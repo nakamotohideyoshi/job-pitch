@@ -1,3 +1,6 @@
 [submodule "web/django"]
 	path = web/django
 	url = https://github.com/django/django.git
+[submodule "web/django-rest-framework"]
+	path = web/django-rest-framework
+	url = https://github.com/tomchristie/django-rest-framework.git

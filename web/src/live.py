@@ -13,7 +13,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'mjpdb',
         'USER': 'mjp',
-        'PASS': 'hdiH33mjp',
+        'PASSWORD': 'hdiH33mjp',
         'HOST': 'localhost',
     }
 }

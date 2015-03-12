@@ -27,3 +27,6 @@ proguard/
 
 # Python
 *.pyc
+
+#Dev
+db.sqlite3

@@ -2,33 +2,42 @@ from django.db import models
 from django.contrib.auth.models import User
 
 class Sector(models.Model):
-    name = models.CharField(required=True, max_length=255)
+    name = models.CharField(max_length=255)
     description = models.TextField()
 
 class Contract(models.Model):
-    name = models.CharField(required=True, max_length=255)
+    name = models.CharField(max_length=255)
     short_name = models.CharField(max_length=255)
     description = models.TextField()
 
 class Hours(models.Model):
-    name = models.CharField(maxrequired=True, _length=255)
+    name = models.CharField(max_length=255)
     short_name = models.CharField(max_length=255)
     description = models.TextField()
+    
+    class Meta:
+        verbose_name_plural = "hours"
 
 class Availability(models.Model):
-    name = models.CharField(required=True, max_length=255)
+    name = models.CharField(max_length=255)
     short_name = models.CharField(max_length=255)
     description = models.TextField()
+    
+    class Meta:
+        verbose_name_plural = "availabilities"
 
 class Business(models.Model):
     user = models.ManyToManyField(User, related_name='businesses')
-    name = models.CharField(required=True, max_length=255)
+    name = models.CharField(max_length=255)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
+    
+    class Meta:
+        verbose_name_plural = "businesses"
 
 class Location(models.Model):
     business = models.ForeignKey(Business, related_name='locations')
-    name = models.CharField(required=True, max_length=255)
+    name = models.CharField(max_length=255)
     description = models.TextField()
     # TODO address
     email = models.EmailField()
@@ -39,29 +48,38 @@ class Location(models.Model):
     updated = models.DateTimeField(auto_now=True)
 
 class JobStatus(models.Model):
-    name = models.CharField(required=True, max_length=20)
+    name = models.CharField(max_length=20)
     friendly_name = models.CharField(max_length=255)
     description = models.TextField()
+    
+    class Meta:
+        verbose_name_plural = "job statuses"
 
 class Job(models.Model):
-    title = models.CharField(required=True, max_length=255)
+    title = models.CharField(max_length=255)
     description = models.TextField()
-    sector = models.ForeignKey(Sector, required=True, related_name='jobs')
-    location = models.ForeignKey(Location, required=True, related_name='jobs')
-    contract = models.ForeignObject(Contract, related_name='jobs')
+    sector = models.ForeignKey(Sector, related_name='jobs')
+    location = models.ForeignKey(Location, related_name='jobs')
+    contract = models.ForeignKey(Contract, related_name='jobs')
     hours = models.ForeignKey(Hours, related_name='jobs')
     required_availability = models.ForeignKey(Availability, related_name='jobs')
-    status = models.ForeignKey(JobStatus, required=True, related_name='jobs')
+    status = models.ForeignKey(JobStatus, related_name='jobs')
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
 
 class Sex(models.Model):
-    name = models.CharField(required=True, max_length=255)
+    name = models.CharField(max_length=255)
     short_name = models.CharField(max_length=255)
+       
+    class Meta:
+        verbose_name_plural = "sexes"
 
 class Nationality(models.Model):
-    name = models.CharField(required=True, max_length=255)
+    name = models.CharField(max_length=255)
     short_name = models.CharField(max_length=255)
+    
+    class Meta:
+        verbose_name_plural = "nationalities"
 
 class JobSeeker(models.Model):
     user = models.ManyToManyField(User, related_name='job_seekers')
@@ -76,28 +94,34 @@ class JobSeeker(models.Model):
     updated = models.DateTimeField(auto_now=True)
 
 class Experience(models.Model):
-    details = models.CharField(required=True, max_length=255)
-    order = models.PositiveSmallIntegerField(required=True)
-    job_seeker = models.ForeignKey(JobSeeker, required=True, related_name='experience')
+    details = models.CharField(max_length=255)
+    order = models.PositiveSmallIntegerField()
+    job_seeker = models.ForeignKey(JobSeeker, related_name='experience')
+    
+    class Meta:
+        verbose_name_plural = "experience"
 
 class JobProfile(models.Model):
-    job_seeker = models.ForeignKey(JobSeeker, required=True, related_name='profiles')
+    job_seeker = models.ForeignKey(JobSeeker, related_name='profiles')
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
 
 class ApplicationStatus(models.Model):
-    name = models.CharField(required=True, max_length=20)
+    name = models.CharField(max_length=20)
     friendly_name = models.CharField(max_length=255)
     description = models.TextField()
+    
+    class Meta:
+        verbose_name_plural = "application statuses"
 
 class Role(models.Model):
     name = models.CharField(max_length=20)
 
 class Application(models.Model):
-    job = models.ForeignKey(Job, required=True, related_name='applications')
-    job_seeker = models.ForeignKey(JobSeeker, required=True, related_name='applications')
-    created_by = models.ForeignKey(Role, required=True, related_name='applications')
-    shortlisted = models.BooleanField(required=True)
-    status = models.ForeignKey(ApplicationStatus, required=True, related_name='applications')
+    job = models.ForeignKey(Job, related_name='applications')
+    job_seeker = models.ForeignKey(JobSeeker, related_name='applications')
+    created_by = models.ForeignKey(Role, related_name='applications')
+    shortlisted = models.BooleanField(default=False)
+    status = models.ForeignKey(ApplicationStatus, related_name='applications')
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)

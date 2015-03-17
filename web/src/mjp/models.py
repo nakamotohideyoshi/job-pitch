@@ -4,16 +4,25 @@ from django.contrib.auth.models import User
 class Sector(models.Model):
     name = models.CharField(max_length=255)
     description = models.TextField()
+    
+    def __str__(self):
+        return "%s: %s" % (type(self).__name__, self.name)
 
 class Contract(models.Model):
     name = models.CharField(max_length=255)
     short_name = models.CharField(max_length=255)
     description = models.TextField()
+    
+    def __str__(self):
+        return "%s: %s" % (type(self).__name__, self.name)
 
 class Hours(models.Model):
     name = models.CharField(max_length=255)
     short_name = models.CharField(max_length=255)
     description = models.TextField()
+    
+    def __str__(self):
+        return "%s: %s" % (type(self).__name__, self.name)
     
     class Meta:
         verbose_name_plural = "hours"
@@ -23,14 +32,68 @@ class Availability(models.Model):
     short_name = models.CharField(max_length=255)
     description = models.TextField()
     
+    def __str__(self):
+        return "%s: %s" % (type(self).__name__, self.name)
+    
     class Meta:
         verbose_name_plural = "availabilities"
 
+class JobStatus(models.Model):
+    name = models.CharField(max_length=20)
+    friendly_name = models.CharField(max_length=255)
+    description = models.TextField()
+    
+    def __str__(self):
+        return "%s: %s" % (type(self).__name__, self.name)
+    
+    class Meta:
+        verbose_name_plural = "job statuses"
+
+class Sex(models.Model):
+    name = models.CharField(max_length=255)
+    short_name = models.CharField(max_length=255)
+    
+    def __str__(self):
+        return "%s: %s" % (type(self).__name__, self.name)
+    
+    class Meta:
+        verbose_name_plural = "sexes"
+
+class Nationality(models.Model):
+    name = models.CharField(max_length=255)
+    short_name = models.CharField(max_length=255)
+    
+    def __str__(self):
+        return "%s: %s" % (type(self).__name__, self.name)
+    
+    class Meta:
+        verbose_name_plural = "nationalities"
+
+class ApplicationStatus(models.Model):
+    name = models.CharField(max_length=20)
+    friendly_name = models.CharField(max_length=255)
+    description = models.TextField()
+    
+    def __str__(self):
+        return "%s: %s" % (type(self).__name__, self.name)
+    
+    class Meta:
+        verbose_name_plural = "application statuses"
+
+class Role(models.Model):
+    name = models.CharField(max_length=20)
+    
+    def __str__(self):
+        return "%s: %s" % (type(self).__name__, self.name)
+
 class Business(models.Model):
-    user = models.ManyToManyField(User, related_name='businesses')
+    users = models.ManyToManyField(User, related_name='businesses')
     name = models.CharField(max_length=255)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
+    
+    def __str__(self):
+        return "%s: %s" % (type(self).__name__, self.name)
     
     class Meta:
         verbose_name_plural = "businesses"
@@ -47,13 +110,8 @@ class Location(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
 
-class JobStatus(models.Model):
-    name = models.CharField(max_length=20)
-    friendly_name = models.CharField(max_length=255)
-    description = models.TextField()
-    
-    class Meta:
-        verbose_name_plural = "job statuses"
+    def __str__(self):
+        return "%s: %s" % (type(self).__name__, self.name)
 
 class Job(models.Model):
     title = models.CharField(max_length=255)
@@ -66,23 +124,12 @@ class Job(models.Model):
     status = models.ForeignKey(JobStatus, related_name='jobs')
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
-
-class Sex(models.Model):
-    name = models.CharField(max_length=255)
-    short_name = models.CharField(max_length=255)
-       
-    class Meta:
-        verbose_name_plural = "sexes"
-
-class Nationality(models.Model):
-    name = models.CharField(max_length=255)
-    short_name = models.CharField(max_length=255)
     
-    class Meta:
-        verbose_name_plural = "nationalities"
+    def __str__(self):
+        return "%s: %s (%s)" % (type(self).__name__, self.title, self.location.name)
 
 class JobSeeker(models.Model):
-    user = models.ManyToManyField(User, related_name='job_seekers')
+    user = models.ForeignKey(User, related_name='job_seekers')
     telephone = models.CharField(max_length=100)
     mobile = models.CharField(max_length=100)
     age = models.PositiveSmallIntegerField()
@@ -92,6 +139,9 @@ class JobSeeker(models.Model):
     # TODO media
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return "%s: %s" % (type(self).__name__, self.user.get_full_name())
 
 class Experience(models.Model):
     details = models.CharField(max_length=255)
@@ -103,25 +153,22 @@ class Experience(models.Model):
 
 class JobProfile(models.Model):
     job_seeker = models.ForeignKey(JobSeeker, related_name='profiles')
+    # TODO search parameters
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
-
-class ApplicationStatus(models.Model):
-    name = models.CharField(max_length=20)
-    friendly_name = models.CharField(max_length=255)
-    description = models.TextField()
     
-    class Meta:
-        verbose_name_plural = "application statuses"
-
-class Role(models.Model):
-    name = models.CharField(max_length=20)
+    def __str__(self):
+        return "%s: %s" % (type(self).__name__, self.job_seeker.user.get_full_name())
 
 class Application(models.Model):
     job = models.ForeignKey(Job, related_name='applications')
     job_seeker = models.ForeignKey(JobSeeker, related_name='applications')
-    created_by = models.ForeignKey(Role, related_name='applications')
+    created_by = models.ForeignKey(Role, related_name='created_applications')
+    deleted_by = models.ForeignKey(Role, related_name='deleted_applications')
     shortlisted = models.BooleanField(default=False)
     status = models.ForeignKey(ApplicationStatus, related_name='applications')
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
+    
+    def __str__(self):
+        return "%s: %s for %s" % (type(self).__name__, self.job.title, self.job_seeker.user.get_full_name())

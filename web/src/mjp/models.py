@@ -164,7 +164,7 @@ class Application(models.Model):
     job = models.ForeignKey(Job, related_name='applications')
     job_seeker = models.ForeignKey(JobSeeker, related_name='applications')
     created_by = models.ForeignKey(Role, related_name='created_applications')
-    deleted_by = models.ForeignKey(Role, related_name='deleted_applications')
+    deleted_by = models.ForeignKey(Role, related_name='deleted_applications', null=True)
     shortlisted = models.BooleanField(default=False)
     status = models.ForeignKey(ApplicationStatus, related_name='applications')
     created = models.DateTimeField(auto_now_add=True)

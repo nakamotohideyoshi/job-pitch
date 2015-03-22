@@ -55,8 +55,8 @@ def create_objects(apps, schema_editor):
     with open(filename) as f:
         for name in f:
             obj = Nationality()
-            obj.name = name
-            obj.short_name = name
+            obj.name = name.strip()
+            obj.short_name = name.strip()
             obj.save()
     
     ApplicationStatus = apps.get_model('mjp', 'ApplicationStatus')

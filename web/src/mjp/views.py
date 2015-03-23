@@ -7,19 +7,9 @@ from rest_framework.routers import DefaultRouter
 from mjp.models import Sector, Hours, Contract, Availability, Business, Location,\
     JobStatus, Job, Sex, Nationality, JobSeeker, Experience, JobProfile,\
     ApplicationStatus, Application, Role
-
+from mjp.serializers import SimpleSerializer
 
 router = DefaultRouter()
-
-def SimpleSerializer(m,  overrides={}):
-    class Meta:
-        model = m
-    fields = {'Meta': Meta}
-    fields.update(overrides)
-    return type(str("%sSerializer" % m._meta.object_name),
-                (serializers.ModelSerializer,),
-                fields,
-                )
 
 def SimpleViewSet(model, base, permissions=(permissions.IsAuthenticated,), overrides={}, serializer_overrides={}):
     fields = {'queryset': model.objects.all(),
@@ -188,70 +178,3 @@ class ApplicationViewSet(viewsets.ModelViewSet):
             return self.update_serializer_class
         return self.serializer_class
 router.register('applications', ApplicationViewSet)
-
-# class UserViewSet(viewsets.ModelViewSet):
-#     class UserSerializer(serializers.ModelSerializer):
-#         class Meta:
-#             fields =  ('id', 'username', 'email', 'first_name', 'last_name')
-#             model = User
-#     class CreateUserSerializer(serializers.ModelSerializer):
-#         class Meta:
-#             fields =  ('id', 'username', 'email', 'first_name', 'last_name', 'password')
-#             model = User
-#     class CurrentUserSerializer(serializers.ModelSerializer):
-#         class Meta:
-#             fields =  ('id', 'username', 'email', 'first_name', 'last_name', 'last_login', 'is_superuser', 'is_staff', 'is_active', 'date_joined', 'groups')
-#             read_only_fields = ('last_login', 'is_superuser', 'is_staff', 'is_active', 'date_joined', 'groups')
-#             model = User
-#     class UpdateUserSerializer(serializers.ModelSerializer):
-#         class Meta:
-#             fields =  ('id', 'username', 'password', 'email', 'first_name', 'last_name')
-#             model = User
-#     class UserPermission(permissions.BasePermission):
-#         def has_permission(self, request, view):
-#             if request.method == 'DELETE':
-#                 return False
-#             return True
-#         def has_object_permission(self, request, view, obj):
-#             if request.method in permissions.SAFE_METHODS:
-#                 return True
-#             return obj == request.user
-#     permission_classes = (permissions.IsAuthenticated, UserPermission)
-#     queryset = User.objects.all()
-#     
-#     def get_serializer_class(self):
-#         if self.request.method == 'POST':
-#             print UserViewSet.CreateUserSerializer
-#             return UserViewSet.CreateUserSerializer
-#         print UserViewSet.UserSerializer
-#         return UserViewSet.UserSerializer
-#     
-#     def get_serializer(self, *args, **kwargs):
-#         instance = kwargs.get('instance')
-#         if instance is None and len(args) > 0:
-#             instance = args[0]
-#         print "%s (%s)" % (self.request.method, instance) 
-#         if instance is None:
-#             return super(UserViewSet, self).get_serializer(*args, **kwargs)
-#         if instance == self.request.user:
-#             if self.request.method in ('PUT', 'PATCH'):
-#                 serializer_class = UserViewSet.UpdateUserSerializer
-#             else:
-#                 serializer_class = UserViewSet.CurrentUserSerializer
-#         else:
-#             serializer_class = UserViewSet.UserSerializer
-#         print serializer_class
-#         kwargs['context'] = self.get_serializer_context()
-#         return serializer_class(*args, **kwargs)
-#         
-#     def perform_create(self, serializer):
-#         user = serializer.save()
-#         if 'password' in self.request.data and self.request.data['password']:
-#             user.set_password(self.request.data['password'])
-#             user.save()
-#             
-# 
-# router.register('users', UserViewSet)
-# 
-# def api_token_auth_test(request):
-#     return render_to_response('api_token_auth_test.html', {}, context_instance=RequestContext(request))

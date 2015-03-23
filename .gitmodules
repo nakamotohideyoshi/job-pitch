@@ -7,3 +7,6 @@
 [submodule "web/django-rest-auth"]
 	path = web/django-rest-auth
 	url = https://github.com/Tivix/django-rest-auth.git
+[submodule "web/django-allauth"]
+	path = web/django-allauth
+	url = https://github.com/pennersr/django-allauth.git

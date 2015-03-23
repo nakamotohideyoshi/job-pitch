@@ -10,4 +10,15 @@
     <string name="prompt_password_confirm">Confirm password</string>
     <string name="prompt_email">Email (optional)</string>
     <string name="create_profile">Create profile</string>
+    <string name="create_employer">I am an Employer</string>
+    <string name="create_job_seeker">I am a Job Seeker</string>
+
+<!-- TODO: Remove or change this placeholder text -->
+    <string name="prompt_business_name">Name</string>
+    <string name="prompt_location_name">Name</string>
+    <string name="prompt_location_description">Description</string>
+    <string name="prompt_telephone">Telephone (optional)</string>
+    <string name="prompt_mobile">Mobile (optional)</string>
+    <string name="location_details">Location details</string>
+    <string name="public_data">Public</string>
 </resources>

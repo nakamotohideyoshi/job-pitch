@@ -4,6 +4,8 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 
 public class CreateProfileActivity extends ActionBarActivity {
 
@@ -11,6 +13,29 @@ public class CreateProfileActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_profile);
+
+        Button mCreateJobSeekerButton = (Button) findViewById(R.id.create_job_seeker);
+        mCreateJobSeekerButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                createJobSeeker();
+            }
+        });
+
+        Button mCreateRecruiterButton = (Button) findViewById(R.id.create_employer);
+        mCreateRecruiterButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                createRecruiter();
+            }
+        });
+    }
+
+    private void createRecruiter() {
+
+    }
+
+    private void createJobSeeker() {
     }
 
 

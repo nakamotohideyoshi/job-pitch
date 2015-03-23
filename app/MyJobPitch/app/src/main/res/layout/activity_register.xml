@@ -50,6 +50,7 @@
                 style="?android:textAppearanceSmall" />
 
         </LinearLayout>
+
     </ScrollView>
 
 </LinearLayout>

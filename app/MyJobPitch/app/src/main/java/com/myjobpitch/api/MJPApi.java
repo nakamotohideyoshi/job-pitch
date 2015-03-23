@@ -21,10 +21,12 @@ import com.myjobpitch.api.auth.Registration;
 import com.myjobpitch.api.auth.User;
 import com.myjobpitch.api.data.ApplicationStatus;
 import com.myjobpitch.api.data.Availability;
+import com.myjobpitch.api.data.Business;
 import com.myjobpitch.api.data.Contract;
 import com.myjobpitch.api.data.Hours;
 import com.myjobpitch.api.data.JobSeeker;
 import com.myjobpitch.api.data.JobStatus;
+import com.myjobpitch.api.data.Location;
 import com.myjobpitch.api.data.Nationality;
 import com.myjobpitch.api.data.Role;
 import com.myjobpitch.api.data.Sector;
@@ -222,5 +224,13 @@ public class MJPApi {
 
     public JobSeeker getJobSeeker(Integer id) {
         return rest.exchange(getObjectUrl("job-seekers", id), HttpMethod.GET, createAuthenticatedRequest(), JobSeeker.class).getBody();
+    }
+
+    public Business getBusiness(Integer id) {
+        return rest.exchange(getObjectUrl("businesses", id), HttpMethod.GET, createAuthenticatedRequest(), Business.class).getBody();
+    }
+
+    public Location getLocation(Integer id) {
+        return rest.exchange(getObjectUrl("locations", id), HttpMethod.GET, createAuthenticatedRequest(), Location.class).getBody();
     }
 }

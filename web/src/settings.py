@@ -26,8 +26,15 @@ TEMPLATE_DEBUG = False
 
 ALLOWED_HOSTS = []
 
-AUTH_USER_MODEL = 'mjp.User'
+# AUTH_USER_MODEL = 'mjp.User'
 
+# allauth
+ALL_AUTH_SETTINGS = {
+#     'ACCOUNT_FORMS': {
+#         'signup': 'mjp.RegistrationForm'
+#     },
+}
+ALLAUTH_SETTING_GETTER = ALL_AUTH_SETTINGS.get
 # Application definition
 
 INSTALLED_APPS = (
@@ -37,9 +44,12 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'allauth',
+    'allauth.account',
     'rest_framework',
     'rest_framework.authtoken',
     'rest_auth',
+    'rest_auth.registration',
     'mjp',
 )
 
@@ -58,6 +68,10 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.SessionAuthentication',
         'rest_framework.authentication.TokenAuthentication',
     )
+}
+
+REST_AUTH_SERIALIZERS = {
+    'USER_DETAILS_SERIALIZER': 'mjp.serializers.UserDetailsSerializer',
 }
 
 ROOT_URLCONF = 'mjp.urls'

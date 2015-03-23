@@ -10,5 +10,7 @@
 <pydev_property name="org.python.pydev.PYTHON_PROJECT_INTERPRETER">Default</pydev_property>
 <pydev_pathproperty name="org.python.pydev.PROJECT_SOURCE_PATH">
 <path>/${PROJECT_DIR_NAME}/src</path>
+<path>/${PROJECT_DIR_NAME}/django-rest-framework</path>
+<path>/${PROJECT_DIR_NAME}/django-rest-auth</path>
 </pydev_pathproperty>
 </pydev_project>

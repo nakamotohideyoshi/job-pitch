@@ -1,3 +1,13 @@
 <resources>
     <string name="app_name">My Job Pitch</string>
+    <string name="title_activity">My Job Pitch</string>
+
+    <string name="recruiter">Recruiter</string>
+    <string name="job_seeker">Job Seeker</string>
+    <string name="action_settings">Settings</string>
+    <string name="register">Register</string>
+    <string name="test_username">admin</string>
+    <string name="prompt_password_confirm">Confirm password</string>
+    <string name="prompt_email">Email (optional)</string>
+    <string name="create_profile">Create profile</string>
 </resources>

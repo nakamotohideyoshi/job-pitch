@@ -93,6 +93,12 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
     }
 
     @Override
+    protected void onPause() {
+        super.onPause();
+        showProgress(false);
+    }
+
+    @Override
     protected void onResume() {
         super.onResume();
         MJPApi api = ((MjpApplication) this.getApplication()).getApi();
@@ -293,7 +299,6 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
         @Override
         protected void onPostExecute(final Class<?> next) {
             loginTask = null;
-            showProgress(false);
 
             if (next != null) {
                 Intent intent = new Intent(LoginActivity.this, next);
@@ -301,6 +306,7 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
             } else {
                 mPasswordView.setError(getString(R.string.error_incorrect_password));
                 mPasswordView.requestFocus();
+                showProgress(false);
             }
         }
 
@@ -311,10 +317,6 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
         }
     }
 
-    /**
-     * Represents an asynchronous login/registration task used to authenticate
-     * the user.
-     */
     public class LogoutTask extends AsyncTask<Void, Void, Void> {
         @Override
         protected Void doInBackground(Void... params) {

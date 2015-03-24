@@ -33,7 +33,7 @@
         </activity>
         <activity
             android:name=".CreateProfileActivity"
-            android:label="@string/title_activity"
+            android:label="@string/title_create_profile"
             android:parentActivityName=".LoginActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

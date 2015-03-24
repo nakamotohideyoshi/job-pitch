@@ -166,6 +166,7 @@ public class RegisterActivity extends ActionBarActivity {
     @Override
     protected void onPause() {
         super.onPause();
+        showProgress(false);
         finish();
     }
 
@@ -210,7 +211,6 @@ public class RegisterActivity extends ActionBarActivity {
         @Override
         protected void onPostExecute(final Class<?> next) {
             registerTask = null;
-            showProgress(false);
             if (errors != null) {
                 View errorView = null;
                 JsonNode generalError = errors.get("__all__");
@@ -245,6 +245,7 @@ public class RegisterActivity extends ActionBarActivity {
 
                 if (errorView != null)
                     errorView.requestFocus();
+                showProgress(false);
             } else {
                 Intent intent = new Intent(RegisterActivity.this, next);
                 startActivity(intent);

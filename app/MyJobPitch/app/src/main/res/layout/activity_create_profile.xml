@@ -7,29 +7,75 @@
     android:paddingTop="@dimen/activity_vertical_margin" tools:context=".CreateProfileActivity">
 
 
-    <ProgressBar android:id="@+id/register_progress" style="?android:attr/progressBarStyleLarge"
+    <ProgressBar android:id="@+id/create_profile_progress" style="?android:attr/progressBarStyleLarge"
         android:layout_width="wrap_content" android:layout_height="wrap_content"
         android:layout_marginBottom="8dp" android:visibility="gone" />
 
-    <LinearLayout android:layout_width="match_parent"
-        android:layout_height="match_parent" android:orientation="vertical">
-        <Button
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:layout_marginBottom="8dp"
-            android:text="@string/create_job_seeker"
-            android:id="@+id/create_job_seeker"
-            android:layout_gravity="center_horizontal" />
+    <LinearLayout
+        android:id="@+id/create_profile"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-        <Button
+        <ScrollView
+            android:id="@+id/recruiter_profile"
+            android:visibility="gone"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:layout_marginTop="8dp"
-            android:text="@string/create_employer"
-            android:id="@+id/create_employer"
-            android:layout_gravity="center_horizontal" />
+            android:layout_height="match_parent">
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <fragment
+                    android:name="com.myjobpitch.BusinessEditFragment"
+                    android:id="@+id/business_edit_fragment"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    tools:layout="@layout/fragment_location_edit" />
+
+                <fragment
+                    android:name="com.myjobpitch.LocationEditFragment"
+                    android:id="@+id/location_edit_fragment"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    tools:layout="@layout/fragment_business_edit" />
+
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/action_continue"
+                    android:id="@+id/continue_button"
+                    android:layout_weight="1"
+                    style="?android:textAppearanceSmall" />
+
+            </LinearLayout>
+
+        </ScrollView>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:layout_marginBottom="8dp"
+                android:text="@string/create_job_seeker"
+                android:id="@+id/create_job_seeker"
+                android:layout_gravity="center_horizontal" />
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:layout_marginTop="8dp"
+                android:text="@string/create_employer"
+                android:id="@+id/create_employer"
+                android:layout_gravity="center_horizontal" />
+
+        </LinearLayout>
 
     </LinearLayout>
 

@@ -1,4 +1,4 @@
-package com.myjobpitch;
+package com.myjobpitch.activities;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
@@ -17,9 +17,9 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.myjobpitch.R;
 import com.myjobpitch.api.MJPApiException;
 import com.myjobpitch.api.MJPApi;
-import com.myjobpitch.api.auth.User;
 
 public class RegisterActivity extends ActionBarActivity {
 
@@ -196,11 +196,6 @@ public class RegisterActivity extends ActionBarActivity {
             // Load user data
             try {
                 api.login(username, password1);
-                User user = api.getUser();
-                if (user.isRecruiter())
-                    return RecruiterActivity.class;
-                else if (user.isJobSeeker())
-                    return JobSeekerActivity.class;
                 return CreateProfileActivity.class;
             } catch (Exception e) {
                 e.printStackTrace();
@@ -248,6 +243,7 @@ public class RegisterActivity extends ActionBarActivity {
                 showProgress(false);
             } else {
                 Intent intent = new Intent(RegisterActivity.this, next);
+                intent.putExtra("from_login", true);
                 startActivity(intent);
             }
         }

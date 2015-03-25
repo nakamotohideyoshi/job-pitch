@@ -28,14 +28,14 @@
                 android:layout_height="match_parent">
 
                 <fragment
-                    android:name="com.myjobpitch.BusinessEditFragment"
+                    android:name="com.myjobpitch.fragments.BusinessEditFragment"
                     android:id="@+id/business_edit_fragment"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     tools:layout="@layout/fragment_location_edit" />
 
                 <fragment
-                    android:name="com.myjobpitch.LocationEditFragment"
+                    android:name="com.myjobpitch.fragments.LocationEditFragment"
                     android:id="@+id/location_edit_fragment"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

@@ -1,4 +1,4 @@
-package com.myjobpitch;
+package com.myjobpitch.activities;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
@@ -26,8 +26,11 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.myjobpitch.R;
 import com.myjobpitch.api.MJPApi;
 import com.myjobpitch.api.auth.User;
+import com.myjobpitch.api.data.Business;
 
 import org.springframework.web.client.HttpClientErrorException;
 
@@ -42,8 +45,8 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
     /**
      * Keep track of the login task to ensure we can cancel it if requested.
      */
-    private AsyncTask<Void, Void, Class<?>> loginTask = null;
-    private AsyncTask<Void, Void, Void> logoutTask = null;
+    private LoginTask loginTask = null;
+    private LogoutTask logoutTask = null;
 
     // UI references.
     private AutoCompleteTextView mUsernameView;
@@ -101,6 +104,7 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
     @Override
     protected void onResume() {
         super.onResume();
+        mPasswordView.setText("");
         MJPApi api = ((MjpApplication) this.getApplication()).getApi();
         if (api.isAuthenticated()) {
             logoutTask = new LogoutTask();
@@ -248,7 +252,6 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
         int IS_PRIMARY = 1;
     }
 
-
     private void addEmailsToAutoComplete(List<String> emailAddressCollection) {
         //Create adapter to tell the AutoCompleteTextView what to show in its dropdown list.
         ArrayAdapter<String> adapter =
@@ -258,11 +261,7 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
         mUsernameView.setAdapter(adapter);
     }
 
-    /**
-     * Represents an asynchronous login/registration task used to authenticate
-     * the user.
-     */
-    public class LoginTask extends AsyncTask<Void, Void, Class<?>> {
+    public class LoginTask extends AsyncTask<Void, Void, Intent> {
 
         private final String mUsername;
         private final String mPassword;
@@ -273,7 +272,7 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
         }
 
         @Override
-        protected Class<?> doInBackground(Void... params) {
+        protected Intent doInBackground(Void... params) {
             MJPApi api = ((MjpApplication)getApplication()).getApi();
             try {
                 api.login(mUsername, mPassword);
@@ -285,23 +284,35 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
             // Load user data
             try {
                 User user = api.getUser();
-                if (user.isRecruiter())
-                    return RecruiterActivity.class;
-                else if (user.isJobSeeker())
-                    return JobSeekerActivity.class;
-                return CreateProfileActivity.class;
+                if (user.isRecruiter()) {
+                    if (user.getBusinesses().size() == 1) {
+                        Business business = api.getBusiness(user.getBusinesses().get(0));
+                        if (business.getLocations().isEmpty()) {
+                            ObjectMapper mapper = new ObjectMapper();
+                            Intent intent = new Intent(LoginActivity.this, CreateProfileActivity.class);
+                            intent.putExtra("business_data", mapper.writeValueAsString(business));
+                            return intent;
+                        }
+                    }
+                    return new Intent(LoginActivity.this, RecruiterActivity.class);
+                } else if (user.isJobSeeker())
+                    return new Intent(LoginActivity.this, JobSeekerActivity.class);
+                Intent intent = new Intent(LoginActivity.this, CreateProfileActivity.class);
+                intent.putExtra("email", user.getEmail());
+                return intent;
             } catch (Exception e) {
                 e.printStackTrace();
+                api.logout();
             }
             return null;
         }
 
         @Override
-        protected void onPostExecute(final Class<?> next) {
+        protected void onPostExecute(final Intent intent) {
             loginTask = null;
 
-            if (next != null) {
-                Intent intent = new Intent(LoginActivity.this, next);
+            if (intent != null) {
+                intent.putExtra("from_login", true);
                 startActivity(intent);
             } else {
                 mPasswordView.setError(getString(R.string.error_incorrect_password));

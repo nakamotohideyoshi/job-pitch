@@ -1,4 +1,4 @@
-package com.myjobpitch;
+package com.myjobpitch.fragments;
 
 import android.os.Bundle;
 import android.app.Fragment;
@@ -10,21 +10,28 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.myjobpitch.R;
+import com.myjobpitch.api.MJPApi;
 import com.myjobpitch.api.data.Location;
+import com.myjobpitch.tasks.CreateLocationTask;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link com.myjobpitch.LocationEditFragment.LocationEditHost} interface
+ * {@link LocationEditFragment.LocationEditHost} interface
  * to handle interaction events.
  * Use the {@link LocationEditFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class LocationEditFragment extends Fragment {
+public class LocationEditFragment extends Fragment implements CreateLocationTask.Listener {
     private CheckBox mLocationMobilePublicView;
     private EditText mLocationNameView;
     private EditText mLocationDescView;
@@ -34,7 +41,7 @@ public class LocationEditFragment extends Fragment {
     private CheckBox mLocationTelephonePublicView;
     private EditText mLocationMobileView;
     private List<TextView> requiredFields;
-    private List<TextView> fields;
+    private Map<String, TextView> fields;
 
     /**
      * Use this factory method to create a new instance of
@@ -83,16 +90,18 @@ public class LocationEditFragment extends Fragment {
         requiredFields.add(mLocationNameView);
         requiredFields.add(mLocationDescView);
 
-        fields = new ArrayList<>(requiredFields);
-        fields.add(mLocationEmailView);
-        fields.add(mLocationTelephoneView);
-        fields.add(mLocationMobileView);
+        fields = new HashMap<>();
+        fields.put("name", mLocationNameView);
+        fields.put("description", mLocationDescView);
+        fields.put("email", mLocationEmailView);
+        fields.put("telephone", mLocationTelephoneView);
+        fields.put("mobile", mLocationMobileView);
 
         return view;
     }
 
     public boolean validateInput() {
-        for (TextView field : fields)
+        for (TextView field : fields.values())
             field.setError(null);
 
         View errorField = null;
@@ -132,6 +141,32 @@ public class LocationEditFragment extends Fragment {
         location.setMobile(mLocationMobileView.getText().toString());
         location.setMobil_public(mLocationMobilePublicView.isChecked());
     }
+
+    public void setEmail(String email) {
+        ((TextView)getView().findViewById(R.id.location_email)).setText(email);
+    }
+
+    public CreateLocationTask getCreateLocationTask(MJPApi api, Location location) {
+        CreateLocationTask task = new CreateLocationTask(api, location);
+        task.addListener(this);
+        return task;
+    }
+
+    @Override
+    public void onSuccess(Location location) {}
+
+    @Override
+    public void onError(JsonNode errors) {
+        Iterator<Map.Entry<String, JsonNode>> error_data = errors.fields();
+        while (error_data.hasNext()) {
+            Map.Entry<String, JsonNode> error = error_data.next();
+            if (fields.containsKey(error.getKey()))
+                fields.get(error.getKey()).setError(error.getValue().get(0).asText());
+        }
+    }
+
+    @Override
+    public void onCancelled() {}
 
     public interface LocationEditHost {
 

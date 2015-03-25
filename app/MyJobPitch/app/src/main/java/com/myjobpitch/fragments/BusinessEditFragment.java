@@ -1,4 +1,4 @@
-package com.myjobpitch;
+package com.myjobpitch.fragments;
 
 import android.app.Fragment;
 import android.os.Bundle;
@@ -9,25 +9,32 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.myjobpitch.R;
+import com.myjobpitch.api.MJPApi;
 import com.myjobpitch.api.data.Business;
+import com.myjobpitch.tasks.CreateBusinessTask;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 
 /**
  * A simple {@link android.app.Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link com.myjobpitch.BusinessEditFragment.BusinessEditHost} interface
+ * {@link BusinessEditFragment.BusinessEditHost} interface
  * to handle interaction events.
- * Use the {@link com.myjobpitch.BusinessEditFragment#newInstance} factory method to
+ * Use the {@link BusinessEditFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class BusinessEditFragment extends Fragment {
+public class BusinessEditFragment extends Fragment implements CreateBusinessTask.Listener {
 
     private EditText mNameView;
     private List<TextView> requiredFields;
-    private List<TextView> fields;
+    private Map<String, TextView> fields;
 
     /**
      * Use this factory method to create a new instance of
@@ -68,13 +75,14 @@ public class BusinessEditFragment extends Fragment {
         requiredFields = new ArrayList<>();
         requiredFields.add(mNameView);
 
-        fields = new ArrayList<>(requiredFields);
+        fields = new HashMap<>();
+        fields.put("name", mNameView);
 
         return view;
     }
 
     public boolean validateInput() {
-        for (TextView field : fields)
+        for (TextView field : fields.values())
             field.setError(null);
 
         View errorField = null;
@@ -99,6 +107,32 @@ public class BusinessEditFragment extends Fragment {
 
     public void save(Business business) {
         business.setName(mNameView.getText().toString());
+    }
+
+    public CreateBusinessTask getCreateBusinessTask(MJPApi api, Business business) {
+        CreateBusinessTask task = new CreateBusinessTask(api, business);
+        task.addListener(this);
+        return task;
+    }
+
+    @Override
+    public void onSuccess(Business business) {
+
+    }
+
+    @Override
+    public void onError(JsonNode errors) {
+        Iterator<Map.Entry<String, JsonNode>> error_data = errors.fields();
+        while (error_data.hasNext()) {
+            Map.Entry<String, JsonNode> error = error_data.next();
+            if (fields.containsKey(error.getKey()))
+                fields.get(error.getKey()).setError(error.getValue().textValue());
+        }
+    }
+
+    @Override
+    public void onCancelled() {
+
     }
 
     public interface BusinessEditHost {

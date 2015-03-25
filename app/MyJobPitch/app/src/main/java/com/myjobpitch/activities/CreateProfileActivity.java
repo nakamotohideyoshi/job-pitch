@@ -1,23 +1,29 @@
-package com.myjobpitch;
+package com.myjobpitch.activities;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
-import android.os.AsyncTask;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.myjobpitch.R;
 import com.myjobpitch.api.MJPApi;
-import com.myjobpitch.api.MJPApiException;
 import com.myjobpitch.api.data.Business;
 import com.myjobpitch.api.data.Location;
+import com.myjobpitch.fragments.BusinessEditFragment;
+import com.myjobpitch.fragments.LocationEditFragment;
+import com.myjobpitch.tasks.CreateBusinessTask;
+import com.myjobpitch.tasks.CreateLocationTask;
+
+import java.io.IOException;
 
 public class CreateProfileActivity extends ActionBarActivity implements BusinessEditFragment.BusinessEditHost, LocationEditFragment.LocationEditHost {
 
@@ -55,6 +61,8 @@ public class CreateProfileActivity extends ActionBarActivity implements Business
         mRecruiterProfile = (View) findViewById(R.id.recruiter_profile);
         mBusinessEditFragment = (BusinessEditFragment) getFragmentManager().findFragmentById(R.id.business_edit_fragment);
         mLocationEditFragment = (LocationEditFragment) getFragmentManager().findFragmentById(R.id.location_edit_fragment);
+        if (getIntent().hasExtra("email"))
+            mLocationEditFragment.setEmail(getIntent().getStringExtra("email"));
 
         Button continueButton = (Button) findViewById(R.id.continue_button);
         continueButton.setOnClickListener(new View.OnClickListener() {
@@ -64,18 +72,81 @@ public class CreateProfileActivity extends ActionBarActivity implements Business
             }
         });
 
+        if (getIntent().hasExtra("business_data")) {
+            ObjectMapper mapper = new ObjectMapper();
+            try {
+                business = mapper.readValue(getIntent().getStringExtra("business_data"), Business.class);
+                mBusinessEditFragment.load(business);
+                createRecruiter();
+            } catch (IOException e) {}
+        }
+
         mProgressView = findViewById(R.id.create_profile_progress);
         mCreateProfileView = findViewById(R.id.create_profile);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        showProgress(false);
+        finish();
     }
 
     private void attemptContinue() {
         boolean result = mBusinessEditFragment.validateInput();
         result &= mLocationEditFragment.validateInput();
         if (result) {
+            showProgress(true);
+
             if (business == null)
                 business = new Business();
             mBusinessEditFragment.save(business);
-            mCreateBusinessTask = new CreateBusinessTask();
+
+            final MJPApi api = ((MjpApplication) getApplication()).getApi();
+            mCreateBusinessTask = new CreateBusinessTask(api, business);
+            mCreateBusinessTask.addListener(new CreateBusinessTask.Listener() {
+                @Override
+                public void onSuccess(Business business) {
+                    CreateProfileActivity.this.business = business;
+
+                    if (location == null)
+                        location = new Location();
+                    location.setBusiness(business.getId());
+                    mLocationEditFragment.save(location);
+                    mCreateLocationTask = mLocationEditFragment.getCreateLocationTask(api, location);
+                    mCreateLocationTask.addListener(new CreateLocationTask.Listener() {
+                        @Override
+                        public void onSuccess(Location location) {
+                            CreateProfileActivity.this.location = location;
+
+                            Intent intent = new Intent(CreateProfileActivity.this, RecruiterActivity.class);
+                            intent.putExtra("from_login", true);
+                            startActivity(intent);
+                        }
+
+                        @Override
+                        public void onError(JsonNode errors) {
+                            showProgress(false);
+                        }
+
+                        @Override
+                        public void onCancelled() {
+                            showProgress(false);
+                        }
+                    });
+                    mCreateLocationTask.execute();
+                }
+
+                @Override
+                public void onError(JsonNode errors) {
+                    showProgress(false);
+                }
+
+                @Override
+                public void onCancelled() {
+                    showProgress(false);
+                }
+            });
             mCreateBusinessTask.execute();
         }
     }
@@ -87,9 +158,6 @@ public class CreateProfileActivity extends ActionBarActivity implements Business
     private void createJobSeeker() {
     }
 
-    /**
-     * Shows the progress UI and hides the login form.
-     */
     @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
     public void showProgress(final boolean show) {
         // On Honeycomb MR2 we have the ViewPropertyAnimator APIs, which allow
@@ -143,82 +211,5 @@ public class CreateProfileActivity extends ActionBarActivity implements Business
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-    public class CreateBusinessTask extends AsyncTask<Void, Void, Void> {
-        private JsonNode errors;
-
-        @Override
-        protected Void doInBackground(Void... params) {
-            try {
-                MJPApi api = ((MjpApplication) getApplication()).getApi();
-                if (business.getId() == null)
-                    business = api.createBusiness(business);
-                else
-                    business = api.updateBusiness(business);
-            } catch (MJPApiException e) {
-                errors = e.getErrors();
-                Log.d("CreateBusiness", errors.toString());
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(final Void __) {
-            mCreateBusinessTask = null;
-
-            if (errors == null) {
-                if (location == null)
-                    location = new Location();
-                location.setBusiness(business.getId());
-                mLocationEditFragment.save(location);
-                mCreateLocationTask = new CreateLocationTask();
-                mCreateLocationTask.execute();
-            } else {
-                showProgress(false);
-            }
-        }
-
-        @Override
-        protected void onCancelled() {
-            mCreateBusinessTask = null;
-            showProgress(false);
-        }
-    }
-
-    public class CreateLocationTask extends AsyncTask<Void, Void, Void> {
-        private JsonNode errors;
-
-        @Override
-        protected Void doInBackground(Void... params) {
-            try {
-                MJPApi api = ((MjpApplication) getApplication()).getApi();
-                if (location.getId() == null)
-                    location = api.createLocation(location);
-                else
-                    location = api.updateLocation(location);
-            } catch (MJPApiException e) {
-                errors = e.getErrors();
-                Log.d("CreateLocation", errors.toString());
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(final Void __) {
-            mCreateLocationTask = null;
-            if (errors == null) {
-
-            } else {
-
-            }
-            showProgress(false);
-        }
-
-        @Override
-        protected void onCancelled() {
-            mCreateLocationTask = null;
-            showProgress(false);
-        }
     }
 }

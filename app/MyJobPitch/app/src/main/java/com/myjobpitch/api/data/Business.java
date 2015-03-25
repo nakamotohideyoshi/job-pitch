@@ -9,6 +9,7 @@ public class Business extends MJPAPIObject {
     private Integer id;
     private String name;
     private List<Integer> users;
+    private List<Integer> locations;
     private Date created;
     private Date updated;
 
@@ -22,6 +23,10 @@ public class Business extends MJPAPIObject {
 
     public List<Integer> getUsers() {
         return users;
+    }
+
+    public List<Integer> getLocations() {
+        return locations;
     }
 
     public Date getCreated() {

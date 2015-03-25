@@ -106,9 +106,12 @@ class Location(models.Model):
     name = models.CharField(max_length=255)
     description = models.TextField()
     # TODO address
-    email = models.EmailField()
-    telephone = models.CharField(max_length=100)
-    mobile = models.CharField(max_length=100)
+    email = models.EmailField(blank=True)
+    email_public = models.BooleanField(default=None)
+    telephone = models.CharField(max_length=100, blank=True)
+    telephone_public = models.BooleanField(default=None)
+    mobile = models.CharField(max_length=100, blank=True)
+    mobile_public = models.BooleanField(default=None)
     # TODO media
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)

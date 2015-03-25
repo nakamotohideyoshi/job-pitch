@@ -21,4 +21,6 @@
     <string name="prompt_mobile">Mobile (optional)</string>
     <string name="location_details">Location details</string>
     <string name="public_data">Public</string>
+    <string name="business_details">Business Details</string>
+    <string name="title_create_profile">Create Profile</string>
 </resources>

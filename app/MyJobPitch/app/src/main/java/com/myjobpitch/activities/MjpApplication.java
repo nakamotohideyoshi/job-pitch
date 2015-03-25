@@ -1,4 +1,4 @@
-package com.myjobpitch;
+package com.myjobpitch.activities;
 
 import android.app.Application;
 

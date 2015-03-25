@@ -2,7 +2,6 @@ package com.myjobpitch.api;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -10,7 +9,6 @@ import org.springframework.http.HttpAuthentication;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.client.ClientHttpRequestInterceptor;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
@@ -59,7 +57,7 @@ public class MJPApi {
 		this("http://mjp.digitalcrocodile.com:8000/");
 	}
 
-	private URI getListUrl(String path) {
+	private URI getTypeUrl(String path) {
 		try {
 			return new URI(apiRoot + "api/" + path + "/");
 		} catch (URISyntaxException e) {
@@ -86,7 +84,7 @@ public class MJPApi {
 		}
 	}
 
-	private HttpEntity<Void> createAuthenticatedRequest() {
+	private <T> HttpEntity<T> createAuthenticatedRequest(T object) {
         if (token == null)
             throw new RuntimeException("Not logged in!");
         HttpHeaders headers = new HttpHeaders();
@@ -96,8 +94,12 @@ public class MJPApi {
                 return "Token " + token.getKey();
             }
         });
-        return new HttpEntity<>(null, headers);
+        return new HttpEntity<>(object, headers);
 	}
+
+    private HttpEntity<Void> createAuthenticatedRequest() {
+        return createAuthenticatedRequest((Void)null);
+    }
 
 	public AuthToken login(String username, String password) {
         if (this.token != null)
@@ -143,7 +145,7 @@ public class MJPApi {
 
 	public List<Sector> getSectors() {
         if (this.sectors == null) {
-            this.sectors = Arrays.asList(rest.exchange(getListUrl("sectors"), HttpMethod.GET, createAuthenticatedRequest(), Sector[].class).getBody());
+            this.sectors = Arrays.asList(rest.exchange(getTypeUrl("sectors"), HttpMethod.GET, createAuthenticatedRequest(), Sector[].class).getBody());
             for (Sector sector : sectors)
                 sector.setApi(this);
         }
@@ -152,7 +154,7 @@ public class MJPApi {
 
 	public List<Contract> getContracts() {
         if (this.contracts == null) {
-            this.contracts = Arrays.asList(rest.exchange(getListUrl("contracts"), HttpMethod.GET, createAuthenticatedRequest(), Contract[].class).getBody());
+            this.contracts = Arrays.asList(rest.exchange(getTypeUrl("contracts"), HttpMethod.GET, createAuthenticatedRequest(), Contract[].class).getBody());
             for (Contract contract : contracts)
                 contract.setApi(this);
         }
@@ -161,7 +163,7 @@ public class MJPApi {
 
 	public List<Hours> getHours() {
         if (this.hours == null) {
-            this.hours = Arrays.asList(rest.exchange(getListUrl("hours"), HttpMethod.GET, createAuthenticatedRequest(), Hours[].class).getBody());
+            this.hours = Arrays.asList(rest.exchange(getTypeUrl("hours"), HttpMethod.GET, createAuthenticatedRequest(), Hours[].class).getBody());
             for (Hours h : hours)
                 h.setApi(this);
         }
@@ -170,7 +172,7 @@ public class MJPApi {
 
 	public List<Availability> getAvailabilities() {
 		if (this.availabilities == null) {
-            this.availabilities = Arrays.asList(rest.exchange(getListUrl("availabilities"), HttpMethod.GET, createAuthenticatedRequest(), Availability[].class).getBody());
+            this.availabilities = Arrays.asList(rest.exchange(getTypeUrl("availabilities"), HttpMethod.GET, createAuthenticatedRequest(), Availability[].class).getBody());
             for (Availability availability : availabilities)
                 availability.setApi(this);
         }
@@ -179,7 +181,7 @@ public class MJPApi {
 
 	public List<Sex> getSexes() {
         if (this.sexes == null) {
-            this.sexes = Arrays.asList(rest.exchange(getListUrl("sexes"), HttpMethod.GET, createAuthenticatedRequest(), Sex[].class).getBody());
+            this.sexes = Arrays.asList(rest.exchange(getTypeUrl("sexes"), HttpMethod.GET, createAuthenticatedRequest(), Sex[].class).getBody());
             for (Sex sex : sexes)
                 sex.setApi(this);
         }
@@ -188,7 +190,7 @@ public class MJPApi {
 
 	public List<Nationality> getNationalities() {
         if (this.nationalities == null) {
-            this.nationalities = Arrays.asList(rest.exchange(getListUrl("nationalities"), HttpMethod.GET, createAuthenticatedRequest(), Nationality[].class).getBody());
+            this.nationalities = Arrays.asList(rest.exchange(getTypeUrl("nationalities"), HttpMethod.GET, createAuthenticatedRequest(), Nationality[].class).getBody());
             for (Nationality nationality : nationalities)
                 nationality.setApi(this);
         }
@@ -197,7 +199,7 @@ public class MJPApi {
 
 	public List<JobStatus> getJobStatuses() {
         if (this.jobStatuses == null) {
-            this.jobStatuses = Arrays.asList(rest.exchange(getListUrl("job-statuses"), HttpMethod.GET, createAuthenticatedRequest(), JobStatus[].class).getBody());
+            this.jobStatuses = Arrays.asList(rest.exchange(getTypeUrl("job-statuses"), HttpMethod.GET, createAuthenticatedRequest(), JobStatus[].class).getBody());
             for (JobStatus jobStatus : jobStatuses)
                 jobStatus.setApi(this);
         }
@@ -206,7 +208,7 @@ public class MJPApi {
 
 	public List<ApplicationStatus> getApplicationStatuses() {
 		if (this.applicationStatuses == null) {
-            this.applicationStatuses = Arrays.asList(rest.exchange(getListUrl("application-statuses"), HttpMethod.GET, createAuthenticatedRequest(), ApplicationStatus[].class).getBody());
+            this.applicationStatuses = Arrays.asList(rest.exchange(getTypeUrl("application-statuses"), HttpMethod.GET, createAuthenticatedRequest(), ApplicationStatus[].class).getBody());
             for (ApplicationStatus applicationStatus : applicationStatuses)
                 applicationStatus.setApi(this);
         }
@@ -215,7 +217,7 @@ public class MJPApi {
 
 	public List<Role> getRoles() {
         if (this.roles == null) {
-            this.roles = Arrays.asList(rest.exchange(getListUrl("roles"), HttpMethod.GET, createAuthenticatedRequest(), Role[].class).getBody());
+            this.roles = Arrays.asList(rest.exchange(getTypeUrl("roles"), HttpMethod.GET, createAuthenticatedRequest(), Role[].class).getBody());
             for (Role role : roles)
                 role.setApi(this);
         }
@@ -232,5 +234,49 @@ public class MJPApi {
 
     public Location getLocation(Integer id) {
         return rest.exchange(getObjectUrl("locations", id), HttpMethod.GET, createAuthenticatedRequest(), Location.class).getBody();
+    }
+
+    public Business createBusiness(Business business) throws MJPApiException {
+        try {
+            return rest.exchange(getTypeUrl("businesses"), HttpMethod.POST, createAuthenticatedRequest(business), Business.class).getBody();
+        } catch (HttpClientErrorException e) {
+            if (e.getStatusCode().value() == 400) {
+                throw new MJPApiException(e);
+            }
+            throw e;
+        }
+    }
+
+    public Business updateBusiness(Business business) throws MJPApiException {
+        try {
+            return rest.exchange(getObjectUrl("businesses", business.getId()), HttpMethod.PUT, createAuthenticatedRequest(business), Business.class).getBody();
+        } catch (HttpClientErrorException e) {
+            if (e.getStatusCode().value() == 400) {
+                throw new MJPApiException(e);
+            }
+            throw e;
+        }
+    }
+
+    public Location createLocation(Location location) throws MJPApiException {
+        try {
+            return rest.exchange(getTypeUrl("locations"), HttpMethod.POST, createAuthenticatedRequest(location), Location.class).getBody();
+        } catch (HttpClientErrorException e) {
+            if (e.getStatusCode().value() == 400) {
+                throw new MJPApiException(e);
+            }
+            throw e;
+        }
+    }
+
+    public Location updateLocation(Location location) throws MJPApiException {
+        try {
+            return rest.exchange(getTypeUrl("locations"), HttpMethod.PUT, createAuthenticatedRequest(location), Location.class).getBody();
+        } catch (HttpClientErrorException e) {
+            if (e.getStatusCode().value() == 400) {
+                throw new MJPApiException(e);
+            }
+            throw e;
+        }
     }
 }

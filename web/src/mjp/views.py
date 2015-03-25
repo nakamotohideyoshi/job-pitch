@@ -45,7 +45,9 @@ class BusinessViewSet(viewsets.ModelViewSet):
             return obj.users.filter(pk=int(request.user.pk)).exists()
     permission_classes = (permissions.IsAuthenticated, BusinessPermission)
     queryset = Business.objects.all()
-    serializer_class = SimpleSerializer(Business, {'users': serializers.PrimaryKeyRelatedField(many=True, read_only=True)})
+    serializer_class = SimpleSerializer(Business, {'users': serializers.PrimaryKeyRelatedField(many=True, read_only=True),
+                                                   'locations': serializers.PrimaryKeyRelatedField(many=True, read_only=True),
+                                                   })
     def perform_create(self, serializer):
         serializer.save().users.add(self.request.user)
 router.register('businesses', BusinessViewSet)

@@ -2,6 +2,7 @@ package com.myjobpitch.api;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -223,6 +224,13 @@ public class MJPApi {
         }
         return this.roles;
 	}
+
+    public List<Business> getBusinesses() {
+        List<Business> businesses = new ArrayList<>();
+        for (Integer id : user.getBusinesses())
+            businesses.add(getBusiness(id));
+        return businesses;
+    }
 
     public JobSeeker getJobSeeker(Integer id) {
         return rest.exchange(getObjectUrl("job-seekers", id), HttpMethod.GET, createAuthenticatedRequest(), JobSeeker.class).getBody();

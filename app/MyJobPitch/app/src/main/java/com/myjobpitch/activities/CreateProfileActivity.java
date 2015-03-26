@@ -14,6 +14,7 @@ import android.widget.Button;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.myjobpitch.MjpApplication;
 import com.myjobpitch.R;
 import com.myjobpitch.api.MJPApi;
 import com.myjobpitch.api.data.Business;
@@ -119,7 +120,7 @@ public class CreateProfileActivity extends ActionBarActivity implements Business
                         public void onSuccess(Location location) {
                             CreateProfileActivity.this.location = location;
 
-                            Intent intent = new Intent(CreateProfileActivity.this, RecruiterActivity.class);
+                            Intent intent = new Intent(CreateProfileActivity.this, BusinessListActivity.class);
                             intent.putExtra("from_login", true);
                             startActivity(intent);
                         }
@@ -158,6 +159,28 @@ public class CreateProfileActivity extends ActionBarActivity implements Business
     private void createJobSeeker() {
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_settings) {
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
     @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
     public void showProgress(final boolean show) {
         // On Honeycomb MR2 we have the ViewPropertyAnimator APIs, which allow
@@ -189,27 +212,5 @@ public class CreateProfileActivity extends ActionBarActivity implements Business
             mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
             mCreateProfileView.setVisibility(show ? View.GONE : View.VISIBLE);
         }
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
     }
 }

@@ -17,6 +17,7 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.myjobpitch.MjpApplication;
 import com.myjobpitch.R;
 import com.myjobpitch.api.MJPApiException;
 import com.myjobpitch.api.MJPApi;

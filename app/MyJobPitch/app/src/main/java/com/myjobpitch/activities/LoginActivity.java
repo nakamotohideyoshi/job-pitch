@@ -27,6 +27,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.myjobpitch.MjpApplication;
 import com.myjobpitch.R;
 import com.myjobpitch.api.MJPApi;
 import com.myjobpitch.api.auth.User;
@@ -288,15 +289,28 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
                     if (user.getBusinesses().size() == 1) {
                         Business business = api.getBusiness(user.getBusinesses().get(0));
                         if (business.getLocations().isEmpty()) {
+                            // Business but no location: still creating profile
                             ObjectMapper mapper = new ObjectMapper();
                             Intent intent = new Intent(LoginActivity.this, CreateProfileActivity.class);
                             intent.putExtra("business_data", mapper.writeValueAsString(business));
+                            intent.putExtra("email", user.getEmail());
                             return intent;
+                        } else if (business.getLocations().size() == 1) {
+                            // Single business and single location: go straight to location
+                            return new Intent(LoginActivity.this, BusinessListActivity.class);
+                        } else {
+                            // Single business, multiple locations: go straight to business
+                            return new Intent(LoginActivity.this, BusinessListActivity.class);
                         }
+                    } else {
+                        // Multiple businesses: goto business list
+                        return new Intent(LoginActivity.this, BusinessListActivity.class);
                     }
-                    return new Intent(LoginActivity.this, RecruiterActivity.class);
-                } else if (user.isJobSeeker())
+                } else if (user.isJobSeeker()) {
+                    // JobSeeker: goto job seeker screen
                     return new Intent(LoginActivity.this, JobSeekerActivity.class);
+                }
+                // NO businesses or job seeker profile
                 Intent intent = new Intent(LoginActivity.this, CreateProfileActivity.class);
                 intent.putExtra("email", user.getEmail());
                 return intent;

@@ -13,7 +13,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.myjobpitch.R;
 import com.myjobpitch.api.MJPApi;
 import com.myjobpitch.api.data.Business;
-import com.myjobpitch.tasks.CreateBusinessTask;
+import com.myjobpitch.tasks.CreateUpdateBusinessTask;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -30,7 +30,7 @@ import java.util.Map;
  * Use the {@link BusinessEditFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class BusinessEditFragment extends Fragment implements CreateBusinessTask.Listener {
+public class BusinessEditFragment extends Fragment implements CreateUpdateBusinessTask.Listener {
 
     private EditText mNameView;
     private List<TextView> requiredFields;
@@ -109,8 +109,8 @@ public class BusinessEditFragment extends Fragment implements CreateBusinessTask
         business.setName(mNameView.getText().toString());
     }
 
-    public CreateBusinessTask getCreateBusinessTask(MJPApi api, Business business) {
-        CreateBusinessTask task = new CreateBusinessTask(api, business);
+    public CreateUpdateBusinessTask getCreateBusinessTask(MJPApi api, Business business) {
+        CreateUpdateBusinessTask task = new CreateUpdateBusinessTask(api, business);
         task.addListener(this);
         return task;
     }

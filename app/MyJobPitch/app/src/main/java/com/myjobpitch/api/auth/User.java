@@ -1,7 +1,6 @@
 package com.myjobpitch.api.auth;
 
 import com.myjobpitch.api.MJPAPIObject;
-import com.myjobpitch.api.data.JobSeeker;
 
 import java.util.List;
 
@@ -43,9 +42,5 @@ public class User extends MJPAPIObject {
 
     public boolean isJobSeeker() {
         return this.job_seeker != null;
-    }
-
-    public JobSeeker getJobSeeker() {
-        return this.api.getJobSeeker(this.job_seeker);
     }
 }

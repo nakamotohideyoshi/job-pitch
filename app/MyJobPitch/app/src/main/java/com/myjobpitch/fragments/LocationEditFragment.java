@@ -14,7 +14,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.myjobpitch.R;
 import com.myjobpitch.api.MJPApi;
 import com.myjobpitch.api.data.Location;
-import com.myjobpitch.tasks.CreateLocationTask;
+import com.myjobpitch.tasks.CreateUpdateLocationTask;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -31,7 +31,7 @@ import java.util.Map;
  * Use the {@link LocationEditFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class LocationEditFragment extends Fragment implements CreateLocationTask.Listener {
+public class LocationEditFragment extends Fragment implements CreateUpdateLocationTask.Listener {
     private CheckBox mLocationMobilePublicView;
     private EditText mLocationNameView;
     private EditText mLocationDescView;
@@ -146,8 +146,8 @@ public class LocationEditFragment extends Fragment implements CreateLocationTask
         ((TextView)getView().findViewById(R.id.location_email)).setText(email);
     }
 
-    public CreateLocationTask getCreateLocationTask(MJPApi api, Location location) {
-        CreateLocationTask task = new CreateLocationTask(api, location);
+    public CreateUpdateLocationTask getCreateLocationTask(MJPApi api, Location location) {
+        CreateUpdateLocationTask task = new CreateUpdateLocationTask(api, location);
         task.addListener(this);
         return task;
     }

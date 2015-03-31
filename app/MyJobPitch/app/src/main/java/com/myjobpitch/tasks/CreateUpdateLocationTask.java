@@ -6,42 +6,45 @@ import android.util.Log;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.myjobpitch.api.MJPApi;
 import com.myjobpitch.api.MJPApiException;
-import com.myjobpitch.api.data.Business;
+import com.myjobpitch.api.data.Location;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class CreateBusinessTask extends AsyncTask<Void, Void, Void> {
+/**
+* Created by Jamie on 24/03/2015.
+*/
+public class CreateUpdateLocationTask extends AsyncTask<Void, Void, Void> {
     private List<Listener> listeners = new ArrayList<>();
 
     public interface Listener {
-        void onSuccess(Business business);
+        void onSuccess(Location location);
         void onError(JsonNode errors);
         void onCancelled();
     }
     private JsonNode errors;
     private final MJPApi api;
-    private Business business;
+    private Location location;
 
-    public CreateBusinessTask(MJPApi api, Business business) {
+    public CreateUpdateLocationTask(MJPApi api, Location location) {
         this.api = api;
-        this.business = business;
+        this.location = location;
     }
 
     public void addListener(Listener listener) {
-        listeners.add(listener);
+        this.listeners.add(listener);
     }
 
     @Override
     protected Void doInBackground(Void... params) {
         try {
-            if (business.getId() == null)
-                business = api.createBusiness(business);
+            if (location.getId() == null)
+                location = api.createLocation(location);
             else
-                business = api.updateBusiness(business);
+                location = api.updateLocation(location);
         } catch (MJPApiException e) {
             errors = e.getErrors();
-            Log.d("CreateBusiness", errors.toString());
+            Log.d("CreateLocation", errors.toString());
         }
         return null;
     }
@@ -50,7 +53,7 @@ public class CreateBusinessTask extends AsyncTask<Void, Void, Void> {
     protected void onPostExecute(final Void __) {
         for (Listener listener : listeners) {
             if (errors == null)
-                listener.onSuccess(business);
+                listener.onSuccess(location);
             else
                 listener.onError(errors);
         }

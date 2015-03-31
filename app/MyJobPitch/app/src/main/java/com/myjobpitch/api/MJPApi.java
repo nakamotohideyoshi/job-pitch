@@ -2,7 +2,6 @@ package com.myjobpitch.api;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -58,8 +57,14 @@ public class MJPApi {
 		this("http://mjp.digitalcrocodile.com:8000/");
 	}
 
-	private URI getTypeUrl(String path) {
+    private URI getTypeUrl(String path) {
+        return getTypeUrl(path, null);
+    }
+
+	private URI getTypeUrl(String path, String query) {
 		try {
+            if (query != null)
+                return new URI(apiRoot + "api/" + path + "/?" + query);
 			return new URI(apiRoot + "api/" + path + "/");
 		} catch (URISyntaxException e) {
 			e.printStackTrace();
@@ -136,100 +141,68 @@ public class MJPApi {
 	}
 
 	public User getUser() {
-        if (this.user == null) {
-            URI url = getAuthUrl("user");
-            this.user = rest.exchange(url, HttpMethod.GET, createAuthenticatedRequest(), User.class).getBody();
-            this.user.setApi(this);
-        }
+        if (this.user == null)
+            this.user = rest.exchange(getAuthUrl("user"), HttpMethod.GET, createAuthenticatedRequest(), User.class).getBody();
         return this.user;
 	}
 
 	public List<Sector> getSectors() {
-        if (this.sectors == null) {
+        if (this.sectors == null)
             this.sectors = Arrays.asList(rest.exchange(getTypeUrl("sectors"), HttpMethod.GET, createAuthenticatedRequest(), Sector[].class).getBody());
-            for (Sector sector : sectors)
-                sector.setApi(this);
-        }
         return this.sectors;
 	}
 
 	public List<Contract> getContracts() {
-        if (this.contracts == null) {
+        if (this.contracts == null)
             this.contracts = Arrays.asList(rest.exchange(getTypeUrl("contracts"), HttpMethod.GET, createAuthenticatedRequest(), Contract[].class).getBody());
-            for (Contract contract : contracts)
-                contract.setApi(this);
-        }
         return this.contracts;
 	}
 
 	public List<Hours> getHours() {
-        if (this.hours == null) {
+        if (this.hours == null)
             this.hours = Arrays.asList(rest.exchange(getTypeUrl("hours"), HttpMethod.GET, createAuthenticatedRequest(), Hours[].class).getBody());
-            for (Hours h : hours)
-                h.setApi(this);
-        }
         return this.hours;
 	}
 
 	public List<Availability> getAvailabilities() {
-		if (this.availabilities == null) {
+		if (this.availabilities == null)
             this.availabilities = Arrays.asList(rest.exchange(getTypeUrl("availabilities"), HttpMethod.GET, createAuthenticatedRequest(), Availability[].class).getBody());
-            for (Availability availability : availabilities)
-                availability.setApi(this);
-        }
         return this.availabilities;
 	}
 
 	public List<Sex> getSexes() {
-        if (this.sexes == null) {
+        if (this.sexes == null)
             this.sexes = Arrays.asList(rest.exchange(getTypeUrl("sexes"), HttpMethod.GET, createAuthenticatedRequest(), Sex[].class).getBody());
-            for (Sex sex : sexes)
-                sex.setApi(this);
-        }
         return sexes;
 	}
 
 	public List<Nationality> getNationalities() {
-        if (this.nationalities == null) {
+        if (this.nationalities == null)
             this.nationalities = Arrays.asList(rest.exchange(getTypeUrl("nationalities"), HttpMethod.GET, createAuthenticatedRequest(), Nationality[].class).getBody());
-            for (Nationality nationality : nationalities)
-                nationality.setApi(this);
-        }
         return this.nationalities;
 	}
 
 	public List<JobStatus> getJobStatuses() {
-        if (this.jobStatuses == null) {
+        if (this.jobStatuses == null)
             this.jobStatuses = Arrays.asList(rest.exchange(getTypeUrl("job-statuses"), HttpMethod.GET, createAuthenticatedRequest(), JobStatus[].class).getBody());
-            for (JobStatus jobStatus : jobStatuses)
-                jobStatus.setApi(this);
-        }
         return this.jobStatuses;
 	}
 
 	public List<ApplicationStatus> getApplicationStatuses() {
-		if (this.applicationStatuses == null) {
+		if (this.applicationStatuses == null)
             this.applicationStatuses = Arrays.asList(rest.exchange(getTypeUrl("application-statuses"), HttpMethod.GET, createAuthenticatedRequest(), ApplicationStatus[].class).getBody());
-            for (ApplicationStatus applicationStatus : applicationStatuses)
-                applicationStatus.setApi(this);
-        }
         return this.applicationStatuses;
 	}
 
 	public List<Role> getRoles() {
-        if (this.roles == null) {
+        if (this.roles == null)
             this.roles = Arrays.asList(rest.exchange(getTypeUrl("roles"), HttpMethod.GET, createAuthenticatedRequest(), Role[].class).getBody());
-            for (Role role : roles)
-                role.setApi(this);
-        }
         return this.roles;
 	}
 
     public List<Business> getBusinesses() {
-        List<Business> businesses = new ArrayList<>();
-        for (Integer id : user.getBusinesses())
-            businesses.add(getBusiness(id));
-        return businesses;
+        URI query = getTypeUrl("businesses");
+        return Arrays.asList(rest.exchange(query, HttpMethod.GET, createAuthenticatedRequest(), Business[].class).getBody());
     }
 
     public JobSeeker getJobSeeker(Integer id) {
@@ -238,6 +211,10 @@ public class MJPApi {
 
     public Business getBusiness(Integer id) {
         return rest.exchange(getObjectUrl("businesses", id), HttpMethod.GET, createAuthenticatedRequest(), Business.class).getBody();
+    }
+
+    public void deleteBusiness(Integer id) {
+        rest.exchange(getObjectUrl("businesses", id), HttpMethod.DELETE, createAuthenticatedRequest(), Void.class);
     }
 
     public Location getLocation(Integer id) {

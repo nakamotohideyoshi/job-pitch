@@ -23,4 +23,11 @@
     <string name="public_data">Public</string>
     <string name="business_details">Business Details</string>
     <string name="title_create_profile">Create Profile</string>
+    <string name="businesses">Businesses</string>
+    <string name="action_add">Add</string>
+    <string name="action_delete">Delete</string>
+    <string name="action_edit">Edit</string>
+    <string name="business">Business</string>
+    <string name="action_save">Save</string>
+    <string name="edit_business">Edit Business</string>
 </resources>

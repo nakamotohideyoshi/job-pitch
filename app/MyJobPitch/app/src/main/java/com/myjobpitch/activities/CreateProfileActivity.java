@@ -7,8 +7,6 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
@@ -21,8 +19,8 @@ import com.myjobpitch.api.data.Business;
 import com.myjobpitch.api.data.Location;
 import com.myjobpitch.fragments.BusinessEditFragment;
 import com.myjobpitch.fragments.LocationEditFragment;
-import com.myjobpitch.tasks.CreateBusinessTask;
-import com.myjobpitch.tasks.CreateLocationTask;
+import com.myjobpitch.tasks.CreateUpdateBusinessTask;
+import com.myjobpitch.tasks.CreateUpdateLocationTask;
 
 import java.io.IOException;
 
@@ -35,8 +33,8 @@ public class CreateProfileActivity extends ActionBarActivity implements Business
     private Location location;
     private View mProgressView;
     private View mCreateProfileView;
-    private CreateBusinessTask mCreateBusinessTask;
-    private CreateLocationTask mCreateLocationTask;
+    private CreateUpdateBusinessTask mCreateBusinessTask;
+    private CreateUpdateLocationTask mCreateLocationTask;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -104,8 +102,8 @@ public class CreateProfileActivity extends ActionBarActivity implements Business
             mBusinessEditFragment.save(business);
 
             final MJPApi api = ((MjpApplication) getApplication()).getApi();
-            mCreateBusinessTask = new CreateBusinessTask(api, business);
-            mCreateBusinessTask.addListener(new CreateBusinessTask.Listener() {
+            mCreateBusinessTask = new CreateUpdateBusinessTask(api, business);
+            mCreateBusinessTask.addListener(new CreateUpdateBusinessTask.Listener() {
                 @Override
                 public void onSuccess(Business business) {
                     CreateProfileActivity.this.business = business;
@@ -115,7 +113,7 @@ public class CreateProfileActivity extends ActionBarActivity implements Business
                     location.setBusiness(business.getId());
                     mLocationEditFragment.save(location);
                     mCreateLocationTask = mLocationEditFragment.getCreateLocationTask(api, location);
-                    mCreateLocationTask.addListener(new CreateLocationTask.Listener() {
+                    mCreateLocationTask.addListener(new CreateUpdateLocationTask.Listener() {
                         @Override
                         public void onSuccess(Location location) {
                             CreateProfileActivity.this.location = location;
@@ -157,28 +155,6 @@ public class CreateProfileActivity extends ActionBarActivity implements Business
     }
 
     private void createJobSeeker() {
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
     }
 
     @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)

@@ -41,11 +41,19 @@
         </activity>
         <activity
             android:name=".activities.BusinessListActivity"
-            android:label="@string/title_activity"
+            android:label="@string/businesses"
             android:parentActivityName=".activities.LoginActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activities.LoginActivity" />
+        </activity>
+        <activity
+            android:name=".activities.EditBusinessActivity"
+            android:label="@string/edit_business"
+            android:parentActivityName=".activities.BusinessListActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activities.BusinessListActivity" />
         </activity>
         <activity
             android:name=".activities.JobSeekerActivity"

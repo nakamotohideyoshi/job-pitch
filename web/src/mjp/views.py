@@ -36,27 +36,32 @@ SexViewSet = SimpleReadOnlyViewSet(Sex)
 NationalityViewSet = SimpleReadOnlyViewSet(Nationality)
 ApplicationStatusViewSet = SimpleReadOnlyViewSet(ApplicationStatus)
 RoleViewSet = SimpleReadOnlyViewSet(Role)
+BusinessViewSet = SimpleReadOnlyViewSet(Business)
+LocationViewSet = SimpleReadOnlyViewSet(Location)
 
-class BusinessViewSet(viewsets.ModelViewSet):
+class UserBusinessViewSet(viewsets.ModelViewSet):
     class BusinessPermission(permissions.BasePermission):
         def has_object_permission(self, request, view, obj):
             if request.method in permissions.SAFE_METHODS:
                 return True
             return obj.users.filter(pk=int(request.user.pk)).exists()
     permission_classes = (permissions.IsAuthenticated, BusinessPermission)
-    queryset = Business.objects.all()
     serializer_class = SimpleSerializer(Business, {'users': serializers.PrimaryKeyRelatedField(many=True, read_only=True),
                                                    'locations': serializers.PrimaryKeyRelatedField(many=True, read_only=True),
                                                    })
     def perform_create(self, serializer):
         serializer.save().users.add(self.request.user)
-router.register('businesses', BusinessViewSet)
+        
+    def get_queryset(self):
+        return Business.objects.filter(users=self.request.user)
+router.register('user-businesses', UserBusinessViewSet, base_name='user-business')
 
 class LocationPermission(permissions.BasePermission):
     def has_permission(self, request, view):
         if request.method in permissions.SAFE_METHODS:
             return True
         pk = request.data.get('business')
+        print "business pk: %s" % pk
         if pk:
             return Business.objects.filter(pk=pk, users__pk=int(request.user.pk)).exists()
         return True
@@ -65,11 +70,17 @@ class LocationPermission(permissions.BasePermission):
         if request.method in permissions.SAFE_METHODS:
             return True
         return request.user.businesses.filter(locations=obj).exists()
-class LocationViewSet(viewsets.ModelViewSet):
+class UserLocationViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.IsAuthenticated, LocationPermission)
-    queryset = Location.objects.all()
     serializer_class = SimpleSerializer(Location)
-router.register('locations', LocationViewSet)
+    
+    def get_queryset(self):
+        business = self.request.QUERY_PARAMS.get('business', None)
+        query = Location.objects.filter(business__users=self.request.user)
+        if business:
+            return query.filter(business__id=business)
+        return query
+router.register('user-locations', UserLocationViewSet, base_name='user-location')
 
 class JobPermission(permissions.BasePermission):
     def has_permission(self, request, view):

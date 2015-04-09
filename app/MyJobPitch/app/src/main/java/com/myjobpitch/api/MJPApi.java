@@ -314,4 +314,30 @@ public class MJPApi {
         }
     }
 
+    public JobSeeker createJobSeeker(JobSeeker jobSeeker) throws MJPApiException {
+        try {
+            return rest.exchange(getTypeUrl("job-seekers"), HttpMethod.POST, createAuthenticatedRequest(jobSeeker), JobSeeker.class).getBody();
+        } catch (HttpClientErrorException e) {
+            if (e.getStatusCode().value() == 400) {
+                throw new MJPApiException(e);
+            }
+            throw e;
+        }
+    }
+
+    public JobSeeker updateJobSeeker(JobSeeker jobSeeker) throws MJPApiException {
+        try {
+            return rest.exchange(getObjectUrl("job-seekers", jobSeeker.getId()), HttpMethod.PUT, createAuthenticatedRequest(jobSeeker), JobSeeker.class).getBody();
+        } catch (HttpClientErrorException e) {
+            if (e.getStatusCode().value() == 400) {
+                throw new MJPApiException(e);
+            }
+            throw e;
+        }
+    }
+
+    public User updateUser(User user) {
+        this.user = rest.exchange(getAuthUrl("user"), HttpMethod.PUT, createAuthenticatedRequest(user), User.class).getBody();
+        return user;
+    }
 }

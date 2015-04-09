@@ -38,15 +38,9 @@ import java.util.Map;
  * Use the {@link com.myjobpitch.fragments.JobEditFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class JobEditFragment extends Fragment implements CreateUpdateJobTask.Listener {
+public class JobEditFragment extends Fragment implements CreateUpdateJobTask.Listener<Job> {
     private EditText mLocationTitleView;
     private EditText mLocationDescView;
-//    private EditText mLocationEmailView;
-//    private CheckBox mLocationEmailPublicView;
-//    private EditText mLocationTelephoneView;
-//    private CheckBox mLocationTelephonePublicView;
-//    private EditText mLocationMobileView;
-//    private CheckBox mLocationMobilePublicView;
     private List<TextView> requiredFields;
     private Map<String, TextView> fields;
     private Spinner mLocationSectorView;
@@ -106,9 +100,6 @@ public class JobEditFragment extends Fragment implements CreateUpdateJobTask.Lis
         fields = new HashMap<>();
         fields.put("title", mLocationTitleView);
         fields.put("description", mLocationDescView);
-//        fields.put("sector", mLocationSectorView);
-//        fields.put("telephone", mLocationTelephoneView);
-//        fields.put("mobile", mLocationMobileView);
 
         return view;
     }

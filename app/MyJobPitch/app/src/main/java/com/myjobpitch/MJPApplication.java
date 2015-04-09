@@ -10,6 +10,7 @@ import com.myjobpitch.api.data.Hours;
 import com.myjobpitch.api.data.JobStatus;
 import com.myjobpitch.api.data.Nationality;
 import com.myjobpitch.api.data.Sector;
+import com.myjobpitch.api.data.Sex;
 
 import java.util.List;
 
@@ -22,6 +23,7 @@ public class MJPApplication extends Application {
     private List<Nationality> nationalities;
     private List<ApplicationStatus> applicationStatuses;
     private List<JobStatus> jobStatuses;
+    private List<Sex> sexes;
 
     public MJPApi getApi() {
         return api;
@@ -88,5 +90,9 @@ public class MJPApplication extends Application {
             if (status.getName().equals(name))
                 return status;
         return null;
+    }
+
+    public List<Sex> getSexes() {
+        return sexes;
     }
 }

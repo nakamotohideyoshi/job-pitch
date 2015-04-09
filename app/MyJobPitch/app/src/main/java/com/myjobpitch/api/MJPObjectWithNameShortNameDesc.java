@@ -1,15 +1,10 @@
 package com.myjobpitch.api;
 
 public class MJPObjectWithNameShortNameDesc extends MJPAPIObject {
-	private int id;
 	private String name;
 	private String short_name;
 	private String description;
 
-	public int getId() {
-		return id;
-	}
-	
 	public String getName() {
 		return name;
 	}
@@ -24,6 +19,6 @@ public class MJPObjectWithNameShortNameDesc extends MJPAPIObject {
 	
 	@Override
 	public String toString() {
-		return String.format("%d - %s (%s): %s", this.id, this.name, this.short_name, this.description);
+		return String.format("%d - %s (%s): %s", this.getId(), this.name, this.short_name, this.description);
 	}
 }

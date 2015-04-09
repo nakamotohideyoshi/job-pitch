@@ -9,12 +9,12 @@ import java.util.List;
 /**
  * Created by Jamie on 26/03/2015.
  */
-public class ReadBusinessesTask extends ReadAPITask<List<Business>> {
-    public ReadBusinessesTask(final MJPApi api) {
+public class ReadUserBusinessesTask extends ReadAPITask<List<Business>> {
+    public ReadUserBusinessesTask(final MJPApi api) {
         super(api, new Action<List<Business>>() {
             @Override
             public List<Business> run() throws MJPApiException {
-                return api.getBusinesses();
+                return api.getUserBusinesses();
             }
         });
     }

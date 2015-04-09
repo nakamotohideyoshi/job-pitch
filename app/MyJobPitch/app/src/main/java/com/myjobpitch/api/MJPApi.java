@@ -1,5 +1,7 @@
 package com.myjobpitch.api;
 
+import android.util.Log;
+
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Arrays;
@@ -22,6 +24,7 @@ import com.myjobpitch.api.data.Availability;
 import com.myjobpitch.api.data.Business;
 import com.myjobpitch.api.data.Contract;
 import com.myjobpitch.api.data.Hours;
+import com.myjobpitch.api.data.Job;
 import com.myjobpitch.api.data.JobSeeker;
 import com.myjobpitch.api.data.JobStatus;
 import com.myjobpitch.api.data.Location;
@@ -133,6 +136,7 @@ public class MJPApi {
 
 	public void logout() {
         try {
+            Log.d("API", "Logging out");
             rest.exchange(getAuthUrl("logout"), HttpMethod.POST, createAuthenticatedRequest(), Object.class);
         } finally {
             this.token = null;
@@ -200,11 +204,6 @@ public class MJPApi {
         return this.roles;
 	}
 
-    public List<Business> getBusinesses() {
-        URI query = getTypeUrl("businesses");
-        return Arrays.asList(rest.exchange(query, HttpMethod.GET, createAuthenticatedRequest(), Business[].class).getBody());
-    }
-
     public JobSeeker getJobSeeker(Integer id) {
         return rest.exchange(getObjectUrl("job-seekers", id), HttpMethod.GET, createAuthenticatedRequest(), JobSeeker.class).getBody();
     }
@@ -213,17 +212,25 @@ public class MJPApi {
         return rest.exchange(getObjectUrl("businesses", id), HttpMethod.GET, createAuthenticatedRequest(), Business.class).getBody();
     }
 
-    public void deleteBusiness(Integer id) {
-        rest.exchange(getObjectUrl("businesses", id), HttpMethod.DELETE, createAuthenticatedRequest(), Void.class);
-    }
-
     public Location getLocation(Integer id) {
         return rest.exchange(getObjectUrl("locations", id), HttpMethod.GET, createAuthenticatedRequest(), Location.class).getBody();
     }
 
+    public void deleteBusiness(Integer id) {
+        rest.exchange(getObjectUrl("user-businesses", id), HttpMethod.DELETE, createAuthenticatedRequest(), Void.class);
+    }
+
+    public List<Business> getUserBusinesses() {
+        return Arrays.asList(rest.exchange(getTypeUrl("user-businesses"), HttpMethod.GET, createAuthenticatedRequest(), Business[].class).getBody());
+    }
+
+    public Business getUserBusiness(Integer id) {
+        return rest.exchange(getObjectUrl("user-businesses", id), HttpMethod.GET, createAuthenticatedRequest(), Business.class).getBody();
+    }
+
     public Business createBusiness(Business business) throws MJPApiException {
         try {
-            return rest.exchange(getTypeUrl("businesses"), HttpMethod.POST, createAuthenticatedRequest(business), Business.class).getBody();
+            return rest.exchange(getTypeUrl("user-businesses"), HttpMethod.POST, createAuthenticatedRequest(business), Business.class).getBody();
         } catch (HttpClientErrorException e) {
             if (e.getStatusCode().value() == 400) {
                 throw new MJPApiException(e);
@@ -234,7 +241,7 @@ public class MJPApi {
 
     public Business updateBusiness(Business business) throws MJPApiException {
         try {
-            return rest.exchange(getObjectUrl("businesses", business.getId()), HttpMethod.PUT, createAuthenticatedRequest(business), Business.class).getBody();
+            return rest.exchange(getObjectUrl("user-businesses", business.getId()), HttpMethod.PUT, createAuthenticatedRequest(business), Business.class).getBody();
         } catch (HttpClientErrorException e) {
             if (e.getStatusCode().value() == 400) {
                 throw new MJPApiException(e);
@@ -243,9 +250,13 @@ public class MJPApi {
         }
     }
 
+    public void deleteLocation(Integer id) {
+        rest.exchange(getObjectUrl("user-locations", id), HttpMethod.DELETE, createAuthenticatedRequest(), Void.class);
+    }
+
     public Location createLocation(Location location) throws MJPApiException {
         try {
-            return rest.exchange(getTypeUrl("locations"), HttpMethod.POST, createAuthenticatedRequest(location), Location.class).getBody();
+            return rest.exchange(getTypeUrl("user-locations"), HttpMethod.POST, createAuthenticatedRequest(location), Location.class).getBody();
         } catch (HttpClientErrorException e) {
             if (e.getStatusCode().value() == 400) {
                 throw new MJPApiException(e);
@@ -256,7 +267,7 @@ public class MJPApi {
 
     public Location updateLocation(Location location) throws MJPApiException {
         try {
-            return rest.exchange(getTypeUrl("locations"), HttpMethod.PUT, createAuthenticatedRequest(location), Location.class).getBody();
+            return rest.exchange(getObjectUrl("user-locations", location.getId()), HttpMethod.PUT, createAuthenticatedRequest(location), Location.class).getBody();
         } catch (HttpClientErrorException e) {
             if (e.getStatusCode().value() == 400) {
                 throw new MJPApiException(e);
@@ -264,4 +275,43 @@ public class MJPApi {
             throw e;
         }
     }
+
+    public List<Location> getUserLocations(Integer business_id) {
+        return Arrays.asList(rest.exchange(getTypeUrl("user-locations", String.format("business=%s", business_id)), HttpMethod.GET, createAuthenticatedRequest(), Location[].class).getBody());
+    }
+
+    public List<Job> getUserJobs(Integer location_id) {
+        return Arrays.asList(rest.exchange(getTypeUrl("user-jobs", String.format("location=%s", location_id)), HttpMethod.GET, createAuthenticatedRequest(), Job[].class).getBody());
+    }
+
+    public void deleteJob(Integer id) {
+        rest.exchange(getObjectUrl("user-jobs", id), HttpMethod.DELETE, createAuthenticatedRequest(), Void.class);
+    }
+
+    public Job getJob(Integer id) {
+        return rest.exchange(getObjectUrl("jobs", id), HttpMethod.GET, createAuthenticatedRequest(), Job.class).getBody();
+    }
+
+    public Job createJob(Job job) throws MJPApiException {
+        try {
+            return rest.exchange(getTypeUrl("user-jobs"), HttpMethod.POST, createAuthenticatedRequest(job), Job.class).getBody();
+        } catch (HttpClientErrorException e) {
+            if (e.getStatusCode().value() == 400) {
+                throw new MJPApiException(e);
+            }
+            throw e;
+        }
+    }
+
+    public Job updateJob(Job job) throws MJPApiException {
+        try {
+            return rest.exchange(getObjectUrl("user-jobs", job.getId()), HttpMethod.PUT, createAuthenticatedRequest(job), Job.class).getBody();
+        } catch (HttpClientErrorException e) {
+            if (e.getStatusCode().value() == 400) {
+                throw new MJPApiException(e);
+            }
+            throw e;
+        }
+    }
+
 }

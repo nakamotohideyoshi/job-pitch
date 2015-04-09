@@ -1,0 +1,41 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="wrap_content" android:gravity="center_horizontal"
+    android:orientation="vertical" android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin" tools:context=".RecruiterProfileFragment">
+
+    <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:text="@string/job_details"
+        android:textSize="25sp"
+        android:paddingBottom="8dp"
+        android:textStyle="bold" />
+
+    <EditText android:id="@+id/job_title" android:layout_width="match_parent"
+        android:layout_height="wrap_content" android:hint="@string/prompt_job_title"
+        android:inputType="text" android:maxLines="1"
+        android:singleLine="true" />
+
+    <EditText android:id="@+id/job_description" android:layout_width="match_parent"
+        android:layout_height="wrap_content" android:hint="@string/prompt_job_description"
+        android:inputType="textMultiLine" android:maxLines="5"
+        android:singleLine="true" />
+
+    <Spinner
+        android:id="@+id/job_sector" android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <Spinner
+        android:id="@+id/job_contract" android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <Spinner
+        android:id="@+id/job_hours" android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <Spinner
+        android:id="@+id/job_availability" android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+</LinearLayout>

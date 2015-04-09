@@ -3,10 +3,11 @@ package com.myjobpitch.api.data;
 import com.myjobpitch.api.MJPAPIObject;
 
 import java.util.Date;
+import java.util.List;
 
 public class Location extends MJPAPIObject {
-    private Integer id;
     private Integer business;
+    private List<Integer> jobs;
     private String name;
     private String description;
     private String email;
@@ -17,14 +18,13 @@ public class Location extends MJPAPIObject {
     private boolean email_public;
     private boolean mobile_public;
     private boolean telephone_public;
-    private boolean mobil_public;
-
-    public Integer getId() {
-        return id;
-    }
 
     public Integer getBusiness() {
         return business;
+    }
+
+    public List<Integer> getJobs() {
+        return jobs;
     }
 
     public String getName() {
@@ -99,7 +99,7 @@ public class Location extends MJPAPIObject {
         this.telephone_public = telephone_public;
     }
 
-    public void setMobil_public(boolean mobil_public) {
-        this.mobil_public = mobil_public;
+    public void setMobile_public(boolean mobile_public) {
+        this.mobile_public = mobile_public;
     }
 }

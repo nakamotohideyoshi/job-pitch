@@ -6,16 +6,11 @@ import java.util.Date;
 import java.util.List;
 
 public class Business extends MJPAPIObject {
-    private Integer id;
     private String name;
     private List<Integer> users;
     private List<Integer> locations;
     private Date created;
     private Date updated;
-
-    public Integer getId() {
-        return id;
-    }
 
     public String getName() {
         return name;

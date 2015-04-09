@@ -15,7 +15,7 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.myjobpitch.MjpApplication;
+import com.myjobpitch.MJPApplication;
 import com.myjobpitch.R;
 import com.myjobpitch.api.MJPApiException;
 import com.myjobpitch.api.MJPApi;
@@ -163,7 +163,7 @@ public class RegisterActivity extends ActionBarActivity {
 
         @Override
         protected Class<?> doInBackground(Void... params) {
-            MJPApi api = ((MjpApplication)getApplication()).getApi();
+            MJPApi api = ((MJPApplication)getApplication()).getApi();
             try {
                 api.register(username, email, password1, password2);
             } catch (MJPApiException e) {

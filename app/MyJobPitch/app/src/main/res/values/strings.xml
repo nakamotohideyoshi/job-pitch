@@ -30,4 +30,16 @@
     <string name="business">Business</string>
     <string name="action_save">Save</string>
     <string name="edit_business">Edit Business</string>
+    <string name="location">Location</string>
+    <string name="action_add_business">Add Business</string>
+    <string name="locations">Locations</string>
+    <string name="edit_location">Edit Location</string>
+    <string name="action_add_location">Add Location</string>
+    <string name="job">Job</string>
+    <string name="action_add_job">Add Job</string>
+    <string name="prompt_job_title">Title</string>
+    <string name="job_details">Job Details</string>
+    <string name="prompt_job_description">Description</string>
+    <string name="edit_job">Edit Job</string>
+    <string name="jobs">Jobs</string>
 </resources>

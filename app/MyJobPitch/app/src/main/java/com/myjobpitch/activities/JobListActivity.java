@@ -22,15 +22,20 @@ import android.widget.Toast;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.myjobpitch.R;
-import com.myjobpitch.api.data.Business;
+import com.myjobpitch.api.data.Job;
+import com.myjobpitch.api.data.Location;
 import com.myjobpitch.tasks.DeleteAPITask;
-import com.myjobpitch.tasks.DeleteBusinessTask;
+import com.myjobpitch.tasks.DeleteJobTask;
 import com.myjobpitch.tasks.ReadAPITask;
-import com.myjobpitch.tasks.ReadUserBusinessesTask;
+import com.myjobpitch.tasks.ReadJobsTask;
+import com.myjobpitch.tasks.ReadLocationTask;
 
 import java.util.List;
 
-public class BusinessListActivity extends MJPProgressActionBarActivity  {
+public class JobListActivity extends MJPProgressActionBarActivity  {
+
+    private Integer location_id;
+    private Location location;
 
     private ListView list;
 
@@ -46,48 +51,48 @@ public class BusinessListActivity extends MJPProgressActionBarActivity  {
 
         @Override
         public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
-            mode.setTitle(R.string.business);
-            Business business = (Business) list.getItemAtPosition(list.getCheckedItemPosition());
-            mode.setSubtitle(business.getName());
+            mode.setTitle(R.string.job);
+            Job job = (Job) list.getItemAtPosition(list.getCheckedItemPosition());
+            mode.setSubtitle(job.getTitle());
             return false;
         }
 
         @Override
         public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
-            final Business business = (Business) list.getItemAtPosition(list.getCheckedItemPosition());
+            final Job job = (Job) list.getItemAtPosition(list.getCheckedItemPosition());
             switch (item.getItemId()) {
                 case R.id.action_edit:
-                    Intent intent = new Intent(BusinessListActivity.this, EditBusinessActivity.class);
-                    intent.putExtra("business_id", business.getId());
+                    Intent intent = new Intent(JobListActivity.this, EditJobActivity.class);
+                    intent.putExtra("job_id", job.getId());
                     startActivity(intent);
                     mode.finish();
                     return true;
                 case R.id.action_delete:
-                    AlertDialog.Builder builder = new AlertDialog.Builder(BusinessListActivity.this);
-                    builder.setMessage("Are you sure you want to delete " + business.getName() + "?")
+                    AlertDialog.Builder builder = new AlertDialog.Builder(JobListActivity.this);
+                    builder.setMessage("Are you sure you want to delete " + job.getTitle() + "?")
                             .setCancelable(false)
                             .setPositiveButton("Delete", new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int id) {
                                     dialog.cancel();
                                     showProgress(true);
-                                    DeleteBusinessTask deleteBusinessTask = new DeleteBusinessTask(getApi(), business.getId());
-                                    deleteBusinessTask.addListener(new DeleteAPITask.Listener() {
+                                    DeleteJobTask deleteJobTask = new DeleteJobTask(getApi(), job.getId());
+                                    deleteJobTask.addListener(new DeleteAPITask.Listener() {
                                         @Override
                                         public void onSuccess() {
-                                            loadBusinesses();
+                                            loadJobs();
                                         }
 
                                         @Override
                                         public void onError(JsonNode errors) {
                                             showProgress(false);
-                                            Toast toast = Toast.makeText(BusinessListActivity.this, "Error deleting business", Toast.LENGTH_LONG);
+                                            Toast toast = Toast.makeText(JobListActivity.this, "Error deleting job", Toast.LENGTH_LONG);
                                             toast.show();
                                         }
 
                                         @Override
                                         public void onCancelled() {}
                                     });
-                                    deleteBusinessTask.execute();
+                                    deleteJobTask.execute();
                                 }
                             })
                             .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -105,32 +110,28 @@ public class BusinessListActivity extends MJPProgressActionBarActivity  {
         @Override
         public void onDestroyActionMode(ActionMode mode) {
             list.clearChoices();
-            ((BusinessListAdapter)list.getAdapter()).notifyDataSetChanged();
+            ((JobListAdapter)list.getAdapter()).notifyDataSetChanged();
             mActionMode = null;
         }
     };
 
-    class BusinessListAdapter extends ArrayAdapter<Business> {
-        public BusinessListAdapter(List<Business> list) {
-            super(BusinessListActivity.this, R.layout.list_item, list);
+    class JobListAdapter extends ArrayAdapter<Job> {
+        public JobListAdapter(List<Job> list) {
+            super(JobListActivity.this, R.layout.list_item, list);
         }
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-            Business business = this.getItem(position);
+            Job job = this.getItem(position);
 
-            LayoutInflater inflater = (LayoutInflater) BusinessListActivity.this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            LayoutInflater inflater = (LayoutInflater) JobListActivity.this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             View rowView = inflater.inflate(R.layout.list_item, parent, false);
 
             ImageView imageView = (ImageView) rowView.findViewById(R.id.icon);
             TextView titleView = (TextView) rowView.findViewById(R.id.title);
             TextView subtitleView = (TextView) rowView.findViewById(R.id.subtiltle);
-            titleView.setText(business.getName());
-            int locationCount = business.getLocations().size();
-            if (locationCount == 1)
-                subtitleView.setText("Includes " + locationCount + " location");
-            else
-                subtitleView.setText("Includes " + locationCount + " locations");
+            titleView.setText(job.getTitle());
+            subtitleView.setText(job.getDescription());
             return rowView;
         }
     }
@@ -138,27 +139,26 @@ public class BusinessListActivity extends MJPProgressActionBarActivity  {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_business_list);
-        list = (ListView) findViewById(R.id.business_list);
+        setContentView(R.layout.activity_job_list);
+        location_id = getIntent().getIntExtra("location_id", -1);
+        list = (ListView) findViewById(R.id.job_list);
         list.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
         list.setLongClickable(true);
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            Intent intent = new Intent(BusinessListActivity.this, LocationListActivity.class);
-            intent.putExtra("business_id", ((Business)list.getItemAtPosition(position)).getId());
-            startActivity(intent);
+//                list.setItemChecked(position, false);
             }
         });
         list.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-            if (mActionMode != null)
-                return false;
+                if (mActionMode != null)
+                    return false;
 
-            // Start the CAB using the ActionMode.Callback defined above
-            list.setItemChecked(position, true);
-            mActionMode = startActionMode(mActionModeCallback);
-            return true;
+                // Start the CAB using the ActionMode.Callback defined above
+                list.setItemChecked(position, true);
+                mActionMode = startActionMode(mActionModeCallback);
+                return true;
             }
         });
         Log.d("RecruiterActivity", "created");
@@ -167,30 +167,53 @@ public class BusinessListActivity extends MJPProgressActionBarActivity  {
     @Override
     protected void onResume() {
         super.onResume();
-        loadBusinesses();
+        loadJobs();
         Log.d("RecruiterActivity", "resumed");
     }
 
-    private void loadBusinesses() {
+    private void loadJobs() {
         showProgress(true);
-        ReadUserBusinessesTask readBusinesses = new ReadUserBusinessesTask(getApi());
-        readBusinesses.addListener(new ReadAPITask.Listener<List<Business>>() {
+        ReadLocationTask readLocation = new ReadLocationTask(getApi(), location_id);
+        readLocation.addListener(new ReadAPITask.Listener<Location>() {
             @Override
-            public void onSuccess(List<Business> result) {
-                Log.d("BusinessListActivity", "success");
-                list.setAdapter(new BusinessListAdapter(result));
-                showProgress(false);
+            public void onSuccess(Location result) {
+                location = result;
+                getSupportActionBar()
+                        .setSubtitle(location.getName());
+                ReadJobsTask readJobs = new ReadJobsTask(getApi(), location_id);
+                readJobs.addListener(new ReadAPITask.Listener<List<Job>>() {
+                    @Override
+                    public void onSuccess(List<Job> result) {
+                        Log.d("LocationListActivity", "success");
+                        list.setAdapter(new JobListAdapter(result));
+                        showProgress(false);
+                    }
+
+                    @Override
+                    public void onError(JsonNode errors) {
+                        Toast toast = Toast.makeText(JobListActivity.this, "Error loading locations", Toast.LENGTH_LONG);
+                        toast.show();
+                        finish();
+                    }
+
+                    @Override
+                    public void onCancelled() {
+                    }
+                });
+                readJobs.execute();
             }
 
             @Override
             public void onError(JsonNode errors) {
-                // TODO
+                Toast toast = Toast.makeText(JobListActivity.this, "Error loading locations", Toast.LENGTH_LONG);
+                toast.show();
+                finish();
             }
 
             @Override
             public void onCancelled() {}
         });
-        readBusinesses.execute();
+        readLocation.execute();
     }
 
     @Override
@@ -200,7 +223,7 @@ public class BusinessListActivity extends MJPProgressActionBarActivity  {
 
     @Override
     protected View getMainView() {
-        return findViewById(R.id.business_list);
+        return findViewById(R.id.job_list);
     }
 
     @Override
@@ -212,15 +235,25 @@ public class BusinessListActivity extends MJPProgressActionBarActivity  {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.business_list, menu);
+        getMenuInflater().inflate(R.menu.job_list, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        Intent intent;
         switch (item.getItemId()) {
             case R.id.action_add:
-                Intent intent = new Intent(this, EditBusinessActivity.class);
+                intent = new Intent(this, EditJobActivity.class);
+                intent.putExtra("location_id", location_id);
+                startActivity(intent);
+                return true;
+            case R.id.action_add_business:
+                intent = new Intent(this, EditBusinessActivity.class);
+                startActivity(intent);
+                return true;
+            case R.id.action_add_location:
+                intent = new Intent(this, EditLocationActivity.class);
                 startActivity(intent);
                 return true;
             default:

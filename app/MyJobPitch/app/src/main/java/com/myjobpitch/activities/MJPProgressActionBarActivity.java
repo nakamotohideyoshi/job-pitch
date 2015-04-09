@@ -4,7 +4,6 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.os.Build;
-import android.os.Bundle;
 import android.view.View;
 
 import com.myjobpitch.R;

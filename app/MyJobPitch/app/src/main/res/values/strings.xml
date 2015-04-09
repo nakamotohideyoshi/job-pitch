@@ -42,4 +42,8 @@
     <string name="prompt_job_description">Description</string>
     <string name="edit_job">Edit Job</string>
     <string name="jobs">Jobs</string>
+    <string name="profile">Profile</string>
+    <string name="prompt_job_seeker_first_name">First Name</string>
+    <string name="prompt_job_seeker_last_name">Last Name</string>
+    <string name="prompt_age">Age (optional)</string>
 </resources>

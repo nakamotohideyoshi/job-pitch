@@ -1,0 +1,102 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="wrap_content" android:gravity="center_horizontal"
+    android:orientation="vertical" android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin" tools:context=".JobSeekerProfileFragment">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/profile"
+        android:textSize="25sp"
+        android:textStyle="bold"
+        android:paddingBottom="8dp"
+        android:id="@+id/textView" />
+
+    <TableRow>
+        <AutoCompleteTextView android:id="@+id/job_seeker_first_name" android:layout_width="match_parent"
+            android:layout_height="wrap_content" android:hint="@string/prompt_job_seeker_first_name"
+            android:inputType="text" android:maxLines="1"
+            android:singleLine="true" />
+        <CheckBox android:layout_gravity="right" android:enabled="false"
+            android:checked="true" />
+    </TableRow>
+
+    <TableRow>
+        <AutoCompleteTextView android:id="@+id/job_seeker_last_name" android:layout_width="match_parent"
+            android:layout_height="wrap_content" android:hint="@string/prompt_job_seeker_last_name"
+            android:inputType="text" android:maxLines="1"
+            android:singleLine="true" />
+        <CheckBox android:layout_gravity="right" android:enabled="false"
+            android:checked="true" />
+    </TableRow>
+
+    <TableRow>
+        <EditText android:id="@+id/job_seeker_email" android:layout_width="match_parent"
+            android:layout_height="wrap_content" android:hint="@string/prompt_email"
+            android:inputType="textEmailAddress" android:maxLines="1"
+            android:singleLine="true" />
+        <CheckBox
+            android:id="@+id/job_seeker_email_public"
+            android:checked="true"
+            android:layout_gravity="right" />
+    </TableRow>
+
+    <TableRow>
+        <EditText android:id="@+id/job_seeker_telephone" android:layout_width="match_parent"
+            android:layout_height="wrap_content" android:hint="@string/prompt_telephone"
+            android:inputType="phone" android:maxLines="1"
+            android:singleLine="true" />
+        <CheckBox
+            android:id="@+id/job_seeker_telephone_public"
+            android:checked="true"
+            android:layout_gravity="right" />
+    </TableRow>
+
+    <TableRow>
+        <EditText android:id="@+id/job_seeker_mobile" android:layout_width="match_parent"
+            android:layout_height="wrap_content" android:hint="@string/prompt_mobile"
+            android:inputType="phone" android:maxLines="1"
+            android:singleLine="true" />
+        <CheckBox
+            android:id="@+id/job_seeker_mobile_public"
+            android:checked="true"
+            android:layout_gravity="right" />
+    </TableRow>
+
+
+    <TableRow>
+        <EditText android:id="@+id/job_seeker_age" android:layout_width="match_parent"
+            android:layout_height="wrap_content" android:hint="@string/prompt_age"
+            android:inputType="number" android:maxLines="1"
+            android:singleLine="true" />
+        <CheckBox
+            android:id="@+id/job_seeker_age_public"
+            android:checked="true"
+            android:layout_gravity="right" />
+    </TableRow>
+
+
+    <TableRow>
+        <Spinner
+            android:id="@+id/job_seeker_sex" android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <CheckBox
+            android:id="@+id/job_seeker_sex_public"
+            android:checked="true"
+            android:layout_gravity="right" />
+    </TableRow>
+
+    <TableRow>
+        <Spinner
+            android:id="@+id/job_seeker_nationality" android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+        <CheckBox
+            android:id="@+id/job_seeker_nationality_public"
+            android:checked="true"
+            android:layout_gravity="right" />
+    </TableRow>
+</LinearLayout>

@@ -15,12 +15,18 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.myjobpitch.MJPApplication;
 import com.myjobpitch.R;
 import com.myjobpitch.api.MJPApi;
+import com.myjobpitch.api.auth.User;
 import com.myjobpitch.api.data.Business;
+import com.myjobpitch.api.data.JobSeeker;
 import com.myjobpitch.api.data.Location;
 import com.myjobpitch.fragments.BusinessEditFragment;
+import com.myjobpitch.fragments.JobSeekerEditFragment;
 import com.myjobpitch.fragments.LocationEditFragment;
+import com.myjobpitch.tasks.CreateUpdateAPITask;
 import com.myjobpitch.tasks.CreateUpdateBusinessTask;
+import com.myjobpitch.tasks.CreateUpdateJobSeekerTask;
 import com.myjobpitch.tasks.CreateUpdateLocationTask;
+import com.myjobpitch.tasks.UpdateUserTask;
 
 import java.io.IOException;
 
@@ -29,18 +35,24 @@ public class CreateProfileActivity extends ActionBarActivity implements Business
     private LocationEditFragment mLocationEditFragment;
     private BusinessEditFragment mBusinessEditFragment;
     private View mRecruiterProfile;
+    private View mJobSeekerProfile;
+    private JobSeeker jobSeeker;
     private Business business;
     private Location location;
     private View mProgressView;
     private View mCreateProfileView;
     private CreateUpdateBusinessTask mCreateBusinessTask;
     private CreateUpdateLocationTask mCreateLocationTask;
+    private JobSeekerEditFragment mJobSeekerEditFragment;
+    private CreateUpdateJobSeekerTask mCreateJobSeekerTask;
+    private UpdateUserTask mUpdateUserTask;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_profile);
 
+        // Job seeker
         Button mCreateJobSeekerButton = (Button) findViewById(R.id.create_job_seeker);
         mCreateJobSeekerButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -49,11 +61,24 @@ public class CreateProfileActivity extends ActionBarActivity implements Business
             }
         });
 
+        mJobSeekerProfile = (View) findViewById(R.id.job_seeker_profile);
+        mJobSeekerEditFragment = (JobSeekerEditFragment) getFragmentManager().findFragmentById(R.id.job_seeker_edit_fragment);
+
+        Button jobSeekerContinueButton = (Button) findViewById(R.id.continue_button_job_seeker);
+        jobSeekerContinueButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                attemptJobSeekerContinue();
+            }
+        });
+        mJobSeekerEditFragment.load(((MJPApplication) getApplication()).getApi().getUser(), null);
+
+        // Recruiter
         Button mCreateRecruiterButton = (Button) findViewById(R.id.create_employer);
         mCreateRecruiterButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                createRecruiter();
+            createRecruiter();
             }
         });
 
@@ -63,14 +88,15 @@ public class CreateProfileActivity extends ActionBarActivity implements Business
         if (getIntent().hasExtra("email"))
             mLocationEditFragment.setEmail(getIntent().getStringExtra("email"));
 
-        Button continueButton = (Button) findViewById(R.id.continue_button);
-        continueButton.setOnClickListener(new View.OnClickListener() {
+        Button recruiterContinueButton = (Button) findViewById(R.id.continue_button_recruiter);
+        recruiterContinueButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                attemptContinue();
+                attemptRecruiterContinue();
             }
         });
 
+        // Test if we are half-way through creating a recruiter
         if (getIntent().hasExtra("business_data")) {
             ObjectMapper mapper = new ObjectMapper();
             try {
@@ -80,6 +106,7 @@ public class CreateProfileActivity extends ActionBarActivity implements Business
             } catch (IOException e) {}
         }
 
+        // General views
         mProgressView = findViewById(R.id.create_profile_progress);
         mCreateProfileView = findViewById(R.id.create_profile);
     }
@@ -91,19 +118,19 @@ public class CreateProfileActivity extends ActionBarActivity implements Business
         finish();
     }
 
-    private void attemptContinue() {
+    private void attemptRecruiterContinue() {
         boolean result = mBusinessEditFragment.validateInput();
         result &= mLocationEditFragment.validateInput();
         if (result) {
             showProgress(true);
 
-            if (business == null)
+                if (business == null)
                 business = new Business();
-            mBusinessEditFragment.save(business);
+                mBusinessEditFragment.save(business);
 
-            final MJPApi api = ((MJPApplication) getApplication()).getApi();
-            mCreateBusinessTask = new CreateUpdateBusinessTask(api, business);
-            mCreateBusinessTask.addListener(new CreateUpdateBusinessTask.Listener() {
+                final MJPApi api = ((MJPApplication) getApplication()).getApi();
+                mCreateBusinessTask = new CreateUpdateBusinessTask(api, business);
+                mCreateBusinessTask.addListener(new CreateUpdateBusinessTask.Listener<Business>() {
                 @Override
                 public void onSuccess(Business business) {
                     CreateProfileActivity.this.business = business;
@@ -113,7 +140,7 @@ public class CreateProfileActivity extends ActionBarActivity implements Business
                     location.setBusiness(business.getId());
                     mLocationEditFragment.save(location);
                     mCreateLocationTask = mLocationEditFragment.getCreateLocationTask(api, location);
-                    mCreateLocationTask.addListener(new CreateUpdateLocationTask.Listener() {
+                    mCreateLocationTask.addListener(new CreateUpdateLocationTask.Listener<Location>() {
                         @Override
                         public void onSuccess(Location location) {
                             CreateProfileActivity.this.location = location;
@@ -150,11 +177,65 @@ public class CreateProfileActivity extends ActionBarActivity implements Business
         }
     }
 
+    private void attemptJobSeekerContinue() {
+        boolean result = mJobSeekerEditFragment.validateInput();
+        if (result) {
+            showProgress(true);
+            final MJPApi api = ((MJPApplication) getApplication()).getApi();
+
+            if (jobSeeker == null)
+                jobSeeker = new JobSeeker();
+            User user = api.getUser();
+            mJobSeekerEditFragment.save(user, jobSeeker);
+
+            mUpdateUserTask = new UpdateUserTask(api, user);
+            mUpdateUserTask.addListener(new CreateUpdateAPITask.Listener<User>() {
+                @Override
+                public void onSuccess(User result) {
+                    mCreateJobSeekerTask = mJobSeekerEditFragment.getCreateBusinessTask(api, jobSeeker);
+                    mCreateJobSeekerTask.addListener(new CreateUpdateJobSeekerTask.Listener<JobSeeker>() {
+                        @Override
+                        public void onSuccess(JobSeeker jobSeeker) {
+                            CreateProfileActivity.this.jobSeeker = jobSeeker;
+
+                            Intent intent = new Intent(CreateProfileActivity.this, JobSeekerActivity.class);
+                            intent.putExtra("from_login", true);
+                            startActivity(intent);
+                        }
+
+                        @Override
+                        public void onError(JsonNode errors) {
+                            showProgress(false);
+                        }
+
+                        @Override
+                        public void onCancelled() {
+                            showProgress(false);
+                        }
+                    });
+                    mCreateJobSeekerTask.execute();
+                }
+
+                @Override
+                public void onError(JsonNode errors) {
+                    showProgress(false);
+                }
+
+                @Override
+                public void onCancelled() {
+                    showProgress(false);
+                }
+            });
+            mUpdateUserTask.execute();
+        }
+    }
+
     private void createRecruiter() {
         mRecruiterProfile.setVisibility(View.VISIBLE);
     }
 
     private void createJobSeeker() {
+        mJobSeekerProfile.setVisibility(View.VISIBLE);
     }
 
     @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)

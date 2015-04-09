@@ -31,7 +31,7 @@ import java.util.Map;
  * Use the {@link LocationEditFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class LocationEditFragment extends Fragment implements CreateUpdateLocationTask.Listener {
+public class LocationEditFragment extends Fragment implements CreateUpdateLocationTask.Listener<Location> {
     private CheckBox mLocationMobilePublicView;
     private EditText mLocationNameView;
     private EditText mLocationDescView;

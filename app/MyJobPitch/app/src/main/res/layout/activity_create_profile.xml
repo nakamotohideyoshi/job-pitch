@@ -47,11 +47,34 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/action_continue"
-                    android:id="@+id/continue_button"
+                    android:id="@+id/continue_button_recruiter"
                     android:layout_weight="1"
                     style="?android:textAppearanceSmall" />
 
             </LinearLayout>
+
+        </ScrollView>
+
+        <ScrollView
+            android:id="@+id/job_seeker_profile"
+            android:visibility="gone"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <fragment
+                android:name="com.myjobpitch.fragments.JobSeekerEditFragment"
+                android:id="@+id/job_seeker_edit_fragment"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                tools:layout="@layout/fragment_job_seeker_edit" />
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/action_continue"
+                android:id="@+id/continue_button_job_seeker"
+                android:layout_weight="1"
+                style="?android:textAppearanceSmall" />
 
         </ScrollView>
 

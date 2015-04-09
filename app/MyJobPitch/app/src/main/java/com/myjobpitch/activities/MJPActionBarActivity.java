@@ -1,20 +1,13 @@
 package com.myjobpitch.activities;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
-import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.os.Build;
-import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.MenuItem;
-import android.view.View;
 
-import com.myjobpitch.MjpApplication;
-import com.myjobpitch.R;
+import com.myjobpitch.MJPApplication;
 import com.myjobpitch.api.MJPApi;
 
 public class MJPActionBarActivity extends ActionBarActivity {
@@ -68,6 +61,10 @@ public class MJPActionBarActivity extends ActionBarActivity {
     }
 
     MJPApi getApi() {
-        return ((MjpApplication)getApplication()).getApi();
+        return getMJPApplication().getApi();
+    }
+
+    public MJPApplication getMJPApplication() {
+        return (MJPApplication)getApplication();
     }
 }

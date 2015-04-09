@@ -12,7 +12,7 @@ import android.widget.Button;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.myjobpitch.MjpApplication;
+import com.myjobpitch.MJPApplication;
 import com.myjobpitch.R;
 import com.myjobpitch.api.MJPApi;
 import com.myjobpitch.api.data.Business;
@@ -101,7 +101,7 @@ public class CreateProfileActivity extends ActionBarActivity implements Business
                 business = new Business();
             mBusinessEditFragment.save(business);
 
-            final MJPApi api = ((MjpApplication) getApplication()).getApi();
+            final MJPApi api = ((MJPApplication) getApplication()).getApi();
             mCreateBusinessTask = new CreateUpdateBusinessTask(api, business);
             mCreateBusinessTask.addListener(new CreateUpdateBusinessTask.Listener() {
                 @Override

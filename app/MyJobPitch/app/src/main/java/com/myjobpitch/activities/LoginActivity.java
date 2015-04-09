@@ -27,7 +27,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.myjobpitch.MjpApplication;
+import com.myjobpitch.MJPApplication;
 import com.myjobpitch.R;
 import com.myjobpitch.api.MJPApi;
 import com.myjobpitch.api.auth.User;
@@ -106,7 +106,7 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
     protected void onResume() {
         super.onResume();
         mPasswordView.setText("");
-        MJPApi api = ((MjpApplication) this.getApplication()).getApi();
+        MJPApi api = ((MJPApplication) this.getApplication()).getApi();
         if (api.isAuthenticated()) {
             logoutTask = new LogoutTask();
             logoutTask.execute((Void) null);
@@ -274,7 +274,8 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
 
         @Override
         protected Intent doInBackground(Void... params) {
-            MJPApi api = ((MjpApplication)getApplication()).getApi();
+            MJPApplication application = (MJPApplication) getApplication();
+            MJPApi api = application.getApi();
             try {
                 api.login(mUsername, mPassword);
             } catch (HttpClientErrorException e) {
@@ -282,12 +283,22 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
                 if (e.getStatusCode().value() == 400)
                     return null;
             }
-            // Load user data
+
             try {
+                // Load basic data
+                application.setSectors(api.getSectors());
+                application.setContracts(api.getContracts());
+                application.setHours(api.getHours());
+                application.setAvailabilities(api.getAvailabilities());
+                application.setNationalities(api.getNationalities());
+                application.setApplicationStatuses(api.getApplicationStatuses());
+                application.setJobStatuses(api.getJobStatuses());
+
+                // Load user data
                 User user = api.getUser();
                 if (user.isRecruiter()) {
                     if (user.getBusinesses().size() == 1) {
-                        Business business = api.getBusiness(user.getBusinesses().get(0));
+                        Business business = api.getUserBusiness(user.getBusinesses().get(0));
                         if (business.getLocations().isEmpty()) {
                             // Business but no location: still creating profile
                             ObjectMapper mapper = new ObjectMapper();
@@ -345,7 +356,7 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
     public class LogoutTask extends AsyncTask<Void, Void, Void> {
         @Override
         protected Void doInBackground(Void... params) {
-            MJPApi api = ((MjpApplication)getApplication()).getApi();
+            MJPApi api = ((MJPApplication)getApplication()).getApi();
             try {
                 api.logout();
             } catch (Exception e) {

@@ -139,7 +139,7 @@ public class LocationEditFragment extends Fragment implements CreateUpdateLocati
         location.setTelephone(mLocationTelephoneView.getText().toString());
         location.setTelephone_public(mLocationTelephonePublicView.isChecked());
         location.setMobile(mLocationMobileView.getText().toString());
-        location.setMobil_public(mLocationMobilePublicView.isChecked());
+        location.setMobile_public(mLocationMobilePublicView.isChecked());
     }
 
     public void setEmail(String email) {

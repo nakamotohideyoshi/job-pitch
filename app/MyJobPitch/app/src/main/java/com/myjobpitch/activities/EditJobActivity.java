@@ -14,30 +14,31 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.myjobpitch.MJPApplication;
 import com.myjobpitch.R;
 import com.myjobpitch.api.MJPApi;
-import com.myjobpitch.api.data.Business;
-import com.myjobpitch.fragments.BusinessEditFragment;
-import com.myjobpitch.tasks.CreateUpdateBusinessTask;
+import com.myjobpitch.api.data.Job;
+import com.myjobpitch.fragments.JobEditFragment;
+import com.myjobpitch.tasks.CreateUpdateJobTask;
 import com.myjobpitch.tasks.ReadAPITask;
-import com.myjobpitch.tasks.ReadBusinessTask;
+import com.myjobpitch.tasks.ReadJobTask;
 
 import java.io.IOException;
 
-public class EditBusinessActivity extends MJPActionBarActivity implements BusinessEditFragment.BusinessEditHost {
+public class EditJobActivity extends MJPActionBarActivity implements JobEditFragment.JobEditHost {
 
-    private BusinessEditFragment mBusinessEditFragment;
-    private View mEditBusinessView;
-    private Business business;
+    private JobEditFragment mJobEditFragment;
+    private View mEditJobView;
+    private Integer location_id;
+    private Job job;
     private View mProgressView;
-    private ReadBusinessTask mReadBusinessTask;
-    private CreateUpdateBusinessTask mCreateUpdateBusinessTask;
+    private ReadJobTask mReadJobTask;
+    private CreateUpdateJobTask mCreateUpdateJobTask;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_edit_business);
+        setContentView(R.layout.activity_edit_job);
 
-        mEditBusinessView = (View) findViewById(R.id.business_edit);
-        mBusinessEditFragment = (BusinessEditFragment) getFragmentManager().findFragmentById(R.id.business_edit_fragment);
+        mEditJobView = (View) findViewById(R.id.job_edit);
+        mJobEditFragment = (JobEditFragment) getFragmentManager().findFragmentById(R.id.job_edit_fragment);
         mProgressView = findViewById(R.id.progress);
 
         Button saveButton = (Button) findViewById(R.id.save_button);
@@ -48,27 +49,29 @@ public class EditBusinessActivity extends MJPActionBarActivity implements Busine
             }
         });
 
-        if (getIntent().hasExtra("business_data")) {
+        mJobEditFragment.loadApplicationData(getMJPApplication());
+
+        if (getIntent().hasExtra("job_data")) {
             ObjectMapper mapper = new ObjectMapper();
             try {
-                business = mapper.readValue(getIntent().getStringExtra("business_data"), Business.class);
-                mBusinessEditFragment.load(business);
+                job = mapper.readValue(getIntent().getStringExtra("job_data"), Job.class);
+                mJobEditFragment.load(job);
                 showProgress(false);
             } catch (IOException e) {}
-        } else if (getIntent().hasExtra("business_id")) {
-            mReadBusinessTask = new ReadBusinessTask(getApi(), getIntent().getIntExtra("business_id", -1));
-            mReadBusinessTask.addListener(new ReadAPITask.Listener<Business>() {
+        } else if (getIntent().hasExtra("job_id")) {
+            mReadJobTask = new ReadJobTask(getApi(), getIntent().getIntExtra("job_id", -1));
+            mReadJobTask.addListener(new ReadAPITask.Listener<Job>() {
                 @Override
-                public void onSuccess(Business result) {
-                    business = result;
-                    mBusinessEditFragment.load(business);
+                public void onSuccess(Job result) {
+                    job = result;
+                    mJobEditFragment.load(job);
                     showProgress(false);
                 }
 
                 @Override
                 public void onError(JsonNode errors) {
                     finish();
-                    Toast toast = Toast.makeText(EditBusinessActivity.this, "Error loading business", Toast.LENGTH_LONG);
+                    Toast toast = Toast.makeText(EditJobActivity.this, "Error loading job", Toast.LENGTH_LONG);
                     toast.show();
                 }
 
@@ -76,12 +79,16 @@ public class EditBusinessActivity extends MJPActionBarActivity implements Busine
                 public void onCancelled() {
                 }
             });
-            mReadBusinessTask.execute();
+            mReadJobTask.execute();
         } else {
+            location_id = getIntent().getIntExtra("location_id", -1);
             showProgress(false);
+            setTitle(R.string.action_add_job);
+            job = new Job();
+            job.setLocation(location_id);
+            job.setStatus(getMJPApplication().getJobStatus("OPEN").getId());
+            mJobEditFragment.load(job);
         }
-        if (business == null)
-            setTitle(R.string.action_add_business);
     }
 
     @Override
@@ -92,19 +99,21 @@ public class EditBusinessActivity extends MJPActionBarActivity implements Busine
     }
 
     private void attemptSave() {
-        if (mBusinessEditFragment.validateInput()) {
+        if (mJobEditFragment.validateInput()) {
             showProgress(true);
 
-            if (business == null)
-                business = new Business();
-            mBusinessEditFragment.save(business);
+            if (job == null) {
+                job = new Job();
+                job.setLocation(location_id);
+            }
+            mJobEditFragment.save(job);
 
             final MJPApi api = ((MJPApplication) getApplication()).getApi();
-            mCreateUpdateBusinessTask = new CreateUpdateBusinessTask(api, business);
-            mCreateUpdateBusinessTask.addListener(new CreateUpdateBusinessTask.Listener() {
+            mCreateUpdateJobTask = new CreateUpdateJobTask(api, job);
+            mCreateUpdateJobTask.addListener(new CreateUpdateJobTask.Listener() {
                 @Override
-                public void onSuccess(Business business) {
-                    EditBusinessActivity.this.finish();
+                public void onSuccess(Job job) {
+                    EditJobActivity.this.finish();
                 }
 
                 @Override
@@ -117,7 +126,7 @@ public class EditBusinessActivity extends MJPActionBarActivity implements Busine
                     showProgress(false);
                 }
             });
-            mCreateUpdateBusinessTask.execute();
+            mCreateUpdateJobTask.execute();
         }
     }
 
@@ -129,12 +138,12 @@ public class EditBusinessActivity extends MJPActionBarActivity implements Busine
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
             int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
 
-            mEditBusinessView.setVisibility(show ? View.GONE : View.VISIBLE);
-            mEditBusinessView.animate().setDuration(shortAnimTime).alpha(
+            mEditJobView.setVisibility(show ? View.GONE : View.VISIBLE);
+            mEditJobView.animate().setDuration(shortAnimTime).alpha(
                     show ? 0 : 1).setListener(new AnimatorListenerAdapter() {
                 @Override
                 public void onAnimationEnd(Animator animation) {
-                    mEditBusinessView.setVisibility(show ? View.GONE : View.VISIBLE);
+                    mEditJobView.setVisibility(show ? View.GONE : View.VISIBLE);
                 }
             });
 
@@ -150,7 +159,7 @@ public class EditBusinessActivity extends MJPActionBarActivity implements Busine
             // The ViewPropertyAnimator APIs are not available, so simply show
             // and hide the relevant UI components.
             mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
-            mEditBusinessView.setVisibility(show ? View.GONE : View.VISIBLE);
+            mEditJobView.setVisibility(show ? View.GONE : View.VISIBLE);
         }
     }
 }

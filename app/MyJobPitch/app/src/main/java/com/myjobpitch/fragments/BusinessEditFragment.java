@@ -30,7 +30,7 @@ import java.util.Map;
  * Use the {@link BusinessEditFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class BusinessEditFragment extends Fragment implements CreateUpdateBusinessTask.Listener {
+public class BusinessEditFragment extends Fragment implements CreateUpdateBusinessTask.Listener<Business> {
 
     private EditText mNameView;
     private List<TextView> requiredFields;

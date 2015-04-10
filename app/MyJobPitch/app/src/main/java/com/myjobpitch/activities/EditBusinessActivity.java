@@ -101,7 +101,7 @@ public class EditBusinessActivity extends MJPActionBarActivity implements Busine
 
             final MJPApi api = ((MJPApplication) getApplication()).getApi();
             mCreateUpdateBusinessTask = new CreateUpdateBusinessTask(api, business);
-            mCreateUpdateBusinessTask.addListener(new CreateUpdateBusinessTask.Listener() {
+            mCreateUpdateBusinessTask.addListener(new CreateUpdateBusinessTask.Listener<Business>() {
                 @Override
                 public void onSuccess(Business business) {
                     EditBusinessActivity.this.finish();

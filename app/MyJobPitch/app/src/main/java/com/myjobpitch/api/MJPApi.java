@@ -122,8 +122,8 @@ public class MJPApi {
         return this.token != null;
     }
 
-    public User register(String username, String email, String password1, String password2) throws MJPApiException {
-        Registration registration = new Registration(username, email, password1, password2);
+    public User register(String username, String password1, String password2) throws MJPApiException {
+        Registration registration = new Registration(username, password1, password2);
         try {
             return rest.postForObject(getAuthUrl("registration"), registration, User.class);
         } catch (HttpClientErrorException e) {
@@ -339,5 +339,9 @@ public class MJPApi {
     public User updateUser(User user) {
         this.user = rest.exchange(getAuthUrl("user"), HttpMethod.PUT, createAuthenticatedRequest(user), User.class).getBody();
         return user;
+    }
+
+    public List<JobSeeker> getJobSeekers(Integer job_id) {
+        return Arrays.asList(rest.exchange(getTypeUrl("job-seekers", String.format("job=%s", job_id)), HttpMethod.GET, createAuthenticatedRequest(), JobSeeker[].class).getBody());
     }
 }

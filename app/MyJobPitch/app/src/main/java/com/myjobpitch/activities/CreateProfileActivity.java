@@ -71,7 +71,8 @@ public class CreateProfileActivity extends ActionBarActivity implements Business
                 attemptJobSeekerContinue();
             }
         });
-        mJobSeekerEditFragment.load(((MJPApplication) getApplication()).getApi().getUser(), null);
+        MJPApplication application = (MJPApplication) getApplication();
+        mJobSeekerEditFragment.loadApplicationData(application);
 
         // Recruiter
         Button mCreateRecruiterButton = (Button) findViewById(R.id.create_employer);
@@ -186,34 +187,17 @@ public class CreateProfileActivity extends ActionBarActivity implements Business
             if (jobSeeker == null)
                 jobSeeker = new JobSeeker();
             User user = api.getUser();
-            mJobSeekerEditFragment.save(user, jobSeeker);
+            mJobSeekerEditFragment.save(jobSeeker);
 
-            mUpdateUserTask = new UpdateUserTask(api, user);
-            mUpdateUserTask.addListener(new CreateUpdateAPITask.Listener<User>() {
+            mCreateJobSeekerTask = mJobSeekerEditFragment.getCreateBusinessTask(api, jobSeeker);
+            mCreateJobSeekerTask.addListener(new CreateUpdateJobSeekerTask.Listener<JobSeeker>() {
                 @Override
-                public void onSuccess(User result) {
-                    mCreateJobSeekerTask = mJobSeekerEditFragment.getCreateBusinessTask(api, jobSeeker);
-                    mCreateJobSeekerTask.addListener(new CreateUpdateJobSeekerTask.Listener<JobSeeker>() {
-                        @Override
-                        public void onSuccess(JobSeeker jobSeeker) {
-                            CreateProfileActivity.this.jobSeeker = jobSeeker;
+                public void onSuccess(JobSeeker jobSeeker) {
+                    CreateProfileActivity.this.jobSeeker = jobSeeker;
 
-                            Intent intent = new Intent(CreateProfileActivity.this, JobSeekerActivity.class);
-                            intent.putExtra("from_login", true);
-                            startActivity(intent);
-                        }
-
-                        @Override
-                        public void onError(JsonNode errors) {
-                            showProgress(false);
-                        }
-
-                        @Override
-                        public void onCancelled() {
-                            showProgress(false);
-                        }
-                    });
-                    mCreateJobSeekerTask.execute();
+                    Intent intent = new Intent(CreateProfileActivity.this, JobSeekerActivity.class);
+                    intent.putExtra("from_login", true);
+                    startActivity(intent);
                 }
 
                 @Override
@@ -226,7 +210,7 @@ public class CreateProfileActivity extends ActionBarActivity implements Business
                     showProgress(false);
                 }
             });
-            mUpdateUserTask.execute();
+            mCreateJobSeekerTask.execute();
         }
     }
 

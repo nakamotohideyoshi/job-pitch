@@ -22,7 +22,9 @@ import android.widget.Toast;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.myjobpitch.R;
+import com.myjobpitch.api.data.Business;
 import com.myjobpitch.api.data.Job;
+import com.myjobpitch.api.data.JobSeeker;
 import com.myjobpitch.api.data.Location;
 import com.myjobpitch.tasks.DeleteAPITask;
 import com.myjobpitch.tasks.DeleteJobTask;
@@ -147,7 +149,9 @@ public class JobListActivity extends MJPProgressActionBarActivity  {
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//                list.setItemChecked(position, false);
+                Intent intent = new Intent(JobListActivity.this, JobActivity.class);
+                intent.putExtra("job_id", ((Job)list.getItemAtPosition(position)).getId());
+                startActivity(intent);
             }
         });
         list.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {

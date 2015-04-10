@@ -93,6 +93,16 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activities.JobListActivity" />
         </activity>
+
+        <activity
+            android:name=".activities.JobActivity"
+            android:label="@string/job"
+            android:launchMode="singleTop"
+            android:parentActivityName=".activities.JobListActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activities.JobListActivity" />
+        </activity>
         <activity
             android:name=".activities.JobSeekerActivity"
             android:label="@string/title_activity"

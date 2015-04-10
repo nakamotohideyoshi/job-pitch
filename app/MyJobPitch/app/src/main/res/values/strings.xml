@@ -46,4 +46,5 @@
     <string name="prompt_job_seeker_first_name">First Name</string>
     <string name="prompt_job_seeker_last_name">Last Name</string>
     <string name="prompt_age">Age (optional)</string>
+    <string name="action_edit_profile">Edit Profile</string>
 </resources>

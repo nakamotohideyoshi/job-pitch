@@ -58,7 +58,7 @@ public class CreateUpdateAPITask<T extends MJPAPIObject> extends AsyncTask<Void,
     protected void onPostExecute(final T result) {
         for (Listener listener : listeners) {
             if (errors == null)
-                listener.onSuccess(object);
+                listener.onSuccess(result);
             else
                 listener.onError(errors);
         }

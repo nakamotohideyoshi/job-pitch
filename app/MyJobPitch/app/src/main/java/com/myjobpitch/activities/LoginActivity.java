@@ -293,6 +293,7 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
                 application.setNationalities(api.getNationalities());
                 application.setApplicationStatuses(api.getApplicationStatuses());
                 application.setJobStatuses(api.getJobStatuses());
+                application.setSexes(api.getSexes());
 
                 // Load user data
                 User user = api.getUser();
@@ -304,7 +305,6 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
                             ObjectMapper mapper = new ObjectMapper();
                             Intent intent = new Intent(LoginActivity.this, CreateProfileActivity.class);
                             intent.putExtra("business_data", mapper.writeValueAsString(business));
-                            intent.putExtra("email", user.getEmail());
                             return intent;
                         } else if (business.getLocations().size() == 1) {
                             // Single business and single location: go straight to location
@@ -323,7 +323,6 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
                 }
                 // NO businesses or job seeker profile
                 Intent intent = new Intent(LoginActivity.this, CreateProfileActivity.class);
-                intent.putExtra("email", user.getEmail());
                 return intent;
             } catch (Exception e) {
                 e.printStackTrace();

@@ -1,0 +1,58 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent" android:gravity="center_horizontal"
+    android:orientation="vertical" tools:context=".RecruiterProfileFragment">
+
+    <View
+        android:id="@+id/top_border"
+        android:layout_width="fill_parent"
+        android:layout_height="15dp"
+        android:layout_alignParentTop="true"
+        android:background="@android:color/white"/>
+
+    <View
+        android:id="@+id/left_border"
+        android:layout_width="15dp"
+        android:layout_height="fill_parent"
+        android:layout_alignParentLeft="true"
+        android:background="@android:color/white"/>
+
+    <View
+        android:id="@+id/right_border"
+        android:layout_width="15dp"
+        android:layout_height="fill_parent"
+        android:layout_alignParentRight="true"
+        android:background="@android:color/white"/>
+
+    <LinearLayout
+        android:id="@+id/bottom_border"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_toLeftOf="@id/right_border"
+        android:layout_toRightOf="@id/left_border"
+        android:paddingBottom="10dp"
+        android:paddingTop="10dp"
+        android:background="@android:color/white">
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:textSize="17sp"
+            android:textStyle="bold"
+            android:paddingBottom="8dp"
+            android:layout_gravity="center"
+            android:id="@+id/job_seeker_name" />
+
+    </LinearLayout>
+
+    <ImageView
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_below="@id/top_border"
+        android:layout_toRightOf="@id/left_border"
+        android:layout_toLeftOf="@id/right_border"
+        android:layout_above="@id/bottom_border"
+        android:background="@android:color/darker_gray"
+        android:src="@drawable/icon_user" />
+
+</RelativeLayout>

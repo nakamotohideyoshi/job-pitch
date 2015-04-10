@@ -1,13 +1,15 @@
 package com.myjobpitch.api.data;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.myjobpitch.api.MJPAPIObject;
 
 import java.util.Date;
 
-/**
- * Created by Jamie on 22/03/2015.
- */
+@JsonIgnoreProperties({"user"})
 public class JobSeeker extends MJPAPIObject {
+    private String first_name;
+    private String last_name;
+    private String email;
     private String telephone;
     private String mobile;
     private Date created;
@@ -42,7 +44,7 @@ public class JobSeeker extends MJPAPIObject {
         return telephone_public;
     }
 
-    public int getAge() {
+    public Integer getAge() {
         return age;
     }
 
@@ -74,7 +76,7 @@ public class JobSeeker extends MJPAPIObject {
         this.mobile_public = mobile_public;
     }
 
-    public void setAge(int age) {
+    public void setAge(Integer age) {
         this.age = age;
     }
 
@@ -116,5 +118,29 @@ public class JobSeeker extends MJPAPIObject {
 
     public void setAge_public(boolean age_public) {
         this.age_public = age_public;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setLast_name(String last_name) {
+        this.last_name = last_name;
+    }
+
+    public String getLast_name() {
+        return last_name;
+    }
+
+    public void setFirst_name(String first_name) {
+        this.first_name = first_name;
+    }
+
+    public String getFirst_name() {
+        return first_name;
     }
 }

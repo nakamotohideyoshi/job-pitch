@@ -45,6 +45,8 @@ public class JobSeekerEditFragment extends Fragment implements CreateUpdateJobSe
 
     private EditText mFirstNameView;
     private EditText mLastNameView;
+    private EditText mEmailView;
+    private CheckBox mEmailPublicView;
     private EditText mTelephoneView;
     private CheckBox mTelephonePublicView;
     private EditText mMobileView;
@@ -92,10 +94,12 @@ public class JobSeekerEditFragment extends Fragment implements CreateUpdateJobSe
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_business_edit, container, false);
+        View view = inflater.inflate(R.layout.fragment_job_seeker_edit, container, false);
 
         mFirstNameView = (EditText) view.findViewById(R.id.job_seeker_first_name);
         mLastNameView = (EditText) view.findViewById(R.id.job_seeker_last_name);
+        mEmailView = (EditText) view.findViewById(R.id.job_seeker_email);
+        mEmailPublicView = (CheckBox) view.findViewById(R.id.job_seeker_email_public);
         mTelephoneView = (EditText) view.findViewById(R.id.job_seeker_telephone);
         mTelephonePublicView = (CheckBox) view.findViewById(R.id.job_seeker_telephone_public);
         mMobileView = (EditText) view.findViewById(R.id.job_seeker_mobile);
@@ -147,42 +151,44 @@ public class JobSeekerEditFragment extends Fragment implements CreateUpdateJobSe
         mNationalityView.setAdapter(new ArrayAdapter<Nationality>(this.getActivity(), android.R.layout.simple_list_item_1, this.nationalities.toArray(new Nationality[]{})));
     }
 
-    public void load(User user, JobSeeker jobSeeker) {
-        mFirstNameView.setText(user.getFirst_name());
-        mLastNameView.setText(user.getLast_name());
-        if (jobSeeker != null) {
-            mTelephoneView.setText(jobSeeker.getTelephone());
-            mTelephonePublicView.setChecked(jobSeeker.getTelephone_public());
-            mMobileView.setText(jobSeeker.getMobile());
-            mMobilePublicView.setChecked(jobSeeker.getMobile_public());
-            mAgeView.setText(jobSeeker.getAge());
-            mAgePublicView.setChecked(jobSeeker.getAge_public());
+    public void load(JobSeeker jobSeeker) {
+        mFirstNameView.setText(jobSeeker.getFirst_name());
+        mLastNameView.setText(jobSeeker.getLast_name());
+        mEmailView.setText(jobSeeker.getEmail());
+        mEmailPublicView.setChecked(jobSeeker.getEmail_public());
+        mTelephoneView.setText(jobSeeker.getTelephone());
+        mTelephonePublicView.setChecked(jobSeeker.getTelephone_public());
+        mMobileView.setText(jobSeeker.getMobile());
+        mMobilePublicView.setChecked(jobSeeker.getMobile_public());
+        mAgeView.setText(jobSeeker.getAge());
+        mAgePublicView.setChecked(jobSeeker.getAge_public());
 
-            if (jobSeeker.getSex() != null) {
-                for (int i = 0; i < sexes.size(); i++) {
-                    if (sexes.get(i).getId() == jobSeeker.getSex()) {
-                        mSexView.setSelection(i);
-                        break;
-                    }
+        if (jobSeeker.getSex() != null) {
+            for (int i = 0; i < sexes.size(); i++) {
+                if (sexes.get(i).getId() == jobSeeker.getSex()) {
+                    mSexView.setSelection(i);
+                    break;
                 }
             }
-            mSexPublicView.setChecked(jobSeeker.getSex_public());
-
-            if (jobSeeker.getNationality() != null) {
-                for (int i = 0; i < nationalities.size(); i++) {
-                    if (nationalities.get(i).getId() == jobSeeker.getNationality()) {
-                        mNationalityView.setSelection(i);
-                        break;
-                    }
-                }
-            }
-            mNationalityPublicView.setChecked(jobSeeker.getNationality_public());
         }
+        mSexPublicView.setChecked(jobSeeker.getSex_public());
+
+        if (jobSeeker.getNationality() != null) {
+            for (int i = 0; i < nationalities.size(); i++) {
+                if (nationalities.get(i).getId() == jobSeeker.getNationality()) {
+                    mNationalityView.setSelection(i);
+                    break;
+                }
+            }
+        }
+        mNationalityPublicView.setChecked(jobSeeker.getNationality_public());
     }
 
-    public void save(User user, JobSeeker jobSeeker) {
-        user.setFirst_name(mFirstNameView.getText().toString());
-        user.setLast_name(mLastNameView.getText().toString());
+    public void save(JobSeeker jobSeeker) {
+        jobSeeker.setFirst_name(mFirstNameView.getText().toString());
+        jobSeeker.setLast_name(mLastNameView.getText().toString());
+        jobSeeker.setEmail(mEmailView.getText().toString());
+        jobSeeker.setEmail_public(mEmailPublicView.isChecked());
         jobSeeker.setTelephone(mTelephoneView.getText().toString());
         jobSeeker.setTelephone_public(mTelephonePublicView.isChecked());
         jobSeeker.setMobile(mMobileView.getText().toString());

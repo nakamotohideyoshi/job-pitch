@@ -95,4 +95,8 @@ public class MJPApplication extends Application {
     public List<Sex> getSexes() {
         return sexes;
     }
+
+    public void setSexes(List<Sex> sexes) {
+        this.sexes = sexes;
+    }
 }

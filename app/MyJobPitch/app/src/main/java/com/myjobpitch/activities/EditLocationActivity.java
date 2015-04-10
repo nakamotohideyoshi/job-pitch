@@ -107,7 +107,7 @@ public class EditLocationActivity extends MJPActionBarActivity implements Locati
 
             final MJPApi api = ((MJPApplication) getApplication()).getApi();
             mCreateUpdateLocationTask = new CreateUpdateLocationTask(api, location);
-            mCreateUpdateLocationTask.addListener(new CreateUpdateLocationTask.Listener() {
+            mCreateUpdateLocationTask.addListener(new CreateUpdateLocationTask.Listener<Location>() {
                 @Override
                 public void onSuccess(Location location) {
                     EditLocationActivity.this.finish();

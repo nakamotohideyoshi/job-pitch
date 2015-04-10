@@ -110,7 +110,7 @@ public class EditJobActivity extends MJPActionBarActivity implements JobEditFrag
 
             final MJPApi api = ((MJPApplication) getApplication()).getApi();
             mCreateUpdateJobTask = new CreateUpdateJobTask(api, job);
-            mCreateUpdateJobTask.addListener(new CreateUpdateJobTask.Listener() {
+            mCreateUpdateJobTask.addListener(new CreateUpdateJobTask.Listener<Job>() {
                 @Override
                 public void onSuccess(Job job) {
                     EditJobActivity.this.finish();

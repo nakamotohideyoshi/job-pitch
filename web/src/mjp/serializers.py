@@ -17,5 +17,5 @@ class UserDetailsSerializer(serializers.ModelSerializer):
     """
     class Meta:
         model = get_user_model()
-        fields = ('email', 'first_name', 'last_name', 'businesses', 'job_seeker')
-        read_only_fields = ('email', 'job_seeker', 'businesses')
+        fields = ('id', 'username', 'businesses', 'job_seeker')
+        read_only_fields = ('id', 'username', 'job_seeker', 'businesses')

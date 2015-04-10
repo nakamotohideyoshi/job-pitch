@@ -136,11 +136,20 @@ class Job(models.Model):
 
 class JobSeeker(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, related_name='job_seeker')
-    telephone = models.CharField(max_length=100)
-    mobile = models.CharField(max_length=100)
-    age = models.PositiveSmallIntegerField()
+    first_name = models.CharField(max_length=100, blank=True)
+    last_name = models.CharField(max_length=100, blank=True)
+    email = models.EmailField(blank=True)
+    email_public = models.BooleanField(default=None)
+    telephone = models.CharField(max_length=100, blank=True)
+    telephone_public = models.BooleanField(default=None)
+    mobile = models.CharField(max_length=100, blank=True)
+    mobile_public = models.BooleanField(default=None)
+    age = models.PositiveSmallIntegerField(null=True)
+    age_public = models.BooleanField(default=None)
     sex = models.ForeignKey(Sex, related_name='job_seekers')
+    sex_public = models.BooleanField(default=None)
     nationality = models.ForeignKey(Nationality, related_name='job_seekers')
+    nationality_public = models.BooleanField(default=None)
     # TODO address
     # TODO media
     created = models.DateTimeField(auto_now_add=True)

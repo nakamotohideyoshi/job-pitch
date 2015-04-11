@@ -4,7 +4,7 @@ from django.template.context import RequestContext
 from rest_framework import viewsets, permissions, serializers
 from rest_framework.routers import DefaultRouter
 
-from mjp.models import Sector, Hours, Contract, Availability, Business, Location,\
+from mjp.models import Sector, Hours, Contract, Business, Location,\
     JobStatus, Job, Sex, Nationality, JobSeeker, Experience, JobProfile,\
     ApplicationStatus, Application, Role
 from mjp.serializers import SimpleSerializer
@@ -30,7 +30,6 @@ def SimpleModelViewSet(model, **kwargs):
 SectorViewSet = SimpleReadOnlyViewSet(Sector)
 ContractViewSet = SimpleReadOnlyViewSet(Contract)
 HoursViewSet = SimpleReadOnlyViewSet(Hours)
-AvailabilityViewSet = SimpleReadOnlyViewSet(Availability)
 JobStatusViewSet = SimpleReadOnlyViewSet(JobStatus)
 SexViewSet = SimpleReadOnlyViewSet(Sex)
 NationalityViewSet = SimpleReadOnlyViewSet(Nationality)
@@ -86,9 +85,7 @@ router.register('user-locations', UserLocationViewSet, base_name='user-location'
 
 class JobPermission(permissions.BasePermission):
     def has_permission(self, request, view):
-        if request.method in permissions.SAFE_METHODS:
-            return True
-        pk = request.data.get('location')
+        pk = request.QUERY_PARAMS.get('location')
         if pk:
             return Location.objects.filter(pk=pk, business__users__pk=int(request.user.pk)).exists()
         return True
@@ -109,18 +106,39 @@ class JobViewSet(viewsets.ModelViewSet):
 router.register('user-jobs', JobViewSet, base_name='user-job')
 
 class JobSeekerPermission(permissions.BasePermission):
+    def has_permission(self, request, view):
+        pk = request.QUERY_PARAMS.get('job')
+        if pk:
+            print "job pk: %s" % pk
+            return Job.objects.filter(pk=pk, location__business__users__pk=int(request.user.pk)).exists()
+        return True
     def has_object_permission(self, request, view, obj):
         if request.method in permissions.SAFE_METHODS:
             return True
         return obj.user == request.user
 class JobSeekerViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.IsAuthenticated, JobSeekerPermission)
-    queryset = JobSeeker.objects.all()
     serializer_class = SimpleSerializer(JobSeeker, {'user': serializers.PrimaryKeyRelatedField(read_only=True)})
+    
+    def get_queryset(self):
+        job = self.request.QUERY_PARAMS.get('job')
+        if job:
+            applied = self.request.QUERY_PARAMS.get('applied')
+            if applied == '1':
+                shortlisted = self.request.QUERY_PARAMS.get('shortlisted')
+                if shortlisted == '1':
+                    return JobSeeker.objects.filter(applications__job__pk=job, applications__shortlisted=True)
+                else:
+                    return JobSeeker.objects.filter(applications__job__pk=job)
+            else:
+                # TODO search criteria
+                return JobSeeker.objects.all()
+        else:
+            return JobSeeker.objects.all()
     
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
-router.register('job-seekers', JobSeekerViewSet)
+router.register('job-seekers', JobSeekerViewSet, base_name='job-seeker')
 
 class ExperiencePermission(permissions.BasePermission):
     def has_permission(self, request, view):
@@ -166,7 +184,13 @@ class ApplicationPermission(permissions.BasePermission):
         if pk:
             job = Job.objects.get(pk=pk)
             is_recruiter = request.user.businesses.filter(locations__jobs=job).exists()
-            if not is_recruiter and not request.user.job_seekers.exists():
+            try:
+                request.user.job_seeker
+            except JobSeeker.DoesNotExist:
+                is_job_seeker = False
+            else:
+                is_job_seeker = True
+            if not is_recruiter and not is_job_seeker:
                 return False
         return True
     def has_object_permission(self, request, view, obj):

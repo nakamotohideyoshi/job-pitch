@@ -30,17 +30,6 @@ class Hours(models.Model):
     class Meta:
         verbose_name_plural = "hours"
 
-class Availability(models.Model):
-    name = models.CharField(max_length=255)
-    short_name = models.CharField(max_length=255)
-    description = models.TextField()
-    
-    def __str__(self):
-        return "%s: %s" % (type(self).__name__, self.name)
-    
-    class Meta:
-        verbose_name_plural = "availabilities"
-
 class JobStatus(models.Model):
     name = models.CharField(max_length=20)
     friendly_name = models.CharField(max_length=255)
@@ -126,7 +115,6 @@ class Job(models.Model):
     location = models.ForeignKey(Location, related_name='jobs')
     contract = models.ForeignKey(Contract, related_name='jobs')
     hours = models.ForeignKey(Hours, related_name='jobs')
-    required_availability = models.ForeignKey(Availability, related_name='jobs')
     status = models.ForeignKey(JobStatus, related_name='jobs')
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
@@ -154,9 +142,12 @@ class JobSeeker(models.Model):
     # TODO media
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
-
+    
+    def get_full_name(self):
+        return " ".join((self.first_name, self.last_name))
+    
     def __str__(self):
-        return "%s: %s" % (type(self).__name__, self.user.get_full_name())
+        return "%s: %s" % (type(self).__name__, self.get_full_name())
 
 class Experience(models.Model):
     details = models.CharField(max_length=255)

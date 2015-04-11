@@ -38,19 +38,6 @@ class Migration(migrations.Migration):
             bases=(models.Model,),
         ),
         migrations.CreateModel(
-            name='Availability',
-            fields=[
-                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('name', models.CharField(max_length=255)),
-                ('short_name', models.CharField(max_length=255)),
-                ('description', models.TextField()),
-            ],
-            options={
-                'verbose_name_plural': 'availabilities',
-            },
-            bases=(models.Model,),
-        ),
-        migrations.CreateModel(
             name='Business',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
@@ -256,12 +243,6 @@ class Migration(migrations.Migration):
             model_name='job',
             name='location',
             field=models.ForeignKey(related_name='jobs', to='mjp.Location'),
-            preserve_default=True,
-        ),
-        migrations.AddField(
-            model_name='job',
-            name='required_availability',
-            field=models.ForeignKey(related_name='jobs', to='mjp.Availability'),
             preserve_default=True,
         ),
         migrations.AddField(

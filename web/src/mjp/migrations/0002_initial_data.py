@@ -27,14 +27,6 @@ def create_objects(apps, schema_editor):
         obj.description = name
         obj.save()
     
-    Availability = apps.get_model('mjp', 'Availability')
-    for name in ['Flexible', 'Evenings', 'Weekends', 'Weekdays']:
-        obj = Availability()
-        obj.name = name
-        obj.short_name = name
-        obj.description = name
-        obj.save()
-    
     JobStatus = apps.get_model('mjp', 'JobStatus')
     for name, f_name in [('OPEN', 'Open'), ('CLOSED', 'Closed')]:
         obj = JobStatus()

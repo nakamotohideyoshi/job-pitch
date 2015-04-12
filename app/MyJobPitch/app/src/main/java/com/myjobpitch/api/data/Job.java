@@ -11,7 +11,6 @@ public class Job extends MJPAPIObject {
     private Integer location;
     private Integer contract;
     private Integer hours;
-    private Integer required_availability;
     private Integer status;
     private Date created;
     private Date updated;
@@ -38,10 +37,6 @@ public class Job extends MJPAPIObject {
 
     public Integer getHours() {
         return hours;
-    }
-
-    public Integer getRequired_availability() {
-        return required_availability;
     }
 
     public Integer getStatus() {
@@ -78,10 +73,6 @@ public class Job extends MJPAPIObject {
 
     public void setHours(Integer hours) {
         this.hours = hours;
-    }
-
-    public void setRequired_availability(Integer required_availability) {
-        this.required_availability = required_availability;
     }
 
     public void setStatus(Integer status) {

@@ -111,6 +111,14 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activities.LoginActivity" />
         </activity>
+        <activity
+            android:name=".activities.EditJobSeekerActivity"
+            android:label="@string/title_activity"
+            android:parentActivityName=".activities.JobSeekerActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activities.JobSeekerActivity" />
+        </activity>
     </application>
 
 </manifest>

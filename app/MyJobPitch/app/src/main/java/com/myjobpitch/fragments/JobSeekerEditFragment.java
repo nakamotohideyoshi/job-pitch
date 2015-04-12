@@ -1,8 +1,6 @@
 package com.myjobpitch.fragments;
 
-import android.app.Fragment;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,39 +8,23 @@ import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Spinner;
-import android.widget.TextView;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.myjobpitch.MJPApplication;
 import com.myjobpitch.R;
 import com.myjobpitch.api.MJPAPIObject;
 import com.myjobpitch.api.MJPApi;
-import com.myjobpitch.api.auth.User;
-import com.myjobpitch.api.data.Contract;
 import com.myjobpitch.api.data.JobSeeker;
 import com.myjobpitch.api.data.Nationality;
-import com.myjobpitch.api.data.Sector;
 import com.myjobpitch.api.data.Sex;
-import com.myjobpitch.tasks.CreateUpdateBusinessTask;
 import com.myjobpitch.tasks.CreateUpdateJobSeekerTask;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-
-/**
- * A simple {@link android.app.Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link com.myjobpitch.fragments.JobSeekerEditFragment.BusinessEditHost} interface
- * to handle interaction events.
- * Use the {@link com.myjobpitch.fragments.JobSeekerEditFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
-public class JobSeekerEditFragment extends Fragment implements CreateUpdateJobSeekerTask.Listener<JobSeeker> {
-
+public class JobSeekerEditFragment extends EditFragment<JobSeeker> {
     private EditText mFirstNameView;
     private EditText mLastNameView;
     private EditText mEmailView;
@@ -57,8 +39,6 @@ public class JobSeekerEditFragment extends Fragment implements CreateUpdateJobSe
     private CheckBox mSexPublicView;
     private Spinner mNationalityView;
     private CheckBox mNationalityPublicView;
-    private List<TextView> requiredFields;
-    private Map<String, TextView> fields;
     private List<Sex> sexes;
     private List<Nationality> nationalities;
 
@@ -111,39 +91,22 @@ public class JobSeekerEditFragment extends Fragment implements CreateUpdateJobSe
         mNationalityView = (Spinner) view.findViewById(R.id.job_seeker_nationality);
         mNationalityPublicView = (CheckBox) view.findViewById(R.id.job_seeker_nationality_public);
 
-        requiredFields = new ArrayList<>();
-        requiredFields.add(mFirstNameView);
-        requiredFields.add(mLastNameView);
-
-        fields = new HashMap<>();
+        Map<String, View> fields = new HashMap<>();
         fields.put("first_name", mFirstNameView);
         fields.put("last_name", mLastNameView);
         fields.put("telephone", mTelephoneView);
         fields.put("mobile", mMobileView);
         fields.put("age", mAgeView);
+        setFields(fields);
+
+        Collection<View> requiredFields = new ArrayList<>();
+        requiredFields.add(mFirstNameView);
+        requiredFields.add(mLastNameView);
+        setRequiredFields(requiredFields);
 
         return view;
     }
 
-    public boolean validateInput() {
-        for (TextView field : fields.values())
-            field.setError(null);
-
-        View errorField = null;
-        for (TextView field : requiredFields) {
-            if (TextUtils.isEmpty(field.getText())) {
-                field.setError(getString(R.string.error_field_required));
-                if (errorField == null)
-                    errorField = field;
-            }
-        }
-
-        if (errorField != null) {
-            errorField.requestFocus();
-            return false;
-        }
-        return true;
-    }
     public void loadApplicationData(MJPApplication application) {
         this.sexes = application.getSexes();
         mSexView.setAdapter(new ArrayAdapter<Sex>(this.getActivity(), android.R.layout.simple_list_item_1, this.sexes.toArray(new Sex[]{})));
@@ -160,7 +123,8 @@ public class JobSeekerEditFragment extends Fragment implements CreateUpdateJobSe
         mTelephonePublicView.setChecked(jobSeeker.getTelephone_public());
         mMobileView.setText(jobSeeker.getMobile());
         mMobilePublicView.setChecked(jobSeeker.getMobile_public());
-        mAgeView.setText(jobSeeker.getAge());
+        Integer age = jobSeeker.getAge();
+        mAgeView.setText(age == null ? null : age.toString());
         mAgePublicView.setChecked(jobSeeker.getAge_public());
 
         if (jobSeeker.getSex() != null) {
@@ -197,9 +161,19 @@ public class JobSeekerEditFragment extends Fragment implements CreateUpdateJobSe
             jobSeeker.setAge(Integer.parseInt(mAgeView.getText().toString()));
         } catch (NumberFormatException e) {}
         jobSeeker.setAge_public(mAgePublicView.isChecked());
-        jobSeeker.setSex((int) ((MJPAPIObject) mSexView.getSelectedItem()).getId());
+
+        MJPAPIObject selectedSex = (MJPAPIObject) mSexView.getSelectedItem();
+        if (selectedSex != null)
+            jobSeeker.setSex((int) selectedSex.getId());
+        else
+            jobSeeker.setSex(null);
         jobSeeker.setSex_public(mSexPublicView.isChecked());
-        jobSeeker.setNationality((int) ((MJPAPIObject) mNationalityView.getSelectedItem()).getId());
+
+        MJPAPIObject selectedNationality = (MJPAPIObject) mNationalityView.getSelectedItem();
+        if (selectedNationality != null)
+            jobSeeker.setNationality((int) selectedNationality.getId());
+        else
+            jobSeeker.setNationality(null);
         jobSeeker.setNationality_public(mNationalityPublicView.isChecked());
     }
 
@@ -208,29 +182,4 @@ public class JobSeekerEditFragment extends Fragment implements CreateUpdateJobSe
         task.addListener(this);
         return task;
     }
-
-    @Override
-    public void onSuccess(JobSeeker result) {
-
-    }
-
-    @Override
-    public void onError(JsonNode errors) {
-        Iterator<Map.Entry<String, JsonNode>> error_data = errors.fields();
-        while (error_data.hasNext()) {
-            Map.Entry<String, JsonNode> error = error_data.next();
-            if (fields.containsKey(error.getKey()))
-                fields.get(error.getKey()).setError(error.getValue().textValue());
-        }
-    }
-
-    @Override
-    public void onCancelled() {
-
-    }
-
-    public interface BusinessEditHost {
-
-    }
-
 }

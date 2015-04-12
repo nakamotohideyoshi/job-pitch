@@ -4,7 +4,6 @@ import android.app.Application;
 
 import com.myjobpitch.api.MJPApi;
 import com.myjobpitch.api.data.ApplicationStatus;
-import com.myjobpitch.api.data.Availability;
 import com.myjobpitch.api.data.Contract;
 import com.myjobpitch.api.data.Hours;
 import com.myjobpitch.api.data.JobStatus;
@@ -19,7 +18,6 @@ public class MJPApplication extends Application {
     private List<Sector> sectors;
     private List<Contract> contracts;
     private List<Hours> hours;
-    private List<Availability> availabilities;
     private List<Nationality> nationalities;
     private List<ApplicationStatus> applicationStatuses;
     private List<JobStatus> jobStatuses;
@@ -51,14 +49,6 @@ public class MJPApplication extends Application {
 
     public List<Hours> getHours() {
         return hours;
-    }
-
-    public void setAvailabilities(List<Availability> availabilities) {
-        this.availabilities = availabilities;
-    }
-
-    public List<Availability> getAvailabilities() {
-        return availabilities;
     }
 
     public void setNationalities(List<Nationality> nationalities) {

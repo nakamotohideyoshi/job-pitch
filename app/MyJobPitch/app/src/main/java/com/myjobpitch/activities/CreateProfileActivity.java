@@ -1,12 +1,7 @@
 package com.myjobpitch.activities;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
-import android.annotation.TargetApi;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
 import android.view.View;
 import android.widget.Button;
 
@@ -22,15 +17,14 @@ import com.myjobpitch.api.data.Location;
 import com.myjobpitch.fragments.BusinessEditFragment;
 import com.myjobpitch.fragments.JobSeekerEditFragment;
 import com.myjobpitch.fragments.LocationEditFragment;
-import com.myjobpitch.tasks.CreateUpdateAPITask;
+import com.myjobpitch.tasks.CreateReadUpdateAPITaskListener;
 import com.myjobpitch.tasks.CreateUpdateBusinessTask;
 import com.myjobpitch.tasks.CreateUpdateJobSeekerTask;
 import com.myjobpitch.tasks.CreateUpdateLocationTask;
-import com.myjobpitch.tasks.UpdateUserTask;
 
 import java.io.IOException;
 
-public class CreateProfileActivity extends ActionBarActivity implements BusinessEditFragment.BusinessEditHost, LocationEditFragment.LocationEditHost {
+public class CreateProfileActivity extends MJPProgressActionBarActivity {
 
     private LocationEditFragment mLocationEditFragment;
     private BusinessEditFragment mBusinessEditFragment;
@@ -45,7 +39,6 @@ public class CreateProfileActivity extends ActionBarActivity implements Business
     private CreateUpdateLocationTask mCreateLocationTask;
     private JobSeekerEditFragment mJobSeekerEditFragment;
     private CreateUpdateJobSeekerTask mCreateJobSeekerTask;
-    private UpdateUserTask mUpdateUserTask;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -131,7 +124,7 @@ public class CreateProfileActivity extends ActionBarActivity implements Business
 
                 final MJPApi api = ((MJPApplication) getApplication()).getApi();
                 mCreateBusinessTask = new CreateUpdateBusinessTask(api, business);
-                mCreateBusinessTask.addListener(new CreateUpdateBusinessTask.Listener<Business>() {
+                mCreateBusinessTask.addListener(new CreateReadUpdateAPITaskListener<Business>() {
                 @Override
                 public void onSuccess(Business business) {
                     CreateProfileActivity.this.business = business;
@@ -141,7 +134,7 @@ public class CreateProfileActivity extends ActionBarActivity implements Business
                     location.setBusiness(business.getId());
                     mLocationEditFragment.save(location);
                     mCreateLocationTask = mLocationEditFragment.getCreateLocationTask(api, location);
-                    mCreateLocationTask.addListener(new CreateUpdateLocationTask.Listener<Location>() {
+                    mCreateLocationTask.addListener(new CreateReadUpdateAPITaskListener<Location>() {
                         @Override
                         public void onSuccess(Location location) {
                             CreateProfileActivity.this.location = location;
@@ -190,7 +183,7 @@ public class CreateProfileActivity extends ActionBarActivity implements Business
             mJobSeekerEditFragment.save(jobSeeker);
 
             mCreateJobSeekerTask = mJobSeekerEditFragment.getCreateBusinessTask(api, jobSeeker);
-            mCreateJobSeekerTask.addListener(new CreateUpdateJobSeekerTask.Listener<JobSeeker>() {
+            mCreateJobSeekerTask.addListener(new CreateReadUpdateAPITaskListener<JobSeeker>() {
                 @Override
                 public void onSuccess(JobSeeker jobSeeker) {
                     CreateProfileActivity.this.jobSeeker = jobSeeker;
@@ -222,36 +215,13 @@ public class CreateProfileActivity extends ActionBarActivity implements Business
         mJobSeekerProfile.setVisibility(View.VISIBLE);
     }
 
-    @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
-    public void showProgress(final boolean show) {
-        // On Honeycomb MR2 we have the ViewPropertyAnimator APIs, which allow
-        // for very easy animations. If available, use these APIs to fade-in
-        // the progress spinner.
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
-            int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
+    @Override
+    public View getMainView() {
+        return mProgressView;
+    }
 
-            mCreateProfileView.setVisibility(show ? View.GONE : View.VISIBLE);
-            mCreateProfileView.animate().setDuration(shortAnimTime).alpha(
-                    show ? 0 : 1).setListener(new AnimatorListenerAdapter() {
-                @Override
-                public void onAnimationEnd(Animator animation) {
-                    mCreateProfileView.setVisibility(show ? View.GONE : View.VISIBLE);
-                }
-            });
-
-            mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
-            mProgressView.animate().setDuration(shortAnimTime).alpha(
-                    show ? 1 : 0).setListener(new AnimatorListenerAdapter() {
-                @Override
-                public void onAnimationEnd(Animator animation) {
-                    mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
-                }
-            });
-        } else {
-            // The ViewPropertyAnimator APIs are not available, so simply show
-            // and hide the relevant UI components.
-            mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
-            mCreateProfileView.setVisibility(show ? View.GONE : View.VISIBLE);
-        }
+    @Override
+    public View getProgressView() {
+        return mCreateProfileView;
     }
 }

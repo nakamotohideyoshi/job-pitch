@@ -22,20 +22,19 @@
         android:inputType="textMultiLine" android:maxLines="5"
         android:singleLine="true" />
 
-    <Spinner
+    <com.myjobpitch.widgets.NoDefaultSpinner
+        android:prompt="@string/prompt_sector"
         android:id="@+id/job_sector" android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
-    <Spinner
+    <com.myjobpitch.widgets.NoDefaultSpinner
+        android:prompt="@string/prompt_contract"
         android:id="@+id/job_contract" android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
-    <Spinner
+    <com.myjobpitch.widgets.NoDefaultSpinner
+        android:prompt="@string/prompt_hours"
         android:id="@+id/job_hours" android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-
-    <Spinner
-        android:id="@+id/job_availability" android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
 </LinearLayout>

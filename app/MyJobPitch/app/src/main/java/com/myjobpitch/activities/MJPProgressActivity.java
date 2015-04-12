@@ -1,13 +1,13 @@
 package com.myjobpitch.activities;
 
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.os.Build;
-import android.support.v7.app.ActionBarActivity;
 
 import com.myjobpitch.MJPApplication;
 import com.myjobpitch.api.MJPApi;
 
-public abstract class MJPProgressActionBarActivity extends ActionBarActivity implements MJPProgressActivityInterface {
+public abstract class MJPProgressActivity extends Activity implements MJPProgressActivityInterface {
     private final MJPProgressActivityDelegate progressActivityDelegate = new MJPProgressActivityDelegate(this, this);
 
     @Override

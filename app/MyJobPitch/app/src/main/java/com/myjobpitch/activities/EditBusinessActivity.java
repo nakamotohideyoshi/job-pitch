@@ -1,9 +1,5 @@
 package com.myjobpitch.activities;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
-import android.annotation.TargetApi;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -16,13 +12,13 @@ import com.myjobpitch.R;
 import com.myjobpitch.api.MJPApi;
 import com.myjobpitch.api.data.Business;
 import com.myjobpitch.fragments.BusinessEditFragment;
+import com.myjobpitch.tasks.CreateReadUpdateAPITaskListener;
 import com.myjobpitch.tasks.CreateUpdateBusinessTask;
-import com.myjobpitch.tasks.ReadAPITask;
 import com.myjobpitch.tasks.ReadBusinessTask;
 
 import java.io.IOException;
 
-public class EditBusinessActivity extends MJPActionBarActivity implements BusinessEditFragment.BusinessEditHost {
+public class EditBusinessActivity extends MJPProgressActionBarActivity {
 
     private BusinessEditFragment mBusinessEditFragment;
     private View mEditBusinessView;
@@ -57,7 +53,7 @@ public class EditBusinessActivity extends MJPActionBarActivity implements Busine
             } catch (IOException e) {}
         } else if (getIntent().hasExtra("business_id")) {
             mReadBusinessTask = new ReadBusinessTask(getApi(), getIntent().getIntExtra("business_id", -1));
-            mReadBusinessTask.addListener(new ReadAPITask.Listener<Business>() {
+            mReadBusinessTask.addListener(new CreateReadUpdateAPITaskListener<Business>() {
                 @Override
                 public void onSuccess(Business result) {
                     business = result;
@@ -101,7 +97,7 @@ public class EditBusinessActivity extends MJPActionBarActivity implements Busine
 
             final MJPApi api = ((MJPApplication) getApplication()).getApi();
             mCreateUpdateBusinessTask = new CreateUpdateBusinessTask(api, business);
-            mCreateUpdateBusinessTask.addListener(new CreateUpdateBusinessTask.Listener<Business>() {
+            mCreateUpdateBusinessTask.addListener(new CreateReadUpdateAPITaskListener<Business>() {
                 @Override
                 public void onSuccess(Business business) {
                     EditBusinessActivity.this.finish();
@@ -121,36 +117,13 @@ public class EditBusinessActivity extends MJPActionBarActivity implements Busine
         }
     }
 
-    @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
-    public void showProgress(final boolean show) {
-        // On Honeycomb MR2 we have the ViewPropertyAnimator APIs, which allow
-        // for very easy animations. If available, use these APIs to fade-in
-        // the progress spinner.
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
-            int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
+    @Override
+    public View getProgressView() {
+        return mProgressView;
+    }
 
-            mEditBusinessView.setVisibility(show ? View.GONE : View.VISIBLE);
-            mEditBusinessView.animate().setDuration(shortAnimTime).alpha(
-                    show ? 0 : 1).setListener(new AnimatorListenerAdapter() {
-                @Override
-                public void onAnimationEnd(Animator animation) {
-                    mEditBusinessView.setVisibility(show ? View.GONE : View.VISIBLE);
-                }
-            });
-
-            mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
-            mProgressView.animate().setDuration(shortAnimTime).alpha(
-                    show ? 1 : 0).setListener(new AnimatorListenerAdapter() {
-                @Override
-                public void onAnimationEnd(Animator animation) {
-                    mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
-                }
-            });
-        } else {
-            // The ViewPropertyAnimator APIs are not available, so simply show
-            // and hide the relevant UI components.
-            mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
-            mEditBusinessView.setVisibility(show ? View.GONE : View.VISIBLE);
-        }
+    @Override
+    public View getMainView() {
+        return mEditBusinessView;
     }
 }

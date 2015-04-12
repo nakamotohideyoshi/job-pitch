@@ -6,21 +6,16 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Adapter;
 import android.widget.ArrayAdapter;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.lorentzos.flingswipe.SwipeFlingAdapterView;
 import com.myjobpitch.R;
-import com.myjobpitch.api.data.Job;
 import com.myjobpitch.api.data.JobSeeker;
-import com.myjobpitch.api.data.Location;
-import com.myjobpitch.tasks.ReadAPITask;
+import com.myjobpitch.tasks.CreateReadUpdateAPITaskListener;
 import com.myjobpitch.tasks.ReadJobSeekersTask;
-import com.myjobpitch.tasks.ReadJobsTask;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -111,7 +106,7 @@ public class JobActivity extends MJPProgressActionBarActivity {
     private void loadJobSeekers() {
         showProgress(true);
         ReadJobSeekersTask readJobSeekers = new ReadJobSeekersTask(getApi(), job_id);
-        readJobSeekers.addListener(new ReadAPITask.Listener<List<JobSeeker>>() {
+        readJobSeekers.addListener(new CreateReadUpdateAPITaskListener<List<JobSeeker>>() {
             @Override
             public void onSuccess(List<JobSeeker> result) {
                 job_seekers = new ArrayList(result);
@@ -135,12 +130,12 @@ public class JobActivity extends MJPProgressActionBarActivity {
     }
 
     @Override
-    protected View getProgressView() {
+    public View getProgressView() {
         return findViewById(R.id.progress);
     }
 
     @Override
-    protected View getMainView() {
+    public View getMainView() {
         return findViewById(R.id.job_seeker_cards);
     }
 }

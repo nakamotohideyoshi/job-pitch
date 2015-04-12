@@ -163,14 +163,14 @@ public class JobListActivity extends MJPProgressActionBarActivity  {
                 return true;
             }
         });
-        Log.d("RecruiterActivity", "created");
+        Log.d("JobListActivity", "created");
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         loadJobs();
-        Log.d("RecruiterActivity", "resumed");
+        Log.d("JobListActivity", "resumed");
     }
 
     private void loadJobs() {

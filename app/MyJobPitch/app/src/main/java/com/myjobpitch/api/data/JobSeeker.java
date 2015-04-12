@@ -3,7 +3,9 @@ package com.myjobpitch.api.data;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.myjobpitch.api.MJPAPIObject;
 
+import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 
 @JsonIgnoreProperties({"user"})
 public class JobSeeker extends MJPAPIObject {
@@ -24,6 +26,7 @@ public class JobSeeker extends MJPAPIObject {
     private boolean nationality_public;
     private boolean age_public;
     private Integer profile;
+    private List<Experience> experience;
 
     public boolean getEmail_public() {
         return email_public;
@@ -147,5 +150,10 @@ public class JobSeeker extends MJPAPIObject {
 
     public Integer getProfile() {
         return profile;
+    }
+
+    public List<Experience> getExperience() {
+        Collections.sort(experience);
+        return experience;
     }
 }

@@ -1,19 +1,23 @@
 package com.myjobpitch.activities;
 
 import android.content.Context;
+import android.database.DataSetObserver;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.lorentzos.flingswipe.SwipeFlingAdapterView;
 import com.myjobpitch.R;
+import com.myjobpitch.api.data.Experience;
 import com.myjobpitch.api.data.JobSeeker;
+import com.myjobpitch.api.data.Sex;
 import com.myjobpitch.tasks.CreateReadUpdateAPITaskListener;
 import com.myjobpitch.tasks.recruiter.ReadJobSeekersTask;
 
@@ -21,6 +25,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class JobActivity extends MJPProgressActionBarActivity {
+
+    private View mProgressView;
+    private View mJobSeekerSearchView;
+    private Switch mAppliedSwitch;
+    private Switch mShortListedSwitch;
 
     class JobSeekerAdapter extends ArrayAdapter<JobSeeker> {
         public JobSeekerAdapter(List<JobSeeker> list) {
@@ -37,35 +46,84 @@ public class JobActivity extends MJPProgressActionBarActivity {
 //            ImageView imageView = (ImageView) rowView.findViewById(R.id.icon);
             TextView nameView = (TextView) cardView.findViewById(R.id.job_seeker_name);
             nameView.setText(jobSeeker.getFirst_name() + " " + jobSeeker.getLast_name());
-//            TextView subtitleView = (TextView) rowView.findViewById(R.id.subtiltle);
-//            titleView.setText(job.getTitle());
-//            subtitleView.setText(job.getDescription());
+            TextView extraView = (TextView) cardView.findViewById(R.id.job_seeker_extra);
+            String extraText = "";
+            Integer age = jobSeeker.getAge();
+            if (jobSeeker.getAge_public() && age != null)
+                extraText += age;
+            Integer sexID = jobSeeker.getSex();
+            if (jobSeeker.getSex_public() && sexID != null) {
+                if (!extraText.isEmpty())
+                    extraText += " ";
+                extraText += getMJPApplication().get(Sex.class, sexID).getShort_name();
+            }
+            extraView.setText(extraText);
+            TextView descriptionView = (TextView) cardView.findViewById(R.id.job_seeker_description);
+            String description = "";
+            for (Experience experience : jobSeeker.getExperience()) {
+                if (!description.isEmpty())
+                    description += "\n";
+                description += experience.getDetails();
+            }
+            descriptionView.setText(description);
             return cardView;
         }
     }
 
     private Integer job_id;
     private SwipeFlingAdapterView mCards;
-    private List<JobSeeker> job_seekers;
+    private List<JobSeeker> jobSeekers;
     private ArrayAdapter<JobSeeker> adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_job);
-
         job_id = getIntent().getIntExtra("job_id", -1);
 
-        loadJobSeekers();
+        mJobSeekerSearchView = findViewById(R.id.job_seeker_search);
+        mProgressView = findViewById(R.id.progress);
 
-        //add the view via xml or programmatically
+        mAppliedSwitch = (Switch) findViewById(R.id.applied_switch);
+        mAppliedSwitch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                loadJobSeekers();
+            }
+        });
+        mShortListedSwitch = (Switch) findViewById(R.id.shortlisted_switch);
+        mShortListedSwitch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                loadJobSeekers();
+            }
+        });
+
+        final View mPositiveButton = findViewById(R.id.positive_button);
+        mPositiveButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!jobSeekers.isEmpty())
+                    mCards.getTopCardListener().selectLeft();
+            }
+        });
+        final View mNegativeButton = findViewById(R.id.negative_button);
+        mNegativeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!jobSeekers.isEmpty())
+                    mCards.getTopCardListener().selectRight();
+            }
+        });
+        final View mShortlistButton = findViewById(R.id.shortlist_button);
+
         mCards = (SwipeFlingAdapterView) findViewById(R.id.job_seeker_cards);
         mCards.setFlingListener(new SwipeFlingAdapterView.onFlingListener() {
             @Override
             public void removeFirstObjectInAdapter() {
                 // this is the simplest way to delete an object from the Adapter (/AdapterView)
                 Log.d("swipe", "removed object!");
-                job_seekers.remove(0);
+                jobSeekers.remove(0);
                 adapter.notifyDataSetChanged();
             }
 
@@ -94,13 +152,40 @@ public class JobActivity extends MJPProgressActionBarActivity {
             }
         });
 
-        // Optionally add an OnItemClickListener
         mCards.setOnItemClickListener(new SwipeFlingAdapterView.OnItemClickListener() {
             @Override
             public void onItemClicked(int itemPosition, Object dataObject) {
                 Toast.makeText(JobActivity.this, "Clicked!", Toast.LENGTH_SHORT).show();
             }
         });
+
+        jobSeekers = new ArrayList();
+        adapter = new JobSeekerAdapter(jobSeekers);
+        mCards.setAdapter(adapter);
+        adapter.registerDataSetObserver(new DataSetObserver() {
+            private void update() {
+                boolean notEmpty = adapter.getCount() > 0;
+                mPositiveButton.setEnabled(notEmpty);
+                mShortlistButton.setEnabled(notEmpty);
+                mNegativeButton.setEnabled(notEmpty);
+            }
+
+            @Override
+            public void onChanged() {
+                update();
+            }
+
+            @Override
+            public void onInvalidated() {
+                update();
+            }
+        });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        loadJobSeekers();
     }
 
     private void loadJobSeekers() {
@@ -109,8 +194,9 @@ public class JobActivity extends MJPProgressActionBarActivity {
         readJobSeekers.addListener(new CreateReadUpdateAPITaskListener<List<JobSeeker>>() {
             @Override
             public void onSuccess(List<JobSeeker> result) {
-                job_seekers = new ArrayList(result);
-                adapter = new JobSeekerAdapter(job_seekers);
+                jobSeekers.clear();
+                jobSeekers.addAll(result);
+                adapter.notifyDataSetChanged();
                 mCards.setAdapter(adapter);
                 showProgress(false);
             }
@@ -131,11 +217,11 @@ public class JobActivity extends MJPProgressActionBarActivity {
 
     @Override
     public View getProgressView() {
-        return findViewById(R.id.progress);
+        return mProgressView;
     }
 
     @Override
     public View getMainView() {
-        return findViewById(R.id.job_seeker_cards);
+        return mJobSeekerSearchView;
     }
 }

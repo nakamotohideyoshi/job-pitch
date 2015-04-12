@@ -108,9 +108,9 @@ public class JobSeekerEditFragment extends EditFragment<JobSeeker> {
     }
 
     public void loadApplicationData(MJPApplication application) {
-        this.sexes = application.getSexes();
+        this.sexes = application.get(Sex.class);
         mSexView.setAdapter(new ArrayAdapter<Sex>(this.getActivity(), android.R.layout.simple_list_item_1, this.sexes.toArray(new Sex[]{})));
-        this.nationalities = application.getNationalities();
+        this.nationalities = application.get(Nationality.class);
         mNationalityView.setAdapter(new ArrayAdapter<Nationality>(this.getActivity(), android.R.layout.simple_list_item_1, this.nationalities.toArray(new Nationality[]{})));
     }
 

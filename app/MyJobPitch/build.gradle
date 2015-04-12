@@ -17,3 +17,11 @@ allprojects {
         jcenter()
     }
 }
+
+apply plugin: 'idea'
+
+idea {
+    module {
+        downloadSources = true
+    }
+}

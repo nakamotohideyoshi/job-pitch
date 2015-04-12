@@ -55,4 +55,6 @@
     <string name="action_edit_search">Change search</string>
     <string name="job_search_profile">Job Match Profile</string>
     <string name="prompt_sectors">Job Sectors</string>
+    <string name="applied">Applied</string>
+    <string name="shortlisted">Shortlisted</string>
 </resources>

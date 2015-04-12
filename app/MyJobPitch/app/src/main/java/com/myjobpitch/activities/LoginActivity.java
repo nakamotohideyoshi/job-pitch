@@ -254,13 +254,7 @@ public class LoginActivity extends MJPProgressActivity implements LoaderCallback
 
             try {
                 // Load basic data
-                application.setSectors(api.getSectors());
-                application.setContracts(api.getContracts());
-                application.setHours(api.getHours());
-                application.setNationalities(api.getNationalities());
-                application.setApplicationStatuses(api.getApplicationStatuses());
-                application.setJobStatuses(api.getJobStatuses());
-                application.setSexes(api.getSexes());
+                application.loadData();
 
                 // Load user data
                 User user = api.getUser();

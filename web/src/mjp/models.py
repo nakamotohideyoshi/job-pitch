@@ -134,9 +134,9 @@ class JobSeeker(models.Model):
     mobile_public = models.BooleanField(default=None)
     age = models.PositiveSmallIntegerField(null=True)
     age_public = models.BooleanField(default=None)
-    sex = models.ForeignKey(Sex, related_name='job_seekers')
+    sex = models.ForeignKey(Sex, related_name='job_seekers', null=True)
     sex_public = models.BooleanField(default=None)
-    nationality = models.ForeignKey(Nationality, related_name='job_seekers')
+    nationality = models.ForeignKey(Nationality, related_name='job_seekers', null=True)
     nationality_public = models.BooleanField(default=None)
     # TODO address
     # TODO media

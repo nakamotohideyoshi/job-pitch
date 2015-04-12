@@ -12,7 +12,7 @@ def create_objects(apps, schema_editor):
         obj.save()
     
     Contract = apps.get_model('mjp', 'Contract')
-    for name, short_name in [('Temporary', 'Temp'), ('Permanent', 'Perm')]:
+    for name, short_name in [('Any', 'Any'), ('Temporary', 'Temp'), ('Permanent', 'Perm')]:
         obj = Contract()
         obj.name = name
         obj.short_name = short_name
@@ -20,7 +20,7 @@ def create_objects(apps, schema_editor):
         obj.save()
     
     Hours = apps.get_model('mjp', 'Hours')
-    for name, short_name in [('Full Time', 'FT'), ('Part Time', 'PT')]:
+    for name, short_name in [('Any', 'Any'), ('Full Time', 'FT'), ('Part Time', 'PT')]:
         obj = Hours()
         obj.name = name
         obj.short_name = short_name

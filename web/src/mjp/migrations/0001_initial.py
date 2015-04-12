@@ -218,13 +218,13 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='jobseeker',
             name='nationality',
-            field=models.ForeignKey(related_name='job_seekers', to='mjp.Nationality'),
+            field=models.ForeignKey(related_name='job_seekers', to='mjp.Nationality', null=True),
             preserve_default=True,
         ),
         migrations.AddField(
             model_name='jobseeker',
             name='sex',
-            field=models.ForeignKey(related_name='job_seekers', to='mjp.Sex'),
+            field=models.ForeignKey(related_name='job_seekers', to='mjp.Sex', null=True),
             preserve_default=True,
         ),
         migrations.AddField(

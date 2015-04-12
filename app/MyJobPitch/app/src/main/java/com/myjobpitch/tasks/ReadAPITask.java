@@ -4,7 +4,6 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.myjobpitch.api.MJPApi;
 import com.myjobpitch.api.MJPApiException;
 
 import java.util.ArrayList;
@@ -17,14 +16,12 @@ public class ReadAPITask<T> extends AsyncTask<Void, Void, T> {
         T run() throws MJPApiException;
     }
 
-    private final MJPApi api;
     private Action<T> action;
     private JsonNode errors;
     private T result;
 
-    public ReadAPITask(MJPApi api, Action<T> action) {
+    public ReadAPITask(Action<T> action) {
         this.action = action;
-        this.api = api;
     }
 
     public void addListener(CreateReadUpdateAPITaskListener<T> listener) {

@@ -1,9 +1,9 @@
-package com.myjobpitch.tasks;
+package com.myjobpitch.tasks.recruiter;
 
 import com.myjobpitch.api.MJPApi;
 import com.myjobpitch.api.MJPApiException;
-import com.myjobpitch.api.data.Business;
 import com.myjobpitch.api.data.Location;
+import com.myjobpitch.tasks.CreateUpdateAPITask;
 
 public class CreateUpdateLocationTask extends CreateUpdateAPITask<Location> {
     public CreateUpdateLocationTask(final MJPApi api, final Location location) {

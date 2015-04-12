@@ -13,8 +13,8 @@ import com.myjobpitch.api.MJPApi;
 import com.myjobpitch.api.data.Location;
 import com.myjobpitch.fragments.LocationEditFragment;
 import com.myjobpitch.tasks.CreateReadUpdateAPITaskListener;
-import com.myjobpitch.tasks.CreateUpdateLocationTask;
 import com.myjobpitch.tasks.ReadLocationTask;
+import com.myjobpitch.tasks.recruiter.CreateUpdateLocationTask;
 
 import java.io.IOException;
 

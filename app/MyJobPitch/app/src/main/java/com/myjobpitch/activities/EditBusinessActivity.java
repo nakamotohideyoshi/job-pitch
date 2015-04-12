@@ -13,8 +13,8 @@ import com.myjobpitch.api.MJPApi;
 import com.myjobpitch.api.data.Business;
 import com.myjobpitch.fragments.BusinessEditFragment;
 import com.myjobpitch.tasks.CreateReadUpdateAPITaskListener;
-import com.myjobpitch.tasks.CreateUpdateBusinessTask;
-import com.myjobpitch.tasks.ReadBusinessTask;
+import com.myjobpitch.tasks.recruiter.CreateUpdateBusinessTask;
+import com.myjobpitch.tasks.recruiter.ReadUserBusinessTask;
 
 import java.io.IOException;
 
@@ -24,7 +24,7 @@ public class EditBusinessActivity extends MJPProgressActionBarActivity {
     private View mEditBusinessView;
     private Business business;
     private View mProgressView;
-    private ReadBusinessTask mReadBusinessTask;
+    private ReadUserBusinessTask mReadBusinessTask;
     private CreateUpdateBusinessTask mCreateUpdateBusinessTask;
 
     @Override
@@ -52,7 +52,7 @@ public class EditBusinessActivity extends MJPProgressActionBarActivity {
                 showProgress(false);
             } catch (IOException e) {}
         } else if (getIntent().hasExtra("business_id")) {
-            mReadBusinessTask = new ReadBusinessTask(getApi(), getIntent().getIntExtra("business_id", -1));
+            mReadBusinessTask = new ReadUserBusinessTask(getApi(), getIntent().getIntExtra("business_id", -1));
             mReadBusinessTask.addListener(new CreateReadUpdateAPITaskListener<Business>() {
                 @Override
                 public void onSuccess(Business result) {

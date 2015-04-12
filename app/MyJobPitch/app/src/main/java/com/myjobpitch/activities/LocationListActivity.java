@@ -26,9 +26,9 @@ import com.myjobpitch.api.data.Business;
 import com.myjobpitch.api.data.Location;
 import com.myjobpitch.tasks.CreateReadUpdateAPITaskListener;
 import com.myjobpitch.tasks.DeleteAPITaskListener;
-import com.myjobpitch.tasks.DeleteLocationTask;
-import com.myjobpitch.tasks.ReadBusinessTask;
-import com.myjobpitch.tasks.ReadLocationsTask;
+import com.myjobpitch.tasks.recruiter.DeleteUserLocationTask;
+import com.myjobpitch.tasks.recruiter.ReadUserBusinessTask;
+import com.myjobpitch.tasks.recruiter.ReadUserLocationsTask;
 
 import java.util.List;
 
@@ -75,7 +75,7 @@ public class LocationListActivity extends MJPProgressActionBarActivity  {
                                 public void onClick(DialogInterface dialog, int id) {
                                     dialog.cancel();
                                     showProgress(true);
-                                    DeleteLocationTask deleteLocationTask = new DeleteLocationTask(getApi(), location.getId());
+                                    DeleteUserLocationTask deleteLocationTask = new DeleteUserLocationTask(getApi(), location.getId());
                                     deleteLocationTask.addListener(new DeleteAPITaskListener() {
                                         @Override
                                         public void onSuccess() {
@@ -179,14 +179,14 @@ public class LocationListActivity extends MJPProgressActionBarActivity  {
 
     private void loadLocations() {
         showProgress(true);
-        ReadBusinessTask readBusiness = new ReadBusinessTask(getApi(), business_id);
+        ReadUserBusinessTask readBusiness = new ReadUserBusinessTask(getApi(), business_id);
         readBusiness.addListener(new CreateReadUpdateAPITaskListener<Business>() {
             @Override
             public void onSuccess(Business result) {
                 business = result;
                 getSupportActionBar()
                         .setSubtitle(business.getName());
-                ReadLocationsTask readLocations = new ReadLocationsTask(getApi(), business_id);
+                ReadUserLocationsTask readLocations = new ReadUserLocationsTask(getApi(), business_id);
                 readLocations.addListener(new CreateReadUpdateAPITaskListener<List<Location>>() {
                     @Override
                     public void onSuccess(List<Location> result) {

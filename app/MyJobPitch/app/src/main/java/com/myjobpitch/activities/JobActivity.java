@@ -15,7 +15,7 @@ import com.lorentzos.flingswipe.SwipeFlingAdapterView;
 import com.myjobpitch.R;
 import com.myjobpitch.api.data.JobSeeker;
 import com.myjobpitch.tasks.CreateReadUpdateAPITaskListener;
-import com.myjobpitch.tasks.ReadJobSeekersTask;
+import com.myjobpitch.tasks.recruiter.ReadJobSeekersTask;
 
 import java.util.ArrayList;
 import java.util.List;

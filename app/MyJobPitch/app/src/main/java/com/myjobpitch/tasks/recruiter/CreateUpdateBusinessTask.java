@@ -1,8 +1,9 @@
-package com.myjobpitch.tasks;
+package com.myjobpitch.tasks.recruiter;
 
 import com.myjobpitch.api.MJPApi;
 import com.myjobpitch.api.MJPApiException;
 import com.myjobpitch.api.data.Business;
+import com.myjobpitch.tasks.CreateUpdateAPITask;
 
 public class CreateUpdateBusinessTask extends CreateUpdateAPITask<Business> {
     public CreateUpdateBusinessTask(final MJPApi api, final Business business) {

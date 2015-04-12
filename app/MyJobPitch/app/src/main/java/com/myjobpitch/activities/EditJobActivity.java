@@ -13,8 +13,8 @@ import com.myjobpitch.api.MJPApi;
 import com.myjobpitch.api.data.Job;
 import com.myjobpitch.fragments.JobEditFragment;
 import com.myjobpitch.tasks.CreateReadUpdateAPITaskListener;
-import com.myjobpitch.tasks.CreateUpdateJobTask;
 import com.myjobpitch.tasks.ReadJobTask;
+import com.myjobpitch.tasks.recruiter.CreateUpdateJobTask;
 
 import java.io.IOException;
 

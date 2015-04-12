@@ -18,9 +18,9 @@ import com.myjobpitch.fragments.BusinessEditFragment;
 import com.myjobpitch.fragments.JobSeekerEditFragment;
 import com.myjobpitch.fragments.LocationEditFragment;
 import com.myjobpitch.tasks.CreateReadUpdateAPITaskListener;
-import com.myjobpitch.tasks.CreateUpdateBusinessTask;
-import com.myjobpitch.tasks.CreateUpdateJobSeekerTask;
-import com.myjobpitch.tasks.CreateUpdateLocationTask;
+import com.myjobpitch.tasks.jobseeker.CreateUpdateJobSeekerTask;
+import com.myjobpitch.tasks.recruiter.CreateUpdateBusinessTask;
+import com.myjobpitch.tasks.recruiter.CreateUpdateLocationTask;
 
 import java.io.IOException;
 

@@ -1,7 +1,7 @@
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
 
-def SimpleSerializer(m,  overrides={}):
+def SimpleSerializer(m, overrides={}):
     class Meta:
         model = m
     fields = {'Meta': Meta}

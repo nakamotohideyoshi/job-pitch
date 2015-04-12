@@ -1,56 +1,34 @@
 package com.myjobpitch.fragments;
 
-import android.app.Fragment;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
-import android.widget.TextView;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.myjobpitch.MJPApplication;
 import com.myjobpitch.R;
 import com.myjobpitch.api.MJPAPIObject;
-import com.myjobpitch.api.MJPApi;
-import com.myjobpitch.api.data.Availability;
 import com.myjobpitch.api.data.Contract;
 import com.myjobpitch.api.data.Hours;
 import com.myjobpitch.api.data.Job;
 import com.myjobpitch.api.data.Sector;
-import com.myjobpitch.tasks.CreateUpdateJobTask;
+import com.myjobpitch.widgets.MJPObjectWithNameAdapter;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-
-/**
- * A simple {@link android.app.Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link com.myjobpitch.fragments.JobEditFragment.JobEditHost} interface
- * to handle interaction events.
- * Use the {@link com.myjobpitch.fragments.JobEditFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
-public class JobEditFragment extends Fragment implements CreateUpdateJobTask.Listener<Job> {
+public class JobEditFragment extends EditFragment {
     private EditText mLocationTitleView;
     private EditText mLocationDescView;
-    private List<TextView> requiredFields;
-    private Map<String, TextView> fields;
     private Spinner mLocationSectorView;
     private Spinner mLocationContractView;
     private Spinner mLocationHoursView;
-    private Spinner mLocationAvailabilityView;
     private List<Sector> sectors;
     private List<Contract> contracts;
     private List<Hours> hours;
-    private List<Availability> availabilities;
 
     /**
      * Use this factory method to create a new instance of
@@ -91,48 +69,27 @@ public class JobEditFragment extends Fragment implements CreateUpdateJobTask.Lis
         mLocationSectorView = (Spinner) view.findViewById(R.id.job_sector);
         mLocationContractView = (Spinner) view.findViewById(R.id.job_contract);
         mLocationHoursView = (Spinner) view.findViewById(R.id.job_hours);
-        mLocationAvailabilityView = (Spinner) view.findViewById(R.id.job_availability);
 
-        requiredFields = new ArrayList<>();
-        requiredFields.add(mLocationTitleView);
-        requiredFields.add(mLocationDescView);
-
-        fields = new HashMap<>();
+        Map<String, View> fields = new HashMap<>();
         fields.put("title", mLocationTitleView);
         fields.put("description", mLocationDescView);
+        fields.put("sector", mLocationSectorView);
+        fields.put("contract", mLocationContractView);
+        fields.put("hours", mLocationHoursView);
+        setFields(fields);
+
+        setRequiredFields(fields.values());
 
         return view;
     }
 
-    public boolean validateInput() {
-        for (TextView field : fields.values())
-            field.setError(null);
-
-        View errorField = null;
-        for (TextView field : requiredFields) {
-            if (TextUtils.isEmpty(field.getText())) {
-                field.setError(getString(R.string.error_field_required));
-                if (errorField == null)
-                    errorField = field;
-            }
-        }
-
-        if (errorField != null) {
-            errorField.requestFocus();
-            return false;
-        }
-        return true;
-    }
-
     public void loadApplicationData(MJPApplication application) {
         this.sectors = application.getSectors();
-        mLocationSectorView.setAdapter(new ArrayAdapter<Sector>(this.getActivity(), android.R.layout.simple_list_item_1, this.sectors.toArray(new Sector[] {})));
+        mLocationSectorView.setAdapter(new MJPObjectWithNameAdapter(this.getActivity(), android.R.layout.simple_list_item_1, this.sectors));
         this.contracts = application.getContracts();
-        mLocationContractView.setAdapter(new ArrayAdapter<Contract>(this.getActivity(), android.R.layout.simple_list_item_1, this.contracts.toArray(new Contract[] {})));
+        mLocationContractView.setAdapter(new MJPObjectWithNameAdapter<Contract>(this.getActivity(), android.R.layout.simple_list_item_1, this.contracts));
         this.hours = application.getHours();
-        mLocationHoursView.setAdapter(new ArrayAdapter<Hours>(this.getActivity(), android.R.layout.simple_list_item_1, this.hours.toArray(new Hours[] {})));
-        this.availabilities = application.getAvailabilities();
-        mLocationAvailabilityView.setAdapter(new ArrayAdapter<Availability>(this.getActivity(), android.R.layout.simple_list_item_1, this.availabilities.toArray(new Availability[] {})));
+        mLocationHoursView.setAdapter(new MJPObjectWithNameAdapter<Hours>(this.getActivity(), android.R.layout.simple_list_item_1, this.hours));
     }
 
     public void load(Job job) {
@@ -164,50 +121,28 @@ public class JobEditFragment extends Fragment implements CreateUpdateJobTask.Lis
                 }
             }
         }
-
-        if (job.getRequired_availability() != null) {
-            for (int i = 0; i < availabilities.size(); i++) {
-                if (availabilities.get(i).getId() == job.getRequired_availability()) {
-                    mLocationAvailabilityView.setSelection(i);
-                    break;
-                }
-            }
-        }
     }
 
     public void save(Job job) {
         job.setTitle(mLocationTitleView.getText().toString());
         job.setDescription(mLocationDescView.getText().toString());
-        job.setSector((int) ((MJPAPIObject) mLocationSectorView.getSelectedItem()).getId());
-        job.setContract((int) ((MJPAPIObject) mLocationContractView.getSelectedItem()).getId());
-        job.setHours((int) ((MJPAPIObject) mLocationHoursView.getSelectedItem()).getId());
-        job.setRequired_availability((int) ((MJPAPIObject) mLocationAvailabilityView.getSelectedItem()).getId());
+
+        MJPAPIObject selectedSector = (MJPAPIObject) mLocationSectorView.getSelectedItem();
+        if (selectedSector != null)
+            job.setSector((int) selectedSector.getId());
+        else
+            job.setSector(null);
+
+        MJPAPIObject selectedContract = (MJPAPIObject) mLocationContractView.getSelectedItem();
+        if (selectedContract != null)
+            job.setContract((int) selectedContract.getId());
+        else
+            job.setContract(null);
+
+        MJPAPIObject selectedHours = (MJPAPIObject) mLocationHoursView.getSelectedItem();
+        if (selectedHours != null)
+            job.setHours((int) selectedHours.getId());
+        else
+            job.setHours(null);
     }
-
-    public CreateUpdateJobTask getCreateJobTask(MJPApi api, Job job) {
-        CreateUpdateJobTask task = new CreateUpdateJobTask(api, job);
-        task.addListener(this);
-        return task;
-    }
-
-    @Override
-    public void onSuccess(Job job) {}
-
-    @Override
-    public void onError(JsonNode errors) {
-        Iterator<Map.Entry<String, JsonNode>> error_data = errors.fields();
-        while (error_data.hasNext()) {
-            Map.Entry<String, JsonNode> error = error_data.next();
-            if (fields.containsKey(error.getKey()))
-                fields.get(error.getKey()).setError(error.getValue().get(0).asText());
-        }
-    }
-
-    @Override
-    public void onCancelled() {}
-
-    public interface JobEditHost {
-
-    }
-
 }

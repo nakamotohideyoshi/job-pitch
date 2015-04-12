@@ -11,13 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DeleteAPITask extends AsyncTask<Void, Void, Void> {
-    private List<Listener> listeners = new ArrayList<>();
-
-    public interface Listener {
-        void onSuccess();
-        void onError(JsonNode errors);
-        void onCancelled();
-    }
+    private List<DeleteAPITaskListener> listeners = new ArrayList<>();
 
     public interface Action {
         void run() throws MJPApiException;
@@ -32,7 +26,7 @@ public class DeleteAPITask extends AsyncTask<Void, Void, Void> {
         this.api = api;
     }
 
-    public void addListener(Listener listener) {
+    public void addListener(DeleteAPITaskListener listener) {
         listeners.add(listener);
     }
 
@@ -49,7 +43,7 @@ public class DeleteAPITask extends AsyncTask<Void, Void, Void> {
 
     @Override
     protected void onPostExecute(Void result) {
-        for (Listener listener : listeners) {
+        for (DeleteAPITaskListener listener : listeners) {
             if (errors == null)
                 listener.onSuccess();
             else
@@ -59,7 +53,7 @@ public class DeleteAPITask extends AsyncTask<Void, Void, Void> {
 
     @Override
     protected void onCancelled() {
-        for (Listener listener : listeners)
+        for (DeleteAPITaskListener listener : listeners)
             listener.onCancelled();
     }
 }

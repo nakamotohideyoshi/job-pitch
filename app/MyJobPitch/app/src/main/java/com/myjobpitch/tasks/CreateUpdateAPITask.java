@@ -14,13 +14,7 @@ import java.util.List;
 * Created by Jamie on 24/03/2015.
 */
 public class CreateUpdateAPITask<T extends MJPAPIObject> extends AsyncTask<Void, Void, T> {
-    private List<Listener> listeners = new ArrayList<>();
-
-    public interface Listener<T> {
-        void onSuccess(T result);
-        void onError(JsonNode errors);
-        void onCancelled();
-    }
+    private List<CreateReadUpdateAPITaskListener<T>> listeners = new ArrayList<>();
 
     public interface Action<T> {
         T create(T obj) throws MJPApiException;
@@ -36,7 +30,7 @@ public class CreateUpdateAPITask<T extends MJPAPIObject> extends AsyncTask<Void,
         this.object = object;
     }
 
-    public void addListener(Listener listener) {
+    public void addListener(CreateReadUpdateAPITaskListener<T> listener) {
         this.listeners.add(listener);
     }
 
@@ -56,7 +50,7 @@ public class CreateUpdateAPITask<T extends MJPAPIObject> extends AsyncTask<Void,
 
     @Override
     protected void onPostExecute(final T result) {
-        for (Listener listener : listeners) {
+        for (CreateReadUpdateAPITaskListener<T> listener : listeners) {
             if (errors == null)
                 listener.onSuccess(result);
             else
@@ -66,7 +60,7 @@ public class CreateUpdateAPITask<T extends MJPAPIObject> extends AsyncTask<Void,
 
     @Override
     protected void onCancelled() {
-        for (Listener listener : listeners)
+        for (CreateReadUpdateAPITaskListener<T> listener : listeners)
             listener.onCancelled();
     }
 }

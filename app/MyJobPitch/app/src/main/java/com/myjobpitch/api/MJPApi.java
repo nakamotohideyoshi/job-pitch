@@ -2,25 +2,11 @@ package com.myjobpitch.api;
 
 import android.util.Log;
 
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.Arrays;
-import java.util.List;
-
-import org.springframework.http.HttpAuthentication;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
-import org.springframework.web.client.HttpClientErrorException;
-import org.springframework.web.client.RestTemplate;
-
 import com.myjobpitch.api.auth.AuthToken;
 import com.myjobpitch.api.auth.Login;
 import com.myjobpitch.api.auth.Registration;
 import com.myjobpitch.api.auth.User;
 import com.myjobpitch.api.data.ApplicationStatus;
-import com.myjobpitch.api.data.Availability;
 import com.myjobpitch.api.data.Business;
 import com.myjobpitch.api.data.Contract;
 import com.myjobpitch.api.data.Hours;
@@ -33,6 +19,19 @@ import com.myjobpitch.api.data.Role;
 import com.myjobpitch.api.data.Sector;
 import com.myjobpitch.api.data.Sex;
 
+import org.springframework.http.HttpAuthentication;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.RestTemplate;
+
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.Arrays;
+import java.util.List;
+
 public class MJPApi {
 
 	private String apiRoot;
@@ -42,7 +41,6 @@ public class MJPApi {
     private List<Sector> sectors;
     private List<Contract> contracts;
     private List<Hours> hours;
-    private List<Availability> availabilities;
     private List<Sex> sexes;
     private List<Nationality> nationalities;
     private List<JobStatus> jobStatuses;
@@ -166,12 +164,6 @@ public class MJPApi {
         if (this.hours == null)
             this.hours = Arrays.asList(rest.exchange(getTypeUrl("hours"), HttpMethod.GET, createAuthenticatedRequest(), Hours[].class).getBody());
         return this.hours;
-	}
-
-	public List<Availability> getAvailabilities() {
-		if (this.availabilities == null)
-            this.availabilities = Arrays.asList(rest.exchange(getTypeUrl("availabilities"), HttpMethod.GET, createAuthenticatedRequest(), Availability[].class).getBody());
-        return this.availabilities;
 	}
 
 	public List<Sex> getSexes() {

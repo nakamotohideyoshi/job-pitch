@@ -6,19 +6,12 @@ import android.util.Log;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.myjobpitch.api.MJPApi;
 import com.myjobpitch.api.MJPApiException;
-import com.myjobpitch.api.data.Business;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class ReadAPITask<T> extends AsyncTask<Void, Void, T> {
-    private List<Listener> listeners = new ArrayList<>();
-
-    public interface Listener<T> {
-        void onSuccess(T result);
-        void onError(JsonNode errors);
-        void onCancelled();
-    }
+    private List<CreateReadUpdateAPITaskListener<T>> listeners = new ArrayList<>();
 
     public interface Action<T> {
         T run() throws MJPApiException;
@@ -34,7 +27,7 @@ public class ReadAPITask<T> extends AsyncTask<Void, Void, T> {
         this.api = api;
     }
 
-    public void addListener(Listener<T> listener) {
+    public void addListener(CreateReadUpdateAPITaskListener<T> listener) {
         listeners.add(listener);
     }
 
@@ -51,7 +44,7 @@ public class ReadAPITask<T> extends AsyncTask<Void, Void, T> {
 
     @Override
     protected void onPostExecute(T result) {
-        for (Listener listener : listeners) {
+        for (CreateReadUpdateAPITaskListener<T> listener : listeners) {
             if (errors == null)
                 listener.onSuccess(result);
             else
@@ -61,7 +54,7 @@ public class ReadAPITask<T> extends AsyncTask<Void, Void, T> {
 
     @Override
     protected void onCancelled() {
-        for (Listener listener : listeners)
+        for (CreateReadUpdateAPITaskListener<T> listener : listeners)
             listener.onCancelled();
     }
 }

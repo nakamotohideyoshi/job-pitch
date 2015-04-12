@@ -1,12 +1,7 @@
 package com.myjobpitch.activities;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
-import android.annotation.TargetApi;
 import android.content.Intent;
 import android.os.AsyncTask;
-import android.os.Build;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -17,11 +12,10 @@ import android.widget.EditText;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.myjobpitch.MJPApplication;
 import com.myjobpitch.R;
-import com.myjobpitch.api.MJPApiException;
 import com.myjobpitch.api.MJPApi;
-import com.myjobpitch.api.auth.User;
+import com.myjobpitch.api.MJPApiException;
 
-public class RegisterActivity extends ActionBarActivity {
+public class RegisterActivity extends MJPProgressActivity {
 
     private AutoCompleteTextView mUsernameView;
     private EditText mPassword1View;
@@ -100,47 +94,21 @@ public class RegisterActivity extends ActionBarActivity {
         }
     }
 
-    /**
-     * Shows the progress UI and hides the login form.
-     */
-    @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
-    public void showProgress(final boolean show) {
-        // On Honeycomb MR2 we have the ViewPropertyAnimator APIs, which allow
-        // for very easy animations. If available, use these APIs to fade-in
-        // the progress spinner.
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
-            int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
-
-            mRegisterFormView.setVisibility(show ? View.GONE : View.VISIBLE);
-            mRegisterFormView.animate().setDuration(shortAnimTime).alpha(
-                    show ? 0 : 1).setListener(new AnimatorListenerAdapter() {
-                @Override
-                public void onAnimationEnd(Animator animation) {
-                    mRegisterFormView.setVisibility(show ? View.GONE : View.VISIBLE);
-                }
-            });
-
-            mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
-            mProgressView.animate().setDuration(shortAnimTime).alpha(
-                    show ? 1 : 0).setListener(new AnimatorListenerAdapter() {
-                @Override
-                public void onAnimationEnd(Animator animation) {
-                    mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
-                }
-            });
-        } else {
-            // The ViewPropertyAnimator APIs are not available, so simply show
-            // and hide the relevant UI components.
-            mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
-            mRegisterFormView.setVisibility(show ? View.GONE : View.VISIBLE);
-        }
-    }
-
     @Override
     protected void onPause() {
         super.onPause();
         showProgress(false);
         finish();
+    }
+
+    @Override
+    public View getProgressView() {
+        return mProgressView;
+    }
+
+    @Override
+    public View getMainView() {
+        return mRegisterFormView;
     }
 
     private class RegisterTask extends AsyncTask<Void, Void, Class<?>> {
@@ -173,7 +141,6 @@ public class RegisterActivity extends ActionBarActivity {
                 application.setSectors(api.getSectors());
                 application.setContracts(api.getContracts());
                 application.setHours(api.getHours());
-                application.setAvailabilities(api.getAvailabilities());
                 application.setNationalities(api.getNationalities());
                 application.setApplicationStatuses(api.getApplicationStatuses());
                 application.setJobStatuses(api.getJobStatuses());

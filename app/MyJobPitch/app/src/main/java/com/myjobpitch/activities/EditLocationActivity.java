@@ -1,9 +1,5 @@
 package com.myjobpitch.activities;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
-import android.annotation.TargetApi;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -16,13 +12,13 @@ import com.myjobpitch.R;
 import com.myjobpitch.api.MJPApi;
 import com.myjobpitch.api.data.Location;
 import com.myjobpitch.fragments.LocationEditFragment;
+import com.myjobpitch.tasks.CreateReadUpdateAPITaskListener;
 import com.myjobpitch.tasks.CreateUpdateLocationTask;
-import com.myjobpitch.tasks.ReadAPITask;
 import com.myjobpitch.tasks.ReadLocationTask;
 
 import java.io.IOException;
 
-public class EditLocationActivity extends MJPActionBarActivity implements LocationEditFragment.LocationEditHost {
+public class EditLocationActivity extends MJPProgressActionBarActivity {
 
     private LocationEditFragment mLocationEditFragment;
     private View mEditLocationView;
@@ -58,7 +54,7 @@ public class EditLocationActivity extends MJPActionBarActivity implements Locati
             } catch (IOException e) {}
         } else if (getIntent().hasExtra("location_id")) {
             mReadLocationTask = new ReadLocationTask(getApi(), getIntent().getIntExtra("location_id", -1));
-            mReadLocationTask.addListener(new ReadAPITask.Listener<Location>() {
+            mReadLocationTask.addListener(new CreateReadUpdateAPITaskListener<Location>() {
                 @Override
                 public void onSuccess(Location result) {
                     location = result;
@@ -107,7 +103,7 @@ public class EditLocationActivity extends MJPActionBarActivity implements Locati
 
             final MJPApi api = ((MJPApplication) getApplication()).getApi();
             mCreateUpdateLocationTask = new CreateUpdateLocationTask(api, location);
-            mCreateUpdateLocationTask.addListener(new CreateUpdateLocationTask.Listener<Location>() {
+            mCreateUpdateLocationTask.addListener(new CreateReadUpdateAPITaskListener<Location>() {
                 @Override
                 public void onSuccess(Location location) {
                     EditLocationActivity.this.finish();
@@ -127,36 +123,13 @@ public class EditLocationActivity extends MJPActionBarActivity implements Locati
         }
     }
 
-    @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
-    public void showProgress(final boolean show) {
-        // On Honeycomb MR2 we have the ViewPropertyAnimator APIs, which allow
-        // for very easy animations. If available, use these APIs to fade-in
-        // the progress spinner.
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
-            int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
+    @Override
+    public View getProgressView() {
+        return mProgressView;
+    }
 
-            mEditLocationView.setVisibility(show ? View.GONE : View.VISIBLE);
-            mEditLocationView.animate().setDuration(shortAnimTime).alpha(
-                    show ? 0 : 1).setListener(new AnimatorListenerAdapter() {
-                @Override
-                public void onAnimationEnd(Animator animation) {
-                    mEditLocationView.setVisibility(show ? View.GONE : View.VISIBLE);
-                }
-            });
-
-            mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
-            mProgressView.animate().setDuration(shortAnimTime).alpha(
-                    show ? 1 : 0).setListener(new AnimatorListenerAdapter() {
-                @Override
-                public void onAnimationEnd(Animator animation) {
-                    mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
-                }
-            });
-        } else {
-            // The ViewPropertyAnimator APIs are not available, so simply show
-            // and hide the relevant UI components.
-            mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
-            mEditLocationView.setVisibility(show ? View.GONE : View.VISIBLE);
-        }
+    @Override
+    public View getMainView() {
+        return mEditLocationView;
     }
 }

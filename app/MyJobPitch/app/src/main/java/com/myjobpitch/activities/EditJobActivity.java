@@ -1,9 +1,5 @@
 package com.myjobpitch.activities;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
-import android.annotation.TargetApi;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -16,13 +12,13 @@ import com.myjobpitch.R;
 import com.myjobpitch.api.MJPApi;
 import com.myjobpitch.api.data.Job;
 import com.myjobpitch.fragments.JobEditFragment;
+import com.myjobpitch.tasks.CreateReadUpdateAPITaskListener;
 import com.myjobpitch.tasks.CreateUpdateJobTask;
-import com.myjobpitch.tasks.ReadAPITask;
 import com.myjobpitch.tasks.ReadJobTask;
 
 import java.io.IOException;
 
-public class EditJobActivity extends MJPActionBarActivity implements JobEditFragment.JobEditHost {
+public class EditJobActivity extends MJPProgressActionBarActivity {
 
     private JobEditFragment mJobEditFragment;
     private View mEditJobView;
@@ -60,7 +56,7 @@ public class EditJobActivity extends MJPActionBarActivity implements JobEditFrag
             } catch (IOException e) {}
         } else if (getIntent().hasExtra("job_id")) {
             mReadJobTask = new ReadJobTask(getApi(), getIntent().getIntExtra("job_id", -1));
-            mReadJobTask.addListener(new ReadAPITask.Listener<Job>() {
+            mReadJobTask.addListener(new CreateReadUpdateAPITaskListener<Job>() {
                 @Override
                 public void onSuccess(Job result) {
                     job = result;
@@ -110,7 +106,7 @@ public class EditJobActivity extends MJPActionBarActivity implements JobEditFrag
 
             final MJPApi api = ((MJPApplication) getApplication()).getApi();
             mCreateUpdateJobTask = new CreateUpdateJobTask(api, job);
-            mCreateUpdateJobTask.addListener(new CreateUpdateJobTask.Listener<Job>() {
+            mCreateUpdateJobTask.addListener(new CreateReadUpdateAPITaskListener<Job>() {
                 @Override
                 public void onSuccess(Job job) {
                     EditJobActivity.this.finish();
@@ -130,36 +126,13 @@ public class EditJobActivity extends MJPActionBarActivity implements JobEditFrag
         }
     }
 
-    @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
-    public void showProgress(final boolean show) {
-        // On Honeycomb MR2 we have the ViewPropertyAnimator APIs, which allow
-        // for very easy animations. If available, use these APIs to fade-in
-        // the progress spinner.
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
-            int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
+    @Override
+    public View getProgressView() {
+        return mProgressView;
+    }
 
-            mEditJobView.setVisibility(show ? View.GONE : View.VISIBLE);
-            mEditJobView.animate().setDuration(shortAnimTime).alpha(
-                    show ? 0 : 1).setListener(new AnimatorListenerAdapter() {
-                @Override
-                public void onAnimationEnd(Animator animation) {
-                    mEditJobView.setVisibility(show ? View.GONE : View.VISIBLE);
-                }
-            });
-
-            mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
-            mProgressView.animate().setDuration(shortAnimTime).alpha(
-                    show ? 1 : 0).setListener(new AnimatorListenerAdapter() {
-                @Override
-                public void onAnimationEnd(Animator animation) {
-                    mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
-                }
-            });
-        } else {
-            // The ViewPropertyAnimator APIs are not available, so simply show
-            // and hide the relevant UI components.
-            mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
-            mEditJobView.setVisibility(show ? View.GONE : View.VISIBLE);
-        }
+    @Override
+    public View getMainView() {
+        return mEditJobView;
     }
 }

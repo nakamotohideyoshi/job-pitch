@@ -1,8 +1,6 @@
 package com.myjobpitch.fragments;
 
 import android.os.Bundle;
-import android.app.Fragment;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,28 +8,17 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.myjobpitch.R;
 import com.myjobpitch.api.MJPApi;
 import com.myjobpitch.api.data.Location;
 import com.myjobpitch.tasks.CreateUpdateLocationTask;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 
-
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link LocationEditFragment.LocationEditHost} interface
- * to handle interaction events.
- * Use the {@link LocationEditFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
-public class LocationEditFragment extends Fragment implements CreateUpdateLocationTask.Listener<Location> {
+public class LocationEditFragment extends EditFragment<Location> {
     private CheckBox mLocationMobilePublicView;
     private EditText mLocationNameView;
     private EditText mLocationDescView;
@@ -40,8 +27,6 @@ public class LocationEditFragment extends Fragment implements CreateUpdateLocati
     private EditText mLocationTelephoneView;
     private CheckBox mLocationTelephonePublicView;
     private EditText mLocationMobileView;
-    private List<TextView> requiredFields;
-    private Map<String, TextView> fields;
 
     /**
      * Use this factory method to create a new instance of
@@ -86,38 +71,20 @@ public class LocationEditFragment extends Fragment implements CreateUpdateLocati
         mLocationMobileView = (EditText) view.findViewById(R.id.location_mobile);
         mLocationMobilePublicView = (CheckBox) view.findViewById(R.id.location_mobile_public);
 
-        requiredFields = new ArrayList<>();
-        requiredFields.add(mLocationNameView);
-        requiredFields.add(mLocationDescView);
-
-        fields = new HashMap<>();
+        Map<String, View> fields = new HashMap<>();
         fields.put("name", mLocationNameView);
         fields.put("description", mLocationDescView);
         fields.put("email", mLocationEmailView);
         fields.put("telephone", mLocationTelephoneView);
         fields.put("mobile", mLocationMobileView);
+        setFields(fields);
+
+        Collection<View> requiredFields = new ArrayList<>();
+        requiredFields.add(mLocationNameView);
+        requiredFields.add(mLocationDescView);
+        setRequiredFields(requiredFields);
 
         return view;
-    }
-
-    public boolean validateInput() {
-        for (TextView field : fields.values())
-            field.setError(null);
-
-        View errorField = null;
-        for (TextView field : requiredFields) {
-            if (TextUtils.isEmpty(field.getText())) {
-                field.setError(getString(R.string.error_field_required));
-                if (errorField == null)
-                    errorField = field;
-            }
-        }
-
-        if (errorField != null) {
-            errorField.requestFocus();
-            return false;
-        }
-        return true;
     }
 
     public void load(Location location) {
@@ -151,25 +118,4 @@ public class LocationEditFragment extends Fragment implements CreateUpdateLocati
         task.addListener(this);
         return task;
     }
-
-    @Override
-    public void onSuccess(Location location) {}
-
-    @Override
-    public void onError(JsonNode errors) {
-        Iterator<Map.Entry<String, JsonNode>> error_data = errors.fields();
-        while (error_data.hasNext()) {
-            Map.Entry<String, JsonNode> error = error_data.next();
-            if (fields.containsKey(error.getKey()))
-                fields.get(error.getKey()).setError(error.getValue().get(0).asText());
-        }
-    }
-
-    @Override
-    public void onCancelled() {}
-
-    public interface LocationEditHost {
-
-    }
-
 }

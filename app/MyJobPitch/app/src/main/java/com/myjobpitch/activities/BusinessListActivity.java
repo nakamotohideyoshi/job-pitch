@@ -23,9 +23,9 @@ import android.widget.Toast;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.myjobpitch.R;
 import com.myjobpitch.api.data.Business;
-import com.myjobpitch.tasks.DeleteAPITask;
+import com.myjobpitch.tasks.CreateReadUpdateAPITaskListener;
+import com.myjobpitch.tasks.DeleteAPITaskListener;
 import com.myjobpitch.tasks.DeleteBusinessTask;
-import com.myjobpitch.tasks.ReadAPITask;
 import com.myjobpitch.tasks.ReadUserBusinessesTask;
 
 import java.util.List;
@@ -71,7 +71,7 @@ public class BusinessListActivity extends MJPProgressActionBarActivity  {
                                     dialog.cancel();
                                     showProgress(true);
                                     DeleteBusinessTask deleteBusinessTask = new DeleteBusinessTask(getApi(), business.getId());
-                                    deleteBusinessTask.addListener(new DeleteAPITask.Listener() {
+                                    deleteBusinessTask.addListener(new DeleteAPITaskListener() {
                                         @Override
                                         public void onSuccess() {
                                             loadBusinesses();
@@ -174,7 +174,8 @@ public class BusinessListActivity extends MJPProgressActionBarActivity  {
     private void loadBusinesses() {
         showProgress(true);
         ReadUserBusinessesTask readBusinesses = new ReadUserBusinessesTask(getApi());
-        readBusinesses.addListener(new ReadAPITask.Listener<List<Business>>() {
+        readBusinesses.execute();
+        readBusinesses.addListener(new CreateReadUpdateAPITaskListener<List<Business>>() {
             @Override
             public void onSuccess(List<Business> result) {
                 Log.d("BusinessListActivity", "success");
@@ -188,18 +189,18 @@ public class BusinessListActivity extends MJPProgressActionBarActivity  {
             }
 
             @Override
-            public void onCancelled() {}
+            public void onCancelled() {
+            }
         });
-        readBusinesses.execute();
     }
 
     @Override
-    protected View getProgressView() {
+    public View getProgressView() {
         return findViewById(R.id.progress);
     }
 
     @Override
-    protected View getMainView() {
+    public View getMainView() {
         return findViewById(R.id.business_list);
     }
 

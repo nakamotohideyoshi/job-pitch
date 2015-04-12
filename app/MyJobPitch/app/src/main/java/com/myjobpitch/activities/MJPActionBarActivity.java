@@ -10,7 +10,8 @@ import android.view.MenuItem;
 import com.myjobpitch.MJPApplication;
 import com.myjobpitch.api.MJPApi;
 
-public class MJPActionBarActivity extends ActionBarActivity {
+public class MJPActionBarActivity extends ActionBarActivity implements MJPActivityInterface {
+    private final MJPActivityDelegate activityDelegate = new MJPActivityDelegate(this);
 
     @Override
     public void onBackPressed() {
@@ -60,11 +61,13 @@ public class MJPActionBarActivity extends ActionBarActivity {
         alert.show();
     }
 
-    MJPApi getApi() {
-        return getMJPApplication().getApi();
+    @Override
+    public MJPApi getApi() {
+        return activityDelegate.getApi();
     }
 
+    @Override
     public MJPApplication getMJPApplication() {
-        return (MJPApplication)getApplication();
+        return activityDelegate.getMJPApplication();
     }
 }

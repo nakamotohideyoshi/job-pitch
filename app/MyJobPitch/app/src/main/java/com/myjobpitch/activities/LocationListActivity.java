@@ -24,9 +24,9 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.myjobpitch.R;
 import com.myjobpitch.api.data.Business;
 import com.myjobpitch.api.data.Location;
-import com.myjobpitch.tasks.DeleteAPITask;
+import com.myjobpitch.tasks.CreateReadUpdateAPITaskListener;
+import com.myjobpitch.tasks.DeleteAPITaskListener;
 import com.myjobpitch.tasks.DeleteLocationTask;
-import com.myjobpitch.tasks.ReadAPITask;
 import com.myjobpitch.tasks.ReadBusinessTask;
 import com.myjobpitch.tasks.ReadLocationsTask;
 
@@ -76,7 +76,7 @@ public class LocationListActivity extends MJPProgressActionBarActivity  {
                                     dialog.cancel();
                                     showProgress(true);
                                     DeleteLocationTask deleteLocationTask = new DeleteLocationTask(getApi(), location.getId());
-                                    deleteLocationTask.addListener(new DeleteAPITask.Listener() {
+                                    deleteLocationTask.addListener(new DeleteAPITaskListener() {
                                         @Override
                                         public void onSuccess() {
                                             loadLocations();
@@ -180,14 +180,14 @@ public class LocationListActivity extends MJPProgressActionBarActivity  {
     private void loadLocations() {
         showProgress(true);
         ReadBusinessTask readBusiness = new ReadBusinessTask(getApi(), business_id);
-        readBusiness.addListener(new ReadAPITask.Listener<Business>() {
+        readBusiness.addListener(new CreateReadUpdateAPITaskListener<Business>() {
             @Override
             public void onSuccess(Business result) {
                 business = result;
                 getSupportActionBar()
                         .setSubtitle(business.getName());
                 ReadLocationsTask readLocations = new ReadLocationsTask(getApi(), business_id);
-                readLocations.addListener(new ReadAPITask.Listener<List<Location>>() {
+                readLocations.addListener(new CreateReadUpdateAPITaskListener<List<Location>>() {
                     @Override
                     public void onSuccess(List<Location> result) {
                         Log.d("LocationListActivity", "success");
@@ -222,12 +222,12 @@ public class LocationListActivity extends MJPProgressActionBarActivity  {
     }
 
     @Override
-    protected View getProgressView() {
+    public View getProgressView() {
         return findViewById(R.id.progress);
     }
 
     @Override
-    protected View getMainView() {
+    public View getMainView() {
         return findViewById(R.id.location_list);
     }
 

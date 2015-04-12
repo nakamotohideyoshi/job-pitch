@@ -2,7 +2,9 @@ package com.myjobpitch;
 
 import android.app.Application;
 
+import com.myjobpitch.api.MJPAPIObject;
 import com.myjobpitch.api.MJPApi;
+import com.myjobpitch.api.MJPApiException;
 import com.myjobpitch.api.data.ApplicationStatus;
 import com.myjobpitch.api.data.Contract;
 import com.myjobpitch.api.data.Hours;
@@ -11,82 +13,43 @@ import com.myjobpitch.api.data.Nationality;
 import com.myjobpitch.api.data.Sector;
 import com.myjobpitch.api.data.Sex;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class MJPApplication extends Application {
     private MJPApi api = new MJPApi();
-    private List<Sector> sectors;
-    private List<Contract> contracts;
-    private List<Hours> hours;
-    private List<Nationality> nationalities;
-    private List<ApplicationStatus> applicationStatuses;
-    private List<JobStatus> jobStatuses;
-    private List<Sex> sexes;
+    Map<Class<? extends MJPAPIObject>, List<? extends MJPAPIObject>> cache = new HashMap<>();
 
     public MJPApi getApi() {
         return api;
     }
 
-    public void setSectors(List<Sector> sectors) {
-        this.sectors = sectors;
+    public void loadData() throws MJPApiException {
+        cache.put(Sector.class, getApi().get(Sector.class));
+        cache.put(Contract.class, getApi().get(Contract.class));
+        cache.put(Hours.class, getApi().get(Hours.class));
+        cache.put(Nationality.class, getApi().get(Nationality.class));
+        cache.put(ApplicationStatus.class, getApi().get(ApplicationStatus.class));
+        cache.put(JobStatus.class, getApi().get(JobStatus.class));
+        cache.put(Sex.class, getApi().get(Sex.class));
     }
 
-    public List<Sector> getSectors() {
-        return sectors;
+    public <T extends MJPAPIObject> List<T> get(Class<T> cls) {
+        return (List<T>) cache.get(cls);
     }
 
-    public void setContracts(List<Contract> contracts) {
-        this.contracts = contracts;
-    }
-
-    public List<Contract> getContracts() {
-        return contracts;
-    }
-
-    public void setHours(List<Hours> hours) {
-        this.hours = hours;
-    }
-
-    public List<Hours> getHours() {
-        return hours;
-    }
-
-    public void setNationalities(List<Nationality> nationalities) {
-        this.nationalities = nationalities;
-    }
-
-    public List<Nationality> getNationalities() {
-        return nationalities;
-    }
-
-    public void setApplicationStatuses(List<ApplicationStatus> applicationStatuses) {
-        this.applicationStatuses = applicationStatuses;
-    }
-
-    public List<ApplicationStatus> getApplicationStatuses() {
-        return applicationStatuses;
-    }
-
-    public List<JobStatus> getJobStatuses() {
-        return jobStatuses;
-    }
-
-    public void setJobStatuses(List<JobStatus> jobStatuses) {
-        this.jobStatuses = jobStatuses;
-    }
-
-    public JobStatus getJobStatus(String name) {
-        for (JobStatus status : jobStatuses)
-            if (status.getName().equals(name))
-                return status;
+    public <T extends MJPAPIObject> T get(Class<T> cls, Integer id) {
+        for (T obj : get(cls))
+            if (obj.getId().equals(id))
+                return obj;
         return null;
     }
 
-    public List<Sex> getSexes() {
-        return sexes;
-    }
-
-    public void setSexes(List<Sex> sexes) {
-        this.sexes = sexes;
+    public JobStatus getJobStatus(String name) {
+        for (JobStatus jobStatus : get(JobStatus.class))
+            if (jobStatus.getName().equals(name))
+                return jobStatus;
+        return null;
     }
 }

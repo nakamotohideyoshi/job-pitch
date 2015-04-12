@@ -28,6 +28,7 @@ import org.springframework.http.converter.json.MappingJackson2HttpMessageConvert
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
+import java.lang.reflect.Array;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Arrays;
@@ -44,20 +45,20 @@ public class MJPApi {
         classEndPoints.put(Job.class, "jobs");
         classEndPoints.put(Location.class, "locations");
         classEndPoints.put(Business.class, "businesses");
+        classEndPoints.put(Sector.class, "sectors");
+        classEndPoints.put(Contract.class, "contracts");
+        classEndPoints.put(Hours.class, "hours");
+        classEndPoints.put(Sex.class, "sexes");
+        classEndPoints.put(Nationality.class, "nationalities");
+        classEndPoints.put(JobStatus.class, "job-statuses");
+        classEndPoints.put(ApplicationStatus.class, "application-statuses");
+        classEndPoints.put(Role.class, "roles");
     }
 
 	private String apiRoot;
 	private RestTemplate rest;
 	private AuthToken token;
     private User user;
-    private List<Sector> sectors;
-    private List<Contract> contracts;
-    private List<Hours> hours;
-    private List<Sex> sexes;
-    private List<Nationality> nationalities;
-    private List<JobStatus> jobStatuses;
-    private List<ApplicationStatus> applicationStatuses;
-    private List<Role> roles;
 
     public MJPApi(String apiRoot) {
 		this.token = null;
@@ -165,54 +166,6 @@ public class MJPApi {
         return user;
     }
 
-	public List<Sector> getSectors() {
-        if (this.sectors == null)
-            this.sectors = Arrays.asList(rest.exchange(getTypeUrl("sectors"), HttpMethod.GET, createAuthenticatedRequest(), Sector[].class).getBody());
-        return this.sectors;
-	}
-
-	public List<Contract> getContracts() {
-        if (this.contracts == null)
-            this.contracts = Arrays.asList(rest.exchange(getTypeUrl("contracts"), HttpMethod.GET, createAuthenticatedRequest(), Contract[].class).getBody());
-        return this.contracts;
-	}
-
-	public List<Hours> getHours() {
-        if (this.hours == null)
-            this.hours = Arrays.asList(rest.exchange(getTypeUrl("hours"), HttpMethod.GET, createAuthenticatedRequest(), Hours[].class).getBody());
-        return this.hours;
-	}
-
-	public List<Sex> getSexes() {
-        if (this.sexes == null)
-            this.sexes = Arrays.asList(rest.exchange(getTypeUrl("sexes"), HttpMethod.GET, createAuthenticatedRequest(), Sex[].class).getBody());
-        return sexes;
-	}
-
-	public List<Nationality> getNationalities() {
-        if (this.nationalities == null)
-            this.nationalities = Arrays.asList(rest.exchange(getTypeUrl("nationalities"), HttpMethod.GET, createAuthenticatedRequest(), Nationality[].class).getBody());
-        return this.nationalities;
-	}
-
-	public List<JobStatus> getJobStatuses() {
-        if (this.jobStatuses == null)
-            this.jobStatuses = Arrays.asList(rest.exchange(getTypeUrl("job-statuses"), HttpMethod.GET, createAuthenticatedRequest(), JobStatus[].class).getBody());
-        return this.jobStatuses;
-	}
-
-	public List<ApplicationStatus> getApplicationStatuses() {
-		if (this.applicationStatuses == null)
-            this.applicationStatuses = Arrays.asList(rest.exchange(getTypeUrl("application-statuses"), HttpMethod.GET, createAuthenticatedRequest(), ApplicationStatus[].class).getBody());
-        return this.applicationStatuses;
-	}
-
-	public List<Role> getRoles() {
-        if (this.roles == null)
-            this.roles = Arrays.asList(rest.exchange(getTypeUrl("roles"), HttpMethod.GET, createAuthenticatedRequest(), Role[].class).getBody());
-        return this.roles;
-	}
-
     public List<Business> getUserBusinesses() {
         return Arrays.asList(rest.exchange(getTypeUrl("user-businesses"), HttpMethod.GET, createAuthenticatedRequest(), Business[].class).getBody());
     }
@@ -305,6 +258,30 @@ public class MJPApi {
 
     public void deleteJob(Integer id) {
         rest.exchange(getObjectUrl("user-jobs", id), HttpMethod.DELETE, createAuthenticatedRequest(), Void.class);
+    }
+
+//    public <T extends MJPAPIObject> List<T> get(Class<T> cls, Class<T[]> arrayCls) throws MJPApiException {
+//        try {
+//            return Arrays.asList(rest.exchange(getTypeUrl(classEndPoints.get(cls)), HttpMethod.GET, createAuthenticatedRequest(), arrayCls).getBody());
+//        } catch (HttpClientErrorException e) {
+//            if (e.getStatusCode().value() == 400) {
+//                throw new MJPApiException(e);
+//            }
+//            throw e;
+//        }
+//    }
+
+    public <T extends MJPAPIObject> List<T> get(Class<T> cls) throws MJPApiException {
+        T[] dummyArray = (T[]) Array.newInstance(cls, 0);
+        Class<T[]> arrayCls = (Class<T[]>) dummyArray.getClass();
+        try {
+            return Arrays.asList(rest.exchange(getTypeUrl(classEndPoints.get(cls)), HttpMethod.GET, createAuthenticatedRequest(), arrayCls).getBody());
+        } catch (HttpClientErrorException e) {
+            if (e.getStatusCode().value() == 400) {
+                throw new MJPApiException(e);
+            }
+            throw e;
+        }
     }
 
     public <T extends MJPAPIObject> T get(Class<T> cls, Integer id) throws MJPApiException {

@@ -174,7 +174,6 @@ public class BusinessListActivity extends MJPProgressActionBarActivity  {
     private void loadBusinesses() {
         showProgress(true);
         ReadUserBusinessesTask readBusinesses = new ReadUserBusinessesTask(getApi());
-        readBusinesses.execute();
         readBusinesses.addListener(new CreateReadUpdateAPITaskListener<List<Business>>() {
             @Override
             public void onSuccess(List<Business> result) {
@@ -192,6 +191,7 @@ public class BusinessListActivity extends MJPProgressActionBarActivity  {
             public void onCancelled() {
             }
         });
+        readBusinesses.execute();
     }
 
     @Override

@@ -71,11 +71,11 @@ public class JobProfileEditFragment extends EditFragment {
     }
 
     public void loadApplicationData(MJPApplication application) {
-        this.sectors = application.getSectors();
+        this.sectors = application.get(Sector.class);
         mProfileSectorsView.setAdapter(new MJPObjectWithNameAdapter(this.getActivity(), android.R.layout.simple_list_item_1, this.sectors));
-        this.contracts = application.getContracts();
+        this.contracts = application.get(Contract.class);
         mProfileContractView.setAdapter(new MJPObjectWithNameAdapter<Contract>(this.getActivity(), android.R.layout.simple_list_item_1, this.contracts));
-        this.hours = application.getHours();
+        this.hours = application.get(Hours.class);
         mProfileHoursView.setAdapter(new MJPObjectWithNameAdapter<Hours>(this.getActivity(), android.R.layout.simple_list_item_1, this.hours));
     }
 

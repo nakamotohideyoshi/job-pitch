@@ -118,7 +118,10 @@ class JobSeekerPermission(permissions.BasePermission):
         return obj.user == request.user
 class JobSeekerViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.IsAuthenticated, JobSeekerPermission)
-    serializer_class = SimpleSerializer(JobSeeker, {'user': serializers.PrimaryKeyRelatedField(read_only=True)})
+    serializer_class = SimpleSerializer(JobSeeker, {'user': serializers.PrimaryKeyRelatedField(read_only=True),
+                                                    'profile': serializers.PrimaryKeyRelatedField(many=True, read_only=True),
+                                                    'experience': SimpleSerializer(Experience)(many=True, read_only=True),
+                                                    })
     
     def get_queryset(self):
         job = self.request.QUERY_PARAMS.get('job')

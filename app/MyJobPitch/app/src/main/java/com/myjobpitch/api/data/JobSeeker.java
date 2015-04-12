@@ -23,6 +23,7 @@ public class JobSeeker extends MJPAPIObject {
     private boolean sex_public;
     private boolean nationality_public;
     private boolean age_public;
+    private Integer profile;
 
     public boolean getEmail_public() {
         return email_public;
@@ -142,5 +143,9 @@ public class JobSeeker extends MJPAPIObject {
 
     public String getFirst_name() {
         return first_name;
+    }
+
+    public Integer getProfile() {
+        return profile;
     }
 }

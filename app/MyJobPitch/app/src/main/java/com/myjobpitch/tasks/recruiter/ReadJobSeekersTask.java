@@ -1,9 +1,9 @@
-package com.myjobpitch.tasks;
+package com.myjobpitch.tasks.recruiter;
 
 import com.myjobpitch.api.MJPApi;
 import com.myjobpitch.api.MJPApiException;
-import com.myjobpitch.api.data.Job;
 import com.myjobpitch.api.data.JobSeeker;
+import com.myjobpitch.tasks.ReadAPITask;
 
 import java.util.List;
 
@@ -12,7 +12,7 @@ import java.util.List;
  */
 public class ReadJobSeekersTask extends ReadAPITask<List<JobSeeker>> {
     public ReadJobSeekersTask(final MJPApi api, final Integer job_id) {
-        super(api, new Action<List<JobSeeker>>() {
+        super(new Action<List<JobSeeker>>() {
             @Override
             public List<JobSeeker> run() throws MJPApiException {
                 return api.getJobSeekers(job_id);

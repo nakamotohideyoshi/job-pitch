@@ -26,9 +26,9 @@ import com.myjobpitch.api.data.Job;
 import com.myjobpitch.api.data.Location;
 import com.myjobpitch.tasks.CreateReadUpdateAPITaskListener;
 import com.myjobpitch.tasks.DeleteAPITaskListener;
-import com.myjobpitch.tasks.DeleteJobTask;
-import com.myjobpitch.tasks.ReadJobsTask;
 import com.myjobpitch.tasks.ReadLocationTask;
+import com.myjobpitch.tasks.recruiter.DeleteUserJobTask;
+import com.myjobpitch.tasks.recruiter.ReadUserJobsTask;
 
 import java.util.List;
 
@@ -75,7 +75,7 @@ public class JobListActivity extends MJPProgressActionBarActivity  {
                                 public void onClick(DialogInterface dialog, int id) {
                                     dialog.cancel();
                                     showProgress(true);
-                                    DeleteJobTask deleteJobTask = new DeleteJobTask(getApi(), job.getId());
+                                    DeleteUserJobTask deleteJobTask = new DeleteUserJobTask(getApi(), job.getId());
                                     deleteJobTask.addListener(new DeleteAPITaskListener() {
                                         @Override
                                         public void onSuccess() {
@@ -182,7 +182,7 @@ public class JobListActivity extends MJPProgressActionBarActivity  {
                 location = result;
                 getSupportActionBar()
                         .setSubtitle(location.getName());
-                ReadJobsTask readJobs = new ReadJobsTask(getApi(), location_id);
+                ReadUserJobsTask readJobs = new ReadUserJobsTask(getApi(), location_id);
                 readJobs.addListener(new CreateReadUpdateAPITaskListener<List<Job>>() {
                     @Override
                     public void onSuccess(List<Job> result) {

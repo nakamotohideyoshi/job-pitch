@@ -11,6 +11,7 @@ import com.myjobpitch.api.data.Business;
 import com.myjobpitch.api.data.Contract;
 import com.myjobpitch.api.data.Hours;
 import com.myjobpitch.api.data.Job;
+import com.myjobpitch.api.data.JobProfile;
 import com.myjobpitch.api.data.JobSeeker;
 import com.myjobpitch.api.data.JobStatus;
 import com.myjobpitch.api.data.Location;
@@ -30,9 +31,20 @@ import org.springframework.web.client.RestTemplate;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class MJPApi {
+    private static final Map<Class<? extends MJPAPIObject>, String> classEndPoints;
+    static {
+        classEndPoints = new HashMap<>();
+        classEndPoints.put(JobProfile.class, "job-profiles");
+        classEndPoints.put(JobSeeker.class, "job-seekers");
+        classEndPoints.put(Job.class, "jobs");
+        classEndPoints.put(Location.class, "locations");
+        classEndPoints.put(Business.class, "businesses");
+    }
 
 	private String apiRoot;
 	private RestTemplate rest;
@@ -148,6 +160,11 @@ public class MJPApi {
         return this.user;
 	}
 
+    public User updateUser(User user) {
+        this.user = rest.exchange(getAuthUrl("user"), HttpMethod.PUT, createAuthenticatedRequest(user), User.class).getBody();
+        return user;
+    }
+
 	public List<Sector> getSectors() {
         if (this.sectors == null)
             this.sectors = Arrays.asList(rest.exchange(getTypeUrl("sectors"), HttpMethod.GET, createAuthenticatedRequest(), Sector[].class).getBody());
@@ -196,22 +213,6 @@ public class MJPApi {
         return this.roles;
 	}
 
-    public JobSeeker getJobSeeker(Integer id) {
-        return rest.exchange(getObjectUrl("job-seekers", id), HttpMethod.GET, createAuthenticatedRequest(), JobSeeker.class).getBody();
-    }
-
-    public Business getBusiness(Integer id) {
-        return rest.exchange(getObjectUrl("businesses", id), HttpMethod.GET, createAuthenticatedRequest(), Business.class).getBody();
-    }
-
-    public Location getLocation(Integer id) {
-        return rest.exchange(getObjectUrl("locations", id), HttpMethod.GET, createAuthenticatedRequest(), Location.class).getBody();
-    }
-
-    public void deleteBusiness(Integer id) {
-        rest.exchange(getObjectUrl("user-businesses", id), HttpMethod.DELETE, createAuthenticatedRequest(), Void.class);
-    }
-
     public List<Business> getUserBusinesses() {
         return Arrays.asList(rest.exchange(getTypeUrl("user-businesses"), HttpMethod.GET, createAuthenticatedRequest(), Business[].class).getBody());
     }
@@ -242,8 +243,8 @@ public class MJPApi {
         }
     }
 
-    public void deleteLocation(Integer id) {
-        rest.exchange(getObjectUrl("user-locations", id), HttpMethod.DELETE, createAuthenticatedRequest(), Void.class);
+    public void deleteBusiness(Integer id) {
+        rest.exchange(getObjectUrl("user-businesses", id), HttpMethod.DELETE, createAuthenticatedRequest(), Void.class);
     }
 
     public Location createLocation(Location location) throws MJPApiException {
@@ -272,16 +273,12 @@ public class MJPApi {
         return Arrays.asList(rest.exchange(getTypeUrl("user-locations", String.format("business=%s", business_id)), HttpMethod.GET, createAuthenticatedRequest(), Location[].class).getBody());
     }
 
+    public void deleteLocation(Integer id) {
+        rest.exchange(getObjectUrl("user-locations", id), HttpMethod.DELETE, createAuthenticatedRequest(), Void.class);
+    }
+
     public List<Job> getUserJobs(Integer location_id) {
         return Arrays.asList(rest.exchange(getTypeUrl("user-jobs", String.format("location=%s", location_id)), HttpMethod.GET, createAuthenticatedRequest(), Job[].class).getBody());
-    }
-
-    public void deleteJob(Integer id) {
-        rest.exchange(getObjectUrl("user-jobs", id), HttpMethod.DELETE, createAuthenticatedRequest(), Void.class);
-    }
-
-    public Job getJob(Integer id) {
-        return rest.exchange(getObjectUrl("jobs", id), HttpMethod.GET, createAuthenticatedRequest(), Job.class).getBody();
     }
 
     public Job createJob(Job job) throws MJPApiException {
@@ -306,9 +303,13 @@ public class MJPApi {
         }
     }
 
-    public JobSeeker createJobSeeker(JobSeeker jobSeeker) throws MJPApiException {
+    public void deleteJob(Integer id) {
+        rest.exchange(getObjectUrl("user-jobs", id), HttpMethod.DELETE, createAuthenticatedRequest(), Void.class);
+    }
+
+    public <T extends MJPAPIObject> T get(Class<T> cls, Integer id) throws MJPApiException {
         try {
-            return rest.exchange(getTypeUrl("job-seekers"), HttpMethod.POST, createAuthenticatedRequest(jobSeeker), JobSeeker.class).getBody();
+            return rest.exchange(getObjectUrl(classEndPoints.get(cls), id), HttpMethod.GET, createAuthenticatedRequest(), cls).getBody();
         } catch (HttpClientErrorException e) {
             if (e.getStatusCode().value() == 400) {
                 throw new MJPApiException(e);
@@ -317,9 +318,9 @@ public class MJPApi {
         }
     }
 
-    public JobSeeker updateJobSeeker(JobSeeker jobSeeker) throws MJPApiException {
+    public <T extends MJPAPIObject> T create(Class<T> cls, T obj) throws MJPApiException {
         try {
-            return rest.exchange(getObjectUrl("job-seekers", jobSeeker.getId()), HttpMethod.PUT, createAuthenticatedRequest(jobSeeker), JobSeeker.class).getBody();
+            return rest.exchange(getTypeUrl(classEndPoints.get(cls)), HttpMethod.POST, createAuthenticatedRequest(obj), cls).getBody();
         } catch (HttpClientErrorException e) {
             if (e.getStatusCode().value() == 400) {
                 throw new MJPApiException(e);
@@ -328,9 +329,15 @@ public class MJPApi {
         }
     }
 
-    public User updateUser(User user) {
-        this.user = rest.exchange(getAuthUrl("user"), HttpMethod.PUT, createAuthenticatedRequest(user), User.class).getBody();
-        return user;
+    public <T extends MJPAPIObject> T update(Class<T> cls, T obj) throws MJPApiException {
+        try {
+            return rest.exchange(getObjectUrl(classEndPoints.get(cls), obj.getId()), HttpMethod.PUT, createAuthenticatedRequest(obj), cls).getBody();
+        } catch (HttpClientErrorException e) {
+            if (e.getStatusCode().value() == 400) {
+                throw new MJPApiException(e);
+            }
+            throw e;
+        }
     }
 
     public List<JobSeeker> getJobSeekers(Integer job_id) {

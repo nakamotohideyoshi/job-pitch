@@ -25,8 +25,8 @@ import com.myjobpitch.R;
 import com.myjobpitch.api.data.Business;
 import com.myjobpitch.tasks.CreateReadUpdateAPITaskListener;
 import com.myjobpitch.tasks.DeleteAPITaskListener;
-import com.myjobpitch.tasks.DeleteBusinessTask;
-import com.myjobpitch.tasks.ReadUserBusinessesTask;
+import com.myjobpitch.tasks.recruiter.DeleteUserBusinessTask;
+import com.myjobpitch.tasks.recruiter.ReadUserBusinessesTask;
 
 import java.util.List;
 
@@ -70,7 +70,7 @@ public class BusinessListActivity extends MJPProgressActionBarActivity  {
                                 public void onClick(DialogInterface dialog, int id) {
                                     dialog.cancel();
                                     showProgress(true);
-                                    DeleteBusinessTask deleteBusinessTask = new DeleteBusinessTask(getApi(), business.getId());
+                                    DeleteUserBusinessTask deleteBusinessTask = new DeleteUserBusinessTask(getApi(), business.getId());
                                     deleteBusinessTask.addListener(new DeleteAPITaskListener() {
                                         @Override
                                         public void onSuccess() {

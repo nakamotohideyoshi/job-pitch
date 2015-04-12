@@ -11,7 +11,7 @@ import android.widget.TextView;
 import com.myjobpitch.R;
 import com.myjobpitch.api.MJPApi;
 import com.myjobpitch.api.data.Location;
-import com.myjobpitch.tasks.CreateUpdateLocationTask;
+import com.myjobpitch.tasks.recruiter.CreateUpdateLocationTask;
 
 import java.util.ArrayList;
 import java.util.Collection;

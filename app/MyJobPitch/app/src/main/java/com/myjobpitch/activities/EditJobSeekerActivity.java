@@ -12,8 +12,8 @@ import com.myjobpitch.api.MJPApi;
 import com.myjobpitch.api.data.JobSeeker;
 import com.myjobpitch.fragments.JobSeekerEditFragment;
 import com.myjobpitch.tasks.CreateReadUpdateAPITaskListener;
-import com.myjobpitch.tasks.CreateUpdateJobSeekerTask;
 import com.myjobpitch.tasks.ReadJobSeekerTask;
+import com.myjobpitch.tasks.jobseeker.CreateUpdateJobSeekerTask;
 
 public class EditJobSeekerActivity extends MJPProgressActionBarActivity {
 

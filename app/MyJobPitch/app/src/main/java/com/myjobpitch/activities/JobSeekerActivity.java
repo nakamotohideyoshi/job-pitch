@@ -32,6 +32,9 @@ public class JobSeekerActivity extends MJPActionBarActivity {
                 startActivity(intent);
                 return true;
             case R.id.action_edit_job_profile:
+                intent = new Intent(this, EditJobProfileActivity.class);
+                intent.putExtra("job_profile_id", getApi().getUser().getJob_seeker());
+                startActivity(intent);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

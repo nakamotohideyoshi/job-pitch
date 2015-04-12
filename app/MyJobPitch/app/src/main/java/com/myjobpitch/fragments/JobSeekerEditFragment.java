@@ -16,7 +16,7 @@ import com.myjobpitch.api.MJPApi;
 import com.myjobpitch.api.data.JobSeeker;
 import com.myjobpitch.api.data.Nationality;
 import com.myjobpitch.api.data.Sex;
-import com.myjobpitch.tasks.CreateUpdateJobSeekerTask;
+import com.myjobpitch.tasks.jobseeker.CreateUpdateJobSeekerTask;
 
 import java.util.ArrayList;
 import java.util.Collection;

@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -30,6 +31,13 @@ public class JobActivity extends MJPProgressActionBarActivity {
     private View mJobSeekerSearchView;
     private Switch mAppliedSwitch;
     private Switch mShortListedSwitch;
+    private Actions mAction;
+
+    private enum Actions {
+        DISMISS,
+        NEGATIVE,
+        POSITIVE,
+    }
 
     class JobSeekerAdapter extends ArrayAdapter<JobSeeker> {
         public JobSeekerAdapter(List<JobSeeker> list) {
@@ -99,31 +107,71 @@ public class JobActivity extends MJPProgressActionBarActivity {
             }
         });
 
-        final View mPositiveButton = findViewById(R.id.positive_button);
+        final Button mPositiveButton = (Button) findViewById(R.id.positive_button);
         mPositiveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!jobSeekers.isEmpty())
-                    mCards.getTopCardListener().selectLeft();
+                if (!jobSeekers.isEmpty()) {
+                    if (mAppliedSwitch.isChecked()) {
+                        // TODO open messages
+                    } else {
+                        mAction = Actions.POSITIVE;
+                        mCards.getTopCardListener().selectLeft();
+                    }
+                }
             }
         });
-        final View mNegativeButton = findViewById(R.id.negative_button);
+        final Button mNegativeButton = (Button) findViewById(R.id.negative_button);
         mNegativeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!jobSeekers.isEmpty())
+                if (!jobSeekers.isEmpty()) {
+                    mAction = Actions.NEGATIVE;
                     mCards.getTopCardListener().selectRight();
+                }
             }
         });
-        final View mShortlistButton = findViewById(R.id.shortlist_button);
+        final Button mShortlistButton = (Button) findViewById(R.id.shortlist_button);
 
         mCards = (SwipeFlingAdapterView) findViewById(R.id.job_seeker_cards);
         mCards.setFlingListener(new SwipeFlingAdapterView.onFlingListener() {
             @Override
             public void removeFirstObjectInAdapter() {
                 // this is the simplest way to delete an object from the Adapter (/AdapterView)
-                Log.d("swipe", "removed object!");
-                jobSeekers.remove(0);
+                JobSeeker jobSeeker = jobSeekers.remove(0);
+                if (mAppliedSwitch.isChecked()) {
+                    switch (mAction) {
+                        case DISMISS:
+                            // Add to end of list so list loops
+                            // around
+                            jobSeekers.add(jobSeeker);
+                            break;
+                        case NEGATIVE:
+                            // Set application status to deleted
+                            // TODO update application status
+                            break;
+                        case POSITIVE:
+                            // shouldn't happen (positive button
+                            // opens message screen instead)
+                            break;
+                    }
+                } else {
+                    switch (mAction) {
+                        case DISMISS:
+                            // Do nothing, jobSeeker may come back later in
+                            // another API read
+                            break;
+                        case NEGATIVE:
+                            // Mark job seeker as ineligible for searches
+                            // TODO update application status
+                            break;
+                        case POSITIVE:
+                            // Create application for job seeker
+                            // TODO update application status
+                            break;
+                    }
+                }
+                mAction = null;
                 adapter.notifyDataSetChanged();
             }
 
@@ -134,6 +182,8 @@ public class JobActivity extends MJPProgressActionBarActivity {
 
             @Override
             public void onRightCardExit(Object dataObject) {
+                if (mAction == null)
+                    mAction = Actions.DISMISS;
                 Toast.makeText(JobActivity.this, "Right!", Toast.LENGTH_SHORT).show();
             }
 
@@ -165,8 +215,16 @@ public class JobActivity extends MJPProgressActionBarActivity {
         adapter.registerDataSetObserver(new DataSetObserver() {
             private void update() {
                 boolean notEmpty = adapter.getCount() > 0;
-                mPositiveButton.setEnabled(notEmpty);
+                if (mAppliedSwitch.isChecked()) {
+                    mPositiveButton.setText(getString(R.string.messages));
+                    mShortlistButton.setVisibility(View.VISIBLE);
+                } else {
+                    mPositiveButton.setText(getString(R.string.connect));
+                    mShortlistButton.setVisibility(View.GONE);
+                }
+                mNegativeButton.setText(getString(R.string.remove));
                 mShortlistButton.setEnabled(notEmpty);
+                mPositiveButton.setEnabled(notEmpty);
                 mNegativeButton.setEnabled(notEmpty);
             }
 

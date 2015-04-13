@@ -158,13 +158,15 @@ class Experience(models.Model):
         verbose_name_plural = "experience"
 
 class JobProfile(models.Model):
-    job_seeker = models.ForeignKey(JobSeeker, related_name='profiles')
-    # TODO search parameters
+    job_seeker = models.OneToOneField(JobSeeker, related_name='profile')
+    sectors = models.ManyToManyField(Sector, related_name='job_profiles')
+    contract = models.ForeignKey(Contract, related_name='job_profiles')
+    hours = models.ForeignKey(Hours, related_name='job_profiles')
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
     
     def __str__(self):
-        return "%s: %s" % (type(self).__name__, self.job_seeker.user.get_full_name())
+        return "%s: %s" % (type(self).__name__, self.job_seeker.get_full_name())
 
 class Application(models.Model):
     job = models.ForeignKey(Job, related_name='applications')
@@ -176,5 +178,8 @@ class Application(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
     
+    class Meta:
+        unique_together = ('job', 'job_seeker')
+    
     def __str__(self):
-        return "%s: %s for %s" % (type(self).__name__, self.job.title, self.job_seeker.user.get_full_name())
+        return "%s: %s for %s" % (type(self).__name__, self.job.title, self.job_seeker.get_full_name())

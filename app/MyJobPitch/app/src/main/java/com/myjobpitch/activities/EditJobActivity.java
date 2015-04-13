@@ -11,6 +11,7 @@ import com.myjobpitch.MJPApplication;
 import com.myjobpitch.R;
 import com.myjobpitch.api.MJPApi;
 import com.myjobpitch.api.data.Job;
+import com.myjobpitch.api.data.JobStatus;
 import com.myjobpitch.fragments.JobEditFragment;
 import com.myjobpitch.tasks.CreateReadUpdateAPITaskListener;
 import com.myjobpitch.tasks.ReadJobTask;
@@ -82,7 +83,7 @@ public class EditJobActivity extends MJPProgressActionBarActivity {
             setTitle(R.string.action_add_job);
             job = new Job();
             job.setLocation(location_id);
-            job.setStatus(getMJPApplication().getJobStatus("OPEN").getId());
+            job.setStatus(getMJPApplication().get(JobStatus.class, "OPEN").getId());
             mJobEditFragment.load(job);
         }
     }

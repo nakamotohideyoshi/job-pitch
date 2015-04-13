@@ -1,16 +1,13 @@
 package com.myjobpitch.api.data;
 
-import com.myjobpitch.api.MJPAPIObject;
+import com.myjobpitch.api.MJPObjectWithDates;
 
-import java.util.Date;
 import java.util.List;
 
-public class Business extends MJPAPIObject {
+public class Business extends MJPObjectWithDates {
     private String name;
     private List<Integer> users;
     private List<Integer> locations;
-    private Date created;
-    private Date updated;
 
     public String getName() {
         return name;
@@ -22,14 +19,6 @@ public class Business extends MJPAPIObject {
 
     public List<Integer> getLocations() {
         return locations;
-    }
-
-    public Date getCreated() {
-        return created;
-    }
-
-    public Date getUpdated() {
-        return updated;
     }
 
     public void setName(String name) {

@@ -1,6 +1,5 @@
 package com.myjobpitch.tasks;
 
-import android.os.AsyncTask;
 import android.util.Log;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -13,7 +12,7 @@ import java.util.List;
 /**
 * Created by Jamie on 24/03/2015.
 */
-public class CreateUpdateAPITask<T extends MJPAPIObject> extends AsyncTask<Void, Void, T> {
+public class CreateUpdateAPITask<T extends MJPAPIObject> extends APITask<T> {
     private List<CreateReadUpdateAPITaskListener<T>> listeners = new ArrayList<>();
 
     public interface Action<T> {
@@ -43,13 +42,14 @@ public class CreateUpdateAPITask<T extends MJPAPIObject> extends AsyncTask<Void,
                 return action.update(object);
         } catch (MJPApiException e) {
             errors = e.getErrors();
-            Log.d("CreateLocation", errors.toString());
+            Log.d("CreateUpdateAPITask", errors.toString());
         }
         return null;
     }
 
     @Override
     protected void onPostExecute(final T result) {
+        super.onPostExecute(result);
         for (CreateReadUpdateAPITaskListener<T> listener : listeners) {
             if (errors == null)
                 listener.onSuccess(result);
@@ -60,6 +60,7 @@ public class CreateUpdateAPITask<T extends MJPAPIObject> extends AsyncTask<Void,
 
     @Override
     protected void onCancelled() {
+        super.onCancelled();
         for (CreateReadUpdateAPITaskListener<T> listener : listeners)
             listener.onCancelled();
     }

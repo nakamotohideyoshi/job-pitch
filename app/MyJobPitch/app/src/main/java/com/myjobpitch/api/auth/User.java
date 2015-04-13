@@ -1,6 +1,5 @@
 package com.myjobpitch.api.auth;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.myjobpitch.api.MJPAPIObject;
 
 import java.util.List;
@@ -28,5 +27,9 @@ public class User extends MJPAPIObject {
 
     public boolean isJobSeeker() {
         return this.job_seeker != null;
+    }
+
+    public void setJob_seeker(Integer job_seeker) {
+        this.job_seeker = job_seeker;
     }
 }

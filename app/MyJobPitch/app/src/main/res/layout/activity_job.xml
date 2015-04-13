@@ -17,6 +17,14 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <ProgressBar android:id="@+id/background_progress"
+            style="?android:attr/progressBarStyleSmall"
+            android:visibility="gone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/activity_horizontal_margin"
+            android:layout_marginTop="8dp"/>
+
         <LinearLayout
             android:id="@+id/controls"
             android:paddingLeft="@dimen/activity_horizontal_margin"
@@ -46,7 +54,7 @@
             android:layout_height="match_parent" />
 
         <LinearLayout
-            android:id="@id/buttons"
+            android:id="@+id/buttons"
             android:paddingLeft="@dimen/activity_horizontal_margin"
             android:paddingRight="@dimen/activity_horizontal_margin"
             android:orientation="horizontal"
@@ -61,6 +69,7 @@
                 android:layout_height="wrap_content" />
             <Button
                 android:id="@+id/shortlist_button"
+                android:text="@string/shortlist"
                 android:layout_weight="1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />

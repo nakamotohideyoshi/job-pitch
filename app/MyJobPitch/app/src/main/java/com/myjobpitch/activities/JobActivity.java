@@ -1,6 +1,8 @@
 package com.myjobpitch.activities;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.database.DataSetObserver;
 import android.os.Bundle;
 import android.util.Log;
@@ -16,10 +18,16 @@ import android.widget.Toast;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.lorentzos.flingswipe.SwipeFlingAdapterView;
 import com.myjobpitch.R;
+import com.myjobpitch.api.data.Application;
+import com.myjobpitch.api.data.ApplicationStatus;
 import com.myjobpitch.api.data.Experience;
 import com.myjobpitch.api.data.JobSeeker;
+import com.myjobpitch.api.data.Role;
 import com.myjobpitch.api.data.Sex;
+import com.myjobpitch.tasks.APITask;
+import com.myjobpitch.tasks.APITaskListener;
 import com.myjobpitch.tasks.CreateReadUpdateAPITaskListener;
+import com.myjobpitch.tasks.CreateUpdateApplicationTask;
 import com.myjobpitch.tasks.recruiter.ReadJobSeekersTask;
 
 import java.util.ArrayList;
@@ -27,17 +35,54 @@ import java.util.List;
 
 public class JobActivity extends MJPProgressActionBarActivity {
 
+    private BackgroundTaskManager backgroundTaskManager;
+    private class BackgroundTaskManager {
+        private List<APITask<?>> tasks = new ArrayList<>();
+        private List<Runnable> taskCompletionActions = new ArrayList<>();
+
+        public synchronized void addTaskCompletionAction(Runnable runnable) {
+            taskCompletionActions.add(runnable);
+        }
+
+        public synchronized void addBackgroundTask(final APITask<?> task) {
+            tasks.add(task);
+            task.addListener(new APITaskListener() {
+                @Override
+                public void onPostExecute() {
+                    removeTask(task);
+                }
+
+                @Override
+                public void onCancelled() {
+                    removeTask(task);
+                }
+            });
+            // Update tasks now, in case the task finished while we were
+            // faffing around up above
+            for (APITask<?> t : new ArrayList<>(tasks))
+                if (task.isExecuted())
+                    tasks.remove(task);
+            checkTasksComplete();
+        }
+
+        private synchronized void removeTask(APITask<?> task) {
+            tasks.remove(task);
+            checkTasksComplete();
+        }
+
+        private void checkTasksComplete() {
+            if (tasks.isEmpty())
+                for (Runnable action : taskCompletionActions)
+                    action.run();
+        }
+    }
+
     private View mProgressView;
     private View mJobSeekerSearchView;
     private Switch mAppliedSwitch;
     private Switch mShortListedSwitch;
-    private Actions mAction;
-
-    private enum Actions {
-        DISMISS,
-        NEGATIVE,
-        POSITIVE,
-    }
+    private boolean mButtonActivation = false;
+    private View mBackgroundProgress;
 
     class JobSeekerAdapter extends ArrayAdapter<JobSeeker> {
         public JobSeekerAdapter(List<JobSeeker> list) {
@@ -85,21 +130,32 @@ public class JobActivity extends MJPProgressActionBarActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        backgroundTaskManager = new BackgroundTaskManager();
+        backgroundTaskManager.addTaskCompletionAction(new Runnable() {
+            @Override
+            public void run() {
+                mBackgroundProgress.setVisibility(View.GONE);
+            }
+        });
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_job);
         job_id = getIntent().getIntExtra("job_id", -1);
 
         mJobSeekerSearchView = findViewById(R.id.job_seeker_search);
         mProgressView = findViewById(R.id.progress);
+        mBackgroundProgress = findViewById(R.id.background_progress);
 
         mAppliedSwitch = (Switch) findViewById(R.id.applied_switch);
+        mAppliedSwitch.setChecked(true);
         mAppliedSwitch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                mShortListedSwitch.setEnabled(mAppliedSwitch.isChecked());
                 loadJobSeekers();
             }
         });
         mShortListedSwitch = (Switch) findViewById(R.id.shortlisted_switch);
+        mShortListedSwitch.setEnabled(false);
         mShortListedSwitch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -115,7 +171,7 @@ public class JobActivity extends MJPProgressActionBarActivity {
                     if (mAppliedSwitch.isChecked()) {
                         // TODO open messages
                     } else {
-                        mAction = Actions.POSITIVE;
+                        mButtonActivation = true;
                         mCards.getTopCardListener().selectLeft();
                     }
                 }
@@ -126,8 +182,25 @@ public class JobActivity extends MJPProgressActionBarActivity {
             @Override
             public void onClick(View v) {
                 if (!jobSeekers.isEmpty()) {
-                    mAction = Actions.NEGATIVE;
-                    mCards.getTopCardListener().selectRight();
+                    JobSeeker jobSeeker = jobSeekers.get(0);
+                    String name = jobSeeker.getFirst_name() + " " + jobSeeker.getLast_name();
+                    String message = "Are you sure you want to remove " + name + "? This job seeker will never appear again for this job.";
+
+                    AlertDialog.Builder builder = new AlertDialog.Builder(JobActivity.this);
+                    builder.setMessage(message)
+                            .setCancelable(false)
+                            .setPositiveButton(getString(R.string.remove), new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    dialog.cancel();
+                                    mButtonActivation = true;
+                                    mCards.getTopCardListener().selectRight();
+                                }
+                            })
+                            .setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    dialog.cancel();
+                                }
+                            }).create().show();
                 }
             }
         });
@@ -137,54 +210,48 @@ public class JobActivity extends MJPProgressActionBarActivity {
         mCards.setFlingListener(new SwipeFlingAdapterView.onFlingListener() {
             @Override
             public void removeFirstObjectInAdapter() {
-                // this is the simplest way to delete an object from the Adapter (/AdapterView)
-                JobSeeker jobSeeker = jobSeekers.remove(0);
-                if (mAppliedSwitch.isChecked()) {
-                    switch (mAction) {
-                        case DISMISS:
-                            // Add to end of list so list loops
-                            // around
-                            jobSeekers.add(jobSeeker);
-                            break;
-                        case NEGATIVE:
-                            // Set application status to deleted
-                            // TODO update application status
-                            break;
-                        case POSITIVE:
-                            // shouldn't happen (positive button
-                            // opens message screen instead)
-                            break;
-                    }
-                } else {
-                    switch (mAction) {
-                        case DISMISS:
-                            // Do nothing, jobSeeker may come back later in
-                            // another API read
-                            break;
-                        case NEGATIVE:
-                            // Mark job seeker as ineligible for searches
-                            // TODO update application status
-                            break;
-                        case POSITIVE:
-                            // Create application for job seeker
-                            // TODO update application status
-                            break;
-                    }
-                }
-                mAction = null;
-                adapter.notifyDataSetChanged();
             }
 
             @Override
             public void onLeftCardExit(Object dataObject) {
-                Toast.makeText(JobActivity.this, "Left!", Toast.LENGTH_SHORT).show();
+                JobSeeker jobSeeker = jobSeekers.remove(0);
+                if (mAppliedSwitch.isChecked()) {
+                    // Add to end of list so list loops around
+                    jobSeekers.add(jobSeeker);
+                } else {
+                    // Create application for job seeker
+                    Application application = new Application();
+                    application.setJob(job_id);
+                    application.setJob_seeker(jobSeeker.getId());
+                    application.setCreated_by(getMJPApplication().get(Role.class, "RECRUITER").getId());
+                    application.setStatus(getMJPApplication().get(ApplicationStatus.class, "CREATED").getId());
+                    application.setShortlisted(false);
+                    CreateUpdateApplicationTask task = new CreateUpdateApplicationTask(getApi(), application);
+                    backgroundTaskManager.addBackgroundTask(task);
+                    mBackgroundProgress.setVisibility(View.VISIBLE);
+                    task.execute();
+                }
+                adapter.notifyDataSetChanged();
+                mButtonActivation = false;
             }
 
             @Override
             public void onRightCardExit(Object dataObject) {
-                if (mAction == null)
-                    mAction = Actions.DISMISS;
-                Toast.makeText(JobActivity.this, "Right!", Toast.LENGTH_SHORT).show();
+                JobSeeker jobSeeker = jobSeekers.remove(0);
+                if (mAppliedSwitch.isChecked()) {
+                    if (!mButtonActivation) {
+                        // Add to end of list so list loops around
+                        jobSeekers.add(jobSeeker);
+                    }
+                } else {
+                    if (mButtonActivation) {
+                        // Mark job seeker as ineligible for searches
+                        // TODO update application status
+                        Log.d("JobActivity", "TODO update application status");
+                    }
+                }
+                adapter.notifyDataSetChanged();
+                mButtonActivation = false;
             }
 
             @Override
@@ -248,7 +315,7 @@ public class JobActivity extends MJPProgressActionBarActivity {
 
     private void loadJobSeekers() {
         showProgress(true);
-        ReadJobSeekersTask readJobSeekers = new ReadJobSeekersTask(getApi(), job_id);
+        ReadJobSeekersTask readJobSeekers = new ReadJobSeekersTask(getApi(), job_id, mAppliedSwitch.isChecked(), mShortListedSwitch.isChecked());
         readJobSeekers.addListener(new CreateReadUpdateAPITaskListener<List<JobSeeker>>() {
             @Override
             public void onSuccess(List<JobSeeker> result) {

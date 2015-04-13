@@ -187,6 +187,7 @@ public class CreateProfileActivity extends MJPProgressActionBarActivity {
                 @Override
                 public void onSuccess(JobSeeker jobSeeker) {
                     CreateProfileActivity.this.jobSeeker = jobSeeker;
+                    getApi().getUser().setJob_seeker(jobSeeker.getId());
 
                     Intent intent = new Intent(CreateProfileActivity.this, JobSeekerActivity.class);
                     intent.putExtra("from_login", true);

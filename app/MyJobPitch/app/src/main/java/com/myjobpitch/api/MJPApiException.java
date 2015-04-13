@@ -21,7 +21,7 @@ public class MJPApiException extends Exception {
         ObjectMapper mapper = new ObjectMapper();
         JsonFactory factory = mapper.getFactory();
         try {
-            Log.d("MJPApiException", e.getResponseBodyAsString());
+            Log.e("MJPApiException", e.getResponseBodyAsString());
             errors = mapper.readTree(e.getResponseBodyAsByteArray());
         } catch (IOException e1) {}
     }

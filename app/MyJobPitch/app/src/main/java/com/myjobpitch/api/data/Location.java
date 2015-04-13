@@ -1,11 +1,10 @@
 package com.myjobpitch.api.data;
 
-import com.myjobpitch.api.MJPAPIObject;
+import com.myjobpitch.api.MJPObjectWithDates;
 
-import java.util.Date;
 import java.util.List;
 
-public class Location extends MJPAPIObject {
+public class Location extends MJPObjectWithDates {
     private Integer business;
     private List<Integer> jobs;
     private String name;
@@ -13,8 +12,6 @@ public class Location extends MJPAPIObject {
     private String email;
     private String telephone;
     private String mobile;
-    private Date created;
-    private Date updated;
     private boolean email_public;
     private boolean mobile_public;
     private boolean telephone_public;
@@ -57,14 +54,6 @@ public class Location extends MJPAPIObject {
 
     public boolean getTelephone_public() {
         return telephone_public;
-    }
-
-    public Date getCreated() {
-        return created;
-    }
-
-    public Date getUpdated() {
-        return updated;
     }
 
     public void setBusiness(Integer business) {

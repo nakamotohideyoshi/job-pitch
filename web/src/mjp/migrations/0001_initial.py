@@ -109,6 +109,8 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('created', models.DateTimeField(auto_now_add=True)),
                 ('updated', models.DateTimeField(auto_now=True)),
+                ('contract', models.ForeignKey(related_name='job_profiles', to='mjp.Contract')),
+                ('hours', models.ForeignKey(related_name='job_profiles', to='mjp.Hours')),
             ],
             options={
             },
@@ -236,7 +238,13 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='jobprofile',
             name='job_seeker',
-            field=models.ForeignKey(related_name='profiles', to='mjp.JobSeeker'),
+            field=models.OneToOneField(related_name='profile', to='mjp.JobSeeker'),
+            preserve_default=True,
+        ),
+        migrations.AddField(
+            model_name='jobprofile',
+            name='sectors',
+            field=models.ManyToManyField(related_name='job_profiles', to='mjp.Sector'),
             preserve_default=True,
         ),
         migrations.AddField(
@@ -292,5 +300,9 @@ class Migration(migrations.Migration):
             name='status',
             field=models.ForeignKey(related_name='applications', to='mjp.ApplicationStatus'),
             preserve_default=True,
+        ),
+        migrations.AlterUniqueTogether(
+            name='application',
+            unique_together=set([('job', 'job_seeker')]),
         ),
     ]

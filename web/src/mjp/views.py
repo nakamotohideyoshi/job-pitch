@@ -135,7 +135,7 @@ class JobSeekerViewSet(viewsets.ModelViewSet):
                     return JobSeeker.objects.filter(applications__job__pk=job)
             else:
                 # TODO search criteria
-                return JobSeeker.objects.all()
+                return JobSeeker.objects.exclude(applications__job__pk=job)
         else:
             return JobSeeker.objects.all()
     

@@ -1,10 +1,8 @@
 package com.myjobpitch.api.data;
 
-import com.myjobpitch.api.MJPAPIObject;
+import com.myjobpitch.api.MJPObjectWithDates;
 
-import java.util.Date;
-
-public class Job extends MJPAPIObject {
+public class Job extends MJPObjectWithDates {
     private String title;
     private String description;
     private Integer sector;
@@ -12,8 +10,6 @@ public class Job extends MJPAPIObject {
     private Integer contract;
     private Integer hours;
     private Integer status;
-    private Date created;
-    private Date updated;
 
     public String getTitle() {
         return title;
@@ -41,14 +37,6 @@ public class Job extends MJPAPIObject {
 
     public Integer getStatus() {
         return status;
-    }
-
-    public Date getCreated() {
-        return created;
-    }
-
-    public Date getUpdated() {
-        return updated;
     }
 
     public void setTitle(String title) {

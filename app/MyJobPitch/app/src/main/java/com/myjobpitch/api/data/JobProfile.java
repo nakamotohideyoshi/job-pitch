@@ -1,16 +1,13 @@
 package com.myjobpitch.api.data;
 
-import com.myjobpitch.api.MJPAPIObject;
+import com.myjobpitch.api.MJPObjectWithDates;
 
-import java.util.Date;
 import java.util.List;
 
-public class JobProfile extends MJPAPIObject {
+public class JobProfile extends MJPObjectWithDates {
     private List<Integer> sectors;
     private Integer contract;
     private Integer hours;
-    private Date created;
-    private Date updated;
 
     public List<Integer> getSectors() {
         return sectors;
@@ -22,14 +19,6 @@ public class JobProfile extends MJPAPIObject {
 
     public Integer getHours() {
         return hours;
-    }
-
-    public Date getCreated() {
-        return created;
-    }
-
-    public Date getUpdated() {
-        return updated;
     }
 
     public void setSectors(List<Integer> sectors) {

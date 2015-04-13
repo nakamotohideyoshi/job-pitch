@@ -6,6 +6,7 @@ import com.myjobpitch.api.auth.AuthToken;
 import com.myjobpitch.api.auth.Login;
 import com.myjobpitch.api.auth.Registration;
 import com.myjobpitch.api.auth.User;
+import com.myjobpitch.api.data.Application;
 import com.myjobpitch.api.data.ApplicationStatus;
 import com.myjobpitch.api.data.Business;
 import com.myjobpitch.api.data.Contract;
@@ -53,6 +54,7 @@ public class MJPApi {
         classEndPoints.put(JobStatus.class, "job-statuses");
         classEndPoints.put(ApplicationStatus.class, "application-statuses");
         classEndPoints.put(Role.class, "roles");
+        classEndPoints.put(Application.class, "applications");
     }
 
 	private String apiRoot;
@@ -272,10 +274,18 @@ public class MJPApi {
 //    }
 
     public <T extends MJPAPIObject> List<T> get(Class<T> cls) throws MJPApiException {
+        return get(cls, getTypeUrl(classEndPoints.get(cls)));
+    }
+
+    public <T extends MJPAPIObject> List<T> get(Class<T> cls, String query) throws MJPApiException {
+        return get(cls, getTypeUrl(classEndPoints.get(cls), query));
+    }
+
+    private <T extends MJPAPIObject> List<T> get(Class<T> cls, URI uri) throws MJPApiException {
         T[] dummyArray = (T[]) Array.newInstance(cls, 0);
         Class<T[]> arrayCls = (Class<T[]>) dummyArray.getClass();
         try {
-            return Arrays.asList(rest.exchange(getTypeUrl(classEndPoints.get(cls)), HttpMethod.GET, createAuthenticatedRequest(), arrayCls).getBody());
+            return Arrays.asList(rest.exchange(uri, HttpMethod.GET, createAuthenticatedRequest(), arrayCls).getBody());
         } catch (HttpClientErrorException e) {
             if (e.getStatusCode().value() == 400) {
                 throw new MJPApiException(e);
@@ -315,9 +325,5 @@ public class MJPApi {
             }
             throw e;
         }
-    }
-
-    public List<JobSeeker> getJobSeekers(Integer job_id) {
-        return Arrays.asList(rest.exchange(getTypeUrl("job-seekers", String.format("job=%s", job_id)), HttpMethod.GET, createAuthenticatedRequest(), JobSeeker[].class).getBody());
     }
 }

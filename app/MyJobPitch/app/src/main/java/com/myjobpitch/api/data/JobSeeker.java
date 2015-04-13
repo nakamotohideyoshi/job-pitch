@@ -1,21 +1,18 @@
 package com.myjobpitch.api.data;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.myjobpitch.api.MJPAPIObject;
+import com.myjobpitch.api.MJPObjectWithDates;
 
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 
 @JsonIgnoreProperties({"user"})
-public class JobSeeker extends MJPAPIObject {
+public class JobSeeker extends MJPObjectWithDates {
     private String first_name;
     private String last_name;
     private String email;
     private String telephone;
     private String mobile;
-    private Date created;
-    private Date updated;
     private boolean email_public;
     private boolean mobile_public;
     private boolean telephone_public;
@@ -50,14 +47,6 @@ public class JobSeeker extends MJPAPIObject {
 
     public Integer getAge() {
         return age;
-    }
-
-    public Date getCreated() {
-        return created;
-    }
-
-    public Date getUpdated() {
-        return updated;
     }
 
     public void setTelephone(String telephone) {
@@ -153,7 +142,8 @@ public class JobSeeker extends MJPAPIObject {
     }
 
     public List<Experience> getExperience() {
-        Collections.sort(experience);
+        if (experience != null)
+            Collections.sort(experience);
         return experience;
     }
 }

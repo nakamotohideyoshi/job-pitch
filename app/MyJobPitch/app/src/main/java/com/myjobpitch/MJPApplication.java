@@ -5,11 +5,13 @@ import android.app.Application;
 import com.myjobpitch.api.MJPAPIObject;
 import com.myjobpitch.api.MJPApi;
 import com.myjobpitch.api.MJPApiException;
+import com.myjobpitch.api.MJPObjectWithName;
 import com.myjobpitch.api.data.ApplicationStatus;
 import com.myjobpitch.api.data.Contract;
 import com.myjobpitch.api.data.Hours;
 import com.myjobpitch.api.data.JobStatus;
 import com.myjobpitch.api.data.Nationality;
+import com.myjobpitch.api.data.Role;
 import com.myjobpitch.api.data.Sector;
 import com.myjobpitch.api.data.Sex;
 
@@ -26,13 +28,18 @@ public class MJPApplication extends Application {
     }
 
     public void loadData() throws MJPApiException {
-        cache.put(Sector.class, getApi().get(Sector.class));
-        cache.put(Contract.class, getApi().get(Contract.class));
-        cache.put(Hours.class, getApi().get(Hours.class));
-        cache.put(Nationality.class, getApi().get(Nationality.class));
-        cache.put(ApplicationStatus.class, getApi().get(ApplicationStatus.class));
-        cache.put(JobStatus.class, getApi().get(JobStatus.class));
-        cache.put(Sex.class, getApi().get(Sex.class));
+        cache(Sector.class);
+        cache(Contract.class);
+        cache(Hours.class);
+        cache(Nationality.class);
+        cache(ApplicationStatus.class);
+        cache(JobStatus.class);
+        cache(Sex.class);
+        cache(Role.class);
+    }
+
+    private <T extends MJPAPIObject> void cache(Class<T> cls) throws MJPApiException {
+        cache.put(cls, getApi().get(cls));
     }
 
     public <T extends MJPAPIObject> List<T> get(Class<T> cls) {
@@ -46,10 +53,10 @@ public class MJPApplication extends Application {
         return null;
     }
 
-    public JobStatus getJobStatus(String name) {
-        for (JobStatus jobStatus : get(JobStatus.class))
-            if (jobStatus.getName().equals(name))
-                return jobStatus;
+    public <T extends MJPObjectWithName> T get(Class<T> cls, String name) {
+        for (T obj : get(cls))
+            if (obj.getName().equals(name))
+                return obj;
         return null;
     }
 }

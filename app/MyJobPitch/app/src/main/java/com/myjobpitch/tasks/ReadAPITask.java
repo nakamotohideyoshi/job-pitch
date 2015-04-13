@@ -1,6 +1,5 @@
 package com.myjobpitch.tasks;
 
-import android.os.AsyncTask;
 import android.util.Log;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -9,7 +8,7 @@ import com.myjobpitch.api.MJPApiException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ReadAPITask<T> extends AsyncTask<Void, Void, T> {
+public class ReadAPITask<T> extends APITask<T> {
     private List<CreateReadUpdateAPITaskListener<T>> listeners = new ArrayList<>();
 
     public interface Action<T> {
@@ -41,6 +40,7 @@ public class ReadAPITask<T> extends AsyncTask<Void, Void, T> {
 
     @Override
     protected void onPostExecute(T result) {
+        super.onPostExecute(result);
         for (CreateReadUpdateAPITaskListener<T> listener : listeners) {
             if (errors == null)
                 listener.onSuccess(result);
@@ -51,6 +51,7 @@ public class ReadAPITask<T> extends AsyncTask<Void, Void, T> {
 
     @Override
     protected void onCancelled() {
+        super.onCancelled();
         for (CreateReadUpdateAPITaskListener<T> listener : listeners)
             listener.onCancelled();
     }

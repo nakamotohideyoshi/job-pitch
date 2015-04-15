@@ -116,28 +116,19 @@ class JobSeekerPermission(permissions.BasePermission):
         if request.method in permissions.SAFE_METHODS:
             return True
         return obj.user == request.user
+JobSeekerSerializer = SimpleSerializer(JobSeeker, {'user': serializers.PrimaryKeyRelatedField(read_only=True),
+                                                   'profile': serializers.PrimaryKeyRelatedField(many=True, read_only=True),
+                                                   'experience': SimpleSerializer(Experience)(many=True, read_only=True),
+                                                   })
 class JobSeekerViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.IsAuthenticated, JobSeekerPermission)
-    serializer_class = SimpleSerializer(JobSeeker, {'user': serializers.PrimaryKeyRelatedField(read_only=True),
-                                                    'profile': serializers.PrimaryKeyRelatedField(many=True, read_only=True),
-                                                    'experience': SimpleSerializer(Experience)(many=True, read_only=True),
-                                                    })
-    
+    serializer_class = JobSeekerSerializer
     def get_queryset(self):
         job = self.request.QUERY_PARAMS.get('job')
         if job:
-            applied = self.request.QUERY_PARAMS.get('applied')
-            if applied == '1':
-                shortlisted = self.request.QUERY_PARAMS.get('shortlisted')
-                if shortlisted == '1':
-                    return JobSeeker.objects.filter(applications__job__pk=job, applications__shortlisted=True)
-                else:
-                    return JobSeeker.objects.filter(applications__job__pk=job)
-            else:
-                # TODO search criteria
-                return JobSeeker.objects.exclude(applications__job__pk=job)
-        else:
-            return JobSeeker.objects.all()
+            # TODO search criteria
+            return JobSeeker.objects.exclude(applications__job__pk=job)
+        return JobSeeker.objects.all()
     
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
@@ -204,9 +195,13 @@ class ApplicationPermission(permissions.BasePermission):
 class ApplicationViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.IsAuthenticated, ApplicationPermission)
     queryset = Application.objects.all()
-    serializer_class = SimpleSerializer(Application, {'created_by': serializers.PrimaryKeyRelatedField(read_only=True),
+    serializer_class = SimpleSerializer(Application, {'job_seeker': JobSeekerSerializer(read_only=True),
+                                                      'created_by': serializers.PrimaryKeyRelatedField(read_only=True),
                                                       'deleted_by': serializers.PrimaryKeyRelatedField(read_only=True),
                                                       })
+    create_serializer_class = SimpleSerializer(Application, {'created_by': serializers.PrimaryKeyRelatedField(read_only=True),
+                                                             'deleted_by': serializers.PrimaryKeyRelatedField(read_only=True),
+                                                             })
     update_serializer_class = SimpleSerializer(Application,
                                                overrides={'job_seeker': serializers.PrimaryKeyRelatedField(read_only=True),
                                                           'job': serializers.PrimaryKeyRelatedField(read_only=True),
@@ -224,5 +219,18 @@ class ApplicationViewSet(viewsets.ModelViewSet):
     def get_serializer_class(self):
         if self.request.method == 'PUT':
             return self.update_serializer_class
+        if self.request.method == 'POST':
+            return self.create_serializer_class
         return self.serializer_class
+    
+    def get_queryset(self):
+        job = self.request.QUERY_PARAMS.get('job')
+        if job:
+            shortlisted = self.request.QUERY_PARAMS.get('shortlisted')
+            if shortlisted == '1':
+                return Application.objects.filter(job__pk=job, shortlisted=True)
+            else:
+                return Application.objects.filter(job__pk=job)
+        return Application.objects.all()
+        
 router.register('applications', ApplicationViewSet)

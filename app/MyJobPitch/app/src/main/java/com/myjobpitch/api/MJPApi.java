@@ -7,6 +7,7 @@ import com.myjobpitch.api.auth.Login;
 import com.myjobpitch.api.auth.Registration;
 import com.myjobpitch.api.auth.User;
 import com.myjobpitch.api.data.Application;
+import com.myjobpitch.api.data.ApplicationForCreation;
 import com.myjobpitch.api.data.ApplicationStatus;
 import com.myjobpitch.api.data.Business;
 import com.myjobpitch.api.data.Contract;
@@ -55,6 +56,7 @@ public class MJPApi {
         classEndPoints.put(ApplicationStatus.class, "application-statuses");
         classEndPoints.put(Role.class, "roles");
         classEndPoints.put(Application.class, "applications");
+        classEndPoints.put(ApplicationForCreation.class, "applications");
     }
 
 	private String apiRoot;

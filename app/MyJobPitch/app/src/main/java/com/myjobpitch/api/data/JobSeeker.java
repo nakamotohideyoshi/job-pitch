@@ -7,7 +7,7 @@ import java.util.Collections;
 import java.util.List;
 
 @JsonIgnoreProperties({"user"})
-public class JobSeeker extends MJPObjectWithDates {
+public class JobSeeker extends MJPObjectWithDates implements JobSeekerContainer {
     private String first_name;
     private String last_name;
     private String email;
@@ -145,5 +145,10 @@ public class JobSeeker extends MJPObjectWithDates {
         if (experience != null)
             Collections.sort(experience);
         return experience;
+    }
+
+    @Override
+    public JobSeeker getJobSeeker() {
+        return this;
     }
 }

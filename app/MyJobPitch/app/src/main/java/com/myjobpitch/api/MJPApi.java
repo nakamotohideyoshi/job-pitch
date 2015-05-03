@@ -9,6 +9,7 @@ import com.myjobpitch.api.auth.User;
 import com.myjobpitch.api.data.Application;
 import com.myjobpitch.api.data.ApplicationForCreation;
 import com.myjobpitch.api.data.ApplicationStatus;
+import com.myjobpitch.api.data.ApplicationUpdate;
 import com.myjobpitch.api.data.Business;
 import com.myjobpitch.api.data.Contract;
 import com.myjobpitch.api.data.Hours;
@@ -57,6 +58,7 @@ public class MJPApi {
         classEndPoints.put(Role.class, "roles");
         classEndPoints.put(Application.class, "applications");
         classEndPoints.put(ApplicationForCreation.class, "applications");
+        classEndPoints.put(ApplicationUpdate.class, "applications");
     }
 
 	private String apiRoot;
@@ -238,6 +240,17 @@ public class MJPApi {
         return Arrays.asList(rest.exchange(getTypeUrl("user-jobs", String.format("location=%s", location_id)), HttpMethod.GET, createAuthenticatedRequest(), Job[].class).getBody());
     }
 
+    public void updateApplication(ApplicationUpdate update) throws MJPApiException {
+        try {
+            rest.exchange(getObjectUrl(classEndPoints.get(ApplicationUpdate.class), update.getId()), HttpMethod.PUT, createAuthenticatedRequest(update), ApplicationUpdate.class);
+        } catch (HttpClientErrorException e) {
+            if (e.getStatusCode().value() == 400) {
+                throw new MJPApiException(e);
+            }
+            throw e;
+        }
+    }
+
     public Job createJob(Job job) throws MJPApiException {
         try {
             return rest.exchange(getTypeUrl("user-jobs"), HttpMethod.POST, createAuthenticatedRequest(job), Job.class).getBody();
@@ -263,17 +276,6 @@ public class MJPApi {
     public void deleteJob(Integer id) {
         rest.exchange(getObjectUrl("user-jobs", id), HttpMethod.DELETE, createAuthenticatedRequest(), Void.class);
     }
-
-//    public <T extends MJPAPIObject> List<T> get(Class<T> cls, Class<T[]> arrayCls) throws MJPApiException {
-//        try {
-//            return Arrays.asList(rest.exchange(getTypeUrl(classEndPoints.get(cls)), HttpMethod.GET, createAuthenticatedRequest(), arrayCls).getBody());
-//        } catch (HttpClientErrorException e) {
-//            if (e.getStatusCode().value() == 400) {
-//                throw new MJPApiException(e);
-//            }
-//            throw e;
-//        }
-//    }
 
     public <T extends MJPAPIObject> List<T> get(Class<T> cls) throws MJPApiException {
         return get(cls, getTypeUrl(classEndPoints.get(cls)));

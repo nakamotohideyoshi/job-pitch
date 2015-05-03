@@ -24,6 +24,7 @@ import com.myjobpitch.R;
 import com.myjobpitch.api.data.Application;
 import com.myjobpitch.api.data.ApplicationForCreation;
 import com.myjobpitch.api.data.ApplicationStatus;
+import com.myjobpitch.api.data.ApplicationUpdate;
 import com.myjobpitch.api.data.Experience;
 import com.myjobpitch.api.data.JobSeeker;
 import com.myjobpitch.api.data.JobSeekerContainer;
@@ -32,6 +33,7 @@ import com.myjobpitch.tasks.APITask;
 import com.myjobpitch.tasks.APITaskListener;
 import com.myjobpitch.tasks.CreateApplicationTask;
 import com.myjobpitch.tasks.CreateReadUpdateAPITaskListener;
+import com.myjobpitch.tasks.UpdateApplicationTask;
 import com.myjobpitch.tasks.recruiter.ReadApplicationsTask;
 import com.myjobpitch.tasks.recruiter.ReadJobSeekersTask;
 
@@ -44,6 +46,13 @@ public class JobActivity extends MJPProgressActionBarActivity {
     private SwipeFlingAdapterView.onFlingListener onFlingListener;
     private FrameLayout mCardContainer;
     private DataSetObserver dataSetObserver;
+    private TextView mPositiveButtonText;
+    private View mPositiveButtonContainer;
+    private ImageView mPositiveButtonIcon;
+    private View mNegativeButtonContainer;
+    private TextView mNegativeButtonText;
+    private View mShortlistButtonContainer;
+    private ImageView mShortlistButtonIcon;
 
     private enum CardState {
         LEFT, MIDDLE, RIGHT
@@ -186,7 +195,7 @@ public class JobActivity extends MJPProgressActionBarActivity {
             }
         });
 
-        final View mPositiveButtonContainer = findViewById(R.id.positive_button_container);
+        mPositiveButtonContainer = findViewById(R.id.positive_button_container);
         Button mPositiveButton = (Button) findViewById(R.id.positive_button);
         mPositiveButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -201,16 +210,16 @@ public class JobActivity extends MJPProgressActionBarActivity {
                 }
             }
         });
-        final TextView mPositiveButtonText = (TextView) findViewById(R.id.positive_button_text);
-        final ImageView mPositiveButtonIcon = (ImageView) findViewById(R.id.positive_button_icon);
+        mPositiveButtonText = (TextView) findViewById(R.id.positive_button_text);
+        mPositiveButtonIcon = (ImageView) findViewById(R.id.positive_button_icon);
 
-        final View mNegativeButtonContainer = findViewById(R.id.negative_button_container);
+        mNegativeButtonContainer = findViewById(R.id.negative_button_container);
         Button mNegativeButton = (Button) findViewById(R.id.negative_button);
         mNegativeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (!adapter.isEmpty()) {
-                    JobSeeker jobSeeker = jobSeekers.get(0).getJobSeeker();
+                    JobSeeker jobSeeker = adapter.getItem(0).getJobSeeker();
                     String name = jobSeeker.getFirst_name() + " " + jobSeeker.getLast_name();
                     String message = "Are you sure you want to remove " + name + "? This job seeker will never appear again for this job.";
 
@@ -232,47 +241,46 @@ public class JobActivity extends MJPProgressActionBarActivity {
                 }
             }
         });
-        final TextView mNegativeButtonText = (TextView) findViewById(R.id.negative_button_text);
+        mNegativeButtonText = (TextView) findViewById(R.id.negative_button_text);
 
-        final View mShortlistButtonContainer = findViewById(R.id.shortlist_button_container);
-        final Button mShortlistButton = (Button) findViewById(R.id.shortlist_button);
+        mShortlistButtonContainer = findViewById(R.id.shortlist_button_container);
+        Button mShortlistButton = (Button) findViewById(R.id.shortlist_button);
         mShortlistButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // TODO toggle shortlist
+                Application application = (Application) adapter.getItem(0);
+                if (application.getShortlisted())
+                    Toast.makeText(JobActivity.this, getString(R.string.removed_from_shortlist), Toast.LENGTH_SHORT).show();
+                else
+                    Toast.makeText(JobActivity.this, getString(R.string.added_to_shortlist), Toast.LENGTH_SHORT).show();
+                application.setShortlisted(!application.getShortlisted());
+                UpdateApplicationTask task = new UpdateApplicationTask(getApi(), new ApplicationUpdate(application));
+                backgroundTaskManager.addBackgroundTask(task);
+                mBackgroundProgress.setVisibility(View.VISIBLE);
+                task.execute();
+
+                View card = mCards.getSelectedView();
+                View shortlistIndicator = card.findViewById(R.id.shortlisted_indicator);
+                if (application.getShortlisted())
+                    shortlistIndicator.setVisibility(View.VISIBLE);
+                else
+                    shortlistIndicator.setVisibility(View.INVISIBLE);
+
+                if (mShortListedSwitch.isChecked()) {
+                    mButtonActivation = true;
+                    mCards.getTopCardListener().selectRight();
+                } else {
+                    update();
+                }
             }
         });
-        final ImageView mShortlistButtonIcon = (ImageView) findViewById(R.id.shortlist_button_icon);
+        mShortlistButtonIcon = (ImageView) findViewById(R.id.shortlist_button_icon);
 
         mCardContainer = (FrameLayout) findViewById(R.id.job_seeker_cards);
 
         jobSeekers = new ArrayList();
 
         dataSetObserver = new DataSetObserver() {
-            private void update() {
-                boolean notEmpty = adapter.getCount() > 0;
-                if (mAppliedSwitch.isChecked()) {
-                    mPositiveButtonText.setText(getString(R.string.messages));
-                    mPositiveButtonIcon.setImageDrawable(getResources().getDrawable(R.drawable.ic_messages));
-                    mShortlistButtonContainer.setVisibility(View.VISIBLE);
-                    if (notEmpty) {
-                        if (adapter.getItem(0) instanceof Application) {
-                            Application application = (Application) adapter.getItem(0);
-                            Drawable drawable = getResources().getDrawable(application.getShortlisted() ? R.drawable.ic_star_remove : R.drawable.ic_star);
-                            mShortlistButtonIcon.setImageDrawable(drawable);
-                        }
-                    }
-                } else {
-                    mPositiveButtonText.setText(getString(R.string.connect));
-                    mPositiveButtonIcon.setImageDrawable(getResources().getDrawable(R.drawable.ic_connect));
-                    mShortlistButtonContainer.setVisibility(View.GONE);
-                }
-                mNegativeButtonText.setText(getString(R.string.remove));
-                mShortlistButtonContainer.setEnabled(notEmpty);
-                mPositiveButtonContainer.setEnabled(notEmpty);
-                mNegativeButtonContainer.setEnabled(notEmpty);
-            }
-
             @Override
             public void onChanged() {
                 update();
@@ -470,6 +478,30 @@ public class JobActivity extends MJPProgressActionBarActivity {
             });
             task.execute();
         }
+    }
+
+    private void update() {
+        boolean notEmpty = adapter.getCount() > 0;
+        if (mAppliedSwitch.isChecked()) {
+            mPositiveButtonText.setText(getString(R.string.messages));
+            mPositiveButtonIcon.setImageDrawable(getResources().getDrawable(R.drawable.ic_messages));
+            mShortlistButtonContainer.setVisibility(View.VISIBLE);
+            if (notEmpty) {
+                if (adapter.getItem(0) instanceof Application) {
+                    Application application = (Application) adapter.getItem(0);
+                    Drawable drawable = getResources().getDrawable(application.getShortlisted() ? R.drawable.ic_star_remove : R.drawable.ic_star);
+                    mShortlistButtonIcon.setImageDrawable(drawable);
+                }
+            }
+        } else {
+            mPositiveButtonText.setText(getString(R.string.connect));
+            mPositiveButtonIcon.setImageDrawable(getResources().getDrawable(R.drawable.ic_connect));
+            mShortlistButtonContainer.setVisibility(View.GONE);
+        }
+        mNegativeButtonText.setText(getString(R.string.remove));
+        mShortlistButtonContainer.setEnabled(notEmpty);
+        mPositiveButtonContainer.setEnabled(notEmpty);
+        mNegativeButtonContainer.setEnabled(notEmpty);
     }
 
     @Override

@@ -114,7 +114,7 @@
                     android:layout_alignBottom="@id/shortlist_button"
                     android:layout_marginBottom="23dp"
                     android:textColor="@color/button_text"
-                    android:text="@string/shortlist"/>
+                    android:text="@string/shortlist" />
                 <ImageView
                     android:id="@+id/shortlist_button_icon"
                     android:src="@drawable/ic_star"

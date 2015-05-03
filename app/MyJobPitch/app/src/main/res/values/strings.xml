@@ -64,4 +64,6 @@
     <string name="cancel">Cancel</string>
     <string name="dismiss">Dismiss</string>
     <string name="next">Next</string>
+    <string name="removed_from_shortlist">Removed from shortlist</string>
+    <string name="added_to_shortlist">Added to shortlist</string>
 </resources>

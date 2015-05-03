@@ -1,7 +1,7 @@
 package com.myjobpitch.api;
 
 public class MJPAPIObject {
-    private Integer id;
+    protected Integer id;
     public Integer getId() {
         return id;
     }

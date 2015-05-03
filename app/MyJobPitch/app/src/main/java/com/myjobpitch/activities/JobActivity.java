@@ -364,13 +364,23 @@ public class JobActivity extends MJPProgressActionBarActivity {
                     switch (cardState) {
                         case LEFT:
                             hint.setVisibility(View.VISIBLE);
-                            hint.setText(R.string.connect);
-                            hint.setTextColor(getResources().getColor(R.color.card_hint_positive));
+                            if (mAppliedSwitch.isChecked()) {
+                                hint.setText(R.string.next);
+                                hint.setTextColor(getResources().getColor(R.color.card_hint_positive));
+                            } else {
+                                hint.setText(R.string.connect);
+                                hint.setTextColor(getResources().getColor(R.color.card_hint_positive));
+                            }
                             break;
                         case RIGHT:
                             hint.setVisibility(View.VISIBLE);
-                            hint.setText(R.string.dismiss);
-                            hint.setTextColor(getResources().getColor(R.color.card_hint_negative));
+                            if (mAppliedSwitch.isChecked()) {
+                                hint.setText(R.string.next);
+                                hint.setTextColor(getResources().getColor(R.color.card_hint_positive));
+                            } else {
+                                hint.setText(R.string.dismiss);
+                                hint.setTextColor(getResources().getColor(R.color.card_hint_negative));
+                            }
                             break;
                         case MIDDLE:
                             hint.setVisibility(View.GONE);

@@ -117,7 +117,7 @@ class JobSeekerPermission(permissions.BasePermission):
             return True
         return obj.user == request.user
 JobSeekerSerializer = SimpleSerializer(JobSeeker, {'user': serializers.PrimaryKeyRelatedField(read_only=True),
-                                                   'profile': serializers.PrimaryKeyRelatedField(many=True, read_only=True),
+                                                   'profile': serializers.PrimaryKeyRelatedField(read_only=True),
                                                    'experience': SimpleSerializer(Experience)(many=True, read_only=True),
                                                    })
 class JobSeekerViewSet(viewsets.ModelViewSet):
@@ -126,8 +126,14 @@ class JobSeekerViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         job = self.request.QUERY_PARAMS.get('job')
         if job:
-            # TODO search criteria
-            return JobSeeker.objects.exclude(applications__job__pk=job)
+            job = Job.objects.get(pk=self.request.QUERY_PARAMS['job'])
+            query = JobSeeker.objects.exclude(applications__job=job)
+            query = query.filter(profile__sectors__in=[job.sector],
+                                 profile__contract=job.contract,
+                                 profile__hours=job.hours,
+                                 )
+            # TODO location
+            return query
         return JobSeeker.objects.all()
     
     def perform_create(self, serializer):

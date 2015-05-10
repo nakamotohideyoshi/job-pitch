@@ -1,7 +1,14 @@
 package com.myjobpitch.api.data;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonSerializer;
+import com.fasterxml.jackson.databind.SerializerProvider;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.myjobpitch.api.MJPObjectWithDates;
 
+import java.io.IOException;
 import java.util.List;
 
 public class Location extends MJPObjectWithDates {
@@ -15,6 +22,12 @@ public class Location extends MJPObjectWithDates {
     private boolean email_public;
     private boolean mobile_public;
     private boolean telephone_public;
+    private String place_name;
+    private String place_id;
+    private String place_address;
+    private Double longitude;
+    private Double latitude;
+    private String address;
 
     public Integer getBusiness() {
         return business;
@@ -90,5 +103,45 @@ public class Location extends MJPObjectWithDates {
 
     public void setMobile_public(boolean mobile_public) {
         this.mobile_public = mobile_public;
+    }
+
+    public String getPlace_name() {
+        return place_name;
+    }
+
+    public void setPlace_name(String place_name) {
+        this.place_name = place_name;
+    }
+
+    public void setPlace_id(String place_id) {
+        this.place_id = place_id;
+    }
+
+    public String getPlace_id() {
+        return place_id;
+    }
+
+    public void setLongitude(Double longitude) {
+        this.longitude = longitude;
+    }
+
+    public Double getLongitude() {
+        return longitude;
+    }
+
+    public void setLatitude(Double latitude) {
+        this.latitude = latitude;
+    }
+
+    public Double getLatitude() {
+        return latitude;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getAddress() {
+        return address;
     }
 }

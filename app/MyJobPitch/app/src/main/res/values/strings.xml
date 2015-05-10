@@ -6,7 +6,7 @@
     <string name="job_seeker">Job Seeker</string>
     <string name="action_settings">Settings</string>
     <string name="register">Register</string>
-    <string name="test_username">admin</string>
+    <string name="test_username">r1</string>
     <string name="prompt_password_confirm">Confirm password</string>
     <string name="prompt_email">Email (optional)</string>
     <string name="create_profile">Create profile</string>
@@ -30,7 +30,7 @@
     <string name="business">Company</string>
     <string name="action_save">Save</string>
     <string name="edit_business">Edit Company</string>
-    <string name="location">Work Place</string>
+    <string name="work_place">Work Place</string>
     <string name="action_add_business">Add Company</string>
     <string name="locations">Work Places</string>
     <string name="edit_location">Edit Work Place</string>
@@ -66,4 +66,17 @@
     <string name="next">Next</string>
     <string name="removed_from_shortlist">Removed from shortlist</string>
     <string name="added_to_shortlist">Added to shortlist</string>
+    <string name="location">Location</string>
+    <string name="location_required">Location (required)</string>
+    <string name="not_set">Not set</string>
+    <string name="title_activity_select_place">Selection location</string>
+    <string name="search">Search</string>
+    <string name="select">Select</string>
+    <string name="custom_location">Custom Location</string>
+    <string name="prompt_location_address">Address (optional)</string>
+    <string name="confirm_logout">This will log you out. Are you sure?</string>
+    <string name="confirm_update_address">Would you like to use the address details provided by Google?\n%1$s?</string>
+    <string name="ok">OK</string>
+    <string name="no_thanks">No thanks</string>
+    <string name="logout">Logout</string>
 </resources>

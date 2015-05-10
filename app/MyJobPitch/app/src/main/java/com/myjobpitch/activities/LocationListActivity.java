@@ -51,7 +51,7 @@ public class LocationListActivity extends MJPProgressActionBarActivity  {
 
         @Override
         public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
-            mode.setTitle(R.string.location);
+            mode.setTitle(R.string.work_place);
             Location location = (Location) list.getItemAtPosition(list.getCheckedItemPosition());
             mode.setSubtitle(location.getName());
             return false;

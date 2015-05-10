@@ -1,0 +1,57 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity" >
+
+
+    <fragment xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/map"
+        android:layout_alignParentTop="true"
+        android:layout_width="match_parent"
+        android:layout_above="@+id/buttons"
+        android:layout_height="wrap_content"
+        class="com.google.android.gms.maps.SupportMapFragment" />
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_margin="10dp"
+        android:background="@android:color/white"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="5dp">
+        <AutoCompleteTextView
+            android:id="@+id/location_search"
+            android:background="@android:color/white"
+            android:layout_weight="1"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:inputType="text"
+            android:padding="5dp"
+            android:hint="@string/search"
+            android:imeOptions="actionDone"
+            android:layout_gravity="center_vertical" />
+        <ImageButton
+            android:id="@+id/button_clear"
+            android:layout_gravity="center_vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@android:drawable/ic_menu_close_clear_cancel"
+            android:background="@android:color/transparent" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@id/buttons"
+        android:layout_alignParentBottom="true"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <Button
+            android:id="@+id/select_button"
+            android:text="@string/select"
+            android:enabled="false"
+            android:layout_weight="1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+</RelativeLayout>

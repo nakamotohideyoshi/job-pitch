@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.MenuItem;
 
 import com.myjobpitch.MJPApplication;
+import com.myjobpitch.R;
 import com.myjobpitch.api.MJPApi;
 
 public class MJPActionBarActivity extends ActionBarActivity implements MJPActivityInterface {
@@ -49,10 +50,10 @@ public class MJPActionBarActivity extends ActionBarActivity implements MJPActivi
 
     private void confirmLogout(DialogInterface.OnClickListener onLogout) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage("This will log you out. Are you sure?")
+        builder.setMessage(R.string.confirm_logout)
                 .setCancelable(false)
-                .setPositiveButton("Logout", onLogout)
-                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                .setPositiveButton(R.string.logout, onLogout)
+                .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         dialog.cancel();
                     }

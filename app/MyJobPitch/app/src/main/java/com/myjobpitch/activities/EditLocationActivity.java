@@ -88,7 +88,6 @@ public class EditLocationActivity extends MJPProgressActionBarActivity {
     protected void onPause() {
         super.onPause();
         showProgress(false);
-        finish();
     }
 
     private void attemptSave() {

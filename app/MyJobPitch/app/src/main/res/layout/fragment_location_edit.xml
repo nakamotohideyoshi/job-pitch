@@ -20,6 +20,7 @@
             <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
                 android:text="@string/public_data" />
         </TableRow>
+
         <TableRow>
             <EditText android:id="@+id/location_name" android:layout_width="match_parent"
                 android:layout_height="wrap_content" android:hint="@string/prompt_location_name"
@@ -35,6 +36,18 @@
                 android:inputType="textMultiLine" android:maxLines="5"
                 android:singleLine="true" />
             <CheckBox android:layout_gravity="right" android:enabled="false"
+                android:checked="true" />
+        </TableRow>
+
+
+        <TableRow>
+            <EditText android:id="@+id/location_address" android:layout_width="match_parent"
+                android:layout_height="wrap_content" android:hint="@string/prompt_location_address"
+                android:inputType="textMultiLine" android:maxLines="5"
+                android:singleLine="true" />
+            <CheckBox
+                android:id="@+id/location_address_public"
+                android:layout_gravity="right"
                 android:checked="true" />
         </TableRow>
 
@@ -70,7 +83,31 @@
                 android:checked="true"
                 android:layout_gravity="right" />
         </TableRow>
-
     </TableLayout>
+
+    <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:text="@string/location_required"
+        android:textSize="20sp"
+        android:paddingTop="15dp"
+        android:paddingBottom="8dp"
+        android:textStyle="bold" />
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:id="@+id/location_place"
+            android:text="@string/not_set"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_gravity="center_vertical"
+            android:layout_marginRight="5dp" />
+        <ImageButton
+            android:id="@+id/location_place_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@android:drawable/ic_dialog_map" />
+    </LinearLayout>
 
 </LinearLayout>

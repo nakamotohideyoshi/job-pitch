@@ -105,19 +105,11 @@ public class CreateProfileActivity extends MJPProgressActionBarActivity {
         mCreateProfileView = findViewById(R.id.create_profile);
     }
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-        showProgress(false);
-        finish();
-    }
-
     private void attemptRecruiterContinue() {
         boolean result = mBusinessEditFragment.validateInput();
         result &= mLocationEditFragment.validateInput();
         if (result) {
             showProgress(true);
-
                 if (business == null)
                 business = new Business();
                 mBusinessEditFragment.save(business);
@@ -142,6 +134,7 @@ public class CreateProfileActivity extends MJPProgressActionBarActivity {
                             Intent intent = new Intent(CreateProfileActivity.this, BusinessListActivity.class);
                             intent.putExtra("from_login", true);
                             startActivity(intent);
+                            finish();
                         }
 
                         @Override

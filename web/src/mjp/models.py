@@ -1,8 +1,9 @@
-from django.db import models
 from django.utils import timezone
 from django.contrib.auth.models import User
 from django.utils.translation import ugettext_lazy as _
 from django.conf import settings
+
+from django.contrib.gis.db import models
 
 class Sector(models.Model):
     name = models.CharField(max_length=255)
@@ -94,7 +95,10 @@ class Location(models.Model):
     business = models.ForeignKey(Business, related_name='locations')
     name = models.CharField(max_length=255)
     description = models.TextField()
-    # TODO address
+    address = models.TextField(blank=True)
+    latlng = models.PointField()
+    place_id = models.CharField(max_length=1024, blank=True)
+    place_name = models.CharField(max_length=1024)
     email = models.EmailField(blank=True)
     email_public = models.BooleanField(default=None)
     telephone = models.CharField(max_length=100, blank=True)

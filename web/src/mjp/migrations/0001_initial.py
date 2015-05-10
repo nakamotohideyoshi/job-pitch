@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 
 from django.db import models, migrations
 from django.conf import settings
+import django.contrib.gis.db.models.fields
 
 
 class Migration(migrations.Migration):
@@ -20,9 +21,6 @@ class Migration(migrations.Migration):
                 ('created', models.DateTimeField(auto_now_add=True)),
                 ('updated', models.DateTimeField(auto_now=True)),
             ],
-            options={
-            },
-            bases=(models.Model,),
         ),
         migrations.CreateModel(
             name='ApplicationStatus',
@@ -35,7 +33,6 @@ class Migration(migrations.Migration):
             options={
                 'verbose_name_plural': 'application statuses',
             },
-            bases=(models.Model,),
         ),
         migrations.CreateModel(
             name='Business',
@@ -49,7 +46,6 @@ class Migration(migrations.Migration):
             options={
                 'verbose_name_plural': 'businesses',
             },
-            bases=(models.Model,),
         ),
         migrations.CreateModel(
             name='Contract',
@@ -59,9 +55,6 @@ class Migration(migrations.Migration):
                 ('short_name', models.CharField(max_length=255)),
                 ('description', models.TextField()),
             ],
-            options={
-            },
-            bases=(models.Model,),
         ),
         migrations.CreateModel(
             name='Experience',
@@ -73,7 +66,6 @@ class Migration(migrations.Migration):
             options={
                 'verbose_name_plural': 'experience',
             },
-            bases=(models.Model,),
         ),
         migrations.CreateModel(
             name='Hours',
@@ -86,7 +78,6 @@ class Migration(migrations.Migration):
             options={
                 'verbose_name_plural': 'hours',
             },
-            bases=(models.Model,),
         ),
         migrations.CreateModel(
             name='Job',
@@ -99,9 +90,6 @@ class Migration(migrations.Migration):
                 ('contract', models.ForeignKey(related_name='jobs', to='mjp.Contract')),
                 ('hours', models.ForeignKey(related_name='jobs', to='mjp.Hours')),
             ],
-            options={
-            },
-            bases=(models.Model,),
         ),
         migrations.CreateModel(
             name='JobProfile',
@@ -112,9 +100,6 @@ class Migration(migrations.Migration):
                 ('contract', models.ForeignKey(related_name='job_profiles', to='mjp.Contract')),
                 ('hours', models.ForeignKey(related_name='job_profiles', to='mjp.Hours')),
             ],
-            options={
-            },
-            bases=(models.Model,),
         ),
         migrations.CreateModel(
             name='JobSeeker',
@@ -122,7 +107,7 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('first_name', models.CharField(max_length=100, blank=True)),
                 ('last_name', models.CharField(max_length=100, blank=True)),
-                ('email', models.EmailField(max_length=75, blank=True)),
+                ('email', models.EmailField(max_length=254, blank=True)),
                 ('email_public', models.BooleanField(default=None)),
                 ('telephone', models.CharField(max_length=100, blank=True)),
                 ('telephone_public', models.BooleanField(default=None)),
@@ -135,9 +120,6 @@ class Migration(migrations.Migration):
                 ('created', models.DateTimeField(auto_now_add=True)),
                 ('updated', models.DateTimeField(auto_now=True)),
             ],
-            options={
-            },
-            bases=(models.Model,),
         ),
         migrations.CreateModel(
             name='JobStatus',
@@ -150,7 +132,6 @@ class Migration(migrations.Migration):
             options={
                 'verbose_name_plural': 'job statuses',
             },
-            bases=(models.Model,),
         ),
         migrations.CreateModel(
             name='Location',
@@ -158,7 +139,11 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('name', models.CharField(max_length=255)),
                 ('description', models.TextField()),
-                ('email', models.EmailField(max_length=75, blank=True)),
+                ('address', models.TextField(blank=True)),
+                ('latlng', django.contrib.gis.db.models.fields.PointField(srid=4326)),
+                ('place_id', models.CharField(max_length=1024, blank=True)),
+                ('place_name', models.CharField(max_length=1024)),
+                ('email', models.EmailField(max_length=254, blank=True)),
                 ('email_public', models.BooleanField(default=None)),
                 ('telephone', models.CharField(max_length=100, blank=True)),
                 ('telephone_public', models.BooleanField(default=None)),
@@ -168,9 +153,6 @@ class Migration(migrations.Migration):
                 ('updated', models.DateTimeField(auto_now=True)),
                 ('business', models.ForeignKey(related_name='locations', to='mjp.Business')),
             ],
-            options={
-            },
-            bases=(models.Model,),
         ),
         migrations.CreateModel(
             name='Nationality',
@@ -182,7 +164,6 @@ class Migration(migrations.Migration):
             options={
                 'verbose_name_plural': 'nationalities',
             },
-            bases=(models.Model,),
         ),
         migrations.CreateModel(
             name='Role',
@@ -190,9 +171,6 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('name', models.CharField(max_length=20)),
             ],
-            options={
-            },
-            bases=(models.Model,),
         ),
         migrations.CreateModel(
             name='Sector',
@@ -201,9 +179,6 @@ class Migration(migrations.Migration):
                 ('name', models.CharField(max_length=255)),
                 ('description', models.TextField()),
             ],
-            options={
-            },
-            bases=(models.Model,),
         ),
         migrations.CreateModel(
             name='Sex',
@@ -215,91 +190,76 @@ class Migration(migrations.Migration):
             options={
                 'verbose_name_plural': 'sexes',
             },
-            bases=(models.Model,),
         ),
         migrations.AddField(
             model_name='jobseeker',
             name='nationality',
             field=models.ForeignKey(related_name='job_seekers', to='mjp.Nationality', null=True),
-            preserve_default=True,
         ),
         migrations.AddField(
             model_name='jobseeker',
             name='sex',
             field=models.ForeignKey(related_name='job_seekers', to='mjp.Sex', null=True),
-            preserve_default=True,
         ),
         migrations.AddField(
             model_name='jobseeker',
             name='user',
             field=models.OneToOneField(related_name='job_seeker', to=settings.AUTH_USER_MODEL),
-            preserve_default=True,
         ),
         migrations.AddField(
             model_name='jobprofile',
             name='job_seeker',
             field=models.OneToOneField(related_name='profile', to='mjp.JobSeeker'),
-            preserve_default=True,
         ),
         migrations.AddField(
             model_name='jobprofile',
             name='sectors',
             field=models.ManyToManyField(related_name='job_profiles', to='mjp.Sector'),
-            preserve_default=True,
         ),
         migrations.AddField(
             model_name='job',
             name='location',
             field=models.ForeignKey(related_name='jobs', to='mjp.Location'),
-            preserve_default=True,
         ),
         migrations.AddField(
             model_name='job',
             name='sector',
             field=models.ForeignKey(related_name='jobs', to='mjp.Sector'),
-            preserve_default=True,
         ),
         migrations.AddField(
             model_name='job',
             name='status',
             field=models.ForeignKey(related_name='jobs', to='mjp.JobStatus'),
-            preserve_default=True,
         ),
         migrations.AddField(
             model_name='experience',
             name='job_seeker',
             field=models.ForeignKey(related_name='experience', to='mjp.JobSeeker'),
-            preserve_default=True,
         ),
         migrations.AddField(
             model_name='application',
             name='created_by',
             field=models.ForeignKey(related_name='created_applications', to='mjp.Role'),
-            preserve_default=True,
         ),
         migrations.AddField(
             model_name='application',
             name='deleted_by',
             field=models.ForeignKey(related_name='deleted_applications', to='mjp.Role', null=True),
-            preserve_default=True,
         ),
         migrations.AddField(
             model_name='application',
             name='job',
             field=models.ForeignKey(related_name='applications', to='mjp.Job'),
-            preserve_default=True,
         ),
         migrations.AddField(
             model_name='application',
             name='job_seeker',
             field=models.ForeignKey(related_name='applications', to='mjp.JobSeeker'),
-            preserve_default=True,
         ),
         migrations.AddField(
             model_name='application',
             name='status',
             field=models.ForeignKey(related_name='applications', to='mjp.ApplicationStatus'),
-            preserve_default=True,
         ),
         migrations.AlterUniqueTogether(
             name='application',

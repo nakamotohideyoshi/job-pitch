@@ -7,7 +7,9 @@ from rest_framework.routers import DefaultRouter
 from mjp.models import Sector, Hours, Contract, Business, Location,\
     JobStatus, Job, Sex, Nationality, JobSeeker, Experience, JobProfile,\
     ApplicationStatus, Application, Role
-from mjp.serializers import SimpleSerializer
+
+from mjp.serializers import SimpleSerializer, LocationSerializer
+
 
 router = DefaultRouter()
 
@@ -36,7 +38,6 @@ NationalityViewSet = SimpleReadOnlyViewSet(Nationality)
 ApplicationStatusViewSet = SimpleReadOnlyViewSet(ApplicationStatus)
 RoleViewSet = SimpleReadOnlyViewSet(Role)
 BusinessViewSet = SimpleReadOnlyViewSet(Business)
-LocationViewSet = SimpleReadOnlyViewSet(Location)
 JobViewSet = SimpleReadOnlyViewSet(Job)
 
 class UserBusinessViewSet(viewsets.ModelViewSet):
@@ -72,9 +73,14 @@ class LocationPermission(permissions.BasePermission):
         return request.user.businesses.filter(locations=obj).exists()
 class UserLocationViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.IsAuthenticated, LocationPermission)
-    serializer_class = SimpleSerializer(Location, {'jobs': serializers.PrimaryKeyRelatedField(many=True, read_only=True),
-                                                   })
+    serializer_class = LocationSerializer
     
+    def retrieve(self, request, pk=None):
+        instance = self.get_object()
+        serializer = self.get_serializer(instance)
+        print serializer.data
+        return super(UserLocationViewSet, self).retrieve(request, pk)
+
     def get_queryset(self):
         business = self.request.QUERY_PARAMS.get('business', None)
         query = Location.objects.filter(business__users=self.request.user)
@@ -82,6 +88,13 @@ class UserLocationViewSet(viewsets.ModelViewSet):
             return query.filter(business__id=business)
         return query
 router.register('user-locations', UserLocationViewSet, base_name='user-location')
+
+class LocationViewSet(viewsets.ReadOnlyModelViewSet):
+    permission_classes = (permissions.IsAuthenticated,)
+    serializer_class = LocationSerializer
+    queryset = Location.objects.all()
+    # TODO hide non-public
+router.register('locations', LocationViewSet, base_name='location')
 
 class JobPermission(permissions.BasePermission):
     def has_permission(self, request, view):

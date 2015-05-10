@@ -1,5 +1,7 @@
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
+from models import Location
+from django.contrib.gis.geos import Point
 
 def SimpleSerializer(m, overrides={}):
     class Meta:
@@ -19,3 +21,17 @@ class UserDetailsSerializer(serializers.ModelSerializer):
         model = get_user_model()
         fields = ('id', 'username', 'businesses', 'job_seeker')
         read_only_fields = ('id', 'username', 'job_seeker', 'businesses')
+
+
+class LocationSerializer(serializers.ModelSerializer):
+    jobs = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
+    latitude = serializers.FloatField(source='latlng.x')
+    longitude = serializers.FloatField(source='latlng.y')
+    
+    def save(self, **kwargs):
+        self.validated_data['latlng'] = Point(**self.validated_data['latlng'])
+        return super(LocationSerializer, self).save(**kwargs)
+    
+    class Meta:
+        model = Location
+        exclude = ('latlng',)

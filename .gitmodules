@@ -10,3 +10,6 @@
 [submodule "web/django-allauth"]
 	path = web/django-allauth
 	url = https://github.com/pennersr/django-allauth.git
+[submodule "web/django-rest-framework-gis"]
+	path = web/django-rest-framework-gis
+	url = https://github.com/djangonauts/django-rest-framework-gis.git

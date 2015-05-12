@@ -1,6 +1,7 @@
 package com.myjobpitch.activities;
 
 import android.app.LoaderManager.LoaderCallbacks;
+import android.content.Context;
 import android.content.CursorLoader;
 import android.content.Intent;
 import android.content.Loader;
@@ -14,6 +15,7 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
@@ -88,12 +90,6 @@ public class LoginActivity extends MJPProgressActivity implements LoaderCallback
 
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        showProgress(false);
     }
 
     @Override
@@ -268,10 +264,10 @@ public class LoginActivity extends MJPProgressActivity implements LoaderCallback
                             intent.putExtra("business_data", mapper.writeValueAsString(business));
                             return intent;
                         } else if (business.getLocations().size() == 1) {
-                            // Single business and single location: go straight to location
+                            // TODO Single business and single location: go straight to location
                             return new Intent(LoginActivity.this, BusinessListActivity.class);
                         } else {
-                            // Single business, multiple locations: go straight to business
+                            // TODO Single business, multiple locations: go straight to business
                             return new Intent(LoginActivity.this, BusinessListActivity.class);
                         }
                     } else {
@@ -299,6 +295,8 @@ public class LoginActivity extends MJPProgressActivity implements LoaderCallback
             if (intent != null) {
                 intent.putExtra("from_login", true);
                 startActivity(intent);
+                InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(mLoginFormView.getWindowToken(), 0);
             } else {
                 mPasswordView.setError(getString(R.string.error_incorrect_password));
                 mPasswordView.requestFocus();

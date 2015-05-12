@@ -12,6 +12,7 @@ import android.support.v4.app.DialogFragment;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
@@ -64,6 +65,7 @@ public class SelectPlaceActivity extends ActionBarActivity implements GoogleApiC
     private Button mSelectButton;
     private String mName;
     private String mAddress;
+    private View mAutocompleteContainerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,19 +83,10 @@ public class SelectPlaceActivity extends ActionBarActivity implements GoogleApiC
 
         setUpMapIfNeeded();
 
-        // Retrieve the AutoCompleteTextView that will display Place suggestions.
-        mAutocompleteView = (AutoCompleteTextView)
-                findViewById(R.id.location_search);
-
-        // Register a listener that receives callbacks when a suggestion has been selected
+        mAutocompleteContainerView = findViewById(R.id.location_search_container);
+        mAutocompleteView = (AutoCompleteTextView) findViewById(R.id.location_search);
         mAutocompleteView.setOnItemClickListener(mAutocompleteClickListener);
 
-        // Retrieve the TextViews that will display details and attributions of the selected place.
-//        mPlaceDetailsText = (TextView) findViewById(R.id.place_details);
-//        mPlaceDetailsAttribution = (TextView) findViewById(R.id.place_attribution);
-
-        // Set up the adapter that will retrieve suggestions from the Places Geo Data API that cover
-        // the entire world.
         mAdapter = new PlaceAutocompleteAdapter(this, android.R.layout.simple_list_item_1,
                 mMap.getProjection().getVisibleRegion().latLngBounds, null);
         mAutocompleteView.setAdapter(mAdapter);
@@ -108,6 +101,7 @@ public class SelectPlaceActivity extends ActionBarActivity implements GoogleApiC
             }
         });
 
+        // Select button
         mSelectButton = (Button) findViewById(R.id.select_button);
         mSelectButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -126,6 +120,26 @@ public class SelectPlaceActivity extends ActionBarActivity implements GoogleApiC
                 }
             }
         });
+
+        // Change maps padding on layout of top/bottom controls
+        ViewTreeObserver.OnGlobalLayoutListener layoutListener = new ViewTreeObserver.OnGlobalLayoutListener() {
+            int mTopPadding, mBottomPadding;
+            final int extraPadding = (int) (5 * getResources().getDisplayMetrics().density + 0.5f);
+            @Override
+            public void onGlobalLayout() {
+                int topPadding = mAutocompleteContainerView.getHeight() + extraPadding;
+                int bottomPadding = mSelectButton.getHeight();
+                if (topPadding != mTopPadding || bottomPadding != mBottomPadding) {
+                    mTopPadding = topPadding;
+                    mBottomPadding = bottomPadding;
+                    mMap.setPadding(0, mTopPadding, 0, mBottomPadding);
+                }
+            }
+        };
+        mAutocompleteContainerView.getViewTreeObserver().addOnGlobalLayoutListener(layoutListener);
+        mSelectButton.getViewTreeObserver().addOnGlobalLayoutListener(layoutListener);
+
+        // If data passed, setup initial marker
         if (getIntent().hasExtra(NAME) && getIntent().hasExtra(LATITUDE) && getIntent().hasExtra(LONGITUDE)) {
             LatLng latLng = new LatLng(getIntent().getDoubleExtra(LATITUDE, 0), getIntent().getDoubleExtra(LONGITUDE, 0));
             String name = getIntent().getStringExtra(NAME);

@@ -12,7 +12,11 @@ import com.myjobpitch.R;
 import com.myjobpitch.api.MJPApi;
 
 public class MJPActionBarActivity extends ActionBarActivity implements MJPActivityInterface {
-    private final MJPActivityDelegate activityDelegate = new MJPActivityDelegate(this);
+    private final MJPActivityDelegate mActivityDelegate = createDelegate();
+
+    protected MJPActivityDelegate createDelegate() {
+        return new MJPActivityDelegate(this);
+    }
 
     @Override
     public void onBackPressed() {
@@ -64,11 +68,11 @@ public class MJPActionBarActivity extends ActionBarActivity implements MJPActivi
 
     @Override
     public MJPApi getApi() {
-        return activityDelegate.getApi();
+        return mActivityDelegate.getApi();
     }
 
     @Override
     public MJPApplication getMJPApplication() {
-        return activityDelegate.getMJPApplication();
+        return mActivityDelegate.getMJPApplication();
     }
 }

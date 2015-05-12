@@ -136,10 +136,12 @@ public class LocationEditFragment extends EditFragment<Location> {
         mLongitude = location.getLongitude();
         mLatitude = location.getLatitude();
 
-        if (mPlaceName.equals(getString(R.string.custom_location)))
-            mLocationPlaceView.setText(mPlaceName);
-        else
-            mLocationPlaceView.setText(mPlaceName + " (from Google)");
+        if (mPlaceName != null) {
+            if (getString(R.string.custom_location).equals(mPlaceName))
+                mLocationPlaceView.setText(mPlaceName);
+            else
+                mLocationPlaceView.setText(mPlaceName + " (from Google)");
+        }
     }
 
     public void save(Location location) {

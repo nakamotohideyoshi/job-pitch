@@ -9,11 +9,11 @@
         android:id="@+id/map"
         android:layout_alignParentTop="true"
         android:layout_width="match_parent"
-        android:layout_above="@+id/buttons"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         class="com.google.android.gms.maps.SupportMapFragment" />
 
     <LinearLayout
+        android:id="@+id/location_search_container"
         android:orientation="horizontal"
         android:layout_margin="10dp"
         android:background="@android:color/white"

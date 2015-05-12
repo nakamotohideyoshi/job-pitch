@@ -15,6 +15,7 @@ import com.myjobpitch.api.data.JobProfile;
 import com.myjobpitch.api.data.Sector;
 import com.myjobpitch.widgets.MJPObjectWithNameAdapter;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -80,27 +81,31 @@ public class JobProfileEditFragment extends EditFragment {
     }
 
     public void load(JobProfile jobProfile) {
-        if (jobProfile.getSectors() != null) {
-//            for (int i = 0; i < sectors.size(); i++) {
-//                if (sectors.get(i).getId() == jobProfile.getSectors()) {
-//                    mProfileSectorsView.setSelection(i);
-//                    break;
-//                }
-//            }
+        List<Integer> selectedSectors = jobProfile.getSectors();
+        if (jobProfile.getSectors() != null && !selectedSectors.isEmpty()) {
+            Integer selectedSector = selectedSectors.get(0);
+            for (int i = 0; i < sectors.size(); i++) {
+                if (this.sectors.get(i).getId() == selectedSector) {
+                    mProfileSectorsView.setSelection(i);
+                    break;
+                }
+            }
         }
 
-        if (jobProfile.getContract() != null) {
+        Integer selectedContract = jobProfile.getContract();
+        if (selectedContract != null) {
             for (int i = 0; i < contracts.size(); i++) {
-                if (contracts.get(i).getId() == jobProfile.getContract()) {
+                if (contracts.get(i).getId() == selectedContract) {
                     mProfileContractView.setSelection(i);
                     break;
                 }
             }
         }
 
-        if (jobProfile.getHours() != null) {
-            for (int i = 0; i < hours.size(); i++) {
-                if (hours.get(i).getId() == jobProfile.getHours()) {
+        Integer selectedHours = jobProfile.getHours();
+        if (selectedHours != null) {
+            for (int i = 0; i < this.hours.size(); i++) {
+                if (this.hours.get(i).getId() == selectedHours) {
                     mProfileHoursView.setSelection(i);
                     break;
                 }
@@ -110,10 +115,11 @@ public class JobProfileEditFragment extends EditFragment {
 
     public void save(JobProfile jobProfile) {
         MJPAPIObject selectedSector = (MJPAPIObject) mProfileSectorsView.getSelectedItem();
-//        if (selectedSector != null)
-//            jobProfile.setSector((int) selectedSector.getId());
-//        else
-//            jobProfile.setSector(null);
+
+        if (selectedSector != null)
+            jobProfile.setSectors(Arrays.asList(new Integer[]{selectedSector.getId()}));
+        else
+            jobProfile.setSectors(null);
 
         MJPAPIObject selectedContract = (MJPAPIObject) mProfileContractView.getSelectedItem();
         if (selectedContract != null)

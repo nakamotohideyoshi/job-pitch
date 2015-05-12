@@ -10,19 +10,20 @@ import com.myjobpitch.MJPApplication;
 import com.myjobpitch.R;
 import com.myjobpitch.api.MJPApi;
 import com.myjobpitch.api.data.JobProfile;
+import com.myjobpitch.api.data.JobSeeker;
 import com.myjobpitch.fragments.JobProfileEditFragment;
 import com.myjobpitch.tasks.CreateReadUpdateAPITaskListener;
 import com.myjobpitch.tasks.ReadJobProfileTask;
+import com.myjobpitch.tasks.ReadJobSeekerTask;
 import com.myjobpitch.tasks.jobseeker.CreateUpdateJobProfileTask;
 
 public class EditJobProfileActivity extends MJPProgressActionBarActivity {
 
     private JobProfileEditFragment mJobProfileEditFragment;
     private View mEditJobProfileView;
-    private JobProfile jobProfile;
     private View mProgressView;
-    private ReadJobProfileTask mReadJobProfileTask;
-    private CreateUpdateJobProfileTask mCreateUpdateJobProfileTask;
+    private JobSeeker mJobSeeker;
+    private JobProfile mJobProfile;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,46 +43,62 @@ public class EditJobProfileActivity extends MJPProgressActionBarActivity {
             }
         });
 
-        if (getIntent().hasExtra("job_profile_id")) {
-            mReadJobProfileTask = new ReadJobProfileTask(getApi(), getIntent().getIntExtra("job_profile_id", -1));
-            mReadJobProfileTask.addListener(new CreateReadUpdateAPITaskListener<JobProfile>() {
-                @Override
-                public void onSuccess(JobProfile result) {
-                    jobProfile = result;
-                    mJobProfileEditFragment.load(jobProfile);
+        ReadJobSeekerTask mReadJobSeekerTask = new ReadJobSeekerTask(getApi(), getIntent().getIntExtra("job_seeker_id", -1));
+        mReadJobSeekerTask.addListener(new CreateReadUpdateAPITaskListener<JobSeeker>() {
+            @Override
+            public void onSuccess(JobSeeker result) {
+                mJobSeeker = result;
+                if (result.getProfile() != null) {
+                    ReadJobProfileTask mReadJobProfileTask = new ReadJobProfileTask(getApi(), result.getProfile());
+                    mReadJobProfileTask.addListener(new CreateReadUpdateAPITaskListener<JobProfile>() {
+                        @Override
+                        public void onSuccess(JobProfile result) {
+                            mJobProfile = result;
+                            mJobProfileEditFragment.load(result);
+                            showProgress(false);
+                        }
+
+                        @Override
+                        public void onError(JsonNode errors) {
+                            Toast toast = Toast.makeText(EditJobProfileActivity.this, "Error loading job search profile", Toast.LENGTH_LONG);
+                            toast.show();
+                            finish();
+                        }
+
+                        @Override
+                        public void onCancelled() {
+                        }
+                    });
+                    mReadJobProfileTask.execute();
+                } else {
+                    mJobProfile = new JobProfile();
+                    mJobProfile.setJob_seeker(mJobSeeker.getId());
                     showProgress(false);
                 }
+            }
 
-                @Override
-                public void onError(JsonNode errors) {
-                    finish();
-                    Toast toast = Toast.makeText(EditJobProfileActivity.this, "Error loading job search profile", Toast.LENGTH_LONG);
-                    toast.show();
-                }
+            @Override
+            public void onError(JsonNode errors) {
+                Toast toast = Toast.makeText(EditJobProfileActivity.this, "Error loading job search profile", Toast.LENGTH_LONG);
+                toast.show();
+                finish();
+            }
 
-                @Override
-                public void onCancelled() {
-                }
-            });
-            mReadJobProfileTask.execute();
-        }
-    }
+            @Override
+            public void onCancelled() {
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-        showProgress(false);
-        finish();
+            }
+        });
+        mReadJobSeekerTask.execute();
     }
 
     private void attemptSave() {
         if (mJobProfileEditFragment.validateInput()) {
             showProgress(true);
-
-            mJobProfileEditFragment.save(jobProfile);
+            mJobProfileEditFragment.save(mJobProfile);
 
             final MJPApi api = ((MJPApplication) getApplication()).getApi();
-            mCreateUpdateJobProfileTask = new CreateUpdateJobProfileTask(api, jobProfile);
+            CreateUpdateJobProfileTask mCreateUpdateJobProfileTask = new CreateUpdateJobProfileTask(api, mJobProfile);
             mCreateUpdateJobProfileTask.addListener(new CreateReadUpdateAPITaskListener<JobProfile>() {
                 @Override
                 public void onSuccess(JobProfile jobSeeker) {
@@ -91,6 +108,8 @@ public class EditJobProfileActivity extends MJPProgressActionBarActivity {
                 @Override
                 public void onError(JsonNode errors) {
                     showProgress(false);
+                    Toast toast = Toast.makeText(EditJobProfileActivity.this, "Error saving job search profile", Toast.LENGTH_LONG);
+                    toast.show();
                 }
 
                 @Override

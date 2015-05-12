@@ -5,6 +5,7 @@ import com.myjobpitch.api.MJPObjectWithDates;
 import java.util.List;
 
 public class JobProfile extends MJPObjectWithDates {
+    private Integer job_seeker;
     private List<Integer> sectors;
     private Integer contract;
     private Integer hours;
@@ -21,6 +22,10 @@ public class JobProfile extends MJPObjectWithDates {
         return hours;
     }
 
+    public Integer getJob_seeker() {
+        return job_seeker;
+    }
+
     public void setSectors(List<Integer> sectors) {
         this.sectors = sectors;
     }
@@ -31,5 +36,9 @@ public class JobProfile extends MJPObjectWithDates {
 
     public void setHours(Integer hours) {
         this.hours = hours;
+    }
+
+    public void setJob_seeker(Integer job_seeker) {
+        this.job_seeker = job_seeker;
     }
 }

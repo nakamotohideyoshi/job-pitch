@@ -49,6 +49,7 @@
         <activity
             android:name=".activities.BusinessListActivity"
             android:label="@string/businesses"
+            android:launchMode="singleTop"
             android:parentActivityName=".activities.LoginActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

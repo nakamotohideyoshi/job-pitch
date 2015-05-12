@@ -2,6 +2,7 @@ package com.myjobpitch.activities;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
@@ -12,16 +13,33 @@ import com.myjobpitch.R;
 import com.myjobpitch.api.MJPApi;
 
 public class MJPActionBarActivity extends ActionBarActivity implements MJPActivityInterface {
+    public static final String FROM_LOGIN = "from_login";
     private final MJPActivityDelegate mActivityDelegate = createDelegate();
+    private boolean mFromLogin = false;
 
     protected MJPActivityDelegate createDelegate() {
         return new MJPActivityDelegate(this);
     }
 
     @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (savedInstanceState != null && savedInstanceState.containsKey(FROM_LOGIN))
+            mFromLogin = savedInstanceState.getBoolean(FROM_LOGIN);
+        else
+            mFromLogin = getIntent().hasExtra(FROM_LOGIN);
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putBoolean(FROM_LOGIN, mFromLogin);
+    }
+
+    @Override
     public void onBackPressed() {
         Log.d("MJPActionBarActivity", "back");
-        if (getIntent().hasExtra("from_login")) {
+        if (mFromLogin) {
             DialogInterface.OnClickListener onLogout = new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
                     dialog.dismiss();
@@ -39,7 +57,7 @@ public class MJPActionBarActivity extends ActionBarActivity implements MJPActivi
         Log.d("MJPActionBarActivity", "up");
         switch (item.getItemId()) {
             case android.R.id.home:
-                if (getIntent().hasExtra("from_login")) {
+                if (getIntent().hasExtra(FROM_LOGIN)) {
                     DialogInterface.OnClickListener onLogout = new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
                             NavUtils.navigateUpFromSameTask(MJPActionBarActivity.this);

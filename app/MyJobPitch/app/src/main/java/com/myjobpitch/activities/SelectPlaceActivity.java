@@ -7,8 +7,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.location.Location;
-import android.support.v4.app.DialogFragment;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.View;
@@ -325,12 +325,14 @@ public class SelectPlaceActivity extends ActionBarActivity implements GoogleApiC
         mAdapter.setGoogleApiClient(mGoogleApiClient);
         Log.d("SelectPlaceActivity", "onConnected");
 
-        // Try to get current location, and move map there
-        Location location = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
-        if (location != null) {
-            LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
-            CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 17);
-            mMap.animateCamera(cameraUpdate);
+        // Try to get current location, and move map there, if no marker placed
+        if (mLatLng == null) {
+            Location location = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+            if (location != null) {
+                LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
+                CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 17);
+                mMap.animateCamera(cameraUpdate);
+            }
         }
     }
 

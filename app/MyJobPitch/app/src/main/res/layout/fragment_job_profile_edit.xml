@@ -17,12 +17,12 @@
         android:id="@+id/job_profile_sectors" android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
-    <com.myjobpitch.widgets.NoDefaultSpinner
+    <Spinner
         android:prompt="@string/prompt_contract"
         android:id="@+id/job_profile_contract" android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
-    <com.myjobpitch.widgets.NoDefaultSpinner
+    <Spinner
         android:prompt="@string/prompt_hours"
         android:id="@+id/job_profile_hours" android:layout_width="match_parent"
         android:layout_height="wrap_content" />

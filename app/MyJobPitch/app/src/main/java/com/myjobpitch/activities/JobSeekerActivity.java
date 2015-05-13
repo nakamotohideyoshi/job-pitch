@@ -2,7 +2,6 @@ package com.myjobpitch.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -32,7 +31,6 @@ public class JobSeekerActivity extends MJPProgressActionBarActivity {
     protected void onResume() {
         super.onResume();
         loadJobSeeker();
-        Log.d("JobSeekerActivity", "resumed");
     }
 
     private void loadJobSeeker() {

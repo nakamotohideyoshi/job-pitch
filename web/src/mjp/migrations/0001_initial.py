@@ -97,8 +97,8 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('created', models.DateTimeField(auto_now_add=True)),
                 ('updated', models.DateTimeField(auto_now=True)),
-                ('contract', models.ForeignKey(related_name='job_profiles', to='mjp.Contract')),
-                ('hours', models.ForeignKey(related_name='job_profiles', to='mjp.Hours')),
+                ('contract', models.ForeignKey(related_name='job_profiles', to='mjp.Contract', null=True)),
+                ('hours', models.ForeignKey(related_name='job_profiles', to='mjp.Hours', null=True)),
             ],
         ),
         migrations.CreateModel(

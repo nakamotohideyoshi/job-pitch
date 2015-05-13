@@ -1,4 +1,5 @@
 from django.contrib.auth.models import User
+from django.db.models import Q
 from django.shortcuts import render_to_response
 from django.template.context import RequestContext
 from rest_framework import viewsets, permissions, serializers
@@ -139,11 +140,11 @@ class JobSeekerViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         job = self.request.QUERY_PARAMS.get('job')
         if job:
-            job = Job.objects.get(pk=self.request.QUERY_PARAMS['job'])
+            job = Job.objects.select_related('sector', 'contract', 'hours').get(pk=self.request.QUERY_PARAMS['job'])
             query = JobSeeker.objects.exclude(applications__job=job)
-            query = query.filter(profile__sectors__in=[job.sector],
-                                 profile__contract=job.contract,
-                                 profile__hours=job.hours,
+            query = query.filter(Q(profile__contract=job.contract) | Q(profile__contract=None),
+                                 Q(profile__hours=job.hours) | Q(profile__hours=None),
+                                 profile__sectors=job.sector,
                                  )
             # TODO location
             return query

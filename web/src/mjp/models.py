@@ -164,8 +164,8 @@ class Experience(models.Model):
 class JobProfile(models.Model):
     job_seeker = models.OneToOneField(JobSeeker, related_name='profile')
     sectors = models.ManyToManyField(Sector, related_name='job_profiles')
-    contract = models.ForeignKey(Contract, related_name='job_profiles')
-    hours = models.ForeignKey(Hours, related_name='job_profiles')
+    contract = models.ForeignKey(Contract, related_name='job_profiles', null=True)
+    hours = models.ForeignKey(Hours, related_name='job_profiles', null=True)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
     

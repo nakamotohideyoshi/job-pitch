@@ -14,7 +14,6 @@ import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
@@ -64,11 +63,8 @@ public class LoginActivity extends MJPProgressActivity implements LoaderCallback
         mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
-                if (id == R.id.login || id == EditorInfo.IME_NULL) {
-                    attemptLogin();
-                    return true;
-                }
-                return false;
+                attemptLogin();
+                return true;
             }
         });
 
@@ -93,9 +89,14 @@ public class LoginActivity extends MJPProgressActivity implements LoaderCallback
     }
 
     @Override
+    protected void onPause() {
+        super.onPause();
+        mPasswordView.setText("");
+    }
+
+    @Override
     protected void onResume() {
         super.onResume();
-        mPasswordView.setText("");
         MJPApi api = ((MJPApplication) this.getApplication()).getApi();
         if (api.isAuthenticated()) {
             logoutTask = new LogoutTask();

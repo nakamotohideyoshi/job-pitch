@@ -9,4 +9,8 @@ public class MJPObjectWithName extends MJPAPIObject {
     public String getName() {
         return this.name;
     }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 }

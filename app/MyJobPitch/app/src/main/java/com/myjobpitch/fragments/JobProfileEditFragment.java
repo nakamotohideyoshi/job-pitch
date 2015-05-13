@@ -15,6 +15,7 @@ import com.myjobpitch.api.data.JobProfile;
 import com.myjobpitch.api.data.Sector;
 import com.myjobpitch.widgets.MJPObjectWithNameAdapter;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -74,9 +75,19 @@ public class JobProfileEditFragment extends EditFragment {
     public void loadApplicationData(MJPApplication application) {
         this.sectors = application.get(Sector.class);
         mProfileSectorsView.setAdapter(new MJPObjectWithNameAdapter(this.getActivity(), android.R.layout.simple_list_item_1, this.sectors));
-        this.contracts = application.get(Contract.class);
+
+        this.contracts = new ArrayList<>();
+        Contract anyContract = new Contract();
+        anyContract.setName(getString(R.string.any));
+        this.contracts.add(anyContract);
+        this.contracts.addAll(application.get(Contract.class));
         mProfileContractView.setAdapter(new MJPObjectWithNameAdapter<Contract>(this.getActivity(), android.R.layout.simple_list_item_1, this.contracts));
-        this.hours = application.get(Hours.class);
+
+        this.hours = new ArrayList<>();
+        Hours anyHours = new Hours();
+        anyHours.setName(getString(R.string.any));
+        this.hours.add(anyHours);
+        this.hours.addAll(application.get(Hours.class));
         mProfileHoursView.setAdapter(new MJPObjectWithNameAdapter<Hours>(this.getActivity(), android.R.layout.simple_list_item_1, this.hours));
     }
 
@@ -93,22 +104,18 @@ public class JobProfileEditFragment extends EditFragment {
         }
 
         Integer selectedContract = jobProfile.getContract();
-        if (selectedContract != null) {
-            for (int i = 0; i < contracts.size(); i++) {
-                if (contracts.get(i).getId() == selectedContract) {
-                    mProfileContractView.setSelection(i);
-                    break;
-                }
+        for (int i = 0; i < contracts.size(); i++) {
+            if (contracts.get(i).getId() == selectedContract) {
+                mProfileContractView.setSelection(i);
+                break;
             }
         }
 
         Integer selectedHours = jobProfile.getHours();
-        if (selectedHours != null) {
-            for (int i = 0; i < this.hours.size(); i++) {
-                if (this.hours.get(i).getId() == selectedHours) {
-                    mProfileHoursView.setSelection(i);
-                    break;
-                }
+        for (int i = 0; i < this.hours.size(); i++) {
+            if (this.hours.get(i).getId() == selectedHours) {
+                mProfileHoursView.setSelection(i);
+                break;
             }
         }
     }
@@ -123,13 +130,13 @@ public class JobProfileEditFragment extends EditFragment {
 
         MJPAPIObject selectedContract = (MJPAPIObject) mProfileContractView.getSelectedItem();
         if (selectedContract != null)
-            jobProfile.setContract((int) selectedContract.getId());
+            jobProfile.setContract(selectedContract.getId());
         else
             jobProfile.setContract(null);
 
         MJPAPIObject selectedHours = (MJPAPIObject) mProfileHoursView.getSelectedItem();
         if (selectedHours != null)
-            jobProfile.setHours((int) selectedHours.getId());
+            jobProfile.setHours(selectedHours.getId());
         else
             jobProfile.setHours(null);
     }

@@ -33,6 +33,7 @@
         <activity
             android:name=".activities.RegisterActivity"
             android:label="@string/register"
+            android:launchMode="singleTop"
             android:parentActivityName=".activities.LoginActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -41,6 +42,7 @@
         <activity
             android:name=".activities.CreateProfileActivity"
             android:label="@string/title_create_profile"
+            android:launchMode="singleTop"
             android:parentActivityName=".activities.LoginActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

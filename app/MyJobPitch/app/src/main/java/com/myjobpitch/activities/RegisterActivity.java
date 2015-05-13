@@ -5,11 +5,12 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.myjobpitch.MJPApplication;
@@ -19,7 +20,7 @@ import com.myjobpitch.api.MJPApiException;
 
 public class RegisterActivity extends MJPProgressActivity {
 
-    private AutoCompleteTextView mUsernameView;
+    private EditText mUsernameView;
     private EditText mPassword1View;
     private EditText mPassword2View;
     private View mRegisterFormView;
@@ -30,9 +31,16 @@ public class RegisterActivity extends MJPProgressActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
-        mUsernameView = (AutoCompleteTextView) findViewById(R.id.username);
+        mUsernameView = (EditText) findViewById(R.id.username);
         mPassword1View = (EditText) findViewById(R.id.password1);
         mPassword2View = (EditText) findViewById(R.id.password2);
+        mPassword2View.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
+                attemptRegistration();
+                return true;
+            }
+        });
 
         String username = getIntent().getStringExtra("username");
         if (username != null) {

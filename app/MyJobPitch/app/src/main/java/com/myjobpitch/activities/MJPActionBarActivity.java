@@ -28,12 +28,43 @@ public class MJPActionBarActivity extends ActionBarActivity implements MJPActivi
             mFromLogin = savedInstanceState.getBoolean(FROM_LOGIN);
         else
             mFromLogin = getIntent().hasExtra(FROM_LOGIN);
+        Log.d(this.getClass().getSimpleName(), "created");
     }
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putBoolean(FROM_LOGIN, mFromLogin);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.d(this.getClass().getSimpleName(), "resumed");
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Log.d(this.getClass().getSimpleName(), "paused");
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Log.d(this.getClass().getSimpleName(), "stopped");
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.d(this.getClass().getSimpleName(), "destroyed");
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        Log.d(this.getClass().getSimpleName(), "restart");
     }
 
     @Override
@@ -57,7 +88,7 @@ public class MJPActionBarActivity extends ActionBarActivity implements MJPActivi
         Log.d("MJPActionBarActivity", "up");
         switch (item.getItemId()) {
             case android.R.id.home:
-                if (getIntent().hasExtra(FROM_LOGIN)) {
+                if (mFromLogin) {
                     DialogInterface.OnClickListener onLogout = new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
                             NavUtils.navigateUpFromSameTask(MJPActionBarActivity.this);

@@ -18,7 +18,15 @@
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme" >
+        android:theme="@style/AppTheme">
+
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="@string/google_maps_key" />
+
         <activity
             android:name=".activities.LoginActivity"
             android:label="@string/app_name"
@@ -114,6 +122,8 @@
         <activity
             android:name=".activities.JobSeekerActivity"
             android:label="@string/title_activity"
+            android:screenOrientation="portrait"
+            android:launchMode="singleTop"
             android:parentActivityName=".activities.LoginActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -122,6 +132,7 @@
         <activity
             android:name=".activities.EditJobSeekerActivity"
             android:label="@string/title_activity"
+            android:launchMode="singleTop"
             android:parentActivityName=".activities.JobSeekerActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -130,19 +141,12 @@
         <activity
             android:name=".activities.EditJobProfileActivity"
             android:label="@string/title_activity"
+            android:launchMode="singleTop"
             android:parentActivityName=".activities.JobSeekerActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activities.JobSeekerActivity" />
         </activity>
-
-        <meta-data
-            android:name="com.google.android.gms.version"
-            android:value="@integer/google_play_services_version" />
-        <meta-data
-            android:name="com.google.android.geo.API_KEY"
-            android:value="@string/google_maps_key" />
-
         <activity
             android:name=".activities.SelectPlaceActivity"
             android:parentActivityName=".activities.EditLocationActivity"

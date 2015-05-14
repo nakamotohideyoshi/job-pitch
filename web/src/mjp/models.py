@@ -166,6 +166,10 @@ class JobProfile(models.Model):
     sectors = models.ManyToManyField(Sector, related_name='job_profiles')
     contract = models.ForeignKey(Contract, related_name='job_profiles', null=True)
     hours = models.ForeignKey(Hours, related_name='job_profiles', null=True)
+    latlng = models.PointField()
+    search_radius = models.IntegerField()
+    place_id = models.CharField(max_length=1024, blank=True)
+    place_name = models.CharField(max_length=1024)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
     

@@ -39,7 +39,6 @@ NationalityViewSet = SimpleReadOnlyViewSet(Nationality)
 ApplicationStatusViewSet = SimpleReadOnlyViewSet(ApplicationStatus)
 RoleViewSet = SimpleReadOnlyViewSet(Role)
 BusinessViewSet = SimpleReadOnlyViewSet(Business)
-JobViewSet = SimpleReadOnlyViewSet(Job)
 
 class UserBusinessViewSet(viewsets.ModelViewSet):
     class BusinessPermission(permissions.BasePermission):
@@ -189,6 +188,29 @@ class JobProfileViewSet(viewsets.ModelViewSet):
     queryset = JobProfile.objects.all()
     serializer_class = JobProfileSerializer
 router.register('job-profiles', JobProfileViewSet)
+
+
+class JobPermission(permissions.BasePermission):
+    def has_permission(self, request, view):
+        return request.user.job_seeker is not None
+class JobViewSet(viewsets.ReadOnlyModelViewSet):
+    permission_classes = (permissions.IsAuthenticated, JobPermission)
+    serializer_class = SimpleSerializer(Job)
+    def get_queryset(self):
+        job_seeker = self.request.user.job_seeker
+        job_profile = job_seeker.profile
+        query = Job.objects.exclude(applications__job_seeker=job_seeker)
+        if job_profile.contract_id:
+            query = query.filter(contract=job_profile.contract)
+        if job_profile.hours_id:
+             query = query.filter(hours=job_profile.hours)
+        query = query.filter(sector__in=job_profile.sectors.all())
+        # TODO location
+        return query
+    
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
+router.register('jobs', JobViewSet, base_name='jobs')
 
 class ApplicationPermission(permissions.BasePermission):
     def has_permission(self, request, view):

@@ -95,6 +95,10 @@ class Migration(migrations.Migration):
             name='JobProfile',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('latlng', django.contrib.gis.db.models.fields.PointField(srid=4326)),
+                ('search_radius', models.IntegerField()),
+                ('place_id', models.CharField(max_length=1024, blank=True)),
+                ('place_name', models.CharField(max_length=1024)),
                 ('created', models.DateTimeField(auto_now_add=True)),
                 ('updated', models.DateTimeField(auto_now=True)),
                 ('contract', models.ForeignKey(related_name='job_profiles', to='mjp.Contract', null=True)),

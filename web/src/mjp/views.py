@@ -9,7 +9,7 @@ from mjp.models import Sector, Hours, Contract, Business, Location,\
     JobStatus, Job, Sex, Nationality, JobSeeker, Experience, JobProfile,\
     ApplicationStatus, Application, Role
 
-from mjp.serializers import SimpleSerializer, LocationSerializer
+from mjp.serializers import SimpleSerializer, LocationSerializer, JobProfileSerializer
 
 
 router = DefaultRouter()
@@ -187,7 +187,7 @@ class JobProfilePermission(permissions.BasePermission):
 class JobProfileViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.IsAuthenticated, JobProfilePermission)
     queryset = JobProfile.objects.all()
-    serializer_class = SimpleSerializer(JobProfile)
+    serializer_class = JobProfileSerializer
 router.register('job-profiles', JobProfileViewSet)
 
 class ApplicationPermission(permissions.BasePermission):

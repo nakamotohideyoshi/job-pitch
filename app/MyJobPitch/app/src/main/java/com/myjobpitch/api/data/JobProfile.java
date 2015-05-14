@@ -9,6 +9,11 @@ public class JobProfile extends MJPObjectWithDates {
     private List<Integer> sectors;
     private Integer contract;
     private Integer hours;
+    private String place_name;
+    private String place_id;
+    private Double longitude;
+    private Double latitude;
+    private Integer search_radius;
 
     public List<Integer> getSectors() {
         return sectors;
@@ -40,5 +45,45 @@ public class JobProfile extends MJPObjectWithDates {
 
     public void setJob_seeker(Integer job_seeker) {
         this.job_seeker = job_seeker;
+    }
+
+    public String getPlace_name() {
+        return place_name;
+    }
+
+    public void setPlace_name(String place_name) {
+        this.place_name = place_name;
+    }
+
+    public String getPlace_id() {
+        return place_id;
+    }
+
+    public void setPlace_id(String place_id) {
+        this.place_id = place_id;
+    }
+
+    public Double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(Double longitude) {
+        this.longitude = longitude;
+    }
+
+    public Double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(Double latitude) {
+        this.latitude = latitude;
+    }
+
+    public Integer getSearch_radius() {
+        return search_radius;
+    }
+
+    public void setSearch_radius(Integer search_radius) {
+        this.search_radius = search_radius;
     }
 }

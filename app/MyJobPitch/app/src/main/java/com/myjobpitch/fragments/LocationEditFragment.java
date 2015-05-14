@@ -36,11 +36,11 @@ public class LocationEditFragment extends EditFragment<Location> {
     private EditText mLocationTelephoneView;
     private CheckBox mLocationTelephonePublicView;
     private EditText mLocationMobileView;
-    private ImageButton mLocationPlaceButton;
-    private TextView mLocationPlaceView;
+    private ImageButton mPlaceButton;
+    private TextView mPlaceView;
     private Double mLongitude;
     private Double mLatitude;
-    private String mPlaceId;
+    private String mPlaceId = "";
     private String mPlaceName;
 
     /**
@@ -86,14 +86,14 @@ public class LocationEditFragment extends EditFragment<Location> {
         mLocationTelephonePublicView = (CheckBox) view.findViewById(R.id.location_telephone_public);
         mLocationMobileView = (EditText) view.findViewById(R.id.location_mobile);
         mLocationMobilePublicView = (CheckBox) view.findViewById(R.id.location_mobile_public);
-        mLocationPlaceView = (TextView) view.findViewById(R.id.location_place);
+        mPlaceView = (TextView) view.findViewById(R.id.location_place);
 
-        mLocationPlaceButton = (ImageButton) view.findViewById(R.id.location_place_button);
-        mLocationPlaceButton.setOnClickListener(new View.OnClickListener() {
+        mPlaceButton = (ImageButton) view.findViewById(R.id.location_place_button);
+        mPlaceButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), SelectPlaceActivity.class);
-                if (mPlaceId != null)
+                if (mPlaceId != null && !mPlaceId.isEmpty())
                     intent.putExtra(SelectPlaceActivity.PLACE_ID, mPlaceId);
                 if (mLongitude != null)
                     intent.putExtra(SelectPlaceActivity.LONGITUDE, mLongitude);
@@ -137,10 +137,10 @@ public class LocationEditFragment extends EditFragment<Location> {
         mLatitude = location.getLatitude();
 
         if (mPlaceName != null) {
-            if (getString(R.string.custom_location).equals(mPlaceName))
-                mLocationPlaceView.setText(mPlaceName);
+            if (mPlaceId == null || mPlaceId.isEmpty())
+                mPlaceView.setText(mPlaceName);
             else
-                mLocationPlaceView.setText(mPlaceName + " (from Google)");
+                mPlaceView.setText(mPlaceName + " (from Google)");
         }
     }
 
@@ -204,10 +204,10 @@ public class LocationEditFragment extends EditFragment<Location> {
                 else
                     mPlaceId = "";
                 if (mPlaceName.equals(getString(R.string.custom_location)))
-                    mLocationPlaceView.setText(mPlaceName);
+                    mPlaceView.setText(mPlaceName);
                 else
-                    mLocationPlaceView.setText(mPlaceName + " (from Google)");
-                mLocationPlaceView.setError(null);
+                    mPlaceView.setText(mPlaceName + " (from Google)");
+                mPlaceView.setError(null);
             }
         }
     }
@@ -216,10 +216,10 @@ public class LocationEditFragment extends EditFragment<Location> {
     public boolean validateInput() {
         boolean success = super.validateInput();
 
-        mLocationPlaceView.setError(null);
+        mPlaceView.setError(null);
         if (mLatitude == null) {
             success = false;
-            mLocationPlaceView.setError(getString(R.string.error_field_required));
+            mPlaceView.setError(getString(R.string.error_field_required));
         }
 
         return success;

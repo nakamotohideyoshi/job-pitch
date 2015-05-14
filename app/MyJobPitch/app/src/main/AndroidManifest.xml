@@ -123,7 +123,6 @@
             android:name=".activities.JobSeekerActivity"
             android:label="@string/title_activity"
             android:screenOrientation="portrait"
-            android:launchMode="singleTop"
             android:parentActivityName=".activities.LoginActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -149,12 +148,7 @@
         </activity>
         <activity
             android:name=".activities.SelectPlaceActivity"
-            android:parentActivityName=".activities.EditLocationActivity"
-            android:launchMode="singleTop"
             android:label="@string/title_activity_select_place" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.EditLocationActivity" />
         </activity>
     </application>
 

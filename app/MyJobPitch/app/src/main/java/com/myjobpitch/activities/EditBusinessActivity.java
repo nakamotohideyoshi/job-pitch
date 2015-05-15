@@ -1,10 +1,15 @@
 package com.myjobpitch.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.NavUtils;
+import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.myjobpitch.MJPApplication;
@@ -44,15 +49,28 @@ public class EditBusinessActivity extends MJPProgressActionBarActivity {
             }
         });
 
-        if (getIntent().hasExtra("business_data")) {
+        if (savedInstanceState != null) {
+            ObjectMapper mapper = new ObjectMapper();
+            try {
+                String business_data = savedInstanceState.getString("business_data");
+                Log.d("EditBusinessActivity", String.format("savedIntanceState['business_data']: %s", business_data));
+                business = mapper.readValue(business_data, Business.class);
+                mBusinessEditFragment.load(business);
+                showProgress(false);
+            } catch (IOException e) {
+                Log.e("EditBusinessActivity", "Error", e);
+            }
+        } else if (getIntent().hasExtra("business_data")) {
             ObjectMapper mapper = new ObjectMapper();
             try {
                 business = mapper.readValue(getIntent().getStringExtra("business_data"), Business.class);
                 mBusinessEditFragment.load(business);
                 showProgress(false);
-            } catch (IOException e) {}
+            } catch (IOException e) {
+            }
         } else if (getIntent().hasExtra("business_id")) {
-            mReadBusinessTask = new ReadUserBusinessTask(getApi(), getIntent().getIntExtra("business_id", -1));
+            int business_id = getIntent().getIntExtra("business_id", -1);
+            mReadBusinessTask = new ReadUserBusinessTask(getApi(), business_id);
             mReadBusinessTask.addListener(new CreateReadUpdateAPITaskListener<Business>() {
                 @Override
                 public void onSuccess(Business result) {
@@ -75,24 +93,27 @@ public class EditBusinessActivity extends MJPProgressActionBarActivity {
             mReadBusinessTask.execute();
         } else {
             showProgress(false);
-        }
-        if (business == null)
             setTitle(R.string.action_add_business);
+            business = new Business();
+            mBusinessEditFragment.load(business);
+            showProgress(false);
+        }
     }
 
     @Override
-    protected void onPause() {
-        super.onPause();
-        showProgress(false);
-        finish();
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        mBusinessEditFragment.save(business);
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            outState.putString("business_data", mapper.writeValueAsString(business));
+        } catch (JsonProcessingException e) {}
     }
 
     private void attemptSave() {
         if (mBusinessEditFragment.validateInput()) {
             showProgress(true);
 
-            if (business == null)
-                business = new Business();
             mBusinessEditFragment.save(business);
 
             final MJPApi api = ((MJPApplication) getApplication()).getApi();
@@ -100,6 +121,9 @@ public class EditBusinessActivity extends MJPProgressActionBarActivity {
             mCreateUpdateBusinessTask.addListener(new CreateReadUpdateAPITaskListener<Business>() {
                 @Override
                 public void onSuccess(Business business) {
+                    Intent intent = new Intent(EditBusinessActivity.this, LocationListActivity.class);
+                    intent.putExtra("business_id", business.getId());
+                    startActivity(intent);
                     EditBusinessActivity.this.finish();
                 }
 
@@ -114,6 +138,20 @@ public class EditBusinessActivity extends MJPProgressActionBarActivity {
                 }
             });
             mCreateUpdateBusinessTask.execute();
+        }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        Intent intent;
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                intent = NavUtils.getParentActivityIntent(EditBusinessActivity.this);
+                startActivity(intent);
+                finish();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
     }
 

@@ -240,6 +240,10 @@ public class MJPApi {
         return Arrays.asList(rest.exchange(getTypeUrl("user-jobs", String.format("location=%s", location_id)), HttpMethod.GET, createAuthenticatedRequest(), Job[].class).getBody());
     }
 
+    public Job getUserJob(Integer job_id) {
+        return rest.exchange(getObjectUrl("user-jobs", job_id), HttpMethod.GET, createAuthenticatedRequest(), Job.class).getBody();
+    }
+
     public void updateApplication(ApplicationUpdate update) throws MJPApiException {
         try {
             rest.exchange(getObjectUrl(classEndPoints.get(ApplicationUpdate.class), update.getId()), HttpMethod.PUT, createAuthenticatedRequest(update), ApplicationUpdate.class);

@@ -3,11 +3,14 @@ package com.myjobpitch.activities;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.database.DataSetObserver;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.v4.app.NavUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -26,6 +29,7 @@ import com.myjobpitch.api.data.ApplicationForCreation;
 import com.myjobpitch.api.data.ApplicationStatus;
 import com.myjobpitch.api.data.ApplicationUpdate;
 import com.myjobpitch.api.data.Experience;
+import com.myjobpitch.api.data.Job;
 import com.myjobpitch.api.data.JobSeeker;
 import com.myjobpitch.api.data.JobSeekerContainer;
 import com.myjobpitch.api.data.Sex;
@@ -36,6 +40,7 @@ import com.myjobpitch.tasks.CreateReadUpdateAPITaskListener;
 import com.myjobpitch.tasks.UpdateApplicationTask;
 import com.myjobpitch.tasks.recruiter.ReadApplicationsTask;
 import com.myjobpitch.tasks.recruiter.ReadJobSeekersTask;
+import com.myjobpitch.tasks.recruiter.ReadUserJobTask;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -53,6 +58,12 @@ public class JobActivity extends MJPProgressActionBarActivity {
     private TextView mNegativeButtonText;
     private View mShortlistButtonContainer;
     private ImageView mShortlistButtonIcon;
+    private SwipeFlingAdapterView mCards;
+    private List<JobSeekerContainer> jobSeekers;
+    private JobSeekerAdapter adapter;
+
+    private Job job;
+    private Integer job_id;
 
     private enum CardState {
         LEFT, MIDDLE, RIGHT
@@ -155,11 +166,6 @@ public class JobActivity extends MJPProgressActionBarActivity {
         }
     }
 
-    private Integer job_id;
-    private SwipeFlingAdapterView mCards;
-    private List<JobSeekerContainer> jobSeekers;
-    private JobSeekerAdapter adapter;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         backgroundTaskManager = new BackgroundTaskManager();
@@ -171,7 +177,6 @@ public class JobActivity extends MJPProgressActionBarActivity {
         });
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_job);
-        job_id = getIntent().getIntExtra("job_id", -1);
 
         mJobSeekerSearchView = findViewById(R.id.job_seeker_search);
         mProgressView = findViewById(R.id.progress);
@@ -311,7 +316,7 @@ public class JobActivity extends MJPProgressActionBarActivity {
                 } else {
                     // Create application for job seeker
                     ApplicationForCreation application = new ApplicationForCreation();
-                    application.setJob(job_id);
+                    application.setJob(job.getId());
                     application.setJob_seeker(jobSeeker.getId());
                     application.setStatus(getMJPApplication().get(ApplicationStatus.class, "CREATED").getId());
                     application.setShortlisted(false);
@@ -404,6 +409,9 @@ public class JobActivity extends MJPProgressActionBarActivity {
             }
         };
         createCardView();
+
+        job_id = getIntent().getIntExtra("job_id", -1);
+        loadJob();
     }
 
     private void createCardView() {
@@ -420,7 +428,30 @@ public class JobActivity extends MJPProgressActionBarActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        loadData();
+    }
+
+    private void loadJob() {
+        showProgress(true);
+        ReadUserJobTask task = new ReadUserJobTask(getApi(), job_id);
+        task.addListener(new CreateReadUpdateAPITaskListener<Job>() {
+            @Override
+            public void onSuccess(Job result) {
+                job = result;
+                loadData();
+            }
+
+            @Override
+            public void onError(JsonNode errors) {
+                Toast toast = Toast.makeText(JobActivity.this, "Error loading job seekers", Toast.LENGTH_LONG);
+                toast.show();
+                finish();
+            }
+
+            @Override
+            public void onCancelled() {
+            }
+        });
+        task.execute();
     }
 
     private void updateList(List<? extends JobSeekerContainer> result) {
@@ -438,7 +469,7 @@ public class JobActivity extends MJPProgressActionBarActivity {
     private void loadData() {
         showProgress(true);
         if (mAppliedSwitch.isChecked()) {
-            ReadApplicationsTask task = new ReadApplicationsTask(getApi(), job_id, mShortListedSwitch.isChecked());
+            ReadApplicationsTask task = new ReadApplicationsTask(getApi(), job.getId(), mShortListedSwitch.isChecked());
             task.addListener(new CreateReadUpdateAPITaskListener<List<Application>>() {
                 @Override
                 public void onSuccess(List<Application> result) {
@@ -458,7 +489,7 @@ public class JobActivity extends MJPProgressActionBarActivity {
             });
             task.execute();
         } else {
-            ReadJobSeekersTask task = new ReadJobSeekersTask(getApi(), job_id);
+            ReadJobSeekersTask task = new ReadJobSeekersTask(getApi(), job.getId());
             task.addListener(new CreateReadUpdateAPITaskListener<List<JobSeeker>>() {
                 @Override
                 public void onSuccess(List<JobSeeker> result) {
@@ -504,6 +535,20 @@ public class JobActivity extends MJPProgressActionBarActivity {
         mNegativeButtonContainer.setEnabled(notEmpty);
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        Intent intent;
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                intent = NavUtils.getParentActivityIntent(JobActivity.this);
+                intent.putExtra("location_id", job.getLocation());
+                startActivity(intent);
+                finish();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
     @Override
     public View getProgressView() {
         return mProgressView;

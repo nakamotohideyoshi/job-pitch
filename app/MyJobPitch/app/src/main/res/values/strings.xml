@@ -85,4 +85,6 @@
     <string name="select_distance">Select distance</string>
     <string name="setup_profile_message">You have not yet setup your job preferences, once we know your search criteria, you will see job matches here, and potential employers will be able to find you.</string>
     <string name="setup_profile">Setup</string>
+    <string name="no_locations_added_message">You have not added any work places for this company.</string>
+    <string name="no_jobs_added_message">You have not added any jobs for this location.</string>
 </resources>

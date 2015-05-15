@@ -1,10 +1,15 @@
 package com.myjobpitch.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.NavUtils;
+import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.myjobpitch.MJPApplication;
@@ -22,7 +27,6 @@ public class EditLocationActivity extends MJPProgressActionBarActivity {
 
     private LocationEditFragment mLocationEditFragment;
     private View mEditLocationView;
-    private Integer business_id;
     private Location location;
     private View mProgressView;
     private ReadLocationTask mReadLocationTask;
@@ -45,7 +49,18 @@ public class EditLocationActivity extends MJPProgressActionBarActivity {
             }
         });
 
-        if (getIntent().hasExtra("location_data")) {
+        if (savedInstanceState != null) {
+            ObjectMapper mapper = new ObjectMapper();
+            try {
+                String location_data = savedInstanceState.getString("location_data");
+                Log.d("EditLocationActivity", String.format("savedIntanceState['location_data']: %s", location_data));
+                location = mapper.readValue(location_data, Location.class);
+                mLocationEditFragment.load(location);
+                showProgress(false);
+            } catch (IOException e) {
+                Log.e("EditLocationActivity", "Error", e);
+            }
+        } else if (getIntent().hasExtra("location_data")) {
             ObjectMapper mapper = new ObjectMapper();
             try {
                 location = mapper.readValue(getIntent().getStringExtra("location_data"), Location.class);
@@ -75,29 +90,27 @@ public class EditLocationActivity extends MJPProgressActionBarActivity {
             });
             mReadLocationTask.execute();
         } else {
-            business_id = getIntent().getIntExtra("business_id", -1);
             showProgress(false);
             setTitle(R.string.action_add_location);
             location = new Location();
-            location.setBusiness(business_id);
+            location.setBusiness(getIntent().getIntExtra("business_id", -1));
             mLocationEditFragment.load(location);
         }
     }
-
     @Override
-    protected void onPause() {
-        super.onPause();
-        showProgress(false);
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        mLocationEditFragment.save(location);
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            outState.putString("location_data", mapper.writeValueAsString(location));
+        } catch (JsonProcessingException e) {}
     }
 
     private void attemptSave() {
         if (mLocationEditFragment.validateInput()) {
             showProgress(true);
 
-            if (location == null) {
-                location = new Location();
-                location.setBusiness(business_id);
-            }
             mLocationEditFragment.save(location);
 
             final MJPApi api = ((MJPApplication) getApplication()).getApi();
@@ -105,6 +118,9 @@ public class EditLocationActivity extends MJPProgressActionBarActivity {
             mCreateUpdateLocationTask.addListener(new CreateReadUpdateAPITaskListener<Location>() {
                 @Override
                 public void onSuccess(Location location) {
+                    Intent intent = new Intent(EditLocationActivity.this, JobListActivity.class);
+                    intent.putExtra("location_id", location.getId());
+                    startActivity(intent);
                     EditLocationActivity.this.finish();
                 }
 
@@ -119,6 +135,21 @@ public class EditLocationActivity extends MJPProgressActionBarActivity {
                 }
             });
             mCreateUpdateLocationTask.execute();
+        }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        Intent intent;
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                intent = NavUtils.getParentActivityIntent(EditLocationActivity.this);
+                intent.putExtra("business_id", location.getBusiness());
+                startActivity(intent);
+                finish();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
     }
 

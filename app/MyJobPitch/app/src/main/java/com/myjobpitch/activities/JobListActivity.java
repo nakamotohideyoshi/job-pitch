@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.NavUtils;
 import android.util.Log;
 import android.view.ActionMode;
 import android.view.LayoutInflater;
@@ -15,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -148,7 +150,8 @@ public class JobListActivity extends MJPProgressActionBarActivity  {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent(JobListActivity.this, JobActivity.class);
-                intent.putExtra("job_id", ((Job)list.getItemAtPosition(position)).getId());
+                Job job = (Job) list.getItemAtPosition(position);
+                intent.putExtra("job_id", job.getId());
                 startActivity(intent);
             }
         });
@@ -163,14 +166,20 @@ public class JobListActivity extends MJPProgressActionBarActivity  {
                 return true;
             }
         });
-        Log.d("JobListActivity", "created");
+        list.setEmptyView(findViewById(android.R.id.empty));
+        Button addJobButton = (Button) findViewById(R.id.add_job_button);
+        addJobButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                addJob();
+            }
+        });
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         loadJobs();
-        Log.d("JobListActivity", "resumed");
     }
 
     private void loadJobs() {
@@ -180,8 +189,8 @@ public class JobListActivity extends MJPProgressActionBarActivity  {
             @Override
             public void onSuccess(Location result) {
                 location = result;
-                getSupportActionBar()
-                        .setSubtitle(location.getName());
+                getSupportActionBar().setTitle(location.getName());
+                getSupportActionBar().setSubtitle(getString(R.string.jobs));
                 ReadUserJobsTask readJobs = new ReadUserJobsTask(getApi(), location_id);
                 readJobs.addListener(new CreateReadUpdateAPITaskListener<List<Job>>() {
                     @Override
@@ -213,7 +222,8 @@ public class JobListActivity extends MJPProgressActionBarActivity  {
             }
 
             @Override
-            public void onCancelled() {}
+            public void onCancelled() {
+            }
         });
         readLocation.execute();
     }
@@ -225,7 +235,7 @@ public class JobListActivity extends MJPProgressActionBarActivity  {
 
     @Override
     public View getMainView() {
-        return findViewById(R.id.job_list);
+        return findViewById(R.id.job_list_main);
     }
 
     @Override
@@ -246,9 +256,7 @@ public class JobListActivity extends MJPProgressActionBarActivity  {
         Intent intent;
         switch (item.getItemId()) {
             case R.id.action_add:
-                intent = new Intent(this, EditJobActivity.class);
-                intent.putExtra("location_id", location_id);
-                startActivity(intent);
+                addJob();
                 return true;
             case R.id.action_add_business:
                 intent = new Intent(this, EditBusinessActivity.class);
@@ -258,8 +266,21 @@ public class JobListActivity extends MJPProgressActionBarActivity  {
                 intent = new Intent(this, EditLocationActivity.class);
                 startActivity(intent);
                 return true;
+            case android.R.id.home:
+                intent = NavUtils.getParentActivityIntent(JobListActivity.this);
+                intent.putExtra("business_id", location.getBusiness());
+                startActivity(intent);
+                finish();
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    private void addJob() {
+        Intent intent;
+        intent = new Intent(this, EditJobActivity.class);
+        intent.putExtra("location_id", location_id);
+        startActivity(intent);
     }
 }

@@ -24,6 +24,7 @@ public class MJPActionBarActivity extends ActionBarActivity implements MJPActivi
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         if (savedInstanceState != null && savedInstanceState.containsKey(FROM_LOGIN))
             mFromLogin = savedInstanceState.getBoolean(FROM_LOGIN);
         else
@@ -85,18 +86,16 @@ public class MJPActionBarActivity extends ActionBarActivity implements MJPActivi
 
     @Override
     public boolean onOptionsItemSelected(final MenuItem item) {
-        Log.d("MJPActionBarActivity", "up");
         switch (item.getItemId()) {
             case android.R.id.home:
-                if (mFromLogin) {
-                    DialogInterface.OnClickListener onLogout = new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                            NavUtils.navigateUpFromSameTask(MJPActionBarActivity.this);
-                        }
-                    };
-                    confirmLogout(onLogout);
-                    return true;
-                }
+                Log.d("MJPActionBarActivity", "up");
+                DialogInterface.OnClickListener onLogout = new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        NavUtils.navigateUpFromSameTask(MJPActionBarActivity.this);
+                    }
+                };
+                confirmLogout(onLogout);
+                return true;
         }
         return super.onOptionsItemSelected(item);
     }

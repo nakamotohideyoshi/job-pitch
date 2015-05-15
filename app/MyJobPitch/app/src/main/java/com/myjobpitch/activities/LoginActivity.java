@@ -265,11 +265,15 @@ public class LoginActivity extends MJPProgressActivity implements LoaderCallback
                             intent.putExtra("business_data", mapper.writeValueAsString(business));
                             return intent;
                         } else if (business.getLocations().size() == 1) {
-                            // TODO Single business and single location: go straight to location
-                            return new Intent(LoginActivity.this, BusinessListActivity.class);
+                            // Single business and single location: go straight to location
+                            Intent intent = new Intent(LoginActivity.this, JobListActivity.class);
+                            intent.putExtra("location_id", business.getLocations().get(0));
+                            return intent;
                         } else {
-                            // TODO Single business, multiple locations: go straight to business
-                            return new Intent(LoginActivity.this, BusinessListActivity.class);
+                            // Single business, multiple locations: go straight to business
+                            Intent intent = new Intent(LoginActivity.this, LocationListActivity.class);
+                            intent.putExtra("business_id", business.getId());
+                            return intent;
                         }
                     } else {
                         // Multiple businesses: goto business list

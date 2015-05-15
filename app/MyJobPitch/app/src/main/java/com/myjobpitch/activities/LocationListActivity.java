@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.NavUtils;
 import android.util.Log;
 import android.view.ActionMode;
 import android.view.LayoutInflater;
@@ -15,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -151,9 +153,9 @@ public class LocationListActivity extends MJPProgressActionBarActivity  {
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            Intent intent = new Intent(LocationListActivity.this, JobListActivity.class);
-            intent.putExtra("location_id", ((Location)list.getItemAtPosition(position)).getId());
-            startActivity(intent);
+                Intent intent = new Intent(LocationListActivity.this, JobListActivity.class);
+                intent.putExtra("location_id", ((Location) list.getItemAtPosition(position)).getId());
+                startActivity(intent);
             }
         });
         list.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
@@ -167,14 +169,20 @@ public class LocationListActivity extends MJPProgressActionBarActivity  {
                 return true;
             }
         });
-        Log.d("RecruiterActivity", "created");
+        list.setEmptyView(findViewById(android.R.id.empty));
+        Button addJobButton = (Button) findViewById(R.id.add_location_button);
+        addJobButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                addLocation();
+            }
+        });
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         loadLocations();
-        Log.d("RecruiterActivity", "resumed");
     }
 
     private void loadLocations() {
@@ -184,8 +192,8 @@ public class LocationListActivity extends MJPProgressActionBarActivity  {
             @Override
             public void onSuccess(Business result) {
                 business = result;
-                getSupportActionBar()
-                        .setSubtitle(business.getName());
+                getSupportActionBar().setTitle(business.getName());
+                getSupportActionBar().setSubtitle(getString(R.string.locations));
                 ReadUserLocationsTask readLocations = new ReadUserLocationsTask(getApi(), business_id);
                 readLocations.addListener(new CreateReadUpdateAPITaskListener<List<Location>>() {
                     @Override
@@ -228,13 +236,7 @@ public class LocationListActivity extends MJPProgressActionBarActivity  {
 
     @Override
     public View getMainView() {
-        return findViewById(R.id.location_list);
-    }
-
-    @Override
-    public void onBackPressed() {
-        Log.d("RecruiterActivity", "back");
-        super.onBackPressed();
+        return findViewById(R.id.location_list_main);
     }
 
     @Override
@@ -249,16 +251,26 @@ public class LocationListActivity extends MJPProgressActionBarActivity  {
         Intent intent;
         switch (item.getItemId()) {
             case R.id.action_add:
-                intent = new Intent(this, EditLocationActivity.class);
-                intent.putExtra("business_id", business_id);
-                startActivity(intent);
+                addLocation();
                 return true;
             case R.id.action_add_business:
                 intent = new Intent(this, EditBusinessActivity.class);
                 startActivity(intent);
                 return true;
+            case android.R.id.home:
+                intent = NavUtils.getParentActivityIntent(LocationListActivity.this);
+                startActivity(intent);
+                finish();
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    private void addLocation() {
+        Intent intent;
+        intent = new Intent(this, EditLocationActivity.class);
+        intent.putExtra("business_id", business_id);
+        startActivity(intent);
     }
 }

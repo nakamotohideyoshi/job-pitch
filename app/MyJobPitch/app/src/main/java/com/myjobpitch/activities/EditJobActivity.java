@@ -1,6 +1,9 @@
 package com.myjobpitch.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.NavUtils;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
@@ -14,8 +17,8 @@ import com.myjobpitch.api.data.Job;
 import com.myjobpitch.api.data.JobStatus;
 import com.myjobpitch.fragments.JobEditFragment;
 import com.myjobpitch.tasks.CreateReadUpdateAPITaskListener;
-import com.myjobpitch.tasks.ReadJobTask;
 import com.myjobpitch.tasks.recruiter.CreateUpdateJobTask;
+import com.myjobpitch.tasks.recruiter.ReadUserJobTask;
 
 import java.io.IOException;
 
@@ -23,10 +26,9 @@ public class EditJobActivity extends MJPProgressActionBarActivity {
 
     private JobEditFragment mJobEditFragment;
     private View mEditJobView;
-    private Integer location_id;
     private Job job;
     private View mProgressView;
-    private ReadJobTask mReadJobTask;
+    private ReadUserJobTask mReadJobTask;
     private CreateUpdateJobTask mCreateUpdateJobTask;
 
     @Override
@@ -56,7 +58,7 @@ public class EditJobActivity extends MJPProgressActionBarActivity {
                 showProgress(false);
             } catch (IOException e) {}
         } else if (getIntent().hasExtra("job_id")) {
-            mReadJobTask = new ReadJobTask(getApi(), getIntent().getIntExtra("job_id", -1));
+            mReadJobTask = new ReadUserJobTask(getApi(), getIntent().getIntExtra("job_id", -1));
             mReadJobTask.addListener(new CreateReadUpdateAPITaskListener<Job>() {
                 @Override
                 public void onSuccess(Job result) {
@@ -78,31 +80,18 @@ public class EditJobActivity extends MJPProgressActionBarActivity {
             });
             mReadJobTask.execute();
         } else {
-            location_id = getIntent().getIntExtra("location_id", -1);
-            showProgress(false);
             setTitle(R.string.action_add_job);
             job = new Job();
-            job.setLocation(location_id);
+            job.setLocation(getIntent().getIntExtra("location_id", -1));
             job.setStatus(getMJPApplication().get(JobStatus.class, "OPEN").getId());
             mJobEditFragment.load(job);
+            showProgress(false);
         }
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        showProgress(false);
-        finish();
     }
 
     private void attemptSave() {
         if (mJobEditFragment.validateInput()) {
             showProgress(true);
-
-            if (job == null) {
-                job = new Job();
-                job.setLocation(location_id);
-            }
             mJobEditFragment.save(job);
 
             final MJPApi api = ((MJPApplication) getApplication()).getApi();
@@ -124,6 +113,21 @@ public class EditJobActivity extends MJPProgressActionBarActivity {
                 }
             });
             mCreateUpdateJobTask.execute();
+        }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        Intent intent;
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                intent = NavUtils.getParentActivityIntent(EditJobActivity.this);
+                intent.putExtra("location_id", job.getLocation());
+                startActivity(intent);
+                finish();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
     }
 

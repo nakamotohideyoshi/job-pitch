@@ -67,13 +67,6 @@ public class EditJobSeekerActivity extends MJPProgressActionBarActivity {
         }
     }
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-        showProgress(false);
-        finish();
-    }
-
     private void attemptSave() {
         if (mJobSeekerEditFragment.validateInput()) {
             showProgress(true);

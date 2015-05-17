@@ -14,15 +14,106 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp" />
 
-    <LinearLayout
+    <RelativeLayout
         android:id="@+id/job_seeker_main"
-        android:gravity="center_horizontal"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-        <LinearLayout
-            android:id="@+id/message_box"
+
+        <ProgressBar android:id="@+id/background_progress"
+            style="?android:attr/progressBarStyleSmall"
             android:visibility="invisible"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/activity_horizontal_margin"
+            android:layout_marginTop="8dp"/>
+
+        <FrameLayout
+            android:id="@+id/job_cards"
+            android:layout_below="@id/controls"
+            android:layout_above="@+id/buttons"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <LinearLayout
+            android:id="@+id/buttons"
+            android:paddingLeft="@dimen/activity_horizontal_margin"
+            android:paddingRight="@dimen/activity_horizontal_margin"
+            android:orientation="horizontal"
+            android:layout_alignParentBottom="true"
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <RelativeLayout
+                android:id="@+id/positive_button_container"
+                android:layout_marginRight="20dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <Button
+                    android:id="@+id/positive_button"
+                    android:background="@drawable/button_bg"
+                    style="?android:attr/borderlessButtonStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+                <TextView
+                    android:id="@+id/positive_button_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_alignBottom="@id/positive_button"
+                    android:layout_marginBottom="27dp"
+                    android:textColor="@color/button_text"
+                    android:text="@string/connect"/>
+                <ImageView
+                    android:id="@+id/positive_button_icon"
+                    android:src="@drawable/ic_connect"
+                    android:layout_marginBottom="5dp"
+                    android:layout_centerHorizontal="true"
+                    android:layout_above="@id/positive_button_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/negative_button_container"
+                android:layout_marginLeft="20dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <Button
+                    android:id="@+id/negative_button"
+                    android:background="@drawable/button_bg"
+                    style="?android:attr/borderlessButtonStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+                <TextView
+                    android:id="@+id/negative_button_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_alignBottom="@id/negative_button"
+                    android:layout_marginBottom="27dp"
+                    android:textColor="@color/button_text"
+                    android:text="@string/remove"/>
+                <ImageView
+                    android:src="@drawable/ic_delete"
+                    android:layout_marginBottom="5dp"
+                    android:layout_centerHorizontal="true"
+                    android:layout_above="@id/negative_button_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </RelativeLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@android:id/empty"
+            android:visibility="visible"
             android:orientation="vertical"
+            android:layout_centerHorizontal="true"
             android:layout_marginTop="30dp"
             android:background="@drawable/dashed_border"
             android:layout_width="300dp"
@@ -31,19 +122,16 @@
 
             <TextView
                 android:id="@+id/message_box_message"
-                android:text="@string/setup_profile_message"
                 android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                />
+                android:layout_height="wrap_content" />
 
             <Button
-                android:id="@+id/setup_button"
+                android:id="@+id/empty_button"
                 android:layout_marginTop="15dp"
-                android:text="@string/setup_profile"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content" />
         </LinearLayout>
 
-    </LinearLayout>
+    </RelativeLayout>
 
 </RelativeLayout>

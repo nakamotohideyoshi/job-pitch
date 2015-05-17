@@ -11,6 +11,9 @@ public class Job extends MJPObjectWithDates {
     private Integer hours;
     private Integer status;
 
+    private Location location_data;
+    private Business business_data;
+
     public String getTitle() {
         return title;
     }
@@ -65,5 +68,13 @@ public class Job extends MJPObjectWithDates {
 
     public void setStatus(Integer status) {
         this.status = status;
+    }
+
+    public Location getLocation_data() {
+        return location_data;
+    }
+
+    public Business getBusiness_data() {
+        return business_data;
     }
 }

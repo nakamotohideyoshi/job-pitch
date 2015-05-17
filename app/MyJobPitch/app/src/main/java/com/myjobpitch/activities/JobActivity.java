@@ -33,8 +33,6 @@ import com.myjobpitch.api.data.Job;
 import com.myjobpitch.api.data.JobSeeker;
 import com.myjobpitch.api.data.JobSeekerContainer;
 import com.myjobpitch.api.data.Sex;
-import com.myjobpitch.tasks.APITask;
-import com.myjobpitch.tasks.APITaskListener;
 import com.myjobpitch.tasks.CreateApplicationTask;
 import com.myjobpitch.tasks.CreateReadUpdateAPITaskListener;
 import com.myjobpitch.tasks.ReadAPITask;
@@ -79,46 +77,6 @@ public class JobActivity extends MJPProgressActionBarActivity {
     }
 
     private BackgroundTaskManager backgroundTaskManager;
-    private class BackgroundTaskManager {
-        private List<APITask<?>> tasks = new ArrayList<>();
-        private List<Runnable> taskCompletionActions = new ArrayList<>();
-
-        public synchronized void addTaskCompletionAction(Runnable runnable) {
-            taskCompletionActions.add(runnable);
-        }
-
-        public synchronized void addBackgroundTask(final APITask<?> task) {
-            tasks.add(task);
-            task.addListener(new APITaskListener() {
-                @Override
-                public void onPostExecute() {
-                    removeTask(task);
-                }
-
-                @Override
-                public void onCancelled() {
-                    removeTask(task);
-                }
-            });
-            // Update tasks now, in case the task finished while we were
-            // faffing around up above
-            for (APITask<?> t : new ArrayList<>(tasks))
-                if (task.isExecuted())
-                    tasks.remove(task);
-            checkTasksComplete();
-        }
-
-        private synchronized void removeTask(APITask<?> task) {
-            tasks.remove(task);
-            checkTasksComplete();
-        }
-
-        private void checkTasksComplete() {
-            if (tasks.isEmpty())
-                for (Runnable action : taskCompletionActions)
-                    action.run();
-        }
-    }
 
     private View mProgressView;
     private View mJobSeekerSearchView;
@@ -235,7 +193,7 @@ public class JobActivity extends MJPProgressActionBarActivity {
                 if (!adapter.isEmpty()) {
                     JobSeeker jobSeeker = adapter.getItem(0).getJobSeeker();
                     String name = jobSeeker.getFirst_name() + " " + jobSeeker.getLast_name();
-                    String message = "Are you sure you want to remove " + name + "? This job seeker will never appear again for this job.";
+                    String message = getString(R.string.remove_job_seeker_message, name);
 
                     AlertDialog.Builder builder = new AlertDialog.Builder(JobActivity.this);
                     builder.setMessage(message)
@@ -327,7 +285,7 @@ public class JobActivity extends MJPProgressActionBarActivity {
                     ApplicationForCreation application = new ApplicationForCreation();
                     application.setJob(job.getId());
                     application.setJob_seeker(jobSeeker.getId());
-                    application.setStatus(getMJPApplication().get(ApplicationStatus.class, "CREATED").getId());
+                    application.setStatus(getMJPApplication().get(ApplicationStatus.class, ApplicationStatus.CREATED).getId());
                     application.setShortlisted(false);
                     CreateApplicationTask task = new CreateApplicationTask(getApi(), application);
                     backgroundTaskManager.addBackgroundTask(task);

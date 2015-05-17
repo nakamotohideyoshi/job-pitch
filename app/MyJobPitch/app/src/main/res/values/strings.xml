@@ -94,4 +94,7 @@
     <string name="no_matching_candidates_message">There are no more potential candidates that match this job.  You can switch to application mode to see the people who have connected with you, or restart the search.</string>
     <string name="no_shortlisted_applications_message">You have not shortlisted any applications for this job, turn off shortlist view to see the non-shortlisted applications.</string>
     <string name="turn_off_shortlist_view">Turn off shortlist view</string>
+    <string name="remove_job_seeker_message">Are you sure you want to remove %1$s? This job seeker will never appear again for this job.\nIf you want this item to appear again in later searches, just swipe to the right to remove temporarily.</string>
+    <string name="remove_job_message">Are you sure you want to remove %1$s? This job will never appear again.\nIf you want this job to appear again in later searches, just swipe to the right to remove temporarily.</string>
+    <string name="no_matching_jobs_message">There are no more jobs that match your profile.  You can restart the search to see all the jobs you\'ve dismissed again.</string>
 </resources>

@@ -85,12 +85,9 @@ public class JobSeekerActivity extends MJPProgressActionBarActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        Intent intent;
         switch (item.getItemId()) {
             case R.id.action_edit_profile:
-                intent = new Intent(this, EditJobSeekerActivity.class);
-                intent.putExtra("job_seeker_id", getApi().getUser().getJob_seeker());
-                startActivity(intent);
+                startActivity(new Intent(this, EditJobSeekerActivity.class));
                 return true;
             case R.id.action_edit_job_profile:
                 editProfile();

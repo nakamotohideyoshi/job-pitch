@@ -141,12 +141,15 @@ class JobSeekerViewSet(viewsets.ModelViewSet):
         if job:
             job = Job.objects.select_related('sector', 'contract', 'hours').get(pk=self.request.QUERY_PARAMS['job'])
             query = JobSeeker.objects.exclude(applications__job=job)
+            exclude_pks = self.request.QUERY_PARAMS.get('exclude')
+            if exclude_pks:
+                query = query.exclude(pk__in=map(int, exclude_pks.split(',')))
             query = query.filter(Q(profile__contract=job.contract) | Q(profile__contract=None),
                                  Q(profile__hours=job.hours) | Q(profile__hours=None),
                                  profile__sectors=job.sector,
                                  )
             # TODO location
-            return query
+            return query[:25]
         return JobSeeker.objects.all()
     
     def perform_create(self, serializer):
@@ -192,7 +195,11 @@ router.register('job-profiles', JobProfileViewSet)
 
 class JobPermission(permissions.BasePermission):
     def has_permission(self, request, view):
-        return request.user.job_seeker is not None
+        try:
+            request.user.job_seeker
+        except JobSeeker.DoesNotExist:
+            return False
+        return True
 class JobViewSet(viewsets.ReadOnlyModelViewSet):
     permission_classes = (permissions.IsAuthenticated, JobPermission)
     serializer_class = SimpleSerializer(Job)

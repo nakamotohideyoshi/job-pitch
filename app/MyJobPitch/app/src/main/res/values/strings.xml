@@ -6,7 +6,7 @@
     <string name="job_seeker">Job Seeker</string>
     <string name="action_settings">Settings</string>
     <string name="register">Register</string>
-    <string name="test_username">j1</string>
+    <string name="test_username">r1</string>
     <string name="test_password">admin1</string>
     <string name="prompt_password_confirm">Confirm password</string>
     <string name="prompt_email">Email (optional)</string>
@@ -87,4 +87,11 @@
     <string name="setup_profile">Setup</string>
     <string name="no_locations_added_message">You have not added any work places for this company.</string>
     <string name="no_jobs_added_message">You have not added any jobs for this location.</string>
+    <string name="no_applications_message">You have not chosen anyone to connect with for this job, and no candidates have yet expressed an interest.  Once that happens, you will be able to sort through them from here.  You can switch to search mode to look for potential applicants.</string>
+    <string name="switch_to_search_mode">Switch to search mode</string>
+    <string name="restart_search">Restart search</string>
+    <string name="switch_to_application_mode">Switch to application mode</string>
+    <string name="no_matching_candidates_message">There are no more potential candidates that match this job.  You can switch to application mode to see the people who have connected with you, or restart the search.</string>
+    <string name="no_shortlisted_applications_message">You have not shortlisted any applications for this job, turn off shortlist view to see the non-shortlisted applications.</string>
+    <string name="turn_off_shortlist_view">Turn off shortlist view</string>
 </resources>

@@ -202,11 +202,16 @@ class JobPermission(permissions.BasePermission):
         return True
 class JobViewSet(viewsets.ReadOnlyModelViewSet):
     permission_classes = (permissions.IsAuthenticated, JobPermission)
-    serializer_class = SimpleSerializer(Job)
+    serializer_class = SimpleSerializer(Job, {'location_data': LocationSerializer(source='location', read_only=True),
+                                              'business_data': SimpleSerializer(Business)(source='location.business', read_only=True),
+                                              })
     def get_queryset(self):
         job_seeker = self.request.user.job_seeker
         job_profile = job_seeker.profile
         query = Job.objects.exclude(applications__job_seeker=job_seeker)
+        exclude_pks = self.request.QUERY_PARAMS.get('exclude')
+        if exclude_pks:
+            query = query.exclude(pk__in=map(int, exclude_pks.split(',')))
         if job_profile.contract_id:
             query = query.filter(contract=job_profile.contract)
         if job_profile.hours_id:

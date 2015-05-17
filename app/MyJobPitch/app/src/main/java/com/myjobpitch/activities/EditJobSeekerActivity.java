@@ -1,11 +1,14 @@
 package com.myjobpitch.activities;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.myjobpitch.MJPApplication;
 import com.myjobpitch.R;
 import com.myjobpitch.api.MJPApi;
@@ -15,11 +18,13 @@ import com.myjobpitch.tasks.CreateReadUpdateAPITaskListener;
 import com.myjobpitch.tasks.ReadJobSeekerTask;
 import com.myjobpitch.tasks.jobseeker.CreateUpdateJobSeekerTask;
 
+import java.io.IOException;
+
 public class EditJobSeekerActivity extends MJPProgressActionBarActivity {
 
     private JobSeekerEditFragment mJobSeekerEditFragment;
     private View mEditJobSeekerView;
-    private JobSeeker jobSeeker;
+    private JobSeeker mJobSeeker;
     private View mProgressView;
     private ReadJobSeekerTask mReadJobSeekerTask;
     private CreateUpdateJobSeekerTask mCreateUpdateJobSeekerTask;
@@ -42,13 +47,24 @@ public class EditJobSeekerActivity extends MJPProgressActionBarActivity {
             }
         });
 
-        if (getIntent().hasExtra("job_seeker_id")) {
-            mReadJobSeekerTask = new ReadJobSeekerTask(getApi(), getIntent().getIntExtra("job_seeker_id", -1));
+        if (savedInstanceState != null) {
+            ObjectMapper mapper = new ObjectMapper();
+            try {
+                String job_seeker_data = savedInstanceState.getString("job_seeker_data");
+                Log.d("EditJobSeekerActivity", String.format("savedIntanceState['job_seeker_data']: %s", job_seeker_data));
+                mJobSeeker = mapper.readValue(job_seeker_data, JobSeeker.class);
+                mJobSeekerEditFragment.load(mJobSeeker);
+                showProgress(false);
+            } catch (IOException e) {
+                Log.e("EditJobSeekerActivity", "Error", e);
+            }
+        } else {
+            mReadJobSeekerTask = new ReadJobSeekerTask(getApi(), getApi().getUser().getJob_seeker());
             mReadJobSeekerTask.addListener(new CreateReadUpdateAPITaskListener<JobSeeker>() {
                 @Override
                 public void onSuccess(JobSeeker result) {
-                    jobSeeker = result;
-                    mJobSeekerEditFragment.load(jobSeeker);
+                    mJobSeeker = result;
+                    mJobSeekerEditFragment.load(mJobSeeker);
                     showProgress(false);
                 }
 
@@ -67,14 +83,24 @@ public class EditJobSeekerActivity extends MJPProgressActionBarActivity {
         }
     }
 
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        mJobSeekerEditFragment.save(mJobSeeker);
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            outState.putString("job_seeker_data", mapper.writeValueAsString(mJobSeeker));
+        } catch (JsonProcessingException e) {}
+    }
+
     private void attemptSave() {
         if (mJobSeekerEditFragment.validateInput()) {
             showProgress(true);
 
-            mJobSeekerEditFragment.save(jobSeeker);
+            mJobSeekerEditFragment.save(mJobSeeker);
 
             final MJPApi api = ((MJPApplication) getApplication()).getApi();
-            mCreateUpdateJobSeekerTask = new CreateUpdateJobSeekerTask(api, jobSeeker);
+            mCreateUpdateJobSeekerTask = new CreateUpdateJobSeekerTask(api, mJobSeeker);
             mCreateUpdateJobSeekerTask.addListener(new CreateReadUpdateAPITaskListener<JobSeeker>() {
                 @Override
                 public void onSuccess(JobSeeker jobSeeker) {

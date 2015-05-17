@@ -3,11 +3,13 @@ package com.myjobpitch.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.myjobpitch.MJPApplication;
@@ -50,7 +52,18 @@ public class EditJobActivity extends MJPProgressActionBarActivity {
 
         mJobEditFragment.loadApplicationData(getMJPApplication());
 
-        if (getIntent().hasExtra("job_data")) {
+        if (savedInstanceState != null) {
+            ObjectMapper mapper = new ObjectMapper();
+            try {
+                String job_data = savedInstanceState.getString("job_data");
+                Log.d("EditJobActivity", String.format("savedIntanceState['job_data']: %s", job_data));
+                job = mapper.readValue(job_data, Job.class);
+                mJobEditFragment.load(job);
+                showProgress(false);
+            } catch (IOException e) {
+                Log.e("EditJobActivity", "Error", e);
+            }
+        } else if (getIntent().hasExtra("job_data")) {
             ObjectMapper mapper = new ObjectMapper();
             try {
                 job = mapper.readValue(getIntent().getStringExtra("job_data"), Job.class);
@@ -87,6 +100,16 @@ public class EditJobActivity extends MJPProgressActionBarActivity {
             mJobEditFragment.load(job);
             showProgress(false);
         }
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        mJobEditFragment.save(job);
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            outState.putString("job_data", mapper.writeValueAsString(job));
+        } catch (JsonProcessingException e) {}
     }
 
     private void attemptSave() {

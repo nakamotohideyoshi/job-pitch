@@ -1,11 +1,14 @@
 package com.myjobpitch.activities;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.myjobpitch.MJPApplication;
 import com.myjobpitch.R;
 import com.myjobpitch.api.MJPApi;
@@ -16,6 +19,8 @@ import com.myjobpitch.tasks.CreateReadUpdateAPITaskListener;
 import com.myjobpitch.tasks.ReadJobProfileTask;
 import com.myjobpitch.tasks.ReadJobSeekerTask;
 import com.myjobpitch.tasks.jobseeker.CreateUpdateJobProfileTask;
+
+import java.io.IOException;
 
 public class EditJobProfileActivity extends MJPProgressActionBarActivity {
 
@@ -42,54 +47,81 @@ public class EditJobProfileActivity extends MJPProgressActionBarActivity {
                 attemptSave();
             }
         });
+        if (savedInstanceState != null) {
+            ObjectMapper mapper = new ObjectMapper();
+            try {
+                String job_seeker_data = savedInstanceState.getString("job_seeker_data");
+                Log.d("EditJobProfileActivity", String.format("savedIntanceState['job_seeker_data']: %s", job_seeker_data));
+                mJobSeeker = mapper.readValue(job_seeker_data, JobSeeker.class);
 
-        ReadJobSeekerTask mReadJobSeekerTask = new ReadJobSeekerTask(getApi(), getIntent().getIntExtra("job_seeker_id", -1));
-        mReadJobSeekerTask.addListener(new CreateReadUpdateAPITaskListener<JobSeeker>() {
-            @Override
-            public void onSuccess(JobSeeker result) {
-                mJobSeeker = result;
-                if (result.getProfile() != null) {
-                    ReadJobProfileTask mReadJobProfileTask = new ReadJobProfileTask(getApi(), result.getProfile());
-                    mReadJobProfileTask.addListener(new CreateReadUpdateAPITaskListener<JobProfile>() {
-                        @Override
-                        public void onSuccess(JobProfile result) {
-                            mJobProfile = result;
-                            mJobProfileEditFragment.load(result);
-                            showProgress(false);
-                        }
+                String profile_data = savedInstanceState.getString("profile_data");
+                Log.d("EditJobProfileActivity", String.format("savedIntanceState['profile_data']: %s", profile_data));
+                mJobProfile = mapper.readValue(profile_data, JobProfile.class);
+                mJobProfileEditFragment.load(mJobProfile);
+                showProgress(false);
+            } catch (IOException e) {
+                Log.e("EditJobProfileActivity", "Error", e);
+            }
+        } else {
+            ReadJobSeekerTask mReadJobSeekerTask = new ReadJobSeekerTask(getApi(), getIntent().getIntExtra("job_seeker_id", -1));
+            mReadJobSeekerTask.addListener(new CreateReadUpdateAPITaskListener<JobSeeker>() {
+                @Override
+                public void onSuccess(JobSeeker result) {
+                    mJobSeeker = result;
+                    if (result.getProfile() != null) {
+                        ReadJobProfileTask mReadJobProfileTask = new ReadJobProfileTask(getApi(), result.getProfile());
+                        mReadJobProfileTask.addListener(new CreateReadUpdateAPITaskListener<JobProfile>() {
+                            @Override
+                            public void onSuccess(JobProfile result) {
+                                mJobProfile = result;
+                                mJobProfileEditFragment.load(result);
+                                showProgress(false);
+                            }
 
-                        @Override
-                        public void onError(JsonNode errors) {
-                            Toast toast = Toast.makeText(EditJobProfileActivity.this, "Error loading job search profile", Toast.LENGTH_LONG);
-                            toast.show();
-                            finish();
-                        }
+                            @Override
+                            public void onError(JsonNode errors) {
+                                Toast toast = Toast.makeText(EditJobProfileActivity.this, "Error loading job search profile", Toast.LENGTH_LONG);
+                                toast.show();
+                                finish();
+                            }
 
-                        @Override
-                        public void onCancelled() {
-                        }
-                    });
-                    mReadJobProfileTask.execute();
-                } else {
-                    mJobProfile = new JobProfile();
-                    mJobProfile.setJob_seeker(mJobSeeker.getId());
-                    showProgress(false);
+                            @Override
+                            public void onCancelled() {
+                            }
+                        });
+                        mReadJobProfileTask.execute();
+                    } else {
+                        mJobProfile = new JobProfile();
+                        mJobProfile.setJob_seeker(mJobSeeker.getId());
+                        showProgress(false);
+                    }
                 }
-            }
 
-            @Override
-            public void onError(JsonNode errors) {
-                Toast toast = Toast.makeText(EditJobProfileActivity.this, "Error loading job search profile", Toast.LENGTH_LONG);
-                toast.show();
-                finish();
-            }
+                @Override
+                public void onError(JsonNode errors) {
+                    Toast toast = Toast.makeText(EditJobProfileActivity.this, "Error loading job search profile", Toast.LENGTH_LONG);
+                    toast.show();
+                    finish();
+                }
 
-            @Override
-            public void onCancelled() {
+                @Override
+                public void onCancelled() {
 
-            }
-        });
-        mReadJobSeekerTask.execute();
+                }
+            });
+            mReadJobSeekerTask.execute();
+        }
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        mJobProfileEditFragment.save(mJobProfile);
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            outState.putString("job_seeker_data", mapper.writeValueAsString(mJobSeeker));
+            outState.putString("profile_data", mapper.writeValueAsString(mJobProfile));
+        } catch (JsonProcessingException e) {}
     }
 
     private void attemptSave() {

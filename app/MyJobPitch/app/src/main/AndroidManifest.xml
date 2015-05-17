@@ -107,6 +107,7 @@
         <activity
             android:name=".activities.JobActivity"
             android:label="@string/job"
+            android:screenOrientation="portrait"
             android:parentActivityName=".activities.JobListActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

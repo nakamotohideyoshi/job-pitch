@@ -37,6 +37,7 @@ import com.myjobpitch.tasks.APITask;
 import com.myjobpitch.tasks.APITaskListener;
 import com.myjobpitch.tasks.CreateApplicationTask;
 import com.myjobpitch.tasks.CreateReadUpdateAPITaskListener;
+import com.myjobpitch.tasks.ReadAPITask;
 import com.myjobpitch.tasks.UpdateApplicationTask;
 import com.myjobpitch.tasks.recruiter.ReadApplicationsTask;
 import com.myjobpitch.tasks.recruiter.ReadJobSeekersTask;
@@ -61,9 +62,17 @@ public class JobActivity extends MJPProgressActionBarActivity {
     private SwipeFlingAdapterView mCards;
     private List<JobSeekerContainer> jobSeekers;
     private JobSeekerAdapter adapter;
+    private Object loadingLock = new Object();
 
     private Job job;
     private Integer job_id;
+    private View mEmptyView;
+    private TextView mEmptyMessageView;
+    private TextView mEmptyButtonView;
+    private TextView mEmptyButtonView2;
+    private List<Integer> dismissed = new ArrayList<>();
+    private ReadAPITask<?> loadingTask;
+    private int lastLoadCount = 0;
 
     private enum CardState {
         LEFT, MIDDLE, RIGHT
@@ -188,7 +197,7 @@ public class JobActivity extends MJPProgressActionBarActivity {
             @Override
             public void onClick(View v) {
                 mShortListedSwitch.setEnabled(mAppliedSwitch.isChecked());
-                loadData();
+                loadDataPreserveSeenAndClearCards();
             }
         });
         mShortListedSwitch = (Switch) findViewById(R.id.shortlisted_switch);
@@ -196,7 +205,7 @@ public class JobActivity extends MJPProgressActionBarActivity {
         mShortListedSwitch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                loadData();
+                loadDataPreserveSeenAndClearCards();
             }
         });
 
@@ -249,7 +258,7 @@ public class JobActivity extends MJPProgressActionBarActivity {
         mNegativeButtonText = (TextView) findViewById(R.id.negative_button_text);
 
         mShortlistButtonContainer = findViewById(R.id.shortlist_button_container);
-        Button mShortlistButton = (Button) findViewById(R.id.shortlist_button);
+        final Button mShortlistButton = (Button) findViewById(R.id.shortlist_button);
         mShortlistButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -338,10 +347,10 @@ public class JobActivity extends MJPProgressActionBarActivity {
                         jobSeekers.add(jobSeekerContainer);
                     }
                 } else {
+                    dismissed.add(jobSeekerContainer.getJobSeeker().getId());
                     if (mButtonActivation) {
                         // Mark job seeker as ineligible for searches
-                        // TODO update application status
-                        Log.d("JobActivity", "TODO update application status");
+                        // TODO permanently exclude
                     }
                 }
                 adapter.notifyDataSetChanged();
@@ -350,11 +359,11 @@ public class JobActivity extends MJPProgressActionBarActivity {
 
             @Override
             public void onAdapterAboutToEmpty(int itemsInAdapter) {
-                // Ask for more data here
-                Log.d("swipe", "onAdapterAboutToEmpty(" + itemsInAdapter + ")");
-//                al.add("XML ".concat(String.valueOf(i)));
-//                arrayAdapter.notifyDataSetChanged();
-//                Log.d("LIST", "notified");
+                synchronized (loadingLock) {
+                    Log.d("swipe", "onAdapterAboutToEmpty(" + itemsInAdapter + "): lastLoadCount = " + lastLoadCount);
+                    if (!mAppliedSwitch.isChecked() && lastLoadCount != 0)
+                        loadDataPreserveSeenAndAppendCardsInBackground();
+                }
             }
 
             @Override
@@ -408,6 +417,31 @@ public class JobActivity extends MJPProgressActionBarActivity {
                 Toast.makeText(JobActivity.this, "Clicked!", Toast.LENGTH_SHORT).show();
             }
         };
+
+        mEmptyView = findViewById(android.R.id.empty);
+        mEmptyMessageView = (TextView) findViewById(R.id.empty_view_message);
+        mEmptyButtonView = (TextView) findViewById(R.id.empty_view_button);
+        mEmptyButtonView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mAppliedSwitch.isChecked()) {
+                    if (mShortListedSwitch.isChecked())
+                        mShortListedSwitch.performClick();
+                    else
+                        mAppliedSwitch.performClick();
+                } else
+                    loadDataClearSeenAndClearCards();
+            }
+        });
+        mEmptyButtonView2 = (TextView) findViewById(R.id.empty_view_button_2);
+        mEmptyButtonView2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mAppliedSwitch.performClick();
+            }
+        });
+
+        updateEmptyView();
         createCardView();
 
         job_id = getIntent().getIntExtra("job_id", -1);
@@ -425,6 +459,24 @@ public class JobActivity extends MJPProgressActionBarActivity {
         mCardContainer.addView(mCards);
     }
 
+    private void updateEmptyView() {
+        if (mAppliedSwitch.isChecked()) {
+            if (mShortListedSwitch.isChecked()) {
+                mEmptyMessageView.setText(getString(R.string.no_shortlisted_applications_message));
+                mEmptyButtonView.setText(getString(R.string.turn_off_shortlist_view));
+            } else {
+                mEmptyMessageView.setText(getString(R.string.no_applications_message));
+                mEmptyButtonView.setText(getString(R.string.switch_to_search_mode));
+            }
+            mEmptyButtonView2.setVisibility(View.GONE);
+        } else {
+            mEmptyMessageView.setText(getString(R.string.no_matching_candidates_message));
+            mEmptyButtonView.setText(getString(R.string.restart_search));
+            mEmptyButtonView2.setText(getString(R.string.switch_to_application_mode));
+            mEmptyButtonView2.setVisibility(View.VISIBLE);
+        }
+    }
+
     @Override
     protected void onResume() {
         super.onResume();
@@ -437,7 +489,7 @@ public class JobActivity extends MJPProgressActionBarActivity {
             @Override
             public void onSuccess(Job result) {
                 job = result;
-                loadData();
+                loadDataPreserveSeenAndClearCards();
             }
 
             @Override
@@ -454,60 +506,129 @@ public class JobActivity extends MJPProgressActionBarActivity {
         task.execute();
     }
 
-    private void updateList(List<? extends JobSeekerContainer> result) {
+    private void updateList(List<? extends JobSeekerContainer> result, boolean append) {
         try {
+            updateEmptyView();
             showProgress(false);
-            jobSeekers.clear();
-            jobSeekers.addAll(result);
-            createCardView();
+            lastLoadCount = result.size();
+            if (append) {
+                jobSeekers.addAll(result);
+            } else {
+                jobSeekers.clear();
+                jobSeekers.addAll(result);
+                createCardView();
+            }
             adapter.notifyDataSetChanged();
         } catch (Exception e) {
             e.printStackTrace(System.err);
         }
     }
 
-    private void loadData() {
-        showProgress(true);
-        if (mAppliedSwitch.isChecked()) {
-            ReadApplicationsTask task = new ReadApplicationsTask(getApi(), job.getId(), mShortListedSwitch.isChecked());
-            task.addListener(new CreateReadUpdateAPITaskListener<List<Application>>() {
-                @Override
-                public void onSuccess(List<Application> result) {
-                    updateList(result);
+    private void loadDataClearSeenAndClearCards() {
+        loadData(true, false, true, false);
+    }
+
+    private void loadDataPreserveSeenAndAppendCardsInBackground() {
+        loadData(false, true, false, true);
+    }
+
+    private void loadDataPreserveSeenAndClearCards() {
+        loadData(false, false, true, false);
+    }
+
+    private void loadData(boolean clearDismissed, final boolean append, boolean cancel, boolean background) {
+        synchronized (loadingLock) {
+            if (loadingTask != null) {
+                Log.d("JobActivity", "Task already running");
+                if (cancel) {
+                    Log.d("JobActivity", "Cancelling running loading task");
+                    loadingTask.cancel(false);
+                    loadingTask = null;
+                } else
+                    return;
+            }
+            if (!background)
+                showProgress(true);
+            if (mAppliedSwitch.isChecked()) {
+                Log.d("JobActivity", "Loading applications");
+                ReadApplicationsTask task = new ReadApplicationsTask(getApi(), job.getId(), mShortListedSwitch.isChecked());
+                loadingTask = task;
+                task.addListener(new CreateReadUpdateAPITaskListener<List<Application>>() {
+                    @Override
+                    public void onSuccess(List<Application> result) {
+                        synchronized (loadingLock) {
+                            Log.d("JobActivity", "Applications loaded");
+                            loadingTask = null;
+                            updateList(result, false);
+                        }
+                    }
+
+                    @Override
+                    public void onError(JsonNode errors) {
+                        synchronized (loadingLock) {
+                            Log.d("JobActivity", "Error loading applications");
+                            loadingTask = null;
+                            Toast toast = Toast.makeText(JobActivity.this, "Error loading job seekers", Toast.LENGTH_LONG);
+                            toast.show();
+                            finish();
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled() {
+                        Log.d("JobActivity", "Application load cancelled");
+                    }
+                });
+            } else {
+                List<Integer> exclude = new ArrayList();
+                if (clearDismissed) {
+                    Log.d("JobActivity", "Resetting dismissed");
+                    dismissed.clear();
+                } else {
+                    // Exclude job seekers that have been dismissed, or are
+                    // already in the list (that are actual jobseekers, not
+                    // applications)
+                    exclude.addAll(dismissed);
+                    for (JobSeekerContainer jobSeeker : jobSeekers)
+                        if (jobSeeker instanceof JobSeeker)
+                            exclude.add(jobSeeker.getJobSeeker().getId());
                 }
 
-                @Override
-                public void onError(JsonNode errors) {
-                    Toast toast = Toast.makeText(JobActivity.this, "Error loading job seekers", Toast.LENGTH_LONG);
-                    toast.show();
-                    finish();
-                }
+                Log.d("JobActivity", "Loading applications");
+                ReadJobSeekersTask task = new ReadJobSeekersTask(getApi(), job.getId(), exclude);
+                loadingTask = task;
+                task.addListener(new CreateReadUpdateAPITaskListener<List<JobSeeker>>() {
+                    @Override
+                    public void onSuccess(List<JobSeeker> result) {
+                        synchronized (loadingLock) {
+                            Log.d("JobActivity", "Job seekers loaded");
+                            loadingTask = null;
+                            updateList(result, append);
+                        }
+                    }
 
-                @Override
-                public void onCancelled() {
-                }
-            });
-            task.execute();
-        } else {
-            ReadJobSeekersTask task = new ReadJobSeekersTask(getApi(), job.getId());
-            task.addListener(new CreateReadUpdateAPITaskListener<List<JobSeeker>>() {
-                @Override
-                public void onSuccess(List<JobSeeker> result) {
-                    updateList(result);
-                }
+                    @Override
+                    public void onError(JsonNode errors) {
+                        synchronized (loadingLock) {
+                            Log.d("JobActivity", "Error loading jobsseekers");
+                            loadingTask = null;
+                            Toast toast = Toast.makeText(JobActivity.this, "Error loading job seekers", Toast.LENGTH_LONG);
+                            toast.show();
+                            finish();
+                        }
+                    }
 
-                @Override
-                public void onError(JsonNode errors) {
-                    Toast toast = Toast.makeText(JobActivity.this, "Error loading job seekers", Toast.LENGTH_LONG);
-                    toast.show();
-                    finish();
-                }
-
-                @Override
-                public void onCancelled() {
-                }
-            });
-            task.execute();
+                    @Override
+                    public void onCancelled() {
+                        Log.d("JobActivity", "Job sseeker load cancelled");
+                    }
+                });
+            }
+            if (background) {
+                mBackgroundProgress.setVisibility(View.VISIBLE);
+                backgroundTaskManager.addBackgroundTask(loadingTask);
+            }
+            loadingTask.execute();
         }
     }
 
@@ -533,6 +654,15 @@ public class JobActivity extends MJPProgressActionBarActivity {
         mShortlistButtonContainer.setEnabled(notEmpty);
         mPositiveButtonContainer.setEnabled(notEmpty);
         mNegativeButtonContainer.setEnabled(notEmpty);
+        synchronized (loadingLock) {
+            if (notEmpty || loadingTask != null) {
+                mEmptyView.setVisibility(View.INVISIBLE);
+                mCards.setVisibility(View.VISIBLE);
+            } else {
+                mEmptyView.setVisibility(View.VISIBLE);
+                mCards.setVisibility(View.INVISIBLE);
+            }
+        }
     }
 
     @Override

@@ -157,6 +157,43 @@
 
         </LinearLayout>
 
+        <LinearLayout
+            android:id="@android:id/empty"
+            android:visibility="visible"
+            android:orientation="vertical"
+            android:layout_below="@id/controls"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="30dp"
+            android:background="@drawable/dashed_border"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:padding="15dp">
+
+            <TextView
+                android:id="@+id/empty_view_message"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                />
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content">
+                <Button
+                    android:id="@+id/empty_view_button"
+                    android:layout_marginTop="15dp"
+                    android:layout_weight="1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+                <Button
+                    android:id="@+id/empty_view_button_2"
+                    android:layout_marginTop="15dp"
+                    android:visibility="gone"
+                    android:layout_weight="1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+        </LinearLayout>
+
     </RelativeLayout>
 
 </RelativeLayout>

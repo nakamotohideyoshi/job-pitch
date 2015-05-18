@@ -184,7 +184,9 @@ public class BusinessListActivity extends MJPProgressActionBarActivity  {
 
             @Override
             public void onError(JsonNode errors) {
-                // TODO
+                Toast toast = Toast.makeText(BusinessListActivity.this, "Error loading companies", Toast.LENGTH_LONG);
+                toast.show();
+                finish();
             }
 
             @Override

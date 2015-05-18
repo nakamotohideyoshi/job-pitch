@@ -95,4 +95,5 @@
     <string name="remove_job_seeker_message">Are you sure you want to remove %1$s? This job seeker will never appear again for this job.\nIf you want this item to appear again in later searches, just swipe to the right to remove temporarily.</string>
     <string name="remove_job_message">Are you sure you want to remove %1$s? This job will never appear again.\nIf you want this job to appear again in later searches, just swipe to the right to remove temporarily.</string>
     <string name="no_matching_jobs_message">There are no more jobs that match your profile.  You can restart the search to see all the jobs you\'ve dismissed again.</string>
+    <string name="action_messages">Messages</string>
 </resources>

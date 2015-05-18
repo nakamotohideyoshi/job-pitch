@@ -340,6 +340,9 @@ public class JobSeekerActivity extends MJPProgressActionBarActivity {
             case R.id.action_edit_job_profile:
                 editProfile();
                 return true;
+            case R.id.action_messages:
+                // TODO open messages
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }

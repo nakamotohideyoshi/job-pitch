@@ -226,6 +226,9 @@ public class BusinessListActivity extends MJPProgressActionBarActivity  {
                 Intent intent = new Intent(this, EditBusinessActivity.class);
                 startActivity(intent);
                 return true;
+            case R.id.action_messages:
+                // TODO open messages
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }

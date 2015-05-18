@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -594,7 +595,7 @@ public class JobActivity extends MJPProgressActionBarActivity {
         boolean notEmpty = adapter.getCount() > 0;
         if (mAppliedSwitch.isChecked()) {
             mPositiveButtonText.setText(getString(R.string.messages));
-            mPositiveButtonIcon.setImageDrawable(getResources().getDrawable(R.drawable.ic_messages));
+            mPositiveButtonIcon.setImageDrawable(getResources().getDrawable(R.drawable.ic_email_blue));
             mShortlistButtonContainer.setVisibility(View.VISIBLE);
             if (notEmpty) {
                 if (adapter.getItem(0) instanceof Application) {
@@ -624,6 +625,13 @@ public class JobActivity extends MJPProgressActionBarActivity {
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.job, menu);
+        return true;
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         Intent intent;
         switch (item.getItemId()) {
@@ -632,6 +640,9 @@ public class JobActivity extends MJPProgressActionBarActivity {
                 intent.putExtra("location_id", job.getLocation());
                 startActivity(intent);
                 finish();
+                return true;
+            case R.id.action_messages:
+                // TODO open messages
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

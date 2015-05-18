@@ -324,11 +324,6 @@ public class JobSeekerActivity extends MJPProgressActionBarActivity {
         readJobSeekerTask.execute();
     }
 
-    private void loadData() {
-        // TODO
-        showProgress(false);
-    }
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.

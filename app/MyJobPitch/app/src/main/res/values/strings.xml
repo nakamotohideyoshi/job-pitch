@@ -13,8 +13,6 @@
     <string name="create_profile">Create profile</string>
     <string name="create_employer">I am an Employer</string>
     <string name="create_job_seeker">I am a Job Seeker</string>
-
-<!-- TODO: Remove or change this placeholder text -->
     <string name="prompt_business_name">Name</string>
     <string name="prompt_location_name">Name</string>
     <string name="prompt_location_description">Description</string>

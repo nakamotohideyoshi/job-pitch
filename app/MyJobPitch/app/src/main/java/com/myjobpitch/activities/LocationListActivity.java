@@ -205,7 +205,7 @@ public class LocationListActivity extends MJPProgressActionBarActivity  {
 
                     @Override
                     public void onError(JsonNode errors) {
-                        Toast toast = Toast.makeText(LocationListActivity.this, "Error loading locations", Toast.LENGTH_LONG);
+                        Toast toast = Toast.makeText(LocationListActivity.this, "Error loading work places", Toast.LENGTH_LONG);
                         toast.show();
                         finish();
                     }

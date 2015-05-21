@@ -7,9 +7,9 @@ from rest_framework.routers import DefaultRouter
 
 from mjp.models import Sector, Hours, Contract, Business, Location,\
     JobStatus, Job, Sex, Nationality, JobSeeker, Experience, JobProfile,\
-    ApplicationStatus, Application, Role
+    ApplicationStatus, Application, Role, LocationImage, BusinessImage
 
-from mjp.serializers import SimpleSerializer, LocationSerializer, JobProfileSerializer
+from mjp.serializers import SimpleSerializer, BusinessSerializer, LocationSerializer, JobProfileSerializer
 
 
 router = DefaultRouter()
@@ -38,7 +38,12 @@ SexViewSet = SimpleReadOnlyViewSet(Sex)
 NationalityViewSet = SimpleReadOnlyViewSet(Nationality)
 ApplicationStatusViewSet = SimpleReadOnlyViewSet(ApplicationStatus)
 RoleViewSet = SimpleReadOnlyViewSet(Role)
-BusinessViewSet = SimpleReadOnlyViewSet(Business)
+
+class BusinessViewSet(viewsets.ReadOnlyModelViewSet):
+    permission_classes = (permissions.IsAuthenticated,)
+    serializer_class = BusinessSerializer
+    queryset = Business.objects.all()
+router.register('businesses', BusinessViewSet, base_name='business')
 
 class UserBusinessViewSet(viewsets.ModelViewSet):
     class BusinessPermission(permissions.BasePermission):
@@ -56,6 +61,27 @@ class UserBusinessViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         return Business.objects.filter(users=self.request.user)
 router.register('user-businesses', UserBusinessViewSet, base_name='user-business')
+
+
+class UserLocationImageViewSet(viewsets.ModelViewSet):
+    class UserLocationImagePermission(permissions.BasePermission):
+        def has_permission(self, request, view):
+            if request.method in permissions.SAFE_METHODS:
+                return True
+            pk = request.data.get('location')
+            print "location pk: %s" % pk
+            if pk:
+                return Location.objects.filter(pk=pk, business__users=request.user).exists()
+            return True
+        def has_object_permission(self, request, view, obj):
+            if request.method in permissions.SAFE_METHODS:
+                return True
+            return request.user.businesses.filter(locations=obj.location).exists()
+    permission_classes = (permissions.IsAuthenticated, UserLocationImagePermission,)
+    serializer_class = SimpleSerializer(LocationImage, {'thumbnail': serializers.ImageField(read_only=True)})
+    queryset = LocationImage.objects.all()
+    # TODO hide non-public
+router.register('user-location-images', UserLocationImageViewSet, base_name='user-location-image')
 
 class LocationPermission(permissions.BasePermission):
     def has_permission(self, request, view):
@@ -203,7 +229,7 @@ class JobPermission(permissions.BasePermission):
 class JobViewSet(viewsets.ReadOnlyModelViewSet):
     permission_classes = (permissions.IsAuthenticated, JobPermission)
     serializer_class = SimpleSerializer(Job, {'location_data': LocationSerializer(source='location', read_only=True),
-                                              'business_data': SimpleSerializer(Business)(source='location.business', read_only=True),
+                                              'business_data': BusinessSerializer(source='location.business', read_only=True),
                                               })
     def get_queryset(self):
         job_seeker = self.request.user.job_seeker

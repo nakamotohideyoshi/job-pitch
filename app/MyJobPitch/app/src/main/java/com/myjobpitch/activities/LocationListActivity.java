@@ -25,9 +25,11 @@ import android.widget.Toast;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.myjobpitch.R;
 import com.myjobpitch.api.data.Business;
+import com.myjobpitch.api.data.Image;
 import com.myjobpitch.api.data.Location;
 import com.myjobpitch.tasks.CreateReadUpdateAPITaskListener;
 import com.myjobpitch.tasks.DeleteAPITaskListener;
+import com.myjobpitch.tasks.DownloadImageTask;
 import com.myjobpitch.tasks.recruiter.DeleteUserLocationTask;
 import com.myjobpitch.tasks.recruiter.ReadUserBusinessTask;
 import com.myjobpitch.tasks.recruiter.ReadUserLocationsTask;
@@ -130,15 +132,18 @@ public class LocationListActivity extends MJPProgressActionBarActivity  {
             View rowView = inflater.inflate(R.layout.list_item, parent, false);
 
             ImageView imageView = (ImageView) rowView.findViewById(R.id.icon);
+            List<Image> images = location.getImages();
+            if (images != null && !images.isEmpty())
+                new DownloadImageTask(imageView).execute(images.get(0).getThumbnail());
             TextView titleView = (TextView) rowView.findViewById(R.id.title);
-            TextView subtitleView = (TextView) rowView.findViewById(R.id.subtiltle);
             titleView.setText(location.getName());
+            TextView subtitleView = (TextView) rowView.findViewById(R.id.subtiltle);
             int jobCount = location.getJobs().size();
             if (jobCount == 1)
                 subtitleView.setText("Includes " + jobCount + " job");
             else
                 subtitleView.setText("Includes " + jobCount + " jobs");
-            return rowView;
+                return rowView;
         }
     }
 

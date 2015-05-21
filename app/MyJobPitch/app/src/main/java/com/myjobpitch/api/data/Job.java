@@ -2,6 +2,8 @@ package com.myjobpitch.api.data;
 
 import com.myjobpitch.api.MJPObjectWithDates;
 
+import java.util.List;
+
 public class Job extends MJPObjectWithDates {
     private String title;
     private String description;
@@ -12,7 +14,7 @@ public class Job extends MJPObjectWithDates {
     private Integer status;
 
     private Location location_data;
-    private Business business_data;
+    private List<Image> images;
 
     public String getTitle() {
         return title;
@@ -74,7 +76,7 @@ public class Job extends MJPObjectWithDates {
         return location_data;
     }
 
-    public Business getBusiness_data() {
-        return business_data;
+    public List<Image> getImages() {
+        return images;
     }
 }

@@ -94,7 +94,7 @@ public class JobSeekerActivity extends MJPProgressActionBarActivity {
             extraView.setText(extraText);
             TextView descriptionView = (TextView) cardView.findViewById(R.id.job_description);
             String description = String.format("%s - %s\n%s",
-                    job.getBusiness_data().getName(),
+                    job.getLocation_data().getBusiness_data().getName(),
                     job.getLocation_data().getName(),
                     job.getDescription()
             );

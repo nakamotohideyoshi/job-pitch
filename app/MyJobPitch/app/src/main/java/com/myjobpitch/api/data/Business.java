@@ -8,6 +8,7 @@ public class Business extends MJPObjectWithDates {
     private String name;
     private List<Integer> users;
     private List<Integer> locations;
+    private List<Image> images;
 
     public String getName() {
         return name;
@@ -25,6 +26,7 @@ public class Business extends MJPObjectWithDates {
         this.name = name;
     }
 
-    public void save() {
+    public List<Image> getImages() {
+        return images;
     }
 }

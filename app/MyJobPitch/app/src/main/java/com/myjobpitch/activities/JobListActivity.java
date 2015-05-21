@@ -24,10 +24,12 @@ import android.widget.Toast;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.myjobpitch.R;
+import com.myjobpitch.api.data.Image;
 import com.myjobpitch.api.data.Job;
 import com.myjobpitch.api.data.Location;
 import com.myjobpitch.tasks.CreateReadUpdateAPITaskListener;
 import com.myjobpitch.tasks.DeleteAPITaskListener;
+import com.myjobpitch.tasks.DownloadImageTask;
 import com.myjobpitch.tasks.ReadLocationTask;
 import com.myjobpitch.tasks.recruiter.DeleteUserJobTask;
 import com.myjobpitch.tasks.recruiter.ReadUserJobsTask;
@@ -37,7 +39,7 @@ import java.util.List;
 public class JobListActivity extends MJPProgressActionBarActivity  {
 
     private Integer location_id;
-    private Location location;
+    private Location mLocation;
 
     private ListView list;
 
@@ -130,6 +132,9 @@ public class JobListActivity extends MJPProgressActionBarActivity  {
             View rowView = inflater.inflate(R.layout.list_item, parent, false);
 
             ImageView imageView = (ImageView) rowView.findViewById(R.id.icon);
+            List<Image> images = job.getImages();
+            if (images != null && !images.isEmpty())
+                new DownloadImageTask(imageView).execute(images.get(0).getThumbnail());
             TextView titleView = (TextView) rowView.findViewById(R.id.title);
             TextView subtitleView = (TextView) rowView.findViewById(R.id.subtiltle);
             titleView.setText(job.getTitle());
@@ -188,8 +193,8 @@ public class JobListActivity extends MJPProgressActionBarActivity  {
         readLocation.addListener(new CreateReadUpdateAPITaskListener<Location>() {
             @Override
             public void onSuccess(Location result) {
-                location = result;
-                getSupportActionBar().setTitle(location.getName());
+                mLocation = result;
+                getSupportActionBar().setTitle(mLocation.getName());
                 getSupportActionBar().setSubtitle(getString(R.string.jobs));
                 ReadUserJobsTask readJobs = new ReadUserJobsTask(getApi(), location_id);
                 readJobs.addListener(new CreateReadUpdateAPITaskListener<List<Job>>() {
@@ -268,7 +273,7 @@ public class JobListActivity extends MJPProgressActionBarActivity  {
                 return true;
             case android.R.id.home:
                 intent = NavUtils.getParentActivityIntent(JobListActivity.this);
-                intent.putExtra("business_id", location.getBusiness());
+                intent.putExtra("business_id", mLocation.getBusiness());
                 startActivity(intent);
                 finish();
                 return true;

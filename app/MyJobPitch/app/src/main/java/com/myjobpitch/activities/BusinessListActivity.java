@@ -23,8 +23,10 @@ import android.widget.Toast;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.myjobpitch.R;
 import com.myjobpitch.api.data.Business;
+import com.myjobpitch.api.data.Image;
 import com.myjobpitch.tasks.CreateReadUpdateAPITaskListener;
 import com.myjobpitch.tasks.DeleteAPITaskListener;
+import com.myjobpitch.tasks.DownloadImageTask;
 import com.myjobpitch.tasks.recruiter.DeleteUserBusinessTask;
 import com.myjobpitch.tasks.recruiter.ReadUserBusinessesTask;
 
@@ -123,9 +125,12 @@ public class BusinessListActivity extends MJPProgressActionBarActivity  {
             View rowView = inflater.inflate(R.layout.list_item, parent, false);
 
             ImageView imageView = (ImageView) rowView.findViewById(R.id.icon);
+            List<Image> images = business.getImages();
+            if (images != null && !images.isEmpty())
+                new DownloadImageTask(imageView).execute(images.get(0).getThumbnail());
             TextView titleView = (TextView) rowView.findViewById(R.id.title);
-            TextView subtitleView = (TextView) rowView.findViewById(R.id.subtiltle);
             titleView.setText(business.getName());
+            TextView subtitleView = (TextView) rowView.findViewById(R.id.subtiltle);
             int locationCount = business.getLocations().size();
             if (locationCount == 1)
                 subtitleView.setText("Includes " + locationCount + " location");

@@ -1,14 +1,7 @@
 package com.myjobpitch.api.data;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonSerializer;
-import com.fasterxml.jackson.databind.SerializerProvider;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.myjobpitch.api.MJPObjectWithDates;
 
-import java.io.IOException;
 import java.util.List;
 
 public class Location extends MJPObjectWithDates {
@@ -28,6 +21,9 @@ public class Location extends MJPObjectWithDates {
     private Double longitude;
     private Double latitude;
     private String address;
+    private List<Image> images;
+
+    private Business business_data;
 
     public Integer getBusiness() {
         return business;
@@ -143,5 +139,13 @@ public class Location extends MJPObjectWithDates {
 
     public String getAddress() {
         return address;
+    }
+
+    public List<Image> getImages() {
+        return images;
+    }
+
+    public Business getBusiness_data() {
+        return business_data;
     }
 }

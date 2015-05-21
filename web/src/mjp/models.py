@@ -1,9 +1,64 @@
-from django.utils import timezone
-from django.contrib.auth.models import User
-from django.utils.translation import ugettext_lazy as _
-from django.conf import settings
+import os
 
+from cStringIO import StringIO
+from PIL import Image
+
+from django.conf import settings
+from django.contrib.auth.models import User
 from django.contrib.gis.db import models
+from django.core.files.uploadedfile import SimpleUploadedFile
+from django.utils import timezone
+from django.utils.translation import ugettext_lazy as _
+
+
+def create_thumbnail(image, thumbnail):
+    # original code for this method came from
+    # http://snipt.net/danfreak/generate-thumbnails-in-django-with-pil/
+
+    # If there is no image associated with this.
+    # do not create thumbnail
+    if not image:
+        return
+
+    # Set our max thumbnail size in a tuple (max width, max height)
+    THUMBNAIL_SIZE = (280, 280) # for android: 70dp at xxxhdpi
+
+    DJANGO_TYPE = image.file.content_type
+
+    if DJANGO_TYPE == 'image/jpeg':
+        PIL_TYPE = 'jpeg'
+        FILE_EXTENSION = 'jpg'
+    elif DJANGO_TYPE == 'image/png':
+        PIL_TYPE = 'png'
+        FILE_EXTENSION = 'png'
+    elif DJANGO_TYPE == 'image/gif':
+        PIL_TYPE = 'gif'
+        FILE_EXTENSION = 'gif'
+
+    # Open original photo which we want to thumbnail using PIL's Image
+    img = Image.open(StringIO(image.read()))
+
+    # We use our PIL Image object to create the thumbnail, which already
+    # has a thumbnail() convenience method that contrains proportions.
+    # Additionally, we use Image.ANTIALIAS to make the image look better.
+    # Without antialiasing the image pattern artifacts may result.
+    img.thumbnail(THUMBNAIL_SIZE, Image.ANTIALIAS)
+
+    # Save the thumbnail
+    temp_handle = StringIO()
+    img.save(temp_handle, PIL_TYPE)
+    temp_handle.seek(0)
+
+    # Save image to a SimpleUploadedFile which can be saved into
+    # ImageField
+    suf = SimpleUploadedFile(os.path.split(image.name)[-1],
+            temp_handle.read(), content_type=DJANGO_TYPE)
+    # Save SimpleUploadedFile into image field
+    thumbnail.save(
+        '%s_thumbnail.%s' % (os.path.splitext(suf.name)[0], FILE_EXTENSION),
+        suf,
+        save=False
+    )
 
 class Sector(models.Model):
     name = models.CharField(max_length=255)
@@ -91,6 +146,19 @@ class Business(models.Model):
     class Meta:
         verbose_name_plural = "businesses"
 
+class BusinessImage(models.Model):
+    business = models.ForeignKey(Business, related_name='images')
+    image = models.ImageField(upload_to='business/%Y/%m/%d', max_length=255)
+    thumbnail = models.ImageField(upload_to='business/%Y/%m/%d', max_length=255)
+    order = models.IntegerField()
+    
+    def save(self, *args, **kwargs):
+        create_thumbnail(self.image, self.thumbnail)
+        super(BusinessImage, self).save(*args, **kwargs)
+
+    class Meta:
+        ordering = ['order']
+    
 class Location(models.Model):
     business = models.ForeignKey(Business, related_name='locations')
     name = models.CharField(max_length=255)
@@ -112,6 +180,19 @@ class Location(models.Model):
     def __str__(self):
         return "%s: %s" % (type(self).__name__, self.name)
 
+class LocationImage(models.Model):
+    location = models.ForeignKey(Location, related_name='images')
+    image = models.ImageField(upload_to='location/%Y/%m/%d', max_length=255)
+    thumbnail = models.ImageField(upload_to='location/%Y/%m/%d', max_length=255)
+    order = models.IntegerField()
+    
+    def save(self, *args, **kwargs):
+        create_thumbnail(self.image, self.thumbnail)
+        super(LocationImage, self).save(*args, **kwargs)
+        
+    class Meta:
+        ordering = ['order']
+    
 class Job(models.Model):
     title = models.CharField(max_length=255)
     description = models.TextField()

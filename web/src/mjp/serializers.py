@@ -1,6 +1,6 @@
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
-from models import Location, JobProfile
+from models import Business, Location, JobProfile, LocationImage, BusinessImage
 from django.contrib.gis.geos import Point
 
 def SimpleSerializer(m, overrides={}):
@@ -13,6 +13,17 @@ def SimpleSerializer(m, overrides={}):
                 fields,
                 )
 
+class RelatedImageURLField(serializers.RelatedField):
+    def to_representation(self, value):
+        url = value.image.url
+        thumbnail_url = value.thumbnail.url
+        request = self.context.get('request', None)
+        if request is not None:
+            return {'image': request.build_absolute_uri(url),
+                    'thumbnail': request.build_absolute_uri(thumbnail_url),
+                    }
+        return [url, thumbnail_url]
+    
 class UserDetailsSerializer(serializers.ModelSerializer):
     """
     User model w/o password
@@ -23,10 +34,18 @@ class UserDetailsSerializer(serializers.ModelSerializer):
         read_only_fields = ('id', 'username', 'job_seeker', 'businesses')
 
 
+class BusinessSerializer(serializers.ModelSerializer):
+    images = SimpleSerializer(LocationImage)(many=True, read_only=True)
+    
+    class Meta:
+        model = Business
+
+
 class LocationSerializer(serializers.ModelSerializer):
     jobs = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
     latitude = serializers.FloatField(source='latlng.x')
     longitude = serializers.FloatField(source='latlng.y')
+    images = RelatedImageURLField(many=True, read_only=True)
     
     def save(self, **kwargs):
         self.validated_data['latlng'] = Point(**self.validated_data['latlng'])

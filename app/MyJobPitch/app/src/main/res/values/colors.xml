@@ -3,5 +3,7 @@
     <color name="card_hint_positive">#7a00c900</color>
     <color name="card_hint_negative">#78ff0000</color>
     <color name="button_text">#ff3f3f3f</color>
-    <color name="dark_grey">#666</color>
+    <color name="grey_6">#666</color>
+    <color name="gray_10">#aaa</color>
+    <color name="gray_14">#eee</color>
 </resources>

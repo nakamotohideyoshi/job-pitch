@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.DataSetObserver;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -16,6 +17,8 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -26,6 +29,7 @@ import com.myjobpitch.api.data.ApplicationForCreation;
 import com.myjobpitch.api.data.ApplicationStatus;
 import com.myjobpitch.api.data.Contract;
 import com.myjobpitch.api.data.Hours;
+import com.myjobpitch.api.data.Image;
 import com.myjobpitch.api.data.Job;
 import com.myjobpitch.api.data.JobSeeker;
 import com.myjobpitch.tasks.CreateApplicationTask;
@@ -58,6 +62,7 @@ public class JobSeekerActivity extends MJPProgressActionBarActivity {
     private List<Integer> dismissed = new ArrayList<>();
     private ReadJobsTask loadingTask;
     private int lastLoadCount = 0;
+    private Handler mHandler = new Handler();;
 
     private enum CardState {
         LEFT, MIDDLE, RIGHT
@@ -75,6 +80,16 @@ public class JobSeekerActivity extends MJPProgressActionBarActivity {
             super(JobSeekerActivity.this, R.layout.list_item, list);
         }
 
+//        @Override
+//        public void remove(Job object) {
+//            super.remove(object);
+//        }
+//
+//        @Override
+//        public void clear() {
+//            super.clear();
+//        }
+
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             Job job = this.getItem(position);
@@ -83,15 +98,16 @@ public class JobSeekerActivity extends MJPProgressActionBarActivity {
             LayoutInflater inflater = (LayoutInflater) JobSeekerActivity.this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             View cardView = inflater.inflate(R.layout.card_job, parent, false);
 
-//            ImageView imageView = (ImageView) rowView.findViewById(R.id.icon);
             TextView titleView = (TextView) cardView.findViewById(R.id.job_title);
             titleView.setText(job.getTitle());
+
             TextView extraView = (TextView) cardView.findViewById(R.id.job_extra);
             String extraText = getMJPApplication().get(Hours.class, job.getHours()).getName();
             Contract contract = getMJPApplication().get(Contract.class, job.getContract());
             if (!contract.equals(getMJPApplication().get(Contract.class, Contract.PERMANENT)))
                 extraText += "(" + contract.getShort_name() + ")";
             extraView.setText(extraText);
+
             TextView descriptionView = (TextView) cardView.findViewById(R.id.job_description);
             String description = String.format("%s - %s\n%s",
                     job.getLocation_data().getBusiness_data().getName(),
@@ -100,6 +116,24 @@ public class JobSeekerActivity extends MJPProgressActionBarActivity {
             );
             descriptionView.setText(description);
             descriptionView.setMovementMethod(new ScrollingMovementMethod());
+
+            ImageView imageView = (ImageView) cardView.findViewById(R.id.image);
+            ProgressBar progress = (ProgressBar) cardView.findViewById(R.id.progress);
+            TextView noImageView = (TextView) cardView.findViewById(R.id.no_image);
+            Image image = null;
+            if (job.getImages() != null && !job.getImages().isEmpty())
+                image = job.getImages().get(0);
+            else if (job.getLocation_data().getImages() != null && !job.getLocation_data().getImages().isEmpty())
+                image = job.getLocation_data().getImages().get(0);
+            else if (job.getLocation_data().getBusiness_data().getImages() != null && !job.getLocation_data().getBusiness_data().getImages().isEmpty())
+                image = job.getLocation_data().getBusiness_data().getImages().get(0);
+            if (image != null) {
+//                new DownloadImageTask(imageView, progress).execute(image.getThumbnail());
+            } else {
+                progress.setVisibility(View.INVISIBLE);
+                noImageView.setVisibility(View.VISIBLE);
+            }
+
             return cardView;
         }
     }
@@ -216,12 +250,17 @@ public class JobSeekerActivity extends MJPProgressActionBarActivity {
             }
 
             @Override
-            public void onAdapterAboutToEmpty(int itemsInAdapter) {
-                synchronized (loadingLock) {
-                    Log.d("swipe", "onAdapterAboutToEmpty(" + itemsInAdapter + "): lastLoadCount = " + lastLoadCount);
-                    if (lastLoadCount != 0)
-                        loadDataPreserveSeenAndAppendCardsInBackground();
-                }
+            public void onAdapterAboutToEmpty(final int itemsInAdapter) {
+                mHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        synchronized (loadingLock) {
+                            Log.d("swipe", "onAdapterAboutToEmpty(" + itemsInAdapter + "): lastLoadCount = " + lastLoadCount);
+                            if (lastLoadCount != 0)
+                                loadDataPreserveSeenAndAppendCardsInBackground();
+                        }
+                    }
+                });
             }
 
             @Override
@@ -280,8 +319,6 @@ public class JobSeekerActivity extends MJPProgressActionBarActivity {
         });
 
         createCardView();
-
-        loadJobSeeker();
     }
 
     @Override
@@ -413,7 +450,7 @@ public class JobSeekerActivity extends MJPProgressActionBarActivity {
                     exclude.add(job.getId());
             }
 
-            Log.d("JobActivity", "Loading applications");
+            Log.d("JobActivity", "Loading jobs");
             ReadJobsTask task = new ReadJobsTask(getApi(), exclude);
             loadingTask = task;
             task.addListener(new CreateReadUpdateAPITaskListener<List<Job>>() {

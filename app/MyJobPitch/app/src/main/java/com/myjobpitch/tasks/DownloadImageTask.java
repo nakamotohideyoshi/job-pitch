@@ -4,22 +4,26 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.view.View;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 
 import java.io.InputStream;
 
 public class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
-    ImageView bmImage;
+    private final ProgressBar progress;
+    private final ImageView imageView;
 
-    public DownloadImageTask(ImageView bmImage) {
-        this.bmImage = bmImage;
+    public DownloadImageTask(ImageView imageView, ProgressBar progress) {
+        this.imageView = imageView;
+        this.progress = progress;
     }
 
     protected Bitmap doInBackground(String... urls) {
-        String urldisplay = urls[0];
+        String url = urls[0];
         Bitmap mIcon11 = null;
         try {
-            InputStream in = new java.net.URL(urldisplay).openStream();
+            InputStream in = new java.net.URL(url).openStream();
             mIcon11 = BitmapFactory.decodeStream(in);
         } catch (Exception e) {
             Log.e("Error", e.getMessage());
@@ -29,6 +33,7 @@ public class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
     }
 
     protected void onPostExecute(Bitmap result) {
-        bmImage.setImageBitmap(result);
+        imageView.setImageBitmap(result);
+        progress.setVisibility(View.GONE);
     }    
 }

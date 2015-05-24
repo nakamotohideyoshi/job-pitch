@@ -19,6 +19,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -132,9 +133,19 @@ public class LocationListActivity extends MJPProgressActionBarActivity  {
             View rowView = inflater.inflate(R.layout.list_item, parent, false);
 
             ImageView imageView = (ImageView) rowView.findViewById(R.id.icon);
-            List<Image> images = location.getImages();
-            if (images != null && !images.isEmpty())
-                new DownloadImageTask(imageView).execute(images.get(0).getThumbnail());
+            Image image = null;
+            ProgressBar progress = (ProgressBar) rowView.findViewById(R.id.progress);
+            TextView noImageView = (TextView) rowView.findViewById(R.id.no_image);
+            if (location.getImages() != null && !location.getImages().isEmpty())
+                image = location.getImages().get(0);
+            else if (location.getBusiness_data().getImages() != null && !location.getBusiness_data().getImages().isEmpty())
+                image = location.getBusiness_data().getImages().get(0);
+            if (image != null) {
+                new DownloadImageTask(imageView, progress).execute(image.getThumbnail());
+            } else {
+                progress.setVisibility(View.GONE);
+                noImageView.setVisibility(View.VISIBLE);
+            }
             TextView titleView = (TextView) rowView.findViewById(R.id.title);
             titleView.setText(location.getName());
             TextView subtitleView = (TextView) rowView.findViewById(R.id.subtiltle);

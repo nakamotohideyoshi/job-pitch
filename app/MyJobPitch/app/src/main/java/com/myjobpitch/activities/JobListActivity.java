@@ -19,6 +19,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -132,9 +133,21 @@ public class JobListActivity extends MJPProgressActionBarActivity  {
             View rowView = inflater.inflate(R.layout.list_item, parent, false);
 
             ImageView imageView = (ImageView) rowView.findViewById(R.id.icon);
-            List<Image> images = job.getImages();
-            if (images != null && !images.isEmpty())
-                new DownloadImageTask(imageView).execute(images.get(0).getThumbnail());
+            Image image = null;
+            ProgressBar progress = (ProgressBar) rowView.findViewById(R.id.progress);
+            TextView noImageView = (TextView) rowView.findViewById(R.id.no_image);
+            if (job.getImages() != null && !job.getImages().isEmpty())
+                image = job.getImages().get(0);
+            else if (job.getLocation_data().getImages() != null && !job.getLocation_data().getImages().isEmpty())
+                image = job.getLocation_data().getImages().get(0);
+            else if (job.getLocation_data().getBusiness_data().getImages() != null && !job.getLocation_data().getBusiness_data().getImages().isEmpty())
+                image = job.getLocation_data().getBusiness_data().getImages().get(0);
+            if (image != null) {
+                new DownloadImageTask(imageView, progress).execute(image.getThumbnail());
+            } else {
+                progress.setVisibility(View.GONE);
+                noImageView.setVisibility(View.VISIBLE);
+            }
             TextView titleView = (TextView) rowView.findViewById(R.id.title);
             TextView subtitleView = (TextView) rowView.findViewById(R.id.subtiltle);
             titleView.setText(job.getTitle());

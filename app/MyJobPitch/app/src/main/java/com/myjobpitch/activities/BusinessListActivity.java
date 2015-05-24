@@ -17,6 +17,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -126,8 +127,14 @@ public class BusinessListActivity extends MJPProgressActionBarActivity  {
 
             ImageView imageView = (ImageView) rowView.findViewById(R.id.icon);
             List<Image> images = business.getImages();
-            if (images != null && !images.isEmpty())
-                new DownloadImageTask(imageView).execute(images.get(0).getThumbnail());
+            ProgressBar progress = (ProgressBar) rowView.findViewById(R.id.progress);
+            TextView noImageView = (TextView) rowView.findViewById(R.id.no_image);
+            if (images != null && !images.isEmpty()) {
+                new DownloadImageTask(imageView, progress).execute(images.get(0).getThumbnail());
+            } else {
+                progress.setVisibility(View.GONE);
+                noImageView.setVisibility(View.VISIBLE);
+            }
             TextView titleView = (TextView) rowView.findViewById(R.id.title);
             titleView.setText(business.getName());
             TextView subtitleView = (TextView) rowView.findViewById(R.id.subtiltle);

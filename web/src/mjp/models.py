@@ -207,6 +207,19 @@ class Job(models.Model):
     def __str__(self):
         return "%s: %s (%s)" % (type(self).__name__, self.title, self.location.name)
 
+class JobImage(models.Model):
+    job = models.ForeignKey(Job, related_name='images')
+    image = models.ImageField(upload_to='job/%Y/%m/%d', max_length=255)
+    thumbnail = models.ImageField(upload_to='job/%Y/%m/%d', max_length=255)
+    order = models.IntegerField()
+    
+    def save(self, *args, **kwargs):
+        create_thumbnail(self.image, self.thumbnail)
+        super(JobImage, self).save(*args, **kwargs)
+        
+    class Meta:
+        ordering = ['order']
+
 class JobSeeker(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, related_name='job_seeker')
     first_name = models.CharField(max_length=100, blank=True)

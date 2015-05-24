@@ -22,11 +22,12 @@ public class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
     protected Bitmap doInBackground(String... urls) {
         String url = urls[0];
         Bitmap mIcon11 = null;
+        Log.d("DownloadImageTask", "Starting download: " + url);
         try {
             InputStream in = new java.net.URL(url).openStream();
             mIcon11 = BitmapFactory.decodeStream(in);
         } catch (Exception e) {
-            Log.e("Error", e.getMessage());
+            Log.e("DownloadImageTask", e.getMessage());
             e.printStackTrace();
         }
         return mIcon11;
@@ -34,6 +35,7 @@ public class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
 
     protected void onPostExecute(Bitmap result) {
         imageView.setImageBitmap(result);
-        progress.setVisibility(View.GONE);
+        progress.setVisibility(View.INVISIBLE);
+        Log.d("DownloadImageTask", "Finished");
     }    
 }

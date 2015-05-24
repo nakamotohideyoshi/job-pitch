@@ -46,6 +46,7 @@ class LocationSerializer(serializers.ModelSerializer):
     latitude = serializers.FloatField(source='latlng.x')
     longitude = serializers.FloatField(source='latlng.y')
     images = RelatedImageURLField(many=True, read_only=True)
+    business_data = BusinessSerializer(source='business', read_only=True)
     
     def save(self, **kwargs):
         self.validated_data['latlng'] = Point(**self.validated_data['latlng'])

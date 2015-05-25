@@ -34,11 +34,15 @@ import com.myjobpitch.api.data.Job;
 import com.myjobpitch.api.data.JobSeeker;
 import com.myjobpitch.tasks.CreateApplicationTask;
 import com.myjobpitch.tasks.CreateReadUpdateAPITaskListener;
+import com.myjobpitch.tasks.DownloadImageTask;
 import com.myjobpitch.tasks.jobseeker.ReadJobsTask;
 import com.myjobpitch.tasks.jobseeker.ReadUserJobSeekerTask;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
+import java.util.WeakHashMap;
 
 public class JobSeekerActivity extends MJPProgressActionBarActivity {
 
@@ -76,27 +80,27 @@ public class JobSeekerActivity extends MJPProgressActionBarActivity {
     private View mBackgroundProgress;
 
     class JobAdapter extends ArrayAdapter<Job> {
+        private Map<Integer, View> viewCache = Collections.synchronizedMap(new WeakHashMap<Integer, View>());
+        private Object viewCacheLock = new Object();
+
         public JobAdapter(List<Job> list) {
             super(JobSeekerActivity.this, R.layout.list_item, list);
         }
-
-//        @Override
-//        public void remove(Job object) {
-//            super.remove(object);
-//        }
-//
-//        @Override
-//        public void clear() {
-//            super.clear();
-//        }
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             Job job = this.getItem(position);
             Log.d("JobAdapter", "getView(" + job.getTitle() + ")");
 
-            LayoutInflater inflater = (LayoutInflater) JobSeekerActivity.this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            View cardView = inflater.inflate(R.layout.card_job, parent, false);
+            View cardView;
+
+            synchronized (viewCacheLock) {
+                if (viewCache.containsKey(job.getId()))
+                    return viewCache.get(job.getId());
+                LayoutInflater inflater = (LayoutInflater) JobSeekerActivity.this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                cardView = inflater.inflate(R.layout.card_job, parent, false);
+                viewCache.put(job.getId(), cardView);
+            }
 
             TextView titleView = (TextView) cardView.findViewById(R.id.job_title);
             titleView.setText(job.getTitle());
@@ -128,7 +132,7 @@ public class JobSeekerActivity extends MJPProgressActionBarActivity {
             else if (job.getLocation_data().getBusiness_data().getImages() != null && !job.getLocation_data().getBusiness_data().getImages().isEmpty())
                 image = job.getLocation_data().getBusiness_data().getImages().get(0);
             if (image != null) {
-//                new DownloadImageTask(imageView, progress).execute(image.getThumbnail());
+                new DownloadImageTask(imageView, progress).execute(image.getThumbnail());
             } else {
                 progress.setVisibility(View.INVISIBLE);
                 noImageView.setVisibility(View.VISIBLE);

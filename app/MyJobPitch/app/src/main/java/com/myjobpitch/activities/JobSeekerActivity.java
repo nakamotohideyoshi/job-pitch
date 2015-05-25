@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.DataSetObserver;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.method.ScrollingMovementMethod;
@@ -132,7 +133,8 @@ public class JobSeekerActivity extends MJPProgressActionBarActivity {
             else if (job.getLocation_data().getBusiness_data().getImages() != null && !job.getLocation_data().getBusiness_data().getImages().isEmpty())
                 image = job.getLocation_data().getBusiness_data().getImages().get(0);
             if (image != null) {
-                new DownloadImageTask(imageView, progress).execute(image.getThumbnail());
+                Uri uri = Uri.parse(image.getThumbnail());
+                new DownloadImageTask(JobSeekerActivity.this, imageView, progress).execute(uri);
             } else {
                 progress.setVisibility(View.INVISIBLE);
                 noImageView.setVisibility(View.VISIBLE);

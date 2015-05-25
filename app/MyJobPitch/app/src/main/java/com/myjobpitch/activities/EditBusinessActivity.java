@@ -1,6 +1,9 @@
 package com.myjobpitch.activities;
 
+import android.content.BroadcastReceiver;
 import android.content.Intent;
+import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.util.Log;
@@ -15,13 +18,23 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.myjobpitch.MJPApplication;
 import com.myjobpitch.R;
 import com.myjobpitch.api.MJPApi;
+import com.myjobpitch.api.MJPApiException;
 import com.myjobpitch.api.data.Business;
+import com.myjobpitch.api.data.BusinessImage;
 import com.myjobpitch.fragments.BusinessEditFragment;
+import com.myjobpitch.tasks.APITaskListener;
 import com.myjobpitch.tasks.CreateReadUpdateAPITaskListener;
 import com.myjobpitch.tasks.recruiter.CreateUpdateBusinessTask;
 import com.myjobpitch.tasks.recruiter.ReadUserBusinessTask;
 
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.InputStreamResource;
+
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 public class EditBusinessActivity extends MJPProgressActionBarActivity {
 
@@ -38,7 +51,7 @@ public class EditBusinessActivity extends MJPProgressActionBarActivity {
         setContentView(R.layout.activity_edit_business);
 
         mEditBusinessView = (View) findViewById(R.id.business_edit);
-        mBusinessEditFragment = (BusinessEditFragment) getFragmentManager().findFragmentById(R.id.business_edit_fragment);
+        mBusinessEditFragment = (BusinessEditFragment) getSupportFragmentManager().findFragmentById(R.id.business_edit_fragment);
         mProgressView = findViewById(R.id.progress);
 
         Button saveButton = (Button) findViewById(R.id.save_button);
@@ -120,11 +133,51 @@ public class EditBusinessActivity extends MJPProgressActionBarActivity {
             mCreateUpdateBusinessTask = new CreateUpdateBusinessTask(api, business);
             mCreateUpdateBusinessTask.addListener(new CreateReadUpdateAPITaskListener<Business>() {
                 @Override
-                public void onSuccess(Business business) {
-                    Intent intent = new Intent(EditBusinessActivity.this, LocationListActivity.class);
-                    intent.putExtra("business_id", business.getId());
-                    startActivity(intent);
-                    EditBusinessActivity.this.finish();
+                public void onSuccess(final Business business) {
+                    final Uri imageUri = mBusinessEditFragment.getNewImageUri();
+                    if (imageUri == null) {
+                        returnToBusinessList(business);
+                    } else {
+
+                        new AsyncTask<Void, Void, Boolean>() {
+                            private List<APITaskListener> listeners = new ArrayList<>();
+                            private boolean executed = false;
+
+                            @Override
+                            protected Boolean doInBackground(Void... params) {
+                                BusinessImage image = new BusinessImage();
+                                image.setBusiness(business.getId());
+                                image.setOrder(0);
+
+                                InputStream in = null;
+                                try {
+                                    in = getContentResolver().openInputStream(imageUri);
+                                } catch (FileNotFoundException e) {}
+                                if (in != null) {
+                                    try {
+                                        try {
+                                            image.setImage(new InputStreamResource(in));
+                                            getApi().uploadBusinessImage(image);
+                                            return Boolean.TRUE;
+                                        } catch (MJPApiException e) {}
+                                    } finally {
+                                        try {
+                                            in.close();
+                                        } catch (IOException e) {}
+                                    }
+                                }
+                                return Boolean.FALSE;
+                            }
+
+                            @Override
+                            protected void onPostExecute(Boolean result) {
+                                returnToBusinessList(business);
+                            }
+
+                            @Override
+                            protected void onCancelled() {}
+                        }.execute();
+                    }
                 }
 
                 @Override
@@ -139,6 +192,13 @@ public class EditBusinessActivity extends MJPProgressActionBarActivity {
             });
             mCreateUpdateBusinessTask.execute();
         }
+    }
+
+    private void returnToBusinessList(Business business) {
+        Intent intent = new Intent(this, LocationListActivity.class);
+        intent.putExtra("business_id", business.getId());
+        startActivity(intent);
+        EditBusinessActivity.this.finish();
     }
 
     @Override

@@ -39,7 +39,7 @@ public class EditJobActivity extends MJPProgressActionBarActivity {
         setContentView(R.layout.activity_edit_job);
 
         mEditJobView = (View) findViewById(R.id.job_edit);
-        mJobEditFragment = (JobEditFragment) getFragmentManager().findFragmentById(R.id.job_edit_fragment);
+        mJobEditFragment = (JobEditFragment) getSupportFragmentManager().findFragmentById(R.id.job_edit_fragment);
         mProgressView = findViewById(R.id.progress);
 
         Button saveButton = (Button) findViewById(R.id.save_button);

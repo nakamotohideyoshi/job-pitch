@@ -97,4 +97,6 @@
     <string name="no_matching_jobs_message">There are no more jobs that match your profile.  You can restart the search to see all the jobs you\'ve dismissed again.</string>
     <string name="action_messages">Messages</string>
     <string name="no_image">no image</string>
+    <string name="company_image">Company Logo</string>
+    <string name="change">Change</string>
 </resources>

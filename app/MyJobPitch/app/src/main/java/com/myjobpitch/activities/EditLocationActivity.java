@@ -38,7 +38,7 @@ public class EditLocationActivity extends MJPProgressActionBarActivity {
         setContentView(R.layout.activity_edit_location);
 
         mEditLocationView = (View) findViewById(R.id.location_edit);
-        mLocationEditFragment = (LocationEditFragment) getFragmentManager().findFragmentById(R.id.location_edit_fragment);
+        mLocationEditFragment = (LocationEditFragment) getSupportFragmentManager().findFragmentById(R.id.location_edit_fragment);
         mProgressView = findViewById(R.id.progress);
 
         Button saveButton = (Button) findViewById(R.id.save_button);

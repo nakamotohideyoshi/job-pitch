@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.ActionMode;
@@ -130,7 +131,8 @@ public class BusinessListActivity extends MJPProgressActionBarActivity  {
             ProgressBar progress = (ProgressBar) rowView.findViewById(R.id.progress);
             TextView noImageView = (TextView) rowView.findViewById(R.id.no_image);
             if (images != null && !images.isEmpty()) {
-                new DownloadImageTask(imageView, progress).execute(images.get(0).getThumbnail());
+                Uri uri = Uri.parse(images.get(0).getThumbnail());
+                new DownloadImageTask(BusinessListActivity.this, imageView, progress).execute(uri);
             } else {
                 progress.setVisibility(View.GONE);
                 noImageView.setVisibility(View.VISIBLE);

@@ -38,7 +38,7 @@ public class EditJobSeekerActivity extends MJPProgressActionBarActivity {
         setContentView(R.layout.activity_edit_job_seeker);
 
         mEditJobSeekerView = (View) findViewById(R.id.job_seeker_edit);
-        mJobSeekerEditFragment = (JobSeekerEditFragment) getFragmentManager().findFragmentById(R.id.job_seeker_edit_fragment);
+        mJobSeekerEditFragment = (JobSeekerEditFragment) getSupportFragmentManager().findFragmentById(R.id.job_seeker_edit_fragment);
         mJobSeekerEditFragment.loadApplicationData(getMJPApplication());
         mProgressView = findViewById(R.id.progress);
 

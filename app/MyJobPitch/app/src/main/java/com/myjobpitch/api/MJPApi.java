@@ -11,8 +11,10 @@ import com.myjobpitch.api.data.ApplicationForCreation;
 import com.myjobpitch.api.data.ApplicationStatus;
 import com.myjobpitch.api.data.ApplicationUpdate;
 import com.myjobpitch.api.data.Business;
+import com.myjobpitch.api.data.BusinessImage;
 import com.myjobpitch.api.data.Contract;
 import com.myjobpitch.api.data.Hours;
+import com.myjobpitch.api.data.Image;
 import com.myjobpitch.api.data.Job;
 import com.myjobpitch.api.data.JobProfile;
 import com.myjobpitch.api.data.JobSeeker;
@@ -27,7 +29,10 @@ import org.springframework.http.HttpAuthentication;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
@@ -279,6 +284,21 @@ public class MJPApi {
 
     public void deleteJob(Integer id) {
         rest.exchange(getObjectUrl("user-jobs", id), HttpMethod.DELETE, createAuthenticatedRequest(), Void.class);
+    }
+
+    public void uploadBusinessImage(BusinessImage business) throws MJPApiException {
+//        MultiValueMap<String, Object> parts = new LinkedMultiValueMap<String, Object>();
+//        parts.put("image", )
+        try {
+            HttpEntity<BusinessImage> request = createAuthenticatedRequest(business);
+            request.getHeaders().setContentType(MediaType.MULTIPART_FORM_DATA);
+            rest.postForObject(getTypeUrl("user-business-images"), request, Object.class);
+        } catch (HttpClientErrorException e) {
+            if (e.getStatusCode().value() == 400) {
+                throw new MJPApiException(e);
+            }
+            throw e;
+        }
     }
 
     public <T extends MJPAPIObject> List<T> get(Class<T> cls) throws MJPApiException {

@@ -1,6 +1,6 @@
 package com.myjobpitch.fragments;
 
-import android.app.Fragment;
+import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Spinner;

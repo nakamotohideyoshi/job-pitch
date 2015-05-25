@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.util.Log;
@@ -143,7 +144,8 @@ public class JobListActivity extends MJPProgressActionBarActivity  {
             else if (job.getLocation_data().getBusiness_data().getImages() != null && !job.getLocation_data().getBusiness_data().getImages().isEmpty())
                 image = job.getLocation_data().getBusiness_data().getImages().get(0);
             if (image != null) {
-                new DownloadImageTask(imageView, progress).execute(image.getThumbnail());
+                Uri uri = Uri.parse(image.getThumbnail());
+                new DownloadImageTask(JobListActivity.this, imageView, progress).execute(uri);
             } else {
                 progress.setVisibility(View.GONE);
                 noImageView.setVisibility(View.VISIBLE);

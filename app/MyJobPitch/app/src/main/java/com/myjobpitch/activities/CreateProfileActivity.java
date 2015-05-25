@@ -55,7 +55,7 @@ public class CreateProfileActivity extends MJPProgressActionBarActivity {
         });
 
         mJobSeekerProfile = (View) findViewById(R.id.job_seeker_profile);
-        mJobSeekerEditFragment = (JobSeekerEditFragment) getFragmentManager().findFragmentById(R.id.job_seeker_edit_fragment);
+        mJobSeekerEditFragment = (JobSeekerEditFragment) getSupportFragmentManager().findFragmentById(R.id.job_seeker_edit_fragment);
 
         Button jobSeekerContinueButton = (Button) findViewById(R.id.continue_button_job_seeker);
         jobSeekerContinueButton.setOnClickListener(new View.OnClickListener() {
@@ -77,8 +77,8 @@ public class CreateProfileActivity extends MJPProgressActionBarActivity {
         });
 
         mRecruiterProfile = (View) findViewById(R.id.recruiter_profile);
-        mBusinessEditFragment = (BusinessEditFragment) getFragmentManager().findFragmentById(R.id.business_edit_fragment);
-        mLocationEditFragment = (LocationEditFragment) getFragmentManager().findFragmentById(R.id.location_edit_fragment);
+        mBusinessEditFragment = (BusinessEditFragment) getSupportFragmentManager().findFragmentById(R.id.business_edit_fragment);
+        mLocationEditFragment = (LocationEditFragment) getSupportFragmentManager().findFragmentById(R.id.location_edit_fragment);
         if (getIntent().hasExtra("email"))
             mLocationEditFragment.setEmail(getIntent().getStringExtra("email"));
 

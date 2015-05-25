@@ -19,5 +19,20 @@
         android:layout_height="wrap_content" android:hint="@string/prompt_business_name"
         android:inputType="text" android:maxLines="1"
         android:singleLine="true" />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/company_image"
+        android:textSize="20sp"
+        android:paddingTop="15dp"
+        android:paddingBottom="8dp"
+        android:textStyle="bold" />
+
+    <fragment
+        android:name="com.myjobpitch.fragments.ImageEditFragment"
+        android:id="@+id/image_edit_fragment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:layout="@layout/fragment_image_edit" />
 
 </LinearLayout>

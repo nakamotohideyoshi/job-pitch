@@ -1,9 +1,7 @@
 package com.myjobpitch.activities;
 
-import android.content.BroadcastReceiver;
 import android.content.Intent;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.util.Log;
@@ -18,23 +16,15 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.myjobpitch.MJPApplication;
 import com.myjobpitch.R;
 import com.myjobpitch.api.MJPApi;
-import com.myjobpitch.api.MJPApiException;
 import com.myjobpitch.api.data.Business;
-import com.myjobpitch.api.data.BusinessImage;
 import com.myjobpitch.fragments.BusinessEditFragment;
 import com.myjobpitch.tasks.APITaskListener;
 import com.myjobpitch.tasks.CreateReadUpdateAPITaskListener;
+import com.myjobpitch.tasks.UploadImage;
 import com.myjobpitch.tasks.recruiter.CreateUpdateBusinessTask;
 import com.myjobpitch.tasks.recruiter.ReadUserBusinessTask;
 
-import org.springframework.core.io.FileSystemResource;
-import org.springframework.core.io.InputStreamResource;
-
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.List;
 
 public class EditBusinessActivity extends MJPProgressActionBarActivity {
 
@@ -136,53 +126,31 @@ public class EditBusinessActivity extends MJPProgressActionBarActivity {
                 public void onSuccess(final Business business) {
                     final Uri imageUri = mBusinessEditFragment.getNewImageUri();
                     if (imageUri == null) {
-                        returnToBusinessList(business);
+                        returnToListActivity(business);
                     } else {
-
-                        new AsyncTask<Void, Void, Boolean>() {
-                            private List<APITaskListener> listeners = new ArrayList<>();
-                            private boolean executed = false;
-
+                        UploadImage uploadTask = new UploadImage(EditBusinessActivity.this, getApi(), "user-business-images", "business", imageUri, business);
+                        uploadTask.addListener(new APITaskListener() {
                             @Override
-                            protected Boolean doInBackground(Void... params) {
-                                BusinessImage image = new BusinessImage();
-                                image.setBusiness(business.getId());
-                                image.setOrder(0);
-
-                                InputStream in = null;
-                                try {
-                                    in = getContentResolver().openInputStream(imageUri);
-                                } catch (FileNotFoundException e) {}
-                                if (in != null) {
-                                    try {
-                                        try {
-                                            image.setImage(new InputStreamResource(in));
-                                            getApi().uploadBusinessImage(image);
-                                            return Boolean.TRUE;
-                                        } catch (MJPApiException e) {}
-                                    } finally {
-                                        try {
-                                            in.close();
-                                        } catch (IOException e) {}
-                                    }
-                                }
-                                return Boolean.FALSE;
+                            public void onPostExecute() {
+                                returnToListActivity(business);
                             }
 
                             @Override
-                            protected void onPostExecute(Boolean result) {
-                                returnToBusinessList(business);
+                            public void onCancelled() {
+                                showProgress(false);
+                                Toast toast = Toast.makeText(EditBusinessActivity.this, "Error uploading company logo", Toast.LENGTH_LONG);
+                                toast.show();
                             }
-
-                            @Override
-                            protected void onCancelled() {}
-                        }.execute();
+                        });
+                        uploadTask.execute();
                     }
                 }
 
                 @Override
                 public void onError(JsonNode errors) {
                     showProgress(false);
+                    Toast toast = Toast.makeText(EditBusinessActivity.this, "Error updating company details", Toast.LENGTH_LONG);
+                    toast.show();
                 }
 
                 @Override
@@ -194,7 +162,7 @@ public class EditBusinessActivity extends MJPProgressActionBarActivity {
         }
     }
 
-    private void returnToBusinessList(Business business) {
+    private void returnToListActivity(Business business) {
         Intent intent = new Intent(this, LocationListActivity.class);
         intent.putExtra("business_id", business.getId());
         startActivity(intent);
@@ -224,4 +192,5 @@ public class EditBusinessActivity extends MJPProgressActionBarActivity {
     public View getMainView() {
         return mEditBusinessView;
     }
+
 }

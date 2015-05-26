@@ -1,6 +1,7 @@
 package com.myjobpitch.activities;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.util.Log;
@@ -18,7 +19,9 @@ import com.myjobpitch.api.MJPApi;
 import com.myjobpitch.api.data.Job;
 import com.myjobpitch.api.data.JobStatus;
 import com.myjobpitch.fragments.JobEditFragment;
+import com.myjobpitch.tasks.APITaskListener;
 import com.myjobpitch.tasks.CreateReadUpdateAPITaskListener;
+import com.myjobpitch.tasks.UploadImage;
 import com.myjobpitch.tasks.recruiter.CreateUpdateJobTask;
 import com.myjobpitch.tasks.recruiter.ReadUserJobTask;
 
@@ -122,12 +125,33 @@ public class EditJobActivity extends MJPProgressActionBarActivity {
             mCreateUpdateJobTask.addListener(new CreateReadUpdateAPITaskListener<Job>() {
                 @Override
                 public void onSuccess(Job job) {
-                    EditJobActivity.this.finish();
+                    final Uri imageUri = mJobEditFragment.getNewImageUri();
+                    if (imageUri == null) {
+                        EditJobActivity.this.finish();
+                    } else {
+                        UploadImage uploadTask = new UploadImage(EditJobActivity.this, getApi(), "user-job-images", "job", imageUri, job);
+                        uploadTask.addListener(new APITaskListener() {
+                            @Override
+                            public void onPostExecute() {
+                                EditJobActivity.this.finish();
+                            }
+
+                            @Override
+                            public void onCancelled() {
+                                EditJobActivity.this.finish();
+                                Toast toast = Toast.makeText(EditJobActivity.this, "Error uploading job image", Toast.LENGTH_LONG);
+                                toast.show();
+                            }
+                        });
+                        uploadTask.execute();
+                    }
                 }
 
                 @Override
                 public void onError(JsonNode errors) {
                     showProgress(false);
+                    Toast toast = Toast.makeText(EditJobActivity.this, "Error updating job details", Toast.LENGTH_LONG);
+                    toast.show();
                 }
 
                 @Override

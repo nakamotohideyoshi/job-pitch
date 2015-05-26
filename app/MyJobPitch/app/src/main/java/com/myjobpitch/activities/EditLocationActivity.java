@@ -1,6 +1,7 @@
 package com.myjobpitch.activities;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.util.Log;
@@ -17,8 +18,10 @@ import com.myjobpitch.R;
 import com.myjobpitch.api.MJPApi;
 import com.myjobpitch.api.data.Location;
 import com.myjobpitch.fragments.LocationEditFragment;
+import com.myjobpitch.tasks.APITaskListener;
 import com.myjobpitch.tasks.CreateReadUpdateAPITaskListener;
 import com.myjobpitch.tasks.ReadLocationTask;
+import com.myjobpitch.tasks.UploadImage;
 import com.myjobpitch.tasks.recruiter.CreateUpdateLocationTask;
 
 import java.io.IOException;
@@ -117,16 +120,34 @@ public class EditLocationActivity extends MJPProgressActionBarActivity {
             mCreateUpdateLocationTask = new CreateUpdateLocationTask(api, location);
             mCreateUpdateLocationTask.addListener(new CreateReadUpdateAPITaskListener<Location>() {
                 @Override
-                public void onSuccess(Location location) {
-                    Intent intent = new Intent(EditLocationActivity.this, JobListActivity.class);
-                    intent.putExtra("location_id", location.getId());
-                    startActivity(intent);
-                    EditLocationActivity.this.finish();
+                public void onSuccess(final Location location) {
+                    final Uri imageUri = mLocationEditFragment.getNewImageUri();
+                    if (imageUri == null) {
+                        returnToListActivity(location);
+                    } else {
+                        UploadImage uploadTask = new UploadImage(EditLocationActivity.this, getApi(), "user-location-images", "location", imageUri, location);
+                        uploadTask.addListener(new APITaskListener() {
+                            @Override
+                            public void onPostExecute() {
+                                returnToListActivity(location);
+                            }
+
+                            @Override
+                            public void onCancelled() {
+                                returnToListActivity(location);
+                                Toast toast = Toast.makeText(EditLocationActivity.this, "Error uploading location image", Toast.LENGTH_LONG);
+                                toast.show();
+                            }
+                        });
+                        uploadTask.execute();
+                    }
                 }
 
                 @Override
                 public void onError(JsonNode errors) {
                     showProgress(false);
+                    Toast toast = Toast.makeText(EditLocationActivity.this, "Error updating work place details", Toast.LENGTH_LONG);
+                    toast.show();
                 }
 
                 @Override
@@ -136,6 +157,13 @@ public class EditLocationActivity extends MJPProgressActionBarActivity {
             });
             mCreateUpdateLocationTask.execute();
         }
+    }
+
+    private void returnToListActivity(Location location) {
+        Intent intent = new Intent(EditLocationActivity.this, JobListActivity.class);
+        intent.putExtra("location_id", location.getId());
+        startActivity(intent);
+        EditLocationActivity.this.finish();
     }
 
     @Override

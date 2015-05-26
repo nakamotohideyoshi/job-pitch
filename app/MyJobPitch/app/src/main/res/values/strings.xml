@@ -99,4 +99,6 @@
     <string name="no_image">no image</string>
     <string name="company_image">Company Logo</string>
     <string name="change">Change</string>
+    <string name="location_image">Work Place Image</string>
+    <string name="job_image">Job Image</string>
 </resources>

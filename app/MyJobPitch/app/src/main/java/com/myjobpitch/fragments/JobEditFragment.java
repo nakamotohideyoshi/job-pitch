@@ -1,5 +1,7 @@
 package com.myjobpitch.fragments;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,6 +31,7 @@ public class JobEditFragment extends EditFragment {
     private List<Sector> sectors;
     private List<Contract> contracts;
     private List<Hours> hours;
+    private ImageEditFragment mImageEdit;
 
     /**
      * Use this factory method to create a new instance of
@@ -63,6 +66,7 @@ public class JobEditFragment extends EditFragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_job_edit, container, false);
+        mImageEdit = (ImageEditFragment) getChildFragmentManager().findFragmentById(R.id.image_edit_fragment);
 
         mLocationTitleView = (EditText) view.findViewById(R.id.job_title);
         mLocationDescView = (EditText) view.findViewById(R.id.job_description);
@@ -121,6 +125,10 @@ public class JobEditFragment extends EditFragment {
                 }
             }
         }
+        if (job.getImages() == null || job.getImages().isEmpty())
+            mImageEdit.load(null);
+        else
+            mImageEdit.load(Uri.parse(job.getImages().get(0).getImage()));
     }
 
     public void save(Job job) {
@@ -144,5 +152,15 @@ public class JobEditFragment extends EditFragment {
             job.setHours((int) selectedHours.getId());
         else
             job.setHours(null);
+    }
+
+    public Uri getNewImageUri() {
+        return mImageEdit.getNewImageUri();
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent imageReturnedIntent) {
+        super.onActivityResult(requestCode, resultCode, imageReturnedIntent);
+        mImageEdit.onActivityResult(requestCode, resultCode, imageReturnedIntent);
     }
 }

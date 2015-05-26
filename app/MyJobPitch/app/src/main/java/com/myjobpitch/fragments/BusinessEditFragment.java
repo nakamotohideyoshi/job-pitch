@@ -59,7 +59,7 @@ public class BusinessEditFragment extends EditFragment<Business> {
 
     public void load(Business business) {
         mNameView.setText(business.getName());
-        if (business.getImages().isEmpty())
+        if (business.getImages() == null || business.getImages().isEmpty())
             mImageEdit.load(null);
         else
             mImageEdit.load(Uri.parse(business.getImages().get(0).getImage()));

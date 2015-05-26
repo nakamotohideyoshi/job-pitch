@@ -4,15 +4,13 @@ import com.myjobpitch.api.MJPAPIObject;
 
 import org.springframework.core.io.Resource;
 
-import java.util.List;
-
-public class BusinessImage extends MJPAPIObject {
-    private Integer business;
+public class ImageUpload extends MJPAPIObject {
+    private Integer object;
     private Integer order;
     private Resource image;
 
-    public Integer getBusiness() {
-        return business;
+    public Integer getObject() {
+        return object;
     }
 
     public Integer getOrder() {
@@ -23,8 +21,8 @@ public class BusinessImage extends MJPAPIObject {
         return image;
     }
 
-    public void setBusiness(Integer business) {
-        this.business = business;
+    public void setObject(Integer object) {
+        this.object = object;
     }
 
     public void setImage(Resource image) {

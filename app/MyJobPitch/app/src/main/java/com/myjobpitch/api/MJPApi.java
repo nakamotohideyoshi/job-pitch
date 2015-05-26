@@ -11,10 +11,9 @@ import com.myjobpitch.api.data.ApplicationForCreation;
 import com.myjobpitch.api.data.ApplicationStatus;
 import com.myjobpitch.api.data.ApplicationUpdate;
 import com.myjobpitch.api.data.Business;
-import com.myjobpitch.api.data.BusinessImage;
 import com.myjobpitch.api.data.Contract;
 import com.myjobpitch.api.data.Hours;
-import com.myjobpitch.api.data.Image;
+import com.myjobpitch.api.data.ImageUpload;
 import com.myjobpitch.api.data.Job;
 import com.myjobpitch.api.data.JobProfile;
 import com.myjobpitch.api.data.JobSeeker;
@@ -30,6 +29,7 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
+import org.springframework.http.converter.FormHttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -76,6 +76,7 @@ public class MJPApi {
 		this.apiRoot = apiRoot;
 		this.rest = new RestTemplate();
 		this.rest.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
+        this.rest.getMessageConverters().add(new FormHttpMessageConverter());
 	}
 	
 	public MJPApi() {
@@ -116,9 +117,13 @@ public class MJPApi {
 	}
 
 	private <T> HttpEntity<T> createAuthenticatedRequest(T object) {
+        return createAuthenticatedRequest(object, new HttpHeaders());
+    }
+
+    private <T> HttpEntity<T> createAuthenticatedRequest(T object, HttpHeaders headers) {
         if (token == null)
             throw new RuntimeException("Not logged in!");
-        HttpHeaders headers = new HttpHeaders();
+
         headers.setAuthorization(new HttpAuthentication() {
             @Override
             public String getHeaderValue() {
@@ -286,13 +291,17 @@ public class MJPApi {
         rest.exchange(getObjectUrl("user-jobs", id), HttpMethod.DELETE, createAuthenticatedRequest(), Void.class);
     }
 
-    public void uploadBusinessImage(BusinessImage business) throws MJPApiException {
-//        MultiValueMap<String, Object> parts = new LinkedMultiValueMap<String, Object>();
-//        parts.put("image", )
+    public void uploadImage(String endpoint, String objectKey, ImageUpload image) throws MJPApiException {
+        MultiValueMap<String, Object> parts = new LinkedMultiValueMap<String, Object>();
+        parts.put("image", Arrays.asList(new Object[] {image.getImage()}));
+        parts.put(objectKey, Arrays.asList(new Object[] {image.getObject().toString()}));
+        parts.put("order", Arrays.asList(new Object[]{image.getOrder().toString()}));
+
         try {
-            HttpEntity<BusinessImage> request = createAuthenticatedRequest(business);
-            request.getHeaders().setContentType(MediaType.MULTIPART_FORM_DATA);
-            rest.postForObject(getTypeUrl("user-business-images"), request, Object.class);
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.MULTIPART_FORM_DATA);
+            HttpEntity<MultiValueMap<String, Object>> request = createAuthenticatedRequest(parts, headers);
+            rest.postForObject(getTypeUrl(endpoint), request, Object.class);
         } catch (HttpClientErrorException e) {
             if (e.getStatusCode().value() == 400) {
                 throw new MJPApiException(e);

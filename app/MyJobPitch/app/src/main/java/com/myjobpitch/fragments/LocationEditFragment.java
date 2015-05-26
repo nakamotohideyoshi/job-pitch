@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,7 +26,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class LocationEditFragment extends EditFragment<Location> {
-    public static final int SELECT_LOCATION = 1;
+    public static final int SELECT_LOCATION = 1000;
 
     private CheckBox mLocationMobilePublicView;
     private EditText mLocationNameView;
@@ -42,6 +43,7 @@ public class LocationEditFragment extends EditFragment<Location> {
     private Double mLatitude;
     private String mPlaceId = "";
     private String mPlaceName;
+    private ImageEditFragment mImageEdit;
 
     /**
      * Use this factory method to create a new instance of
@@ -76,6 +78,8 @@ public class LocationEditFragment extends EditFragment<Location> {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_location_edit, container, false);
+
+        mImageEdit = (ImageEditFragment) getChildFragmentManager().findFragmentById(R.id.image_edit_fragment);
 
         mLocationNameView = (EditText) view.findViewById(R.id.location_name);
         mLocationDescView = (EditText) view.findViewById(R.id.location_description);
@@ -142,6 +146,10 @@ public class LocationEditFragment extends EditFragment<Location> {
             else
                 mPlaceView.setText(mPlaceName + " (from Google)");
         }
+        if (location.getImages() == null || location.getImages().isEmpty())
+            mImageEdit.load(null);
+        else
+            mImageEdit.load(Uri.parse(location.getImages().get(0).getImage()));
     }
 
     public void save(Location location) {
@@ -168,6 +176,10 @@ public class LocationEditFragment extends EditFragment<Location> {
         CreateUpdateLocationTask task = new CreateUpdateLocationTask(api, location);
         task.addListener(this);
         return task;
+    }
+
+    public Uri getNewImageUri() {
+        return mImageEdit.getNewImageUri();
     }
 
     @Override
@@ -209,6 +221,8 @@ public class LocationEditFragment extends EditFragment<Location> {
                     mPlaceView.setText(mPlaceName + " (from Google)");
                 mPlaceView.setError(null);
             }
+        } else {
+            mImageEdit.onActivityResult(requestCode, resultCode, data);
         }
     }
 

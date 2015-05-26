@@ -51,6 +51,7 @@ INSTALLED_APPS = (
     'rest_auth',
     'rest_auth.registration',
     'mjp',
+    'web',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -74,7 +75,7 @@ REST_AUTH_SERIALIZERS = {
     'USER_DETAILS_SERIALIZER': 'mjp.serializers.UserDetailsSerializer',
 }
 
-ROOT_URLCONF = 'mjp.urls'
+ROOT_URLCONF = 'urls'
 
 WSGI_APPLICATION = 'wsgi.application'
 

@@ -1,7 +1,10 @@
 from django.contrib.auth import get_user_model
-from rest_framework import serializers
-from models import Business, Location, JobProfile, LocationImage, BusinessImage, Job
 from django.contrib.gis.geos import Point
+from rest_framework import serializers
+
+from models import Business, Location, JobProfile, LocationImage, \
+    BusinessImage, Job, JobSeeker, Experience
+
 
 def SimpleSerializer(m, overrides={}):
     class Meta:
@@ -13,21 +16,19 @@ def SimpleSerializer(m, overrides={}):
                 fields,
                 )
 
+
 class RelatedImageURLField(serializers.RelatedField):
     def to_representation(self, value):
         url = value.image.url
         thumbnail_url = value.thumbnail.url
         request = self.context.get('request', None)
-#         if request is not None:
         return {'image': request.build_absolute_uri(url),
                 'thumbnail': request.build_absolute_uri(thumbnail_url),
                 }
-#         return [url, thumbnail_url]
+    
     
 class UserDetailsSerializer(serializers.ModelSerializer):
-    """
-    User model w/o password
-    """
+    
     class Meta:
         model = get_user_model()
         fields = ('id', 'username', 'businesses', 'job_seeker')
@@ -79,3 +80,12 @@ class JobSerializer(serializers.ModelSerializer):
         
     class Meta:
         model = Job
+
+
+class JobSeekerSerializer(serializers.ModelSerializer):
+    user = serializers.PrimaryKeyRelatedField(read_only=True)
+    profile = serializers.PrimaryKeyRelatedField(read_only=True)
+    experience = SimpleSerializer(Experience)(many=True, read_only=True)
+    
+    class Meta:
+        model = JobSeeker

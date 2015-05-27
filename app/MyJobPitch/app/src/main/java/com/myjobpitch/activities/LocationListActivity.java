@@ -16,7 +16,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -121,15 +120,13 @@ public class LocationListActivity extends MJPProgressActionBarActivity  {
         }
     };
 
-    class LocationListAdapter extends ArrayAdapter<Location> {
+    class LocationListAdapter extends CachingArrayAdapter<Location> {
         public LocationListAdapter(List<Location> list) {
             super(LocationListActivity.this, R.layout.list_item, list);
         }
 
         @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            Location location = this.getItem(position);
-
+        public View createView(int position, View convertView, ViewGroup parent, Location location) {
             LayoutInflater inflater = (LayoutInflater) LocationListActivity.this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             View rowView = inflater.inflate(R.layout.list_item, parent, false);
 

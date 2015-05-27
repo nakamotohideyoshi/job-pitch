@@ -55,6 +55,12 @@ class UserBusinessImageViewSet(viewsets.ModelViewSet):
             if request.method in permissions.SAFE_METHODS:
                 return True
             return request.user.businesses.filter(pk=obj.pk).exists()
+    
+    def perform_create(self, serializer):
+        image = serializer.save()
+        # for now, allow only one image
+        image.business.images.exclude(pk=image.pk).delete()
+        
     permission_classes = (permissions.IsAuthenticated, UserBusinessImagePermission,)
     serializer_class = SimpleSerializer(BusinessImage, {'thumbnail': serializers.ImageField(read_only=True)})
     queryset = BusinessImage.objects.all()
@@ -96,6 +102,12 @@ class UserLocationImageViewSet(viewsets.ModelViewSet):
             if request.method in permissions.SAFE_METHODS:
                 return True
             return request.user.businesses.filter(locations=obj.location).exists()
+    
+    def perform_create(self, serializer):
+        image = serializer.save()
+        # for now, allow only one image
+        image.location.images.exclude(pk=image.pk).delete()
+    
     permission_classes = (permissions.IsAuthenticated, UserLocationImagePermission,)
     serializer_class = SimpleSerializer(LocationImage, {'thumbnail': serializers.ImageField(read_only=True)})
     queryset = LocationImage.objects.all()
@@ -156,6 +168,12 @@ class UserJobImageViewSet(viewsets.ModelViewSet):
             if request.method in permissions.SAFE_METHODS:
                 return True
             return request.user.businesses.filter(locations__jobs=obj.job).exists()
+        
+    def perform_create(self, serializer):
+        image = serializer.save()
+        # for now, allow only one image
+        image.job.images.exclude(pk=image.pk).delete()
+    
     permission_classes = (permissions.IsAuthenticated, UserJobImagePermission,)
     serializer_class = SimpleSerializer(JobImage, {'thumbnail': serializers.ImageField(read_only=True)})
     queryset = JobImage.objects.all()

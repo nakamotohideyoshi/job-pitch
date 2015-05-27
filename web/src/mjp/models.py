@@ -60,12 +60,14 @@ def create_thumbnail(image, thumbnail):
         save=False
     )
 
+
 class Sector(models.Model):
     name = models.CharField(max_length=255)
     description = models.TextField()
     
     def __str__(self):
         return "%s: %s" % (type(self).__name__, self.name)
+
 
 class Contract(models.Model):
     name = models.CharField(max_length=255)
@@ -74,6 +76,7 @@ class Contract(models.Model):
     
     def __str__(self):
         return "%s: %s" % (type(self).__name__, self.name)
+
 
 class Hours(models.Model):
     name = models.CharField(max_length=255)
@@ -86,6 +89,7 @@ class Hours(models.Model):
     class Meta:
         verbose_name_plural = "hours"
 
+
 class JobStatus(models.Model):
     name = models.CharField(max_length=20)
     friendly_name = models.CharField(max_length=255)
@@ -97,6 +101,7 @@ class JobStatus(models.Model):
     class Meta:
         verbose_name_plural = "job statuses"
 
+
 class Sex(models.Model):
     name = models.CharField(max_length=255)
     short_name = models.CharField(max_length=255)
@@ -107,6 +112,7 @@ class Sex(models.Model):
     class Meta:
         verbose_name_plural = "sexes"
 
+
 class Nationality(models.Model):
     name = models.CharField(max_length=255)
     short_name = models.CharField(max_length=255)
@@ -116,6 +122,7 @@ class Nationality(models.Model):
     
     class Meta:
         verbose_name_plural = "nationalities"
+
 
 class ApplicationStatus(models.Model):
     name = models.CharField(max_length=20)
@@ -128,11 +135,13 @@ class ApplicationStatus(models.Model):
     class Meta:
         verbose_name_plural = "application statuses"
 
+
 class Role(models.Model):
     name = models.CharField(max_length=20)
     
     def __str__(self):
         return "%s: %s" % (type(self).__name__, self.name)
+
 
 class Business(models.Model):
     users = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='businesses')
@@ -146,6 +155,7 @@ class Business(models.Model):
     class Meta:
         verbose_name_plural = "businesses"
 
+
 class BusinessImage(models.Model):
     business = models.ForeignKey(Business, related_name='images')
     image = models.ImageField(upload_to='business/%Y/%m/%d', max_length=255)
@@ -158,7 +168,8 @@ class BusinessImage(models.Model):
 
     class Meta:
         ordering = ['order']
-    
+
+
 class Location(models.Model):
     business = models.ForeignKey(Business, related_name='locations')
     name = models.CharField(max_length=255)
@@ -180,6 +191,7 @@ class Location(models.Model):
     def __str__(self):
         return "%s: %s" % (type(self).__name__, self.name)
 
+
 class LocationImage(models.Model):
     location = models.ForeignKey(Location, related_name='images')
     image = models.ImageField(upload_to='location/%Y/%m/%d', max_length=255)
@@ -193,6 +205,7 @@ class LocationImage(models.Model):
     class Meta:
         ordering = ['order']
     
+
 class Job(models.Model):
     title = models.CharField(max_length=255)
     description = models.TextField()
@@ -207,6 +220,7 @@ class Job(models.Model):
     def __str__(self):
         return "%s: %s (%s)" % (type(self).__name__, self.title, self.location.name)
 
+
 class JobImage(models.Model):
     job = models.ForeignKey(Job, related_name='images')
     image = models.ImageField(upload_to='job/%Y/%m/%d', max_length=255)
@@ -219,6 +233,7 @@ class JobImage(models.Model):
         
     class Meta:
         ordering = ['order']
+
 
 class JobSeeker(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, related_name='job_seeker')
@@ -236,8 +251,6 @@ class JobSeeker(models.Model):
     sex_public = models.BooleanField(default=None)
     nationality = models.ForeignKey(Nationality, related_name='job_seekers', null=True)
     nationality_public = models.BooleanField(default=None)
-    # TODO address
-    # TODO media
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
     
@@ -246,6 +259,7 @@ class JobSeeker(models.Model):
     
     def __str__(self):
         return "%s: %s" % (type(self).__name__, self.get_full_name())
+        
 
 class Experience(models.Model):
     details = models.CharField(max_length=255)
@@ -254,6 +268,7 @@ class Experience(models.Model):
     
     class Meta:
         verbose_name_plural = "experience"
+
 
 class JobProfile(models.Model):
     job_seeker = models.OneToOneField(JobSeeker, related_name='profile')
@@ -269,6 +284,7 @@ class JobProfile(models.Model):
     
     def __str__(self):
         return "%s: %s" % (type(self).__name__, self.job_seeker.get_full_name())
+
 
 class Application(models.Model):
     job = models.ForeignKey(Job, related_name='applications')

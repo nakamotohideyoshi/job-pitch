@@ -8,10 +8,11 @@ from rest_framework.routers import DefaultRouter
 from mjp.models import Sector, Hours, Contract, Business, Location,\
     JobStatus, Job, Sex, Nationality, JobSeeker, Experience, JobProfile,\
     ApplicationStatus, Application, Role, LocationImage, BusinessImage, \
-    JobImage
+    JobImage, Message
 
 from mjp.serializers import SimpleSerializer, BusinessSerializer,\
-    LocationSerializer, JobProfileSerializer, JobSerializer, JobSeekerSerializer
+    LocationSerializer, JobProfileSerializer, JobSerializer, JobSeekerSerializer,\
+    ApplicationSerializer, ApplicationCreateSerializer
 
 
 router = DefaultRouter()
@@ -317,6 +318,9 @@ router.register('jobs', JobViewSet, base_name='jobs')
 
 
 class ApplicationViewSet(viewsets.ModelViewSet):
+    RECRUITER = Role.objects.get(name='RECRUITER')
+    JOB_SEEKER = Role.objects.get(name='JOB_SEEKER')
+    
     class ApplicationPermission(permissions.BasePermission):
         def has_permission(self, request, view):
             if request.method in permissions.SAFE_METHODS:
@@ -334,50 +338,92 @@ class ApplicationViewSet(viewsets.ModelViewSet):
                 if not is_recruiter and not is_job_seeker:
                     return False
             return True
-        def has_object_permission(self, request, view, obj):
+        def has_object_permission(self, request, view, application):
             if request.method in permissions.SAFE_METHODS:
                 return True
-            is_recruiter = request.user.businesses.filter(locations__jobs__applications=obj).exists()
-            return is_recruiter or obj.job_seeker.user == request.user
+            if request.method == 'DELETE' and application.status.name == 'DELETED':
+                return False
+            is_recruiter = request.user.businesses.filter(locations__jobs__applications=application).exists()
+            return is_recruiter or application.job_seeker.user == request.user
         
     permission_classes = (permissions.IsAuthenticated, ApplicationPermission)
-    queryset = Application.objects.all()
-    serializer_class = SimpleSerializer(Application, {'job_seeker': JobSeekerSerializer(read_only=True),
-                                                      'created_by': serializers.PrimaryKeyRelatedField(read_only=True),
-                                                      'deleted_by': serializers.PrimaryKeyRelatedField(read_only=True),
-                                                      })
-    create_serializer_class = SimpleSerializer(Application, {'created_by': serializers.PrimaryKeyRelatedField(read_only=True),
-                                                             'deleted_by': serializers.PrimaryKeyRelatedField(read_only=True),
-                                                             })
-    update_serializer_class = SimpleSerializer(Application,
-                                               overrides={'job_seeker': serializers.PrimaryKeyRelatedField(read_only=True),
-                                                          'job': serializers.PrimaryKeyRelatedField(read_only=True),
-                                                          'created_by': serializers.PrimaryKeyRelatedField(read_only=True),
-                                                          'deleted_by': serializers.PrimaryKeyRelatedField(read_only=True),
-                                                          })
+    serializer_class = ApplicationSerializer
+    create_serializer_class = ApplicationCreateSerializer
+    
+    def get_role(self):
+        if self.request.user.businesses.exists():
+            return self.RECRUITER
+        return self.JOB_SEEKER
+    
     def perform_create(self, serializer):
         job = Job.objects.get(pk=self.request.data['job'])
-        if self.request.user.businesses.filter(locations__jobs=job).exists():
-            role = Role.objects.get(name='RECRUITER')
+        role = self.get_role()
+        if role is self.RECRUITER:
+            status = ApplicationStatus.objects.get(name='ESTABLISHED')
         else:
-            role = Role.objects.get(name='JOB_SEEKER')
-        serializer.save(created_by=role)
-        
+            status = ApplicationStatus.objects.get(name='CREATED')
+        application = serializer.save(created_by=role, status=status)
+        message = Message()
+        message.system = True
+        message.application = application
+        message.from_role = role
+        if role is self.RECRUITER:
+            job.location.business.name
+            message.content = \
+                '%(business)s has expressed an interest in your profile for the following job:\n'\
+                'Job title: %(title)s\n'\
+                'Sector: %(sector)s\n'\
+                'Contract: %(contract)s\n'\
+                'Hours: %(hours)s\n'\
+                 % {'business': job.location.business.name,
+                    'title': job.title,
+                    'sector': job.sector.name,
+                    'contract': job.contract.name,
+                    'hours': job.hours.name,
+                    }
+        else:
+            message.content = '%(name) has expressed an interest in your job %(title)s, %(location)s, %(business)s' \
+                 % {'name': job.job_seeker.get_full_name(),
+                    'title': job.title,
+                    'location': job.location.name,
+                    'business': job.location.business.name,
+                    }
+        message.save()
+    
+    def perform_destroy(self, application):
+        application.status = ApplicationStatus.objects.get(name='DELETED')
+        role = self.get_role()
+        application.deleted_by = role  
+        application.save()
+        message = Message()
+        message.system = True
+        message.application = application
+        message.from_role = role
+        if role is self.RECRUITER:
+            message.content = 'The recruiter has withdrawn their interest'
+        else:
+            message.content = 'The job seeker has withdrawn their interest in this job'
+        message.save()
+    
     def get_serializer_class(self):
-        if self.request.method == 'PUT':
-            return self.update_serializer_class
         if self.request.method == 'POST':
             return self.create_serializer_class
         return self.serializer_class
     
     def get_queryset(self):
-        job = self.request.QUERY_PARAMS.get('job')
-        if job:
-            shortlisted = self.request.QUERY_PARAMS.get('shortlisted')
-            if shortlisted == '1':
-                return Application.objects.filter(job__pk=job, shortlisted=True)
-            else:
-                return Application.objects.filter(job__pk=job)
-        return Application.objects.all()
-        
-router.register('applications', ApplicationViewSet)
+        query = Application.objects.order_by('-updated', '-messages__created')
+        if self.get_role() is self.RECRUITER:
+            query = query.filter(job__location__business__users=self.request.user)
+            job = self.request.QUERY_PARAMS.get('job')
+            if job:
+                query = query.filter(job__pk=job)
+                shortlisted = self.request.QUERY_PARAMS.get('shortlisted')
+                if shortlisted == '1':
+                    query = query.filter(shortlisted=True)
+                else:
+                    query = query.order_by('-shortlisted')
+        else:
+            query = query.filter(job_seeker__user=self.request.user)
+        return query 
+
+router.register('applications', ApplicationViewSet, base_name='application')

@@ -16,7 +16,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -121,15 +120,13 @@ public class JobListActivity extends MJPProgressActionBarActivity  {
         }
     };
 
-    class JobListAdapter extends ArrayAdapter<Job> {
+    class JobListAdapter extends CachingArrayAdapter<Job> {
         public JobListAdapter(List<Job> list) {
             super(JobListActivity.this, R.layout.list_item, list);
         }
 
         @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            Job job = this.getItem(position);
-
+        public View createView(int position, View convertView, ViewGroup parent, Job job) {
             LayoutInflater inflater = (LayoutInflater) JobListActivity.this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             View rowView = inflater.inflate(R.layout.list_item, parent, false);
 

@@ -15,7 +15,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
@@ -114,15 +113,13 @@ public class BusinessListActivity extends MJPProgressActionBarActivity  {
         }
     };
 
-    class BusinessListAdapter extends ArrayAdapter<Business> {
+    class BusinessListAdapter extends CachingArrayAdapter<Business> {
         public BusinessListAdapter(List<Business> list) {
             super(BusinessListActivity.this, R.layout.list_item, list);
         }
 
         @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            Business business = this.getItem(position);
-
+        public View createView(int position, View convertView, ViewGroup parent, Business business) {
             LayoutInflater inflater = (LayoutInflater) BusinessListActivity.this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             View rowView = inflater.inflate(R.layout.list_item, parent, false);
 

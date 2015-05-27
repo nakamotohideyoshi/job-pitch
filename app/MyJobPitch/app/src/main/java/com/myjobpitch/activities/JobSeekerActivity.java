@@ -15,7 +15,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -40,10 +39,7 @@ import com.myjobpitch.tasks.jobseeker.ReadJobsTask;
 import com.myjobpitch.tasks.jobseeker.ReadUserJobSeekerTask;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.Map;
-import java.util.WeakHashMap;
 
 public class JobSeekerActivity extends MJPProgressActionBarActivity {
 
@@ -80,28 +76,18 @@ public class JobSeekerActivity extends MJPProgressActionBarActivity {
     private boolean mButtonActivation = false;
     private View mBackgroundProgress;
 
-    class JobAdapter extends ArrayAdapter<Job> {
-        private Map<Integer, View> viewCache = Collections.synchronizedMap(new WeakHashMap<Integer, View>());
-        private Object viewCacheLock = new Object();
+    class JobAdapter extends CachingArrayAdapter<Job> {
 
         public JobAdapter(List<Job> list) {
             super(JobSeekerActivity.this, R.layout.list_item, list);
         }
 
         @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            Job job = this.getItem(position);
+        public View createView(int position, View convertView, ViewGroup parent, Job job) {
             Log.d("JobAdapter", "getView(" + job.getTitle() + ")");
 
-            View cardView;
-
-            synchronized (viewCacheLock) {
-                if (viewCache.containsKey(job.getId()))
-                    return viewCache.get(job.getId());
-                LayoutInflater inflater = (LayoutInflater) JobSeekerActivity.this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                cardView = inflater.inflate(R.layout.card_job, parent, false);
-                viewCache.put(job.getId(), cardView);
-            }
+            LayoutInflater inflater = (LayoutInflater) JobSeekerActivity.this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            View cardView = inflater.inflate(R.layout.card_job, parent, false);
 
             TextView titleView = (TextView) cardView.findViewById(R.id.job_title);
             titleView.setText(job.getTitle());

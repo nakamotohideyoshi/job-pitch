@@ -3,7 +3,7 @@ from django.contrib.gis.geos import Point
 from rest_framework import serializers
 
 from models import Business, Location, JobProfile, LocationImage, \
-    BusinessImage, Job, JobSeeker, Experience
+    BusinessImage, Job, JobSeeker, Experience, Application, Message
 
 
 def SimpleSerializer(m, overrides={}):
@@ -89,3 +89,20 @@ class JobSeekerSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = JobSeeker
+
+
+class ApplicationSerializer(serializers.ModelSerializer):
+    job_data = JobSerializer(read_only=True)
+    job_seeker = JobSeekerSerializer(read_only=True)
+    messages = SimpleSerializer(Message)(many=True, read_only=True)
+    
+    class Meta:
+        model = Application
+        read_only_fields = ('status', 'created_by', 'deleted_by')
+
+
+class ApplicationCreateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Application
+        read_only_fields = ('status', 'created_by', 'deleted_by')
+

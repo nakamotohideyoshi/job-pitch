@@ -301,3 +301,15 @@ class Application(models.Model):
     
     def __str__(self):
         return "%s: %s for %s" % (type(self).__name__, self.job.title, self.job_seeker.get_full_name())
+
+
+class Message(models.Model):
+    application = models.ForeignKey(Application, related_name='messages')
+    system = models.BooleanField(default=False)
+    from_role = models.ForeignKey(Role)
+    content = models.TextField()
+    read = models.BooleanField(default=False)
+    created = models.DateTimeField(auto_now_add=True)
+    
+    class Meta:
+        ordering = ('created',)

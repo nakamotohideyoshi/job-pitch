@@ -285,6 +285,8 @@ public class JobListActivity extends MJPProgressActionBarActivity  {
                 return true;
             case android.R.id.home:
                 intent = NavUtils.getParentActivityIntent(JobListActivity.this);
+                //TODO handle null mLocation being null (before data has loaded)
+                // here and other screens
                 intent.putExtra("business_id", mLocation.getBusiness());
                 startActivity(intent);
                 finish();

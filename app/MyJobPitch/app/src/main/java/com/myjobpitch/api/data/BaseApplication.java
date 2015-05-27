@@ -10,6 +10,7 @@ public abstract class BaseApplication extends MJPObjectWithDates {
     boolean shortlisted;
     Integer status;
 
+
     public Integer getJob() {
         return job;
     }
@@ -20,10 +21,6 @@ public abstract class BaseApplication extends MJPObjectWithDates {
 
     public Integer getStatus() {
         return status;
-    }
-
-    public void setStatus(Integer status) {
-        this.status = status;
     }
 
     public void setShortlisted(boolean shortlisted) {

@@ -42,7 +42,9 @@ public class CreateUpdateAPITask<T extends MJPAPIObject> extends APITask<T> {
                 return action.update(object);
         } catch (MJPApiException e) {
             errors = e.getErrors();
-            Log.d("CreateUpdateAPITask", errors.toString());
+            Log.e("CreateUpdateAPITask", errors.toString());
+        } catch (Exception e) {
+            Log.e("CreateUpdateAPITask", "API Error", e);
         }
         return null;
     }

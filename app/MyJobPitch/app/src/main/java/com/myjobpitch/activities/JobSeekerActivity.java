@@ -26,7 +26,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.lorentzos.flingswipe.SwipeFlingAdapterView;
 import com.myjobpitch.R;
 import com.myjobpitch.api.data.ApplicationForCreation;
-import com.myjobpitch.api.data.ApplicationStatus;
 import com.myjobpitch.api.data.Contract;
 import com.myjobpitch.api.data.Hours;
 import com.myjobpitch.api.data.Image;
@@ -219,7 +218,6 @@ public class JobSeekerActivity extends MJPProgressActionBarActivity {
                 ApplicationForCreation application = new ApplicationForCreation();
                 application.setJob(job.getId());
                 application.setJob_seeker(mJobSeeker.getId());
-                application.setStatus(getMJPApplication().get(ApplicationStatus.class, ApplicationStatus.CREATED).getId());
                 application.setShortlisted(false);
                 CreateApplicationTask task = new CreateApplicationTask(getApi(), application);
                 backgroundTaskManager.addBackgroundTask(task);

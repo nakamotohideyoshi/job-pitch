@@ -22,4 +22,13 @@ public class ReadApplicationsTask extends ReadAPITask<List<Application>> {
             }
         });
     }
+
+    public ReadApplicationsTask(final MJPApi api) {
+        super(new Action<List<Application>>() {
+            @Override
+            public List<Application> run() throws MJPApiException {
+                return api.get(Application.class);
+            }
+        });
+    }
 }

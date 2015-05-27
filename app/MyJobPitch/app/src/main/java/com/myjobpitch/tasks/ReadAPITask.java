@@ -34,6 +34,8 @@ public class ReadAPITask<T> extends APITask<T> {
         } catch (MJPApiException e) {
             errors = e.getErrors();
             Log.d("ReadAPITask", errors.toString());
+        } catch (Exception e) {
+            Log.e("ReadAPITask", "API Error", e);
         }
         return null;
     }

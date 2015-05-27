@@ -28,7 +28,6 @@ import com.lorentzos.flingswipe.SwipeFlingAdapterView;
 import com.myjobpitch.R;
 import com.myjobpitch.api.data.Application;
 import com.myjobpitch.api.data.ApplicationForCreation;
-import com.myjobpitch.api.data.ApplicationStatus;
 import com.myjobpitch.api.data.ApplicationUpdate;
 import com.myjobpitch.api.data.Experience;
 import com.myjobpitch.api.data.Job;
@@ -287,7 +286,6 @@ public class JobActivity extends MJPProgressActionBarActivity {
                     ApplicationForCreation application = new ApplicationForCreation();
                     application.setJob(job.getId());
                     application.setJob_seeker(jobSeeker.getId());
-                    application.setStatus(getMJPApplication().get(ApplicationStatus.class, ApplicationStatus.CREATED).getId());
                     application.setShortlisted(false);
                     CreateApplicationTask task = new CreateApplicationTask(getApi(), application);
                     backgroundTaskManager.addBackgroundTask(task);

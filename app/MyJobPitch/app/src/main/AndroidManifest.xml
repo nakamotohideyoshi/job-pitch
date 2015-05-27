@@ -113,6 +113,10 @@
                 android:value=".activities.JobListActivity" />
         </activity>
         <activity
+            android:name=".activities.ConversationListActivity"
+            android:label="@string/messages">
+        </activity>
+        <activity
             android:name=".activities.JobSeekerActivity"
             android:label="@string/title_activity"
             android:launchMode="singleTop"
@@ -145,10 +149,6 @@
             android:label="@string/title_activity_select_place" >
         </activity>
 
-        <service
-            android:name=".services.UploadMediaService"
-            android:exported="false" >
-        </service>
     </application>
 
 </manifest>

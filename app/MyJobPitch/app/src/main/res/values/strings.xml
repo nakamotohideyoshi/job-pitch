@@ -101,4 +101,5 @@
     <string name="change">Change</string>
     <string name="location_image">Work Place Image</string>
     <string name="job_image">Job Image</string>
+    <string name="no_messages">You have no messages!  Once you have connected through the main interface with someone, you\'ll be able to communicate with them here.</string>
 </resources>

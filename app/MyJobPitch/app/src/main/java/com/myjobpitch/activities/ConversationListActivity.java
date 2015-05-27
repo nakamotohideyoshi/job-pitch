@@ -1,17 +1,10 @@
 package com.myjobpitch.activities;
 
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.ActionMode;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -23,21 +16,18 @@ import android.widget.Toast;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.myjobpitch.R;
+import com.myjobpitch.api.data.Application;
 import com.myjobpitch.api.data.Business;
-import com.myjobpitch.api.data.Image;
 import com.myjobpitch.tasks.CreateReadUpdateAPITaskListener;
-import com.myjobpitch.tasks.DeleteAPITaskListener;
-import com.myjobpitch.tasks.DownloadImageTask;
-import com.myjobpitch.tasks.recruiter.DeleteUserBusinessTask;
-import com.myjobpitch.tasks.recruiter.ReadUserBusinessesTask;
+import com.myjobpitch.tasks.recruiter.ReadApplicationsTask;
 
 import java.util.List;
 
-public class BusinessListActivity extends MJPProgressActionBarActivity  {
+public class ConversationListActivity extends MJPProgressActionBarActivity  {
 
     private ListView list;
 
-    private ActionMode mActionMode;
+    /*private ActionMode mActionMode;
     private ActionMode.Callback mActionModeCallback = new ActionMode.Callback() {
 
         @Override
@@ -60,13 +50,13 @@ public class BusinessListActivity extends MJPProgressActionBarActivity  {
             final Business business = (Business) list.getItemAtPosition(list.getCheckedItemPosition());
             switch (item.getItemId()) {
                 case R.id.action_edit:
-                    Intent intent = new Intent(BusinessListActivity.this, EditBusinessActivity.class);
+                    Intent intent = new Intent(ConversationListActivity.this, EditBusinessActivity.class);
                     intent.putExtra("business_id", business.getId());
                     startActivity(intent);
                     mode.finish();
                     return true;
                 case R.id.action_delete:
-                    AlertDialog.Builder builder = new AlertDialog.Builder(BusinessListActivity.this);
+                    AlertDialog.Builder builder = new AlertDialog.Builder(ConversationListActivity.this);
                     builder.setMessage("Are you sure you want to delete " + business.getName() + "?")
                             .setCancelable(false)
                             .setPositiveButton("Delete", new DialogInterface.OnClickListener() {
@@ -83,7 +73,7 @@ public class BusinessListActivity extends MJPProgressActionBarActivity  {
                                         @Override
                                         public void onError(JsonNode errors) {
                                             showProgress(false);
-                                            Toast toast = Toast.makeText(BusinessListActivity.this, "Error deleting business", Toast.LENGTH_LONG);
+                                            Toast toast = Toast.makeText(ConversationListActivity.this, "Error deleting business", Toast.LENGTH_LONG);
                                             toast.show();
                                         }
 
@@ -111,37 +101,38 @@ public class BusinessListActivity extends MJPProgressActionBarActivity  {
             ((BusinessListAdapter)list.getAdapter()).notifyDataSetChanged();
             mActionMode = null;
         }
-    };
+    };*/
 
-    class BusinessListAdapter extends CachingArrayAdapter<Business> {
-        public BusinessListAdapter(List<Business> list) {
-            super(BusinessListActivity.this, R.layout.list_item, list);
+    class ConversationListAdapter extends CachingArrayAdapter<Application> {
+        public ConversationListAdapter(List<Application> list) {
+            super(ConversationListActivity.this, R.layout.list_item, list);
         }
 
         @Override
-        public View createView(int position, View convertView, ViewGroup parent, Business business) {
-            LayoutInflater inflater = (LayoutInflater) BusinessListActivity.this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            View rowView = inflater.inflate(R.layout.list_item, parent, false);
+        public View createView(int position, View convertView, ViewGroup parent, Application application) {
+            LayoutInflater inflater = (LayoutInflater) ConversationListActivity.this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            View rowView = inflater.inflate(R.layout.conversation_list_item, parent, false);
 
             ImageView imageView = (ImageView) rowView.findViewById(R.id.icon);
-            List<Image> images = business.getImages();
             ProgressBar progress = (ProgressBar) rowView.findViewById(R.id.progress);
             TextView noImageView = (TextView) rowView.findViewById(R.id.no_image);
-            if (images != null && !images.isEmpty()) {
-                Uri uri = Uri.parse(images.get(0).getThumbnail());
-                new DownloadImageTask(BusinessListActivity.this, imageView, progress).execute(uri);
-            } else {
-                progress.setVisibility(View.GONE);
-                noImageView.setVisibility(View.VISIBLE);
-            }
             TextView titleView = (TextView) rowView.findViewById(R.id.title);
-            titleView.setText(business.getName());
             TextView subtitleView = (TextView) rowView.findViewById(R.id.subtiltle);
-            int locationCount = business.getLocations().size();
-            if (locationCount == 1)
-                subtitleView.setText("Includes " + locationCount + " location");
-            else
-                subtitleView.setText("Includes " + locationCount + " locations");
+
+//            List<Image> images = business.getImages();
+//            if (images != null && !images.isEmpty()) {
+//                Uri uri = Uri.parse(images.get(0).getThumbnail());
+//                new DownloadImageTask(ConversationListActivity.this, imageView, progress).execute(uri);
+//            } else {
+//                progress.setVisibility(View.GONE);
+//                noImageView.setVisibility(View.VISIBLE);
+//            }
+//            titleView.setText(business.getName());
+//            int locationCount = business.getLocations().size();
+//            if (locationCount == 1)
+//                subtitleView.setText("Includes " + locationCount + " location");
+//            else
+//                subtitleView.setText("Includes " + locationCount + " locations");
             return rowView;
         }
     }
@@ -149,53 +140,57 @@ public class BusinessListActivity extends MJPProgressActionBarActivity  {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_business_list);
-        list = (ListView) findViewById(R.id.business_list);
+        setContentView(R.layout.activity_conversation_list);
+        list = (ListView) findViewById(R.id.conversation_list);
         list.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
         list.setLongClickable(true);
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            Intent intent = new Intent(BusinessListActivity.this, LocationListActivity.class);
+            Intent intent = new Intent(ConversationListActivity.this, LocationListActivity.class);
             intent.putExtra("business_id", ((Business)list.getItemAtPosition(position)).getId());
             startActivity(intent);
             }
         });
-        list.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-            if (mActionMode != null)
-                return false;
-
-            // Start the CAB using the ActionMode.Callback defined above
-            list.setItemChecked(position, true);
-            mActionMode = startActionMode(mActionModeCallback);
-            return true;
-            }
-        });
-        Log.d("RecruiterActivity", "created");
+//        list.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+//            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+//            if (mActionMode != null)
+//                return false;
+//
+//            // Start the CAB using the ActionMode.Callback defined above
+//            list.setItemChecked(position, true);
+//            mActionMode = startActionMode(mActionModeCallback);
+//            return true;
+//            }
+//        });
+        Log.d("ConversationList", "created");
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        loadBusinesses();
-        Log.d("RecruiterActivity", "resumed");
+        loadConversations();
+        Log.d("ConversationList", "resumed");
     }
 
-    private void loadBusinesses() {
+    private void loadConversations() {
         showProgress(true);
-        ReadUserBusinessesTask readBusinesses = new ReadUserBusinessesTask(getApi());
-        readBusinesses.addListener(new CreateReadUpdateAPITaskListener<List<Business>>() {
+        ReadApplicationsTask readApplications;
+        if (getApi().getUser().isJobSeeker())
+            readApplications = new ReadApplicationsTask(getApi());
+        else
+            readApplications = new ReadApplicationsTask(getApi()); // TODO filter by job
+        readApplications.addListener(new CreateReadUpdateAPITaskListener<List<Application>>() {
             @Override
-            public void onSuccess(List<Business> result) {
-                Log.d("BusinessListActivity", "success");
-                list.setAdapter(new BusinessListAdapter(result));
+            public void onSuccess(List<Application> result) {
+                Log.d("ConversationList", "success");
+                list.setAdapter(new ConversationListAdapter(result));
                 showProgress(false);
             }
 
             @Override
             public void onError(JsonNode errors) {
-                Toast toast = Toast.makeText(BusinessListActivity.this, "Error loading companies", Toast.LENGTH_LONG);
+                Toast toast = Toast.makeText(ConversationListActivity.this, "Error loading companies", Toast.LENGTH_LONG);
                 toast.show();
                 finish();
             }
@@ -204,7 +199,7 @@ public class BusinessListActivity extends MJPProgressActionBarActivity  {
             public void onCancelled() {
             }
         });
-        readBusinesses.execute();
+        readApplications.execute();
     }
 
     @Override
@@ -214,33 +209,6 @@ public class BusinessListActivity extends MJPProgressActionBarActivity  {
 
     @Override
     public View getMainView() {
-        return findViewById(R.id.business_list);
-    }
-
-    @Override
-    public void onBackPressed() {
-        Log.d("RecruiterActivity", "back");
-        super.onBackPressed();
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.business_list, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.action_add:
-                startActivity(new Intent(this, EditBusinessActivity.class));
-                return true;
-            case R.id.action_messages:
-                startActivity(new Intent(this, ConversationListActivity.class));
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
+        return findViewById(R.id.conversation_list);
     }
 }

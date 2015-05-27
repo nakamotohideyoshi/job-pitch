@@ -6,12 +6,13 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 public class ApplicationForCreation extends BaseApplication {
     Integer job_seeker;
 
-    public void setJob(Integer job) {
-        this.job = job;
-    }
-
+    // Not used, but required for jackson
     public Integer getJob_seeker() {
         return job_seeker;
+    }
+
+    public void setJob(Integer job) {
+        this.job = job;
     }
 
     public void setJob_seeker(Integer job_seeker) {

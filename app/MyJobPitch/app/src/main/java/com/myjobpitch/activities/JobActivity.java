@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.Switch;
@@ -152,18 +153,18 @@ public class JobActivity extends MJPProgressActionBarActivity {
 
         mAppliedSwitch = (Switch) findViewById(R.id.applied_switch);
         mAppliedSwitch.setChecked(true);
-        mAppliedSwitch.setOnClickListener(new View.OnClickListener() {
+        mAppliedSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
-            public void onClick(View v) {
-                mShortListedSwitch.setEnabled(mAppliedSwitch.isChecked());
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                mShortListedSwitch.setEnabled(isChecked);
                 loadDataPreserveSeenAndClearCards();
             }
         });
         mShortListedSwitch = (Switch) findViewById(R.id.shortlisted_switch);
         mShortListedSwitch.setEnabled(true);
-        mShortListedSwitch.setOnClickListener(new View.OnClickListener() {
+        mShortListedSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
-            public void onClick(View v) {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 loadDataPreserveSeenAndClearCards();
             }
         });

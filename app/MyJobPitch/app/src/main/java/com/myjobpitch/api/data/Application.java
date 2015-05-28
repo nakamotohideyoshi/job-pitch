@@ -4,6 +4,7 @@ import java.util.List;
 
 public class Application extends BaseApplication implements JobSeekerContainer {
     private JobSeeker job_seeker;
+    private Job job_data;
     private Integer created_by;
     private Integer deleted_by;
     private List<Message> messages;
@@ -27,5 +28,9 @@ public class Application extends BaseApplication implements JobSeekerContainer {
 
     public List<Message> getMessages() {
         return messages;
+    }
+
+    public Job getJob_data() {
+        return job_data;
     }
 }

@@ -2,6 +2,8 @@ package com.myjobpitch.activities;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Typeface;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -17,8 +19,15 @@ import android.widget.Toast;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.myjobpitch.R;
 import com.myjobpitch.api.data.Application;
+import com.myjobpitch.api.data.ApplicationStatus;
 import com.myjobpitch.api.data.Business;
+import com.myjobpitch.api.data.Job;
+import com.myjobpitch.api.data.JobSeeker;
+import com.myjobpitch.api.data.Location;
+import com.myjobpitch.api.data.Message;
+import com.myjobpitch.api.data.Role;
 import com.myjobpitch.tasks.CreateReadUpdateAPITaskListener;
+import com.myjobpitch.tasks.DownloadImageTask;
 import com.myjobpitch.tasks.recruiter.ReadApplicationsTask;
 
 import java.util.List;
@@ -26,82 +35,6 @@ import java.util.List;
 public class ConversationListActivity extends MJPProgressActionBarActivity  {
 
     private ListView list;
-
-    /*private ActionMode mActionMode;
-    private ActionMode.Callback mActionModeCallback = new ActionMode.Callback() {
-
-        @Override
-        public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-            MenuInflater inflater = mode.getMenuInflater();
-            inflater.inflate(R.menu.list_context, menu);
-            return true;
-        }
-
-        @Override
-        public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
-            mode.setTitle(R.string.business);
-            Business business = (Business) list.getItemAtPosition(list.getCheckedItemPosition());
-            mode.setSubtitle(business.getName());
-            return false;
-        }
-
-        @Override
-        public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
-            final Business business = (Business) list.getItemAtPosition(list.getCheckedItemPosition());
-            switch (item.getItemId()) {
-                case R.id.action_edit:
-                    Intent intent = new Intent(ConversationListActivity.this, EditBusinessActivity.class);
-                    intent.putExtra("business_id", business.getId());
-                    startActivity(intent);
-                    mode.finish();
-                    return true;
-                case R.id.action_delete:
-                    AlertDialog.Builder builder = new AlertDialog.Builder(ConversationListActivity.this);
-                    builder.setMessage("Are you sure you want to delete " + business.getName() + "?")
-                            .setCancelable(false)
-                            .setPositiveButton("Delete", new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int id) {
-                                    dialog.cancel();
-                                    showProgress(true);
-                                    DeleteUserBusinessTask deleteBusinessTask = new DeleteUserBusinessTask(getApi(), business.getId());
-                                    deleteBusinessTask.addListener(new DeleteAPITaskListener() {
-                                        @Override
-                                        public void onSuccess() {
-                                            loadBusinesses();
-                                        }
-
-                                        @Override
-                                        public void onError(JsonNode errors) {
-                                            showProgress(false);
-                                            Toast toast = Toast.makeText(ConversationListActivity.this, "Error deleting business", Toast.LENGTH_LONG);
-                                            toast.show();
-                                        }
-
-                                        @Override
-                                        public void onCancelled() {}
-                                    });
-                                    deleteBusinessTask.execute();
-                                }
-                            })
-                            .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int id) {
-                                    dialog.cancel();
-                                }
-                            }).create().show();
-                    mode.finish();
-                    return true;
-                default:
-                    return false;
-            }
-        }
-
-        @Override
-        public void onDestroyActionMode(ActionMode mode) {
-            list.clearChoices();
-            ((BusinessListAdapter)list.getAdapter()).notifyDataSetChanged();
-            mActionMode = null;
-        }
-    };*/
 
     class ConversationListAdapter extends CachingArrayAdapter<Application> {
         public ConversationListAdapter(List<Application> list) {
@@ -118,21 +51,85 @@ public class ConversationListActivity extends MJPProgressActionBarActivity  {
             TextView noImageView = (TextView) rowView.findViewById(R.id.no_image);
             TextView titleView = (TextView) rowView.findViewById(R.id.title);
             TextView subtitleView = (TextView) rowView.findViewById(R.id.subtiltle);
+            TextView messageView = (TextView) rowView.findViewById(R.id.message);
 
-//            List<Image> images = business.getImages();
-//            if (images != null && !images.isEmpty()) {
-//                Uri uri = Uri.parse(images.get(0).getThumbnail());
-//                new DownloadImageTask(ConversationListActivity.this, imageView, progress).execute(uri);
-//            } else {
-//                progress.setVisibility(View.GONE);
-//                noImageView.setVisibility(View.VISIBLE);
-//            }
-//            titleView.setText(business.getName());
-//            int locationCount = business.getLocations().size();
-//            if (locationCount == 1)
-//                subtitleView.setText("Includes " + locationCount + " location");
-//            else
-//                subtitleView.setText("Includes " + locationCount + " locations");
+            Job job = application.getJob_data();
+            Location location = job.getLocation_data();
+            Business business = location.getBusiness_data();
+            JobSeeker jobSeeker = application.getJobSeeker();
+            boolean applicationDeleted = application.getStatus().equals(getMJPApplication().get(ApplicationStatus.class, ApplicationStatus.DELETED));
+
+            Message message = null;
+            boolean messageUnread = false;
+            Role fromRole = null;
+            CharSequence title = "";
+            CharSequence subtitle = "";
+            CharSequence content = "";
+            String imageUri = null;
+
+            if (!application.getMessages().isEmpty())
+                message = application.getMessages().get(0);
+
+            if (getApi().getUser().isRecruiter()) {
+                fromRole = getMJPApplication().get(Role.class, Role.JOB_SEEKER);
+                title = jobSeeker.getFirst_name() + " " + jobSeeker.getLast_name();
+
+                // TODO job seeker message image
+
+            } else {
+                fromRole = getMJPApplication().get(Role.class, Role.RECRUITER);
+                title = business.getName();
+
+                if (job.getImages() != null && !job.getImages().isEmpty())
+                    imageUri = job.getImages().get(0).getThumbnail();
+                else if (location.getImages() != null && !location.getImages().isEmpty())
+                    imageUri = location.getImages().get(0).getThumbnail();
+                else if (business.getImages() != null && !business.getImages().isEmpty())
+                    imageUri = business.getImages().get(0).getThumbnail();
+            }
+
+            // TODO change based on filter?
+            subtitle = String.format("%s (%s, %s)\n", job.getTitle(), location.getName(), business.getName());
+
+            if (message == null)
+                content = getString(R.string.no_messages);
+            else {
+                StringBuilder contentBuilder = new StringBuilder();
+                if (!fromRole.getId().equals(message.getFrom_role()))
+                    contentBuilder.append("You: ");
+                contentBuilder.append(message.getContent().replace('\n', ' '));
+                content = contentBuilder;
+            }
+
+            // Find the first message from the other user, and check
+            // its "read" state
+            for (Message m : application.getMessages()) {
+                if (m.getFrom_role().equals(fromRole.getId())) {
+                    messageUnread = !message.getRead();
+                    break;
+                }
+            }
+
+            // Setup views
+            if (imageUri != null) {
+                Uri uri = Uri.parse(imageUri);
+                new DownloadImageTask(ConversationListActivity.this, imageView, progress).execute(uri);
+            } else {
+                progress.setVisibility(View.GONE);
+                noImageView.setVisibility(View.VISIBLE);
+            }
+
+            titleView.setText(title);
+            subtitleView.setText(subtitle);
+            messageView.setText(content);
+
+            if (messageUnread && applicationDeleted)
+                titleView.setTypeface(null, Typeface.BOLD_ITALIC);
+            else if (messageUnread)
+                titleView.setTypeface(null, Typeface.BOLD);
+            else if (applicationDeleted)
+                titleView.setTypeface(null, Typeface.ITALIC);
+
             return rowView;
         }
     }
@@ -152,17 +149,6 @@ public class ConversationListActivity extends MJPProgressActionBarActivity  {
             startActivity(intent);
             }
         });
-//        list.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-//            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-//            if (mActionMode != null)
-//                return false;
-//
-//            // Start the CAB using the ActionMode.Callback defined above
-//            list.setItemChecked(position, true);
-//            mActionMode = startActionMode(mActionModeCallback);
-//            return true;
-//            }
-//        });
         Log.d("ConversationList", "created");
     }
 
@@ -176,10 +162,10 @@ public class ConversationListActivity extends MJPProgressActionBarActivity  {
     private void loadConversations() {
         showProgress(true);
         ReadApplicationsTask readApplications;
-        if (getApi().getUser().isJobSeeker())
-            readApplications = new ReadApplicationsTask(getApi());
-        else
+        if (getApi().getUser().isRecruiter())
             readApplications = new ReadApplicationsTask(getApi()); // TODO filter by job
+        else
+            readApplications = new ReadApplicationsTask(getApi());
         readApplications.addListener(new CreateReadUpdateAPITaskListener<List<Application>>() {
             @Override
             public void onSuccess(List<Application> result) {

@@ -368,7 +368,7 @@ public class JobSeekerActivity extends MJPProgressActionBarActivity {
                 editProfile();
                 return true;
             case R.id.action_messages:
-                // TODO open messages
+                startActivity(new Intent(this, ConversationListActivity.class));
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

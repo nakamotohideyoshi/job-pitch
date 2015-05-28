@@ -39,7 +39,7 @@
 
             <TextView
                 android:id="@+id/message_box_message"
-                android:text="@string/no_messages"
+                android:text="@string/no_conversations"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 />

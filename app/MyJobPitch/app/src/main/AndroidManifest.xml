@@ -117,6 +117,15 @@
             android:label="@string/messages">
         </activity>
         <activity
+            android:name=".activities.ConversationThreadActivity"
+            android:label="@string/message_thread"
+            android:parentActivityName=".activities.ConversationListActivity"
+            android:screenOrientation="portrait" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activities.ConversationListActivity" />
+        </activity>
+        <activity
             android:name=".activities.JobSeekerActivity"
             android:label="@string/title_activity"
             android:launchMode="singleTop"

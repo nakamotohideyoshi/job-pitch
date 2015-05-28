@@ -37,8 +37,8 @@ import com.myjobpitch.api.data.Sex;
 import com.myjobpitch.tasks.CreateApplicationTask;
 import com.myjobpitch.tasks.CreateReadUpdateAPITaskListener;
 import com.myjobpitch.tasks.ReadAPITask;
+import com.myjobpitch.tasks.ReadApplicationsTask;
 import com.myjobpitch.tasks.UpdateApplicationTask;
-import com.myjobpitch.tasks.recruiter.ReadApplicationsTask;
 import com.myjobpitch.tasks.recruiter.ReadJobSeekersTask;
 import com.myjobpitch.tasks.recruiter.ReadUserJobTask;
 

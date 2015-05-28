@@ -1,9 +1,8 @@
-package com.myjobpitch.tasks.recruiter;
+package com.myjobpitch.tasks;
 
 import com.myjobpitch.api.MJPApi;
 import com.myjobpitch.api.MJPApiException;
 import com.myjobpitch.api.data.Application;
-import com.myjobpitch.tasks.ReadAPITask;
 
 import java.util.List;
 

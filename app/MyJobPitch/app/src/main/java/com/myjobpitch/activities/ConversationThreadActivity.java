@@ -3,17 +3,14 @@ package com.myjobpitch.activities;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
-import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.NavUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -28,28 +25,26 @@ import com.myjobpitch.api.data.Location;
 import com.myjobpitch.api.data.Message;
 import com.myjobpitch.api.data.Role;
 import com.myjobpitch.tasks.CreateReadUpdateAPITaskListener;
-import com.myjobpitch.tasks.DownloadImageTask;
-import com.myjobpitch.tasks.ReadApplicationsTask;
+import com.myjobpitch.tasks.ReadApplicationTask;
 
 import java.util.List;
 
-public class ConversationListActivity extends MJPProgressActionBarActivity  {
+public class ConversationThreadActivity extends MJPProgressActionBarActivity  {
 
+    private Integer applicationId;
+    private Application application;
     private ListView list;
 
-    class ConversationListAdapter extends CachingArrayAdapter<Application> {
-        public ConversationListAdapter(List<Application> list) {
-            super(ConversationListActivity.this, R.layout.list_item, list);
+    class ConversationMessageAdapter extends CachingArrayAdapter<Message> {
+        public ConversationMessageAdapter(List<Message> list) {
+            super(ConversationThreadActivity.this, R.layout.list_item, list);
         }
 
         @Override
-        public View createView(int position, View convertView, ViewGroup parent, Application application) {
-            LayoutInflater inflater = (LayoutInflater) ConversationListActivity.this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            View rowView = inflater.inflate(R.layout.conversation_list_item, parent, false);
+        public View createView(int position, View convertView, ViewGroup parent, Message message) {
+            LayoutInflater inflater = (LayoutInflater) ConversationThreadActivity.this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            View rowView = inflater.inflate(R.layout.conversation_thread_item, parent, false);
 
-            ImageView imageView = (ImageView) rowView.findViewById(R.id.icon);
-            ProgressBar progress = (ProgressBar) rowView.findViewById(R.id.progress);
-            TextView noImageView = (TextView) rowView.findViewById(R.id.no_image);
             TextView titleView = (TextView) rowView.findViewById(R.id.title);
             TextView subtitleView = (TextView) rowView.findViewById(R.id.subtiltle);
             TextView messageView = (TextView) rowView.findViewById(R.id.message);
@@ -60,7 +55,6 @@ public class ConversationListActivity extends MJPProgressActionBarActivity  {
             JobSeeker jobSeeker = application.getJobSeeker();
             boolean applicationDeleted = application.getStatus().equals(getMJPApplication().get(ApplicationStatus.class, ApplicationStatus.DELETED));
 
-            Message message = null;
             boolean messageUnread = false;
             Role fromRole = null;
             CharSequence title = "";
@@ -102,24 +96,8 @@ public class ConversationListActivity extends MJPProgressActionBarActivity  {
                 content = contentBuilder;
             }
 
-            // Find the first message from the other user, and check
-            // its "read" state
-            for (Message m : application.getMessages()) {
-                if (m.getFrom_role().equals(fromRole.getId())) {
-                    messageUnread = !message.getRead();
-                    break;
-                }
-            }
 
             // Setup views
-            if (imageUri != null) {
-                Uri uri = Uri.parse(imageUri);
-                new DownloadImageTask(ConversationListActivity.this, imageView, progress).execute(uri);
-            } else {
-                progress.setVisibility(View.GONE);
-                noImageView.setVisibility(View.VISIBLE);
-            }
-
             titleView.setText(title);
             subtitleView.setText(subtitle);
             messageView.setText(content);
@@ -138,45 +116,36 @@ public class ConversationListActivity extends MJPProgressActionBarActivity  {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_conversation_list);
-        list = (ListView) findViewById(R.id.conversation_list);
+
+        applicationId = getIntent().getIntExtra("application_id", -1);
+
+        setContentView(R.layout.activity_conversation_thread);
+        list = (ListView) findViewById(R.id.conversation_thread);
         list.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
-        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            Intent intent = new Intent(ConversationListActivity.this, ConversationThreadActivity.class);
-            intent.putExtra("application_id", ((Application)list.getItemAtPosition(position)).getId());
-            startActivity(intent);
-            }
-        });
-        Log.d("ConversationList", "created");
+        Log.d("ConversationThread", "created");
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        loadConversations();
-        Log.d("ConversationList", "resumed");
+        loadConversation();
+        Log.d("ConversationThread", "resumed");
     }
 
-    private void loadConversations() {
+    private void loadConversation() {
         showProgress(true);
-        ReadApplicationsTask readApplications;
-        if (getApi().getUser().isRecruiter())
-            readApplications = new ReadApplicationsTask(getApi()); // TODO filter by job
-        else
-            readApplications = new ReadApplicationsTask(getApi());
-        readApplications.addListener(new CreateReadUpdateAPITaskListener<List<Application>>() {
+        ReadApplicationTask readApplication = new ReadApplicationTask(getApi(), applicationId);
+        readApplication.addListener(new CreateReadUpdateAPITaskListener<Application>() {
             @Override
-            public void onSuccess(List<Application> result) {
-                Log.d("ConversationList", "success");
-                list.setAdapter(new ConversationListAdapter(result));
+            public void onSuccess(Application result) {
+                Log.d("ConversationThread", "success");
+                list.setAdapter(new ConversationMessageAdapter(result.getMessages()));
                 showProgress(false);
             }
 
             @Override
             public void onError(JsonNode errors) {
-                Toast toast = Toast.makeText(ConversationListActivity.this, "Error loading messages", Toast.LENGTH_LONG);
+                Toast toast = Toast.makeText(ConversationThreadActivity.this, "Error loading messages", Toast.LENGTH_LONG);
                 toast.show();
                 finish();
             }
@@ -185,7 +154,7 @@ public class ConversationListActivity extends MJPProgressActionBarActivity  {
             public void onCancelled() {
             }
         });
-        readApplications.execute();
+        readApplication.execute();
     }
 
     @Override
@@ -203,6 +172,8 @@ public class ConversationListActivity extends MJPProgressActionBarActivity  {
         Intent intent;
         switch (item.getItemId()) {
             case android.R.id.home:
+                intent = NavUtils.getParentActivityIntent(this);
+                startActivity(intent);
                 finish();
                 return true;
             default:

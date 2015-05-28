@@ -92,7 +92,7 @@ class JobSeekerSerializer(serializers.ModelSerializer):
 
 
 class ApplicationSerializer(serializers.ModelSerializer):
-    job_data = JobSerializer(read_only=True)
+    job_data = JobSerializer(source='job', read_only=True)
     job_seeker = JobSeekerSerializer(read_only=True)
     messages = SimpleSerializer(Message)(many=True, read_only=True)
     

@@ -368,7 +368,6 @@ class ApplicationViewSet(viewsets.ModelViewSet):
         message.application = application
         message.from_role = role
         if role is self.RECRUITER:
-            job.location.business.name
             message.content = \
                 '%(business)s has expressed an interest in your profile for the following job:\n'\
                 'Job title: %(title)s\n'\
@@ -382,8 +381,8 @@ class ApplicationViewSet(viewsets.ModelViewSet):
                     'hours': job.hours.name,
                     }
         else:
-            message.content = '%(name) has expressed an interest in your job %(title)s, %(location)s, %(business)s' \
-                 % {'name': job.job_seeker.get_full_name(),
+            message.content = '%(name)s has expressed an interest in your job %(title)s, %(location)s, %(business)s' \
+                 % {'name': application.job_seeker.get_full_name(),
                     'title': job.title,
                     'location': job.location.name,
                     'business': job.location.business.name,

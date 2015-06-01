@@ -73,7 +73,7 @@
     </LinearLayout>
 
     <ImageView
-        android:background="@color/gray_14"
+        android:background="@color/grey_14"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/image"

@@ -4,6 +4,14 @@
     <color name="card_hint_negative">#78ff0000</color>
     <color name="button_text">#ff3f3f3f</color>
     <color name="grey_6">#666</color>
-    <color name="gray_10">#aaa</color>
-    <color name="gray_14">#eee</color>
+    <color name="grey_7">#777</color>
+    <color name="grey_8">#888</color>
+    <color name="grey_9">#999</color>
+    <color name="grey_10">#aaa</color>
+    <color name="grey_11">#bbb</color>
+    <color name="grey_12">#ccc</color>
+    <color name="grey_13">#ddd</color>
+    <color name="grey_14">#eee</color>
+    <color name="grey_15">#fff</color>
+    <color name="white">#fff</color>
 </resources>

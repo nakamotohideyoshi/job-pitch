@@ -1,0 +1,132 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ConversationThreadActivity">
+
+    <ProgressBar android:id="@+id/progress"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp" />
+
+
+    <LinearLayout
+        android:id="@+id/conversion_thread_main"
+        android:orientation="vertical"
+        android:gravity="center_horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <RelativeLayout
+            android:id="@+id/header"
+            android:background="@color/grey_12"
+            android:padding="8dp"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content">
+
+            <RelativeLayout
+                android:id="@+id/image_container"
+                android:layout_width="70dp"
+                android:layout_height="52dp"
+                android:layout_marginRight="16dip">
+
+                <ImageView
+                    android:id="@+id/image"
+                    android:adjustViewBounds="true"
+                    android:background="@android:color/darker_gray"
+                    android:layout_width="match_parent"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_height="fill_parent" />
+
+                <ProgressBar
+                    android:id="@+id/image_progress"
+                    style="?android:attr/progressBarStyleSmall"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true" />
+
+                <TextView
+                    android:id="@+id/no_image"
+                    android:textColor="@color/grey_6"
+                    android:text="@string/no_image"
+                    android:textSize="12sp"
+                    android:textAlignment="center"
+                    android:gravity="center"
+                    android:visibility="invisible"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true" />
+            </RelativeLayout>
+
+            <TextView
+                android:id="@+id/title"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentTop="true"
+                android:layout_toRightOf="@id/image_container"
+                android:paddingTop="6dip"
+                android:paddingBottom="3dip"
+                android:gravity="center_vertical"
+                tools:text="John Doe"
+                android:singleLine="true"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/subtiltle"
+                android:layout_below="@id/title"
+                android:layout_toRightOf="@id/image_container"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="2"
+                android:paddingBottom="3dip"
+                tools:text="Job: Sales Executive, Edinburgh, Peter Vardy Vauxhall"
+                android:textStyle="italic"
+                android:textSize="12sp" />
+
+        </RelativeLayout>
+
+        <ListView
+            android:id="@+id/conversation_thread"
+            android:divider="@null"
+            android:layout_below="@id/header"
+            android:layout_above="@+id/message_form"
+            android:layout_width="fill_parent"
+            android:layout_weight="1"
+            android:layout_height="fill_parent"
+            android:scrollbars="vertical"
+            tools:listitem="@layout/conversation_thread_item" />
+
+        <LinearLayout
+            android:id="@+id/message_form"
+            android:orientation="horizontal"
+            android:background="@color/white"
+            android:padding="6dp"
+            android:layout_alignParentBottom="true"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="90dp">
+
+            <EditText
+                android:id="@+id/message"
+                android:layout_weight="1"
+                android:imeOptions="actionSend"
+                android:imeActionLabel="@string/send"
+                android:layout_width="wrap_content"
+                android:layout_height="fill_parent" />
+
+            <Button
+                android:id="@+id/send_button"
+                android:layout_gravity="bottom"
+                android:layout_marginLeft="6dp"
+                android:text="@string/send"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+</RelativeLayout>

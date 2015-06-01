@@ -119,8 +119,7 @@
         <activity
             android:name=".activities.ConversationThreadActivity"
             android:label="@string/message_thread"
-            android:parentActivityName=".activities.ConversationListActivity"
-            android:screenOrientation="portrait" >
+            android:parentActivityName=".activities.ConversationListActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activities.ConversationListActivity" />

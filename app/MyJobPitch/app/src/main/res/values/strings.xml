@@ -104,4 +104,5 @@
     <string name="no_conversations">You have no messages!  Once you have connected through the main interface with someone, you\'ll be able to communicate with them here.</string>
     <string name="no_messages">No messages</string>
     <string name="message_thread">Message Thread</string>
+    <string name="send">Send</string>
 </resources>

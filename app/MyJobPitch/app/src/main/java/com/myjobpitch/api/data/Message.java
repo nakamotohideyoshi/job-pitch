@@ -8,12 +8,12 @@ import java.util.Date;
  * Created by Jamie on 27/05/2015.
  */
 public class Message extends MJPAPIObject {
-    private Integer application;
-    private Boolean system;
-    private Integer from_role;
-    private String content;
-    private Date created;
-    private Boolean read;
+    protected Integer application;
+    protected Boolean system;
+    protected Integer from_role;
+    protected String content;
+    protected Date created;
+    protected Boolean read;
 
     public Integer getApplication() {
         return application;

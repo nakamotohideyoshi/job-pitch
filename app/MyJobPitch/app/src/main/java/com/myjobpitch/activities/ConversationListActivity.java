@@ -69,7 +69,7 @@ public class ConversationListActivity extends MJPProgressActionBarActivity  {
             String imageUri = null;
 
             if (!application.getMessages().isEmpty())
-                message = application.getMessages().get(0);
+                message = application.getMessages().get(application.getMessages().size()-1);
 
             if (getApi().getUser().isRecruiter()) {
                 fromRole = getMJPApplication().get(Role.class, Role.JOB_SEEKER);

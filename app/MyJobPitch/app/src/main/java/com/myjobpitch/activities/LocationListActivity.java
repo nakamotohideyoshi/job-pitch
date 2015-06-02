@@ -278,7 +278,7 @@ public class LocationListActivity extends MJPProgressActionBarActivity  {
                 finish();
                 return true;
             case R.id.action_messages:
-                // TODO open messages
+                startActivity(new Intent(LocationListActivity.this, ConversationListActivity.class));
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

@@ -1,5 +1,5 @@
 from django.contrib.auth.models import User
-from django.db.models import Q
+from django.db.models import Q, Max
 from django.shortcuts import render_to_response
 from django.template.context import RequestContext
 from rest_framework import viewsets, permissions, serializers
@@ -12,7 +12,7 @@ from mjp.models import Sector, Hours, Contract, Business, Location,\
 
 from mjp.serializers import SimpleSerializer, BusinessSerializer,\
     LocationSerializer, JobProfileSerializer, JobSerializer, JobSeekerSerializer,\
-    ApplicationSerializer, ApplicationCreateSerializer
+    ApplicationSerializer, ApplicationCreateSerializer, MessageCreateSerializer
 
 
 router = DefaultRouter()
@@ -410,7 +410,7 @@ class ApplicationViewSet(viewsets.ModelViewSet):
         return self.serializer_class
     
     def get_queryset(self):
-        query = Application.objects.order_by('-updated', '-messages__created')
+        query = Application.objects.annotate(Max('messages__created')).order_by('-messages__created__max', '-updated')
         if self.get_role() is self.RECRUITER:
             query = query.filter(job__location__business__users=self.request.user)
             job = self.request.QUERY_PARAMS.get('job')
@@ -426,3 +426,32 @@ class ApplicationViewSet(viewsets.ModelViewSet):
         return query 
 
 router.register('applications', ApplicationViewSet, base_name='application')
+
+
+
+class MessageViewSet(viewsets.ModelViewSet):
+    class MessagePermission(permissions.BasePermission):
+        def has_permission(self, request, view):
+            if request.method in permissions.SAFE_METHODS:
+                return True
+            if request.method == 'POST':
+                pk = request.data.get('application')
+                if pk:
+                    application = Application.objects.get(pk=int(pk))
+                    is_recruiter = request.user.businesses.filter(locations__jobs__applications=application).exists()
+                    return is_recruiter or application.job_seeker.user == request.user
+                return True
+            return False
+    
+    def perform_create(self, serializer):
+        application = Application.objects.get(pk=int(self.request.data.get('application')))
+        if self.request.user.businesses.filter(locations__jobs__applications=application).exists():
+            role = Role.objects.get(name='RECRUITER')
+        else:
+            role = Role.objects.get(name='JOB_SEEKER')
+        serializer.save(from_role=role)
+        
+    permission_classes = (permissions.IsAuthenticated, MessagePermission)
+    serializer_class = MessageCreateSerializer
+    queryset = Message.objects.none()
+router.register('messages', MessageViewSet, base_name='message')

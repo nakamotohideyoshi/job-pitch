@@ -175,7 +175,10 @@ public class JobActivity extends MJPProgressActionBarActivity {
             public void onClick(View v) {
                 if (!adapter.isEmpty()) {
                     if (mAppliedSwitch.isChecked()) {
-                        // TODO open messages
+                        Application application = (Application) adapter.getItem(0);
+                        Intent intent = new Intent(JobActivity.this, ConversationThreadActivity.class);
+                        intent.putExtra("application_id", application.getId());
+                        startActivity(intent);
                     } else {
                         mButtonActivation = true;
                         mCards.getTopCardListener().selectLeft();
@@ -641,7 +644,7 @@ public class JobActivity extends MJPProgressActionBarActivity {
                 finish();
                 return true;
             case R.id.action_messages:
-                // TODO open messages
+                startActivity(new Intent(JobActivity.this, ConversationListActivity.class));
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

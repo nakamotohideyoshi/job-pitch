@@ -2,6 +2,7 @@ import settings
 import sys
 
 import os
+
 BASE_DIR = None
 
 globals().update(vars(sys.modules['settings']))
@@ -18,3 +19,6 @@ DATABASES = {
     }
 }
 
+MIDDLEWARE_CLASSES += (
+    'mjp.middleware.PlainExceptionsMiddleware',
+)

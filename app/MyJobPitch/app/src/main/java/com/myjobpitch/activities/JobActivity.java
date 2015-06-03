@@ -450,7 +450,7 @@ public class JobActivity extends MJPProgressActionBarActivity {
             @Override
             public void onSuccess(Job result) {
                 job = result;
-                loadDataPreserveSeenAndClearCards();
+                loadDataPreserveSeenAndAppendCards();
             }
 
             @Override
@@ -502,6 +502,9 @@ public class JobActivity extends MJPProgressActionBarActivity {
 
     private void loadDataPreserveSeenAndClearCards() {
         loadData(false, false, true, false);
+    }
+    private void loadDataPreserveSeenAndAppendCards() {
+        loadData(false, true, true, false);
     }
 
     private void loadData(boolean clearDismissed, final boolean append, boolean cancel, boolean background) {

@@ -333,7 +333,7 @@ public class JobSeekerActivity extends MJPProgressActionBarActivity {
                     mEmptyMessageView.setText(getString(R.string.no_matching_jobs_message));
                     mEmptyButtonView.setText(getString(R.string.restart_search));
                     mEmptyView.setVisibility(View.INVISIBLE);
-                    loadDataPreserveSeenAndClearCards();
+                    loadDataPreserveSeenAndAppendCards();
                 }
             }
 
@@ -418,8 +418,8 @@ public class JobSeekerActivity extends MJPProgressActionBarActivity {
         loadData(false, true, false, true);
     }
 
-    private void loadDataPreserveSeenAndClearCards() {
-        loadData(false, false, true, false);
+    private void loadDataPreserveSeenAndAppendCards() {
+        loadData(false, true, true, false);
     }
 
     private void loadData(boolean clearDismissed, final boolean append, boolean cancel, boolean background) {

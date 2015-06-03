@@ -20,6 +20,7 @@ import com.myjobpitch.api.data.JobSeeker;
 import com.myjobpitch.api.data.JobStatus;
 import com.myjobpitch.api.data.Location;
 import com.myjobpitch.api.data.MessageForCreation;
+import com.myjobpitch.api.data.MessageForUpdate;
 import com.myjobpitch.api.data.Nationality;
 import com.myjobpitch.api.data.Role;
 import com.myjobpitch.api.data.Sector;
@@ -66,6 +67,7 @@ public class MJPApi {
         classEndPoints.put(ApplicationForCreation.class, "applications");
         classEndPoints.put(ApplicationUpdate.class, "applications");
         classEndPoints.put(MessageForCreation.class, "messages");
+        classEndPoints.put(MessageForUpdate.class, "messages");
     }
 
 	private String apiRoot;

@@ -73,9 +73,16 @@ public class EditJobSeekerActivity extends MJPProgressActionBarActivity {
 
                 @Override
                 public void onError(JsonNode errors) {
-                    finish();
                     Toast toast = Toast.makeText(EditJobSeekerActivity.this, "Error loading job seeker", Toast.LENGTH_LONG);
                     toast.show();
+                    finish();
+                }
+
+                @Override
+                public void onConnectionError() {
+                    Toast toast = Toast.makeText(EditJobSeekerActivity.this, "Connection Error: Please check your internet connection", Toast.LENGTH_LONG);
+                    toast.show();
+                    finish();
                 }
 
                 @Override
@@ -113,6 +120,13 @@ public class EditJobSeekerActivity extends MJPProgressActionBarActivity {
                 @Override
                 public void onError(JsonNode errors) {
                     showProgress(false);
+                }
+
+                @Override
+                public void onConnectionError() {
+                    showProgress(false);
+                    Toast toast = Toast.makeText(EditJobSeekerActivity.this, "Connection Error: Please check your internet connection", Toast.LENGTH_LONG);
+                    toast.show();
                 }
 
                 @Override

@@ -11,6 +11,7 @@ import java.util.List;
 
 public class DeleteAPITask extends APITask<Void> {
     private List<DeleteAPITaskListener> listeners = new ArrayList<>();
+    private boolean connectionError = false;
 
     public interface Action {
         void run() throws MJPApiException;
@@ -34,6 +35,9 @@ public class DeleteAPITask extends APITask<Void> {
         } catch (MJPApiException e) {
             errors = e.getErrors();
             Log.d("ReadAPITask", errors.toString());
+        } catch (Exception e) {
+            e.printStackTrace();
+            connectionError = true;
         }
         return null;
     }
@@ -42,7 +46,9 @@ public class DeleteAPITask extends APITask<Void> {
     protected void onPostExecute(Void result) {
         super.onPostExecute(result);
         for (DeleteAPITaskListener listener : listeners) {
-            if (errors == null)
+            if (connectionError)
+                listener.onConnectionError();
+            else if (errors == null)
                 listener.onSuccess();
             else
                 listener.onError(errors);

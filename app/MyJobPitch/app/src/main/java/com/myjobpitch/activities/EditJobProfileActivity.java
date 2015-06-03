@@ -89,6 +89,13 @@ public class EditJobProfileActivity extends MJPProgressActionBarActivity {
                             }
 
                             @Override
+                            public void onConnectionError() {
+                                Toast toast = Toast.makeText(EditJobProfileActivity.this, "Connection Error: Please check your internet connection", Toast.LENGTH_LONG);
+                                toast.show();
+                                finish();
+                            }
+
+                            @Override
                             public void onCancelled() {
                             }
                         });
@@ -103,6 +110,13 @@ public class EditJobProfileActivity extends MJPProgressActionBarActivity {
                 @Override
                 public void onError(JsonNode errors) {
                     Toast toast = Toast.makeText(EditJobProfileActivity.this, "Error loading job search profile", Toast.LENGTH_LONG);
+                    toast.show();
+                    finish();
+                }
+
+                @Override
+                public void onConnectionError() {
+                    Toast toast = Toast.makeText(EditJobProfileActivity.this, "Connection Error: Please check your internet connection", Toast.LENGTH_LONG);
                     toast.show();
                     finish();
                 }
@@ -144,6 +158,13 @@ public class EditJobProfileActivity extends MJPProgressActionBarActivity {
                 public void onError(JsonNode errors) {
                     showProgress(false);
                     Toast toast = Toast.makeText(EditJobProfileActivity.this, "Error saving job search profile", Toast.LENGTH_LONG);
+                    toast.show();
+                }
+
+                @Override
+                public void onConnectionError() {
+                    showProgress(false);
+                    Toast toast = Toast.makeText(EditJobProfileActivity.this, "Connection Error: Please check your internet connection", Toast.LENGTH_LONG);
                     toast.show();
                 }
 

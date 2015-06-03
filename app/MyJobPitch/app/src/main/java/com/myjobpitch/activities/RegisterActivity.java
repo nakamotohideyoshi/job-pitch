@@ -11,12 +11,15 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.myjobpitch.MJPApplication;
 import com.myjobpitch.R;
 import com.myjobpitch.api.MJPApi;
 import com.myjobpitch.api.MJPApiException;
+
+import org.springframework.web.client.RestClientException;
 
 public class RegisterActivity extends MJPProgressActivity {
 
@@ -125,6 +128,7 @@ public class RegisterActivity extends MJPProgressActivity {
         private final String password1;
         private final String password2;
         private JsonNode errors;
+        private boolean clientException = false;
 
         public RegisterTask(String username, String password1, String password2) {
             this.username = username;
@@ -137,23 +141,26 @@ public class RegisterActivity extends MJPProgressActivity {
             MJPApplication application = (MJPApplication) getApplication();
             MJPApi api = application.getApi();
             try {
-                api.register(username, password1, password2);
-            } catch (MJPApiException e) {
-                errors = e.getErrors();
-                return null;
-            }
+                try {
+                    api.register(username, password1, password2);
+                } catch (MJPApiException e) {
+                    errors = e.getErrors();
+                    return null;
+                }
 
-            try {
                 api.login(username, password1);
 
-                // Load basic data
-                application.loadData();
-
-                // Load user data
-                api.getUser();
+                try {
+                    // Load data
+                    application.loadData();
+                    api.getUser();
+                } catch (Exception e) {
+                    api.logout();
+                }
                 return CreateProfileActivity.class;
-            } catch (Exception e) {
+            } catch (RestClientException e) {
                 e.printStackTrace();
+                clientException = true;
             }
             return null;
         }
@@ -189,6 +196,11 @@ public class RegisterActivity extends MJPProgressActivity {
 
                 if (errorView != null)
                     errorView.requestFocus();
+                showProgress(false);
+
+            } else if (clientException) {
+                Toast toast = Toast.makeText(RegisterActivity.this, "Connection Error: Please check your internet connection", Toast.LENGTH_LONG);
+                toast.show();
                 showProgress(false);
             } else {
                 Intent intent = new Intent(RegisterActivity.this, next);

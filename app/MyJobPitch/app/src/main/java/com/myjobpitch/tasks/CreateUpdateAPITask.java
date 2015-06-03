@@ -14,6 +14,7 @@ import java.util.List;
 */
 public class CreateUpdateAPITask<T extends MJPAPIObject> extends APITask<T> {
     private List<CreateReadUpdateAPITaskListener<T>> listeners = new ArrayList<>();
+    private boolean connectionError = false;
 
     public interface Action<T> {
         T create(T obj) throws MJPApiException;
@@ -45,6 +46,7 @@ public class CreateUpdateAPITask<T extends MJPAPIObject> extends APITask<T> {
             Log.e("CreateUpdateAPITask", errors.toString());
         } catch (Exception e) {
             Log.e("CreateUpdateAPITask", "API Error", e);
+            connectionError = true;
         }
         return null;
     }
@@ -53,7 +55,9 @@ public class CreateUpdateAPITask<T extends MJPAPIObject> extends APITask<T> {
     protected void onPostExecute(final T result) {
         super.onPostExecute(result);
         for (CreateReadUpdateAPITaskListener<T> listener : listeners) {
-            if (errors == null)
+            if (connectionError)
+                listener.onConnectionError();
+            else if (errors == null)
                 listener.onSuccess(result);
             else
                 listener.onError(errors);

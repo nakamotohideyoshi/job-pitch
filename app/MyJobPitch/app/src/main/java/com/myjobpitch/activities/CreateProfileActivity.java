@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -143,6 +144,13 @@ public class CreateProfileActivity extends MJPProgressActionBarActivity {
                         }
 
                         @Override
+                        public void onConnectionError() {
+                            showProgress(false);
+                            Toast toast = Toast.makeText(CreateProfileActivity.this, "Connection Error: Please check your internet connection", Toast.LENGTH_LONG);
+                            toast.show();
+                        }
+
+                        @Override
                         public void onCancelled() {
                             showProgress(false);
                         }
@@ -153,6 +161,13 @@ public class CreateProfileActivity extends MJPProgressActionBarActivity {
                 @Override
                 public void onError(JsonNode errors) {
                     showProgress(false);
+                }
+
+                @Override
+                public void onConnectionError() {
+                    showProgress(false);
+                    Toast toast = Toast.makeText(CreateProfileActivity.this, "Connection Error: Please check your internet connection", Toast.LENGTH_LONG);
+                    toast.show();
                 }
 
                 @Override
@@ -190,6 +205,13 @@ public class CreateProfileActivity extends MJPProgressActionBarActivity {
                 @Override
                 public void onError(JsonNode errors) {
                     showProgress(false);
+                }
+
+                @Override
+                public void onConnectionError() {
+                    showProgress(false);
+                    Toast toast = Toast.makeText(CreateProfileActivity.this, "Connection Error: Please check your internet connection", Toast.LENGTH_LONG);
+                    toast.show();
                 }
 
                 @Override

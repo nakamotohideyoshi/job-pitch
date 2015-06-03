@@ -139,7 +139,13 @@ public class ConversationThreadActivity extends MJPProgressActionBarActivity  {
                             messageAdapter.remove(message);
                             Toast toast = Toast.makeText(ConversationThreadActivity.this, "Error sending message", Toast.LENGTH_LONG);
                             toast.show();
-                            finish();
+                        }
+
+                        @Override
+                        public void onConnectionError() {
+                            messageAdapter.remove(message);
+                            Toast toast = Toast.makeText(ConversationThreadActivity.this, "Connection Error: Please check your internet connection", Toast.LENGTH_LONG);
+                            toast.show();
                         }
 
                         @Override
@@ -208,6 +214,13 @@ public class ConversationThreadActivity extends MJPProgressActionBarActivity  {
             @Override
             public void onError(JsonNode errors) {
                 Toast toast = Toast.makeText(ConversationThreadActivity.this, "Error loading messages", Toast.LENGTH_LONG);
+                toast.show();
+                finish();
+            }
+
+            @Override
+            public void onConnectionError() {
+                Toast toast = Toast.makeText(ConversationThreadActivity.this, "Connection Error: Please check your internet connection", Toast.LENGTH_LONG);
                 toast.show();
                 finish();
             }

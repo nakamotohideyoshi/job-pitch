@@ -130,6 +130,14 @@
                 android:layout_marginTop="15dp"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content" />
+
+
+            <Button
+                android:id="@+id/empty_button_2"
+                android:layout_marginTop="15dp"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content" />
+
         </LinearLayout>
 
     </RelativeLayout>

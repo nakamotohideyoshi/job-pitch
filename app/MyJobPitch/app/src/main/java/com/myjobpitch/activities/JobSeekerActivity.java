@@ -58,11 +58,13 @@ public class JobSeekerActivity extends MJPProgressActionBarActivity {
     private JobSeeker mJobSeeker;
     private View mEmptyView;
     private TextView mEmptyMessageView;
-    private TextView mEmptyButtonView;
+    private Button mEmptyButtonView;
+    private Button mEmptyButton2View;
     private List<Integer> dismissed = new ArrayList<>();
     private ReadJobsTask loadingTask;
     private int lastLoadCount = 0;
     private Handler mHandler = new Handler();;
+    private View mButtons;
 
     private enum CardState {
         LEFT, MIDDLE, RIGHT
@@ -144,6 +146,8 @@ public class JobSeekerActivity extends MJPProgressActionBarActivity {
         mJobSeekerView = findViewById(R.id.job_seeker_main);
         mProgressView = findViewById(R.id.progress);
         mBackgroundProgress = findViewById(R.id.background_progress);
+
+        mButtons = findViewById(R.id.buttons);
 
         mPositiveButtonContainer = findViewById(R.id.positive_button_container);
         Button mPositiveButton = (Button) findViewById(R.id.positive_button);
@@ -303,8 +307,18 @@ public class JobSeekerActivity extends MJPProgressActionBarActivity {
             public void onClick(View v) {
                 if (mJobSeeker.getProfile() == null)
                     editProfile();
+                else if (mJobSeeker.getVideo() == null)
+                    recordPitch();
                 else
                     loadDataClearSeenAndClearCards();
+            }
+        });
+
+        mEmptyButton2View = (Button) findViewById(R.id.empty_button_2);
+        mEmptyButton2View.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                recordPitch();
             }
         });
 
@@ -324,15 +338,34 @@ public class JobSeekerActivity extends MJPProgressActionBarActivity {
             @Override
             public void onSuccess(JobSeeker result) {
                 mJobSeeker = result;
-                if (mJobSeeker.getProfile() == null) {
+                if (mJobSeeker.getProfile() == null && mJobSeeker.getVideo() == null) {
+                    mEmptyView.setVisibility(View.VISIBLE);
+                    mEmptyMessageView.setText(getString(R.string.setup_profile_and_pitch_message));
+                    mEmptyButtonView.setText(getString(R.string.setup_profile));
+                    mEmptyButton2View.setVisibility(View.VISIBLE);
+                    mEmptyButton2View.setText(getString(R.string.record_pitch));
+                    mButtons.setVisibility(View.INVISIBLE);
+                    showProgress(false);
+                } else if (mJobSeeker.getProfile() == null) {
                     mEmptyView.setVisibility(View.VISIBLE);
                     mEmptyMessageView.setText(getString(R.string.setup_profile_message));
                     mEmptyButtonView.setText(getString(R.string.setup_profile));
+                    mEmptyButton2View.setVisibility(View.GONE);
+                    mButtons.setVisibility(View.INVISIBLE);
+                    showProgress(false);
+                } else if (mJobSeeker.getVideo() == null) {
+                    mEmptyView.setVisibility(View.VISIBLE);
+                    mEmptyMessageView.setText(getString(R.string.record_pitch_message));
+                    mEmptyButtonView.setText(getString(R.string.record_pitch));
+                    mEmptyButton2View.setVisibility(View.GONE);
+                    mButtons.setVisibility(View.INVISIBLE);
                     showProgress(false);
                 } else {
                     mEmptyMessageView.setText(getString(R.string.no_matching_jobs_message));
                     mEmptyButtonView.setText(getString(R.string.restart_search));
+                    mEmptyButton2View.setVisibility(View.INVISIBLE);
                     mEmptyView.setVisibility(View.INVISIBLE);
+                    mButtons.setVisibility(View.VISIBLE);
                     loadDataPreserveSeenAndAppendCards();
                 }
             }
@@ -502,9 +535,11 @@ public class JobSeekerActivity extends MJPProgressActionBarActivity {
             if (notEmpty || loadingTask != null) {
                 mEmptyView.setVisibility(View.INVISIBLE);
                 mCards.setVisibility(View.VISIBLE);
+                mButtons.setVisibility(View.VISIBLE);
             } else {
                 mEmptyView.setVisibility(View.VISIBLE);
                 mCards.setVisibility(View.INVISIBLE);
+                mButtons.setVisibility(View.INVISIBLE);
             }
         }
     }
@@ -514,6 +549,10 @@ public class JobSeekerActivity extends MJPProgressActionBarActivity {
         intent = new Intent(this, EditJobProfileActivity.class);
         intent.putExtra("job_seeker_id", getApi().getUser().getJob_seeker());
         startActivity(intent);
+    }
+
+    private void recordPitch() {
+        Log.d("JobSeekerActivity", "recordPitch()");
     }
 
     @Override

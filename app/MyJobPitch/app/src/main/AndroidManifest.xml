@@ -57,6 +57,7 @@
         </activity>
         <activity
             android:name=".activities.BusinessListActivity"
+            android:launchMode="singleTop"
             android:label="@string/businesses"
             android:parentActivityName=".activities.LoginActivity" >
             <meta-data
@@ -73,6 +74,7 @@
         </activity>
         <activity
             android:name=".activities.LocationListActivity"
+            android:launchMode="singleTop"
             android:label="@string/locations"
             android:parentActivityName=".activities.BusinessListActivity" >
             <meta-data
@@ -89,6 +91,7 @@
         </activity>
         <activity
             android:name=".activities.JobListActivity"
+            android:launchMode="singleTop"
             android:label="@string/jobs"
             android:parentActivityName=".activities.LocationListActivity" >
             <meta-data
@@ -105,6 +108,7 @@
         </activity>
         <activity
             android:name=".activities.JobActivity"
+            android:launchMode="singleTop"
             android:label="@string/job"
             android:parentActivityName=".activities.JobListActivity"
             android:screenOrientation="portrait" >

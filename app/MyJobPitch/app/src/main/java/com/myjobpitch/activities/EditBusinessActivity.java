@@ -188,9 +188,9 @@ public class EditBusinessActivity extends MJPProgressActionBarActivity {
         Intent intent;
         switch (item.getItemId()) {
             case android.R.id.home:
+                finish();
                 intent = NavUtils.getParentActivityIntent(EditBusinessActivity.this);
                 startActivity(intent);
-                finish();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

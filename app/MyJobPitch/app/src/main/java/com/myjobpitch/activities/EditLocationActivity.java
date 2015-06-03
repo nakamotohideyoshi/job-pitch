@@ -185,10 +185,12 @@ public class EditLocationActivity extends MJPProgressActionBarActivity {
         Intent intent;
         switch (item.getItemId()) {
             case android.R.id.home:
-                intent = NavUtils.getParentActivityIntent(EditLocationActivity.this);
-                intent.putExtra("business_id", location.getBusiness());
-                startActivity(intent);
                 finish();
+                if (location != null) {
+                    intent = NavUtils.getParentActivityIntent(EditLocationActivity.this);
+                    intent.putExtra("business_id", location.getBusiness());
+                    startActivity(intent);
+                }
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

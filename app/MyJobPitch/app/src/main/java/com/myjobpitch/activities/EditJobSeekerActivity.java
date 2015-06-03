@@ -143,9 +143,9 @@ public class EditJobSeekerActivity extends MJPProgressActionBarActivity {
         Intent intent;
         switch (item.getItemId()) {
             case android.R.id.home:
+                finish();
                 intent = NavUtils.getParentActivityIntent(EditJobSeekerActivity.this);
                 startActivity(intent);
-                finish();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

@@ -659,10 +659,12 @@ public class JobActivity extends MJPProgressActionBarActivity {
         Intent intent;
         switch (item.getItemId()) {
             case android.R.id.home:
-                intent = NavUtils.getParentActivityIntent(JobActivity.this);
-                intent.putExtra("location_id", job.getLocation());
-                startActivity(intent);
                 finish();
+                if (job != null) {
+                    intent = NavUtils.getParentActivityIntent(JobActivity.this);
+                    intent.putExtra("location_id", job.getLocation());
+                    startActivity(intent);
+                }
                 return true;
             case R.id.action_messages:
                 startActivity(new Intent(JobActivity.this, ConversationListActivity.class));

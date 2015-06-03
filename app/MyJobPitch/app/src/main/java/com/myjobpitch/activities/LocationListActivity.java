@@ -95,6 +95,13 @@ public class LocationListActivity extends MJPProgressActionBarActivity  {
                                         }
 
                                         @Override
+                                        public void onConnectionError() {
+                                            showProgress(false);
+                                            Toast toast = Toast.makeText(LocationListActivity.this, "Connection Error: Please check your internet connection", Toast.LENGTH_LONG);
+                                            toast.show();
+                                        }
+
+                                        @Override
                                         public void onCancelled() {}
                                     });
                                     deleteLocationTask.execute();
@@ -226,6 +233,13 @@ public class LocationListActivity extends MJPProgressActionBarActivity  {
                     }
 
                     @Override
+                    public void onConnectionError() {
+                        Toast toast = Toast.makeText(LocationListActivity.this, "Connection Error: Please check your internet connection", Toast.LENGTH_LONG);
+                        toast.show();
+                        finish();
+                    }
+
+                    @Override
                     public void onCancelled() {}
                 });
                 readLocations.execute();
@@ -234,6 +248,13 @@ public class LocationListActivity extends MJPProgressActionBarActivity  {
             @Override
             public void onError(JsonNode errors) {
                 Toast toast = Toast.makeText(LocationListActivity.this, "Error loading locations", Toast.LENGTH_LONG);
+                toast.show();
+                finish();
+            }
+
+            @Override
+            public void onConnectionError() {
+                Toast toast = Toast.makeText(LocationListActivity.this, "Connection Error: Please check your internet connection", Toast.LENGTH_LONG);
                 toast.show();
                 finish();
             }

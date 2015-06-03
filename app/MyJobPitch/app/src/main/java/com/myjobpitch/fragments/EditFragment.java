@@ -5,6 +5,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.myjobpitch.R;
@@ -69,6 +70,12 @@ public class EditFragment<T> extends Fragment implements CreateReadUpdateAPITask
             if (fields.containsKey(error.getKey()))
                 getTextViewForField(fields.get(error.getKey())).setError(error.getValue().get(0).asText());
         }
+    }
+
+    @Override
+    public void onConnectionError() {
+        Toast toast = Toast.makeText(getActivity(), "Connection Error: Please check your internet connection", Toast.LENGTH_LONG);
+        toast.show();
     }
 
     @Override

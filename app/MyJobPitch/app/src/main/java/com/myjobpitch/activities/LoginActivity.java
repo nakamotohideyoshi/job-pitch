@@ -20,6 +20,7 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.myjobpitch.MJPApplication;
@@ -29,6 +30,7 @@ import com.myjobpitch.api.auth.User;
 import com.myjobpitch.api.data.Business;
 
 import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.RestClientException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -231,6 +233,7 @@ public class LoginActivity extends MJPProgressActivity implements LoaderCallback
 
         private final String mUsername;
         private final String mPassword;
+        private boolean clientException = false;
 
         LoginTask(String username, String password) {
             mUsername = username;
@@ -242,53 +245,58 @@ public class LoginActivity extends MJPProgressActivity implements LoaderCallback
             MJPApplication application = (MJPApplication) getApplication();
             MJPApi api = application.getApi();
             try {
-                api.login(mUsername, mPassword);
-            } catch (HttpClientErrorException e) {
-                // Invalid credentials
-                if (e.getStatusCode().value() == 400)
-                    return null;
-            }
-
-            try {
-                // Load basic data
-                application.loadData();
-
-                // Load user data
-                User user = api.getUser();
-                if (user.isRecruiter()) {
-                    if (user.getBusinesses().size() == 1) {
-                        Business business = api.getUserBusiness(user.getBusinesses().get(0));
-                        if (business.getLocations().isEmpty()) {
-                            // Business but no location: still creating profile
-                            ObjectMapper mapper = new ObjectMapper();
-                            Intent intent = new Intent(LoginActivity.this, CreateProfileActivity.class);
-                            intent.putExtra("business_data", mapper.writeValueAsString(business));
-                            return intent;
-                        } else if (business.getLocations().size() == 1) {
-                            // Single business and single location: go straight to location
-                            Intent intent = new Intent(LoginActivity.this, JobListActivity.class);
-                            intent.putExtra("location_id", business.getLocations().get(0));
-                            return intent;
-                        } else {
-                            // Single business, multiple locations: go straight to business
-                            Intent intent = new Intent(LoginActivity.this, LocationListActivity.class);
-                            intent.putExtra("business_id", business.getId());
-                            return intent;
-                        }
-                    } else {
-                        // Multiple businesses: goto business list
-                        return new Intent(LoginActivity.this, BusinessListActivity.class);
-                    }
-                } else if (user.isJobSeeker()) {
-                    // JobSeeker: goto job seeker screen
-                    return new Intent(LoginActivity.this, JobSeekerActivity.class);
+                try {
+                    api.login(mUsername, mPassword);
+                } catch (HttpClientErrorException e) {
+                    // Invalid credentials
+                    if (e.getStatusCode().value() == 400)
+                        return null;
                 }
-                // NO businesses or job seeker profile
-                Intent intent = new Intent(LoginActivity.this, CreateProfileActivity.class);
-                return intent;
-            } catch (Exception e) {
+
+                try {
+                    // Load basic data
+                    application.loadData();
+
+                    // Load user data
+                    User user = api.getUser();
+                    if (user.isRecruiter()) {
+                        if (user.getBusinesses().size() == 1) {
+                            Business business = api.getUserBusiness(user.getBusinesses().get(0));
+                            if (business.getLocations().isEmpty()) {
+                                // Business but no location: still creating profile
+                                ObjectMapper mapper = new ObjectMapper();
+                                Intent intent = new Intent(LoginActivity.this, CreateProfileActivity.class);
+                                intent.putExtra("business_data", mapper.writeValueAsString(business));
+                                return intent;
+                            } else if (business.getLocations().size() == 1) {
+                                // Single business and single location: go straight to location
+                                Intent intent = new Intent(LoginActivity.this, JobListActivity.class);
+                                intent.putExtra("location_id", business.getLocations().get(0));
+                                return intent;
+                            } else {
+                                // Single business, multiple locations: go straight to business
+                                Intent intent = new Intent(LoginActivity.this, LocationListActivity.class);
+                                intent.putExtra("business_id", business.getId());
+                                return intent;
+                            }
+                        } else {
+                            // Multiple businesses: goto business list
+                            return new Intent(LoginActivity.this, BusinessListActivity.class);
+                        }
+                    } else if (user.isJobSeeker()) {
+                        // JobSeeker: goto job seeker screen
+                        return new Intent(LoginActivity.this, JobSeekerActivity.class);
+                    }
+                    // NO businesses or job seeker profile
+                    Intent intent = new Intent(LoginActivity.this, CreateProfileActivity.class);
+                    return intent;
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    api.logout();
+                }
+            } catch (RestClientException e) {
                 e.printStackTrace();
-                api.logout();
+                clientException = true;
             }
             return null;
         }
@@ -302,6 +310,10 @@ public class LoginActivity extends MJPProgressActivity implements LoaderCallback
                 startActivity(intent);
                 InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.hideSoftInputFromWindow(mLoginFormView.getWindowToken(), 0);
+            } else if (clientException) {
+                Toast toast = Toast.makeText(LoginActivity.this, "Connection Error: Please check your internet connection", Toast.LENGTH_LONG);
+                toast.show();
+                showProgress(false);
             } else {
                 mPasswordView.setError(getString(R.string.error_incorrect_password));
                 mPasswordView.requestFocus();

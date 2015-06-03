@@ -182,6 +182,13 @@ public class ConversationListActivity extends MJPProgressActionBarActivity  {
             }
 
             @Override
+            public void onConnectionError() {
+                Toast toast = Toast.makeText(ConversationListActivity.this, "Connection Error: Please check your internet connection", Toast.LENGTH_LONG);
+                toast.show();
+                finish();
+            }
+
+            @Override
             public void onCancelled() {
             }
         });

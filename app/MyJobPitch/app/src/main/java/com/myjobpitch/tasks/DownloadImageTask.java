@@ -25,7 +25,7 @@ public class DownloadImageTask extends AsyncTask<Uri, Void, Bitmap> {
 
     protected Bitmap doInBackground(Uri... urls) {
         Uri url = urls[0];
-        Bitmap mIcon11 = null;
+        Bitmap bitmap = null;
         Log.d("DownloadImageTask", "Starting download: " + url);
         try {
             InputStream in;
@@ -35,7 +35,7 @@ public class DownloadImageTask extends AsyncTask<Uri, Void, Bitmap> {
                 in = context.getContentResolver().openInputStream(url);
 
             try {
-                mIcon11 = BitmapFactory.decodeStream(in);
+                bitmap = BitmapFactory.decodeStream(in);
             } finally {
                 in.close();
             }
@@ -43,7 +43,7 @@ public class DownloadImageTask extends AsyncTask<Uri, Void, Bitmap> {
             Log.e("DownloadImageTask", e.getMessage());
             e.printStackTrace();
         }
-        return mIcon11;
+        return bitmap;
     }
 
     protected void onPostExecute(Bitmap result) {

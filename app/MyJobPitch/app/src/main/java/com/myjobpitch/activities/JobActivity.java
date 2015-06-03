@@ -461,6 +461,13 @@ public class JobActivity extends MJPProgressActionBarActivity {
             }
 
             @Override
+            public void onConnectionError() {
+                Toast toast = Toast.makeText(JobActivity.this, "Connection Error: Please check your internet connection", Toast.LENGTH_LONG);
+                toast.show();
+                finish();
+            }
+
+            @Override
             public void onCancelled() {
             }
         });
@@ -536,6 +543,13 @@ public class JobActivity extends MJPProgressActionBarActivity {
                     }
 
                     @Override
+                    public void onConnectionError() {
+                        Toast toast = Toast.makeText(JobActivity.this, "Connection Error: Please check your internet connection", Toast.LENGTH_LONG);
+                        toast.show();
+                        finish();
+                    }
+
+                    @Override
                     public void onCancelled() {
                         Log.d("JobActivity", "Application load cancelled");
                     }
@@ -577,6 +591,13 @@ public class JobActivity extends MJPProgressActionBarActivity {
                             toast.show();
                             finish();
                         }
+                    }
+
+                    @Override
+                    public void onConnectionError() {
+                        Toast toast = Toast.makeText(JobActivity.this, "Connection Error: Please check your internet connection", Toast.LENGTH_LONG);
+                        toast.show();
+                        finish();
                     }
 
                     @Override

@@ -8,5 +8,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 public interface CreateReadUpdateAPITaskListener<T> {
     void onSuccess(T result);
     void onError(JsonNode errors);
+    void onConnectionError();
     void onCancelled();
 }

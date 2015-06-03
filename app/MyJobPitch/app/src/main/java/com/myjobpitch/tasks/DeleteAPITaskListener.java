@@ -8,5 +8,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 public interface DeleteAPITaskListener {
     void onSuccess();
     void onError(JsonNode errors);
+    void onConnectionError();
     void onCancelled();
 }

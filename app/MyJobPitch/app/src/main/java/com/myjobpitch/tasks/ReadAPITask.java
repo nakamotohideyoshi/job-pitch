@@ -10,6 +10,7 @@ import java.util.List;
 
 public class ReadAPITask<T> extends APITask<T> {
     private List<CreateReadUpdateAPITaskListener<T>> listeners = new ArrayList<>();
+    private boolean connectionError = false;
 
     public interface Action<T> {
         T run() throws MJPApiException;
@@ -36,6 +37,7 @@ public class ReadAPITask<T> extends APITask<T> {
             Log.d("ReadAPITask", errors.toString());
         } catch (Exception e) {
             Log.e("ReadAPITask", "API Error", e);
+            connectionError = true;
         }
         return null;
     }
@@ -44,7 +46,9 @@ public class ReadAPITask<T> extends APITask<T> {
     protected void onPostExecute(T result) {
         super.onPostExecute(result);
         for (CreateReadUpdateAPITaskListener<T> listener : listeners) {
-            if (errors == null)
+            if (connectionError)
+                listener.onConnectionError();
+            else if (errors == null)
                 listener.onSuccess(result);
             else
                 listener.onError(errors);

@@ -143,6 +143,7 @@ public class ConversationListActivity extends MJPProgressActionBarActivity  {
         setContentView(R.layout.activity_conversation_list);
         list = (ListView) findViewById(R.id.conversation_list);
         list.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+        list.setEmptyView(findViewById(android.R.id.empty));
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -204,7 +205,7 @@ public class ConversationListActivity extends MJPProgressActionBarActivity  {
 
     @Override
     public View getMainView() {
-        return findViewById(R.id.conversation_list);
+        return findViewById(R.id.conversion_list_main);
     }
 
     @Override

@@ -114,6 +114,7 @@
         </activity>
         <activity
             android:name=".activities.ConversationListActivity"
+            android:launchMode="singleTop"
             android:label="@string/messages">
         </activity>
         <activity

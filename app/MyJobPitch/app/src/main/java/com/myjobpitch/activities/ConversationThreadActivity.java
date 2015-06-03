@@ -26,12 +26,14 @@ import com.myjobpitch.api.data.JobSeeker;
 import com.myjobpitch.api.data.Location;
 import com.myjobpitch.api.data.Message;
 import com.myjobpitch.api.data.MessageForCreation;
+import com.myjobpitch.api.data.MessageForUpdate;
 import com.myjobpitch.api.data.MessageLocal;
 import com.myjobpitch.api.data.Role;
 import com.myjobpitch.tasks.CreateMessageTask;
 import com.myjobpitch.tasks.CreateReadUpdateAPITaskListener;
 import com.myjobpitch.tasks.DownloadImageTask;
 import com.myjobpitch.tasks.ReadApplicationTask;
+import com.myjobpitch.tasks.UpdateMessageTask;
 import com.myjobpitch.utils.Utils;
 
 import java.util.Calendar;
@@ -196,15 +198,19 @@ public class ConversationThreadActivity extends MJPProgressActionBarActivity  {
 
                 String imageUri = null;
                 String title;
+                Role fromRole;
 
                 if (getApi().getUser().isRecruiter()) {
                     JobSeeker jobSeeker = application.getJob_seeker();
                     title = jobSeeker.getFirst_name() + " " + jobSeeker.getLast_name();
+                    fromRole = getMJPApplication().get(Role.class, Role.JOB_SEEKER);
 
                     // TODO job seeker message image
 
                 } else {
                     title = business.getName();
+                    fromRole = getMJPApplication().get(Role.class, Role.RECRUITER);
+
                     if (job.getImages() != null && !job.getImages().isEmpty())
                         imageUri = job.getImages().get(0).getThumbnail();
                     else if (location.getImages() != null && !location.getImages().isEmpty())
@@ -225,6 +231,19 @@ public class ConversationThreadActivity extends MJPProgressActionBarActivity  {
                 }
 
                 showProgress(false);
+
+                Message lastUnreadMessage = null;
+                for (Message message : application.getMessages())
+                    if (message.getFrom_role().equals(fromRole.getId()) && !message.getRead())
+                        lastUnreadMessage = message;
+
+                if (lastUnreadMessage != null) {
+                    MessageForUpdate messageUpdate = new MessageForUpdate();
+                    messageUpdate.setId(lastUnreadMessage.getId());
+                    messageUpdate.setRead(true);
+                    UpdateMessageTask updateMessageTask = new UpdateMessageTask(getApi(), messageUpdate);
+                    updateMessageTask.execute();
+                }
             }
 
             @Override

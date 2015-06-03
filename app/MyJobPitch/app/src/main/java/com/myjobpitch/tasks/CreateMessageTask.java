@@ -13,7 +13,7 @@ public class CreateMessageTask extends CreateUpdateAPITask<MessageForCreation> {
             }
 
             @Override
-            public MessageForCreation update(MessageForCreation application) throws MJPApiException {
+            public MessageForCreation update(MessageForCreation message) throws MJPApiException {
                 throw new UnsupportedOperationException("can't update a sent message");
             }
         });

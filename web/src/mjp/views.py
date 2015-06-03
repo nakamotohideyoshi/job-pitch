@@ -12,7 +12,8 @@ from mjp.models import Sector, Hours, Contract, Business, Location,\
 
 from mjp.serializers import SimpleSerializer, BusinessSerializer,\
     LocationSerializer, JobProfileSerializer, JobSerializer, JobSeekerSerializer,\
-    ApplicationSerializer, ApplicationCreateSerializer, MessageCreateSerializer
+    ApplicationSerializer, ApplicationCreateSerializer, MessageCreateSerializer, \
+    MessageUpdateSerializer
 
 
 router = DefaultRouter()
@@ -441,7 +442,31 @@ class MessageViewSet(viewsets.ModelViewSet):
                     is_recruiter = request.user.businesses.filter(locations__jobs__applications=application).exists()
                     return is_recruiter or application.job_seeker.user == request.user
                 return True
+            elif request.method == 'PUT':
+                return True
             return False
+        
+        def has_object_permission(self, request, view, message):
+            if request.method == 'PUT':
+                is_recruiter = request.user.businesses.filter(locations__jobs__applications__messages=message).exists()
+                if is_recruiter and message.from_role.name == "JOB_SEEKER":
+                    #import pdb; pdb.set_trace()
+                    return True
+                is_job_seeker = message.application.job_seeker.user == request.user
+                if is_job_seeker and message.from_role.name == "RECRUITER":
+                    return True
+            return False
+        
+    def get_serializer_class(self):
+        if self.request.method == 'POST':
+            return self.serializer_class
+        if self.request.method == 'PUT':
+            return self.update_serializer_class
+    
+    def get_queryset(self):
+        if self.request.method == 'PUT':
+            return Message.objects.all()
+        return Message.objects.none()
     
     def perform_create(self, serializer):
         application = Application.objects.get(pk=int(self.request.data.get('application')))
@@ -452,6 +477,6 @@ class MessageViewSet(viewsets.ModelViewSet):
         serializer.save(from_role=role)
         
     permission_classes = (permissions.IsAuthenticated, MessagePermission)
+    update_serializer_class = MessageUpdateSerializer
     serializer_class = MessageCreateSerializer
-    queryset = Message.objects.none()
 router.register('messages', MessageViewSet, base_name='message')

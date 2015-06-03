@@ -6,6 +6,8 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.myjobpitch.api.MJPAPIObject;
 import com.myjobpitch.api.MJPApiException;
 
+import org.springframework.web.client.HttpServerErrorException;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,6 +46,9 @@ public class CreateUpdateAPITask<T extends MJPAPIObject> extends APITask<T> {
         } catch (MJPApiException e) {
             errors = e.getErrors();
             Log.e("CreateUpdateAPITask", errors.toString());
+        } catch (HttpServerErrorException e) {
+            Log.e("CreateUpdateAPITask", e.getResponseBodyAsString(), e);
+            connectionError = true; // not really a connection error, but might as well be
         } catch (Exception e) {
             Log.e("CreateUpdateAPITask", "API Error", e);
             connectionError = true;

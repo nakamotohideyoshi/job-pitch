@@ -89,7 +89,6 @@ public class ConversationListActivity extends MJPProgressActionBarActivity  {
                     imageUri = business.getImages().get(0).getThumbnail();
             }
 
-            // TODO change based on filter?
             subtitle = String.format("%s (%s, %s)\n", job.getTitle(), location.getName(), business.getName());
 
             if (message == null)

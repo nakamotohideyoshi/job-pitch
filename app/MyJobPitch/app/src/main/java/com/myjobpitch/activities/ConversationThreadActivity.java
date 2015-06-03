@@ -50,6 +50,7 @@ public class ConversationThreadActivity extends MJPProgressActionBarActivity  {
     private TextView messageView;
     private Button sendButton;
     private ConversationMessageAdapter messageAdapter;
+    private CreateMessageTask createMessageTask = null;
 
     class ConversationMessageAdapter extends CachingArrayAdapter<Message> {
         public ConversationMessageAdapter(List<Message> list) {
@@ -126,12 +127,18 @@ public class ConversationThreadActivity extends MJPProgressActionBarActivity  {
                     message.setRead(false);
                     message.setSystem(false);
                     messageAdapter.add(message);
-                    CreateMessageTask createMessageTask = new CreateMessageTask(getApi(), messageData);
+                    messageView.setEnabled(false);
+                    sendButton.setEnabled(false);
+                    createMessageTask = new CreateMessageTask(getApi(), messageData);
                     createMessageTask.addListener(new CreateReadUpdateAPITaskListener<MessageForCreation>() {
                         @Override
                         public void onSuccess(MessageForCreation result) {
                             message.setContent(content);
                             messageAdapter.notifyDataSetChanged();
+                            messageView.setText("");
+                            sendButton.setEnabled(true);
+                            messageView.setEnabled(true);
+                            createMessageTask = null;
                         }
 
                         @Override
@@ -139,6 +146,9 @@ public class ConversationThreadActivity extends MJPProgressActionBarActivity  {
                             messageAdapter.remove(message);
                             Toast toast = Toast.makeText(ConversationThreadActivity.this, "Error sending message", Toast.LENGTH_LONG);
                             toast.show();
+                            messageView.setEnabled(true);
+                            sendButton.setEnabled(true);
+                            createMessageTask = null;
                         }
 
                         @Override
@@ -146,6 +156,9 @@ public class ConversationThreadActivity extends MJPProgressActionBarActivity  {
                             messageAdapter.remove(message);
                             Toast toast = Toast.makeText(ConversationThreadActivity.this, "Connection Error: Please check your internet connection", Toast.LENGTH_LONG);
                             toast.show();
+                            messageView.setEnabled(true);
+                            sendButton.setEnabled(true);
+                            createMessageTask = null;
                         }
 
                         @Override
@@ -182,15 +195,16 @@ public class ConversationThreadActivity extends MJPProgressActionBarActivity  {
                 Business business = location.getBusiness_data();
 
                 String imageUri = null;
+                String title;
 
                 if (getApi().getUser().isRecruiter()) {
                     JobSeeker jobSeeker = application.getJob_seeker();
-                    titleView.setText(jobSeeker.getFirst_name() + " " + jobSeeker.getLast_name());
-                    subtitleView.setText(String.format("%s (%s, %s)\n", job.getTitle(), location.getName(), business.getName()));
+                    title = jobSeeker.getFirst_name() + " " + jobSeeker.getLast_name();
 
                     // TODO job seeker message image
 
                 } else {
+                    title = business.getName();
                     if (job.getImages() != null && !job.getImages().isEmpty())
                         imageUri = job.getImages().get(0).getThumbnail();
                     else if (location.getImages() != null && !location.getImages().isEmpty())
@@ -200,6 +214,8 @@ public class ConversationThreadActivity extends MJPProgressActionBarActivity  {
                 }
 
                 // Setup views
+                titleView.setText(title);
+                subtitleView.setText(String.format("Job: %s (%s, %s)\n", job.getTitle(), location.getName(), business.getName()));
                 if (imageUri != null) {
                     Uri uri = Uri.parse(imageUri);
                     new DownloadImageTask(ConversationThreadActivity.this, imageView, imageProgress).execute(uri);
@@ -247,13 +263,20 @@ public class ConversationThreadActivity extends MJPProgressActionBarActivity  {
         Intent intent;
         switch (item.getItemId()) {
             case android.R.id.home:
-                finish();
-                intent = NavUtils.getParentActivityIntent(this);
-                startActivity(intent);
+                if (createMessageTask == null) {
+                    finish();
+                    intent = NavUtils.getParentActivityIntent(this);
+                    startActivity(intent);
+                }
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
 
+    @Override
+    public void onBackPressed() {
+        if (createMessageTask == null)
+            super.onBackPressed();
+    }
 }

@@ -24,6 +24,7 @@ public class JobSeeker extends MJPObjectWithDates implements JobSeekerContainer 
     private boolean age_public;
     private Integer profile;
     private List<Experience> experience;
+    private Object video;
 
     public boolean getEmail_public() {
         return email_public;
@@ -150,5 +151,9 @@ public class JobSeeker extends MJPObjectWithDates implements JobSeekerContainer 
     @Override
     public JobSeeker getJobSeeker() {
         return this;
+    }
+
+    public Object getVideo() {
+        return video;
     }
 }

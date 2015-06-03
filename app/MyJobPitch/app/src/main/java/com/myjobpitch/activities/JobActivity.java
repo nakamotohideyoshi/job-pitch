@@ -72,6 +72,7 @@ public class JobActivity extends MJPProgressActionBarActivity {
     private List<Integer> dismissed = new ArrayList<>();
     private ReadAPITask<?> loadingTask;
     private int lastLoadCount = 0;
+    private View mButtons;
 
     private enum CardState {
         LEFT, MIDDLE, RIGHT
@@ -167,6 +168,8 @@ public class JobActivity extends MJPProgressActionBarActivity {
                 loadDataPreserveSeenAndClearCards();
             }
         });
+
+        mButtons = findViewById(R.id.buttons);
 
         mPositiveButtonContainer = findViewById(R.id.positive_button_container);
         Button mPositiveButton = (Button) findViewById(R.id.positive_button);
@@ -649,9 +652,11 @@ public class JobActivity extends MJPProgressActionBarActivity {
             if (notEmpty || loadingTask != null) {
                 mEmptyView.setVisibility(View.INVISIBLE);
                 mCards.setVisibility(View.VISIBLE);
+                mButtons.setVisibility(View.VISIBLE);
             } else {
                 mEmptyView.setVisibility(View.VISIBLE);
                 mCards.setVisibility(View.INVISIBLE);
+                mButtons.setVisibility(View.INVISIBLE);
             }
         }
     }

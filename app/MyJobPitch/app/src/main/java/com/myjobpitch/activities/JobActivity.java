@@ -450,6 +450,7 @@ public class JobActivity extends MJPProgressActionBarActivity {
             @Override
             public void onSuccess(Job result) {
                 job = result;
+                getSupportActionBar().setTitle(job.getTitle());
                 loadDataPreserveSeenAndAppendCards();
             }
 
@@ -521,6 +522,10 @@ public class JobActivity extends MJPProgressActionBarActivity {
             if (!background)
                 showProgress(true);
             if (mAppliedSwitch.isChecked()) {
+                if (mShortListedSwitch.isChecked())
+                    getSupportActionBar().setSubtitle(getString(R.string.shortlisted_job_seekers));
+                else
+                    getSupportActionBar().setSubtitle(getString(R.string.applied_job_seekers));
                 Log.d("JobActivity", "Loading applications");
                 ReadApplicationsTask task = new ReadApplicationsTask(getApi(), job.getId(), mShortListedSwitch.isChecked());
                 loadingTask = task;
@@ -558,6 +563,7 @@ public class JobActivity extends MJPProgressActionBarActivity {
                     }
                 });
             } else {
+                getSupportActionBar().setSubtitle(getString(R.string.job_seeker_search));
                 List<Integer> exclude = new ArrayList();
                 if (clearDismissed) {
                     Log.d("JobActivity", "Resetting dismissed");

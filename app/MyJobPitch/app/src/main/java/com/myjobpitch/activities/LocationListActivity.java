@@ -294,9 +294,9 @@ public class LocationListActivity extends MJPProgressActionBarActivity  {
                 startActivity(intent);
                 return true;
             case android.R.id.home:
+                finish();
                 intent = NavUtils.getParentActivityIntent(LocationListActivity.this);
                 startActivity(intent);
-                finish();
                 return true;
             case R.id.action_messages:
                 startActivity(new Intent(LocationListActivity.this, ConversationListActivity.class));

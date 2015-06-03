@@ -61,7 +61,6 @@ public class ConversationListActivity extends MJPProgressActionBarActivity  {
             boolean applicationDeleted = application.getStatus().equals(getMJPApplication().get(ApplicationStatus.class, ApplicationStatus.DELETED));
 
             Message message = null;
-            boolean messageUnread = false;
             Role fromRole = null;
             CharSequence title = "";
             CharSequence subtitle = "";
@@ -101,14 +100,13 @@ public class ConversationListActivity extends MJPProgressActionBarActivity  {
                 content = contentBuilder;
             }
 
-            // Find the first message from the other user, and check
+            // Find the last message from the other user, and check
             // its "read" state
-            for (Message m : application.getMessages()) {
-                if (m.getFrom_role().equals(fromRole.getId())) {
-                    messageUnread = !message.getRead();
-                    break;
-                }
-            }
+
+            Message lastMessage = null;
+            for (Message m : application.getMessages())
+                if (message.getFrom_role().equals(fromRole.getId()))
+                    lastMessage = message;
 
             // Setup views
             if (imageUri != null) {
@@ -123,12 +121,17 @@ public class ConversationListActivity extends MJPProgressActionBarActivity  {
             subtitleView.setText(subtitle);
             messageView.setText(content);
 
-            if (messageUnread && applicationDeleted)
-                titleView.setTypeface(null, Typeface.BOLD_ITALIC);
-            else if (messageUnread)
-                titleView.setTypeface(null, Typeface.BOLD);
-            else if (applicationDeleted)
-                titleView.setTypeface(null, Typeface.ITALIC);
+            if (lastMessage != null) {
+                if (!lastMessage.getRead() && applicationDeleted)
+                    titleView.setTypeface(null, Typeface.BOLD_ITALIC);
+                else if (!lastMessage.getRead())
+                    titleView.setTypeface(null, Typeface.BOLD);
+                else if (applicationDeleted)
+                    titleView.setTypeface(null, Typeface.ITALIC);
+            } else {
+                if (applicationDeleted)
+                    titleView.setTypeface(null, Typeface.ITALIC);
+            }
 
             return rowView;
         }

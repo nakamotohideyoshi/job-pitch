@@ -261,6 +261,8 @@ public class JobSeekerActivity extends MJPProgressActionBarActivity {
             public void onScroll(float v) {
                 if (card != mCards.getSelectedView()) {
                     card = mCards.getSelectedView();
+                    if (card == null)
+                        return;
                     hint = (TextView) card.findViewById(R.id.hint);
                     cardState = null;
                 }

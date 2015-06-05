@@ -12,8 +12,8 @@ from mjp.models import Sector, Hours, Contract, Business, Location,\
 
 from mjp.serializers import SimpleSerializer, BusinessSerializer,\
     LocationSerializer, JobProfileSerializer, JobSerializer, JobSeekerSerializer,\
-    ApplicationSerializer, ApplicationCreateSerializer, MessageCreateSerializer, \
-    MessageUpdateSerializer
+    ApplicationSerializer, ApplicationCreateSerializer, ApplicationUpdateSerializer, \
+    MessageCreateSerializer, MessageUpdateSerializer
 
 
 router = DefaultRouter()
@@ -350,6 +350,7 @@ class ApplicationViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.IsAuthenticated, ApplicationPermission)
     serializer_class = ApplicationSerializer
     create_serializer_class = ApplicationCreateSerializer
+    update_serializer_class = ApplicationUpdateSerializer
     
     def get_role(self):
         if self.request.user.businesses.exists():
@@ -408,6 +409,8 @@ class ApplicationViewSet(viewsets.ModelViewSet):
     def get_serializer_class(self):
         if self.request.method == 'POST':
             return self.create_serializer_class
+        if self.request.method == 'PUT':
+            return self.update_serializer_class
         return self.serializer_class
     
     def get_queryset(self):

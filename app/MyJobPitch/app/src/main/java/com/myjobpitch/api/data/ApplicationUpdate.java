@@ -7,8 +7,17 @@ import com.myjobpitch.api.MJPAPIObject;
 public class ApplicationUpdate extends MJPAPIObject {
     private Boolean shortlisted;
 
+    public ApplicationUpdate() {
+
+    }
+
     public ApplicationUpdate(Application application) {
         this.id = application.getId();
         this.shortlisted = application.getShortlisted();
+    }
+
+    // Required to exist for RestTemplate to serialize value
+    public Boolean getShortlisted() {
+        return shortlisted;
     }
 }

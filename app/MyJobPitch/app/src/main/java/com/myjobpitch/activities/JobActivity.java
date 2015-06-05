@@ -227,23 +227,45 @@ public class JobActivity extends MJPProgressActionBarActivity {
         mShortlistButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Application application = (Application) adapter.getItem(0);
+                View card = mCards.getSelectedView();
+                final View shortlistIndicator = card.findViewById(R.id.shortlisted_indicator);
+
+                final Application application = (Application) adapter.getItem(0);
                 if (application.getShortlisted())
                     Toast.makeText(JobActivity.this, getString(R.string.removed_from_shortlist), Toast.LENGTH_SHORT).show();
                 else
                     Toast.makeText(JobActivity.this, getString(R.string.added_to_shortlist), Toast.LENGTH_SHORT).show();
                 application.setShortlisted(!application.getShortlisted());
                 UpdateApplicationTask task = new UpdateApplicationTask(getApi(), new ApplicationUpdate(application));
+                task.addListener(new CreateReadUpdateAPITaskListener<ApplicationUpdate>() {
+                    @Override
+                    public void onSuccess(ApplicationUpdate result) {}
+
+                    @Override
+                    public void onError(JsonNode errors) {
+                        toggleShortlistIndicator(shortlistIndicator, application);
+                        JobSeeker jobSeeker = application.getJobSeeker();
+                        Toast toast = Toast.makeText(JobActivity.this, "Error shortlisting " + jobSeeker.getFirst_name() + " " + jobSeeker.getLast_name(), Toast.LENGTH_LONG);
+                        toast.show();
+                    }
+
+                    @Override
+                    public void onConnectionError() {
+                        toggleShortlistIndicator(shortlistIndicator, application);
+                        Toast toast = Toast.makeText(JobActivity.this, "Connection Error: Please check your internet connection", Toast.LENGTH_LONG);
+                        toast.show();
+                    }
+
+                    @Override
+                    public void onCancelled() {
+                        toggleShortlistIndicator(shortlistIndicator, application);
+                    }
+                });
                 backgroundTaskManager.addBackgroundTask(task);
                 mBackgroundProgress.setVisibility(View.VISIBLE);
                 task.execute();
 
-                View card = mCards.getSelectedView();
-                View shortlistIndicator = card.findViewById(R.id.shortlisted_indicator);
-                if (application.getShortlisted())
-                    shortlistIndicator.setVisibility(View.VISIBLE);
-                else
-                    shortlistIndicator.setVisibility(View.INVISIBLE);
+                toggleShortlistIndicator(shortlistIndicator, application);
 
                 if (mShortListedSwitch.isChecked()) {
                     mButtonActivation = true;
@@ -251,6 +273,13 @@ public class JobActivity extends MJPProgressActionBarActivity {
                 } else {
                     update();
                 }
+            }
+
+            private void toggleShortlistIndicator(View shortlistIndicator, Application application) {
+                if (application.getShortlisted())
+                    shortlistIndicator.setVisibility(View.VISIBLE);
+                else
+                    shortlistIndicator.setVisibility(View.INVISIBLE);
             }
         });
         mShortlistButtonIcon = (ImageView) findViewById(R.id.shortlist_button_icon);

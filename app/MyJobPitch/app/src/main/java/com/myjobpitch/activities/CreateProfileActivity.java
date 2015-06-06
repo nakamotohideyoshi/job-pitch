@@ -102,7 +102,7 @@ public class CreateProfileActivity extends MJPProgressActionBarActivity {
         }
 
         // General views
-        mProgressView = findViewById(R.id.create_profile_progress);
+        mProgressView = findViewById(R.id.progress);
         mCreateProfileView = findViewById(R.id.create_profile);
     }
 

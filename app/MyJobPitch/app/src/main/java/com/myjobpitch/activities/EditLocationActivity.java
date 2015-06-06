@@ -133,9 +133,9 @@ public class EditLocationActivity extends MJPProgressActionBarActivity {
                         returnToListActivity(location);
                     } else {
                         UploadImage uploadTask = new UploadImage(EditLocationActivity.this, getApi(), "user-location-images", "location", imageUri, location);
-                        uploadTask.addListener(new APITaskListener() {
+                        uploadTask.addListener(new APITaskListener<Boolean>() {
                             @Override
-                            public void onPostExecute() {
+                            public void onPostExecute(Boolean success) {
                                 returnToListActivity(location);
                             }
 

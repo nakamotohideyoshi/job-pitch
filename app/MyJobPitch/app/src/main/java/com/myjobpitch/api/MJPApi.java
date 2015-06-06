@@ -166,12 +166,13 @@ public class MJPApi {
     }
 
 	public void logout() {
+        this.token = null;
+        this.user = null;
         try {
             Log.d("API", "Logging out");
             rest.exchange(getAuthUrl("logout"), HttpMethod.POST, createAuthenticatedRequest(), Object.class);
-        } finally {
-            this.token = null;
-            this.user = null;
+        } catch (Exception e){
+            Log.e("API", "Couldn't contact server to log out", e);
         }
 	}
 

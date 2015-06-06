@@ -137,9 +137,9 @@ public class EditJobActivity extends MJPProgressActionBarActivity {
                         EditJobActivity.this.finish();
                     } else {
                         UploadImage uploadTask = new UploadImage(EditJobActivity.this, getApi(), "user-job-images", "job", imageUri, job);
-                        uploadTask.addListener(new APITaskListener() {
+                        uploadTask.addListener(new APITaskListener<Boolean>() {
                             @Override
-                            public void onPostExecute() {
+                            public void onPostExecute(Boolean success) {
                                 EditJobActivity.this.finish();
                             }
 

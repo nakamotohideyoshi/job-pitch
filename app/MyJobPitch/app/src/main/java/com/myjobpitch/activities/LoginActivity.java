@@ -11,6 +11,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -28,12 +29,15 @@ import com.myjobpitch.R;
 import com.myjobpitch.api.MJPApi;
 import com.myjobpitch.api.auth.User;
 import com.myjobpitch.api.data.Business;
+import com.myjobpitch.tasks.APITask;
+import com.myjobpitch.tasks.APITaskListener;
 
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestClientException;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 
 /**
@@ -50,6 +54,7 @@ public class LoginActivity extends MJPProgressActivity implements LoaderCallback
     private AutoCompleteTextView mUsernameView;
     private EditText mPasswordView;
     private View mProgressView;
+    private TextView mProgressText;
     private View mLoginFormView;
 
     @Override
@@ -87,7 +92,8 @@ public class LoginActivity extends MJPProgressActivity implements LoaderCallback
         });
 
         mLoginFormView = findViewById(R.id.login_form);
-        mProgressView = findViewById(R.id.login_progress);
+        mProgressView = findViewById(R.id.progress);
+        mProgressText = (TextView) findViewById(R.id.progress_text);
     }
 
     @Override
@@ -155,6 +161,7 @@ public class LoginActivity extends MJPProgressActivity implements LoaderCallback
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
             showProgress(true);
+            mProgressText.setText(getString(R.string.logging_in));
             loginTask = new LoginTask(username, password);
             loginTask.execute((Void) null);
         }
@@ -229,11 +236,14 @@ public class LoginActivity extends MJPProgressActivity implements LoaderCallback
         mUsernameView.setAdapter(adapter);
     }
 
-    public class LoginTask extends AsyncTask<Void, Void, Intent> {
+    class LoginTask extends AsyncTask<Void, Void, Boolean> {
 
         private final String mUsername;
         private final String mPassword;
         private boolean clientException = false;
+        private boolean loadError = false;
+        private User mUser;
+        private Business mBusiness;
 
         LoginTask(String username, String password) {
             mUsername = username;
@@ -241,7 +251,7 @@ public class LoginActivity extends MJPProgressActivity implements LoaderCallback
         }
 
         @Override
-        protected Intent doInBackground(Void... params) {
+        protected Boolean doInBackground(Void... params) {
             MJPApplication application = (MJPApplication) getApplication();
             MJPApi api = application.getApi();
             try {
@@ -250,71 +260,119 @@ public class LoginActivity extends MJPProgressActivity implements LoaderCallback
                 } catch (HttpClientErrorException e) {
                     // Invalid credentials
                     if (e.getStatusCode().value() == 400)
-                        return null;
+                        return false;
+                    throw e;
                 }
 
-                try {
-                    // Load basic data
-                    application.loadData();
+                // Load user data
+                mUser = api.getUser();
+                mBusiness = null;
+                if (mUser.isRecruiter())
+                    if (mUser.getBusinesses().size() == 1)
+                        mBusiness = api.getUserBusiness(mUser.getBusinesses().get(0));
 
-                    // Load user data
-                    User user = api.getUser();
-                    if (user.isRecruiter()) {
-                        if (user.getBusinesses().size() == 1) {
-                            Business business = api.getUserBusiness(user.getBusinesses().get(0));
-                            if (business.getLocations().isEmpty()) {
-                                // Business but no location: still creating profile
-                                ObjectMapper mapper = new ObjectMapper();
-                                Intent intent = new Intent(LoginActivity.this, CreateProfileActivity.class);
-                                intent.putExtra("business_data", mapper.writeValueAsString(business));
-                                return intent;
-                            } else if (business.getLocations().size() == 1) {
-                                // Single business and single location: go straight to location
-                                Intent intent = new Intent(LoginActivity.this, JobListActivity.class);
-                                intent.putExtra("location_id", business.getLocations().get(0));
-                                return intent;
-                            } else {
-                                // Single business, multiple locations: go straight to business
-                                Intent intent = new Intent(LoginActivity.this, LocationListActivity.class);
-                                intent.putExtra("business_id", business.getId());
-                                return intent;
-                            }
-                        } else {
-                            // Multiple businesses: goto business list
-                            return new Intent(LoginActivity.this, BusinessListActivity.class);
-                        }
-                    } else if (user.isJobSeeker()) {
-                        // JobSeeker: goto job seeker screen
-                        return new Intent(LoginActivity.this, JobSeekerActivity.class);
-                    }
-                    // NO businesses or job seeker profile
-                    Intent intent = new Intent(LoginActivity.this, CreateProfileActivity.class);
-                    return intent;
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    api.logout();
-                }
+                return true;
             } catch (RestClientException e) {
                 e.printStackTrace();
                 clientException = true;
             }
-            return null;
+            return false;
         }
 
         @Override
-        protected void onPostExecute(final Intent intent) {
-            loginTask = null;
+        protected void onPostExecute(final Boolean loginSuccess) {
+            if (loginSuccess) {
+                final List<APITask<Boolean>> tasks = getMJPApplication().getLoadActions();
 
-            if (intent != null) {
-                intent.putExtra("from_login", true);
-                startActivity(intent);
+                final AtomicInteger progress = new AtomicInteger();
+                final Integer progressInterval = 100/tasks.size();
+                mProgressText.setText(getString(R.string.loading_data, progress));
+
                 InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.hideSoftInputFromWindow(mLoginFormView.getWindowToken(), 0);
+
+                BackgroundTaskManager taskManager = new BackgroundTaskManager();
+                taskManager.addTaskCompletionAction(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            if (loadError) {
+                                Toast toast = Toast.makeText(LoginActivity.this, "Error loading application data", Toast.LENGTH_LONG);
+                                toast.show();
+                                LogoutTask logout = new LogoutTask();
+                                logout.execute();
+                                showProgress(false);
+                            } else {
+                                Log.d("LoginActivity", "application data loaded");
+                                Intent intent;
+                                if (mUser.isRecruiter()) {
+                                    if (mUser.getBusinesses().size() == 1) {
+                                        if (mBusiness.getLocations().isEmpty()) {
+                                            // Business but no location: still creating profile
+                                            ObjectMapper mapper = new ObjectMapper();
+                                            intent = new Intent(LoginActivity.this, CreateProfileActivity.class);
+                                            intent.putExtra("business_data", mapper.writeValueAsString(mBusiness));
+                                        } else if (mBusiness.getLocations().size() == 1) {
+                                            // Single business and single location: go straight to location
+                                            intent = new Intent(LoginActivity.this, JobListActivity.class);
+                                            intent.putExtra("location_id", mBusiness.getLocations().get(0));
+                                        } else {
+                                            // Single business, multiple locations: go straight to business
+                                            intent = new Intent(LoginActivity.this, LocationListActivity.class);
+                                            intent.putExtra("business_id", mBusiness.getId());
+                                        }
+                                    } else {
+                                        // Multiple businesses: goto business list
+                                        intent = new Intent(LoginActivity.this, BusinessListActivity.class);
+                                    }
+                                } else if (mUser.isJobSeeker()) {
+                                    // JobSeeker: goto job seeker screen
+                                    intent = new Intent(LoginActivity.this, JobSeekerActivity.class);
+                                } else {
+                                    // NO businesses or job seeker profile
+                                    intent = new Intent(LoginActivity.this, CreateProfileActivity.class);
+                                }
+                                intent.putExtra("from_login", true);
+                                startActivity(intent);
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            LogoutTask logout = new LogoutTask();
+                            logout.execute();
+                            showProgress(false);
+                        } finally{
+                            loginTask = null;
+                        }
+                    }
+                });
+                for (APITask<Boolean> task : tasks) {
+                    task.addListener(new APITaskListener<Boolean>() {
+                        @Override
+                        public void onPostExecute(Boolean result) {
+                            mProgressText.setText(getString(R.string.loading_data, progress.addAndGet(progressInterval)));
+                            if (!result) {
+                                for (APITask<Boolean> task : tasks)
+                                    task.cancel(true);
+                                loadError = true;
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled() {
+                            Log.d("LoginActivity", "load data task cancelled");
+                        }
+                    });
+                    taskManager.addBackgroundTask(task);
+                }
+                for (APITask<Boolean> task : tasks)
+                    task.execute();
             } else if (clientException) {
+                loginTask = null;
                 Toast toast = Toast.makeText(LoginActivity.this, "Connection Error: Please check your internet connection", Toast.LENGTH_LONG);
                 toast.show();
                 showProgress(false);
             } else {
+                loginTask = null;
                 mPasswordView.setError(getString(R.string.error_incorrect_password));
                 mPasswordView.requestFocus();
                 showProgress(false);

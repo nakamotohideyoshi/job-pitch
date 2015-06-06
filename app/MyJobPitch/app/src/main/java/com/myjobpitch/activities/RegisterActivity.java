@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -18,8 +19,13 @@ import com.myjobpitch.MJPApplication;
 import com.myjobpitch.R;
 import com.myjobpitch.api.MJPApi;
 import com.myjobpitch.api.MJPApiException;
+import com.myjobpitch.tasks.APITask;
+import com.myjobpitch.tasks.APITaskListener;
 
 import org.springframework.web.client.RestClientException;
+
+import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class RegisterActivity extends MJPProgressActivity {
 
@@ -29,6 +35,7 @@ public class RegisterActivity extends MJPProgressActivity {
     private View mRegisterFormView;
     private View mProgressView;
     private RegisterTask registerTask;
+    private TextView mProgressText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,7 +66,8 @@ public class RegisterActivity extends MJPProgressActivity {
         });
 
         mRegisterFormView = findViewById(R.id.register_form);
-        mProgressView = findViewById(R.id.register_progress);
+        mProgressView = findViewById(R.id.progress);
+        mProgressText = (TextView) findViewById(R.id.progress_text);
     }
 
     private void attemptRegistration() {
@@ -102,6 +110,7 @@ public class RegisterActivity extends MJPProgressActivity {
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
             showProgress(true);
+            mProgressText.setText(getString(R.string.creating_account));
             registerTask = new RegisterTask(username, password1, password2);
             registerTask.execute((Void) null);
         }
@@ -128,6 +137,7 @@ public class RegisterActivity extends MJPProgressActivity {
         private final String password1;
         private final String password2;
         private JsonNode errors;
+        private boolean loadError = false;
         private boolean clientException = false;
 
         public RegisterTask(String username, String password1, String password2) {
@@ -151,8 +161,6 @@ public class RegisterActivity extends MJPProgressActivity {
                 api.login(username, password1);
 
                 try {
-                    // Load data
-                    application.loadData();
                     api.getUser();
                 } catch (Exception e) {
                     api.logout();
@@ -203,11 +211,53 @@ public class RegisterActivity extends MJPProgressActivity {
                 toast.show();
                 showProgress(false);
             } else {
-                Intent intent = new Intent(RegisterActivity.this, next);
-                intent.putExtra("from_login", true);
-                startActivity(intent);
+                List<APITask<Boolean>> tasks = getMJPApplication().getLoadActions();
+
+                final AtomicInteger progress = new AtomicInteger();
+                final Integer progressInterval = 100/tasks.size();
+                mProgressText.setText(getString(R.string.loading_data, progress));
+
                 InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.hideSoftInputFromWindow(mRegisterFormView.getWindowToken(), 0);
+
+                BackgroundTaskManager taskManager = new BackgroundTaskManager();
+                taskManager.addTaskCompletionAction(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            if (loadError) {
+                                Toast toast = Toast.makeText(RegisterActivity.this, "Error loading application data", Toast.LENGTH_LONG);
+                                toast.show();
+                                showProgress(false);
+                            } else {
+                                Log.d("LoginActivity", "application data loaded");
+                                Intent intent = new Intent(RegisterActivity.this, next);
+                                intent.putExtra("from_login", true);
+                                startActivity(intent);
+                            }
+                        } finally{
+                            registerTask = null;
+                        }
+                    }
+                });
+                for (APITask<Boolean> task : tasks) {
+                    task.addListener(new APITaskListener<Boolean>() {
+                        @Override
+                        public void onPostExecute(Boolean result) {
+                            mProgressText.setText(getString(R.string.loading_data, progress.addAndGet(progressInterval)));
+                            if (!result)
+                                loadError = true;
+                        }
+
+                        @Override
+                        public void onCancelled() {
+                            Log.d("RegisterActivity", "load data task cancelled");
+                        }
+                    });
+                    taskManager.addBackgroundTask(task);
+                }
+                for (APITask<Boolean> task : tasks)
+                    task.execute();
             }
         }
 

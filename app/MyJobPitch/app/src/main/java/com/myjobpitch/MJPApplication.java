@@ -1,6 +1,7 @@
 package com.myjobpitch;
 
 import android.app.Application;
+import android.util.Log;
 
 import com.myjobpitch.api.MJPAPIObject;
 import com.myjobpitch.api.MJPApi;
@@ -14,7 +15,9 @@ import com.myjobpitch.api.data.Nationality;
 import com.myjobpitch.api.data.Role;
 import com.myjobpitch.api.data.Sector;
 import com.myjobpitch.api.data.Sex;
+import com.myjobpitch.tasks.APITask;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,15 +30,38 @@ public class MJPApplication extends Application {
         return api;
     }
 
-    public void loadData() throws MJPApiException {
-        cache(Sector.class);
-        cache(Contract.class);
-        cache(Hours.class);
-        cache(Nationality.class);
-        cache(ApplicationStatus.class);
-        cache(JobStatus.class);
-        cache(Sex.class);
-        cache(Role.class);
+    class LoadCacheTask extends APITask<Boolean> {
+        private Class<? extends MJPAPIObject> mCls;
+
+        public LoadCacheTask(Class<? extends MJPAPIObject> cls) {
+            mCls = cls;
+        }
+
+        @Override
+        protected Boolean doInBackground(Void... params) {
+            try {
+                Log.d("LoadCacheTask", "loading " + mCls.getName());
+                cache(mCls);
+                Log.d("LoadCacheTask", "loading " + mCls.getName() + " complete");
+                return true;
+            } catch (Exception e) {
+                Log.d("LoadCacheTask", "error loading " + mCls.getName());
+                return false;
+            }
+        }
+    }
+
+    public List<APITask<Boolean>> getLoadActions() {
+        List<APITask<Boolean>> actions = new ArrayList<>();
+        actions.add(new LoadCacheTask(Sector.class));
+        actions.add(new LoadCacheTask(Contract.class));
+        actions.add(new LoadCacheTask(Hours.class));
+        actions.add(new LoadCacheTask(Nationality.class));
+        actions.add(new LoadCacheTask(ApplicationStatus.class));
+        actions.add(new LoadCacheTask(JobStatus.class));
+        actions.add(new LoadCacheTask(Sex.class));
+        actions.add(new LoadCacheTask(Role.class));
+        return actions;
     }
 
     private <T extends MJPAPIObject> void cache(Class<T> cls) throws MJPApiException {

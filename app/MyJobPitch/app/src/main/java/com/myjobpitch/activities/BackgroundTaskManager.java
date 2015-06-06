@@ -18,7 +18,7 @@ class BackgroundTaskManager {
         tasks.add(task);
         task.addListener(new APITaskListener() {
             @Override
-            public void onPostExecute() {
+            public void onPostExecute(Object result) {
                 removeTask(task);
             }
 

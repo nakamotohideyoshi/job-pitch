@@ -136,9 +136,9 @@ public class EditBusinessActivity extends MJPProgressActionBarActivity {
                         returnToListActivity(business);
                     } else {
                         UploadImage uploadTask = new UploadImage(EditBusinessActivity.this, getApi(), "user-business-images", "business", imageUri, business);
-                        uploadTask.addListener(new APITaskListener() {
+                        uploadTask.addListener(new APITaskListener<Boolean>() {
                             @Override
-                            public void onPostExecute() {
+                            public void onPostExecute(Boolean success) {
                                 returnToListActivity(business);
                             }
 

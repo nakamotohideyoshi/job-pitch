@@ -111,4 +111,7 @@
     <string name="applied_job_seekers">Showing connected job seekers</string>
     <string name="shortlisted_job_seekers">Showing shortlisted job seekers</string>
     <string name="job_seeker_search">Job seeker search</string>
+    <string name="logging_in">Logging in...</string>
+    <string name="loading_data">Loading data... (%1$s%%)</string>
+    <string name="creating_account">Creating account...</string>
 </resources>

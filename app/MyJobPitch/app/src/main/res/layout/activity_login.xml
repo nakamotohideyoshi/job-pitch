@@ -66,7 +66,16 @@
                     style="?android:textAppearanceSmall" />
             </LinearLayout>
 
+            <TextView
+                android:id="@+id/version"
+                android:layout_marginTop="10dp"
+                android:text="debug build"
+                android:gravity="center"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
         </LinearLayout>
+
     </ScrollView>
 
 </RelativeLayout>

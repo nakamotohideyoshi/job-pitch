@@ -5,6 +5,8 @@ import android.content.Context;
 import android.content.CursorLoader;
 import android.content.Intent;
 import android.content.Loader;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -24,6 +26,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.myjobpitch.BuildConfig;
 import com.myjobpitch.MJPApplication;
 import com.myjobpitch.R;
 import com.myjobpitch.api.MJPApi;
@@ -61,6 +64,21 @@ public class LoginActivity extends MJPProgressActivity implements LoaderCallback
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        // Display version
+        String version = "unknown";
+        try {
+            PackageInfo packageInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
+            version = packageInfo.versionName;
+
+        } catch (PackageManager.NameNotFoundException e) {}
+        TextView versionView = (TextView) findViewById(R.id.version);
+        if (BuildConfig.DEBUG) {
+            versionView.setText(String.format("Version: %s (DEBUG)", version));
+            versionView.setTextColor(getResources().getColor(android.R.color.holo_red_dark));
+        } else {
+            versionView.setText(String.format("Version: %s", version));
+        }
 
         // Set up the login form.
         mUsernameView = (AutoCompleteTextView) findViewById(R.id.username);

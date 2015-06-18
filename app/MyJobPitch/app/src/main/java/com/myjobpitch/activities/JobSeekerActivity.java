@@ -309,7 +309,7 @@ public class JobSeekerActivity extends MJPProgressActionBarActivity {
             public void onClick(View v) {
                 if (mJobSeeker.getProfile() == null)
                     editProfile();
-                else if (mJobSeeker.getVideo() == null)
+                else if (mJobSeeker.getPitch() == null)
                     recordPitch();
                 else
                     loadDataClearSeenAndClearCards();
@@ -340,7 +340,7 @@ public class JobSeekerActivity extends MJPProgressActionBarActivity {
             @Override
             public void onSuccess(JobSeeker result) {
                 mJobSeeker = result;
-                if (mJobSeeker.getProfile() == null && mJobSeeker.getVideo() == null) {
+                if (mJobSeeker.getProfile() == null && mJobSeeker.getPitch() == null) {
                     mEmptyView.setVisibility(View.VISIBLE);
                     mEmptyMessageView.setText(getString(R.string.setup_profile_and_pitch_message));
                     mEmptyButtonView.setText(getString(R.string.setup_profile));
@@ -355,7 +355,7 @@ public class JobSeekerActivity extends MJPProgressActionBarActivity {
                     mEmptyButton2View.setVisibility(View.GONE);
                     mButtons.setVisibility(View.INVISIBLE);
                     showProgress(false);
-                } else if (mJobSeeker.getVideo() == null) {
+                } else if (mJobSeeker.getPitch() == null) {
                     mEmptyView.setVisibility(View.VISIBLE);
                     mEmptyMessageView.setText(getString(R.string.record_pitch_message));
                     mEmptyButtonView.setText(getString(R.string.record_pitch));
@@ -555,6 +555,8 @@ public class JobSeekerActivity extends MJPProgressActionBarActivity {
 
     private void recordPitch() {
         Log.d("JobSeekerActivity", "recordPitch()");
+        Intent intent = new Intent(this, RecordPitchActivity.class);
+        startActivity(intent);
     }
 
     @Override

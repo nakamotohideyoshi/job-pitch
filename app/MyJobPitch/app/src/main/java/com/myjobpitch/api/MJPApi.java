@@ -26,6 +26,7 @@ import com.myjobpitch.api.data.Role;
 import com.myjobpitch.api.data.Sector;
 import com.myjobpitch.api.data.Sex;
 
+import org.springframework.core.io.Resource;
 import org.springframework.http.HttpAuthentication;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -297,7 +298,7 @@ public class MJPApi {
     }
 
     public void uploadImage(String endpoint, String objectKey, ImageUpload image) throws MJPApiException {
-        MultiValueMap<String, Object> parts = new LinkedMultiValueMap<String, Object>();
+        MultiValueMap<String, Object> parts = new LinkedMultiValueMap<>();
         parts.put("image", Arrays.asList(new Object[] {image.getImage()}));
         parts.put(objectKey, Arrays.asList(new Object[] {image.getObject().toString()}));
         parts.put("order", Arrays.asList(new Object[]{image.getOrder().toString()}));
@@ -312,6 +313,25 @@ public class MJPApi {
                 throw new MJPApiException(e);
             }
             throw e;
+        }
+    }
+
+    public void uploadPitch(Resource pitch) throws MJPApiException {
+        MultiValueMap<String, Object> parts = new LinkedMultiValueMap<>();
+        parts.put("video", Arrays.asList(new Object[] {pitch}));
+
+        try {
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.MULTIPART_FORM_DATA);
+            HttpEntity<MultiValueMap<String, Object>> request = createAuthenticatedRequest(parts, headers);
+            rest.postForObject(getTypeUrl("pitches"), request, Object.class);
+        } catch (HttpClientErrorException e) {
+            if (e.getStatusCode().value() == 400) {
+                throw new MJPApiException(e);
+            }
+            throw e;
+        } catch (Exception e) {
+            Log.e("API", "uploadPitch", e);
         }
     }
 

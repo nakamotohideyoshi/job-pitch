@@ -29,7 +29,7 @@ import java.util.Map;
 
 public class JobProfileEditFragment extends EditFragment {
     public static final int SELECT_PLACE = 1;
-    public static final int DEFAUL_RADIUS_INDEX = 2;
+    public static final int DEFAULT_RADIUS_INDEX = 2;
 
     private Spinner mProfileSectorsView;
     private Spinner mProfileContractView;
@@ -49,7 +49,7 @@ public class JobProfileEditFragment extends EditFragment {
         "1 mile", "2 miles", "5 miles", "10 miles", "50 miles"
     });
     private List<Integer> radiusValues = Arrays.asList(new Integer[] {
-        1, DEFAUL_RADIUS_INDEX, 5, 10, 50
+        1, DEFAULT_RADIUS_INDEX, 5, 10, 50
     });
 
     public static JobProfileEditFragment newInstance() {
@@ -107,7 +107,7 @@ public class JobProfileEditFragment extends EditFragment {
         mRadiusSpinner = (Spinner) view.findViewById(R.id.select_radius);
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_dropdown_item, radiusOptions);
         mRadiusSpinner.setAdapter(adapter);
-        mRadiusSpinner.setSelection(DEFAUL_RADIUS_INDEX);
+        mRadiusSpinner.setSelection(DEFAULT_RADIUS_INDEX);
 
         Map<String, View> fields = new HashMap<>();
         fields.put("sectors", mProfileSectorsView);
@@ -171,7 +171,7 @@ public class JobProfileEditFragment extends EditFragment {
         Integer searchRadius = jobProfile.getSearch_radius();
         int index = radiusValues.indexOf(searchRadius);
         if (index == -1)
-            index = DEFAUL_RADIUS_INDEX;
+            index = DEFAULT_RADIUS_INDEX;
         mRadiusSpinner.setSelection(index);
 
         mPlaceName = jobProfile.getPlace_name();

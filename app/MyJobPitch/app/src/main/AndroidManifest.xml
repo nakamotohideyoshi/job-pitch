@@ -12,6 +12,12 @@
     <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-feature android:name="android.hardware.camera" />
+    <uses-feature android:name="android.hardware.camera.autofocus"/>
 
     <application
         android:name=".MJPApplication"
@@ -131,7 +137,7 @@
         </activity>
         <activity
             android:name=".activities.JobSeekerActivity"
-            android:label="@string/title_activity"
+            android:label="@string/app_name"
             android:launchMode="singleTop"
             android:parentActivityName=".activities.LoginActivity"
             android:screenOrientation="portrait" >
@@ -141,18 +147,18 @@
         </activity>
         <activity
             android:name=".activities.EditJobSeekerActivity"
-            android:label="@string/title_activity"
+            android:label="@string/edit_profile"
             android:launchMode="singleTop"
-            android:parentActivityName=".activities.JobSeekerActivity" >
+            android:parentActivityName=".activities.JobSeekerActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activities.JobSeekerActivity" />
         </activity>
         <activity
             android:name=".activities.EditJobProfileActivity"
-            android:label="@string/title_activity"
+            android:label="@string/edit_job_profile"
             android:launchMode="singleTop"
-            android:parentActivityName=".activities.JobSeekerActivity" >
+            android:parentActivityName=".activities.JobSeekerActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activities.JobSeekerActivity" />
@@ -160,6 +166,23 @@
         <activity
             android:name=".activities.SelectPlaceActivity"
             android:label="@string/title_activity_select_place" >
+        </activity>
+        <activity
+            android:name=".activities.RecordPitchActivity"
+            android:label="@string/record_pitch"
+            android:parentActivityName=".activities.JobSeekerActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activities.JobSeekerActivity" />
+        </activity>
+        <activity
+            android:name=".activities.CameraActivity"
+            android:label="@string/record_pitch"
+            android:parentActivityName=".activities.RecordPitchActivity"
+            android:screenOrientation="sensorLandscape">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activities.RecordPitchActivity" />
         </activity>
 
     </application>

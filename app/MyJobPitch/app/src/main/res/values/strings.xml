@@ -111,7 +111,22 @@
     <string name="applied_job_seekers">Showing connected job seekers</string>
     <string name="shortlisted_job_seekers">Showing shortlisted job seekers</string>
     <string name="job_seeker_search">Job seeker search</string>
+    <string name="record">Record</string>
+    <string name="stop">Stop</string>
+    <string name="edit_profile">Edit profile</string>
+    <string name="edit_job_profile">Edit job profile</string>
     <string name="logging_in">Logging in...</string>
     <string name="loading_data">Loading data... (%1$s%%)</string>
     <string name="creating_account">Creating account...</string>
+    <string name="rotate">rotate</string>
+    <string name="get_ready">Get ready!</string>
+    <string name="pre_record_message">Before recording starts, you will get a %1$s second countdown to get ready.  The recording will stop automatically after %2$s seconds, or if you hit the stop button.</string>
+    <string name="record_new_pitch">Record new pitch</string>
+    <string name="no_pitch">no recording</string>
+    <string name="record_pitch_title">Record My Pitch</string>
+    <string name="record_pitch_intro">Here you can record your 30 second pitch. This 30 second video will be viewed by prospective employers.</string>
+    <string name="upload">Upload</string>
+    <string name="discard_recording_prompt">Are you sure you want to discard your recording?</string>
+    <string name="start_recording_prompt">You have a pitch recorded but not uploaded.  A new recording will replace this.</string>
+    <string name="uploading">Uploading... (%1$s%%)</string>
 </resources>

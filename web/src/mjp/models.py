@@ -1,4 +1,5 @@
 import os
+import subprocess
 
 from cStringIO import StringIO
 from PIL import Image
@@ -6,9 +7,11 @@ from PIL import Image
 from django.conf import settings
 from django.contrib.auth.models import User
 from django.contrib.gis.db import models
+from django.core.files import File
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
+from tempfile import mkstemp
 
 
 def create_thumbnail(image, thumbnail):
@@ -251,6 +254,7 @@ class JobSeeker(models.Model):
     sex_public = models.BooleanField(default=None)
     nationality = models.ForeignKey(Nationality, related_name='job_seekers', null=True)
     nationality_public = models.BooleanField(default=None)
+    pitch = models.ForeignKey('Pitch', related_name='job_seeker', null=True)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
     
@@ -259,7 +263,27 @@ class JobSeeker(models.Model):
     
     def __str__(self):
         return "%s: %s" % (type(self).__name__, self.get_full_name())
+
+
+class Pitch(models.Model):
+    video = models.FileField(upload_to='pitch/%Y/%m/%d', max_length=255)
+    thumbnail = models.ImageField(upload_to='pitch/%Y/%m/%d', max_length=255)
+    
+    def save(self, *args, **kwargs):
+        super(Pitch, self).save(*args, **kwargs)
         
+        if not self.thumbnail:
+            fd, tempfile = mkstemp(suffix='.png')
+            os.close(fd)
+            try:
+                subprocess.check_call(['ffmpeg', '-i', self.video.path, '-an',  '-vframes', '1', '-y', tempfile])
+                f = open(tempfile)
+                try:
+                    self.thumbnail.save('thumbnail.png', File(f))
+                finally:
+                    f.close()
+            finally:
+                os.remove(tempfile)
 
 class Experience(models.Model):
     details = models.CharField(max_length=255)

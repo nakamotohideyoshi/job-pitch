@@ -8,7 +8,7 @@ from rest_framework.routers import DefaultRouter
 from mjp.models import Sector, Hours, Contract, Business, Location,\
     JobStatus, Job, Sex, Nationality, JobSeeker, Experience, JobProfile,\
     ApplicationStatus, Application, Role, LocationImage, BusinessImage, \
-    JobImage, Message
+    JobImage, Message, Pitch
 
 from mjp.serializers import SimpleSerializer, BusinessSerializer,\
     LocationSerializer, JobProfileSerializer, JobSerializer, JobSeekerSerializer,\
@@ -245,6 +245,35 @@ class JobSeekerViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
 router.register('job-seekers', JobSeekerViewSet, base_name='job-seeker')
+
+
+class PitchViewSet(viewsets.ModelViewSet):
+    class PitchPermission(permissions.BasePermission):
+        def has_permission(self, request, view):
+            if request.method in permissions.SAFE_METHODS:
+                return True
+            try:
+                request.user.job_seeker
+            except JobSeeker.DoesNotExist:
+                return False
+            return True
+        def has_object_permission(self, request, view, obj):
+            if request.method in permissions.SAFE_METHODS:
+                return True
+            return obj.job_seeker == request.user.job_seeker
+    
+    def perform_create(self, serializer):
+        job_seeker = self.request.user.job_seeker
+        pitch = serializer.save()
+        if job_seeker.pitch:
+            job_seeker.pitch.delete()
+        job_seeker.pitch = pitch
+        job_seeker.save()
+        
+    permission_classes = (permissions.IsAuthenticated, PitchPermission,)
+    serializer_class = SimpleSerializer(Pitch, {'thumbnail': serializers.ImageField(read_only=True)})
+    queryset = Pitch.objects.all()
+router.register('pitches', PitchViewSet, base_name='pitch')
 
 
 class ExperienceViewSet(viewsets.ModelViewSet):

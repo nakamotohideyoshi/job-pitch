@@ -4,6 +4,7 @@ from django.shortcuts import render_to_response
 from django.template.context import RequestContext
 from rest_framework import viewsets, permissions, serializers
 from rest_framework.routers import DefaultRouter
+from rest_framework.parsers import FileUploadParser
 
 from mjp.models import Sector, Hours, Contract, Business, Location,\
     JobStatus, Job, Sex, Nationality, JobSeeker, Experience, JobProfile,\
@@ -13,7 +14,7 @@ from mjp.models import Sector, Hours, Contract, Business, Location,\
 from mjp.serializers import SimpleSerializer, BusinessSerializer,\
     LocationSerializer, JobProfileSerializer, JobSerializer, JobSeekerSerializer,\
     ApplicationSerializer, ApplicationCreateSerializer, ApplicationUpdateSerializer, \
-    MessageCreateSerializer, MessageUpdateSerializer
+    MessageCreateSerializer, MessageUpdateSerializer, PitchSerializer
 
 
 router = DefaultRouter()
@@ -248,6 +249,8 @@ router.register('job-seekers', JobSeekerViewSet, base_name='job-seeker')
 
 
 class PitchViewSet(viewsets.ModelViewSet):
+    parser_classes = [FileUploadParser]
+    
     class PitchPermission(permissions.BasePermission):
         def has_permission(self, request, view):
             if request.method in permissions.SAFE_METHODS:
@@ -271,7 +274,7 @@ class PitchViewSet(viewsets.ModelViewSet):
         job_seeker.save()
         
     permission_classes = (permissions.IsAuthenticated, PitchPermission,)
-    serializer_class = SimpleSerializer(Pitch, {'thumbnail': serializers.ImageField(read_only=True)})
+    serializer_class = PitchSerializer
     queryset = Pitch.objects.all()
 router.register('pitches', PitchViewSet, base_name='pitch')
 

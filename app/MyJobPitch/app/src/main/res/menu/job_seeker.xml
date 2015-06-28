@@ -14,6 +14,14 @@
         android:title="@string/action_edit_search"
         android:orderInCategory="100"
         app:showAsAction="always" />
+
+    <item
+        android:id="@+id/action_record_pitch"
+        android:icon="@drawable/ic_action_video"
+        android:title="@string/action_record_pitch"
+        android:orderInCategory="100"
+        app:showAsAction="ifRoom" />
+
     <item
         android:id="@+id/action_edit_profile"
         android:icon="@drawable/ic_action_edit_light"

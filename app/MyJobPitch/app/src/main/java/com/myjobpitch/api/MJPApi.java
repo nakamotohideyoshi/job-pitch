@@ -32,7 +32,9 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
+import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.http.converter.FormHttpMessageConverter;
+import org.springframework.http.converter.ResourceHttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -71,17 +73,25 @@ public class MJPApi {
         classEndPoints.put(MessageForUpdate.class, "messages");
     }
 
-	private String apiRoot;
+    private String apiRoot;
 	private RestTemplate rest;
+    private RestTemplate unbufferedRest;
 	private AuthToken token;
     private User user;
 
     public MJPApi(String apiRoot) {
 		this.token = null;
 		this.apiRoot = apiRoot;
-		this.rest = new RestTemplate();
-		this.rest.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
+        this.rest = new RestTemplate();
+        this.rest.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
         this.rest.getMessageConverters().add(new FormHttpMessageConverter());
+
+        this.unbufferedRest = new RestTemplate();
+        SimpleClientHttpRequestFactory unbufferedFactory = new SimpleClientHttpRequestFactory();
+        unbufferedFactory.setBufferRequestBody(false);
+        this.unbufferedRest.setRequestFactory(unbufferedFactory);
+        this.unbufferedRest.getMessageConverters().add(new ResourceHttpMessageConverter());
+        this.unbufferedRest.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
 	}
 	
 	public MJPApi() {
@@ -317,21 +327,23 @@ public class MJPApi {
     }
 
     public void uploadPitch(Resource pitch) throws MJPApiException {
-        MultiValueMap<String, Object> parts = new LinkedMultiValueMap<>();
-        parts.put("video", Arrays.asList(new Object[] {pitch}));
+//        MultiValueMap<String, Object> parts = new LinkedMultiValueMap<>();
+//        HttpHeaders videoHeaders = new HttpHeaders();
+//        videoHeaders.setContentType(MediaType.valueOf("video/mp4"));
+//        HttpEntity<Resource> videoEntity = new HttpEntity<>(pitch, videoHeaders);
+//        parts.add("video", pitch);
 
         try {
             HttpHeaders headers = new HttpHeaders();
-            headers.setContentType(MediaType.MULTIPART_FORM_DATA);
-            HttpEntity<MultiValueMap<String, Object>> request = createAuthenticatedRequest(parts, headers);
-            rest.postForObject(getTypeUrl("pitches"), request, Object.class);
+            headers.set("Content-Disposition", "attachment; filename=" + pitch.getFilename());
+            headers.setContentType(MediaType.valueOf("video/mp4"));
+            HttpEntity<Resource> request = createAuthenticatedRequest(pitch, headers);
+            unbufferedRest.postForObject(getTypeUrl("pitches"), request, Object.class);
         } catch (HttpClientErrorException e) {
             if (e.getStatusCode().value() == 400) {
                 throw new MJPApiException(e);
             }
             throw e;
-        } catch (Exception e) {
-            Log.e("API", "uploadPitch", e);
         }
     }
 

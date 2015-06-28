@@ -156,6 +156,7 @@ public class CameraActivity extends MJPActionBarActivity {
                                             isActive = true;
                                             setCaptureButtonText(getString(R.string.get_ready));
                                             mCountdownView.setVisibility(View.VISIBLE);
+                                            mRotateCameraButton.setEnabled(false);
                                             final CountDownAction countDown = new CountDownAction(COUNTDOWN_TIME, v);
                                             countDown.onTick(new Runnable() {
                                                 @Override
@@ -175,6 +176,8 @@ public class CameraActivity extends MJPActionBarActivity {
                                                 @Override
                                                 public void run() {
                                                     mCountdownView.setVisibility(View.INVISIBLE);
+                                                    mRotateCameraButton.setEnabled(true);
+                                                    setCaptureButtonText(getString(R.string.record));
                                                 }
                                             });
                                             countDown.run();
@@ -214,9 +217,13 @@ public class CameraActivity extends MJPActionBarActivity {
 
     private void stopRecording() {
         // stop recording and release camera
-        mMediaRecorder.stop();  // stop the recording
+        try {
+            if (mMediaRecorder != null)
+                mMediaRecorder.stop();  // stop the recording
+        } catch (Exception e) {}
         releaseMediaRecorder(); // release the MediaRecorder object
         mCamera.lock();         // take camera access back from MediaRecorder
+        setCaptureButtonText(getString(R.string.record));
 
         Intent intent = new Intent();
         intent.putExtra(OUTPUT_FILE, mOutputFile);
@@ -483,7 +490,7 @@ public class CameraActivity extends MJPActionBarActivity {
                 countDown.onCancel(new Runnable() {
                     @Override
                     public void run() {
-                        mCaptureButton.setText(getString(R.string.record));
+                        setCaptureButtonText(getString(R.string.record));
                     }
                 });
                 countDown.run();

@@ -22,7 +22,9 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lorentzos.flingswipe.SwipeFlingAdapterView;
 import com.myjobpitch.R;
 import com.myjobpitch.api.data.ApplicationForCreation;
@@ -411,6 +413,14 @@ public class JobSeekerActivity extends MJPProgressActionBarActivity {
                 return true;
             case R.id.action_messages:
                 startActivity(new Intent(this, ConversationListActivity.class));
+                return true;
+            case R.id.action_record_pitch:
+                Intent intent = new Intent(this, RecordPitchActivity.class);
+                ObjectMapper mapper = new ObjectMapper();
+                try {
+                    intent.putExtra("pitch_data", mapper.writeValueAsString(mJobSeeker.getPitch()));
+                } catch (JsonProcessingException e) {}
+                startActivity(intent);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

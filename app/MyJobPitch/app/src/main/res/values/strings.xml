@@ -129,4 +129,7 @@
     <string name="discard_recording_prompt">Are you sure you want to discard your recording?</string>
     <string name="start_recording_prompt">You have a pitch recorded but not uploaded.  A new recording will replace this.</string>
     <string name="uploading">Uploading... (%1$s%%)</string>
+    <string name="action_record_pitch">Record My Pitch</string>
+    <string name="home">Home</string>
+    <string name="processing">Processing...</string>
 </resources>

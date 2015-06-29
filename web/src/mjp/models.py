@@ -14,7 +14,7 @@ from django.utils.translation import ugettext_lazy as _
 from tempfile import mkstemp
 
 
-def create_thumbnail(image, thumbnail):
+def create_thumbnail(image, thumbnail, name=None, content_type=None):
     # original code for this method came from
     # http://snipt.net/danfreak/generate-thumbnails-in-django-with-pil/
 
@@ -26,17 +26,20 @@ def create_thumbnail(image, thumbnail):
     # Set our max thumbnail size in a tuple (max width, max height)
     THUMBNAIL_SIZE = (280, 280) # for android: 70dp at xxxhdpi
 
-    DJANGO_TYPE = image.file.content_type
+    if content_type is None: 
+        content_type = image.file.content_type
+    if name is None:
+        name = image.name
 
-    if DJANGO_TYPE == 'image/jpeg':
-        PIL_TYPE = 'jpeg'
-        FILE_EXTENSION = 'jpg'
-    elif DJANGO_TYPE == 'image/png':
-        PIL_TYPE = 'png'
-        FILE_EXTENSION = 'png'
-    elif DJANGO_TYPE == 'image/gif':
-        PIL_TYPE = 'gif'
-        FILE_EXTENSION = 'gif'
+    if content_type == 'image/jpeg':
+        pil_type = 'jpeg'
+        extension = 'jpg'
+    elif content_type == 'image/png':
+        pil_type = 'png'
+        extension = 'png'
+    elif content_type == 'image/gif':
+        pil_type = 'gif'
+        extension = 'gif'
 
     # Open original photo which we want to thumbnail using PIL's Image
     img = Image.open(StringIO(image.read()))
@@ -49,16 +52,16 @@ def create_thumbnail(image, thumbnail):
 
     # Save the thumbnail
     temp_handle = StringIO()
-    img.save(temp_handle, PIL_TYPE)
+    img.save(temp_handle, pil_type)
     temp_handle.seek(0)
 
     # Save image to a SimpleUploadedFile which can be saved into
     # ImageField
-    suf = SimpleUploadedFile(os.path.split(image.name)[-1],
-            temp_handle.read(), content_type=DJANGO_TYPE)
+    suf = SimpleUploadedFile(os.path.split(name)[-1],
+            temp_handle.read(), content_type=content_type)
     # Save SimpleUploadedFile into image field
     thumbnail.save(
-        '%s_thumbnail.%s' % (os.path.splitext(suf.name)[0], FILE_EXTENSION),
+        '%s_thumbnail.%s' % (os.path.splitext(suf.name)[0], extension),
         suf,
         save=False
     )
@@ -254,7 +257,7 @@ class JobSeeker(models.Model):
     sex_public = models.BooleanField(default=None)
     nationality = models.ForeignKey(Nationality, related_name='job_seekers', null=True)
     nationality_public = models.BooleanField(default=None)
-    pitch = models.ForeignKey('Pitch', related_name='job_seeker', null=True)
+    pitch = models.ForeignKey('Pitch', related_name='job_seeker', null=True, on_delete=models.SET_NULL)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
     
@@ -267,6 +270,7 @@ class JobSeeker(models.Model):
 
 class Pitch(models.Model):
     video = models.FileField(upload_to='pitch/%Y/%m/%d', max_length=255)
+    image = models.ImageField(upload_to='pitch/%Y/%m/%d', max_length=255)
     thumbnail = models.ImageField(upload_to='pitch/%Y/%m/%d', max_length=255)
     
     def save(self, *args, **kwargs):
@@ -279,7 +283,9 @@ class Pitch(models.Model):
                 subprocess.check_call(['ffmpeg', '-i', self.video.path, '-an',  '-vframes', '1', '-y', tempfile])
                 f = open(tempfile)
                 try:
-                    self.thumbnail.save('thumbnail.png', File(f))
+                    create_thumbnail(f, self.thumbnail, name="%s.png" % self.video.name, content_type='image/png')
+                    f.seek(0)
+                    self.image.save('%s.png' % self.video.name, File(f))
                 finally:
                     f.close()
             finally:

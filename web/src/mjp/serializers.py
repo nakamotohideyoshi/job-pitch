@@ -125,3 +125,12 @@ class MessageUpdateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Message
         fields = ('read',)
+
+
+class PitchSerializer(serializers.ModelSerializer):
+    file = serializers.FileField(source='video')
+    thumbnail = serializers.ImageField(read_only=True)
+        
+    class Meta:
+        model = Pitch
+        fields = ('thumbnail', 'file')

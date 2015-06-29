@@ -4,6 +4,7 @@ from django.shortcuts import render_to_response
 from django.template.context import RequestContext
 from rest_framework import viewsets, permissions, serializers
 from rest_framework.routers import DefaultRouter
+from rest_framework.parsers import FileUploadParser
 
 from mjp.models import Sector, Hours, Contract, Business, Location,\
     JobStatus, Job, Sex, Nationality, JobSeeker, Experience, JobProfile,\
@@ -13,7 +14,7 @@ from mjp.models import Sector, Hours, Contract, Business, Location,\
 from mjp.serializers import SimpleSerializer, BusinessSerializer,\
     LocationSerializer, JobProfileSerializer, JobSerializer, JobSeekerSerializer,\
     ApplicationSerializer, ApplicationCreateSerializer, ApplicationUpdateSerializer, \
-    MessageCreateSerializer, MessageUpdateSerializer
+    MessageCreateSerializer, MessageUpdateSerializer, PitchSerializer
 
 
 router = DefaultRouter()
@@ -230,7 +231,11 @@ class JobSeekerViewSet(viewsets.ModelViewSet):
         job = self.request.QUERY_PARAMS.get('job')
         if job:
             job = Job.objects.select_related('sector', 'contract', 'hours').get(pk=self.request.QUERY_PARAMS['job'])
-            query = JobSeeker.objects.exclude(applications__job=job)
+            query = JobSeeker.objects.select_related('pitch')
+            query = query.prefetch_related('experience', 'profile')
+            query = query.exclude(applications__job=job)
+            query = query.exclude(pitch=None)
+            query = query.exclude(profile=None)
             exclude_pks = self.request.QUERY_PARAMS.get('exclude')
             if exclude_pks:
                 query = query.exclude(pk__in=map(int, exclude_pks.split(',')))
@@ -248,6 +253,8 @@ router.register('job-seekers', JobSeekerViewSet, base_name='job-seeker')
 
 
 class PitchViewSet(viewsets.ModelViewSet):
+    parser_classes = [FileUploadParser]
+    
     class PitchPermission(permissions.BasePermission):
         def has_permission(self, request, view):
             if request.method in permissions.SAFE_METHODS:
@@ -271,7 +278,7 @@ class PitchViewSet(viewsets.ModelViewSet):
         job_seeker.save()
         
     permission_classes = (permissions.IsAuthenticated, PitchPermission,)
-    serializer_class = SimpleSerializer(Pitch, {'thumbnail': serializers.ImageField(read_only=True)})
+    serializer_class = PitchSerializer
     queryset = Pitch.objects.all()
 router.register('pitches', PitchViewSet, base_name='pitch')
 
@@ -444,6 +451,21 @@ class ApplicationViewSet(viewsets.ModelViewSet):
     
     def get_queryset(self):
         query = Application.objects.annotate(Max('messages__created')).order_by('-messages__created__max', '-updated')
+        query = query.select_related('job__location__business',
+                                     'job_seeker__user',
+                                     'job_seeker__pitch',
+                                     'job_seeker__profile__contract',
+                                     'job_seeker__profile__hours',
+                                     )
+        query = query.prefetch_related('job_seeker__experience',
+                                       'messages',
+                                       'job__location__jobs',
+                                       'job__location__business__locations', 
+                                       'job__images',
+                                       'job__location__images',
+                                       'job__location__business__images',
+                                       'job__location__business__users',
+                                       )
         if self.get_role() is self.RECRUITER:
             query = query.filter(job__location__business__users=self.request.user)
             job = self.request.QUERY_PARAMS.get('job')

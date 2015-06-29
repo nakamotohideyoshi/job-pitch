@@ -5,6 +5,8 @@ import android.util.Log;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.myjobpitch.api.MJPApiException;
 
+import org.springframework.web.client.HttpStatusCodeException;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,6 +37,8 @@ public class ReadAPITask<T> extends APITask<T> {
         } catch (MJPApiException e) {
             errors = e.getErrors();
             Log.d("ReadAPITask", errors.toString());
+        } catch (HttpStatusCodeException e) {
+            Log.e("ReadAPITask", e.getResponseBodyAsString(), e);
         } catch (Exception e) {
             Log.e("ReadAPITask", "API Error", e);
             connectionError = true;

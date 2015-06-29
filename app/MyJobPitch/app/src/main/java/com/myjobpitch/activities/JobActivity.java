@@ -5,7 +5,9 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.DataSetObserver;
+import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.util.Log;
@@ -14,11 +16,11 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -36,6 +38,7 @@ import com.myjobpitch.api.data.JobSeekerContainer;
 import com.myjobpitch.api.data.Sex;
 import com.myjobpitch.tasks.CreateApplicationTask;
 import com.myjobpitch.tasks.CreateReadUpdateAPITaskListener;
+import com.myjobpitch.tasks.DownloadImageTask;
 import com.myjobpitch.tasks.ReadAPITask;
 import com.myjobpitch.tasks.ReadApplicationsTask;
 import com.myjobpitch.tasks.UpdateApplicationTask;
@@ -87,21 +90,19 @@ public class JobActivity extends MJPProgressActionBarActivity {
     private boolean mButtonActivation = false;
     private View mBackgroundProgress;
 
-    class JobSeekerAdapter extends ArrayAdapter<JobSeekerContainer> {
+    class JobSeekerAdapter extends CachingArrayAdapter<JobSeekerContainer> {
         public JobSeekerAdapter(List<JobSeekerContainer> list) {
             super(JobActivity.this, R.layout.list_item, list);
         }
 
         @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            JobSeekerContainer jobSeekerContainer = this.getItem(position);
+        public View createView(int position, View convertView, ViewGroup parent, JobSeekerContainer jobSeekerContainer) {
             JobSeeker jobSeeker = jobSeekerContainer.getJobSeeker();
             Log.d("JobSeekerAdapter", "getView("+ jobSeeker.getFirst_name() + ")");
 
             LayoutInflater inflater = (LayoutInflater) JobActivity.this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             View cardView = inflater.inflate(R.layout.card_job_seeker, parent, false);
 
-//            ImageView imageView = (ImageView) rowView.findViewById(R.id.icon);
             TextView nameView = (TextView) cardView.findViewById(R.id.job_seeker_name);
             nameView.setText(jobSeeker.getFirst_name() + " " + jobSeeker.getLast_name());
             TextView extraView = (TextView) cardView.findViewById(R.id.job_seeker_extra);
@@ -131,6 +132,34 @@ public class JobActivity extends MJPProgressActionBarActivity {
                     cardView.findViewById(R.id.shortlisted_indicator).setVisibility(View.VISIBLE);
             }
 
+            ImageView imageView = (ImageView) cardView.findViewById(R.id.image);
+            final ProgressBar progress = (ProgressBar) cardView.findViewById(R.id.progress);
+            final TextView noImageView = (TextView) cardView.findViewById(R.id.no_image);
+            final ImageView playButton = (ImageView) cardView.findViewById(R.id.play_button);
+            String imageUri = null;
+            if (jobSeeker.getPitch() != null)
+                imageUri = jobSeeker.getPitch().getImage();
+
+            if (imageUri != null) {
+                Uri uri = Uri.parse(imageUri);
+                DownloadImageTask downloadImageTask = new DownloadImageTask(JobActivity.this, imageView, progress);
+                downloadImageTask.setListener(new DownloadImageTask.DownloadImageTaskListener() {
+                    @Override
+                    public void onComplete(Bitmap bitmap) {
+                        playButton.setVisibility(View.VISIBLE);
+                    }
+
+                    @Override
+                    public void onError() {
+                        progress.setVisibility(View.INVISIBLE);
+                        noImageView.setVisibility(View.VISIBLE);
+                    }
+                });
+                downloadImageTask.execute(uri);
+            } else {
+                progress.setVisibility(View.INVISIBLE);
+                noImageView.setVisibility(View.VISIBLE);
+            }
             return cardView;
         }
     }
@@ -239,7 +268,8 @@ public class JobActivity extends MJPProgressActionBarActivity {
                 UpdateApplicationTask task = new UpdateApplicationTask(getApi(), new ApplicationUpdate(application));
                 task.addListener(new CreateReadUpdateAPITaskListener<ApplicationUpdate>() {
                     @Override
-                    public void onSuccess(ApplicationUpdate result) {}
+                    public void onSuccess(ApplicationUpdate result) {
+                    }
 
                     @Override
                     public void onError(JsonNode errors) {
@@ -409,7 +439,14 @@ public class JobActivity extends MJPProgressActionBarActivity {
         onItemClickListener = new SwipeFlingAdapterView.OnItemClickListener() {
             @Override
             public void onItemClicked(int itemPosition, Object dataObject) {
-                Toast.makeText(JobActivity.this, "Clicked!", Toast.LENGTH_SHORT).show();
+                JobSeeker jobSeeker = adapter.getItem(itemPosition).getJobSeeker();
+                if (jobSeeker.getPitch() != null) {
+                    String video = jobSeeker.getPitch().getVideo();
+                    Log.d("RecordPitchActivity", "playing video " + video);
+                    Intent intent = new Intent(JobActivity.this, MediaPlayerActivity.class);
+                    intent.putExtra("url", video);
+                    startActivity(intent);
+                }
             }
         };
 

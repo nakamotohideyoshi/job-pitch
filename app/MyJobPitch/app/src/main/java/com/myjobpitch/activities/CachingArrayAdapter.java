@@ -34,5 +34,13 @@ public abstract class CachingArrayAdapter<T> extends ArrayAdapter<T> {
         return view;
     }
 
+    @Override
+    public void notifyDataSetChanged() {
+        synchronized (viewCacheLock) {
+            viewCache.clear();
+            super.notifyDataSetChanged();
+        }
+    }
+
     protected abstract View createView(int position, View convertView, ViewGroup parent, T object);
 }

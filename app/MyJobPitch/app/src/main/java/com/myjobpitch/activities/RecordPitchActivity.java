@@ -193,7 +193,7 @@ public class RecordPitchActivity extends MJPProgressActionBarActivity {
             mPreviewBitmap = ThumbnailUtils.createVideoThumbnail(mOutputFile, MediaStore.Images.Thumbnails.FULL_SCREEN_KIND);
         } else if (mPitch != null) {
             playButtonVisibility = View.VISIBLE;
-            Uri uri = Uri.parse(mPitch.getThumbnail());
+            Uri uri = Uri.parse(mPitch.getImage());
             mImageProgress.setVisibility(View.VISIBLE);
             mDownloadImageTask = new DownloadImageTask(this, mPreviewImageView, mImageProgress);
             mDownloadImageTask.execute(uri);

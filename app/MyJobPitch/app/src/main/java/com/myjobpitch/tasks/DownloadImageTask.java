@@ -17,10 +17,21 @@ public class DownloadImageTask extends AsyncTask<Uri, Void, Bitmap> {
     private final ImageView imageView;
     private final Context context;
 
+    public interface DownloadImageTaskListener {
+        void onComplete(Bitmap bitmap);
+        void onError();
+    }
+
+    private DownloadImageTaskListener listener = null;
+
     public DownloadImageTask(Context context, ImageView imageView, ProgressBar progress) {
         this.context = context;
         this.imageView = imageView;
         this.progress = progress;
+    }
+
+    public void setListener(DownloadImageTaskListener listener) {
+        this.listener = listener;
     }
 
     protected Bitmap doInBackground(Uri... urls) {
@@ -49,6 +60,11 @@ public class DownloadImageTask extends AsyncTask<Uri, Void, Bitmap> {
     protected void onPostExecute(Bitmap result) {
         imageView.setImageBitmap(result);
         progress.setVisibility(View.INVISIBLE);
-        Log.d("DownloadImageTask", "Finished");
-    }    
+        if (listener != null) {
+            if (result == null)
+                listener.onError();
+            else
+                listener.onComplete(result);
+        }
+    }
 }

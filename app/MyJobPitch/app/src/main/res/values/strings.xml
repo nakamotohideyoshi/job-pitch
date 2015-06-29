@@ -6,7 +6,7 @@
     <string name="job_seeker">Job Seeker</string>
     <string name="action_settings">Settings</string>
     <string name="register">Register</string>
-    <string name="test_username">j1</string>
+    <string name="test_username">r1</string>
     <string name="test_password">admin1</string>
     <string name="prompt_password_confirm">Confirm password</string>
     <string name="prompt_email">Email (optional)</string>

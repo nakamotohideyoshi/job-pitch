@@ -361,9 +361,8 @@ public class MJPApi {
         try {
             return Arrays.asList(rest.exchange(uri, HttpMethod.GET, createAuthenticatedRequest(), arrayCls).getBody());
         } catch (HttpClientErrorException e) {
-            if (e.getStatusCode().value() == 400) {
+            if (e.getStatusCode().value() == 400)
                 throw new MJPApiException(e);
-            }
             throw e;
         }
     }

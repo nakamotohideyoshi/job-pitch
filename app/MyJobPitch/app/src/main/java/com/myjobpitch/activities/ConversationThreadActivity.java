@@ -205,7 +205,8 @@ public class ConversationThreadActivity extends MJPProgressActionBarActivity  {
                     title = jobSeeker.getFirst_name() + " " + jobSeeker.getLast_name();
                     fromRole = getMJPApplication().get(Role.class, Role.JOB_SEEKER);
 
-                    // TODO job seeker message image
+                    if (jobSeeker.getPitch() != null)
+                        imageUri = jobSeeker.getPitch().getThumbnail();
 
                 } else {
                     title = business.getName();

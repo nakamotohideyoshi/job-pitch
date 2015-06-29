@@ -7,10 +7,15 @@ import com.myjobpitch.api.MJPAPIObject;
  */
 public class Pitch extends MJPAPIObject {
     private String video;
+    private String image;
     private String thumbnail;
 
     public String getVideo() {
         return video;
+    }
+
+    public String getImage() {
+        return image;
     }
 
     public String getThumbnail() {

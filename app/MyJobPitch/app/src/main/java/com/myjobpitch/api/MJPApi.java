@@ -340,9 +340,8 @@ public class MJPApi {
             HttpEntity<Resource> request = createAuthenticatedRequest(pitch, headers);
             unbufferedRest.postForObject(getTypeUrl("pitches"), request, Object.class);
         } catch (HttpClientErrorException e) {
-            if (e.getStatusCode().value() == 400) {
+            if (e.getStatusCode().value() == 400)
                 throw new MJPApiException(e);
-            }
             throw e;
         }
     }

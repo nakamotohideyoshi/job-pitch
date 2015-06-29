@@ -71,16 +71,34 @@
     </LinearLayout>
 
     <ImageView
-        android:background="@android:color/darker_gray"
-        android:src="@drawable/icon_user"
+        android:background="@color/black"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/imageView"
+        android:id="@+id/image"
         android:layout_below="@id/top_border"
         android:layout_above="@id/bottom_border"
         android:layout_toLeftOf="@id/right_border"
         android:layout_toRightOf="@id/left_border" />
 
+    <ProgressBar android:id="@+id/progress"
+        style="?android:attr/progressBarStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@id/image"
+        android:layout_centerHorizontal="true"
+        android:layout_alignBottom="@id/image"/>
+
+    <TextView android:id="@+id/no_image"
+        android:textColor="@color/grey_6"
+        android:text="@string/no_image"
+        android:textAlignment="center"
+        android:gravity="center"
+        android:visibility="invisible"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@id/image"
+        android:layout_centerHorizontal="true"
+        android:layout_alignBottom="@id/image" />
     <TextView
         android:id="@+id/hint"
         android:visibility="invisible"
@@ -91,6 +109,16 @@
         android:textSize="30sp"
         android:textStyle="bold"
         android:gravity="center" />
+
+    <ImageView android:id="@+id/play_button"
+        android:src="@drawable/ic_action_play_over_video"
+        android:visibility="invisible"
+        android:gravity="center"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@id/image"
+        android:layout_centerHorizontal="true"
+        android:layout_alignBottom="@id/image" />
 
     <ImageView
         android:id="@+id/shortlisted_indicator"

@@ -9,6 +9,7 @@ import com.myjobpitch.api.MJPApiException;
 
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
+import org.springframework.web.client.HttpStatusCodeException;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -86,6 +87,9 @@ public class UploadPitch extends APITask<Boolean> {
                 api.uploadPitch(upload);
             } catch (MJPApiException e) {
                 e.printStackTrace();
+                return Boolean.FALSE;
+            } catch (HttpStatusCodeException e) {
+                Log.e("Upload Pitch", e.getResponseBodyAsString(), e);
                 return Boolean.FALSE;
             }
             return Boolean.TRUE;

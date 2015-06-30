@@ -51,6 +51,8 @@
     <string name="prompt_contract">Contract</string>
     <string name="sex">Sex</string>
     <string name="nationality">Nationality</string>
+    <string name="prompt_nationality">Nationality (optional)</string>
+    <string name="prompt_sex">Sex (optional)</string>
     <string name="action_edit_search">Change search</string>
     <string name="job_search_profile">Job Match Profile</string>
     <string name="prompt_sectors">Choose a job sector</string>

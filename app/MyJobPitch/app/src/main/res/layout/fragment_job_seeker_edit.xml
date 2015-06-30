@@ -90,7 +90,7 @@
 
         <TableRow>
             <com.myjobpitch.widgets.NoDefaultSpinner
-                android:prompt="@string/sex"
+                android:prompt="@string/prompt_sex"
                 android:id="@+id/job_seeker_sex" android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
@@ -102,7 +102,7 @@
 
         <TableRow>
             <com.myjobpitch.widgets.NoDefaultSpinner
-                android:prompt="@string/nationality"
+                android:prompt="@string/prompt_nationality"
                 android:id="@+id/job_seeker_nationality" android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
             <CheckBox

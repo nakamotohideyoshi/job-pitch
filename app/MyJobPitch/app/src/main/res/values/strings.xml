@@ -134,4 +134,5 @@
     <string name="action_record_pitch">Record My Pitch</string>
     <string name="home">Home</string>
     <string name="processing">Processing...</string>
+    <string name="map_error">Error starting google maps!</string>
 </resources>

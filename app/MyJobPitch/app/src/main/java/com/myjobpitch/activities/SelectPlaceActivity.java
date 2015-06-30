@@ -19,6 +19,7 @@ import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
@@ -83,6 +84,9 @@ public class SelectPlaceActivity extends ActionBarActivity implements GoogleApiC
         }
 
         setUpMapIfNeeded();
+
+        if (mMap == null)
+            return;
 
         mAutocompleteContainerView = findViewById(R.id.location_search_container);
         mAutocompleteView = (AutoCompleteTextView) findViewById(R.id.location_search);
@@ -212,9 +216,11 @@ public class SelectPlaceActivity extends ActionBarActivity implements GoogleApiC
             mMap = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map))
                     .getMap();
             // Check if we were successful in obtaining the map.
-            if (mMap != null) {
+            if (mMap == null) {
+                finish();
+                Toast.makeText(this, R.string.map_error, Toast.LENGTH_LONG).show();
+            } else
                 setUpMap();
-            }
         }
     }
 

@@ -17,7 +17,9 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.myjobpitch.R;
 import com.myjobpitch.api.data.Application;
 import com.myjobpitch.api.data.Business;
@@ -53,6 +55,7 @@ public class ConversationThreadActivity extends MJPProgressActionBarActivity  {
     private Button sendButton;
     private ConversationMessageAdapter messageAdapter;
     private CreateMessageTask createMessageTask = null;
+    private View header;
 
     class ConversationMessageAdapter extends CachingArrayAdapter<Message> {
         public ConversationMessageAdapter(List<Message> list) {
@@ -102,6 +105,27 @@ public class ConversationThreadActivity extends MJPProgressActionBarActivity  {
         applicationId = getIntent().getIntExtra("application_id", -1);
 
         setContentView(R.layout.activity_conversation_thread);
+
+        header = (View) findViewById(R.id.header);
+        header.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if (getApi().getUser().isRecruiter()) {
+                    // TODO show job seeker details?
+                } else {
+                    Intent intent = new Intent(ConversationThreadActivity.this, JobDetailsActivity.class);
+
+                    Job job = application.getJob_data();
+                    ObjectMapper mapper = new ObjectMapper();
+                    try {
+                        intent.putExtra("job_data", mapper.writeValueAsString(job));
+                    } catch (JsonProcessingException e) {}
+                    startActivity(intent);
+                }
+            }
+        });
+
         list = (ListView) findViewById(R.id.conversation_thread);
 
         titleView = (TextView) findViewById(R.id.title);

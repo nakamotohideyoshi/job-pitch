@@ -51,23 +51,12 @@ public class JobSeekerEditFragment extends EditFragment<JobSeeker> {
     public static JobSeekerEditFragment newInstance() {
         JobSeekerEditFragment fragment = new JobSeekerEditFragment();
         Bundle args = new Bundle();
-//        args.putString(ARG_PARAM1, param1);
-//        args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
         return fragment;
     }
 
     public JobSeekerEditFragment() {
         // Required empty public constructor
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-//            mParam1 = getArguments().getString(ARG_PARAM1);
-//            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
     }
 
     @Override
@@ -90,6 +79,8 @@ public class JobSeekerEditFragment extends EditFragment<JobSeeker> {
         mSexPublicView = (CheckBox) view.findViewById(R.id.job_seeker_sex_public);
         mNationalityView = (Spinner) view.findViewById(R.id.job_seeker_nationality);
         mNationalityPublicView = (CheckBox) view.findViewById(R.id.job_seeker_nationality_public);
+
+        // TODO edit experience
 
         Map<String, View> fields = new HashMap<>();
         fields.put("first_name", mFirstNameView);

@@ -153,8 +153,11 @@ public class MJPApi {
     }
 
 	public AuthToken login(String username, String password) {
-        if (this.token != null)
-            throw new RuntimeException("Already logged in!");
+        if (this.token != null) {
+            Log.e("MJPApi", "Already logged in!");
+            this.token = null;
+            this.user = null;
+        }
 		Login login = new Login(username, password);
 		this.token = rest.postForObject(getAuthUrl("login"), login, AuthToken.class);
 		return this.token;

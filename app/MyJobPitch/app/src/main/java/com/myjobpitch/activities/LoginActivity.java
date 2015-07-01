@@ -281,15 +281,19 @@ public class LoginActivity extends MJPProgressActivity implements LoaderCallback
                         return false;
                     throw e;
                 }
+                try {
+                    // Load user data
+                    mUser = api.getUser();
+                    mBusiness = null;
+                    if (mUser.isRecruiter())
+                        if (mUser.getBusinesses().size() == 1)
+                            mBusiness = api.getUserBusiness(mUser.getBusinesses().get(0));
 
-                // Load user data
-                mUser = api.getUser();
-                mBusiness = null;
-                if (mUser.isRecruiter())
-                    if (mUser.getBusinesses().size() == 1)
-                        mBusiness = api.getUserBusiness(mUser.getBusinesses().get(0));
-
-                return true;
+                    return true;
+                } catch (Exception e) {
+                    api.logout();
+                    throw e;
+                }
             } catch (RestClientException e) {
                 e.printStackTrace();
                 clientException = true;

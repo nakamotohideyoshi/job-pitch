@@ -299,8 +299,15 @@ public class JobSeekerActivity extends MJPProgressActionBarActivity {
         onItemClickListener = new SwipeFlingAdapterView.OnItemClickListener() {
             @Override
             public void onItemClicked(int itemPosition, Object dataObject) {
-                // TODO
-                Toast.makeText(JobSeekerActivity.this, "Clicked!", Toast.LENGTH_SHORT).show();
+                Job job = jobs.get(0);
+                Intent intent = new Intent(JobSeekerActivity.this, JobDetailsActivity.class);
+
+                ObjectMapper mapper = new ObjectMapper();
+                try {
+                    String value = mapper.writeValueAsString(job);
+                    intent.putExtra("job_data", value);
+                } catch (JsonProcessingException e) {}
+                startActivity(intent);
             }
         };
 

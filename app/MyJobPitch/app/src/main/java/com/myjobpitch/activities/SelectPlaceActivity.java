@@ -1,6 +1,7 @@
 package com.myjobpitch.activities;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -155,6 +156,15 @@ public class SelectPlaceActivity extends ActionBarActivity implements GoogleApiC
             }
             mSelectButton.setEnabled(false);
         }
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(getString(R.string.select_place_explainer))
+                .setCancelable(false)
+                .setPositiveButton(getString(R.string.got_it), new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.cancel();
+                    }
+                }).create().show();
     }
 
     @Override

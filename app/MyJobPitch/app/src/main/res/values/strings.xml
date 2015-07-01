@@ -136,4 +136,6 @@
     <string name="search_location_hint">In order to match you with jobs in your area, you must tell us your location, and specify the maximum distance to search.</string>
     <string name="delete">Delete</string>
     <string name="delete_confirmation">Are you sure you want to delete %1$s?</string>
+    <string name="got_it">Got it!</string>
+    <string name="select_place_explainer">Search for a location, or long-press on the map to manually select a location.</string>
 </resources>

@@ -74,9 +74,9 @@ public class LocationListActivity extends MJPProgressActionBarActivity  {
                     return true;
                 case R.id.action_delete:
                     AlertDialog.Builder builder = new AlertDialog.Builder(LocationListActivity.this);
-                    builder.setMessage("Are you sure you want to delete " + location.getName() + "?")
+                    builder.setMessage(getString(R.string.delete_confirmation, location.getName()))
                             .setCancelable(false)
-                            .setPositiveButton("Delete", new DialogInterface.OnClickListener() {
+                            .setPositiveButton(getString(R.string.delete), new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int id) {
                                     dialog.cancel();
                                     showProgress(true);
@@ -102,12 +102,13 @@ public class LocationListActivity extends MJPProgressActionBarActivity  {
                                         }
 
                                         @Override
-                                        public void onCancelled() {}
+                                        public void onCancelled() {
+                                        }
                                     });
                                     deleteLocationTask.execute();
                                 }
                             })
-                            .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                            .setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int id) {
                                     dialog.cancel();
                                 }

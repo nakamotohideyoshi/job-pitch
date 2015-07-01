@@ -67,9 +67,9 @@ public class BusinessListActivity extends MJPProgressActionBarActivity  {
                     return true;
                 case R.id.action_delete:
                     AlertDialog.Builder builder = new AlertDialog.Builder(BusinessListActivity.this);
-                    builder.setMessage("Are you sure you want to delete " + business.getName() + "?")
+                    builder.setMessage(getString(R.string.delete_confirmation, business.getName()))
                             .setCancelable(false)
-                            .setPositiveButton("Delete", new DialogInterface.OnClickListener() {
+                            .setPositiveButton(getString(R.string.delete), new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int id) {
                                     dialog.cancel();
                                     showProgress(true);
@@ -100,7 +100,7 @@ public class BusinessListActivity extends MJPProgressActionBarActivity  {
                                     deleteBusinessTask.execute();
                                 }
                             })
-                            .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                            .setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int id) {
                                     dialog.cancel();
                                 }

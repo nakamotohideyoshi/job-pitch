@@ -41,8 +41,9 @@ public class JobDetailsActivity extends MJPProgressActionBarActivity {
     private ImageView mJobImageView;
     private ProgressBar mJobImageProgressView;
     private TextView mJobNoImageView;
-    private TextView mJoblocationDetailsView;
+    private TextView mJobLocationAddressView;
     private ImageButton mJobLocationMapButton;
+    private TextView mJobLocationDescriptionView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,14 +59,15 @@ public class JobDetailsActivity extends MJPProgressActionBarActivity {
         mJobImageView = (ImageView) findViewById(R.id.image);
         mJobImageProgressView = (ProgressBar) findViewById(R.id.image_progress);
         mJobNoImageView = (TextView) findViewById(R.id.no_image);
-        mJoblocationDetailsView = (TextView) findViewById(R.id.job_location_details);
+        mJobLocationAddressView = (TextView) findViewById(R.id.job_location_address);
+        mJobLocationDescriptionView = (TextView) findViewById(R.id.job_location_description);
         mJobLocationMapButton = (ImageButton) findViewById(R.id.location_map_button);
         mJobLocationMapButton.setEnabled(false);
         mJobLocationMapButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Uri gmmIntentUri = Uri.parse(String.format(
-                        "geo:%s,%s(%s)",
+                        "geo:0,0?q=%s,%s(%s)",
                         job.getLocation_data().getLatitude(),
                         job.getLocation_data().getLongitude(),
                         job.getLocation_data().getName()));
@@ -154,12 +156,14 @@ public class JobDetailsActivity extends MJPProgressActionBarActivity {
             mJobNoImageView.setVisibility(View.VISIBLE);
         }
 
-        mJoblocationDetailsView.setText(String.format(
+        mJobLocationAddressView.setText(String.format(
                 "%s\n%s",
                 job.getLocation_data().getName(),
                 job.getLocation_data().getAddress()));
 
-        mJobLocationMapButton.setEnabled(false);
+        mJobLocationMapButton.setEnabled(true);
+
+        mJobLocationDescriptionView.setText(job.getLocation_data().getDescription());
     }
 
     @Override

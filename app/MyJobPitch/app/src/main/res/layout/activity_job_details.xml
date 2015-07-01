@@ -105,25 +105,39 @@
                     android:textSize="15sp"
                     android:textStyle="bold"
                     android:paddingBottom="5dp"
-                    android:text="@string/location"
+                    android:text="@string/work_place"
                     android:layout_height="wrap_content" />
-
-                <ImageButton
-                    android:id="@+id/location_map_button"
-                    android:layout_alignParentRight="true"
-                    android:layout_below="@id/job_location_header"
-                    android:src="@android:drawable/ic_dialog_map"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-
-                <TextView
+                <LinearLayout
                     android:id="@+id/job_location_details"
-                    android:layout_width="match_parent"
+                    android:orientation="horizontal"
+                    android:paddingBottom="10dp"
                     android:layout_below="@id/job_location_header"
-                    android:layout_toLeftOf="@id/location_map_button"
-                    android:paddingBottom="5dp"
-                    android:text="@string/location"
-                    android:layout_height="wrap_content" />
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:id="@+id/job_location_address"
+                        android:layout_weight="1"
+                        android:layout_width="match_parent"
+                        android:paddingBottom="5dp"
+                        android:text="@string/location"
+                        android:layout_height="wrap_content" />
+
+                    <ImageButton
+                        android:id="@+id/location_map_button"
+                        android:src="@android:drawable/ic_dialog_map"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+
+
+                </LinearLayout>
+                <TextView
+                    android:id="@+id/job_location_description"
+                    android:layout_below="@id/job_location_details"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    tools:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus et dictum augue. Pellentesque a aliquam felis. Aliquam dictum aliquet magna, sed lacinia ex vehicula et. Proin id neque nec ipsum suscipit tempus eget eget metus."
+                    />
             </RelativeLayout>
         </LinearLayout>
     </ScrollView>

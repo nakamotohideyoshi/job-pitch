@@ -32,7 +32,7 @@ public class CameraActivity extends MJPActionBarActivity {
     public static final String OUTPUT_FILE = "output_file";
 
     private static final int MAX_RECORD_TIME = 30;
-    private static final int COUNTDOWN_TIME = 2;
+    private static final int COUNTDOWN_TIME = 10;
 
     private final String mOutputFile = CameraHelper.getOutputMediaFile(CameraHelper.MEDIA_TYPE_VIDEO).toString();
 

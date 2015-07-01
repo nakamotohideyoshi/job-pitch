@@ -1,0 +1,131 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
+    tools:context=".JobDetailsActivity">
+
+    <ProgressBar android:id="@+id/progress" style="?android:attr/progressBarStyleLarge"
+        android:visibility="gone"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="8dp" />
+
+    <ScrollView
+        android:id="@+id/job_details"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <RelativeLayout
+                android:id="@+id/icon_container"
+                android:layout_height="180dp"
+                android:layout_width="match_parent">
+
+                <ImageView
+                    android:id="@+id/image"
+                    tools:src="@drawable/ic_star"
+                    android:adjustViewBounds="true"
+                    android:background="@android:color/darker_gray"
+                    android:scaleType="centerCrop"
+                    android:layout_width="match_parent"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_height="fill_parent" />
+
+                <ProgressBar
+                    android:id="@+id/image_progress"
+                    style="?android:attr/progressBarStyleSmall"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true" />
+
+                <TextView
+                    android:id="@+id/no_image"
+                    android:textColor="@color/grey_6"
+                    android:text="@string/no_image"
+                    android:textSize="12sp"
+                    android:textAlignment="center"
+                    android:gravity="center"
+                    android:visibility="invisible"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:paddingLeft="@dimen/activity_horizontal_margin"
+                android:paddingRight="@dimen/activity_horizontal_margin"
+                android:paddingTop="@dimen/activity_vertical_margin"
+                android:paddingBottom="@dimen/activity_vertical_margin"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:id="@+id/job_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/material_deep_teal_500"
+                    android:layout_toLeftOf="@+id/job_properties"
+                    tools:text="Job Title"
+                    android:textSize="25sp"
+                    android:paddingBottom="8dp"
+                    android:textStyle="bold" />
+                <TextView
+                    android:id="@+id/job_properties"
+                    android:layout_alignParentRight="true"
+                    tools:text="Full time"
+                    android:layout_marginTop="5dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+                <TextView
+                    android:id="@+id/job_location"
+                    android:layout_below="@id/job_title"
+                    android:textSize="15sp"
+                    android:textStyle="bold"
+                    android:paddingBottom="5dp"
+                    tools:text="Location"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+                <TextView
+                    android:id="@+id/job_description"
+                    android:layout_below="@id/job_location"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="10dp"
+                    tools:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus et dictum augue. Pellentesque a aliquam felis. Aliquam dictum aliquet magna, sed lacinia ex vehicula et. Proin id neque nec ipsum suscipit tempus eget eget metus."
+                    />
+                <TextView
+                    android:id="@+id/job_location_header"
+                    android:layout_width="match_parent"
+                    android:layout_below="@id/job_description"
+                    android:textSize="15sp"
+                    android:textStyle="bold"
+                    android:paddingBottom="5dp"
+                    android:text="@string/location"
+                    android:layout_height="wrap_content" />
+
+                <ImageButton
+                    android:id="@+id/location_map_button"
+                    android:layout_alignParentRight="true"
+                    android:layout_below="@id/job_location_header"
+                    android:src="@android:drawable/ic_dialog_map"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+                <TextView
+                    android:id="@+id/job_location_details"
+                    android:layout_width="match_parent"
+                    android:layout_below="@id/job_location_header"
+                    android:layout_toLeftOf="@id/location_map_button"
+                    android:paddingBottom="5dp"
+                    android:text="@string/location"
+                    android:layout_height="wrap_content" />
+            </RelativeLayout>
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>

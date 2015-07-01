@@ -7,7 +7,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -39,7 +38,7 @@ public class JobProfileEditFragment extends EditFragment {
     private List<Hours> hours;
     private Spinner mRadiusSpinner;
     private TextView mPlaceView;
-    private ImageButton mPlaceButton;
+    private View mPlaceButton;
 
     private Double mLongitude;
     private Double mLatitude;
@@ -87,7 +86,7 @@ public class JobProfileEditFragment extends EditFragment {
 
         mPlaceView = (TextView) view.findViewById(R.id.place);
 
-        mPlaceButton = (ImageButton) view.findViewById(R.id.place_button);
+        mPlaceButton = view.findViewById(R.id.place_button);
         mPlaceButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

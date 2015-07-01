@@ -11,7 +11,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.myjobpitch.R;
@@ -37,7 +36,7 @@ public class LocationEditFragment extends EditFragment<Location> {
     private EditText mLocationTelephoneView;
     private CheckBox mLocationTelephonePublicView;
     private EditText mLocationMobileView;
-    private ImageButton mPlaceButton;
+    private View mPlaceButton;
     private TextView mPlaceView;
     private Double mLongitude;
     private Double mLatitude;
@@ -92,7 +91,7 @@ public class LocationEditFragment extends EditFragment<Location> {
         mLocationMobilePublicView = (CheckBox) view.findViewById(R.id.location_mobile_public);
         mPlaceView = (TextView) view.findViewById(R.id.location_place);
 
-        mPlaceButton = (ImageButton) view.findViewById(R.id.location_place_button);
+        mPlaceButton = view.findViewById(R.id.location_place_button);
         mPlaceButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

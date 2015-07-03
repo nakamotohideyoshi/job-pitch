@@ -190,6 +190,10 @@
         <activity
             android:name=".activities.MediaPlayerActivity" />
 
+        <service
+            android:name=".services.UploadPitchService"
+            android:exported="false" >
+        </service>
     </application>
 
 </manifest>

@@ -401,4 +401,12 @@ public class MJPApi {
             throw e;
         }
     }
+
+    public void setToken(AuthToken token) {
+        this.token = token;
+    }
+
+    public AuthToken getToken() {
+        return token;
+    }
 }

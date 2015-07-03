@@ -1,15 +1,17 @@
 package com.myjobpitch.activities;
 
 import android.app.AlertDialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 import android.provider.MediaStore;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -23,14 +25,37 @@ import android.widget.Toast;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.myjobpitch.R;
 import com.myjobpitch.api.data.Pitch;
-import com.myjobpitch.tasks.APITaskListener;
+import com.myjobpitch.services.UploadPitchService;
 import com.myjobpitch.tasks.DownloadImageTask;
-import com.myjobpitch.tasks.UploadPitch;
 
 import java.io.File;
 import java.io.IOException;
 
 public class RecordPitchActivity extends MJPProgressActionBarActivity {
+    private class UploadStatusReceiver extends BroadcastReceiver
+    {
+        private UploadStatusReceiver() {}
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (intent.getAction().equals(UploadPitchService.ACTION_UPLOAD_STATUS)) {
+                int complete = intent.getIntExtra(UploadPitchService.EXTRA_COMPLETE, -1);
+                if (complete < 100)
+                    mProgressText.setText(getString(R.string.uploading, complete));
+                else
+                    mProgressText.setText(getString(R.string.processing));
+            } else if (intent.getAction().equals(UploadPitchService.ACTION_UPLOAD_COMPLETE)) {
+                Toast toast = Toast.makeText(RecordPitchActivity.this, "Pitch uploaded!", Toast.LENGTH_LONG);
+                toast.show();
+                finish();
+            } else if (intent.getAction().equals(UploadPitchService.ACTION_UPLOAD_ERROR)) {
+                Toast toast = Toast.makeText(RecordPitchActivity.this, "Error uploading video!", Toast.LENGTH_LONG);
+                toast.show();
+                showProgress(false);
+            }
+        }
+    }
+
     private static final int RECORD_PITCH = 1;
     private static final String OUTPUT_FILE = "output_file";
 
@@ -93,48 +118,8 @@ public class RecordPitchActivity extends MJPProgressActionBarActivity {
             public void onClick(View v) {
                 showProgress(true);
                 mProgressText.setText(getString(R.string.uploading, 0));
-                UploadPitch uploadTask = new UploadPitch(RecordPitchActivity.this, getApi(), mOutputFile, new UploadPitch.ProgressListener() {
-                    int complete = 0;
-
-                    @Override
-                    public void transferred(long transferred, long totalSize) {
-                        int newValue = Math.round((((float)transferred)/totalSize)*100);
-                        if (newValue != complete) {
-                            complete = newValue;
-                            new Handler(Looper.getMainLooper()).post(new Runnable() {
-                                @Override
-                                public void run() {
-                                    if (complete < 100)
-                                        mProgressText.setText(getString(R.string.uploading, complete));
-                                    else
-                                        mProgressText.setText(getString(R.string.processing));
-                                }
-                            });
-                        }
-                    }
-                });
-                uploadTask.addListener(new APITaskListener<Boolean>() {
-                    @Override
-                    public void onPostExecute(Boolean success) {
-                        if (success) {
-                            Toast toast = Toast.makeText(RecordPitchActivity.this, "Pitch uploaded!", Toast.LENGTH_LONG);
-                            toast.show();
-                            finish();
-                        } else {
-                            Toast toast = Toast.makeText(RecordPitchActivity.this, "Error uploading video!", Toast.LENGTH_LONG);
-                            toast.show();
-                            showProgress(false);
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled() {
-                        Toast toast = Toast.makeText(RecordPitchActivity.this, "Error uploading video", Toast.LENGTH_LONG);
-                        toast.show();
-                        showProgress(false);
-                    }
-                });
-                uploadTask.execute();
+                if (!UploadPitchService.startUpload(RecordPitchActivity.this, getApi().getToken(), mOutputFile))
+                    Toast.makeText(RecordPitchActivity.this, getString(R.string.error_upload_in_progress), Toast.LENGTH_LONG).show();
             }
         });
 
@@ -162,6 +147,24 @@ public class RecordPitchActivity extends MJPProgressActionBarActivity {
         mProgressText = (TextView) findViewById(R.id.progress_text);
 
         updateInterface();
+
+        UploadStatusReceiver uploadStatusReceiver = new UploadStatusReceiver();
+        LocalBroadcastManager.getInstance(this).registerReceiver(uploadStatusReceiver, new IntentFilter(UploadPitchService.ACTION_UPLOAD_STATUS));
+        LocalBroadcastManager.getInstance(this).registerReceiver(uploadStatusReceiver, new IntentFilter(UploadPitchService.ACTION_UPLOAD_COMPLETE));
+        LocalBroadcastManager.getInstance(this).registerReceiver(uploadStatusReceiver, new IntentFilter(UploadPitchService.ACTION_UPLOAD_ERROR));
+
+        UploadPitchService.checkUploadState(new UploadPitchService.UploadStateChecker() {
+            @Override
+            public void state(boolean running, int complete) {
+                if (running) {
+                    showProgress(true);
+                    if (complete < 100)
+                        mProgressText.setText(getString(R.string.uploading, complete));
+                    else
+                        mProgressText.setText(getString(R.string.processing));
+                }
+            }
+        });
     }
 
     @Override

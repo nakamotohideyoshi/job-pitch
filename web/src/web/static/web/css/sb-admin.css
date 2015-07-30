@@ -249,3 +249,7 @@ Web App By Reiss Watson
 .top-nav>li.not_logged_in_menu{
 	display:none;	
 }
+
+#page-wrapper{
+	height:100vh;
+}

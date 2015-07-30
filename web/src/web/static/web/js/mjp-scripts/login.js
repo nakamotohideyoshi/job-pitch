@@ -17,6 +17,12 @@ $(function() {
 				window.location.href = "/";
 			  })
 			  .fail(function( data ) {
+				$('.alert-danger').show();
+				$('.alert-danger').html('');
+				for (var key in data.responseJSON) {
+					var obj = data.responseJSON[key];
+					$('.alert-danger').append(obj+'</br>');
+				}
 				console.log( data.responseJSON );
 			  });
 	});

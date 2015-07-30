@@ -18,11 +18,16 @@ $(function() {
 				window.location.href = "/profile";
 			  })
 			  .fail(function( data ) {
-				console.log( data.responseJSON );
+				
 			  });
 		  })
 		  .fail(function( data ) {
-			console.log( data.responseJSON );
+			$('.alert-danger').show();
+			$('.alert-danger').html('');
+			for (var key in data.responseJSON) {
+				var obj = data.responseJSON[key];
+				$('.alert-danger').append(obj+'</br>');
+			}
 		  });
 	});
 });

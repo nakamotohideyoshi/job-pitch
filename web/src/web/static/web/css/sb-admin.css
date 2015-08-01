@@ -253,3 +253,11 @@ Web App By Reiss Watson
 #page-wrapper{
 	height:100vh;
 }
+
+.business-link{
+	display:none;	
+}
+
+.job-seeker-link{
+	display:none;
+}

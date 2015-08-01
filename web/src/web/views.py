@@ -41,10 +41,15 @@ def about(request):
 def pitch(request):
     return render(request, 'profile/pitch.html')	
 	
-def profile_job_seeker(request):
-    return render(request, 'profile/job-seeker.html')	
+def create_profile_job_seeker(request):
+    return render(request, 'profile/create-job-seeker.html')	
 
-def profile_business(request):
-    return render(request, 'profile/business.html')	
+def create_profile_business(request):
+    return render(request, 'profile/create-business.html')	
 	
+def edit_profile_job_seeker(request):
+    return render(request, 'profile/edit-job-seeker.html')	
+
+def edit_profile_business(request):
+    return render(request, 'profile/edit-business.html')	
 	

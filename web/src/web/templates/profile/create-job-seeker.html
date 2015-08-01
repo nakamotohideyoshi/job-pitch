@@ -1,0 +1,484 @@
+{% extends "mjp_base.html" %}
+
+{% block content %}
+	<div class="container-fluid">
+
+                <!-- Page Heading -->
+                <div class="row">
+                    <div class="col-lg-12">
+                        <h1 class="page-header">
+                            Create Profile 
+                        </h1>
+						
+						<div class="col-lg-12">
+							<div class="col-md-4 col-md-offset-4">
+								<form role="form"  method="post" id="profile">
+								
+									<div class="form-group">
+										<label>Profile:</label>
+											<input type="text" class="form-control" required placeholder="First Name" name="first_name" id="first_name">
+									</div>
+									
+									<div class="form-group">
+											<input type="text" class="form-control" required placeholder="Last Name" name="last_name" id="last_name">
+									</div>
+									
+									<div class="form-group">
+										<div class="col-md-10">
+											<input type="text" class="form-control" placeholder="Email (optional)" name="email" id="email">
+										</div>
+										<div class="col-md-2">
+											<label class="checkbox-inline">
+											  <input type="checkbox" id="email_public" name="email_public" value="true" checked> Public
+											</label>
+										</div>
+									</div>
+									
+									<div class="form-group">
+										<div class="col-md-10">
+											<input type="text" class="form-control" placeholder="Telephone (optional)" name="telephone" id="telephone">
+										</div>
+										<div class="col-md-2">
+											<label class="checkbox-inline">
+											  <input type="checkbox" id="telephone_public" name="telephone_public" value="true" checked> Public
+											</label>
+										</div>
+									</div>
+									
+									<div class="form-group">
+										<div class="col-md-10">
+											<input type="text" class="form-control" placeholder="Mobile (optional)" name="mobile" id="mobile">
+										</div>
+										<div class="col-md-2">
+											<label class="checkbox-inline">
+											  <input type="checkbox" id="mobile_public" name="mobile_public" value="true" checked> Public
+											</label>
+										</div>
+									</div>
+									
+									<div class="form-group">
+										<div class="col-md-10">
+											<input type="text" class="form-control" placeholder="Age (optional)" name="age" id="age">
+										</div>
+										<div class="col-md-2">
+											<label class="checkbox-inline">
+											  <input type="checkbox" id="age_public" name="age_public" value="true" checked> Public
+											</label>
+										</div>
+									</div>
+									
+									<div class="form-group">
+										<div class="col-md-10">
+											<select class="form-control" name="sex" id="sex">
+												<option value="" selected="">Sex (optional)</option>										
+												<option value="1">Sex: Male</option>
+												<option value="2">Sex: Female</option>
+											</select>
+										</div>
+										<div class="col-md-2">
+											<label class="checkbox-inline">
+											  <input type="checkbox" id="sex_public" name="sex_public" value="true" checked> Public
+											</label>
+										</div>
+									</div>
+									
+									<div class="form-group">
+										<div class="col-md-10">
+											<select class="form-control" name="nationality" id="nationality">
+											  <option value="" selected="">Nationality (optional)</option>
+											  <option value="1">Nationality: Afghan</option>
+											  <option value="2">Nationality: Albanian</option>
+											  <option value="3">Nationality: Algerian</option>								
+											  <option value="4">Nationality: American</option>								
+												<option value="5">Nationality: Andorran</option>										
+												<option value="6">Nationality: Angolan</option>										
+												<option value="7">Nationality: Antiguans</option>										
+												<option value="8">Nationality: Argentinean</option>										
+												<option value="9">Nationality: Armenian</option>										
+												<option value="10">Nationality: Australian</option>										
+												<option value="11">Nationality: Austrian</option>										
+												<option value="12">Nationality: Azerbaijani</option>										
+												<option value="13">Nationality: Bahamian</option>										
+												<option value="14">Nationality: Bahraini</option>										
+												<option value="15">Nationality: Bangladeshi</option>										
+												<option value="16">Nationality: Barbadian</option>										
+												<option value="17">Nationality: Barbudans</option>
+												<option value="18">Nationality: Batswana</option>
+												<option value="19">Nationality: Belarusian</option>
+												<option value="20">Nationality: Belgian</option>
+												<option value="21">Nationality: Belizean</option>
+											
+												<option value="22">Nationality: Beninese</option>
+											
+												<option value="23">Nationality: Bhutanese</option>
+											
+												<option value="24">Nationality: Bolivian</option>
+											
+												<option value="25">Nationality: Bosnian</option>
+											
+												<option value="26">Nationality: Brazilian</option>
+											
+												<option value="27">Nationality: British</option>
+											
+												<option value="28">Nationality: Bruneian</option>
+											
+												<option value="29">Nationality: Bulgarian</option>
+											
+												<option value="30">Nationality: Burkinabe</option>
+											
+												<option value="31">Nationality: Burmese</option>
+											
+												<option value="32">Nationality: Burundian</option>
+											
+												<option value="33">Nationality: Cambodian</option>
+											
+												<option value="34">Nationality: Cameroonian</option>
+											
+												<option value="35">Nationality: Canadian</option>
+											
+												<option value="36">Nationality: Cape Verdean</option>
+											
+												<option value="37">Nationality: Central African</option>
+											
+												<option value="38">Nationality: Chadian</option>
+											
+												<option value="39">Nationality: Chilean</option>
+											
+												<option value="40">Nationality: Chinese</option>
+											
+												<option value="41">Nationality: Colombian</option>
+											
+												<option value="42">Nationality: Comoran</option>
+											
+												<option value="43">Nationality: Congolese</option>
+											
+												<option value="44">Nationality: Costa Rican</option>
+											
+												<option value="45">Nationality: Croatian</option>
+											
+												<option value="46">Nationality: Cuban</option>
+											
+												<option value="47">Nationality: Cypriot</option>
+											
+												<option value="48">Nationality: Czech</option>
+											
+												<option value="49">Nationality: Danish</option>
+											
+												<option value="50">Nationality: Djibouti</option>
+											
+												<option value="51">Nationality: Dominican</option>
+											
+												<option value="52">Nationality: Dutch</option>
+											
+												<option value="53">Nationality: East Timorese</option>
+											
+												<option value="54">Nationality: Ecuadorean</option>
+											
+												<option value="55">Nationality: Egyptian</option>
+											
+												<option value="56">Nationality: Emirian</option>
+											
+												<option value="57">Nationality: Equatorial Guinean</option>
+											
+												<option value="58">Nationality: Eritrean</option>
+											
+												<option value="59">Nationality: Estonian</option>
+											
+												<option value="60">Nationality: Ethiopian</option>
+											
+												<option value="61">Nationality: Fijian</option>
+											
+												<option value="62">Nationality: Filipino</option>
+											
+												<option value="63">Nationality: Finnish</option>
+											
+												<option value="64">Nationality: French</option>
+											
+												<option value="65">Nationality: Gabonese</option>
+											
+												<option value="66">Nationality: Gambian</option>
+											
+												<option value="67">Nationality: Georgian</option>
+											
+												<option value="68">Nationality: German</option>
+											
+												<option value="69">Nationality: Ghanaian</option>
+											
+												<option value="70">Nationality: Greek</option>
+											
+												<option value="71">Nationality: Grenadian</option>
+											
+												<option value="72">Nationality: Guatemalan</option>
+											
+												<option value="73">Nationality: Guinea-Bissauan</option>
+											
+												<option value="74">Nationality: Guinean</option>
+											
+												<option value="75">Nationality: Guyanese</option>
+											
+												<option value="76">Nationality: Haitian</option>
+											
+												<option value="77">Nationality: Herzegovinian</option>
+											
+												<option value="78">Nationality: Honduran</option>
+											
+												<option value="79">Nationality: Hungarian</option>
+											
+												<option value="80">Nationality: I-Kiribati</option>
+											
+												<option value="81">Nationality: Icelander</option>
+											
+												<option value="82">Nationality: Indian</option>
+											
+												<option value="83">Nationality: Indonesian</option>
+											
+												<option value="84">Nationality: Iranian</option>
+											
+												<option value="85">Nationality: Iraqi</option>
+											
+												<option value="86">Nationality: Irish</option>
+											
+												<option value="87">Nationality: Israeli</option>
+											
+												<option value="88">Nationality: Italian</option>
+											
+												<option value="89">Nationality: Ivorian</option>
+											
+												<option value="90">Nationality: Jamaican</option>
+											
+												<option value="91">Nationality: Japanese</option>
+											
+												<option value="92">Nationality: Jordanian</option>
+											
+												<option value="93">Nationality: Kazakhstani</option>
+											
+												<option value="94">Nationality: Kenyan</option>
+											
+												<option value="95">Nationality: Kittian and Nevisian</option>
+											
+												<option value="96">Nationality: Kuwaiti</option>
+											
+												<option value="97">Nationality: Kyrgyz</option>
+											
+												<option value="98">Nationality: Laotian</option>
+											
+												<option value="99">Nationality: Latvian</option>
+											
+												<option value="100">Nationality: Lebanese</option>
+											
+												<option value="101">Nationality: Liberian</option>
+											
+												<option value="102">Nationality: Libyan</option>
+											
+												<option value="103">Nationality: Liechtensteiner</option>
+											
+												<option value="104">Nationality: Lithuanian</option>
+											
+												<option value="105">Nationality: Luxembourger</option>
+											
+												<option value="106">Nationality: Macedonian</option>
+											
+												<option value="107">Nationality: Malagasy</option>
+											
+												<option value="108">Nationality: Malawian</option>
+											
+												<option value="109">Nationality: Malaysian</option>
+											
+												<option value="110">Nationality: Maldivan</option>
+											
+												<option value="111">Nationality: Malian</option>
+											
+												<option value="112">Nationality: Maltese</option>
+											
+												<option value="113">Nationality: Marshallese</option>
+											
+												<option value="114">Nationality: Mauritanian</option>
+											
+												<option value="115">Nationality: Mauritian</option>
+											
+												<option value="116">Nationality: Mexican</option>
+											
+												<option value="117">Nationality: Micronesian</option>
+											
+												<option value="118">Nationality: Moldovan</option>
+											
+												<option value="119">Nationality: Monacan</option>
+											
+												<option value="120">Nationality: Mongolian</option>
+											
+												<option value="121">Nationality: Moroccan</option>
+											
+												<option value="122">Nationality: Mosotho</option>
+											
+												<option value="123">Nationality: Motswana</option>
+											
+												<option value="124">Nationality: Mozambican</option>
+											
+												<option value="125">Nationality: Namibian</option>
+											
+												<option value="126">Nationality: Nauruan</option>
+											
+												<option value="127">Nationality: Nepalese</option>
+											
+												<option value="128">Nationality: New Zealander</option>
+											
+												<option value="129">Nationality: Nicaraguan</option>
+											
+												<option value="130">Nationality: Nigerian</option>
+											
+												<option value="131">Nationality: Nigerien</option>
+											
+												<option value="132">Nationality: North Korean</option>
+											
+												<option value="133">Nationality: Northern Irish</option>
+											
+												<option value="134">Nationality: Norwegian</option>
+											
+												<option value="135">Nationality: Omani</option>
+											
+												<option value="136">Nationality: Pakistani</option>
+											
+												<option value="137">Nationality: Palauan</option>
+											
+												<option value="138">Nationality: Panamanian</option>
+											
+												<option value="139">Nationality: Papua New Guinean</option>
+											
+												<option value="140">Nationality: Paraguayan</option>
+											
+												<option value="141">Nationality: Peruvian</option>
+											
+												<option value="142">Nationality: Polish</option>
+											
+												<option value="143">Nationality: Portuguese</option>
+											
+												<option value="144">Nationality: Qatari</option>
+											
+												<option value="145">Nationality: Romanian</option>
+											
+												<option value="146">Nationality: Russian</option>
+											
+												<option value="147">Nationality: Rwandan</option>
+											
+												<option value="148">Nationality: Saint Lucian</option>
+											
+												<option value="149">Nationality: Salvadoran</option>
+											
+												<option value="150">Nationality: Samoan</option>
+											
+												<option value="151">Nationality: San Marinese</option>
+											
+												<option value="152">Nationality: Sao Tomean</option>
+											
+												<option value="153">Nationality: Saudi</option>
+											
+												<option value="154">Nationality: Scottish</option>
+											
+												<option value="155">Nationality: Senegalese</option>
+											
+												<option value="156">Nationality: Serbian</option>
+											
+												<option value="157">Nationality: Seychellois</option>
+											
+												<option value="158">Nationality: Sierra Leonean</option>
+											
+												<option value="159">Nationality: Singaporean</option>
+											
+												<option value="160">Nationality: Slovakian</option>
+											
+												<option value="161">Nationality: Slovenian</option>
+											
+												<option value="162">Nationality: Solomon Islander</option>
+											
+												<option value="163">Nationality: Somali</option>
+											
+												<option value="164">Nationality: South African</option>
+											
+												<option value="165">Nationality: South Korean</option>
+											
+												<option value="166">Nationality: Spanish</option>
+											
+												<option value="167">Nationality: Sri Lankan</option>
+											
+												<option value="168">Nationality: Sudanese</option>
+											
+												<option value="169">Nationality: Surinamer</option>
+											
+												<option value="170">Nationality: Swazi</option>
+											
+												<option value="171">Nationality: Swedish</option>
+											
+												<option value="172">Nationality: Swiss</option>
+											
+												<option value="173">Nationality: Syrian</option>
+											
+												<option value="174">Nationality: Taiwanese</option>
+											
+												<option value="175">Nationality: Tajik</option>
+											
+												<option value="176">Nationality: Tanzanian</option>
+											
+												<option value="177">Nationality: Thai</option>
+											
+												<option value="178">Nationality: Togolese</option>
+											
+												<option value="179">Nationality: Tongan</option>
+											
+												<option value="180">Nationality: Trinidadian or Tobagonian</option>
+											
+												<option value="181">Nationality: Tunisian</option>
+											
+												<option value="182">Nationality: Turkish</option>
+											
+												<option value="183">Nationality: Tuvaluan</option>
+											
+												<option value="184">Nationality: Ugandan</option>
+											
+												<option value="185">Nationality: Ukrainian</option>
+											
+												<option value="186">Nationality: Uruguayan</option>
+											
+												<option value="187">Nationality: Uzbekistani</option>
+											
+												<option value="188">Nationality: Venezuelan</option>
+											
+												<option value="189">Nationality: Vietnamese</option>
+											
+												<option value="190">Nationality: Welsh</option>
+											
+												<option value="191">Nationality: Yemenite</option>
+											
+												<option value="192">Nationality: Zambian</option>
+											
+												<option value="193">Nationality: Zimbabwean</option>
+											</select>
+										</div>
+										<div class="col-md-2">
+											<label class="checkbox-inline">
+											  <input type="checkbox" id="nationality_public" name="nationality_public" value="true" checked> Public
+											</label>
+										</div>
+									</div>
+									
+									<button type="submit" class="btn btn-primary">Continue</button>
+									
+									{% csrf_token %}
+								</form>
+								
+							</div>
+						</div>
+                        
+                    </div>
+                </div>
+                <!-- /.row -->
+               
+
+            </div>
+            <!-- /.container-fluid -->
+
+{% endblock %}
+{% block pagescripts %}
+
+	<script src="/static/web/js/mjp-scripts/create-profile-job-seeker.js"></script>
+	
+{% endblock %}

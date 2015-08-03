@@ -1,3 +1,4 @@
+import uuid
 import os
 import subprocess
 
@@ -257,7 +258,6 @@ class JobSeeker(models.Model):
     sex_public = models.BooleanField(default=None)
     nationality = models.ForeignKey(Nationality, related_name='job_seekers', null=True)
     nationality_public = models.BooleanField(default=None)
-    pitch = models.ForeignKey('Pitch', related_name='job_seeker', null=True, on_delete=models.SET_NULL)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
     
@@ -269,27 +269,11 @@ class JobSeeker(models.Model):
 
 
 class Pitch(models.Model):
-    video = models.FileField(upload_to='pitch/%Y/%m/%d', max_length=255)
-    image = models.ImageField(upload_to='pitch/%Y/%m/%d', max_length=255)
-    thumbnail = models.ImageField(upload_to='pitch/%Y/%m/%d', max_length=255)
-    
-    def save(self, *args, **kwargs):
-        super(Pitch, self).save(*args, **kwargs)
-        
-        if not self.thumbnail:
-            fd, tempfile = mkstemp(suffix='.png')
-            os.close(fd)
-            try:
-                subprocess.check_call(['ffmpeg', '-i', self.video.path, '-an',  '-vframes', '1', '-y', tempfile])
-                f = open(tempfile)
-                try:
-                    create_thumbnail(f, self.thumbnail, name="%s.png" % self.video.name, content_type='image/png')
-                    f.seek(0)
-                    self.image.save('%s.png' % self.video.name, File(f))
-                finally:
-                    f.close()
-            finally:
-                os.remove(tempfile)
+    token = models.TextField(default=uuid.uuid4, editable=False)
+    job_seeker = models.ForeignKey('JobSeeker', related_name='pitches')
+    video = models.URLField(null=True)
+    thumbnail = models.URLField(null=True)
+
 
 class Experience(models.Model):
     details = models.CharField(max_length=255)

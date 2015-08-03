@@ -84,10 +84,15 @@ class JobSerializer(serializers.ModelSerializer):
 
 
 class JobSeekerSerializer(serializers.ModelSerializer):
+    class PitchSerializer(serializers.ModelSerializer):
+        class Meta:
+            model = Pitch
+            exclude = ('token', 'job_seeker')
+            
     user = serializers.PrimaryKeyRelatedField(read_only=True)
     profile = serializers.PrimaryKeyRelatedField(read_only=True)
     experience = SimpleSerializer(Experience)(many=True, read_only=True)
-    pitches = SimpleSerializer(Pitch)(many=True, read_only=True)
+    pitches = PitchSerializer(many=True, read_only=True)
     
     class Meta:
         model = JobSeeker

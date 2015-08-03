@@ -255,17 +255,31 @@ router.register('job-seekers', JobSeekerViewSet, base_name='job-seeker')
 class PitchViewSet(viewsets.ModelViewSet):
     class PitchPermission(permissions.BasePermission):
         def has_permission(self, request, view):
-            if request.method in permissions.SAFE_METHODS:
+            if request.user and request.user.is_authenticated():
+                if request.method in permissions.SAFE_METHODS:
+                    return True
+                try:
+                    request.user.job_seeker
+                except JobSeeker.DoesNotExist:
+                    return False
                 return True
-            try:
-                request.user.job_seeker
-            except JobSeeker.DoesNotExist:
-                return False
-            return True
+            if request.user.is_anonymous() and request.method in ('GET', 'PUT'):
+                return True
+            return False
+    
         def has_object_permission(self, request, view, obj):
-            if request.method in permissions.SAFE_METHODS:
-                return True
-            return obj.job_seeker == request.user.job_seeker
+            if request.user and request.user.is_authenticated():
+                return obj.job_seeker == request.user.job_seeker
+            if request.user.is_anonymous() and request.method in ('GET', 'PUT'):
+                return request.GET.get('token') == obj.token
+            return False
+    
+    def get_queryset(self):
+        query = super(PitchViewSet, self).get_queryset()
+        if self.request.user.is_authenticated():
+            return query.filter(job_seeker=self.request.user.job_seeker)
+        if self.request.user.is_anonymous() and self.request.method in ('GET', 'PUT'):
+            return query.filter(token=self.request.GET.get('token'))
     
     def perform_create(self, serializer):
         job_seeker = self.request.user.job_seeker
@@ -279,7 +293,7 @@ class PitchViewSet(viewsets.ModelViewSet):
             
     def perform_update(self, serializer):
         pitch = serializer.save()
-        job_seeker = self.request.user.job_seeker
+        job_seeker = pitch.job_seeker
         if pitch.video is None:
             # delete any pitch other uploads 
             Pitch.objects.filter(job_seeker=job_seeker, video=None).exclude(pk=pitch.pk).delete()
@@ -287,7 +301,7 @@ class PitchViewSet(viewsets.ModelViewSet):
             # delete any pitch except this one
             Pitch.objects.filter(job_seeker=job_seeker).exclude(pk=pitch.pk).delete()
         
-    permission_classes = (permissions.IsAuthenticated, PitchPermission,)
+    permission_classes = (PitchPermission,)
     serializer_class = PitchSerializer
     queryset = Pitch.objects.all()
 router.register('pitches', PitchViewSet, base_name='pitch')

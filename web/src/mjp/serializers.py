@@ -87,7 +87,7 @@ class JobSeekerSerializer(serializers.ModelSerializer):
     user = serializers.PrimaryKeyRelatedField(read_only=True)
     profile = serializers.PrimaryKeyRelatedField(read_only=True)
     experience = SimpleSerializer(Experience)(many=True, read_only=True)
-    pitch = SimpleSerializer(Pitch)(read_only=True)
+    pitches = SimpleSerializer(Pitch)(many=True, read_only=True)
     
     class Meta:
         model = JobSeeker
@@ -128,9 +128,6 @@ class MessageUpdateSerializer(serializers.ModelSerializer):
 
 
 class PitchSerializer(serializers.ModelSerializer):
-    file = serializers.FileField(source='video')
-    thumbnail = serializers.ImageField(read_only=True)
-        
     class Meta:
         model = Pitch
-        fields = ('thumbnail', 'file')
+        read_only_fields = ('token', 'job_seeker',)

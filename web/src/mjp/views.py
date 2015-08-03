@@ -253,8 +253,6 @@ router.register('job-seekers', JobSeekerViewSet, base_name='job-seeker')
 
 
 class PitchViewSet(viewsets.ModelViewSet):
-    parser_classes = [FileUploadParser]
-    
     class PitchPermission(permissions.BasePermission):
         def has_permission(self, request, view):
             if request.method in permissions.SAFE_METHODS:
@@ -271,11 +269,23 @@ class PitchViewSet(viewsets.ModelViewSet):
     
     def perform_create(self, serializer):
         job_seeker = self.request.user.job_seeker
+        pitch = serializer.save(job_seeker=job_seeker)
+        if pitch.video is None:
+            # delete any pitch other uploads 
+            Pitch.objects.filter(job_seeker=job_seeker, video=None).exclude(pk=pitch.pk).delete()
+        else:
+            # delete any pitch except this one
+            Pitch.objects.filter(job_seeker=job_seeker).exclude(pk=pitch.pk).delete()
+            
+    def perform_update(self, serializer):
         pitch = serializer.save()
-        if job_seeker.pitch:
-            job_seeker.pitch.delete()
-        job_seeker.pitch = pitch
-        job_seeker.save()
+        job_seeker = self.request.user.job_seeker
+        if pitch.video is None:
+            # delete any pitch other uploads 
+            Pitch.objects.filter(job_seeker=job_seeker, video=None).exclude(pk=pitch.pk).delete()
+        else:
+            # delete any pitch except this one
+            Pitch.objects.filter(job_seeker=job_seeker).exclude(pk=pitch.pk).delete()
         
     permission_classes = (permissions.IsAuthenticated, PitchPermission,)
     serializer_class = PitchSerializer

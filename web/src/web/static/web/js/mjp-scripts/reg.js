@@ -22,12 +22,13 @@ $(function() {
 			  });
 		  })
 		  .fail(function( data ) {
-			$('.alert-danger').show();
-			$('.alert-danger').html('');
+			  
+			var messageError = ''
 			for (var key in data.responseJSON) {
 				var obj = data.responseJSON[key];
-				$('.alert-danger').append(obj+'</br>');
+				messageError = messageError+obj+'<br>';
 			}
+			formAlert('danger', messageError);
 		  });
 	});
 });

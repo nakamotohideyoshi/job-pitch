@@ -48,6 +48,29 @@ function setHeaderUsername(){
 	
 }
 
+var QueryString = function () {
+  // This function is anonymous, is executed immediately and 
+  // the return value is assigned to QueryString!
+  var query_string = {};
+  var query = window.location.search.substring(1);
+  var vars = query.split("&");
+  for (var i=0;i<vars.length;i++) {
+    var pair = vars[i].split("=");
+        // If first entry with this name
+    if (typeof query_string[pair[0]] === "undefined") {
+      query_string[pair[0]] = decodeURIComponent(pair[1]);
+        // If second entry with this name
+    } else if (typeof query_string[pair[0]] === "string") {
+      var arr = [ query_string[pair[0]],decodeURIComponent(pair[1]) ];
+      query_string[pair[0]] = arr;
+        // If third or later entry with this name
+    } else {
+      query_string[pair[0]].push(decodeURIComponent(pair[1]));
+    }
+  } 
+    return query_string;
+}();
+
 // Get the user type (business or job_seeker) return true for business false for job seeker
 function userTypeCheckIsBusiness(){
 			  $.get( "/api-rest-auth/user/", { token: getCookie('key') ,csrftoken: getCookie('csrftoken') }).done(function( data ) {
@@ -68,6 +91,12 @@ function userTypeCheckIsBusiness(){
 				console.log( data );
 			  });
 			  
+}
+
+function formAlert(type, message){
+	$('.alert').addClass('alert-'+type);
+	$('.alert').html(message);
+	$('.alert').show();
 }
 
 // Some handy helpers
@@ -106,6 +135,19 @@ $.delete = function(url, data, callback, type){
   });
 }
 
+//Fix the CSRF on the above functions
+
+function csrfSafeMethod(method) {
+    // these HTTP methods do not require CSRF protection
+    return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+}
+$.ajaxSetup({
+    beforeSend: function(xhr, settings) {
+        if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+            xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
+        }
+    }
+});
 
 /* Site wide on-load functions */
 

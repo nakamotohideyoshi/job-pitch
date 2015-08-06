@@ -79,8 +79,8 @@ $(function() {
 		var nationality_public = $('#nationality_public').val();	
 		var csrfmiddlewaretoken = $('[name="csrfmiddlewaretoken"]').val();
 			
-			$.put( "/api/job-seekers/"+job_seeker_id+"/", { csrfmiddlewaretoken: csrfmiddlewaretoken, first_name: first_name, last_name: last_name, email: email, email_public: email_public, telephone: telephone, telephone_public: telephone_public, mobile: mobile, mobile_public: mobile_public,age: age,age_public: age_public,sex: sex,sex_public: sex_public, nationality: nationality, nationality_public: nationality_public }).done(function( data ) {
-				
+			$.put( "/api/job-seekers/"+job_seeker_id+"/", { csrftoken: getCookie('csrftoken'), first_name: first_name, last_name: last_name, email: email, email_public: email_public, telephone: telephone, telephone_public: telephone_public, mobile: mobile, mobile_public: mobile_public,age: age,age_public: age_public,sex: sex,sex_public: sex_public, nationality: nationality, nationality_public: nationality_public }).done(function( data ) {
+				formAlert('success', 'Profile Updated!');
 				
 			  })
 			  .fail(function( data ) {

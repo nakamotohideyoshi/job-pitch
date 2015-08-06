@@ -3,30 +3,79 @@ $(function() {
 	checkLogin(true);
 	
 	//Form submit code
- 	$('#profile').submit(function( event ) {
+ 	$('#company_details').submit(function( event ) {
 		event.preventDefault();
-		var first_name = $('#first_name').val();
-		var last_name = $('#last_name').val();
-		var email = $('#email').val();
-		var email_public = $('#email_public').val();
-		var telephone = $('#telephone').val();
-		var telephone_public = $('#telephone_public').val();
-		var mobile = $('#mobile').val();
-		var mobile_public = $('#mobile_public').val();
-		var age = $('#age').val();
-		var age_public = $('#age_public').val();
-		var sex = $('#sex').val();
-		var sex_public = $('#sex_public').val();
-		var nationality = $('#nationality').val();
-		var nationality_public = $('#nationality_public').val();
-		var csrfmiddlewaretoken = $('[name="csrfmiddlewaretoken"]').val();
-		
-			$.post( "/api/job-seekers/", { first_name: first_name, last_name: last_name, email: email, email_public: email_public, telephone: telephone, telephone_public: telephone_public, mobile: mobile, mobile_public: mobile_public,age: age,age_public: age_public,sex: sex,sex_public: sex_public, nationality: nationality, nationality_public: nationality_public,csrfmiddlewaretoken: csrfmiddlewaretoken }).done(function( data ) {
-				
-				window.location.href = "/app";
+			
+			var company_name = $('#company_name').val();			
+			$.post( "/api/user-businesses/", { name:company_name }).done(function( data ) {
+					  $('#business').val(data.id);
+					  
+					  var formData = new FormData($('#company_details')[0]);
+					  $.ajax({
+						url: '/api/user-business-images/',
+						type: 'POST',
+						data: formData,
+						async: false,
+						cache: false,
+						contentType: false,
+						processData: false,
+						success: function (data) {
+						  		console.log(data);
+						  		$('#company_details').fadeOut(250, function() {
+									$('#work_place_details').fadeIn(250);
+								});
+						}
+					  });
+					  
 			  })
 			  .fail(function( data ) {
-				console.log( data.responseJSON );
+				console.log( data );
+			  });
+	});
+	
+	$('#work_place_details').submit(function( event ) {
+		event.preventDefault();
+			
+			var work_place_name = $('#work_place_name').val();		
+			var work_place_description = $('#work_place_description').val();
+			var work_place_address = $('#work_place_address').val();	
+			var work_place_address_public = $('#work_place_address_public').val();
+			var work_place_email = $('#work_place_email').val();
+			var work_place_email_public = $('#work_place_email_public').val();
+			var work_place_telephone = $('#work_place_telephone').val();
+			var work_place_telephone_public = $('#work_place_telephone_public').val();
+			var work_place_mobile = $('#work_place_mobile').val();
+			var work_place_mobile_public = $('#work_place_mobile_public').val();
+			var work_place_location = $('#work_place_location').val();
+			var business_id = $('#business').val();
+			
+			// Still need to build these in:
+			var latitude = 0;
+			var longitude = 0;
+			var place_name = 'place_name';
+			
+			
+			$.post( "/api/user-locations/", { name:work_place_name, description:work_place_description, address:work_place_address, email:work_place_email, email_public:work_place_email_public, telephone:work_place_telephone, telephone_public:work_place_telephone_public, mobile:work_place_mobile, mobile_public:work_place_mobile_public, business:business_id, latitude:latitude, longitude:longitude, place_name:place_name }).done(function( data ) {
+					  $('#location').val(data.id);
+					  var formData2 = new FormData($('#work_place_details')[0]);
+					  $.ajax({
+						url: '/api/user-location-images/',
+						type: 'POST',
+						data: formData2,
+						async: false,
+						cache: false,
+						contentType: false,
+						processData: false,
+						success: function (data) {
+						  		console.log(data);
+						  		$('#work_place_details').fadeOut(250, function() {
+									
+								});
+						}
+					  });
+			  })
+			  .fail(function( data ) {
+				console.log( data );
 			  });
 	});
 });

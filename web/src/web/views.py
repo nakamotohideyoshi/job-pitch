@@ -53,3 +53,8 @@ def edit_profile_job_seeker(request):
 def edit_profile_business(request):
     return render(request, 'profile/edit-business.html')	
 	
+def list_businesses(request):
+    return render(request, 'profile/list-businesses.html')
+	
+def list_locations(request):
+    return render(request, 'profile/list-locations.html')

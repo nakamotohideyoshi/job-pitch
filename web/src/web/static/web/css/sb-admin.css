@@ -234,11 +234,11 @@ Web App By Reiss Watson
     margin: auto;
 }
 
-#profile .form-group{
+#work_place_details .form-group{
 	min-height: 36px;
 }
 
-#profile .col-md-10{
+#work_place_details .col-md-10{
 	padding-left:0px;
 }
 
@@ -251,7 +251,7 @@ Web App By Reiss Watson
 }
 
 #page-wrapper{
-	height:100vh;
+	min-height:100vh;
 }
 
 .business-link{
@@ -260,4 +260,15 @@ Web App By Reiss Watson
 
 .job-seeker-link{
 	display:none;
+}
+.alert{
+	display:none;
+}
+
+#work_place_details{
+	display:none;
+}
+
+#list-table tbody tr{
+	cursor:pointer;	
 }

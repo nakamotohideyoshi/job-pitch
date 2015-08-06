@@ -17,13 +17,12 @@ $(function() {
 				window.location.href = "/";
 			  })
 			  .fail(function( data ) {
-				$('.alert-danger').show();
-				$('.alert-danger').html('');
+				var messageError = ''
 				for (var key in data.responseJSON) {
 					var obj = data.responseJSON[key];
-					$('.alert-danger').append(obj+'</br>');
+					messageError = messageError+obj+'<br>';
 				}
-				console.log( data.responseJSON );
+				formAlert('danger', messageError);
 			  });
 	});
 });

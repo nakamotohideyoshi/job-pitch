@@ -1,0 +1,47 @@
+{% extends "mjp_base.html" %}
+
+{% block content %}
+	<div class="container-fluid">
+
+                <!-- Page Heading -->
+                <div class="row">
+                    <div class="col-lg-12">
+                        <h1 class="page-header">
+                            Locations
+                        </h1>
+						
+						<div class="col-lg-12">
+							<div class="row">
+								<div class="col-lg-12">
+									<div class="table-responsive">
+										<table class="table table-hover" id="list-table">
+											<thead>
+												<tr>
+													<th>Image</th>
+													<th>Name</th>
+													<th>Description</th>
+													<th>No of Jobs</th>
+												</tr>
+											</thead>
+											<tbody>
+												
+											</tbody>
+										</table>
+									</div>
+								</div>
+						</div>
+                        
+                    </div>
+                </div>
+                <!-- /.row -->
+               
+
+            </div>
+            <!-- /.container-fluid -->
+
+{% endblock %}
+{% block pagescripts %}
+
+	<script src="/static/web/js/mjp-scripts/list-locations.js"></script>
+	
+{% endblock %}

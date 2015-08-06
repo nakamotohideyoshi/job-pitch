@@ -58,3 +58,9 @@ def list_businesses(request):
 	
 def list_locations(request):
     return render(request, 'profile/list-locations.html')
+	
+def list_jobs(request):
+    return render(request, 'profile/list-jobs.html')
+	
+def create_job(request):
+    return render(request, 'profile/create-job.html')

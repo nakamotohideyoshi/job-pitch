@@ -22,6 +22,13 @@ function deleteCookie(cname){
 	document.cookie = cname+"=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC";	
 }
 
+//get lat long and other data from postcode
+function postcodeLocationData(postcode, handleData){
+	$.get( "http://api.postcodes.io/postcodes/"+postcode, {}).done(function( data ) {
+		handleData(data);
+	});
+}
+
 //if redirect is true, send user to login
 function checkLogin(redirect){
 	var username = getCookie('username');
@@ -35,6 +42,7 @@ function checkLogin(redirect){
 		}	
 	}else{
 		setHeaderUsername();
+		
 		return true;
 	}
 }
@@ -71,8 +79,8 @@ var QueryString = function () {
     return query_string;
 }();
 
-// Get the user type (business or job_seeker) return true for business false for job seeker
-function userTypeCheckIsBusiness(){
+// Get the user type(business or job_seeker) & sort the menus out.
+function userTypeMenuConfiguration(redirectToProfile){
 			  $.get( "/api-rest-auth/user/", { token: getCookie('key') ,csrftoken: getCookie('csrftoken') }).done(function( data ) {
 				
 				if (data.businesses.length){
@@ -83,7 +91,10 @@ function userTypeCheckIsBusiness(){
 					$('.job-seeker-link').show();
 				}else{
 				    // Go Finish registration
-					//window.location.href = "/profile";
+					if(redirectToProfile == true){
+						//window.location.href = "/profile";
+						alert('hit');
+					}
 				}
 				
 			  })
@@ -93,10 +104,23 @@ function userTypeCheckIsBusiness(){
 			  
 }
 
+
 function formAlert(type, message){
 	$('.alert').addClass('alert-'+type);
 	$('.alert').html(message);
 	$('.alert').show();
+}
+
+function deleteRow(id, apiFunction, rowPrefix){
+	$.ajax({
+		url: "/api/"+apiFunction+"/"+id+"/",
+		type: 'DELETE',
+		data:{ csrftoken: getCookie('csrftoken') },
+		success: function(result) {
+			console.log(rowPrefix+id);
+			$('#'+rowPrefix+id).fadeOut(250);
+		}
+		});
 }
 
 // Some handy helpers
@@ -155,6 +179,6 @@ $(function() {
 	/* Check if user is logged in */
 	var login = checkLogin();
 	if(login){
-		userTypeCheckIsBusiness();
+		userTypeMenuConfiguration();
 	}
 });

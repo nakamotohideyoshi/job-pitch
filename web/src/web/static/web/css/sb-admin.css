@@ -272,3 +272,15 @@ Web App By Reiss Watson
 #list-table tbody tr{
 	cursor:pointer;	
 }
+#profile .form-group{
+	min-height: 36px;
+}
+
+#profile .col-md-10{
+	padding-left:0px;
+}
+
+.btn-on-table{
+	margin-left:5px;
+	margin-right:5px;	
+}

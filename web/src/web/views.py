@@ -44,14 +44,14 @@ def pitch(request):
 def create_profile_job_seeker(request):
     return render(request, 'profile/create-job-seeker.html')	
 
-def create_profile_business(request):
+def create_business(request):
     return render(request, 'profile/create-business.html')	
+
+def create_profile_location(request):
+    return render(request, 'profile/create-location.html')	
 	
 def edit_profile_job_seeker(request):
     return render(request, 'profile/edit-job-seeker.html')	
-
-def edit_profile_business(request):
-    return render(request, 'profile/edit-business.html')	
 	
 def list_businesses(request):
     return render(request, 'profile/list-businesses.html')
@@ -64,3 +64,12 @@ def list_jobs(request):
 	
 def create_job(request):
     return render(request, 'profile/create-job.html')
+	
+def create_location(request):
+    return render(request, 'profile/create-location.html')
+
+def messages(request):
+    return render(request, 'profile/messages.html')
+
+def job_preferences(request):
+    return render(request, 'profile/job-preferences.html')

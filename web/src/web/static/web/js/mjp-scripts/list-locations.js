@@ -1,4 +1,4 @@
-function goToJobs(id){
+function goToLocations(id){
         window.location.href = "/profile/list-jobs/?id="+id;
     }
 $(function() {
@@ -7,6 +7,9 @@ $(function() {
 	
 	//grab business id from url
 	var business_id = QueryString.id;
+	
+	// Add ID to links
+	$('.link-create-location').attr('href', '/profile/create-location/?id='+business_id);
 	
 	// Populate any fields that have data
 			  $.get( "/api/user-locations/", { business:business_id ,csrftoken: getCookie('csrftoken') }).done(function( data ) {
@@ -19,9 +22,9 @@ $(function() {
 						  imageThumb = obj.images[0].thumbnail;
 					  }
 					  if(imageThumb != ''){
-					  	$('#list-table tbody').append('<tr onclick="goToJobs('+obj.id+');" data-jobs-id="'+obj.id+'" class="business-list" id="jobs-list-'+obj.id+'"><td class="text-center"><img width="150px" src="'+imageThumb+'"></td><td>'+obj.name+'</td><td>'+obj.description+'</td><td>'+obj.jobs.length+'</td></tr>');
+					  	$('#list-table tbody').append('<tr data-jobs-id="'+obj.id+'" class="locations-list" id="locations-list-'+obj.id+'"><td class="text-center" onclick="goToLocations('+obj.id+');"><img width="150px" src="'+imageThumb+'"></td><td onclick="goToLocations('+obj.id+');">'+obj.name+'</td><td onclick="goToLocations('+obj.id+');">'+obj.description+'</td><td onclick="goToLocations('+obj.id+');">'+obj.jobs.length+'</td></tr>');
 					  }else{
-						 $('#list-table tbody').append('<tr onclick="goToJobs('+obj.id+');" data-jobs-id="'+obj.id+'" class="business-list" id="jobs-list-'+obj.id+'"><td class="text-center"><img width="150px" src="/static/web/images/no_image_available.png"></td><td>'+obj.description+'</td><td>'+obj.description+'</td><td>'+obj.jobs.length+'</td></tr>');
+						 $('#list-table tbody').append('<tr data-jobs-id="'+obj.id+'" class="locations-list" id="jobs-list-'+obj.id+'"><td class="text-center" onclick="goToLocations('+obj.id+');"><img width="150px" src="/static/web/images/no_image_available.png"></td><td onclick="goToLocations('+obj.id+');">'+obj.description+'</td><td onclick="goToLocations('+obj.id+');">'+obj.description+'</td><td onclick="goToLocations('+obj.id+');">'+obj.jobs.length+'</td></tr>');
 					  }
 				  }
 			  })

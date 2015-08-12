@@ -2,6 +2,29 @@ $(function() {
 	// Run login check funtion with auto-redirect
 	checkLogin(true);
 	
+	//Populate selects
+	$.get( "/api/nationalities/", { csrftoken: getCookie('csrftoken') }).done(function( data ) {
+		for (var key in data) {
+			var obj = data[key];
+			$('#nationality').append('<option value="'+obj.id+'">'+obj.name+'</options>');
+		}
+	})
+	.fail(function( data ) {
+		console.log( data );
+		
+	});
+	
+	$.get( "/api/sexes/", { csrftoken: getCookie('csrftoken') }).done(function( data ) {
+		for (var key in data) {
+			var obj = data[key];
+			$('#sex').append('<option value="'+obj.id+'">'+obj.name+'</options>');
+		}
+	})
+	.fail(function( data ) {
+		console.log( data );
+		
+	});
+	
 	var job_seeker_id = 0;
 	
 	// Populate any fields that have data

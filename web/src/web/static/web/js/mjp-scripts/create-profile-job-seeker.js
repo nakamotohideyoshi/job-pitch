@@ -2,6 +2,29 @@ $(function() {
 	// Run login check funtion with auto-redirect
 	checkLogin(true);
 	
+	//Populate selects
+	$.get( "/api/nationalities/", { csrftoken: getCookie('csrftoken') }).done(function( data ) {
+		for (var key in data) {
+			var obj = data[key];
+			$('#nationality').append('<option value="'+obj.id+'">'+obj.name+'</options>');
+		}
+	})
+	.fail(function( data ) {
+		console.log( data );
+		
+	});
+	
+	$.get( "/api/sexes/", { csrftoken: getCookie('csrftoken') }).done(function( data ) {
+		for (var key in data) {
+			var obj = data[key];
+			$('#sex').append('<option value="'+obj.id+'">'+obj.name+'</options>');
+		}
+	})
+	.fail(function( data ) {
+		console.log( data );
+		
+	});
+	
 	//Form submit code
  	$('#profile').submit(function( event ) {
 		event.preventDefault();
@@ -23,7 +46,7 @@ $(function() {
 		
 			$.post( "/api/job-seekers/", { first_name: first_name, last_name: last_name, email: email, email_public: email_public, telephone: telephone, telephone_public: telephone_public, mobile: mobile, mobile_public: mobile_public,age: age,age_public: age_public,sex: sex,sex_public: sex_public, nationality: nationality, nationality_public: nationality_public,csrfmiddlewaretoken: csrfmiddlewaretoken }).done(function( data ) {
 				console.log( data );
-				window.location.href = "/profile/pitch";
+				window.location.href = "/profile/job-preferences";
 			  })
 			  .fail(function( data ) {
 				console.log( data.responseJSON );

@@ -56,7 +56,7 @@ $(function() {
 						contentType: false,
 						processData: false,
 						success: function (data) {
-						  		
+								window.location.href = "/profile/list-jobs/?id="+location_id;
 						}
 					  });
 				

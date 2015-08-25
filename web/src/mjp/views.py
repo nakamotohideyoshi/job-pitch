@@ -477,11 +477,11 @@ class ApplicationViewSet(viewsets.ModelViewSet):
         query = Application.objects.annotate(Max('messages__created')).order_by('-messages__created__max', '-updated')
         query = query.select_related('job__location__business',
                                      'job_seeker__user',
-                                     'job_seeker__pitch',
                                      'job_seeker__profile__contract',
                                      'job_seeker__profile__hours',
                                      )
         query = query.prefetch_related('job_seeker__experience',
+                                       'job_seeker__pitches'
                                        'messages',
                                        'job__location__jobs',
                                        'job__location__business__locations', 

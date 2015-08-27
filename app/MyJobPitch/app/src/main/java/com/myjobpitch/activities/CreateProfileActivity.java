@@ -55,7 +55,7 @@ public class CreateProfileActivity extends MJPProgressActionBarActivity {
             }
         });
 
-        mJobSeekerProfile = (View) findViewById(R.id.job_seeker_profile);
+        mJobSeekerProfile = findViewById(R.id.job_seeker_profile);
         mJobSeekerEditFragment = (JobSeekerEditFragment) getSupportFragmentManager().findFragmentById(R.id.job_seeker_edit_fragment);
 
         Button jobSeekerContinueButton = (Button) findViewById(R.id.continue_button_job_seeker);
@@ -77,7 +77,7 @@ public class CreateProfileActivity extends MJPProgressActionBarActivity {
             }
         });
 
-        mRecruiterProfile = (View) findViewById(R.id.recruiter_profile);
+        mRecruiterProfile = findViewById(R.id.recruiter_profile);
         mBusinessEditFragment = (BusinessEditFragment) getSupportFragmentManager().findFragmentById(R.id.business_edit_fragment);
         mLocationEditFragment = (LocationEditFragment) getSupportFragmentManager().findFragmentById(R.id.location_edit_fragment);
         if (getIntent().hasExtra("email"))
@@ -239,5 +239,15 @@ public class CreateProfileActivity extends MJPProgressActionBarActivity {
     @Override
     public View getProgressView() {
         return mCreateProfileView;
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (mRecruiterProfile.getVisibility() == View.VISIBLE)
+            mRecruiterProfile.setVisibility(View.GONE);
+        else if (mJobSeekerProfile.getVisibility() == View.VISIBLE)
+            mJobSeekerProfile.setVisibility(View.GONE);
+        else
+            super.onBackPressed();
     }
 }

@@ -20,7 +20,15 @@
     <EditText android:id="@+id/job_description" android:layout_width="match_parent"
         android:layout_height="wrap_content" android:hint="@string/prompt_job_description"
         android:inputType="textMultiLine" android:maxLines="5"
+        android:maxLength="500"
         android:singleLine="true" />
+    <TextView
+        android:id="@+id/job_description_character_count"
+        tools:text="@string/characters_remaining"
+        android:paddingLeft="5dp"
+        android:layout_marginBottom="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
 
     <com.myjobpitch.widgets.NoDefaultSpinner
         android:prompt="@string/prompt_sector"

@@ -140,4 +140,5 @@
     <string name="select_place_explainer">Search for a location, or long-press on the map to manually select a location.</string>
     <string name="error_upload_in_progress">Error: pitch upload in progress!</string>
     <string name="my_jobs">My jobs</string>
+    <string name="characters_remaining">%1$s characters remaining</string>
 </resources>

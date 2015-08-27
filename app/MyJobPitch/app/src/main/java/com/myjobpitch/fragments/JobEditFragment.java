@@ -3,11 +3,14 @@ package com.myjobpitch.fragments;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.myjobpitch.MJPApplication;
 import com.myjobpitch.R;
@@ -32,6 +35,7 @@ public class JobEditFragment extends EditFragment {
     private List<Contract> contracts;
     private List<Hours> hours;
     private ImageEditFragment mImageEdit;
+    private TextView mLocationDescCharacters;
 
     /**
      * Use this factory method to create a new instance of
@@ -53,15 +57,6 @@ public class JobEditFragment extends EditFragment {
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-//            mParam1 = getArguments().getString(ARG_PARAM1);
-//            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
-    }
-
-    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
@@ -70,9 +65,23 @@ public class JobEditFragment extends EditFragment {
 
         mLocationTitleView = (EditText) view.findViewById(R.id.job_title);
         mLocationDescView = (EditText) view.findViewById(R.id.job_description);
+        mLocationDescCharacters = (TextView) view.findViewById(R.id.job_description_character_count);
         mLocationSectorView = (Spinner) view.findViewById(R.id.job_sector);
         mLocationContractView = (Spinner) view.findViewById(R.id.job_contract);
         mLocationHoursView = (Spinner) view.findViewById(R.id.job_hours);
+
+        mLocationDescView.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                mLocationDescCharacters.setText(getString(R.string.characters_remaining, 500 - charSequence.length()));
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {}
+        });
 
         Map<String, View> fields = new HashMap<>();
         fields.put("title", mLocationTitleView);
@@ -91,9 +100,9 @@ public class JobEditFragment extends EditFragment {
         this.sectors = application.get(Sector.class);
         mLocationSectorView.setAdapter(new MJPObjectWithNameAdapter(this.getActivity(), android.R.layout.simple_list_item_1, this.sectors));
         this.contracts = application.get(Contract.class);
-        mLocationContractView.setAdapter(new MJPObjectWithNameAdapter<Contract>(this.getActivity(), android.R.layout.simple_list_item_1, this.contracts));
+        mLocationContractView.setAdapter(new MJPObjectWithNameAdapter<>(this.getActivity(), android.R.layout.simple_list_item_1, this.contracts));
         this.hours = application.get(Hours.class);
-        mLocationHoursView.setAdapter(new MJPObjectWithNameAdapter<Hours>(this.getActivity(), android.R.layout.simple_list_item_1, this.hours));
+        mLocationHoursView.setAdapter(new MJPObjectWithNameAdapter<>(this.getActivity(), android.R.layout.simple_list_item_1, this.hours));
     }
 
     public void load(Job job) {

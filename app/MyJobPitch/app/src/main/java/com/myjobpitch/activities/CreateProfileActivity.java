@@ -2,6 +2,7 @@ package com.myjobpitch.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
@@ -249,5 +250,20 @@ public class CreateProfileActivity extends MJPProgressActionBarActivity {
             mJobSeekerProfile.setVisibility(View.GONE);
         else
             super.onBackPressed();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                if (mRecruiterProfile.getVisibility() == View.VISIBLE) {
+                    mRecruiterProfile.setVisibility(View.GONE);
+                    return true;
+                } else if (mJobSeekerProfile.getVisibility() == View.VISIBLE) {
+                    mJobSeekerProfile.setVisibility(View.GONE);
+                    return true;
+                }
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

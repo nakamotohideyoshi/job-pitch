@@ -16,7 +16,7 @@
     <string name="prompt_location_description">Description</string>
     <string name="prompt_telephone">Telephone (optional)</string>
     <string name="prompt_mobile">Mobile (optional)</string>
-    <string name="location_details">Work Place Details</string>
+    <string name="location_details">Work Place &amp; Details</string>
     <string name="public_data">Public</string>
     <string name="business_details">Company Details</string>
     <string name="title_create_profile">Create Profile</string>

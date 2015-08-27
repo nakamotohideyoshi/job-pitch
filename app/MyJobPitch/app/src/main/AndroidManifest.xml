@@ -137,7 +137,7 @@
         </activity>
         <activity
             android:name=".activities.JobSeekerActivity"
-            android:label="@string/home"
+            android:label="@string/my_jobs"
             android:launchMode="singleTop"
             android:parentActivityName=".activities.LoginActivity"
             android:screenOrientation="portrait" >

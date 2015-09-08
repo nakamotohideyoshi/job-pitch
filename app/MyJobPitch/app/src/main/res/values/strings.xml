@@ -141,4 +141,7 @@
     <string name="error_upload_in_progress">Error: pitch upload in progress!</string>
     <string name="my_jobs">My jobs</string>
     <string name="characters_remaining">%1$s characters remaining</string>
+    <string name="image_set_by_business">image set by company</string>
+    <string name="image_set_by_location">image set by work place</string>
+    <string name="delete_image_confirmation">Are you sure you want to remove this image?</string>
 </resources>

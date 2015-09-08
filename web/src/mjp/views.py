@@ -507,7 +507,6 @@ class ApplicationViewSet(viewsets.ModelViewSet):
 router.register('applications', ApplicationViewSet, base_name='application')
 
 
-
 class MessageViewSet(viewsets.ModelViewSet):
     class MessagePermission(permissions.BasePermission):
         def has_permission(self, request, view):
@@ -528,7 +527,6 @@ class MessageViewSet(viewsets.ModelViewSet):
             if request.method == 'PUT':
                 is_recruiter = request.user.businesses.filter(locations__jobs__applications__messages=message).exists()
                 if is_recruiter and message.from_role.name == "JOB_SEEKER":
-                    #import pdb; pdb.set_trace()
                     return True
                 is_job_seeker = message.application.job_seeker.user == request.user
                 if is_job_seeker and message.from_role.name == "RECRUITER":

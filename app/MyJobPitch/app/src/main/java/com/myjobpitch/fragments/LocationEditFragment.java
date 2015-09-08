@@ -16,6 +16,7 @@ import android.widget.TextView;
 import com.myjobpitch.R;
 import com.myjobpitch.activities.SelectPlaceActivity;
 import com.myjobpitch.api.MJPApi;
+import com.myjobpitch.api.data.Business;
 import com.myjobpitch.api.data.Location;
 import com.myjobpitch.tasks.recruiter.CreateUpdateLocationTask;
 
@@ -43,33 +44,15 @@ public class LocationEditFragment extends EditFragment<Location> {
     private String mPlaceId = "";
     private String mPlaceName;
     private ImageEditFragment mImageEdit;
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @return A new instance of fragment RecruiterProfileFragment.
-     */
-    public static LocationEditFragment newInstance() {
-        LocationEditFragment fragment = new LocationEditFragment();
-        Bundle args = new Bundle();
-//        args.putString(ARG_PARAM1, param1);
-//        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
+    private Location mLocation;
+    private Uri mImageUri;
+    private Uri mNoImageUri;
+    private boolean mImageUriSet = false;
+    private String mNoImageMessage;
+    private float mNoImageAlpha;
 
     public LocationEditFragment() {
         // Required empty public constructor
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-//            mParam1 = getArguments().getString(ARG_PARAM1);
-//            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
     }
 
     @Override
@@ -79,6 +62,32 @@ public class LocationEditFragment extends EditFragment<Location> {
         View view = inflater.inflate(R.layout.fragment_location_edit, container, false);
 
         mImageEdit = (ImageEditFragment) getChildFragmentManager().findFragmentById(R.id.image_edit_fragment);
+        mImageEdit.setListener(new ImageEditFragment.ImageEditFragmentListener() {
+            @Override
+            public void onDelete() {
+                AlertDialog.Builder builder = new AlertDialog.Builder(LocationEditFragment.this.getActivity());
+                builder.setMessage(getString(R.string.delete_image_confirmation))
+                        .setCancelable(false)
+                        .setPositiveButton(getString(R.string.delete), new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                dialog.cancel();
+                                mImageUri = null;
+                                loadImage();
+                            }
+                        })
+                        .setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                dialog.cancel();
+                            }
+                        }).create().show();
+            }
+
+            @Override
+            public void onChange(Uri image) {
+                mImageUri = image;
+                loadImage();
+            }
+        });
 
         mLocationNameView = (EditText) view.findViewById(R.id.location_name);
         mLocationDescView = (EditText) view.findViewById(R.id.location_description);
@@ -121,23 +130,35 @@ public class LocationEditFragment extends EditFragment<Location> {
         requiredFields.add(mLocationDescView);
         setRequiredFields(requiredFields);
 
+        if (savedInstanceState != null && savedInstanceState.containsKey("mImageUri")) {
+            mImageUri = savedInstanceState.getParcelable("mImageUri");
+            mImageUriSet = true;
+        }
+
         return view;
     }
 
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelable("mImageUri", mImageUri);
+    }
+
     public void load(Location location) {
-        mLocationNameView.setText(location.getName());
-        mLocationDescView.setText(location.getDescription());
-        mLocationAddressView.setText(location.getAddress());
-        mLocationEmailView.setText(location.getEmail());
-        mLocationEmailPublicView.setChecked(location.getEmail_public());
-        mLocationTelephoneView.setText(location.getTelephone());
-        mLocationTelephonePublicView.setChecked(location.getTelephone_public());
-        mLocationMobileView.setText(location.getMobile());
-        mLocationMobilePublicView.setChecked(location.getMobile_public());
-        mPlaceName = location.getPlace_name();
-        mPlaceId = location.getPlace_id();
-        mLongitude = location.getLongitude();
-        mLatitude = location.getLatitude();
+        mLocation = location;
+        mLocationNameView.setText(mLocation.getName());
+        mLocationDescView.setText(mLocation.getDescription());
+        mLocationAddressView.setText(mLocation.getAddress());
+        mLocationEmailView.setText(mLocation.getEmail());
+        mLocationEmailPublicView.setChecked(mLocation.getEmail_public());
+        mLocationTelephoneView.setText(mLocation.getTelephone());
+        mLocationTelephonePublicView.setChecked(mLocation.getTelephone_public());
+        mLocationMobileView.setText(mLocation.getMobile());
+        mLocationMobilePublicView.setChecked(mLocation.getMobile_public());
+        mPlaceName = mLocation.getPlace_name();
+        mPlaceId = mLocation.getPlace_id();
+        mLongitude = mLocation.getLongitude();
+        mLatitude = mLocation.getLatitude();
 
         if (mPlaceName != null) {
             if (mPlaceId == null || mPlaceId.isEmpty())
@@ -145,10 +166,24 @@ public class LocationEditFragment extends EditFragment<Location> {
             else
                 mPlaceView.setText(mPlaceName + " (from Google)");
         }
-        if (location.getImages() == null || location.getImages().isEmpty())
-            mImageEdit.load(null);
-        else
-            mImageEdit.load(Uri.parse(location.getImages().get(0).getImage()));
+
+        if (!mImageUriSet && mLocation.getImages() != null && !mLocation.getImages().isEmpty())
+            mImageUri = Uri.parse(mLocation.getImages().get(0).getThumbnail());
+
+        Business business = mLocation.getBusiness_data();
+        if (business != null && business.getImages() != null && !business.getImages().isEmpty()) {
+            mNoImageUri = Uri.parse(business.getImages().get(0).getThumbnail());
+            mNoImageMessage = getString(R.string.image_set_by_business);
+            mNoImageAlpha = 0.3f;
+        } else {
+            mNoImageMessage = getString(R.string.no_image);
+            mNoImageAlpha = 1.0f;
+        }
+        loadImage();
+    }
+
+    private void loadImage() {
+        mImageEdit.load(mImageUri, mNoImageUri, mNoImageMessage, mNoImageAlpha);
     }
 
     public void save(Location location) {
@@ -177,8 +212,8 @@ public class LocationEditFragment extends EditFragment<Location> {
         return task;
     }
 
-    public Uri getNewImageUri() {
-        return mImageEdit.getNewImageUri();
+    public Uri getImageUri() {
+        return mImageUri;
     }
 
     @Override

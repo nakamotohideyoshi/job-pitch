@@ -17,11 +17,14 @@ import com.myjobpitch.MJPApplication;
 import com.myjobpitch.R;
 import com.myjobpitch.api.MJPApi;
 import com.myjobpitch.api.data.Business;
+import com.myjobpitch.api.data.Image;
 import com.myjobpitch.fragments.BusinessEditFragment;
 import com.myjobpitch.tasks.APITaskListener;
 import com.myjobpitch.tasks.CreateReadUpdateAPITaskListener;
-import com.myjobpitch.tasks.UploadImage;
+import com.myjobpitch.tasks.DeleteAPITaskListener;
+import com.myjobpitch.tasks.UploadImageTask;
 import com.myjobpitch.tasks.recruiter.CreateUpdateBusinessTask;
+import com.myjobpitch.tasks.recruiter.DeleteBusinessImageTask;
 import com.myjobpitch.tasks.recruiter.ReadUserBusinessTask;
 
 import java.io.IOException;
@@ -131,11 +134,47 @@ public class EditBusinessActivity extends MJPProgressActionBarActivity {
             mCreateUpdateBusinessTask.addListener(new CreateReadUpdateAPITaskListener<Business>() {
                 @Override
                 public void onSuccess(final Business business) {
-                    final Uri imageUri = mBusinessEditFragment.getNewImageUri();
-                    if (imageUri == null) {
-                        returnToListActivity(business);
+                    final Uri imageUri = mBusinessEditFragment.getImageUri();
+                    Uri originalUri = null;
+                    Image originalImage = null;
+                    if (business.getImages() != null && !business.getImages().isEmpty()) {
+                        originalImage = business.getImages().get(0);
+                        originalUri = Uri.parse(originalImage.getThumbnail());
+                    }
+                    if ((imageUri == null && originalUri == null) || (imageUri != null && imageUri.equals(originalUri))) {
+                        // No change to image
+                        EditBusinessActivity.this.finish();
+                    } else if (imageUri == null) {
+                        // Image deleted
+                        DeleteBusinessImageTask deleteTask = new DeleteBusinessImageTask(getApi(), originalImage.getId());
+                        deleteTask.addListener(new DeleteAPITaskListener() {
+                            @Override
+                            public void onSuccess() {
+                                EditBusinessActivity.this.finish();
+                            }
+
+                            @Override
+                            public void onError(JsonNode errors) {
+                                showProgress(false);
+                                Toast toast = Toast.makeText(EditBusinessActivity.this, "Error deleting image", Toast.LENGTH_LONG);
+                                toast.show();
+                                EditBusinessActivity.this.finish();
+                            }
+
+                            @Override
+                            public void onConnectionError() {
+                                showProgress(false);
+                                Toast toast = Toast.makeText(EditBusinessActivity.this, "Connection Error: Please check your internet connection", Toast.LENGTH_LONG);
+                                toast.show();
+                            }
+
+                            @Override
+                            public void onCancelled() {}
+                        });
+                        deleteTask.execute();
                     } else {
-                        UploadImage uploadTask = new UploadImage(EditBusinessActivity.this, getApi(), "user-business-images", "business", imageUri, business);
+                        // Image changed
+                        UploadImageTask uploadTask = new UploadImageTask(EditBusinessActivity.this, getApi(), "user-business-images", "business", imageUri, business);
                         uploadTask.addListener(new APITaskListener<Boolean>() {
                             @Override
                             public void onPostExecute(Boolean success) {

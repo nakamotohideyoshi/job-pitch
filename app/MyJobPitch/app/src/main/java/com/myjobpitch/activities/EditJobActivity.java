@@ -16,13 +16,16 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.myjobpitch.MJPApplication;
 import com.myjobpitch.R;
 import com.myjobpitch.api.MJPApi;
+import com.myjobpitch.api.data.Image;
 import com.myjobpitch.api.data.Job;
 import com.myjobpitch.api.data.JobStatus;
 import com.myjobpitch.fragments.JobEditFragment;
 import com.myjobpitch.tasks.APITaskListener;
 import com.myjobpitch.tasks.CreateReadUpdateAPITaskListener;
-import com.myjobpitch.tasks.UploadImage;
+import com.myjobpitch.tasks.DeleteAPITaskListener;
+import com.myjobpitch.tasks.UploadImageTask;
 import com.myjobpitch.tasks.recruiter.CreateUpdateJobTask;
+import com.myjobpitch.tasks.recruiter.DeleteJobImageTask;
 import com.myjobpitch.tasks.recruiter.ReadUserJobTask;
 
 import java.io.IOException;
@@ -132,11 +135,47 @@ public class EditJobActivity extends MJPProgressActionBarActivity {
             mCreateUpdateJobTask.addListener(new CreateReadUpdateAPITaskListener<Job>() {
                 @Override
                 public void onSuccess(Job job) {
-                    final Uri imageUri = mJobEditFragment.getNewImageUri();
-                    if (imageUri == null) {
+                    final Uri imageUri = mJobEditFragment.getImageUri();
+                    Uri originalUri = null;
+                    Image originalImage = null;
+                    if (job.getImages() != null && !job.getImages().isEmpty()) {
+                        originalImage = job.getImages().get(0);
+                        originalUri = Uri.parse(originalImage.getThumbnail());
+                    }
+                    if ((imageUri == null && originalUri == null) || (imageUri != null && imageUri.equals(originalUri))) {
+                        // No change to image
                         EditJobActivity.this.finish();
+                    } else if (imageUri == null) {
+                        // Image deleted
+                        DeleteJobImageTask deleteTask = new DeleteJobImageTask(getApi(), originalImage.getId());
+                        deleteTask.addListener(new DeleteAPITaskListener() {
+                            @Override
+                            public void onSuccess() {
+                                EditJobActivity.this.finish();
+                            }
+
+                            @Override
+                            public void onError(JsonNode errors) {
+                                showProgress(false);
+                                Toast toast = Toast.makeText(EditJobActivity.this, "Error deleting image", Toast.LENGTH_LONG);
+                                toast.show();
+                                EditJobActivity.this.finish();
+                            }
+
+                            @Override
+                            public void onConnectionError() {
+                                showProgress(false);
+                                Toast toast = Toast.makeText(EditJobActivity.this, "Connection Error: Please check your internet connection", Toast.LENGTH_LONG);
+                                toast.show();
+                            }
+
+                            @Override
+                            public void onCancelled() {}
+                        });
+                        deleteTask.execute();
                     } else {
-                        UploadImage uploadTask = new UploadImage(EditJobActivity.this, getApi(), "user-job-images", "job", imageUri, job);
+                        // Image changed
+                        UploadImageTask uploadTask = new UploadImageTask(EditJobActivity.this, getApi(), "user-job-images", "job", imageUri, job);
                         uploadTask.addListener(new APITaskListener<Boolean>() {
                             @Override
                             public void onPostExecute(Boolean success) {

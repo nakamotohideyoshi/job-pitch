@@ -58,7 +58,7 @@ class UserBusinessImageViewSet(viewsets.ModelViewSet):
         def has_object_permission(self, request, view, obj):
             if request.method in permissions.SAFE_METHODS:
                 return True
-            return request.user.businesses.filter(pk=obj.pk).exists()
+            return request.user.businesses.filter(pk=obj.business.pk).exists()
     
     def perform_create(self, serializer):
         image = serializer.save()

@@ -93,7 +93,7 @@ public class MJPApi {
         this.unbufferedRest.getMessageConverters().add(new ResourceHttpMessageConverter());
         this.unbufferedRest.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
 	}
-	
+
 	public MJPApi() {
 		this("http://mjp.digitalcrocodile.com:8000/");
 	}
@@ -179,14 +179,15 @@ public class MJPApi {
         }
     }
 
-	public void logout() {
-        this.token = null;
-        this.user = null;
+    public void logout() {
         try {
             Log.d("API", "Logging out");
             rest.exchange(getAuthUrl("logout"), HttpMethod.POST, createAuthenticatedRequest(), Object.class);
         } catch (Exception e){
             Log.e("API", "Couldn't contact server to log out", e);
+        } finally {
+            this.token = null;
+            this.user = null;
         }
 	}
 

@@ -229,7 +229,7 @@ public class ConversationThreadActivity extends MJPProgressActionBarActivity  {
                     title = jobSeeker.getFirst_name() + " " + jobSeeker.getLast_name();
                     fromRole = getMJPApplication().get(Role.class, Role.JOB_SEEKER);
 
-                    if (jobSeeker.getPitch() != null)
+                    if (jobSeeker.hasPitch())
                         imageUri = jobSeeker.getPitch().getThumbnail();
 
                 } else {

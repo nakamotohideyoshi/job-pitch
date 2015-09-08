@@ -319,7 +319,7 @@ public class JobSeekerActivity extends MJPProgressActionBarActivity {
             public void onClick(View v) {
                 if (mJobSeeker.getProfile() == null)
                     editProfile();
-                else if (mJobSeeker.getPitch() == null)
+                else if (!mJobSeeker.hasPitch())
                     recordPitch();
                 else
                     loadDataClearSeenAndClearCards();
@@ -350,7 +350,7 @@ public class JobSeekerActivity extends MJPProgressActionBarActivity {
             @Override
             public void onSuccess(JobSeeker result) {
                 mJobSeeker = result;
-                if (mJobSeeker.getProfile() == null && mJobSeeker.getPitch() == null) {
+                if (mJobSeeker.getProfile() == null && !mJobSeeker.hasPitch()) {
                     mEmptyView.setVisibility(View.VISIBLE);
                     mEmptyMessageView.setText(getString(R.string.setup_profile_and_pitch_message));
                     mEmptyButtonView.setText(getString(R.string.setup_profile));
@@ -365,7 +365,7 @@ public class JobSeekerActivity extends MJPProgressActionBarActivity {
                     mEmptyButton2View.setVisibility(View.GONE);
                     mButtons.setVisibility(View.INVISIBLE);
                     showProgress(false);
-                } else if (mJobSeeker.getPitch() == null) {
+                } else if (!mJobSeeker.hasPitch()) {
                     mEmptyView.setVisibility(View.VISIBLE);
                     mEmptyMessageView.setText(getString(R.string.record_pitch_message));
                     mEmptyButtonView.setText(getString(R.string.record_pitch));
@@ -426,7 +426,7 @@ public class JobSeekerActivity extends MJPProgressActionBarActivity {
                 Intent intent = new Intent(this, RecordPitchActivity.class);
                 ObjectMapper mapper = new ObjectMapper();
                 try {
-                    intent.putExtra("pitch_data", mapper.writeValueAsString(mJobSeeker.getPitch()));
+                    intent.putExtra("pitch_data", mapper.writeValueAsString(mJobSeeker.getPitches()));
                 } catch (JsonProcessingException e) {}
                 startActivity(intent);
                 return true;

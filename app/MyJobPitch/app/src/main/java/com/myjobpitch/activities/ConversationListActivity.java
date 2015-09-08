@@ -73,7 +73,7 @@ public class ConversationListActivity extends MJPProgressActionBarActivity  {
             if (getApi().getUser().isRecruiter()) {
                 fromRole = getMJPApplication().get(Role.class, Role.JOB_SEEKER);
                 title = jobSeeker.getFirst_name() + " " + jobSeeker.getLast_name();
-                if (jobSeeker.getPitch() != null)
+                if (jobSeeker.hasPitch())
                     imageUri = jobSeeker.getPitch().getThumbnail();
             } else {
                 fromRole = getMJPApplication().get(Role.class, Role.RECRUITER);

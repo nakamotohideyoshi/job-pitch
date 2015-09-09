@@ -23,7 +23,8 @@ class RelatedImageURLField(serializers.RelatedField):
         url = value.image.url
         thumbnail_url = value.thumbnail.url
         request = self.context.get('request', None)
-        return {'image': request.build_absolute_uri(url),
+        return {'id': value.pk,
+                'image': request.build_absolute_uri(url),
                 'thumbnail': request.build_absolute_uri(thumbnail_url),
                 }
     
@@ -72,7 +73,6 @@ class JobProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = JobProfile
         exclude = ('latlng',)
-
 
 
 class JobSerializer(serializers.ModelSerializer):
@@ -125,6 +125,7 @@ class MessageCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Message
         fields = ('application', 'content') 
+
 
 class MessageUpdateSerializer(serializers.ModelSerializer):
     class Meta:

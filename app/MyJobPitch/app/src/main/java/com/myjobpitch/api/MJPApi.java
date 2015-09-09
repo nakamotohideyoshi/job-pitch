@@ -93,7 +93,7 @@ public class MJPApi {
         this.unbufferedRest.getMessageConverters().add(new ResourceHttpMessageConverter());
         this.unbufferedRest.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
 	}
-	
+
 	public MJPApi() {
 		this("http://mjp.digitalcrocodile.com:8000/");
 	}
@@ -179,14 +179,15 @@ public class MJPApi {
         }
     }
 
-	public void logout() {
-        this.token = null;
-        this.user = null;
+    public void logout() {
         try {
             Log.d("API", "Logging out");
             rest.exchange(getAuthUrl("logout"), HttpMethod.POST, createAuthenticatedRequest(), Object.class);
         } catch (Exception e){
             Log.e("API", "Couldn't contact server to log out", e);
+        } finally {
+            this.token = null;
+            this.user = null;
         }
 	}
 
@@ -329,13 +330,19 @@ public class MJPApi {
         }
     }
 
-    public void uploadPitch(Resource pitch) throws MJPApiException {
-//        MultiValueMap<String, Object> parts = new LinkedMultiValueMap<>();
-//        HttpHeaders videoHeaders = new HttpHeaders();
-//        videoHeaders.setContentType(MediaType.valueOf("video/mp4"));
-//        HttpEntity<Resource> videoEntity = new HttpEntity<>(pitch, videoHeaders);
-//        parts.add("video", pitch);
+    public void deleteBusinessImage(Integer id) {
+        rest.exchange(getObjectUrl("user-business-images", id), HttpMethod.DELETE, createAuthenticatedRequest(), Void.class);
+    }
 
+    public void deleteLocationImage(Integer id) {
+        rest.exchange(getObjectUrl("user-location-images", id), HttpMethod.DELETE, createAuthenticatedRequest(), Void.class);
+    }
+
+    public void deleteJobImage(Integer id) {
+        rest.exchange(getObjectUrl("user-job-images", id), HttpMethod.DELETE, createAuthenticatedRequest(), Void.class);
+    }
+
+    public void uploadPitch(Resource pitch) throws MJPApiException {
         try {
             HttpHeaders headers = new HttpHeaders();
             headers.set("Content-Disposition", "attachment; filename=" + pitch.getFilename());

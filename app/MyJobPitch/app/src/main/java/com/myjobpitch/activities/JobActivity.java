@@ -137,7 +137,7 @@ public class JobActivity extends MJPProgressActionBarActivity {
             final TextView noImageView = (TextView) cardView.findViewById(R.id.no_image);
             final ImageView playButton = (ImageView) cardView.findViewById(R.id.play_button);
             String imageUri = null;
-            if (jobSeeker.getPitch() != null)
+            if (jobSeeker.hasPitch())
                 imageUri = jobSeeker.getPitch().getImage();
 
             if (imageUri != null) {
@@ -440,7 +440,7 @@ public class JobActivity extends MJPProgressActionBarActivity {
             @Override
             public void onItemClicked(int itemPosition, Object dataObject) {
                 JobSeeker jobSeeker = adapter.getItem(itemPosition).getJobSeeker();
-                if (jobSeeker.getPitch() != null) {
+                if (jobSeeker.hasPitch()) {
                     String video = jobSeeker.getPitch().getVideo();
                     Log.d("RecordPitchActivity", "playing video " + video);
                     Intent intent = new Intent(JobActivity.this, MediaPlayerActivity.class);

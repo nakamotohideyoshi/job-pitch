@@ -1,5 +1,7 @@
 package com.myjobpitch.fragments;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -18,19 +20,9 @@ public class BusinessEditFragment extends EditFragment<Business> {
 
     private EditText mNameView;
     private ImageEditFragment mImageEdit;
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @return A new instance of fragment RecruiterProfileFragment.
-     */
-    public static BusinessEditFragment newInstance() {
-        BusinessEditFragment fragment = new BusinessEditFragment();
-        Bundle args = new Bundle();
-        fragment.setArguments(args);
-        return fragment;
-    }
+    private Business mBusiness;
+    private Uri mImageUri;
+    private boolean mImageUriSet = false;
 
     public BusinessEditFragment() {
         // Required empty public constructor
@@ -49,28 +41,69 @@ public class BusinessEditFragment extends EditFragment<Business> {
 
         mNameView = (EditText) view.findViewById(R.id.business_name);
         mImageEdit = (ImageEditFragment) getChildFragmentManager().findFragmentById(R.id.image_edit_fragment);
+        mImageEdit.setListener(new ImageEditFragment.ImageEditFragmentListener() {
+            @Override
+            public void onDelete() {
+                AlertDialog.Builder builder = new AlertDialog.Builder(BusinessEditFragment.this.getActivity());
+                builder.setMessage(getString(R.string.delete_image_confirmation))
+                        .setCancelable(false)
+                        .setPositiveButton(getString(R.string.delete), new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                dialog.cancel();
+                                mImageUri = null;
+                                loadImage();
+                            }
+                        })
+                        .setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                dialog.cancel();
+                            }
+                        }).create().show();
+            }
 
+            @Override
+            public void onChange(Uri image) {
+                mImageUri = image;
+                loadImage();
+            }
+        });
         Map<String, View> fields = new HashMap<>();
         fields.put("name", mNameView);
         setFields(fields);
         setRequiredFields(fields.values());
+
+        if (savedInstanceState != null && savedInstanceState.containsKey("mImageUri")) {
+            mImageUri = savedInstanceState.getParcelable("mImageUri");
+            mImageUriSet = true;
+        }
+
         return view;
     }
 
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelable("mImageUri", mImageUri);
+    }
+
     public void load(Business business) {
+        mBusiness = business;
         mNameView.setText(business.getName());
-        if (business.getImages() == null || business.getImages().isEmpty())
-            mImageEdit.load(null);
-        else
-            mImageEdit.load(Uri.parse(business.getImages().get(0).getImage()));
+        if (!mImageUriSet && mBusiness.getImages() != null && !mBusiness.getImages().isEmpty())
+            mImageUri = Uri.parse(mBusiness.getImages().get(0).getThumbnail());
+        loadImage();
+    }
+
+    private void loadImage() {
+        mImageEdit.load(mImageUri);
     }
 
     public void save(Business business) {
         business.setName(mNameView.getText().toString());
     }
 
-    public Uri getNewImageUri() {
-        return mImageEdit.getNewImageUri();
+    public Uri getImageUri() {
+        return mImageUri;
     }
 
     @Override

@@ -24,7 +24,7 @@ public class JobSeeker extends MJPObjectWithDates implements JobSeekerContainer 
     private boolean age_public;
     private Integer profile;
     private List<Experience> experience;
-    private Pitch pitch;
+    private List<Pitch> pitches;
 
     public boolean getEmail_public() {
         return email_public;
@@ -153,7 +153,31 @@ public class JobSeeker extends MJPObjectWithDates implements JobSeekerContainer 
         return this;
     }
 
+    public List<Pitch> getPitches() {
+        return pitches;
+    }
+
+    public Pitch getUploadingPitch() {
+        if (pitches != null)
+            for (Pitch pitch : pitches)
+                if (pitch.getVideo() == null)
+                    return pitch;
+        return null;
+    }
+
     public Pitch getPitch() {
-        return pitch;
+        if (pitches != null)
+            for (Pitch pitch : pitches)
+                if (pitch.getVideo() != null)
+                    return pitch;
+        return null;
+    }
+
+    public boolean hasUploadingPitch() {
+        return getUploadingPitch() != null;
+    }
+
+    public boolean hasPitch() {
+        return getPitch() != null;
     }
 }

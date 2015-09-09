@@ -330,13 +330,19 @@ public class MJPApi {
         }
     }
 
-    public void uploadPitch(Resource pitch) throws MJPApiException {
-//        MultiValueMap<String, Object> parts = new LinkedMultiValueMap<>();
-//        HttpHeaders videoHeaders = new HttpHeaders();
-//        videoHeaders.setContentType(MediaType.valueOf("video/mp4"));
-//        HttpEntity<Resource> videoEntity = new HttpEntity<>(pitch, videoHeaders);
-//        parts.add("video", pitch);
+    public void deleteBusinessImage(Integer id) {
+        rest.exchange(getObjectUrl("user-business-images", id), HttpMethod.DELETE, createAuthenticatedRequest(), Void.class);
+    }
 
+    public void deleteLocationImage(Integer id) {
+        rest.exchange(getObjectUrl("user-location-images", id), HttpMethod.DELETE, createAuthenticatedRequest(), Void.class);
+    }
+
+    public void deleteJobImage(Integer id) {
+        rest.exchange(getObjectUrl("user-job-images", id), HttpMethod.DELETE, createAuthenticatedRequest(), Void.class);
+    }
+
+    public void uploadPitch(Resource pitch) throws MJPApiException {
         try {
             HttpHeaders headers = new HttpHeaders();
             headers.set("Content-Disposition", "attachment; filename=" + pitch.getFilename());

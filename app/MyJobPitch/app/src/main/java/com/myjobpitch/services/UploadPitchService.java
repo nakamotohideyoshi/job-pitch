@@ -90,7 +90,7 @@ public class UploadPitchService extends IntentService {
     public static synchronized boolean startUpload(Context context, AuthToken token, String file) {
         if (running)
             return false;
-        running = true;
+        setRunning(true);
         Intent intent = new Intent(context, UploadPitchService.class);
         intent.setAction(ACTION_UPLOAD);
         intent.putExtra(EXTRA_TOKEN, token.getKey());

@@ -34,7 +34,7 @@ public class DeleteAPITask extends APITask<Void> {
             action.run();
         } catch (MJPApiException e) {
             errors = e.getErrors();
-            Log.d("ReadAPITask", errors.toString());
+            Log.d("DeleteAPITask", errors.toString());
         } catch (Exception e) {
             e.printStackTrace();
             connectionError = true;

@@ -1,6 +1,6 @@
 package com.myjobpitch.tasks;
 
-import android.content.Context;
+import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -15,7 +15,7 @@ import java.io.InputStream;
 public class DownloadImageTask extends AsyncTask<Uri, Void, Bitmap> {
     private final ProgressBar progress;
     private final ImageView imageView;
-    private final Context context;
+    private final Activity context;
 
     public interface DownloadImageTaskListener {
         void onComplete(Bitmap bitmap);
@@ -24,7 +24,7 @@ public class DownloadImageTask extends AsyncTask<Uri, Void, Bitmap> {
 
     private DownloadImageTaskListener listener = null;
 
-    public DownloadImageTask(Context context, ImageView imageView, ProgressBar progress) {
+    public DownloadImageTask(Activity context, ImageView imageView, ProgressBar progress) {
         this.context = context;
         this.imageView = imageView;
         this.progress = progress;
@@ -58,7 +58,19 @@ public class DownloadImageTask extends AsyncTask<Uri, Void, Bitmap> {
     }
 
     protected void onPostExecute(Bitmap result) {
+        if (result != null) {
+            float scaleFactor = Math.min(
+                    ((float) imageView.getWidth()) / result.getWidth(),
+                    ((float) imageView.getHeight()) / result.getHeight());
+            if (scaleFactor <= 1.0f)
+                result = Bitmap.createScaledBitmap(
+                        result,
+                        (int) (result.getWidth() * scaleFactor),
+                        (int) (result.getHeight() * scaleFactor),
+                        true);
+        }
         imageView.setImageBitmap(result);
+        imageView.setVisibility(View.VISIBLE);
         progress.setVisibility(View.INVISIBLE);
         if (listener != null) {
             if (result == null)

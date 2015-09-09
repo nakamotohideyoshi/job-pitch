@@ -20,7 +20,7 @@ import java.io.InputStream;
 /**
  * Created by jcockburn on 26/05/2015.
  */
-public class UploadImage extends APITask<Boolean> {
+public class UploadImageTask extends APITask<Boolean> {
     private final MJPApi api;
     private final Context context;
     private final String endpoint;
@@ -28,7 +28,7 @@ public class UploadImage extends APITask<Boolean> {
     private final Uri imageUri;
     private final MJPAPIObject object;
 
-    public UploadImage(Context context, MJPApi api, String endpoint, String objectKey, Uri imageUri, MJPAPIObject object) {
+    public UploadImageTask(Context context, MJPApi api, String endpoint, String objectKey, Uri imageUri, MJPAPIObject object) {
         this.context = context;
         this.api = api;
         this.endpoint = endpoint;

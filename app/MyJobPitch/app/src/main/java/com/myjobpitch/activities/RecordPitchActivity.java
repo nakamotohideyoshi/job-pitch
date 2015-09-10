@@ -1,17 +1,13 @@
 package com.myjobpitch.activities;
 
 import android.app.AlertDialog;
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -22,43 +18,54 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.amazonaws.auth.AWSCredentials;
+import com.amazonaws.mobileconnectors.s3.transferutility.TransferListener;
+import com.amazonaws.mobileconnectors.s3.transferutility.TransferObserver;
+import com.amazonaws.mobileconnectors.s3.transferutility.TransferState;
+import com.amazonaws.mobileconnectors.s3.transferutility.TransferUtility;
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.AmazonS3Client;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.myjobpitch.R;
 import com.myjobpitch.api.data.Pitch;
-import com.myjobpitch.services.UploadPitchService;
 import com.myjobpitch.tasks.CreatePitchTask;
 import com.myjobpitch.tasks.CreateReadUpdateAPITaskListener;
 import com.myjobpitch.tasks.DownloadImageTask;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.concurrent.atomic.AtomicBoolean;
 
-public class RecordPitchActivity extends MJPProgressActionBarActivity {
+public class RecordPitchActivity extends MJPProgressActionBarActivity implements TransferListener {
 
-    private class UploadStatusReceiver extends BroadcastReceiver
-    {
-        private UploadStatusReceiver() {}
+    @Override
+    public void onStateChanged(int id, TransferState state) {
+        Log.d("RecordPitchActivity", "onStateChanged " + state);
 
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            if (intent.getAction().equals(UploadPitchService.ACTION_UPLOAD_STATUS)) {
-                int complete = intent.getIntExtra(UploadPitchService.EXTRA_COMPLETE, -1);
-                if (complete < 100)
-                    mUploadProgressText.setText(Integer.toString(complete) + "%");
-                else
-                    mUploadProgressText.setText(getString(R.string.processing));
-            } else if (intent.getAction().equals(UploadPitchService.ACTION_UPLOAD_COMPLETE)) {
-                Toast toast = Toast.makeText(RecordPitchActivity.this, "Pitch uploaded!", Toast.LENGTH_LONG);
-                toast.show();
-                finish();
-            } else if (intent.getAction().equals(UploadPitchService.ACTION_UPLOAD_ERROR)) {
-                Toast toast = Toast.makeText(RecordPitchActivity.this, "Error uploading video!", Toast.LENGTH_LONG);
-                toast.show();
-                showUploadProgress(false);
-            }
-        }
+//                Toast toast = Toast.makeText(RecordPitchActivity.this, "Pitch uploaded!", Toast.LENGTH_LONG);
+//                toast.show();
+//                finish();
+    }
+
+    @Override
+    public void onProgressChanged(int id, long bytesCurrent, long bytesTotal) {
+        int complete = (int)(((float) bytesCurrent / bytesTotal) * 100);
+        if (complete < 100)
+            mUploadProgressText.setText(Integer.toString(complete) + "%");
+        else
+            mUploadProgressText.setText(getString(R.string.processing));
+    }
+
+    @Override
+    public void onError(int id, Exception ex) {
+        Log.e("RecordPitchActivity", "onError " + id + " " + ex);
+        Toast toast = Toast.makeText(RecordPitchActivity.this, "Error uploading video!", Toast.LENGTH_LONG);
+        toast.show();
+        showUploadProgress(false);
+    }
+
+    public boolean isUploadInProgress() {
+        return false; // TODO
     }
 
     private static final int RECORD_PITCH = 1;
@@ -123,29 +130,24 @@ public class RecordPitchActivity extends MJPProgressActionBarActivity {
         mUploadButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                UploadPitchService.checkUploadState(new UploadPitchService.UploadStateChecker() {
-                    @Override
-                    public void state(boolean running, int complete) {
-                        if (running) {
-                            AlertDialog.Builder builder = new AlertDialog.Builder(RecordPitchActivity.this);
-                            builder.setMessage(getString(R.string.cancel_upload_prompt))
-                                    .setCancelable(false)
-                                    .setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int id) {
-                                            dialog.cancel();
-                                            doUpload();
-                                        }
-                                    })
-                                    .setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int id) {
-                                            dialog.cancel();
-                                        }
-                                    }).create().show();
-                        } else {
-                            doUpload();
-                        }
-                    }
-                });
+                if (isUploadInProgress()) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(RecordPitchActivity.this);
+                    builder.setMessage(getString(R.string.cancel_upload_prompt))
+                            .setCancelable(false)
+                            .setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    dialog.cancel();
+                                    doUpload();
+                                }
+                            })
+                            .setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    dialog.cancel();
+                                }
+                            }).create().show();
+                } else {
+                    doUpload();
+                }
             }
         });
 
@@ -177,23 +179,9 @@ public class RecordPitchActivity extends MJPProgressActionBarActivity {
 
         updateInterface();
 
-        UploadStatusReceiver uploadStatusReceiver = new UploadStatusReceiver();
-        LocalBroadcastManager.getInstance(this).registerReceiver(uploadStatusReceiver, new IntentFilter(UploadPitchService.ACTION_UPLOAD_STATUS));
-        LocalBroadcastManager.getInstance(this).registerReceiver(uploadStatusReceiver, new IntentFilter(UploadPitchService.ACTION_UPLOAD_COMPLETE));
-        LocalBroadcastManager.getInstance(this).registerReceiver(uploadStatusReceiver, new IntentFilter(UploadPitchService.ACTION_UPLOAD_ERROR));
-
-        UploadPitchService.checkUploadState(new UploadPitchService.UploadStateChecker() {
-            @Override
-            public void state(boolean running, int complete) {
-                if (running) {
-                    showProgress(true);
-                    if (complete < 100)
-                        mProgressText.setText(getString(R.string.uploading, complete));
-                    else
-                        mProgressText.setText(getString(R.string.processing));
-                }
-            }
-        });
+        if (isUploadInProgress()) {
+            // TODO
+        }
     }
 
     private void doUpload() {
@@ -202,8 +190,16 @@ public class RecordPitchActivity extends MJPProgressActionBarActivity {
         CreatePitchTask task = new CreatePitchTask(getApi(), new Pitch());
         task.addListener(new CreateReadUpdateAPITaskListener<Pitch>() {
             @Override
-            public void onSuccess(Pitch result) {
-                UploadPitchService.startUpload(RecordPitchActivity.this, getApi().getToken(), mOutputFile);
+            public void onSuccess(Pitch pitch) {
+                File file = new File(mOutputFile);
+                AmazonS3 s3 = new AmazonS3Client((AWSCredentials) null);
+                TransferUtility transferUtility = new TransferUtility(s3, getApplicationContext());
+                TransferObserver observer = transferUtility.upload(
+                        "mjp-android-uploads",
+                        String.format("%s/%s.%s.%s", getApi().getApiRoot().replace("/", ""), pitch.getToken(), pitch.getId(), file.getName()),
+                        file
+                );
+                observer.setTransferListener(RecordPitchActivity.this);
                 showProgress(false);
                 showUploadProgress(true);
                 updateInterface();
@@ -260,15 +256,7 @@ public class RecordPitchActivity extends MJPProgressActionBarActivity {
         int playButtonVisibility = View.GONE;
 
         if (mOutputFile != null) {
-            final AtomicBoolean uploading = new AtomicBoolean(false);
-            UploadPitchService.checkUploadState(new UploadPitchService.UploadStateChecker() {
-                @Override
-                public void state(boolean running, int complete) {
-                    uploading.set(running);
-                }
-            });
-            if (!uploading.get())
-                uploadButtonVisibility = View.VISIBLE;
+            uploadButtonVisibility = View.VISIBLE;
             playButtonVisibility = View.VISIBLE;
             mPreviewBitmap = ThumbnailUtils.createVideoThumbnail(mOutputFile, MediaStore.Images.Thumbnails.FULL_SCREEN_KIND);
         } else if (mPitch != null) {

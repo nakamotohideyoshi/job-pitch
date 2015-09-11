@@ -18,11 +18,12 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.amazonaws.auth.AWSCredentials;
+import com.amazonaws.auth.CognitoCachingCredentialsProvider;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferListener;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferObserver;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferState;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferUtility;
+import com.amazonaws.regions.Regions;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -38,6 +39,8 @@ import java.io.IOException;
 
 public class RecordPitchActivity extends MJPProgressActionBarActivity implements TransferListener {
 
+    private ProgressBar mUploadProgressBar;
+
     @Override
     public void onStateChanged(int id, TransferState state) {
         Log.d("RecordPitchActivity", "onStateChanged " + state);
@@ -50,10 +53,13 @@ public class RecordPitchActivity extends MJPProgressActionBarActivity implements
     @Override
     public void onProgressChanged(int id, long bytesCurrent, long bytesTotal) {
         int complete = (int)(((float) bytesCurrent / bytesTotal) * 100);
-        if (complete < 100)
+        if (complete < 100) {
+            mUploadProgressBar.setProgress(complete);
             mUploadProgressText.setText(Integer.toString(complete) + "%");
-        else
+        } else {
             mUploadProgressText.setText(getString(R.string.processing));
+            mUploadProgressBar.setIndeterminate(true);
+        }
     }
 
     @Override
@@ -176,6 +182,7 @@ public class RecordPitchActivity extends MJPProgressActionBarActivity implements
 
         mUploadProgressView = findViewById(R.id.upload_progress);
         mUploadProgressText = (TextView) findViewById(R.id.upload_progress_text);
+        mUploadProgressBar = (ProgressBar) findViewById(R.id.upload_progress_bar);
 
         updateInterface();
 
@@ -192,7 +199,12 @@ public class RecordPitchActivity extends MJPProgressActionBarActivity implements
             @Override
             public void onSuccess(Pitch pitch) {
                 File file = new File(mOutputFile);
-                AmazonS3 s3 = new AmazonS3Client((AWSCredentials) null);
+                CognitoCachingCredentialsProvider credentialsProvider = new CognitoCachingCredentialsProvider(
+                        getApplicationContext(),
+                        "eu-west-1:93ae6986-5938-4130-a3c0-f96c39d75be2", // Identity Pool ID
+                        Regions.EU_WEST_1 // Region
+                );
+                AmazonS3 s3 = new AmazonS3Client(credentialsProvider);
                 TransferUtility transferUtility = new TransferUtility(s3, getApplicationContext());
                 TransferObserver observer = transferUtility.upload(
                         "mjp-android-uploads",
@@ -226,9 +238,10 @@ public class RecordPitchActivity extends MJPProgressActionBarActivity implements
     }
 
     private void showUploadProgress(boolean visible) {
-        if (visible)
+        if (visible) {
+            mUploadProgressBar.setIndeterminate(false);
             mUploadProgressView.setVisibility(View.VISIBLE);
-        else
+        } else
             mUploadProgressView.setVisibility(View.GONE);
     }
 

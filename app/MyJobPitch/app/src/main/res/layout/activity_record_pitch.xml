@@ -51,6 +51,7 @@
 
             <LinearLayout
                 android:id="@+id/upload_progress"
+                android:visibility="gone"
                 android:gravity="center"
                 android:layout_width="267dp"
                 android:layout_marginTop="10dp"
@@ -61,6 +62,8 @@
                     android:layout_height="wrap_content"
                     android:text="Uploading: "/>
                 <ProgressBar
+                    android:id="@+id/upload_progress_bar"
+                    android:max="100"
                     style="@android:style/Widget.Holo.ProgressBar.Horizontal"
                     android:layout_marginLeft="5dp"
                     android:layout_marginRight="10dp"

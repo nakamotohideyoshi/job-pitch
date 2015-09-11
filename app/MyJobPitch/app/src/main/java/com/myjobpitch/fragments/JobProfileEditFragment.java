@@ -1,12 +1,15 @@
 package com.myjobpitch.fragments;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -30,47 +33,30 @@ public class JobProfileEditFragment extends EditFragment {
     public static final int SELECT_PLACE = 1;
     public static final int DEFAULT_RADIUS_INDEX = 2;
 
-    private Spinner mProfileSectorsView;
+    private TextView mProfileSectorsView;
     private Spinner mProfileContractView;
     private Spinner mProfileHoursView;
-    private List<Sector> sectors;
-    private List<Contract> contracts;
-    private List<Hours> hours;
+
+    private List<Sector> mSelectedSectors = new ArrayList<>();
+    private List<Sector> mSectors;
+    private List<Contract> mContracts;
+    private List<Hours> mHours;
+
     private Spinner mRadiusSpinner;
     private TextView mPlaceView;
-    private View mPlaceButton;
-
     private Double mLongitude;
     private Double mLatitude;
     private String mPlaceId = "";
     private String mPlaceName;
-    private List<String> radiusOptions = Arrays.asList(new String[] {
+    private List<String> radiusOptions = Arrays.asList(
         "1 mile", "2 miles", "5 miles", "10 miles", "50 miles"
-    });
-    private List<Integer> radiusValues = Arrays.asList(new Integer[] {
+    );
+    private List<Integer> radiusValues = Arrays.asList(
         1, DEFAULT_RADIUS_INDEX, 5, 10, 50
-    });
-
-    public static JobProfileEditFragment newInstance() {
-        JobProfileEditFragment fragment = new JobProfileEditFragment();
-        Bundle args = new Bundle();
-//        args.putString(ARG_PARAM1, param1);
-//        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
+    );
 
     public JobProfileEditFragment() {
         // Required empty public constructor
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-//            mParam1 = getArguments().getString(ARG_PARAM1);
-//            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
     }
 
     @Override
@@ -79,15 +65,55 @@ public class JobProfileEditFragment extends EditFragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_job_profile_edit, container, false);
 
-        mProfileSectorsView = (Spinner) view.findViewById(R.id.job_profile_sectors);
         mProfileContractView = (Spinner) view.findViewById(R.id.job_profile_contract);
         mProfileHoursView = (Spinner) view.findViewById(R.id.job_profile_hours);
 
+        mProfileSectorsView = (TextView) view.findViewById(R.id.job_profile_sectors);
+        Button profileSectorsButton = (Button) view.findViewById(R.id.job_profile_sectors_button);
+        profileSectorsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final List<Sector> selectedSectors = new ArrayList<>(mSelectedSectors);
+                String[] sectorNames = new String[mSectors.size()];
+                boolean[] checkedSectors = new boolean[mSectors.size()];
+                for (int i = 0; i < mSectors.size(); i++) {
+                    Sector sector = mSectors.get(i);
+                    sectorNames[i] = sector.getName();
+                    checkedSectors[i] = selectedSectors.contains(sector);
+                }
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                builder.setTitle(R.string.select_sectors)
+                        .setMultiChoiceItems(sectorNames, checkedSectors,
+                                new DialogInterface.OnMultiChoiceClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int i, boolean isChecked) {
+                                        Sector sector = mSectors.get(i);
+                                        if (isChecked)
+                                            selectedSectors.add(sector);
+                                        else if (selectedSectors.contains(sector))
+                                            selectedSectors.remove(sector);
+                                    }
+                                })
+                        .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int id) {
+                                updateSelectedSectors(selectedSectors);
+                            }
+                        })
+                        .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int id) {
+
+                            }
+                        })
+                        .show();
+            }
+        });
 
         mPlaceView = (TextView) view.findViewById(R.id.place);
 
-        mPlaceButton = view.findViewById(R.id.place_button);
-        mPlaceButton.setOnClickListener(new View.OnClickListener() {
+        View placeButton = view.findViewById(R.id.place_button);
+        placeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), SelectPlaceActivity.class);
@@ -104,7 +130,7 @@ public class JobProfileEditFragment extends EditFragment {
         });
 
         mRadiusSpinner = (Spinner) view.findViewById(R.id.select_radius);
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_dropdown_item, radiusOptions);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_dropdown_item, radiusOptions);
         mRadiusSpinner.setAdapter(adapter);
         mRadiusSpinner.setSelection(DEFAULT_RADIUS_INDEX);
 
@@ -121,47 +147,48 @@ public class JobProfileEditFragment extends EditFragment {
     }
 
     public void loadApplicationData(MJPApplication application) {
-        this.sectors = application.get(Sector.class);
-        mProfileSectorsView.setAdapter(new MJPObjectWithNameAdapter(this.getActivity(), android.R.layout.simple_list_item_1, this.sectors));
+        this.mSectors = application.get(Sector.class);
 
-        this.contracts = new ArrayList<>();
+        this.mContracts = new ArrayList<>();
         Contract anyContract = new Contract();
         anyContract.setName(getString(R.string.any));
-        this.contracts.add(anyContract);
-        this.contracts.addAll(application.get(Contract.class));
-        mProfileContractView.setAdapter(new MJPObjectWithNameAdapter<Contract>(this.getActivity(), android.R.layout.simple_list_item_1, this.contracts));
+        this.mContracts.add(anyContract);
+        this.mContracts.addAll(application.get(Contract.class));
+        mProfileContractView.setAdapter(new MJPObjectWithNameAdapter<>(this.getActivity(), android.R.layout.simple_list_item_1, this.mContracts));
 
-        this.hours = new ArrayList<>();
+        this.mHours = new ArrayList<>();
         Hours anyHours = new Hours();
         anyHours.setName(getString(R.string.any));
-        this.hours.add(anyHours);
-        this.hours.addAll(application.get(Hours.class));
-        mProfileHoursView.setAdapter(new MJPObjectWithNameAdapter<Hours>(this.getActivity(), android.R.layout.simple_list_item_1, this.hours));
+        this.mHours.add(anyHours);
+        this.mHours.addAll(application.get(Hours.class));
+        mProfileHoursView.setAdapter(new MJPObjectWithNameAdapter<>(this.getActivity(), android.R.layout.simple_list_item_1, this.mHours));
     }
 
     public void load(JobProfile jobProfile) {
-        List<Integer> selectedSectors = jobProfile.getSectors();
-        if (jobProfile.getSectors() != null && !selectedSectors.isEmpty()) {
-            Integer selectedSector = selectedSectors.get(0);
-            for (int i = 0; i < sectors.size(); i++) {
-                if (this.sectors.get(i).getId() == selectedSector) {
-                    mProfileSectorsView.setSelection(i);
-                    break;
-                }
-            }
-        }
+
+        if (jobProfile.getSectors() != null) {
+            List<Sector> selectedSectors = new ArrayList<>();
+            for (Integer sectorId : jobProfile.getSectors())
+                for (Sector sector : mSectors)
+                    if (sector.getId().equals(sectorId))
+                        selectedSectors.add(sector);
+            updateSelectedSectors(selectedSectors);
+        } else
+            updateSelectedSectors(new ArrayList<Sector>());
 
         Integer selectedContract = jobProfile.getContract();
-        for (int i = 0; i < contracts.size(); i++) {
-            if (contracts.get(i).getId() == selectedContract) {
+        for (int i = 0; i < mContracts.size(); i++) {
+            Integer contract = mContracts.get(i).getId();
+            if ((contract == null && selectedContract == null) || (contract != null && contract.equals(selectedContract))) {
                 mProfileContractView.setSelection(i);
                 break;
             }
         }
 
         Integer selectedHours = jobProfile.getHours();
-        for (int i = 0; i < this.hours.size(); i++) {
-            if (this.hours.get(i).getId() == selectedHours) {
+        for (int i = 0; i < this.mHours.size(); i++) {
+            Integer hours = mHours.get(i).getId();
+            if ((hours == null && selectedHours == null) || (hours != null && hours.equals(selectedHours))) {
                 mProfileHoursView.setSelection(i);
                 break;
             }
@@ -186,13 +213,26 @@ public class JobProfileEditFragment extends EditFragment {
         }
     }
 
-    public void save(JobProfile jobProfile) {
-        MJPAPIObject selectedSector = (MJPAPIObject) mProfileSectorsView.getSelectedItem();
+    private void updateSelectedSectors(List<Sector> selectedSectors) {
+        mSelectedSectors = selectedSectors;
+        if (selectedSectors.isEmpty())
+            mProfileSectorsView.setText(getString(R.string.not_set));
+        else {
+            StringBuilder text = new StringBuilder();
+            for (Sector sector : mSelectedSectors) {
+                if (text.length() > 0)
+                    text.append(", ");
+                text.append(sector.getName());
+            }
+            mProfileSectorsView.setText(text);
+        }
+    }
 
-        if (selectedSector != null)
-            jobProfile.setSectors(Arrays.asList(new Integer[]{selectedSector.getId()}));
-        else
-            jobProfile.setSectors(null);
+    public void save(JobProfile jobProfile) {
+        List<Integer> selectedSectors = new ArrayList<>();
+        for (Sector sector : mSelectedSectors)
+            selectedSectors.add(sector.getId());
+        jobProfile.setSectors(selectedSectors);
 
         MJPAPIObject selectedContract = (MJPAPIObject) mProfileContractView.getSelectedItem();
         if (selectedContract != null)
@@ -242,6 +282,12 @@ public class JobProfileEditFragment extends EditFragment {
         if (mLatitude == null) {
             success = false;
             mPlaceView.setError(getString(R.string.error_field_required));
+        }
+
+        mProfileSectorsView.setError(null);
+        if (mSelectedSectors.isEmpty()) {
+            success = false;
+            mProfileSectorsView.setError(getString(R.string.error_field_required));
         }
 
         return success;

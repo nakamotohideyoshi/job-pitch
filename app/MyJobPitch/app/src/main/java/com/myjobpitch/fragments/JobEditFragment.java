@@ -1,20 +1,27 @@
 package com.myjobpitch.fragments;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.myjobpitch.MJPApplication;
 import com.myjobpitch.R;
 import com.myjobpitch.api.MJPAPIObject;
+import com.myjobpitch.api.data.Business;
 import com.myjobpitch.api.data.Contract;
 import com.myjobpitch.api.data.Hours;
 import com.myjobpitch.api.data.Job;
+import com.myjobpitch.api.data.Location;
 import com.myjobpitch.api.data.Sector;
 import com.myjobpitch.widgets.MJPObjectWithNameAdapter;
 
@@ -32,33 +39,16 @@ public class JobEditFragment extends EditFragment {
     private List<Contract> contracts;
     private List<Hours> hours;
     private ImageEditFragment mImageEdit;
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @return A new instance of fragment RecruiterProfileFragment.
-     */
-    public static JobEditFragment newInstance() {
-        JobEditFragment fragment = new JobEditFragment();
-        Bundle args = new Bundle();
-//        args.putString(ARG_PARAM1, param1);
-//        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
+    private TextView mLocationDescCharacters;
+    private Uri mImageUri;
+    private Uri mNoImageUri;
+    private boolean mImageUriSet = false;
+    private String mNoImageMessage;
+    private float mNoImageAlpha;
+    private Job mJob;
 
     public JobEditFragment() {
         // Required empty public constructor
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-//            mParam1 = getArguments().getString(ARG_PARAM1);
-//            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
     }
 
     @Override
@@ -67,12 +57,52 @@ public class JobEditFragment extends EditFragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_job_edit, container, false);
         mImageEdit = (ImageEditFragment) getChildFragmentManager().findFragmentById(R.id.image_edit_fragment);
+        mImageEdit.setListener(new ImageEditFragment.ImageEditFragmentListener() {
+            @Override
+            public void onDelete() {
+                AlertDialog.Builder builder = new AlertDialog.Builder(JobEditFragment.this.getActivity());
+                builder.setMessage(getString(R.string.delete_image_confirmation))
+                        .setCancelable(false)
+                        .setPositiveButton(getString(R.string.delete), new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                dialog.cancel();
+                                mImageUri = null;
+                                loadImage();
+                            }
+                        })
+                        .setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                dialog.cancel();
+                            }
+                        }).create().show();
+            }
+
+            @Override
+            public void onChange(Uri image) {
+                mImageUri = image;
+                loadImage();
+            }
+        });
 
         mLocationTitleView = (EditText) view.findViewById(R.id.job_title);
         mLocationDescView = (EditText) view.findViewById(R.id.job_description);
+        mLocationDescCharacters = (TextView) view.findViewById(R.id.job_description_character_count);
         mLocationSectorView = (Spinner) view.findViewById(R.id.job_sector);
         mLocationContractView = (Spinner) view.findViewById(R.id.job_contract);
         mLocationHoursView = (Spinner) view.findViewById(R.id.job_hours);
+
+        mLocationDescView.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                mLocationDescCharacters.setText(getString(R.string.characters_remaining, 500 - charSequence.length()));
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {}
+        });
 
         Map<String, View> fields = new HashMap<>();
         fields.put("title", mLocationTitleView);
@@ -84,51 +114,86 @@ public class JobEditFragment extends EditFragment {
 
         setRequiredFields(fields.values());
 
+        if (savedInstanceState != null && savedInstanceState.containsKey("mImageUri")) {
+            mImageUri = savedInstanceState.getParcelable("mImageUri");
+            mImageUriSet = true;
+        }
+
         return view;
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelable("mImageUri", mImageUri);
     }
 
     public void loadApplicationData(MJPApplication application) {
         this.sectors = application.get(Sector.class);
         mLocationSectorView.setAdapter(new MJPObjectWithNameAdapter(this.getActivity(), android.R.layout.simple_list_item_1, this.sectors));
         this.contracts = application.get(Contract.class);
-        mLocationContractView.setAdapter(new MJPObjectWithNameAdapter<Contract>(this.getActivity(), android.R.layout.simple_list_item_1, this.contracts));
+        mLocationContractView.setAdapter(new MJPObjectWithNameAdapter<>(this.getActivity(), android.R.layout.simple_list_item_1, this.contracts));
         this.hours = application.get(Hours.class);
-        mLocationHoursView.setAdapter(new MJPObjectWithNameAdapter<Hours>(this.getActivity(), android.R.layout.simple_list_item_1, this.hours));
+        mLocationHoursView.setAdapter(new MJPObjectWithNameAdapter<>(this.getActivity(), android.R.layout.simple_list_item_1, this.hours));
     }
 
     public void load(Job job) {
-        mLocationTitleView.setText(job.getTitle());
-        mLocationDescView.setText(job.getDescription());
-        if (job.getSector() != null) {
+        mJob = job;
+        mLocationTitleView.setText(mJob.getTitle());
+        mLocationDescView.setText(mJob.getDescription());
+        if (mJob.getSector() != null) {
             for (int i = 0; i < sectors.size(); i++) {
-                if (sectors.get(i).getId() == job.getSector()) {
+                if (sectors.get(i).getId() == mJob.getSector()) {
                     mLocationSectorView.setSelection(i);
                     break;
                 }
             }
         }
 
-        if (job.getContract() != null) {
+        if (mJob.getContract() != null) {
             for (int i = 0; i < contracts.size(); i++) {
-                if (contracts.get(i).getId() == job.getContract()) {
+                if (contracts.get(i).getId() == mJob.getContract()) {
                     mLocationContractView.setSelection(i);
                     break;
                 }
             }
         }
 
-        if (job.getHours() != null) {
+        if (mJob.getHours() != null) {
             for (int i = 0; i < hours.size(); i++) {
-                if (hours.get(i).getId() == job.getHours()) {
+                if (hours.get(i).getId() == mJob.getHours()) {
                     mLocationHoursView.setSelection(i);
                     break;
                 }
             }
         }
-        if (job.getImages() == null || job.getImages().isEmpty())
-            mImageEdit.load(null);
-        else
-            mImageEdit.load(Uri.parse(job.getImages().get(0).getImage()));
+
+        if (!mImageUriSet && mJob.getImages() != null && !mJob.getImages().isEmpty())
+            mImageUri = Uri.parse(mJob.getImages().get(0).getThumbnail());
+
+
+        mNoImageMessage = getString(R.string.no_image);
+        mNoImageAlpha = 1.0f;
+        Location location = mJob.getLocation_data();
+        if (location != null) {
+            if (location.getImages() != null && !location.getImages().isEmpty()) {
+                mNoImageUri = Uri.parse(location.getImages().get(0).getThumbnail());
+                mNoImageMessage = getString(R.string.image_set_by_location);
+                mNoImageAlpha = 0.3f;
+            } else {
+                Business business = location.getBusiness_data();
+                if (business != null && business.getImages() != null && !business.getImages().isEmpty()) {
+                    mNoImageUri = Uri.parse(business.getImages().get(0).getThumbnail());
+                    mNoImageMessage = getString(R.string.image_set_by_business);
+                    mNoImageAlpha = 0.3f;
+                }
+            }
+        }
+        loadImage();
+    }
+
+    private void loadImage() {
+        mImageEdit.load(mImageUri, mNoImageUri, mNoImageMessage, mNoImageAlpha);
     }
 
     public void save(Job job) {
@@ -137,25 +202,25 @@ public class JobEditFragment extends EditFragment {
 
         MJPAPIObject selectedSector = (MJPAPIObject) mLocationSectorView.getSelectedItem();
         if (selectedSector != null)
-            job.setSector((int) selectedSector.getId());
+            job.setSector(selectedSector.getId());
         else
             job.setSector(null);
 
         MJPAPIObject selectedContract = (MJPAPIObject) mLocationContractView.getSelectedItem();
         if (selectedContract != null)
-            job.setContract((int) selectedContract.getId());
+            job.setContract(selectedContract.getId());
         else
             job.setContract(null);
 
         MJPAPIObject selectedHours = (MJPAPIObject) mLocationHoursView.getSelectedItem();
         if (selectedHours != null)
-            job.setHours((int) selectedHours.getId());
+            job.setHours(selectedHours.getId());
         else
             job.setHours(null);
     }
 
-    public Uri getNewImageUri() {
-        return mImageEdit.getNewImageUri();
+    public Uri getImageUri() {
+        return mImageUri;
     }
 
     @Override

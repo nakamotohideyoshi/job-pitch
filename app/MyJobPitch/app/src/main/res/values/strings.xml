@@ -16,7 +16,7 @@
     <string name="prompt_location_description">Description</string>
     <string name="prompt_telephone">Telephone (optional)</string>
     <string name="prompt_mobile">Mobile (optional)</string>
-    <string name="location_details">Work Place Details</string>
+    <string name="location_details">Work Place &amp; Details</string>
     <string name="public_data">Public</string>
     <string name="business_details">Company Details</string>
     <string name="title_create_profile">Create Profile</string>
@@ -139,4 +139,10 @@
     <string name="got_it">Got it!</string>
     <string name="select_place_explainer">Search for a location, or long-press on the map to manually select a location.</string>
     <string name="error_upload_in_progress">Error: pitch upload in progress!</string>
+    <string name="my_jobs">My jobs</string>
+    <string name="characters_remaining">%1$s characters remaining</string>
+    <string name="image_set_by_business">image set by company</string>
+    <string name="image_set_by_location">image set by work place</string>
+    <string name="delete_image_confirmation">Are you sure you want to remove this image?</string>
+    <string name="select_sectors">Select job sectors</string>
 </resources>

@@ -69,7 +69,19 @@ def create_location(request):
     return render(request, 'profile/create-location.html')
 
 def messages(request):
-    return render(request, 'profile/messages.html')
+    return render(request, 'messages.html')
 
 def job_preferences(request):
     return render(request, 'profile/job-preferences.html')
+	
+def jobs(request):
+    return render(request, 'jobs.html')
+
+def single_job(request):
+    return render(request, 'single-job.html')
+	
+def design(request):
+    return render(request, 'design.html')	
+	
+def edit_job_preferences(request):
+    return render(request, 'profile/edit-job-preferences.html')	

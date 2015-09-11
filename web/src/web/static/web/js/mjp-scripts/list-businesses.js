@@ -5,7 +5,6 @@ $(function() {
 	// Run login check funtion with auto-redirect
 	checkLogin(true);
 
-	// Populate any fields that have data
 			  $.get( "/api/businesses/", { csrftoken: getCookie('csrftoken') }).done(function( data ) {
 				  for (var key in data) {
 					  var obj = data[key];

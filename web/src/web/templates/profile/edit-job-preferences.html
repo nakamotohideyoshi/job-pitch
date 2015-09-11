@@ -1,0 +1,76 @@
+{% extends "mjp_base.html" %}
+
+{% block content %}
+	<div class="container-fluid">
+
+                <!-- Page Heading -->
+                <div class="row">
+                    <div class="col-lg-12">
+                        <h1 class="page-header">
+                            Edit Job Preferences
+                        </h1>
+						
+						<div class="col-lg-12">
+							<div class="col-md-4 col-md-offset-4">
+								<form role="form"  method="post" id="job-preferences">
+									<div class="alert" role="alert"></div>													
+																										
+									<div class="form-group">
+											<label>Sector</label>
+											<select class="form-control" required name="sector" id="sector">
+											  <option value="" selected="">Choose a job sector</option>
+											</select>
+									</div>
+									
+									<div class="form-group">
+											<label>Contract</label>
+											<select class="form-control" name="contract" id="contract">
+											  <option value="" selected="">Any</option>
+											</select>
+									</div>
+									
+									<div class="form-group">
+											<label>Hours</label>
+											<select class="form-control" name="hours" id="hours">
+											  <option value="" selected="">Any</option>
+											</select>
+									</div>
+									
+									<div class="form-group">
+											<label>Search Area</label>
+											<p>In order to match you with jobs in your area, you must tell us your location, and specify the maximum distance to search.</p>
+											<input type="text" class="form-control" required placeholder="Postcode" name="location" id="location">
+									</div>
+									
+									<div class="form-group">
+											<select class="form-control" required name="search_radius" id="search_radius">
+												<option value="1">1 Miles</option>
+												<option value="2">2 Miles</option>
+												<option value="5" selected="">5 Miles</option>
+												<option value="10">10 Miles</option>
+												<option value="50">50 Miles</option>
+											</select>
+									</div>
+									
+									<button type="submit" class="btn btn-primary">Continue</button>
+									
+									{% csrf_token %}
+								</form>
+								
+							</div>
+						</div>
+                        
+                    </div>
+                </div>
+                <!-- /.row -->
+               
+
+            </div>
+            <!-- /.container-fluid -->
+
+{% endblock %}
+{% block pagescripts %}
+
+	<script src="/static/web/js/mjp-scripts/edit-job-preferences.js"></script>
+	
+{% endblock %}

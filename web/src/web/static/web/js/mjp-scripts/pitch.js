@@ -1,4 +1,9 @@
 $(document).ready(function() {
+			var job_seeker_id = 0;
+			$.get( "/api-rest-auth/user/", { token: getCookie('key') ,csrftoken: getCookie('csrftoken') }).done(function( data ) {
+				  
+				  job_seeker_id = data.job_seeker;
+			});
 				$("#webcam").scriptcam({ 
 					fileReady:fileReady,
 					cornerRadius:20,
@@ -20,34 +25,42 @@ $(document).ready(function() {
 				$( "#recordStartButton" ).attr( "disabled", false );
 			}
 			function startRecording() {
-				$( "#recordStartButton" ).attr( "disabled", true );
+				$( "#recordStartButton" ).hide();
 				$( "#recordStopButton" ).attr( "disabled", false );
+				$( "#recordStopButton" ).show();
 				$.scriptcam.startRecording();
 			}
 			function closeCamera() {
 				$("#recordStopButton" ).attr( "disabled", true );
 				$.scriptcam.closeCamera();
-				$('#message').html('Please wait for the file conversion to finish...');
+				$('#message').html('Please wait while we process your upload.');
 			}
 			function fileReady(fileName) {
 				$('#recorder').hide();
-				$('#message').html('This file is now dowloadable for five minutes over <a href='+fileName+'>here</a>.');
-				var fileNameNoExtension=fileName.replace(".mp4", "");
+				var filenameOnly = fileName.replace("http://europe.www.scriptcam.com/dwnld/", "");
+				var filenameOnlyNoExt = filenameOnly.replace(".mp4", "");
+				console.log(filenameOnly);
 				
+				$('#message').html('Pitch Uploaded: '+filenameOnly);
+				  
 				$('#mediaplayer').show();
-
-					   $.ajax({
-						  method: "GET",
-						  url: "http://52.10.72.16/videoProcess.php",
-						  data: {file:fileName}
-						})
-						  .done(function( msg ) {
-							alert( "Data Saved: " + msg );
-						  });
+				
+				$.post( "/api/pitches/", { csrftoken: getCookie('csrftoken') }).done(function( data ) {
+					console.log( data );
+					$.put( "/api/pitches/"+data.id+"/?token="+data.token, { video: 'https://s3-eu-west-1.amazonaws.com/mjp-media-upload/'+filenameOnly , thumb: 'https://s3-eu-west-1.amazonaws.com/mjp-media-upload/'+filenameOnlyNoExt+'.jpg',csrftoken: getCookie('csrftoken') }).done(function( data ) {
+						window.location.href = "/jobs";
+					})
+					.fail(function( data ) {
+						alert( data.responseJSON );
+					});
+				  })
+				  .fail(function( data ) {
+					alert( data.responseJSON );
+				  });
+					  
 			}
 			function onError(errorId,errorMsg) {
-				alert('hit');
-				alert(errorMsg);
+				console.log(errorMsg);
 			}
 			function onWebcamReady(cameraNames,camera,microphoneNames,microphone,volume) {
 				$.each(cameraNames, function(index, text) {
@@ -71,19 +84,3 @@ $(document).ready(function() {
 			function changeMicrophone() {
 				$.scriptcam.changeMicrophone($('#microphoneNames').val());
 			}
-			$('#pitch-upload').submit(function( event ) {
-				event.preventDefault();
-				var fd = new FormData(document.getElementById("file-upload"));
-				console.log(fd);
-				$.ajax({
-				  url: "http://52.10.72.16/upload_fallback.php",
-				  type: "POST",
-				  data: fd,
-				  enctype: 'multipart/form-data',
-				  processData: false,  // tell jQuery not to process the data
-				  contentType: false   // tell jQuery not to set contentType
-				}).done(function( data ) {
-					console.log("PHP Output:");
-					console.log( data );
-				});
-			});

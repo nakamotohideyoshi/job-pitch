@@ -49,13 +49,10 @@ $(function() {
 			var work_place_location = $('#work_place_location').val();
 			var business_id = $('#business').val();
 			
-			// Still need to build these in:
-			var latitude = 0;
-			var longitude = 0;
-			var place_name = 'place_name';
+			postcodeLocationData(work_place_location, function(output){
+  				var postcodeData = output.result;
 			
-			
-			$.post( "/api/user-locations/", { name:work_place_name, description:work_place_description, address:work_place_address, email:work_place_email, email_public:work_place_email_public, telephone:work_place_telephone, telephone_public:work_place_telephone_public, mobile:work_place_mobile, mobile_public:work_place_mobile_public, business:business_id, latitude:latitude, longitude:longitude, place_name:place_name }).done(function( data ) {
+			$.post( "/api/user-locations/", { name:work_place_name, description:work_place_description, address:work_place_address, email:work_place_email, email_public:work_place_email_public, telephone:work_place_telephone, telephone_public:work_place_telephone_public, mobile:work_place_mobile, mobile_public:work_place_mobile_public, business:business_id, latitude: postcodeData.latitude, longitude: postcodeData.longitude, place_name:postcodeData.nuts }).done(function( data ) {
 					  $('#location').val(data.id);
 					  var formData2 = new FormData($('#work_place_details')[0]);
 					  $.ajax({
@@ -68,14 +65,13 @@ $(function() {
 						processData: false,
 						success: function (data) {
 						  		console.log(data);
-						  		$('#work_place_details').fadeOut(250, function() {
-									
-								});
+						  		window.location.href = "/profile/list-businesses/";
 						}
 					  });
 			  })
 			  .fail(function( data ) {
 				console.log( data );
 			  });
+			});
 	});
 });

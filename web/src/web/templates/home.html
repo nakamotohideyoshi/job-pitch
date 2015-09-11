@@ -1,21 +1,135 @@
 {% extends "mjp_base.html" %}
 
+{% block headerslider %}
+
+	<div class="message-get-app"><p class="get-app-text">Download the app: <a href="#">Android</a> / <a href="#">Apple</a></p></div>
+
+<!-- Header Carousel -->
+    <header id="myCarousel" class="carousel slide">
+        <!-- Indicators -->
+        <ol class="carousel-indicators">
+            <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+            <li data-target="#myCarousel" data-slide-to="1"></li>
+        </ol>
+        
+		<div class="above-slide-detail">
+        	<img src="/static/web/design/images/logo-slide.png">
+            <div class="buttons-slide">
+            	<a href="#" class="btn btn-home-login" data-toggle="modal" data-target="#loginModal">Login</a>
+            	<a href="#" class="btn btn-home-reg" data-toggle="modal" data-target="#regModal">Registration</a>
+            </div>
+        </div>
+        
+        <!-- Wrapper for slides -->
+        <div class="carousel-inner">
+            <div class="item active">
+                <div class="fill" style="background-image:url('/static/web/design/images/slide-1.jpg');"></div>
+            </div>
+            <div class="item">
+                <div class="fill" style="background-image:url('/static/web/design/images/slide-1.jpg');"></div>
+            </div>
+        </div>
+
+        <!-- Controls -->
+        <a class="left carousel-control" href="#myCarousel" data-slide="prev">
+            <span class="icon-prev"><img src="/static/web/design/images/prev-arrow.png"></span>
+        </a>
+        <a class="right carousel-control" href="#myCarousel" data-slide="next">
+            <span class="icon-next"><img src="/static/web/design/images/next-arrow.png"></span>
+        </a>
+    </header>
+{% endblock %}
+
 {% block content %}
-	<div class="container-fluid">
-
-                <!-- Page Heading -->
-                <div class="row">
-                    <div class="col-lg-12">
-                        <h1 class="page-header">
-                            Home
-                        </h1>
-
+	 <!-- Marketing Icons Section -->
+        <div class="row need-details-box">
+            <div class="col-md-6">
+                <div class="need-staff-box">
+                	<img class="need-staff-header-image" src="/static/web/design/images/need-staff-icon.png">
+                    <h3 class="need-staff-header-title">I Need Staff</h3>
+                	<div class="row">
+                    	<div class="col-sm-6 content-squares">
+                            <div class="background-trans">
+                                <img src="/static/web/design/images/create-icon.png" class="create-icon">
+                                <h3>Create<br>my company's profile</h3>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 content-squares">
+                            <div class="background-trans">
+                                <img src="/static/web/design/images/recording-icon.png" class="recording-icon">
+                                <h3>Record<br>company's pitch</h3>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                    	<div class="col-sm-6 content-squares">
+                            <div class="background-trans">
+                                <img src="/static/web/design/images/add-icon.png" class="add-icon">
+                                <h3>Add a Job</h3>
+                            </div>
+                        </div>
+                    	<div class="col-sm-6 content-squares">
+                            <div class="background-trans">
+                                <img src="/static/web/design/images/search-icon.png" class="search-icon">
+                                <h3>Find a Resume</h3>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <!-- /.row -->
-               
-
             </div>
-            <!-- /.container-fluid -->
+            <div class="col-md-6">
+                <div class="need-job-box">
+                	<img class="need-job-header-image" src="/static/web/design/images/need-job-icon.png">
+                    <h3 class="need-job-header-title">Find A Job</h3>
+                	<div class="row">
+                    	<div class="col-sm-6 content-squares">
+                        	<div class="background-trans">
+                                <img src="/static/web/design/images/create-icon.png" class="create-icon">
+                                <h3>Create<br>my profile</h3>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 content-squares">
+                        	<div class="background-trans">
+								<img src="/static/web/design/images/recording-icon.png" class="recording-icon">
+                            	<h3>Record<br>my pitch</h3>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-6 content-squares">
+	                        <div class="background-trans">
+								<img src="/static/web/design/images/add-icon.png" class="add-icon">
+        	                    <h3>Add my resume</h3>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 content-squares">
+                        	<div class="background-trans">
+ 								<img src="/static/web/design/images/search-icon.png" class="search-icon">
+                            	<h3>Find a vacancy</h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /.row -->
+	</div>
+    <div class="container-fluid full-width-mjp">
+        <!-- Portfolio Section -->
+        <div class="row video-background-row">
+        	<div class="container">
+                <div class="col-md-6">
+                    <a href="portfolio-item.html">
+                        <img class="img-responsive img-hover" src="/static/web/design/images/video-placeholder_1.jpg" width="540" height="372" alt="">
+                    </a>
+                </div>
+                <div class="col-md-6">
+                    <a href="portfolio-item.html">
+                        <img class="img-responsive img-hover" src="/static/web/design/images/video-placeholder_2.jpg" width="540" height="372" alt="">
+                    </a>
+                </div>
+            </div>
+        </div>
+        <!-- /.row -->
 
 {% endblock %}

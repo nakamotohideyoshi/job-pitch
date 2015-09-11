@@ -16,13 +16,16 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.myjobpitch.MJPApplication;
 import com.myjobpitch.R;
 import com.myjobpitch.api.MJPApi;
+import com.myjobpitch.api.data.Image;
 import com.myjobpitch.api.data.Location;
 import com.myjobpitch.fragments.LocationEditFragment;
 import com.myjobpitch.tasks.APITaskListener;
 import com.myjobpitch.tasks.CreateReadUpdateAPITaskListener;
+import com.myjobpitch.tasks.DeleteAPITaskListener;
 import com.myjobpitch.tasks.ReadLocationTask;
-import com.myjobpitch.tasks.UploadImage;
+import com.myjobpitch.tasks.UploadImageTask;
 import com.myjobpitch.tasks.recruiter.CreateUpdateLocationTask;
+import com.myjobpitch.tasks.recruiter.DeleteLocationImageTask;
 
 import java.io.IOException;
 
@@ -128,11 +131,47 @@ public class EditLocationActivity extends MJPProgressActionBarActivity {
             mCreateUpdateLocationTask.addListener(new CreateReadUpdateAPITaskListener<Location>() {
                 @Override
                 public void onSuccess(final Location location) {
-                    final Uri imageUri = mLocationEditFragment.getNewImageUri();
-                    if (imageUri == null) {
-                        returnToListActivity(location);
+                    final Uri imageUri = mLocationEditFragment.getImageUri();
+                    Uri originalUri = null;
+                    Image originalImage = null;
+                    if (location.getImages() != null && !location.getImages().isEmpty()) {
+                        originalImage = location.getImages().get(0);
+                        originalUri = Uri.parse(originalImage.getThumbnail());
+                    }
+                    if ((imageUri == null && originalUri == null) || (imageUri != null && imageUri.equals(originalUri))) {
+                        // No change to image
+                        EditLocationActivity.this.finish();
+                    } else if (imageUri == null) {
+                        // Image deleted
+                        DeleteLocationImageTask deleteTask = new DeleteLocationImageTask(getApi(), originalImage.getId());
+                        deleteTask.addListener(new DeleteAPITaskListener() {
+                            @Override
+                            public void onSuccess() {
+                                EditLocationActivity.this.finish();
+                            }
+
+                            @Override
+                            public void onError(JsonNode errors) {
+                                showProgress(false);
+                                Toast toast = Toast.makeText(EditLocationActivity.this, "Error deleting image", Toast.LENGTH_LONG);
+                                toast.show();
+                                EditLocationActivity.this.finish();
+                            }
+
+                            @Override
+                            public void onConnectionError() {
+                                showProgress(false);
+                                Toast toast = Toast.makeText(EditLocationActivity.this, "Connection Error: Please check your internet connection", Toast.LENGTH_LONG);
+                                toast.show();
+                            }
+
+                            @Override
+                            public void onCancelled() {}
+                        });
+                        deleteTask.execute();
                     } else {
-                        UploadImage uploadTask = new UploadImage(EditLocationActivity.this, getApi(), "user-location-images", "location", imageUri, location);
+                        // Image changed
+                        UploadImageTask uploadTask = new UploadImageTask(EditLocationActivity.this, getApi(), "user-location-images", "location", imageUri, location);
                         uploadTask.addListener(new APITaskListener<Boolean>() {
                             @Override
                             public void onPostExecute(Boolean success) {

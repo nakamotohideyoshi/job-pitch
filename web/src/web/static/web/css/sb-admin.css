@@ -242,7 +242,7 @@ Web App By Reiss Watson
 	padding-left:0px;
 }
 
-#logged_in_menu{
+.top-nav>li.logged_in_menu{
 	display:none;
 }
 
@@ -261,6 +261,15 @@ Web App By Reiss Watson
 .job-seeker-link{
 	display:none;
 }
+
+.top-nav>li.business-link{
+	display:none;	
+}
+
+.top-nav>li.job-seeker-link{
+	display:none;
+}
+
 .alert{
 	display:none;
 }
@@ -283,4 +292,8 @@ Web App By Reiss Watson
 .btn-on-table{
 	margin-left:5px;
 	margin-right:5px;	
+}
+.image-job{
+	display:none;
+	margin-bottom:20px;	
 }

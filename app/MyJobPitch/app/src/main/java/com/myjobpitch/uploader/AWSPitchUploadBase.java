@@ -5,9 +5,6 @@ import com.amazonaws.mobileconnectors.s3.transferutility.TransferState;
 import com.myjobpitch.api.MJPApi;
 import com.myjobpitch.api.data.Pitch;
 
-/**
- * Created by jcockburn on 11/09/15.
- */
 public abstract class AWSPitchUploadBase implements PitchUpload, TransferListener {
 
     protected final MJPApi api;
@@ -26,10 +23,8 @@ public abstract class AWSPitchUploadBase implements PitchUpload, TransferListene
 
     @Override
     public synchronized void onStateChanged(int id, TransferState state) {
-        if (state.equals(TransferState.COMPLETED)) {
-            listener.onStateChange(PitchUpload.PROCESSING);
+        if (state.equals(TransferState.COMPLETED))
             new AWSPitchUploadProcessing(api, pitch).setPitchUploadListener(listener);
-        }
     }
 
     @Override

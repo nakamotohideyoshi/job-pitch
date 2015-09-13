@@ -20,10 +20,6 @@ public class Pitch extends MJPAPIObject {
         return video;
     }
 
-    public String getImage() {
-        return image;
-    }
-
     public String getThumbnail() {
         return thumbnail;
     }

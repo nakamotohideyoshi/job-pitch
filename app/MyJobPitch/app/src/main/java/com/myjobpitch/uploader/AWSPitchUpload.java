@@ -16,6 +16,8 @@ import java.io.File;
 public class AWSPitchUpload extends AWSPitchUploadBase {
     private final File file;
     private final TransferUtility transferUtility;
+    private TransferObserver mObserver;
+    private boolean mCancelled = false;
 
     public AWSPitchUpload(TransferUtility transferUtility, MJPApi api, File file) {
         super(api, null);
@@ -33,13 +35,15 @@ public class AWSPitchUpload extends AWSPitchUploadBase {
             @Override
             public void onSuccess(Pitch newPitch) {
                 pitch = newPitch;
-                TransferObserver observer = transferUtility.upload(
-                        "mjp-android-uploads",
-                        String.format("%s/%s.%s.%s", api.getApiRoot().replace("/", ""), pitch.getToken(), pitch.getId(), file.getName()),
-                        file
-                );
                 synchronized (this) {
-                    observer.setTransferListener(AWSPitchUpload.this);
+                    if (mCancelled)
+                        return;
+                    mObserver = transferUtility.upload(
+                            "mjp-android-uploads",
+                            String.format("%s/%s.%s.%s", api.getApiRoot().replace("/", ""), pitch.getToken(), pitch.getId(), file.getName()),
+                            file
+                    );
+                    mObserver.setTransferListener(AWSPitchUpload.this);
                     listener.onStateChange(PitchUpload.UPLOADING);
                 }
             }
@@ -58,5 +62,20 @@ public class AWSPitchUpload extends AWSPitchUploadBase {
             public void onCancelled() {}
         });
         task.execute();
+    }
+
+
+    @Override
+    public synchronized void stop() {
+        if (mObserver != null)
+            mObserver.cleanTransferListener();
+    }
+
+    @Override
+    public synchronized void cancel() {
+        mCancelled = true;
+        if (mObserver != null) {
+            transferUtility.cancel(mObserver.getId());
+        }
     }
 }

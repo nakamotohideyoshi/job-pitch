@@ -4,24 +4,18 @@ import android.content.Context;
 
 import com.amazonaws.auth.CognitoCachingCredentialsProvider;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferObserver;
+import com.amazonaws.mobileconnectors.s3.transferutility.TransferState;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferType;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferUtility;
 import com.amazonaws.regions.Regions;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.myjobpitch.api.MJPApi;
-import com.myjobpitch.api.MJPApiException;
 import com.myjobpitch.api.data.Pitch;
-import com.myjobpitch.tasks.CreateReadUpdateAPITaskListener;
-import com.myjobpitch.tasks.ReadAPITask;
 
 import java.io.File;
 import java.util.List;
 
-/**
- * Created by jcockburn on 11/09/15.
- */
 public class AWSPitchUploader implements PitchUploader {
 
     private final Context applicationContext;
@@ -46,43 +40,20 @@ public class AWSPitchUploader implements PitchUploader {
     }
 
     @Override
-    public void getUploadInProgress(final UploadInProgressCallback callback) {
-        ReadAPITask<List<Pitch>> getPitchData = new ReadAPITask<List<Pitch>>(new ReadAPITask.Action<List<Pitch>>() {
-            @Override
-            public List<Pitch> run() throws MJPApiException {
-                return api.get(Pitch.class);
-            }
-        });
-        getPitchData.addListener(new CreateReadUpdateAPITaskListener<List<Pitch>>() {
-            @Override
-            public void onSuccess(List<Pitch> pitches) {
-                for (Pitch pitch : pitches)
-                    if (pitch.getVideo() == null) {
-                        List<TransferObserver> transfers = transferUtility.getTransfersWithType(TransferType.UPLOAD);
-                        if (transfers.isEmpty())
-                            callback.uploadInProgress(new AWSPitchUploadProcessing(api, pitch));
-                        else {
-                            TransferObserver transferObserver = transfers.get(0);
-                            callback.uploadInProgress(new AWSPitchUploadOngoing(api, pitch, transferObserver));
-                        }
+    public void getUploadInProgress(List<Pitch> pitches, final UploadInProgressCallback callback) {
+        for (Pitch pitch : pitches)
+            if (pitch.getVideo() == null) {
+                for (TransferObserver transfer : transferUtility.getTransfersWithType(TransferType.UPLOAD)) {
+                    TransferState state = transfer.getState();
+                    if (state.equals(TransferState.COMPLETED) || state.equals(TransferState.CANCELED) || state.equals(TransferState.FAILED)) {
+                        transferUtility.deleteTransferRecord(transfer.getId());
+                    } else {
+                        callback.uploadInProgress(new AWSPitchUploadOngoing(api, pitch, transferUtility, transfer));
                         return;
                     }
-                callback.noUploadInProgress();
+                }
+                callback.uploadInProgress(new AWSPitchUploadProcessing(api, pitch));
             }
-
-            @Override
-            public void onError(JsonNode errors) {
-                callback.error();
-            }
-
-            @Override
-            public void onConnectionError() {
-                callback.error();
-            }
-
-            @Override
-            public void onCancelled() {}
-        });
-        getPitchData.execute();
+        callback.noUploadInProgress();
     }
 }

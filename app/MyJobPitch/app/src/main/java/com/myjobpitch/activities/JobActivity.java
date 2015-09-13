@@ -138,7 +138,7 @@ public class JobActivity extends MJPProgressActionBarActivity {
             final ImageView playButton = (ImageView) cardView.findViewById(R.id.play_button);
             String imageUri = null;
             if (jobSeeker.hasPitch())
-                imageUri = jobSeeker.getPitch().getImage();
+                imageUri = jobSeeker.getPitch().getThumbnail();
 
             if (imageUri != null) {
                 Uri uri = Uri.parse(imageUri);

@@ -1,17 +1,13 @@
 package com.myjobpitch.activities;
 
 import android.app.AlertDialog;
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -22,43 +18,86 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.myjobpitch.R;
+import com.myjobpitch.api.MJPApiException;
 import com.myjobpitch.api.data.Pitch;
-import com.myjobpitch.services.UploadPitchService;
+import com.myjobpitch.tasks.CreateReadUpdateAPITaskListener;
 import com.myjobpitch.tasks.DownloadImageTask;
+import com.myjobpitch.tasks.ReadAPITask;
+import com.myjobpitch.uploader.AWSPitchUploader;
+import com.myjobpitch.uploader.PitchUpload;
+import com.myjobpitch.uploader.PitchUploadListener;
+import com.myjobpitch.uploader.PitchUploader;
+import com.myjobpitch.uploader.UploadInProgressCallback;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
 public class RecordPitchActivity extends MJPProgressActionBarActivity {
-    private class UploadStatusReceiver extends BroadcastReceiver
-    {
-        private UploadStatusReceiver() {}
+    private static final String TAG = "RecordPitchActivity";
 
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            if (intent.getAction().equals(UploadPitchService.ACTION_UPLOAD_STATUS)) {
-                int complete = intent.getIntExtra(UploadPitchService.EXTRA_COMPLETE, -1);
-                if (complete < 100)
-                    mProgressText.setText(getString(R.string.uploading, complete));
-                else
-                    mProgressText.setText(getString(R.string.processing));
-            } else if (intent.getAction().equals(UploadPitchService.ACTION_UPLOAD_COMPLETE)) {
-                Toast toast = Toast.makeText(RecordPitchActivity.this, "Pitch uploaded!", Toast.LENGTH_LONG);
-                toast.show();
-                finish();
-            } else if (intent.getAction().equals(UploadPitchService.ACTION_UPLOAD_ERROR)) {
-                Toast toast = Toast.makeText(RecordPitchActivity.this, "Error uploading video!", Toast.LENGTH_LONG);
-                toast.show();
-                showProgress(false);
+    PitchUploadListener pitchUploadListener = new PitchUploadListener() {
+        public void onStateChange(int state) {
+            switch (state) {
+                case PitchUpload.STARTING:
+                    Log.d(TAG, "onStateChange(STARTING)");
+                    mProgressText.setText(getString(R.string.starting_upload));
+                    showProgress(true);
+                    break;
+                case PitchUpload.UPLOADING:
+                    Log.d(TAG, "onStateChange(UPLOADING)");
+                    showProgress(false);
+                    showUploadProgress(true);
+                    mUploadProgressBar.setIndeterminate(true);
+                    mUploadProgressText.setText("0%");
+                    break;
+                case PitchUpload.PROCESSING:
+                    Log.d(TAG, "onStateChange(PROCESSING)");
+                    showProgress(false);
+                    showUploadProgress(true);
+                    mUploadProgressText.setText(getString(R.string.processing));
+                    mUploadProgressBar.setIndeterminate(true);
+                    break;
+                case PitchUpload.COMPLETE:
+                    Log.d(TAG, "onStateChange(COMPLETE)");
+                    showUploadProgress(false);
+                    showProgress(false);
+                    Toast.makeText(RecordPitchActivity.this, "Pitch successfully uploaded!", Toast.LENGTH_LONG).show();
+                    finish();
+                    break;
             }
         }
-    }
+
+        @Override
+        public void onProgress(double current, long total) {
+            int complete = (int) (((float) current / total) * 100);
+            if (complete < 100) {
+                Log.d(TAG, "onProgress(" + complete + "%)");
+                mUploadProgressBar.setIndeterminate(false);
+                mUploadProgressBar.setProgress(complete);
+                mUploadProgressText.setText(Integer.toString(complete) + "%");
+            } else {
+                mUploadProgressText.setText(getString(R.string.processing));
+                mUploadProgressBar.setIndeterminate(true);
+            }
+        }
+
+        @Override
+        public void onError(String message) {
+            showUploadProgress(false);
+            showProgress(false);
+            Toast.makeText(RecordPitchActivity.this, "Error uploading video!", Toast.LENGTH_LONG).show();
+        }
+    };
+
 
     private static final int RECORD_PITCH = 1;
     private static final String OUTPUT_FILE = "output_file";
 
+    private PitchUploader mPitchUploader;
     private String mOutputFile = null;
     private Button mUploadButton;
     private Bitmap mPreviewBitmap;
@@ -68,12 +107,18 @@ public class RecordPitchActivity extends MJPProgressActionBarActivity {
     private View mNoRecordingView;
     private View mProgressView;
     private TextView mProgressText;
+    private View mUploadProgressView;
+    private TextView mUploadProgressText;
+    private ProgressBar mUploadProgressBar;
     private Pitch mPitch;
     private DownloadImageTask mDownloadImageTask;
+    private PitchUpload mUpload;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        mPitchUploader = new AWSPitchUploader(getApplicationContext(), getApi());
 
         if (savedInstanceState != null && savedInstanceState.containsKey(OUTPUT_FILE))
             mOutputFile = savedInstanceState.getString(OUTPUT_FILE);
@@ -92,8 +137,9 @@ public class RecordPitchActivity extends MJPProgressActionBarActivity {
             @Override
             public void onClick(View v) {
                 if (mOutputFile != null) {
+                    String message = getString(R.string.start_recording_prompt);
                     AlertDialog.Builder builder = new AlertDialog.Builder(RecordPitchActivity.this);
-                    builder.setMessage(getString(R.string.start_recording_prompt))
+                    builder.setMessage(message)
                             .setCancelable(false)
                             .setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int id) {
@@ -116,10 +162,23 @@ public class RecordPitchActivity extends MJPProgressActionBarActivity {
         mUploadButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showProgress(true);
-                mProgressText.setText(getString(R.string.uploading, 0));
-                if (!UploadPitchService.startUpload(RecordPitchActivity.this, getApi().getToken(), mOutputFile))
-                    Toast.makeText(RecordPitchActivity.this, getString(R.string.error_upload_in_progress), Toast.LENGTH_LONG).show();
+                if (mUploadProgressView.getVisibility() == View.VISIBLE) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(RecordPitchActivity.this);
+                    builder.setMessage(getString(R.string.cancel_upload_prompt))
+                            .setCancelable(false)
+                            .setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    dialog.cancel();
+                                    doUpload();
+                                }
+                            })
+                            .setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    dialog.cancel();
+                                }
+                            }).create().show();
+                } else
+                    doUpload();
             }
         });
 
@@ -127,7 +186,7 @@ public class RecordPitchActivity extends MJPProgressActionBarActivity {
         mPlayButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String video = null;
+                String video;
                 if (mOutputFile != null)
                     video = Uri.fromFile(new File(mOutputFile)).toString();
                 else
@@ -146,25 +205,91 @@ public class RecordPitchActivity extends MJPProgressActionBarActivity {
         mProgressView = findViewById(R.id.progress);
         mProgressText = (TextView) findViewById(R.id.progress_text);
 
-        updateInterface();
+        mUploadProgressView = findViewById(R.id.upload_progress);
+        mUploadProgressText = (TextView) findViewById(R.id.upload_progress_text);
+        mUploadProgressBar = (ProgressBar) findViewById(R.id.upload_progress_bar);
 
-        UploadStatusReceiver uploadStatusReceiver = new UploadStatusReceiver();
-        LocalBroadcastManager.getInstance(this).registerReceiver(uploadStatusReceiver, new IntentFilter(UploadPitchService.ACTION_UPLOAD_STATUS));
-        LocalBroadcastManager.getInstance(this).registerReceiver(uploadStatusReceiver, new IntentFilter(UploadPitchService.ACTION_UPLOAD_COMPLETE));
-        LocalBroadcastManager.getInstance(this).registerReceiver(uploadStatusReceiver, new IntentFilter(UploadPitchService.ACTION_UPLOAD_ERROR));
-
-        UploadPitchService.checkUploadState(new UploadPitchService.UploadStateChecker() {
+        showProgress(true);
+        ReadAPITask<List<Pitch>> getPitchData = new ReadAPITask<List<Pitch>>(new ReadAPITask.Action<List<Pitch>>() {
             @Override
-            public void state(boolean running, int complete) {
-                if (running) {
-                    showProgress(true);
-                    if (complete < 100)
-                        mProgressText.setText(getString(R.string.uploading, complete));
-                    else
-                        mProgressText.setText(getString(R.string.processing));
-                }
+            public List<Pitch> run() throws MJPApiException {
+                return getApi().get(Pitch.class);
             }
         });
+        getPitchData.addListener(new CreateReadUpdateAPITaskListener<List<Pitch>>() {
+            @Override
+            public void onSuccess(List<Pitch> pitches) {
+                for (Pitch pitch : pitches)
+                    if (pitch.getVideo() != null) {
+                        mPitch = pitch;
+                        break;
+                    }
+                updateInterface();
+
+                mPitchUploader.getUploadInProgress(pitches, new UploadInProgressCallback() {
+                    @Override
+                    public void uploadInProgress(PitchUpload upload) {
+                        mUpload = upload;
+                        upload.setPitchUploadListener(pitchUploadListener);
+                    }
+
+                    @Override
+                    public void noUploadInProgress() {
+                        showProgress(false);
+                    }
+
+                    @Override
+                    public void error() {
+                        Toast.makeText(RecordPitchActivity.this, "Error: Couldn't get video upload state!", Toast.LENGTH_LONG).show();
+                        finish();
+                    }
+                });
+            }
+
+            @Override
+            public void onError(JsonNode errors) {
+                Toast.makeText(RecordPitchActivity.this, "Error: Couldn't get video upload state!", Toast.LENGTH_LONG).show();
+                finish();
+            }
+
+            @Override
+            public void onConnectionError() {
+                Toast.makeText(RecordPitchActivity.this, "Error: Couldn't get video upload state!", Toast.LENGTH_LONG).show();
+                finish();
+            }
+
+            @Override
+            public void onCancelled() {}
+        });
+        getPitchData.execute();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (mUpload != null) {
+            mUpload.stop();
+            mUpload = null;
+        }
+    }
+
+    private void doUpload() {
+        showProgress(true);
+        if (mUpload != null) {
+            mUpload.cancel();
+            mUpload = null;
+        }
+        mUpload = mPitchUploader.upload(new File(mOutputFile));
+        mUpload.setPitchUploadListener(pitchUploadListener);
+        mUpload.start();
+    }
+
+    private void showUploadProgress(boolean visible) {
+        if (visible) {
+            mUploadProgressBar.setIndeterminate(false);
+            mUploadProgressView.setVisibility(View.VISIBLE);
+        } else
+            mUploadProgressView.setVisibility(View.GONE);
     }
 
     @Override
@@ -196,7 +321,7 @@ public class RecordPitchActivity extends MJPProgressActionBarActivity {
             mPreviewBitmap = ThumbnailUtils.createVideoThumbnail(mOutputFile, MediaStore.Images.Thumbnails.FULL_SCREEN_KIND);
         } else if (mPitch != null) {
             playButtonVisibility = View.VISIBLE;
-            Uri uri = Uri.parse(mPitch.getImage());
+            Uri uri = Uri.parse(mPitch.getThumbnail());
             mImageProgress.setVisibility(View.VISIBLE);
             mDownloadImageTask = new DownloadImageTask(this, mPreviewImageView, mImageProgress);
             mDownloadImageTask.execute(uri);

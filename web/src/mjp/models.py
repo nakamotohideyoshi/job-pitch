@@ -258,6 +258,7 @@ class JobSeeker(models.Model):
     sex_public = models.BooleanField(default=None)
     nationality = models.ForeignKey(Nationality, related_name='job_seekers', null=True)
     nationality_public = models.BooleanField(default=None)
+    description = models.TextField()
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
     
@@ -273,15 +274,6 @@ class Pitch(models.Model):
     job_seeker = models.ForeignKey('JobSeeker', related_name='pitches')
     video = models.URLField(null=True)
     thumbnail = models.URLField(null=True)
-
-
-class Experience(models.Model):
-    details = models.CharField(max_length=255)
-    order = models.PositiveSmallIntegerField()
-    job_seeker = models.ForeignKey(JobSeeker, related_name='experience')
-    
-    class Meta:
-        verbose_name_plural = "experience"
 
 
 class JobProfile(models.Model):

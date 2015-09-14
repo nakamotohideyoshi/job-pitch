@@ -7,7 +7,7 @@ from rest_framework.routers import DefaultRouter
 from rest_framework.parsers import FileUploadParser
 
 from mjp.models import Sector, Hours, Contract, Business, Location,\
-    JobStatus, Job, Sex, Nationality, JobSeeker, Experience, JobProfile,\
+    JobStatus, Job, Sex, Nationality, JobSeeker, JobProfile,\
     ApplicationStatus, Application, Role, LocationImage, BusinessImage, \
     JobImage, Message, Pitch
 
@@ -231,10 +231,9 @@ class JobSeekerViewSet(viewsets.ModelViewSet):
         job = self.request.QUERY_PARAMS.get('job')
         if job:
             job = Job.objects.select_related('sector', 'contract', 'hours').get(pk=self.request.QUERY_PARAMS['job'])
-            query = JobSeeker.objects.select_related('pitch')
-            query = query.prefetch_related('experience', 'profile')
+            query = JobSeeker.objects.prefetch_related('pitches', 'profile').distinct()
+            query = query.filter(pitches__video__isnull=False)
             query = query.exclude(applications__job=job)
-            query = query.exclude(pitch=None)
             query = query.exclude(profile=None)
             exclude_pks = self.request.QUERY_PARAMS.get('exclude')
             if exclude_pks:
@@ -305,26 +304,6 @@ class PitchViewSet(viewsets.ModelViewSet):
     serializer_class = PitchSerializer
     queryset = Pitch.objects.all()
 router.register('pitches', PitchViewSet, base_name='pitch')
-
-
-class ExperienceViewSet(viewsets.ModelViewSet):
-    class ExperiencePermission(permissions.BasePermission):
-        def has_permission(self, request, view):
-            if request.method in permissions.SAFE_METHODS:
-                return True
-            pk = request.data.get('job_seeker')
-            if pk:
-                return JobSeeker.objects.filter(pk=pk, user=request.user).exists()
-            return True
-        def has_object_permission(self, request, view, obj):
-            if request.method in permissions.SAFE_METHODS:
-                return True
-            return obj.job_seeker.user == request.user
-    
-    permission_classes = (permissions.IsAuthenticated, ExperiencePermission)
-    queryset = Experience.objects.all()
-    serializer_class = SimpleSerializer(Experience)
-router.register('experience', ExperienceViewSet)
 
 
 class JobProfileViewSet(viewsets.ModelViewSet):
@@ -480,8 +459,7 @@ class ApplicationViewSet(viewsets.ModelViewSet):
                                      'job_seeker__profile__contract',
                                      'job_seeker__profile__hours',
                                      )
-        query = query.prefetch_related('job_seeker__experience',
-                                       'job_seeker__pitches',
+        query = query.prefetch_related('job_seeker__pitches',
                                        'messages',
                                        'job__location__jobs',
                                        'job__location__business__locations', 

@@ -3,7 +3,7 @@ from django.contrib.gis.geos import Point
 from rest_framework import serializers
 
 from models import Business, Location, JobProfile, LocationImage, \
-    BusinessImage, Job, JobSeeker, Experience, Application, Message, \
+    BusinessImage, Job, JobSeeker, Application, Message, \
     Pitch
 
 
@@ -91,7 +91,6 @@ class JobSeekerSerializer(serializers.ModelSerializer):
             
     user = serializers.PrimaryKeyRelatedField(read_only=True)
     profile = serializers.PrimaryKeyRelatedField(read_only=True)
-    experience = SimpleSerializer(Experience)(many=True, read_only=True)
     pitches = PitchSerializer(many=True, read_only=True)
     
     class Meta:

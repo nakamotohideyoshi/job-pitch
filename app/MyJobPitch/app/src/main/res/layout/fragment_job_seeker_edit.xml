@@ -112,4 +112,40 @@
         </TableRow>
 
     </TableLayout>
+
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/description"
+        android:textSize="20sp"
+        android:paddingTop="15dp"
+        android:paddingBottom="8dp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/job_seeker_description_hint"
+        android:paddingBottom="8dp"
+        android:paddingLeft="0dp"
+        android:paddingRight="15dp"
+        android:textStyle="bold" />
+
+    <EditText
+        android:id="@+id/job_seeker_description"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/prompt_job_description"
+        android:inputType="textMultiLine"
+        android:maxLength="500" />
+
+    <TextView
+        android:id="@+id/job_seeler_description_character_count"
+        tools:text="@string/characters_remaining"
+        android:paddingLeft="5dp"
+        android:layout_marginBottom="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
 </LinearLayout>

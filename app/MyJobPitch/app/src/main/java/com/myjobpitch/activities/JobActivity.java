@@ -31,7 +31,6 @@ import com.myjobpitch.R;
 import com.myjobpitch.api.data.Application;
 import com.myjobpitch.api.data.ApplicationForCreation;
 import com.myjobpitch.api.data.ApplicationUpdate;
-import com.myjobpitch.api.data.Experience;
 import com.myjobpitch.api.data.Job;
 import com.myjobpitch.api.data.JobSeeker;
 import com.myjobpitch.api.data.JobSeekerContainer;
@@ -118,13 +117,7 @@ public class JobActivity extends MJPProgressActionBarActivity {
             }
             extraView.setText(extraText);
             TextView descriptionView = (TextView) cardView.findViewById(R.id.job_seeker_description);
-            String description = "";
-            for (Experience experience : jobSeeker.getExperience()) {
-                if (!description.isEmpty())
-                    description += "\n";
-                description += experience.getDetails();
-            }
-            descriptionView.setText(description);
+            descriptionView.setText(jobSeeker.getDescription());
 
             if (jobSeekerContainer instanceof Application) {
                 Application application = (Application) jobSeekerContainer;

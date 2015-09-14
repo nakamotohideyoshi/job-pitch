@@ -1,6 +1,8 @@
 package com.myjobpitch.fragments;
 
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,6 +10,7 @@ import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.myjobpitch.MJPApplication;
 import com.myjobpitch.R;
@@ -41,28 +44,15 @@ public class JobSeekerEditFragment extends EditFragment<JobSeeker> {
     private CheckBox mNationalityPublicView;
     private List<Sex> sexes;
     private List<Nationality> nationalities;
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @return A new instance of fragment RecruiterProfileFragment.
-     */
-    public static JobSeekerEditFragment newInstance() {
-        JobSeekerEditFragment fragment = new JobSeekerEditFragment();
-        Bundle args = new Bundle();
-        fragment.setArguments(args);
-        return fragment;
-    }
+    private EditText mDescriptionView;
+    private TextView mDescriptionCharacters;
 
     public JobSeekerEditFragment() {
         // Required empty public constructor
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_job_seeker_edit, container, false);
 
         mFirstNameView = (EditText) view.findViewById(R.id.job_seeker_first_name);
@@ -79,8 +69,21 @@ public class JobSeekerEditFragment extends EditFragment<JobSeeker> {
         mSexPublicView = (CheckBox) view.findViewById(R.id.job_seeker_sex_public);
         mNationalityView = (Spinner) view.findViewById(R.id.job_seeker_nationality);
         mNationalityPublicView = (CheckBox) view.findViewById(R.id.job_seeker_nationality_public);
+        mDescriptionView = (EditText) view.findViewById(R.id.job_seeker_description);
+        mDescriptionCharacters = (TextView) view.findViewById(R.id.job_seeler_description_character_count);
 
-        // TODO edit experience
+        mDescriptionView.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                mDescriptionCharacters.setText(getString(R.string.characters_remaining, 500 - charSequence.length()));
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {}
+        });
 
         Map<String, View> fields = new HashMap<>();
         fields.put("first_name", mFirstNameView);
@@ -93,6 +96,7 @@ public class JobSeekerEditFragment extends EditFragment<JobSeeker> {
         Collection<View> requiredFields = new ArrayList<>();
         requiredFields.add(mFirstNameView);
         requiredFields.add(mLastNameView);
+        requiredFields.add(mDescriptionView);
         setRequiredFields(requiredFields);
 
         return view;
@@ -137,6 +141,7 @@ public class JobSeekerEditFragment extends EditFragment<JobSeeker> {
             }
         }
         mNationalityPublicView.setChecked(jobSeeker.getNationality_public());
+        mDescriptionView.setText(jobSeeker.getDescription());
     }
 
     public void save(JobSeeker jobSeeker) {
@@ -166,6 +171,7 @@ public class JobSeekerEditFragment extends EditFragment<JobSeeker> {
         else
             jobSeeker.setNationality(null);
         jobSeeker.setNationality_public(mNationalityPublicView.isChecked());
+        jobSeeker.setDescription(mDescriptionView.getText().toString());
     }
 
     public CreateUpdateJobSeekerTask getCreateBusinessTask(MJPApi api, JobSeeker jobSeeker) {

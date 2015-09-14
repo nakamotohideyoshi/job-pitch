@@ -22,11 +22,11 @@ import com.myjobpitch.api.data.Location;
 import com.myjobpitch.api.data.MessageForCreation;
 import com.myjobpitch.api.data.MessageForUpdate;
 import com.myjobpitch.api.data.Nationality;
+import com.myjobpitch.api.data.Pitch;
 import com.myjobpitch.api.data.Role;
 import com.myjobpitch.api.data.Sector;
 import com.myjobpitch.api.data.Sex;
 
-import org.springframework.core.io.Resource;
 import org.springframework.http.HttpAuthentication;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -55,6 +55,7 @@ public class MJPApi {
         classEndPoints = new HashMap<>();
         classEndPoints.put(JobProfile.class, "job-profiles");
         classEndPoints.put(JobSeeker.class, "job-seekers");
+        classEndPoints.put(Pitch.class, "pitches");
         classEndPoints.put(Job.class, "jobs");
         classEndPoints.put(Location.class, "locations");
         classEndPoints.put(Business.class, "businesses");
@@ -342,20 +343,6 @@ public class MJPApi {
         rest.exchange(getObjectUrl("user-job-images", id), HttpMethod.DELETE, createAuthenticatedRequest(), Void.class);
     }
 
-    public void uploadPitch(Resource pitch) throws MJPApiException {
-        try {
-            HttpHeaders headers = new HttpHeaders();
-            headers.set("Content-Disposition", "attachment; filename=" + pitch.getFilename());
-            headers.setContentType(MediaType.valueOf("video/mp4"));
-            HttpEntity<Resource> request = createAuthenticatedRequest(pitch, headers);
-            unbufferedRest.postForObject(getTypeUrl("pitches"), request, Object.class);
-        } catch (HttpClientErrorException e) {
-            if (e.getStatusCode().value() == 400)
-                throw new MJPApiException(e);
-            throw e;
-        }
-    }
-
     public <T extends MJPAPIObject> List<T> get(Class<T> cls) throws MJPApiException {
         return get(cls, getTypeUrl(classEndPoints.get(cls)));
     }
@@ -415,5 +402,9 @@ public class MJPApi {
 
     public AuthToken getToken() {
         return token;
+    }
+
+    public String getApiRoot() {
+        return apiRoot;
     }
 }

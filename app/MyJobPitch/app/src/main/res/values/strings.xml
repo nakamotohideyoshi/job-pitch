@@ -145,4 +145,7 @@
     <string name="image_set_by_location">image set by work place</string>
     <string name="delete_image_confirmation">Are you sure you want to remove this image?</string>
     <string name="select_sectors">Select job sectors</string>
+    <string name="error_starting_upload">Error starting upload!</string>
+    <string name="starting_upload">Starting upload...</string>
+    <string name="cancel_upload_prompt">This will cancel your current upload! Continue?</string>
 </resources>

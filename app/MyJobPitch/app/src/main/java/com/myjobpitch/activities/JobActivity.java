@@ -96,14 +96,15 @@ public class JobActivity extends MJPProgressActionBarActivity {
 
         @Override
         public View createView(int position, View convertView, ViewGroup parent, JobSeekerContainer jobSeekerContainer) {
-            JobSeeker jobSeeker = jobSeekerContainer.getJobSeeker();
+            final JobSeeker jobSeeker = jobSeekerContainer.getJobSeeker();
             Log.d("JobSeekerAdapter", "getView("+ jobSeeker.getFirst_name() + ")");
 
             LayoutInflater inflater = (LayoutInflater) JobActivity.this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             View cardView = inflater.inflate(R.layout.card_job_seeker, parent, false);
 
             TextView nameView = (TextView) cardView.findViewById(R.id.job_seeker_name);
-            nameView.setText(jobSeeker.getFirst_name() + " " + jobSeeker.getLast_name());
+            final String name = jobSeeker.getFirst_name() + " " + jobSeeker.getLast_name();
+            nameView.setText(name);
             TextView extraView = (TextView) cardView.findViewById(R.id.job_seeker_extra);
             String extraText = "";
             Integer age = jobSeeker.getAge();
@@ -118,6 +119,20 @@ public class JobActivity extends MJPProgressActionBarActivity {
             extraView.setText(extraText);
             TextView descriptionView = (TextView) cardView.findViewById(R.id.job_seeker_description);
             descriptionView.setText(jobSeeker.getDescription());
+            final String finalExtraText = extraText;
+            descriptionView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    String title = name;
+                    if (!finalExtraText.isEmpty())
+                        title = String.format("%s - %s", name, finalExtraText);
+                    new AlertDialog.Builder(JobActivity.this)
+                            .setTitle(title)
+                            .setMessage(jobSeeker.getDescription())
+                            .setPositiveButton(R.string.ok, null)
+                            .show();
+                }
+            });
 
             if (jobSeekerContainer instanceof Application) {
                 Application application = (Application) jobSeekerContainer;

@@ -3,7 +3,6 @@ package com.myjobpitch.api.data;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.myjobpitch.api.MJPObjectWithDates;
 
-import java.util.Collections;
 import java.util.List;
 
 @JsonIgnoreProperties({"user", "jobSeeker"})
@@ -23,8 +22,8 @@ public class JobSeeker extends MJPObjectWithDates implements JobSeekerContainer 
     private boolean nationality_public;
     private boolean age_public;
     private Integer profile;
-    private List<Experience> experience;
     private List<Pitch> pitches;
+    private String description;
 
     public boolean getEmail_public() {
         return email_public;
@@ -142,12 +141,6 @@ public class JobSeeker extends MJPObjectWithDates implements JobSeekerContainer 
         return profile;
     }
 
-    public List<Experience> getExperience() {
-        if (experience != null)
-            Collections.sort(experience);
-        return experience;
-    }
-
     @Override
     public JobSeeker getJobSeeker() {
         return this;
@@ -179,5 +172,13 @@ public class JobSeeker extends MJPObjectWithDates implements JobSeekerContainer 
 
     public boolean hasPitch() {
         return getPitch() != null;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }

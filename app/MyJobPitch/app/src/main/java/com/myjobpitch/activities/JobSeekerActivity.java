@@ -99,7 +99,7 @@ public class JobSeekerActivity extends MJPProgressActionBarActivity {
             String extraText = getMJPApplication().get(Hours.class, job.getHours()).getName();
             Contract contract = getMJPApplication().get(Contract.class, job.getContract());
             if (!contract.equals(getMJPApplication().get(Contract.class, Contract.PERMANENT)))
-                extraText += "(" + contract.getShort_name() + ")";
+                extraText += " (" + contract.getShort_name() + ")";
             extraView.setText(extraText);
 
             TextView descriptionView = (TextView) cardView.findViewById(R.id.job_description);

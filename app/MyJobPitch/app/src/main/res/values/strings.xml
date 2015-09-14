@@ -148,4 +148,6 @@
     <string name="error_starting_upload">Error starting upload!</string>
     <string name="starting_upload">Starting upload...</string>
     <string name="cancel_upload_prompt">This will cancel your current upload! Continue?</string>
+    <string name="description">Description</string>
+    <string name="job_seeker_description_hint">Give a short personal description about you, your work experience and your skills.</string>
 </resources>

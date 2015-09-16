@@ -12,7 +12,9 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.ContactsContract;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -73,12 +75,7 @@ public class LoginActivity extends MJPProgressActivity implements LoaderCallback
 
         } catch (PackageManager.NameNotFoundException e) {}
         TextView versionView = (TextView) findViewById(R.id.version);
-        if (BuildConfig.DEBUG) {
-            versionView.setText(String.format("Version: %s (DEBUG)", version));
-            versionView.setTextColor(getResources().getColor(android.R.color.holo_red_dark));
-        } else {
-            versionView.setText(String.format("Version: %s", version));
-        }
+        versionView.setText(String.format("Version: %s", version));
 
         // Set up the login form.
         mUsernameView = (AutoCompleteTextView) findViewById(R.id.username);
@@ -112,12 +109,40 @@ public class LoginActivity extends MJPProgressActivity implements LoaderCallback
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.progress);
         mProgressText = (TextView) findViewById(R.id.progress_text);
+
+        if (BuildConfig.DEBUG) {
+            versionView.setText(String.format("Version: %s (DEBUG)", version));
+            versionView.setTextColor(getResources().getColor(android.R.color.holo_red_dark));
+            findViewById(R.id.debug).setVisibility(View.VISIBLE);
+            String urls[] = new String[] {
+                    "http://mjp.digitalcrocodile.com:8000/",
+                    "http://mjp.digitalcrocodile.com:8001/",
+                    "http://mjp.digitalcrocodile.com/api/",
+                    "http://localhost:8000/",
+            };
+            ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_dropdown_item_1line, urls);
+            AutoCompleteTextView textView = (AutoCompleteTextView) findViewById(R.id.debug_api);
+            textView.setAdapter(adapter);
+            textView.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    getApi().setApiRoot(s.toString());
+                }
+
+                @Override
+                public void afterTextChanged(Editable s) {}
+            });
+        }
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        mPasswordView.setText("");
+        if (!BuildConfig.DEBUG)
+            mPasswordView.setText("");
     }
 
     @Override

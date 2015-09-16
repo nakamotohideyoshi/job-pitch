@@ -407,4 +407,8 @@ public class MJPApi {
     public String getApiRoot() {
         return apiRoot;
     }
+
+    public void setApiRoot(String apiRoot) {
+        this.apiRoot = apiRoot;
+    }
 }

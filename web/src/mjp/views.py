@@ -349,6 +349,7 @@ class JobViewSet(viewsets.ReadOnlyModelViewSet):
         if job_profile.hours_id:
              query = query.filter(hours=job_profile.hours)
         query = query.filter(sector__in=job_profile.sectors.all())
+        query = query.filter(status__name="OPEN")
         # TODO location
         return query
     

@@ -1,18 +1,12 @@
 import uuid
 import os
-import subprocess
 
 from cStringIO import StringIO
 from PIL import Image
 
 from django.conf import settings
-from django.contrib.auth.models import User
 from django.contrib.gis.db import models
-from django.core.files import File
 from django.core.files.uploadedfile import SimpleUploadedFile
-from django.utils import timezone
-from django.utils.translation import ugettext_lazy as _
-from tempfile import mkstemp
 
 
 def create_thumbnail(image, thumbnail, name=None, content_type=None):
@@ -191,7 +185,6 @@ class Location(models.Model):
     telephone_public = models.BooleanField(default=None)
     mobile = models.CharField(max_length=100, blank=True)
     mobile_public = models.BooleanField(default=None)
-    # TODO media
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
 

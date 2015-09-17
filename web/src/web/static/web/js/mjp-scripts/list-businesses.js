@@ -5,7 +5,7 @@ $(function() {
 	// Run login check funtion with auto-redirect
 	checkLogin(true);
 
-			  $.get( "/api/businesses/", { csrftoken: getCookie('csrftoken') }).done(function( data ) {
+			  $.get( "/api/user-businesses/", { csrftoken: getCookie('csrftoken') }).done(function( data ) {
 				  for (var key in data) {
 					  var obj = data[key];
 					  var imageThumb = '';

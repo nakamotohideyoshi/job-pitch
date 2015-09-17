@@ -70,6 +70,9 @@ def create_location(request):
 
 def messages(request):
     return render(request, 'messages.html')
+	
+def applications(request):
+    return render(request, 'applications.html')
 
 def job_preferences(request):
     return render(request, 'profile/job-preferences.html')

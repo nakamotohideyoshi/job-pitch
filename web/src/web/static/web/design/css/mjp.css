@@ -624,6 +624,18 @@ Web App By Reiss Watson
 	text-align:center;	
 }
 
+.login-username{
+	font-size:18px;
+	color:#fff !important;
+	display:inline-block;
+	margin-top:18px;
+}
+
+#header_username{
+	display:inline-block;
+}
+
+
 
 /* Only show the "mobile menu" fix */
 @media (max-width: 3000px) {

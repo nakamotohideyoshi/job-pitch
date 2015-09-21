@@ -150,4 +150,8 @@
     <string name="cancel_upload_prompt">This will cancel your current upload! Continue?</string>
     <string name="description">Description</string>
     <string name="job_seeker_description_hint">Give a short personal description about you, your work experience and your skills.</string>
+    <string name="no_active_jobs">No active jobs</string>
+    <string name="no_inactive_jobs">No inactive jobs</string>
+    <string name="cant_view_inactive_job">You can\'t view an inactive job!</string>
+    <string name="inactive">Inactive</string>
 </resources>

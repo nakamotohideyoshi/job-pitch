@@ -1,0 +1,3 @@
+--allow-external Pillow
+six
+requests

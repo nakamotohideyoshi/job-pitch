@@ -155,6 +155,8 @@ class Business(models.Model):
     
     class Meta:
         verbose_name_plural = "businesses"
+        ordering = ('name',)
+
 
 
 class BusinessImage(models.Model):
@@ -188,6 +190,9 @@ class Location(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
 
+    class Meta:
+        ordering = ('name',)
+
     def __str__(self):
         return "%s: %s" % (type(self).__name__, self.name)
 
@@ -219,6 +224,9 @@ class Job(models.Model):
     
     def __str__(self):
         return "%s: %s (%s)" % (type(self).__name__, self.title, self.location.name)
+
+    class Meta:
+        ordering = ('status', '-created',)
 
 
 class JobImage(models.Model):

@@ -154,4 +154,5 @@
     <string name="no_inactive_jobs">No inactive jobs</string>
     <string name="cant_view_inactive_job">You can\'t view an inactive job!</string>
     <string name="inactive">Inactive</string>
+    <string name="remember_password">Remember password</string>
 </resources>

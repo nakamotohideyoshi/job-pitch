@@ -46,6 +46,12 @@
                 android:imeOptions="actionDone" android:inputType="textPassword"
                 android:maxLines="1" android:singleLine="true" />
 
+            <CheckBox
+                android:id="@+id/remember_password"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/remember_password"/>
+
             <LinearLayout
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
@@ -85,7 +91,6 @@
 
                 <AutoCompleteTextView
                     android:id="@+id/debug_api"
-                    android:text="http://mjp.digitalcrocodile.com:8000"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content" />
 

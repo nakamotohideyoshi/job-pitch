@@ -1,5 +1,7 @@
 
 $(function() {
+	$('#job_applied_for').hide();
+	
 	// Run login check funtion with auto-redirect
 	checkLogin(true);
 	
@@ -7,6 +9,13 @@ $(function() {
 	var job_id = QueryString.id;
 	
 	console.log(job_id);
+	$.get( '/api-rest-auth/user/', { csrftoken: getCookie('csrftoken') }).done(function( data ) {
+		
+		$('#applyButton').attr('href','javascript:applyForJob('+job_id+','+data.job_seeker+');');
+		
+		
+	});
+	
 	
 	$.get( "/api/jobs/"+job_id, { csrftoken: getCookie('csrftoken') }).done(function( data ) {
 		console.log(data);

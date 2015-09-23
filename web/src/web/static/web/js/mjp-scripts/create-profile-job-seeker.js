@@ -42,9 +42,10 @@ $(function() {
 		var sex_public = $('#sex_public').val();
 		var nationality = $('#nationality').val();
 		var nationality_public = $('#nationality_public').val();
+		var description = $('#description').val();
 		var csrfmiddlewaretoken = $('[name="csrfmiddlewaretoken"]').val();
 		
-			$.post( "/api/job-seekers/", { first_name: first_name, last_name: last_name, email: email, email_public: email_public, telephone: telephone, telephone_public: telephone_public, mobile: mobile, mobile_public: mobile_public,age: age,age_public: age_public,sex: sex,sex_public: sex_public, nationality: nationality, nationality_public: nationality_public,csrfmiddlewaretoken: csrfmiddlewaretoken }).done(function( data ) {
+			$.post( "/api/job-seekers/", { first_name: first_name, last_name: last_name, email: email, email_public: email_public, telephone: telephone, telephone_public: telephone_public, mobile: mobile, mobile_public: mobile_public,age: age,age_public: age_public,sex: sex,sex_public: sex_public, nationality: nationality, description:description, nationality_public: nationality_public,csrfmiddlewaretoken: csrfmiddlewaretoken }).done(function( data ) {
 				console.log( data );
 				window.location.href = "/profile/job-preferences";
 			  })

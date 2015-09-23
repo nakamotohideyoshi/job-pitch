@@ -56,6 +56,27 @@ function setHeaderUsername(){
 	
 }
 
+function applyForJob(job_id, job_seeker_id){
+			  $.post( "/api/applications/", { job: job_id, job_seeker: job_seeker_id, csrftoken: getCookie('csrftoken')}).done(function( data ) {
+				  $('#applyButton').fadeOut(200,function(){
+						$('#job_applied_for').show();
+					});
+			  })
+			  .fail(function( data ) {
+				
+			  });
+}
+
+function messageRead(message_id){
+			$.put( "/api/messages/"+message_id+'/', { read:true, csrftoken: getCookie('csrftoken')}).done(function( data ) {
+;
+				  
+			  })
+			  .fail(function( data ) {
+				
+			  });
+}
+
 var QueryString = function () {
   // This function is anonymous, is executed immediately and 
   // the return value is assigned to QueryString!
@@ -194,7 +215,6 @@ $(function() {
 		var password1 = $('#password').val();
 		var csrfmiddlewaretoken = $('[name="csrfmiddlewaretoken"]').val();
 			$.post( "/api-rest-auth/login/", { username: username, password: password1, csrfmiddlewaretoken: csrfmiddlewaretoken }).done(function( data ) {
-				
 				setCookie('username', username, 28);
 				setCookie('key', data.key, 28);
 				window.location.href = "/";

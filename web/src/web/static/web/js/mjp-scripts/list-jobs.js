@@ -22,9 +22,9 @@ $(function() {
 							  imageThumb = obj.images[0].thumbnail;
 						  }
 						  if(imageThumb != ''){
-							$('#list-table tbody').append('<tr data-business-id="'+obj.id+'" class="jobs-list" id="jobs-list-'+obj.id+'"><td class="text-center" onclick="goToJobs('+obj.id+');"><img width="150px" src="'+imageThumb+'"></td><td onclick="goToJobs('+obj.id+');">'+obj.title+'</td><td onclick="goToJobs('+obj.id+');">'+obj.description+'</td><td><a href="javascript:deleteRow('+obj.id+',\'user-jobs\' , \'jobs-list-\');" class="btn btn-danger btn-delete btn-on-table"><i class="fa fa-trash"></i></a></td></tr>');
+							$('#list-table tbody').append('<tr data-business-id="'+obj.id+'" class="jobs-list" id="jobs-list-'+obj.id+'"><td class="text-center" onclick="goToJobs('+obj.id+');"><img width="150px" src="'+imageThumb+'"></td><td onclick="goToJobs('+obj.id+');">'+obj.title+'</td><td onclick="goToJobs('+obj.id+');">'+obj.description+'</td><td><a href="javascript:deleteRow('+obj.id+',\'user-jobs\' , \'jobs-list-\');">Delete</a> | <a href="/applications/?jobs='+obj.id+'">View Applicants</a> | <a href="/find-staff/?id='+obj.id+'">Find Staff</a></td></tr>');
 						  }else{
-							 $('#list-table tbody').append('<tr data-business-id="'+obj.id+'" class="jobs-list" id="jobs-list-'+obj.id+'"><td class="text-center" onclick="goToJobs('+obj.id+');"><img width="150px" src="/static/web/images/no_image_available.png"></td><td onclick="goToJobs('+obj.id+');">'+obj.title+'</td><td onclick="goToJobs('+obj.id+');">'+obj.description+'</td><td><a href="javascript:deleteRow('+obj.id+',\'user-jobs\' , \'jobs-list-\');" class="btn btn-danger btn-delete btn-on-table"><i class="fa fa-trash"></i></a></td></tr>');
+							 $('#list-table tbody').append('<tr data-business-id="'+obj.id+'" class="jobs-list" id="jobs-list-'+obj.id+'"><td class="text-center" onclick="goToJobs('+obj.id+');"><img width="150px" src="/static/web/images/no_image_available.png"></td><td onclick="goToJobs('+obj.id+');">'+obj.title+'</td><td onclick="goToJobs('+obj.id+');">'+obj.description+'</td><td><a href="javascript:deleteRow('+obj.id+',\'user-jobs\' , \'jobs-list-\');">Delete</a></td></tr>');
 						  }
 					  }
 					  $('#table-container').show();

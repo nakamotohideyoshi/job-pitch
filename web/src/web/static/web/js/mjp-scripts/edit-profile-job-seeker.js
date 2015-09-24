@@ -41,6 +41,9 @@ $(function() {
 				  if(data.last_name != null){
 				  	$('#last_name').val(data.last_name);
 				  }
+				  if(data.description != null){
+				  	$('#description').val(data.description);
+				  }
 				  if(data.mobile != null){
 				  	$('#mobile').val(data.mobile);
 				  }

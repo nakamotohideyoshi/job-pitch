@@ -38,6 +38,7 @@ function checkLogin(redirect){
 		}else{
 			//show login & reg links
 			$('.not_logged_in_menu').show();
+			$('.login-username').hide();
 			return false;
 		}	
 	}else{
@@ -61,6 +62,15 @@ function applyForJob(job_id, job_seeker_id){
 				  $('#applyButton').fadeOut(200,function(){
 						$('#job_applied_for').show();
 					});
+			  })
+			  .fail(function( data ) {
+				
+			  });
+}
+
+function connectWithJob(job_id, job_seeker_id){
+			  $.post( "/api/applications/", { job: job_id, job_seeker: job_seeker_id, csrftoken: getCookie('csrftoken')}).done(function( data ) {
+				  location.reload();
 			  })
 			  .fail(function( data ) {
 				
@@ -192,6 +202,26 @@ $.ajaxSetup({
         }
     }
 });
+
+function deleteJobSeekerFromJob(job_id,job_seeker){
+	
+}
+
+function viewPitch(url, job_id, job_seeker){
+	$('#pitchViewer').html('');
+	$('#pitchViewer').html('<video width="320" height="240" controls><source src="'+url+'" type="video/mp4"></video>');
+	$('#applyButtonModal').attr('href','javascript:connectWithJob('+job_id+','+job_seeker+');');
+	$('#deleteButtonModal').attr('href','javascript:deleteJobSeekerFromJob('+job_id+','+job_seeker+');');
+	$('#applyButtonModal').show();
+	$('#deleteButtonModal').show();
+	$('#viewPitchModal').modal('show');
+}
+
+function viewPitch2(url, job_id, job_seeker){
+	$('#pitchViewer').html('');
+	$('#pitchViewer').html('<video width="320" height="240" controls><source src="'+url+'" type="video/mp4"></video>');
+	$('#viewPitchModal').modal('show');
+}
 
 /* Site wide on-load functions */
 

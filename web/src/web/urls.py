@@ -27,6 +27,7 @@ urlpatterns = patterns('web.views',
 	url(r'^messages/$', 'messages'),
 	url(r'^jobs/$', 'jobs'),
 	url(r'^single-job/$', 'single_job'),
-	url(r'^design$', 'design'),
+	url(r'^dashboard/$', 'dashboard'),
 	url(r'^profile/edit-job-preferences/$', 'edit_job_preferences'),
+	url(r'^find-staff/$', 'find_staff'),
 )

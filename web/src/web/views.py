@@ -83,8 +83,11 @@ def jobs(request):
 def single_job(request):
     return render(request, 'single-job.html')
 	
-def design(request):
-    return render(request, 'design.html')	
+def dashboard(request):
+    return render(request, 'dashboard.html')
 	
 def edit_job_preferences(request):
     return render(request, 'profile/edit-job-preferences.html')	
+	
+def find_staff(request):
+    return render(request, 'find-staff.html')		

@@ -31,17 +31,41 @@ $(function() {
 		var first_name = $('#first_name').val();
 		var last_name = $('#last_name').val();
 		var email = $('#email').val();
-		var email_public = $('#email_public').val();
+		if ($('#email_public').is(':checked')) {
+			var email_public = true;
+		}else{
+			var email_public = false;
+		}
 		var telephone = $('#telephone').val();
-		var telephone_public = $('#telephone_public').val();
+		if ($('#telephone_public').is(':checked')) {
+			var telephone_public = true;
+		}else{
+			var telephone_public = false;
+		}
 		var mobile = $('#mobile').val();
-		var mobile_public = $('#mobile_public').val();
+		if ($('#mobile_public').is(':checked')) {
+			var mobile_public = true;
+		}else{
+			var mobile_public = false;
+		}
 		var age = $('#age').val();
-		var age_public = $('#age_public').val();
+		if ($('#age_public').is(':checked')) {
+			var age_public = true;
+		}else{
+			var age_public = false;
+		}
 		var sex = $('#sex').val();
-		var sex_public = $('#sex_public').val();
+		if ($('#sex_public').is(':checked')) {
+			var sex_public = true;
+		}else{
+			var sex_public = false;
+		}
 		var nationality = $('#nationality').val();
-		var nationality_public = $('#nationality_public').val();
+		if ($('#nationality_public').is(':checked')) {
+			var nationality_public = true;
+		}else{
+			var nationality_public = false;
+		}
 		var description = $('#description').val();
 		var csrfmiddlewaretoken = $('[name="csrfmiddlewaretoken"]').val();
 		
@@ -50,7 +74,12 @@ $(function() {
 				window.location.href = "/profile/job-preferences";
 			  })
 			  .fail(function( data ) {
-				console.log( data.responseJSON );
+				var messageError = ''
+				for (var key in data.responseJSON) {
+					var obj = data.responseJSON[key];
+					messageError = messageError+obj+'<br>';
+				}
+				formAlert('danger', messageError);
 			  });
 	});
 });

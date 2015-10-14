@@ -22,9 +22,9 @@ $(function() {
 						  imageThumb = obj.images[0].thumbnail;
 					  }
 					  if(imageThumb != ''){
-					  	$('#list-table tbody').append('<tr data-jobs-id="'+obj.id+'" class="locations-list" id="locations-list-'+obj.id+'"><td class="text-center" onclick="goToLocations('+obj.id+');"><img width="150px" src="'+imageThumb+'"></td><td onclick="goToLocations('+obj.id+');">'+obj.name+'</td><td onclick="goToLocations('+obj.id+');">'+obj.description+'</td><td onclick="goToLocations('+obj.id+');">'+obj.jobs.length+'</td></tr>');
+					  	$('#list-table tbody').append('<tr data-jobs-id="'+obj.id+'" class="locations-list" id="locations-list-'+obj.id+'"><td onclick="goToLocations('+obj.id+');">'+obj.name+'</td><td class="text-center" onclick="goToLocations('+obj.id+');"><img width="150px" src="'+imageThumb+'"></td><td onclick="goToLocations('+obj.id+');">'+obj.description+'</td><td onclick="goToLocations('+obj.id+');">'+obj.jobs.length+'</td></tr>');
 					  }else{
-						 $('#list-table tbody').append('<tr data-jobs-id="'+obj.id+'" class="locations-list" id="jobs-list-'+obj.id+'"><td class="text-center" onclick="goToLocations('+obj.id+');"><img width="150px" src="/static/web/images/no_image_available.png"></td><td onclick="goToLocations('+obj.id+');">'+obj.description+'</td><td onclick="goToLocations('+obj.id+');">'+obj.description+'</td><td onclick="goToLocations('+obj.id+');">'+obj.jobs.length+'</td></tr>');
+						 $('#list-table tbody').append('<tr data-jobs-id="'+obj.id+'" class="locations-list" id="jobs-list-'+obj.id+'"><td onclick="goToLocations('+obj.id+');">'+obj.description+'</td><td class="text-center" onclick="goToLocations('+obj.id+');"><img width="150px" src="/static/web/images/no_image_available.png"></td><td onclick="goToLocations('+obj.id+');">'+obj.description+'</td><td onclick="goToLocations('+obj.id+');">'+obj.jobs.length+'</td></tr>');
 					  }
 				  }
 			  })

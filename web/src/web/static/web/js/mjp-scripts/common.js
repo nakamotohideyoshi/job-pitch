@@ -24,9 +24,17 @@ function deleteCookie(cname){
 
 //get lat long and other data from postcode
 function postcodeLocationData(postcode, handleData){
-	$.get( "http://api.postcodes.io/postcodes/"+postcode, {}).done(function( data ) {
-		handleData(data);
-	});
+		$.ajax({ cache: false,
+			url: "http://api.postcodes.io/postcodes/"+postcode,
+			success: function (data) {
+				handleData(data);
+			},
+			error: function (data) {
+				var response = JSON.parse(data.responseText);
+				console.log(response.error);
+				formAlert('danger', response.error);
+			}
+		});
 }
 
 //if redirect is true, send user to login
@@ -38,6 +46,7 @@ function checkLogin(redirect){
 		}else{
 			//show login & reg links
 			$('.not_logged_in_menu').show();
+			$('.not_logged_in_element').show();
 			$('.login-username').hide();
 			return false;
 		}	

@@ -564,6 +564,10 @@ Web App By Reiss Watson
 	display:none;	
 }
 
+.not_logged_in_element{
+	display:none;	
+}
+
 #page-wrapper{
 	min-height:100vh;
 }
@@ -670,7 +674,133 @@ Web App By Reiss Watson
 }
 
 .login-username{
+	
 }
+
+
+
+.table thead{
+	background:#00b9a5;
+	color:#fff !important;
+	font-weight:normal !important;
+}
+
+.table thead tr:first-child th:first-child { border-top-left-radius: 8px; }
+
+.table thead tr:first-child th:last-child { border-top-right-radius: 8px; }
+
+.table>tbody>tr{
+	border-bottom:#a4a4a4 1px solid !important;
+	border-left:#a4a4a4 1px solid !important;
+	border-right:#a4a4a4 1px solid !important;
+}
+
+.link-create-job, .link-create-location, .form-buttons{
+	background:#00b9a5;
+	border:1px solid #00b9a5;
+	border-radius:6px;
+	margin-bottom:20px;
+	padding-left:25px;
+	padding-right:25px;
+}
+
+.link-create-job:hover, .link-create-location:hover, .form-buttons:hover{
+	background:#fff;
+	border:1px solid #00b9a5;
+	border-radius:6px;
+	margin-bottom:20px;
+	padding-left:25px;
+	padding-right:25px;
+	color:#000;
+}
+
+.page-header{
+	border:none;	
+	margin-bottom:5px;
+}
+
+.page-header-form{
+	font-size: 30px;
+}
+
+.delete-action-btn{
+	border:1px solid #d9534f;
+	background:#fff;	
+	border-radius:6px;
+	margin-right:10px;
+	color:#4a4a4a;
+}
+
+.view-applications-btn{
+	border:1px solid #00b9a5;
+	background:#fff;	
+	border-radius:6px;
+	margin-right:10px;
+	color:#4a4a4a;
+}
+
+.find-staff-btn{
+	border:1px solid #00b9a5;
+	background:#fff;	
+	border-radius:6px;
+	margin-right:10px;
+	color:#4a4a4a;
+}
+
+.delete-action-btn:hover{
+	border:1px solid #d9534f;
+	background:#d9534f;	
+	border-radius:6px;
+	margin-right:10px;
+	color:#fff;
+}
+
+.view-applications-btn:hover{
+	border:1px solid #00b9a5;
+	background:#00b9a5;	
+	border-radius:6px;
+	margin-right:10px;
+	color:#fff;
+}
+
+.find-staff-btn:hover{
+	border:1px solid #00b9a5;
+	background:#00b9a5;	
+	border-radius:6px;
+	margin-right:10px;
+	color:#fff;
+}
+
+.table-responsive{
+	overflow: visible;
+}
+
+.form-control{
+	border-radius:8px;
+}
+
+.fileUpload {
+    position: relative;
+    overflow: hidden;
+    margin: 10px;
+}
+.fileUpload input#company_logo ,.fileUpload input#work_place_image, .fileUpload input#job_image{
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin: 0;
+    padding: 0;
+    font-size: 20px;
+    cursor: pointer;
+    opacity: 0;
+    filter: alpha(opacity=0);
+}
+
+.message-time-date{
+	color:#00b9a5;
+	font-size:12px;
+}
+
 /* Only show the "mobile menu" fix */
 @media (max-width: 3000px) {
     .navbar-header {

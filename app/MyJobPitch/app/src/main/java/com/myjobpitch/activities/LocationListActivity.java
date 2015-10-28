@@ -156,11 +156,11 @@ public class LocationListActivity extends MJPProgressActionBarActivity  {
             TextView titleView = (TextView) rowView.findViewById(R.id.title);
             titleView.setText(location.getName());
             TextView subtitleView = (TextView) rowView.findViewById(R.id.subtiltle);
-            int jobCount = location.getJobs().size();
-            if (jobCount == 1)
-                subtitleView.setText("Includes " + jobCount + " job");
+            Integer activeJobCount = location.getActive_job_count();
+            if (activeJobCount == 1)
+                subtitleView.setText("Includes " + activeJobCount + " active job");
             else
-                subtitleView.setText("Includes " + jobCount + " jobs");
+                subtitleView.setText("Includes " + activeJobCount + " active jobs");
                 return rowView;
         }
     }

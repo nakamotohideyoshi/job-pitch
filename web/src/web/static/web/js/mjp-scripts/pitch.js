@@ -48,7 +48,7 @@ $(document).ready(function() {
 				$.post( "/api/pitches/", { csrftoken: getCookie('csrftoken') }).done(function( data ) {
 					console.log( data );
 					$.put( "/api/pitches/"+data.id+"/?token="+data.token, { video: 'https://s3-eu-west-1.amazonaws.com/mjp-media-upload/'+filenameOnly , thumb: 'https://s3-eu-west-1.amazonaws.com/mjp-media-upload/'+filenameOnlyNoExt+'.jpg',csrftoken: getCookie('csrftoken') }).done(function( data ) {
-						window.location.href = "/jobs";
+						window.location.href = "/profile/viewpitch";
 					})
 					.fail(function( data ) {
 						alert( data.responseJSON );

@@ -1,14 +1,19 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center_horizontal"
-    android:orientation="vertical"
     tools:context=".JobDetailsActivity">
+
+    <ImageView
+        android:src="@drawable/background_logo"
+        android:layout_marginTop="200dp"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" />
 
     <ProgressBar android:id="@+id/progress" style="?android:attr/progressBarStyleLarge"
         android:visibility="gone"
+        android:layout_gravity="center"
         android:layout_width="wrap_content"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_marginBottom="8dp" />
 
     <ScrollView
@@ -68,7 +73,7 @@
                     android:id="@+id/job_title"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/material_deep_teal_500"
+                    android:textColor="@color/mjp_teal"
                     android:layout_toLeftOf="@+id/job_properties"
                     tools:text="Job Title"
                     android:textSize="25sp"
@@ -142,4 +147,4 @@
         </LinearLayout>
     </ScrollView>
 
-</LinearLayout>
+</FrameLayout>

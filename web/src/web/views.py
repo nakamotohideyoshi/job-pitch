@@ -91,3 +91,6 @@ def edit_job_preferences(request):
 	
 def find_staff(request):
     return render(request, 'find-staff.html')		
+	
+def viewpitch(request):
+    return render(request, 'profile/viewpitch.html')

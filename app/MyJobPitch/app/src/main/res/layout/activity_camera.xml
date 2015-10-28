@@ -32,7 +32,7 @@
             tools:text="30"
             android:padding="10dp"
             android:textSize="50dip"
-            android:textColor="@color/material_deep_teal_500"
+            android:textColor="@color/mjp_teal"
             android:layout_alignParentBottom="true"
             android:layout_alignParentRight="true"
             android:layout_width="wrap_content"

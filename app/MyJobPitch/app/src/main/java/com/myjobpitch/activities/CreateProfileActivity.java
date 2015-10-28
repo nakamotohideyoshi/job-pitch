@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -48,7 +49,7 @@ public class CreateProfileActivity extends MJPProgressActionBarActivity {
         setContentView(R.layout.activity_create_profile);
 
         // Job seeker
-        Button mCreateJobSeekerButton = (Button) findViewById(R.id.create_job_seeker);
+        ImageButton mCreateJobSeekerButton = (ImageButton) findViewById(R.id.create_job_seeker);
         mCreateJobSeekerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -70,7 +71,7 @@ public class CreateProfileActivity extends MJPProgressActionBarActivity {
         mJobSeekerEditFragment.loadApplicationData(application);
 
         // Recruiter
-        Button mCreateRecruiterButton = (Button) findViewById(R.id.create_employer);
+        ImageButton mCreateRecruiterButton = (ImageButton) findViewById(R.id.create_employer);
         mCreateRecruiterButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -226,9 +227,11 @@ public class CreateProfileActivity extends MJPProgressActionBarActivity {
 
     private void createRecruiter() {
         mRecruiterProfile.setVisibility(View.VISIBLE);
+        mJobSeekerProfile.setVisibility(View.GONE);
     }
 
     private void createJobSeeker() {
+        mRecruiterProfile.setVisibility(View.GONE);
         mJobSeekerProfile.setVisibility(View.VISIBLE);
     }
 

@@ -9,8 +9,8 @@
     <string name="prompt_password_confirm">Confirm password</string>
     <string name="prompt_email">Email (optional)</string>
     <string name="create_profile">Create profile</string>
-    <string name="create_employer">I am an Employer</string>
-    <string name="create_job_seeker">I am a Job Seeker</string>
+    <string name="create_employer">I need staff</string>
+    <string name="create_job_seeker">Get a job</string>
     <string name="prompt_business_name">Name</string>
     <string name="prompt_location_name">Name</string>
     <string name="prompt_location_description">Description</string>

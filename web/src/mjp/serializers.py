@@ -52,6 +52,10 @@ class LocationSerializer(serializers.ModelSerializer):
     longitude = serializers.FloatField(source='latlng.y')
     images = RelatedImageURLField(many=True, read_only=True)
     business_data = BusinessSerializer(source='business', read_only=True)
+    active_job_count = serializers.SerializerMethodField()
+
+    def get_active_job_count(self, obj):
+        return obj.jobs.filter(status__name="OPEN").count()
     
     def save(self, **kwargs):
         self.validated_data['latlng'] = Point(**self.validated_data['latlng'])

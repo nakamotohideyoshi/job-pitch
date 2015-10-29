@@ -7,6 +7,7 @@ import java.util.List;
 public class Location extends MJPObjectWithDates {
     private Integer business;
     private List<Integer> jobs;
+    private Integer active_job_count;
     private String name;
     private String description;
     private String email;
@@ -147,5 +148,9 @@ public class Location extends MJPObjectWithDates {
 
     public Business getBusiness_data() {
         return business_data;
+    }
+
+    public Integer getActive_job_count() {
+        return active_job_count;
     }
 }

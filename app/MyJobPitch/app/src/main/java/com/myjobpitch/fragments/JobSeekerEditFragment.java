@@ -28,6 +28,7 @@ import java.util.List;
 import java.util.Map;
 
 public class JobSeekerEditFragment extends EditFragment<JobSeeker> {
+    private CheckBox mActiveView;
     private EditText mFirstNameView;
     private EditText mLastNameView;
     private EditText mEmailView;
@@ -55,6 +56,7 @@ public class JobSeekerEditFragment extends EditFragment<JobSeeker> {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_job_seeker_edit, container, false);
 
+        mActiveView = (CheckBox) view.findViewById(R.id.job_seeker_active);
         mFirstNameView = (EditText) view.findViewById(R.id.job_seeker_first_name);
         mLastNameView = (EditText) view.findViewById(R.id.job_seeker_last_name);
         mEmailView = (EditText) view.findViewById(R.id.job_seeker_email);
@@ -142,6 +144,7 @@ public class JobSeekerEditFragment extends EditFragment<JobSeeker> {
         }
         mNationalityPublicView.setChecked(jobSeeker.getNationality_public());
         mDescriptionView.setText(jobSeeker.getDescription());
+        mActiveView.setChecked(jobSeeker.isActive());
     }
 
     public void save(JobSeeker jobSeeker) {
@@ -172,6 +175,7 @@ public class JobSeekerEditFragment extends EditFragment<JobSeeker> {
             jobSeeker.setNationality(null);
         jobSeeker.setNationality_public(mNationalityPublicView.isChecked());
         jobSeeker.setDescription(mDescriptionView.getText().toString());
+        jobSeeker.setActive(mActiveView.isChecked());
     }
 
     public CreateUpdateJobSeekerTask getCreateBusinessTask(MJPApi api, JobSeeker jobSeeker) {

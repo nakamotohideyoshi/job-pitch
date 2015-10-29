@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.CursorLoader;
 import android.content.Intent;
 import android.content.Loader;
+import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -23,6 +24,8 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -42,6 +45,8 @@ import org.springframework.web.client.RestClientException;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
 
 
@@ -49,15 +54,20 @@ import java.util.concurrent.atomic.AtomicInteger;
  * A login screen that offers login via email/password.
  */
 public class LoginActivity extends MJPProgressActivity implements LoaderCallbacks<Cursor> {
-    /**
-     * Keep track of the login task to ensure we can cancel it if requested.
-     */
+    private static final String LOGIN_PREFERENCES = "LoginPreferences";
+    private static final String API_ROOT = "API_ROOT";
+    private static final String USERNAME = "USERNAME";
+    private static final String PASSWORD = "PASSWORD";
+    private static final String REMEMBER_PASSWORD = "REMEMBER_PASSWORD";
+
+
     private LoginTask loginTask = null;
     private LogoutTask logoutTask = null;
 
     // UI references.
     private AutoCompleteTextView mUsernameView;
     private EditText mPasswordView;
+    private CheckBox mRememberPasswordView;
     private View mProgressView;
     private TextView mProgressText;
     private View mLoginFormView;
@@ -66,6 +76,8 @@ public class LoginActivity extends MJPProgressActivity implements LoaderCallback
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        final SharedPreferences preferences = getSharedPreferences(LOGIN_PREFERENCES, MODE_PRIVATE);
 
         // Display version
         String version = "unknown";
@@ -79,7 +91,7 @@ public class LoginActivity extends MJPProgressActivity implements LoaderCallback
 
         // Set up the login form.
         mUsernameView = (AutoCompleteTextView) findViewById(R.id.username);
-        populateAutoComplete();
+        mUsernameView.setText(preferences.getString(USERNAME, ""));
 
         mPasswordView = (EditText) findViewById(R.id.password);
         mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -89,6 +101,19 @@ public class LoginActivity extends MJPProgressActivity implements LoaderCallback
                 return true;
             }
         });
+
+        mRememberPasswordView = (CheckBox)findViewById(R.id.remember_password);
+        mRememberPasswordView.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (!isChecked)
+                    preferences.edit().remove(REMEMBER_PASSWORD).commit();
+            }
+        });
+        if (preferences.getBoolean(REMEMBER_PASSWORD, false)) {
+            mPasswordView.setText(preferences.getString(PASSWORD, ""));
+            mRememberPasswordView.setChecked(true);
+        }
 
         Button mSignInButton = (Button) findViewById(R.id.sign_in_button);
         mSignInButton.setOnClickListener(new OnClickListener() {
@@ -117,15 +142,16 @@ public class LoginActivity extends MJPProgressActivity implements LoaderCallback
             String urls[] = new String[] {
                     "http://mjp.digitalcrocodile.com:8000/",
                     "http://mjp.digitalcrocodile.com:8001/",
-                    "http://mjp.digitalcrocodile.com/api/",
+                    "http://mjp.digitalcrocodile.com/",
                     "http://localhost:8000/",
             };
             ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_dropdown_item_1line, urls);
-            AutoCompleteTextView textView = (AutoCompleteTextView) findViewById(R.id.debug_api);
-            textView.setAdapter(adapter);
-            textView.addTextChangedListener(new TextWatcher() {
+            AutoCompleteTextView apiRootView = (AutoCompleteTextView) findViewById(R.id.debug_api);
+            apiRootView.setAdapter(adapter);
+            apiRootView.addTextChangedListener(new TextWatcher() {
                 @Override
-                public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                }
 
                 @Override
                 public void onTextChanged(CharSequence s, int start, int before, int count) {
@@ -133,8 +159,10 @@ public class LoginActivity extends MJPProgressActivity implements LoaderCallback
                 }
 
                 @Override
-                public void afterTextChanged(Editable s) {}
+                public void afterTextChanged(Editable s) {
+                }
             });
+            apiRootView.setText(preferences.getString(API_ROOT, urls[0]));
         }
     }
 
@@ -329,6 +357,15 @@ public class LoginActivity extends MJPProgressActivity implements LoaderCallback
         @Override
         protected void onPostExecute(final Boolean loginSuccess) {
             if (loginSuccess) {
+                SharedPreferences.Editor preferences = getSharedPreferences(LOGIN_PREFERENCES, MODE_PRIVATE)
+                        .edit()
+                        .putString(USERNAME, mUsername)
+                        .putString(PASSWORD, mPassword)
+                        .putBoolean(REMEMBER_PASSWORD, mRememberPasswordView.isChecked());
+                if (BuildConfig.DEBUG)
+                    preferences.putString(API_ROOT, getApi().getApiRoot());
+                preferences.commit();
+
                 final List<APITask<Boolean>> tasks = getMJPApplication().getLoadActions();
 
                 final AtomicInteger progress = new AtomicInteger();
@@ -411,8 +448,10 @@ public class LoginActivity extends MJPProgressActivity implements LoaderCallback
                     });
                     taskManager.addBackgroundTask(task);
                 }
+                ExecutorService executor = Executors.newFixedThreadPool(5);
                 for (APITask<Boolean> task : tasks)
-                    task.execute();
+                    task.executeOnExecutor(executor);
+                executor.shutdown();
             } else if (clientException) {
                 loginTask = null;
                 Toast toast = Toast.makeText(LoginActivity.this, "Connection Error: Please check your internet connection", Toast.LENGTH_LONG);

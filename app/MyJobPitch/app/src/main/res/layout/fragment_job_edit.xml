@@ -6,11 +6,22 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin" tools:context=".JobEditFragment">
 
-    <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
-        android:text="@string/job_details"
-        android:textSize="25sp"
-        android:paddingBottom="8dp"
-        android:textStyle="bold" />
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:text="@string/job_details"
+            android:textSize="25sp"
+            android:paddingBottom="8dp"
+            android:textStyle="bold" />
+
+        <CheckBox
+            android:id="@+id/job_active"
+            android:text="@string/active"
+            android:layout_gravity="right"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </FrameLayout>
 
     <EditText android:id="@+id/job_title" android:layout_width="match_parent"
         android:layout_height="wrap_content" android:hint="@string/prompt_job_title"

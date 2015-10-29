@@ -20,6 +20,7 @@
     <color name="grey_13">#ddd</color>
     <color name="grey_14">#eee</color>
     <color name="grey_15">#fff</color>
+    <color name="message_background">#7ccc</color>
     <color name="mjp_teal">#ff009688</color>
     <color name="white">#fff</color>
 </resources>

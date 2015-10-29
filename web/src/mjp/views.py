@@ -231,7 +231,7 @@ class JobSeekerViewSet(viewsets.ModelViewSet):
         job = self.request.QUERY_PARAMS.get('job')
         if job:
             job = Job.objects.select_related('sector', 'contract', 'hours').get(pk=self.request.QUERY_PARAMS['job'])
-            query = JobSeeker.objects.prefetch_related('pitches', 'profile').distinct()
+            query = JobSeeker.objects.filter(active=True).prefetch_related('pitches', 'profile').distinct()
             query = query.filter(pitches__video__isnull=False)
             query = query.exclude(applications__job=job)
             query = query.exclude(profile=None)
@@ -244,7 +244,7 @@ class JobSeekerViewSet(viewsets.ModelViewSet):
                                  )
             # TODO location
             return query[:25]
-        return JobSeeker.objects.all()
+        return JobSeeker.objects.filter(user=self.request.user)
     
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)

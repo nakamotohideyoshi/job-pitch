@@ -7,6 +7,7 @@ import java.util.List;
 
 @JsonIgnoreProperties({"user", "jobSeeker"})
 public class JobSeeker extends MJPObjectWithDates implements JobSeekerContainer {
+    private boolean active;
     private String first_name;
     private String last_name;
     private String email;
@@ -180,5 +181,13 @@ public class JobSeeker extends MJPObjectWithDates implements JobSeekerContainer 
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
     }
 }

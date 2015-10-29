@@ -138,7 +138,7 @@ public class JobDetailsActivity extends MJPProgressActionBarActivity {
         String properties = getMJPApplication().get(Hours.class, job.getHours()).getName();
         Contract contract = getMJPApplication().get(Contract.class, job.getContract());
         if (!contract.equals(getMJPApplication().get(Contract.class, Contract.PERMANENT)))
-            properties += "(" + contract.getShort_name() + ")";
+            properties += " (" + contract.getShort_name() + ")";
         mJobPropertiesView.setText(properties);
 
         Image image = null;

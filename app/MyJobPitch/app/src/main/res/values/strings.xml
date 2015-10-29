@@ -88,16 +88,16 @@
     <string name="record_pitch">Record my pitch</string>
     <string name="no_locations_added_message">You have not added any work places for this company.</string>
     <string name="no_jobs_added_message">You have not added any jobs for this location.</string>
-    <string name="no_applications_message">You have not chosen anyone to connect with for this job, and no candidates have yet expressed an interest.  Once that happens, you will be able to sort through them from here.  You can switch to search mode to look for potential applicants.</string>
+    <string name="no_applications_message">You have not chosen anyone to connect with for this job, and no candidates have yet expressed an interest. Once that happens, you will be able to sort through them from here. You can switch to search mode to look for potential applicants.</string>
     <string name="switch_to_search_mode">Switch to search mode</string>
     <string name="restart_search">Restart search</string>
     <string name="switch_to_application_mode">Switch to application mode</string>
-    <string name="no_matching_candidates_message">There are no more potential candidates that match this job.  You can switch to application mode to see the people who have connected with you, or restart the search.</string>
+    <string name="no_matching_candidates_message">There are no more potential candidates that match this job. You can switch to application mode to see the people who have connected with you, or restart the search.</string>
     <string name="no_shortlisted_applications_message">You have not shortlisted any applications for this job, turn off shortlist view to see the non-shortlisted applications.</string>
     <string name="turn_off_shortlist_view">Turn off shortlist view</string>
     <string name="remove_job_seeker_message">Are you sure you want to remove %1$s? This job seeker will never appear again for this job.\nIf you want this item to appear again in later searches, just swipe to the right to remove temporarily.</string>
     <string name="remove_job_message">Are you sure you want to remove %1$s? This job will never appear again.\nIf you want this job to appear again in later searches, just swipe to the right to remove temporarily.</string>
-    <string name="no_matching_jobs_message">There are no more jobs that match your profile.  You can restart the search to see all the jobs you\'ve dismissed again.</string>
+    <string name="no_matching_jobs_message">There are no more jobs that match your profile. You can restart the search to restore all the jobs you\'ve dismissed, or got to the message centre to check the status of your applications.</string>
     <string name="action_messages">Messages</string>
     <string name="no_image">no image</string>
     <string name="company_image">Company Logo</string>
@@ -120,14 +120,14 @@
     <string name="creating_account">Creating account...</string>
     <string name="rotate">rotate</string>
     <string name="get_ready">Get ready!</string>
-    <string name="pre_record_message">Before recording starts, you will get a %1$s second countdown to get ready.  The recording will stop automatically after %2$s seconds, or if you hit the stop button.</string>
+    <string name="pre_record_message">Before recording starts, you will get a %1$s second countdown to get ready. The recording will stop automatically after %2$s seconds, or if you hit the stop button.</string>
     <string name="record_new_pitch">Record new pitch</string>
     <string name="no_pitch">no recording</string>
     <string name="record_pitch_title">Record My Pitch</string>
     <string name="record_pitch_intro">Here you can record your 30 second pitch. This 30 second video will be viewed by prospective employers.</string>
     <string name="upload">Upload</string>
     <string name="discard_recording_prompt">Are you sure you want to discard your recording?</string>
-    <string name="start_recording_prompt">You have a pitch recorded but not uploaded.  A new recording will replace this.</string>
+    <string name="start_recording_prompt">You have a pitch recorded but not uploaded. A new recording will replace this.</string>
     <string name="uploading">Uploading... (%1$s%%)</string>
     <string name="action_record_pitch">Record My Pitch</string>
     <string name="home">Home</string>
@@ -155,5 +155,8 @@
     <string name="cant_view_inactive_job">You can\'t view an inactive job!</string>
     <string name="inactive">Inactive</string>
     <string name="remember_password">Remember password</string>
-    <string name="job_active">Active</string>
+    <string name="active">Active</string>
+    <string name="profile_inactive_message">Your profile is currently inactive. The means you are hidden from prospective employers and cannot search for jobs.</string>
+    <string name="activate_profile">Activate my profile</string>
+    <string name="open_message_center">Open message centre</string>
 </resources>

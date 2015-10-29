@@ -36,6 +36,7 @@ import com.myjobpitch.api.data.JobSeeker;
 import com.myjobpitch.tasks.CreateApplicationTask;
 import com.myjobpitch.tasks.CreateReadUpdateAPITaskListener;
 import com.myjobpitch.tasks.DownloadImageTask;
+import com.myjobpitch.tasks.jobseeker.CreateUpdateJobSeekerTask;
 import com.myjobpitch.tasks.jobseeker.ReadJobsTask;
 import com.myjobpitch.tasks.jobseeker.ReadUserJobSeekerTask;
 
@@ -321,6 +322,8 @@ public class JobSeekerActivity extends MJPProgressActionBarActivity {
                     editProfile();
                 else if (!mJobSeeker.hasPitch())
                     recordPitch();
+                else if (!mJobSeeker.isActive())
+                    activateProfile();
                 else
                     loadDataClearSeenAndClearCards();
             }
@@ -330,7 +333,10 @@ public class JobSeekerActivity extends MJPProgressActionBarActivity {
         mEmptyButton2View.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                recordPitch();
+                if (!mJobSeeker.hasPitch())
+                    recordPitch();
+                else
+                    openMessageCenter();
             }
         });
 
@@ -349,37 +355,7 @@ public class JobSeekerActivity extends MJPProgressActionBarActivity {
         readJobSeekerTask.addListener(new CreateReadUpdateAPITaskListener<JobSeeker>() {
             @Override
             public void onSuccess(JobSeeker result) {
-                mJobSeeker = result;
-                if (mJobSeeker.getProfile() == null && !mJobSeeker.hasPitch()) {
-                    mEmptyView.setVisibility(View.VISIBLE);
-                    mEmptyMessageView.setText(getString(R.string.setup_profile_and_pitch_message));
-                    mEmptyButtonView.setText(getString(R.string.setup_profile));
-                    mEmptyButton2View.setVisibility(View.VISIBLE);
-                    mEmptyButton2View.setText(getString(R.string.record_pitch));
-                    mButtons.setVisibility(View.INVISIBLE);
-                    showProgress(false);
-                } else if (mJobSeeker.getProfile() == null) {
-                    mEmptyView.setVisibility(View.VISIBLE);
-                    mEmptyMessageView.setText(getString(R.string.setup_profile_message));
-                    mEmptyButtonView.setText(getString(R.string.setup_profile));
-                    mEmptyButton2View.setVisibility(View.GONE);
-                    mButtons.setVisibility(View.INVISIBLE);
-                    showProgress(false);
-                } else if (!mJobSeeker.hasPitch()) {
-                    mEmptyView.setVisibility(View.VISIBLE);
-                    mEmptyMessageView.setText(getString(R.string.record_pitch_message));
-                    mEmptyButtonView.setText(getString(R.string.record_pitch));
-                    mEmptyButton2View.setVisibility(View.GONE);
-                    mButtons.setVisibility(View.INVISIBLE);
-                    showProgress(false);
-                } else {
-                    mEmptyMessageView.setText(getString(R.string.no_matching_jobs_message));
-                    mEmptyButtonView.setText(getString(R.string.restart_search));
-                    mEmptyButton2View.setVisibility(View.INVISIBLE);
-                    mEmptyView.setVisibility(View.INVISIBLE);
-                    mButtons.setVisibility(View.VISIBLE);
-                    loadDataPreserveSeenAndAppendCards();
-                }
+                jobSeekerLoaded(result);
             }
 
             @Override
@@ -403,6 +379,48 @@ public class JobSeekerActivity extends MJPProgressActionBarActivity {
         readJobSeekerTask.execute();
     }
 
+    private void jobSeekerLoaded(JobSeeker result) {
+        mJobSeeker = result;
+        if (mJobSeeker.getProfile() == null && !mJobSeeker.hasPitch()) {
+            mEmptyView.setVisibility(View.VISIBLE);
+            mEmptyMessageView.setText(getString(R.string.setup_profile_and_pitch_message));
+            mEmptyButtonView.setText(getString(R.string.setup_profile));
+            mEmptyButton2View.setVisibility(View.VISIBLE);
+            mEmptyButton2View.setText(getString(R.string.record_pitch));
+            mButtons.setVisibility(View.INVISIBLE);
+            showProgress(false);
+        } else if (mJobSeeker.getProfile() == null) {
+            mEmptyView.setVisibility(View.VISIBLE);
+            mEmptyMessageView.setText(getString(R.string.setup_profile_message));
+            mEmptyButtonView.setText(getString(R.string.setup_profile));
+            mEmptyButton2View.setVisibility(View.GONE);
+            mButtons.setVisibility(View.INVISIBLE);
+            showProgress(false);
+        } else if (!mJobSeeker.hasPitch()) {
+            mEmptyView.setVisibility(View.VISIBLE);
+            mEmptyMessageView.setText(getString(R.string.record_pitch_message));
+            mEmptyButtonView.setText(getString(R.string.record_pitch));
+            mEmptyButton2View.setVisibility(View.GONE);
+            mButtons.setVisibility(View.INVISIBLE);
+            showProgress(false);
+        } else if (!mJobSeeker.isActive()) {
+            mEmptyView.setVisibility(View.VISIBLE);
+            mEmptyMessageView.setText(getString(R.string.profile_inactive_message));
+            mEmptyButtonView.setText(getString(R.string.activate_profile));
+            mEmptyButton2View.setVisibility(View.GONE);
+            mButtons.setVisibility(View.INVISIBLE);
+            showProgress(false);
+        } else {
+            mEmptyMessageView.setText(getString(R.string.no_matching_jobs_message));
+            mEmptyButtonView.setText(getString(R.string.restart_search));
+            mEmptyButton2View.setText(getString(R.string.open_message_center));
+            mEmptyButton2View.setVisibility(View.VISIBLE);
+            mEmptyView.setVisibility(View.INVISIBLE);
+            mButtons.setVisibility(View.VISIBLE);
+            loadDataPreserveSeenAndAppendCards();
+        }
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -420,7 +438,7 @@ public class JobSeekerActivity extends MJPProgressActionBarActivity {
                 editProfile();
                 return true;
             case R.id.action_messages:
-                startActivity(new Intent(this, ConversationListActivity.class));
+                openMessageCenter();
                 return true;
             case R.id.action_record_pitch:
                 Intent intent = new Intent(this, RecordPitchActivity.class);
@@ -569,6 +587,41 @@ public class JobSeekerActivity extends MJPProgressActionBarActivity {
         intent = new Intent(this, EditJobProfileActivity.class);
         intent.putExtra("job_seeker_id", getApi().getUser().getJob_seeker());
         startActivity(intent);
+    }
+
+    private void activateProfile() {
+        showProgress(true);
+        mJobSeeker.setActive(true);
+        CreateUpdateJobSeekerTask updateJobSeekerTask = new CreateUpdateJobSeekerTask(getApi(), mJobSeeker);
+        updateJobSeekerTask.addListener(new CreateReadUpdateAPITaskListener<JobSeeker>() {
+            @Override
+            public void onSuccess(JobSeeker result) {
+                jobSeekerLoaded(result);
+            }
+
+            @Override
+            public void onError(JsonNode errors) {
+                Toast toast = Toast.makeText(JobSeekerActivity.this, "Error loading job seeker", Toast.LENGTH_LONG);
+                toast.show();
+                finish();
+            }
+
+            @Override
+            public void onConnectionError() {
+                Toast toast = Toast.makeText(JobSeekerActivity.this, "Connection Error: Please check your internet connection", Toast.LENGTH_LONG);
+                toast.show();
+                finish();
+            }
+
+            @Override
+            public void onCancelled() {
+            }
+        });
+        updateJobSeekerTask.execute();
+    }
+
+    private void openMessageCenter() {
+        startActivity(new Intent(this, ConversationListActivity.class));
     }
 
     private void recordPitch() {

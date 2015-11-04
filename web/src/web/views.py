@@ -65,6 +65,9 @@ def list_jobs(request):
 def create_job(request):
     return render(request, 'profile/create-job.html')
 	
+def edit_job(request):
+    return render(request, 'profile/edit-job.html')
+	
 def create_location(request):
     return render(request, 'profile/create-location.html')
 

@@ -5,7 +5,19 @@ function goToJob(id){
 $(function() {
 	// Run login check funtion with auto-redirect
 	checkLogin(true);
-	$.get( "/api/jobs/", { csrftoken: getCookie('csrftoken') }).done(function( data ) {
+	
+	//check the user has an active account, required to search jobs.
+	$.get( "/api-rest-auth/user/", { token: getCookie('key') ,csrftoken: getCookie('csrftoken') }).done(function( data ) {
+				  
+				  job_seeker_id = data.job_seeker;
+				  
+				  $.get( "/api/job-seekers/"+data.job_seeker, { token: getCookie('key') ,csrftoken: getCookie('csrftoken') }).done(function( data ) {
+					  var account_active = data.active;
+					  if(account_active == false){
+							$('#jobListMessages').show();
+							$('#accountInactiveJobsPage').show();
+						}else{
+							$.get( "/api/jobs/", { csrftoken: getCookie('csrftoken') }).done(function( data ) {
 		console.log(data);
 			for (var key in data) {
 					  var obj = data[key];
@@ -32,5 +44,12 @@ $(function() {
 				$('#profileNon').show();
 				
 			  });
+	
+						}
+				  });
+				  
+		});
+	
+	
 	
 });

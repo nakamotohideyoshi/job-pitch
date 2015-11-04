@@ -2,6 +2,17 @@ $(function() {
 	// Run login check funtion with auto-redirect
 	checkLogin(true);
 	
+	
+	$("#active_account").bootstrapSwitch();
+	
+	$('#active_account').on('switchChange.bootstrapSwitch', function(event, state) {
+	 	if(state){
+			$('#account_details_active_only').fadeIn(500);	
+		}else{
+			$('#account_details_active_only').fadeOut(500);	
+		}
+	});
+	
 	//Populate selects
 	$.get( "/api/nationalities/", { csrftoken: getCookie('csrftoken') }).done(function( data ) {
 		for (var key in data) {
@@ -35,6 +46,10 @@ $(function() {
 				  $.get( "/api/job-seekers/"+data.job_seeker, { token: getCookie('key') ,csrftoken: getCookie('csrftoken') }).done(function( data ) {
 					  
 					  console.log( data );
+				  if(!data.active){
+				  	$('#active_account').bootstrapSwitch('toggleState');
+					$('#account_details_active_only').hide();
+				  }
 				  if(data.first_name != null){
 				  	$('#first_name').val(data.first_name);
 				  }
@@ -77,6 +92,7 @@ $(function() {
 				  if(!data.email_public){
 				  	$('#email_public').attr('checked', false);
 				  }
+				 
 				  })
 				  .fail(function( data ) {
 					console.log( data );
@@ -127,10 +143,15 @@ $(function() {
 		}else{
 			var nationality_public = false;
 		}
+		if ($('#active_account').is(':checked')) {
+			var active_account = true;
+		}else{
+			var active_account = false;
+		}
 		var description = $('#description').val();
 		var csrfmiddlewaretoken = $('[name="csrfmiddlewaretoken"]').val();
 			
-			$.put( "/api/job-seekers/"+job_seeker_id+"/", { csrftoken: getCookie('csrftoken'), first_name: first_name, last_name: last_name, email: email, email_public: email_public, telephone: telephone, telephone_public: telephone_public, mobile: mobile, mobile_public: mobile_public,age: age,age_public: age_public,sex: sex,sex_public: sex_public, nationality: nationality, description:description, nationality_public: nationality_public }).done(function( data ) {
+			$.put( "/api/job-seekers/"+job_seeker_id+"/", { csrftoken: getCookie('csrftoken'), first_name: first_name, last_name: last_name, email: email, email_public: email_public, telephone: telephone, telephone_public: telephone_public, mobile: mobile, mobile_public: mobile_public,age: age,age_public: age_public,sex: sex,sex_public: sex_public, nationality: nationality, description:description, nationality_public: nationality_public, active:active_account }).done(function( data ) {
 				formAlert('success', 'Profile Updated!');
 				
 			  })

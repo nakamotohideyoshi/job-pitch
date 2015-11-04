@@ -1,8 +1,27 @@
 $(function() {
 	// Run login check funtion with auto-redirect
-	checkLogin(true);
+	checkLogin(true);	
 	
 	var application_id = QueryString.id;
+	
+	var recruiter_role;
+	var job_seeker_role;
+	
+	//Get other data
+	
+	$.get( "/api/roles/", { csrftoken: getCookie('csrftoken') }).done(function( data ) {
+		for (var key in data) {
+			var obj = data[key];
+			if(obj.name == "RECRUITER"){
+				recruiter_role = obj;
+			}else if(obj.name == "JOB_SEEKER"){
+				job_seeker_role = obj;
+			}
+		}
+	})
+	.fail(function( data ) {
+		console.log( data );
+	});
 	
 	$.get( "/api/applications/"+application_id, { csrftoken: getCookie('csrftoken') }).done(function( data ) {
 				for (var key in data.messages) {
@@ -15,7 +34,7 @@ $(function() {
 						  if(obj.read){
 							  readText  = ' - Message Read';
 						  }
-						  if(obj.from_role == 1){
+						  if(obj.from_role == recruiter_role.id){
 							  if(obj.system == true){
 						  		$('#list-table tbody').append('<tr data-message-id="'+obj.id+'" class="message-list" id="message-list-'+obj.id+'"><td onclick="goToUserProfile('+data.job_seeker.id+');">System</td><td>'+obj.content+'<br>'+date.getDate()+'/'+date.getMonth()+'/'+date.getFullYear()+' '+date.getHours()+':'+minutesTwoDigitsWithLeadingZero+readText+'</td></tr>');
 							  }else{

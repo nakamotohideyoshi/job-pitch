@@ -2,11 +2,15 @@ $(function() {
 	// Run login check funtion with auto-redirect
 	checkLogin(true);
 	
-	//grab location id from url
-	var location_id = QueryString.id;
+	$("#status_job").bootstrapSwitch();
+	
+	//grab job_id id from url
+	var job_id = QueryString.id;
 	
 	//variables defined
 	var open_job_status;
+	var closed_job_status;
+	var location_id;
 	
 	//Populate selects
 	$.get( "/api/hours/", { csrftoken: getCookie('csrftoken') }).done(function( data ) {
@@ -45,12 +49,47 @@ $(function() {
 			var obj = data[key];
 			if(obj.name == "OPEN"){
 				open_job_status = obj.id;
+			}else if(obj.name == "CLOSED"){
+				closed_job_status = obj.id;
 			}
 		}
 	})
 	.fail(function( data ) {
 		console.log( data );
 	});
+	
+	
+	// Populate any fields that have data
+				  
+				  $.get( "/api/user-jobs/"+job_id, { token: getCookie('key') ,csrftoken: getCookie('csrftoken') }).done(function( data ) {
+					  
+					  console.log( data );
+				  if(data.status == closed_job_status){
+				    $('#status_job').bootstrapSwitch('toggleState');
+				  }
+				  
+				  if(data.title != null){
+				  	$('#title').val(data.title);
+				  }
+				  if(data.description != null){
+				  	$('#description').val(data.description);
+				  }
+				  if(data.sector != null){
+				  	$('#job_sector').val(data.sector);
+				  }
+				  if(data.contract != null){
+				  	$('#contract').val(data.contract);
+				  }
+				  if(data.hours != null){
+				  	$('#hours').val(data.hours);
+				  }
+				  location_id = data.location;
+				 
+				  })
+				  .fail(function( data ) {
+					console.log( data );
+				  });
+	
 			  
 	//Form submit code
  	$('#create-job').submit(function( event ) {
@@ -60,22 +99,16 @@ $(function() {
 		var job_sector = $('#job_sector').val();
 		var contract = $('#contract').val();
 		var hours = $('#hours').val();
-		
-			$.post( "/api/user-jobs/", { title: title, description: description, sector: job_sector, contract: contract, hours: hours, location:location_id, status:open_job_status, csrftoken: getCookie('csrftoken') }).done(function( data ) {
+		if ($('#status_job').is(':checked')) {
+			var status_job = open_job_status;
+		}else{
+			var status_job = closed_job_status;
+		}
+			$.put( "/api/user-jobs/"+job_id, { title: title, description: description, sector: job_sector, contract: contract, hours: hours, location:location_id, status:status_job, csrftoken: getCookie('csrftoken') }).done(function( data ) {
 				$('#job_id').val(data.id);
-				var formData = new FormData($('#create-job')[0]);
-					  $.ajax({
-						url: '/api/user-job-images/',
-						type: 'POST',
-						data: formData,
-						async: false,
-						cache: false,
-						contentType: false,
-						processData: false,
-						success: function (data) {
+				
 								window.location.href = "/profile/list-jobs/?id="+location_id;
-						}
-					  });
+
 				
 			  })
 			  .fail(function( data ) {

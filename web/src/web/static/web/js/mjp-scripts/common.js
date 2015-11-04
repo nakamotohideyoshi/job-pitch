@@ -162,6 +162,20 @@ function deleteRow(id, apiFunction, rowPrefix){
 		});
 }
 
+//check if a job seeker account is active. Returns true|false
+
+function account_active_check(){
+		$.get( "/api-rest-auth/user/", { token: getCookie('key') ,csrftoken: getCookie('csrftoken') }).done(function( data ) {
+				  
+				  job_seeker_id = data.job_seeker;
+				  
+				  $.get( "/api/job-seekers/"+data.job_seeker, { token: getCookie('key') ,csrftoken: getCookie('csrftoken') }).done(function( data ) {
+					  return data.active;
+				  });
+				  
+		});
+}
+
 // Some handy helpers
 
 $.put = function(url, data, callback, type){

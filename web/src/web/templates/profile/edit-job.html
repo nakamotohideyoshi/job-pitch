@@ -1,0 +1,73 @@
+{% extends "mjp_base.html" %}
+
+{% block content %}
+	<div class="container-fluid">
+
+                <!-- Page Heading -->
+                <div class="row">
+                    <div class="col-lg-12">
+                        
+						
+						<div class="col-lg-12">
+							<div class="col-md-4 col-md-offset-4">
+                                <h1 class="page-header page-header-form">
+                                    Job Details
+                                </h1>
+								<form role="form"  method="post" id="create-job" enctype="multipart/form-data">
+																								
+									<div class="alert" role="alert"></div>
+                                    <div class="form-group">
+															<input type="checkbox" name="status_job" id="status_job" data-on-text="OPEN" data-off-text="CLOSED" data-label-text="Job Status" checked>		
+                                    </div>
+									<div class="form-group">
+											<input type="text" class="form-control" required placeholder="Title" name="title" id="title">
+									</div>
+									
+									<div class="form-group">
+											<textarea type="text" class="form-control" required placeholder="Description" name="description" id="description" maxlength="500" rows="5"></textarea>
+                                            <div id="textarea_feedback"></div>
+									</div>
+									
+									<div class="form-group">
+											<select class="form-control" required name="job_sector" id="job_sector">
+												<option value="" selected="">Job Sector</option>										
+											</select>
+									</div>
+									
+									<div class="form-group">
+											<select class="form-control" required name="contract" id="contract">
+												<option value="" selected="">Contract</option>									
+											</select>
+									</div>
+									
+									<div class="form-group">
+											<select class="form-control" required name="hours" id="hours">
+												<option value="" selected="">Hours</option>										
+											</select>
+									</div>
+									
+									
+									<input type="hidden" name="job" id="job_id" value="0">
+									
+									<button type="submit" class="btn btn-primary form-buttons">Save</button>
+									
+									{% csrf_token %}
+								</form>
+								
+							</div>
+						</div>
+                        
+                    </div>
+                </div>
+                <!-- /.row -->
+               
+
+            </div>
+            <!-- /.container-fluid -->
+
+{% endblock %}
+{% block pagescripts %}
+
+	<script src="/static/web/js/mjp-scripts/edit-job.js"></script>
+	
+{% endblock %}

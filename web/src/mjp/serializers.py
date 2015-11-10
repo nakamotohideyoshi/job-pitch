@@ -117,7 +117,14 @@ class ApplicationCreateSerializer(serializers.ModelSerializer):
         read_only_fields = ('status', 'created_by', 'deleted_by')
 
 
-class ApplicationUpdateSerializer(serializers.ModelSerializer):
+class ApplicationStatusUpdateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Application
+        fields = ('id', 'status',)
+        read_only_fields = ('id',)
+
+
+class ApplicationShortlistUpdateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Application
         fields = ('id', 'shortlisted',)

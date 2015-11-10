@@ -13,8 +13,8 @@ from mjp.models import Sector, Hours, Contract, Business, Location,\
 
 from mjp.serializers import SimpleSerializer, BusinessSerializer,\
     LocationSerializer, JobProfileSerializer, JobSerializer, JobSeekerSerializer,\
-    ApplicationSerializer, ApplicationCreateSerializer, ApplicationUpdateSerializer, \
-    MessageCreateSerializer, MessageUpdateSerializer, PitchSerializer
+    ApplicationSerializer, ApplicationCreateSerializer, ApplicationStatusUpdateSerializer, \
+    ApplicationShortlistUpdateSerializer, MessageCreateSerializer, MessageUpdateSerializer, PitchSerializer
 
 
 router = DefaultRouter()
@@ -379,18 +379,24 @@ class ApplicationViewSet(viewsets.ModelViewSet):
                 if not is_recruiter and not is_job_seeker:
                     return False
             return True
+
         def has_object_permission(self, request, view, application):
-            if request.method in permissions.SAFE_METHODS:
-                return True
-            if request.method == 'DELETE' and application.status.name == 'DELETED':
-                return False
             is_recruiter = request.user.businesses.filter(locations__jobs__applications=application).exists()
-            return is_recruiter or application.job_seeker.user == request.user
-        
+            is_job_seeker = application.job_seeker.user == request.user
+            if is_recruiter or is_job_seeker:
+                if request.method in permissions.SAFE_METHODS:
+                    return True
+                if request.method == 'DELETE' and application.status.name != 'DELETED':
+                    return True
+                if request.method == 'PUT':
+                    return is_recruiter
+
+
     permission_classes = (permissions.IsAuthenticated, ApplicationPermission)
     serializer_class = ApplicationSerializer
     create_serializer_class = ApplicationCreateSerializer
-    update_serializer_class = ApplicationUpdateSerializer
+    update_status_serializer_class = ApplicationStatusUpdateSerializer
+    update_shortlist_serializer_class = ApplicationShortlistUpdateSerializer
     
     def get_role(self):
         if self.request.user.businesses.exists():
@@ -430,6 +436,13 @@ class ApplicationViewSet(viewsets.ModelViewSet):
                     'business': job.location.business.name,
                     }
         message.save()
+
+    def perform_update(self, serializer):
+        serializer.save()
+        # if self.request.
+        # e = role
+
+
     
     def perform_destroy(self, application):
         application.status = ApplicationStatus.objects.get(name='DELETED')
@@ -450,7 +463,11 @@ class ApplicationViewSet(viewsets.ModelViewSet):
         if self.request.method == 'POST':
             return self.create_serializer_class
         if self.request.method == 'PUT':
-            return self.update_serializer_class
+            if self.request.data.get('shortlisted') is not None:
+                return self.update_shortlist_serializer_class
+            if self.request.data.get('status') is not None:
+                return self.update_status_serializer_class
+            return None
         return self.serializer_class
     
     def get_queryset(self):
@@ -479,10 +496,12 @@ class ApplicationViewSet(viewsets.ModelViewSet):
                     query = query.filter(shortlisted=True)
                 else:
                     query = query.order_by('-shortlisted')
+                status = self.request.QUERY_PARAMS.get('status')
+                if status is not None:
+                    query = query.filter(status__pk=status)
         else:
             query = query.filter(job_seeker__user=self.request.user)
-        return query 
-
+        return query
 router.register('applications', ApplicationViewSet, base_name='application')
 
 

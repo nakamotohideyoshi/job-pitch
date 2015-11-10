@@ -4,20 +4,20 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.myjobpitch.api.MJPAPIObject;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class ApplicationUpdate extends MJPAPIObject {
-    private Boolean shortlisted;
+public class ApplicationStatusUpdate extends MJPAPIObject {
+    private Integer status;
 
-    public ApplicationUpdate() {
+    public ApplicationStatusUpdate() {
 
     }
 
-    public ApplicationUpdate(Application application) {
+    public ApplicationStatusUpdate(Application application) {
         this.id = application.getId();
-        this.shortlisted = application.getShortlisted();
+        this.status = application.getStatus();
     }
 
     // Required to exist for RestTemplate to serialize value
-    public Boolean getShortlisted() {
-        return shortlisted;
+    public Integer getStatus() {
+        return status;
     }
 }

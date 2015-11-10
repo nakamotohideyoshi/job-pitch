@@ -21,6 +21,7 @@
         <CheckBox
             android:id="@+id/job_seeker_active"
             android:text="@string/active"
+            android:checked="true"
             android:layout_gravity="right"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />

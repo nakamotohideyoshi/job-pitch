@@ -31,6 +31,7 @@ import java.io.IOException;
 
 public class EditLocationActivity extends MJPProgressActionBarActivity {
 
+    public static final String LOCATION_ID = "LOCATION_ID";
     private LocationEditFragment mLocationEditFragment;
     private View mEditLocationView;
     private Location location;
@@ -73,8 +74,8 @@ public class EditLocationActivity extends MJPProgressActionBarActivity {
                 mLocationEditFragment.load(location);
                 showProgress(false);
             } catch (IOException e) {}
-        } else if (getIntent().hasExtra("location_id")) {
-            mReadLocationTask = new ReadLocationTask(getApi(), getIntent().getIntExtra("location_id", -1));
+        } else if (getIntent().hasExtra(LOCATION_ID)) {
+            mReadLocationTask = new ReadLocationTask(getApi(), getIntent().getIntExtra(LOCATION_ID, -1));
             mReadLocationTask.addListener(new CreateReadUpdateAPITaskListener<Location>() {
                 @Override
                 public void onSuccess(Location result) {
@@ -214,7 +215,7 @@ public class EditLocationActivity extends MJPProgressActionBarActivity {
 
     private void returnToListActivity(Location location) {
         Intent intent = new Intent(EditLocationActivity.this, JobListActivity.class);
-        intent.putExtra("location_id", location.getId());
+        intent.putExtra(LOCATION_ID, location.getId());
         startActivity(intent);
         EditLocationActivity.this.finish();
     }

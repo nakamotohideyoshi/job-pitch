@@ -25,12 +25,16 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lorentzos.flingswipe.SwipeFlingAdapterView;
 import com.myjobpitch.R;
 import com.myjobpitch.api.data.Application;
 import com.myjobpitch.api.data.ApplicationForCreation;
-import com.myjobpitch.api.data.ApplicationUpdate;
+import com.myjobpitch.api.data.ApplicationStatus;
+import com.myjobpitch.api.data.ApplicationShortlistUpdate;
+import com.myjobpitch.api.data.ApplicationStatusUpdate;
 import com.myjobpitch.api.data.Job;
 import com.myjobpitch.api.data.JobSeeker;
 import com.myjobpitch.api.data.JobSeekerContainer;
@@ -40,7 +44,8 @@ import com.myjobpitch.tasks.CreateReadUpdateAPITaskListener;
 import com.myjobpitch.tasks.DownloadImageTask;
 import com.myjobpitch.tasks.ReadAPITask;
 import com.myjobpitch.tasks.ReadApplicationsTask;
-import com.myjobpitch.tasks.UpdateApplicationTask;
+import com.myjobpitch.tasks.UpdateApplicationShortlistTask;
+import com.myjobpitch.tasks.UpdateApplicationStatusTask;
 import com.myjobpitch.tasks.recruiter.ReadJobSeekersTask;
 import com.myjobpitch.tasks.recruiter.ReadUserJobTask;
 
@@ -48,6 +53,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class JobActivity extends MJPProgressActionBarActivity {
+
+    public static final String TAG = "JobActivity";
+    public static final String SEARCH = "SEARCH";
+    public static final String APPLICATIONS = "APPLICATIONS";
+    public static final String CONNECTIONS = "CONNECTIONS";
+    public static final String MODE = "MODE";
+    public static final String JOB_ID = "JOB_ID";
 
     private SwipeFlingAdapterView.OnItemClickListener onItemClickListener;
     private SwipeFlingAdapterView.onFlingListener onFlingListener;
@@ -67,10 +79,10 @@ public class JobActivity extends MJPProgressActionBarActivity {
 
     private Job job;
     private Integer job_id;
+    private String mode;
     private View mEmptyView;
     private TextView mEmptyMessageView;
     private TextView mEmptyButtonView;
-    private TextView mEmptyButtonView2;
     private List<Integer> dismissed = new ArrayList<>();
     private ReadAPITask<?> loadingTask;
     private int lastLoadCount = 0;
@@ -84,7 +96,6 @@ public class JobActivity extends MJPProgressActionBarActivity {
 
     private View mProgressView;
     private View mJobSeekerSearchView;
-    private Switch mAppliedSwitch;
     private Switch mShortListedSwitch;
     private boolean mButtonActivation = false;
     private View mBackgroundProgress;
@@ -119,21 +130,6 @@ public class JobActivity extends MJPProgressActionBarActivity {
             extraView.setText(extraText);
             TextView descriptionView = (TextView) cardView.findViewById(R.id.job_seeker_description);
             descriptionView.setText(jobSeeker.getDescription());
-            final String finalExtraText = extraText;
-            descriptionView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    String title = name;
-                    if (!finalExtraText.isEmpty())
-                        title = String.format("%s - %s", name, finalExtraText);
-                    new AlertDialog.Builder(JobActivity.this)
-                            .setTitle(title)
-                            .setMessage(jobSeeker.getDescription())
-                            .setPositiveButton(R.string.ok, null)
-                            .show();
-                }
-            });
-
             if (jobSeekerContainer instanceof Application) {
                 Application application = (Application) jobSeekerContainer;
                 if (application.getShortlisted())
@@ -141,6 +137,18 @@ public class JobActivity extends MJPProgressActionBarActivity {
             }
 
             ImageView imageView = (ImageView) cardView.findViewById(R.id.image);
+            imageView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (jobSeeker.hasPitch()) {
+                        String video = jobSeeker.getPitch().getVideo();
+                        Log.d("RecordPitchActivity", "playing video " + video);
+                        Intent intent = new Intent(JobActivity.this, MediaPlayerActivity.class);
+                        intent.putExtra("url", video);
+                        startActivity(intent);
+                    }
+                }
+            });
             final ProgressBar progress = (ProgressBar) cardView.findViewById(R.id.progress);
             final TextView noImageView = (TextView) cardView.findViewById(R.id.no_image);
             final ImageView playButton = (ImageView) cardView.findViewById(R.id.play_button);
@@ -188,15 +196,6 @@ public class JobActivity extends MJPProgressActionBarActivity {
         mProgressView = findViewById(R.id.progress);
         mBackgroundProgress = findViewById(R.id.background_progress);
 
-        mAppliedSwitch = (Switch) findViewById(R.id.applied_switch);
-        mAppliedSwitch.setChecked(true);
-        mAppliedSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                mShortListedSwitch.setEnabled(isChecked);
-                loadDataPreserveSeenAndClearCards();
-            }
-        });
         mShortListedSwitch = (Switch) findViewById(R.id.shortlisted_switch);
         mShortListedSwitch.setEnabled(true);
         mShortListedSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -214,7 +213,7 @@ public class JobActivity extends MJPProgressActionBarActivity {
             @Override
             public void onClick(View v) {
                 if (!adapter.isEmpty()) {
-                    if (mAppliedSwitch.isChecked()) {
+                    if (mode.equals(CONNECTIONS)) {
                         Application application = (Application) adapter.getItem(0);
                         Intent intent = new Intent(JobActivity.this, ConversationThreadActivity.class);
                         intent.putExtra("application_id", application.getId());
@@ -273,10 +272,10 @@ public class JobActivity extends MJPProgressActionBarActivity {
                 else
                     Toast.makeText(JobActivity.this, getString(R.string.added_to_shortlist), Toast.LENGTH_SHORT).show();
                 application.setShortlisted(!application.getShortlisted());
-                UpdateApplicationTask task = new UpdateApplicationTask(getApi(), new ApplicationUpdate(application));
-                task.addListener(new CreateReadUpdateAPITaskListener<ApplicationUpdate>() {
+                UpdateApplicationShortlistTask task = new UpdateApplicationShortlistTask(getApi(), new ApplicationShortlistUpdate(application));
+                task.addListener(new CreateReadUpdateAPITaskListener<ApplicationShortlistUpdate>() {
                     @Override
-                    public void onSuccess(ApplicationUpdate result) {
+                    public void onSuccess(ApplicationShortlistUpdate result) {
                     }
 
                     @Override
@@ -351,16 +350,24 @@ public class JobActivity extends MJPProgressActionBarActivity {
             public void onLeftCardExit(Object dataObject) {
                 JobSeekerContainer jobSeekerContainer = jobSeekers.remove(0);
                 JobSeeker jobSeeker = jobSeekerContainer.getJobSeeker();
-                if (mAppliedSwitch.isChecked()) {
+                if (mode.equals(CONNECTIONS)) {
                     // Add to end of list so list loops around
                     jobSeekers.add(jobSeekerContainer);
-                } else {
+                } else if (mode.equals(SEARCH)) {
                     // Create application for job seeker
                     ApplicationForCreation application = new ApplicationForCreation();
                     application.setJob(job.getId());
                     application.setJob_seeker(jobSeeker.getId());
                     application.setShortlisted(false);
                     CreateApplicationTask task = new CreateApplicationTask(getApi(), application);
+                    backgroundTaskManager.addBackgroundTask(task);
+                    mBackgroundProgress.setVisibility(View.VISIBLE);
+                    task.execute();
+                } else if (mode.equals(APPLICATIONS)) {
+                    Application application = (Application) jobSeekerContainer;
+                    application.setStatus(getMJPApplication().get(ApplicationStatus.class, ApplicationStatus.ESTABLISHED).getId());
+                    ApplicationStatusUpdate applicationUpdate = new ApplicationStatusUpdate(application);
+                    UpdateApplicationStatusTask task = new UpdateApplicationStatusTask(getApi(), applicationUpdate);
                     backgroundTaskManager.addBackgroundTask(task);
                     mBackgroundProgress.setVisibility(View.VISIBLE);
                     task.execute();
@@ -372,12 +379,18 @@ public class JobActivity extends MJPProgressActionBarActivity {
             @Override
             public void onRightCardExit(Object dataObject) {
                 JobSeekerContainer jobSeekerContainer = jobSeekers.remove(0);
-                if (mAppliedSwitch.isChecked()) {
+                if (mode.equals(CONNECTIONS)) {
                     if (!mButtonActivation) {
                         // Add to end of list so list loops around
                         jobSeekers.add(jobSeekerContainer);
                     }
-                } else {
+                } else if (mode.equals(SEARCH)){
+                    dismissed.add(jobSeekerContainer.getJobSeeker().getId());
+                    if (mButtonActivation) {
+                        // Mark job seeker as ineligible for searches
+                        // TODO permanently exclude
+                    }
+                } else if (mode.equals(APPLICATIONS)){
                     dismissed.add(jobSeekerContainer.getJobSeeker().getId());
                     if (mButtonActivation) {
                         // Mark job seeker as ineligible for searches
@@ -392,7 +405,7 @@ public class JobActivity extends MJPProgressActionBarActivity {
             public void onAdapterAboutToEmpty(int itemsInAdapter) {
                 synchronized (loadingLock) {
                     Log.d("swipe", "onAdapterAboutToEmpty(" + itemsInAdapter + "): lastLoadCount = " + lastLoadCount);
-                    if (!mAppliedSwitch.isChecked() && lastLoadCount != 0)
+                    if (mode.equals(SEARCH) && lastLoadCount != 0)
                         loadDataPreserveSeenAndAppendCardsInBackground();
                 }
             }
@@ -419,7 +432,7 @@ public class JobActivity extends MJPProgressActionBarActivity {
                     switch (cardState) {
                         case LEFT:
                             hint.setVisibility(View.VISIBLE);
-                            if (mAppliedSwitch.isChecked()) {
+                            if (mode.equals(CONNECTIONS)) {
                                 hint.setText(R.string.next);
                                 hint.setTextColor(getResources().getColor(R.color.card_hint_positive));
                             } else {
@@ -429,7 +442,7 @@ public class JobActivity extends MJPProgressActionBarActivity {
                             break;
                         case RIGHT:
                             hint.setVisibility(View.VISIBLE);
-                            if (mAppliedSwitch.isChecked()) {
+                            if (mode.equals(CONNECTIONS)) {
                                 hint.setText(R.string.next);
                                 hint.setTextColor(getResources().getColor(R.color.card_hint_positive));
                             } else {
@@ -448,13 +461,14 @@ public class JobActivity extends MJPProgressActionBarActivity {
             @Override
             public void onItemClicked(int itemPosition, Object dataObject) {
                 JobSeeker jobSeeker = adapter.getItem(itemPosition).getJobSeeker();
-                if (jobSeeker.hasPitch()) {
-                    String video = jobSeeker.getPitch().getVideo();
-                    Log.d("RecordPitchActivity", "playing video " + video);
-                    Intent intent = new Intent(JobActivity.this, MediaPlayerActivity.class);
-                    intent.putExtra("url", video);
-                    startActivity(intent);
-                }
+                Intent intent = new Intent(JobActivity.this, JobSeekerDetailsActivity.class);
+
+                ObjectMapper mapper = new ObjectMapper();
+                try {
+                    String value = mapper.writeValueAsString(jobSeeker);
+                    intent.putExtra(JobSeekerDetailsActivity.JOB_SEEKER_DATA, value);
+                } catch (JsonProcessingException e) {}
+                startActivity(intent);
             }
         };
 
@@ -464,27 +478,22 @@ public class JobActivity extends MJPProgressActionBarActivity {
         mEmptyButtonView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mAppliedSwitch.isChecked()) {
+                if (mode.equals(CONNECTIONS)) {
                     if (mShortListedSwitch.isChecked())
                         mShortListedSwitch.performClick();
-                    else
-                        mAppliedSwitch.performClick();
-                } else
+                } else if (mode.equals(SEARCH))
                     loadDataClearSeenAndClearCards();
             }
         });
-        mEmptyButtonView2 = (TextView) findViewById(R.id.empty_view_button_2);
-        mEmptyButtonView2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mAppliedSwitch.performClick();
-            }
-        });
+
+        job_id = getIntent().getIntExtra(JOB_ID, -1);
+        mode = getIntent().getStringExtra(MODE);
+
+        if (!mode.equals(CONNECTIONS))
+            findViewById(R.id.controls).setVisibility(View.INVISIBLE);
 
         updateEmptyView();
         createCardView();
-
-        job_id = getIntent().getIntExtra("job_id", -1);
         loadJob();
     }
 
@@ -500,20 +509,22 @@ public class JobActivity extends MJPProgressActionBarActivity {
     }
 
     private void updateEmptyView() {
-        if (mAppliedSwitch.isChecked()) {
+        if (mode.equals(CONNECTIONS)) {
             if (mShortListedSwitch.isChecked()) {
                 mEmptyMessageView.setText(getString(R.string.no_shortlisted_applications_message));
                 mEmptyButtonView.setText(getString(R.string.turn_off_shortlist_view));
+                mEmptyButtonView.setVisibility(View.VISIBLE);
             } else {
-                mEmptyMessageView.setText(getString(R.string.no_applications_message));
-                mEmptyButtonView.setText(getString(R.string.switch_to_search_mode));
+                mEmptyMessageView.setText(getString(R.string.no_connections_message));
+                mEmptyButtonView.setVisibility(View.GONE);
             }
-            mEmptyButtonView2.setVisibility(View.GONE);
-        } else {
+        } else if (mode.equals(SEARCH)){
             mEmptyMessageView.setText(getString(R.string.no_matching_candidates_message));
             mEmptyButtonView.setText(getString(R.string.restart_search));
-            mEmptyButtonView2.setText(getString(R.string.switch_to_application_mode));
-            mEmptyButtonView2.setVisibility(View.VISIBLE);
+            mEmptyButtonView.setVisibility(View.VISIBLE);
+        } else if (mode.equals(APPLICATIONS)){
+            mEmptyMessageView.setText(getString(R.string.no_applications_message));
+            mEmptyButtonView.setVisibility(View.GONE);
         }
     }
 
@@ -590,9 +601,9 @@ public class JobActivity extends MJPProgressActionBarActivity {
     private void loadData(boolean clearDismissed, final boolean append, boolean cancel, boolean background) {
         synchronized (loadingLock) {
             if (loadingTask != null) {
-                Log.d("JobActivity", "Task already running");
+                Log.d(TAG, "Task already running");
                 if (cancel) {
-                    Log.d("JobActivity", "Cancelling running loading task");
+                    Log.d(TAG, "Cancelling running loading task");
                     loadingTask.cancel(false);
                     loadingTask = null;
                 } else
@@ -600,19 +611,20 @@ public class JobActivity extends MJPProgressActionBarActivity {
             }
             if (!background)
                 showProgress(true);
-            if (mAppliedSwitch.isChecked()) {
+            if (mode.equals(CONNECTIONS)) {
                 if (mShortListedSwitch.isChecked())
                     getSupportActionBar().setSubtitle(getString(R.string.shortlisted_job_seekers));
                 else
                     getSupportActionBar().setSubtitle(getString(R.string.applied_job_seekers));
-                Log.d("JobActivity", "Loading applications");
-                ReadApplicationsTask task = new ReadApplicationsTask(getApi(), job.getId(), mShortListedSwitch.isChecked());
+                Log.d(TAG, "Loading applications");
+                Integer status = getMJPApplication().get(ApplicationStatus.class, ApplicationStatus.ESTABLISHED).getId();
+                ReadApplicationsTask task = new ReadApplicationsTask(getApi(), job.getId(), status, mShortListedSwitch.isChecked());
                 loadingTask = task;
                 task.addListener(new CreateReadUpdateAPITaskListener<List<Application>>() {
                     @Override
                     public void onSuccess(List<Application> result) {
                         synchronized (loadingLock) {
-                            Log.d("JobActivity", "Applications loaded");
+                            Log.d(TAG, "Applications loaded");
                             loadingTask = null;
                             updateList(result, false);
                         }
@@ -621,7 +633,7 @@ public class JobActivity extends MJPProgressActionBarActivity {
                     @Override
                     public void onError(JsonNode errors) {
                         synchronized (loadingLock) {
-                            Log.d("JobActivity", "Error loading applications");
+                            Log.d(TAG, "Error loading applications");
                             loadingTask = null;
                             Toast toast = Toast.makeText(JobActivity.this, "Error loading job seekers", Toast.LENGTH_LONG);
                             toast.show();
@@ -638,14 +650,14 @@ public class JobActivity extends MJPProgressActionBarActivity {
 
                     @Override
                     public void onCancelled() {
-                        Log.d("JobActivity", "Application load cancelled");
+                        Log.d(TAG, "Application load cancelled");
                     }
                 });
-            } else {
+            } else if (mode.equals(SEARCH)) {
                 getSupportActionBar().setSubtitle(getString(R.string.job_seeker_search));
                 List<Integer> exclude = new ArrayList();
                 if (clearDismissed) {
-                    Log.d("JobActivity", "Resetting dismissed");
+                    Log.d(TAG, "Resetting dismissed");
                     dismissed.clear();
                 } else {
                     // Exclude job seekers that have been dismissed, or are
@@ -657,14 +669,14 @@ public class JobActivity extends MJPProgressActionBarActivity {
                             exclude.add(jobSeeker.getJobSeeker().getId());
                 }
 
-                Log.d("JobActivity", "Loading applications");
+                Log.d(TAG, "Loading applications");
                 ReadJobSeekersTask task = new ReadJobSeekersTask(getApi(), job.getId(), exclude);
                 loadingTask = task;
                 task.addListener(new CreateReadUpdateAPITaskListener<List<JobSeeker>>() {
                     @Override
                     public void onSuccess(List<JobSeeker> result) {
                         synchronized (loadingLock) {
-                            Log.d("JobActivity", "Job seekers loaded");
+                            Log.d(TAG, "Job seekers loaded");
                             loadingTask = null;
                             updateList(result, append);
                         }
@@ -673,7 +685,7 @@ public class JobActivity extends MJPProgressActionBarActivity {
                     @Override
                     public void onError(JsonNode errors) {
                         synchronized (loadingLock) {
-                            Log.d("JobActivity", "Error loading jobsseekers");
+                            Log.d(TAG, "Error loading jobsseekers");
                             loadingTask = null;
                             Toast toast = Toast.makeText(JobActivity.this, "Error loading job seekers", Toast.LENGTH_LONG);
                             toast.show();
@@ -690,7 +702,46 @@ public class JobActivity extends MJPProgressActionBarActivity {
 
                     @Override
                     public void onCancelled() {
-                        Log.d("JobActivity", "Job sseeker load cancelled");
+                        Log.d(TAG, "Job sseeker load cancelled");
+                    }
+                });
+            } else if (mode.equals(APPLICATIONS)) {
+                getSupportActionBar().setSubtitle(getString(R.string.job_seeker_applications));
+                Log.d(TAG, "Loading applications");
+                Integer status = getMJPApplication().get(ApplicationStatus.class, ApplicationStatus.CREATED).getId();
+                ReadApplicationsTask task = new ReadApplicationsTask(getApi(), job.getId(), status, mShortListedSwitch.isChecked());
+                loadingTask = task;
+                task.addListener(new CreateReadUpdateAPITaskListener<List<Application>>() {
+                    @Override
+                    public void onSuccess(List<Application> result) {
+                        synchronized (loadingLock) {
+                            Log.d(TAG, "Applications loaded");
+                            loadingTask = null;
+                            updateList(result, false);
+                        }
+                    }
+
+                    @Override
+                    public void onError(JsonNode errors) {
+                        synchronized (loadingLock) {
+                            Log.d(TAG, "Error loading applications");
+                            loadingTask = null;
+                            Toast toast = Toast.makeText(JobActivity.this, "Error loading job seekers", Toast.LENGTH_LONG);
+                            toast.show();
+                            finish();
+                        }
+                    }
+
+                    @Override
+                    public void onConnectionError() {
+                        Toast toast = Toast.makeText(JobActivity.this, "Connection Error: Please check your internet connection", Toast.LENGTH_LONG);
+                        toast.show();
+                        finish();
+                    }
+
+                    @Override
+                    public void onCancelled() {
+                        Log.d(TAG, "Application load cancelled");
                     }
                 });
             }
@@ -704,7 +755,7 @@ public class JobActivity extends MJPProgressActionBarActivity {
 
     private void update() {
         boolean notEmpty = adapter.getCount() > 0;
-        if (mAppliedSwitch.isChecked()) {
+        if (mode.equals(CONNECTIONS)) {
             mPositiveButtonText.setText(getString(R.string.messages));
             mPositiveButtonIcon.setImageDrawable(getResources().getDrawable(R.drawable.ic_email_blue));
             mShortlistButtonContainer.setVisibility(View.VISIBLE);
@@ -752,7 +803,8 @@ public class JobActivity extends MJPProgressActionBarActivity {
                 finish();
                 if (job != null) {
                     intent = NavUtils.getParentActivityIntent(JobActivity.this);
-                    intent.putExtra("location_id", job.getLocation());
+                    intent.putExtra(JobModeChoiceActivity.JOB_ID, job.getId());
+                    intent.putExtra(JobModeChoiceActivity.LOCATION_ID, job.getLocation());
                     startActivity(intent);
                 }
                 return true;

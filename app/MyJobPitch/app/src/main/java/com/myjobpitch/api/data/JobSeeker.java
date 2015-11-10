@@ -25,6 +25,7 @@ public class JobSeeker extends MJPObjectWithDates implements JobSeekerContainer 
     private Integer profile;
     private List<Pitch> pitches;
     private String description;
+    private String cv;
 
     public boolean getEmail_public() {
         return email_public;
@@ -189,5 +190,9 @@ public class JobSeeker extends MJPObjectWithDates implements JobSeekerContainer 
 
     public void setActive(boolean active) {
         this.active = active;
+    }
+
+    public String getCV() {
+        return cv;
     }
 }

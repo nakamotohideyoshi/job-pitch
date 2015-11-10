@@ -9,7 +9,8 @@ import com.myjobpitch.api.auth.User;
 import com.myjobpitch.api.data.Application;
 import com.myjobpitch.api.data.ApplicationForCreation;
 import com.myjobpitch.api.data.ApplicationStatus;
-import com.myjobpitch.api.data.ApplicationUpdate;
+import com.myjobpitch.api.data.ApplicationShortlistUpdate;
+import com.myjobpitch.api.data.ApplicationStatusUpdate;
 import com.myjobpitch.api.data.Business;
 import com.myjobpitch.api.data.Contract;
 import com.myjobpitch.api.data.Hours;
@@ -32,15 +33,19 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
+import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.http.converter.FormHttpMessageConverter;
 import org.springframework.http.converter.ResourceHttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.DefaultResponseErrorHandler;
 import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.ResponseErrorHandler;
 import org.springframework.web.client.RestTemplate;
 
+import java.io.IOException;
 import java.lang.reflect.Array;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -69,7 +74,8 @@ public class MJPApi {
         classEndPoints.put(Role.class, "roles");
         classEndPoints.put(Application.class, "applications");
         classEndPoints.put(ApplicationForCreation.class, "applications");
-        classEndPoints.put(ApplicationUpdate.class, "applications");
+        classEndPoints.put(ApplicationShortlistUpdate.class, "applications");
+        classEndPoints.put(ApplicationStatusUpdate.class, "applications");
         classEndPoints.put(MessageForCreation.class, "messages");
         classEndPoints.put(MessageForUpdate.class, "messages");
     }
@@ -275,9 +281,20 @@ public class MJPApi {
         return rest.exchange(getObjectUrl("user-jobs", job_id), HttpMethod.GET, createAuthenticatedRequest(), Job.class).getBody();
     }
 
-    public void updateApplication(ApplicationUpdate update) throws MJPApiException {
+    public void updateApplicationShortlist(ApplicationShortlistUpdate update) throws MJPApiException {
         try {
-            rest.exchange(getObjectUrl(classEndPoints.get(ApplicationUpdate.class), update.getId()), HttpMethod.PUT, createAuthenticatedRequest(update), ApplicationUpdate.class);
+            rest.exchange(getObjectUrl(classEndPoints.get(ApplicationShortlistUpdate.class), update.getId()), HttpMethod.PUT, createAuthenticatedRequest(update), ApplicationShortlistUpdate.class);
+        } catch (HttpClientErrorException e) {
+            if (e.getStatusCode().value() == 400) {
+                throw new MJPApiException(e);
+            }
+            throw e;
+        }
+    }
+
+    public void updateApplicationStatus(ApplicationStatusUpdate update) throws MJPApiException {
+        try {
+            rest.exchange(getObjectUrl(classEndPoints.get(ApplicationStatusUpdate.class), update.getId()), HttpMethod.PUT, createAuthenticatedRequest(update), ApplicationStatusUpdate.class);
         } catch (HttpClientErrorException e) {
             if (e.getStatusCode().value() == 400) {
                 throw new MJPApiException(e);

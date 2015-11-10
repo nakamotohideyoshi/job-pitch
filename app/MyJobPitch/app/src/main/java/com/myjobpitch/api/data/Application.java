@@ -33,4 +33,8 @@ public class Application extends BaseApplication implements JobSeekerContainer {
     public Job getJob_data() {
         return job_data;
     }
+
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
 }

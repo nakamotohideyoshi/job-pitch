@@ -32,8 +32,8 @@ import com.lorentzos.flingswipe.SwipeFlingAdapterView;
 import com.myjobpitch.R;
 import com.myjobpitch.api.data.Application;
 import com.myjobpitch.api.data.ApplicationForCreation;
-import com.myjobpitch.api.data.ApplicationStatus;
 import com.myjobpitch.api.data.ApplicationShortlistUpdate;
+import com.myjobpitch.api.data.ApplicationStatus;
 import com.myjobpitch.api.data.ApplicationStatusUpdate;
 import com.myjobpitch.api.data.Job;
 import com.myjobpitch.api.data.JobSeeker;
@@ -130,6 +130,21 @@ public class JobActivity extends MJPProgressActionBarActivity {
             extraView.setText(extraText);
             TextView descriptionView = (TextView) cardView.findViewById(R.id.job_seeker_description);
             descriptionView.setText(jobSeeker.getDescription());
+            cardView.findViewById(R.id.bottom_border).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(JobActivity.this, JobSeekerDetailsActivity.class);
+
+                    ObjectMapper mapper = new ObjectMapper();
+                    try {
+                        String value = mapper.writeValueAsString(jobSeeker);
+                        intent.putExtra(JobSeekerDetailsActivity.JOB_SEEKER_DATA, value);
+                    } catch (JsonProcessingException e) {
+                    }
+                    startActivity(intent);
+                }
+            });
+
             if (jobSeekerContainer instanceof Application) {
                 Application application = (Application) jobSeekerContainer;
                 if (application.getShortlisted())
@@ -137,18 +152,6 @@ public class JobActivity extends MJPProgressActionBarActivity {
             }
 
             ImageView imageView = (ImageView) cardView.findViewById(R.id.image);
-            imageView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (jobSeeker.hasPitch()) {
-                        String video = jobSeeker.getPitch().getVideo();
-                        Log.d("RecordPitchActivity", "playing video " + video);
-                        Intent intent = new Intent(JobActivity.this, MediaPlayerActivity.class);
-                        intent.putExtra("url", video);
-                        startActivity(intent);
-                    }
-                }
-            });
             final ProgressBar progress = (ProgressBar) cardView.findViewById(R.id.progress);
             final TextView noImageView = (TextView) cardView.findViewById(R.id.no_image);
             final ImageView playButton = (ImageView) cardView.findViewById(R.id.play_button);
@@ -461,14 +464,13 @@ public class JobActivity extends MJPProgressActionBarActivity {
             @Override
             public void onItemClicked(int itemPosition, Object dataObject) {
                 JobSeeker jobSeeker = adapter.getItem(itemPosition).getJobSeeker();
-                Intent intent = new Intent(JobActivity.this, JobSeekerDetailsActivity.class);
-
-                ObjectMapper mapper = new ObjectMapper();
-                try {
-                    String value = mapper.writeValueAsString(jobSeeker);
-                    intent.putExtra(JobSeekerDetailsActivity.JOB_SEEKER_DATA, value);
-                } catch (JsonProcessingException e) {}
-                startActivity(intent);
+                if (jobSeeker.hasPitch()) {
+                    String video = jobSeeker.getPitch().getVideo();
+                    Log.d(TAG, "playing video " + video);
+                    Intent intent = new Intent(JobActivity.this, MediaPlayerActivity.class);
+                    intent.putExtra("url", video);
+                    startActivity(intent);
+                }
             }
         };
 

@@ -32,7 +32,6 @@ public class JobSeekerDetailsActivity extends MJPProgressActionBarActivity {
     private View mJobSeekerDetailsView;
     private View mProgressView;
     private JobSeeker jobSeeker;
-    private ReadJobSeekerTask mReadJobSeekerTask;
     private TextView mJobSeekerNameView;
     private TextView mJobSeekerDescriptionView;
     private TextView mJobSeekerPropertiesView;
@@ -49,7 +48,7 @@ public class JobSeekerDetailsActivity extends MJPProgressActionBarActivity {
         mProgressView = findViewById(R.id.progress);
         mJobSeekerNameView = (TextView) findViewById(R.id.job_seeker_name);
         mJobSeekerDescriptionView = (TextView) findViewById(R.id.job_seeker_description);
-        mJobSeekerPropertiesView = (TextView) findViewById(R.id.job_properties);
+        mJobSeekerPropertiesView = (TextView) findViewById(R.id.job_seeker_properties);
         mJobSeekerImageView = (ImageView) findViewById(R.id.image);
         mJobSeekerImageProgressView = (ProgressBar) findViewById(R.id.image_progress);
         mJobSeekerNoImageView = (TextView) findViewById(R.id.no_image);
@@ -74,7 +73,7 @@ public class JobSeekerDetailsActivity extends MJPProgressActionBarActivity {
                 Log.e(TAG, "JSON decode", e);
             }
         } else {
-            mReadJobSeekerTask = new ReadJobSeekerTask(getApi(), getIntent().getIntExtra(JOB_ID, -1));
+            ReadJobSeekerTask mReadJobSeekerTask = new ReadJobSeekerTask(getApi(), getIntent().getIntExtra(JOB_ID, -1));
             mReadJobSeekerTask.addListener(new CreateReadUpdateAPITaskListener<JobSeeker>() {
                 @Override
                 public void onSuccess(JobSeeker result) {

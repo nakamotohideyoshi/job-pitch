@@ -14,6 +14,7 @@
             android:layout_height="wrap_content"
             android:text="@string/profile"
             android:textSize="25sp"
+            android:textColor="@color/mjp_teal"
             android:textStyle="bold"
             android:paddingBottom="8dp"
             android:id="@+id/textView" />
@@ -131,6 +132,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/description"
+        android:textColor="@color/mjp_teal"
         android:textSize="20sp"
         android:paddingTop="15dp"
         android:paddingBottom="8dp"

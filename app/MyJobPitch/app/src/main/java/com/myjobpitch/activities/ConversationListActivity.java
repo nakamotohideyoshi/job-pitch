@@ -147,7 +147,7 @@ public class ConversationListActivity extends MJPProgressActionBarActivity  {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
             Intent intent = new Intent(ConversationListActivity.this, ConversationThreadActivity.class);
-            intent.putExtra("application_id", ((Application)list.getItemAtPosition(position)).getId());
+            intent.putExtra(ConversationThreadActivity.APPLICATION_ID, ((Application) list.getItemAtPosition(position)).getId());
             startActivity(intent);
             }
         });

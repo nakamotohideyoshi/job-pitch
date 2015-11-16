@@ -130,20 +130,6 @@ public class JobActivity extends MJPProgressActionBarActivity {
             extraView.setText(extraText);
             TextView descriptionView = (TextView) cardView.findViewById(R.id.job_seeker_description);
             descriptionView.setText(jobSeeker.getDescription());
-            cardView.findViewById(R.id.bottom_border).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(JobActivity.this, JobSeekerDetailsActivity.class);
-
-                    ObjectMapper mapper = new ObjectMapper();
-                    try {
-                        String value = mapper.writeValueAsString(jobSeeker);
-                        intent.putExtra(JobSeekerDetailsActivity.JOB_SEEKER_DATA, value);
-                    } catch (JsonProcessingException e) {
-                    }
-                    startActivity(intent);
-                }
-            });
 
             if (jobSeekerContainer instanceof Application) {
                 Application application = (Application) jobSeekerContainer;
@@ -219,7 +205,7 @@ public class JobActivity extends MJPProgressActionBarActivity {
                     if (mode.equals(CONNECTIONS)) {
                         Application application = (Application) adapter.getItem(0);
                         Intent intent = new Intent(JobActivity.this, ConversationThreadActivity.class);
-                        intent.putExtra("application_id", application.getId());
+                        intent.putExtra(ConversationThreadActivity.APPLICATION_ID, application.getId());
                         startActivity(intent);
                     } else {
                         mButtonActivation = true;
@@ -463,14 +449,20 @@ public class JobActivity extends MJPProgressActionBarActivity {
         onItemClickListener = new SwipeFlingAdapterView.OnItemClickListener() {
             @Override
             public void onItemClicked(int itemPosition, Object dataObject) {
-                JobSeeker jobSeeker = adapter.getItem(itemPosition).getJobSeeker();
-                if (jobSeeker.hasPitch()) {
-                    String video = jobSeeker.getPitch().getVideo();
-                    Log.d(TAG, "playing video " + video);
-                    Intent intent = new Intent(JobActivity.this, MediaPlayerActivity.class);
-                    intent.putExtra("url", video);
-                    startActivity(intent);
-                }
+                JobSeekerContainer jobSeekerContainer = adapter.getItem(itemPosition);
+                JobSeeker jobSeeker = jobSeekerContainer.getJobSeeker();
+                Intent intent = new Intent(JobActivity.this, JobSeekerDetailsActivity.class);
+                ObjectMapper mapper = new ObjectMapper();
+                try {
+                    String jobSeekerData = mapper.writeValueAsString(jobSeeker);
+                    intent.putExtra(JobSeekerDetailsActivity.JOB_SEEKER_DATA, jobSeekerData);
+                    if (jobSeekerContainer instanceof Application) {
+                        Application application = (Application) jobSeekerContainer;
+                        String applicationData = mapper.writeValueAsString(application);
+                        intent.putExtra(JobSeekerDetailsActivity.APPLICATION_DATA, applicationData);
+                    }
+                } catch (JsonProcessingException e) {}
+                startActivity(intent);
             }
         };
 

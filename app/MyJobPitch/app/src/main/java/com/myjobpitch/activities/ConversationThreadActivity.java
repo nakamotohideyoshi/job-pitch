@@ -43,6 +43,7 @@ import java.util.List;
 
 public class ConversationThreadActivity extends MJPProgressActionBarActivity  {
 
+    public static final String APPLICATION_ID = "APPLICATION_ID";
     private Integer applicationId;
     private Application application;
     private ListView list;
@@ -102,7 +103,10 @@ public class ConversationThreadActivity extends MJPProgressActionBarActivity  {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        applicationId = getIntent().getIntExtra("application_id", -1);
+        if (savedInstanceState != null)
+            applicationId = savedInstanceState.getInt(APPLICATION_ID, -1);
+        else
+            applicationId = getIntent().getIntExtra(APPLICATION_ID, -1);
 
         setContentView(R.layout.activity_conversation_thread);
 
@@ -290,6 +294,12 @@ public class ConversationThreadActivity extends MJPProgressActionBarActivity  {
             }
         });
         readApplication.execute();
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt(APPLICATION_ID, applicationId);
     }
 
     @Override

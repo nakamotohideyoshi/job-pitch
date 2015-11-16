@@ -1,47 +1,14 @@
 package com.myjobpitch.activities;
 
-import android.app.AlertDialog;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Typeface;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.text.Html;
-import android.text.SpannableString;
-import android.view.ActionMode;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.ListView;
-import android.widget.ProgressBar;
-import android.widget.TextView;
-import android.widget.Toast;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.myjobpitch.R;
-import com.myjobpitch.api.data.Image;
-import com.myjobpitch.api.data.Job;
-import com.myjobpitch.api.data.JobStatus;
-import com.myjobpitch.api.data.Location;
-import com.myjobpitch.tasks.CreateReadUpdateAPITaskListener;
-import com.myjobpitch.tasks.DeleteAPITaskListener;
-import com.myjobpitch.tasks.DownloadImageTask;
-import com.myjobpitch.tasks.ReadLocationTask;
-import com.myjobpitch.tasks.recruiter.DeleteUserJobTask;
-import com.myjobpitch.tasks.recruiter.ReadUserJobsTask;
-
-import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.atomic.AtomicInteger;
 
 public class JobModeChoiceActivity extends MJPActionBarActivity  {
 

@@ -306,7 +306,7 @@ public class JobSeekerActivity extends MJPProgressActionBarActivity {
                 ObjectMapper mapper = new ObjectMapper();
                 try {
                     String value = mapper.writeValueAsString(job);
-                    intent.putExtra("job_data", value);
+                    intent.putExtra(JobDetailsActivity.JOB_DATA, value);
                 } catch (JsonProcessingException e) {}
                 startActivity(intent);
             }

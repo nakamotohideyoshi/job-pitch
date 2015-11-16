@@ -29,6 +29,8 @@ import java.io.IOException;
 
 public class JobDetailsActivity extends MJPProgressActionBarActivity {
 
+    public static final String JOB_DATA = "JOB_DATA";
+
     private View mJobDetailsView;
     private View mProgressView;
     private Job job;
@@ -80,17 +82,17 @@ public class JobDetailsActivity extends MJPProgressActionBarActivity {
         if (savedInstanceState != null) {
             ObjectMapper mapper = new ObjectMapper();
             try {
-                String job_data = savedInstanceState.getString("job_data");
+                String job_data = savedInstanceState.getString(JOB_DATA);
                 job = mapper.readValue(job_data, Job.class);
                 loadJob();
                 showProgress(false);
             } catch (IOException e) {
                 Log.e("EditJobActivity", "Error", e);
             }
-        } else if (getIntent().hasExtra("job_data")) {
+        } else if (getIntent().hasExtra(JOB_DATA)) {
             ObjectMapper mapper = new ObjectMapper();
             try {
-                job = mapper.readValue(getIntent().getStringExtra("job_data"), Job.class);
+                job = mapper.readValue(getIntent().getStringExtra(JOB_DATA), Job.class);
                 loadJob();
                 showProgress(false);
             } catch (IOException e) {}
@@ -171,7 +173,7 @@ public class JobDetailsActivity extends MJPProgressActionBarActivity {
         super.onSaveInstanceState(outState);
         ObjectMapper mapper = new ObjectMapper();
         try {
-            outState.putString("job_data", mapper.writeValueAsString(job));
+            outState.putString(JOB_DATA, mapper.writeValueAsString(job));
         } catch (JsonProcessingException e) {}
     }
 

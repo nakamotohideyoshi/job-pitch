@@ -362,7 +362,7 @@ public class ConversationThreadActivity extends MJPProgressActionBarActivity  {
         subtitleView.setText(String.format("Job: %s (%s, %s)\n", job.getTitle(), location.getName(), business.getName()));
         if (imageUri != null) {
             Uri uri = Uri.parse(imageUri);
-            new DownloadImageTask(ConversationThreadActivity.this, imageView, imageProgress).execute(uri);
+            new DownloadImageTask(ConversationThreadActivity.this, imageView, imageProgress).executeOnExecutor(DownloadImageTask.executor, uri);
         } else {
             imageProgress.setVisibility(View.GONE);
             noImageView.setVisibility(View.VISIBLE);

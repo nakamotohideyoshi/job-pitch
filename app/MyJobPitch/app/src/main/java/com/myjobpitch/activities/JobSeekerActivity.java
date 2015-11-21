@@ -124,7 +124,7 @@ public class JobSeekerActivity extends MJPProgressActionBarActivity {
                 image = job.getLocation_data().getBusiness_data().getImages().get(0);
             if (image != null) {
                 Uri uri = Uri.parse(image.getThumbnail());
-                new DownloadImageTask(JobSeekerActivity.this, imageView, progress).execute(uri);
+                new DownloadImageTask(JobSeekerActivity.this, imageView, progress).executeOnExecutor(DownloadImageTask.executor, uri);
             } else {
                 progress.setVisibility(View.INVISIBLE);
                 noImageView.setVisibility(View.VISIBLE);

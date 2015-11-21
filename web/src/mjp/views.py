@@ -1,10 +1,6 @@
-from django.contrib.auth.models import User
 from django.db.models import Q, Max
-from django.shortcuts import render_to_response
-from django.template.context import RequestContext
 from rest_framework import viewsets, permissions, serializers
 from rest_framework.routers import DefaultRouter
-from rest_framework.parsers import FileUploadParser
 
 from mjp.models import Sector, Hours, Contract, Business, Location,\
     JobStatus, Job, Sex, Nationality, JobSeeker, JobProfile,\
@@ -13,8 +9,8 @@ from mjp.models import Sector, Hours, Contract, Business, Location,\
 
 from mjp.serializers import SimpleSerializer, BusinessSerializer,\
     LocationSerializer, JobProfileSerializer, JobSerializer, JobSeekerSerializer,\
-    ApplicationSerializer, ApplicationCreateSerializer, ApplicationUpdateSerializer, \
-    MessageCreateSerializer, MessageUpdateSerializer, PitchSerializer
+    ApplicationSerializer, ApplicationCreateSerializer, ApplicationStatusUpdateSerializer, \
+    ApplicationShortlistUpdateSerializer, MessageCreateSerializer, MessageUpdateSerializer, PitchSerializer
 
 
 router = DefaultRouter()
@@ -55,6 +51,7 @@ class UserBusinessImageViewSet(viewsets.ModelViewSet):
             if pk:
                 return Business.objects.filter(pk=pk, users=request.user).exists()
             return True
+
         def has_object_permission(self, request, view, obj):
             if request.method in permissions.SAFE_METHODS:
                 return True
@@ -86,6 +83,7 @@ class UserBusinessViewSet(viewsets.ModelViewSet):
             return obj.users.filter(pk=int(request.user.pk)).exists()
     permission_classes = (permissions.IsAuthenticated, BusinessPermission)
     serializer_class = BusinessSerializer
+
     def perform_create(self, serializer):
         serializer.save().users.add(self.request.user)
         
@@ -104,6 +102,7 @@ class UserLocationImageViewSet(viewsets.ModelViewSet):
             if pk:
                 return Location.objects.filter(pk=pk, business__users=request.user).exists()
             return True
+
         def has_object_permission(self, request, view, obj):
             if request.method in permissions.SAFE_METHODS:
                 return True
@@ -172,6 +171,7 @@ class UserJobImageViewSet(viewsets.ModelViewSet):
             if pk:
                 return Job.objects.filter(pk=pk, location__business__users=request.user).exists()
             return True
+
         def has_object_permission(self, request, view, obj):
             if request.method in permissions.SAFE_METHODS:
                 return True
@@ -195,6 +195,7 @@ class UserJobViewSet(viewsets.ModelViewSet):
             if pk:
                 return Location.objects.filter(pk=pk, business__users__pk=int(request.user.pk)).exists()
             return True
+
         def has_object_permission(self, request, view, obj):
             if request.method in permissions.SAFE_METHODS:
                 return True
@@ -220,6 +221,7 @@ class JobSeekerViewSet(viewsets.ModelViewSet):
                 print "job pk: %s" % pk
                 return Job.objects.filter(pk=pk, location__business__users__pk=int(request.user.pk)).exists()
             return True
+
         def has_object_permission(self, request, view, obj):
             if request.method in permissions.SAFE_METHODS:
                 return True
@@ -227,6 +229,7 @@ class JobSeekerViewSet(viewsets.ModelViewSet):
     
     permission_classes = (permissions.IsAuthenticated, JobSeekerPermission)
     serializer_class = JobSeekerSerializer
+
     def get_queryset(self):
         job = self.request.QUERY_PARAMS.get('job')
         if job:
@@ -315,15 +318,18 @@ class JobProfileViewSet(viewsets.ModelViewSet):
             if pk:
                 return JobSeeker.objects.filter(pk=pk, user=request.user).exists()
             return True
+
         def has_object_permission(self, request, view, obj):
             if request.method in permissions.SAFE_METHODS:
                 return True
             return obj.job_seeker.user == request.user
+
+    def get_queryset(self):
+        return JobProfile.objects.filter(job_seeker__user=self.request.user)
     
     permission_classes = (permissions.IsAuthenticated, JobProfilePermission)
-    queryset = JobProfile.objects.all()
     serializer_class = JobProfileSerializer
-router.register('job-profiles', JobProfileViewSet)
+router.register('job-profiles', JobProfileViewSet, base_name='job-profile')
 
 
 class JobViewSet(viewsets.ReadOnlyModelViewSet):
@@ -337,6 +343,7 @@ class JobViewSet(viewsets.ReadOnlyModelViewSet):
     
     permission_classes = (permissions.IsAuthenticated, JobPermission)
     serializer_class = JobSerializer
+
     def get_queryset(self):
         job_seeker = self.request.user.job_seeker
         job_profile = job_seeker.profile
@@ -347,7 +354,7 @@ class JobViewSet(viewsets.ReadOnlyModelViewSet):
         if job_profile.contract_id:
             query = query.filter(contract=job_profile.contract)
         if job_profile.hours_id:
-             query = query.filter(hours=job_profile.hours)
+            query = query.filter(hours=job_profile.hours)
         query = query.filter(sector__in=job_profile.sectors.all())
         query = query.filter(status__name="OPEN")
         # TODO location
@@ -379,18 +386,23 @@ class ApplicationViewSet(viewsets.ModelViewSet):
                 if not is_recruiter and not is_job_seeker:
                     return False
             return True
+
         def has_object_permission(self, request, view, application):
-            if request.method in permissions.SAFE_METHODS:
-                return True
-            if request.method == 'DELETE' and application.status.name == 'DELETED':
-                return False
             is_recruiter = request.user.businesses.filter(locations__jobs__applications=application).exists()
-            return is_recruiter or application.job_seeker.user == request.user
-        
+            is_job_seeker = application.job_seeker.user == request.user
+            if is_recruiter or is_job_seeker:
+                if request.method in permissions.SAFE_METHODS:
+                    return True
+                if request.method == 'DELETE' and application.status.name != 'DELETED':
+                    return True
+                if request.method == 'PUT':
+                    return is_recruiter
+
     permission_classes = (permissions.IsAuthenticated, ApplicationPermission)
     serializer_class = ApplicationSerializer
     create_serializer_class = ApplicationCreateSerializer
-    update_serializer_class = ApplicationUpdateSerializer
+    update_status_serializer_class = ApplicationStatusUpdateSerializer
+    update_shortlist_serializer_class = ApplicationShortlistUpdateSerializer
     
     def get_role(self):
         if self.request.user.businesses.exists():
@@ -430,7 +442,12 @@ class ApplicationViewSet(viewsets.ModelViewSet):
                     'business': job.location.business.name,
                     }
         message.save()
-    
+
+    def perform_update(self, serializer):
+        serializer.save()
+        # if self.request.
+        # e = role
+
     def perform_destroy(self, application):
         application.status = ApplicationStatus.objects.get(name='DELETED')
         role = self.get_role()
@@ -450,7 +467,11 @@ class ApplicationViewSet(viewsets.ModelViewSet):
         if self.request.method == 'POST':
             return self.create_serializer_class
         if self.request.method == 'PUT':
-            return self.update_serializer_class
+            if self.request.data.get('shortlisted') is not None:
+                return self.update_shortlist_serializer_class
+            if self.request.data.get('status') is not None:
+                return self.update_status_serializer_class
+            return None
         return self.serializer_class
     
     def get_queryset(self):
@@ -479,10 +500,12 @@ class ApplicationViewSet(viewsets.ModelViewSet):
                     query = query.filter(shortlisted=True)
                 else:
                     query = query.order_by('-shortlisted')
+                status = self.request.QUERY_PARAMS.get('status')
+                if status is not None:
+                    query = query.filter(status__pk=status)
         else:
             query = query.filter(job_seeker__user=self.request.user)
-        return query 
-
+        return query
 router.register('applications', ApplicationViewSet, base_name='application')
 
 

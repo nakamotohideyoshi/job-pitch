@@ -110,7 +110,7 @@ public class ConversationListActivity extends MJPProgressActionBarActivity  {
             // Setup views
             if (imageUri != null) {
                 Uri uri = Uri.parse(imageUri);
-                new DownloadImageTask(ConversationListActivity.this, imageView, progress).execute(uri);
+                new DownloadImageTask(ConversationListActivity.this, imageView, progress).executeOnExecutor(DownloadImageTask.executor, uri);
             } else {
                 progress.setVisibility(View.GONE);
                 noImageView.setVisibility(View.VISIBLE);

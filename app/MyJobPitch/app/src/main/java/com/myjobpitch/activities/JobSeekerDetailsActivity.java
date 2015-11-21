@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -55,6 +56,9 @@ public class JobSeekerDetailsActivity extends MJPProgressActionBarActivity {
     private TextView mJobSeekerTelephoneView;
     private TextView mJobSeekerMobileView;
     private TextView mJobSeekerEmailView;
+    private View mJobSeekerCVView;
+    private Button mJobSeekerCVButton;
+    private Button mJobSeekerSendMessageButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,6 +79,31 @@ public class JobSeekerDetailsActivity extends MJPProgressActionBarActivity {
         mJobSeekerTelephoneView = (TextView) findViewById(R.id.job_seeker_telephone);
         mJobSeekerMobileView = (TextView) findViewById(R.id.job_seeker_mobile);
         mJobSeekerEmailView = (TextView) findViewById(R.id.job_seeker_email);
+        mJobSeekerCVView = findViewById(R.id.cv);
+
+        mJobSeekerCVButton = (Button) findViewById(R.id.cv_button);
+        mJobSeekerCVButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (jobSeeker.getCV() != null && !jobSeeker.getCV().isEmpty()) {
+                    Intent i = new Intent(Intent.ACTION_VIEW);
+                    i.setData(Uri.parse(jobSeeker.getCV()));
+                    startActivity(i);
+                }
+            }
+        });
+
+        mJobSeekerSendMessageButton = (Button) findViewById(R.id.send_message_button);
+        mJobSeekerSendMessageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (application != null) {
+                    Intent intent = new Intent(JobSeekerDetailsActivity.this, ConversationThreadActivity.class);
+                    intent.putExtra(ConversationThreadActivity.APPLICATION_ID, application.getId());
+                    startActivity(intent);
+                }
+            }
+        });
 
         mJobSeekerImageContainer.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -221,7 +250,7 @@ public class JobSeekerDetailsActivity extends MJPProgressActionBarActivity {
                     mJobSeekerNoImageView.setVisibility(View.VISIBLE);
                 }
             });
-            task.execute(uri);
+            task.executeOnExecutor(DownloadImageTask.executor, uri);
         } else {
             mJobSeekerImageProgressView.setVisibility(View.INVISIBLE);
             mJobSeekerNoImageView.setVisibility(View.VISIBLE);
@@ -230,40 +259,38 @@ public class JobSeekerDetailsActivity extends MJPProgressActionBarActivity {
         ApplicationStatus establishedStatus = getMJPApplication().get(ApplicationStatus.class, ApplicationStatus.ESTABLISHED);
         if (application != null && application.getStatus() != null && application.getStatus().equals(establishedStatus.getId())) {
             mJobSeekerNoContactView.setVisibility(View.GONE);
-            boolean hasContactDetails = false;
+            mJobSeekerSendMessageButton.setVisibility(View.VISIBLE);
+
             if (jobSeeker.getTelephone_public() && jobSeeker.getTelephone() != null && !jobSeeker.getTelephone().isEmpty()) {
                 mJobSeekerTelephoneView.setVisibility(View.VISIBLE);
                 mJobSeekerTelephoneView.setText(Html.fromHtml(String.format("Phone: <u>%s</u>", jobSeeker.getTelephone())));
-                hasContactDetails = true;
             } else {
                 mJobSeekerTelephoneView.setVisibility(View.GONE);
             }
             if (jobSeeker.getMobile_public() && jobSeeker.getMobile() != null && !jobSeeker.getMobile().isEmpty()) {
                 mJobSeekerMobileView.setVisibility(View.VISIBLE);
                 mJobSeekerMobileView.setText(Html.fromHtml(String.format("Mobile: <u>%s</u>", jobSeeker.getMobile())));
-                hasContactDetails = true;
             } else {
                 mJobSeekerMobileView.setVisibility(View.GONE);
             }
             if (jobSeeker.getEmail_public() && jobSeeker.getEmail() != null && !jobSeeker.getEmail().isEmpty()) {
                 mJobSeekerEmailView.setVisibility(View.VISIBLE);
                 mJobSeekerEmailView.setText(Html.fromHtml(String.format("Email: <u>%s</u>", jobSeeker.getEmail())));
-                hasContactDetails = true;
             } else {
                 mJobSeekerEmailView.setVisibility(View.GONE);
-            }
-
-            if (hasContactDetails) {
-                mJobSeekerNoContactView.setVisibility(View.GONE);
-            } else {
-                mJobSeekerNoContactView.setVisibility(View.VISIBLE);
-                mJobSeekerNoContactView.setText(getString(R.string.no_contact_details));
             }
         } else {
             mJobSeekerNoContactView.setVisibility(View.VISIBLE);
             mJobSeekerTelephoneView.setVisibility(View.GONE);
             mJobSeekerMobileView.setVisibility(View.GONE);
             mJobSeekerEmailView.setVisibility(View.GONE);
+            mJobSeekerSendMessageButton.setVisibility(View.GONE);
+        }
+
+        if (jobSeeker.getCV() != null && !jobSeeker.getCV().isEmpty()) {
+            mJobSeekerCVView.setVisibility(View.VISIBLE);
+        } else {
+            mJobSeekerCVView.setVisibility(View.GONE);
         }
     }
 

@@ -169,9 +169,11 @@
     <string name="job_seeker_applications">Showing applications</string>
     <string name="contact_details">Contact Details</string>
     <string name="contact_details_unavailable">Contact details unavailable until connected</string>
-    <string name="no_contact_details">No contact details supplied</string>
     <string name="recruiter_not_connected_reason">You must be connected to send messages</string>
     <string name="thread_deleted_reason">This conversation has been deleted.</string>
     <string name="error">Error</string>
     <string name="job_seeker_not_connected_reason">You cannot send messages until your application is accepted</string>
+    <string name="cv">CV</string>
+    <string name="download_cv">Download CV</string>
+    <string name="send_message">Send message</string>
 </resources>

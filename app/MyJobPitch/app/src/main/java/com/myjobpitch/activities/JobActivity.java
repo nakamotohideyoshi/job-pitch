@@ -160,7 +160,7 @@ public class JobActivity extends MJPProgressActionBarActivity {
                         noImageView.setVisibility(View.VISIBLE);
                     }
                 });
-                downloadImageTask.execute(uri);
+                downloadImageTask.executeOnExecutor(DownloadImageTask.executor, uri);
             } else {
                 progress.setVisibility(View.INVISIBLE);
                 noImageView.setVisibility(View.VISIBLE);

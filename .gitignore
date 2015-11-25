@@ -31,3 +31,6 @@ proguard/
 #Dev
 .vagrant
 db.sqlite3
+
+# Mac
+.DS_Store

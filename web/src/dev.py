@@ -22,3 +22,9 @@ DATABASES = {
 MIDDLEWARE_CLASSES += (
     'mjp.middleware.PlainExceptionsMiddleware',
 )
+
+try:
+    from local import *
+except ImportError:
+    pass
+

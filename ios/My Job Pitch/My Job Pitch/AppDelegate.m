@@ -7,6 +7,7 @@
 //
 
 #import "AppDelegate.h"
+#import "API.h"
 
 @interface AppDelegate ()
 
@@ -16,7 +17,7 @@
 
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-    // Override point for customization after application launch.
+    _api = [[API alloc] init];
     return YES;
 }
 

@@ -7,20 +7,22 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "MJPViewController.h"
 
-@interface Login : UIViewController {
+@interface Login : MJPViewController {
     
     IBOutlet UITextField * username;
+    IBOutlet UITextView * usernameError;
     IBOutlet UITextField * password;
+    IBOutlet UITextView * passwordError;
     IBOutlet UITextField * password2;
-    IBOutlet UIButton * loginButton;
-    IBOutlet UIButton * registrationFormButton;
-    IBOutlet UIButton * registrationCancelButton;
-    IBOutlet UIButton * registerButton;
     IBOutlet UIView * loginForm;
     IBOutlet UIView * registrationForm;
     IBOutlet UIActivityIndicatorView * activityIndicator;
     IBOutlet UIScrollView * scrollView;
+    IBOutlet NSLayoutConstraint *passwordErrorHeightConstraint;
+    IBOutlet NSLayoutConstraint *usernameErrorHeightConstraint;
+
     
 @private
     UITextField * activeField;

@@ -42,6 +42,15 @@
                                                     <outlet property="delegate" destination="BYZ-38-t0r" id="rbo-Fr-yZY"/>
                                                 </connections>
                                             </textField>
+                                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="Mc6-Zh-7Pn">
+                                                <rect key="frame" x="188" y="360" width="225" height="0.0"/>
+                                                <animations/>
+                                                <constraints>
+                                                    <constraint firstAttribute="height" id="Iv8-Gx-OVl"/>
+                                                </constraints>
+                                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                                            </textView>
                                             <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="password" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="VL3-Rw-Ph3">
                                                 <rect key="frame" x="188" y="370" width="225" height="30"/>
                                                 <animations/>
@@ -51,6 +60,15 @@
                                                     <outlet property="delegate" destination="BYZ-38-t0r" id="DYm-Fk-WnE"/>
                                                 </connections>
                                             </textField>
+                                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="qt1-te-G9H">
+                                                <rect key="frame" x="188" y="400" width="225" height="0.0"/>
+                                                <animations/>
+                                                <constraints>
+                                                    <constraint firstAttribute="height" id="MGg-nz-A46"/>
+                                                </constraints>
+                                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                                            </textView>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="rOG-ZM-oUz" userLabel="Login Form">
                                                 <rect key="frame" x="188" y="410" width="225" height="30"/>
                                                 <subviews>
@@ -170,25 +188,43 @@
                                                     </mask>
                                                 </variation>
                                             </view>
+                                            <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="6Qt-79-gCv">
+                                                <rect key="frame" x="290" y="358" width="20" height="20"/>
+                                                <animations/>
+                                            </activityIndicatorView>
                                         </subviews>
                                         <animations/>
                                         <constraints>
                                             <constraint firstItem="dxw-r2-Epm" firstAttribute="centerX" secondItem="L7T-UN-5Ab" secondAttribute="centerX" id="4Se-Gk-xUY"/>
                                             <constraint firstItem="L7T-UN-5Ab" firstAttribute="centerX" secondItem="aIC-ZR-ZpV" secondAttribute="centerX" id="56M-dl-3m4"/>
                                             <constraint firstItem="L7T-UN-5Ab" firstAttribute="top" secondItem="aIC-ZR-ZpV" secondAttribute="top" constant="70" id="5g8-Am-IHo"/>
+                                            <constraint firstItem="qt1-te-G9H" firstAttribute="leading" secondItem="VL3-Rw-Ph3" secondAttribute="leading" id="BiS-yg-fIj"/>
                                             <constraint firstItem="VL3-Rw-Ph3" firstAttribute="top" secondItem="dxw-r2-Epm" secondAttribute="bottom" constant="10" id="Bwv-qt-bxp"/>
+                                            <constraint firstItem="qt1-te-G9H" firstAttribute="width" secondItem="VL3-Rw-Ph3" secondAttribute="width" id="Ejp-Y2-Svy"/>
                                             <constraint firstItem="dxw-r2-Epm" firstAttribute="top" secondItem="L7T-UN-5Ab" secondAttribute="bottom" constant="10" id="FrO-j8-17T"/>
+                                            <constraint firstItem="qt1-te-G9H" firstAttribute="top" secondItem="VL3-Rw-Ph3" secondAttribute="bottom" id="GyI-QP-E0r"/>
                                             <constraint firstItem="wUw-mL-TTb" firstAttribute="width" secondItem="VL3-Rw-Ph3" secondAttribute="width" id="Lf5-fV-cyz"/>
-                                            <constraint firstItem="wUw-mL-TTb" firstAttribute="top" secondItem="VL3-Rw-Ph3" secondAttribute="bottom" constant="10" id="OkC-s2-Vrv"/>
+                                            <constraint firstItem="Mc6-Zh-7Pn" firstAttribute="top" secondItem="dxw-r2-Epm" secondAttribute="bottom" id="MEb-Jj-cSK"/>
+                                            <constraint firstItem="Mc6-Zh-7Pn" firstAttribute="leading" secondItem="dxw-r2-Epm" secondAttribute="leading" id="SHV-qc-mRV"/>
                                             <constraint firstItem="dxw-r2-Epm" firstAttribute="width" secondItem="L7T-UN-5Ab" secondAttribute="width" multiplier="0.9" id="Scx-1G-7jg"/>
                                             <constraint firstItem="VL3-Rw-Ph3" firstAttribute="width" secondItem="dxw-r2-Epm" secondAttribute="width" id="XGI-RZ-abO"/>
                                             <constraint firstAttribute="bottom" secondItem="wUw-mL-TTb" secondAttribute="bottom" constant="20" id="ZZH-mD-RWZ"/>
                                             <constraint firstItem="rOG-ZM-oUz" firstAttribute="width" secondItem="VL3-Rw-Ph3" secondAttribute="width" id="gSd-Ct-4Pl"/>
+                                            <constraint firstItem="Mc6-Zh-7Pn" firstAttribute="width" secondItem="dxw-r2-Epm" secondAttribute="width" id="ice-e2-pN6"/>
+                                            <constraint firstItem="VL3-Rw-Ph3" firstAttribute="top" secondItem="Mc6-Zh-7Pn" secondAttribute="bottom" constant="10" id="j3B-eI-p0b"/>
+                                            <constraint firstItem="rOG-ZM-oUz" firstAttribute="top" secondItem="qt1-te-G9H" secondAttribute="bottom" constant="10" id="kLZ-wK-9pj"/>
                                             <constraint firstItem="VL3-Rw-Ph3" firstAttribute="centerX" secondItem="dxw-r2-Epm" secondAttribute="centerX" id="kTY-2M-oPk"/>
-                                            <constraint firstItem="rOG-ZM-oUz" firstAttribute="top" secondItem="VL3-Rw-Ph3" secondAttribute="bottom" constant="10" id="ldd-Ja-GJL"/>
+                                            <constraint firstItem="6Qt-79-gCv" firstAttribute="centerX" secondItem="aIC-ZR-ZpV" secondAttribute="centerX" id="osA-MO-7KE"/>
                                             <constraint firstItem="rOG-ZM-oUz" firstAttribute="centerX" secondItem="VL3-Rw-Ph3" secondAttribute="centerX" id="wIR-v9-UMT"/>
+                                            <constraint firstItem="wUw-mL-TTb" firstAttribute="top" secondItem="qt1-te-G9H" secondAttribute="bottom" constant="10" id="xWF-br-tcK"/>
                                             <constraint firstItem="wUw-mL-TTb" firstAttribute="centerX" secondItem="VL3-Rw-Ph3" secondAttribute="centerX" id="xvb-DH-g4L"/>
+                                            <constraint firstItem="6Qt-79-gCv" firstAttribute="top" secondItem="L7T-UN-5Ab" secondAttribute="bottom" constant="38" id="yXy-Ri-19Y"/>
                                         </constraints>
+                                        <variation key="default">
+                                            <mask key="constraints">
+                                                <exclude reference="Bwv-qt-bxp"/>
+                                            </mask>
+                                        </variation>
                                     </view>
                                 </subviews>
                                 <animations/>
@@ -211,15 +247,17 @@
                         </constraints>
                     </view>
                     <connections>
-                        <outlet property="loginButton" destination="u1x-9D-lDH" id="WNj-zE-b08"/>
+                        <outlet property="activityIndicator" destination="6Qt-79-gCv" id="UGM-0R-UU8"/>
                         <outlet property="loginForm" destination="rOG-ZM-oUz" id="d4u-d1-TqC"/>
                         <outlet property="password" destination="VL3-Rw-Ph3" id="bfF-mN-Zrz"/>
                         <outlet property="password2" destination="zaA-fD-Y4u" id="1i5-LB-x8x"/>
-                        <outlet property="registerButton" destination="VxJ-MT-Aec" id="FXC-Bd-cIh"/>
-                        <outlet property="registrationCancelButton" destination="wFp-VL-l2f" id="Haa-6M-p4K"/>
+                        <outlet property="passwordError" destination="qt1-te-G9H" id="lqY-tG-d5x"/>
+                        <outlet property="passwordErrorHeightConstraint" destination="MGg-nz-A46" id="nfU-IV-ijK"/>
                         <outlet property="registrationForm" destination="wUw-mL-TTb" id="ygm-oO-tJr"/>
                         <outlet property="scrollView" destination="Yhh-uQ-M0h" id="2gZ-kZ-fpx"/>
                         <outlet property="username" destination="dxw-r2-Epm" id="JZT-TO-fdn"/>
+                        <outlet property="usernameError" destination="Mc6-Zh-7Pn" id="6Fr-s1-MKK"/>
+                        <outlet property="usernameErrorHeightConstraint" destination="Iv8-Gx-OVl" id="hE7-Zf-kOI"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>

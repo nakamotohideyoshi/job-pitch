@@ -454,7 +454,7 @@ footer {
 }
 
 .mjp-footer, .push {
-    height: 221px; /* .push must be the same height as .footer */
+    min-height: 221px; /* .push must be the same height as .footer */
 }
 
 .page-container{
@@ -805,6 +805,10 @@ Web App By Reiss Watson
 	font-size:12px;
 }
 
+	.mobile-logo-home{
+		display:none;
+	}
+
 /* Only show the "mobile menu" fix */
 @media (max-width: 3000px) {
     .navbar-header {
@@ -859,4 +863,30 @@ Web App By Reiss Watson
     header.carousel .carousel {
         height: 70%;
     }
+	.main-logo-home{
+		display:none;
+	}
+	.mobile-logo-home{
+		display:block;
+	}
+	.buttons-slide{
+		margin-left:0px;
+	}
+}
+
+@media(max-width:640px) {
+	.btn-home-reg{
+		position: absolute;
+    	margin-top: 13px;
+	    margin-left: 0px;
+	}
+}
+
+@media(max-width:320px) {
+	.above-slide-detail{
+		width: 280px;
+	}
+    .above-slide-detail img{
+		width: 280px;
+	}
 }

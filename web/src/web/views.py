@@ -90,7 +90,10 @@ def dashboard(request):
     return render(request, 'dashboard.html')
 	
 def edit_job_preferences(request):
-    return render(request, 'profile/edit-job-preferences.html')	
+    return render(request, 'profile/edit-job-preferences.html')
+	
+def edit_pitch(request):
+    return render(request, 'profile/edit-pitch.html')	
 	
 def find_staff(request):
     return render(request, 'find-staff.html')		

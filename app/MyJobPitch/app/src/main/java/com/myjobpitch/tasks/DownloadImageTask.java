@@ -11,8 +11,11 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 
 import java.io.InputStream;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 public class DownloadImageTask extends AsyncTask<Uri, Void, Bitmap> {
+    public static Executor executor = Executors.newFixedThreadPool(3);
     private final ProgressBar progress;
     private final ImageView imageView;
     private final Activity context;
@@ -62,12 +65,17 @@ public class DownloadImageTask extends AsyncTask<Uri, Void, Bitmap> {
             float scaleFactor = Math.min(
                     ((float) imageView.getWidth()) / result.getWidth(),
                     ((float) imageView.getHeight()) / result.getHeight());
-            if (scaleFactor <= 1.0f)
-                result = Bitmap.createScaledBitmap(
-                        result,
-                        (int) (result.getWidth() * scaleFactor),
-                        (int) (result.getHeight() * scaleFactor),
-                        true);
+            if (scaleFactor <= 1.0f) {
+                try {
+                    result = Bitmap.createScaledBitmap(
+                            result,
+                            (int) (result.getWidth() * scaleFactor),
+                            (int) (result.getHeight() * scaleFactor),
+                            true);
+                } catch (IllegalArgumentException e) {
+                    result = null;
+                }
+            }
         }
         imageView.setImageBitmap(result);
         imageView.setVisibility(View.VISIBLE);
@@ -79,4 +87,5 @@ public class DownloadImageTask extends AsyncTask<Uri, Void, Bitmap> {
                 listener.onComplete(result);
         }
     }
+
 }

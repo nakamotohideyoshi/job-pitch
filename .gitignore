@@ -29,4 +29,7 @@ proguard/
 *.pyc
 
 #Dev
+.vagrant
 db.sqlite3
+
+web/src/local.py

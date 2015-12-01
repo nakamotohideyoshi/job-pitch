@@ -1,7 +1,10 @@
 package com.myjobpitch.api.data;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import java.util.List;
 
+@JsonIgnoreProperties({"jobSeeker"})
 public class Application extends BaseApplication implements JobSeekerContainer {
     private JobSeeker job_seeker;
     private Job job_data;
@@ -32,5 +35,9 @@ public class Application extends BaseApplication implements JobSeekerContainer {
 
     public Job getJob_data() {
         return job_data;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
     }
 }

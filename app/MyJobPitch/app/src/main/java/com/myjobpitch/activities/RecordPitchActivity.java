@@ -324,7 +324,7 @@ public class RecordPitchActivity extends MJPProgressActionBarActivity {
             Uri uri = Uri.parse(mPitch.getThumbnail());
             mImageProgress.setVisibility(View.VISIBLE);
             mDownloadImageTask = new DownloadImageTask(this, mPreviewImageView, mImageProgress);
-            mDownloadImageTask.execute(uri);
+            mDownloadImageTask.executeOnExecutor(DownloadImageTask.executor, uri);
         } else {
             noRecordingVisibility = View.VISIBLE;
         }

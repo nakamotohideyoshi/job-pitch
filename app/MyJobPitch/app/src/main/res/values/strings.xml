@@ -36,6 +36,7 @@
     <string name="action_add_job">Add Job</string>
     <string name="prompt_job_title">Title</string>
     <string name="job_details">Job Details</string>
+    <string name="job_seeker_details">Job Seeker Profile</string>
     <string name="prompt_job_description">Description</string>
     <string name="edit_job">Edit Job</string>
     <string name="jobs">Jobs</string>
@@ -88,7 +89,8 @@
     <string name="record_pitch">Record my pitch</string>
     <string name="no_locations_added_message">You have not added any work places for this company.</string>
     <string name="no_jobs_added_message">You have not added any jobs for this location.</string>
-    <string name="no_applications_message">You have not chosen anyone to connect with for this job, and no candidates have yet expressed an interest. Once that happens, you will be able to sort through them from here. You can switch to search mode to look for potential applicants.</string>
+    <string name="no_connections_message">You have not chosen anyone to connect with for this job. Once that happens, you will be able to sort through them from here. You can switch to search mode to look for potential applicants.</string>
+    <string name="no_applications_message">No candidates have yet expressed an interest in this job. Once that happens, you will be able to sort through them from here. You can switch to search mode to look for potential applicants.</string>
     <string name="switch_to_search_mode">Switch to search mode</string>
     <string name="restart_search">Restart search</string>
     <string name="switch_to_application_mode">Switch to application mode</string>
@@ -106,7 +108,7 @@
     <string name="job_image">Job Image</string>
     <string name="no_conversations">You have no messages!  Once you have connected through the main interface with someone, you\'ll be able to communicate with them here.</string>
     <string name="no_messages">No messages</string>
-    <string name="message_thread">Message Thread</string>
+    <string name="message_thread">Messages</string>
     <string name="send">Send</string>
     <string name="applied_job_seekers">Showing connected job seekers</string>
     <string name="shortlisted_job_seekers">Showing shortlisted job seekers</string>
@@ -159,4 +161,19 @@
     <string name="profile_inactive_message">Your profile is currently inactive. The means you are hidden from prospective employers and cannot search for jobs.</string>
     <string name="activate_profile">Activate my profile</string>
     <string name="open_message_center">Open message centre</string>
+    <string name="job_seeker_search_description">Search for job seekers matching this job</string>
+    <string name="applications">Applications</string>
+    <string name="applications_description">View job seekers who are interested in this job</string>
+    <string name="connections">Connections</string>
+    <string name="connections_description">View job seekers you have connected with</string>
+    <string name="job_seeker_applications">Showing applications</string>
+    <string name="contact_details">Contact Details</string>
+    <string name="contact_details_unavailable">Contact details unavailable until connected</string>
+    <string name="recruiter_not_connected_reason">You must be connected to send messages</string>
+    <string name="thread_deleted_reason">This conversation has been deleted.</string>
+    <string name="error">Error</string>
+    <string name="job_seeker_not_connected_reason">You cannot send messages until your application is accepted</string>
+    <string name="cv">CV</string>
+    <string name="download_cv">Download CV</string>
+    <string name="send_message">Send message</string>
 </resources>

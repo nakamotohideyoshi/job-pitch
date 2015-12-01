@@ -43,6 +43,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class JobListActivity extends MJPProgressActionBarActivity  {
 
+    public static final String LOCATION_ID = "LOCATION_ID";
+            ;
     private Integer mStatusOpenId;
 
     private Integer location_id;
@@ -136,6 +138,7 @@ public class JobListActivity extends MJPProgressActionBarActivity  {
             mActionMode = null;
         }
     };
+    private Job job;
 
     class JobListAdapter extends CachingArrayAdapter<Job> {
         public JobListAdapter(List<Job> list) {
@@ -159,7 +162,7 @@ public class JobListActivity extends MJPProgressActionBarActivity  {
                 image = job.getLocation_data().getBusiness_data().getImages().get(0);
             if (image != null) {
                 Uri uri = Uri.parse(image.getThumbnail());
-                new DownloadImageTask(JobListActivity.this, imageView, progress).execute(uri);
+                new DownloadImageTask(JobListActivity.this, imageView, progress).executeOnExecutor(DownloadImageTask.executor, uri);
             } else {
                 progress.setVisibility(View.GONE);
                 noImageView.setVisibility(View.VISIBLE);
@@ -186,17 +189,20 @@ public class JobListActivity extends MJPProgressActionBarActivity  {
         mStatusOpenId = getMJPApplication().get(JobStatus.class, "OPEN").getId();
 
         setContentView(R.layout.activity_job_list);
-        location_id = getIntent().getIntExtra("location_id", -1);
+        location_id = getIntent().getIntExtra(LOCATION_ID, -1);
+
+
         list = (ListView) findViewById(R.id.job_list);
         list.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
         list.setLongClickable(true);
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Job job = (Job) list.getItemAtPosition(position);
+                job = (Job) list.getItemAtPosition(position);
                 if (job.getStatus().equals(mStatusOpenId)) {
-                    Intent intent = new Intent(JobListActivity.this, JobActivity.class);
-                    intent.putExtra("job_id", job.getId());
+                    Intent intent = new Intent(JobListActivity.this, JobModeChoiceActivity.class);
+                    intent.putExtra(JobModeChoiceActivity.JOB_ID, job.getId());
+                    intent.putExtra(JobModeChoiceActivity.LOCATION_ID, job.getLocation());
                     startActivity(intent);
                 } else {
                     new AlertDialog.Builder(JobListActivity.this)
@@ -355,7 +361,7 @@ public class JobListActivity extends MJPProgressActionBarActivity  {
     private void addJob() {
         Intent intent;
         intent = new Intent(this, EditJobActivity.class);
-        intent.putExtra("location_id", location_id);
+        intent.putExtra(LOCATION_ID, location_id);
         startActivity(intent);
     }
 }

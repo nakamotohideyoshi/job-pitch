@@ -68,7 +68,7 @@ public class LocationListActivity extends MJPProgressActionBarActivity  {
             switch (item.getItemId()) {
                 case R.id.action_edit:
                     Intent intent = new Intent(LocationListActivity.this, EditLocationActivity.class);
-                    intent.putExtra("location_id", location.getId());
+                    intent.putExtra(EditLocationActivity.LOCATION_ID, location.getId());
                     startActivity(intent);
                     mode.finish();
                     return true;
@@ -148,7 +148,7 @@ public class LocationListActivity extends MJPProgressActionBarActivity  {
                 image = location.getBusiness_data().getImages().get(0);
             if (image != null) {
                 Uri uri = Uri.parse(image.getThumbnail());
-                new DownloadImageTask(LocationListActivity.this, imageView, progress).execute(uri);
+                new DownloadImageTask(LocationListActivity.this, imageView, progress).executeOnExecutor(DownloadImageTask.executor, uri);
             } else {
                 progress.setVisibility(View.GONE);
                 noImageView.setVisibility(View.VISIBLE);
@@ -177,7 +177,7 @@ public class LocationListActivity extends MJPProgressActionBarActivity  {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent(LocationListActivity.this, JobListActivity.class);
-                intent.putExtra("location_id", ((Location) list.getItemAtPosition(position)).getId());
+                intent.putExtra(JobListActivity.LOCATION_ID, ((Location) list.getItemAtPosition(position)).getId());
                 startActivity(intent);
             }
         });

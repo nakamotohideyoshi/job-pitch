@@ -399,7 +399,7 @@ public class LoginActivity extends MJPProgressActivity implements LoaderCallback
                                         } else if (mBusiness.getLocations().size() == 1) {
                                             // Single business and single location: go straight to location
                                             intent = new Intent(LoginActivity.this, JobListActivity.class);
-                                            intent.putExtra("location_id", mBusiness.getLocations().get(0));
+                                            intent.putExtra(JobListActivity.LOCATION_ID, mBusiness.getLocations().get(0));
                                         } else {
                                             // Single business, multiple locations: go straight to business
                                             intent = new Intent(LoginActivity.this, LocationListActivity.class);

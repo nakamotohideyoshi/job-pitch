@@ -11,6 +11,7 @@
         android:layout_height="wrap_content">
         <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
             android:text="@string/job_details"
+            android:textColor="@color/mjp_teal"
             android:textSize="25sp"
             android:paddingBottom="8dp"
             android:textStyle="bold" />
@@ -18,6 +19,7 @@
         <CheckBox
             android:id="@+id/job_active"
             android:text="@string/active"
+            android:checked="true"
             android:layout_gravity="right"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
@@ -60,6 +62,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/job_image"
+        android:textColor="@color/mjp_teal"
         android:textSize="20sp"
         android:paddingTop="15dp"
         android:paddingBottom="8dp"

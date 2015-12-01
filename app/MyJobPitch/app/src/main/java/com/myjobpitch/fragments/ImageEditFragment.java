@@ -120,7 +120,7 @@ public class ImageEditFragment extends Fragment {
                     mDownloadImageTask = null;
                 }
             });
-            mDownloadImageTask.execute(downloadUri);
+            mDownloadImageTask.executeOnExecutor(DownloadImageTask.executor, uri);
         }
     }
 

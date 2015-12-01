@@ -136,7 +136,7 @@ public class BusinessListActivity extends MJPProgressActionBarActivity  {
             TextView noImageView = (TextView) rowView.findViewById(R.id.no_image);
             if (images != null && !images.isEmpty()) {
                 Uri uri = Uri.parse(images.get(0).getThumbnail());
-                new DownloadImageTask(BusinessListActivity.this, imageView, progress).execute(uri);
+                new DownloadImageTask(BusinessListActivity.this, imageView, progress).executeOnExecutor(DownloadImageTask.executor, uri);
             } else {
                 progress.setVisibility(View.GONE);
                 noImageView.setVisibility(View.VISIBLE);

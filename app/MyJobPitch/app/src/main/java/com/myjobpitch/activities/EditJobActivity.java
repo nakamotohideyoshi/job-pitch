@@ -32,6 +32,7 @@ import java.io.IOException;
 
 public class EditJobActivity extends MJPProgressActionBarActivity {
 
+    private static final String LOCATION_ID = "LOCATION_ID";
     private JobEditFragment mJobEditFragment;
     private View mEditJobView;
     private Job job;
@@ -108,7 +109,7 @@ public class EditJobActivity extends MJPProgressActionBarActivity {
         } else {
             setTitle(R.string.action_add_job);
             job = new Job();
-            job.setLocation(getIntent().getIntExtra("location_id", -1));
+            job.setLocation(getIntent().getIntExtra(EditJobActivity.LOCATION_ID, -1));
             job.setStatus(getMJPApplication().get(JobStatus.class, "OPEN").getId());
             mJobEditFragment.load(job);
             showProgress(false);
@@ -224,7 +225,7 @@ public class EditJobActivity extends MJPProgressActionBarActivity {
                 finish();
                 if (job != null) {
                     intent = NavUtils.getParentActivityIntent(EditJobActivity.this);
-                    intent.putExtra("location_id", job.getLocation());
+                    intent.putExtra(JobListActivity.LOCATION_ID, job.getLocation());
                     startActivity(intent);
                 }
                 return true;

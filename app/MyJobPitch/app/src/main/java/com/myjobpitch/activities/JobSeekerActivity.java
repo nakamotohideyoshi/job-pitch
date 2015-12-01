@@ -44,7 +44,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class JobSeekerActivity extends MJPProgressActionBarActivity {
-
+    public static final String TAG = "JobSeekerActivity";
 
     private SwipeFlingAdapterView.OnItemClickListener onItemClickListener;
     private SwipeFlingAdapterView.onFlingListener onFlingListener;
@@ -124,7 +124,7 @@ public class JobSeekerActivity extends MJPProgressActionBarActivity {
                 image = job.getLocation_data().getBusiness_data().getImages().get(0);
             if (image != null) {
                 Uri uri = Uri.parse(image.getThumbnail());
-                new DownloadImageTask(JobSeekerActivity.this, imageView, progress).execute(uri);
+                new DownloadImageTask(JobSeekerActivity.this, imageView, progress).executeOnExecutor(DownloadImageTask.executor, uri);
             } else {
                 progress.setVisibility(View.INVISIBLE);
                 noImageView.setVisibility(View.VISIBLE);
@@ -306,7 +306,7 @@ public class JobSeekerActivity extends MJPProgressActionBarActivity {
                 ObjectMapper mapper = new ObjectMapper();
                 try {
                     String value = mapper.writeValueAsString(job);
-                    intent.putExtra("job_data", value);
+                    intent.putExtra(JobDetailsActivity.JOB_DATA, value);
                 } catch (JsonProcessingException e) {}
                 startActivity(intent);
             }
@@ -518,14 +518,14 @@ public class JobSeekerActivity extends MJPProgressActionBarActivity {
                     exclude.add(job.getId());
             }
 
-            Log.d("JobActivity", "Loading jobs");
+            Log.d(TAG, "Loading jobs");
             ReadJobsTask task = new ReadJobsTask(getApi(), exclude);
             loadingTask = task;
             task.addListener(new CreateReadUpdateAPITaskListener<List<Job>>() {
                 @Override
                 public void onSuccess(List<Job> result) {
                     synchronized (loadingLock) {
-                        Log.d("JobActivity", "Jobs loaded");
+                        Log.d(TAG, "Jobs loaded");
                         loadingTask = null;
                         updateList(result, append);
                     }
@@ -534,7 +534,7 @@ public class JobSeekerActivity extends MJPProgressActionBarActivity {
                 @Override
                 public void onError(JsonNode errors) {
                     synchronized (loadingLock) {
-                        Log.d("JobActivity", "Error loading jobs");
+                        Log.d(TAG, "Error loading jobs");
                         loadingTask = null;
                         Toast toast = Toast.makeText(JobSeekerActivity.this, "Error loading jobs", Toast.LENGTH_LONG);
                         toast.show();
@@ -554,7 +554,7 @@ public class JobSeekerActivity extends MJPProgressActionBarActivity {
 
                 @Override
                 public void onCancelled() {
-                    Log.d("JobActivity", "Job load cancelled");
+                    Log.d(TAG, "Job load cancelled");
                 }
             });
             if (background) {

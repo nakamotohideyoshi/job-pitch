@@ -18,6 +18,7 @@
 		CE6FD3471C01F9BC001A04C3 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CE6FD3461C01F9BC001A04C3 /* Assets.xcassets */; };
 		CE6FD34A1C01F9BC001A04C3 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CE6FD3481C01F9BC001A04C3 /* LaunchScreen.storyboard */; };
 		CE6FD3551C01F9BC001A04C3 /* My_Job_PitchTests.m in Sources */ = {isa = PBXBuildFile; fileRef = CE6FD3541C01F9BC001A04C3 /* My_Job_PitchTests.m */; };
+		CE86847E1C0E570300D4B6C7 /* ScrollingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CE86847D1C0E570300D4B6C7 /* ScrollingViewController.m */; };
 		CEE52CED1C0654DD00881648 /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CEE52CEC1C0654DD00881648 /* MobileCoreServices.framework */; };
 		CEE52CEF1C0654E900881648 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CEE52CEE1C0654E900881648 /* Security.framework */; };
 		CEE52CF11C0654F200881648 /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CEE52CF01C0654F200881648 /* CFNetwork.framework */; };
@@ -62,6 +63,8 @@
 		CE6FD3501C01F9BC001A04C3 /* My Job PitchTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "My Job PitchTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		CE6FD3541C01F9BC001A04C3 /* My_Job_PitchTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = My_Job_PitchTests.m; sourceTree = "<group>"; };
 		CE6FD3561C01F9BC001A04C3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		CE86847C1C0E570300D4B6C7 /* ScrollingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ScrollingViewController.h; sourceTree = "<group>"; };
+		CE86847D1C0E570300D4B6C7 /* ScrollingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ScrollingViewController.m; sourceTree = "<group>"; };
 		CEE52CEB1C0653AC00881648 /* PrefixHeader.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PrefixHeader.pch; sourceTree = "<group>"; };
 		CEE52CEC1C0654DD00881648 /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
 		CEE52CEE1C0654E900881648 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
@@ -139,6 +142,8 @@
 				CE6FD33A1C01F9BB001A04C3 /* Supporting Files */,
 				CE45AEC21C0B41380092AB75 /* MJPViewController.h */,
 				CE45AEC31C0B41390092AB75 /* MJPViewController.m */,
+				CE86847C1C0E570300D4B6C7 /* ScrollingViewController.h */,
+				CE86847D1C0E570300D4B6C7 /* ScrollingViewController.m */,
 			);
 			path = "My Job Pitch";
 			sourceTree = "<group>";
@@ -376,6 +381,7 @@
 				CEE52CFE1C066AB000881648 /* AuthToken.m in Sources */,
 				CE6FD33F1C01F9BB001A04C3 /* AppDelegate.m in Sources */,
 				CEE52D011C066F2700881648 /* LoginRequest.m in Sources */,
+				CE86847E1C0E570300D4B6C7 /* ScrollingViewController.m in Sources */,
 				CEE52CFA1C065C4100881648 /* API.m in Sources */,
 				CE6FD33C1C01F9BB001A04C3 /* main.m in Sources */,
 			);

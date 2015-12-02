@@ -13,7 +13,6 @@
 @implementation API
 {
     NSURL * apiRoot;
-    AuthToken *token;
 }
 
 - (instancetype)init
@@ -48,6 +47,7 @@
              responseArray:@[@"key"]
         responseDictionary:nil
                       path:@"/api-rest-auth/login/"
+                    method:RKRequestMethodPOST
      ];
     
     [self configureMapping:objectManager
@@ -58,8 +58,17 @@
              responseArray:@[@"id", @"username", @"businesses"]
         responseDictionary:@{@"job_seeker": @"jobSeeker"}
                       path:@"/api-rest-auth/registration/"
+                    method:RKRequestMethodPOST
      ];
     
+    
+    [self configureResponseMapping:objectManager
+                     responseClass:[User class]
+                     responseArray:@[@"id", @"username", @"businesses"]
+                responseDictionary:@{@"job_seeker": @"jobSeeker"}
+                              path:@"/api-rest-auth/user/"
+                            method:RKRequestMethodGET
+     ];
     
     RKObjectMapping *errorMapping = [RKObjectMapping mappingForClass: [RKErrorMessage class]];
     [errorMapping addPropertyMapping:[RKAttributeMapping attributeMappingFromKeyPath: nil
@@ -82,6 +91,32 @@
            responseArray:(NSArray *)responseArray
       responseDictionary:(NSDictionary *)responseDictionary
                     path:(NSString *)path
+                  method:(RKRequestMethod)method
+{
+    [self configureRequestMapping:objectManager
+                     requestClass:requestClass
+                     requestArray:requestArray
+                requestDictionary:requestDictionary
+                             path:path
+                           method:method
+     ];
+    
+    [self configureResponseMapping:objectManager
+                     responseClass:responseClass
+                     responseArray:responseArray
+                responseDictionary:responseDictionary
+                              path:path
+                            method:method
+     ];
+}
+
+
+- (void)configureRequestMapping:(RKObjectManager *)objectManager
+                   requestClass:(Class)requestClass
+                   requestArray:(NSArray *)requestArray
+              requestDictionary:(NSDictionary *)requestDictionary
+                           path:(NSString *)path
+                         method:(RKRequestMethod)method
 {
     // setup object mappings
     RKObjectMapping *requestMapping = [RKObjectMapping requestMapping];
@@ -98,7 +133,15 @@
                                           rootKeyPath:nil
                                           method:RKRequestMethodPOST
                                           ]];
+}
 
+- (void)configureResponseMapping:(RKObjectManager *)objectManager
+                   responseClass:(Class)responseClass
+                   responseArray:(NSArray *)responseArray
+              responseDictionary:(NSDictionary *)responseDictionary
+                            path:(NSString *)path
+                          method:(RKRequestMethod)method
+{
     RKObjectMapping *responseMapping = [RKObjectMapping mappingForClass:responseClass];
     if (responseArray != nil) {
         [responseMapping addAttributeMappingsFromArray:responseArray];
@@ -109,7 +152,7 @@
     
     RKResponseDescriptor *responseDescriptor =
     [RKResponseDescriptor responseDescriptorWithMapping:responseMapping
-                                                 method:RKRequestMethodPOST
+                                                 method:method
                                             pathPattern:path
                                                 keyPath:nil
                                             statusCodes:RKStatusCodeIndexSetForClass(RKStatusCodeClassSuccessful)];
@@ -158,11 +201,12 @@
     [[RKObjectManager sharedManager] postObject:request path:@"/api-rest-auth/login/" parameters:nil
                                         success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
                                             NSLog(@"Login success");
-                                            self->token = [mappingResult firstObject];
-                                            success(self->token);
+                                            AuthToken *token = [mappingResult firstObject];
+                                            [self setToken:token];
+                                            success(token);
                                         } failure:^(RKObjectRequestOperation *operation, NSError *error) {
                                             NSLog(@"Error logging in: %@", error);
-                                            self->token = nil;
+                                            [self clearToken];
                                             failure(operation, error, [self getMessage:error], [self getErrors:error]);
                                         }
      ];
@@ -191,9 +235,34 @@
      ];
 }
 
+- (void)getUser:(void (^)(User *user))success
+        failure:(void (^)(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors))failure;
+{
+    [self clearCookies];
+    [[RKObjectManager sharedManager] getObjectsAtPath:@"/api-rest-auth/user/" parameters:nil
+                                       success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
+                                           success([mappingResult firstObject]);
+                                       } failure:^(RKObjectRequestOperation *operation, NSError *error) {
+                                           failure(operation, error, [self getMessage:error], [self getErrors:error]);
+                                           
+                                       }
+     ];
+}
+
 - (void)logout
 {
-    self->token = nil;
+    [self clearToken];
+}
+
+- (void)setToken:(AuthToken*)token
+{
+    [[RKObjectManager sharedManager].HTTPClient
+     setDefaultHeader:@"Authorization" value:[NSString stringWithFormat: @"Token %@", token.key]];
+}
+
+- (void)clearToken
+{
+    [[RKObjectManager sharedManager].HTTPClient clearAuthorizationHeader];
 }
 
 @end

@@ -24,6 +24,9 @@
                    password2:(NSString*)password2
                      success:(void (^)(User *user))success
                      failure:(void (^)(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors))failure;
+
+- (void)getUser:(void (^)(User *user))success
+        failure:(void (^)(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors))failure;
 - (void)logout;
 
 @end

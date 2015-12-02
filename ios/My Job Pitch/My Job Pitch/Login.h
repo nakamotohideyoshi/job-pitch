@@ -8,8 +8,9 @@
 
 #import <UIKit/UIKit.h>
 #import "MJPViewController.h"
+#import "ScrollingViewController.h"
 
-@interface Login : MJPViewController {
+@interface Login : ScrollingViewController {
     
     IBOutlet UITextField * username;
     IBOutlet UITextView * usernameError;
@@ -19,13 +20,8 @@
     IBOutlet UIView * loginForm;
     IBOutlet UIView * registrationForm;
     IBOutlet UIActivityIndicatorView * activityIndicator;
-    IBOutlet UIScrollView * scrollView;
     IBOutlet NSLayoutConstraint *passwordErrorHeightConstraint;
     IBOutlet NSLayoutConstraint *usernameErrorHeightConstraint;
-
-    
-@private
-    UITextField * activeField;
 }
 
 @end

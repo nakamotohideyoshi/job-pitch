@@ -102,4 +102,28 @@
     [self waitForExpectationsWithTimeout:10000.0 handler:nil];
 }
 
+
+- (void)testGetUser
+{
+    XCTestExpectation *expectation = [self expectationWithDescription:@"asynchronous request"];
+    
+    API* api = [[API alloc] initWithAPIRoot:apiRoot];
+    [api loginWithUsername:@"r1" password:@"admin1"
+                   success:^(AuthToken * token) {
+                       [api getUser:^(User *user) {
+                           XCTAssertEqualObjects(user.username, @"r1");
+                           [expectation fulfill];
+                       } failure:^(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors) {
+                           XCTAssert(FALSE);
+                           [expectation fulfill];
+                       }];
+                   }
+                   failure:^(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors) {
+                       XCTAssert(FALSE);
+                       [expectation fulfill];
+                   }];
+    
+    [self waitForExpectationsWithTimeout:10000.0 handler:nil];
+}
+
 @end

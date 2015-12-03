@@ -13,16 +13,13 @@
 @interface Login : ScrollingViewController {
     
     IBOutlet UITextField * username;
-    IBOutlet UITextView * usernameError;
+    IBOutlet UILabel * usernameError;
     IBOutlet UITextField * password;
-    IBOutlet UITextView * passwordError;
+    IBOutlet UILabel * passwordError;
     IBOutlet UITextField * password2;
+    IBOutlet UILabel * password2Error;
     IBOutlet UIView * loginForm;
     IBOutlet UIView * registrationForm;
-    IBOutlet UIActivityIndicatorView * activityIndicator;
-    IBOutlet NSLayoutConstraint *passwordErrorHeightConstraint;
-    IBOutlet NSLayoutConstraint *usernameErrorHeightConstraint;
 }
 
 @end
-

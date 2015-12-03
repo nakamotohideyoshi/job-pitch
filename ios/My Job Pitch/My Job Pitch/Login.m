@@ -27,16 +27,18 @@
 
 - (void)viewWillAppear:(BOOL)animated
 {
-    username.hidden = NO;
-    password.hidden = NO;
-    usernameError.hidden = NO;
-    passwordError.hidden = NO;
-    loginForm.hidden = NO;
-    activityIndicator.hidden = YES;
+    username.text = @"";
+    password.text = @"";
+    password2.text = @"";
+    [self clearErrors];
+    [self showProgress:false];
+    registrationForm.hidden = YES;
+    loginForm.alpha = 1.0f;
 }
 
 - (void)completeLoginWithUser:(User*)user
 {
+    [self clearErrors];
     if (user.jobSeeker) {
         [self performSegueWithIdentifier:@"goto_job_seeker" sender:@"login"];
     } else if ([user.businesses count] > 0) {
@@ -46,57 +48,84 @@
     }
 }
 
+- (NSMutableDictionary *)performValidation
+{
+    NSMutableDictionary *errors = [super performValidation];
+    if (!registrationForm.hidden) {
+        NSMutableArray *passwordErrors = errors[@"password"];
+        if (!passwordErrors) {
+            passwordErrors = [@[] mutableCopy];
+        }
+        if (password.text.length < 6) {
+            [passwordErrors addObject:@"Password must be at least 6 characters long."];
+        } else if (![password.text isEqualToString:password2.text]) {
+            [passwordErrors addObject:@"Passwords must match."];
+        }
+        if ([passwordErrors count]) {
+            errors[@"password"] = passwordErrors;
+        }
+    }
+    return errors;
+}
+
+- (NSArray *)getRequiredFields {
+    if (registrationForm.hidden) {
+        return @[@"username", @"password"];
+    } else {
+        return @[@"username", @"password", @"password2"];
+    }
+}
+
+- (NSDictionary*)getFieldMap {
+    return @{@"username": username,
+             @"password": password,
+             @"password2": password2,
+             };
+}
+
+- (NSDictionary *)getErrorViewMap {
+    return @{@"username": usernameError,
+             @"password": passwordError,
+             @"password2": password2Error,
+             };
+}
+
 - (IBAction)login:(id)sender {
     NSLog(@"login");
-    username.hidden = YES;
-    password.hidden = YES;
-    usernameError.hidden = YES;
-    passwordError.hidden = YES;
-    loginForm.hidden = YES;
-    activityIndicator.hidden = NO;
-    [activityIndicator startAnimating];
-    [[self appDelegate].api loginWithUsername:username.text password:password.text success:^(AuthToken *authToken) {
-        [[self appDelegate].api getUser:^(User *user) {
-            [self completeLoginWithUser:user];
+    if ([self validate]) {
+        [self showProgress:true];
+        [[self appDelegate].api loginWithUsername:username.text password:password.text success:^(AuthToken *authToken) {
+            [[self appDelegate].api getUser:^(User *user) {
+                [self completeLoginWithUser:user];
+            } failure:^(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors) {
+                [self handleErrors:errors message:message];
+                [self showProgress:false];
+            }];
         } failure:^(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors) {
+            [self handleErrors:errors message:message];
+            [self showProgress:false];
         }];
-    } failure:^(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors) {
-        NSString *errorMessage = nil;
-        if (message) {
-            errorMessage = message;
-        } else if ([errors objectForKey:@"non_field_errors"]) {
-            errorMessage = [[errors objectForKey:@"non_field_errors"] firstObject];
-        }
-        if ([errors objectForKey:@"username"]) {
-            [usernameError setText:[[errors objectForKey:@"username"] firstObject]];
-            [usernameError sizeToFit];
-            usernameErrorHeightConstraint.constant = usernameError.frame.size.height;
-        } else {
-            usernameErrorHeightConstraint.constant = 0;
-        }
-        if ([errors objectForKey:@"password"]) {
-            [passwordError setText:[[errors objectForKey:@"password"] firstObject]];
-            [passwordError sizeToFit];
-            passwordErrorHeightConstraint.constant = passwordError.frame.size.height;
-        } else {
-            passwordErrorHeightConstraint.constant = 0;
-        }
-        if (errorMessage) {
-            [[[UIAlertView alloc] initWithTitle:@"Login Error"
-                                        message:errorMessage
-                                       delegate:nil
-                              cancelButtonTitle:@"OK"
-                              otherButtonTitles:nil, nil] show];
-        }
-        username.hidden = NO;
-        password.hidden = NO;
-        usernameError.hidden = NO;
-        passwordError.hidden = NO;
-        loginForm.hidden = NO;
-        activityIndicator.hidden = YES;
-        [activityIndicator stopAnimating];
-    }];
+    }
 }
+
+- (IBAction)register:(id)sender {
+    NSLog(@"register");
+    if ([self validate]) {
+        [self showProgress:true];
+        [[self appDelegate].api registerWithUsername:username.text password1:password.text password2:password2.text success:^(User *user) {
+            [[self appDelegate].api loginWithUsername:username.text password:password.text success:^(AuthToken *authToken) {
+                [self completeLoginWithUser:user];
+            } failure:^(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors) {
+                [self handleErrors:errors message:message];
+                [self showProgress:false];
+            }];
+        } failure:^(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors) {
+            [self handleErrors:errors message:message];
+            [self showProgress:false];
+        }];
+    }
+}
+
 
 - (IBAction)registrationForm:(id)sender {
     NSLog(@"registrationForm");
@@ -109,74 +138,6 @@
             [registrationForm setAlpha:1.0f];
         } completion:nil];
     }];
-}
-
-- (IBAction)register:(id)sender {
-    NSLog(@"register");
-    if (password.text.length < 6) {
-        [[[UIAlertView alloc] initWithTitle:nil
-                                    message:@"Password must be at least 6 characters long."
-                                   delegate:nil
-                          cancelButtonTitle:@"OK"
-                          otherButtonTitles:nil, nil] show];
-    } else if (![password.text isEqualToString:password2.text]) {
-        [[[UIAlertView alloc] initWithTitle:nil
-                                    message:@"Passwords must match!"
-                                   delegate:nil
-                          cancelButtonTitle:@"OK"
-                           otherButtonTitles:nil, nil] show];
-    } else {
-        username.hidden = YES;
-        password.hidden = YES;
-        usernameError.hidden = YES;
-        passwordError.hidden = YES;
-        registrationForm.hidden = YES;
-        activityIndicator.hidden = NO;
-        [activityIndicator startAnimating];
-        [[self appDelegate].api registerWithUsername:username.text password1:password.text password2:password2.text success:^(User *user) {
-            [[self appDelegate].api loginWithUsername:username.text password:password.text success:^(AuthToken *authToken) {
-                [self completeLoginWithUser:user];
-            } failure:^(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors) {
-                NSString *errorMessage = @"Unknown error";
-                if (message) {
-                    errorMessage = message;
-                } else if ([errors objectForKey:@"non_field_errors"]) {
-                    errorMessage = [[errors objectForKey:@"non_field_errors"] firstObject];
-                }
-                [[[UIAlertView alloc] initWithTitle:@"Login Error"
-                                            message:errorMessage
-                                           delegate:nil
-                                  cancelButtonTitle:@"OK"
-                                  otherButtonTitles:nil, nil] show];
-                username.hidden = NO;
-                password.hidden = NO;
-                usernameError.hidden = NO;
-                passwordError.hidden = NO;
-                registrationForm.hidden = NO;
-                activityIndicator.hidden = YES;
-                [activityIndicator stopAnimating];
-            }];
-        } failure:^(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors) {
-            NSString *errorMessage = @"Unknown error";
-            if (message) {
-                errorMessage = message;
-            } else if ([errors objectForKey:@"username"]) {
-                errorMessage = [[errors objectForKey:@"username"] firstObject];
-            }
-            [[[UIAlertView alloc] initWithTitle:@"Registration Error"
-                                        message:errorMessage
-                                       delegate:nil
-                              cancelButtonTitle:@"OK"
-                              otherButtonTitles:nil, nil] show];
-            username.hidden = NO;
-            password.hidden = NO;
-            usernameError.hidden = NO;
-            passwordError.hidden = NO;
-            registrationForm.hidden = NO;
-            activityIndicator.hidden = YES;
-            [activityIndicator stopAnimating];
-        }];
-    }
 }
 
 - (IBAction)registrationCancel:(id)sender {

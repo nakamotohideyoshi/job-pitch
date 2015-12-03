@@ -9,6 +9,19 @@
 #import <UIKit/UIKit.h>
 #import "AppDelegate.h"
 
-@interface MJPViewController : UIViewController
+@interface MJPViewController : UIViewController {
+    IBOutlet UIActivityIndicatorView * activityIndicator;
+    IBOutlet UIView * mainView;
+}
+
 - (AppDelegate*)appDelegate;
+- (NSArray*) getRequiredFields;
+- (NSDictionary*)getFieldMap;
+- (NSDictionary*)getErrorViewMap;
+- (void)clearErrors;
+- (void)handleErrors:(NSDictionary*)errors message:(NSString*)message;
+- (void)showProgress:(BOOL)showProgress;
+- (BOOL)validate;
+- (NSMutableDictionary*)performValidation;
 @end
+

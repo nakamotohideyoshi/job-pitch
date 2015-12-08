@@ -8,7 +8,7 @@
 
 #import "CreateProfile.h"
 
-@interface CreateProfile ()
+@interface CreateProfile<JobSeekerProfileViewDelegate> ()
 
 @end
 
@@ -16,12 +16,18 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    jobSeekerProfile.delegate = self;
     // Do any additional setup after loading the view.
 }
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    activityIndicator.hidden = YES;
 }
 
 - (IBAction)logout {
@@ -41,20 +47,42 @@
 
 - (void)showJobSeeker {
     NSLog(@"showJobSeeker");
+    [self->jobSeekerProfile setHidden:false];
 }
 
 - (void)showRecruiter {
     NSLog(@"showRecruiter");
+    [self->jobSeekerProfile setHidden:true];
 }
 
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
+- (NSArray *)getRequiredFields {
+    if (jobSeekerProfile.hidden) {
+        return @[@"firstName", @"lastName", @"description"];
+    } else {
+        return @[];
+    }
 }
-*/
+
+- (NSDictionary*)getFieldMap {
+    return @{@"firstName": jobSeekerProfile.firstName.textField,
+             @"lastName": jobSeekerProfile.lastName.textField,
+             @"email": jobSeekerProfile.email.textField,
+             @"telephone": jobSeekerProfile.telephone.textField,
+             @"mobile": jobSeekerProfile.mobile.textField,
+             @"age": jobSeekerProfile.age.textField,
+             @"description": jobSeekerProfile.description,
+             };
+}
+
+- (NSDictionary *)getErrorViewMap {
+    return @{@"firstName": jobSeekerProfile.firstName.errorLabel,
+             @"lastName": jobSeekerProfile.lastName.errorLabel,
+             @"email": jobSeekerProfile.email.errorLabel,
+             @"telephone": jobSeekerProfile.telephone.errorLabel,
+             @"mobile": jobSeekerProfile.mobile.errorLabel,
+             @"age": jobSeekerProfile.age.errorLabel,
+             @"description": jobSeekerProfile.descriptionError,
+             };
+}
 
 @end

@@ -11,6 +11,7 @@
 		CE45AEC41C0B41390092AB75 /* MJPViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CE45AEC31C0B41390092AB75 /* MJPViewController.m */; };
 		CE45AECA1C0B45AD0092AB75 /* RegisterRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = CE45AEC91C0B45AD0092AB75 /* RegisterRequest.m */; };
 		CE45AECD1C0B461A0092AB75 /* User.m in Sources */ = {isa = PBXBuildFile; fileRef = CE45AECC1C0B461A0092AB75 /* User.m */; };
+		CE59737D1C1626630096B001 /* JobSeekerProfileView.m in Sources */ = {isa = PBXBuildFile; fileRef = CE59737C1C1626630096B001 /* JobSeekerProfileView.m */; };
 		CE6FD33C1C01F9BB001A04C3 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = CE6FD33B1C01F9BB001A04C3 /* main.m */; };
 		CE6FD33F1C01F9BB001A04C3 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = CE6FD33E1C01F9BB001A04C3 /* AppDelegate.m */; };
 		CE6FD3421C01F9BB001A04C3 /* Login.m in Sources */ = {isa = PBXBuildFile; fileRef = CE6FD3411C01F9BB001A04C3 /* Login.m */; };
@@ -22,6 +23,9 @@
 		CEE04A9C1C0F896300697620 /* RecruiterHome.m in Sources */ = {isa = PBXBuildFile; fileRef = CEE04A9B1C0F896300697620 /* RecruiterHome.m */; };
 		CEE04A9F1C0F8A9100697620 /* JobSeekerHome.m in Sources */ = {isa = PBXBuildFile; fileRef = CEE04A9E1C0F8A9100697620 /* JobSeekerHome.m */; };
 		CEE04AA21C0F8C6700697620 /* CreateProfile.m in Sources */ = {isa = PBXBuildFile; fileRef = CEE04AA11C0F8C6700697620 /* CreateProfile.m */; };
+		CEE04AA41C10EAD900697620 /* ErrorTextField.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEE04AA31C10EAD900697620 /* ErrorTextField.xib */; };
+		CEE04AA71C10EE2000697620 /* ErrorTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = CEE04AA61C10EE2000697620 /* ErrorTextField.m */; };
+		CEE04AA91C10F8FE00697620 /* JobSeekerProfileView.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEE04AA81C10F8FE00697620 /* JobSeekerProfileView.xib */; };
 		CEE52CED1C0654DD00881648 /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CEE52CEC1C0654DD00881648 /* MobileCoreServices.framework */; };
 		CEE52CEF1C0654E900881648 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CEE52CEE1C0654E900881648 /* Security.framework */; };
 		CEE52CF11C0654F200881648 /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CEE52CF01C0654F200881648 /* CFNetwork.framework */; };
@@ -53,6 +57,8 @@
 		CE45AEC91C0B45AD0092AB75 /* RegisterRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RegisterRequest.m; sourceTree = "<group>"; };
 		CE45AECB1C0B461A0092AB75 /* User.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = User.h; sourceTree = "<group>"; };
 		CE45AECC1C0B461A0092AB75 /* User.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = User.m; sourceTree = "<group>"; };
+		CE59737B1C1626630096B001 /* JobSeekerProfileView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JobSeekerProfileView.h; sourceTree = "<group>"; };
+		CE59737C1C1626630096B001 /* JobSeekerProfileView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JobSeekerProfileView.m; sourceTree = "<group>"; };
 		CE6FD3371C01F9BB001A04C3 /* My Job Pitch.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "My Job Pitch.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		CE6FD33B1C01F9BB001A04C3 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		CE6FD33D1C01F9BB001A04C3 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -74,6 +80,10 @@
 		CEE04A9E1C0F8A9100697620 /* JobSeekerHome.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JobSeekerHome.m; sourceTree = "<group>"; };
 		CEE04AA01C0F8C6700697620 /* CreateProfile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CreateProfile.h; sourceTree = "<group>"; };
 		CEE04AA11C0F8C6700697620 /* CreateProfile.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CreateProfile.m; sourceTree = "<group>"; };
+		CEE04AA31C10EAD900697620 /* ErrorTextField.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ErrorTextField.xib; sourceTree = "<group>"; };
+		CEE04AA51C10EE2000697620 /* ErrorTextField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ErrorTextField.h; sourceTree = "<group>"; };
+		CEE04AA61C10EE2000697620 /* ErrorTextField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ErrorTextField.m; sourceTree = "<group>"; };
+		CEE04AA81C10F8FE00697620 /* JobSeekerProfileView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = JobSeekerProfileView.xib; sourceTree = "<group>"; };
 		CEE52CEB1C0653AC00881648 /* PrefixHeader.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PrefixHeader.pch; sourceTree = "<group>"; };
 		CEE52CEC1C0654DD00881648 /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
 		CEE52CEE1C0654E900881648 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
@@ -151,6 +161,12 @@
 				CEE04A9A1C0F896300697620 /* RecruiterHome.h */,
 				CEE04A9B1C0F896300697620 /* RecruiterHome.m */,
 				CE6FD3431C01F9BB001A04C3 /* Main.storyboard */,
+				CE59737B1C1626630096B001 /* JobSeekerProfileView.h */,
+				CE59737C1C1626630096B001 /* JobSeekerProfileView.m */,
+				CEE04AA81C10F8FE00697620 /* JobSeekerProfileView.xib */,
+				CEE04AA51C10EE2000697620 /* ErrorTextField.h */,
+				CEE04AA61C10EE2000697620 /* ErrorTextField.m */,
+				CEE04AA31C10EAD900697620 /* ErrorTextField.xib */,
 				CE6FD3461C01F9BC001A04C3 /* Assets.xcassets */,
 				CE6FD3481C01F9BC001A04C3 /* LaunchScreen.storyboard */,
 				CE6FD34B1C01F9BC001A04C3 /* Info.plist */,
@@ -307,8 +323,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				CE6FD34A1C01F9BC001A04C3 /* LaunchScreen.storyboard in Resources */,
+				CEE04AA91C10F8FE00697620 /* JobSeekerProfileView.xib in Resources */,
 				CE6FD3471C01F9BC001A04C3 /* Assets.xcassets in Resources */,
 				CE6FD3451C01F9BB001A04C3 /* Main.storyboard in Resources */,
+				CEE04AA41C10EAD900697620 /* ErrorTextField.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -394,7 +412,9 @@
 				CE45AECD1C0B461A0092AB75 /* User.m in Sources */,
 				CE45AECA1C0B45AD0092AB75 /* RegisterRequest.m in Sources */,
 				CEE52CFE1C066AB000881648 /* AuthToken.m in Sources */,
+				CE59737D1C1626630096B001 /* JobSeekerProfileView.m in Sources */,
 				CEE04A9F1C0F8A9100697620 /* JobSeekerHome.m in Sources */,
+				CEE04AA71C10EE2000697620 /* ErrorTextField.m in Sources */,
 				CE6FD33F1C01F9BB001A04C3 /* AppDelegate.m in Sources */,
 				CEE52D011C066F2700881648 /* LoginRequest.m in Sources */,
 				CE86847E1C0E570300D4B6C7 /* ScrollingViewController.m in Sources */,
@@ -479,7 +499,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -517,7 +537,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";

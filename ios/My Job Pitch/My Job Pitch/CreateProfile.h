@@ -7,9 +7,10 @@
 //
 
 #import "ScrollingViewController.h"
+#import "JobSeekerProfileView.h"
 
-@interface CreateProfile : ScrollingViewController {
-    
+@interface CreateProfile<JobSeekerProfileViewDelegate> : ScrollingViewController {
+    __weak IBOutlet JobSeekerProfileView *jobSeekerProfile;
 }
 
 - (IBAction)logout;

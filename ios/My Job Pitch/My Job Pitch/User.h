@@ -7,9 +7,9 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "MJPObject.h"
 
-@interface User : NSObject
-@property NSNumber* id;
+@interface User : MJPObject
 @property NSString* username;
 @property NSArray* businesses;
 @property NSNumber* jobSeeker;

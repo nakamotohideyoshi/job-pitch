@@ -67,11 +67,34 @@ $(function() {
 			var nationality_public = false;
 		}
 		var description = $('#description').val();
+		var cv_upload = $('#cv_upload').val();
 		var csrfmiddlewaretoken = $('[name="csrfmiddlewaretoken"]').val();
-		
-			$.post( "/api/job-seekers/", { first_name: first_name, last_name: last_name, email: email, email_public: email_public, telephone: telephone, telephone_public: telephone_public, mobile: mobile, mobile_public: mobile_public,age: age,age_public: age_public,sex: sex,sex_public: sex_public, nationality: nationality, description:description, nationality_public: nationality_public,csrfmiddlewaretoken: csrfmiddlewaretoken }).done(function( data ) {
+		var formData2 = new FormData($('#profile')[0]);
+			$.ajax({
+				url: "/api/job-seekers/",
+				type: 'POST',
+				data: formData2,
+				async: false,
+				cache: false,
+				contentType: false,
+				processData: false
+			}).done(function( data ) {
 				console.log( data );
 				window.location.href = "/profile/job-preferences";
+			  }).fail(function( data ) {
+				var messageError = ''
+				for (var key in data.responseJSON) {
+					var obj = data.responseJSON[key];
+					messageError = messageError+obj+'<br>';
+				}
+				formAlert('danger', messageError);
+			  });
+			/*
+			
+			first_name: first_name, last_name: last_name, email: email, email_public: email_public, telephone: telephone, telephone_public: telephone_public, mobile: mobile, mobile_public: mobile_public,age: age,age_public: age_public,sex: sex,sex_public: sex_public, nationality: nationality, description:description, cv:cv_upload, nationality_public: nationality_public,csrfmiddlewaretoken: csrfmiddlewaretoken
+			$.post( "/api/job-seekers/", formData2).done(function( data ) {
+				console.log( data );
+				//window.location.href = "/profile/job-preferences";
 			  })
 			  .fail(function( data ) {
 				var messageError = ''
@@ -80,6 +103,6 @@ $(function() {
 					messageError = messageError+obj+'<br>';
 				}
 				formAlert('danger', messageError);
-			  });
+			  });*/
 	});
 });

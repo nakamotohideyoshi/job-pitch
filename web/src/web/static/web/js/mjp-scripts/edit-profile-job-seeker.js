@@ -149,14 +149,35 @@ $(function() {
 			var active_account = false;
 		}
 		var description = $('#description').val();
+		var cv_upload = $('#cv_upload').val();
 		var csrfmiddlewaretoken = $('[name="csrfmiddlewaretoken"]').val();
+		var formData2 = new FormData($('#profile')[0]);
+			$.ajax({
+				url: "/api/job-seekers/"+job_seeker_id+"/",
+				type: 'PUT',
+				data: formData2,
+				async: false,
+				cache: false,
+				contentType: false,
+				processData: false
+			}).done(function( data ) {
+				console.log( data );
+				window.location.href = "/profile/job-preferences";
+			  }).fail(function( data ) {
+				var messageError = ''
+				for (var key in data.responseJSON) {
+					var obj = data.responseJSON[key];
+					messageError = messageError+obj+'<br>';
+				}
+				formAlert('danger', messageError);
+			  });
 			
-			$.put( "/api/job-seekers/"+job_seeker_id+"/", { csrftoken: getCookie('csrftoken'), first_name: first_name, last_name: last_name, email: email, email_public: email_public, telephone: telephone, telephone_public: telephone_public, mobile: mobile, mobile_public: mobile_public,age: age,age_public: age_public,sex: sex,sex_public: sex_public, nationality: nationality, description:description, nationality_public: nationality_public, active:active_account }).done(function( data ) {
+			/*$.put( "/api/job-seekers/"+job_seeker_id+"/", { csrftoken: getCookie('csrftoken'), first_name: first_name, last_name: last_name, email: email, email_public: email_public, telephone: telephone, telephone_public: telephone_public, mobile: mobile, mobile_public: mobile_public,age: age,age_public: age_public,sex: sex,sex_public: sex_public, nationality: nationality, description:description, nationality_public: nationality_public, active:active_account,cv_upload:cv_upload }).done(function( data ) {
 				formAlert('success', 'Profile Updated!');
 				
 			  })
 			  .fail(function( data ) {
 				console.log( data.responseJSON );
-			  });
+			  });*/
 	});
 });

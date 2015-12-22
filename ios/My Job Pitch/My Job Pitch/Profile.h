@@ -2,8 +2,8 @@
 #import "MJPObject.h"
 
 @interface Profile : MJPObject
-@property NSNumber* jobSeeker;
-@property MSArray* sectors;
+@property (nonnull) NSNumber* jobSeeker;
+@property (nonnull) NSArray* sectors;
 @property (nullable) NSNumber* contract;
 @property (nullable) NSNumber* hours;
 @property (nullable) NSString* placeName;

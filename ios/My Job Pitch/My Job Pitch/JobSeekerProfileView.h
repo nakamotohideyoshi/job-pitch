@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "ErrorTextField.h"
+#import "JobSeeker.h"
 
 @protocol JobSeekerProfileViewDelegate
 - (void)continue;
@@ -37,5 +38,7 @@
 @property (weak, nonatomic, nullable) id<JobSeekerProfileViewDelegate> delegate;
 
 - (IBAction)continue:(nullable id)sender;
+- (void)load:(nonnull JobSeeker*)jobSeeker;
+- (void)save:(nonnull JobSeeker*)jobSeeker;
 
 @end

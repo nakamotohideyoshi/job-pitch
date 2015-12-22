@@ -8,7 +8,7 @@
 
 #import "CreateProfile.h"
 
-@interface CreateProfile<JobSeekerProfileViewDelegate> ()
+@interface CreateProfile ()
 
 @end
 
@@ -56,7 +56,7 @@
 }
 
 - (NSArray *)getRequiredFields {
-    if (jobSeekerProfile.hidden) {
+    if (!jobSeekerProfile.hidden) {
         return @[@"firstName", @"lastName", @"description"];
     } else {
         return @[];
@@ -70,7 +70,7 @@
              @"telephone": jobSeekerProfile.telephone.textField,
              @"mobile": jobSeekerProfile.mobile.textField,
              @"age": jobSeekerProfile.age.textField,
-             @"description": jobSeekerProfile.description,
+             @"description": jobSeekerProfile.descriptionView,
              };
 }
 
@@ -83,6 +83,15 @@
              @"age": jobSeekerProfile.age.errorLabel,
              @"description": jobSeekerProfile.descriptionError,
              };
+}
+
+- (void)continue
+{
+    NSLog(@"continue");
+    if ([self validate]) {
+        JobSeeker *jobSeeker = [JobSeeker alloc];
+        [jobSeekerProfile save:jobSeeker];
+    }
 }
 
 @end

@@ -50,11 +50,10 @@
 
 - (NSMutableDictionary*)performValidation
 {
-    NSArray *requiredFields = [self getRequiredFields];
     NSDictionary *fieldMap = [self getFieldMap];
     NSMutableDictionary *errors = [@{} mutableCopy];
     for (id key in [self getRequiredFields]) {
-        if ([requiredFields containsObject:key]) {
+        if ([fieldMap objectForKey:key]) {
             UITextField *field = fieldMap[key];
             if (field) {
                 NSString *text = [field.text

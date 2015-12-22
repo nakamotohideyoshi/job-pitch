@@ -9,7 +9,7 @@
 #import "ScrollingViewController.h"
 #import "JobSeekerProfileView.h"
 
-@interface CreateProfile<JobSeekerProfileViewDelegate> : ScrollingViewController {
+@interface CreateProfile : ScrollingViewController<JobSeekerProfileViewDelegate> {
     __weak IBOutlet JobSeekerProfileView *jobSeekerProfile;
 }
 

@@ -54,7 +54,43 @@
 }
 
 - (IBAction)continue:(nullable id)sender {
-    
+    [self.delegate continue];
+}
+
+-(void)save:(JobSeeker*)jobSeeker
+{
+    jobSeeker.firstName = self.firstName.textField.text;
+    jobSeeker.lastName = self.lastName.textField.text;
+    jobSeeker.email = self.email.textField.text;
+    jobSeeker.telephone = self.telephone.textField.text;
+    jobSeeker.mobile = self.mobile.textField.text;
+    jobSeeker.age = @([self.age.textField.text integerValue]);
+    //    jobSeeker.sex =
+    //    jobSeeker.nationality =
+    jobSeeker.emailPublic = self.emailPublic.isOn;
+    jobSeeker.telephonePublic = self.telephonePublic.isOn;
+    jobSeeker.mobilePublic = self.mobilePublic.isOn;
+    jobSeeker.agePublic = self.agePublic.isOn;
+    jobSeeker.sexPublic = self.sexPublic.isOn;
+    jobSeeker.nationalityPublic = self.nationalityPublic.isOn;
+}
+
+-(void)load:(JobSeeker*)jobSeeker
+{
+    self.firstName.textField.text = jobSeeker.firstName;
+    self.lastName.textField.text = jobSeeker.lastName;
+    self.email.textField.text = jobSeeker.email;
+    self.telephone.textField.text = jobSeeker.telephone;
+    self.mobile.textField.text = jobSeeker.mobile;
+    self.age.textField.text = [jobSeeker.age stringValue];
+    //    jobSeeker.sex =
+    //    jobSeeker.nationality =
+    self.emailPublic.on = jobSeeker.emailPublic;
+    self.telephonePublic.on = jobSeeker.telephonePublic;
+    self.mobilePublic.on = jobSeeker.mobilePublic;
+    self.agePublic.on = jobSeeker.agePublic;
+    self.sexPublic.on = jobSeeker.sexPublic;
+    self.nationalityPublic.on = jobSeeker.nationalityPublic;
 }
 
 @end

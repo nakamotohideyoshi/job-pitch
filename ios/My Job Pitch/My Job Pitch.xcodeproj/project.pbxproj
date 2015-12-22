@@ -26,6 +26,20 @@
 		CEE04AA41C10EAD900697620 /* ErrorTextField.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEE04AA31C10EAD900697620 /* ErrorTextField.xib */; };
 		CEE04AA71C10EE2000697620 /* ErrorTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = CEE04AA61C10EE2000697620 /* ErrorTextField.m */; };
 		CEE04AA91C10F8FE00697620 /* JobSeekerProfileView.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEE04AA81C10F8FE00697620 /* JobSeekerProfileView.xib */; };
+		CEE062531C28B77500ED60C0 /* Business.m in Sources */ = {isa = PBXBuildFile; fileRef = CEE062381C28B77500ED60C0 /* Business.m */; };
+		CEE062541C28B77500ED60C0 /* Contract.m in Sources */ = {isa = PBXBuildFile; fileRef = CEE0623A1C28B77500ED60C0 /* Contract.m */; };
+		CEE062551C28B77500ED60C0 /* Hours.m in Sources */ = {isa = PBXBuildFile; fileRef = CEE0623C1C28B77500ED60C0 /* Hours.m */; };
+		CEE062561C28B77500ED60C0 /* JobSeeker.m in Sources */ = {isa = PBXBuildFile; fileRef = CEE0623E1C28B77500ED60C0 /* JobSeeker.m */; };
+		CEE062571C28B77500ED60C0 /* MJPObject.m in Sources */ = {isa = PBXBuildFile; fileRef = CEE062401C28B77500ED60C0 /* MJPObject.m */; };
+		CEE062581C28B77500ED60C0 /* MJPObjectWithName.m in Sources */ = {isa = PBXBuildFile; fileRef = CEE062421C28B77500ED60C0 /* MJPObjectWithName.m */; };
+		CEE062591C28B77500ED60C0 /* MJPObjectWithNameDesc.m in Sources */ = {isa = PBXBuildFile; fileRef = CEE062441C28B77500ED60C0 /* MJPObjectWithNameDesc.m */; };
+		CEE0625A1C28B77500ED60C0 /* MJPObjectWithNameShortName.m in Sources */ = {isa = PBXBuildFile; fileRef = CEE062461C28B77500ED60C0 /* MJPObjectWithNameShortName.m */; };
+		CEE0625B1C28B77500ED60C0 /* MJPObjectWithNameShortNameDesc.m in Sources */ = {isa = PBXBuildFile; fileRef = CEE062481C28B77500ED60C0 /* MJPObjectWithNameShortNameDesc.m */; };
+		CEE0625C1C28B77500ED60C0 /* Nationality.m in Sources */ = {isa = PBXBuildFile; fileRef = CEE0624A1C28B77500ED60C0 /* Nationality.m */; };
+		CEE0625D1C28B77500ED60C0 /* Profile.m in Sources */ = {isa = PBXBuildFile; fileRef = CEE0624C1C28B77500ED60C0 /* Profile.m */; };
+		CEE0625E1C28B77500ED60C0 /* Role.m in Sources */ = {isa = PBXBuildFile; fileRef = CEE0624E1C28B77500ED60C0 /* Role.m */; };
+		CEE0625F1C28B77500ED60C0 /* Sector.m in Sources */ = {isa = PBXBuildFile; fileRef = CEE062501C28B77500ED60C0 /* Sector.m */; };
+		CEE062601C28B77500ED60C0 /* Sex.m in Sources */ = {isa = PBXBuildFile; fileRef = CEE062521C28B77500ED60C0 /* Sex.m */; };
 		CEE52CED1C0654DD00881648 /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CEE52CEC1C0654DD00881648 /* MobileCoreServices.framework */; };
 		CEE52CEF1C0654E900881648 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CEE52CEE1C0654E900881648 /* Security.framework */; };
 		CEE52CF11C0654F200881648 /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CEE52CF01C0654F200881648 /* CFNetwork.framework */; };
@@ -84,6 +98,34 @@
 		CEE04AA51C10EE2000697620 /* ErrorTextField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ErrorTextField.h; sourceTree = "<group>"; };
 		CEE04AA61C10EE2000697620 /* ErrorTextField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ErrorTextField.m; sourceTree = "<group>"; };
 		CEE04AA81C10F8FE00697620 /* JobSeekerProfileView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = JobSeekerProfileView.xib; sourceTree = "<group>"; };
+		CEE062371C28B77500ED60C0 /* Business.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Business.h; sourceTree = "<group>"; };
+		CEE062381C28B77500ED60C0 /* Business.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Business.m; sourceTree = "<group>"; };
+		CEE062391C28B77500ED60C0 /* Contract.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Contract.h; sourceTree = "<group>"; };
+		CEE0623A1C28B77500ED60C0 /* Contract.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Contract.m; sourceTree = "<group>"; };
+		CEE0623B1C28B77500ED60C0 /* Hours.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Hours.h; sourceTree = "<group>"; };
+		CEE0623C1C28B77500ED60C0 /* Hours.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Hours.m; sourceTree = "<group>"; };
+		CEE0623D1C28B77500ED60C0 /* JobSeeker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JobSeeker.h; sourceTree = "<group>"; };
+		CEE0623E1C28B77500ED60C0 /* JobSeeker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JobSeeker.m; sourceTree = "<group>"; };
+		CEE0623F1C28B77500ED60C0 /* MJPObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MJPObject.h; sourceTree = "<group>"; };
+		CEE062401C28B77500ED60C0 /* MJPObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MJPObject.m; sourceTree = "<group>"; };
+		CEE062411C28B77500ED60C0 /* MJPObjectWithName.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MJPObjectWithName.h; sourceTree = "<group>"; };
+		CEE062421C28B77500ED60C0 /* MJPObjectWithName.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MJPObjectWithName.m; sourceTree = "<group>"; };
+		CEE062431C28B77500ED60C0 /* MJPObjectWithNameDesc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MJPObjectWithNameDesc.h; sourceTree = "<group>"; };
+		CEE062441C28B77500ED60C0 /* MJPObjectWithNameDesc.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MJPObjectWithNameDesc.m; sourceTree = "<group>"; };
+		CEE062451C28B77500ED60C0 /* MJPObjectWithNameShortName.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MJPObjectWithNameShortName.h; sourceTree = "<group>"; };
+		CEE062461C28B77500ED60C0 /* MJPObjectWithNameShortName.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MJPObjectWithNameShortName.m; sourceTree = "<group>"; };
+		CEE062471C28B77500ED60C0 /* MJPObjectWithNameShortNameDesc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MJPObjectWithNameShortNameDesc.h; sourceTree = "<group>"; };
+		CEE062481C28B77500ED60C0 /* MJPObjectWithNameShortNameDesc.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MJPObjectWithNameShortNameDesc.m; sourceTree = "<group>"; };
+		CEE062491C28B77500ED60C0 /* Nationality.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Nationality.h; sourceTree = "<group>"; };
+		CEE0624A1C28B77500ED60C0 /* Nationality.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Nationality.m; sourceTree = "<group>"; };
+		CEE0624B1C28B77500ED60C0 /* Profile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Profile.h; sourceTree = "<group>"; };
+		CEE0624C1C28B77500ED60C0 /* Profile.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Profile.m; sourceTree = "<group>"; };
+		CEE0624D1C28B77500ED60C0 /* Role.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Role.h; sourceTree = "<group>"; };
+		CEE0624E1C28B77500ED60C0 /* Role.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Role.m; sourceTree = "<group>"; };
+		CEE0624F1C28B77500ED60C0 /* Sector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Sector.h; sourceTree = "<group>"; };
+		CEE062501C28B77500ED60C0 /* Sector.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Sector.m; sourceTree = "<group>"; };
+		CEE062511C28B77500ED60C0 /* Sex.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Sex.h; sourceTree = "<group>"; };
+		CEE062521C28B77500ED60C0 /* Sex.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Sex.m; sourceTree = "<group>"; };
 		CEE52CEB1C0653AC00881648 /* PrefixHeader.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PrefixHeader.pch; sourceTree = "<group>"; };
 		CEE52CEC1C0654DD00881648 /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
 		CEE52CEE1C0654E900881648 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
@@ -208,6 +250,34 @@
 				CEE52D001C066F2700881648 /* LoginRequest.m */,
 				CE45AEC81C0B45AD0092AB75 /* RegisterRequest.h */,
 				CE45AEC91C0B45AD0092AB75 /* RegisterRequest.m */,
+				CEE062371C28B77500ED60C0 /* Business.h */,
+				CEE062381C28B77500ED60C0 /* Business.m */,
+				CEE062391C28B77500ED60C0 /* Contract.h */,
+				CEE0623A1C28B77500ED60C0 /* Contract.m */,
+				CEE0623B1C28B77500ED60C0 /* Hours.h */,
+				CEE0623C1C28B77500ED60C0 /* Hours.m */,
+				CEE0623D1C28B77500ED60C0 /* JobSeeker.h */,
+				CEE0623E1C28B77500ED60C0 /* JobSeeker.m */,
+				CEE0623F1C28B77500ED60C0 /* MJPObject.h */,
+				CEE062401C28B77500ED60C0 /* MJPObject.m */,
+				CEE062411C28B77500ED60C0 /* MJPObjectWithName.h */,
+				CEE062421C28B77500ED60C0 /* MJPObjectWithName.m */,
+				CEE062431C28B77500ED60C0 /* MJPObjectWithNameDesc.h */,
+				CEE062441C28B77500ED60C0 /* MJPObjectWithNameDesc.m */,
+				CEE062451C28B77500ED60C0 /* MJPObjectWithNameShortName.h */,
+				CEE062461C28B77500ED60C0 /* MJPObjectWithNameShortName.m */,
+				CEE062471C28B77500ED60C0 /* MJPObjectWithNameShortNameDesc.h */,
+				CEE062481C28B77500ED60C0 /* MJPObjectWithNameShortNameDesc.m */,
+				CEE062491C28B77500ED60C0 /* Nationality.h */,
+				CEE0624A1C28B77500ED60C0 /* Nationality.m */,
+				CEE0624B1C28B77500ED60C0 /* Profile.h */,
+				CEE0624C1C28B77500ED60C0 /* Profile.m */,
+				CEE0624D1C28B77500ED60C0 /* Role.h */,
+				CEE0624E1C28B77500ED60C0 /* Role.m */,
+				CEE0624F1C28B77500ED60C0 /* Sector.h */,
+				CEE062501C28B77500ED60C0 /* Sector.m */,
+				CEE062511C28B77500ED60C0 /* Sex.h */,
+				CEE062521C28B77500ED60C0 /* Sex.m */,
 				CE45AECB1C0B461A0092AB75 /* User.h */,
 				CE45AECC1C0B461A0092AB75 /* User.m */,
 			);
@@ -407,17 +477,31 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CEE062571C28B77500ED60C0 /* MJPObject.m in Sources */,
 				CE6FD3421C01F9BB001A04C3 /* Login.m in Sources */,
+				CEE062531C28B77500ED60C0 /* Business.m in Sources */,
 				CE45AEC41C0B41390092AB75 /* MJPViewController.m in Sources */,
+				CEE062551C28B77500ED60C0 /* Hours.m in Sources */,
+				CEE0625E1C28B77500ED60C0 /* Role.m in Sources */,
 				CE45AECD1C0B461A0092AB75 /* User.m in Sources */,
 				CE45AECA1C0B45AD0092AB75 /* RegisterRequest.m in Sources */,
 				CEE52CFE1C066AB000881648 /* AuthToken.m in Sources */,
 				CE59737D1C1626630096B001 /* JobSeekerProfileView.m in Sources */,
+				CEE062581C28B77500ED60C0 /* MJPObjectWithName.m in Sources */,
 				CEE04A9F1C0F8A9100697620 /* JobSeekerHome.m in Sources */,
+				CEE062541C28B77500ED60C0 /* Contract.m in Sources */,
+				CEE0625B1C28B77500ED60C0 /* MJPObjectWithNameShortNameDesc.m in Sources */,
 				CEE04AA71C10EE2000697620 /* ErrorTextField.m in Sources */,
 				CE6FD33F1C01F9BB001A04C3 /* AppDelegate.m in Sources */,
 				CEE52D011C066F2700881648 /* LoginRequest.m in Sources */,
+				CEE062601C28B77500ED60C0 /* Sex.m in Sources */,
+				CEE0625C1C28B77500ED60C0 /* Nationality.m in Sources */,
+				CEE062561C28B77500ED60C0 /* JobSeeker.m in Sources */,
+				CEE0625F1C28B77500ED60C0 /* Sector.m in Sources */,
+				CEE062591C28B77500ED60C0 /* MJPObjectWithNameDesc.m in Sources */,
 				CE86847E1C0E570300D4B6C7 /* ScrollingViewController.m in Sources */,
+				CEE0625A1C28B77500ED60C0 /* MJPObjectWithNameShortName.m in Sources */,
+				CEE0625D1C28B77500ED60C0 /* Profile.m in Sources */,
 				CEE04A9C1C0F896300697620 /* RecruiterHome.m in Sources */,
 				CEE04AA21C0F8C6700697620 /* CreateProfile.m in Sources */,
 				CEE52CFA1C065C4100881648 /* API.m in Sources */,

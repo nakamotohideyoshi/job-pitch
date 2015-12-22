@@ -3,22 +3,21 @@
 
 @interface JobSeeker : MJPObject
 @property bool active;
-@property NSString* firstName;
-@property NSString* lastName;
+@property (nonnull) NSString* firstName;
+@property (nonnull) NSString* lastName;
 @property (nullable) NSString* email;
 @property (nullable) NSString* telephone;
 @property (nullable) NSString* mobile;
-@property bool email_public;
-@property bool telephone_public;
-@property bool mobile_public;
 @property (nullable) NSNumber* age;
 @property (nullable) NSNumber* sex;
 @property (nullable) NSNumber* nationality;
-@property bool age_public;
-@property bool sex_public;
-@property bool nationality_public;
+@property bool emailPublic;
+@property bool telephonePublic;
+@property bool mobilePublic;
+@property bool agePublic;
+@property bool sexPublic;
+@property bool nationalityPublic;
 @property (nullable) NSNumber* profile;
-@property (nullable) NSNumber* nationality;
-@property (nullable) NSString* description;
+@property (nullable) NSString* desc;
 @property (nullable) NSString* cv;
 @end

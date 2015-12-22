@@ -2,5 +2,5 @@
 #import "MJPObjectWithName.h"
 
 @interface MJPObjectWithNameDesc : MJPObjectWithName
-@property NSString* description;
+@property (nonnull) NSString* desc;
 @end

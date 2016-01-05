@@ -63,7 +63,12 @@ $(function() {
 						  });
 				  })
 				  .fail(function( data ) {
-					console.log( data );
+					var messageError = ''
+					for (var key in data.responseJSON) {
+						var obj = data.responseJSON[key];
+						messageError = messageError+obj+'<br>';
+					}
+					formAlert('danger', messageError);
 				  });
 			  
 			  });

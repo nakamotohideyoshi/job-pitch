@@ -72,8 +72,8 @@
                     <li class="not_logged_in_menu"><a href="/login">Log in</a></li>
                     <li class="business-link job-seeker-link"><a href="/logout">Log Out</a></li>
 					<li class="not_logged_in_menu"><a href="/registration">Register</a></li>
-                    <li><a href="#">How it Works</a></li>
-                    <li><a href="#">About</a></li>
+                    <li><a href="/mobile-app/">How it Works</a></li>
+                    <li><a href="/about/">About</a></li>
                     <li><a href="/terms-conditions/">Terms and Conditions</a></li>
                     <li><a href="/privacy-policy/">Privacy Policy</a></li>
                   </ul>
@@ -104,8 +104,8 @@
                     <div class="col-md-offset-2 col-md-4">
                         <div class="center-contact-details-footer">
                         	<p>
-                            tel: 123 456 789<br>
-                            <span class="email">e-mail: email@mjp.com</span>
+                            <a href="tel:123456789" class="footer-link-center">tel: 123 456 789</a><br>
+                            <span class="email"><a href="mailto:email@mjp.com" class="footer-link-center">e-mail: email@mjp.com</a></span>
                             </p>
                         </div>
                     </div>
@@ -135,13 +135,15 @@
             <h4 class="modal-title">Login</h4>
           </div>
           <div class="modal-body">
-          	<div class="col-md-8 col-md-offset-2">
-                <form role="form"  action="/api-rest-auth/login/" method="post" id="login">
-                	<div class="alert" role="alert"></div>
-                    <input type="text" class="form-control" id="username" name="username" placeholder="Username">
-                    <input type="password" class="form-control" id="password" name="password" placeholder="Password">
-                    <button type="submit" class="btn btn-custom-modal">Login</button>
-                </form>
+          	<div class="row">
+                <div class="col-md-8 col-md-offset-2">
+                    <form role="form"  action="/api-rest-auth/login/" method="post" id="login">
+                        <div class="alert" role="alert"></div>
+                        <input type="text" class="form-control" id="username" name="username" placeholder="Username">
+                        <input type="password" class="form-control" id="password" name="password" placeholder="Password">
+                        <button type="submit" class="btn btn-custom-modal">Login</button>
+                    </form>
+                </div>
             </div>
           </div>
         </div><!-- /.modal-content -->
@@ -157,15 +159,17 @@
             <h4 class="modal-title">Registration</h4>
           </div>
           <div class="modal-body">
-          	<div class="col-md-8 col-md-offset-2">
-            	<form role="form"  action="/api-auth/login/" method="post" id="register">
-                	<div class="alert" role="alert"></div>
-                    <input type="text" class="form-control" id="reg_username" name="reg_username" placeholder="Username">
-                    <input type="password" class="form-control" id="password1" name="password1" placeholder="Password">
-                    <input type="password" class="form-control" id="password2" name="password2" placeholder="Confirm Password">
-                    <button type="submit" class="btn btn-custom-modal-2">Register</button>
-                    </div>
-                </form>
+          	<div class="row">
+                <div class="col-md-8 col-md-offset-2">
+                    <form role="form"  action="/api-auth/login/" method="post" id="register">
+                        <div class="alert" role="alert"></div>
+                        <input type="text" class="form-control" id="reg_username" name="reg_username" placeholder="Username">
+                        <input type="password" class="form-control" id="password1" name="password1" placeholder="Password">
+                        <input type="password" class="form-control" id="password2" name="password2" placeholder="Confirm Password">
+                        <button type="submit" class="btn btn-custom-modal-2">Register</button>
+                        </div>
+                    </form>
+                </div>
             </div>
           </div>
         </div><!-- /.modal-content -->

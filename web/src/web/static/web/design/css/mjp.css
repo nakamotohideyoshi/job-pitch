@@ -42,7 +42,9 @@ header.carousel .fill {
     background-position: center;
     background-size: cover;
 }
-
+a{
+	outline: none;
+}
 /* 404 Page Styles */
 
 .error-404 {
@@ -135,6 +137,7 @@ footer {
     padding-left: 30px;
     padding-right: 30px;
 	font-size:15px;
+	
 }
 
 .btn-custom:hover, .btn-custom-red:hover, .btn-custom-modal:hover, .btn-custom-modal-2:hover, .btn-home-reg:hover, .btn-home-login:hover{
@@ -522,6 +525,7 @@ footer {
     padding-left: 75px;
     padding-right: 75px;
     font-size: 15px;
+	width: 100%;
 }
 
 .btn-custom-modal-2 {
@@ -532,6 +536,7 @@ footer {
     padding-left: 65px;
     padding-right: 65px;
     font-size: 15px;
+	width: 100%;
 }
 
 #register .alert, #login .alert{
@@ -805,10 +810,22 @@ Web App By Reiss Watson
 	font-size:12px;
 }
 
-	.mobile-logo-home{
-		display:none;
-	}
-
+.mobile-logo-home{
+	display:none;
+}
+.footer-link-center{
+	color:#fff;
+	text-decoration:none;
+}
+.footer-link-center:hover{
+	text-decoration:none;
+}
+.modal-header .close {
+    margin-top: -10px;
+}
+#job_applied_for{
+	margin-top:15px;	
+}
 /* Only show the "mobile menu" fix */
 @media (max-width: 3000px) {
     .navbar-header {

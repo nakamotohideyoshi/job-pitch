@@ -309,4 +309,12 @@ $(function() {
 			formAlert('danger', messageError);
 		  });
 	});
+	$('#regModal').on('hidden.bs.modal', function () {
+		$('.alert').html('');
+		$('.alert').hide();
+	});
+	$('#loginModal').on('hidden.bs.modal', function () {
+		$('.alert').html('');
+		$('.alert').hide();
+	});
 });

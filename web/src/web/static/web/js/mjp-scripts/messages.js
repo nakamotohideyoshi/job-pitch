@@ -58,6 +58,7 @@ $(function() {
 		event.preventDefault();
 		var content = $('#content-form').val();
 			$.post( "/api/messages/", { application:application_id,content:content, csrftoken: getCookie('csrftoken') }).done(function( data ) {
+				$('#content-form').val('');
 				location.reload();
 			  })
 			  .fail(function( data ) {

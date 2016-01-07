@@ -15,7 +15,7 @@
 
 @implementation My_Job_PitchTests
 
-    NSString* apiRoot = @"http://mjp.digitalcrocodile.com:8000";
+NSString* apiRoot = @"http://mjp.digitalcrocodile.com:8000";
 
 - (void)setUp {
     [super setUp];
@@ -123,6 +123,51 @@
                        [expectation fulfill];
                    }];
     
+    [self waitForExpectationsWithTimeout:10000.0 handler:nil];
+}
+
+- (void)login:(API*)api expectation:(XCTestExpectation*)expectation next:(void (^)())next {
+    NSString *username = [NSString stringWithFormat:@"_ios_test_%u", arc4random() % 100000];
+    NSString *password = @"admin1";
+    [api registerWithUsername:username
+                    password1:password
+                    password2:password
+                      success:^(User *user) {
+                          [api loginWithUsername:username password:password
+                                         success:^(AuthToken *authToken) {
+                                             next();
+                                         }
+                                         failure:^(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors) {
+                                             XCTAssert(FALSE);
+                                             [expectation fulfill];
+                                         }];
+                      }
+                      failure:^(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors) {
+                          XCTAssert(FALSE);
+                          [expectation fulfill];
+                      }
+     ];
+}
+
+- (void)testCreateJobSeeker {
+    XCTestExpectation *expectation = [self expectationWithDescription:@"asynchronous request"];
+    API* api = [[API alloc] initWithAPIRoot:apiRoot];
+    JobSeeker* jobSeeker = [[JobSeeker alloc] init];
+    jobSeeker.desc = @"a job seeker";
+    jobSeeker.email = @"an@email.com";
+    jobSeeker.mobile = @"";
+    jobSeeker.telephone = @"";
+    [self login:api expectation:expectation next:^{
+        [api saveJobSeeker:jobSeeker
+                   success:^(JobSeeker *jobSeeker) {
+                       [expectation fulfill];
+                   }
+                   failure:^(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors) {
+                       XCTAssert(FALSE);
+                       [expectation fulfill];
+                   }
+         ];
+    }];
     [self waitForExpectationsWithTimeout:10000.0 handler:nil];
 }
 

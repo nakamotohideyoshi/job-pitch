@@ -61,13 +61,38 @@
                     method:RKRequestMethodPOST
      ];
     
-    
     [self configureResponseMapping:objectManager
                      responseClass:[User class]
                      responseArray:@[@"id", @"username", @"businesses"]
                 responseDictionary:@{@"job_seeker": @"jobSeeker"}
                               path:@"/api-rest-auth/user/"
                             method:RKRequestMethodGET
+     ];
+    
+    [self configureSimpleMapping:objectManager
+                           class:[JobSeeker class]
+                           array:@[@"id",
+                                   @"firstName",
+                                   @"lastName",
+                                   @"email",
+                                   @"telephone",
+                                   @"mobile",
+                                   @"age",
+                                   @"sex",
+                                   @"nationality",
+                                   @"profile",
+                                   @"cv"
+                                   ]
+                      dictionary:@{@"desc": @"description",
+                                   @"emailPublic": @"email_public",
+                                   @"telephonePublic": @"telephone_public",
+                                   @"mobilePublic": @"mobile_public",
+                                   @"agePublic": @"age_public",
+                                   @"sexPublic": @"sex_public",
+                                   @"nationalityPublic": @"nationality_public",
+                                   }
+                            path:@"/api/job-seekers/"
+                          method:RKRequestMethodAny
      ];
     
     RKObjectMapping *errorMapping = [RKObjectMapping mappingForClass: [RKErrorMessage class]];
@@ -110,6 +135,29 @@
      ];
 }
 
+- (void)configureSimpleMapping:(RKObjectManager *)objectManager
+                         class:(Class)class
+                         array:(NSArray *)array
+                    dictionary:(NSDictionary *)dictionary
+                    path:(NSString *)path
+                  method:(RKRequestMethod)method
+{
+    [self configureRequestMapping:objectManager
+                     requestClass:class
+                     requestArray:array
+                requestDictionary:dictionary
+                             path:path
+                           method:method
+     ];
+    
+    [self configureResponseMapping:objectManager
+                     responseClass:class
+                     responseArray:array
+                responseDictionary:dictionary
+                              path:path
+                            method:method
+     ];
+}
 
 - (void)configureRequestMapping:(RKObjectManager *)objectManager
                    requestClass:(Class)requestClass
@@ -244,9 +292,38 @@
                                            success([mappingResult firstObject]);
                                        } failure:^(RKObjectRequestOperation *operation, NSError *error) {
                                            failure(operation, error, [self getMessage:error], [self getErrors:error]);
-                                           
                                        }
      ];
+}
+
+- (void)saveJobSeeker:(JobSeeker*)jobSeeker
+              success:(void (^)(JobSeeker *jobSeeker))success
+              failure:(void (^)(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors))failure;
+{
+    [self clearCookies];
+    if (jobSeeker.id) {
+        [[RKObjectManager sharedManager] putObject:jobSeeker
+                                              path:[NSString stringWithFormat:@"/api/job-seekers/%@/", jobSeeker.id]
+                                         parameters:nil success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
+                                             NSLog(@"JobSeeker created");
+                                             success([mappingResult firstObject]);
+                                         } failure:^(RKObjectRequestOperation *operation, NSError *error) {
+                                             NSLog(@"Error creating jobseeker: %@", error);
+                                             failure(operation, error, [self getMessage:error], [self getErrors:error]);
+                                         }
+         ];
+    } else {
+        [[RKObjectManager sharedManager] postObject:jobSeeker
+                                               path:@"/api/job-seekers/"
+                                         parameters:nil success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
+                                             NSLog(@"JobSeeker created");
+                                             success([mappingResult firstObject]);
+                                         } failure:^(RKObjectRequestOperation *operation, NSError *error) {
+                                             NSLog(@"Error creating jobseeker: %@", error);
+                                             failure(operation, error, [self getMessage:error], [self getErrors:error]);
+                                         }
+         ];
+    }
 }
 
 - (void)logout

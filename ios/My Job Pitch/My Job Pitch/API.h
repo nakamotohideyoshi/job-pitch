@@ -10,15 +10,19 @@
 #import <RestKit/RestKit.h>
 #import "AuthToken.h"
 #import "User.h"
+#import "JobSeeker.h"
 
 @interface API : NSObject
 
 - (id)init;
+
 - (id)initWithAPIRoot:(NSString*)apiRoot;
+
 - (void)loginWithUsername:(NSString*)username
                  password:(NSString*)password
                   success:(void (^)(AuthToken *authToken))success
                   failure:(void (^)(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors))failure;
+
 - (void)registerWithUsername:(NSString*)username
                    password1:(NSString*)password1
                    password2:(NSString*)password2
@@ -27,6 +31,11 @@
 
 - (void)getUser:(void (^)(User *user))success
         failure:(void (^)(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors))failure;
+
+- (void)saveJobSeeker:(JobSeeker*)jobSeeker
+              success:(void (^)(JobSeeker *jobSeeker))success
+              failure:(void (^)(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors))failure;
+
 - (void)logout;
 
 @end

@@ -73,6 +73,7 @@
     jobSeeker.agePublic = self.agePublic.isOn;
     jobSeeker.sexPublic = self.sexPublic.isOn;
     jobSeeker.nationalityPublic = self.nationalityPublic.isOn;
+    jobSeeker.desc = self.descriptionView.text;
 }
 
 -(void)load:(JobSeeker*)jobSeeker
@@ -91,6 +92,7 @@
     self.agePublic.on = jobSeeker.agePublic;
     self.sexPublic.on = jobSeeker.sexPublic;
     self.nationalityPublic.on = jobSeeker.nationalityPublic;
+    self.descriptionView.text = jobSeeker.desc;
 }
 
 @end

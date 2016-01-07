@@ -91,6 +91,18 @@
     if ([self validate]) {
         JobSeeker *jobSeeker = [JobSeeker alloc];
         [jobSeekerProfile save:jobSeeker];
+        [self showProgress:true];
+        [[self appDelegate].api saveJobSeeker:jobSeeker
+                                      success:^(JobSeeker *jobSeeker) {
+                                          [self clearErrors];
+                                          [self performSegueWithIdentifier:@"goto_job_seeker" sender:@"login"];
+                                          [self showProgress:false];
+                                      }
+                                      failure:^(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors) {
+                                          [self handleErrors:errors message:message];
+                                          [self showProgress:false];
+                                      }
+         ];
     }
 }
 

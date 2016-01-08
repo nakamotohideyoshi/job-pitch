@@ -8,11 +8,13 @@
 
 #import <UIKit/UIKit.h>
 #import "API.h"
+#import "User.h"
 
 @interface AppDelegate : UIResponder <UIApplicationDelegate>
 
 @property (strong, nonatomic) UIWindow *window;
 @property (strong, nonatomic, readonly) API *api;
+@property (strong, nonatomic) User *user;
 
 @end
 

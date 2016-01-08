@@ -33,6 +33,10 @@
     [alert show];
 }
 
+- (IBAction)editProfile {
+    [self performSegueWithIdentifier:@"goto_edit_profile" sender:@"home"];
+}
+
 - (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex {
     if (buttonIndex == 1) {
         [self dismissViewControllerAnimated:true completion:^{}];

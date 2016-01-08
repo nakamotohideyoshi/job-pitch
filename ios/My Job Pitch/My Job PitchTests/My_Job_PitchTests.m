@@ -153,6 +153,8 @@ NSString* apiRoot = @"http://mjp.digitalcrocodile.com:8000";
     XCTestExpectation *expectation = [self expectationWithDescription:@"asynchronous request"];
     API* api = [[API alloc] initWithAPIRoot:apiRoot];
     JobSeeker* jobSeeker = [[JobSeeker alloc] init];
+    jobSeeker.firstName = @"Jamie";
+    jobSeeker.lastName = @"Cockburn";
     jobSeeker.desc = @"a job seeker";
     jobSeeker.email = @"an@email.com";
     jobSeeker.mobile = @"";
@@ -160,7 +162,79 @@ NSString* apiRoot = @"http://mjp.digitalcrocodile.com:8000";
     [self login:api expectation:expectation next:^{
         [api saveJobSeeker:jobSeeker
                    success:^(JobSeeker *jobSeeker) {
+                       XCTAssert([jobSeeker.firstName isEqualToString:@"Jamie"]);
+                       XCTAssert([jobSeeker.desc isEqualToString:@"a job seeker"]);
                        [expectation fulfill];
+                   }
+                   failure:^(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors) {
+                       XCTAssert(FALSE);
+                       [expectation fulfill];
+                   }
+         ];
+    }];
+    [self waitForExpectationsWithTimeout:10000.0 handler:nil];
+}
+
+- (void)testLoadJobSeeker {
+    XCTestExpectation *expectation = [self expectationWithDescription:@"asynchronous request"];
+    API* api = [[API alloc] initWithAPIRoot:apiRoot];
+    JobSeeker* jobSeeker = [[JobSeeker alloc] init];
+    jobSeeker.firstName = @"Jamie";
+    jobSeeker.lastName = @"Cockburn";
+    jobSeeker.desc = @"a job seeker";
+    jobSeeker.email = @"an@email.com";
+    jobSeeker.mobile = @"";
+    jobSeeker.telephone = @"";
+    [self login:api expectation:expectation next:^{
+        [api saveJobSeeker:jobSeeker
+                   success:^(JobSeeker *jobSeeker) {
+                       [api loadJobSeekerWithId:jobSeeker.id
+                                        success:^(JobSeeker *jobSeeker) {
+                                            XCTAssert([jobSeeker.firstName isEqualToString:@"Jamie"]);
+                                            XCTAssert([jobSeeker.desc isEqualToString:@"a job seeker"]);
+                                            [expectation fulfill];
+                                        }
+                                        failure:^(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors) {
+                                            XCTAssert(FALSE);
+                                            [expectation fulfill];
+                                        }
+                        ];
+                   }
+                   failure:^(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors) {
+                       XCTAssert(FALSE);
+                       [expectation fulfill];
+                   }
+         ];
+    }];
+    [self waitForExpectationsWithTimeout:10000.0 handler:nil];
+}
+
+- (void)testUpdateJobSeeker {
+    XCTestExpectation *expectation = [self expectationWithDescription:@"asynchronous request"];
+    API* api = [[API alloc] initWithAPIRoot:apiRoot];
+    JobSeeker* jobSeeker = [[JobSeeker alloc] init];
+    jobSeeker.firstName = @"Jamie";
+    jobSeeker.lastName = @"Cockburn";
+    jobSeeker.desc = @"a job seeker";
+    jobSeeker.email = @"an@email.com";
+    jobSeeker.mobile = @"";
+    jobSeeker.telephone = @"";
+    [self login:api expectation:expectation next:^{
+        [api saveJobSeeker:jobSeeker
+                   success:^(JobSeeker *jobSeeker) {
+                       XCTAssert([jobSeeker.firstName isEqualToString:@"Jamie"]);
+                       XCTAssert([jobSeeker.desc isEqualToString:@"a job seeker"]);
+                       jobSeeker.firstName = @"Bob";
+                       [api saveJobSeeker:jobSeeker
+                                  success:^(JobSeeker *jobSeeker) {
+                                      XCTAssert([jobSeeker.firstName isEqualToString:@"Bob"]);
+                                      [expectation fulfill];
+                                  }
+                                  failure:^(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors) {
+                                      XCTAssert(FALSE);
+                                      [expectation fulfill];
+                                  }
+                        ];
                    }
                    failure:^(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors) {
                        XCTAssert(FALSE);

@@ -6,6 +6,7 @@
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="Constraints with non-1.0 multipliers" minToolsVersion="5.1"/>
+        <capability name="Navigation items with more than one left or right bar item" minToolsVersion="7.0"/>
     </dependencies>
     <scenes>
         <!--Login-->
@@ -312,10 +313,10 @@
                                     </navigationItem>
                                 </items>
                             </navigationBar>
-                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="yd0-lH-82v">
+                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="yd0-lH-82v">
                                 <rect key="frame" x="0.0" y="64" width="600" height="536"/>
                                 <subviews>
-                                    <view contentMode="scaleToFill" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="95F-pS-Sf5" userLabel="Content View">
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="95F-pS-Sf5" userLabel="Content View">
                                         <rect key="frame" x="0.0" y="0.0" width="600" height="750"/>
                                         <subviews>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="lFc-Dg-xvb">
@@ -369,7 +370,7 @@
                                                 <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
-                                            <view hidden="YES" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="gAN-df-50q" customClass="JobSeekerProfileView">
+                                            <view hidden="YES" contentMode="scaleToFill" placeholderIntrinsicWidth="infinite" placeholderIntrinsicHeight="607" translatesAutoresizingMaskIntoConstraints="NO" id="gAN-df-50q" customClass="JobSeekerProfileView">
                                                 <rect key="frame" x="13" y="127" width="574" height="607"/>
                                             </view>
                                         </subviews>
@@ -416,13 +417,13 @@
                             <constraint firstItem="ASo-90-FJ1" firstAttribute="width" secondItem="Xz4-8S-hlV" secondAttribute="width" id="HH2-Ri-B3p"/>
                             <constraint firstItem="yd0-lH-82v" firstAttribute="left" secondItem="Xz4-8S-hlV" secondAttribute="left" id="NMD-eV-W3s"/>
                             <constraint firstItem="ASo-90-FJ1" firstAttribute="centerX" secondItem="Xz4-8S-hlV" secondAttribute="centerX" id="PhY-eW-LDv"/>
-                            <constraint firstItem="hJT-K0-hgA" firstAttribute="top" secondItem="Yh5-e3-ne2" secondAttribute="bottom" id="S5d-if-9GD"/>
                             <constraint firstItem="ASo-90-FJ1" firstAttribute="top" secondItem="Xz4-8S-hlV" secondAttribute="top" id="Tcz-tF-poK"/>
                             <constraint firstItem="jhI-1W-Gly" firstAttribute="centerX" secondItem="Xz4-8S-hlV" secondAttribute="centerX" id="VTI-7K-0kJ"/>
                             <constraint firstItem="95F-pS-Sf5" firstAttribute="width" secondItem="Xz4-8S-hlV" secondAttribute="width" id="VW9-GX-zRm"/>
                             <constraint firstItem="hJT-K0-hgA" firstAttribute="left" secondItem="Xz4-8S-hlV" secondAttribute="left" id="YQI-Jo-1dA"/>
                             <constraint firstItem="Qfv-hH-auH" firstAttribute="height" secondItem="Xz4-8S-hlV" secondAttribute="height" multiplier="0.8" id="hBu-9D-ktl"/>
                             <constraint firstAttribute="right" secondItem="yd0-lH-82v" secondAttribute="right" id="icJ-QT-OYW"/>
+                            <constraint firstItem="hJT-K0-hgA" firstAttribute="top" secondItem="Yh5-e3-ne2" secondAttribute="bottom" id="n0N-r4-uNE"/>
                             <constraint firstItem="Qfv-hH-auH" firstAttribute="width" secondItem="Xz4-8S-hlV" secondAttribute="width" multiplier="0.8" id="rfe-4v-4WQ"/>
                             <constraint firstAttribute="bottomMargin" secondItem="yd0-lH-82v" secondAttribute="bottom" id="upi-LA-kco"/>
                         </constraints>
@@ -445,7 +446,7 @@
             </objects>
             <point key="canvasLocation" x="1066" y="481"/>
         </scene>
-        <!--Job Seeker Home-->
+        <!--Home-->
         <scene sceneID="8c0-vk-QXQ">
             <objects>
                 <viewController id="B6U-eH-CfR" customClass="JobSeekerHome" sceneMemberID="viewController">
@@ -469,19 +470,30 @@
                             <constraint firstItem="woJ-aA-IvQ" firstAttribute="width" secondItem="VKz-Fl-eMn" secondAttribute="width" multiplier="0.8" id="Zqd-rG-O2P"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" id="SOC-PA-dFI">
+                    <navigationItem key="navigationItem" title="Home" id="SOC-PA-dFI">
                         <barButtonItem key="leftBarButtonItem" title="Logout" id="7SZ-tm-1Cf">
                             <connections>
                                 <action selector="logout" destination="B6U-eH-CfR" id="BBN-KU-YsL"/>
                             </connections>
                         </barButtonItem>
+                        <rightBarButtonItems>
+                            <barButtonItem title="Edit Profile" id="Y2Z-hZ-Wcu">
+                                <connections>
+                                    <action selector="editProfile" destination="B6U-eH-CfR" id="t70-jF-X2i"/>
+                                </connections>
+                            </barButtonItem>
+                            <barButtonItem title="Messages" id="Kbl-Cx-I42"/>
+                        </rightBarButtonItems>
                     </navigationItem>
+                    <connections>
+                        <segue destination="9sE-YX-o7D" kind="show" identifier="goto_edit_profile" id="Bra-CJ-YQ4"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="wWf-ZI-89N" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1787" y="-263"/>
         </scene>
-        <!--Recruiter Home-->
+        <!--Home-->
         <scene sceneID="MPK-xw-IQi">
             <objects>
                 <viewController id="Bh1-kr-uT8" customClass="RecruiterHome" sceneMemberID="viewController">
@@ -505,7 +517,7 @@
                             <constraint firstItem="gcd-jd-n79" firstAttribute="width" secondItem="yue-X8-nIh" secondAttribute="width" multiplier="0.8" id="o7z-T9-c0f"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" id="fXS-Fo-0Nv">
+                    <navigationItem key="navigationItem" title="Home" id="fXS-Fo-0Nv">
                         <barButtonItem key="leftBarButtonItem" title="Logout" id="Jaj-g5-ihk">
                             <connections>
                                 <action selector="logout" destination="Bh1-kr-uT8" id="0NI-MC-34p"/>
@@ -516,6 +528,77 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="FKu-5p-xn1" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1803" y="1213"/>
+        </scene>
+        <!--Edit Profile-->
+        <scene sceneID="fAt-nl-ie9">
+            <objects>
+                <viewController id="9sE-YX-o7D" customClass="EditProfile" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="4Hl-hq-kfQ"/>
+                        <viewControllerLayoutGuide type="bottom" id="ucr-bE-RNZ"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="siU-Bw-tAy">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="FO0-Lh-UBm">
+                                <rect key="frame" x="290" y="290" width="20" height="20"/>
+                            </activityIndicatorView>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="background_logo" translatesAutoresizingMaskIntoConstraints="NO" id="wc3-a3-SQy">
+                                <rect key="frame" x="60" y="60" width="480" height="480"/>
+                            </imageView>
+                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="CcG-Xl-gtT">
+                                <rect key="frame" x="0.0" y="64" width="600" height="536"/>
+                                <subviews>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="MIw-KS-P2H" userLabel="Content View">
+                                        <rect key="frame" x="0.0" y="0.0" width="600" height="632"/>
+                                        <subviews>
+                                            <view contentMode="scaleToFill" placeholderIntrinsicWidth="infinite" placeholderIntrinsicHeight="600" translatesAutoresizingMaskIntoConstraints="NO" id="NSp-sf-325" customClass="JobSeekerProfileView">
+                                                <rect key="frame" x="13" y="16" width="574" height="600"/>
+                                            </view>
+                                        </subviews>
+                                        <constraints>
+                                            <constraint firstAttribute="bottom" secondItem="NSp-sf-325" secondAttribute="bottom" constant="16" id="ECF-Di-5ft"/>
+                                            <constraint firstItem="NSp-sf-325" firstAttribute="top" secondItem="MIw-KS-P2H" secondAttribute="top" constant="16" id="Mez-wb-ERS"/>
+                                            <constraint firstAttribute="trailingMargin" secondItem="NSp-sf-325" secondAttribute="trailing" constant="5" id="att-Yd-edk"/>
+                                            <constraint firstItem="NSp-sf-325" firstAttribute="leading" secondItem="MIw-KS-P2H" secondAttribute="leadingMargin" constant="5" id="ek5-5h-giq"/>
+                                        </constraints>
+                                    </view>
+                                </subviews>
+                                <constraints>
+                                    <constraint firstAttribute="right" secondItem="MIw-KS-P2H" secondAttribute="right" id="058-6v-yxw"/>
+                                    <constraint firstAttribute="bottom" secondItem="MIw-KS-P2H" secondAttribute="bottom" id="Gzh-Al-71d"/>
+                                    <constraint firstItem="MIw-KS-P2H" firstAttribute="top" secondItem="CcG-Xl-gtT" secondAttribute="top" id="bkV-Jn-TrY"/>
+                                    <constraint firstItem="MIw-KS-P2H" firstAttribute="left" secondItem="CcG-Xl-gtT" secondAttribute="left" id="eZF-sz-c8a"/>
+                                </constraints>
+                            </scrollView>
+                        </subviews>
+                        <color key="backgroundColor" red="0.85098039215686272" green="0.85098039215686272" blue="0.85098039215686272" alpha="1" colorSpace="calibratedRGB"/>
+                        <constraints>
+                            <constraint firstItem="wc3-a3-SQy" firstAttribute="height" secondItem="siU-Bw-tAy" secondAttribute="height" multiplier="0.8" id="3El-Vm-IQg"/>
+                            <constraint firstItem="wc3-a3-SQy" firstAttribute="width" secondItem="siU-Bw-tAy" secondAttribute="width" multiplier="0.8" id="E3I-bF-96J"/>
+                            <constraint firstItem="CcG-Xl-gtT" firstAttribute="top" secondItem="4Hl-hq-kfQ" secondAttribute="bottom" id="GvW-ZZ-fv3"/>
+                            <constraint firstItem="FO0-Lh-UBm" firstAttribute="centerX" secondItem="siU-Bw-tAy" secondAttribute="centerX" id="buw-aW-N3P"/>
+                            <constraint firstItem="wc3-a3-SQy" firstAttribute="centerX" secondItem="siU-Bw-tAy" secondAttribute="centerX" id="eLQ-8x-UHU"/>
+                            <constraint firstItem="CcG-Xl-gtT" firstAttribute="leading" secondItem="siU-Bw-tAy" secondAttribute="leading" id="gse-wY-tF8"/>
+                            <constraint firstAttribute="trailing" secondItem="CcG-Xl-gtT" secondAttribute="trailing" id="lj8-hc-gI4"/>
+                            <constraint firstItem="FO0-Lh-UBm" firstAttribute="centerY" secondItem="siU-Bw-tAy" secondAttribute="centerY" id="nmK-s2-9Kb"/>
+                            <constraint firstItem="MIw-KS-P2H" firstAttribute="width" secondItem="siU-Bw-tAy" secondAttribute="width" id="oI4-WA-36Q"/>
+                            <constraint firstItem="ucr-bE-RNZ" firstAttribute="top" secondItem="CcG-Xl-gtT" secondAttribute="bottom" id="u2E-co-M4Q"/>
+                            <constraint firstItem="wc3-a3-SQy" firstAttribute="centerY" secondItem="siU-Bw-tAy" secondAttribute="centerY" id="wg4-PJ-eZ7"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" title="Edit Profile" id="Ccp-vz-mAh"/>
+                    <connections>
+                        <outlet property="activityIndicator" destination="FO0-Lh-UBm" id="bG7-pX-ryl"/>
+                        <outlet property="jobSeekerProfile" destination="NSp-sf-325" id="1YN-bi-p5G"/>
+                        <outlet property="mainView" destination="MIw-KS-P2H" id="G49-Yf-NWI"/>
+                        <outlet property="scrollView" destination="CcG-Xl-gtT" id="Xld-RN-iCz"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Q8J-BV-iQD" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2555" y="-263"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="Lry-wQ-ILw">

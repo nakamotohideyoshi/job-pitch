@@ -32,6 +32,10 @@
 - (void)getUser:(void (^)(User *user))success
         failure:(void (^)(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors))failure;
 
+- (void)loadJobSeekerWithId:(NSNumber*)pk
+                    success:(void (^)(JobSeeker *jobSeeker))success
+                    failure:(void (^)(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors))failure;
+
 - (void)saveJobSeeker:(JobSeeker*)jobSeeker
               success:(void (^)(JobSeeker *jobSeeker))success
               failure:(void (^)(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors))failure;

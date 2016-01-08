@@ -13,5 +13,6 @@
 }
 
 - (IBAction)logout;
+- (IBAction)editProfile;
 
 @end

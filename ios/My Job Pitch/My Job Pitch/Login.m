@@ -27,6 +27,8 @@
 
 - (void)viewWillAppear:(BOOL)animated
 {
+    [[self appDelegate].api logout];
+    [self appDelegate].user = NULL;
     username.text = @"";
     password.text = @"";
     password2.text = @"";
@@ -39,6 +41,7 @@
 - (void)completeLoginWithUser:(User*)user
 {
     [self clearErrors];
+    [self appDelegate].user = user;
     if (user.jobSeeker) {
         [self performSegueWithIdentifier:@"goto_job_seeker" sender:@"login"];
     } else if ([user.businesses count] > 0) {

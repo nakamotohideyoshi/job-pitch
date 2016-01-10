@@ -36,6 +36,12 @@
     [self showProgress:false];
     registrationForm.hidden = YES;
     loginForm.alpha = 1.0f;
+    self.navigationController.navigationBarHidden = YES;
+}
+
+- (void)viewDidDisappear:(BOOL)animated
+{
+    self.navigationController.navigationBarHidden = NO;
 }
 
 - (void)completeLoginWithUser:(User*)user

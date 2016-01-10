@@ -267,7 +267,7 @@
         <!--Create Profile-->
         <scene sceneID="gzx-OK-5OY">
             <objects>
-                <viewController title="Create Profile" id="4TA-uO-Eyq" customClass="CreateProfile" sceneMemberID="viewController">
+                <viewController id="4TA-uO-Eyq" customClass="CreateProfile" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="Yh5-e3-ne2"/>
                         <viewControllerLayoutGuide type="bottom" id="SNS-ut-f6T"/>
@@ -279,10 +279,6 @@
                             <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="jhI-1W-Gly">
                                 <rect key="frame" x="290" y="290" width="20" height="20"/>
                             </activityIndicatorView>
-                            <view contentMode="scaleToFill" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ASo-90-FJ1">
-                                <rect key="frame" x="0.0" y="0.0" width="600" height="25"/>
-                                <color key="backgroundColor" red="0.96078431372549022" green="0.96078431372549022" blue="0.96078431372549022" alpha="1" colorSpace="calibratedRGB"/>
-                            </view>
                             <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="background_logo" translatesAutoresizingMaskIntoConstraints="NO" id="Qfv-hH-auH">
                                 <rect key="frame" x="60" y="60" width="480" height="480"/>
                             </imageView>
@@ -384,10 +380,7 @@
                             <constraint firstItem="Qfv-hH-auH" firstAttribute="centerX" secondItem="Xz4-8S-hlV" secondAttribute="centerX" id="4Cb-gm-E11"/>
                             <constraint firstItem="jhI-1W-Gly" firstAttribute="centerY" secondItem="Xz4-8S-hlV" secondAttribute="centerY" id="6UJ-8v-vKR"/>
                             <constraint firstItem="Qfv-hH-auH" firstAttribute="centerY" secondItem="Xz4-8S-hlV" secondAttribute="centerY" id="9sv-EY-eNC"/>
-                            <constraint firstItem="ASo-90-FJ1" firstAttribute="width" secondItem="Xz4-8S-hlV" secondAttribute="width" id="HH2-Ri-B3p"/>
                             <constraint firstItem="yd0-lH-82v" firstAttribute="left" secondItem="Xz4-8S-hlV" secondAttribute="left" id="NMD-eV-W3s"/>
-                            <constraint firstItem="ASo-90-FJ1" firstAttribute="centerX" secondItem="Xz4-8S-hlV" secondAttribute="centerX" id="PhY-eW-LDv"/>
-                            <constraint firstItem="ASo-90-FJ1" firstAttribute="top" secondItem="Xz4-8S-hlV" secondAttribute="top" id="Tcz-tF-poK"/>
                             <constraint firstItem="jhI-1W-Gly" firstAttribute="centerX" secondItem="Xz4-8S-hlV" secondAttribute="centerX" id="VTI-7K-0kJ"/>
                             <constraint firstItem="95F-pS-Sf5" firstAttribute="width" secondItem="Xz4-8S-hlV" secondAttribute="width" id="VW9-GX-zRm"/>
                             <constraint firstItem="yd0-lH-82v" firstAttribute="top" secondItem="Yh5-e3-ne2" secondAttribute="bottom" id="am9-3i-yZN"/>
@@ -397,13 +390,18 @@
                             <constraint firstAttribute="bottomMargin" secondItem="yd0-lH-82v" secondAttribute="bottom" id="upi-LA-kco"/>
                         </constraints>
                     </view>
+                    <navigationItem key="navigationItem" title="Create Profile" id="Ckg-4J-Z4h">
+                        <barButtonItem key="leftBarButtonItem" title="Logout" id="uNu-bh-RdO">
+                            <connections>
+                                <action selector="logout" destination="4TA-uO-Eyq" id="qYM-TW-vvZ"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                     <connections>
                         <outlet property="activityIndicator" destination="jhI-1W-Gly" id="yax-vI-wS7"/>
                         <outlet property="jobSeekerProfile" destination="gAN-df-50q" id="TOo-lO-EnB"/>
                         <outlet property="mainView" destination="95F-pS-Sf5" id="1EW-bv-rWH"/>
                         <outlet property="scrollView" destination="yd0-lH-82v" id="BzK-Zq-0Jc"/>
-                        <segue destination="B6U-eH-CfR" kind="custom" identifier="goto_job_seeker" customClass="ReplaceSegue" id="8S3-Vl-o1H"/>
-                        <segue destination="Bh1-kr-uT8" kind="custom" identifier="goto_recruiter" customClass="ReplaceSegue" id="xTS-oB-NpK"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Iub-or-YBE" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -418,7 +416,7 @@
         <!--Home-->
         <scene sceneID="8c0-vk-QXQ">
             <objects>
-                <viewController id="B6U-eH-CfR" customClass="JobSeekerHome" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="job_seeker_home" title="Home" id="B6U-eH-CfR" customClass="JobSeekerHome" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="Ga3-vJ-Dbg"/>
                         <viewControllerLayoutGuide type="bottom" id="Zfz-1n-DLf"/>
@@ -430,19 +428,26 @@
                             <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="background_logo" translatesAutoresizingMaskIntoConstraints="NO" id="woJ-aA-IvQ">
                                 <rect key="frame" x="60" y="60" width="480" height="480"/>
                             </imageView>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="pmf-kY-76p">
+                                <rect key="frame" x="0.0" y="64" width="600" height="536"/>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" red="0.8784313725490196" green="0.8784313725490196" blue="0.8784313725490196" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
+                            <constraint firstItem="pmf-kY-76p" firstAttribute="top" secondItem="Ga3-vJ-Dbg" secondAttribute="bottom" id="GHp-vF-ndh"/>
                             <constraint firstItem="woJ-aA-IvQ" firstAttribute="centerX" secondItem="VKz-Fl-eMn" secondAttribute="centerX" id="Nym-rX-9t2"/>
                             <constraint firstItem="woJ-aA-IvQ" firstAttribute="height" secondItem="VKz-Fl-eMn" secondAttribute="height" multiplier="0.8" id="SNx-ei-YU1"/>
                             <constraint firstItem="woJ-aA-IvQ" firstAttribute="centerY" secondItem="VKz-Fl-eMn" secondAttribute="centerY" id="Tm5-e3-Yso"/>
+                            <constraint firstAttribute="trailing" secondItem="pmf-kY-76p" secondAttribute="trailing" id="YSc-iT-E2F"/>
                             <constraint firstItem="woJ-aA-IvQ" firstAttribute="width" secondItem="VKz-Fl-eMn" secondAttribute="width" multiplier="0.8" id="Zqd-rG-O2P"/>
+                            <constraint firstAttribute="bottomMargin" secondItem="pmf-kY-76p" secondAttribute="bottom" id="b4o-Jq-UZf"/>
+                            <constraint firstItem="pmf-kY-76p" firstAttribute="leading" secondItem="VKz-Fl-eMn" secondAttribute="leading" id="wcm-PR-O29"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Home" id="SOC-PA-dFI">
-                        <barButtonItem key="leftBarButtonItem" title="Logout" id="7SZ-tm-1Cf">
+                        <barButtonItem key="leftBarButtonItem" title="Logout" id="9yk-ag-3Nf">
                             <connections>
-                                <action selector="logout" destination="B6U-eH-CfR" id="BBN-KU-YsL"/>
+                                <action selector="logout" destination="B6U-eH-CfR" id="kVX-LU-vH2"/>
                             </connections>
                         </barButtonItem>
                         <rightBarButtonItems>
@@ -465,7 +470,7 @@
         <!--Companies-->
         <scene sceneID="MPK-xw-IQi">
             <objects>
-                <viewController title="Companies" id="Bh1-kr-uT8" customClass="RecruiterHome" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="recruiter_home" title="Companies" id="Bh1-kr-uT8" customClass="RecruiterHome" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="SGN-Rr-hHW"/>
                         <viewControllerLayoutGuide type="bottom" id="uCS-cf-ZFr"/>
@@ -487,9 +492,9 @@
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Home" id="fXS-Fo-0Nv">
-                        <barButtonItem key="leftBarButtonItem" title="Logout" id="Jaj-g5-ihk">
+                        <barButtonItem key="leftBarButtonItem" title="Logout" id="5KU-uI-j19">
                             <connections>
-                                <action selector="logout" destination="Bh1-kr-uT8" id="0NI-MC-34p"/>
+                                <action selector="logout" destination="Bh1-kr-uT8" id="zfY-pl-TiT"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
@@ -592,8 +597,4 @@
         <image name="head" width="43" height="37"/>
         <image name="logo" width="180" height="180"/>
     </resources>
-    <inferredMetricsTieBreakers>
-        <segue reference="8S3-Vl-o1H"/>
-        <segue reference="xTS-oB-NpK"/>
-    </inferredMetricsTieBreakers>
 </document>

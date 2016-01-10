@@ -15,8 +15,10 @@
     UIViewController *destinationController = (UIViewController*)[self destinationViewController];
     UINavigationController *navigationController = sourceViewController.navigationController;
     // Pop to root view controller (not animated) before pushing
-    [navigationController popToRootViewControllerAnimated:NO];
     [navigationController pushViewController:destinationController animated:YES];
+    NSMutableArray *navigationArray = [[NSMutableArray alloc] initWithArray: navigationController.viewControllers];
+    [navigationArray removeObject:sourceViewController];
+    navigationController.viewControllers = navigationArray;
 }
 
 @end

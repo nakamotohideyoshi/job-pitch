@@ -95,7 +95,7 @@
         [[self appDelegate].api saveJobSeeker:jobSeeker
                                       success:^(JobSeeker *jobSeeker) {
                                           [self clearErrors];
-                                          [self performSegueWithIdentifier:@"goto_job_seeker" sender:@"login"];
+                                          [self replaceWithViewControllerNamed:@"job_seeker_home"];
                                           [self showProgress:false];
                                       }
                                       failure:^(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors) {
@@ -104,6 +104,15 @@
                                       }
          ];
     }
+}
+
+- (void)replaceWithViewControllerNamed:(NSString*)name
+{
+    UIViewController *destinationController = [self.storyboard instantiateViewControllerWithIdentifier:name];
+    [self.navigationController pushViewController:destinationController animated:YES];
+    NSMutableArray *navigationArray = [[NSMutableArray alloc] initWithArray: self.navigationController.viewControllers];
+    [navigationArray removeObject:self];
+    self.navigationController.viewControllers = navigationArray;
 }
 
 @end

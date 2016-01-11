@@ -96,7 +96,6 @@
                                       success:^(JobSeeker *jobSeeker) {
                                           [self clearErrors];
                                           [self replaceWithViewControllerNamed:@"job_seeker_home"];
-                                          [self showProgress:false];
                                       }
                                       failure:^(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors) {
                                           [self handleErrors:errors message:message];

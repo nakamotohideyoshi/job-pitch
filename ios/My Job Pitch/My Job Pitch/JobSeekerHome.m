@@ -16,12 +16,33 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    // Do any additional setup after loading the view.
+    self.swipeView.delegate = self;
 }
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+- (IBAction)connect {
+    [self.swipeView swipeLeft:^{
+        [self nextCard];
+    } complete:^{
+        
+    }];
+}
+
+- (IBAction)dismiss {
+    [self.swipeView swipeRight:^{
+        [self nextCard];
+    } complete:^{
+        
+    }];
+}
+
+- (IBAction)messages
+{
+    
 }
 
 - (IBAction)logout {
@@ -37,20 +58,62 @@
     [self performSegueWithIdentifier:@"goto_edit_profile" sender:@"home"];
 }
 
+- (IBAction)messages:(id)sender {
+}
+
 - (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex {
     if (buttonIndex == 1) {
         [self.navigationController popViewControllerAnimated:true];
     }
 }
 
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
+- (void)dragStarted
+{
+    self.dismissButton.enabled = false;
+    self.connectButton.enabled = false;
 }
-*/
+
+- (void)updateDistance:(CGFloat)distance
+{
+//    [self.directionLabel.superview bringSubviewToFront:self.directionLabel];
+    if (distance > 0) {
+        self.directionLabel.text = @"Dismiss";
+        self.directionLabel.textColor = [UIColor colorWithRed:0.7 green:0 blue:0 alpha:0.8];
+    } else if (distance <= 0) {
+        self.directionLabel.text = @"Connect";
+        self.directionLabel.textColor = [UIColor colorWithRed:0.2 green:0.5 blue:0.1 alpha:0.8];
+    }
+    CGFloat overlayStrength = MIN(fabs(distance) / 60, 1.0);
+    NSLog(@"alpha: %f", overlayStrength);
+    self.directionLabel.alpha = overlayStrength;
+}
+
+- (void)dragComplete:(CGFloat)distance
+{
+    NSLog(@"complete: %f", distance);
+    if (distance >= 80) {
+        [self dismiss];
+    } else if (distance <= -80) {
+        [self connect];
+    } else {
+        [UIView animateWithDuration:0.2
+                         animations:^{
+                             self.directionLabel.alpha = 0;
+                         }
+         ];
+        [self.swipeView returnToOrigin:^{
+            self.directionLabel.alpha = 0;
+            self.connectButton.enabled = true;
+            self.dismissButton.enabled = true;
+        }];
+    }
+}
+
+- (void)nextCard
+{
+    self.connectButton.enabled = true;
+    self.dismissButton.enabled = true;
+    self.directionLabel.alpha = 0;
+}
 
 @end

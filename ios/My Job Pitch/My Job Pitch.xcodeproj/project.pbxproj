@@ -20,6 +20,7 @@
 		CE6FD34A1C01F9BC001A04C3 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CE6FD3481C01F9BC001A04C3 /* LaunchScreen.storyboard */; };
 		CE6FD3551C01F9BC001A04C3 /* My_Job_PitchTests.m in Sources */ = {isa = PBXBuildFile; fileRef = CE6FD3541C01F9BC001A04C3 /* My_Job_PitchTests.m */; };
 		CE8395A81C3EF98F007A8213 /* EditProfile.m in Sources */ = {isa = PBXBuildFile; fileRef = CE8395A71C3EF98F007A8213 /* EditProfile.m */; };
+		CE8395AB1C42F279007A8213 /* SwipeView.m in Sources */ = {isa = PBXBuildFile; fileRef = CE8395AA1C42F279007A8213 /* SwipeView.m */; };
 		CE86847E1C0E570300D4B6C7 /* ScrollingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CE86847D1C0E570300D4B6C7 /* ScrollingViewController.m */; };
 		CEE04A9C1C0F896300697620 /* RecruiterHome.m in Sources */ = {isa = PBXBuildFile; fileRef = CEE04A9B1C0F896300697620 /* RecruiterHome.m */; };
 		CEE04A9F1C0F8A9100697620 /* JobSeekerHome.m in Sources */ = {isa = PBXBuildFile; fileRef = CEE04A9E1C0F8A9100697620 /* JobSeekerHome.m */; };
@@ -89,6 +90,8 @@
 		CE6FD3561C01F9BC001A04C3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		CE8395A61C3EF98F007A8213 /* EditProfile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EditProfile.h; sourceTree = "<group>"; };
 		CE8395A71C3EF98F007A8213 /* EditProfile.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EditProfile.m; sourceTree = "<group>"; };
+		CE8395A91C42F279007A8213 /* SwipeView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SwipeView.h; sourceTree = "<group>"; };
+		CE8395AA1C42F279007A8213 /* SwipeView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SwipeView.m; sourceTree = "<group>"; };
 		CE86847C1C0E570300D4B6C7 /* ScrollingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ScrollingViewController.h; sourceTree = "<group>"; };
 		CE86847D1C0E570300D4B6C7 /* ScrollingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ScrollingViewController.m; sourceTree = "<group>"; };
 		CEE04A9A1C0F896300697620 /* RecruiterHome.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RecruiterHome.h; sourceTree = "<group>"; };
@@ -211,6 +214,8 @@
 				CE59737B1C1626630096B001 /* JobSeekerProfileView.h */,
 				CE59737C1C1626630096B001 /* JobSeekerProfileView.m */,
 				CEE04AA81C10F8FE00697620 /* JobSeekerProfileView.xib */,
+				CE8395A91C42F279007A8213 /* SwipeView.h */,
+				CE8395AA1C42F279007A8213 /* SwipeView.m */,
 				CEE04AA51C10EE2000697620 /* ErrorTextField.h */,
 				CEE04AA61C10EE2000697620 /* ErrorTextField.m */,
 				CEE04AA31C10EAD900697620 /* ErrorTextField.xib */,
@@ -494,6 +499,7 @@
 				CE59737D1C1626630096B001 /* JobSeekerProfileView.m in Sources */,
 				CE8395A81C3EF98F007A8213 /* EditProfile.m in Sources */,
 				CEE062581C28B77500ED60C0 /* MJPObjectWithName.m in Sources */,
+				CE8395AB1C42F279007A8213 /* SwipeView.m in Sources */,
 				CEE04A9F1C0F8A9100697620 /* JobSeekerHome.m in Sources */,
 				CEE062541C28B77500ED60C0 /* Contract.m in Sources */,
 				CEE0625B1C28B77500ED60C0 /* MJPObjectWithNameShortNameDesc.m in Sources */,

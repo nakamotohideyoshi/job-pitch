@@ -6,13 +6,20 @@
 //  Copyright © 2015 SC Labs Ltd. All rights reserved.
 //
 
-#import "ScrollingViewController.h"
+#import "MJPViewController.h"
+#import "SwipeView.h"
 
-@interface JobSeekerHome : ScrollingViewController {
-    
-}
+@interface JobSeekerHome : MJPViewController<SwipeViewDelegate>
 
+@property (weak, nonatomic) IBOutlet UIButton *dismissButton;
+@property (weak, nonatomic) IBOutlet UIButton *connectButton;
+@property (weak, nonatomic) IBOutlet UILabel *directionLabel;
+@property (weak, nonatomic) IBOutlet SwipeView *swipeView;
+
+- (IBAction)connect;
+- (IBAction)dismiss;
 - (IBAction)logout;
 - (IBAction)editProfile;
+- (IBAction)messages;
 
 @end

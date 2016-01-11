@@ -82,7 +82,6 @@
                                       success:^(JobSeeker *jobSeeker) {
                                           [self clearErrors];
                                           [self.navigationController popViewControllerAnimated:true];
-                                          [self showProgress:false];
                                       }
                                       failure:^(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors) {
                                           [self handleErrors:errors message:message];

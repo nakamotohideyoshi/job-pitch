@@ -35,6 +35,7 @@
 @property (weak, nonatomic) IBOutlet UILabel *descriptionError;
 @property (weak, nonatomic) IBOutlet UILabel *descriptionCharactersRemaining;
 @property (weak, nonatomic) IBOutlet UIButton *continueButton;
+
 @property (weak, nonatomic, nullable) id<JobSeekerProfileViewDelegate> delegate;
 
 - (IBAction)continue:(nullable id)sender;

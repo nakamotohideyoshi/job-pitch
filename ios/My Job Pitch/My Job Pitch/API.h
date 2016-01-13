@@ -11,6 +11,8 @@
 #import "AuthToken.h"
 #import "User.h"
 #import "JobSeeker.h"
+#import "Job.h"
+#import "Location.h"
 
 @interface API : NSObject
 
@@ -38,6 +40,10 @@
 
 - (void)saveJobSeeker:(JobSeeker*)jobSeeker
               success:(void (^)(JobSeeker *jobSeeker))success
+              failure:(void (^)(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors))failure;
+
+- (void)loadJobsWithExclusions:(NSArray*)exlusions
+              success:(void (^)(NSArray *jobSeekers))success
               failure:(void (^)(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors))failure;
 
 - (void)logout;

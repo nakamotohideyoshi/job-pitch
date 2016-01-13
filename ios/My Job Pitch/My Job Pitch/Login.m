@@ -29,8 +29,8 @@
 {
     [[self appDelegate].api logout];
     [self appDelegate].user = NULL;
-    username.text = @"";
-    password.text = @"";
+    username.text = @"r68";
+    password.text = @"admin1";
     password2.text = @"";
     [self clearErrors];
     [self showProgress:false];

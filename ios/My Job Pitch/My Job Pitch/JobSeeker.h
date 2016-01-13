@@ -1,7 +1,7 @@
 #import <Foundation/Foundation.h>
-#import "MJPObject.h"
+#import "MJPObjectWithDates.h"
 
-@interface JobSeeker : MJPObject
+@interface JobSeeker : MJPObjectWithDates
 @property bool active;
 @property (nonnull) NSString* firstName;
 @property (nonnull) NSString* lastName;

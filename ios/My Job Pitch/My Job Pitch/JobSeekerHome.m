@@ -75,7 +75,6 @@
 
 - (void)updateDistance:(CGFloat)distance
 {
-//    [self.directionLabel.superview bringSubviewToFront:self.directionLabel];
     if (distance > 0) {
         self.directionLabel.text = @"Dismiss";
         self.directionLabel.textColor = [UIColor colorWithRed:0.7 green:0 blue:0 alpha:0.8];

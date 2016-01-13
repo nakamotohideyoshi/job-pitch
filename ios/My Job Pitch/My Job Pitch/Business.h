@@ -1,7 +1,7 @@
 #import <Foundation/Foundation.h>
-#import "MJPObject.h"
+#import "MJPObjectWithDates.h"
 
-@interface Business : MJPObject
+@interface Business : MJPObjectWithDates
 @property NSString* name;
 @property NSArray* users;
 @property NSArray* locations;

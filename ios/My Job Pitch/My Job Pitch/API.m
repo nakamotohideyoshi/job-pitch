@@ -9,6 +9,7 @@
 #import "API.h"
 #import "LoginRequest.h"
 #import "RegisterRequest.h"
+#import "Image.h"
 
 @implementation API
 {
@@ -43,9 +44,11 @@
               requestClass:[LoginRequest class]
               requestArray:@[@"username", @"password"]
          requestDictionary:nil
+      requestRelationships:nil
              responseClass:[AuthToken class]
              responseArray:@[@"key"]
         responseDictionary:nil
+     responseRelationships:nil
                       path:@"/api-rest-auth/login/"
                     method:RKRequestMethodPOST
      ];
@@ -54,9 +57,11 @@
               requestClass:[RegisterRequest class]
               requestArray:@[@"username", @"password1", @"password2"]
          requestDictionary:nil
+      requestRelationships:nil
              responseClass:[User class]
              responseArray:@[@"id", @"username", @"businesses"]
         responseDictionary:@{@"job_seeker": @"jobSeeker"}
+     responseRelationships:nil
                       path:@"/api-rest-auth/registration/"
                     method:RKRequestMethodPOST
      ];
@@ -65,11 +70,14 @@
                      responseClass:[User class]
                      responseArray:@[@"id", @"username", @"businesses"]
                 responseDictionary:@{@"job_seeker": @"jobSeeker"}
+             responseRelationships:nil
                               path:@"/api-rest-auth/user/"
                             method:RKRequestMethodGET
      ];
     
     NSArray* jobSeekerArray = @[@"id",
+                                @"created",
+                                @"updated",
                                 @"email",
                                 @"telephone",
                                 @"mobile",
@@ -79,8 +87,7 @@
                                 @"profile",
                                 @"cv"
                                 ];
-    NSDictionary* jobSeekerDictionary = @{
-                                          @"firstName": @"first_name",
+    NSDictionary* jobSeekerDictionary = @{@"firstName": @"first_name",
                                           @"lastName": @"last_name",
                                           @"desc": @"description",
                                           @"emailPublic": @"email_public",
@@ -90,10 +97,12 @@
                                           @"sexPublic": @"sex_public",
                                           @"nationalityPublic": @"nationality_public",
                                           };
+    
     [self configureSimpleMapping:objectManager
                            class:[JobSeeker class]
                            array:jobSeekerArray
                       dictionary:jobSeekerDictionary
+                   relationships:nil
                             path:@"/api/job-seekers/"
                           method:RKRequestMethodAny
      ];
@@ -102,16 +111,101 @@
                            class:[JobSeeker class]
                            array:jobSeekerArray
                       dictionary:jobSeekerDictionary
+                   relationships:nil
                             path:@"/api/job-seekers/:pk/"
                           method:RKRequestMethodAny
      ];
-//    [self configureResponseMapping:objectManager
-//                     responseClass:[JobSeeker class]
-//                     responseArray:jobSeekerArray
-//                responseDictionary:[self inverseDictionary:jobSeekerDictionary]
-//                              path:@"/api/job-seekers/:pk/"
-//                            method:RKRequestMethodGET
-//     ];
+    
+    NSArray* imageArray = @[@"id",
+                            @"image",
+                            @"thumbnail",
+                            ];
+    RKObjectMapping *imageMapping = [self
+                                     createResponseMappingForClass:[Image class]
+                                     array:imageArray
+                                     dictionary:nil
+                                     relationships:nil];
+    
+    NSArray *businessArray = @[@"id",
+                               @"created",
+                               @"updated",
+                               @"users",
+                               @"locations",
+                               @"name",
+                               ];
+    NSArray *businessRelationships = @[@{@"source": @"images",
+                                         @"destination": @"images",
+                                         @"mapping": imageMapping,
+                                         }
+                                       ];
+    RKObjectMapping *businessMapping = [self
+                                        createResponseMappingForClass:[Business class]
+                                        array:businessArray
+                                        dictionary:nil
+                                        relationships:[self inverseRelationships:businessRelationships]];
+    
+    NSArray *locationArray = @[@"id",
+                               @"created",
+                               @"updated",
+                               @"business",
+                               @"jobs",
+                               @"name",
+                               @"email",
+                               @"telephone",
+                               @"mobile",
+                               @"longitude",
+                               @"latitude",
+                               @"address",
+                               ];
+    NSDictionary *locationDictionary = @{@"desc": @"description",
+                                         @"emailPublic": @"email_public",
+                                         @"mobilePublic": @"mobile_public",
+                                         @"telephonePublic": @"telephone_public",
+                                         @"placeName": @"place_name",
+                                         @"placeID": @"place_id",
+                                         };
+    NSArray *locationRelationships = @[@{@"source": @"businessData",
+                                         @"destination": @"business_data",
+                                         @"mapping": businessMapping,
+                                         },
+                                       @{@"source": @"images",
+                                         @"destination": @"images",
+                                         @"mapping": imageMapping,
+                                         }];
+    RKObjectMapping *locationMapping = [self
+                                        createResponseMappingForClass:[Location class]
+                                        array:locationArray
+                                        dictionary:[self inverseDictionary:locationDictionary]
+                                        relationships:[self inverseRelationships:locationRelationships]];
+    
+    NSArray* jobArray = @[@"id",
+                          @"created",
+                          @"updated",
+                          @"title",
+                          @"sector",
+                          @"location",
+                          @"contract",
+                          @"hours",
+                          @"status",
+                          ];
+    NSDictionary* jobDictionary = @{@"desc": @"description"};
+    NSArray* jobRelationships = @[@{@"source": @"locationData",
+                                    @"destination": @"location_data",
+                                    @"mapping": locationMapping,
+                                    },
+                                  @{@"source": @"images",
+                                    @"destination": @"images",
+                                    @"mapping": imageMapping,
+                                    }
+                                  ];
+    [self configureResponseMapping:objectManager
+                     responseClass:[Job class]
+                     responseArray:jobArray
+                responseDictionary:[self inverseDictionary:jobDictionary]
+             responseRelationships:[self inverseRelationships:jobRelationships]
+                              path:@"/api/jobs/"
+                            method:RKRequestMethodGET
+     ];
     
     RKObjectMapping *errorMapping = [RKObjectMapping mappingForClass: [RKErrorMessage class]];
     [errorMapping addPropertyMapping:[RKAttributeMapping attributeMappingFromKeyPath: nil
@@ -133,13 +227,28 @@
     return [NSDictionary dictionaryWithObjects:keys forKeys:vals];
 }
 
+- (NSArray*)inverseRelationships:(NSArray*)relationships
+{
+    NSMutableArray *result = [[NSMutableArray alloc] initWithCapacity:[relationships count]];
+    for (NSDictionary *relationship in relationships) {
+        [result addObject:@{@"source": [relationship objectForKey:@"destination"],
+                            @"destination": [relationship objectForKey:@"source"],
+                            @"mapping": [relationship objectForKey:@"mapping"],
+                            }
+         ];
+    }
+    return result;
+}
+
 - (void)configureMapping:(RKObjectManager *)objectManager
             requestClass:(Class)requestClass
             requestArray:(NSArray *)requestArray
        requestDictionary:(NSDictionary *)requestDictionary
+    requestRelationships:(NSArray*)requestRelationships
            responseClass:(Class)responseClass
            responseArray:(NSArray *)responseArray
       responseDictionary:(NSDictionary *)responseDictionary
+   responseRelationships:(NSArray*)responseRelationships
                     path:(NSString *)path
                   method:(RKRequestMethod)method
 {
@@ -147,6 +256,7 @@
                      requestClass:requestClass
                      requestArray:requestArray
                 requestDictionary:requestDictionary
+             requestRelationships:requestRelationships
                              path:path
                            method:method
      ];
@@ -155,6 +265,7 @@
                      responseClass:responseClass
                      responseArray:responseArray
                 responseDictionary:responseDictionary
+             responseRelationships:responseRelationships
                               path:path
                             method:method
      ];
@@ -164,13 +275,15 @@
                          class:(Class)class
                          array:(NSArray *)array
                     dictionary:(NSDictionary *)dictionary
-                    path:(NSString *)path
-                  method:(RKRequestMethod)method
+                 relationships:(NSArray*)relationships
+                          path:(NSString *)path
+                        method:(RKRequestMethod)method
 {
     [self configureRequestMapping:objectManager
                      requestClass:class
                      requestArray:array
                 requestDictionary:dictionary
+             requestRelationships:relationships
                              path:path
                            method:method
      ];
@@ -179,27 +292,50 @@
                      responseClass:class
                      responseArray:array
                 responseDictionary:[self inverseDictionary:dictionary]
+             responseRelationships:[self inverseRelationships:relationships]
                               path:path
                             method:method
      ];
+}
+
+
+- (void)setupMapping:(RKObjectMapping*)mapping
+               array:(NSArray *)array
+          dictionary:(NSDictionary *)dictionary
+       relationships:(NSArray*)relationships
+{
+    if (array != nil) {
+        [mapping addAttributeMappingsFromArray:array];
+    }
+    if (dictionary != nil) {
+        [mapping addAttributeMappingsFromDictionary:dictionary];
+    }
+    if (relationships != nil) {
+        for (NSDictionary *relationship in relationships) {
+            [mapping addPropertyMapping:[RKRelationshipMapping
+                                         relationshipMappingFromKeyPath:[relationship
+                                                                         objectForKey:@"source"]
+                                         toKeyPath:[relationship objectForKey:@"destination"]
+                                         withMapping:[relationship objectForKey:@"mapping"]
+                                         ]];
+        }
+    }
 }
 
 - (void)configureRequestMapping:(RKObjectManager *)objectManager
                    requestClass:(Class)requestClass
                    requestArray:(NSArray *)requestArray
               requestDictionary:(NSDictionary *)requestDictionary
+           requestRelationships:(NSArray*)requestRelationships
                            path:(NSString *)path
                          method:(RKRequestMethod)method
 {
-    // setup object mappings
     RKObjectMapping *requestMapping = [RKObjectMapping requestMapping];
-    if (requestArray != nil) {
-        [requestMapping addAttributeMappingsFromArray:requestArray];
-    }
-    if (requestDictionary != nil) {
-        [requestMapping addAttributeMappingsFromDictionary:requestDictionary];
-    }
-    
+    [self setupMapping:requestMapping
+                 array:requestArray
+            dictionary:requestDictionary
+         relationships:requestRelationships
+     ];
     [objectManager addRequestDescriptor: [RKRequestDescriptor
                                           requestDescriptorWithMapping:requestMapping
                                           objectClass:requestClass
@@ -208,21 +344,34 @@
                                           ]];
 }
 
+- (RKObjectMapping*)createResponseMappingForClass:(Class)class
+                                            array:(NSArray *)array
+                                       dictionary:(NSDictionary *)dictionary
+                                    relationships:(NSArray*)relationships
+{
+    
+    RKObjectMapping *mapping = [RKObjectMapping mappingForClass:class];
+    [self setupMapping:mapping
+                 array:array
+            dictionary:dictionary
+         relationships:relationships
+     ];
+    return mapping;
+}
+
 - (void)configureResponseMapping:(RKObjectManager *)objectManager
                    responseClass:(Class)responseClass
                    responseArray:(NSArray *)responseArray
               responseDictionary:(NSDictionary *)responseDictionary
+           responseRelationships:(NSArray*)responseRelationships
                             path:(NSString *)path
                           method:(RKRequestMethod)method
 {
-    RKObjectMapping *responseMapping = [RKObjectMapping mappingForClass:responseClass];
-    if (responseArray != nil) {
-        [responseMapping addAttributeMappingsFromArray:responseArray];
-    }
-    if (responseDictionary != nil) {
-        [responseMapping addAttributeMappingsFromDictionary:responseDictionary];
-    }
-    
+    RKObjectMapping *responseMapping = [self createResponseMappingForClass:responseClass
+                                                                     array:responseArray
+                                                                dictionary:responseDictionary
+                                                             relationships:responseRelationships
+                                        ];
     RKResponseDescriptor *responseDescriptor =
     [RKResponseDescriptor responseDescriptorWithMapping:responseMapping
                                                  method:method
@@ -363,6 +512,25 @@
                                          }
          ];
     }
+}
+
+- (void)loadJobsWithExclusions:(NSArray*)exclusions
+                       success:(void (^)(NSArray *jobSeekers))success
+                       failure:(void (^)(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors))failure
+{
+    NSString *path = @"/api/jobs/";
+    if (exclusions)
+        path = [NSString stringWithFormat:@"%@?exclude=%@", path, [exclusions componentsJoinedByString:@","]];
+    
+    [[RKObjectManager sharedManager] getObjectsAtPath:path
+                                           parameters:nil
+                                              success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
+                                                  success(mappingResult.array);
+                                              } failure:^(RKObjectRequestOperation *operation, NSError *error) {
+                                                  NSLog(@"Error loading jobs: %@", error);
+                                                  failure(operation, error, [self getMessage:error], [self getErrors:error]);
+                                              }
+     ];
 }
 
 - (void)logout

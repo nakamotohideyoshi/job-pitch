@@ -245,4 +245,31 @@ NSString* apiRoot = @"http://mjp.digitalcrocodile.com:8000";
     [self waitForExpectationsWithTimeout:10000.0 handler:nil];
 }
 
+- (void)testGetJobs
+{
+    XCTestExpectation *expectation = [self expectationWithDescription:@"asynchronous request"];
+    
+    API* api = [[API alloc] initWithAPIRoot:apiRoot];
+    [api loginWithUsername:@"r1" password:@"admin1"
+                   success:^(AuthToken * token) {
+                       [api loadJobsWithExclusions:nil
+                             success:^(NSArray *jobs) {
+                                 [expectation fulfill];
+                             }
+                             failure:^(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors) {
+                                 NSLog(@"error");
+                                 XCTAssert(FALSE);
+                                 [expectation fulfill];
+                             }
+                        ];
+                   }
+                   failure:^(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors) {
+                       NSLog(@"error");
+                       XCTAssert(FALSE);
+                       [expectation fulfill];
+                   }];
+    [self waitForExpectationsWithTimeout:10.0 handler:nil];
+
+}
+
 @end

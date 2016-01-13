@@ -22,6 +22,10 @@
 		CE8395A81C3EF98F007A8213 /* EditProfile.m in Sources */ = {isa = PBXBuildFile; fileRef = CE8395A71C3EF98F007A8213 /* EditProfile.m */; };
 		CE8395AB1C42F279007A8213 /* SwipeView.m in Sources */ = {isa = PBXBuildFile; fileRef = CE8395AA1C42F279007A8213 /* SwipeView.m */; };
 		CE86847E1C0E570300D4B6C7 /* ScrollingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CE86847D1C0E570300D4B6C7 /* ScrollingViewController.m */; };
+		CEC2E4041C45A88100AC0F45 /* Job.m in Sources */ = {isa = PBXBuildFile; fileRef = CEC2E4031C45A88100AC0F45 /* Job.m */; };
+		CEC2E4071C45B4C200AC0F45 /* Location.m in Sources */ = {isa = PBXBuildFile; fileRef = CEC2E4061C45B4C200AC0F45 /* Location.m */; };
+		CEC2E40A1C45B4EC00AC0F45 /* MJPObjectWithDates.m in Sources */ = {isa = PBXBuildFile; fileRef = CEC2E4091C45B4EC00AC0F45 /* MJPObjectWithDates.m */; };
+		CEC2E40D1C45C7AB00AC0F45 /* Image.m in Sources */ = {isa = PBXBuildFile; fileRef = CEC2E40C1C45C7AB00AC0F45 /* Image.m */; };
 		CEE04A9C1C0F896300697620 /* RecruiterHome.m in Sources */ = {isa = PBXBuildFile; fileRef = CEE04A9B1C0F896300697620 /* RecruiterHome.m */; };
 		CEE04A9F1C0F8A9100697620 /* JobSeekerHome.m in Sources */ = {isa = PBXBuildFile; fileRef = CEE04A9E1C0F8A9100697620 /* JobSeekerHome.m */; };
 		CEE04AA21C0F8C6700697620 /* CreateProfile.m in Sources */ = {isa = PBXBuildFile; fileRef = CEE04AA11C0F8C6700697620 /* CreateProfile.m */; };
@@ -94,6 +98,14 @@
 		CE8395AA1C42F279007A8213 /* SwipeView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SwipeView.m; sourceTree = "<group>"; };
 		CE86847C1C0E570300D4B6C7 /* ScrollingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ScrollingViewController.h; sourceTree = "<group>"; };
 		CE86847D1C0E570300D4B6C7 /* ScrollingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ScrollingViewController.m; sourceTree = "<group>"; };
+		CEC2E4021C45A88100AC0F45 /* Job.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Job.h; path = Assets.xcassets/Job.h; sourceTree = "<group>"; };
+		CEC2E4031C45A88100AC0F45 /* Job.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Job.m; path = Assets.xcassets/Job.m; sourceTree = "<group>"; };
+		CEC2E4051C45B4C200AC0F45 /* Location.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Location.h; sourceTree = "<group>"; };
+		CEC2E4061C45B4C200AC0F45 /* Location.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Location.m; sourceTree = "<group>"; };
+		CEC2E4081C45B4EC00AC0F45 /* MJPObjectWithDates.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MJPObjectWithDates.h; sourceTree = "<group>"; };
+		CEC2E4091C45B4EC00AC0F45 /* MJPObjectWithDates.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MJPObjectWithDates.m; sourceTree = "<group>"; };
+		CEC2E40B1C45C7AB00AC0F45 /* Image.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Image.h; sourceTree = "<group>"; };
+		CEC2E40C1C45C7AB00AC0F45 /* Image.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Image.m; sourceTree = "<group>"; };
 		CEE04A9A1C0F896300697620 /* RecruiterHome.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RecruiterHome.h; sourceTree = "<group>"; };
 		CEE04A9B1C0F896300697620 /* RecruiterHome.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RecruiterHome.m; sourceTree = "<group>"; };
 		CEE04A9D1C0F8A9100697620 /* JobSeekerHome.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JobSeekerHome.h; sourceTree = "<group>"; };
@@ -266,10 +278,18 @@
 				CEE0623A1C28B77500ED60C0 /* Contract.m */,
 				CEE0623B1C28B77500ED60C0 /* Hours.h */,
 				CEE0623C1C28B77500ED60C0 /* Hours.m */,
+				CEC2E40B1C45C7AB00AC0F45 /* Image.h */,
+				CEC2E40C1C45C7AB00AC0F45 /* Image.m */,
+				CEC2E4021C45A88100AC0F45 /* Job.h */,
+				CEC2E4031C45A88100AC0F45 /* Job.m */,
 				CEE0623D1C28B77500ED60C0 /* JobSeeker.h */,
 				CEE0623E1C28B77500ED60C0 /* JobSeeker.m */,
+				CEC2E4051C45B4C200AC0F45 /* Location.h */,
+				CEC2E4061C45B4C200AC0F45 /* Location.m */,
 				CEE0623F1C28B77500ED60C0 /* MJPObject.h */,
 				CEE062401C28B77500ED60C0 /* MJPObject.m */,
+				CEC2E4081C45B4EC00AC0F45 /* MJPObjectWithDates.h */,
+				CEC2E4091C45B4EC00AC0F45 /* MJPObjectWithDates.m */,
 				CEE062411C28B77500ED60C0 /* MJPObjectWithName.h */,
 				CEE062421C28B77500ED60C0 /* MJPObjectWithName.m */,
 				CEE062431C28B77500ED60C0 /* MJPObjectWithNameDesc.h */,
@@ -491,6 +511,7 @@
 				CE6FD3421C01F9BB001A04C3 /* Login.m in Sources */,
 				CEE062531C28B77500ED60C0 /* Business.m in Sources */,
 				CE45AEC41C0B41390092AB75 /* MJPViewController.m in Sources */,
+				CEC2E4071C45B4C200AC0F45 /* Location.m in Sources */,
 				CEE062551C28B77500ED60C0 /* Hours.m in Sources */,
 				CEE0625E1C28B77500ED60C0 /* Role.m in Sources */,
 				CE45AECD1C0B461A0092AB75 /* User.m in Sources */,
@@ -506,6 +527,7 @@
 				CEE04AA71C10EE2000697620 /* ErrorTextField.m in Sources */,
 				CE6FD33F1C01F9BB001A04C3 /* AppDelegate.m in Sources */,
 				CEE52D011C066F2700881648 /* LoginRequest.m in Sources */,
+				CEC2E40A1C45B4EC00AC0F45 /* MJPObjectWithDates.m in Sources */,
 				CEE062601C28B77500ED60C0 /* Sex.m in Sources */,
 				CEE0625C1C28B77500ED60C0 /* Nationality.m in Sources */,
 				CEE062561C28B77500ED60C0 /* JobSeeker.m in Sources */,
@@ -514,10 +536,12 @@
 				CE86847E1C0E570300D4B6C7 /* ScrollingViewController.m in Sources */,
 				CEE0625A1C28B77500ED60C0 /* MJPObjectWithNameShortName.m in Sources */,
 				CEE0625D1C28B77500ED60C0 /* Profile.m in Sources */,
+				CEC2E4041C45A88100AC0F45 /* Job.m in Sources */,
 				CEE04A9C1C0F896300697620 /* RecruiterHome.m in Sources */,
 				CEE04AA21C0F8C6700697620 /* CreateProfile.m in Sources */,
 				CEE52CFA1C065C4100881648 /* API.m in Sources */,
 				CE6FD33C1C01F9BB001A04C3 /* main.m in Sources */,
+				CEC2E40D1C45C7AB00AC0F45 /* Image.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -43,8 +43,32 @@
               failure:(void (^)(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors))failure;
 
 - (void)loadJobsWithExclusions:(NSArray*)exlusions
-              success:(void (^)(NSArray *jobSeekers))success
+                       success:(void (^)(NSArray *jobSeekers))success
+                       failure:(void (^)(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors))failure;
+
+- (void)loadHours:(void (^)(NSArray *hours))success
+          failure:(void (^)(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors))failure;
+
+- (void)loadContracts:(void (^)(NSArray *contracts))success
               failure:(void (^)(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors))failure;
+
+- (void)loadSexes:(void (^)(NSArray *sexes))success
+          failure:(void (^)(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors))failure;
+
+- (void)loadNationalities:(void (^)(NSArray *nationalities))success
+                  failure:(void (^)(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors))failure;
+
+- (void)loadSectors:(void (^)(NSArray *sectors))success
+            failure:(void (^)(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors))failure;
+
+- (void)loadJobStatuses:(void (^)(NSArray *jobStatuses))success
+                failure:(void (^)(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors))failure;
+
+- (void)loadApplicationStatuses:(void (^)(NSArray *applicationStatuses))success
+                        failure:(void (^)(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors))failure;
+
+- (void)loadRoles:(void (^)(NSArray *roles))success
+          failure:(void (^)(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors))failure;
 
 - (void)logout;
 

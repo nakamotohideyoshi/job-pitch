@@ -527,6 +527,9 @@
                                     <constraint firstAttribute="trailing" secondItem="vw2-Ei-nOB" secondAttribute="trailing" constant="20" id="u15-IG-TEM"/>
                                 </constraints>
                             </view>
+                            <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="0m9-Xc-RT2">
+                                <rect key="frame" x="290" y="290" width="20" height="20"/>
+                            </activityIndicatorView>
                         </subviews>
                         <color key="backgroundColor" red="0.8784313725490196" green="0.8784313725490196" blue="0.8784313725490196" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
@@ -537,6 +540,8 @@
                             <constraint firstAttribute="trailing" secondItem="pmf-kY-76p" secondAttribute="trailing" id="YSc-iT-E2F"/>
                             <constraint firstItem="woJ-aA-IvQ" firstAttribute="width" secondItem="VKz-Fl-eMn" secondAttribute="width" multiplier="0.8" id="Zqd-rG-O2P"/>
                             <constraint firstAttribute="bottomMargin" secondItem="pmf-kY-76p" secondAttribute="bottom" id="b4o-Jq-UZf"/>
+                            <constraint firstItem="0m9-Xc-RT2" firstAttribute="centerX" secondItem="VKz-Fl-eMn" secondAttribute="centerX" id="ceo-YY-wUB"/>
+                            <constraint firstItem="0m9-Xc-RT2" firstAttribute="centerY" secondItem="VKz-Fl-eMn" secondAttribute="centerY" id="gV7-Kl-X38"/>
                             <constraint firstItem="pmf-kY-76p" firstAttribute="leading" secondItem="VKz-Fl-eMn" secondAttribute="leading" id="wcm-PR-O29"/>
                         </constraints>
                     </view>
@@ -560,11 +565,13 @@
                         </rightBarButtonItems>
                     </navigationItem>
                     <connections>
+                        <outlet property="activityIndicator" destination="0m9-Xc-RT2" id="5QR-GG-mpu"/>
                         <outlet property="connectButton" destination="6yS-vE-ymz" id="vbo-5F-MI3"/>
                         <outlet property="descriptionLabel" destination="EYe-fb-xHA" id="YwB-gr-X8V"/>
                         <outlet property="directionLabel" destination="52L-RD-C24" id="02Z-uy-SvQ"/>
                         <outlet property="dismissButton" destination="cNh-na-cts" id="31m-f5-n21"/>
                         <outlet property="extraLabel" destination="VBC-EA-t1B" id="EtV-hY-5Op"/>
+                        <outlet property="mainView" destination="pmf-kY-76p" id="NuM-c9-7mf"/>
                         <outlet property="nameLabel" destination="B5K-17-alo" id="07O-uh-BJ8"/>
                         <outlet property="swipeView" destination="vw2-Ei-nOB" id="v9U-BX-PS7"/>
                         <segue destination="9sE-YX-o7D" kind="show" identifier="goto_edit_profile" id="Bra-CJ-YQ4"/>

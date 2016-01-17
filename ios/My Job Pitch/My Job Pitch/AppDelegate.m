@@ -8,9 +8,17 @@
 
 #import "AppDelegate.h"
 #import "API.h"
+#import "Hours.h"
+#import "Contract.h"
+#import "Sector.h"
+#import "Sex.h"
+#import "Nationality.h"
+#import "ApplicationStatus.h"
+#import "JobStatus.h"
+#import "Role.h"
 
 @interface AppDelegate ()
-
+@property Boolean loaded;
 @end
 
 @implementation AppDelegate
@@ -18,6 +26,7 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     _api = [[API alloc] init];
+    self.loaded = false;
     return YES;
 }
 
@@ -41,6 +50,129 @@
 
 - (void)applicationWillTerminate:(UIApplication *)application {
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
+}
+
+- (void)loadData:(void (^)())success
+         failure:(void (^)(NSDictionary *errors, NSString *message))failure
+{
+    [self.api loadHours:^(NSArray *hours) {
+        @synchronized(self) {
+            self.hours = hours;
+            if ([self isLoaded]) success();
+        }
+    } failure:^(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors) {
+        failure(errors, message);
+    }];
+    
+    [self.api loadContracts:^(NSArray *contracts) {
+        @synchronized(self) {
+            self.contracts = contracts;
+            if ([self isLoaded]) success();
+        }
+    } failure:^(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors) {
+        failure(errors, message);
+    }];
+    
+    [self.api loadSexes:^(NSArray *sexes) {
+        @synchronized(self) {
+            self.sexes = sexes;
+            if ([self isLoaded]) success();
+        }
+    } failure:^(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors) {
+        failure(errors, message);
+    }];
+    
+    [self.api loadNationalities:^(NSArray *nationalities) {
+        @synchronized(self) {
+            self.nationalities = nationalities;
+            if ([self isLoaded]) success();
+        }
+    } failure:^(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors) {
+        failure(errors, message);
+    }];
+    
+    [self.api loadSectors:^(NSArray *sectors) {
+        @synchronized(self) {
+            self.sectors = sectors;
+            if ([self isLoaded]) success();
+        }
+    } failure:^(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors) {
+        failure(errors, message);
+    }];
+    
+    
+    [self.api loadJobStatuses:^(NSArray *jobStatuses) {
+        @synchronized(self) {
+            self.jobStatuses = jobStatuses;
+            if ([self isLoaded]) success();
+        }
+    } failure:^(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors) {
+        failure(errors, message);
+    }];
+    
+    [self.api loadApplicationStatuses:^(NSArray *applicationStatuses) {
+        @synchronized(self) {
+            self.applicationStatuses = applicationStatuses;
+            if ([self isLoaded]) success();
+        }
+    } failure:^(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors) {
+        failure(errors, message);
+    }];
+    
+    [self.api loadRoles:^(NSArray *roles) {
+        @synchronized(self) {
+            self.roles = roles;
+            if ([self isLoaded]) success();
+        }
+    } failure:^(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors) {
+        failure(errors, message);
+    }];
+}
+
+- (Boolean)isLoaded
+{
+    self.loaded =
+        self.hours != nil &&
+        self.contracts != nil &&
+        self.sexes != nil &&
+        self.nationalities != nil &&
+        self.sectors != nil &&
+        self.jobStatuses != nil &&
+        self.applicationStatuses != nil &&
+        self.roles != nil;
+    return self.loaded;
+}
+
+- (Hours*)getHours:(NSNumber*)id
+{
+    for (Hours *hours in self.hours)
+        if (hours.id == id)
+            return hours;
+    return nil;
+}
+
+- (Hours*)getHoursByName:(NSString*)name
+{
+    for (Hours *hours in self.hours)
+        if (hours.name == name)
+            return hours;
+    return nil;
+}
+
+- (Contract*)getContract:(NSNumber*)id
+{
+    for (Contract *contract in self.contracts)
+        if (contract.id == id)
+            return contract;
+    return nil;
+}
+
+- (Contract*)getContractByName:(NSString*)name;
+{
+    for (Contract *contract in self.contracts)
+        if (contract.name == name)
+            return contract;
+    return nil;
 }
 
 @end

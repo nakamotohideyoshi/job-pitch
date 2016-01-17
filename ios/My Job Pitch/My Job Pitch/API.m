@@ -10,6 +10,14 @@
 #import "LoginRequest.h"
 #import "RegisterRequest.h"
 #import "Image.h"
+#import "Hours.h"
+#import "Contract.h"
+#import "Sector.h"
+#import "Sex.h"
+#import "Nationality.h"
+#import "ApplicationStatus.h"
+#import "JobStatus.h"
+#import "Role.h"
 
 @implementation API
 {
@@ -206,6 +214,82 @@
                               path:@"/api/jobs/"
                             method:RKRequestMethodGET
      ];
+    
+    NSArray *nameArray = @[@"id",
+                           @"name",
+                           ];
+    NSDictionary *nameDescDictionary = @{@"desc": @"description"};
+    NSDictionary *shortNameDictionary = @{@"shortName": @"short_name"};
+    NSDictionary *shortNameDescDictionary = @{@"shortName": @"short_name",
+                                              @"desc": @"description",
+                                              };
+    NSDictionary *friendlyNameDescDictionary = @{@"shortName": @"short_name",
+                                              @"desc": @"description",
+                                              };
+    
+    [self configureResponseMapping:objectManager
+                     responseClass:[Hours class]
+                     responseArray:nameArray
+                responseDictionary:shortNameDescDictionary
+             responseRelationships:nil
+                              path:@"/api/hours/"
+                            method:RKRequestMethodGET];
+    
+    [self configureResponseMapping:objectManager
+                     responseClass:[Contract class]
+                     responseArray:nameArray
+                responseDictionary:shortNameDescDictionary
+             responseRelationships:nil
+                              path:@"/api/contracts/"
+                            method:RKRequestMethodGET];
+    
+    [self configureResponseMapping:objectManager
+                     responseClass:[Sector class]
+                     responseArray:nameArray
+                responseDictionary:nameDescDictionary
+             responseRelationships:nil
+                              path:@"/api/sectors/"
+                            method:RKRequestMethodGET];
+    
+    [self configureResponseMapping:objectManager
+                     responseClass:[Sex class]
+                     responseArray:nameArray
+                responseDictionary:shortNameDescDictionary
+             responseRelationships:nil
+                              path:@"/api/sexes/"
+                            method:RKRequestMethodGET];
+    
+    [self configureResponseMapping:objectManager
+                     responseClass:[Nationality class]
+                     responseArray:nameArray
+                responseDictionary:shortNameDictionary
+             responseRelationships:nil
+                              path:@"/api/nationalities/"
+                            method:RKRequestMethodGET];
+    
+    [self configureResponseMapping:objectManager
+                     responseClass:[JobStatus class]
+                     responseArray:nameArray
+                responseDictionary:friendlyNameDescDictionary
+             responseRelationships:nil
+                              path:@"/api/job-statuses/"
+                            method:RKRequestMethodGET];
+    
+    [self configureResponseMapping:objectManager
+                     responseClass:[ApplicationStatus class]
+                     responseArray:nameArray
+                responseDictionary:friendlyNameDescDictionary
+             responseRelationships:nil
+                              path:@"/api/application-statuses/"
+                            method:RKRequestMethodGET];
+    
+    [self configureResponseMapping:objectManager
+                     responseClass:[Role class]
+                     responseArray:nameArray
+                responseDictionary:nil
+             responseRelationships:nil
+                              path:@"/api/roles/"
+                            method:RKRequestMethodGET];
     
     RKObjectMapping *errorMapping = [RKObjectMapping mappingForClass: [RKErrorMessage class]];
     [errorMapping addPropertyMapping:[RKAttributeMapping attributeMappingFromKeyPath: nil
@@ -528,6 +612,94 @@
                                                   success(mappingResult.array);
                                               } failure:^(RKObjectRequestOperation *operation, NSError *error) {
                                                   NSLog(@"Error loading jobs: %@", error);
+                                                  failure(operation, error, [self getMessage:error], [self getErrors:error]);
+                                              }
+     ];
+}
+
+- (void)loadHours:(void (^)(NSArray *hours))success
+          failure:(void (^)(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors))failure
+{
+    [self loadObjectsAtPath:@"/api/hours/"
+                    success:success
+                    failure:failure
+     ];
+}
+
+- (void)loadContracts:(void (^)(NSArray *contracts))success
+              failure:(void (^)(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors))failure
+{
+    [self loadObjectsAtPath:@"/api/contracts/"
+                    success:success
+                    failure:failure
+     ];
+}
+
+- (void)loadSexes:(void (^)(NSArray *sexes))success
+          failure:(void (^)(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors))failure
+{
+    
+    [self loadObjectsAtPath:@"/api/sexes/"
+                    success:success
+                    failure:failure
+     ];
+}
+
+- (void)loadNationalities:(void (^)(NSArray *nationalities))success
+                  failure:(void (^)(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors))failure
+{
+    [self loadObjectsAtPath:@"/api/nationalities/"
+                    success:success
+                    failure:failure
+     ];
+}
+
+- (void)loadSectors:(void (^)(NSArray *sectors))success
+                  failure:(void (^)(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors))failure
+{
+    [self loadObjectsAtPath:@"/api/sectors/"
+                    success:success
+                    failure:failure
+     ];
+}
+
+- (void)loadJobStatuses:(void (^)(NSArray *jobStatuses))success
+                failure:(void (^)(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors))failure
+{
+    [self loadObjectsAtPath:@"/api/job-statuses/"
+                    success:success
+                    failure:failure
+     ];
+}
+
+- (void)loadApplicationStatuses:(void (^)(NSArray *applicationStatuses))success
+                failure:(void (^)(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors))failure
+{
+    [self loadObjectsAtPath:@"/api/application-statuses/"
+                    success:success
+                    failure:failure
+     ];
+}
+
+- (void)loadRoles:(void (^)(NSArray *roles))success
+                failure:(void (^)(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors))failure
+{
+    [self loadObjectsAtPath:@"/api/roles/"
+                    success:success
+                    failure:failure
+     ];
+}
+
+- (void)loadObjectsAtPath:(NSString*)path
+                  success:(void (^)(NSArray *objects))success
+                  failure:(void (^)(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors))failure
+{
+    [[RKObjectManager sharedManager] getObjectsAtPath:path
+                                           parameters:nil
+                                              success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
+                                                  success(mappingResult.array);
+                                              } failure:^(RKObjectRequestOperation *operation, NSError *error) {
+                                                  NSLog(@"Error loading objects: %@", error);
                                                   failure(operation, error, [self getMessage:error], [self getErrors:error]);
                                               }
      ];

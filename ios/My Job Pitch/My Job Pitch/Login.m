@@ -29,7 +29,7 @@
 {
     [[self appDelegate].api logout];
     [self appDelegate].user = NULL;
-    username.text = @"r68";
+    username.text = @"j1";
     password.text = @"admin1";
     password2.text = @"";
     [self clearErrors];
@@ -48,13 +48,18 @@
 {
     [self clearErrors];
     [self appDelegate].user = user;
-    if (user.jobSeeker) {
-        [self performSegueWithIdentifier:@"goto_job_seeker" sender:@"login"];
-    } else if ([user.businesses count] > 0) {
-        [self performSegueWithIdentifier:@"goto_recruiter" sender:@"login"];
-    } else {
-        [self performSegueWithIdentifier:@"goto_create_profile" sender:@"login"];
-    }
+    [self.appDelegate loadData:^() {
+        if (user.jobSeeker) {
+            [self performSegueWithIdentifier:@"goto_job_seeker" sender:@"login"];
+        } else if ([user.businesses count] > 0) {
+            [self performSegueWithIdentifier:@"goto_recruiter" sender:@"login"];
+        } else {
+            [self performSegueWithIdentifier:@"goto_create_profile" sender:@"login"];
+        }
+    } failure:^(NSDictionary *errors, NSString *message) {
+        [self handleErrors:errors message:message];
+        [self showProgress:false];
+    }];
 }
 
 - (NSMutableDictionary *)performValidation
@@ -134,7 +139,6 @@
         }];
     }
 }
-
 
 - (IBAction)registrationForm:(id)sender {
     NSLog(@"registrationForm");

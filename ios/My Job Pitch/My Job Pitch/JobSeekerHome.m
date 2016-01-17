@@ -9,7 +9,11 @@
 #import "JobSeekerHome.h"
 
 @interface JobSeekerHome ()
-
+@property (nonnull) NSMutableArray* jobs;
+@property (nonnull) NSMutableArray* seen;
+@property (nullable) Job* job;
+@property NSUInteger lastLoad;
+@property Boolean loading;
 @end
 
 @implementation JobSeekerHome
@@ -17,6 +21,11 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.swipeView.delegate = self;
+    self.jobs = [[NSMutableArray alloc] init];
+    self.seen = [[NSMutableArray alloc] init];
+    self.job = nil;
+    self.lastLoad = 999;
+    [self nextCard];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -27,16 +36,12 @@
 - (IBAction)connect {
     [self.swipeView swipeLeft:^{
         [self nextCard];
-    } complete:^{
-        
     }];
 }
 
 - (IBAction)dismiss {
     [self.swipeView swipeRight:^{
         [self nextCard];
-    } complete:^{
-        
     }];
 }
 
@@ -58,8 +63,6 @@
     [self performSegueWithIdentifier:@"goto_edit_profile" sender:@"home"];
 }
 
-- (IBAction)messages:(id)sender {
-}
 
 - (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex {
     if (buttonIndex == 1) {
@@ -108,11 +111,78 @@
     }
 }
 
+- (void)loadJobs:(void (^)())success
+         failure:(void (^)())failure
+{
+    self.loading = true;
+    [self.appDelegate.api loadJobsWithExclusions:self.seen
+                                         success:^(NSArray *jobs) {
+                                             @synchronized(self) {
+                                                 self.lastLoad = [jobs count];
+                                                 [self.jobs addObjectsFromArray:jobs];
+                                                 self.loading = false;
+                                                 NSMutableArray *ids = [[NSMutableArray alloc] init];
+                                                 for (Job *job in jobs)
+                                                     [ids addObject:job.id];
+                                                 [self.seen addObjectsFromArray:ids];
+                                                 NSLog(@"loaded: %@", [ids componentsJoinedByString:@", "]);
+                                                 success();
+                                             }
+                                         }
+                                         failure:^(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors) {
+                                             [[[UIAlertView alloc] initWithTitle:@"Error"
+                                                                         message:@"Error loading jobs"
+                                                                        delegate:self
+                                                               cancelButtonTitle:@"Okay"
+                                                               otherButtonTitles:nil] show];
+                                             @synchronized(self) {
+                                                 self.loading = false;
+                                                 failure();
+                                             }
+                                         }
+     ];
+}
+
 - (void)nextCard
 {
-    self.connectButton.enabled = true;
-    self.dismissButton.enabled = true;
-    self.directionLabel.alpha = 0;
+    @synchronized(self) {
+        self.job = nil;
+        if ([self.jobs count] > 0) {
+            self.job = self.jobs.firstObject;
+            [self.jobs removeObject:self.job];
+        }
+        if ([self.jobs count] < 5 && !self.loading) {
+            if (self.lastLoad > 0) {
+                if (self.job) {
+                    [self loadJobs:^{} failure:^{}];
+                } else {
+                    [self loadJobs:^{
+                        [self nextCard];
+                    } failure:^{}];
+                }
+            }
+        }
+        if (self.job) {
+            [self showProgress:false];
+            self.nameLabel.text = self.job.title;
+            self.descriptionLabel.text = self.job.desc;
+            Hours *hours = [self.appDelegate getHours:self.job.hours];
+            Contract *contract = [self.appDelegate getContract:self.job.contract];
+            if ([contract isEqual:[self.appDelegate getContractByName:CONTRACT_PERMANENT]])
+                self.extraLabel.text = hours.name;
+            else
+                self.extraLabel.text = [NSString stringWithFormat:@"%@ (%@)", hours.name, contract.shortName];
+            self.connectButton.enabled = true;
+            self.dismissButton.enabled = true;
+            self.directionLabel.alpha = 0;
+            [self.swipeView nextCard:^{}];
+        } else if (self.loading) {
+            [self showProgress:true];
+        } else {
+            // TODO show reset menu
+            NSLog(@"out");
+        }
+    }
 }
 
 @end

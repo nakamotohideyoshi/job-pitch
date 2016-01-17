@@ -1,13 +1,13 @@
 //
-//  Sectors.h
+//  ApplicationStatus.m
 //  My Job Pitch
 //
 //  Created by user on 17/01/2016.
 //  Copyright © 2016 SC Labs Ltd. All rights reserved.
 //
 
-#import "MJPObjectWithNameDesc.h"
+#import "ApplicationStatus.h"
 
-@interface Sector : MJPObjectWithNameDesc
+@implementation ApplicationStatus
 
 @end

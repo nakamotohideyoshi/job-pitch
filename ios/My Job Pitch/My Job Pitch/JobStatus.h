@@ -1,5 +1,5 @@
 //
-//  Sectors.h
+//  JobStatus.h
 //  My Job Pitch
 //
 //  Created by user on 17/01/2016.
@@ -8,6 +8,6 @@
 
 #import "MJPObjectWithNameDesc.h"
 
-@interface Sector : MJPObjectWithNameDesc
-
+@interface JobStatus : MJPObjectWithNameDesc
+@property NSString* friendlyName;
 @end

@@ -86,7 +86,7 @@
                      }];
 }
 
-- (void)swipeRight:(void(^)())nextCard complete:(void(^)())completion
+- (void)swipeRight:(void(^)())completion
 {
     if (self.originalPoint.x == 0 && self.originalPoint.y == 0)
         self.originalPoint = self.center;
@@ -97,12 +97,11 @@
                          self.alpha = 0;
                      }
                      completion:^(BOOL finished) {
-                         nextCard();
-                         [self nextCard:nextCard];
+                         completion();
                      }];
 }
 
-- (void)swipeLeft:(void(^)())nextCard complete:(void(^)())completion
+- (void)swipeLeft:(void(^)())completion
 {
     if (self.originalPoint.x == 0 && self.originalPoint.y == 0)
         self.originalPoint = self.center;
@@ -113,8 +112,7 @@
                          self.alpha = 0;
                      }
                      completion:^(BOOL finished) {
-                         nextCard();
-                         [self nextCard:completion];
+                         completion();
                      }];
 }
 

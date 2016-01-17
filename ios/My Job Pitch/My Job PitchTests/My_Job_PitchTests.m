@@ -9,6 +9,7 @@
 #import <XCTest/XCTest.h>
 #import "API.h"
 #import "AuthToken.h"
+#import "AppDelegate.h"
 
 @interface My_Job_PitchTests : XCTestCase
 @end
@@ -36,7 +37,23 @@ NSString* apiRoot = @"http://mjp.digitalcrocodile.com:8000";
     [api loginWithUsername:@"r1" password:@"admin1"
                    success:^(AuthToken * token) {
                        XCTAssertNotNil(token.key);
-                       [expectation fulfill];
+                       AppDelegate *appDelegate = [[AppDelegate alloc] init];
+                       appDelegate.api = api;
+                       [appDelegate loadData:^{
+                           XCTAssertNotNil(appDelegate.hours);
+                           XCTAssertNotNil(appDelegate.contracts);
+                           XCTAssertNotNil(appDelegate.sexes);
+                           XCTAssertNotNil(appDelegate.nationalities);
+                           XCTAssertNotNil(appDelegate.sectors);
+                           XCTAssertNotNil(appDelegate.jobStatuses);
+                           XCTAssertNotNil(appDelegate.applicationStatuses);
+                           XCTAssertNotNil(appDelegate.roles);
+                           [expectation fulfill];
+                       } failure:^(NSDictionary *errors, NSString *message) {
+                           NSLog(@"error");
+                           XCTAssert(FALSE);
+                           [expectation fulfill];
+                       }];
                    }
                    failure:^(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors) {
                        NSLog(@"error");

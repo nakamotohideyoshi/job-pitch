@@ -1,4 +1,10 @@
 $(document).ready(function() {
+			$.get( "/api/job-seekers/", { csrftoken: getCookie('csrftoken') }).done(function( data ) {
+				  
+				  console.log(data[0].pitches[0].video);
+				  $('#pitchVideoCheck').html('<video width="320" height="240" controls><source src="'+data[0].pitches[0].video+'" type="video/mp4"></video>');
+			});
+			
 			var job_seeker_id = 0;
 			$.get( "/api-rest-auth/user/", { token: getCookie('key') ,csrftoken: getCookie('csrftoken') }).done(function( data ) {
 				  
@@ -83,4 +89,8 @@ $(document).ready(function() {
 			}
 			function changeMicrophone() {
 				$.scriptcam.changeMicrophone($('#microphoneNames').val());
+			}
+			function newPitchStart(){
+				$('.videoCheckEdit').hide();
+				$('.recordNewVideo').show();
 			}

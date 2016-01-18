@@ -826,6 +826,28 @@ Web App By Reiss Watson
 #job_applied_for{
 	margin-top:15px;	
 }
+#recordStartButton{
+	margin: auto;
+    display: block;
+}
+#recorder #webcam{
+	margin: auto;
+    display: block;
+	float:none;
+}
+#recorder #recorderTimer{
+	margin: auto;
+    display: block;
+}
+.videoCheckEdit{
+	text-align: center;
+}
+.recordNewVideo{
+	display:none;
+}
+.jobs-list{
+	cursor:default !important;
+}
 /* Only show the "mobile menu" fix */
 @media (max-width: 3000px) {
     .navbar-header {

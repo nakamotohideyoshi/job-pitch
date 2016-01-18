@@ -151,15 +151,17 @@ function formAlert(type, message){
 }
 
 function deleteRow(id, apiFunction, rowPrefix){
-	$.ajax({
-		url: "/api/"+apiFunction+"/"+id+"/",
-		type: 'DELETE',
-		data:{ csrftoken: getCookie('csrftoken') },
-		success: function(result) {
-			console.log(rowPrefix+id);
-			$('#'+rowPrefix+id).fadeOut(250);
-		}
-		});
+	bootbox.confirm("Are you sure?", function(result) {
+		$.ajax({
+			url: "/api/"+apiFunction+"/"+id+"/",
+			type: 'DELETE',
+			data:{ csrftoken: getCookie('csrftoken') },
+			success: function(result) {
+				console.log(rowPrefix+id);
+				$('#'+rowPrefix+id).fadeOut(250);
+			}
+			});
+	});
 }
 
 //check if a job seeker account is active. Returns true|false

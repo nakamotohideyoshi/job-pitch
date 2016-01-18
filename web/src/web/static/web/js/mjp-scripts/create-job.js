@@ -62,8 +62,8 @@ $(function() {
 		var hours = $('#hours').val();
 		
 			$.post( "/api/user-jobs/", { title: title, description: description, sector: job_sector, contract: contract, hours: hours, location:location_id, status:open_job_status, csrftoken: getCookie('csrftoken') }).done(function( data ) {
-				$('#job_id').val(data.id);
-				var formData = new FormData($('#create-job')[0]);
+				if($('#job_id').val(data.id) == ''){
+					  var formData = new FormData($('#create-job')[0]);
 					  $.ajax({
 						url: '/api/user-job-images/',
 						type: 'POST',
@@ -76,6 +76,9 @@ $(function() {
 								window.location.href = "/profile/list-jobs/?id="+location_id;
 						}
 					  });
+				}else{
+					window.location.href = "/profile/list-jobs/?id="+location_id;
+				}
 				
 			  })
 			  .fail(function( data ) {

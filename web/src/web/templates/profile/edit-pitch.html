@@ -54,13 +54,21 @@
                         <h1 class="page-header">
                             Record a New Pitch
                         </h1>
-						
-                            <div class="row">
-                                <div class="col-lg-6 col-lg-offset-3">
+							<div class="row videoCheckEdit">
+                            	<div class="col-lg-12">
+                                	<h3>Your Current Pitch:</h3>
+                                        <div id="pitchVideoCheck">
+                                            <video width="320" height="240" controls><source src="" type="video/mp4"></video>
+                                        </div>
+                                    <button id="recordStartButton" class="btn btn-small" onclick="newPitchStart()">Record a new Pitch</button>
+                                </div>
+                            </div>
+                            <div class="row recordNewVideo">
+                                <div class="col-lg-6">
                                     
                                     <div id="message"></div>
                                     <div id="recorder">
-                                        <span style="padding-left:5px;padding-right:5px;text-align:center;">
+                                        <span style="padding-left:5px;padding-right:5px;text-align:center;" id="recorderTimer">
                                         Time left: <span class="timeLeft">00:30</span>
                                         </span>
                                         <br/>
@@ -79,10 +87,7 @@
                                     </div>
                                     
                                 </div>
-                            </div>
-                            <br />
-                            <div class="row">
-                                <div class="col-lg-8 col-lg-offset-2">
+                                <div class="col-lg-6">
                                 
                                     <p>Setting up your job pitch here are some tips from one of our recruiting pros:
     <br />

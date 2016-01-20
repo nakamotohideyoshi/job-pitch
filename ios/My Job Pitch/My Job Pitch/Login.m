@@ -28,7 +28,7 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [[self appDelegate].api logout];
-    [self appDelegate].user = NULL;
+    [[self appDelegate] clearData];
     username.text = @"j1";
     password.text = @"admin1";
     password2.text = @"";

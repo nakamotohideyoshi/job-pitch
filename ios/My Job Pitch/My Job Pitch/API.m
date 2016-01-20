@@ -230,7 +230,7 @@
     [self configureResponseMapping:objectManager
                      responseClass:[Hours class]
                      responseArray:nameArray
-                responseDictionary:shortNameDescDictionary
+                responseDictionary:[self inverseDictionary:shortNameDescDictionary]
              responseRelationships:nil
                               path:@"/api/hours/"
                             method:RKRequestMethodGET];
@@ -238,7 +238,7 @@
     [self configureResponseMapping:objectManager
                      responseClass:[Contract class]
                      responseArray:nameArray
-                responseDictionary:shortNameDescDictionary
+                responseDictionary:[self inverseDictionary:shortNameDescDictionary]
              responseRelationships:nil
                               path:@"/api/contracts/"
                             method:RKRequestMethodGET];
@@ -246,7 +246,7 @@
     [self configureResponseMapping:objectManager
                      responseClass:[Sector class]
                      responseArray:nameArray
-                responseDictionary:nameDescDictionary
+                responseDictionary:[self inverseDictionary:nameDescDictionary]
              responseRelationships:nil
                               path:@"/api/sectors/"
                             method:RKRequestMethodGET];
@@ -254,7 +254,7 @@
     [self configureResponseMapping:objectManager
                      responseClass:[Sex class]
                      responseArray:nameArray
-                responseDictionary:shortNameDescDictionary
+                responseDictionary:[self inverseDictionary:shortNameDescDictionary]
              responseRelationships:nil
                               path:@"/api/sexes/"
                             method:RKRequestMethodGET];
@@ -262,7 +262,7 @@
     [self configureResponseMapping:objectManager
                      responseClass:[Nationality class]
                      responseArray:nameArray
-                responseDictionary:shortNameDictionary
+                responseDictionary:[self inverseDictionary:shortNameDictionary]
              responseRelationships:nil
                               path:@"/api/nationalities/"
                             method:RKRequestMethodGET];
@@ -270,7 +270,7 @@
     [self configureResponseMapping:objectManager
                      responseClass:[JobStatus class]
                      responseArray:nameArray
-                responseDictionary:friendlyNameDescDictionary
+                responseDictionary:[self inverseDictionary:friendlyNameDescDictionary]
              responseRelationships:nil
                               path:@"/api/job-statuses/"
                             method:RKRequestMethodGET];
@@ -278,7 +278,7 @@
     [self configureResponseMapping:objectManager
                      responseClass:[ApplicationStatus class]
                      responseArray:nameArray
-                responseDictionary:friendlyNameDescDictionary
+                responseDictionary:[self inverseDictionary:friendlyNameDescDictionary]
              responseRelationships:nil
                               path:@"/api/application-statuses/"
                             method:RKRequestMethodGET];

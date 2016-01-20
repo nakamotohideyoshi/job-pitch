@@ -29,6 +29,8 @@
 - (void)loadData:(void (^)())success
          failure:(void (^)(NSDictionary *errors, NSString *message))failure;
 
+- (void)clearData;
+
 - (Hours*)getHours:(NSNumber*)id;
 - (Hours*)getHoursByName:(NSString*)name;
 - (Contract*)getContract:(NSNumber*)id;

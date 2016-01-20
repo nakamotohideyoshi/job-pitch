@@ -39,12 +39,16 @@
 }
 
 - (IBAction)connect {
+    self.dismissButton.enabled = false;
+    self.connectButton.enabled = false;
     [self.swipeView swipeLeft:^{
         [self nextCard];
     }];
 }
 
 - (IBAction)dismiss {
+    self.dismissButton.enabled = false;
+    self.connectButton.enabled = false;
     [self.swipeView swipeRight:^{
         [self nextCard];
     }];

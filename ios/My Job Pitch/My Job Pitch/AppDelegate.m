@@ -129,9 +129,23 @@
     }];
 }
 
+- (void)clearData
+{
+    self.user = nil;
+    self.hours = nil;
+    self.contracts = nil;
+    self.sexes = nil;
+    self.nationalities = nil;
+    self.sectors = nil;
+    self.jobStatuses = nil;
+    self.applicationStatuses = nil;
+    self.roles = nil;
+}
+
 - (Boolean)isLoaded
 {
     self.loaded =
+        self.user != nil &&
         self.hours != nil &&
         self.contracts != nil &&
         self.sexes != nil &&

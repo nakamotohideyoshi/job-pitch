@@ -32,7 +32,7 @@
 {
     [self showProgress:true];
     [[self appDelegate].api loadJobSeekerWithId:[self appDelegate].user.jobSeeker
-                                        success:^(JobSeeker *jobSeeker) {\
+                                        success:^(JobSeeker *jobSeeker) {
                                             myJobSeeker = jobSeeker;
                                             [jobSeekerProfile load:jobSeeker];
                                             [self showProgress:false];

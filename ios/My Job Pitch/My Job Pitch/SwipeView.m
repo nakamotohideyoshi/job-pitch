@@ -11,7 +11,6 @@
 
 @interface SwipeView ()
 @property(nonatomic, strong) UIPanGestureRecognizer *panGestureRecognizer;
-@property(nonatomic) CGPoint originalPoint;
 @end
 
 @implementation SwipeView
@@ -45,7 +44,6 @@
     
     switch (gestureRecognizer.state) {
         case UIGestureRecognizerStateBegan:{
-            self.originalPoint = self.center;
             [self.delegate dragStarted];
             break;
         };
@@ -55,16 +53,15 @@
             CGFloat scaleStrength = 1 - fabs(rotationStrength) / 4;
             CGFloat scale = MAX(scaleStrength, 0.93);
             CGAffineTransform transform = CGAffineTransformMakeRotation(rotationAngel);
-            CGAffineTransform scaleTransform = CGAffineTransformScale(transform, scale, scale);
-            self.transform = scaleTransform;
-            self.center = CGPointMake(self.originalPoint.x + xDistance, self.originalPoint.y + yDistance);
+            transform = CGAffineTransformTranslate(transform, xDistance, yDistance);
+            transform = CGAffineTransformScale(transform, scale, scale);
+            self.transform = transform;
             
             [self.delegate updateDistance:xDistance];
             
             break;
         };
         case UIGestureRecognizerStateEnded: {
-            NSLog(@"original: %f, %f", self.originalPoint.x, self.originalPoint.y);
             [self.delegate dragComplete:xDistance];
             break;
         };
@@ -78,7 +75,6 @@
 {
     [UIView animateWithDuration:0.2
                      animations:^{
-                         self.center = self.originalPoint;
                          self.transform = CGAffineTransformMakeRotation(0);
                      }
                      completion:^(BOOL finished) {
@@ -88,12 +84,11 @@
 
 - (void)swipeRight:(void(^)())completion
 {
-    if (self.originalPoint.x == 0 && self.originalPoint.y == 0)
-        self.originalPoint = self.center;
     [UIView animateWithDuration:0.2
                      animations:^{
-                         self.center = CGPointMake(self.originalPoint.x + 300, self.center.y);
-                         self.transform = CGAffineTransformMakeRotation(-320);
+                         CGAffineTransform transform = CGAffineTransformMakeTranslation(self.transform.tx + 200, self.transform.ty);
+                         transform = CGAffineTransformRotate(transform, -320);
+                         self.transform = transform;
                          self.alpha = 0;
                      }
                      completion:^(BOOL finished) {
@@ -103,12 +98,11 @@
 
 - (void)swipeLeft:(void(^)())completion
 {
-    if (self.originalPoint.x == 0 && self.originalPoint.y == 0)
-        self.originalPoint = self.center;
     [UIView animateWithDuration:0.2
                      animations:^{
-                         self.center = CGPointMake(self.originalPoint.x - 300, self.center.y);
-                         self.transform = CGAffineTransformMakeRotation(320);
+                         CGAffineTransform transform = CGAffineTransformMakeTranslation(self.transform.tx - 200, self.transform.ty);
+                         transform = CGAffineTransformRotate(transform, 320);
+                         self.transform = transform;
                          self.alpha = 0;
                      }
                      completion:^(BOOL finished) {
@@ -119,13 +113,15 @@
 - (void)nextCard:(void(^)())completion
 {
     self.transform = CGAffineTransformMakeRotation(0);
-    self.transform = CGAffineTransformMakeScale(0.8, 0.8);
-    self.center = CGPointMake(self.originalPoint.x, self.originalPoint.y + 100);
-    [UIView animateWithDuration:0.4
+    self.transform = CGAffineTransformConcat(CGAffineTransformMakeScale(0.8, 0.8),
+                                             CGAffineTransformMakeTranslation(0, 100));
+    self.alpha = 0.0;
+    [UIView animateWithDuration:0.6
                      animations:^{
-                         self.transform = CGAffineTransformMakeScale(1.0, 1.0);
+                         CGAffineTransform transform = CGAffineTransformMakeTranslation(0, 0);
+                         transform = CGAffineTransformScale(transform, 1.0, 1.0);
+                         self.transform = transform;
                          self.alpha = 1.0;
-                         self.center = self.originalPoint;
                      }
                      completion:^(BOOL finished) {
                          completion();

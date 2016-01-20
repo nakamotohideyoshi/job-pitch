@@ -21,10 +21,15 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.swipeView.delegate = self;
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
     self.jobs = [[NSMutableArray alloc] init];
     self.seen = [[NSMutableArray alloc] init];
     self.job = nil;
     self.lastLoad = 999;
+    self.swipeView.alpha = 0.0;
     [self nextCard];
 }
 
@@ -151,19 +156,7 @@
             self.job = self.jobs.firstObject;
             [self.jobs removeObject:self.job];
         }
-        if ([self.jobs count] < 5 && !self.loading) {
-            if (self.lastLoad > 0) {
-                if (self.job) {
-                    [self loadJobs:^{} failure:^{}];
-                } else {
-                    [self loadJobs:^{
-                        [self nextCard];
-                    } failure:^{}];
-                }
-            }
-        }
         if (self.job) {
-            [self showProgress:false];
             self.nameLabel.text = self.job.title;
             self.descriptionLabel.text = self.job.desc;
             Hours *hours = [self.appDelegate getHours:self.job.hours];
@@ -176,11 +169,19 @@
             self.dismissButton.enabled = true;
             self.directionLabel.alpha = 0;
             [self.swipeView nextCard:^{}];
-        } else if (self.loading) {
+        } else if (self.lastLoad > 0) {
             [self showProgress:true];
         } else {
             // TODO show reset menu
             NSLog(@"out");
+        }
+        
+        if ([self.jobs count] < 5 && !self.loading && self.lastLoad > 0) {
+            [self loadJobs:^{
+                [self showProgress:false];
+                if (self.job == nil)
+                    [self nextCard];
+            } failure:^{}];
         }
     }
 }

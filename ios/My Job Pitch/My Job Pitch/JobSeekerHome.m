@@ -8,6 +8,14 @@
 
 #import "JobSeekerHome.h"
 
+typedef NS_ENUM(NSInteger, EmptyButtonAction) {
+    EmptyButtonActionNone,
+    EmptyButtonActionReset,
+    EmptyButtonActionSetupProfile,
+    EmptyButtonActionRecordPitch,
+    EmptyButtonActionActivateProfile,
+};
+
 @interface JobSeekerHome ()
 @property (nonnull) NSMutableArray* jobs;
 @property (nonnull) NSMutableArray* seen;
@@ -15,6 +23,8 @@
 @property (nullable) JobSeeker* jobSeeker;
 @property NSUInteger lastLoad;
 @property Boolean loading;
+@property EmptyButtonAction emptyButton1Action;
+@property EmptyButtonAction emptyButton2Action;
 @end
 
 @implementation JobSeekerHome
@@ -22,17 +32,47 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.swipeView.delegate = self;
+    self.emptyButton1Action = EmptyButtonActionNone;
+    self.emptyButton2Action = EmptyButtonActionNone;
 }
 
 - (IBAction)emptyButton1ActionDelegate:(id)sender
 {
+    [self performEmptyButtonAction:self.emptyButton1Action];
 }
 
 - (IBAction)emptyButton2ActionDelegate:(id)sender
 {
+    [self performEmptyButtonAction:self.emptyButton2Action];
+}
+
+- (void)performEmptyButtonAction:(EmptyButtonAction)action
+{
+    switch (action) {
+        case EmptyButtonActionReset:
+            [self reset];
+            break;
+        case EmptyButtonActionActivateProfile:
+            [self performActivateProfile];
+            break;
+        case EmptyButtonActionRecordPitch:
+            [self performRecordPitch];
+            break;
+        case EmptyButtonActionSetupProfile:
+            [self performEditSearch];
+            break;
+        case EmptyButtonActionNone:
+        default:
+            break;
+    }
 }
 
 - (void)viewWillAppear:(BOOL)animated
+{
+    [self reset];
+}
+
+- (void)reset
 {
     [self showProgress:true];
     self.jobs = [[NSMutableArray alloc] init];
@@ -48,29 +88,37 @@
              [self.emptyLabel setText:@"You have not yet setup your job preferences or recorded your pitch, once we have this information, you will see job matches here, and potential employers will be able to find you."];
              [self.emptyButton1 setHidden:false];
              [self.emptyButton1 setTitle:@"Setup Profile" forState:UIControlStateNormal];
+             [self setEmptyButton1Action:EmptyButtonActionSetupProfile];
              [self.emptyButton2 setHidden:false];
              [self.emptyButton2 setTitle:@"Record my pitch" forState:UIControlStateNormal];
+             [self setEmptyButton2Action:EmptyButtonActionRecordPitch];
              [self.swipeContainer setHidden:true];
              [self.emptyView setHidden:false];
          } else if (jobSeeker.profile == nil) {
              [self.emptyLabel setText:@"You have not yet setup your job preferences, once we know your search criteria, you will see job matches here, and potential employers will be able to find you."];
              [self.emptyButton1 setHidden:false];
              [self.emptyButton1 setTitle:@"Setup Profile" forState:UIControlStateNormal];
+             [self setEmptyButton1Action:EmptyButtonActionSetupProfile];
              [self.emptyButton2 setHidden:true];
+             [self setEmptyButton2Action:EmptyButtonActionNone];
              [self.swipeContainer setHidden:true];
              [self.emptyView setHidden:false];
          } else if (jobSeeker.pitches.count == 0) {
              [self.emptyLabel setText:@"You have not yet recorded your pitch, once we have this, you will see job matches here, and potential employers will be able to find you."];
              [self.emptyButton1 setHidden:false];
              [self.emptyButton1 setTitle:@"Record my pitch" forState:UIControlStateNormal];
+             [self setEmptyButton1Action:EmptyButtonActionRecordPitch];
              [self.emptyButton2 setHidden:true];
+             [self setEmptyButton2Action:EmptyButtonActionNone];
              [self.swipeContainer setHidden:true];
              [self.emptyView setHidden:false];
          } else if (!jobSeeker.active) {
              [self.emptyLabel setText:@"Your profile is currently inactive. The means you are hidden from prospective employers and cannot search for jobs."];
              [self.emptyButton1 setHidden:false];
              [self.emptyButton1 setTitle:@"Activate my profile" forState:UIControlStateNormal];
+             [self setEmptyButton1Action:EmptyButtonActionActivateProfile];
              [self.emptyButton2 setHidden:true];
+             [self setEmptyButton2Action:EmptyButtonActionNone];
              [self.swipeContainer setHidden:true];
              [self.emptyView setHidden:false];
          } else {
@@ -111,7 +159,7 @@
 
 - (IBAction)messages
 {
-    
+    [self performMessages];
 }
 
 - (IBAction)logout {
@@ -136,6 +184,33 @@
 - (void)performEditSearch
 {
     [self performSegueWithIdentifier:@"goto_edit_search" sender:@"home"];
+}
+
+- (void)performRecordPitch
+{
+    [self performSegueWithIdentifier:@"goto_record_pitch" sender:@"home"];
+}
+
+- (void)performMessages
+{
+    [self performSegueWithIdentifier:@"goto_messages" sender:@"home"];
+}
+
+- (void)performActivateProfile
+{
+    self.jobSeeker.active = true;
+    [self showProgress:true];
+    [self.appDelegate.api saveJobSeeker:self.jobSeeker
+                                success:^(JobSeeker *jobSeeker) {
+                                    [self reset];
+                                } failure:^(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors) {
+                                    [[[UIAlertView alloc] initWithTitle:@"Error"
+                                                                message:@"Error activating profile"
+                                                               delegate:self
+                                                      cancelButtonTitle:@"Okay"
+                                                      otherButtonTitles:nil] show];
+                                    [self showProgress:false];
+                                }];
 }
 
 - (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex {
@@ -241,8 +316,14 @@
         } else if (self.lastLoad > 0) {
             [self showProgress:true];
         } else {
-            // TODO show reset menu
-            NSLog(@"out");
+            [self.emptyLabel setText:@"There are no more jobs that match your profile. You can restart the search to restore all the jobs you\'ve dismissed, or go to the message centre to check the status of your applications."];
+            [self.emptyButton1 setHidden:false];
+            [self.emptyButton1 setTitle:@"Restart search" forState:UIControlStateNormal];
+            [self setEmptyButton1Action:EmptyButtonActionReset];
+            [self.emptyButton2 setHidden:true];
+            [self setEmptyButton2Action:EmptyButtonActionNone];
+            [self.swipeContainer setHidden:true];
+            [self.emptyView setHidden:false];
         }
         
         if ([self.jobs count] < 5 && !self.loading && self.lastLoad > 0) {

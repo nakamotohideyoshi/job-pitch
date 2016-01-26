@@ -59,6 +59,7 @@
 
 -(void)save:(JobSeeker*)jobSeeker
 {
+    jobSeeker.active = self.active.isOn;
     jobSeeker.firstName = self.firstName.textField.text;
     jobSeeker.lastName = self.lastName.textField.text;
     jobSeeker.email = self.email.textField.text;
@@ -78,6 +79,7 @@
 
 -(void)load:(JobSeeker*)jobSeeker
 {
+    self.active.on = jobSeeker.active;
     self.firstName.textField.text = jobSeeker.firstName;
     self.lastName.textField.text = jobSeeker.lastName;
     self.email.textField.text = jobSeeker.email;

@@ -22,6 +22,7 @@
 		CE8395A81C3EF98F007A8213 /* EditProfile.m in Sources */ = {isa = PBXBuildFile; fileRef = CE8395A71C3EF98F007A8213 /* EditProfile.m */; };
 		CE8395AB1C42F279007A8213 /* SwipeView.m in Sources */ = {isa = PBXBuildFile; fileRef = CE8395AA1C42F279007A8213 /* SwipeView.m */; };
 		CE86847E1C0E570300D4B6C7 /* ScrollingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CE86847D1C0E570300D4B6C7 /* ScrollingViewController.m */; };
+		CE8AAFE51C56D93C0004F021 /* Pitch.m in Sources */ = {isa = PBXBuildFile; fileRef = CE8AAFE41C56D93C0004F021 /* Pitch.m */; };
 		CEC2E4041C45A88100AC0F45 /* Job.m in Sources */ = {isa = PBXBuildFile; fileRef = CEC2E4031C45A88100AC0F45 /* Job.m */; };
 		CEC2E4071C45B4C200AC0F45 /* Location.m in Sources */ = {isa = PBXBuildFile; fileRef = CEC2E4061C45B4C200AC0F45 /* Location.m */; };
 		CEC2E40A1C45B4EC00AC0F45 /* MJPObjectWithDates.m in Sources */ = {isa = PBXBuildFile; fileRef = CEC2E4091C45B4EC00AC0F45 /* MJPObjectWithDates.m */; };
@@ -100,6 +101,8 @@
 		CE8395AA1C42F279007A8213 /* SwipeView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SwipeView.m; sourceTree = "<group>"; };
 		CE86847C1C0E570300D4B6C7 /* ScrollingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ScrollingViewController.h; sourceTree = "<group>"; };
 		CE86847D1C0E570300D4B6C7 /* ScrollingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ScrollingViewController.m; sourceTree = "<group>"; };
+		CE8AAFE31C56D93C0004F021 /* Pitch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Pitch.h; sourceTree = "<group>"; };
+		CE8AAFE41C56D93C0004F021 /* Pitch.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Pitch.m; sourceTree = "<group>"; };
 		CEC2E4021C45A88100AC0F45 /* Job.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Job.h; path = Assets.xcassets/Job.h; sourceTree = "<group>"; };
 		CEC2E4031C45A88100AC0F45 /* Job.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Job.m; path = Assets.xcassets/Job.m; sourceTree = "<group>"; };
 		CEC2E4051C45B4C200AC0F45 /* Location.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Location.h; sourceTree = "<group>"; };
@@ -310,6 +313,8 @@
 				CEE062481C28B77500ED60C0 /* MJPObjectWithNameShortNameDesc.m */,
 				CEE062491C28B77500ED60C0 /* Nationality.h */,
 				CEE0624A1C28B77500ED60C0 /* Nationality.m */,
+				CE8AAFE31C56D93C0004F021 /* Pitch.h */,
+				CE8AAFE41C56D93C0004F021 /* Pitch.m */,
 				CEE0624B1C28B77500ED60C0 /* Profile.h */,
 				CEE0624C1C28B77500ED60C0 /* Profile.m */,
 				CEE0624D1C28B77500ED60C0 /* Role.h */,
@@ -527,6 +532,7 @@
 				CEE0625E1C28B77500ED60C0 /* Role.m in Sources */,
 				CE45AECD1C0B461A0092AB75 /* User.m in Sources */,
 				CE45AECA1C0B45AD0092AB75 /* RegisterRequest.m in Sources */,
+				CE8AAFE51C56D93C0004F021 /* Pitch.m in Sources */,
 				CEE52CFE1C066AB000881648 /* AuthToken.m in Sources */,
 				CE59737D1C1626630096B001 /* JobSeekerProfileView.m in Sources */,
 				CE8395A81C3EF98F007A8213 /* EditProfile.m in Sources */,

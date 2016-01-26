@@ -18,6 +18,7 @@
 #import "ApplicationStatus.h"
 #import "JobStatus.h"
 #import "Role.h"
+#import "Pitch.h"
 
 @implementation API
 {
@@ -93,7 +94,8 @@
                                 @"sex",
                                 @"nationality",
                                 @"profile",
-                                @"cv"
+                                @"cv",
+                                @"active",
                                 ];
     NSDictionary* jobSeekerDictionary = @{@"firstName": @"first_name",
                                           @"lastName": @"last_name",
@@ -106,11 +108,25 @@
                                           @"nationalityPublic": @"nationality_public",
                                           };
     
+    NSArray* pitchArray = @[@"id",
+                            @"video",
+                            @"thumbnail",
+                            ];
+    RKObjectMapping *pitchMapping = [self
+                                     createResponseMappingForClass:[Pitch class]
+                                     array:pitchArray
+                                     dictionary:nil
+                                     relationships:nil];
+    NSArray *jobSeekerRelationships = @[@{@"source": @"pitches",
+                                          @"destination": @"pitches",
+                                          @"mapping": pitchMapping,
+                                          }
+                                        ];
     [self configureSimpleMapping:objectManager
                            class:[JobSeeker class]
                            array:jobSeekerArray
                       dictionary:jobSeekerDictionary
-                   relationships:nil
+                   relationships:jobSeekerRelationships
                             path:@"/api/job-seekers/"
                           method:RKRequestMethodAny
      ];
@@ -119,7 +135,7 @@
                            class:[JobSeeker class]
                            array:jobSeekerArray
                       dictionary:jobSeekerDictionary
-                   relationships:nil
+                   relationships:jobSeekerRelationships
                             path:@"/api/job-seekers/:pk/"
                           method:RKRequestMethodAny
      ];

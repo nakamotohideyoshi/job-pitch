@@ -122,22 +122,37 @@
                                           @"mapping": pitchMapping,
                                           }
                                         ];
-    [self configureSimpleMapping:objectManager
-                           class:[JobSeeker class]
-                           array:jobSeekerArray
-                      dictionary:jobSeekerDictionary
-                   relationships:jobSeekerRelationships
-                            path:@"/api/job-seekers/"
-                          method:RKRequestMethodAny
+    [self configureResponseMapping:objectManager
+                     responseClass:[JobSeeker class]
+                     responseArray:jobSeekerArray
+                responseDictionary:[self inverseDictionary:jobSeekerDictionary]
+             responseRelationships:[self inverseRelationships:jobSeekerRelationships]
+                              path:@"/api/job-seekers/"
+                            method:RKRequestMethodAny
      ];
-    
-    [self configureSimpleMapping:objectManager
-                           class:[JobSeeker class]
-                           array:jobSeekerArray
-                      dictionary:jobSeekerDictionary
-                   relationships:jobSeekerRelationships
-                            path:@"/api/job-seekers/:pk/"
-                          method:RKRequestMethodAny
+    [self configureRequestMapping:objectManager
+                     requestClass:[JobSeeker class]
+                     requestArray:jobSeekerArray
+                requestDictionary:jobSeekerDictionary
+             requestRelationships:nil
+                             path:@"/api/job-seekers/"
+                           method:RKRequestMethodAny
+     ];
+    [self configureResponseMapping:objectManager
+                     responseClass:[JobSeeker class]
+                     responseArray:jobSeekerArray
+                responseDictionary:[self inverseDictionary:jobSeekerDictionary]
+             responseRelationships:[self inverseRelationships:jobSeekerRelationships]
+                              path:@"/api/job-seekers/:pk/"
+                            method:RKRequestMethodAny
+     ];
+    [self configureRequestMapping:objectManager
+                     requestClass:[JobSeeker class]
+                     requestArray:jobSeekerArray
+                requestDictionary:jobSeekerDictionary
+             requestRelationships:nil
+                             path:@"/api/job-seekers/:pk/"
+                           method:RKRequestMethodAny
      ];
     
     NSArray* imageArray = @[@"id",

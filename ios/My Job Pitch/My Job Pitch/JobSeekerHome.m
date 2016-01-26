@@ -12,6 +12,7 @@
 @property (nonnull) NSMutableArray* jobs;
 @property (nonnull) NSMutableArray* seen;
 @property (nullable) Job* job;
+@property (nullable) JobSeeker* jobSeeker;
 @property NSUInteger lastLoad;
 @property Boolean loading;
 @end
@@ -23,14 +24,68 @@
     self.swipeView.delegate = self;
 }
 
+- (IBAction)emptyButton1ActionDelegate:(id)sender
+{
+}
+
+- (IBAction)emptyButton2ActionDelegate:(id)sender
+{
+}
+
 - (void)viewWillAppear:(BOOL)animated
 {
+    [self showProgress:true];
     self.jobs = [[NSMutableArray alloc] init];
     self.seen = [[NSMutableArray alloc] init];
     self.job = nil;
     self.lastLoad = 999;
     self.swipeView.alpha = 0.0;
-    [self nextCard];
+    [self.appDelegate.api
+     loadJobSeekerWithId:self.appDelegate.user.jobSeeker
+     success:^(JobSeeker *jobSeeker) {
+         self.jobSeeker = jobSeeker;
+         if (jobSeeker.profile == nil && jobSeeker.pitches.count == 0) {
+             [self.emptyLabel setText:@"You have not yet setup your job preferences or recorded your pitch, once we have this information, you will see job matches here, and potential employers will be able to find you."];
+             [self.emptyButton1 setHidden:false];
+             [self.emptyButton1 setTitle:@"Setup Profile" forState:UIControlStateNormal];
+             [self.emptyButton2 setHidden:false];
+             [self.emptyButton2 setTitle:@"Record my pitch" forState:UIControlStateNormal];
+             [self.swipeContainer setHidden:true];
+             [self.emptyView setHidden:false];
+         } else if (jobSeeker.profile == nil) {
+             [self.emptyLabel setText:@"You have not yet setup your job preferences, once we know your search criteria, you will see job matches here, and potential employers will be able to find you."];
+             [self.emptyButton1 setHidden:false];
+             [self.emptyButton1 setTitle:@"Setup Profile" forState:UIControlStateNormal];
+             [self.emptyButton2 setHidden:true];
+             [self.swipeContainer setHidden:true];
+             [self.emptyView setHidden:false];
+         } else if (jobSeeker.pitches.count == 0) {
+             [self.emptyLabel setText:@"You have not yet recorded your pitch, once we have this, you will see job matches here, and potential employers will be able to find you."];
+             [self.emptyButton1 setHidden:false];
+             [self.emptyButton1 setTitle:@"Record my pitch" forState:UIControlStateNormal];
+             [self.emptyButton2 setHidden:true];
+             [self.swipeContainer setHidden:true];
+             [self.emptyView setHidden:false];
+         } else if (!jobSeeker.active) {
+             [self.emptyLabel setText:@"Your profile is currently inactive. The means you are hidden from prospective employers and cannot search for jobs."];
+             [self.emptyButton1 setHidden:false];
+             [self.emptyButton1 setTitle:@"Activate my profile" forState:UIControlStateNormal];
+             [self.emptyButton2 setHidden:true];
+             [self.swipeContainer setHidden:true];
+             [self.emptyView setHidden:false];
+         } else {
+             [self.swipeContainer setHidden:false];
+             [self.emptyView setHidden:true];
+             [self nextCard];
+         }
+         [self showProgress:false];
+     } failure:^(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors) {
+         [[[UIAlertView alloc] initWithTitle:@"Error"
+                                     message:@"Error loading data"
+                                    delegate:self
+                           cancelButtonTitle:@"Okay"
+                           otherButtonTitles:nil] show];
+     }];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -68,10 +123,20 @@
     [alert show];
 }
 
-- (IBAction)editProfile {
+- (IBAction)editProfile
+{
+    [self performEditProfile];
+}
+
+- (void)performEditProfile
+{
     [self performSegueWithIdentifier:@"goto_edit_profile" sender:@"home"];
 }
 
+- (void)performEditSearch
+{
+    [self performSegueWithIdentifier:@"goto_edit_search" sender:@"home"];
+}
 
 - (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex {
     if (buttonIndex == 1) {

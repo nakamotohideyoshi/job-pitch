@@ -18,6 +18,7 @@
 @property bool sexPublic;
 @property bool nationalityPublic;
 @property (nullable) NSNumber* profile;
+@property (nullable) NSArray* pitches;
 @property (nullable) NSString* desc;
 @property (nullable) NSString* cv;
 @end

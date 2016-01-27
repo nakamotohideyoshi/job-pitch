@@ -14,10 +14,10 @@
             buildForArchiving = "YES">
             <BuildableReference
                BuildableIdentifier = 'primary'
-               BlueprintIdentifier = '43562D7B21D5743016A2641A'
-               BlueprintName = 'RestKit'
+               BlueprintIdentifier = '10167BE899B91E5BD9A5D21B'
+               BlueprintName = 'DownPicker'
                ReferencedContainer = 'container:Pods.xcodeproj'
-               BuildableName = 'libRestKit.a'>
+               BuildableName = 'libDownPicker.a'>
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>

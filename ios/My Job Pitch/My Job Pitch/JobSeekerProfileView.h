@@ -9,6 +9,9 @@
 #import <UIKit/UIKit.h>
 #import "ErrorTextField.h"
 #import "JobSeeker.h"
+#import <DownPicker.h>
+#import "AppDelegate.h"
+
 
 @protocol JobSeekerProfileViewDelegate
 - (void)continue;
@@ -29,7 +32,11 @@
 @property (weak, nonatomic) IBOutlet UISwitch *mobilePublic;
 @property (weak, nonatomic) IBOutlet ErrorTextField *age;
 @property (weak, nonatomic) IBOutlet UISwitch *agePublic;
+@property (weak, nonatomic) IBOutlet ErrorTextField *sex;
+@property (nonnull) DownPicker *sexPicker;
 @property (weak, nonatomic) IBOutlet UISwitch *sexPublic;
+@property (weak, nonatomic) IBOutlet ErrorTextField *nationality;
+@property (nonnull) DownPicker *nationalityPicker;
 @property (weak, nonatomic) IBOutlet UISwitch *nationalityPublic;
 @property (weak, nonatomic) IBOutlet UITextView *descriptionView;
 @property (weak, nonatomic) IBOutlet UILabel *descriptionError;
@@ -41,5 +48,7 @@
 - (IBAction)continue:(nullable id)sender;
 - (void)load:(nonnull JobSeeker*)jobSeeker;
 - (void)save:(nonnull JobSeeker*)jobSeeker;
+- (void)setSexes:(nonnull NSArray*)sexObjects;
+- (void)setNationalities:(nonnull NSArray*)nationalityObjects;
 
 @end

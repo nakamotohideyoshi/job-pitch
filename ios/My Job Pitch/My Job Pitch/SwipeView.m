@@ -116,7 +116,7 @@
     self.transform = CGAffineTransformConcat(CGAffineTransformMakeScale(0.8, 0.8),
                                              CGAffineTransformMakeTranslation(0, 100));
     self.alpha = 0.0;
-    [UIView animateWithDuration:0.6
+    [UIView animateWithDuration:0.4
                      animations:^{
                          CGAffineTransform transform = CGAffineTransformMakeTranslation(0, 0);
                          transform = CGAffineTransformScale(transform, 1.0, 1.0);

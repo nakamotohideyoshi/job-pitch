@@ -20,7 +20,8 @@
     [super viewDidLoad];
     jobSeekerProfile.delegate = self;
     jobSeekerProfile.continueButton.titleLabel.text = @"Save";
-    // Do any additional setup after loading the view.
+    [jobSeekerProfile setSexes:self.appDelegate.sexes];
+    [jobSeekerProfile setNationalities:self.appDelegate.nationalities];
 }
 
 - (void)didReceiveMemoryWarning {

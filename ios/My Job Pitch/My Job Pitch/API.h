@@ -13,6 +13,7 @@
 #import "JobSeeker.h"
 #import "Job.h"
 #import "Location.h"
+#import "Profile.h"
 
 @interface API : NSObject
 
@@ -40,6 +41,14 @@
 
 - (void)saveJobSeeker:(JobSeeker*)jobSeeker
               success:(void (^)(JobSeeker *jobSeeker))success
+              failure:(void (^)(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors))failure;
+
+- (void)loadJobProfileWithId:(NSNumber*)pk
+                    success:(void (^)(Profile *profile))success
+                    failure:(void (^)(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors))failure;
+
+- (void)saveJobProfile:(Profile*)jobSeeker
+              success:(void (^)(Profile *profile))success
               failure:(void (^)(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors))failure;
 
 - (void)loadJobsWithExclusions:(NSArray*)exlusions

@@ -621,6 +621,11 @@
                                     <action selector="editProfile" destination="B6U-eH-CfR" id="t70-jF-X2i"/>
                                 </connections>
                             </barButtonItem>
+                            <barButtonItem title="Edit Search" id="3yw-Os-zXF">
+                                <connections>
+                                    <action selector="editSearch" destination="B6U-eH-CfR" id="n2P-nq-uT4"/>
+                                </connections>
+                            </barButtonItem>
                             <barButtonItem title="Messages" id="Kbl-Cx-I42">
                                 <connections>
                                     <action selector="messages" destination="B6U-eH-CfR" id="fbE-oo-1Sb"/>
@@ -644,6 +649,7 @@
                         <outlet property="swipeContainer" destination="pmf-kY-76p" id="QL3-Qu-qjJ"/>
                         <outlet property="swipeView" destination="vw2-Ei-nOB" id="v9U-BX-PS7"/>
                         <segue destination="9sE-YX-o7D" kind="show" identifier="goto_edit_profile" id="Bra-CJ-YQ4"/>
+                        <segue destination="TSl-Ib-hcF" kind="show" identifier="goto_edit_search" id="8T7-ZT-leH"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="wWf-ZI-89N" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -772,6 +778,77 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="uug-oc-82f" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="821" y="-7"/>
+        </scene>
+        <!--Edit Profile-->
+        <scene sceneID="WLV-fV-WdA">
+            <objects>
+                <viewController id="TSl-Ib-hcF" customClass="EditSearchProfile" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="ZGa-mT-vAf"/>
+                        <viewControllerLayoutGuide type="bottom" id="7Bf-Vb-eha"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="mC7-mJ-Agk">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="NNf-bt-K5S">
+                                <rect key="frame" x="290" y="290" width="20" height="20"/>
+                            </activityIndicatorView>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="background_logo" translatesAutoresizingMaskIntoConstraints="NO" id="Kvz-g5-lqM">
+                                <rect key="frame" x="60" y="60" width="480" height="480"/>
+                            </imageView>
+                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Lov-qX-jQd">
+                                <rect key="frame" x="0.0" y="64" width="600" height="536"/>
+                                <subviews>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="r5X-ll-F1U" userLabel="Content View">
+                                        <rect key="frame" x="0.0" y="0.0" width="600" height="632"/>
+                                        <subviews>
+                                            <view contentMode="scaleToFill" placeholderIntrinsicWidth="infinite" placeholderIntrinsicHeight="600" translatesAutoresizingMaskIntoConstraints="NO" id="eaB-sX-d7i" customClass="JobSeekerSearchProfileView">
+                                                <rect key="frame" x="13" y="16" width="574" height="600"/>
+                                            </view>
+                                        </subviews>
+                                        <constraints>
+                                            <constraint firstAttribute="bottom" secondItem="eaB-sX-d7i" secondAttribute="bottom" constant="16" id="23r-ym-hcI"/>
+                                            <constraint firstAttribute="trailingMargin" secondItem="eaB-sX-d7i" secondAttribute="trailing" constant="5" id="aWY-ht-wxC"/>
+                                            <constraint firstItem="eaB-sX-d7i" firstAttribute="top" secondItem="r5X-ll-F1U" secondAttribute="top" constant="16" id="hol-mt-FJf"/>
+                                            <constraint firstItem="eaB-sX-d7i" firstAttribute="leading" secondItem="r5X-ll-F1U" secondAttribute="leadingMargin" constant="5" id="zMD-T3-dx5"/>
+                                        </constraints>
+                                    </view>
+                                </subviews>
+                                <constraints>
+                                    <constraint firstAttribute="right" secondItem="r5X-ll-F1U" secondAttribute="right" id="4RG-8H-vaT"/>
+                                    <constraint firstItem="r5X-ll-F1U" firstAttribute="left" secondItem="Lov-qX-jQd" secondAttribute="left" id="dvX-mw-J73"/>
+                                    <constraint firstItem="r5X-ll-F1U" firstAttribute="top" secondItem="Lov-qX-jQd" secondAttribute="top" id="hp1-gK-Jje"/>
+                                    <constraint firstAttribute="bottom" secondItem="r5X-ll-F1U" secondAttribute="bottom" id="iSp-Dc-4IG"/>
+                                </constraints>
+                            </scrollView>
+                        </subviews>
+                        <color key="backgroundColor" red="0.85098039219999999" green="0.85098039219999999" blue="0.85098039219999999" alpha="1" colorSpace="calibratedRGB"/>
+                        <constraints>
+                            <constraint firstItem="Kvz-g5-lqM" firstAttribute="width" secondItem="mC7-mJ-Agk" secondAttribute="width" multiplier="0.8" id="7zR-eo-iUo"/>
+                            <constraint firstItem="Kvz-g5-lqM" firstAttribute="height" secondItem="mC7-mJ-Agk" secondAttribute="height" multiplier="0.8" id="B95-XZ-nii"/>
+                            <constraint firstItem="NNf-bt-K5S" firstAttribute="centerX" secondItem="mC7-mJ-Agk" secondAttribute="centerX" id="BqV-Bh-cNl"/>
+                            <constraint firstItem="Kvz-g5-lqM" firstAttribute="centerX" secondItem="mC7-mJ-Agk" secondAttribute="centerX" id="FGZ-nV-f2Q"/>
+                            <constraint firstItem="Lov-qX-jQd" firstAttribute="leading" secondItem="mC7-mJ-Agk" secondAttribute="leading" id="FWN-yc-cvA"/>
+                            <constraint firstItem="r5X-ll-F1U" firstAttribute="width" secondItem="mC7-mJ-Agk" secondAttribute="width" id="Iv1-FT-zl9"/>
+                            <constraint firstItem="7Bf-Vb-eha" firstAttribute="top" secondItem="Lov-qX-jQd" secondAttribute="bottom" id="V0i-CI-L1L"/>
+                            <constraint firstItem="Lov-qX-jQd" firstAttribute="top" secondItem="ZGa-mT-vAf" secondAttribute="bottom" id="VWq-ox-RsL"/>
+                            <constraint firstItem="NNf-bt-K5S" firstAttribute="centerY" secondItem="mC7-mJ-Agk" secondAttribute="centerY" id="W9U-Dk-WXZ"/>
+                            <constraint firstAttribute="trailing" secondItem="Lov-qX-jQd" secondAttribute="trailing" id="gzj-b7-pTL"/>
+                            <constraint firstItem="Kvz-g5-lqM" firstAttribute="centerY" secondItem="mC7-mJ-Agk" secondAttribute="centerY" id="qYJ-3F-Uf4"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" title="Edit Profile" id="bU9-MJ-3oH"/>
+                    <connections>
+                        <outlet property="activityIndicator" destination="NNf-bt-K5S" id="Tzh-IY-aa3"/>
+                        <outlet property="jobSeekerSearchProfile" destination="eaB-sX-d7i" id="uhp-kH-lJL"/>
+                        <outlet property="mainView" destination="r5X-ll-F1U" id="ZY7-oS-LJS"/>
+                        <outlet property="scrollView" destination="Lov-qX-jQd" id="sVV-Qs-FkI"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="5wH-74-NtQ" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2555" y="-927"/>
         </scene>
     </scenes>
     <resources>

@@ -10,8 +10,6 @@
 #import "ErrorTextField.h"
 #import "JobSeeker.h"
 #import <DownPicker.h>
-#import "AppDelegate.h"
-
 
 @protocol JobSeekerProfileViewDelegate
 - (void)continue;

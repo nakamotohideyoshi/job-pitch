@@ -19,6 +19,7 @@
 #import "JobStatus.h"
 #import "Role.h"
 #import "Pitch.h"
+#import "Profile.h"
 
 @implementation API
 {
@@ -244,6 +245,37 @@
              responseRelationships:[self inverseRelationships:jobRelationships]
                               path:@"/api/jobs/"
                             method:RKRequestMethodGET
+     ];
+    
+    NSArray* profileArray = @[@"id",
+                              @"created",
+                              @"updated",
+                              @"latitude",
+                              @"longitude",
+                              @"contract",
+                              @"hours",
+                              @"sectors",
+                              ];
+    NSDictionary* profileDictionary = @{@"searchRadius": @"search_radius",
+                                        @"placeID": @"place_id",
+                                        @"placeName": @"place_name",
+                                        @"jobSeeker": @"job_seeker",
+                                        };
+    [self configureSimpleMapping:objectManager
+                           class:[Profile class]
+                           array:profileArray
+                      dictionary:profileDictionary
+                   relationships:nil
+                            path:@"/api/job-profiles/"
+                          method:RKRequestMethodAny
+     ];
+    [self configureSimpleMapping:objectManager
+                           class:[Profile class]
+                           array:profileArray
+                      dictionary:profileDictionary
+                   relationships:nil
+                            path:@"/api/job-profiles/:pk/"
+                          method:RKRequestMethodAny
      ];
     
     NSArray *nameArray = @[@"id",
@@ -584,6 +616,7 @@
                                        }
      ];
 }
+
 - (void)loadJobSeekerWithId:(NSNumber*)pk
                     success:(void (^)(JobSeeker *jobSeeker))success
                     failure:(void (^)(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors))failure;
@@ -623,6 +656,51 @@
                                              success([mappingResult firstObject]);
                                          } failure:^(RKObjectRequestOperation *operation, NSError *error) {
                                              NSLog(@"Error creating jobseeker: %@", error);
+                                             failure(operation, error, [self getMessage:error], [self getErrors:error]);
+                                         }
+         ];
+    }
+}
+
+- (void)loadJobProfileWithId:(NSNumber*)pk
+                    success:(void (^)(Profile *profile))success
+                    failure:(void (^)(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors))failure;
+{
+    [self clearCookies];
+    NSString *url = [NSString stringWithFormat:@"/api/job-profiles/%@/", pk];
+    [[RKObjectManager sharedManager] getObjectsAtPath:url parameters:nil
+                                              success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
+                                                  success([mappingResult firstObject]);
+                                              }
+                                              failure:^(RKObjectRequestOperation *operation, NSError *error) {
+                                                  failure(operation, error, [self getMessage:error], [self getErrors:error]);
+                                              }];
+}
+
+- (void)saveJobProfile:(Profile*)profile
+              success:(void (^)(Profile *profile))success
+              failure:(void (^)(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors))failure;
+{
+    [self clearCookies];
+    if (profile.id) {
+        [[RKObjectManager sharedManager] putObject:profile
+                                              path:[NSString stringWithFormat:@"/api/job-profiles/%@/", profile.id]
+                                        parameters:nil success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
+                                            NSLog(@"Profile updated");
+                                            success([mappingResult firstObject]);
+                                        } failure:^(RKObjectRequestOperation *operation, NSError *error) {
+                                            NSLog(@"Error updating profile: %@", error);
+                                            failure(operation, error, [self getMessage:error], [self getErrors:error]);
+                                        }
+         ];
+    } else {
+        [[RKObjectManager sharedManager] postObject:profile
+                                               path:@"/api/job-profiles/"
+                                         parameters:nil success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
+                                             NSLog(@"Profile created");
+                                             success([mappingResult firstObject]);
+                                         } failure:^(RKObjectRequestOperation *operation, NSError *error) {
+                                             NSLog(@"Error creating profile: %@", error);
                                              failure(operation, error, [self getMessage:error], [self getErrors:error]);
                                          }
          ];

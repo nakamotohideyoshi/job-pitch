@@ -1,7 +1,7 @@
 #import <Foundation/Foundation.h>
-#import "MJPObject.h"
+#import "MJPObjectWithDates.h"
 
-@interface Profile : MJPObject
+@interface Profile : MJPObjectWithDates
 @property (nonnull) NSNumber* jobSeeker;
 @property (nonnull) NSArray* sectors;
 @property (nullable) NSNumber* contract;

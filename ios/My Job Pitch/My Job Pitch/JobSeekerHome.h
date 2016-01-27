@@ -29,6 +29,7 @@
 - (IBAction)dismiss;
 - (IBAction)logout;
 - (IBAction)editProfile;
+- (IBAction)editSearch;
 - (IBAction)messages;
 
 @end

@@ -7,6 +7,7 @@
 //
 
 #import "JobSeekerHome.h"
+#import "EditSearchProfile.h"
 
 typedef NS_ENUM(NSInteger, EmptyButtonAction) {
     EmptyButtonActionNone,
@@ -176,6 +177,14 @@ typedef NS_ENUM(NSInteger, EmptyButtonAction) {
     [self performEditProfile];
 }
 
+- (IBAction)editSearch
+{
+    [self performEditSearch];
+}
+
+- (IBAction)editSearch:(id)sender {
+}
+
 - (void)performEditProfile
 {
     [self performSegueWithIdentifier:@"goto_edit_profile" sender:@"home"];
@@ -333,6 +342,14 @@ typedef NS_ENUM(NSInteger, EmptyButtonAction) {
                     [self nextCard];
             } failure:^{}];
         }
+    }
+}
+
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
+{
+    if ([[segue identifier] isEqualToString:@"goto_edit_search"]) {
+        EditSearchProfile *editSearchProfileView = [segue destinationViewController];
+        [editSearchProfileView setProfileId:self.jobSeeker.profile];
     }
 }
 

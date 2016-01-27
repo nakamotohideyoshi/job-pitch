@@ -1,3 +1,4 @@
 platform :ios, '7.0'
 pod 'RestKit', '~> 0.24.1'
+pod 'DownPicker'
 link_with 'My Job Pitch', 'My Job PitchTests'

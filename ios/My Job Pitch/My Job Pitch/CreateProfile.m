@@ -8,16 +8,13 @@
 
 #import "CreateProfile.h"
 
-@interface CreateProfile ()
-
-@end
-
 @implementation CreateProfile
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     jobSeekerProfile.delegate = self;
-    // Do any additional setup after loading the view.
+    [jobSeekerProfile setSexes:self.appDelegate.sexes];
+    [jobSeekerProfile setNationalities:self.appDelegate.nationalities];
 }
 
 - (void)didReceiveMemoryWarning {

@@ -16,6 +16,7 @@
 #import "ApplicationStatus.h"
 #import "JobStatus.h"
 #import "Role.h"
+@import GoogleMaps;
 
 @interface AppDelegate ()
 @property Boolean loaded;
@@ -27,6 +28,7 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     _api = [[API alloc] init];
     self.loaded = false;
+    [GMSServices provideAPIKey:@"AIzaSyCeseQMdrlh9E5d7DHHHm4GvW7yd8C_sZk"];
     return YES;
 }
 

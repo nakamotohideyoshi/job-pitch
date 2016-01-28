@@ -10,6 +10,7 @@
 #import "Contract.h"
 #import "Hours.h"
 #import "Sector.h"
+#import "LocationMapView.h"
 
 @interface JobSeekerSearchProfileView ()
 @property (nonatomic, nonnull) NSArray *contracts;
@@ -100,7 +101,9 @@
 }
 
 - (IBAction)changeLocation:(id)sender {
-    [self updateLocation];
+    UIViewController *controller = [[UIViewController alloc] init];
+    controller.view = [[LocationMapView alloc] init];
+    [self.navigationController pushViewController:controller animated:YES];
 }
 
 - (IBAction)continue:(id)sender {

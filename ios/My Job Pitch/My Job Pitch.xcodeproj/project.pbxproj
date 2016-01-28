@@ -26,6 +26,7 @@
 		CE8AAFE71C5848490004F021 /* JobSeekerSearchProfileView.xib in Resources */ = {isa = PBXBuildFile; fileRef = CE8AAFE61C5848490004F021 /* JobSeekerSearchProfileView.xib */; };
 		CE8AAFEA1C5848900004F021 /* JobSeekerSearchProfileView.m in Sources */ = {isa = PBXBuildFile; fileRef = CE8AAFE91C5848900004F021 /* JobSeekerSearchProfileView.m */; };
 		CE8AAFED1C5850C40004F021 /* EditSearchProfile.m in Sources */ = {isa = PBXBuildFile; fileRef = CE8AAFEC1C5850C40004F021 /* EditSearchProfile.m */; };
+		CE8AAFF41C597BED0004F021 /* DownPickerMultiple.m in Sources */ = {isa = PBXBuildFile; fileRef = CE8AAFF31C597BED0004F021 /* DownPickerMultiple.m */; };
 		CEC2E4041C45A88100AC0F45 /* Job.m in Sources */ = {isa = PBXBuildFile; fileRef = CEC2E4031C45A88100AC0F45 /* Job.m */; };
 		CEC2E4071C45B4C200AC0F45 /* Location.m in Sources */ = {isa = PBXBuildFile; fileRef = CEC2E4061C45B4C200AC0F45 /* Location.m */; };
 		CEC2E40A1C45B4EC00AC0F45 /* MJPObjectWithDates.m in Sources */ = {isa = PBXBuildFile; fileRef = CEC2E4091C45B4EC00AC0F45 /* MJPObjectWithDates.m */; };
@@ -111,6 +112,8 @@
 		CE8AAFE91C5848900004F021 /* JobSeekerSearchProfileView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JobSeekerSearchProfileView.m; sourceTree = "<group>"; };
 		CE8AAFEB1C5850C40004F021 /* EditSearchProfile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EditSearchProfile.h; sourceTree = "<group>"; };
 		CE8AAFEC1C5850C40004F021 /* EditSearchProfile.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EditSearchProfile.m; sourceTree = "<group>"; };
+		CE8AAFF21C597BED0004F021 /* DownPickerMultiple.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DownPickerMultiple.h; path = ../Pods/DownPicker/DownPickerMultiple.h; sourceTree = "<group>"; };
+		CE8AAFF31C597BED0004F021 /* DownPickerMultiple.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DownPickerMultiple.m; path = ../Pods/DownPicker/DownPickerMultiple.m; sourceTree = "<group>"; };
 		CEC2E4021C45A88100AC0F45 /* Job.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Job.h; path = Assets.xcassets/Job.h; sourceTree = "<group>"; };
 		CEC2E4031C45A88100AC0F45 /* Job.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Job.m; path = Assets.xcassets/Job.m; sourceTree = "<group>"; };
 		CEC2E4051C45B4C200AC0F45 /* Location.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Location.h; sourceTree = "<group>"; };
@@ -250,6 +253,8 @@
 				CE8AAFE61C5848490004F021 /* JobSeekerSearchProfileView.xib */,
 				CE8395A91C42F279007A8213 /* SwipeView.h */,
 				CE8395AA1C42F279007A8213 /* SwipeView.m */,
+				CE8AAFF21C597BED0004F021 /* DownPickerMultiple.h */,
+				CE8AAFF31C597BED0004F021 /* DownPickerMultiple.m */,
 				CEE04AA51C10EE2000697620 /* ErrorTextField.h */,
 				CEE04AA61C10EE2000697620 /* ErrorTextField.m */,
 				CEE04AA31C10EAD900697620 /* ErrorTextField.xib */,
@@ -594,6 +599,7 @@
 				CEE062601C28B77500ED60C0 /* Sex.m in Sources */,
 				CEE0625C1C28B77500ED60C0 /* Nationality.m in Sources */,
 				CEE062561C28B77500ED60C0 /* JobSeeker.m in Sources */,
+				CE8AAFF41C597BED0004F021 /* DownPickerMultiple.m in Sources */,
 				CEE062591C28B77500ED60C0 /* MJPObjectWithNameDesc.m in Sources */,
 				CE8AAFED1C5850C40004F021 /* EditSearchProfile.m in Sources */,
 				CEC2E41C1C4BEAA900AC0F45 /* ApplicationStatus.m in Sources */,

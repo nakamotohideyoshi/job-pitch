@@ -9,10 +9,16 @@
 #import "JobSeekerSearchProfileView.h"
 #import "Contract.h"
 #import "Hours.h"
+#import "Sector.h"
 
 @interface JobSeekerSearchProfileView ()
 @property (nonatomic, nonnull) NSArray *contracts;
 @property (nonatomic, nonnull) NSArray *hoursList;
+@property (nonatomic, nonnull) NSArray *sectorList;
+@property (nonatomic, nonnull) NSString *placeID;
+@property (nonatomic, nonnull) NSString *placeName;
+@property (nonatomic, nonnull) NSNumber *placeLatitude;
+@property (nonatomic, nonnull) NSNumber *placeLongitude;
 @end
 
 @implementation JobSeekerSearchProfileView
@@ -42,6 +48,16 @@
     [self addSubview:view];
     self.contractPicker = [[DownPicker alloc] initWithTextField:self.contract.textField];
     self.hoursPicker = [[DownPicker alloc] initWithTextField:self.hours.textField];
+    self.sectorsPicker = [[DownPickerMultiple alloc] initWithTextField:self.sectors.textField];
+    self.location.textField.enabled = false;
+    self.radiusPicker = [[DownPicker alloc] initWithTextField:self.radius.textField
+                                                     withData:@[@"1 miles",
+                                                                @"2 miles",
+                                                                @"5 miles",
+                                                                @"10 miles",
+                                                                @"50 miles",
+                                                                ]];
+    self.radius.textField.text = @"5 miles";
 }
 
 - (UIView*)loadViewFromNib
@@ -73,7 +89,21 @@
     [self.hoursPicker setPlaceholder:@"Hours"];
 }
 
-- (IBAction)continue:(nullable id)sender {
+- (void)setSectorOptions:(NSArray*)sectorObjects
+{
+    _sectorList = sectorObjects;
+    NSMutableArray *sectorOptions = [[NSMutableArray alloc] initWithCapacity:sectorObjects.count];
+    for (Sector *sector in sectorObjects)
+        [sectorOptions addObject: sector.name];
+    [self.sectorsPicker setData:sectorOptions];
+    [self.sectorsPicker setPlaceholder:@"Sectors"];
+}
+
+- (IBAction)changeLocation:(id)sender {
+    [self updateLocation];
+}
+
+- (IBAction)continue:(id)sender {
     [self.delegate continue];
 }
 
@@ -96,6 +126,21 @@
         }
     }
     profile.hours = newHours;
+    
+    NSArray *selectedSectors = [self.sectors.textField.text componentsSeparatedByString:@", "];
+    NSMutableArray *sectors = [[NSMutableArray alloc] initWithCapacity:selectedSectors.count];
+    for (Sector *sector in self.sectorList) {
+        if ([selectedSectors containsObject:sector.name])
+            [sectors addObject:sector.id];
+    }
+    profile.sectors = sectors;
+    
+    profile.placeID = self.placeID;
+    profile.placeName = self.placeName;
+    profile.latitude = self.placeLatitude;
+    profile.longitude = self.placeLongitude;
+    
+    profile.searchRadius = [NSNumber numberWithInt:self.radius.textField.text.intValue];
 }
 
 -(void)load:(Profile*)profile
@@ -125,6 +170,39 @@
     if (newHours == nil)
         newHours = @"Any";
     self.hours.textField.text = newHours;
+    
+    if (profile.sectors) {
+        NSMutableArray *selectedSectorNames = [[NSMutableArray alloc] init];
+        for (Sector *sector in self.sectorList) {
+            if ([profile.sectors containsObject:sector.id]) {
+                [selectedSectorNames addObject:sector.name];
+            }
+        }
+        self.sectors.textField.text = [selectedSectorNames componentsJoinedByString:@", "];
+    }
+
+    self.placeID = profile.placeID;
+    self.placeName = profile.placeName;
+    self.placeLatitude = profile.latitude;
+    self.placeLongitude = profile.longitude;
+    [self updateLocation];
+    
+    if (profile.searchRadius)
+        self.radius.textField.text = [NSString stringWithFormat:@"%@ miles", profile.searchRadius];
+    else
+        self.radius.textField.text = @"5 miles";
+}
+
+- (void)updateLocation
+{
+    if (self.placeName) {
+        if (self.placeID == nil || [self.placeID isEqualToString:@""])
+            self.location.textField.text = self.placeName;
+        else
+            self.location.textField.text = [NSString stringWithFormat:@"%@ (from Google)", self.placeName];
+    } else {
+        self.location.textField.text = @"";
+    }
 }
 
 @end

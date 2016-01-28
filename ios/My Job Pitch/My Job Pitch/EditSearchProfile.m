@@ -19,9 +19,11 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     jobSeekerSearchProfile.delegate = self;
-    jobSeekerSearchProfile.continueButton.titleLabel.text = @"Save";
+    [jobSeekerSearchProfile.continueButton setTitle:@"Save" forState:UIControlStateNormal];
     [jobSeekerSearchProfile setContracts:self.appDelegate.contracts];
     [jobSeekerSearchProfile setHoursOptions:self.appDelegate.hours];
+    [jobSeekerSearchProfile setSectorOptions:self.appDelegate.sectors];
+    [jobSeekerSearchProfile setNavigationController:self.navigationController];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -31,35 +33,47 @@
 
 - (void)viewWillAppear:(BOOL)animated
 {
-    [self showProgress:true];
-    [[self appDelegate].api loadJobProfileWithId:self.profileId
-                                         success:^(Profile *profile) {
-                                             myProfile = profile;
-                                             [jobSeekerSearchProfile load:profile];
-                                             [self showProgress:false];
-                                         }
-                                         failure:^(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors) {
-                                             [self handleErrors:errors message:message];
-                                         }];
+    if (self.profileId) {
+        [self showProgress:true];
+        [[self appDelegate].api loadJobProfileWithId:self.profileId
+                                             success:^(Profile *profile) {
+                                                 myProfile = profile;
+                                                 [jobSeekerSearchProfile load:profile];
+                                                 [self showProgress:false];
+                                             }
+                                             failure:^(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors) {
+                                                 [self handleErrors:errors message:message];
+                                             }];
+    } else {
+        [self showProgress:false];
+        myProfile = [[Profile alloc] init];
+        [jobSeekerSearchProfile load:myProfile];
+    }
 }
 
 - (NSArray *)getRequiredFields {
     if (!jobSeekerSearchProfile.hidden) {
-        return @[];
+        return @[@"sectors", @"searchRadius", @"location"];
     } else {
         return @[];
     }
 }
 
 - (NSDictionary*)getFieldMap {
-    return @{@"contract": jobSeekerSearchProfile.contract.textField,
+    return @{@"sectors": jobSeekerSearchProfile.sectors.textField,
+             @"contract": jobSeekerSearchProfile.contract.textField,
              @"hours": jobSeekerSearchProfile.hours.textField,
+             @"location": jobSeekerSearchProfile.location.textField,
+             @"searchRadius": jobSeekerSearchProfile.radius.textField,
              };
 }
 
 - (NSDictionary *)getErrorViewMap {
-    return @{@"contract": jobSeekerSearchProfile.contract.errorLabel,
+    return @{@"sectors": jobSeekerSearchProfile.sectors.errorLabel,
+             @"contract": jobSeekerSearchProfile.contract.errorLabel,
              @"hours": jobSeekerSearchProfile.hours.errorLabel,
+             @"location": jobSeekerSearchProfile.location.errorLabel,
+             @"searchRadius": jobSeekerSearchProfile.radius.errorLabel,
              };
 }
 

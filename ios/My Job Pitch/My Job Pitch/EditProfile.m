@@ -19,7 +19,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     jobSeekerProfile.delegate = self;
-    jobSeekerProfile.continueButton.titleLabel.text = @"Save";
+    [jobSeekerProfile.continueButton setTitle:@"Save" forState:UIControlStateNormal];
     [jobSeekerProfile setSexes:self.appDelegate.sexes];
     [jobSeekerProfile setNationalities:self.appDelegate.nationalities];
 }

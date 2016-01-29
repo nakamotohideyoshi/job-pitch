@@ -30,6 +30,7 @@
 		CE8AAFF91C59A2DE0004F021 /* LocationMap.xib in Resources */ = {isa = PBXBuildFile; fileRef = CE8AAFF81C59A2DE0004F021 /* LocationMap.xib */; };
 		CE8AAFFC1C59A7820004F021 /* LocationMapView.m in Sources */ = {isa = PBXBuildFile; fileRef = CE8AAFFB1C59A7820004F021 /* LocationMapView.m */; };
 		CE8AAFFE1C5AD62E0004F021 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CE8AAFFD1C5AD62E0004F021 /* CoreLocation.framework */; };
+		CE8AB0011C5AF6250004F021 /* Application.m in Sources */ = {isa = PBXBuildFile; fileRef = CE8AB0001C5AF6250004F021 /* Application.m */; };
 		CEC2E4041C45A88100AC0F45 /* Job.m in Sources */ = {isa = PBXBuildFile; fileRef = CEC2E4031C45A88100AC0F45 /* Job.m */; };
 		CEC2E4071C45B4C200AC0F45 /* Location.m in Sources */ = {isa = PBXBuildFile; fileRef = CEC2E4061C45B4C200AC0F45 /* Location.m */; };
 		CEC2E40A1C45B4EC00AC0F45 /* MJPObjectWithDates.m in Sources */ = {isa = PBXBuildFile; fileRef = CEC2E4091C45B4EC00AC0F45 /* MJPObjectWithDates.m */; };
@@ -121,6 +122,8 @@
 		CE8AAFFA1C59A7820004F021 /* LocationMapView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LocationMapView.h; sourceTree = "<group>"; };
 		CE8AAFFB1C59A7820004F021 /* LocationMapView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LocationMapView.m; sourceTree = "<group>"; };
 		CE8AAFFD1C5AD62E0004F021 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
+		CE8AAFFF1C5AF6250004F021 /* Application.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Application.h; sourceTree = "<group>"; };
+		CE8AB0001C5AF6250004F021 /* Application.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Application.m; sourceTree = "<group>"; };
 		CEC2E4021C45A88100AC0F45 /* Job.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Job.h; path = Assets.xcassets/Job.h; sourceTree = "<group>"; };
 		CEC2E4031C45A88100AC0F45 /* Job.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Job.m; path = Assets.xcassets/Job.m; sourceTree = "<group>"; };
 		CEC2E4051C45B4C200AC0F45 /* Location.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Location.h; sourceTree = "<group>"; };
@@ -304,6 +307,8 @@
 			children = (
 				CEE52CF81C065C4100881648 /* API.h */,
 				CEE52CF91C065C4100881648 /* API.m */,
+				CE8AAFFF1C5AF6250004F021 /* Application.h */,
+				CE8AB0001C5AF6250004F021 /* Application.m */,
 				CEC2E41A1C4BEAA900AC0F45 /* ApplicationStatus.h */,
 				CEC2E41B1C4BEAA900AC0F45 /* ApplicationStatus.m */,
 				CEE52CFC1C066AB000881648 /* AuthToken.h */,
@@ -595,6 +600,7 @@
 				CEC2E4191C4BE86400AC0F45 /* Sector.m in Sources */,
 				CEE0625E1C28B77500ED60C0 /* Role.m in Sources */,
 				CE45AECD1C0B461A0092AB75 /* User.m in Sources */,
+				CE8AB0011C5AF6250004F021 /* Application.m in Sources */,
 				CE45AECA1C0B45AD0092AB75 /* RegisterRequest.m in Sources */,
 				CE8AAFE51C56D93C0004F021 /* Pitch.m in Sources */,
 				CEE52CFE1C066AB000881648 /* AuthToken.m in Sources */,

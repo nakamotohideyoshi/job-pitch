@@ -71,6 +71,12 @@ typedef NS_ENUM(NSInteger, EmptyButtonAction) {
 - (void)viewWillAppear:(BOOL)animated
 {
     [self reset];
+    [self.navigationController setToolbarHidden:NO animated:YES];
+}
+
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [self.navigationController setToolbarHidden:YES animated:YES];
 }
 
 - (void)reset

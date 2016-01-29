@@ -14,6 +14,7 @@
 
 @implementation EditProfile {
     JobSeeker* myJobSeeker;
+    NSString *backTitle;
 }
 
 - (void)viewDidLoad {
@@ -41,6 +42,13 @@
                                         failure:^(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors) {
                                             [self handleErrors:errors message:message];
                                         }];
+    backTitle = self.navigationController.navigationBar.topItem.title;
+    self.navigationController.navigationBar.topItem.title = @"Cancel";
+}
+
+- (void)viewWillDisappear:(BOOL)animated
+{
+    self.navigationController.navigationBar.topItem.title = backTitle;
 }
 
 - (NSArray *)getRequiredFields {

@@ -14,6 +14,7 @@
 
 @implementation EditSearchProfile {
     Profile *myProfile;
+    NSString *backTitle;
 }
 
 - (void)viewDidLoad {
@@ -42,6 +43,13 @@
         myProfile.jobSeeker = self.appDelegate.user.jobSeeker;
         [jobSeekerSearchProfile load:myProfile];
     }
+    backTitle = self.navigationController.navigationBar.topItem.title;
+    self.navigationController.navigationBar.topItem.title = @"Cancel";
+}
+
+- (void)viewWillDisappear:(BOOL)animated
+{
+    self.navigationController.navigationBar.topItem.title = backTitle;
 }
 
 - (void)didReceiveMemoryWarning {

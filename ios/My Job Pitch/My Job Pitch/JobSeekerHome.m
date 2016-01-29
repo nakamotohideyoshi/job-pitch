@@ -9,6 +9,7 @@
 #import "JobSeekerHome.h"
 #import "EditSearchProfile.h"
 #import "Application.h"
+#import "JobDetails.h"
 
 typedef NS_ENUM(NSInteger, EmptyButtonAction) {
     EmptyButtonActionNone,
@@ -36,6 +37,11 @@ typedef NS_ENUM(NSInteger, EmptyButtonAction) {
     self.swipeView.delegate = self;
     self.emptyButton1Action = EmptyButtonActionNone;
     self.emptyButton2Action = EmptyButtonActionNone;
+}
+
+- (IBAction)cardTapAction:(id)sender
+{
+    [self performSegueWithIdentifier:@"goto_job_details" sender:@"home"];
 }
 
 - (IBAction)emptyButton1ActionDelegate:(id)sender
@@ -371,6 +377,9 @@ typedef NS_ENUM(NSInteger, EmptyButtonAction) {
     if ([[segue identifier] isEqualToString:@"goto_edit_search"]) {
         EditSearchProfile *editSearchProfileView = [segue destinationViewController];
         [editSearchProfileView setProfileId:self.jobSeeker.profile];
+    } else if ([[segue identifier] isEqualToString:@"goto_job_details"]) {
+        JobDetails *jobDetailsView = [segue destinationViewController];
+        [jobDetailsView setJob:self.job];
     }
 }
 

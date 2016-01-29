@@ -278,6 +278,76 @@
                           method:RKRequestMethodAny
      ];
     
+    
+    NSArray* applictionCreateArray = @[@"id",
+                                       @"created",
+                                       @"updated",
+                                       @"job",
+                                       @"shortlisted",
+                                       @"status",
+                                       ];
+    NSDictionary* applictionCreateDictionary = @{@"jobSeeker": @"job_seeker",
+                                                 @"createdBy": @"created_by",
+                                                 @"deletedBy": @"deleted_by",
+                                                 };
+    [self configureSimpleMapping:objectManager
+                           class:[ApplicationForCreation class]
+                           array:applictionCreateArray
+                      dictionary:applictionCreateDictionary
+                   relationships:nil
+                            path:@"/api/applications/"
+                          method:RKRequestMethodPOST];
+    
+    NSArray* applictionArray = @[@"id",
+                                 @"created",
+                                 @"updated",
+                                 @"shortlisted",
+                                 @"status"
+                                 ];
+    NSDictionary* applictionDictionary = @{@"createdBy": @"created_by",
+                                           @"deletedBy": @"deleted_by",
+                                           };
+    RKObjectMapping *jobMapping = [self
+                                   createResponseMappingForClass:[Job class]
+                                   array:jobArray
+                                   dictionary:[self inverseDictionary:jobDictionary]
+                                   relationships:[self inverseRelationships:jobRelationships]];
+    RKObjectMapping *jobSeekerMapping = [self
+                                         createResponseMappingForClass:[JobSeeker class]
+                                         array:jobSeekerArray
+                                         dictionary:[self inverseDictionary:jobSeekerDictionary]
+                                         relationships:[self inverseRelationships:jobSeekerRelationships]];
+
+    NSArray* applicationRelationships = @[@{@"source": @"job",
+                                            @"destination": @"job_data",
+                                            @"mapping": jobMapping,
+                                            },
+                                          @{@"source": @"jobSeeker",
+                                            @"destination": @"job_seeker",
+                                            @"mapping": jobSeekerMapping,
+                                            },
+//                                          @{@"source": @"messages",
+//                                            @"destination": @"messages",
+//                                            @"mapping": messageMapping,
+//                                            },
+                                          ];
+    
+    [self configureResponseMapping:objectManager
+                     responseClass:[ApplicationForCreation class]
+                     responseArray:applictionArray
+                responseDictionary:[self inverseDictionary:applictionDictionary]
+             responseRelationships:[self inverseRelationships:applicationRelationships]
+                              path:@"/api/applications/"
+                            method:RKRequestMethodGET];
+    
+    [self configureResponseMapping:objectManager
+                     responseClass:[ApplicationForCreation class]
+                     responseArray:applictionArray
+                responseDictionary:[self inverseDictionary:applictionDictionary]
+             responseRelationships:[self inverseRelationships:applicationRelationships]
+                              path:@"/api/applications/:pk/"
+                            method:RKRequestMethodGET];
+    
     NSArray *nameArray = @[@"id",
                            @"name",
                            ];
@@ -723,6 +793,22 @@
                                                   NSLog(@"Error loading jobs: %@", error);
                                                   failure(operation, error, [self getMessage:error], [self getErrors:error]);
                                               }
+     ];
+}
+
+- (void)createApplication:(ApplicationForCreation*)application
+                  success:(void (^)(ApplicationForCreation *application))success
+                  failure:(void (^)(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors))failure
+{
+    [[RKObjectManager sharedManager] postObject:application
+                                           path:@"/api/applications/"
+                                     parameters:nil success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
+                                         NSLog(@"Profile created");
+                                         success([mappingResult firstObject]);
+                                     } failure:^(RKObjectRequestOperation *operation, NSError *error) {
+                                         NSLog(@"Error creating profile: %@", error);
+                                         failure(operation, error, [self getMessage:error], [self getErrors:error]);
+                                     }
      ];
 }
 

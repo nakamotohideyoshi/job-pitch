@@ -14,6 +14,7 @@
 #import "Job.h"
 #import "Location.h"
 #import "Profile.h"
+#import "Application.h"
 
 @interface API : NSObject
 
@@ -54,6 +55,10 @@
 - (void)loadJobsWithExclusions:(NSArray*)exlusions
                        success:(void (^)(NSArray *jobSeekers))success
                        failure:(void (^)(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors))failure;
+
+- (void)createApplication:(ApplicationForCreation*)application
+                  success:(void (^)(ApplicationForCreation *application))success
+                  failure:(void (^)(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors))failure;
 
 - (void)loadHours:(void (^)(NSArray *hours))success
           failure:(void (^)(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors))failure;

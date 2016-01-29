@@ -8,6 +8,7 @@
 
 #import "JobSeekerHome.h"
 #import "EditSearchProfile.h"
+#import "Application.h"
 
 typedef NS_ENUM(NSInteger, EmptyButtonAction) {
     EmptyButtonActionNone,
@@ -151,6 +152,20 @@ typedef NS_ENUM(NSInteger, EmptyButtonAction) {
 - (IBAction)connect {
     self.dismissButton.enabled = false;
     self.connectButton.enabled = false;
+    ApplicationForCreation *application = [ApplicationForCreation alloc];
+    application.job = self.job.id;
+    application.jobSeeker = self.jobSeeker.id;
+    application.shortlisted = false;
+    [self.appDelegate.api createApplication:application
+                                    success:^(ApplicationForCreation *application) {
+                                        NSLog(@"Application created %@", application);
+                                    } failure:^(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors) {
+                                        [[[UIAlertView alloc] initWithTitle:@"Error"
+                                                                    message:@"Error creating application!"
+                                                                   delegate:nil
+                                                          cancelButtonTitle:@"OK"
+                                                          otherButtonTitles:nil] show];
+                                    }];
     [self.swipeView swipeLeft:^{
         [self nextCard];
     }];

@@ -24,15 +24,7 @@
     [jobSeekerSearchProfile setHoursOptions:self.appDelegate.hours];
     [jobSeekerSearchProfile setSectorOptions:self.appDelegate.sectors];
     [jobSeekerSearchProfile setNavigationController:self.navigationController];
-}
-
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
-}
-
-- (void)viewWillAppear:(BOOL)animated
-{
+    
     if (self.profileId) {
         [self showProgress:true];
         [[self appDelegate].api loadJobProfileWithId:self.profileId
@@ -47,9 +39,16 @@
     } else {
         [self showProgress:false];
         myProfile = [[Profile alloc] init];
+        myProfile.jobSeeker = self.appDelegate.user.jobSeeker;
         [jobSeekerSearchProfile load:myProfile];
     }
 }
+
+- (void)didReceiveMemoryWarning {
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+
 
 - (NSArray *)getRequiredFields {
     if (!jobSeekerSearchProfile.hidden) {

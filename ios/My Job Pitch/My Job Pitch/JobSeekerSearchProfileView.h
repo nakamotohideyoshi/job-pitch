@@ -11,12 +11,13 @@
 #import "Profile.h"
 #import <DownPicker.h>
 #import "DownPickerMultiple.h"
+#import "LocationMapView.h"
 
 @protocol JobSeekerSearchProfileViewDelegate
 - (void)continue;
 @end
 
-@interface JobSeekerSearchProfileView : UIView
+@interface JobSeekerSearchProfileView : UIView<LocationMapViewDelegate>
 
 @property (weak, nonatomic) IBOutlet ErrorTextField *sectors;
 @property (nonnull) DownPickerMultiple *sectorsPicker;

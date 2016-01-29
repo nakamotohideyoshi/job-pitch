@@ -10,7 +10,6 @@
 #import "Contract.h"
 #import "Hours.h"
 #import "Sector.h"
-#import "LocationMapView.h"
 
 @interface JobSeekerSearchProfileView ()
 @property (nonatomic, nonnull) NSArray *contracts;
@@ -101,9 +100,14 @@
 }
 
 - (IBAction)changeLocation:(id)sender {
-    UIViewController *controller = [[UIViewController alloc] init];
-    controller.view = [[LocationMapView alloc] init];
-    [self.navigationController pushViewController:controller animated:YES];
+    LocationMapView *map = [[LocationMapView alloc] initWithNibName:@"LocationMap" bundle:nil];
+    [map setDelegate:self];
+    if (self.placeLatitude != nil)
+        [map setLocationWithLatitude:self.placeLatitude
+                           longitude:self.placeLongitude
+                                name:self.placeName
+                             placeID:self.placeID];
+    [self.navigationController pushViewController:map animated:YES];
 }
 
 - (IBAction)continue:(id)sender {
@@ -206,6 +210,18 @@
     } else {
         self.location.textField.text = @"";
     }
+}
+
+- (void)setLocationWithLatitude:(NSNumber *)latitude
+                      longitude:(NSNumber *)longitude
+                           name:(NSString *)name
+                        placeID:(NSString *)placeID
+{
+    self.placeLatitude = latitude;
+    self.placeLongitude = longitude;
+    self.placeName = name;
+    self.placeID = placeID;
+    [self updateLocation];
 }
 
 @end

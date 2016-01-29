@@ -29,6 +29,7 @@
 		CE8AAFF71C599FA50004F021 /* DownPickerMultiple.m in Sources */ = {isa = PBXBuildFile; fileRef = CE8AAFF61C599FA50004F021 /* DownPickerMultiple.m */; };
 		CE8AAFF91C59A2DE0004F021 /* LocationMap.xib in Resources */ = {isa = PBXBuildFile; fileRef = CE8AAFF81C59A2DE0004F021 /* LocationMap.xib */; };
 		CE8AAFFC1C59A7820004F021 /* LocationMapView.m in Sources */ = {isa = PBXBuildFile; fileRef = CE8AAFFB1C59A7820004F021 /* LocationMapView.m */; };
+		CE8AAFFE1C5AD62E0004F021 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CE8AAFFD1C5AD62E0004F021 /* CoreLocation.framework */; };
 		CEC2E4041C45A88100AC0F45 /* Job.m in Sources */ = {isa = PBXBuildFile; fileRef = CEC2E4031C45A88100AC0F45 /* Job.m */; };
 		CEC2E4071C45B4C200AC0F45 /* Location.m in Sources */ = {isa = PBXBuildFile; fileRef = CEC2E4061C45B4C200AC0F45 /* Location.m */; };
 		CEC2E40A1C45B4EC00AC0F45 /* MJPObjectWithDates.m in Sources */ = {isa = PBXBuildFile; fileRef = CEC2E4091C45B4EC00AC0F45 /* MJPObjectWithDates.m */; };
@@ -119,6 +120,7 @@
 		CE8AAFF81C59A2DE0004F021 /* LocationMap.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LocationMap.xib; sourceTree = "<group>"; };
 		CE8AAFFA1C59A7820004F021 /* LocationMapView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LocationMapView.h; sourceTree = "<group>"; };
 		CE8AAFFB1C59A7820004F021 /* LocationMapView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LocationMapView.m; sourceTree = "<group>"; };
+		CE8AAFFD1C5AD62E0004F021 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		CEC2E4021C45A88100AC0F45 /* Job.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Job.h; path = Assets.xcassets/Job.h; sourceTree = "<group>"; };
 		CEC2E4031C45A88100AC0F45 /* Job.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Job.m; path = Assets.xcassets/Job.m; sourceTree = "<group>"; };
 		CEC2E4051C45B4C200AC0F45 /* Location.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Location.h; sourceTree = "<group>"; };
@@ -190,6 +192,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CE8AAFFE1C5AD62E0004F021 /* CoreLocation.framework in Frameworks */,
 				CEE52CF71C06550E00881648 /* Foundation.framework in Frameworks */,
 				CEE52CF51C06550500881648 /* UIKit.framework in Frameworks */,
 				CEE52CF31C0654FB00881648 /* SystemConfiguration.framework in Frameworks */,
@@ -367,6 +370,7 @@
 		FFB8B70042B1AAA85F696FCB /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				CE8AAFFD1C5AD62E0004F021 /* CoreLocation.framework */,
 				CEE52CF61C06550E00881648 /* Foundation.framework */,
 				CEE52CF41C06550500881648 /* UIKit.framework */,
 				CEE52CF21C0654FB00881648 /* SystemConfiguration.framework */,

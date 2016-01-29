@@ -519,6 +519,7 @@
                                                             </label>
                                                         </subviews>
                                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                        <gestureRecognizers/>
                                                         <constraints>
                                                             <constraint firstItem="52L-RD-C24" firstAttribute="leading" secondItem="RaC-Zt-Qoo" secondAttribute="leading" id="G9q-PZ-Fif"/>
                                                             <constraint firstItem="52L-RD-C24" firstAttribute="trailing" secondItem="RaC-Zt-Qoo" secondAttribute="trailing" id="ODc-VS-Tlq"/>
@@ -542,6 +543,9 @@
                                                                 <integer key="value" value="6"/>
                                                             </userDefinedRuntimeAttribute>
                                                         </userDefinedRuntimeAttributes>
+                                                        <connections>
+                                                            <outletCollection property="gestureRecognizers" destination="SlX-UY-XIP" appends="YES" id="88t-dV-a1R"/>
+                                                        </connections>
                                                     </view>
                                                 </subviews>
                                                 <constraints>
@@ -650,9 +654,15 @@
                         <outlet property="swipeView" destination="vw2-Ei-nOB" id="v9U-BX-PS7"/>
                         <segue destination="9sE-YX-o7D" kind="show" identifier="goto_edit_profile" id="Bra-CJ-YQ4"/>
                         <segue destination="TSl-Ib-hcF" kind="show" identifier="goto_edit_search" id="8T7-ZT-leH"/>
+                        <segue destination="AFt-YI-JVu" kind="show" identifier="goto_job_details" id="bLg-hp-djS"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="wWf-ZI-89N" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <tapGestureRecognizer id="SlX-UY-XIP">
+                    <connections>
+                        <action selector="cardTapAction:" destination="B6U-eH-CfR" id="zod-Lm-vIl"/>
+                    </connections>
+                </tapGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="1787" y="-263"/>
         </scene>
@@ -855,6 +865,80 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="5wH-74-NtQ" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="2555" y="-927"/>
+        </scene>
+        <!--Job Details-->
+        <scene sceneID="ejO-kA-TJn">
+            <objects>
+                <viewController id="AFt-YI-JVu" customClass="JobDetails" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="NSA-DW-CYx"/>
+                        <viewControllerLayoutGuide type="bottom" id="dFG-2c-cEV"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="vJH-yR-Cyc">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="D7t-jo-r5A">
+                                <rect key="frame" x="290" y="290" width="20" height="20"/>
+                            </activityIndicatorView>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="background_logo" translatesAutoresizingMaskIntoConstraints="NO" id="tuK-iR-goT">
+                                <rect key="frame" x="60" y="60" width="480" height="480"/>
+                            </imageView>
+                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="hNc-Bd-zYK">
+                                <rect key="frame" x="0.0" y="64" width="600" height="536"/>
+                                <subviews>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Dwu-tN-pup" userLabel="Content View">
+                                        <rect key="frame" x="0.0" y="0.0" width="600" height="72"/>
+                                        <subviews>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="..." textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jTy-yG-uEI">
+                                                <rect key="frame" x="16" y="16" width="29" height="40"/>
+                                                <fontDescription key="fontDescription" type="boldSystem" pointSize="33"/>
+                                                <color key="textColor" red="0.0" green="0.58823529409999997" blue="0.53333333329999999" alpha="1" colorSpace="calibratedRGB"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                        </subviews>
+                                        <constraints>
+                                            <constraint firstItem="jTy-yG-uEI" firstAttribute="top" secondItem="Dwu-tN-pup" secondAttribute="top" constant="16" id="Ee7-8d-q0j"/>
+                                            <constraint firstItem="jTy-yG-uEI" firstAttribute="leading" secondItem="Dwu-tN-pup" secondAttribute="leading" constant="16" id="XKA-ek-O50"/>
+                                            <constraint firstAttribute="bottom" secondItem="jTy-yG-uEI" secondAttribute="bottom" constant="16" id="Xek-ik-o0o"/>
+                                        </constraints>
+                                    </view>
+                                </subviews>
+                                <constraints>
+                                    <constraint firstItem="Dwu-tN-pup" firstAttribute="top" secondItem="hNc-Bd-zYK" secondAttribute="top" id="1rL-M7-SiV"/>
+                                    <constraint firstAttribute="right" secondItem="Dwu-tN-pup" secondAttribute="right" id="7ka-Pj-LIL"/>
+                                    <constraint firstAttribute="bottom" secondItem="Dwu-tN-pup" secondAttribute="bottom" id="Eic-Sv-xdD"/>
+                                    <constraint firstItem="Dwu-tN-pup" firstAttribute="left" secondItem="hNc-Bd-zYK" secondAttribute="left" id="vcX-Yt-Bek"/>
+                                </constraints>
+                            </scrollView>
+                        </subviews>
+                        <color key="backgroundColor" red="0.85098039219999999" green="0.85098039219999999" blue="0.85098039219999999" alpha="1" colorSpace="calibratedRGB"/>
+                        <constraints>
+                            <constraint firstItem="hNc-Bd-zYK" firstAttribute="leading" secondItem="vJH-yR-Cyc" secondAttribute="leading" id="0J3-NR-Fkz"/>
+                            <constraint firstItem="dFG-2c-cEV" firstAttribute="top" secondItem="hNc-Bd-zYK" secondAttribute="bottom" id="32l-3Z-Rkt"/>
+                            <constraint firstAttribute="trailing" secondItem="hNc-Bd-zYK" secondAttribute="trailing" id="7LJ-sn-vQ0"/>
+                            <constraint firstItem="D7t-jo-r5A" firstAttribute="centerY" secondItem="vJH-yR-Cyc" secondAttribute="centerY" id="I8H-wg-rFb"/>
+                            <constraint firstItem="hNc-Bd-zYK" firstAttribute="top" secondItem="NSA-DW-CYx" secondAttribute="bottom" id="MVT-pD-dVJ"/>
+                            <constraint firstItem="Dwu-tN-pup" firstAttribute="width" secondItem="vJH-yR-Cyc" secondAttribute="width" id="Ymu-0R-kuv"/>
+                            <constraint firstItem="tuK-iR-goT" firstAttribute="centerX" secondItem="vJH-yR-Cyc" secondAttribute="centerX" id="kux-OT-hQQ"/>
+                            <constraint firstItem="D7t-jo-r5A" firstAttribute="centerX" secondItem="vJH-yR-Cyc" secondAttribute="centerX" id="m4F-ty-uIh"/>
+                            <constraint firstItem="tuK-iR-goT" firstAttribute="width" secondItem="vJH-yR-Cyc" secondAttribute="width" multiplier="0.8" id="v26-eI-wBE"/>
+                            <constraint firstItem="tuK-iR-goT" firstAttribute="centerY" secondItem="vJH-yR-Cyc" secondAttribute="centerY" id="y2o-Tr-QWf"/>
+                            <constraint firstItem="tuK-iR-goT" firstAttribute="height" secondItem="vJH-yR-Cyc" secondAttribute="height" multiplier="0.8" id="yGF-eF-dAO"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" title="Job Details" id="Yiy-ZQ-6TI"/>
+                    <nil key="simulatedBottomBarMetrics"/>
+                    <connections>
+                        <outlet property="activityIndicator" destination="D7t-jo-r5A" id="TFP-8F-SRs"/>
+                        <outlet property="jobTitle" destination="jTy-yG-uEI" id="aPi-kH-34m"/>
+                        <outlet property="mainView" destination="Dwu-tN-pup" id="gNo-g6-3Gs"/>
+                        <outlet property="scrollView" destination="hNc-Bd-zYK" id="3B1-6R-GEd"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="nmM-2f-Awx" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2555" y="513"/>
         </scene>
     </scenes>
     <resources>

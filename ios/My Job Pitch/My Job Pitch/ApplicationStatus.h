@@ -8,6 +8,10 @@
 
 #import "MJPObjectWithNameDesc.h"
 
+extern NSString *const APPLICATION_CREATED;
+extern NSString *const APPLICATION_ESTABLISHED;
+extern NSString *const APPLICATION_DELETED;
+
 @interface ApplicationStatus : MJPObjectWithNameDesc
 @property NSString* friendlyName;
 @end

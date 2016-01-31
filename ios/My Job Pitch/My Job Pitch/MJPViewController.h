@@ -8,20 +8,23 @@
 
 #import <UIKit/UIKit.h>
 #import "AppDelegate.h"
+#import "Image.h"
 
 @interface MJPViewController : UIViewController {
     IBOutlet UIActivityIndicatorView * activityIndicator;
     IBOutlet UIView * mainView;
 }
 
-- (AppDelegate*)appDelegate;
-- (NSArray*) getRequiredFields;
-- (NSDictionary*)getFieldMap;
-- (NSDictionary*)getErrorViewMap;
+- (nonnull AppDelegate*)appDelegate;
+- (nonnull NSArray*) getRequiredFields;
+- (nonnull NSDictionary*)getFieldMap;
+- (nonnull NSDictionary*)getErrorViewMap;
 - (void)clearErrors;
-- (void)handleErrors:(NSDictionary*)errors message:(NSString*)message;
+- (void)handleErrors:(nullable NSDictionary*)errors message:(nullable NSString*)message;
 - (void)showProgress:(BOOL)showProgress;
 - (BOOL)validate;
-- (NSMutableDictionary*)performValidation;
+- (nonnull NSMutableDictionary*)performValidation;
+- (void)loadImageURL:(nonnull NSString*)image into:(nonnull UIImageView*)imageView withIndicator:(nonnull UIActivityIndicatorView*)indicator;
+
 @end
 

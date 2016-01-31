@@ -9,11 +9,9 @@
 #import "AppDelegate.h"
 #import "API.h"
 #import "Hours.h"
-#import "Contract.h"
 #import "Sector.h"
 #import "Sex.h"
 #import "Nationality.h"
-#import "ApplicationStatus.h"
 #import "JobStatus.h"
 #import "Role.h"
 @import GoogleMaps;
@@ -162,7 +160,7 @@
 - (Hours*)getHours:(NSNumber*)id
 {
     for (Hours *hours in self.hours)
-        if (hours.id == id)
+        if ([hours.id isEqualToNumber:id])
             return hours;
     return nil;
 }
@@ -170,7 +168,7 @@
 - (Hours*)getHoursByName:(NSString*)name
 {
     for (Hours *hours in self.hours)
-        if (hours.name == name)
+        if ([hours.name isEqualToString:name])
             return hours;
     return nil;
 }
@@ -178,7 +176,7 @@
 - (Contract*)getContract:(NSNumber*)id
 {
     for (Contract *contract in self.contracts)
-        if (contract.id == id)
+        if ([contract.id isEqualToNumber:id])
             return contract;
     return nil;
 }
@@ -186,8 +184,24 @@
 - (Contract*)getContractByName:(NSString*)name;
 {
     for (Contract *contract in self.contracts)
-        if (contract.name == name)
+        if ([contract.name isEqualToString:name])
             return contract;
+    return nil;
+}
+
+- (ApplicationStatus*)getApplicationStatus:(NSNumber *)id
+{
+    for (ApplicationStatus *applicationStatus in self.applicationStatuses)
+        if ([applicationStatus.id isEqualToNumber:id])
+            return applicationStatus;
+    return nil;
+}
+
+- (ApplicationStatus*)getApplicationStatusByName:(NSString *)name
+{
+    for (ApplicationStatus *applicationStatus in self.applicationStatuses)
+        if ([applicationStatus.name isEqualToString:name])
+            return applicationStatus;
     return nil;
 }
 

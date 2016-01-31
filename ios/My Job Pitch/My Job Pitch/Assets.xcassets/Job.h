@@ -8,6 +8,7 @@
 
 #import "MJPObjectWithDates.h"
 #import "Location.h"
+#import "Image.h"
 
 @interface Job : MJPObjectWithDates
 
@@ -20,5 +21,7 @@
 @property (nullable) NSNumber* status;
 @property (nullable) Location* locationData;
 @property (nullable) NSArray* images;
+
+- (nullable Image*) getImage;
 
 @end

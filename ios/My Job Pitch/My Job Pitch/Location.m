@@ -10,4 +10,13 @@
 
 @implementation Location
 
+- (Image*)getImage
+{
+    if (self.images && self.images.count > 0) {
+        return [self.images firstObject];
+    } else {
+        return [self.businessData getImage];
+    }
+}
+
 @end

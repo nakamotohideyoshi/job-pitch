@@ -11,7 +11,19 @@
 
 @interface JobDetails : ScrollingViewController
 
-@property (weak, nonatomic) IBOutlet UILabel *jobTitle;
+@property (nonnull) Application *application;
 @property (nonnull) Job *job;
+
+@property (weak, nonatomic) IBOutlet UIImageView *jobImage;
+@property (weak, nonatomic) IBOutlet UIActivityIndicatorView *jobImageActivity;
+@property (weak, nonatomic) IBOutlet UILabel *jobTitle;
+@property (weak, nonatomic) IBOutlet UILabel *attributes;
+@property (weak, nonatomic) IBOutlet UILabel *jobBusinessLocation;
+@property (weak, nonatomic) IBOutlet UILabel *jobDescription;
+@property (weak, nonatomic) IBOutlet UILabel *locationName;
+@property (weak, nonatomic) IBOutlet UILabel *locationDescription;
+@property (weak, nonatomic) IBOutlet UILabel *contactDetails;
+
+- (IBAction)openMap:(nullable id)sender;
 
 @end

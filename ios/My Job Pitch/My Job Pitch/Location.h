@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "MJPObjectWithDates.h"
 #import "Business.h"
+#import "Image.h"
 
 @interface Location : MJPObjectWithDates
 
@@ -29,5 +30,7 @@
 @property (nullable) NSString* address;
 @property (nullable) NSArray* images;
 @property (nullable) Business* businessData;
+
+- (nullable Image*)getImage;
 
 @end

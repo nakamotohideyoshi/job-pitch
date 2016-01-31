@@ -116,4 +116,19 @@
     }
 }
 
+- (void)loadImageURL:(NSString*)image into:(UIImageView*)imageView withIndicator:(UIActivityIndicatorView*)indicator
+{
+    [indicator setHidden:false];
+    [indicator startAnimating];
+    imageView.image = nil;
+    NSURL *imageURL = [NSURL URLWithString:image];
+    [NSURLConnection sendAsynchronousRequest:[NSURLRequest requestWithURL:imageURL]
+                                       queue:[NSOperationQueue mainQueue]
+                           completionHandler:^(NSURLResponse *response, NSData *data, NSError *error) {
+                               imageView.image = [UIImage imageWithData:data];
+                               [indicator setHidden:true];
+                               [indicator stopAnimating];
+                           }];
+}
+
 @end

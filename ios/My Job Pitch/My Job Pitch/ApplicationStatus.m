@@ -8,6 +8,10 @@
 
 #import "ApplicationStatus.h"
 
+NSString *const APPLICATION_CREATED = @"CREATED";
+NSString *const APPLICATION_ESTABLISHED = @"ESTABLISHED";
+NSString *const APPLICATION_DELETED = @"DELETED";
+
 @implementation ApplicationStatus
 
 @end

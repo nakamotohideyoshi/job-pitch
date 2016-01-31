@@ -30,10 +30,13 @@ typedef NS_ENUM(NSInteger, EmptyButtonAction) {
 @property EmptyButtonAction emptyButton2Action;
 @end
 
-@implementation JobSeekerHome
+@implementation JobSeekerHome {
+    Boolean resetOnAppearance;
+}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    resetOnAppearance = true;
     self.swipeView.delegate = self;
     self.emptyButton1Action = EmptyButtonActionNone;
     self.emptyButton2Action = EmptyButtonActionNone;
@@ -41,7 +44,7 @@ typedef NS_ENUM(NSInteger, EmptyButtonAction) {
 
 - (IBAction)cardTapAction:(id)sender
 {
-    [self performSegueWithIdentifier:@"goto_job_details" sender:@"home"];
+    [self performJobDetails];
 }
 
 - (IBAction)emptyButton1ActionDelegate:(id)sender
@@ -77,7 +80,9 @@ typedef NS_ENUM(NSInteger, EmptyButtonAction) {
 
 - (void)viewWillAppear:(BOOL)animated
 {
-    [self reset];
+    if (resetOnAppearance)
+        [self reset];
+    resetOnAppearance = true;
     [self.navigationController setToolbarHidden:NO animated:YES];
 }
 
@@ -214,6 +219,7 @@ typedef NS_ENUM(NSInteger, EmptyButtonAction) {
 
 - (void)performEditProfile
 {
+    resetOnAppearance = false;
     [self performSegueWithIdentifier:@"goto_edit_profile" sender:@"home"];
 }
 
@@ -229,7 +235,14 @@ typedef NS_ENUM(NSInteger, EmptyButtonAction) {
 
 - (void)performMessages
 {
+    resetOnAppearance = false;
     [self performSegueWithIdentifier:@"goto_messages" sender:@"home"];
+}
+
+- (void)performJobDetails
+{
+    resetOnAppearance = false;
+    [self performSegueWithIdentifier:@"goto_job_details" sender:@"home"];
 }
 
 - (void)performActivateProfile
@@ -337,6 +350,10 @@ typedef NS_ENUM(NSInteger, EmptyButtonAction) {
             [self.jobs removeObject:self.job];
         }
         if (self.job) {
+            Image *image = [self.job getImage];
+            self.image.image = nil;
+            if (image)
+                [self loadImageURL:image.image into:self.image withIndicator:self.imageActivity];
             self.nameLabel.text = self.job.title;
             self.descriptionLabel.text = self.job.desc;
             Hours *hours = [self.appDelegate getHours:self.job.hours];

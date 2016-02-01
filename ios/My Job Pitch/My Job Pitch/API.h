@@ -64,6 +64,10 @@
 - (void)loadApplications:(void (^)(NSArray *applications))success
                  failure:(void (^)(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors))failure;
 
+- (void)loadApplicationWithId:(NSNumber*)pk
+                      success:(void (^)(Application *application))success
+                      failure:(void (^)(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors))failure;
+
 - (void)sendMessage:(MessageForCreation*)message
             success:(void (^)(MessageForCreation *message))success
             failure:(void (^)(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors))failure;

@@ -12,7 +12,7 @@
 #import "JobDetails.h"
 
 @interface MessageThread ()
-
+@property (nonnull) NSMutableArray *messageData;
 @end
 
 @implementation MessageThread
@@ -20,6 +20,8 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     [self showProgress:false];
+    self.messageData = [NSMutableArray arrayWithArray:self.application.messages];
+    self.application.messages = self.messageData;
     self.messages.rowHeight = UITableViewAutomaticDimension;
     self.messages.estimatedRowHeight = 96;
     self.messages.delegate = self;
@@ -28,6 +30,7 @@
 
 - (void)viewWillAppear:(BOOL)animated
 {
+    self.messages.alpha = 0;
     ApplicationStatus *statusCreated = [self.appDelegate getApplicationStatusByName:APPLICATION_CREATED];
     if ([self.appDelegate.user isJobSeeker]) {
         self.from.text = self.application.job.locationData.businessData.name;
@@ -45,7 +48,6 @@
             self.sendButton.enabled = false;
             self.sendButton.alpha = 0.5;
         }
-
     } else {
         self.from.text = [NSString stringWithFormat:@"%@ %@",
                           self.application.jobSeeker.firstName,
@@ -75,11 +77,54 @@
 
 -(void)viewDidAppear:(BOOL)animated
 {
+    [self scrollToBottomAnimated:false];
+    self.messages.alpha = 1;
+    [UIView animateWithDuration:1.0
+                     animations:^{
+                         self.tableBottomContraint.constant = 32;
+                     } completion:^(BOOL finished) {
+                         [self.appDelegate.api
+                          loadApplicationWithId:self.application.id
+                          success:^(Application *application) {
+                              [UIView animateWithDuration:1.0
+                                               animations:^{
+                                                   self.tableBottomContraint.constant = 0;
+                                               } completion:^(BOOL finished) {
+                                                   [self newData:application.messages];
+                                               }];
+                          } failure:^(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors) {
+                              [[[UIAlertView alloc] initWithTitle:@"Error"
+                                                          message:@"Error checking messages"
+                                                         delegate:nil
+                                                cancelButtonTitle:@"Okay"
+                                                otherButtonTitles:nil] show];
+                              [UIView animateWithDuration:1.0
+                                               animations:^{
+                                                   self.tableBottomContraint.constant = 0;
+                                               }];
+                          }];
+                     }
+     ];
+}
+
+-(void)newData:(NSArray *)messages
+{
+    NSMutableArray *newIndexes = [[NSMutableArray alloc]init];
+    for (NSUInteger i = self.messageData.count; i < messages.count; i++) {
+        [self.messageData addObject:[messages objectAtIndex:i]];
+        [newIndexes addObject:[NSIndexPath indexPathForRow:i inSection:0]];
+    }
+    [self.messages insertRowsAtIndexPaths:newIndexes withRowAnimation:UITableViewRowAnimationNone];
+    [self scrollToBottomAnimated:false];
+}
+
+-(void)scrollToBottomAnimated:(Boolean)animated
+{
     [self.messages scrollToRowAtIndexPath:[NSIndexPath
                                            indexPathForRow:self.application.messages.count-1
                                            inSection:0]
                          atScrollPosition:UITableViewScrollPositionBottom
-                                 animated:true];
+                                 animated:animated];
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
@@ -157,22 +202,34 @@
         self.sendButton.enabled = false;
         self.sendButton.alpha = 0.5;
         self.messageInput.editable = false;
-        [self.appDelegate.api sendMessage:message
-                                  success:^(MessageForCreation *message) {
-                                      self.sendButton.enabled = true;
-                                      self.sendButton.alpha = 1.0;
-                                      self.messageInput.editable = true;
-                                      self.messageInput.text = @"";
-                                  } failure:^(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors) {
-                                      self.sendButton.enabled = true;
-                                      self.sendButton.alpha = 1.0;
-                                      self.messageInput.editable = true;
-                                      [[[UIAlertView alloc] initWithTitle:@"Error"
-                                                                  message:@"Error loading data"
-                                                                 delegate:self
-                                                        cancelButtonTitle:@"Okay"
-                                                        otherButtonTitles:nil] show];
-                                  }];
+        [self.appDelegate.api
+         sendMessage:message
+         success:^(MessageForCreation *message) {
+             [self.appDelegate.api
+              loadApplicationWithId:self.application.id
+              success:^(Application *application) {
+                  [self newData:application.messages];
+                  self.sendButton.enabled = true;
+                  self.sendButton.alpha = 1.0;
+                  self.messageInput.editable = true;
+                  self.messageInput.text = @"";
+              } failure:^(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors) {
+                  [[[UIAlertView alloc] initWithTitle:@"Error"
+                                              message:@"Error checking messages"
+                                             delegate:nil
+                                    cancelButtonTitle:@"Okay"
+                                    otherButtonTitles:nil] show];
+              }];
+         } failure:^(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors) {
+             self.sendButton.enabled = true;
+             self.sendButton.alpha = 1.0;
+             self.messageInput.editable = true;
+             [[[UIAlertView alloc] initWithTitle:@"Error"
+                                         message:@"Error sending message"
+                                        delegate:self
+                               cancelButtonTitle:@"Okay"
+                               otherButtonTitles:nil] show];
+         }];
     }
 }
 

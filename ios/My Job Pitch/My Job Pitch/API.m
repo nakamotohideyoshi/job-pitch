@@ -844,6 +844,21 @@
      ];
 }
 
+- (void)loadApplicationWithId:(NSNumber*)pk
+                      success:(void (^)(Application *application))success
+                      failure:(void (^)(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors))failure
+{
+    [self clearCookies];
+    NSString *url = [NSString stringWithFormat:@"/api/applications/%@/", pk];
+    [[RKObjectManager sharedManager] getObjectsAtPath:url parameters:nil
+                                              success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
+                                                  success([mappingResult firstObject]);
+                                              }
+                                              failure:^(RKObjectRequestOperation *operation, NSError *error) {
+                                                  failure(operation, error, [self getMessage:error], [self getErrors:error]);
+                                              }];
+}
+
 - (void)sendMessage:(MessageForCreation*)message
             success:(void (^)(MessageForCreation *message))success
             failure:(void (^)(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors))failure

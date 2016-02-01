@@ -26,6 +26,10 @@
     self.messages.estimatedRowHeight = 96;
     self.messages.dataSource = self;
     self.messages.delegate = self;
+}
+
+-(void)viewWillAppear:(BOOL)animated
+{
     [self showProgress:true];
     [self.appDelegate.api loadApplications:^(NSArray *loadedApplications) {
         [self showProgress:false];

@@ -19,6 +19,7 @@
 @property (weak, nonatomic) IBOutlet UITableView *messages;
 @property (weak, nonatomic) IBOutlet UITextView *messageInput;
 @property (weak, nonatomic) IBOutlet UIButton *sendButton;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *tableBottomContraint;
 
 - (IBAction)headerTap:(nullable id)sender;
 - (IBAction)send:(nullable id)sender;

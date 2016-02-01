@@ -1325,8 +1325,11 @@
                                             <constraint firstAttribute="trailing" secondItem="adB-Ad-lqU" secondAttribute="trailing" constant="8" id="jQD-pF-EHq"/>
                                         </constraints>
                                     </view>
+                                    <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="white" translatesAutoresizingMaskIntoConstraints="NO" id="7Av-Ij-uy8">
+                                        <rect key="frame" x="290" y="460" width="20" height="20"/>
+                                    </activityIndicatorView>
                                     <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" dataMode="prototypes" style="plain" separatorStyle="none" allowsSelection="NO" rowHeight="101" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="gSe-xC-hKC">
-                                        <rect key="frame" x="8" y="91" width="584" height="360"/>
+                                        <rect key="frame" x="8" y="91" width="584" height="361"/>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         <prototypes>
                                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="MessageThreadCell" rowHeight="96" id="Uxu-3c-FRc" customClass="MessageThreadCell">
@@ -1392,12 +1395,14 @@
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstAttribute="trailing" secondItem="SVX-Mt-v3L" secondAttribute="trailing" id="15v-UC-Kja"/>
+                                    <constraint firstItem="xgA-tT-mNv" firstAttribute="top" secondItem="gSe-xC-hKC" secondAttribute="bottom" id="AIR-GC-bDQ"/>
                                     <constraint firstAttribute="trailing" secondItem="xgA-tT-mNv" secondAttribute="trailing" id="HEf-eQ-w5u"/>
                                     <constraint firstItem="SVX-Mt-v3L" firstAttribute="top" secondItem="Rrb-6A-csV" secondAttribute="top" id="HhQ-sc-iEP"/>
-                                    <constraint firstItem="xgA-tT-mNv" firstAttribute="top" secondItem="gSe-xC-hKC" secondAttribute="bottom" constant="1" id="TBC-2n-frr"/>
                                     <constraint firstItem="xgA-tT-mNv" firstAttribute="leading" secondItem="Rrb-6A-csV" secondAttribute="leading" id="VrM-aN-s18"/>
                                     <constraint firstAttribute="trailing" secondItem="gSe-xC-hKC" secondAttribute="trailing" constant="8" id="bBm-Is-DP2"/>
+                                    <constraint firstItem="7Av-Ij-uy8" firstAttribute="centerX" secondItem="Rrb-6A-csV" secondAttribute="centerX" id="bdC-Vh-Edh"/>
                                     <constraint firstItem="gSe-xC-hKC" firstAttribute="leading" secondItem="Rrb-6A-csV" secondAttribute="leading" constant="8" id="dW2-fF-Jgv"/>
+                                    <constraint firstItem="7Av-Ij-uy8" firstAttribute="top" secondItem="gSe-xC-hKC" secondAttribute="bottom" constant="8" id="j8D-PU-b7x"/>
                                     <constraint firstAttribute="bottom" secondItem="xgA-tT-mNv" secondAttribute="bottom" id="mOS-i1-kMg"/>
                                     <constraint firstItem="SVX-Mt-v3L" firstAttribute="leading" secondItem="Rrb-6A-csV" secondAttribute="leading" id="qIf-YJ-Znp"/>
                                     <constraint firstItem="gSe-xC-hKC" firstAttribute="top" secondItem="SVX-Mt-v3L" secondAttribute="bottom" id="y9s-a6-5Sm"/>
@@ -1432,6 +1437,7 @@
                         <outlet property="messageInput" destination="d7X-nK-QFJ" id="UYg-rj-khD"/>
                         <outlet property="messages" destination="gSe-xC-hKC" id="FAv-Ix-sfF"/>
                         <outlet property="sendButton" destination="adB-Ad-lqU" id="7cn-oX-vVp"/>
+                        <outlet property="tableBottomContraint" destination="AIR-GC-bDQ" id="Xxm-8v-eM6"/>
                         <segue destination="AFt-YI-JVu" kind="show" identifier="goto_job_details" id="DDY-hC-ukR"/>
                     </connections>
                 </viewController>

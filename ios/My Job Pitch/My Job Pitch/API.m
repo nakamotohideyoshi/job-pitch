@@ -19,7 +19,6 @@
 #import "JobStatus.h"
 #import "Role.h"
 #import "Pitch.h"
-#import "Profile.h"
 
 @implementation API
 {
@@ -317,7 +316,20 @@
                                          array:jobSeekerArray
                                          dictionary:[self inverseDictionary:jobSeekerDictionary]
                                          relationships:[self inverseRelationships:jobSeekerRelationships]];
-
+    NSArray *messageArray = @[@"id",
+                              @"system",
+                              @"content",
+                              @"read",
+                              @"created",
+                              @"application",
+                              ];
+    NSDictionary *messageDictionary = @{@"fromRole": @"from_role",
+                                        };
+    RKObjectMapping *messageMapping = [self
+                                       createResponseMappingForClass:[Message class]
+                                       array:messageArray
+                                       dictionary:[self inverseDictionary:messageDictionary]
+                                       relationships:nil];
     NSArray* applicationRelationships = @[@{@"source": @"job",
                                             @"destination": @"job_data",
                                             @"mapping": jobMapping,
@@ -326,14 +338,13 @@
                                             @"destination": @"job_seeker",
                                             @"mapping": jobSeekerMapping,
                                             },
-//                                          @{@"source": @"messages",
-//                                            @"destination": @"messages",
-//                                            @"mapping": messageMapping,
-//                                            },
+                                          @{@"source": @"messages",
+                                            @"destination": @"messages",
+                                            @"mapping": messageMapping,
+                                            },
                                           ];
-    
     [self configureResponseMapping:objectManager
-                     responseClass:[ApplicationForCreation class]
+                     responseClass:[Application class]
                      responseArray:applictionArray
                 responseDictionary:[self inverseDictionary:applictionDictionary]
              responseRelationships:[self inverseRelationships:applicationRelationships]
@@ -341,12 +352,24 @@
                             method:RKRequestMethodGET];
     
     [self configureResponseMapping:objectManager
-                     responseClass:[ApplicationForCreation class]
+                     responseClass:[Application class]
                      responseArray:applictionArray
                 responseDictionary:[self inverseDictionary:applictionDictionary]
              responseRelationships:[self inverseRelationships:applicationRelationships]
                               path:@"/api/applications/:pk/"
                             method:RKRequestMethodGET];
+    
+    NSArray *createMessageArray = @[@"id",
+                                    @"application",
+                                    @"content",
+                                    ];
+    [self configureSimpleMapping:objectManager
+                           class:[MessageForCreation class]
+                           array:createMessageArray
+                      dictionary:nil
+                   relationships:nil
+                            path:@"/api/messages/"
+                          method:RKRequestMethodPOST];
     
     NSArray *nameArray = @[@"id",
                            @"name",
@@ -807,6 +830,31 @@
                                          success([mappingResult firstObject]);
                                      } failure:^(RKObjectRequestOperation *operation, NSError *error) {
                                          NSLog(@"Error creating profile: %@", error);
+                                         failure(operation, error, [self getMessage:error], [self getErrors:error]);
+                                     }
+     ];
+}
+
+- (void)loadApplications:(void (^)(NSArray *applications))success
+                 failure:(void (^)(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors))failure
+{
+    [self loadObjectsAtPath:@"/api/applications/"
+                    success:success
+                    failure:failure
+     ];
+}
+
+- (void)sendMessage:(MessageForCreation*)message
+            success:(void (^)(MessageForCreation *message))success
+            failure:(void (^)(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors))failure
+{
+    [[RKObjectManager sharedManager] postObject:message
+                                           path:@"/api/messages/"
+                                     parameters:nil success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
+                                         NSLog(@"Message sent");
+                                         success([mappingResult firstObject]);
+                                     } failure:^(RKObjectRequestOperation *operation, NSError *error) {
+                                         NSLog(@"Error sending message: %@", error);
                                          failure(operation, error, [self getMessage:error], [self getErrors:error]);
                                      }
      ];

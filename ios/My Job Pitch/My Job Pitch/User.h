@@ -13,4 +13,8 @@
 @property NSString* username;
 @property NSArray* businesses;
 @property NSNumber* jobSeeker;
+
+-(bool)isJobSeeker;
+-(bool)isRecruiter;
+
 @end

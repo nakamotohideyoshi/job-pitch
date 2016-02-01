@@ -10,4 +10,14 @@
 
 @implementation User
 
+-(bool)isJobSeeker
+{
+    return self.jobSeeker != nil;
+}
+
+-(bool)isRecruiter
+{
+    return [self.businesses count] > 0;
+}
+
 @end

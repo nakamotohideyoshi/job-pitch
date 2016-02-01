@@ -32,6 +32,11 @@
 		CE8AAFFE1C5AD62E0004F021 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CE8AAFFD1C5AD62E0004F021 /* CoreLocation.framework */; };
 		CE8AB0011C5AF6250004F021 /* Application.m in Sources */ = {isa = PBXBuildFile; fileRef = CE8AB0001C5AF6250004F021 /* Application.m */; };
 		CE8AB0041C5B04320004F021 /* JobDetails.m in Sources */ = {isa = PBXBuildFile; fileRef = CE8AB0031C5B04320004F021 /* JobDetails.m */; };
+		CE8AB00B1C5EA9F60004F021 /* MessageListCell.m in Sources */ = {isa = PBXBuildFile; fileRef = CE8AB00A1C5EA9F60004F021 /* MessageListCell.m */; };
+		CE8AB0111C5EB66C0004F021 /* Messages.m in Sources */ = {isa = PBXBuildFile; fileRef = CE8AB0101C5EB66C0004F021 /* Messages.m */; };
+		CE8AB0141C5EBA850004F021 /* Message.m in Sources */ = {isa = PBXBuildFile; fileRef = CE8AB0131C5EBA850004F021 /* Message.m */; };
+		CE8AB0171C5EDB7B0004F021 /* MessageThread.m in Sources */ = {isa = PBXBuildFile; fileRef = CE8AB0161C5EDB7B0004F021 /* MessageThread.m */; };
+		CE8AB01A1C5EE4B80004F021 /* MessageThreadCell.m in Sources */ = {isa = PBXBuildFile; fileRef = CE8AB0191C5EE4B80004F021 /* MessageThreadCell.m */; };
 		CEC2E4041C45A88100AC0F45 /* Job.m in Sources */ = {isa = PBXBuildFile; fileRef = CEC2E4031C45A88100AC0F45 /* Job.m */; };
 		CEC2E4071C45B4C200AC0F45 /* Location.m in Sources */ = {isa = PBXBuildFile; fileRef = CEC2E4061C45B4C200AC0F45 /* Location.m */; };
 		CEC2E40A1C45B4EC00AC0F45 /* MJPObjectWithDates.m in Sources */ = {isa = PBXBuildFile; fileRef = CEC2E4091C45B4EC00AC0F45 /* MJPObjectWithDates.m */; };
@@ -127,6 +132,16 @@
 		CE8AB0001C5AF6250004F021 /* Application.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Application.m; sourceTree = "<group>"; };
 		CE8AB0021C5B04320004F021 /* JobDetails.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JobDetails.h; sourceTree = "<group>"; };
 		CE8AB0031C5B04320004F021 /* JobDetails.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JobDetails.m; sourceTree = "<group>"; };
+		CE8AB0091C5EA9F60004F021 /* MessageListCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessageListCell.h; sourceTree = "<group>"; };
+		CE8AB00A1C5EA9F60004F021 /* MessageListCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessageListCell.m; sourceTree = "<group>"; };
+		CE8AB00F1C5EB66C0004F021 /* Messages.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Messages.h; sourceTree = "<group>"; };
+		CE8AB0101C5EB66C0004F021 /* Messages.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Messages.m; sourceTree = "<group>"; };
+		CE8AB0121C5EBA850004F021 /* Message.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Message.h; sourceTree = "<group>"; };
+		CE8AB0131C5EBA850004F021 /* Message.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Message.m; sourceTree = "<group>"; };
+		CE8AB0151C5EDB7B0004F021 /* MessageThread.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessageThread.h; sourceTree = "<group>"; };
+		CE8AB0161C5EDB7B0004F021 /* MessageThread.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessageThread.m; sourceTree = "<group>"; };
+		CE8AB0181C5EE4B70004F021 /* MessageThreadCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessageThreadCell.h; sourceTree = "<group>"; };
+		CE8AB0191C5EE4B80004F021 /* MessageThreadCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessageThreadCell.m; sourceTree = "<group>"; };
 		CEC2E4021C45A88100AC0F45 /* Job.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Job.h; path = Assets.xcassets/Job.h; sourceTree = "<group>"; };
 		CEC2E4031C45A88100AC0F45 /* Job.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Job.m; path = Assets.xcassets/Job.m; sourceTree = "<group>"; };
 		CEC2E4051C45B4C200AC0F45 /* Location.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Location.h; sourceTree = "<group>"; };
@@ -270,6 +285,14 @@
 				CE8AAFE81C5848900004F021 /* JobSeekerSearchProfileView.h */,
 				CE8AAFE91C5848900004F021 /* JobSeekerSearchProfileView.m */,
 				CE8AAFE61C5848490004F021 /* JobSeekerSearchProfileView.xib */,
+				CE8AB00F1C5EB66C0004F021 /* Messages.h */,
+				CE8AB0101C5EB66C0004F021 /* Messages.m */,
+				CE8AB0091C5EA9F60004F021 /* MessageListCell.h */,
+				CE8AB00A1C5EA9F60004F021 /* MessageListCell.m */,
+				CE8AB0151C5EDB7B0004F021 /* MessageThread.h */,
+				CE8AB0161C5EDB7B0004F021 /* MessageThread.m */,
+				CE8AB0181C5EE4B70004F021 /* MessageThreadCell.h */,
+				CE8AB0191C5EE4B80004F021 /* MessageThreadCell.m */,
 				CE8AAFF51C599FA50004F021 /* DownPickerMultiple.h */,
 				CE8AAFF61C599FA50004F021 /* DownPickerMultiple.m */,
 				CE8395A91C42F279007A8213 /* SwipeView.h */,
@@ -338,6 +361,8 @@
 				CEC2E4211C4BEFDE00AC0F45 /* JobStatus.m */,
 				CEC2E4051C45B4C200AC0F45 /* Location.h */,
 				CEC2E4061C45B4C200AC0F45 /* Location.m */,
+				CE8AB0121C5EBA850004F021 /* Message.h */,
+				CE8AB0131C5EBA850004F021 /* Message.m */,
 				CEE0623F1C28B77500ED60C0 /* MJPObject.h */,
 				CEE062401C28B77500ED60C0 /* MJPObject.m */,
 				CEC2E4081C45B4EC00AC0F45 /* MJPObjectWithDates.h */,
@@ -603,6 +628,7 @@
 				CEC2E4071C45B4C200AC0F45 /* Location.m in Sources */,
 				CEE062551C28B77500ED60C0 /* Hours.m in Sources */,
 				CEC2E4191C4BE86400AC0F45 /* Sector.m in Sources */,
+				CE8AB0171C5EDB7B0004F021 /* MessageThread.m in Sources */,
 				CEE0625E1C28B77500ED60C0 /* Role.m in Sources */,
 				CE45AECD1C0B461A0092AB75 /* User.m in Sources */,
 				CE8AB0011C5AF6250004F021 /* Application.m in Sources */,
@@ -619,11 +645,13 @@
 				CEE04AA71C10EE2000697620 /* ErrorTextField.m in Sources */,
 				CE6FD33F1C01F9BB001A04C3 /* AppDelegate.m in Sources */,
 				CEE52D011C066F2700881648 /* LoginRequest.m in Sources */,
+				CE8AB01A1C5EE4B80004F021 /* MessageThreadCell.m in Sources */,
 				CEC2E40A1C45B4EC00AC0F45 /* MJPObjectWithDates.m in Sources */,
 				CEE062601C28B77500ED60C0 /* Sex.m in Sources */,
 				CE8AAFFC1C59A7820004F021 /* LocationMapView.m in Sources */,
 				CEE0625C1C28B77500ED60C0 /* Nationality.m in Sources */,
 				CEE062561C28B77500ED60C0 /* JobSeeker.m in Sources */,
+				CE8AB0141C5EBA850004F021 /* Message.m in Sources */,
 				CE8AB0041C5B04320004F021 /* JobDetails.m in Sources */,
 				CE8AAFF71C599FA50004F021 /* DownPickerMultiple.m in Sources */,
 				CEE062591C28B77500ED60C0 /* MJPObjectWithNameDesc.m in Sources */,
@@ -634,10 +662,12 @@
 				CEE0625D1C28B77500ED60C0 /* Profile.m in Sources */,
 				CEC2E4041C45A88100AC0F45 /* Job.m in Sources */,
 				CEC2E4221C4BEFDE00AC0F45 /* JobStatus.m in Sources */,
+				CE8AB00B1C5EA9F60004F021 /* MessageListCell.m in Sources */,
 				CE8AAFEA1C5848900004F021 /* JobSeekerSearchProfileView.m in Sources */,
 				CEE04A9C1C0F896300697620 /* RecruiterHome.m in Sources */,
 				CEE04AA21C0F8C6700697620 /* CreateProfile.m in Sources */,
 				CEE52CFA1C065C4100881648 /* API.m in Sources */,
+				CE8AB0111C5EB66C0004F021 /* Messages.m in Sources */,
 				CE6FD33C1C01F9BB001A04C3 /* main.m in Sources */,
 				CEC2E40D1C45C7AB00AC0F45 /* Image.m in Sources */,
 			);

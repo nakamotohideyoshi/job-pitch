@@ -12,6 +12,7 @@
 #import "Hours.h"
 #import "Contract.h"
 #import "ApplicationStatus.h"
+#import "Role.h"
 
 @interface AppDelegate : UIResponder <UIApplicationDelegate>
 
@@ -38,5 +39,8 @@
 - (Contract*)getContractByName:(NSString*)name;
 - (ApplicationStatus*)getApplicationStatus:(NSNumber*)id;
 - (ApplicationStatus*)getApplicationStatusByName:(NSString*)name;
+- (Role*)getRole:(NSNumber*)id;
+- (Role*)getRoleByName:(NSString*)name;
+- (Role*)getUserRole;
 
 @end

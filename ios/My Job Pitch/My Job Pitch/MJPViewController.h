@@ -8,7 +8,6 @@
 
 #import <UIKit/UIKit.h>
 #import "AppDelegate.h"
-#import "Image.h"
 
 @interface MJPViewController : UIViewController {
     IBOutlet UIActivityIndicatorView * activityIndicator;

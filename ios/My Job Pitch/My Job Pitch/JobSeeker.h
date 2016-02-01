@@ -1,5 +1,6 @@
 #import <Foundation/Foundation.h>
 #import "MJPObjectWithDates.h"
+#import "Pitch.h"
 
 @interface JobSeeker : MJPObjectWithDates
 @property bool active;
@@ -21,4 +22,7 @@
 @property (nullable) NSArray* pitches;
 @property (nullable) NSString* desc;
 @property (nullable) NSString* cv;
+
+-(nullable Pitch*)getPitch;
+
 @end

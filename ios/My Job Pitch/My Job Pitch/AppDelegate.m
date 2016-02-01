@@ -205,4 +205,28 @@
     return nil;
 }
 
+- (Role*)getRole:(NSNumber *)id
+{
+    for (Role *role in self.roles)
+        if ([role.id isEqualToNumber:id])
+            return role;
+    return nil;
+}
+
+- (Role*)getRoleByName:(NSString *)name
+{
+    for (Role *role in self.roles)
+        if ([role.name isEqualToString:name])
+            return role;
+    return nil;
+}
+
+- (Role*)getUserRole
+{
+    if ([self.user isJobSeeker]) {
+        return [self getRoleByName:ROLE_JOB_SEEKER];
+    }
+    return [self getRoleByName:ROLE_RECRUITER];
+}
+
 @end

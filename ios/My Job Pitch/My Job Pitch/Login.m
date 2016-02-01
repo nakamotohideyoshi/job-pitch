@@ -49,9 +49,9 @@
     [self clearErrors];
     [self appDelegate].user = user;
     [self.appDelegate loadData:^() {
-        if (user.jobSeeker) {
+        if ([user isJobSeeker]) {
             [self performSegueWithIdentifier:@"goto_job_seeker" sender:@"login"];
-        } else if ([user.businesses count] > 0) {
+        } else if ([user isRecruiter]) {
             [self performSegueWithIdentifier:@"goto_recruiter" sender:@"login"];
         } else {
             [self performSegueWithIdentifier:@"goto_create_profile" sender:@"login"];

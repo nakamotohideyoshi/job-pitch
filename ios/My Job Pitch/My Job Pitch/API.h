@@ -15,6 +15,7 @@
 #import "Location.h"
 #import "Profile.h"
 #import "Application.h"
+#import "Message.h"
 
 @interface API : NSObject
 
@@ -59,6 +60,13 @@
 - (void)createApplication:(ApplicationForCreation*)application
                   success:(void (^)(ApplicationForCreation *application))success
                   failure:(void (^)(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors))failure;
+
+- (void)loadApplications:(void (^)(NSArray *applications))success
+                 failure:(void (^)(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors))failure;
+
+- (void)sendMessage:(MessageForCreation*)message
+            success:(void (^)(MessageForCreation *message))success
+            failure:(void (^)(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors))failure;
 
 - (void)loadHours:(void (^)(NSArray *hours))success
           failure:(void (^)(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors))failure;

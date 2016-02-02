@@ -824,7 +824,8 @@ Web App By Reiss Watson
     margin-top: -10px;
 }
 #job_applied_for{
-	margin-top:15px;	
+	margin-top:15px;
+	text-align:center;
 }
 #recordStartButton{
 	margin: auto;

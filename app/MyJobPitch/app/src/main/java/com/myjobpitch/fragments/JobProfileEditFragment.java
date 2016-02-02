@@ -52,7 +52,7 @@ public class JobProfileEditFragment extends EditFragment {
         "1 mile", "2 miles", "5 miles", "10 miles", "50 miles"
     );
     private List<Integer> radiusValues = Arrays.asList(
-        1, DEFAULT_RADIUS_INDEX, 5, 10, 50
+        1, 2, 5, 10, 50
     );
 
     public JobProfileEditFragment() {

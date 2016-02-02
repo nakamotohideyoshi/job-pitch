@@ -33,5 +33,6 @@
 - (IBAction)editProfile;
 - (IBAction)editSearch;
 - (IBAction)messages;
+- (IBAction)recordPitch;
 
 @end

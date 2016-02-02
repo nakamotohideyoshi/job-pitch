@@ -37,6 +37,9 @@
 		CE8AB0141C5EBA850004F021 /* Message.m in Sources */ = {isa = PBXBuildFile; fileRef = CE8AB0131C5EBA850004F021 /* Message.m */; };
 		CE8AB0171C5EDB7B0004F021 /* MessageThread.m in Sources */ = {isa = PBXBuildFile; fileRef = CE8AB0161C5EDB7B0004F021 /* MessageThread.m */; };
 		CE8AB01A1C5EE4B80004F021 /* MessageThreadCell.m in Sources */ = {isa = PBXBuildFile; fileRef = CE8AB0191C5EE4B80004F021 /* MessageThreadCell.m */; };
+		CE8AB01D1C6029D90004F021 /* RecordPitch.m in Sources */ = {isa = PBXBuildFile; fileRef = CE8AB01C1C6029D90004F021 /* RecordPitch.m */; };
+		CE8AB0201C6038750004F021 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CE8AB01E1C6038750004F021 /* AVFoundation.framework */; };
+		CE8AB0211C6038750004F021 /* AVKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CE8AB01F1C6038750004F021 /* AVKit.framework */; };
 		CEC2E4041C45A88100AC0F45 /* Job.m in Sources */ = {isa = PBXBuildFile; fileRef = CEC2E4031C45A88100AC0F45 /* Job.m */; };
 		CEC2E4071C45B4C200AC0F45 /* Location.m in Sources */ = {isa = PBXBuildFile; fileRef = CEC2E4061C45B4C200AC0F45 /* Location.m */; };
 		CEC2E40A1C45B4EC00AC0F45 /* MJPObjectWithDates.m in Sources */ = {isa = PBXBuildFile; fileRef = CEC2E4091C45B4EC00AC0F45 /* MJPObjectWithDates.m */; };
@@ -142,6 +145,10 @@
 		CE8AB0161C5EDB7B0004F021 /* MessageThread.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessageThread.m; sourceTree = "<group>"; };
 		CE8AB0181C5EE4B70004F021 /* MessageThreadCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessageThreadCell.h; sourceTree = "<group>"; };
 		CE8AB0191C5EE4B80004F021 /* MessageThreadCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessageThreadCell.m; sourceTree = "<group>"; };
+		CE8AB01B1C6029D90004F021 /* RecordPitch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RecordPitch.h; sourceTree = "<group>"; };
+		CE8AB01C1C6029D90004F021 /* RecordPitch.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RecordPitch.m; sourceTree = "<group>"; };
+		CE8AB01E1C6038750004F021 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
+		CE8AB01F1C6038750004F021 /* AVKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVKit.framework; path = System/Library/Frameworks/AVKit.framework; sourceTree = SDKROOT; };
 		CEC2E4021C45A88100AC0F45 /* Job.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Job.h; path = Assets.xcassets/Job.h; sourceTree = "<group>"; };
 		CEC2E4031C45A88100AC0F45 /* Job.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Job.m; path = Assets.xcassets/Job.m; sourceTree = "<group>"; };
 		CEC2E4051C45B4C200AC0F45 /* Location.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Location.h; sourceTree = "<group>"; };
@@ -213,6 +220,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CE8AB0201C6038750004F021 /* AVFoundation.framework in Frameworks */,
+				CE8AB0211C6038750004F021 /* AVKit.framework in Frameworks */,
 				CE8AAFFE1C5AD62E0004F021 /* CoreLocation.framework in Frameworks */,
 				CEE52CF71C06550E00881648 /* Foundation.framework in Frameworks */,
 				CEE52CF51C06550500881648 /* UIKit.framework in Frameworks */,
@@ -293,6 +302,8 @@
 				CE8AB0161C5EDB7B0004F021 /* MessageThread.m */,
 				CE8AB0181C5EE4B70004F021 /* MessageThreadCell.h */,
 				CE8AB0191C5EE4B80004F021 /* MessageThreadCell.m */,
+				CE8AB01B1C6029D90004F021 /* RecordPitch.h */,
+				CE8AB01C1C6029D90004F021 /* RecordPitch.m */,
 				CE8AAFF51C599FA50004F021 /* DownPickerMultiple.h */,
 				CE8AAFF61C599FA50004F021 /* DownPickerMultiple.m */,
 				CE8395A91C42F279007A8213 /* SwipeView.h */,
@@ -405,6 +416,8 @@
 		FFB8B70042B1AAA85F696FCB /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				CE8AB01E1C6038750004F021 /* AVFoundation.framework */,
+				CE8AB01F1C6038750004F021 /* AVKit.framework */,
 				CE8AAFFD1C5AD62E0004F021 /* CoreLocation.framework */,
 				CEE52CF61C06550E00881648 /* Foundation.framework */,
 				CEE52CF41C06550500881648 /* UIKit.framework */,
@@ -648,6 +661,7 @@
 				CE8AB01A1C5EE4B80004F021 /* MessageThreadCell.m in Sources */,
 				CEC2E40A1C45B4EC00AC0F45 /* MJPObjectWithDates.m in Sources */,
 				CEE062601C28B77500ED60C0 /* Sex.m in Sources */,
+				CE8AB01D1C6029D90004F021 /* RecordPitch.m in Sources */,
 				CE8AAFFC1C59A7820004F021 /* LocationMapView.m in Sources */,
 				CEE0625C1C28B77500ED60C0 /* Nationality.m in Sources */,
 				CEE062561C28B77500ED60C0 /* JobSeeker.m in Sources */,

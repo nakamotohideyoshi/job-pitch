@@ -152,6 +152,7 @@ $(function() {
 		var cv_upload = $('#cv_upload').val();
 		var csrfmiddlewaretoken = $('[name="csrfmiddlewaretoken"]').val();
 		var formData2 = new FormData($('#profile')[0]);
+		formData2.append('active', active_account);
 			$.ajax({
 				url: "/api/job-seekers/"+job_seeker_id+"/",
 				type: 'PUT',
@@ -162,7 +163,7 @@ $(function() {
 				processData: false
 			}).done(function( data ) {
 				console.log( data );
-				window.location.href = "/profile/job-preferences";
+				formAlert('success', 'Profile Updated!');
 			  }).fail(function( data ) {
 				var messageError = ''
 				for (var key in data.responseJSON) {

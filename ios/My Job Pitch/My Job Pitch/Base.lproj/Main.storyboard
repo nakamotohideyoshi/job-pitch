@@ -633,6 +633,11 @@
                                 <action selector="editSearch" destination="B6U-eH-CfR" id="n2P-nq-uT4"/>
                             </connections>
                         </barButtonItem>
+                        <barButtonItem title="Record Pitch" id="qnp-ni-emX">
+                            <connections>
+                                <action selector="recordPitch" destination="B6U-eH-CfR" id="mj5-Au-4t4"/>
+                            </connections>
+                        </barButtonItem>
                     </toolbarItems>
                     <navigationItem key="navigationItem" title="Home" id="SOC-PA-dFI">
                         <barButtonItem key="leftBarButtonItem" title="Logout" id="9yk-ag-3Nf">
@@ -663,6 +668,7 @@
                         <segue destination="TSl-Ib-hcF" kind="show" identifier="goto_edit_search" id="8T7-ZT-leH"/>
                         <segue destination="AFt-YI-JVu" kind="show" identifier="goto_job_details" id="bLg-hp-djS"/>
                         <segue destination="yfL-Kb-fdd" kind="show" identifier="goto_messages" id="ouc-Of-Rbe"/>
+                        <segue destination="KaQ-qh-VKT" kind="show" identifier="goto_record_pitch" id="eej-bw-2N3"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="wWf-ZI-89N" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -1450,6 +1456,157 @@
             </objects>
             <point key="canvasLocation" x="3325" y="1293"/>
         </scene>
+        <!--Record Pitch-->
+        <scene sceneID="VIx-nh-H5T">
+            <objects>
+                <viewController id="KaQ-qh-VKT" customClass="RecordPitch" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="96X-sK-qiZ"/>
+                        <viewControllerLayoutGuide type="bottom" id="D0E-Dw-Jzs"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="R4A-pn-hYU">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="D9s-uY-8B0">
+                                <rect key="frame" x="290" y="290" width="20" height="20"/>
+                            </activityIndicatorView>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="background_logo" translatesAutoresizingMaskIntoConstraints="NO" id="fAt-Kx-x6J">
+                                <rect key="frame" x="60" y="60" width="480" height="480"/>
+                            </imageView>
+                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="9iR-62-35b">
+                                <rect key="frame" x="0.0" y="64" width="600" height="536"/>
+                                <subviews>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="P4C-g8-IHW" userLabel="Content View">
+                                        <rect key="frame" x="0.0" y="0.0" width="600" height="450"/>
+                                        <subviews>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" text="Record My Pitch" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BXr-yH-tHu">
+                                                <rect key="frame" x="16" y="16" width="255" height="40"/>
+                                                <fontDescription key="fontDescription" type="boldSystem" pointSize="33"/>
+                                                <color key="textColor" red="0.0" green="0.58823529409999997" blue="0.53333333329999999" alpha="1" colorSpace="calibratedRGB"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Here you can record your 30 second pitch. The 30 video will be viewed by prospective employers." textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hIT-Ow-thQ">
+                                                <rect key="frame" x="16" y="64" width="568" height="41"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <imageView contentMode="scaleToFill" semanticContentAttribute="playback" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Gls-FS-6cB">
+                                                <rect key="frame" x="75" y="129" width="450" height="253"/>
+                                                <color key="backgroundColor" white="0.66666666666666663" alpha="0.53604525862068964" colorSpace="calibratedWhite"/>
+                                                <gestureRecognizers/>
+                                                <constraints>
+                                                    <constraint firstAttribute="width" secondItem="Gls-FS-6cB" secondAttribute="height" multiplier="16:9" id="gSI-kD-ZqT"/>
+                                                </constraints>
+                                                <connections>
+                                                    <outletCollection property="gestureRecognizers" destination="AO8-pV-1iX" appends="YES" id="lig-Pk-mxQ"/>
+                                                </connections>
+                                            </imageView>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="CRs-n6-UjE">
+                                                <rect key="frame" x="232" y="398" width="137" height="32"/>
+                                                <color key="backgroundColor" red="0.0" green="0.58823529409999997" blue="0.53333333329999999" alpha="1" colorSpace="calibratedRGB"/>
+                                                <inset key="contentEdgeInsets" minX="7" minY="7" maxX="7" maxY="7"/>
+                                                <state key="normal" title="Record New Pitch">
+                                                    <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                                </state>
+                                                <userDefinedRuntimeAttributes>
+                                                    <userDefinedRuntimeAttribute type="boolean" keyPath="layer.masksToBounds" value="YES"/>
+                                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                                        <integer key="value" value="7"/>
+                                                    </userDefinedRuntimeAttribute>
+                                                </userDefinedRuntimeAttributes>
+                                                <connections>
+                                                    <action selector="recordPitch:" destination="KaQ-qh-VKT" eventType="touchUpInside" id="xMe-QF-dKs"/>
+                                                </connections>
+                                            </button>
+                                            <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="O2F-f4-6uO">
+                                                <rect key="frame" x="282" y="237" width="37" height="37"/>
+                                            </activityIndicatorView>
+                                            <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="no recording" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ysV-dm-iWu">
+                                                <rect key="frame" x="252" y="245" width="97" height="21"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <imageView hidden="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" semanticContentAttribute="playback" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="play" translatesAutoresizingMaskIntoConstraints="NO" id="ACW-EH-Kde">
+                                                <rect key="frame" x="252" y="208" width="96" height="96"/>
+                                            </imageView>
+                                        </subviews>
+                                        <constraints>
+                                            <constraint firstItem="ACW-EH-Kde" firstAttribute="centerY" secondItem="Gls-FS-6cB" secondAttribute="centerY" id="0M7-kT-xh3"/>
+                                            <constraint firstItem="Gls-FS-6cB" firstAttribute="centerX" secondItem="P4C-g8-IHW" secondAttribute="centerX" id="1dZ-ro-0fs"/>
+                                            <constraint firstAttribute="trailing" secondItem="hIT-Ow-thQ" secondAttribute="trailing" constant="16" id="2OP-eA-gZw"/>
+                                            <constraint firstItem="ysV-dm-iWu" firstAttribute="centerY" secondItem="Gls-FS-6cB" secondAttribute="centerY" id="8aj-da-ofh"/>
+                                            <constraint firstAttribute="bottom" secondItem="CRs-n6-UjE" secondAttribute="bottom" constant="20" id="Dfy-gg-Io7"/>
+                                            <constraint firstItem="ysV-dm-iWu" firstAttribute="centerX" secondItem="Gls-FS-6cB" secondAttribute="centerX" id="Gvi-18-sEU"/>
+                                            <constraint firstItem="Gls-FS-6cB" firstAttribute="width" secondItem="P4C-g8-IHW" secondAttribute="width" multiplier="0.75" id="HFa-EK-L8p"/>
+                                            <constraint firstItem="ACW-EH-Kde" firstAttribute="centerX" secondItem="Gls-FS-6cB" secondAttribute="centerX" id="HT3-J8-1iC"/>
+                                            <constraint firstItem="CRs-n6-UjE" firstAttribute="top" secondItem="Gls-FS-6cB" secondAttribute="bottom" constant="16" id="OYI-Fx-wqK"/>
+                                            <constraint firstItem="O2F-f4-6uO" firstAttribute="centerY" secondItem="Gls-FS-6cB" secondAttribute="centerY" id="U7f-ka-8wC"/>
+                                            <constraint firstItem="CRs-n6-UjE" firstAttribute="centerX" secondItem="P4C-g8-IHW" secondAttribute="centerX" id="Yve-bi-iNi"/>
+                                            <constraint firstItem="hIT-Ow-thQ" firstAttribute="leading" secondItem="BXr-yH-tHu" secondAttribute="leading" id="aY5-1y-5fg"/>
+                                            <constraint firstItem="BXr-yH-tHu" firstAttribute="leading" secondItem="P4C-g8-IHW" secondAttribute="leading" constant="16" id="avV-Xf-CVh"/>
+                                            <constraint firstItem="O2F-f4-6uO" firstAttribute="centerX" secondItem="Gls-FS-6cB" secondAttribute="centerX" id="bdD-Vs-cVe"/>
+                                            <constraint firstItem="hIT-Ow-thQ" firstAttribute="top" secondItem="BXr-yH-tHu" secondAttribute="bottom" constant="8" id="gDa-e9-u8D"/>
+                                            <constraint firstItem="BXr-yH-tHu" firstAttribute="top" secondItem="P4C-g8-IHW" secondAttribute="top" constant="16" id="jY7-0w-vF5"/>
+                                            <constraint firstItem="Gls-FS-6cB" firstAttribute="top" secondItem="hIT-Ow-thQ" secondAttribute="bottom" constant="24" id="mTG-k8-dww"/>
+                                        </constraints>
+                                    </view>
+                                </subviews>
+                                <constraints>
+                                    <constraint firstAttribute="right" secondItem="P4C-g8-IHW" secondAttribute="right" id="14Y-yv-KcN"/>
+                                    <constraint firstItem="P4C-g8-IHW" firstAttribute="left" secondItem="9iR-62-35b" secondAttribute="left" id="LGi-Xx-omS"/>
+                                    <constraint firstAttribute="bottom" secondItem="P4C-g8-IHW" secondAttribute="bottom" id="oat-jJ-u8B"/>
+                                    <constraint firstItem="P4C-g8-IHW" firstAttribute="top" secondItem="9iR-62-35b" secondAttribute="top" id="wb3-8R-r6N"/>
+                                </constraints>
+                            </scrollView>
+                        </subviews>
+                        <color key="backgroundColor" red="0.85098039219999999" green="0.85098039219999999" blue="0.85098039219999999" alpha="1" colorSpace="calibratedRGB"/>
+                        <constraints>
+                            <constraint firstItem="9iR-62-35b" firstAttribute="leading" secondItem="R4A-pn-hYU" secondAttribute="leading" id="3Gj-br-OLq"/>
+                            <constraint firstItem="9iR-62-35b" firstAttribute="top" secondItem="96X-sK-qiZ" secondAttribute="bottom" id="E5x-Xe-cP6"/>
+                            <constraint firstAttribute="trailing" secondItem="9iR-62-35b" secondAttribute="trailing" id="Fik-9Z-a5z"/>
+                            <constraint firstItem="D9s-uY-8B0" firstAttribute="centerX" secondItem="R4A-pn-hYU" secondAttribute="centerX" id="LQ8-Tr-hQH"/>
+                            <constraint firstItem="fAt-Kx-x6J" firstAttribute="height" secondItem="R4A-pn-hYU" secondAttribute="height" multiplier="0.8" id="MMd-UC-6ld"/>
+                            <constraint firstItem="fAt-Kx-x6J" firstAttribute="centerX" secondItem="R4A-pn-hYU" secondAttribute="centerX" id="Ppm-tJ-mIB"/>
+                            <constraint firstItem="D9s-uY-8B0" firstAttribute="centerY" secondItem="R4A-pn-hYU" secondAttribute="centerY" id="TXU-ty-mMF"/>
+                            <constraint firstItem="fAt-Kx-x6J" firstAttribute="width" secondItem="R4A-pn-hYU" secondAttribute="width" multiplier="0.8" id="U6R-KF-ndy"/>
+                            <constraint firstItem="D0E-Dw-Jzs" firstAttribute="top" secondItem="9iR-62-35b" secondAttribute="bottom" id="o74-wn-2On"/>
+                            <constraint firstItem="fAt-Kx-x6J" firstAttribute="centerY" secondItem="R4A-pn-hYU" secondAttribute="centerY" id="ppa-dW-CiR"/>
+                            <constraint firstItem="P4C-g8-IHW" firstAttribute="width" secondItem="R4A-pn-hYU" secondAttribute="width" id="xRD-fD-EfU"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" title="Record Pitch" id="hSm-cR-BCN"/>
+                    <nil key="simulatedBottomBarMetrics"/>
+                    <connections>
+                        <outlet property="activityIndicator" destination="D9s-uY-8B0" id="hPs-jx-mFW"/>
+                        <outlet property="image" destination="Gls-FS-6cB" id="yeo-O3-JfW"/>
+                        <outlet property="imageActivity" destination="O2F-f4-6uO" id="azi-nY-2Cf"/>
+                        <outlet property="mainView" destination="P4C-g8-IHW" id="ntD-cU-QLy"/>
+                        <outlet property="noRecording" destination="ysV-dm-iWu" id="jLH-Sb-AkP"/>
+                        <outlet property="playOverlay" destination="ACW-EH-Kde" id="ixv-Ja-XEu"/>
+                        <outlet property="recordButton" destination="CRs-n6-UjE" id="yAy-hp-hG7"/>
+                        <segue destination="2iG-mk-uiW" kind="show" identifier="play_video" id="F33-gd-75U"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="dY4-Y7-4U3" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <tapGestureRecognizer id="AO8-pV-1iX">
+                    <connections>
+                        <action selector="playPitch:" destination="KaQ-qh-VKT" id="4EK-bw-eR0"/>
+                    </connections>
+                </tapGestureRecognizer>
+            </objects>
+            <point key="canvasLocation" x="3338" y="-263"/>
+        </scene>
+        <!--AV Player View Controller-->
+        <scene sceneID="RWG-ab-w3y">
+            <objects>
+                <avPlayerViewController videoGravity="AVLayerVideoGravityResizeAspect" id="2iG-mk-uiW" sceneMemberID="viewController"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Bif-Mb-Zde" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="4108" y="-263"/>
+        </scene>
     </scenes>
     <resources>
         <image name="IOS_Maps_icon" width="100" height="100"/>
@@ -1457,9 +1614,10 @@
         <image name="briefcase" width="43" height="37"/>
         <image name="head" width="43" height="37"/>
         <image name="logo" width="180" height="180"/>
+        <image name="play" width="96" height="96"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="Fr8-oD-wru"/>
-        <segue reference="DDY-hC-ukR"/>
+        <segue reference="ouc-Of-Rbe"/>
+        <segue reference="bLg-hp-djS"/>
     </inferredMetricsTieBreakers>
 </document>

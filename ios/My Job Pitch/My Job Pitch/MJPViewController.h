@@ -24,6 +24,6 @@
 - (BOOL)validate;
 - (nonnull NSMutableDictionary*)performValidation;
 - (void)loadImageURL:(nonnull NSString*)image into:(nonnull UIImageView*)imageView withIndicator:(nonnull UIActivityIndicatorView*)indicator;
-
+- (void)loadImageURL:(nonnull NSString*)image into:(nonnull UIImageView*)imageView withIndicator:(nonnull UIActivityIndicatorView*)indicator completion:(nullable void (^)())completion;
 @end
 

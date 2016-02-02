@@ -195,6 +195,10 @@ typedef NS_ENUM(NSInteger, EmptyButtonAction) {
     [self performMessages];
 }
 
+- (IBAction)recordPitch {
+    [self performRecordPitch];
+}
+
 - (IBAction)logout {
     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Logout"
                                                     message:@"Are you sure you want to logout?"
@@ -212,9 +216,6 @@ typedef NS_ENUM(NSInteger, EmptyButtonAction) {
 - (IBAction)editSearch
 {
     [self performEditSearch];
-}
-
-- (IBAction)editSearch:(id)sender {
 }
 
 - (void)performEditProfile

@@ -116,7 +116,17 @@
     }
 }
 
-- (void)loadImageURL:(NSString*)image into:(UIImageView*)imageView withIndicator:(UIActivityIndicatorView*)indicator
+- (void)loadImageURL:(NSString*)image
+                into:(UIImageView*)imageView
+       withIndicator:(UIActivityIndicatorView*)indicator
+{
+    [self loadImageURL:image into:imageView withIndicator:indicator completion:nil];
+}
+
+- (void)loadImageURL:(NSString*)image
+                into:(UIImageView*)imageView
+       withIndicator:(UIActivityIndicatorView*)indicator
+          completion:(void (^)())completion
 {
     [indicator setHidden:false];
     [indicator startAnimating];
@@ -128,6 +138,8 @@
                                imageView.image = [UIImage imageWithData:data];
                                [indicator setHidden:true];
                                [indicator stopAnimating];
+                               if (completion)
+                                   completion();
                            }];
 }
 

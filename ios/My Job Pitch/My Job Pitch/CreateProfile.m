@@ -38,18 +38,22 @@
 
 - (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex {
     if (buttonIndex == 1) {
-        [self dismissViewControllerAnimated:true completion:^{}];
+        [self.navigationController popViewControllerAnimated:true];
     }
 }
 
 - (void)showJobSeeker {
     NSLog(@"showJobSeeker");
     [self->jobSeekerProfile setHidden:false];
+    [self->recruiterProfile setHidden:true];
+    [self->recruiterBottomContraint setPriority:UILayoutPriorityDefaultLow];
 }
 
 - (void)showRecruiter {
     NSLog(@"showRecruiter");
     [self->jobSeekerProfile setHidden:true];
+    [self->recruiterProfile setHidden:false];
+    [self->recruiterBottomContraint setPriority:UILayoutPriorityDefaultHigh];
 }
 
 - (NSArray *)getRequiredFields {

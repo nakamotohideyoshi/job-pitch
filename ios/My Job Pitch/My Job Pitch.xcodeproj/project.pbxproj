@@ -40,6 +40,8 @@
 		CE8AB01D1C6029D90004F021 /* RecordPitch.m in Sources */ = {isa = PBXBuildFile; fileRef = CE8AB01C1C6029D90004F021 /* RecordPitch.m */; };
 		CE8AB0201C6038750004F021 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CE8AB01E1C6038750004F021 /* AVFoundation.framework */; };
 		CE8AB0211C6038750004F021 /* AVKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CE8AB01F1C6038750004F021 /* AVKit.framework */; };
+		CE8AB0241C617F550004F021 /* BusinessEditView.m in Sources */ = {isa = PBXBuildFile; fileRef = CE8AB0231C617F550004F021 /* BusinessEditView.m */; };
+		CE8AB0261C61826B0004F021 /* BusinessEditView.xib in Resources */ = {isa = PBXBuildFile; fileRef = CE8AB0251C61826B0004F021 /* BusinessEditView.xib */; };
 		CEC2E4041C45A88100AC0F45 /* Job.m in Sources */ = {isa = PBXBuildFile; fileRef = CEC2E4031C45A88100AC0F45 /* Job.m */; };
 		CEC2E4071C45B4C200AC0F45 /* Location.m in Sources */ = {isa = PBXBuildFile; fileRef = CEC2E4061C45B4C200AC0F45 /* Location.m */; };
 		CEC2E40A1C45B4EC00AC0F45 /* MJPObjectWithDates.m in Sources */ = {isa = PBXBuildFile; fileRef = CEC2E4091C45B4EC00AC0F45 /* MJPObjectWithDates.m */; };
@@ -149,6 +151,9 @@
 		CE8AB01C1C6029D90004F021 /* RecordPitch.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RecordPitch.m; sourceTree = "<group>"; };
 		CE8AB01E1C6038750004F021 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		CE8AB01F1C6038750004F021 /* AVKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVKit.framework; path = System/Library/Frameworks/AVKit.framework; sourceTree = SDKROOT; };
+		CE8AB0221C617F550004F021 /* BusinessEditView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BusinessEditView.h; sourceTree = "<group>"; };
+		CE8AB0231C617F550004F021 /* BusinessEditView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BusinessEditView.m; sourceTree = "<group>"; };
+		CE8AB0251C61826B0004F021 /* BusinessEditView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = BusinessEditView.xib; sourceTree = "<group>"; };
 		CEC2E4021C45A88100AC0F45 /* Job.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Job.h; path = Assets.xcassets/Job.h; sourceTree = "<group>"; };
 		CEC2E4031C45A88100AC0F45 /* Job.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Job.m; path = Assets.xcassets/Job.m; sourceTree = "<group>"; };
 		CEC2E4051C45B4C200AC0F45 /* Location.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Location.h; sourceTree = "<group>"; };
@@ -291,6 +296,9 @@
 				CE59737B1C1626630096B001 /* JobSeekerProfileView.h */,
 				CE59737C1C1626630096B001 /* JobSeekerProfileView.m */,
 				CEE04AA81C10F8FE00697620 /* JobSeekerProfileView.xib */,
+				CE8AB0221C617F550004F021 /* BusinessEditView.h */,
+				CE8AB0231C617F550004F021 /* BusinessEditView.m */,
+				CE8AB0251C61826B0004F021 /* BusinessEditView.xib */,
 				CE8AAFE81C5848900004F021 /* JobSeekerSearchProfileView.h */,
 				CE8AAFE91C5848900004F021 /* JobSeekerSearchProfileView.m */,
 				CE8AAFE61C5848490004F021 /* JobSeekerSearchProfileView.xib */,
@@ -519,6 +527,7 @@
 			files = (
 				CE6FD34A1C01F9BC001A04C3 /* LaunchScreen.storyboard in Resources */,
 				CEE04AA91C10F8FE00697620 /* JobSeekerProfileView.xib in Resources */,
+				CE8AB0261C61826B0004F021 /* BusinessEditView.xib in Resources */,
 				CE6FD3471C01F9BC001A04C3 /* Assets.xcassets in Resources */,
 				CE8AAFF91C59A2DE0004F021 /* LocationMap.xib in Resources */,
 				CE6FD3451C01F9BB001A04C3 /* Main.storyboard in Resources */,
@@ -645,6 +654,7 @@
 				CEE0625E1C28B77500ED60C0 /* Role.m in Sources */,
 				CE45AECD1C0B461A0092AB75 /* User.m in Sources */,
 				CE8AB0011C5AF6250004F021 /* Application.m in Sources */,
+				CE8AB0241C617F550004F021 /* BusinessEditView.m in Sources */,
 				CE45AECA1C0B45AD0092AB75 /* RegisterRequest.m in Sources */,
 				CE8AAFE51C56D93C0004F021 /* Pitch.m in Sources */,
 				CEE52CFE1C066AB000881648 /* AuthToken.m in Sources */,

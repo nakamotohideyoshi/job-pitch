@@ -55,7 +55,33 @@
 }
 
 - (IBAction)recordPitch:(id)sender {
-    
+    if ([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera]) {
+        NSArray *availableMediaTypes = [UIImagePickerController
+                                        availableMediaTypesForSourceType:UIImagePickerControllerSourceTypeCamera];
+        if ([availableMediaTypes containsObject:(NSString *)kUTTypeMovie]) {
+            UIImagePickerController *camera = [UIImagePickerController new];
+            camera.sourceType = UIImagePickerControllerSourceTypeCamera;
+            camera.mediaTypes = @[(NSString *)kUTTypeMovie];
+            camera.delegate = self;
+            camera.videoMaximumDuration = 30;
+            camera.cameraCaptureMode = UIImagePickerControllerCameraCaptureModeVideo;
+            if ([UIImagePickerController isCameraDeviceAvailable:UIImagePickerControllerCameraDeviceFront])
+                camera.cameraDevice = UIImagePickerControllerCameraDeviceFront;
+            [self.navigationController pushViewController:camera animated:true];
+        } else {
+            [[[UIAlertView alloc] initWithTitle:@"Not supported"
+                                        message:@"Video recording is not supported on your device"
+                                       delegate:nil
+                              cancelButtonTitle:@"Dismiss"
+                              otherButtonTitles:nil] show];
+        }
+    } else {
+        [[[UIAlertView alloc] initWithTitle:@"Not supported"
+                                    message:@"Video recording is not supported on your device"
+                                   delegate:nil
+                          cancelButtonTitle:@"Dismiss"
+                          otherButtonTitles:nil] show];
+    }
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {

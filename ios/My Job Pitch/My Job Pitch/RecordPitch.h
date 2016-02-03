@@ -8,7 +8,7 @@
 
 #import "MJPViewController.h"
 
-@interface RecordPitch : MJPViewController
+@interface RecordPitch : MJPViewController<UIImagePickerControllerDelegate, UINavigationControllerDelegate>
 
 @property (weak, nonatomic) IBOutlet UIButton *recordButton;
 @property (weak, nonatomic) IBOutlet UIImageView *image;

@@ -33,4 +33,5 @@ urlpatterns = patterns('web.views',
 	url(r'^find-staff/$', 'find_staff'),
 	url(r'^profile/viewpitch/$', 'viewpitch'),
 	url(r'^profile/edit-pitch/$', 'edit_pitch'),
+	url(r'^profile/edit-location/$', 'edit_location'),
 )

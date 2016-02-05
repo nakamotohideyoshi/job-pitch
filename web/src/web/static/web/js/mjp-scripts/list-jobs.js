@@ -29,10 +29,11 @@ $(function() {
 	
 	// Populate any fields that have data
 			  $.get( "/api/user-jobs/", { location:location_id ,csrftoken: getCookie('csrftoken') }).done(function( data ) {
+				  console.log(data);
+				  if(data.length != 0){
 				  $('#companyName').html(data[0].location_data.business_data.name);
 				  $('#locationName').html(data[0].location_data.name);
 				  $('#locationName').attr('href', '/profile/list-locations/?id='+data[0].location_data.business_data.id);
-				  if(data.length != 0){
 					  for (var key in data) {
 						  var obj = data[key];
 						  var imageThumb = '';
@@ -56,7 +57,7 @@ $(function() {
 					  }
 					  $('#table-container').show();
 				  }else{
-					  
+					  $('.glyphicon-chevron-right').hide();
 					  $('#no-items-create').show();  
 				  }
 			  })

@@ -7,6 +7,7 @@ $(function() {
 	
 	//variables defined
 	var open_job_status;
+	$.get( "/api/user-locations/"+location_id, { token: getCookie('key') ,csrftoken: getCookie('csrftoken') }).done(function( data ) {$('#currentLogo').attr('src', data.images[0].thumbnail).show(); });
 	
 	//Populate selects
 	$.get( "/api/hours/", { csrftoken: getCookie('csrftoken') }).done(function( data ) {
@@ -62,7 +63,7 @@ $(function() {
 		var hours = $('#hours').val();
 		
 			$.post( "/api/user-jobs/", { title: title, description: description, sector: job_sector, contract: contract, hours: hours, location:location_id, status:open_job_status, csrftoken: getCookie('csrftoken') }).done(function( data ) {
-				if($('#job_id').val(data.id) == ''){
+				if($('#job_image').val() != ''){
 					  var formData = new FormData($('#create-job')[0]);
 					  $.ajax({
 						url: '/api/user-job-images/',
@@ -77,7 +78,38 @@ $(function() {
 						}
 					  });
 				}else{
-					window.location.href = "/profile/list-jobs/?id="+location_id;
+					//window.location.href = "/profile/list-jobs/?id="+location_id;
+					$.get( "/api/user-locations/"+location_id, { token: getCookie('key') ,csrftoken: getCookie('csrftoken') }).done(function( data ) {
+							console.log( data );
+							$('#currentLogo').attr('src', data.images[0].thumbnail).show();
+												  var xhr = new XMLHttpRequest();
+													xhr.onreadystatechange = function(){
+														if (this.readyState == 4 && this.status == 200){
+															//this.response is what you're looking for
+															//console.log(this.response, typeof this.response);
+															//console.log(data.images[0].image.split('.').pop());
+															$('#job_image').remove();
+															var formData = new FormData($('#create-job')[0]);
+															formData.append('image',this.response, 'location-'+location_id+'.'+data.images[0].image.split('.').pop());
+															  $.ajax({
+																url: '/api/user-job-images/',
+																type: 'POST',
+																data: formData,
+																async: false,
+																cache: false,
+																contentType: false,
+																processData: false,
+																success: function (data) {
+																		console.log(data);
+																		window.location.href = "/profile/list-jobs/?id="+location_id;
+																}
+															  });
+														}
+													}
+													xhr.open('GET', data.images[0].image);
+													xhr.responseType = 'blob';
+													xhr.send();    
+					});
 				}
 				
 			  })

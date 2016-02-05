@@ -46,6 +46,9 @@ def create_profile_job_seeker(request):
 
 def create_business(request):
     return render(request, 'profile/create-business.html')	
+	
+def edit_business(request):
+    return render(request, 'profile/edit-business.html')	
 
 def create_profile_location(request):
     return render(request, 'profile/create-location.html')	

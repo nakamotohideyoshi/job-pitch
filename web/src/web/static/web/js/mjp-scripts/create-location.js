@@ -8,7 +8,7 @@ $(function() {
 	
 	$('#business').val(business_id);
 	$('#work_place_details').show();
-	
+	 $.get( "/api/user-businesses/"+business_id, { token: getCookie('key') ,csrftoken: getCookie('csrftoken') }).done(function( data ) { $('#currentLogo').attr('src', data.images[0].thumbnail).show(); });
 	
 	$('#work_place_details').submit(function( event ) {
 		event.preventDefault();
@@ -63,7 +63,39 @@ $(function() {
 								}
 							  });
 						  }else{
-								window.location.href = "/profile/list-locations/?id="+business_id;  
+							  $.get( "/api/user-businesses/"+business_id, { token: getCookie('key') ,csrftoken: getCookie('csrftoken') }).done(function( data ) {
+												  console.log( data );
+												  $('#currentLogo').attr('src', data.images[0].thumbnail).show();
+												  var xhr = new XMLHttpRequest();
+													xhr.onreadystatechange = function(){
+														if (this.readyState == 4 && this.status == 200){
+															//this.response is what you're looking for
+															//console.log(this.response, typeof this.response);
+															//console.log(data.images[0].image.split('.').pop());
+															$('#work_place_image').remove();
+															var formData2 = new FormData($('#work_place_details')[0]);
+															formData2.append('image',this.response, 'location-'+business_id+'-'+$('#location').val()+'.'+data.images[0].image.split('.').pop());
+															  $.ajax({
+																url: '/api/user-location-images/',
+																type: 'POST',
+																data: formData2,
+																async: false,
+																cache: false,
+																contentType: false,
+																processData: false,
+																success: function (data) {
+																		//console.log(data);
+																		window.location.href = "/profile/list-locations/?id="+business_id;
+																}
+															  });
+														}
+													}
+													xhr.open('GET', data.images[0].image);
+													xhr.responseType = 'blob';
+													xhr.send();    
+													
+								});
+								
 						  }
 				  })
 				  .fail(function( data ) {

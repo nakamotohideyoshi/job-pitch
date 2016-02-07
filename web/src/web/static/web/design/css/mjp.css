@@ -831,6 +831,10 @@ Web App By Reiss Watson
 	margin: auto;
     display: block;
 }
+#recordStartButtonBefore{
+	margin:auto;
+	display:block;
+}
 #recorder #webcam{
 	margin: auto;
     display: block;
@@ -848,6 +852,9 @@ Web App By Reiss Watson
 }
 .jobs-list{
 	cursor:default !important;
+}
+#account_details_not_active{
+	display:none;	
 }
 /* Only show the "mobile menu" fix */
 @media (max-width: 3000px) {

@@ -63,6 +63,7 @@ $(function() {
 		var hours = $('#hours').val();
 		
 			$.post( "/api/user-jobs/", { title: title, description: description, sector: job_sector, contract: contract, hours: hours, location:location_id, status:open_job_status, csrftoken: getCookie('csrftoken') }).done(function( data ) {
+				$('#job_id').val(data.id);
 				if($('#job_image').val() != ''){
 					  var formData = new FormData($('#create-job')[0]);
 					  $.ajax({

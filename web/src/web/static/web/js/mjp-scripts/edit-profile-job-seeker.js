@@ -48,7 +48,8 @@ $(function() {
 				  
 				  $.get( "/api/job-seekers/"+data.job_seeker, { token: getCookie('key') ,csrftoken: getCookie('csrftoken') }).done(function( data ) {
 					  
-					  console.log( data );
+				  $('#CVcurrent').attr('href', data.cv);
+					  
 				  if(!data.active){
 				  	$('#active_account').bootstrapSwitch('toggleState');
 					$('#account_details_active_only').hide();

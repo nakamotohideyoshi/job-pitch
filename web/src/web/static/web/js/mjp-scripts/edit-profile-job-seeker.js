@@ -7,11 +7,12 @@ $(function() {
 	
 	$('#active_account').on('switchChange.bootstrapSwitch', function(event, state) {
 	 	if(state){
-			$('#account_details_not_active').show();
-			$('#account_details_active_only').hide();	
+			$('#account_details_not_active').hide();
+			$('#account_details_active_only').show();	
 		}else{
-			$('#account_details_active_only').hide();
 			$('#account_details_not_active').show();
+			$('#account_details_active_only').hide();
+			
 				
 		}
 	});

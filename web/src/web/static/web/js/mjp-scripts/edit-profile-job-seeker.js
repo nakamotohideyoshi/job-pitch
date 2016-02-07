@@ -7,9 +7,12 @@ $(function() {
 	
 	$('#active_account').on('switchChange.bootstrapSwitch', function(event, state) {
 	 	if(state){
-			$('#account_details_active_only').fadeIn(500);	
+			$('#account_details_not_active').show();
+			$('#account_details_active_only').hide();	
 		}else{
-			$('#account_details_active_only').fadeOut(500);	
+			$('#account_details_active_only').hide();
+			$('#account_details_not_active').show();
+				
 		}
 	});
 	
@@ -49,6 +52,7 @@ $(function() {
 				  if(!data.active){
 				  	$('#active_account').bootstrapSwitch('toggleState');
 					$('#account_details_active_only').hide();
+					$('#account_details_not_active').show();
 				  }
 				  if(data.first_name != null){
 				  	$('#first_name').val(data.first_name);

@@ -856,6 +856,31 @@ Web App By Reiss Watson
 #account_details_not_active{
 	display:none;	
 }
+
+
+
+input { 
+   color: #777;
+}
+
+::-webkit-input-placeholder {
+  color: #777;
+}
+::-moz-placeholder { /* Firefox 19+ */
+  color:  #777;
+}
+:-ms-input-placeholder {
+  color:  #777;
+}
+:-moz-placeholder { /* Firefox 18- */
+  color:  #777;
+}
+
+
+.jobs-list .btn{
+	margin-top:10px;
+}
+
 /* Only show the "mobile menu" fix */
 @media (max-width: 3000px) {
     .navbar-header {

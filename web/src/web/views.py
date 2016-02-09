@@ -82,7 +82,10 @@ def messages(request):
 	
 def applications(request):
     return render(request, 'applications.html')
-
+	
+def connections(request):
+    return render(request, 'connections.html')
+	
 def job_preferences(request):
     return render(request, 'profile/job-preferences.html')
 	

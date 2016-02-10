@@ -11,10 +11,10 @@
             <connections>
                 <outlet property="changeButton" destination="F63-u5-xh7" id="2ip-Yj-0IJ"/>
                 <outlet property="changeCenterContraint" destination="TJV-3Y-hdv" id="ktn-0m-6f6"/>
-                <outlet property="companyName" destination="Zv0-8L-XSk" id="dda-PN-sMH"/>
                 <outlet property="deleteButton" destination="rxM-gh-nAk" id="tt1-Nc-fWi"/>
                 <outlet property="imageActivity" destination="SCK-Pp-1ag" id="gep-mA-l0g"/>
                 <outlet property="imageView" destination="woO-Az-Bfm" id="VMS-Et-8L7"/>
+                <outlet property="name" destination="Zv0-8L-XSk" id="gK9-sP-Luo"/>
                 <outlet property="noImage" destination="3Nv-mr-LdI" id="JCr-Ze-hnU"/>
             </connections>
         </placeholder>
@@ -67,7 +67,7 @@
                         </userDefinedRuntimeAttribute>
                     </userDefinedRuntimeAttributes>
                     <connections>
-                        <action selector="delete:" destination="-1" eventType="touchUpInside" id="aZA-4V-slH"/>
+                        <action selector="deleteImage:" destination="-1" eventType="touchUpInside" id="7Mj-T3-ks3"/>
                     </connections>
                 </button>
                 <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="SCK-Pp-1ag">
@@ -92,7 +92,7 @@
                         </userDefinedRuntimeAttribute>
                     </userDefinedRuntimeAttributes>
                     <connections>
-                        <action selector="change:" destination="-1" eventType="touchUpInside" id="2lA-cO-sy8"/>
+                        <action selector="changeImage:" destination="-1" eventType="touchUpInside" id="zKz-Qx-2Eb"/>
                     </connections>
                 </button>
             </subviews>

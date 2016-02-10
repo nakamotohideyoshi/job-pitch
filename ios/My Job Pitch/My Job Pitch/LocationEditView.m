@@ -1,18 +1,18 @@
 //
-//  CompanyEditView.m
+//  LocationEditView.m
 //  My Job Pitch
 //
-//  Created by user on 03/02/2016.
+//  Created by user on 09/02/2016.
 //  Copyright © 2016 SC Labs Ltd. All rights reserved.
 //
 
-#import "BusinessEditView.h"
+#import "LocationEditView.h"
 
-@interface BusinessEditView ()
+@interface LocationEditView ()
 @property (nullable) Image *image;
 @end
 
-@implementation BusinessEditView
+@implementation LocationEditView
 
 - (instancetype)initWithCoder:(NSCoder *)aDecoder
 {
@@ -47,14 +47,25 @@
 - (UIView*)loadViewFromNib
 {
     NSBundle *bundle = [NSBundle bundleForClass:[self class]];
-    UINib *nib = [UINib nibWithNibName:@"BusinessEditView" bundle:bundle];
+    UINib *nib = [UINib nibWithNibName:@"LocationEditView" bundle:bundle];
     return [[nib instantiateWithOwner:self options:nil] objectAtIndex:0];
 }
 
-- (void)load:(nonnull Business*)business
+- (void)load:(nonnull Location*)location
 {
-    self.name.textField.text = business.name;
-    self.image = [business getImage];
+    self.name.textField.text = location.name;
+    self.desc.textField.text = location.desc;
+    self.address.textField.text = location.address;
+    self.email.textField.text = location.email;
+    self.emailPublic.on = location.emailPublic;
+    self.telephone.textField.text = location.telephone;
+    self.telephonePublic.on = location.telephonePublic;
+    self.mobile.textField.text = location.mobile;
+    self.mobilePublic.on = location.mobilePublic;
+    
+    self.locationLabel.text = location.placeName;
+    
+    self.image = [location getImage];
     if (self.image && self.image.image) {
         [self.imageActivity setHidden:false];
         [self.imageActivity startAnimating];
@@ -85,9 +96,17 @@
     }
 }
 
-- (void)save:(nonnull Business*)business
+- (void)save:(nonnull Location*)location
 {
-    business.name = self.name.textField.text;
+    location.name = self.name.textField.text;
+    location.desc = self.desc.textField.text;
+    location.address = self.address.textField.text;
+    location.email = self.email.textField.text;
+    location.emailPublic = self.emailPublic.on;
+    location.telephone = self.telephone.textField.text;
+    location.telephonePublic = self.telephonePublic.on;
+    location.mobile = self.mobile.textField.text;
+    location.mobilePublic = self.mobilePublic.on;
 }
 
 - (IBAction)changeImage:(id)sender {
@@ -101,4 +120,6 @@
     self.noImage.hidden = false;
 }
 
+- (IBAction)changeLocation:(id)sender {
+}
 @end

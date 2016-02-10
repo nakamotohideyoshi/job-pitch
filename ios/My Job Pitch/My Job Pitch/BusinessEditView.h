@@ -12,7 +12,7 @@
 
 @interface BusinessEditView : UIView
 
-@property (weak, nonatomic) IBOutlet ErrorTextField *companyName;
+@property (weak, nonatomic) IBOutlet ErrorTextField *name;
 @property (weak, nonatomic) IBOutlet UIImageView *imageView;
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView *imageActivity;
 @property (weak, nonatomic) IBOutlet UILabel *noImage;
@@ -22,5 +22,7 @@
 
 - (void)load:(nonnull Business*)business;
 - (void)save:(nonnull Business*)business;
+- (IBAction)changeImage:(nullable id)sender;
+- (IBAction)deleteImage:(nullable id)sender;
 
 @end

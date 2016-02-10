@@ -340,13 +340,13 @@
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <view hidden="YES" contentMode="scaleToFill" placeholderIntrinsicWidth="infinite" placeholderIntrinsicHeight="429" translatesAutoresizingMaskIntoConstraints="NO" id="7PK-AC-wYm">
-                                                <rect key="frame" x="13" y="127" width="574" height="429"/>
+                                                <rect key="frame" x="13" y="127" width="574" height="607"/>
                                                 <subviews>
-                                                    <view contentMode="scaleToFill" placeholderIntrinsicWidth="infinite" placeholderIntrinsicHeight="100" translatesAutoresizingMaskIntoConstraints="NO" id="Hr1-5I-O6w" customClass="BusinessEditView">
-                                                        <rect key="frame" x="0.0" y="100" width="574" height="100"/>
-                                                    </view>
                                                     <view contentMode="scaleToFill" placeholderIntrinsicWidth="infinite" placeholderIntrinsicHeight="100" translatesAutoresizingMaskIntoConstraints="NO" id="iEJ-jy-dvM" customClass="BusinessEditView">
-                                                        <rect key="frame" x="0.0" y="0.0" width="574" height="100"/>
+                                                        <rect key="frame" x="0.0" y="0.0" width="574" height="487"/>
+                                                    </view>
+                                                    <view contentMode="scaleToFill" verticalHuggingPriority="251" placeholderIntrinsicWidth="infinite" placeholderIntrinsicHeight="100" translatesAutoresizingMaskIntoConstraints="NO" id="Hr1-5I-O6w" customClass="LocationEditView">
+                                                        <rect key="frame" x="0.0" y="487" width="574" height="100"/>
                                                     </view>
                                                 </subviews>
                                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
@@ -357,7 +357,7 @@
                                                     <constraint firstItem="iEJ-jy-dvM" firstAttribute="leading" secondItem="7PK-AC-wYm" secondAttribute="leading" id="Hdh-20-Wgh"/>
                                                     <constraint firstAttribute="trailing" secondItem="iEJ-jy-dvM" secondAttribute="trailing" id="OJs-aH-Ndt"/>
                                                     <constraint firstItem="iEJ-jy-dvM" firstAttribute="top" secondItem="7PK-AC-wYm" secondAttribute="top" id="sSq-g3-gWz"/>
-                                                    <constraint firstAttribute="bottom" secondItem="Hr1-5I-O6w" secondAttribute="bottom" priority="250" constant="20" id="v0W-Rm-wnD"/>
+                                                    <constraint firstAttribute="bottom" secondItem="Hr1-5I-O6w" secondAttribute="bottom" priority="251" constant="20" id="v0W-Rm-wnD"/>
                                                 </constraints>
                                             </view>
                                             <view hidden="YES" contentMode="scaleToFill" placeholderIntrinsicWidth="infinite" placeholderIntrinsicHeight="607" translatesAutoresizingMaskIntoConstraints="NO" id="gAN-df-50q" customClass="JobSeekerProfileView">
@@ -367,7 +367,7 @@
                                         <constraints>
                                             <constraint firstItem="gSh-70-as0" firstAttribute="centerX" secondItem="1OK-GD-kbI" secondAttribute="centerX" id="0EH-eU-ruc"/>
                                             <constraint firstItem="7PK-AC-wYm" firstAttribute="leading" secondItem="95F-pS-Sf5" secondAttribute="leadingMargin" constant="5" id="8Dn-ZS-9eO"/>
-                                            <constraint firstAttribute="bottom" secondItem="7PK-AC-wYm" secondAttribute="bottom" priority="250" constant="16" id="Blz-LM-Ak0"/>
+                                            <constraint firstAttribute="bottom" secondItem="7PK-AC-wYm" secondAttribute="bottom" priority="251" constant="16" id="Blz-LM-Ak0"/>
                                             <constraint firstItem="wds-5h-nw4" firstAttribute="top" secondItem="lFc-Dg-xvb" secondAttribute="top" constant="20" id="Bss-e4-Qpx"/>
                                             <constraint firstItem="lFc-Dg-xvb" firstAttribute="left" secondItem="95F-pS-Sf5" secondAttribute="leftMargin" constant="5" id="F0x-QA-fLu"/>
                                             <constraint firstAttribute="rightMargin" secondItem="1OK-GD-kbI" secondAttribute="right" constant="5" id="GOF-8R-w4C"/>
@@ -426,6 +426,7 @@
                         <outlet property="activityIndicator" destination="jhI-1W-Gly" id="yax-vI-wS7"/>
                         <outlet property="businessEditView" destination="iEJ-jy-dvM" id="Kkt-8l-SFl"/>
                         <outlet property="jobSeekerProfile" destination="gAN-df-50q" id="TOo-lO-EnB"/>
+                        <outlet property="locationEditView" destination="Hr1-5I-O6w" id="tQi-ZE-smb"/>
                         <outlet property="mainView" destination="95F-pS-Sf5" id="1EW-bv-rWH"/>
                         <outlet property="recruiterBottomContraint" destination="Blz-LM-Ak0" id="o0w-KR-L8J"/>
                         <outlet property="recruiterProfile" destination="7PK-AC-wYm" id="d9r-Eb-ruO"/>
@@ -1645,7 +1646,7 @@
         <image name="play" width="96" height="96"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="ouc-Of-Rbe"/>
+        <segue reference="Fr8-oD-wru"/>
         <segue reference="bLg-hp-djS"/>
     </inferredMetricsTieBreakers>
 </document>

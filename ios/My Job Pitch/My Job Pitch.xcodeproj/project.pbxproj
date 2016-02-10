@@ -42,6 +42,8 @@
 		CE8AB0211C6038750004F021 /* AVKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CE8AB01F1C6038750004F021 /* AVKit.framework */; };
 		CE8AB0241C617F550004F021 /* BusinessEditView.m in Sources */ = {isa = PBXBuildFile; fileRef = CE8AB0231C617F550004F021 /* BusinessEditView.m */; };
 		CE8AB0261C61826B0004F021 /* BusinessEditView.xib in Resources */ = {isa = PBXBuildFile; fileRef = CE8AB0251C61826B0004F021 /* BusinessEditView.xib */; };
+		CE8AB0281C6AA22E0004F021 /* LocationEditView.xib in Resources */ = {isa = PBXBuildFile; fileRef = CE8AB0271C6AA22E0004F021 /* LocationEditView.xib */; };
+		CE8AB02B1C6AA2490004F021 /* LocationEditView.m in Sources */ = {isa = PBXBuildFile; fileRef = CE8AB02A1C6AA2490004F021 /* LocationEditView.m */; };
 		CEC2E4041C45A88100AC0F45 /* Job.m in Sources */ = {isa = PBXBuildFile; fileRef = CEC2E4031C45A88100AC0F45 /* Job.m */; };
 		CEC2E4071C45B4C200AC0F45 /* Location.m in Sources */ = {isa = PBXBuildFile; fileRef = CEC2E4061C45B4C200AC0F45 /* Location.m */; };
 		CEC2E40A1C45B4EC00AC0F45 /* MJPObjectWithDates.m in Sources */ = {isa = PBXBuildFile; fileRef = CEC2E4091C45B4EC00AC0F45 /* MJPObjectWithDates.m */; };
@@ -154,6 +156,9 @@
 		CE8AB0221C617F550004F021 /* BusinessEditView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BusinessEditView.h; sourceTree = "<group>"; };
 		CE8AB0231C617F550004F021 /* BusinessEditView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BusinessEditView.m; sourceTree = "<group>"; };
 		CE8AB0251C61826B0004F021 /* BusinessEditView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = BusinessEditView.xib; sourceTree = "<group>"; };
+		CE8AB0271C6AA22E0004F021 /* LocationEditView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LocationEditView.xib; sourceTree = "<group>"; };
+		CE8AB0291C6AA2490004F021 /* LocationEditView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LocationEditView.h; sourceTree = "<group>"; };
+		CE8AB02A1C6AA2490004F021 /* LocationEditView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LocationEditView.m; sourceTree = "<group>"; };
 		CEC2E4021C45A88100AC0F45 /* Job.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Job.h; path = Assets.xcassets/Job.h; sourceTree = "<group>"; };
 		CEC2E4031C45A88100AC0F45 /* Job.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Job.m; path = Assets.xcassets/Job.m; sourceTree = "<group>"; };
 		CEC2E4051C45B4C200AC0F45 /* Location.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Location.h; sourceTree = "<group>"; };
@@ -299,6 +304,9 @@
 				CE8AB0221C617F550004F021 /* BusinessEditView.h */,
 				CE8AB0231C617F550004F021 /* BusinessEditView.m */,
 				CE8AB0251C61826B0004F021 /* BusinessEditView.xib */,
+				CE8AB0291C6AA2490004F021 /* LocationEditView.h */,
+				CE8AB02A1C6AA2490004F021 /* LocationEditView.m */,
+				CE8AB0271C6AA22E0004F021 /* LocationEditView.xib */,
 				CE8AAFE81C5848900004F021 /* JobSeekerSearchProfileView.h */,
 				CE8AAFE91C5848900004F021 /* JobSeekerSearchProfileView.m */,
 				CE8AAFE61C5848490004F021 /* JobSeekerSearchProfileView.xib */,
@@ -527,6 +535,7 @@
 			files = (
 				CE6FD34A1C01F9BC001A04C3 /* LaunchScreen.storyboard in Resources */,
 				CEE04AA91C10F8FE00697620 /* JobSeekerProfileView.xib in Resources */,
+				CE8AB0281C6AA22E0004F021 /* LocationEditView.xib in Resources */,
 				CE8AB0261C61826B0004F021 /* BusinessEditView.xib in Resources */,
 				CE6FD3471C01F9BC001A04C3 /* Assets.xcassets in Resources */,
 				CE8AAFF91C59A2DE0004F021 /* LocationMap.xib in Resources */,
@@ -678,6 +687,7 @@
 				CE8AB0141C5EBA850004F021 /* Message.m in Sources */,
 				CE8AB0041C5B04320004F021 /* JobDetails.m in Sources */,
 				CE8AAFF71C599FA50004F021 /* DownPickerMultiple.m in Sources */,
+				CE8AB02B1C6AA2490004F021 /* LocationEditView.m in Sources */,
 				CEE062591C28B77500ED60C0 /* MJPObjectWithNameDesc.m in Sources */,
 				CE8AAFED1C5850C40004F021 /* EditSearchProfile.m in Sources */,
 				CEC2E41C1C4BEAA900AC0F45 /* ApplicationStatus.m in Sources */,

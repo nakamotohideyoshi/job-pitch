@@ -46,44 +46,52 @@
     NSLog(@"showJobSeeker");
     [self->jobSeekerProfile setHidden:false];
     [self->recruiterProfile setHidden:true];
-    [self->recruiterBottomContraint setPriority:UILayoutPriorityDefaultLow];
+    [self->recruiterBottomContraint setPriority:UILayoutPriorityDefaultLow+1];
 }
 
 - (void)showRecruiter {
     NSLog(@"showRecruiter");
     [self->jobSeekerProfile setHidden:true];
     [self->recruiterProfile setHidden:false];
-    [self->recruiterBottomContraint setPriority:UILayoutPriorityDefaultHigh];
+    [self->recruiterBottomContraint setPriority:UILayoutPriorityRequired-1];
 }
 
 - (NSArray *)getRequiredFields {
     if (!jobSeekerProfile.hidden) {
         return @[@"firstName", @"lastName", @"description"];
     } else {
-        return @[];
+        return @[@"name", @"description"];
     }
 }
 
 - (NSDictionary*)getFieldMap {
-    return @{@"firstName": jobSeekerProfile.firstName.textField,
-             @"lastName": jobSeekerProfile.lastName.textField,
-             @"email": jobSeekerProfile.email.textField,
-             @"telephone": jobSeekerProfile.telephone.textField,
-             @"mobile": jobSeekerProfile.mobile.textField,
-             @"age": jobSeekerProfile.age.textField,
-             @"description": jobSeekerProfile.descriptionView,
-             };
+    if (!jobSeekerProfile.hidden) {
+        return @{@"firstName": jobSeekerProfile.firstName.textField,
+                 @"lastName": jobSeekerProfile.lastName.textField,
+                 @"email": jobSeekerProfile.email.textField,
+                 @"telephone": jobSeekerProfile.telephone.textField,
+                 @"mobile": jobSeekerProfile.mobile.textField,
+                 @"age": jobSeekerProfile.age.textField,
+                 @"description": jobSeekerProfile.descriptionView,
+                 };
+    } else {
+        return @{};
+    }
 }
 
 - (NSDictionary *)getErrorViewMap {
-    return @{@"firstName": jobSeekerProfile.firstName.errorLabel,
-             @"lastName": jobSeekerProfile.lastName.errorLabel,
-             @"email": jobSeekerProfile.email.errorLabel,
-             @"telephone": jobSeekerProfile.telephone.errorLabel,
-             @"mobile": jobSeekerProfile.mobile.errorLabel,
-             @"age": jobSeekerProfile.age.errorLabel,
-             @"description": jobSeekerProfile.descriptionError,
-             };
+    if (!jobSeekerProfile.hidden) {
+        return @{@"firstName": jobSeekerProfile.firstName.errorLabel,
+                 @"lastName": jobSeekerProfile.lastName.errorLabel,
+                 @"email": jobSeekerProfile.email.errorLabel,
+                 @"telephone": jobSeekerProfile.telephone.errorLabel,
+                 @"mobile": jobSeekerProfile.mobile.errorLabel,
+                 @"age": jobSeekerProfile.age.errorLabel,
+                 @"description": jobSeekerProfile.descriptionError,
+                 };
+    } else {
+        return @{};
+    }
 }
 
 - (void)continue

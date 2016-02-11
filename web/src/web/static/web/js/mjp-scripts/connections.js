@@ -26,7 +26,6 @@ $(function() {
 								businessUser = 1;
 							}
 						  
-			//Remove hardcode and fetch ID from /api/application-statuses/ when Jamie confirms use.
 			$.get( "/api/applications/"+job_refine+"&status=1", { csrftoken: getCookie('csrftoken') }).done(function( data ) {
 						if(data.length != 0){
 							for (var key in data) {
@@ -39,10 +38,10 @@ $(function() {
 									  var minutesTwoDigitsWithLeadingZero = ("0" + date.getMinutes()).substr(-2);
 									  if(businessUser == 1){
 										  //business
-										$('#list-table tbody').append('<tr data-application-id="'+obj.id+'" class="application-list" id="application-list-'+obj.id+'"><td>'+obj.job_data.title+'</td><td onclick="viewPitch2(\''+obj.job_seeker.pitches[0].video+'\','+obj.job_data.id+','+obj.job_seeker.id+');">'+obj.job_seeker.first_name+' '+obj.job_seeker.last_name+'</td><td>'+obj.job_seeker.description+'</td></tr>');
+										$('#list-table tbody').append('<tr data-application-id="'+obj.id+'" class="application-list" id="application-list-'+obj.id+'"><td>'+obj.job_data.title+'</td><td onclick="viewPitch2(\''+obj.job_seeker.pitches[0].video+'\','+obj.job_data.id+','+obj.job_seeker.id+');">'+obj.job_seeker.first_name+' '+obj.job_seeker.last_name+'</td><td>'+obj.job_seeker.description+'</td><td onclick="goToMessages('+obj.id+');">'+messageShort+'...<br><span class="message-time-date">'+date.getHours()+':'+minutesTwoDigitsWithLeadingZero+' '+date.getDate()+'/'+date.getMonth()+'/'+date.getFullYear()+'</span></td></tr>');
 									  }else{
 										  //job seeker
-										$('#list-table tbody').append('<tr data-application-id="'+obj.id+'" class="application-list" id="application-list-'+obj.id+'"><td>'+obj.job_data.title+'</td><td>'+obj.job_seeker.description+'</td></tr>');
+										$('#list-table tbody').append('<tr data-application-id="'+obj.id+'" class="application-list" id="application-list-'+obj.id+'"><td>'+obj.job_data.title+'</td><td>'+obj.job_seeker.description+'</td><td onclick="goToMessages('+obj.id+');">'+messageShort+'...<br><span class="message-time-date">'+date.getHours()+':'+minutesTwoDigitsWithLeadingZero+' '+date.getDate()+'/'+date.getMonth()+'/'+date.getFullYear()+'</span></td></tr>');
 									  }
 			
 								  }

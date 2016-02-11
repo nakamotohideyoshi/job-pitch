@@ -392,14 +392,14 @@ footer {
     margin-left: 115px;
 }
 .navbar-collapse.collapse.in{
-	width:270px;
+	width:330px;
 	background:#4f5050;
 	float:right;
 }
 .navbar-collapse
 {
 	position: relative;
-	width: 270px;
+	width: 330px;
 	padding: 0px;
 	background: #4f5050;
 	-webkit-border-radius: 0px;
@@ -420,7 +420,7 @@ footer {
 	width: 0;
 	z-index: 1;
 	top: -15px;
-	left: 210px;
+	left: 270px;
 }
 
 .navbar-nav{
@@ -879,6 +879,17 @@ input {
 
 .jobs-list .btn{
 	margin-top:10px;
+}
+
+.jobTableDescription{
+	max-width: 120px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.systemMessageNotice{
+	font-size: 9px;
 }
 
 /* Only show the "mobile menu" fix */

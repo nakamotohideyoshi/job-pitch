@@ -28,7 +28,7 @@ $(function() {
 							}
 						  
 	
-			$.get( "/api/applications/"+job_refine+"&status=2", { csrftoken: getCookie('csrftoken') }).done(function( data ) {
+			$.get( "/api/applications/"+job_refine+"", { csrftoken: getCookie('csrftoken'), status:2 }).done(function( data ) {
 						if(data.length != 0){
 							for (var key in data) {
 									  var obj = data[key];

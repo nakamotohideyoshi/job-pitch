@@ -29,6 +29,7 @@ $(function() {
 								});
 						  		$('#company_details').fadeOut(250, function() {
 									$('#work_place_details').fadeIn(250);
+									$('.page-header').html('Create your first recruitment location');
 								});
 						}
 					  });

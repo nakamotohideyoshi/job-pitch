@@ -79,7 +79,9 @@ function applyForJob(job_id, job_seeker_id){
 
 function connectWithJob(job_id, job_seeker_id){
 			  $.post( "/api/applications/", { job: job_id, job_seeker: job_seeker_id, csrftoken: getCookie('csrftoken')}).done(function( data ) {
-				  location.reload();
+				  //location.reload();
+				  $('#viewPitchModal').find('.modal-body').html('<div class="row"><div class="col-md-12"><h4 style="text-align: center; font-size:16px;">Thanks for requesting to connect. A message has been sent to the job seeker</h4></div></div><div class="row"><div class="col-md-12" style="text-align:center;"><button style="margin-left:0;" type="button" class="btn btn-custom" data-dismiss="modal" aria-label="Close">Back to List</button></div></row>');
+				  $('#job-list-'+job_seeker_id).remove();
 			  })
 			  .fail(function( data ) {
 				

@@ -892,6 +892,10 @@ input {
 	font-size: 9px;
 }
 
+#map{
+	height:200px;
+}
+
 /* Only show the "mobile menu" fix */
 @media (max-width: 3000px) {
     .navbar-header {

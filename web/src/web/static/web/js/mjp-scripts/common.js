@@ -88,6 +88,7 @@ function connectWithJob(job_id, job_seeker_id){
 			  });
 }
 
+
 function messageRead(message_id){
 			$.put( "/api/messages/"+message_id+'/', { read:true, csrftoken: getCookie('csrftoken')}).done(function( data ) {
 ;
@@ -320,5 +321,8 @@ $(function() {
 	$('#loginModal').on('hidden.bs.modal', function () {
 		$('.alert').html('');
 		$('.alert').hide();
+	});
+	$('#viewPitchModal').on('hidden.bs.modal', function () {
+		$('#viewPitchModal').find('.modal-body').html('<div class="col-md-12" id="pitchViewer"></div><div class="col-md-offset-4 col-md-4"><a class="btn btn-custom" id="applyButtonModal" style="display:none; margin-left: 18px;margin-top: 20px;">Connect</a></div>');
 	});
 });

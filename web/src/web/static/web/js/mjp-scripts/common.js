@@ -275,7 +275,7 @@ $(function() {
 			$.post( "/api-rest-auth/login/", { username: username, password: password1, csrfmiddlewaretoken: csrfmiddlewaretoken }).done(function( data ) {
 				setCookie('username', username, 28);
 				setCookie('key', data.key, 28);
-				window.location.href = "/";
+				window.location.href = "/applications/";
 			  })
 			  .fail(function( data ) {
 				var messageError = ''

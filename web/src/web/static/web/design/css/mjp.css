@@ -896,6 +896,11 @@ input {
 	height:200px;
 }
 
+.job-image-messages{
+	width: 100%;
+}
+
+
 /* Only show the "mobile menu" fix */
 @media (max-width: 3000px) {
     .navbar-header {

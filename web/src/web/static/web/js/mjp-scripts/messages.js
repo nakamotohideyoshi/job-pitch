@@ -41,7 +41,12 @@ $(function() {
 				$('#location-address-single').html(data.job_data.location_data.address);
 				$('#location-place-name-single').html(data.job_data.location_data.place_name);
 				if(data.job_data.images.length != 0){
-						$('.job-image-message').attr('src', data.job_data.images[0].image);
+					$('.job-image-messages').attr('src', data.job_data.images[0].image);
+				}else if(data.job_data.location_data.images.length != 0){
+					$('.job-image-messages').attr("src", data.job_data.location_data.images[0].image);
+				}else{
+					console.log(data.job_data.business_data.images[0].image);
+					$('.job-image-messages').attr("src", data.job_data.business_data.images[0].image);
 				}
 				var LatLng = {lat: data.job_data.location_data.latitude, lng: data.job_data.location_data.longitude};
 				var map = new google.maps.Map(document.getElementById('map'), {

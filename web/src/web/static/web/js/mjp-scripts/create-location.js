@@ -11,6 +11,7 @@ $(function() {
 	 $.get( "/api/user-businesses/"+business_id, { token: getCookie('key') ,csrftoken: getCookie('csrftoken') }).done(function( data ) { $('#currentLogo').attr('src', data.images[0].thumbnail).show(); });
 	
 	$('#work_place_details').submit(function( event ) {
+		$('.btn-primary').attr( "disabled", true );
 		event.preventDefault();
 			
 			var work_place_name = $('#work_place_name').val();		

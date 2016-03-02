@@ -33,7 +33,7 @@ $(document).ready(function() {
 			function startRecording() {
 				$( "#recordStartButton" ).hide();
 				$( "#recordStopButton" ).attr( "disabled", false );
-				$( "#recordStopButton" ).show();
+				$( "#recordStopButton" ).css('display', 'block');
 				$.scriptcam.startRecording();
 			}
 			function closeCamera() {

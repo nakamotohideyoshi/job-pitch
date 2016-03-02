@@ -56,6 +56,8 @@ $(function() {
 								if (businessUser == 1){
 									// business
 									$('.business-link').show();
+								}else{
+									$('.business-link').hide();
 								}
 							  
 					  })

@@ -581,6 +581,10 @@ Web App By Reiss Watson
 	display:none;	
 }
 
+#list-table .business-link{
+	display:none;
+}
+
 .job-seeker-link{
 	display:none;
 }

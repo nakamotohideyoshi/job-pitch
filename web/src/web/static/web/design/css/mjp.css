@@ -892,6 +892,13 @@ input {
     white-space: nowrap;
 }
 
+.jobTableDescription2{
+	max-width: 100px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
 .systemMessageNotice{
 	font-size: 9px;
 }

@@ -93,6 +93,7 @@ $(function() {
 			  
 	//Form submit code
  	$('#create-job').submit(function( event ) {
+		$('.btn-primary').attr( "disabled", true );
 		event.preventDefault();
 		var title = $('#title').val();
 		var description = $('#description').val();

@@ -55,6 +55,7 @@ $(function() {
 	
 	
 	$('#job-preferences').submit(function( event ) {
+		$('.btn-primary').attr( "disabled", true );
 		event.preventDefault();
 		var sectors = $('#sector').val();
 		var contract = $('#contract').val();

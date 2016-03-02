@@ -47,6 +47,7 @@ $(function() {
 	
 	
 	$('#work_place_details').submit(function( event ) {
+		$('.btn-primary').attr( "disabled", true );
 		event.preventDefault();
 			
 			var work_place_name = $('#work_place_name').val();		

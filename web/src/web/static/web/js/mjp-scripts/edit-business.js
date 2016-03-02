@@ -20,6 +20,7 @@ $(function() {
 	
 	//Form submit code
  	$('#company_details').submit(function( event ) {
+		$('.btn-primary').attr( "disabled", true );
 		event.preventDefault();
 			
 			var company_name = $('#company_name').val();		

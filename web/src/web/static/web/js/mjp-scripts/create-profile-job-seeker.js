@@ -27,6 +27,7 @@ $(function() {
 	
 	//Form submit code
  	$('#profile').submit(function( event ) {
+		$('.btn-primary').attr( "disabled", true );
 		event.preventDefault();
 		var first_name = $('#first_name').val();
 		var last_name = $('#last_name').val();

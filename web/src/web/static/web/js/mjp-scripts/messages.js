@@ -89,6 +89,7 @@ $(function() {
 
 	//Form submit code
  	$('#send-messages').submit(function( event ) {
+		$('.btn-default').attr( "disabled", true );
 		event.preventDefault();
 		var content = $('#content-form').val();
 			$.post( "/api/messages/", { application:application_id,content:content, csrftoken: getCookie('csrftoken') }).done(function( data ) {

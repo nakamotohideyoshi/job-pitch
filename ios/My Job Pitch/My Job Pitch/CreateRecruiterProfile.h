@@ -18,6 +18,8 @@
 
 }
 
+@property (weak, nonatomic) IBOutlet UILabel *activityLabel;
+
 - (IBAction)continue;
 
 @end

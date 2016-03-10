@@ -11,7 +11,6 @@
 
 @interface LocationEditView ()
 @property (nullable) Image *image;
-@property (nullable) UIImage *imageForUpload;
 @property (nonatomic, nonnull) NSString *placeID;
 @property (nonatomic, nonnull) NSString *placeName;
 @property (nonatomic, nonnull) NSNumber *placeLatitude;

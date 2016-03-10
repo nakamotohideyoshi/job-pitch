@@ -104,6 +104,15 @@
              success:(void (^)(Location *location))success
              failure:(void (^)(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors))failure;
 
+- (void)uploadImage:(UIImage*)image
+                 to:(NSString*)endpoint
+          objectKey:(NSString*)objectKey
+           objectId:(NSNumber*)objectId
+              order:(NSNumber*)order
+           progress:(void (^)(NSUInteger bytesWritten, long long totalBytesWritten, long long totalBytesExpectedToWrite))progress
+            success:(void (^)(Image *image))success
+            failure:(void (^)(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors))failure;
+
 - (void)logout;
 
 @end

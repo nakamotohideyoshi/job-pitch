@@ -24,6 +24,7 @@
 @property (weak, nonatomic) IBOutlet ErrorTextField *mobile;
 @property (weak, nonatomic) IBOutlet UISwitch *mobilePublic;
 @property (weak, nonatomic) IBOutlet ErrorTextField *location;
+@property (nullable) UIImage *imageForUpload;
 
 @property (weak, nonatomic) IBOutlet UIImageView *imageView;
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView *imageActivity;

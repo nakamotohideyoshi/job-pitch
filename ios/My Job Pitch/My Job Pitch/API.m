@@ -183,6 +183,38 @@
                                         dictionary:nil
                                         relationships:[self inverseRelationships:businessRelationships]];
     
+    [self configureResponseMapping:objectManager
+                     responseClass:[Business class]
+                     responseArray:businessArray
+                responseDictionary:nil
+             responseRelationships:[self inverseRelationships:businessRelationships]
+                              path:@"/api/user-businesses/"
+                            method:RKRequestMethodAny
+     ];
+    [self configureRequestMapping:objectManager
+                     requestClass:[Business class]
+                     requestArray:businessArray
+                requestDictionary:nil
+             requestRelationships:nil
+                             path:@"/api/user-businesses/"
+                           method:RKRequestMethodAny
+     ];
+    [self configureResponseMapping:objectManager
+                     responseClass:[Business class]
+                     responseArray:businessArray
+                responseDictionary:nil
+             responseRelationships:[self inverseRelationships:businessRelationships]
+                              path:@"/api/user-businesses/:pk/"
+                            method:RKRequestMethodAny
+     ];
+    [self configureRequestMapping:objectManager
+                     requestClass:[Business class]
+                     requestArray:businessArray
+                requestDictionary:nil
+             requestRelationships:nil
+                             path:@"/api/user-businesses/:pk/"
+                           method:RKRequestMethodAny
+     ];
     NSArray *locationArray = @[@"id",
                                @"created",
                                @"updated",
@@ -216,6 +248,39 @@
                                         array:locationArray
                                         dictionary:[self inverseDictionary:locationDictionary]
                                         relationships:[self inverseRelationships:locationRelationships]];
+    
+    [self configureResponseMapping:objectManager
+                     responseClass:[Location class]
+                     responseArray:locationArray
+                responseDictionary:[self inverseDictionary:locationDictionary]
+             responseRelationships:[self inverseRelationships:locationRelationships]
+                              path:@"/api/user-locations/"
+                            method:RKRequestMethodAny
+     ];
+    [self configureRequestMapping:objectManager
+                     requestClass:[Location class]
+                     requestArray:locationArray
+                requestDictionary:locationDictionary
+             requestRelationships:nil
+                             path:@"/api/user-locations/"
+                           method:RKRequestMethodAny
+     ];
+    [self configureResponseMapping:objectManager
+                     responseClass:[Location class]
+                     responseArray:locationArray
+                responseDictionary:[self inverseDictionary:locationDictionary]
+             responseRelationships:[self inverseRelationships:locationRelationships]
+                              path:@"/api/user-locations/:pk/"
+                            method:RKRequestMethodAny
+     ];
+    [self configureRequestMapping:objectManager
+                     requestClass:[Location class]
+                     requestArray:locationArray
+                requestDictionary:locationDictionary
+             requestRelationships:nil
+                             path:@"/api/user-locations/:pk/"
+                           method:RKRequestMethodAny
+     ];
     
     NSArray* jobArray = @[@"id",
                           @"created",
@@ -961,6 +1026,66 @@
                                                   failure(operation, error, [self getMessage:error], [self getErrors:error]);
                                               }
      ];
+}
+
+- (void)saveBusiness:(Business*)business
+              success:(void (^)(Business *business))success
+              failure:(void (^)(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors))failure;
+{
+    [self clearCookies];
+    if (business.id) {
+        [[RKObjectManager sharedManager] putObject:business
+                                              path:[NSString stringWithFormat:@"/api/user-businesses/%@/", business.id]
+                                        parameters:nil success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
+                                            NSLog(@"Business updated");
+                                            success([mappingResult firstObject]);
+                                        } failure:^(RKObjectRequestOperation *operation, NSError *error) {
+                                            NSLog(@"Error updating business: %@", error);
+                                            failure(operation, error, [self getMessage:error], [self getErrors:error]);
+                                        }
+         ];
+    } else {
+        [[RKObjectManager sharedManager] postObject:business
+                                               path:@"/api/user-businesses/"
+                                         parameters:nil success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
+                                             NSLog(@"Business created");
+                                             success([mappingResult firstObject]);
+                                         } failure:^(RKObjectRequestOperation *operation, NSError *error) {
+                                             NSLog(@"Error creating business: %@", error);
+                                             failure(operation, error, [self getMessage:error], [self getErrors:error]);
+                                         }
+         ];
+    }
+}
+
+- (void)saveLocation:(Location*)location
+             success:(void (^)(Location *location))success
+             failure:(void (^)(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors))failure;
+{
+    [self clearCookies];
+    if (location.id) {
+        [[RKObjectManager sharedManager] putObject:location
+                                              path:[NSString stringWithFormat:@"/api/user-locations/%@/", location.id]
+                                        parameters:nil success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
+                                            NSLog(@"Location updated");
+                                            success([mappingResult firstObject]);
+                                        } failure:^(RKObjectRequestOperation *operation, NSError *error) {
+                                            NSLog(@"Error updating location: %@", error);
+                                            failure(operation, error, [self getMessage:error], [self getErrors:error]);
+                                        }
+         ];
+    } else {
+        [[RKObjectManager sharedManager] postObject:location
+                                               path:@"/api/user-locations/"
+                                         parameters:nil success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
+                                             NSLog(@"Location created");
+                                             success([mappingResult firstObject]);
+                                         } failure:^(RKObjectRequestOperation *operation, NSError *error) {
+                                             NSLog(@"Error creating location: %@", error);
+                                             failure(operation, error, [self getMessage:error], [self getErrors:error]);
+                                         }
+         ];
+    }
 }
 
 - (void)logout

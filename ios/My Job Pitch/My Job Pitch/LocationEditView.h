@@ -9,8 +9,9 @@
 #import <UIKit/UIKit.h>
 #import "Location.h"
 #import "ErrorTextField.h"
+#import "LocationMapView.h"
 
-@interface LocationEditView : UIView
+@interface LocationEditView : UIView<LocationMapViewDelegate>
 
 @property (weak, nonatomic) IBOutlet ErrorTextField *name;
 @property (weak, nonatomic) IBOutlet ErrorTextField *desc;
@@ -22,7 +23,7 @@
 @property (weak, nonatomic) IBOutlet UISwitch *telephonePublic;
 @property (weak, nonatomic) IBOutlet ErrorTextField *mobile;
 @property (weak, nonatomic) IBOutlet UISwitch *mobilePublic;
-@property (weak, nonatomic) IBOutlet UILabel *locationLabel;
+@property (weak, nonatomic) IBOutlet ErrorTextField *location;
 
 @property (weak, nonatomic) IBOutlet UIImageView *imageView;
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView *imageActivity;

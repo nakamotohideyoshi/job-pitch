@@ -99,7 +99,12 @@
                     [errorText setText:[errors[key] firstObject]];
                 }
             } else {
-                [[[UIAlertView alloc] initWithTitle:[NSString stringWithFormat:@"Error: %@", key]
+                NSString *title;
+                if ([key isEqualToString:@"non_field_errors"])
+                    title = @"Error";
+                else
+                    title = [NSString stringWithFormat:@"Error: %@", key];
+                [[[UIAlertView alloc] initWithTitle:title
                                             message:[errors[key] firstObject]
                                            delegate:nil
                                   cancelButtonTitle:@"OK"

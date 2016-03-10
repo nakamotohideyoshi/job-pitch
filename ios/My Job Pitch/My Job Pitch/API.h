@@ -96,6 +96,14 @@
 - (void)loadRoles:(void (^)(NSArray *roles))success
           failure:(void (^)(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors))failure;
 
+- (void)saveBusiness:(Business*)business
+             success:(void (^)(Business *business))success
+             failure:(void (^)(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors))failure;
+
+- (void)saveLocation:(Location*)location
+             success:(void (^)(Location *location))success
+             failure:(void (^)(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors))failure;
+
 - (void)logout;
 
 @end

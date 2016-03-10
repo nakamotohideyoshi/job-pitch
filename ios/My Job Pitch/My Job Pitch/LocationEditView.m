@@ -10,6 +10,10 @@
 
 @interface LocationEditView ()
 @property (nullable) Image *image;
+@property (nonatomic, nonnull) NSString *placeID;
+@property (nonatomic, nonnull) NSString *placeName;
+@property (nonatomic, nonnull) NSNumber *placeLatitude;
+@property (nonatomic, nonnull) NSNumber *placeLongitude;
 @end
 
 @implementation LocationEditView
@@ -42,6 +46,7 @@
     self.deleteButton.hidden = true;
     self.noImage.hidden = false;
     self.imageActivity.hidden = true;
+    self.location.textField.enabled = false;
 }
 
 - (UIView*)loadViewFromNib
@@ -62,8 +67,6 @@
     self.telephonePublic.on = location.telephonePublic;
     self.mobile.textField.text = location.mobile;
     self.mobilePublic.on = location.mobilePublic;
-    
-    self.locationLabel.text = location.placeName;
     
     self.image = [location getImage];
     if (self.image && self.image.image) {
@@ -94,6 +97,12 @@
         self.noImage.hidden = false;
         self.imageActivity.hidden = true;
     }
+    
+    self.placeID = location.placeID;
+    self.placeName = location.placeName;
+    self.placeLatitude = location.latitude;
+    self.placeLongitude = location.longitude;
+    [self updateLocation];
 }
 
 - (void)save:(nonnull Location*)location
@@ -107,6 +116,10 @@
     location.telephonePublic = self.telephonePublic.on;
     location.mobile = self.mobile.textField.text;
     location.mobilePublic = self.mobilePublic.on;
+    location.placeID = self.placeID;
+    location.placeName = self.placeName;
+    location.latitude = self.placeLatitude;
+    location.longitude = self.placeLongitude;
 }
 
 - (IBAction)changeImage:(id)sender {
@@ -121,5 +134,41 @@
 }
 
 - (IBAction)changeLocation:(id)sender {
+    LocationMapView *map = [[LocationMapView alloc] initWithNibName:@"LocationMap" bundle:nil];
+    [map setDelegate:self];
+    if (self.placeLatitude != nil)
+        [map setLocationWithLatitude:self.placeLatitude
+                           longitude:self.placeLongitude
+                                name:self.placeName
+                             placeID:self.placeID];
+    UINavigationController *navigationController = (UINavigationController *)self.window.rootViewController;
+    [navigationController pushViewController:map animated:YES];
+
 }
+
+- (void)updateLocation
+{
+    if (self.placeName) {
+        if (self.placeID == nil || [self.placeID isEqualToString:@""])
+            self.location.textField.text = self.placeName;
+        else
+            self.location.textField.text = [NSString stringWithFormat:@"%@ (from Google)", self.placeName];
+        self.location.error = nil;
+    } else {
+        self.location.textField.text = @"";
+    }
+}
+
+- (void)setLocationWithLatitude:(NSNumber *)latitude
+                      longitude:(NSNumber *)longitude
+                           name:(NSString *)name
+                        placeID:(NSString *)placeID
+{
+    self.placeLatitude = latitude;
+    self.placeLongitude = longitude;
+    self.placeName = name;
+    self.placeID = placeID;
+    [self updateLocation];
+}
+
 @end

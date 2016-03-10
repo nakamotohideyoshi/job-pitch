@@ -11,13 +11,7 @@
 #import "BusinessEditView.h"
 #import "LocationEditView.h"
 
-@interface CreateProfile : ScrollingViewController<JobSeekerProfileViewDelegate> {
-    __weak IBOutlet JobSeekerProfileView *jobSeekerProfile;
-    __weak IBOutlet UIView *recruiterProfile;
-    __weak IBOutlet BusinessEditView *businessEditView;
-    __weak IBOutlet LocationEditView *locationEditView;
-    __weak IBOutlet NSLayoutConstraint *recruiterBottomContraint;
-}
+@interface CreateProfile : ScrollingViewController
 
 - (IBAction)logout;
 - (IBAction)showJobSeeker;

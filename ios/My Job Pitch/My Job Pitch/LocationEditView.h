@@ -11,7 +11,7 @@
 #import "ErrorTextField.h"
 #import "LocationMapView.h"
 
-@interface LocationEditView : UIView<LocationMapViewDelegate>
+@interface LocationEditView : UIView<LocationMapViewDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate>
 
 @property (weak, nonatomic) IBOutlet ErrorTextField *name;
 @property (weak, nonatomic) IBOutlet ErrorTextField *desc;

@@ -164,7 +164,13 @@
                                      array:imageArray
                                      dictionary:nil
                                      relationships:nil];
-    
+    [self configureResponseMapping:objectManager
+                     responseClass:[Image class]
+                     responseArray:imageArray
+                responseDictionary:nil
+             responseRelationships:nil
+                              path:@"/api/user-business-images/"
+                            method:RKRequestMethodPOST];
     NSArray *businessArray = @[@"id",
                                @"created",
                                @"updated",
@@ -1030,7 +1036,7 @@
 
 - (void)saveBusiness:(Business*)business
               success:(void (^)(Business *business))success
-              failure:(void (^)(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors))failure;
+              failure:(void (^)(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors))failure
 {
     [self clearCookies];
     if (business.id) {
@@ -1060,7 +1066,7 @@
 
 - (void)saveLocation:(Location*)location
              success:(void (^)(Location *location))success
-             failure:(void (^)(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors))failure;
+             failure:(void (^)(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors))failure
 {
     [self clearCookies];
     if (location.id) {
@@ -1086,6 +1092,44 @@
                                          }
          ];
     }
+}
+
+- (void)uploadImage:(UIImage*)image
+                 to:(NSString*)endpoint
+          objectKey:(NSString*)objectKey
+           objectId:(NSNumber*)objectId
+              order:(NSNumber*)order
+           progress:(void (^)(NSUInteger bytesWritten, long long totalBytesWritten, long long totalBytesExpectedToWrite))progress
+            success:(void (^)(Image *image))success
+            failure:(void (^)(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors))failure
+{
+    NSMutableURLRequest *request = [[RKObjectManager sharedManager]
+                                    multipartFormRequestWithObject:nil
+                                    method:RKRequestMethodPOST
+                                    path:[NSString stringWithFormat:@"/api/%@/", endpoint]
+                                    parameters:nil
+                                    constructingBodyWithBlock:^(id<AFMultipartFormData> formData) {
+                                        [formData appendPartWithFileData:UIImagePNGRepresentation(image)
+                                                                    name:@"image"
+                                                                fileName:@"photo.png"
+                                                                mimeType:@"image/png"];
+                                        [formData appendPartWithFormData:[[order stringValue] dataUsingEncoding:NSUTF8StringEncoding]
+                                                                    name:@"order"];
+                                        [formData appendPartWithFormData:[[objectId stringValue] dataUsingEncoding:NSUTF8StringEncoding]
+                                                                    name:objectKey];
+    }];
+    
+    RKObjectRequestOperation *operation = [[RKObjectManager sharedManager]
+                                           objectRequestOperationWithRequest:request
+                                           success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
+                                               NSLog(@"Image uploaded");
+                                               success([mappingResult firstObject]);
+                                           } failure:^(RKObjectRequestOperation *operation, NSError *error) {
+                                               NSLog(@"Error uploading image: %@", error);
+                                               failure(operation, error, [self getMessage:error], [self getErrors:error]);
+                                           }];
+    [operation.HTTPRequestOperation setUploadProgressBlock:progress];
+    [[RKObjectManager sharedManager] enqueueObjectRequestOperation:operation];
 }
 
 - (void)logout

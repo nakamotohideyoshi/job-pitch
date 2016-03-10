@@ -7,12 +7,16 @@
 //
 
 #import "BusinessEditView.h"
+@import AssetsLibrary;
 
 @interface BusinessEditView ()
 @property (nullable) Image *image;
 @end
 
-@implementation BusinessEditView
+@implementation BusinessEditView {
+    UIImagePickerController *ipc;
+    UIPopoverController *popover;
+}
 
 - (instancetype)initWithCoder:(NSCoder *)aDecoder
 {
@@ -91,10 +95,55 @@
 }
 
 - (IBAction)changeImage:(id)sender {
+    ipc= [[UIImagePickerController alloc] init];
+    ipc.delegate = self;
+    ipc.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
+    
+    if(UI_USER_INTERFACE_IDIOM()==UIUserInterfaceIdiomPhone) {
+        [self.window.rootViewController
+         presentViewController:ipc animated:true completion:nil];
+    } else {
+        popover=[[UIPopoverController alloc]initWithContentViewController:ipc];
+        [popover presentPopoverFromRect:self.changeButton.frame
+                                 inView:self
+               permittedArrowDirections:UIPopoverArrowDirectionAny
+                               animated:YES];
+    }
+}
+
+-(void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info
+{
+    [self dismissPicker];
+    NSURL *referenceURL = [info objectForKey:UIImagePickerControllerReferenceURL];
+    ALAssetsLibrary *library = [[ALAssetsLibrary alloc] init];
+    [library assetForURL:referenceURL
+             resultBlock:^(ALAsset *asset) {
+                 self.imageForUpload = [UIImage imageWithCGImage:[[asset defaultRepresentation] fullResolutionImage]];
+                 self.imageView.image = self.imageForUpload;
+                 self.changeCenterContraint.priority = UILayoutPriorityDefaultLow;
+                 self.deleteButton.hidden = false;
+                 self.noImage.hidden = true;
+             }
+            failureBlock:^(NSError *error) {}];
+}
+
+-(void)imagePickerControllerDidCancel:(UIImagePickerController *)picker
+{
+    [self dismissPicker];
+}
+
+- (void)dismissPicker
+{
+    if (UI_USER_INTERFACE_IDIOM()==UIUserInterfaceIdiomPhone) {
+        [ipc dismissViewControllerAnimated:true completion:nil];
+    } else {
+        [popover dismissPopoverAnimated:YES];
+    }
 }
 
 - (IBAction)deleteImage:(id)sender {
     self.image = nil;
+    self.imageForUpload = nil;
     self.imageView.image = nil;
     self.changeCenterContraint.priority = UILayoutPriorityDefaultHigh;
     self.deleteButton.hidden = true;

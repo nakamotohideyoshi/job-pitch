@@ -10,7 +10,7 @@
 #import "Business.h"
 #import "ErrorTextField.h"
 
-@interface BusinessEditView : UIView
+@interface BusinessEditView : UIView<UIImagePickerControllerDelegate, UINavigationControllerDelegate>
 
 @property (weak, nonatomic) IBOutlet ErrorTextField *name;
 @property (weak, nonatomic) IBOutlet UIImageView *imageView;
@@ -19,6 +19,7 @@
 @property (weak, nonatomic) IBOutlet UIButton *changeButton;
 @property (weak, nonatomic) IBOutlet UIButton *deleteButton;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *changeCenterContraint;
+@property (nullable) UIImage *imageForUpload;
 
 - (void)load:(nonnull Business*)business;
 - (void)save:(nonnull Business*)business;

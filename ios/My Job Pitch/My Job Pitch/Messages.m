@@ -70,6 +70,7 @@
                  withIndicator:cell.imageActivity];
         } else {
             cell.image.image = nil;
+            cell.imageActivity.hidden = true;
         }
     } else {
         cell.from.text = [NSString stringWithFormat:@"%@ %@",

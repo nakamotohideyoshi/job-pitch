@@ -22,6 +22,7 @@
 		CE7742351C92368200A9A2BA /* SimpleListCell.m in Sources */ = {isa = PBXBuildFile; fileRef = CE7742341C92368200A9A2BA /* SimpleListCell.m */; };
 		CE7742381C923D4900A9A2BA /* ListLocations.m in Sources */ = {isa = PBXBuildFile; fileRef = CE7742371C923D4900A9A2BA /* ListLocations.m */; };
 		CE77423B1C923EAD00A9A2BA /* ListJobs.m in Sources */ = {isa = PBXBuildFile; fileRef = CE77423A1C923EAD00A9A2BA /* ListJobs.m */; };
+		CE77423E1C92555900A9A2BA /* EditLocation.m in Sources */ = {isa = PBXBuildFile; fileRef = CE77423D1C92555900A9A2BA /* EditLocation.m */; };
 		CE8395A81C3EF98F007A8213 /* EditProfile.m in Sources */ = {isa = PBXBuildFile; fileRef = CE8395A71C3EF98F007A8213 /* EditProfile.m */; };
 		CE8395AB1C42F279007A8213 /* SwipeView.m in Sources */ = {isa = PBXBuildFile; fileRef = CE8395AA1C42F279007A8213 /* SwipeView.m */; };
 		CE86847E1C0E570300D4B6C7 /* ScrollingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CE86847D1C0E570300D4B6C7 /* ScrollingViewController.m */; };
@@ -127,6 +128,8 @@
 		CE7742371C923D4900A9A2BA /* ListLocations.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ListLocations.m; sourceTree = "<group>"; };
 		CE7742391C923EAD00A9A2BA /* ListJobs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ListJobs.h; sourceTree = "<group>"; };
 		CE77423A1C923EAD00A9A2BA /* ListJobs.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ListJobs.m; sourceTree = "<group>"; };
+		CE77423C1C92555900A9A2BA /* EditLocation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EditLocation.h; sourceTree = "<group>"; };
+		CE77423D1C92555900A9A2BA /* EditLocation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EditLocation.m; sourceTree = "<group>"; };
 		CE8395A61C3EF98F007A8213 /* EditProfile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EditProfile.h; sourceTree = "<group>"; };
 		CE8395A71C3EF98F007A8213 /* EditProfile.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EditProfile.m; sourceTree = "<group>"; };
 		CE8395A91C42F279007A8213 /* SwipeView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SwipeView.h; sourceTree = "<group>"; };
@@ -312,6 +315,8 @@
 				CE7742391C923EAD00A9A2BA /* ListJobs.h */,
 				CE77423A1C923EAD00A9A2BA /* ListJobs.m */,
 				CE6FD3431C01F9BB001A04C3 /* Main.storyboard */,
+				CE77423C1C92555900A9A2BA /* EditLocation.h */,
+				CE77423D1C92555900A9A2BA /* EditLocation.m */,
 				CE8395A61C3EF98F007A8213 /* EditProfile.h */,
 				CE8395A71C3EF98F007A8213 /* EditProfile.m */,
 				CE8AAFEB1C5850C40004F021 /* EditSearchProfile.h */,
@@ -689,6 +694,7 @@
 				CE45AECD1C0B461A0092AB75 /* User.m in Sources */,
 				CE8AB0011C5AF6250004F021 /* Application.m in Sources */,
 				CE8AB0241C617F550004F021 /* BusinessEditView.m in Sources */,
+				CE77423E1C92555900A9A2BA /* EditLocation.m in Sources */,
 				CE45AECA1C0B45AD0092AB75 /* RegisterRequest.m in Sources */,
 				CE8AAFE51C56D93C0004F021 /* Pitch.m in Sources */,
 				CEE52CFE1C066AB000881648 /* AuthToken.m in Sources */,

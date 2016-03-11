@@ -61,6 +61,7 @@
              withIndicator:cell.imageActivity];
     } else {
         cell.image.image = nil;
+        cell.imageActivity.hidden = true;
     }
     cell.subtitle.text = [NSString stringWithFormat:@"Includes %ld work place", business.locations.count];
     cell.backgroundColor = [UIColor clearColor];
@@ -89,6 +90,9 @@
         ListLocations *locationsView = [segue destinationViewController];
         Business *selectedBusiness = [data objectAtIndex:self.businesses.indexPathForSelectedRow.row];
         [locationsView setBusiness:selectedBusiness];
+    } else if ([[segue identifier] isEqualToString:@"goto_edit_company"]) {
+//        EditCompany *editView = [segue destinationViewController];
+//        [editView setBusiness:self.business];
     }
 }
 @end

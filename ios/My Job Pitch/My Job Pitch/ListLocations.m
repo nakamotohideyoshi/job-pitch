@@ -9,7 +9,7 @@
 #import "ListLocations.h"
 #import "SimpleListCell.h"
 #import "ListJobs.h"
-
+#import "EditLocation.h"
 
 @interface ListLocations () {
     NSArray *data;
@@ -29,11 +29,19 @@
 
 -(void)viewWillAppear:(BOOL)animated
 {
+    [self.emptyView setHidden:true];
     [self showProgress:true];
     [self.appDelegate.api loadLocationsForBusiness:self.business.id success:^(NSArray *locations) {
+        if (locations.count) {
+            data = locations;
+            [self.locations setHidden:false];
+            [self.emptyView setHidden:true];
+            [self.locations reloadData];
+        } else {
+            [self.locations setHidden:true];
+            [self.emptyView setHidden:false];
+        }
         [self showProgress:false];
-        data = locations;
-        [self.locations reloadData];
     } failure:^(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors) {
         [[[UIAlertView alloc] initWithTitle:@"Error"
                                     message:@"Error loading data"
@@ -62,6 +70,7 @@
              withIndicator:cell.imageActivity];
     } else {
         cell.image.image = nil;
+        cell.imageActivity.hidden = true;
     }
     cell.subtitle.text = [NSString stringWithFormat:@"Includes %ld job", location.jobs.count];
     cell.backgroundColor = [UIColor clearColor];
@@ -75,7 +84,14 @@
         ListJobs *jobsView = [segue destinationViewController];
         Location *selectedLocation = [data objectAtIndex:self.locations.indexPathForSelectedRow.row];
         [jobsView setLocation:selectedLocation];
+    } else if ([[segue identifier] isEqualToString:@"goto_edit_location"]) {
+        EditLocation *editView = [segue destinationViewController];
+        [editView setBusiness:self.business];
     }
+}
+
+- (IBAction)addWorkPlace:(id)sender {
+    [self performSegueWithIdentifier:@"goto_edit_location" sender:self];
 }
 
 @end

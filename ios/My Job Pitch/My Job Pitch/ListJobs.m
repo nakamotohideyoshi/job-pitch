@@ -29,9 +29,16 @@
 {
     [self showProgress:true];
     [self.appDelegate.api loadJobsForLocation:self.location.id success:^(NSArray *jobs) {
+        if (jobs.count) {
+            data = jobs;
+            [self.jobs setHidden:false];
+            [self.emptyView setHidden:true];
+            [self.jobs reloadData];
+        } else {
+            [self.jobs setHidden:true];
+            [self.emptyView setHidden:false];
+        }
         [self showProgress:false];
-        data = jobs;
-        [self.jobs reloadData];
     } failure:^(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors) {
         [[[UIAlertView alloc] initWithTitle:@"Error"
                                     message:@"Error loading data"
@@ -60,6 +67,7 @@
              withIndicator:cell.imageActivity];
     } else {
         cell.image.image = nil;
+        cell.imageActivity.hidden = true;
     }
     cell.subtitle.text = job.desc;
     cell.backgroundColor = [UIColor clearColor];
@@ -76,4 +84,6 @@
 //    }
 }
 
+- (IBAction)addJob:(id)sender {
+}
 @end

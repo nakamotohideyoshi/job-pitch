@@ -41,6 +41,7 @@
                  withIndicator:self.imageActivity];
         } else {
             self.image.image = nil;
+            self.imageActivity.hidden = true;
         }
         if ([self.application.status isEqual:statusCreated.id]) {
             self.messageInput.text = @"You cannot send messages until your application is accepted";

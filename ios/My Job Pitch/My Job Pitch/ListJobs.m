@@ -1,0 +1,79 @@
+//
+//  ListJobs.m
+//  My Job Pitch
+//
+//  Created by user on 10/03/2016.
+//  Copyright © 2016 SC Labs Ltd. All rights reserved.
+//
+
+#import "ListJobs.h"
+#import "SimpleListCell.h"
+
+@interface ListJobs () {
+    NSArray *data;
+}
+
+@end
+
+@implementation ListJobs
+
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    self.jobs.rowHeight = UITableViewAutomaticDimension;
+    self.jobs.estimatedRowHeight = 96;
+    self.jobs.dataSource = self;
+    self.jobs.delegate = self;
+}
+
+-(void)viewWillAppear:(BOOL)animated
+{
+    [self showProgress:true];
+    [self.appDelegate.api loadJobsForLocation:self.location.id success:^(NSArray *jobs) {
+        [self showProgress:false];
+        data = jobs;
+        [self.jobs reloadData];
+    } failure:^(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors) {
+        [[[UIAlertView alloc] initWithTitle:@"Error"
+                                    message:@"Error loading data"
+                                   delegate:self
+                          cancelButtonTitle:@"Okay"
+                          otherButtonTitles:nil] show];
+    }];
+}
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+{
+    if (data)
+        return data.count;
+    return 0;
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    SimpleListCell *cell = [self.jobs dequeueReusableCellWithIdentifier:@"SimpleListCell"];
+    Job *job = [self->data objectAtIndex:indexPath.row];
+    cell.title.text = job.title;
+    Image *image = [job getImage];
+    if (image) {
+        [self loadImageURL:image.thumbnail
+                      into:cell.image
+             withIndicator:cell.imageActivity];
+    } else {
+        cell.image.image = nil;
+    }
+    cell.subtitle.text = job.desc;
+    cell.backgroundColor = [UIColor clearColor];
+    cell.selectedBackgroundView = [[UIView alloc] init];
+    cell.selectedBackgroundView.backgroundColor = [UIColor colorWithWhite:1.0 alpha:0.5];
+    return cell;
+}
+
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+//    if ([[segue identifier] isEqualToString:@"goto_jobs_list"]) {
+//        Job *jobsView = [segue destinationViewController];
+//        Location *selectedLocation = [data objectAtIndex:self.locations.indexPathForSelectedRow.row];
+//        [jobsView setLocation:selectedLocation];
+//    }
+}
+
+@end

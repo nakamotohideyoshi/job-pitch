@@ -10,11 +10,17 @@ TEMPLATE_DEUG = True
 # https://docs.djangoproject.com/en/1.6/ref/settings/#databases
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'mjpdb',
+        'ENGINE': 'django.contrib.gis.db.backends.postgis',
+        'NAME': 'mjp',
         'USER': 'mjp',
-        'PASSWORD': 'hdiH33mjp',
+        'PASSWORD': 'SGe9+UNoSam/',
         'HOST': 'localhost',
+        'PORT': '',
     }
 }
+
+try:
+    from local_live import *
+except ImportError:
+    pass
 

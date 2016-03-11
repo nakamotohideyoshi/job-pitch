@@ -317,6 +317,39 @@
                             method:RKRequestMethodGET
      ];
     
+    [self configureResponseMapping:objectManager
+                     responseClass:[Job class]
+                     responseArray:jobArray
+                responseDictionary:[self inverseDictionary:jobDictionary]
+             responseRelationships:[self inverseRelationships:jobRelationships]
+                              path:@"/api/user-jobs/"
+                            method:RKRequestMethodAny
+     ];
+    [self configureRequestMapping:objectManager
+                     requestClass:[Job class]
+                     requestArray:jobArray
+                requestDictionary:jobDictionary
+             requestRelationships:nil
+                             path:@"/api/user-jobs/"
+                           method:RKRequestMethodAny
+     ];
+    [self configureResponseMapping:objectManager
+                     responseClass:[Job class]
+                     responseArray:jobArray
+                responseDictionary:[self inverseDictionary:jobDictionary]
+             responseRelationships:[self inverseRelationships:jobRelationships]
+                              path:@"/api/user-jobs/:pk/"
+                            method:RKRequestMethodAny
+     ];
+    [self configureRequestMapping:objectManager
+                     requestClass:[Job class]
+                     requestArray:jobArray
+                requestDictionary:jobDictionary
+             requestRelationships:nil
+                             path:@"/api/user-jobs/:pk/"
+                           method:RKRequestMethodAny
+     ];
+    
     NSArray* profileArray = @[@"id",
                               @"created",
                               @"updated",
@@ -1130,6 +1163,35 @@
                                            }];
     [operation.HTTPRequestOperation setUploadProgressBlock:progress];
     [[RKObjectManager sharedManager] enqueueObjectRequestOperation:operation];
+}
+
+- (void)loadBusinesses:(void (^)(NSArray *applications))success
+               failure:(void (^)(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors))failure
+{
+    [self loadObjectsAtPath:@"/api/user-businesses/"
+                    success:success
+                    failure:failure
+     ];
+}
+
+- (void)loadLocationsForBusiness:(NSNumber*)business
+                         success:(void (^)(NSArray *applications))success
+                         failure:(void (^)(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors))failure
+{
+    [self loadObjectsAtPath:[NSString stringWithFormat:@"/api/user-locations/?business=%@", business]
+                    success:success
+                    failure:failure
+     ];
+}
+
+- (void)loadJobsForLocation:(NSNumber*)location
+                    success:(void (^)(NSArray *applications))success
+                    failure:(void (^)(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors))failure
+{
+    [self loadObjectsAtPath:[NSString stringWithFormat:@"/api/user-jobs/?location=%@", location]
+                    success:success
+                    failure:failure
+     ];
 }
 
 - (void)logout

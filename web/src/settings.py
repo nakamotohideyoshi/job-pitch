@@ -93,6 +93,5 @@ USE_L10N = True
 
 USE_TZ = True
 
-MEDIA_ROOT = '/tmp/mjp_media/media/'
 MEDIA_URL = '/media/'
 STATIC_URL = '/static/'

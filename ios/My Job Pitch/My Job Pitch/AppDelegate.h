@@ -12,6 +12,7 @@
 #import "Hours.h"
 #import "Contract.h"
 #import "ApplicationStatus.h"
+#import "Sex.h"
 #import "Role.h"
 
 @interface AppDelegate : UIResponder <UIApplicationDelegate>
@@ -33,6 +34,8 @@
 
 - (void)clearData;
 
+- (Sex*)getSex:(NSNumber*)id;
+- (Sex*)getSexByName:(NSString*)name;
 - (Hours*)getHours:(NSNumber*)id;
 - (Hours*)getHoursByName:(NSString*)name;
 - (Contract*)getContract:(NSNumber*)id;

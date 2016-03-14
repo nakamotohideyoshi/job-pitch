@@ -10,13 +10,17 @@
 #import "JobSeeker.h"
 #import "Job.h"
 
-@interface ApplicationForCreation : MJPObjectWithDates
+@interface ApplicationForCreation : MJPObject
 @property NSNumber *jobSeeker;
 @property NSNumber *job;
-@property bool shortlisted;
-@property NSNumber *createdBy;
-@property NSNumber *deletedBy;
+@end
+
+@interface ApplicationStatusUpdate : MJPObject
 @property NSNumber *status;
+@end
+
+@interface ApplicationShortlistUpdate : MJPObject
+@property bool shortlisted;
 @end
 
 @interface Application : MJPObjectWithDates

@@ -8,6 +8,9 @@
 
 #import "JobStatus.h"
 
+NSString *const JOB_STATUS_OPEN = @"OPEN";
+NSString *const JOB_STATUS_CLOSED = @"CLOSED";
+
 @implementation JobStatus
 
 @end

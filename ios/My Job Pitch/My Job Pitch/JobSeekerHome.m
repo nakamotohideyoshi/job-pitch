@@ -166,7 +166,6 @@ typedef NS_ENUM(NSInteger, EmptyButtonAction) {
     ApplicationForCreation *application = [ApplicationForCreation alloc];
     application.job = self.job.id;
     application.jobSeeker = self.jobSeeker.id;
-    application.shortlisted = false;
     [self.appDelegate.api createApplication:application
                                     success:^(ApplicationForCreation *application) {
                                         NSLog(@"Application created %@", application);
@@ -285,7 +284,6 @@ typedef NS_ENUM(NSInteger, EmptyButtonAction) {
         self.directionLabel.textColor = [UIColor colorWithRed:0.2 green:0.5 blue:0.1 alpha:0.8];
     }
     CGFloat overlayStrength = MIN(fabs(distance) / 60, 1.0);
-    NSLog(@"alpha: %f", overlayStrength);
     self.directionLabel.alpha = overlayStrength;
 }
 
@@ -314,32 +312,32 @@ typedef NS_ENUM(NSInteger, EmptyButtonAction) {
          failure:(void (^)())failure
 {
     self.loading = true;
-    [self.appDelegate.api loadJobsWithExclusions:self.seen
-                                         success:^(NSArray *jobs) {
-                                             @synchronized(self) {
-                                                 self.lastLoad = [jobs count];
-                                                 [self.jobs addObjectsFromArray:jobs];
-                                                 self.loading = false;
-                                                 NSMutableArray *ids = [[NSMutableArray alloc] init];
-                                                 for (Job *job in jobs)
-                                                     [ids addObject:job.id];
-                                                 [self.seen addObjectsFromArray:ids];
-                                                 NSLog(@"loaded: %@", [ids componentsJoinedByString:@", "]);
-                                                 success();
-                                             }
-                                         }
-                                         failure:^(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors) {
-                                             [[[UIAlertView alloc] initWithTitle:@"Error"
-                                                                         message:@"Error loading jobs"
-                                                                        delegate:self
-                                                               cancelButtonTitle:@"Okay"
-                                                               otherButtonTitles:nil] show];
-                                             @synchronized(self) {
-                                                 self.loading = false;
-                                                 failure();
-                                             }
-                                         }
-     ];
+    [self.appDelegate.api
+     searchJobsWithExclusions:self.seen
+     success:^(NSArray *jobs) {
+         @synchronized(self) {
+             self.lastLoad = [jobs count];
+             [self.jobs addObjectsFromArray:jobs];
+             self.loading = false;
+             NSMutableArray *ids = [[NSMutableArray alloc] init];
+             for (Job *job in jobs)
+                 [ids addObject:job.id];
+             [self.seen addObjectsFromArray:ids];
+             NSLog(@"loaded: %@", [ids componentsJoinedByString:@", "]);
+             success();
+         }
+     }
+     failure:^(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors) {
+         [[[UIAlertView alloc] initWithTitle:@"Error"
+                                     message:@"Error loading jobs"
+                                    delegate:self
+                           cancelButtonTitle:@"Okay"
+                           otherButtonTitles:nil] show];
+         @synchronized(self) {
+             self.loading = false;
+             failure();
+         }
+     }];
 }
 
 - (void)nextCard

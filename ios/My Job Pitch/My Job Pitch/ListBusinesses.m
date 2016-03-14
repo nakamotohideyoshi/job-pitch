@@ -63,7 +63,10 @@
         cell.image.image = nil;
         cell.imageActivity.hidden = true;
     }
-    cell.subtitle.text = [NSString stringWithFormat:@"Includes %ld work place", business.locations.count];
+    if (business.locations.count == 1)
+        cell.subtitle.text = [NSString stringWithFormat:@"Includes %ld work place", business.locations.count];
+    else
+        cell.subtitle.text = [NSString stringWithFormat:@"Includes %ld work places", business.locations.count];
     cell.backgroundColor = [UIColor clearColor];
     cell.selectedBackgroundView = [[UIView alloc] init];
     cell.selectedBackgroundView.backgroundColor = [UIColor colorWithWhite:1.0 alpha:0.5];

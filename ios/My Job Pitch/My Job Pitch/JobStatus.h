@@ -8,6 +8,9 @@
 
 #import "MJPObjectWithNameDesc.h"
 
+extern NSString *const JOB_STATUS_OPEN;
+extern NSString *const JOB_STATUS_CLOSED;
+
 @interface JobStatus : MJPObjectWithNameDesc
 @property NSString* friendlyName;
 @end

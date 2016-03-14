@@ -8,6 +8,8 @@
 
 #import "ListJobs.h"
 #import "SimpleListCell.h"
+#import "EditJob.h"
+#import "ViewJobMenu.h"
 
 @interface ListJobs () {
     NSArray *data;
@@ -77,13 +79,17 @@
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-//    if ([[segue identifier] isEqualToString:@"goto_jobs_list"]) {
-//        Job *jobsView = [segue destinationViewController];
-//        Location *selectedLocation = [data objectAtIndex:self.locations.indexPathForSelectedRow.row];
-//        [jobsView setLocation:selectedLocation];
-//    }
+    if ([[segue identifier] isEqualToString:@"goto_edit_job"]) {
+        EditJob *jobsView = [segue destinationViewController];
+        [jobsView setLocation:self.location];
+    } else if ([[segue identifier] isEqualToString:@"goto_view_job_menu"]) {
+        ViewJobMenu *jobView = [segue destinationViewController];
+        Job *selectedJob = [data objectAtIndex:self.jobs.indexPathForSelectedRow.row];
+        [jobView setJob:selectedJob];
+    }
 }
 
 - (IBAction)addJob:(id)sender {
+    [self performSegueWithIdentifier:@"goto_edit_job" sender:self];
 }
 @end

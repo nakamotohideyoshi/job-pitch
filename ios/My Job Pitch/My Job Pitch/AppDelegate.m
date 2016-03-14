@@ -8,9 +8,7 @@
 
 #import "AppDelegate.h"
 #import "API.h"
-#import "Hours.h"
 #import "Sector.h"
-#import "Sex.h"
 #import "Nationality.h"
 #import "JobStatus.h"
 #import "Role.h"
@@ -155,6 +153,22 @@
         self.applicationStatuses != nil &&
         self.roles != nil;
     return self.loaded;
+}
+
+- (Sex*)getSex:(NSNumber*)id
+{
+    for (Sex *sex in self.sexes)
+        if ([sex.id isEqualToNumber:id])
+            return sex;
+    return nil;
+}
+
+- (Sex*)getSexByName:(NSString*)name
+{
+    for (Sex *sex in self.sexes)
+        if ([sex.name isEqualToString:name])
+            return sex;
+    return nil;
 }
 
 - (Hours*)getHours:(NSNumber*)id

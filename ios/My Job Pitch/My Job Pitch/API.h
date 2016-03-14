@@ -53,7 +53,7 @@
               success:(void (^)(Profile *profile))success
               failure:(void (^)(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors))failure;
 
-- (void)loadJobsWithExclusions:(NSArray*)exlusions
+- (void)searchJobsWithExclusions:(NSArray*)exlusions
                        success:(void (^)(NSArray *jobSeekers))success
                        failure:(void (^)(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors))failure;
 
@@ -104,6 +104,10 @@
              success:(void (^)(Location *location))success
              failure:(void (^)(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors))failure;
 
+- (void)saveJob:(Job*)job
+        success:(void (^)(Job *job))success
+        failure:(void (^)(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors))failure;
+
 - (void)uploadImage:(UIImage*)image
                  to:(NSString*)endpoint
           objectKey:(NSString*)objectKey
@@ -123,6 +127,15 @@
 - (void)loadLocationsForBusiness:(NSNumber*)business
                          success:(void (^)(NSArray *applications))success
                          failure:(void (^)(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors))failure;
+
+- (void)loadJobWithId:(NSNumber*)pk
+              success:(void (^)(Job *job))success
+              failure:(void (^)(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors))failure;
+
+- (void)searchJobSeekersForJob:(Job*)job
+                    exclusions:(NSArray*)exclusions
+                       success:(void (^)(NSArray *jobSeekers))success
+                       failure:(void (^)(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors))failure;
 
 - (void)logout;
 

@@ -171,6 +171,20 @@
              responseRelationships:nil
                               path:@"/api/user-business-images/"
                             method:RKRequestMethodPOST];
+    [self configureResponseMapping:objectManager
+                     responseClass:[Image class]
+                     responseArray:imageArray
+                responseDictionary:nil
+             responseRelationships:nil
+                              path:@"/api/user-location-images/"
+                            method:RKRequestMethodPOST];
+    [self configureResponseMapping:objectManager
+                     responseClass:[Image class]
+                     responseArray:imageArray
+                responseDictionary:nil
+             responseRelationships:nil
+                              path:@"/api/user-job-images/"
+                            method:RKRequestMethodPOST];
     NSArray *businessArray = @[@"id",
                                @"created",
                                @"updated",
@@ -904,9 +918,9 @@
     }
 }
 
-- (void)loadJobsWithExclusions:(NSArray*)exclusions
-                       success:(void (^)(NSArray *jobSeekers))success
-                       failure:(void (^)(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors))failure
+- (void)searchJobsWithExclusions:(NSArray*)exclusions
+                         success:(void (^)(NSArray *jobSeekers))success
+                         failure:(void (^)(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors))failure
 {
     NSString *path = @"/api/jobs/";
     if (exclusions)
@@ -1127,6 +1141,36 @@
     }
 }
 
+- (void)saveJob:(Job*)job
+        success:(void (^)(Job *job))success
+        failure:(void (^)(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors))failure
+{
+    [self clearCookies];
+    if (job.id) {
+        [[RKObjectManager sharedManager] putObject:job
+                                              path:[NSString stringWithFormat:@"/api/user-jobs/%@/", job.id]
+                                        parameters:nil success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
+                                            NSLog(@"Job updated");
+                                            success([mappingResult firstObject]);
+                                        } failure:^(RKObjectRequestOperation *operation, NSError *error) {
+                                            NSLog(@"Error updating job: %@", error);
+                                            failure(operation, error, [self getMessage:error], [self getErrors:error]);
+                                        }
+         ];
+    } else {
+        [[RKObjectManager sharedManager] postObject:job
+                                               path:@"/api/user-jobs/"
+                                         parameters:nil success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
+                                             NSLog(@"Job created");
+                                             success([mappingResult firstObject]);
+                                         } failure:^(RKObjectRequestOperation *operation, NSError *error) {
+                                             NSLog(@"Error creating job: %@", error);
+                                             failure(operation, error, [self getMessage:error], [self getErrors:error]);
+                                         }
+         ];
+    }
+}
+
 - (void)uploadImage:(UIImage*)image
                  to:(NSString*)endpoint
           objectKey:(NSString*)objectKey
@@ -1191,6 +1235,41 @@
     [self loadObjectsAtPath:[NSString stringWithFormat:@"/api/user-jobs/?location=%@", location]
                     success:success
                     failure:failure
+     ];
+}
+
+- (void)loadJobWithId:(NSNumber*)pk
+              success:(void (^)(Job *job))success
+              failure:(void (^)(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors))failure;
+{
+    [self clearCookies];
+    NSString *url = [NSString stringWithFormat:@"/api/user-jobs/%@/", pk];
+    [[RKObjectManager sharedManager] getObjectsAtPath:url parameters:nil
+                                              success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
+                                                  success([mappingResult firstObject]);
+                                              }
+                                              failure:^(RKObjectRequestOperation *operation, NSError *error) {
+                                                  failure(operation, error, [self getMessage:error], [self getErrors:error]);
+                                              }];
+}
+
+- (void)searchJobSeekersForJob:(Job*)job
+                exclusions:(NSArray*)exclusions
+                       success:(void (^)(NSArray *jobSeekers))success
+                       failure:(void (^)(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors))failure
+{
+    NSString *path = [NSString stringWithFormat:@"/api/job-seekers/?job=%@", job.id];
+    if (exclusions)
+        path = [NSString stringWithFormat:@"%@&exclude=%@", path, [exclusions componentsJoinedByString:@","]];
+    
+    [[RKObjectManager sharedManager] getObjectsAtPath:path
+                                           parameters:nil
+                                              success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
+                                                  success(mappingResult.array);
+                                              } failure:^(RKObjectRequestOperation *operation, NSError *error) {
+                                                  NSLog(@"Error loading jobs: %@", error);
+                                                  failure(operation, error, [self getMessage:error], [self getErrors:error]);
+                                              }
      ];
 }
 

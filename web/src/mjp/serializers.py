@@ -48,8 +48,8 @@ class BusinessSerializer(serializers.ModelSerializer):
 
 class LocationSerializer(serializers.ModelSerializer):
     jobs = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
-    latitude = serializers.FloatField(source='latlng.x')
-    longitude = serializers.FloatField(source='latlng.y')
+    longitude = serializers.FloatField(source='latlng.x')
+    latitude = serializers.FloatField(source='latlng.y')
     images = RelatedImageURLField(many=True, read_only=True)
     business_data = BusinessSerializer(source='business', read_only=True)
     active_job_count = serializers.SerializerMethodField()
@@ -67,8 +67,8 @@ class LocationSerializer(serializers.ModelSerializer):
 
 
 class JobProfileSerializer(serializers.ModelSerializer):
-    latitude = serializers.FloatField(source='latlng.x')
-    longitude = serializers.FloatField(source='latlng.y')
+    longitude = serializers.FloatField(source='latlng.x')
+    latitude = serializers.FloatField(source='latlng.y')
     
     def save(self, **kwargs):
         self.validated_data['latlng'] = Point(**self.validated_data['latlng'])

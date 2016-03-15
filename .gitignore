@@ -33,3 +33,4 @@ proguard/
 db.sqlite3
 
 web/src/local.py
+web/src/local_live.py

@@ -12,6 +12,14 @@
 
 @end
 
+@implementation ApplicationStatusUpdate
+
+@end
+
+@implementation ApplicationShortlistUpdate
+
+@end
+
 @implementation Application
 
 @end

@@ -13,6 +13,7 @@
 @interface ApplicationForCreation : MJPObject
 @property NSNumber *jobSeeker;
 @property NSNumber *job;
+@property bool shortlisted;
 @end
 
 @interface ApplicationStatusUpdate : MJPObject

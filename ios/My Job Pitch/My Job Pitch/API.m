@@ -27,7 +27,7 @@
 
 - (instancetype)init
 {
-    return [self initWithAPIRoot:@"http://mjp.digitalcrocodile.com:8000"];
+    return [self initWithAPIRoot:@"http://ec2-52-31-145-95.eu-west-1.compute.amazonaws.com"];
 }
 
 - (id)initWithAPIRoot:(NSString*)aApiRoot
@@ -397,15 +397,10 @@
     
     
     NSArray* applictionCreateArray = @[@"id",
-                                       @"created",
-                                       @"updated",
                                        @"job",
                                        @"shortlisted",
-                                       @"status",
                                        ];
     NSDictionary* applictionCreateDictionary = @{@"jobSeeker": @"job_seeker",
-                                                 @"createdBy": @"created_by",
-                                                 @"deletedBy": @"deleted_by",
                                                  };
     [self configureSimpleMapping:objectManager
                            class:[ApplicationForCreation class]
@@ -476,6 +471,18 @@
              responseRelationships:[self inverseRelationships:applicationRelationships]
                               path:@"/api/applications/:pk/"
                             method:RKRequestMethodGET];
+    
+    NSArray *applicationStatusUpdateArray = @[@"id",
+                                              @"status",
+                                              ];
+    
+    [self configureSimpleMapping:objectManager
+                           class:[ApplicationStatusUpdate class]
+                           array:applicationStatusUpdateArray
+                      dictionary:nil
+                   relationships:nil
+                            path:@"/api/applications/:pk/"
+                          method:RKRequestMethodPUT];
     
     NSArray *createMessageArray = @[@"id",
                                     @"application",
@@ -977,6 +984,24 @@
                                               }];
 }
 
+- (void)updateApplicationStatus:(ApplicationStatusUpdate*)update
+                  success:(void (^)(ApplicationStatusUpdate *update))success
+                  failure:(void (^)(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors))failure
+{
+    NSString *url = [NSString stringWithFormat:@"/api/applications/%@/", update.id];
+    
+    [[RKObjectManager sharedManager] putObject:update
+                                          path:url
+                                    parameters:nil success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
+                                        NSLog(@"Application updated");
+                                        success([mappingResult firstObject]);
+                                    } failure:^(RKObjectRequestOperation *operation, NSError *error) {
+                                        NSLog(@"Error updating application: %@", error);
+                                        failure(operation, error, [self getMessage:error], [self getErrors:error]);
+                                    }
+     ];
+}
+
 - (void)sendMessage:(MessageForCreation*)message
             success:(void (^)(MessageForCreation *message))success
             failure:(void (^)(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors))failure
@@ -1268,6 +1293,27 @@
                                                   success(mappingResult.array);
                                               } failure:^(RKObjectRequestOperation *operation, NSError *error) {
                                                   NSLog(@"Error loading jobs: %@", error);
+                                                  failure(operation, error, [self getMessage:error], [self getErrors:error]);
+                                              }
+     ];
+}
+
+- (void)loadApplicationsForJob:(Job*)job
+                        status:(NSNumber*)status
+                   shortlisted:(BOOL)shortlisted
+                       success:(void (^)(NSArray *applictions))success
+                       failure:(void (^)(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors))failure
+{
+    NSString *path = [NSString stringWithFormat:@"/api/applications/?job=%@&status=%@", job.id, status];
+    if (shortlisted)
+        path = [NSString stringWithFormat:@"%@&shortlisted=1", path];
+    
+    [[RKObjectManager sharedManager] getObjectsAtPath:path
+                                           parameters:nil
+                                              success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
+                                                  success(mappingResult.array);
+                                              } failure:^(RKObjectRequestOperation *operation, NSError *error) {
+                                                  NSLog(@"Error loading applications: %@", error);
                                                   failure(operation, error, [self getMessage:error], [self getErrors:error]);
                                               }
      ];

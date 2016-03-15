@@ -39,6 +39,10 @@ function postcodeLocationData(postcode, handleData){
 
 //if redirect is true, send user to login
 function checkLogin(redirect){
+	//Check if this is a mobile device, if so tell them to go use the mobile apps
+	if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
+		window.location.href = "/mobile-app";
+	}
 	var username = getCookie('username');
 	if(username == ""){
 		if(redirect == true){

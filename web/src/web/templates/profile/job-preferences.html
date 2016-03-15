@@ -18,7 +18,7 @@
 																										
 									<div class="form-group">
 											<label>Sector</label>
-											<select class="form-control" required name="sector" id="sector">
+											<select class="form-control" required name="sectors" multiple id="sectors">
 											  <option value="" selected="">Choose a job sector</option>
 											</select>
 									</div>
@@ -54,7 +54,11 @@
 									</div>
 									
 									<button type="submit" class="btn btn-primary">Continue</button>
-									
+									<input type="hidden" name="job_seeker" id="job_seeker" />
+                                    <input type="hidden" name="latitude" id="latitude" />
+                                    <input type="hidden" name="longitude" id="longitude" />
+                                    <input type="hidden" name="place_name" id="place_name" />
+                                    <input type="hidden" name="place_id" id="place_id" />
 									{% csrf_token %}
 								</form>
 								

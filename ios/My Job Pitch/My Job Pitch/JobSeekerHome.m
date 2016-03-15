@@ -166,6 +166,7 @@ typedef NS_ENUM(NSInteger, EmptyButtonAction) {
     ApplicationForCreation *application = [ApplicationForCreation alloc];
     application.job = self.job.id;
     application.jobSeeker = self.jobSeeker.id;
+    application.shortlisted = false;
     [self.appDelegate.api createApplication:application
                                     success:^(ApplicationForCreation *application) {
                                         NSLog(@"Application created %@", application);

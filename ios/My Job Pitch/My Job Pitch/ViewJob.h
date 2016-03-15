@@ -23,6 +23,10 @@ typedef NS_ENUM(NSInteger, JobViewMode) {
 @property (weak, nonatomic) IBOutlet UIView *emptyView;
 @property (weak, nonatomic) IBOutlet UILabel *emptyLabel;
 @property (weak, nonatomic) IBOutlet UIButton *emptyButton1;
+@property (weak, nonatomic) IBOutlet UIButton *emptyButton2;
+
+@property (weak, nonatomic) IBOutlet UISwitch *shortlisted;
+@property (weak, nonatomic) IBOutlet UILabel *shortlistedLabel;
 
 @property (weak, nonatomic) IBOutlet UIView *swipeContainer;
 @property (weak, nonatomic) IBOutlet SwipeView *swipeView;

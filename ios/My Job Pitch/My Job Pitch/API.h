@@ -68,6 +68,10 @@
                       success:(void (^)(Application *application))success
                       failure:(void (^)(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors))failure;
 
+- (void)updateApplicationStatus:(ApplicationStatusUpdate*)update
+                        success:(void (^)(ApplicationStatusUpdate *update))success
+                        failure:(void (^)(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors))failure;
+
 - (void)sendMessage:(MessageForCreation*)message
             success:(void (^)(MessageForCreation *message))success
             failure:(void (^)(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors))failure;
@@ -135,6 +139,12 @@
 - (void)searchJobSeekersForJob:(Job*)job
                     exclusions:(NSArray*)exclusions
                        success:(void (^)(NSArray *jobSeekers))success
+                       failure:(void (^)(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors))failure;
+
+- (void)loadApplicationsForJob:(Job*)job
+                        status:(NSNumber*)status
+                   shortlisted:(BOOL)shortlisted
+                       success:(void (^)(NSArray *applictions))success
                        failure:(void (^)(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors))failure;
 
 - (void)logout;

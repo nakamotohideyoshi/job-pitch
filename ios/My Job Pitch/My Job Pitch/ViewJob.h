@@ -30,13 +30,21 @@ typedef NS_ENUM(NSInteger, JobViewMode) {
 
 @property (weak, nonatomic) IBOutlet UIView *swipeContainer;
 @property (weak, nonatomic) IBOutlet SwipeView *swipeView;
-@property (weak, nonatomic) IBOutlet UIButton *rightButton;
-@property (weak, nonatomic) IBOutlet UIButton *leftButton;
 @property (weak, nonatomic) IBOutlet UILabel *directionLabel;
 @property (weak, nonatomic) IBOutlet UIImageView *image;
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView *imageActivity;
 @property (weak, nonatomic) IBOutlet UILabel *nameLabel;
 @property (weak, nonatomic) IBOutlet UILabel *extraLabel;
 @property (weak, nonatomic) IBOutlet UILabel *descriptionLabel;
+@property (weak, nonatomic) IBOutlet UIImageView *playIcon;
+@property (weak, nonatomic) IBOutlet UIImageView *shortlistIcon;
+
+@property (weak, nonatomic) IBOutlet UIButton *leftButton;
+@property (weak, nonatomic) IBOutlet UIImageView *leftIcon;
+@property (weak, nonatomic) IBOutlet UILabel *leftTitle;
+
+@property (weak, nonatomic) IBOutlet UIButton *rightButton;
+@property (weak, nonatomic) IBOutlet UIImageView *rightIcon;
+@property (weak, nonatomic) IBOutlet UILabel *rightTitle;
 
 @end

@@ -470,7 +470,7 @@
                 responseDictionary:[self inverseDictionary:applictionDictionary]
              responseRelationships:[self inverseRelationships:applicationRelationships]
                               path:@"/api/applications/:pk/"
-                            method:RKRequestMethodGET];
+                            method:RKRequestMethodGET|RKRequestMethodDELETE];
     
     NSArray *applicationStatusUpdateArray = @[@"id",
                                               @"status",
@@ -1316,6 +1316,22 @@
                                                   NSLog(@"Error loading applications: %@", error);
                                                   failure(operation, error, [self getMessage:error], [self getErrors:error]);
                                               }
+     ];
+}
+- (void)deleteApplication:(Application*)application
+                  success:(void (^)(Application *application))success
+                  failure:(void (^)(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors))failure
+{
+    NSString *url = [NSString stringWithFormat:@"/api/applications/%@/", application.id];
+    [[RKObjectManager sharedManager] deleteObject:nil
+                                             path:url
+                                       parameters:nil
+                                          success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
+                                              success(mappingResult.firstObject);
+                                          } failure:^(RKObjectRequestOperation *operation, NSError *error) {
+                                              NSLog(@"Error deleting application: %@", error);
+                                              failure(operation, error, [self getMessage:error], [self getErrors:error]);
+                                          }
      ];
 }
 

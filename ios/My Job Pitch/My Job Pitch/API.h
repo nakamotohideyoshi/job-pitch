@@ -147,6 +147,10 @@
                        success:(void (^)(NSArray *applictions))success
                        failure:(void (^)(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors))failure;
 
+- (void)deleteApplication:(Application*)application
+                  success:(void (^)(Application *application))success
+                  failure:(void (^)(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors))failure;
+
 - (void)logout;
 
 @end

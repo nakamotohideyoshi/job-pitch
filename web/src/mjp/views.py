@@ -248,8 +248,8 @@ class JobSeekerViewSet(viewsets.ModelViewSet):
                                  Q(profile__hours=job.hours) | Q(profile__hours=None),
                                  profile__sectors=job.sector,
                                  )
-            query = query.annotate(distance=Distance(F('latlng'), job.location.latlng))
-            query = query.filter(profile__distance__lte=F('search_radius')*D(mi=1).m)
+            query = query.annotate(distance=Distance(F('profile__latlng'), job.location.latlng))
+            query = query.filter(distance__lte=F('profile__search_radius')*D(mi=1).m)
             return query[:25]
         return JobSeeker.objects.filter(user=self.request.user)
     
@@ -475,7 +475,6 @@ class ApplicationViewSet(viewsets.ModelViewSet):
                 return self.update_shortlist_serializer_class
             if self.request.data.get('status') is not None:
                 return self.update_status_serializer_class
-            return None
         return self.serializer_class
     
     def get_queryset(self):

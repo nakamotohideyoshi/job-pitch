@@ -97,9 +97,15 @@ typedef NS_ENUM(NSInteger, EmptyButtonAction) {
     self.swipeContainer.hidden = false;
     self.emptyView.hidden = true;
     if (self.mode == JobViewModeConnections) {
+        self.leftTitle.text = @"Messages";
+        self.leftIcon.image = [UIImage imageNamed:@"ic_email_blue"];
+        self.rightTitle.text = @"Remove";
         self.shortlisted.hidden = false;
         self.shortlistedLabel.hidden = false;
     } else {
+        self.leftTitle.text = @"Connect";
+        self.leftIcon.image = [UIImage imageNamed:@"ic_connect"];
+        self.rightTitle.text = @"Remove";
         self.shortlisted.hidden = true;
         self.shortlistedLabel.hidden = true;
     }
@@ -185,13 +191,16 @@ typedef NS_ENUM(NSInteger, EmptyButtonAction) {
             if (self.mode == JobViewModeSearch) {
                 self.jobSeeker = self.objects.firstObject;
                 [self.objects removeObject:self.jobSeeker];
+                [self.objects addObject:self.jobSeeker];
             } else {
                 self.application = self.objects.firstObject;
                 self.jobSeeker = self.application.jobSeeker;
                 [self.objects removeObject:self.application];
+                [self.objects addObject:self.application];
             }
         }
         if (self.jobSeeker) {
+            // TODO play button
             Pitch *pitch = [self.jobSeeker.pitches firstObject];
             self.image.image = nil;
             if (pitch)
@@ -210,7 +219,13 @@ typedef NS_ENUM(NSInteger, EmptyButtonAction) {
             } else {
                 self.extraLabel.text = nil;
             }
-;
+            
+            if(self.mode == JobViewModeConnections && self.application.shortlisted) {
+                self.shortlistIcon.hidden = false;
+            } else {
+                self.shortlistIcon.hidden = true;
+            }
+            
             self.leftButton.enabled = true;
             self.rightButton.enabled = true;
             self.directionLabel.alpha = 0;
@@ -312,10 +327,42 @@ typedef NS_ENUM(NSInteger, EmptyButtonAction) {
     }
 }
 
-- (IBAction)left {
+- (IBAction)leftClick:(id)sender {
+    if (self.mode == JobViewModeConnections) {
+        // TODO open messages
+    } else {
+        [self left];
+    }
+}
+
+- (IBAction)rightClick:(id)sender {
+    // TODO confirmation
+    if (true) {
+        if (self.mode == JobViewModeSearch) {
+            // TODO permanenty exclude
+        } else {
+            [self.objects removeObject:self.application];
+            [self.appDelegate.api deleteApplication:self.application
+                                            success:^(Application *application) {
+                                                NSLog(@"Application deleted: %@", application);
+                                            } failure:^(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors) {
+                                                [[[UIAlertView alloc] initWithTitle:@"Error"
+                                                                            message:@"Error deleting application!"
+                                                                           delegate:nil
+                                                                  cancelButtonTitle:@"OK"
+                                                                  otherButtonTitles:nil] show];
+                                            }
+             ];
+        }
+        [self right];
+    }
+}
+
+- (void)left {
     self.leftButton.enabled = false;
     self.rightButton.enabled = false;
     if (self.mode == JobViewModeSearch) {
+        [self.objects removeObject:self.jobSeeker];
         ApplicationForCreation *application = [ApplicationForCreation alloc];
         application.job = self.job.id;
         application.jobSeeker = self.jobSeeker.id;
@@ -331,6 +378,7 @@ typedef NS_ENUM(NSInteger, EmptyButtonAction) {
                                                               otherButtonTitles:nil] show];
                                         }];
     } else if (self.mode == JobViewModeApplications) {
+        [self.objects removeObject:self.application];
         ApplicationStatusUpdate *update = [ApplicationStatusUpdate alloc];
         update.id = self.application.id;
         update.status = [self.appDelegate getApplicationStatusByName:APPLICATION_ESTABLISHED].id;
@@ -351,9 +399,13 @@ typedef NS_ENUM(NSInteger, EmptyButtonAction) {
     }];
 }
 
-- (IBAction)right {
+- (void)right {
     self.leftButton.enabled = false;
     self.rightButton.enabled = false;
+    if (self.mode == JobViewModeSearch)
+        [self.objects removeObject:self.jobSeeker];
+    else if (self.mode == JobViewModeApplications)
+        [self.objects removeObject:self.application];
     [self.swipeView swipeRight:^{
         [self nextCard];
     }];
@@ -362,6 +414,7 @@ typedef NS_ENUM(NSInteger, EmptyButtonAction) {
 - (void)performJobSeekerDetails
 {
     resetOnAppearance = false;
+    // TODO
     [self performSegueWithIdentifier:@"goto_job_seeker_details" sender:@"view_job"];
 }
 

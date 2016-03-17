@@ -109,7 +109,10 @@ $(function() {
 				$('#job_id').val(data.id);
 								formAlert('success', 'Successfully Updated! <br><a href="/profile/list-jobs/?id='+location_id+'">Back to Job List</a>');
 								//window.location.href = "/profile/list-jobs/?id="+location_id;
-
+								setTimeout(function () {
+									$('.btn-primary').attr( "disabled", false );
+									$('.alert').hide();
+								}, 5000);
 				
 			  })
 			  .fail(function( data ) {

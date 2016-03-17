@@ -39,10 +39,18 @@ $(function() {
 						success: function (data) {
 						  		//console.log(data);
 						  		formAlert('success', 'Successfully Updated!');
+								setTimeout(function () {
+									$('.btn-primary').attr( "disabled", false );
+									$('.alert').hide();
+								}, 5000);
 						}
 					  });
 					  }else{
 						  formAlert('success', 'Successfully Updated!');
+						  setTimeout(function () {
+									$('.btn-primary').attr( "disabled", false );
+									$('.alert').hide();
+								}, 5000);
 					  }
 					  
 			  })

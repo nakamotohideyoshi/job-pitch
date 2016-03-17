@@ -92,7 +92,11 @@ $(function() {
 						processData: false,
 						success: function (data) {
 						  		console.log(data);
-								formAlert('success', 'Successfully Updated!');
+								formAlert('success', 'Successfully Updated!');								
+								setTimeout(function () {
+									$('.btn-primary').attr( "disabled", false );
+									$('.alert').hide();
+								}, 5000);
 						}
 					  });
 				

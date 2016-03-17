@@ -23,6 +23,7 @@
 @property (weak, nonatomic) IBOutlet UILabel *locationName;
 @property (weak, nonatomic) IBOutlet UILabel *locationDescription;
 @property (weak, nonatomic) IBOutlet UILabel *contactDetails;
+@property (weak, nonatomic) IBOutlet UIButton *messagesButton;
 
 - (IBAction)openMap:(nullable id)sender;
 

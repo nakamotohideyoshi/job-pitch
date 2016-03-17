@@ -7,6 +7,8 @@
 //
 
 #import "ViewJob.h"
+#import "MessageThread.h"
+#import "JobSeekerDetails.h"
 
 typedef NS_ENUM(NSInteger, EmptyButtonAction) {
     EmptyButtonActionNone,
@@ -14,6 +16,7 @@ typedef NS_ENUM(NSInteger, EmptyButtonAction) {
     EmptyButtonActionTurnOffShortlist,
     EmptyButtonActionGotoSearchMode,
     EmptyButtonActionGotoApplicationsMode,
+    EmptyButtonActionGotoConnectionsMode,
 };
 
 @interface ViewJob ()
@@ -25,6 +28,7 @@ typedef NS_ENUM(NSInteger, EmptyButtonAction) {
 @property Boolean loading;
 @property EmptyButtonAction emptyButton1Action;
 @property EmptyButtonAction emptyButton2Action;
+@property EmptyButtonAction emptyButton3Action;
 @end
 
 @implementation ViewJob {
@@ -37,6 +41,7 @@ typedef NS_ENUM(NSInteger, EmptyButtonAction) {
     self.swipeView.delegate = self;
     self.emptyButton1Action = EmptyButtonActionNone;
     self.emptyButton2Action = EmptyButtonActionNone;
+    self.emptyButton3Action = EmptyButtonActionNone;
     self.shortlisted.on = false;
 }
 
@@ -47,6 +52,8 @@ typedef NS_ENUM(NSInteger, EmptyButtonAction) {
 
 - (void)viewWillAppear:(BOOL)animated
 {
+    NSNumber *orientation = [NSNumber numberWithInt: UIInterfaceOrientationPortrait];
+    [[UIDevice currentDevice] setValue:orientation forKey:@"orientation"];
     if (resetOnAppearance)
         [self reset];
     resetOnAppearance = true;
@@ -60,6 +67,11 @@ typedef NS_ENUM(NSInteger, EmptyButtonAction) {
 - (IBAction)emptyButton2ActionDelegate:(id)sender
 {
     [self performEmptyButtonAction:self.emptyButton2Action];
+}
+
+- (IBAction)emptyButton3ActionDelegate:(id)sender
+{
+    [self performEmptyButtonAction:self.emptyButton3Action];
 }
 
 - (void)performEmptyButtonAction:(EmptyButtonAction)action
@@ -79,6 +91,11 @@ typedef NS_ENUM(NSInteger, EmptyButtonAction) {
         case EmptyButtonActionGotoApplicationsMode:
             self.mode = JobViewModeApplications;
             [self reset];
+            break;
+        case EmptyButtonActionGotoConnectionsMode:
+            self.mode = JobViewModeConnections;
+            [self reset];
+            break;
         case EmptyButtonActionNone:
         default:
             break;
@@ -102,12 +119,16 @@ typedef NS_ENUM(NSInteger, EmptyButtonAction) {
         self.rightTitle.text = @"Remove";
         self.shortlisted.hidden = false;
         self.shortlistedLabel.hidden = false;
+        self.shortlistButton.hidden = false;
+        self.shortlistButtonIcon.hidden = false;
     } else {
         self.leftTitle.text = @"Connect";
         self.leftIcon.image = [UIImage imageNamed:@"ic_connect"];
         self.rightTitle.text = @"Remove";
         self.shortlisted.hidden = true;
         self.shortlistedLabel.hidden = true;
+        self.shortlistButton.hidden = true;
+        self.shortlistButtonIcon.hidden = true;
     }
     [self.appDelegate.api
      loadJobWithId:self.job.id
@@ -200,7 +221,6 @@ typedef NS_ENUM(NSInteger, EmptyButtonAction) {
             }
         }
         if (self.jobSeeker) {
-            // TODO play button
             Pitch *pitch = [self.jobSeeker.pitches firstObject];
             self.image.image = nil;
             if (pitch)
@@ -222,50 +242,55 @@ typedef NS_ENUM(NSInteger, EmptyButtonAction) {
             
             if(self.mode == JobViewModeConnections && self.application.shortlisted) {
                 self.shortlistIcon.hidden = false;
+                self.shortlistButtonIcon.image = [UIImage imageNamed:@"ic_star_remove"];
             } else {
                 self.shortlistIcon.hidden = true;
+                self.shortlistButtonIcon.image = [UIImage imageNamed:@"ic_star"];
             }
             
             self.leftButton.enabled = true;
             self.rightButton.enabled = true;
+            self.shortlisted.enabled = true;
             self.directionLabel.alpha = 0;
             [self.swipeView nextCard:^{}];
         } else if (self.lastLoad > 0) {
             [self showProgress:true];
         } else {
             if (self.mode == JobViewModeSearch) {
-                [self.emptyLabel setText:@"There are no more potential candidates that match this job. You can switch to application mode to see the people who have connected with you, or restart the search."];
-                [self.emptyButton1 setHidden:false];
-                [self.emptyButton1 setTitle:@"Switch to application mode" forState:UIControlStateNormal];
-                [self setEmptyButton1Action:EmptyButtonActionGotoApplicationsMode];
-                [self.emptyButton2 setHidden:false];
-                [self.emptyButton2 setTitle:@"Restart search" forState:UIControlStateNormal];
-                [self setEmptyButton2Action:EmptyButtonActionReset];
+                [self.emptyLabel setText:@"There are no more potential candidates that match this job. You can switch to application mode or connections to see the people who have connected with you, or restart the search."];
+                [self.emptyButton1 setTitle:@"Restart search" forState:UIControlStateNormal];
+                [self setEmptyButton1Action:EmptyButtonActionReset];
+                [self.emptyButton2 setTitle:@"Switch to applications mode" forState:UIControlStateNormal];
+                [self setEmptyButton2Action:EmptyButtonActionGotoApplicationsMode];
+                [self.emptyButton3 setTitle:@"Switch to connections mode" forState:UIControlStateNormal];
+                [self setEmptyButton3Action:EmptyButtonActionGotoConnectionsMode];
+                [self.emptyButton3 setHidden:false];
             } else if (self.mode == JobViewModeApplications) {
-                [self.emptyLabel setText:@"No candidates have yet expressed an interest in this job. Once that happens, you will be able to sort through them from here. You can switch to search mode to look for potential applicants."];
-                [self.emptyButton1 setHidden:false];
-                [self.emptyButton1 setTitle:@"Switch to search mode" forState:UIControlStateNormal];
-                [self setEmptyButton1Action:EmptyButtonActionGotoSearchMode];
-                [self.emptyButton2 setHidden:false];
-                [self.emptyButton2 setTitle:@"Restart search" forState:UIControlStateNormal];
-                [self setEmptyButton2Action:EmptyButtonActionReset];
+                [self.emptyLabel setText:@"No candidates have yet expressed an interest in this job. Once that happens, you will be able to sort through them from here. You can switch to search mode to look for potential applicants or switch to connections mode to view job seekers you've already connected with."];
+                [self.emptyButton1 setTitle:@"Restart search" forState:UIControlStateNormal];
+                [self setEmptyButton1Action:EmptyButtonActionReset];
+                [self.emptyButton2 setTitle:@"Switch to search mode" forState:UIControlStateNormal];
+                [self setEmptyButton2Action:EmptyButtonActionGotoSearchMode];
+                [self.emptyButton3 setTitle:@"Switch to connections mode" forState:UIControlStateNormal];
+                [self setEmptyButton3Action:EmptyButtonActionGotoConnectionsMode];
+                [self.emptyButton3 setHidden:false];
             } else if (self.mode == JobViewModeConnections) {
                 if (self.shortlisted.on) {
                     [self.emptyLabel setText:@"You have not shortlisted any applications for this job, turn off shortlist view to see the non-shortlisted applications."];
-                    [self.emptyButton1 setHidden:false];
-                    [self.emptyButton1 setTitle:@"Turn off shortlist" forState:UIControlStateNormal];
-                    [self setEmptyButton1Action:EmptyButtonActionTurnOffShortlist];
-                    [self.emptyButton2 setHidden:false];
-                    [self.emptyButton2 setTitle:@"Restart search" forState:UIControlStateNormal];
-                    [self setEmptyButton2Action:EmptyButtonActionReset];
+                    [self.emptyButton1 setTitle:@"Restart search" forState:UIControlStateNormal];
+                    [self setEmptyButton1Action:EmptyButtonActionReset];
+                    [self.emptyButton2 setTitle:@"Turn off shortlist" forState:UIControlStateNormal];
+                    [self setEmptyButton2Action:EmptyButtonActionTurnOffShortlist];
+                    [self.emptyButton3 setHidden:true];
                 } else {
-                    [self.emptyLabel setText:@"You have not chosen anyone to connect with for this job. Once that happens, you will be able to sort through them from here. You can switch to search mode to look for potential applicants."];
-                    [self.emptyButton1 setHidden:false];
-                    [self.emptyButton1 setTitle:@"Switch to search mode" forState:UIControlStateNormal];
-                    [self setEmptyButton1Action:EmptyButtonActionGotoSearchMode];
-                    [self.emptyButton2 setHidden:false];
-                    [self.emptyButton2 setTitle:@"Restart search" forState:UIControlStateNormal];
-                    [self setEmptyButton2Action:EmptyButtonActionReset];
+                    [self.emptyLabel setText:@"You have not chosen anyone to connect with for this job. Once that happens, you will be able to sort through them from here. You can switch to search mode to look for potential applicants or applications mode to look at job seekers who have applied."];
+                    [self.emptyButton1 setTitle:@"Restart search" forState:UIControlStateNormal];
+                    [self setEmptyButton1Action:EmptyButtonActionReset];
+                    [self.emptyButton2 setTitle:@"Switch to search mode" forState:UIControlStateNormal];
+                    [self setEmptyButton2Action:EmptyButtonActionGotoSearchMode];
+                    [self.emptyButton3 setTitle:@"Switch to applications mode" forState:UIControlStateNormal];
+                    [self setEmptyButton3Action:EmptyButtonActionGotoApplicationsMode];
+                    [self.emptyButton3 setHidden:false];
                 }
             }
             [self.swipeContainer setHidden:true];
@@ -286,6 +311,7 @@ typedef NS_ENUM(NSInteger, EmptyButtonAction) {
 {
     self.leftButton.enabled = false;
     self.rightButton.enabled = false;
+    self.shortlisted.enabled = false;
 }
 
 - (void)updateDistance:(CGFloat)distance
@@ -323,21 +349,34 @@ typedef NS_ENUM(NSInteger, EmptyButtonAction) {
             self.directionLabel.alpha = 0;
             self.leftButton.enabled = true;
             self.rightButton.enabled = true;
+            self.shortlisted.enabled = true;
         }];
     }
 }
 
 - (IBAction)leftClick:(id)sender {
     if (self.mode == JobViewModeConnections) {
-        // TODO open messages
+        [self performMessages];
     } else {
         [self left];
     }
 }
 
 - (IBAction)rightClick:(id)sender {
-    // TODO confirmation
-    if (true) {
+    NSString *title = [NSString stringWithFormat:@"Remove %@ %@?",
+                       self.jobSeeker.firstName,
+                       self.jobSeeker.lastName];
+    NSString *message = @"This job seeker will never appear again for this job. If you want this item to appear again in this list, just swipe to the right to remove temporarily.";
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:title
+                                                    message:message
+                                                   delegate:self
+                                          cancelButtonTitle:@"Cancel"
+                                          otherButtonTitles:@"Okay", nil];
+    [alert show];
+}
+
+- (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex {
+    if (buttonIndex == 1) {
         if (self.mode == JobViewModeSearch) {
             // TODO permanenty exclude
         } else {
@@ -361,6 +400,7 @@ typedef NS_ENUM(NSInteger, EmptyButtonAction) {
 - (void)left {
     self.leftButton.enabled = false;
     self.rightButton.enabled = false;
+    self.shortlisted.enabled = false;
     if (self.mode == JobViewModeSearch) {
         [self.objects removeObject:self.jobSeeker];
         ApplicationForCreation *application = [ApplicationForCreation alloc];
@@ -402,6 +442,7 @@ typedef NS_ENUM(NSInteger, EmptyButtonAction) {
 - (void)right {
     self.leftButton.enabled = false;
     self.rightButton.enabled = false;
+    self.shortlisted.enabled = false;
     if (self.mode == JobViewModeSearch)
         [self.objects removeObject:self.jobSeeker];
     else if (self.mode == JobViewModeApplications)
@@ -411,11 +452,53 @@ typedef NS_ENUM(NSInteger, EmptyButtonAction) {
     }];
 }
 
+- (IBAction)shortlistClick:(id)sender {
+    self.leftButton.enabled = false;
+    self.rightButton.enabled = false;
+    self.shortlisted.enabled = false;
+    self.shortlistButtonIcon.image = [UIImage imageNamed:@"ic_star_disabled"];
+    ApplicationShortlistUpdate *update = [ApplicationShortlistUpdate alloc];
+    update.id = self.application.id;
+    update.shortlisted = !self.application.shortlisted;
+    [self.appDelegate.api updateApplicationShortlist:update
+                                          success:^(ApplicationShortlistUpdate *update) {
+                                              self.shortlistIcon.hidden = !update.shortlisted;
+                                              self.application.shortlisted = update.shortlisted;
+                                              self.leftButton.enabled = true;
+                                              self.rightButton.enabled = true;
+                                              self.shortlisted.enabled = true;
+                                              if (update.shortlisted)
+                                                  self.shortlistButtonIcon.image = [UIImage imageNamed:@"ic_star_remove"];
+                                              else
+                                                  self.shortlistButtonIcon.image = [UIImage imageNamed:@"ic_star"];
+                                              if (self.shortlisted.on) {
+                                                  [self.objects removeObject:self.application];
+                                                  [self right];
+                                              }
+                                          }
+                                          failure:^(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors) {
+                                              [[[UIAlertView alloc] initWithTitle:@"Error"
+                                                                          message:@"Error updating application!"
+                                                                         delegate:nil
+                                                                cancelButtonTitle:@"OK"
+                                                                otherButtonTitles:nil] show];
+                                              self.leftButton.enabled = true;
+                                              self.rightButton.enabled = true;
+                                              self.shortlisted.enabled = true;
+                                          }
+     ];
+}
+
 - (void)performJobSeekerDetails
 {
     resetOnAppearance = false;
-    // TODO
     [self performSegueWithIdentifier:@"goto_job_seeker_details" sender:@"view_job"];
+}
+
+- (void)performMessages
+{
+    resetOnAppearance = false;
+    [self performSegueWithIdentifier:@"goto_message_thread" sender:@"view_job"];
 }
 
 - (IBAction)shortlistedChanged:(id)sender {
@@ -425,9 +508,27 @@ typedef NS_ENUM(NSInteger, EmptyButtonAction) {
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
     if ([[segue identifier] isEqualToString:@"goto_job_seeker_details"]) {
-//        JobSeekerDetails *jobSeekerDetailsView = [segue destinationViewController];
-//        [jobSeekerDetailsView setJobSeeker:self.jobSeeker];
+        JobSeekerDetails *jobSeekerDetailsView = [segue destinationViewController];
+        [jobSeekerDetailsView setJobSeeker:self.jobSeeker];
+        [jobSeekerDetailsView setApplication:self.application];
+    } else if ([[segue identifier] isEqualToString:@"goto_message_thread"]) {
+        MessageThread *messageThreadView = [segue destinationViewController];
+        [messageThreadView setApplication:self.application];
     }
+}
+
+- (UIInterfaceOrientationMask)supportedInterfaceOrientations
+{
+    return UIInterfaceOrientationMaskPortrait;
+}
+
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation {
+    return UIInterfaceOrientationIsPortrait(toInterfaceOrientation);
+}
+
+- (UIInterfaceOrientation)preferredInterfaceOrientationForPresentation
+{
+    return UIInterfaceOrientationPortrait;
 }
 
 @end

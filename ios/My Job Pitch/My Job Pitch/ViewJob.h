@@ -24,6 +24,7 @@ typedef NS_ENUM(NSInteger, JobViewMode) {
 @property (weak, nonatomic) IBOutlet UILabel *emptyLabel;
 @property (weak, nonatomic) IBOutlet UIButton *emptyButton1;
 @property (weak, nonatomic) IBOutlet UIButton *emptyButton2;
+@property (weak, nonatomic) IBOutlet UIButton *emptyButton3;
 
 @property (weak, nonatomic) IBOutlet UISwitch *shortlisted;
 @property (weak, nonatomic) IBOutlet UILabel *shortlistedLabel;
@@ -46,5 +47,8 @@ typedef NS_ENUM(NSInteger, JobViewMode) {
 @property (weak, nonatomic) IBOutlet UIButton *rightButton;
 @property (weak, nonatomic) IBOutlet UIImageView *rightIcon;
 @property (weak, nonatomic) IBOutlet UILabel *rightTitle;
+
+@property (weak, nonatomic) IBOutlet UIButton *shortlistButton;
+@property (weak, nonatomic) IBOutlet UIImageView *shortlistButtonIcon;
 
 @end

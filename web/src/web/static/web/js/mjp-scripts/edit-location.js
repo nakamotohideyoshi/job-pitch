@@ -36,8 +36,8 @@ $(function() {
 						$('#work_place_mobile').val(data.mobile);
 					  }
 					  
-					  if(data.place_id != null){
-						$('#work_place_location').val(data.place_id);
+					  if(data.postcode_lookup != null){
+						$('#work_place_location').val(data.postcode_lookup);
 					  }
 					  $('#business').val(data.business_data.id);
 	});
@@ -83,7 +83,7 @@ $(function() {
 			postcodeLocationData(work_place_location, function(output){
   				var postcodeData = output.result;
 			
-				$.put( "/api/user-locations/"+location_id+"/", { name:work_place_name, description:work_place_description, address:work_place_address, email:work_place_email, email_public:work_place_email_public, telephone:work_place_telephone, telephone_public:work_place_telephone_public, mobile:work_place_mobile, mobile_public:work_place_mobile_public,business:business_id, location:location_id, latitude: postcodeData.latitude, longitude: postcodeData.longitude,place_id:work_place_location, place_name:postcodeData.nuts }).done(function( data ) {
+				$.put( "/api/user-locations/"+location_id+"/", { name:work_place_name, description:work_place_description, address:work_place_address, email:work_place_email, email_public:work_place_email_public, telephone:work_place_telephone, telephone_public:work_place_telephone_public, mobile:work_place_mobile, mobile_public:work_place_mobile_public,business:business_id, location:location_id, latitude: postcodeData.latitude, longitude: postcodeData.longitude,postcode_lookup:work_place_location, place_name:postcodeData.nuts }).done(function( data ) {
 							formAlert('success', 'Successfully Updated!');
 						  /*if($('#work_place_image').val() != ''){
 							  var formData2 = new FormData($('#work_place_details')[0]);

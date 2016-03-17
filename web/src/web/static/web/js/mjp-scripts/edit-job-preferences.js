@@ -48,7 +48,7 @@ $(function() {
 				$('#contract').val(data.contract);
 				$('#hours').val(data.hours);
 				$('#sectors').val(data.sectors);
-				$('#location').val(data.place_id);
+				$('#location').val(data.postcode_lookup);
 				$('#search_radius').val(data.search_radius);
 				$('#job_seeker').val(data.job_seeker);
 				$('#latitude').val(data.latitude);
@@ -74,8 +74,8 @@ $(function() {
 				$('#latitude').val(postcodeData.latitude);
 				$('#longitude').val(postcodeData.longitude);
 				$('#place_name').val(postcodeData.nuts);
-				$('#place_id').val(location);
-				/*$.put( "/api/job-profiles/"+profile_id+"/", { latitude: postcodeData.latitude, longitude: postcodeData.longitude, place_id: location, place_name: postcodeData.nuts, search_radius: search_radius,  job_seeker: job_seeker, csrftoken: getCookie('csrftoken'), contract:contract, hours:hours, sectors:sectors }).done(function( data ) {
+				$('#postcode_lookup').val(location);
+				/*$.put( "/api/job-profiles/"+profile_id+"/", { latitude: postcodeData.latitude, longitude: postcodeData.longitude, postcode_lookup: location, place_name: postcodeData.nuts, search_radius: search_radius,  job_seeker: job_seeker, csrftoken: getCookie('csrftoken'), contract:contract, hours:hours, sectors:sectors }).done(function( data ) {
 					formAlert('success', 'Successfully Updated!');			
 			  	})
 			  	.fail(function( data ) {

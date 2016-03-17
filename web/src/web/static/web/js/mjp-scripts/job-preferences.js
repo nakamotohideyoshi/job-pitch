@@ -56,9 +56,9 @@ $(function() {
 				$('#latitude').val(postcodeData.latitude);
 				$('#longitude').val(postcodeData.longitude);
 				$('#place_name').val(postcodeData.nuts);
-				$('#place_id').val(location);
+				$('#postcode_lookup').val(location);
 				
-				/*$.post( "/api/job-profiles/", { latitude: postcodeData.latitude, longitude: postcodeData.longitude, place_id: location, place_name: postcodeData.nuts, search_radius: search_radius,  job_seeker: job_seeker, csrftoken: getCookie('csrftoken'), contract:contract, hours:hours, sectors:sectors }).done(function( data ) {
+				/*$.post( "/api/job-profiles/", { latitude: postcodeData.latitude, longitude: postcodeData.longitude, postcode_lookup: location, place_name: postcodeData.nuts, search_radius: search_radius,  job_seeker: job_seeker, csrftoken: getCookie('csrftoken'), contract:contract, hours:hours, sectors:sectors }).done(function( data ) {
 					window.location.href = "/profile/pitch";			
 			  	})
 			  	.fail(function( data ) {

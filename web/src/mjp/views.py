@@ -370,8 +370,11 @@ router.register('jobs', JobViewSet, base_name='jobs')
 
 
 class ApplicationViewSet(viewsets.ModelViewSet):
-    RECRUITER = Role.objects.get(name='RECRUITER')
-    JOB_SEEKER = Role.objects.get(name='JOB_SEEKER')
+    try:
+        RECRUITER = Role.objects.get(name='RECRUITER')
+        JOB_SEEKER = Role.objects.get(name='JOB_SEEKER')
+    except:
+        pass
     
     class ApplicationPermission(permissions.BasePermission):
         def has_permission(self, request, view):

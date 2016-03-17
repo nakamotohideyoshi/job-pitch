@@ -1,4 +1,5 @@
 <!-- My Job Pitch - Web Application - By Reiss Watson -->
+<!-- BUILD NO. - 02022016 -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -9,6 +10,9 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="description" content="">
         <meta name="author" content="">
+        <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+		<meta http-equiv="Pragma" content="no-cache" />
+		<meta http-equiv="Expires" content="0" />
         
         <!-- Bootstrap Core CSS -->
         <link href="/static/web/design/css/bootstrap.min.css" rel="stylesheet">
@@ -65,14 +69,15 @@
                     <li class="business-link job-seeker-link"><a href="/dashboard">Dashboard</a></li>
                     <li class="job-seeker-link"><a href="/jobs">Vacancies</a></li>
                     <li class="job-seeker-link"><a href="/profile/edit-job-seeker/">Edit Profile</a></li>
+                    <li class="job-seeker-link"><a href="/profile/edit-pitch/">Edit Pitch</a></li>
                     <li class="job-seeker-link"><a href="/profile/edit-job-preferences/">Edit Job Prefrences</a></li>
 					<li class="business-link"><a href="/profile/list-businesses/">Companies</a></li>
-                    <li class="business-link job-seeker-link"><a href="/applications/">Applications</a></li>
+                    <li class="business-link job-seeker-link"><a href="/applications/">Applications and Messages</a></li>
                     <li class="not_logged_in_menu"><a href="/login">Log in</a></li>
                     <li class="business-link job-seeker-link"><a href="/logout">Log Out</a></li>
 					<li class="not_logged_in_menu"><a href="/registration">Register</a></li>
-                    <li><a href="#">Information</a></li>
-                    <li><a href="#">About</a></li>
+                    <li><a href="/mobile-app/">How it Works</a></li>
+                    <li><a href="/about/">About</a></li>
                     <li><a href="/terms-conditions/">Terms and Conditions</a></li>
                     <li><a href="/privacy-policy/">Privacy Policy</a></li>
                   </ul>
@@ -99,12 +104,13 @@
             	<div class="container">
                     <div class="col-md-2">
                         <img src="/static/web/design/images/logo-footer.png">
+                        <br><p style="color:#fff;">Build:02022016</p>
                     </div>
                     <div class="col-md-offset-2 col-md-4">
                         <div class="center-contact-details-footer">
                         	<p>
-                            tel: 123 456 789<br>
-                            <span class="email">e-mail: email@mjp.com</span>
+                            <a href="tel:123456789" class="footer-link-center">tel: 123 456 789</a><br>
+                            <span class="email"><a href="mailto:email@mjp.com" class="footer-link-center">e-mail: email@mjp.com</a></span>
                             </p>
                         </div>
                     </div>
@@ -134,13 +140,15 @@
             <h4 class="modal-title">Login</h4>
           </div>
           <div class="modal-body">
-          	<div class="col-md-8 col-md-offset-2">
-                <form role="form"  action="/api-rest-auth/login/" method="post" id="login">
-                	<div class="alert" role="alert"></div>
-                    <input type="text" class="form-control" id="username" name="username" placeholder="Username">
-                    <input type="password" class="form-control" id="password" name="password" placeholder="Password">
-                    <button type="submit" class="btn btn-custom-modal">Login</button>
-                </form>
+          	<div class="row">
+                <div class="col-md-8 col-md-offset-2">
+                    <form role="form"  action="/api-rest-auth/login/" method="post" id="login">
+                        <div class="alert" role="alert"></div>
+                        <input type="text" class="form-control" id="username" name="username" placeholder="Username">
+                        <input type="password" class="form-control" id="password" name="password" placeholder="Password">
+                        <button type="submit" class="btn btn-custom-modal">Login</button>
+                    </form>
+                </div>
             </div>
           </div>
         </div><!-- /.modal-content -->
@@ -156,15 +164,17 @@
             <h4 class="modal-title">Registration</h4>
           </div>
           <div class="modal-body">
-          	<div class="col-md-8 col-md-offset-2">
-            	<form role="form"  action="/api-auth/login/" method="post" id="register">
-                	<div class="alert" role="alert"></div>
-                    <input type="text" class="form-control" id="reg_username" name="reg_username" placeholder="Username">
-                    <input type="password" class="form-control" id="password1" name="password1" placeholder="Password">
-                    <input type="password" class="form-control" id="password2" name="password2" placeholder="Confirm Password">
-                    <button type="submit" class="btn btn-custom-modal-2">Register</button>
-                    </div>
-                </form>
+          	<div class="row">
+                <div class="col-md-8 col-md-offset-2">
+                    <form role="form"  action="/api-auth/login/" method="post" id="register">
+                        <div class="alert" role="alert"></div>
+                        <input type="text" class="form-control" id="reg_username" name="reg_username" placeholder="Username">
+                        <input type="password" class="form-control" id="password1" name="password1" placeholder="Password">
+                        <input type="password" class="form-control" id="password2" name="password2" placeholder="Confirm Password">
+                        <button type="submit" class="btn btn-custom-modal-2">Register</button>
+                        </div>
+                    </form>
+                </div>
             </div>
           </div>
         </div><!-- /.modal-content -->
@@ -197,11 +207,14 @@
     <!-- jQuery -->
     <script src="/static/web/design/js/jquery.js"></script>
     
+    
+    
     <!-- Bootstrap Core JavaScript -->
     <script src="/static/web/design/js/bootstrap.min.js"></script>
     
     <!-- Bootstrap Extras JavaScript -->
 	<script src="/static/web/js/bootstrap-switch.min.js"></script>
+	<script src="/static/web/js/bootbox.min.js"></script>
     
 	<!-- Common MJP Scripts-->
 	<script src="/static/web/js/mjp-scripts/common.js"></script>

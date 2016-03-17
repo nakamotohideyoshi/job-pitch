@@ -14,7 +14,7 @@ $(function() {
 				
 				setCookie('username', username, 28);
 				setCookie('key', data.key, 28);
-				window.location.href = "/";
+				window.location.href = "/applications/";
 			  })
 			  .fail(function( data ) {
 				var messageError = ''

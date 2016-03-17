@@ -39,6 +39,10 @@ function postcodeLocationData(postcode, handleData){
 
 //if redirect is true, send user to login
 function checkLogin(redirect){
+	//Check if this is a mobile device, if so tell them to go use the mobile apps
+	if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
+		window.location.href = "/mobile-app";
+	}
 	var username = getCookie('username');
 	if(username == ""){
 		if(redirect == true){
@@ -79,12 +83,15 @@ function applyForJob(job_id, job_seeker_id){
 
 function connectWithJob(job_id, job_seeker_id){
 			  $.post( "/api/applications/", { job: job_id, job_seeker: job_seeker_id, csrftoken: getCookie('csrftoken')}).done(function( data ) {
-				  location.reload();
+				  //location.reload();
+				  $('#viewPitchModal').find('.modal-body').html('<div class="row"><div class="col-md-12"><h4 style="text-align: center; font-size:16px;">Thanks for requesting to connect. A message has been sent to the job seeker</h4></div></div><div class="row"><div class="col-md-12" style="text-align:center;"><button style="margin-left:0;" type="button" class="btn btn-custom" data-dismiss="modal" aria-label="Close">Back to List</button></div></row>');
+				  $('#job-list-'+job_seeker_id).remove();
 			  })
 			  .fail(function( data ) {
 				
 			  });
 }
+
 
 function messageRead(message_id){
 			$.put( "/api/messages/"+message_id+'/', { read:true, csrftoken: getCookie('csrftoken')}).done(function( data ) {
@@ -151,15 +158,17 @@ function formAlert(type, message){
 }
 
 function deleteRow(id, apiFunction, rowPrefix){
-	$.ajax({
-		url: "/api/"+apiFunction+"/"+id+"/",
-		type: 'DELETE',
-		data:{ csrftoken: getCookie('csrftoken') },
-		success: function(result) {
-			console.log(rowPrefix+id);
-			$('#'+rowPrefix+id).fadeOut(250);
-		}
-		});
+	bootbox.confirm("Are you sure?", function(result) {
+		$.ajax({
+			url: "/api/"+apiFunction+"/"+id+"/",
+			type: 'DELETE',
+			data:{ csrftoken: getCookie('csrftoken') },
+			success: function(result) {
+				console.log(rowPrefix+id);
+				$('#'+rowPrefix+id).fadeOut(250);
+			}
+			});
+	});
 }
 
 //check if a job seeker account is active. Returns true|false
@@ -270,7 +279,7 @@ $(function() {
 			$.post( "/api-rest-auth/login/", { username: username, password: password1, csrfmiddlewaretoken: csrfmiddlewaretoken }).done(function( data ) {
 				setCookie('username', username, 28);
 				setCookie('key', data.key, 28);
-				window.location.href = "/";
+				window.location.href = "/applications/";
 			  })
 			  .fail(function( data ) {
 				var messageError = ''
@@ -308,5 +317,16 @@ $(function() {
 			}
 			formAlert('danger', messageError);
 		  });
+	});
+	$('#regModal').on('hidden.bs.modal', function () {
+		$('.alert').html('');
+		$('.alert').hide();
+	});
+	$('#loginModal').on('hidden.bs.modal', function () {
+		$('.alert').html('');
+		$('.alert').hide();
+	});
+	$('#viewPitchModal').on('hidden.bs.modal', function () {
+		$('#viewPitchModal').find('.modal-body').html('<div class="col-md-12" id="pitchViewer"></div><div class="col-md-offset-4 col-md-4"><a class="btn btn-custom" id="applyButtonModal" style="display:none; margin-left: 18px;margin-top: 20px;">Connect</a></div>');
 	});
 });

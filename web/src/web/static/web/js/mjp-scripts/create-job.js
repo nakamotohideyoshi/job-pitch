@@ -7,6 +7,7 @@ $(function() {
 	
 	//variables defined
 	var open_job_status;
+	$.get( "/api/user-locations/"+location_id, { token: getCookie('key') ,csrftoken: getCookie('csrftoken') }).done(function( data ) {$('#currentLogo').attr('src', data.images[0].thumbnail).show(); });
 	
 	//Populate selects
 	$.get( "/api/hours/", { csrftoken: getCookie('csrftoken') }).done(function( data ) {
@@ -54,6 +55,7 @@ $(function() {
 			  
 	//Form submit code
  	$('#create-job').submit(function( event ) {
+		$('.btn-primary').attr( "disabled", true );
 		event.preventDefault();
 		var title = $('#title').val();
 		var description = $('#description').val();
@@ -63,7 +65,8 @@ $(function() {
 		
 			$.post( "/api/user-jobs/", { title: title, description: description, sector: job_sector, contract: contract, hours: hours, location:location_id, status:open_job_status, csrftoken: getCookie('csrftoken') }).done(function( data ) {
 				$('#job_id').val(data.id);
-				var formData = new FormData($('#create-job')[0]);
+				if($('#job_image').val() != ''){
+					  var formData = new FormData($('#create-job')[0]);
 					  $.ajax({
 						url: '/api/user-job-images/',
 						type: 'POST',
@@ -76,10 +79,49 @@ $(function() {
 								window.location.href = "/profile/list-jobs/?id="+location_id;
 						}
 					  });
+				}else{
+					//window.location.href = "/profile/list-jobs/?id="+location_id;
+					$.get( "/api/user-locations/"+location_id, { token: getCookie('key') ,csrftoken: getCookie('csrftoken') }).done(function( data ) {
+							console.log( data );
+							$('#currentLogo').attr('src', data.images[0].thumbnail).show();
+												  var xhr = new XMLHttpRequest();
+													xhr.onreadystatechange = function(){
+														if (this.readyState == 4 && this.status == 200){
+															//this.response is what you're looking for
+															//console.log(this.response, typeof this.response);
+															//console.log(data.images[0].image.split('.').pop());
+															$('#job_image').remove();
+															var formData = new FormData($('#create-job')[0]);
+															formData.append('image',this.response, 'location-'+location_id+'.'+data.images[0].image.split('.').pop());
+															  $.ajax({
+																url: '/api/user-job-images/',
+																type: 'POST',
+																data: formData,
+																async: false,
+																cache: false,
+																contentType: false,
+																processData: false,
+																success: function (data) {
+																		console.log(data);
+																		window.location.href = "/profile/list-jobs/?id="+location_id;
+																}
+															  });
+														}
+													}
+													xhr.open('GET', data.images[0].image);
+													xhr.responseType = 'blob';
+													xhr.send();    
+					});
+				}
 				
 			  })
 			  .fail(function( data ) {
-				console.log( data.responseJSON );
+				var messageError = ''
+				for (var key in data.responseJSON) {
+					var obj = data.responseJSON[key];
+					messageError = messageError+obj+'<br>';
+				}
+				formAlert('danger', messageError);
 			  });
 	});
 	

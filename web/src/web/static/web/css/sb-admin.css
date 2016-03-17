@@ -297,3 +297,10 @@ Web App By Reiss Watson
 	display:none;
 	margin-bottom:20px;	
 }
+.phone-number-footer{
+	color:#fff;
+	text-decoration:none;
+}
+.phone-number-footer:hover{
+	text-decoration:none;
+}

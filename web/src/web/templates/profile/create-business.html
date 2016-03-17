@@ -15,6 +15,7 @@
                                 </h1>
                                 	<div class="alert" role="alert"></div>
 									<form role="form" method="post" id="company_details" enctype="multipart/form-data">
+                                    	<p>Please provide your company name and a company logo.</p>
 										<div class="form-group">
 											<label>Company Details:</label>
 												<input type="text" required class="form-control" placeholder="Company Name" name="company_name" id="company_name">
@@ -22,10 +23,7 @@
 										
 										<div class="form-group">
 												<label>Company Logo:</label>
-                                                <div class="fileUpload btn btn-primary form-buttons">
-   												<span>Upload</span>
-												<input type="file" required class="form-control" name="image" id="company_logo">
-                                                </div>
+                                                <input type="file" required class="form-control" name="image" id="company_logo">
 												<input type="hidden" name="order" value="0">
 										</div>
 										
@@ -42,7 +40,8 @@
 										</div>
 										
 										<div class="form-group">
-												<input type="text"  class="form-control" required placeholder="Description" name="work_place_description" id="work_place_description">
+												<textarea type="text"  class="form-control" required name="work_place_description" id="work_place_description" placeholder="Please describe what size of business you are, how many employees you have and what it is like to work at your company." maxlength="500" rows="4"></textarea>
+                                                <div id="textarea_feedback"></div>
 										</div>
 										
 										<div class="form-group">
@@ -58,7 +57,7 @@
 										
 										<div class="form-group">
 											<div class="col-md-10">
-												<input type="text" class="form-control" placeholder="Email (optional)" name="work_place_email" id="work_place_email">
+												<input type="text" class="form-control" placeholder="Email" name="work_place_email" id="work_place_email" required="required">
 											</div>
 											<div class="col-md-2">
 												<label class="checkbox-inline">
@@ -95,10 +94,9 @@
 										
 										<div class="form-group">
 												<label>Work Place Image:</label>
-                                                <div class="fileUpload btn btn-primary form-buttons">
-   												<span>Upload</span>
-												<input type="file"  class="form-control" name="image" id="work_place_image" required="required">
-                                                </div>
+                                                <img src="" id="currentLogo" style="display:none;" />
+                                                <p>If you do not wish to upload an image, your previously uploaded company logo will be used.</p>
+                                                <input type="file"  class="form-control" name="image" id="work_place_image">
 												<input type="hidden" name="order" value="0">
 										</div>
 									

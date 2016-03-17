@@ -13,6 +13,7 @@
                                 <h1 class="page-header page-header-form">
                                     Job Details
                                 </h1>
+                                <div class="alert" role="alert"></div>
 								<form role="form"  method="post" id="create-job" enctype="multipart/form-data">
 																								
 									<div class="alert" role="alert"></div>
@@ -46,10 +47,9 @@
 									
 									<div class="form-group">
 												<label>Job Image:</label>
-                                                <div class="fileUpload btn btn-primary form-buttons">
-   												<span>Upload</span>
-												<input type="file" required class="form-control" name="image" id="job_image">
-                                                </div>
+                                                <img src="" id="currentLogo" style="display:none;" />
+                                                <p>If you do not wish to upload an image, your previously uploaded company logo will be used.</p>
+                                                <input type="file" class="form-control" name="image" id="job_image">
 												<input type="hidden" name="order" value="0">
 									</div>
 									

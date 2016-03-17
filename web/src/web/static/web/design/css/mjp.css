@@ -42,7 +42,9 @@ header.carousel .fill {
     background-position: center;
     background-size: cover;
 }
-
+a{
+	outline: none;
+}
 /* 404 Page Styles */
 
 .error-404 {
@@ -135,6 +137,7 @@ footer {
     padding-left: 30px;
     padding-right: 30px;
 	font-size:15px;
+	
 }
 
 .btn-custom:hover, .btn-custom-red:hover, .btn-custom-modal:hover, .btn-custom-modal-2:hover, .btn-home-reg:hover, .btn-home-login:hover{
@@ -389,14 +392,14 @@ footer {
     margin-left: 115px;
 }
 .navbar-collapse.collapse.in{
-	width:270px;
+	width:330px;
 	background:#4f5050;
 	float:right;
 }
 .navbar-collapse
 {
 	position: relative;
-	width: 270px;
+	width: 330px;
 	padding: 0px;
 	background: #4f5050;
 	-webkit-border-radius: 0px;
@@ -417,7 +420,7 @@ footer {
 	width: 0;
 	z-index: 1;
 	top: -15px;
-	left: 210px;
+	left: 270px;
 }
 
 .navbar-nav{
@@ -454,7 +457,7 @@ footer {
 }
 
 .mjp-footer, .push {
-    height: 221px; /* .push must be the same height as .footer */
+    min-height: 221px; /* .push must be the same height as .footer */
 }
 
 .page-container{
@@ -522,6 +525,7 @@ footer {
     padding-left: 75px;
     padding-right: 75px;
     font-size: 15px;
+	width: 100%;
 }
 
 .btn-custom-modal-2 {
@@ -532,6 +536,7 @@ footer {
     padding-left: 65px;
     padding-right: 65px;
     font-size: 15px;
+	width: 100%;
 }
 
 #register .alert, #login .alert{
@@ -574,6 +579,10 @@ Web App By Reiss Watson
 
 .business-link{
 	display:none;	
+}
+
+#list-table .business-link{
+	display:none;
 }
 
 .job-seeker-link{
@@ -629,6 +638,7 @@ Web App By Reiss Watson
 }
 
 #recordStopButton{
+	margin: auto;
 	display:none;
 }
 
@@ -805,6 +815,104 @@ Web App By Reiss Watson
 	font-size:12px;
 }
 
+.mobile-logo-home{
+	display:none;
+}
+.footer-link-center{
+	color:#fff;
+	text-decoration:none;
+}
+.footer-link-center:hover{
+	text-decoration:none;
+}
+.modal-header .close {
+    margin-top: -10px;
+}
+#job_applied_for{
+	margin-top:15px;
+	text-align:center;
+}
+#recordStartButton{
+	margin: auto;
+    display: block;
+}
+#recordStartButtonBefore{
+	margin:auto;
+	display:block;
+}
+#recorder #webcam{
+	margin: auto;
+    display: block;
+	float:none;
+}
+#recorder #recorderTimer{
+	margin: auto;
+    display: block;
+}
+.videoCheckEdit{
+	text-align: center;
+}
+.recordNewVideo{
+	display:none;
+}
+.jobs-list{
+	cursor:default !important;
+}
+#account_details_not_active{
+	display:none;	
+}
+
+
+
+input { 
+   color: #777;
+}
+
+::-webkit-input-placeholder {
+  color: #777;
+}
+::-moz-placeholder { /* Firefox 19+ */
+  color:  #777;
+}
+:-ms-input-placeholder {
+  color:  #777;
+}
+:-moz-placeholder { /* Firefox 18- */
+  color:  #777;
+}
+
+
+.jobs-list .btn{
+	margin-top:10px;
+}
+
+.jobTableDescription{
+	max-width: 120px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.jobTableDescription2{
+	max-width: 100px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.systemMessageNotice{
+	font-size: 9px;
+}
+
+#map{
+	height:200px;
+}
+
+.job-image-messages{
+	width: 100%;
+}
+
+
 /* Only show the "mobile menu" fix */
 @media (max-width: 3000px) {
     .navbar-header {
@@ -859,4 +967,30 @@ Web App By Reiss Watson
     header.carousel .carousel {
         height: 70%;
     }
+	.main-logo-home{
+		display:none;
+	}
+	.mobile-logo-home{
+		display:block;
+	}
+	.buttons-slide{
+		margin-left:0px;
+	}
+}
+
+@media(max-width:640px) {
+	.btn-home-reg{
+		position: absolute;
+    	margin-top: 13px;
+	    margin-left: 0px;
+	}
+}
+
+@media(max-width:320px) {
+	.above-slide-detail{
+		width: 280px;
+	}
+    .above-slide-detail img{
+		width: 280px;
+	}
 }

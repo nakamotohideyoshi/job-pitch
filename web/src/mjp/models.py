@@ -181,6 +181,7 @@ class Location(models.Model):
     latlng = models.PointField()
     place_id = models.CharField(max_length=1024, blank=True)
     place_name = models.CharField(max_length=1024)
+    postcode_lookup = models.CharField(max_length=10, blank=True)
     email = models.EmailField(blank=True)
     email_public = models.BooleanField(default=None)
     telephone = models.CharField(max_length=100, blank=True)
@@ -288,6 +289,7 @@ class JobProfile(models.Model):
     search_radius = models.IntegerField()
     place_id = models.CharField(max_length=1024, blank=True)
     place_name = models.CharField(max_length=1024)
+    postcode_lookup = models.CharField(max_length=10, blank=True)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
     

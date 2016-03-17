@@ -72,6 +72,10 @@
                         success:(void (^)(ApplicationStatusUpdate *update))success
                         failure:(void (^)(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors))failure;
 
+- (void)updateApplicationShortlist:(ApplicationShortlistUpdate*)update
+                           success:(void (^)(ApplicationShortlistUpdate *update))success
+                           failure:(void (^)(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors))failure;
+
 - (void)sendMessage:(MessageForCreation*)message
             success:(void (^)(MessageForCreation *message))success
             failure:(void (^)(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors))failure;

@@ -11,6 +11,7 @@
 		CE45AEC41C0B41390092AB75 /* MJPViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CE45AEC31C0B41390092AB75 /* MJPViewController.m */; };
 		CE45AECA1C0B45AD0092AB75 /* RegisterRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = CE45AEC91C0B45AD0092AB75 /* RegisterRequest.m */; };
 		CE45AECD1C0B461A0092AB75 /* User.m in Sources */ = {isa = PBXBuildFile; fileRef = CE45AECC1C0B461A0092AB75 /* User.m */; };
+		CE4696AE1C9A0BC8001E3FFE /* LockableNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = CE4696AD1C9A0BC8001E3FFE /* LockableNavigationController.m */; };
 		CE59737D1C1626630096B001 /* JobSeekerProfileView.m in Sources */ = {isa = PBXBuildFile; fileRef = CE59737C1C1626630096B001 /* JobSeekerProfileView.m */; };
 		CE6FD33C1C01F9BB001A04C3 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = CE6FD33B1C01F9BB001A04C3 /* main.m */; };
 		CE6FD33F1C01F9BB001A04C3 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = CE6FD33E1C01F9BB001A04C3 /* AppDelegate.m */; };
@@ -53,6 +54,7 @@
 		CE8AB0261C61826B0004F021 /* BusinessEditView.xib in Resources */ = {isa = PBXBuildFile; fileRef = CE8AB0251C61826B0004F021 /* BusinessEditView.xib */; };
 		CE8AB0281C6AA22E0004F021 /* LocationEditView.xib in Resources */ = {isa = PBXBuildFile; fileRef = CE8AB0271C6AA22E0004F021 /* LocationEditView.xib */; };
 		CE8AB02B1C6AA2490004F021 /* LocationEditView.m in Sources */ = {isa = PBXBuildFile; fileRef = CE8AB02A1C6AA2490004F021 /* LocationEditView.m */; };
+		CEB424131C9A35BC0012748B /* JobSeekerDetails.m in Sources */ = {isa = PBXBuildFile; fileRef = CEB424121C9A35BC0012748B /* JobSeekerDetails.m */; };
 		CEC2E4041C45A88100AC0F45 /* Job.m in Sources */ = {isa = PBXBuildFile; fileRef = CEC2E4031C45A88100AC0F45 /* Job.m */; };
 		CEC2E4071C45B4C200AC0F45 /* Location.m in Sources */ = {isa = PBXBuildFile; fileRef = CEC2E4061C45B4C200AC0F45 /* Location.m */; };
 		CEC2E40A1C45B4EC00AC0F45 /* MJPObjectWithDates.m in Sources */ = {isa = PBXBuildFile; fileRef = CEC2E4091C45B4EC00AC0F45 /* MJPObjectWithDates.m */; };
@@ -112,6 +114,8 @@
 		CE45AEC91C0B45AD0092AB75 /* RegisterRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RegisterRequest.m; sourceTree = "<group>"; };
 		CE45AECB1C0B461A0092AB75 /* User.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = User.h; sourceTree = "<group>"; };
 		CE45AECC1C0B461A0092AB75 /* User.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = User.m; sourceTree = "<group>"; };
+		CE4696AC1C9A0BC8001E3FFE /* LockableNavigationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LockableNavigationController.h; path = ../LockableNavigationController.h; sourceTree = "<group>"; };
+		CE4696AD1C9A0BC8001E3FFE /* LockableNavigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LockableNavigationController.m; path = ../LockableNavigationController.m; sourceTree = "<group>"; };
 		CE59737B1C1626630096B001 /* JobSeekerProfileView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JobSeekerProfileView.h; sourceTree = "<group>"; };
 		CE59737C1C1626630096B001 /* JobSeekerProfileView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JobSeekerProfileView.m; sourceTree = "<group>"; };
 		CE6FD3371C01F9BB001A04C3 /* My Job Pitch.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "My Job Pitch.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -187,6 +191,8 @@
 		CE8AB0271C6AA22E0004F021 /* LocationEditView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LocationEditView.xib; sourceTree = "<group>"; };
 		CE8AB0291C6AA2490004F021 /* LocationEditView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LocationEditView.h; sourceTree = "<group>"; };
 		CE8AB02A1C6AA2490004F021 /* LocationEditView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LocationEditView.m; sourceTree = "<group>"; };
+		CEB424111C9A35BC0012748B /* JobSeekerDetails.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JobSeekerDetails.h; sourceTree = "<group>"; };
+		CEB424121C9A35BC0012748B /* JobSeekerDetails.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JobSeekerDetails.m; sourceTree = "<group>"; };
 		CEC2E4021C45A88100AC0F45 /* Job.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Job.h; path = Assets.xcassets/Job.h; sourceTree = "<group>"; };
 		CEC2E4031C45A88100AC0F45 /* Job.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Job.m; path = Assets.xcassets/Job.m; sourceTree = "<group>"; };
 		CEC2E4051C45B4C200AC0F45 /* Location.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Location.h; sourceTree = "<group>"; };
@@ -343,6 +349,8 @@
 				CE8AAFEC1C5850C40004F021 /* EditSearchProfile.m */,
 				CE8AB0021C5B04320004F021 /* JobDetails.h */,
 				CE8AB0031C5B04320004F021 /* JobDetails.m */,
+				CEB424111C9A35BC0012748B /* JobSeekerDetails.h */,
+				CEB424121C9A35BC0012748B /* JobSeekerDetails.m */,
 				CE8AAFFA1C59A7820004F021 /* LocationMapView.h */,
 				CE8AAFFB1C59A7820004F021 /* LocationMapView.m */,
 				CE8AAFF81C59A2DE0004F021 /* LocationMap.xib */,
@@ -388,6 +396,8 @@
 				CE45AEC31C0B41390092AB75 /* MJPViewController.m */,
 				CE86847C1C0E570300D4B6C7 /* ScrollingViewController.h */,
 				CE86847D1C0E570300D4B6C7 /* ScrollingViewController.m */,
+				CE4696AC1C9A0BC8001E3FFE /* LockableNavigationController.h */,
+				CE4696AD1C9A0BC8001E3FFE /* LockableNavigationController.m */,
 			);
 			path = "My Job Pitch";
 			sourceTree = "<group>";
@@ -718,6 +728,7 @@
 				CE7742491C9623C300A9A2BA /* ViewJobMenu.m in Sources */,
 				CEE0625E1C28B77500ED60C0 /* Role.m in Sources */,
 				CE45AECD1C0B461A0092AB75 /* User.m in Sources */,
+				CE4696AE1C9A0BC8001E3FFE /* LockableNavigationController.m in Sources */,
 				CE8AB0011C5AF6250004F021 /* Application.m in Sources */,
 				CE8AB0241C617F550004F021 /* BusinessEditView.m in Sources */,
 				CE77423E1C92555900A9A2BA /* EditLocation.m in Sources */,
@@ -750,6 +761,7 @@
 				CEE062561C28B77500ED60C0 /* JobSeeker.m in Sources */,
 				CE8AB0141C5EBA850004F021 /* Message.m in Sources */,
 				CE8AB0041C5B04320004F021 /* JobDetails.m in Sources */,
+				CEB424131C9A35BC0012748B /* JobSeekerDetails.m in Sources */,
 				CE8AAFF71C599FA50004F021 /* DownPickerMultiple.m in Sources */,
 				CE8AB02B1C6AA2490004F021 /* LocationEditView.m in Sources */,
 				CEE062591C28B77500ED60C0 /* MJPObjectWithNameDesc.m in Sources */,

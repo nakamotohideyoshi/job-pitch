@@ -10,6 +10,7 @@
 #import "MessageThreadCell.h"
 #import "Message.h"
 #import "JobDetails.h"
+#import "JobSeekerDetails.h"
 
 @interface MessageThread ()
 @property (nonnull) NSMutableArray *messageData;
@@ -160,15 +161,19 @@
         created = [NSString stringWithFormat:@"%@, %@",
                    [dateFormat stringFromDate:message.created],
                    [timeFormat stringFromDate:message.created]];
-    if ([fromRole isEqual:[self.appDelegate getRoleByName:ROLE_RECRUITER]]) {
-        cell.byLine.text = [NSString stringWithFormat:@"%@, %@",
-                            self.application.job.locationData.businessData.name,
-                            created];
+    if ([fromRole isEqual:userRole]) {
+        cell.byLine.text = [NSString stringWithFormat:@"You, %@", created];
     } else {
-        cell.byLine.text = [NSString stringWithFormat:@"%@ %@, %@",
-                            self.application.jobSeeker.firstName,
-                            self.application.jobSeeker.lastName,
-                            created];
+        if ([fromRole isEqual:[self.appDelegate getRoleByName:ROLE_RECRUITER]]) {
+            cell.byLine.text = [NSString stringWithFormat:@"%@, %@",
+                                self.application.job.locationData.businessData.name,
+                                created];
+        } else {
+            cell.byLine.text = [NSString stringWithFormat:@"%@ %@, %@",
+                                self.application.jobSeeker.firstName,
+                                self.application.jobSeeker.lastName,
+                                created];
+        }
     }
     cell.message.text = message.content;
     cell.backgroundColor = [UIColor clearColor];
@@ -180,6 +185,10 @@
         JobDetails *jobDetailsView = [segue destinationViewController];
         [jobDetailsView setJob:self.application.job];
         [jobDetailsView setApplication:self.application];
+    } else if ([[segue identifier] isEqualToString:@"goto_job_seeker_details"]) {
+        JobSeekerDetails *jobSeekerDetailsView = [segue destinationViewController];
+        [jobSeekerDetailsView setJobSeeker:self.application.jobSeeker];
+        [jobSeekerDetailsView setApplication:self.application];
     }
 }
 
@@ -192,6 +201,8 @@
 - (IBAction)headerTap:(id)sender {
     if ([self.appDelegate.user isJobSeeker]) {
         [self performSegueWithIdentifier:@"goto_job_details" sender:nil];
+    } else {
+        [self performSegueWithIdentifier:@"goto_job_seeker_details" sender:nil];
     }
 }
 

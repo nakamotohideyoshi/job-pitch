@@ -8,6 +8,7 @@
 
 #import "JobDetails.h"
 #import "Image.h"
+#import "MessageThread.h"
 @import MapKit;
 
 @implementation JobDetails
@@ -50,9 +51,14 @@
             [contactDetails addObject:location.telephone];
         if (location.mobile != nil && location.mobilePublic)
             [contactDetails addObject:location.mobile];
-        self.contactDetails.text = [contactDetails componentsJoinedByString:@"\n"];
+        if (contactDetails.count > 0)
+            self.contactDetails.text = [contactDetails componentsJoinedByString:@"\n"];
+        else
+            self.contactDetails.text = @"No contact details supplied.";
+        self.messagesButton.hidden = false;
     } else {
         self.contactDetails.text = @"You cannot view contact details until your application has been accepted";
+        self.messagesButton.hidden = true;
     }
 }
 
@@ -71,4 +77,16 @@
     [mapItem setName:location.name];
     [mapItem openInMapsWithLaunchOptions:@{}];
 }
+
+- (IBAction)messages:(id)sender {
+    [self performSegueWithIdentifier:@"goto_message_thread" sender:nil];
+}
+
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    if ([[segue identifier] isEqualToString:@"goto_message_thread"]) {
+        MessageThread *messageThreadView = [segue destinationViewController];
+        [messageThreadView setApplication:self.application];
+    }
+}
+
 @end

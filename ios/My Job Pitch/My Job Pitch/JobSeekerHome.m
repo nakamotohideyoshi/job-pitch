@@ -80,6 +80,8 @@ typedef NS_ENUM(NSInteger, EmptyButtonAction) {
 
 - (void)viewWillAppear:(BOOL)animated
 {
+    NSNumber *orientation = [NSNumber numberWithInt: UIInterfaceOrientationPortrait];
+    [[UIDevice currentDevice] setValue:orientation forKey:@"orientation"];
     if (resetOnAppearance)
         [self reset];
     resetOnAppearance = true;
@@ -398,6 +400,20 @@ typedef NS_ENUM(NSInteger, EmptyButtonAction) {
         JobDetails *jobDetailsView = [segue destinationViewController];
         [jobDetailsView setJob:self.job];
     }
+}
+
+- (UIInterfaceOrientationMask)supportedInterfaceOrientations
+{
+    return UIInterfaceOrientationMaskPortrait;
+}
+
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation {
+    return UIInterfaceOrientationIsPortrait(toInterfaceOrientation);
+}
+
+- (UIInterfaceOrientation)preferredInterfaceOrientationForPresentation
+{
+    return UIInterfaceOrientationPortrait;
 }
 
 @end

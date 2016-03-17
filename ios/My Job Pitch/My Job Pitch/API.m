@@ -484,6 +484,18 @@
                             path:@"/api/applications/:pk/"
                           method:RKRequestMethodPUT];
     
+    NSArray *applicationShortlistUpdateArray = @[@"id",
+                                              @"shortlisted",
+                                              ];
+    
+    [self configureSimpleMapping:objectManager
+                           class:[ApplicationShortlistUpdate class]
+                           array:applicationShortlistUpdateArray
+                      dictionary:nil
+                   relationships:nil
+                            path:@"/api/applications/:pk/"
+                          method:RKRequestMethodPUT];
+    
     NSArray *createMessageArray = @[@"id",
                                     @"application",
                                     @"content",
@@ -985,8 +997,26 @@
 }
 
 - (void)updateApplicationStatus:(ApplicationStatusUpdate*)update
-                  success:(void (^)(ApplicationStatusUpdate *update))success
-                  failure:(void (^)(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors))failure
+                        success:(void (^)(ApplicationStatusUpdate *update))success
+                        failure:(void (^)(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors))failure
+{
+    NSString *url = [NSString stringWithFormat:@"/api/applications/%@/", update.id];
+    
+    [[RKObjectManager sharedManager] putObject:update
+                                          path:url
+                                    parameters:nil success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
+                                        NSLog(@"Application updated");
+                                        success([mappingResult firstObject]);
+                                    } failure:^(RKObjectRequestOperation *operation, NSError *error) {
+                                        NSLog(@"Error updating application: %@", error);
+                                        failure(operation, error, [self getMessage:error], [self getErrors:error]);
+                                    }
+     ];
+}
+
+- (void)updateApplicationShortlist:(ApplicationShortlistUpdate*)update
+                        success:(void (^)(ApplicationShortlistUpdate *update))success
+                        failure:(void (^)(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors))failure
 {
     NSString *url = [NSString stringWithFormat:@"/api/applications/%@/", update.id];
     

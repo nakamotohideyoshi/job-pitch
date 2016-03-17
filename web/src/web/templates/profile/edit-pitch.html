@@ -52,10 +52,18 @@
                 <div class="row">
                     <div class="col-lg-12">
                         <h1 class="page-header">
-                            Your Pitch
+                            Record a New Pitch
                         </h1>
-						
-						<div class="row">
+							<div class="row videoCheckEdit">
+                            	<div class="col-lg-12">
+                                	<h3>Your Current Pitch:</h3>
+                                        <div id="pitchVideoCheck">
+                                            <video width="320" height="240" controls><source src="" type="video/mp4"></video>
+                                        </div>
+                                    <button id="recordStartButtonBefore" class="btn btn-small" onclick="newPitchStart()">Record a new Pitch</button>
+                                </div>
+                            </div>
+                            <div class="row recordNewVideo">
                                 <div class="col-lg-6">
                                     
                                     <div id="message"></div>
@@ -68,7 +76,7 @@
                                         </div>
                                         <br clear="both"/>
                                         <br/>
-                                        <button id="recordStartButton" class="btn btn-small" onclick="startRecording()">Start Recording</button>
+                                        <button id="recordStartButton" class="btn btn-small" onclick="startRecording()" disabled>Start Recording</button>
                                         
     
                                         <button id="recordStopButton" class="btn btn-small" onclick="closeCamera()" disabled>Stop Recording</button>
@@ -123,6 +131,6 @@
 {% block pagescripts %}
 	<script language="JavaScript" src="//ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js"></script>
 
-	<script src="/static/web/js/mjp-scripts/pitch.js"></script>
+	<script src="/static/web/js/mjp-scripts/edit-pitch.js"></script>
 	<script src="/static/web/js/ScriptCam/scriptcam.js"></script>
 {% endblock %}

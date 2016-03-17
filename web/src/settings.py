@@ -40,6 +40,7 @@ ALLAUTH_SETTING_GETTER = ALL_AUTH_SETTINGS.get
 INSTALLED_APPS = (
     'django.contrib.admin',
     'django.contrib.auth',
+    'django.contrib.sites',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
@@ -92,6 +93,5 @@ USE_L10N = True
 
 USE_TZ = True
 
-MEDIA_ROOT = '/tmp/mjp_media/media/'
 MEDIA_URL = '/media/'
 STATIC_URL = '/static/'

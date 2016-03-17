@@ -2,17 +2,32 @@ $(function() {
 	// Run login check funtion with auto-redirect
 	checkLogin(true);
 	
-	var imageCurrentLogo = '';
-	var formData = '';
+	//grab business id from url
+	var business_id = QueryString.id;
+	
+	$('#business').val(business_id);
+	
+	$.get( "/api/user-businesses/"+business_id, { token: getCookie('key') ,csrftoken: getCookie('csrftoken') }).done(function( data ) {
+					  console.log( data );
+					  
+					  if(data.name != null){
+						$('#company_name').val(data.name);
+					  }  
+					  $('#currentLogo').attr('src', data.images[0].thumbnail).show();
+						
+	});
+	
+	
 	//Form submit code
  	$('#company_details').submit(function( event ) {
+		$('.btn-primary').attr( "disabled", true );
 		event.preventDefault();
 			
-			var company_name = $('#company_name').val();			
-			$.post( "/api/user-businesses/", { name:company_name }).done(function( data ) {
-					  $('#business').val(data.id);
+			var company_name = $('#company_name').val();		
+			$.put( "/api/user-businesses/"+business_id+"/", { name:company_name }).done(function( data ) {
 					  
-					  formData = new FormData($('#company_details')[0]);
+					  if($('#company_logo').val() != ''){
+					  var formData = new FormData($('#company_details')[0]);
 					  $.ajax({
 						url: '/api/user-business-images/',
 						type: 'POST',
@@ -22,21 +37,22 @@ $(function() {
 						contentType: false,
 						processData: false,
 						success: function (data) {
-						  		console.log(data);
-								$('#currentLogo').attr('src', data.thumbnail).show();
-								$.get(data.image, function(data2) {
-									 imageCurrentLogo = data2;
-								});
-						  		$('#company_details').fadeOut(250, function() {
-									$('#work_place_details').fadeIn(250);
-									$('.page-header').html('Create your first recruitment location');
-								});
+						  		//console.log(data);
+						  		formAlert('success', 'Successfully Updated!');
 						}
 					  });
+					  }else{
+						  formAlert('success', 'Successfully Updated!');
+					  }
 					  
 			  })
 			  .fail(function( data ) {
-				console.log( data );
+				var messageError = ''
+					for (var key in data.responseJSON) {
+						var obj = data.responseJSON[key];
+						messageError = messageError+obj+'<br>';
+					}
+					formAlert('danger', messageError);
 			  });
 	});
 	
@@ -77,54 +93,28 @@ $(function() {
 			
 			$.post( "/api/user-locations/", { name:work_place_name, description:work_place_description, address:work_place_address, email:work_place_email, email_public:work_place_email_public, telephone:work_place_telephone, telephone_public:work_place_telephone_public, mobile:work_place_mobile, mobile_public:work_place_mobile_public, business:business_id, latitude: postcodeData.latitude, longitude: postcodeData.longitude, place_name:postcodeData.nuts }).done(function( data ) {
 					  $('#location').val(data.id);
-					  var location_id = data.id;
-					  if($('#work_place_image').val() != ''){
-						  var formData2 = new FormData($('#work_place_details')[0]);
-						  $.ajax({
-							url: '/api/user-location-images/',
-							type: 'POST',
-							data: formData2,
-							async: false,
-							cache: false,
-							contentType: false,
-							processData: false,
-							success: function (data) {
-									console.log(data);
-									window.location.href = "/profile/list-businesses/";
-							},
-							fail: function (data){
-								var messageError = ''
-								for (var key in data.responseJSON) {
-									var obj = data.responseJSON[key];
-									messageError = messageError+obj+'<br>';
-								}
-								formAlert('danger', messageError);
+					  var formData2 = new FormData($('#work_place_details')[0]);
+					  $.ajax({
+						url: '/api/user-location-images/',
+						type: 'POST',
+						data: formData2,
+						async: false,
+						cache: false,
+						contentType: false,
+						processData: false,
+						success: function (data) {
+						  		console.log(data);
+						  		window.location.href = "/profile/list-businesses/";
+						},
+						fail: function (data){
+							var messageError = ''
+							for (var key in data.responseJSON) {
+								var obj = data.responseJSON[key];
+								messageError = messageError+obj+'<br>';
 							}
-						  });
-					  }else{
-							formData.append('location', location_id);
-						  $.ajax({
-							url: '/api/user-location-images/',
-							type: 'POST',
-							data: formData,
-							async: false,
-							cache: false,
-							contentType: false,
-							processData: false,
-							success: function (data) {
-									console.log(data);
-									window.location.href = "/profile/list-businesses/";
-							},
-							fail: function (data){
-								var messageError = ''
-								for (var key in data.responseJSON) {
-									var obj = data.responseJSON[key];
-									messageError = messageError+obj+'<br>';
-								}
-								formAlert('danger', messageError);
-							}
-						  });
-					  }
+							formAlert('danger', messageError);
+						}
+					  });
 			  })
 			  .fail(function( data ) {
 				var messageError = ''

@@ -29,7 +29,11 @@ $(function() {
 	
 	// Populate any fields that have data
 			  $.get( "/api/user-jobs/", { location:location_id ,csrftoken: getCookie('csrftoken') }).done(function( data ) {
+				  console.log(data);
 				  if(data.length != 0){
+				  $('#companyName').html(data[0].location_data.business_data.name);
+				  $('#locationName').html(data[0].location_data.name);
+				  $('#locationName').attr('href', '/profile/list-locations/?id='+data[0].location_data.business_data.id);
 					  for (var key in data) {
 						  var obj = data[key];
 						  var imageThumb = '';
@@ -41,19 +45,19 @@ $(function() {
 						  
 						  //status
 						  if(obj.status == open_status.id){
-							  var status_text = 'Job Open'
+							  var status_text = 'Open'
 						  }else if(obj.status == closed_status.id){
-							  var status_text = 'Job Closed'
+							  var status_text = 'Closed'
 						  }
 						  if(imageThumb != ''){
-							$('#list-table tbody').append('<tr data-business-id="'+obj.id+'" class="jobs-list" id="jobs-list-'+obj.id+'"><td>'+obj.title+'</td><td class="text-center"><img width="150px" src="'+imageThumb+'"></td><td>'+obj.description+'</td><td>'+status_text+'</td><td><a class="find-staff-btn btn btn-primary" href="/profile/edit-job/?id='+obj.id+'"><i class="fa fa-pencil"></i></a> <a class="delete-action-btn btn btn-primary" href="javascript:deleteRow('+obj.id+',\'user-jobs\' , \'jobs-list-\');"><i class="fa fa-trash-o"></i></a>  <a class="view-applications-btn btn btn-primary" href="/applications/?jobs='+obj.id+'">View Applicants</a>  <a class="find-staff-btn btn btn-primary" href="/find-staff/?id='+obj.id+'">Find Staff</a></td></tr>');
+							$('#list-table tbody').append('<tr data-business-id="'+obj.id+'" class="jobs-list" id="jobs-list-'+obj.id+'"><td>'+obj.title+'</td><td class="text-center"><img width="150px" src="'+imageThumb+'"></td><td class="jobTableDescription">'+obj.description+'</td><td>'+status_text+'</td><td><a class="find-staff-btn btn btn-primary" href="/profile/edit-job/?id='+obj.id+'"><i class="fa fa-pencil"></i></a> <a class="delete-action-btn btn btn-primary" href="javascript:deleteRow('+obj.id+',\'user-jobs\' , \'jobs-list-\');"><i class="fa fa-trash-o"></i></a> <a class="find-staff-btn btn btn-primary" href="/find-staff/?id='+obj.id+'">Find Staff</a> <a class="view-applications-btn btn btn-primary" href="/applications/?job='+obj.id+'">View Applicants</a> <a class="view-applications-btn btn btn-primary" href="/connections/?job='+obj.id+'">Connections</a></td></tr>');
 						  }else{
-							 $('#list-table tbody').append('<tr data-business-id="'+obj.id+'" class="jobs-list" id="jobs-list-'+obj.id+'"><td>'+obj.title+'</td><td class="text-center"><img width="150px" src="/static/web/images/no_image_available.png"></td><td>'+obj.description+'</td><td>'+status_text+'</td><td><a class="find-staff-btn btn btn-primary" href="/profile/edit-job/?id='+obj.id+'"><i class="fa fa-pencil"></i></a> <a class="delete-action-btn btn btn-primary" href="javascript:deleteRow('+obj.id+',\'user-jobs\' , \'jobs-list-\');"><i class="fa fa-trash-o"></i></a>  <a class="view-applications-btn btn btn-primary" href="/applications/?jobs='+obj.id+'">View Applicants</a> <a class="find-staff-btn btn btn-primary" href="/find-staff/?id='+obj.id+'">Find Staff</a></td></tr>');
+							 $('#list-table tbody').append('<tr data-business-id="'+obj.id+'" class="jobs-list" id="jobs-list-'+obj.id+'"><td>'+obj.title+'</td><td class="text-center"><img width="150px" src="/static/web/images/no_image_available.png"></td><td class="jobTableDescription">'+obj.description+'</td><td>'+status_text+'</td><td><a class="find-staff-btn btn btn-primary" href="/profile/edit-job/?id='+obj.id+'"><i class="fa fa-pencil"></i></a> <a class="delete-action-btn btn btn-primary" href="javascript:deleteRow('+obj.id+',\'user-jobs\' , \'jobs-list-\');"><i class="fa fa-trash-o"></i></a> <a class="find-staff-btn btn btn-primary" href="/find-staff/?id='+obj.id+'">Find Staff</a> <a class="view-applications-btn btn btn-primary" href="/applications/?job='+obj.id+'">View Applicants</a> <a class="view-applications-btn btn btn-primary" href="/connections/?job='+obj.id+'">Connections</a></td></tr>');
 						  }
 					  }
 					  $('#table-container').show();
 				  }else{
-					  
+					  $('.glyphicon-chevron-right').hide();
 					  $('#no-items-create').show();  
 				  }
 			  })

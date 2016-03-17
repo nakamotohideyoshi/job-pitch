@@ -1,4 +1,7 @@
-from django.db.models import Q, Max
+from django.db.models import F, Q, Max
+from django.contrib.gis.measure import D
+from django.contrib.gis.db.models.functions import Distance
+
 from rest_framework import viewsets, permissions, serializers
 from rest_framework.routers import DefaultRouter
 
@@ -145,7 +148,7 @@ class UserLocationViewSet(viewsets.ModelViewSet):
         return super(UserLocationViewSet, self).retrieve(request, pk)
 
     def get_queryset(self):
-        business = self.request.QUERY_PARAMS.get('business', None)
+        business = self.request.query_params.get('business', None)
         query = Location.objects.filter(business__users=self.request.user)
         if business:
             return query.filter(business__id=business)
@@ -191,7 +194,7 @@ router.register('user-job-images', UserJobImageViewSet, base_name='user-job-imag
 class UserJobViewSet(viewsets.ModelViewSet):
     class UserJobPermission(permissions.BasePermission):
         def has_permission(self, request, view):
-            pk = request.QUERY_PARAMS.get('location')
+            pk = request.query_params.get('location')
             if pk:
                 return Location.objects.filter(pk=pk, business__users__pk=int(request.user.pk)).exists()
             return True
@@ -205,7 +208,7 @@ class UserJobViewSet(viewsets.ModelViewSet):
     serializer_class = JobSerializer
     
     def get_queryset(self):
-        location = self.request.QUERY_PARAMS.get('location', None)
+        location = self.request.query_params.get('location', None)
         query = Job.objects.filter(location__business__users=self.request.user)
         if location:
             return query.filter(location__id=location)
@@ -216,7 +219,7 @@ router.register('user-jobs', UserJobViewSet, base_name='user-job')
 class JobSeekerViewSet(viewsets.ModelViewSet):
     class JobSeekerPermission(permissions.BasePermission):
         def has_permission(self, request, view):
-            pk = request.QUERY_PARAMS.get('job')
+            pk = request.query_params.get('job')
             if pk:
                 print "job pk: %s" % pk
                 return Job.objects.filter(pk=pk, location__business__users__pk=int(request.user.pk)).exists()
@@ -231,21 +234,22 @@ class JobSeekerViewSet(viewsets.ModelViewSet):
     serializer_class = JobSeekerSerializer
 
     def get_queryset(self):
-        job = self.request.QUERY_PARAMS.get('job')
+        job = self.request.query_params.get('job')
         if job:
-            job = Job.objects.select_related('sector', 'contract', 'hours').get(pk=self.request.QUERY_PARAMS['job'])
+            job = Job.objects.select_related('sector', 'contract', 'hours').get(pk=self.request.query_params['job'])
             query = JobSeeker.objects.filter(active=True).prefetch_related('pitches', 'profile').distinct()
             query = query.filter(pitches__video__isnull=False)
             query = query.exclude(applications__job=job)
             query = query.exclude(profile=None)
-            exclude_pks = self.request.QUERY_PARAMS.get('exclude')
+            exclude_pks = self.request.query_params.get('exclude')
             if exclude_pks:
                 query = query.exclude(pk__in=map(int, exclude_pks.split(',')))
             query = query.filter(Q(profile__contract=job.contract) | Q(profile__contract=None),
                                  Q(profile__hours=job.hours) | Q(profile__hours=None),
                                  profile__sectors=job.sector,
                                  )
-            # TODO location
+            query = query.annotate(distance=Distance(F('profile__latlng'), job.location.latlng))
+            query = query.filter(distance__lte=F('profile__search_radius')*D(mi=1).m)
             return query[:25]
         return JobSeeker.objects.filter(user=self.request.user)
     
@@ -348,7 +352,7 @@ class JobViewSet(viewsets.ReadOnlyModelViewSet):
         job_seeker = self.request.user.job_seeker
         job_profile = job_seeker.profile
         query = Job.objects.exclude(applications__job_seeker=job_seeker)
-        exclude_pks = self.request.QUERY_PARAMS.get('exclude')
+        exclude_pks = self.request.query_params.get('exclude')
         if exclude_pks:
             query = query.exclude(pk__in=map(int, exclude_pks.split(',')))
         if job_profile.contract_id:
@@ -357,7 +361,7 @@ class JobViewSet(viewsets.ReadOnlyModelViewSet):
             query = query.filter(hours=job_profile.hours)
         query = query.filter(sector__in=job_profile.sectors.all())
         query = query.filter(status__name="OPEN")
-        # TODO location
+        query = query.filter(location__latlng__distance_lte=(job_profile.latlng, D(mi=job_profile.search_radius)))
         return query
     
     def perform_create(self, serializer):
@@ -471,7 +475,6 @@ class ApplicationViewSet(viewsets.ModelViewSet):
                 return self.update_shortlist_serializer_class
             if self.request.data.get('status') is not None:
                 return self.update_status_serializer_class
-            return None
         return self.serializer_class
     
     def get_queryset(self):
@@ -492,15 +495,15 @@ class ApplicationViewSet(viewsets.ModelViewSet):
                                        )
         if self.get_role() is self.RECRUITER:
             query = query.filter(job__location__business__users=self.request.user)
-            job = self.request.QUERY_PARAMS.get('job')
+            job = self.request.query_params.get('job')
             if job:
                 query = query.filter(job__pk=job)
-                shortlisted = self.request.QUERY_PARAMS.get('shortlisted')
+                shortlisted = self.request.query_params.get('shortlisted')
                 if shortlisted == '1':
                     query = query.filter(shortlisted=True)
                 else:
                     query = query.order_by('-shortlisted')
-                status = self.request.QUERY_PARAMS.get('status')
+                status = self.request.query_params.get('status')
                 if status is not None:
                     query = query.filter(status__pk=status)
         else:

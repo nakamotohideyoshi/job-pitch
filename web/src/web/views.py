@@ -46,9 +46,15 @@ def create_profile_job_seeker(request):
 
 def create_business(request):
     return render(request, 'profile/create-business.html')	
+	
+def edit_business(request):
+    return render(request, 'profile/edit-business.html')	
 
 def create_profile_location(request):
     return render(request, 'profile/create-location.html')	
+	
+def edit_location(request):
+    return render(request, 'profile/edit-location.html')	
 	
 def edit_profile_job_seeker(request):
     return render(request, 'profile/edit-job-seeker.html')	
@@ -76,7 +82,10 @@ def messages(request):
 	
 def applications(request):
     return render(request, 'applications.html')
-
+	
+def connections(request):
+    return render(request, 'connections.html')
+	
 def job_preferences(request):
     return render(request, 'profile/job-preferences.html')
 	
@@ -90,7 +99,10 @@ def dashboard(request):
     return render(request, 'dashboard.html')
 	
 def edit_job_preferences(request):
-    return render(request, 'profile/edit-job-preferences.html')	
+    return render(request, 'profile/edit-job-preferences.html')
+	
+def edit_pitch(request):
+    return render(request, 'profile/edit-pitch.html')	
 	
 def find_staff(request):
     return render(request, 'find-staff.html')		

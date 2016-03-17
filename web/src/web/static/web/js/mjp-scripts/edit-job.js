@@ -93,6 +93,7 @@ $(function() {
 			  
 	//Form submit code
  	$('#create-job').submit(function( event ) {
+		$('.btn-primary').attr( "disabled", true );
 		event.preventDefault();
 		var title = $('#title').val();
 		var description = $('#description').val();
@@ -106,13 +107,18 @@ $(function() {
 		}
 			$.put( "/api/user-jobs/"+job_id, { title: title, description: description, sector: job_sector, contract: contract, hours: hours, location:location_id, status:status_job, csrftoken: getCookie('csrftoken') }).done(function( data ) {
 				$('#job_id').val(data.id);
-				
-								window.location.href = "/profile/list-jobs/?id="+location_id;
+								formAlert('success', 'Successfully Updated! <br><a href="/profile/list-jobs/?id='+location_id+'">Back to Job List</a>');
+								//window.location.href = "/profile/list-jobs/?id="+location_id;
 
 				
 			  })
 			  .fail(function( data ) {
-				console.log( data.responseJSON );
+				var messageError = ''
+				for (var key in data.responseJSON) {
+					var obj = data.responseJSON[key];
+					messageError = messageError+obj+'<br>';
+				}
+				formAlert('danger', messageError);
 			  });
 	});
 	

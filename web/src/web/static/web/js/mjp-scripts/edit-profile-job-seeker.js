@@ -113,6 +113,7 @@ $(function() {
 	
 	//Form submit code
  	$('#profile').submit(function( event ) {
+		$('.btn-primary').attr( "disabled", true );
 		event.preventDefault();
 		var first_name = $('#first_name').val();
 		var last_name = $('#last_name').val();
@@ -173,6 +174,10 @@ $(function() {
 			}).done(function( data ) {
 				console.log( data );
 				formAlert('success', 'Profile Updated!');
+				setTimeout(function () {
+									$('.btn-primary').attr( "disabled", false );
+									$('.alert').hide();
+								}, 5000);
 			  }).fail(function( data ) {
 				var messageError = ''
 				for (var key in data.responseJSON) {

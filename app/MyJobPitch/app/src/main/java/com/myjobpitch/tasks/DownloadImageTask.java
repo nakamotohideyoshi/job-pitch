@@ -54,7 +54,7 @@ public class DownloadImageTask extends AsyncTask<Uri, Void, Bitmap> {
                 in.close();
             }
         } catch (Exception e) {
-            Log.e("DownloadImageTask", e.getMessage());
+            Log.e("DownloadImageTask", ""+e.getMessage());
             e.printStackTrace();
         }
         return bitmap;

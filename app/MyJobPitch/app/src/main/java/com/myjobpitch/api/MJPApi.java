@@ -152,34 +152,40 @@ public class MJPApi {
 	}
 
     private HttpEntity<Void> createAuthenticatedRequest() {
-        return createAuthenticatedRequest((Void)null);
+        return createAuthenticatedRequest((Void) null);
     }
-
-	public AuthToken login(String username, String password) {
-        if (this.token != null) {
-            Log.e("MJPApi", "Already logged in!");
-            this.token = null;
-            this.user = null;
-        }
-		Login login = new Login(username, password);
-		this.token = rest.postForObject(getAuthUrl("login"), login, AuthToken.class);
-		return this.token;
-	}
 
     public boolean isAuthenticated() {
         return this.token != null;
     }
 
-    public User register(String username, String password1, String password2) throws MJPApiException {
+    public AuthToken login(String username, String password) throws MJPApiException {
+        Login login = new Login(username, password);
+        URI url = getAuthUrl("login");
+        return doAuthentication(login, url);
+    }
+
+    public AuthToken register(String username, String password1, String password2) throws MJPApiException {
         Registration registration = new Registration(username, password1, password2);
+        URI url = getAuthUrl("registration");
+        return doAuthentication(registration, url);
+    }
+
+    private AuthToken doAuthentication(Object credentials, URI url) throws MJPApiException {
+        if (this.token != null) {
+            Log.e("MJPApi", "Already logged in!");
+            this.token = null;
+            this.user = null;
+        }
         try {
-            return rest.postForObject(getAuthUrl("registration"), registration, User.class);
+            this.token = rest.postForObject(url, credentials, AuthToken.class);
         } catch (HttpClientErrorException e) {
             if (e.getStatusCode().value() == 400) {
                 throw new MJPApiException(e);
             }
             throw e;
         }
+        return this.token;
     }
 
     public void logout() {

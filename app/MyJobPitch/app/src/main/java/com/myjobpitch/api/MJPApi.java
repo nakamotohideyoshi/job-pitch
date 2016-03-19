@@ -8,8 +8,8 @@ import com.myjobpitch.api.auth.Registration;
 import com.myjobpitch.api.auth.User;
 import com.myjobpitch.api.data.Application;
 import com.myjobpitch.api.data.ApplicationForCreation;
-import com.myjobpitch.api.data.ApplicationStatus;
 import com.myjobpitch.api.data.ApplicationShortlistUpdate;
+import com.myjobpitch.api.data.ApplicationStatus;
 import com.myjobpitch.api.data.ApplicationStatusUpdate;
 import com.myjobpitch.api.data.Business;
 import com.myjobpitch.api.data.Contract;
@@ -33,19 +33,15 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
-import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.http.converter.FormHttpMessageConverter;
 import org.springframework.http.converter.ResourceHttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
-import org.springframework.web.client.DefaultResponseErrorHandler;
 import org.springframework.web.client.HttpClientErrorException;
-import org.springframework.web.client.ResponseErrorHandler;
 import org.springframework.web.client.RestTemplate;
 
-import java.io.IOException;
 import java.lang.reflect.Array;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -102,7 +98,7 @@ public class MJPApi {
 	}
 
 	public MJPApi() {
-		this("http://mjp.digitalcrocodile.com:8000/");
+		this("http://ec2-52-31-145-95.eu-west-1.compute.amazonaws.com/");
 	}
 
     private URI getTypeUrl(String path) {

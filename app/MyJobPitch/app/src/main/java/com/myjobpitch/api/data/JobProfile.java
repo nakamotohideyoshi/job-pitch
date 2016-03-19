@@ -11,6 +11,7 @@ public class JobProfile extends MJPObjectWithDates {
     private Integer hours;
     private String place_name;
     private String place_id;
+    private String postcode_lookup;
     private Double longitude;
     private Double latitude;
     private Integer search_radius;
@@ -61,6 +62,14 @@ public class JobProfile extends MJPObjectWithDates {
 
     public void setPlace_id(String place_id) {
         this.place_id = place_id;
+    }
+
+    public String getPostcode_lookup() {
+        return postcode_lookup;
+    }
+
+    public void setPostcode_lookup(String postcode_lookup) {
+        this.postcode_lookup = postcode_lookup;
     }
 
     public Double getLongitude() {

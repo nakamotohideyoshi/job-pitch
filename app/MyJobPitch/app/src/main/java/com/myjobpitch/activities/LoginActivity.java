@@ -35,12 +35,12 @@ import com.myjobpitch.BuildConfig;
 import com.myjobpitch.MJPApplication;
 import com.myjobpitch.R;
 import com.myjobpitch.api.MJPApi;
+import com.myjobpitch.api.MJPApiException;
 import com.myjobpitch.api.auth.User;
 import com.myjobpitch.api.data.Business;
 import com.myjobpitch.tasks.APITask;
 import com.myjobpitch.tasks.APITaskListener;
 
-import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestClientException;
 
 import java.util.ArrayList;
@@ -329,11 +329,8 @@ public class LoginActivity extends MJPProgressActivity implements LoaderCallback
             try {
                 try {
                     api.login(mUsername, mPassword);
-                } catch (HttpClientErrorException e) {
-                    // Invalid credentials
-                    if (e.getStatusCode().value() == 400)
-                        return false;
-                    throw e;
+                } catch (MJPApiException e) {
+                    return false;
                 }
                 try {
                     // Load user data

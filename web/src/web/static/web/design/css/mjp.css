@@ -921,6 +921,14 @@ input {
 .formFieldErrorInField{
 	border:#d43f3a 2px solid;	
 }
+
+#locationSelect{
+	display:none;
+}
+#mainFormAreaCreateJob{
+	display:none;
+}
+
 /* Only show the "mobile menu" fix */
 @media (max-width: 3000px) {
     .navbar-header {

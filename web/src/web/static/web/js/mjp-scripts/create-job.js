@@ -1,3 +1,14 @@
+function populateCompanies(){
+	$.get( "/api/user-businesses/", { token: getCookie('key') ,csrftoken: getCookie('csrftoken') }).done(function( data ) {
+		console.log(data);
+		for (var key in data) {
+			var obj = data[key];
+			$('#company').append('<option value="'+obj.id+'">'+obj.name+'</options>');
+		}
+	});
+}
+
+
 $(function() {
 	// Run login check funtion with auto-redirect
 	checkLogin(true);
@@ -7,7 +18,73 @@ $(function() {
 	
 	//variables defined
 	var open_job_status;
-	$.get( "/api/user-locations/"+location_id, { token: getCookie('key') ,csrftoken: getCookie('csrftoken') }).done(function( data ) {$('#currentLogo').attr('src', data.images[0].thumbnail).show(); });
+	
+	//Populate Companies and Locations selects
+	populateCompanies();
+	
+	$( "#company" ).change(function() {
+		if($(this).val() != ''){
+		   $.get( "/api/user-locations/", { business:$(this).val() ,csrftoken: getCookie('csrftoken') }).done(function( data ) {
+			   for (var key in data) {
+					var obj = data[key];
+					$('#location').append('<option value="'+obj.id+'">'+obj.name+'</options>');
+				}
+			   $('#locationSelect').show();
+			   })
+			.fail(function( data ) {
+				console.log( data );
+				
+			});
+		}else{
+			$('#locationSelect').hide();
+			$( "#location" ).val('');
+		}
+	});
+	
+	$( "#location" ).change(function() {
+		if($(this).val() != ''){
+			$('#mainFormAreaCreateJob').show();	
+			location_id = $(this).val();
+			$.get( "/api/user-locations/"+location_id, { token: getCookie('key') ,csrftoken: getCookie('csrftoken') }).done(function( data ) {
+				$('#currentLogo').attr('src', data.images[0].thumbnail).show();
+			});	
+		}else{
+			$('#locationSelect').hide();
+			$('#mainFormAreaCreateJob').hide();	
+			$( "#location" ).val('');
+		}
+	});
+	
+	
+	
+	//if location id is set then go ahead with populating the fields and do other functions
+	if(typeof location_id !== "undefined"){
+
+		$.get( "/api/user-locations/"+location_id, { token: getCookie('key') ,csrftoken: getCookie('csrftoken') }).done(function( data ) {
+			$('#currentLogo').attr('src', data.images[0].thumbnail).show();
+		});	
+		
+		$.get( "/api/user-locations/"+location_id, { token: getCookie('key') ,csrftoken: getCookie('csrftoken') }).done(function( data ) {
+			
+			$('#company').val(data.business_data.id);
+			
+				$.get( "/api/user-locations/", { business:$('#company').val() ,csrftoken: getCookie('csrftoken') }).done(function( data ) {
+				   for (var key in data) {
+						var obj = data[key];
+						$('#location').append('<option value="'+obj.id+'">'+obj.name+'</options>');
+					}
+					$('#location').val(location_id);
+				   $('#locationSelect').show();
+				   
+				   })
+				.fail(function( data ) {
+					console.log( data );
+					
+				});
+			$('#mainFormAreaCreateJob').show();	
+		});	
+	
+	}
 	
 	//Populate selects
 	$.get( "/api/hours/", { csrftoken: getCookie('csrftoken') }).done(function( data ) {

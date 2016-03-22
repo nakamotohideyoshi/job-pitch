@@ -14,10 +14,22 @@
                                     Job Details
                                 </h1>
                                 <div class="alert" role="alert"></div>
+                               
 								<form role="form"  method="post" id="create-job" enctype="multipart/form-data">
-																								
-									<div class="alert" role="alert"></div>
-																	
+                                	 <div class="form-group">
+												<label>Company:</label>
+                                                <select class="form-control" required name="company" id="company">
+                                                    <option value="" selected="">Please Select</option>									
+                                                </select>
+                                </div>
+                                <div class="form-group" id="locationSelect">
+                                                <label>Location:</label>
+                                                <select class="form-control" required name="location" id="location">
+                                                    <option value="" selected="">Please Select</option>									
+                                                </select>
+									</div>
+																						
+									<div id="mainFormAreaCreateJob">			
 									<div class="form-group">
 											<input type="text" class="form-control" required placeholder="Title" name="title" id="title">
 									</div>
@@ -56,7 +68,7 @@
 									<input type="hidden" name="job" id="job_id" value="0">
 									
 									<button type="submit" class="btn btn-primary form-buttons">Save</button>
-									
+									</div>
 									{% csrf_token %}
 								</form>
 								

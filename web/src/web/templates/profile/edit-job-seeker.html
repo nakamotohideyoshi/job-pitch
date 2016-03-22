@@ -27,16 +27,16 @@
                                 	<div id="account_details_active_only">
 									<div class="form-group">
 										<label>Profile:</label>
-											<input type="text" class="form-control" required placeholder="First Name" name="first_name" id="first_name">
+											<input type="text" class="form-control" required placeholder="First Name" name="first_name" id="first_name" data-error-field="first_name">
 									</div>
 									
 									<div class="form-group">
-											<input type="text" class="form-control" required placeholder="Last Name" name="last_name" id="last_name">
+											<input type="text" class="form-control" required placeholder="Last Name" name="last_name" id="last_name" data-error-field="last_name">
 									</div>
 									
 									<div class="form-group">
 										<div class="col-md-10">
-											<input type="text" class="form-control" placeholder="Email (optional)" name="email" id="email">
+											<input type="text" class="form-control"  data-error-field="email" placeholder="Email (optional)" name="email" id="email">
 										</div>
 										<div class="col-md-2">
 											<label class="checkbox-inline">
@@ -47,7 +47,7 @@
 									
 									<div class="form-group">
 										<div class="col-md-10">
-											<input type="text" class="form-control" placeholder="Telephone (optional)" name="telephone" id="telephone">
+											<input type="text" class="form-control" placeholder="Telephone (optional)" data-error-field="telephone" name="telephone" id="telephone">
 										</div>
 										<div class="col-md-2">
 											<label class="checkbox-inline">
@@ -58,7 +58,7 @@
 									
 									<div class="form-group">
 										<div class="col-md-10">
-											<input type="text" class="form-control" placeholder="Mobile (optional)" name="mobile" id="mobile">
+											<input type="text" data-error-field="mobile" class="form-control" placeholder="Mobile (optional)" name="mobile" id="mobile">
 										</div>
 										<div class="col-md-2">
 											<label class="checkbox-inline">
@@ -69,7 +69,7 @@
 									
 									<div class="form-group">
 										<div class="col-md-10">
-											<input type="text" class="form-control" placeholder="Age (optional)" name="age" id="age">
+											<input type="text" data-error-field="age" class="form-control" placeholder="Age (optional)" name="age" id="age">
 										</div>
 										<div class="col-md-2">
 											<label class="checkbox-inline">
@@ -80,7 +80,7 @@
 									
 									<div class="form-group">
 										<div class="col-md-10">
-											<select class="form-control" name="sex" id="sex">
+											<select class="form-control" data-error-field="sex" name="sex" id="sex">
 												<option value="" selected="">Sex (optional)</option>										
 											</select>
 										</div>
@@ -93,7 +93,7 @@
 									
 									<div class="form-group">
 										<div class="col-md-10">
-											<select class="form-control" name="nationality" id="nationality">
+											<select class="form-control" data-error-field="nationality" name="nationality" id="nationality">
 											  <option value="" selected="">Nationality (optional)</option>
 											</select>
 										</div>
@@ -106,12 +106,12 @@
 									<div class="form-group">
 												<label>Upload CV:</label>
                                                 <a href="#" target="_blank" id="CVcurrent">View Current CV</a>
-                                                <input type="file"  class="form-control" name="cv_upload" id="cv_upload">
+                                                <input type="file" data-error-field="cv"  class="form-control" name="cv_upload" id="cv_upload">
 												<input type="hidden" name="order" value="0">
 									</div>
                                     <div class="form-group">
 										<div class="col-md-12">
-											<textarea class="form-control" placeholder="Description (Required) - Tell us a little about you in less than 50 words. For example, work experience and personality." name="description" id="description" maxlength="250" rows="4"></textarea>
+											<textarea class="form-control" placeholder="Description (Required) - Tell us a little about you in less than 50 words. For example, work experience and personality." name="description" id="description" data-error-field="description" maxlength="250" rows="4"></textarea>
                                             <div id="textarea_feedback"></div>
 										</div>
 									</div>

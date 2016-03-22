@@ -43,6 +43,9 @@ $(function() {
 		job_seeker = data.job_seeker;
 		$.get( "/api/job-seekers/"+job_seeker, { csrftoken: getCookie('csrftoken') }).done(function( data ) {
 			profile_id = data.profile;
+			if(data.profile == null){
+				window.location.href = "/profile/job-preferences/";
+			}
 			$.get( "/api/job-profiles/"+data.profile, { csrftoken: getCookie('csrftoken') }).done(function( data ) {
 				console.log(data);
 				$('#contract').val(data.contract);

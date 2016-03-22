@@ -912,7 +912,15 @@ input {
 	width: 100%;
 }
 
-
+.formFieldError{
+	margin-top:10px;
+	padding-left:13px;
+	padding-top:13px;
+	padding-bottom:13px;
+}
+.formFieldErrorInField{
+	border:#d43f3a 2px solid;	
+}
 /* Only show the "mobile menu" fix */
 @media (max-width: 3000px) {
     .navbar-header {

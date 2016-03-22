@@ -173,6 +173,7 @@ $(function() {
 				processData: false
 			}).done(function( data ) {
 				console.log( data );
+				clearErrors();
 				formAlert('success', 'Profile Updated!');
 				setTimeout(function () {
 									$('.btn-primary').attr( "disabled", false );
@@ -182,9 +183,15 @@ $(function() {
 				var messageError = ''
 				for (var key in data.responseJSON) {
 					var obj = data.responseJSON[key];
-					messageError = messageError+obj+'<br>';
-				}
-				formAlert('danger', messageError);
+					if(key == 'non_field_errors'){
+							messageError = messageError+obj+'<br>';
+						}
+						fieldError(obj,key);
+					}
+					if(messageError != ''){
+						formAlert('danger', messageError);
+					}
+				$('.btn-primary').attr( "disabled", false );
 			  });
 			
 			/*$.put( "/api/job-seekers/"+job_seeker_id+"/", { csrftoken: getCookie('csrftoken'), first_name: first_name, last_name: last_name, email: email, email_public: email_public, telephone: telephone, telephone_public: telephone_public, mobile: mobile, mobile_public: mobile_public,age: age,age_public: age_public,sex: sex,sex_public: sex_public, nationality: nationality, description:description, nationality_public: nationality_public, active:active_account,cv_upload:cv_upload }).done(function( data ) {

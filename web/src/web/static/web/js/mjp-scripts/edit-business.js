@@ -61,6 +61,7 @@ $(function() {
 						messageError = messageError+obj+'<br>';
 					}
 					formAlert('danger', messageError);
+					$('.btn-primary').attr( "disabled", false );
 			  });
 	});
 	
@@ -121,6 +122,7 @@ $(function() {
 								messageError = messageError+obj+'<br>';
 							}
 							formAlert('danger', messageError);
+							$('.btn-primary').attr( "disabled", false );
 						}
 					  });
 			  })
@@ -131,6 +133,7 @@ $(function() {
 					messageError = messageError+obj+'<br>';
 				}
 				formAlert('danger', messageError);
+				$('.btn-primary').attr( "disabled", false );
 			  });
 			});
 	});

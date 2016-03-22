@@ -86,9 +86,15 @@ $(function() {
 				var messageError = ''
 				for (var key in data.responseJSON) {
 					var obj = data.responseJSON[key];
-					messageError = messageError+obj+'<br>';
+					if(key == 'non_field_errors'){
+						messageError = messageError+obj+'<br>';
+					}
+					fieldError(obj,key);
 				}
-				formAlert('danger', messageError);
+					if(messageError != ''){
+						formAlert('danger', messageError);
+					}
+				$('.btn-primary').attr( "disabled", false );
 			  });
 			/*
 			

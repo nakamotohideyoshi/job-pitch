@@ -156,6 +156,16 @@ function formAlert(type, message){
 	$('.alert').html(message);
 	$('.alert').show();
 }
+function fieldError(error,field){
+	$('.formFieldError').remove();
+	$('.formFieldErrorInField').removeClass('formFieldErrorInField');
+	$('*[data-error-field="'+field+'"]').parent("div").append('<p class="formFieldError bg-danger">'+error+'</p>');
+	$('*[data-error-field="'+field+'"]').addClass('formFieldErrorInField');
+}
+function clearErrors(){
+	$('.formFieldError').remove();
+	$('.formFieldErrorInField').removeClass('formFieldErrorInField');
+}
 
 function deleteRow(id, apiFunction, rowPrefix){
 	bootbox.confirm("Are you sure?", function(result) {

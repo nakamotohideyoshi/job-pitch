@@ -30,6 +30,7 @@ $(function() {
 	$.get( "/api/sectors/", { csrftoken: getCookie('csrftoken') }).done(function( data ) {
 		for (var key in data) {
 			var obj = data[key];
+			console.log(obj);
 			$('#sectors').append('<option value="'+obj.id+'">'+obj.name+'</options>');
 		}
 	})

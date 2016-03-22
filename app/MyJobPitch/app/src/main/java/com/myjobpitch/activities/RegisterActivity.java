@@ -158,8 +158,6 @@ public class RegisterActivity extends MJPProgressActivity {
                     return null;
                 }
 
-                api.login(username, password1);
-
                 try {
                     api.getUser();
                 } catch (Exception e) {

@@ -35,12 +35,12 @@ import com.myjobpitch.BuildConfig;
 import com.myjobpitch.MJPApplication;
 import com.myjobpitch.R;
 import com.myjobpitch.api.MJPApi;
+import com.myjobpitch.api.MJPApiException;
 import com.myjobpitch.api.auth.User;
 import com.myjobpitch.api.data.Business;
 import com.myjobpitch.tasks.APITask;
 import com.myjobpitch.tasks.APITaskListener;
 
-import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestClientException;
 
 import java.util.ArrayList;
@@ -140,6 +140,7 @@ public class LoginActivity extends MJPProgressActivity implements LoaderCallback
             versionView.setTextColor(getResources().getColor(android.R.color.holo_red_dark));
             findViewById(R.id.debug).setVisibility(View.VISIBLE);
             String urls[] = new String[] {
+                    "http://ec2-52-31-145-95.eu-west-1.compute.amazonaws.com/",
                     "http://mjp.digitalcrocodile.com:8000/",
                     "http://mjp.digitalcrocodile.com:8001/",
                     "http://mjp.digitalcrocodile.com/",
@@ -328,11 +329,8 @@ public class LoginActivity extends MJPProgressActivity implements LoaderCallback
             try {
                 try {
                     api.login(mUsername, mPassword);
-                } catch (HttpClientErrorException e) {
-                    // Invalid credentials
-                    if (e.getStatusCode().value() == 400)
-                        return false;
-                    throw e;
+                } catch (MJPApiException e) {
+                    return false;
                 }
                 try {
                     // Load user data

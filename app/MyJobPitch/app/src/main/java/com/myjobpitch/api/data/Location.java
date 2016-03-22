@@ -18,6 +18,7 @@ public class Location extends MJPObjectWithDates {
     private boolean telephone_public;
     private String place_name;
     private String place_id;
+    private String postcode_lookup;
     private String place_address;
     private Double longitude;
     private Double latitude;
@@ -116,6 +117,14 @@ public class Location extends MJPObjectWithDates {
 
     public String getPlace_id() {
         return place_id;
+    }
+
+    public String getPostcode_lookup() {
+        return postcode_lookup;
+    }
+
+    public void setPostcode_lookup(String postcode_lookup) {
+        this.postcode_lookup = postcode_lookup;
     }
 
     public void setLongitude(Double longitude) {

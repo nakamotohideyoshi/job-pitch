@@ -8,8 +8,8 @@ import com.myjobpitch.api.auth.Registration;
 import com.myjobpitch.api.auth.User;
 import com.myjobpitch.api.data.Application;
 import com.myjobpitch.api.data.ApplicationForCreation;
-import com.myjobpitch.api.data.ApplicationStatus;
 import com.myjobpitch.api.data.ApplicationShortlistUpdate;
+import com.myjobpitch.api.data.ApplicationStatus;
 import com.myjobpitch.api.data.ApplicationStatusUpdate;
 import com.myjobpitch.api.data.Business;
 import com.myjobpitch.api.data.Contract;
@@ -33,19 +33,15 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
-import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.http.converter.FormHttpMessageConverter;
 import org.springframework.http.converter.ResourceHttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
-import org.springframework.web.client.DefaultResponseErrorHandler;
 import org.springframework.web.client.HttpClientErrorException;
-import org.springframework.web.client.ResponseErrorHandler;
 import org.springframework.web.client.RestTemplate;
 
-import java.io.IOException;
 import java.lang.reflect.Array;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -102,7 +98,7 @@ public class MJPApi {
 	}
 
 	public MJPApi() {
-		this("http://mjp.digitalcrocodile.com:8000/");
+		this("http://ec2-52-31-145-95.eu-west-1.compute.amazonaws.com/");
 	}
 
     private URI getTypeUrl(String path) {
@@ -156,34 +152,40 @@ public class MJPApi {
 	}
 
     private HttpEntity<Void> createAuthenticatedRequest() {
-        return createAuthenticatedRequest((Void)null);
+        return createAuthenticatedRequest((Void) null);
     }
-
-	public AuthToken login(String username, String password) {
-        if (this.token != null) {
-            Log.e("MJPApi", "Already logged in!");
-            this.token = null;
-            this.user = null;
-        }
-		Login login = new Login(username, password);
-		this.token = rest.postForObject(getAuthUrl("login"), login, AuthToken.class);
-		return this.token;
-	}
 
     public boolean isAuthenticated() {
         return this.token != null;
     }
 
-    public User register(String username, String password1, String password2) throws MJPApiException {
+    public AuthToken login(String username, String password) throws MJPApiException {
+        Login login = new Login(username, password);
+        URI url = getAuthUrl("login");
+        return doAuthentication(login, url);
+    }
+
+    public AuthToken register(String username, String password1, String password2) throws MJPApiException {
         Registration registration = new Registration(username, password1, password2);
+        URI url = getAuthUrl("registration");
+        return doAuthentication(registration, url);
+    }
+
+    private AuthToken doAuthentication(Object credentials, URI url) throws MJPApiException {
+        if (this.token != null) {
+            Log.e("MJPApi", "Already logged in!");
+            this.token = null;
+            this.user = null;
+        }
         try {
-            return rest.postForObject(getAuthUrl("registration"), registration, User.class);
+            this.token = rest.postForObject(url, credentials, AuthToken.class);
         } catch (HttpClientErrorException e) {
             if (e.getStatusCode().value() == 400) {
                 throw new MJPApiException(e);
             }
             throw e;
         }
+        return this.token;
     }
 
     public void logout() {

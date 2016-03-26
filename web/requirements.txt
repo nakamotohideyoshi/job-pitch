@@ -2,3 +2,4 @@
 six
 requests
 Pillow
+psycopg2

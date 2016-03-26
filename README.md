@@ -58,6 +58,5 @@ cd /vagrant/src/
 ./manage.py runserver 0.0.0.0:8000
 ```
 
-The server should now be accessible from the IP of your VM on port 8000, for example:
+The server should now be accessible from http://127.0.0.1:8080/
 
-http://1.2.3.4:8000/

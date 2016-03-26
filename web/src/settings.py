@@ -55,6 +55,19 @@ INSTALLED_APPS = (
     'web',
 )
 
+# Database
+# https://docs.djangoproject.com/en/1.6/ref/settings/#databases
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.contrib.gis.db.backends.postgis',
+        'NAME': 'mjp',
+        'USER': 'mjp',
+        'PASSWORD': 'SGe9+UNoSam/',
+        'HOST': 'localhost',
+        'PORT': '',
+    }
+}
+
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',

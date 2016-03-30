@@ -58,6 +58,7 @@ $(function() {
 									$('.business-link').show();
 								}else{
 									$('.business-link').hide();
+									$('.job-seeker-link').show();
 								}
 							  
 					  })

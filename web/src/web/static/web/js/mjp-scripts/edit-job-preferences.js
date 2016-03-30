@@ -78,12 +78,6 @@ $(function() {
 				$('#longitude').val(postcodeData.longitude);
 				$('#place_name').val(postcodeData.nuts);
 				$('#postcode_lookup').val(location);
-				/*$.put( "/api/job-profiles/"+profile_id+"/", { latitude: postcodeData.latitude, longitude: postcodeData.longitude, postcode_lookup: location, place_name: postcodeData.nuts, search_radius: search_radius,  job_seeker: job_seeker, csrftoken: getCookie('csrftoken'), contract:contract, hours:hours, sectors:sectors }).done(function( data ) {
-					formAlert('success', 'Successfully Updated!');			
-			  	})
-			  	.fail(function( data ) {
-					console.log( data.responseJSON );
-			  	});*/
 				var formData = new FormData($('#job-preferences')[0]);
 					  $.ajax({
 						url: "/api/job-profiles/"+profile_id+"/",
@@ -97,8 +91,7 @@ $(function() {
 						  		console.log(data);
 								formAlert('success', 'Successfully Updated!');								
 								setTimeout(function () {
-									$('.btn-primary').attr( "disabled", false );
-									$('.alert').hide();
+									window.location.href = "/jobs/";
 								}, 5000);
 						}
 					  });

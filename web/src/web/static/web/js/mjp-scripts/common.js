@@ -189,6 +189,20 @@ function deleteRow(id, apiFunction, rowPrefix){
 	});
 }
 
+function deleteRowApplication(id, rowPrefix){
+	bootbox.confirm("Are you sure?", function(result) {
+		$.ajax({
+			url: "/api/applications/"+id+"/",
+			type: 'PUT',
+			data:{ csrftoken: getCookie('csrftoken'), status:3 },
+			success: function(result) {
+				console.log(rowPrefix+id);
+				$('#'+rowPrefix+id).fadeOut(250);
+			}
+			});
+	});
+}
+
 //check if a job seeker account is active. Returns true|false
 
 function account_active_check(){

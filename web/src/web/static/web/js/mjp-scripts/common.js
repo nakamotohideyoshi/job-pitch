@@ -24,6 +24,8 @@ function deleteCookie(cname){
 
 //get lat long and other data from postcode
 function postcodeLocationData(postcode, handleData){
+	console.log(postcode);
+	if(postcode != ''){
 		$.ajax({ cache: false,
 			url: "http://api.postcodes.io/postcodes/"+postcode,
 			success: function (data) {
@@ -32,9 +34,15 @@ function postcodeLocationData(postcode, handleData){
 			error: function (data) {
 				var response = JSON.parse(data.responseText);
 				console.log(response.error);
-				formAlert('danger', response.error);
+				fieldError('Please enter a valid postcode.', 'postcode');
+				//formAlert('danger', 'Please enter a valid postcode.');
 			}
 		});
+	}else{
+		console.log('hit');
+		fieldError('Please enter a postcode.', 'postcode');
+		$('.btn-primary').attr( "disabled", false );
+	}
 }
 
 //if redirect is true, send user to login

@@ -17,16 +17,16 @@
 									<form role="form" method="post" id="work_place_details" enctype="multipart/form-data">
 										<div class="form-group">
 											<label>Work Place & Details:</label>
-												<input type="text"  class="form-control" placeholder="Name" name="work_place_name" id="work_place_name">
+												<input type="text"  class="form-control" placeholder="Name" name="work_place_name" id="work_place_name" required="required" data-error-field="name">
 										</div>
 										
 										<div class="form-group">
-												<textarea type="text"  class="form-control" required name="work_place_description" id="work_place_description" placeholder="Please describe what size of business you are, how many employees you have and what it is like to work at your company" maxlength="500" rows="4"></textarea>
+												<textarea type="text"  class="form-control" required name="work_place_description" id="work_place_description" placeholder="Please describe what size of business you are, how many employees you have and what it is like to work at your company" maxlength="500" rows="4" data-error-field="description"></textarea>
 										</div>
 										
 										<div class="form-group">
 											<div class="col-md-10">
-												<input type="text" class="form-control" placeholder="Address (optional)" name="work_place_address" id="work_place_address">
+												<input type="text" class="form-control" placeholder="Address (optional)" name="work_place_address" id="work_place_address" data-error-field="address">
 											</div>
 											<div class="col-md-2">
 												<label class="checkbox-inline">
@@ -37,7 +37,7 @@
 										
 										<div class="form-group">
 											<div class="col-md-10">
-												<input type="text" class="form-control" placeholder="Email" name="work_place_email" id="work_place_email" required="required">
+												<input type="text" class="form-control" placeholder="Email" name="work_place_email" id="work_place_email" required="required" data-error-field="email">
 											</div>
 											<div class="col-md-2">
 												<label class="checkbox-inline">
@@ -48,7 +48,7 @@
 										
 										<div class="form-group">
 											<div class="col-md-10">
-												<input type="text" class="form-control" placeholder="Telephone (optional)" name="work_place_telephone" id="work_place_telephone">
+												<input type="text" class="form-control" placeholder="Telephone (optional)" name="work_place_telephone" id="work_place_telephone" data-error-field="telephone">
 											</div>
 											<div class="col-md-2">
 												<label class="checkbox-inline">
@@ -59,7 +59,7 @@
 										
 										<div class="form-group">
 											<div class="col-md-10">
-												<input type="text" class="form-control" placeholder="Mobile (optional)" name="work_place_mobile" id="work_place_mobile">
+												<input type="text" class="form-control" placeholder="Mobile (optional)" name="work_place_mobile" id="work_place_mobile" data-error-field="mobile">
 											</div>
 											<div class="col-md-2">
 												<label class="checkbox-inline">
@@ -69,7 +69,7 @@
 										</div>
 										
 										<div class="form-group">
-												<input type="text" class="form-control" placeholder="Postcode (required)" name="work_place_location" id="work_place_location">
+												<input type="text" class="form-control" placeholder="Postcode (required)" name="work_place_location"  id="work_place_location" data-error-field="postcode">
 										</div>
 										
 										<div class="form-group">

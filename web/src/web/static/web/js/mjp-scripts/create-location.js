@@ -11,6 +11,7 @@ $(function() {
 	 $.get( "/api/user-businesses/"+business_id, { token: getCookie('key') ,csrftoken: getCookie('csrftoken') }).done(function( data ) { $('#currentLogo').attr('src', data.images[0].thumbnail).show(); });
 	
 	$('#work_place_details').submit(function( event ) {
+		clearErrors();
 		$('.btn-primary').attr( "disabled", true );
 		event.preventDefault();
 			
@@ -100,13 +101,25 @@ $(function() {
 						  }
 				  })
 				  .fail(function( data ) {
-					var messageError = ''
+					/*var messageError = ''
 					for (var key in data.responseJSON) {
 						var obj = data.responseJSON[key];
 						messageError = messageError+obj+'<br>';
 					}
 					formAlert('danger', messageError);
-					$('.btn-primary').attr( "disabled", false );
+					$('.btn-primary').attr( "disabled", false );*/
+					var messageError = ''
+				for (var key in data.responseJSON) {
+					var obj = data.responseJSON[key];
+					if(key == 'non_field_errors'){
+						messageError = messageError+obj+'<br>';
+					}
+					fieldError(obj,key);
+				}
+					if(messageError != ''){
+						formAlert('danger', messageError);
+					}
+				$('.btn-primary').attr( "disabled", false );
 				  });
 			  
 			  });

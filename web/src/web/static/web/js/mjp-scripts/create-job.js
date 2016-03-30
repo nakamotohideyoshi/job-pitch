@@ -193,13 +193,17 @@ $(function() {
 				
 			  })
 			  .fail(function( data ) {
-				var messageError = ''
 				for (var key in data.responseJSON) {
-					var obj = data.responseJSON[key];
-					messageError = messageError+obj+'<br>';
-				}
-				formAlert('danger', messageError);
-				$('.btn-primary').attr( "disabled", false );
+						var obj = data.responseJSON[key];
+						if(key == 'non_field_errors'){
+							messageError = messageError+obj+'<br>';
+						}
+						fieldError(obj,key);
+					}
+						if(messageError != ''){
+							formAlert('danger', messageError);
+						}
+					$('.btn-primary').attr( "disabled", false );
 			  });
 	});
 	

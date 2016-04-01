@@ -158,6 +158,22 @@ function userTypeMenuConfiguration(redirectToProfile){
 			  
 }
 
+function logoutUser(){
+	var login = checkLogin();
+	if(login == true){
+			deleteCookie('username');
+			deleteCookie('key');
+			
+			$.post( "/api-rest-auth/logout/", { csrfmiddlewaretoken: getCookie('csrftoken') }).done(function( data ) {
+				window.location.href = "/";
+			  })
+			  .fail(function( data ) {
+				console.log( data.responseJSON );
+			  });
+	}else{
+		window.location.href = "/login";
+	}	
+}
 
 function formAlert(type, message){
 	$('.alert').addClass('alert-'+type);

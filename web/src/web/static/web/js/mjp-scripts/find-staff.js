@@ -12,15 +12,17 @@ $(function() {
 					  var obj = data[key];
 					  console.log(obj);
 					  var imageThumb = '';
+					  var length = 60;
+					  var descriptionShort = obj.description.substring(0, length);
 					  if(obj.pitches.length != 0){
 						  if(obj.pitches[0].thumbnail != null){
 						  	imageThumb = obj.pitches[0].thumbnail;
 						  }
 					  }
 					  if(imageThumb != ''){
-					  	$('#list-table tbody').append('<tr data-job-seeker-id="'+obj.id+'" class="job-seeker-list" id="job-seeker-list-'+obj.id+'"><td onclick="viewPitch(\''+obj.pitches[0].video+'\','+job_id+','+obj.id+');"><img width="150px" src="'+imageThumb+'"></td><td onclick="viewPitch(\''+obj.pitches[0].video+'\','+job_id+','+obj.id+');">'+obj.first_name+' '+obj.last_name+'</td></tr>');
+					  	$('#list-table tbody').append('<tr data-job-seeker-id="'+obj.id+'" class="job-seeker-list" id="job-seeker-list-'+obj.id+'"><td onclick="viewPitch(\''+obj.pitches[0].video+'\','+job_id+','+obj.id+');"><img width="150px" src="'+imageThumb+'"></td><td onclick="viewPitch(\''+obj.pitches[0].video+'\','+job_id+','+obj.id+');">'+obj.first_name+' '+obj.last_name+'</td><td>'+descriptionShort+'</td></tr>');
 					  }else{
-						$('#list-table tbody').append('<tr data-job-id="'+obj.id+'" class="job-list" id="job-list-'+obj.id+'"><td onclick="viewPitch(\''+obj.pitches[0].video+'\','+job_id+','+obj.id+');"><img width="150px" src="/static/web/images/no_image_available.png"></td><td onclick="viewPitch(\''+obj.pitches[0].video+'\','+job_id+','+obj.id+');">'+obj.first_name+' '+obj.last_name+'</td></tr>');
+						$('#list-table tbody').append('<tr data-job-id="'+obj.id+'" class="job-list" id="job-list-'+obj.id+'"><td onclick="viewPitch(\''+obj.pitches[0].video+'\','+job_id+','+obj.id+');"><img width="150px" src="/static/web/images/no_image_available.png"></td><td onclick="viewPitch(\''+obj.pitches[0].video+'\','+job_id+','+obj.id+');">'+obj.first_name+' '+obj.last_name+'</td><td>'+descriptionShort+'</td></tr>');
 					  }
 				  }
 				  if(data.length==0){

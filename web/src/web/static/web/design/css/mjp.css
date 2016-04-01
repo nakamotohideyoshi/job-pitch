@@ -929,6 +929,12 @@ input {
 	display:none;
 }
 
+
+.table>tbody>tr.inactive>td, .table>tbody>tr.inactive>th, .table>tbody>tr>td.inactive, .table>tbody>tr>th.inactive, .table>tfoot>tr.inactive>td, .table>tfoot>tr.inactive>th, .table>tfoot>tr>td.inactive, .table>tfoot>tr>th.inactive, .table>thead>tr.inactive>td, .table>thead>tr.inactive>th, .table>thead>tr>td.inactive, .table>thead>tr>th.inactive {
+    background-color: #a9a9a9;
+	cursor:default;
+}
+
 /* Only show the "mobile menu" fix */
 @media (max-width: 3000px) {
     .navbar-header {

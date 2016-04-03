@@ -6,6 +6,12 @@ All development will be controlled through git, and will follow a standard [Feat
 
 No contributor should commit directly to the master branch, and all changes must be made via an approved pull request.
 
+### Commit messages
+
+Commit messages should be in the format:
+
+`re #<issue number> - message`
+
 ## Development Environment
 
 To setup a local development environment, you will need a modern linux PC or VM.  Other OSs will work, but your mileage may vary!

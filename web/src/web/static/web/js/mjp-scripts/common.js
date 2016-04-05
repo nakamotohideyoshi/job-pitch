@@ -19,7 +19,7 @@ function getCookie(cname) {
 }
 
 function deleteCookie(cname){
-	document.cookie = cname+"=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC";	
+	document.cookie = cname+"=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC";
 }
 
 //get lat long and other data from postcode
@@ -61,10 +61,10 @@ function checkLogin(redirect){
 			$('.not_logged_in_element').show();
 			$('.login-username').hide();
 			return false;
-		}	
+		}
 	}else{
 		setHeaderUsername();
-		
+
 		return true;
 	}
 }
@@ -74,8 +74,8 @@ function setHeaderUsername(){
 	$('#header_username').html(username);
 	// Display said menu
 	$('.logged_in_menu').show();
-	
-	
+
+
 }
 
 function applyForJob(job_id, job_seeker_id){
@@ -85,7 +85,7 @@ function applyForJob(job_id, job_seeker_id){
 					});
 			  })
 			  .fail(function( data ) {
-				
+
 			  });
 }
 
@@ -96,7 +96,7 @@ function connectWithJob(job_id, job_seeker_id){
 				  $('#job-list-'+job_seeker_id).remove();
 			  })
 			  .fail(function( data ) {
-				
+
 			  });
 }
 
@@ -104,15 +104,15 @@ function connectWithJob(job_id, job_seeker_id){
 function messageRead(message_id){
 			$.put( "/api/messages/"+message_id+'/', { read:true, csrftoken: getCookie('csrftoken')}).done(function( data ) {
 ;
-				  
+
 			  })
 			  .fail(function( data ) {
-				
+
 			  });
 }
 
 var QueryString = function () {
-  // This function is anonymous, is executed immediately and 
+  // This function is anonymous, is executed immediately and
   // the return value is assigned to QueryString!
   var query_string = {};
   var query = window.location.search.substring(1);
@@ -130,14 +130,14 @@ var QueryString = function () {
     } else {
       query_string[pair[0]].push(decodeURIComponent(pair[1]));
     }
-  } 
+  }
     return query_string;
 }();
 
 // Get the user type(business or job_seeker) & sort the menus out.
 function userTypeMenuConfiguration(redirectToProfile){
 			  $.get( "/api-rest-auth/user/", { token: getCookie('key') ,csrftoken: getCookie('csrftoken') }).done(function( data ) {
-				
+
 				if (data.businesses.length){
     				// business
 					$('.business-link').show();
@@ -150,12 +150,12 @@ function userTypeMenuConfiguration(redirectToProfile){
 						window.location.href = "/profile";
 					}
 				}
-				
+
 			  })
 			  .fail(function( data ) {
 				console.log( data );
 			  });
-			  
+
 }
 
 function logoutUser(){
@@ -163,7 +163,7 @@ function logoutUser(){
 	if(login == true){
 			deleteCookie('username');
 			deleteCookie('key');
-			
+
 			$.post( "/api-rest-auth/logout/", { csrfmiddlewaretoken: getCookie('csrftoken') }).done(function( data ) {
 				window.location.href = "/";
 			  })
@@ -172,14 +172,30 @@ function logoutUser(){
 			  });
 	}else{
 		window.location.href = "/login";
-	}	
+	}
 }
 
 function formAlert(type, message){
-	$('.alert').addClass('alert-'+type);
-	$('.alert').html(message);
-	$('.alert').show();
+    $('.alert').addClass('alert-'+type);
+    $('.alert').html(message);
+    $('.alert').show();
 }
+
+function putManyAlerts(parentId, messages ){
+    $(parentId+' > .alert').addClass('alert-'+messages[0].type);
+    $(parentId+' > .alert').html(messages[0].content);
+    $(parentId+' > .alert').show();
+
+    for (var i = 1;  i < messages.length ; i++) {
+        message = messages[i];
+        $(parentId+' > .alert:last')
+        .clone()
+        .addClass('alert-'+message.type)
+        .html(message.content)
+        .insertAfter(parentId+' > .alert:last');
+    }
+}
+
 function fieldError(error,field){
 	$('.formFieldError').remove();
 	$('.formFieldErrorInField').removeClass('formFieldErrorInField');
@@ -223,26 +239,26 @@ function deleteRowApplication(id, rowPrefix){
 
 function account_active_check(){
 		$.get( "/api-rest-auth/user/", { token: getCookie('key') ,csrftoken: getCookie('csrftoken') }).done(function( data ) {
-				  
+
 				  job_seeker_id = data.job_seeker;
-				  
+
 				  $.get( "/api/job-seekers/"+data.job_seeker, { token: getCookie('key') ,csrftoken: getCookie('csrftoken') }).done(function( data ) {
 					  return data.active;
 				  });
-				  
+
 		});
 }
 
 // Some handy helpers
 
 $.put = function(url, data, callback, type){
- 
+
   if ( $.isFunction(data) ){
     type = type || callback,
     callback = data,
     data = {}
   }
- 
+
   return $.ajax({
     url: url,
     type: 'PUT',
@@ -253,13 +269,13 @@ $.put = function(url, data, callback, type){
 }
 
 $.delete = function(url, data, callback, type){
- 
+
   if ( $.isFunction(data) ){
     type = type || callback,
         callback = data,
         data = {}
   }
- 
+
   return $.ajax({
     url: url,
     type: 'DELETE',
@@ -284,7 +300,7 @@ $.ajaxSetup({
 });
 
 function deleteJobSeekerFromJob(job_id,job_seeker){
-	
+
 }
 
 function viewPitch(url, job_id, job_seeker){
@@ -338,7 +354,7 @@ $(function() {
 				formAlert('danger', messageError);
 			  });
 	});
-	
+
 	//Form submit code - Reg
 	$('#register').submit(function( event ) {
 		event.preventDefault();
@@ -353,11 +369,11 @@ $(function() {
 				window.location.href = "/profile";
 			  })
 			  .fail(function( data ) {
-				
+
 			  });
 		  })
 		  .fail(function( data ) {
-			  
+
 			var messageError = ''
 			for (var key in data.responseJSON) {
 				var obj = data.responseJSON[key];

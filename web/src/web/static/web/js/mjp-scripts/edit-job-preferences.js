@@ -1,10 +1,10 @@
 $(function() {
 	// Run login check funtion with auto-redirect
 	checkLogin(true);
-	
+
 	var job_seeker = '';
 	var profile_id = '';
-	
+
 	//Populate selects
 	$.get( "/api/hours/", { csrftoken: getCookie('csrftoken') }).done(function( data ) {
 		for (var key in data) {
@@ -14,9 +14,9 @@ $(function() {
 	})
 	.fail(function( data ) {
 		console.log( data );
-		
+
 	});
-	
+
 	$.get( "/api/contracts/", { csrftoken: getCookie('csrftoken') }).done(function( data ) {
 		for (var key in data) {
 			var obj = data[key];
@@ -25,9 +25,9 @@ $(function() {
 	})
 	.fail(function( data ) {
 		console.log( data );
-		
+
 	});
-	
+
 	$.get( "/api/sectors/", { csrftoken: getCookie('csrftoken') }).done(function( data ) {
 		for (var key in data) {
 			var obj = data[key];
@@ -36,9 +36,9 @@ $(function() {
 	})
 	.fail(function( data ) {
 		console.log( data );
-		
+
 	});
-	
+
 	$.get( "/api-rest-auth/user/", { csrftoken: getCookie('csrftoken') }).done(function( data ) {
 		job_seeker = data.job_seeker;
 		$.get( "/api/job-seekers/"+job_seeker, { csrftoken: getCookie('csrftoken') }).done(function( data ) {
@@ -60,8 +60,8 @@ $(function() {
 			});
 		});
 	});
-	
-	
+
+
 	$('#job-preferences').submit(function( event ) {
 		$('.btn-primary').attr( "disabled", true );
 		event.preventDefault();
@@ -71,7 +71,7 @@ $(function() {
 		var hours = $('#job_sector').val();
 		var location = $('#location').val();
 		var search_radius = $('#search_radius').val();
-		
+
 			postcodeLocationData(location, function(output){
   				var postcodeData = output.result;
 				$('#latitude').val(postcodeData.latitude);
@@ -88,17 +88,25 @@ $(function() {
 						contentType: false,
 						processData: false,
 						success: function (data) {
-						  		console.log(data);
-								formAlert('success', 'Successfully Updated!');								
+						  	console.log(data);
+                $(window).scrollTop();
+                putManyAlerts('#job-preferences',[
+                  {
+                    type: 'success', content: 'Successfully Updated!'
+                  },
+                  {
+                    type: 'info', content: '<i class="fa fa-spinner"></i> Wait a moment. Looking for matching jobs...'
+                  }
+                ]);
 								setTimeout(function () {
 									window.location.href = "/jobs/";
 								}, 5000);
 						}
 					  });
-				
+
 			});
-		
-			
+
+
 	});
-	
+
 });

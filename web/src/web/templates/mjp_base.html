@@ -12,19 +12,19 @@
         <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
 		<meta http-equiv="Pragma" content="no-cache" />
 		<meta http-equiv="Expires" content="0" />
-        
+
         <!-- Bootstrap Core CSS -->
         <link href="/static/web/design/css/bootstrap.min.css" rel="stylesheet">
-    	
+
         <!-- Bootstrap Extras CSS -->
         <link href="/static/web/design/css/bootstrap-switch.min.css" rel="stylesheet">
-        
+
         <!-- Custom CSS -->
         <link href="/static/web/design/css/mjp.css" rel="stylesheet">
-    
+
         <!-- Custom Fonts -->
         <link href="/static/web/design/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
-    
+
         <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
         <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
         <!--[if lt IE 9]>
@@ -44,7 +44,7 @@
                 <div class="navbar-header row">
                   <a class="navbar-brand col-md-3" href="/"><img src="/static/web/design/images/logo.png"></a>
                   <!--<div class="center-section-header col-md-6">Do you want to make a pitch?<a class="btn btn-custom">Create my Pitch</a></div>-->
-                  
+
                   <div class="col-md-3 menu-container">
                       <div class="login-username business-link job-seeker-link">
                         <h4 id="header_username"></h4>
@@ -56,7 +56,7 @@
                       </a>
                   </div>
                 </div>
-                
+
                 <div class="navbar-collapse collapse always-collapse">
                   <ul class="nav navbar-nav">
                     <!--<li><a href="#">Create profile</a></li>
@@ -66,10 +66,10 @@
                     <li><a href="#">Vacancies</a></li>
                     <li><a href="#">Location</a></li>-->
                     <li class="business-link job-seeker-link"><a href="/dashboard">Dashboard</a></li>
-                    <li class="job-seeker-link"><a href="/jobs">Vacancies</a></li>
+                    <li class="job-seeker-link"><a href="/jobs">Find a Job</a></li>
                     <li class="job-seeker-link"><a href="/profile/edit-job-seeker/">Edit Profile</a></li>
                     <li class="job-seeker-link"><a href="/profile/edit-pitch/">Edit Pitch</a></li>
-                    <li class="job-seeker-link"><a href="/profile/edit-job-preferences/">Edit Job Prefrences</a></li>
+                    <li class="job-seeker-link"><a href="/profile/edit-job-preferences/">Edit Job Preferences</a></li>
 					<li class="business-link"><a href="/profile/list-businesses/">Companies</a></li>
                     <li class="business-link job-seeker-link"><a href="/applications/">Applications and Messages</a></li>
                     <li class="not_logged_in_menu"><a href="/login">Log in</a></li>
@@ -83,10 +83,10 @@
                 </div>
             </div>
         </nav><!--End Nav Area-->
-        
-        
+
+
         {% block headerslider %}{% endblock %}
-		
+
         <!-- Page Content -->
     	<div class="container page-container">
 			{% block content %}{% endblock %}
@@ -129,7 +129,7 @@
     <!-- /.container -->
 
 	<!-- Modals -->
-    
+
     <div class="modal fade" id="loginModal">
       <div class="modal-dialog">
         <div class="modal-content">
@@ -152,8 +152,8 @@
         </div><!-- /.modal-content -->
       </div><!-- /.modal-dialog -->
     </div><!-- /.modal -->
-    
-    
+
+
     <div class="modal fade" id="regModal">
       <div class="modal-dialog">
         <div class="modal-content">
@@ -178,7 +178,7 @@
         </div><!-- /.modal-content -->
       </div><!-- /.modal-dialog -->
     </div><!-- /.modal -->
-    
+
     <div class="modal fade" id="viewPitchModal">
       <div class="modal-dialog">
         <div class="modal-content">
@@ -187,7 +187,7 @@
           </div>
           <div class="modal-body">
           	<div class="col-md-12" id="pitchViewer">
-            	
+
             </div>
             <div class="col-md-offset-4 col-md-4">
             	<a class="btn btn-custom" id="applyButtonModal" style="display:none; margin-left: 18px;margin-top: 20px;">Connect</a>
@@ -199,36 +199,36 @@
         </div><!-- /.modal-content -->
       </div><!-- /.modal-dialog -->
     </div><!-- /.modal -->
-    
+
     <!-- End Modals -->
 
     <!-- jQuery -->
     <script src="/static/web/design/js/jquery.js"></script>
-    
-    
-    
+
+
+
     <!-- Bootstrap Core JavaScript -->
     <script src="/static/web/design/js/bootstrap.min.js"></script>
-    
+
     <!-- Bootstrap Extras JavaScript -->
 	<script src="/static/web/js/bootstrap-switch.min.js"></script>
 	<script src="/static/web/js/bootbox.min.js"></script>
-    
+
 	<!-- Common MJP Scripts-->
 	<script src="/static/web/js/mjp-scripts/common.js"></script>
-	
+
     <!-- Script to Activate the Carousel -->
     <script>
     $('.carousel').carousel({
         interval: 5000 //changes the speed
     })
     </script>
-	
+
 	{% block pagescripts %}
 	{% endblock %}
-	
+
     {% endblock %}
-        
+
 
 </body>
 

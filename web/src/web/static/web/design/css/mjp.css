@@ -124,7 +124,7 @@ footer {
 
 .center-section-header{
 	color:#fff;
-	font-size:20px;	
+	font-size:20px;
 	font-weight:lighter;
     margin-top: 16px;
 }
@@ -137,11 +137,11 @@ footer {
     padding-left: 30px;
     padding-right: 30px;
 	font-size:15px;
-	
+
 }
 
 .btn-custom:hover, .btn-custom-red:hover, .btn-custom-modal:hover, .btn-custom-modal-2:hover, .btn-home-reg:hover, .btn-home-login:hover{
-	color:#fff;	
+	color:#fff;
 }
 
 .btn-custom-red{
@@ -155,7 +155,7 @@ footer {
 }
 
 .btn-custom:focus, .btn-custom-modal:focus, .btn-custom-modal-2:focus, .btn-home-reg:focus, .btn-home-login:focus{
-	color:#fff !important;	
+	color:#fff !important;
 }
 
 .menu-container{
@@ -338,11 +338,11 @@ footer {
 }
 
 .carousel-control .icon-next:before{
-	display:none;	
+	display:none;
 }
 
 .carousel-control .icon-prev:before{
-	display:none;	
+	display:none;
 }
 
 .above-slide-detail{
@@ -353,7 +353,7 @@ footer {
 }
 
 #myCarousel{
-	position:relative;	
+	position:relative;
 }
 
 .btn-home-login{
@@ -409,7 +409,7 @@ footer {
     margin-top: 16px !important;
 }
 
-.navbar-collapse:after 
+.navbar-collapse:after
 {
 	content: '';
 	position: absolute;
@@ -430,7 +430,7 @@ footer {
 }
 
 .navbar-nav li{
-	
+
 }
 
 .navbar-nav li a{
@@ -446,7 +446,7 @@ footer {
 }
 
 .navbar-nav li:last-child a{
-	border-bottom:none !important;	
+	border-bottom:none !important;
 }
 
 #wrapper {
@@ -543,7 +543,7 @@ footer {
 	display:none;
 }
 
-/* 
+/*
 From Non-Designed version CSS
 Web App By Reiss Watson
 */
@@ -566,11 +566,11 @@ Web App By Reiss Watson
 }
 
 .navbar-nav>li.not_logged_in_menu{
-	display:none;	
+	display:none;
 }
 
 .not_logged_in_element{
-	display:none;	
+	display:none;
 }
 
 #page-wrapper{
@@ -578,7 +578,7 @@ Web App By Reiss Watson
 }
 
 .business-link{
-	display:none;	
+	display:none;
 }
 
 #list-table .business-link{
@@ -590,7 +590,7 @@ Web App By Reiss Watson
 }
 
 .navbar-nav>li.business-link{
-	display:none;	
+	display:none;
 }
 
 .navbar-nav>li.job-seeker-link{
@@ -606,7 +606,7 @@ Web App By Reiss Watson
 }
 
 #list-table tbody tr{
-	cursor:pointer;	
+	cursor:pointer;
 }
 #profile .form-group{
 	min-height: 36px;
@@ -618,11 +618,11 @@ Web App By Reiss Watson
 
 .btn-on-table{
 	margin-left:5px;
-	margin-right:5px;	
+	margin-right:5px;
 }
 .image-job{
 	display:none;
-	margin-bottom:20px;	
+	margin-bottom:20px;
 }
 
 .main-jobs-list{
@@ -634,7 +634,7 @@ Web App By Reiss Watson
 }
 
 #profileOrPitch #profileNon{
-		
+
 }
 
 #recordStopButton{
@@ -655,7 +655,7 @@ Web App By Reiss Watson
 }
 
 #jobListMessages{
-	text-align:center;	
+	text-align:center;
 }
 
 .login-username{
@@ -688,20 +688,24 @@ Web App By Reiss Watson
 }
 
 .login-username{
-	
+
 }
 
 
 
-.table thead{
+.table > thead{
 	background:#00b9a5;
 	color:#fff !important;
 	font-weight:normal !important;
 }
 
-.table thead tr:first-child th:first-child { border-top-left-radius: 8px; }
+.table > thead > tr > th:first-child {
+  border-top-left-radius: 8px;
+}
 
-.table thead tr:first-child th:last-child { border-top-right-radius: 8px; }
+.table > thead > tr > th:last-child {
+  border-top-right-radius: 8px;
+}
 
 .table>tbody>tr{
 	border-bottom:#a4a4a4 1px solid !important;
@@ -729,7 +733,7 @@ Web App By Reiss Watson
 }
 
 .page-header{
-	border:none;	
+	border:none;
 	margin-bottom:5px;
 }
 
@@ -739,7 +743,7 @@ Web App By Reiss Watson
 
 .delete-action-btn{
 	border:1px solid #d9534f;
-	background:#fff;	
+	background:#fff;
 	border-radius:6px;
 	margin-right:10px;
 	color:#4a4a4a;
@@ -747,7 +751,7 @@ Web App By Reiss Watson
 
 .view-applications-btn{
 	border:1px solid #00b9a5;
-	background:#fff;	
+	background:#fff;
 	border-radius:6px;
 	margin-right:10px;
 	color:#4a4a4a;
@@ -755,7 +759,7 @@ Web App By Reiss Watson
 
 .find-staff-btn{
 	border:1px solid #00b9a5;
-	background:#fff;	
+	background:#fff;
 	border-radius:6px;
 	margin-right:10px;
 	color:#4a4a4a;
@@ -763,7 +767,7 @@ Web App By Reiss Watson
 
 .delete-action-btn:hover{
 	border:1px solid #d9534f;
-	background:#d9534f;	
+	background:#d9534f;
 	border-radius:6px;
 	margin-right:10px;
 	color:#fff;
@@ -771,7 +775,7 @@ Web App By Reiss Watson
 
 .view-applications-btn:hover{
 	border:1px solid #00b9a5;
-	background:#00b9a5;	
+	background:#00b9a5;
 	border-radius:6px;
 	margin-right:10px;
 	color:#fff;
@@ -779,7 +783,7 @@ Web App By Reiss Watson
 
 .find-staff-btn:hover{
 	border:1px solid #00b9a5;
-	background:#00b9a5;	
+	background:#00b9a5;
 	border-radius:6px;
 	margin-right:10px;
 	color:#fff;
@@ -859,12 +863,12 @@ Web App By Reiss Watson
 	cursor:default !important;
 }
 #account_details_not_active{
-	display:none;	
+	display:none;
 }
 
 
 
-input { 
+input {
    color: #777;
 }
 
@@ -919,7 +923,7 @@ input {
 	padding-bottom:13px;
 }
 .formFieldErrorInField{
-	border:#d43f3a 2px solid;	
+	border:#d43f3a 2px solid;
 }
 
 #locationSelect{

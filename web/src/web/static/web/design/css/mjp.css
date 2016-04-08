@@ -457,7 +457,7 @@ footer {
 }
 
 .mjp-footer, .push {
-    min-height: 221px; /* .push must be the same height as .footer */
+    min-height: 121px; /* .push must be the same height as .footer */
 }
 
 .page-container{

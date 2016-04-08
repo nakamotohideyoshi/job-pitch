@@ -393,6 +393,7 @@ footer {
 }
 .navbar-collapse.collapse.in{
 	width:330px;
+    max-height: 425px;
 	background:#4f5050;
 	float:right;
 }

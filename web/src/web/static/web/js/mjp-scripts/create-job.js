@@ -6,14 +6,17 @@ function populateCompanies(companyid){
 			var obj = data[key];
 
 			selected = '';
-			if(obj.id == companyid){
+			if(companyid && obj.id == companyid){
 				selected = 'selected=""';
 			}
 
 			$('#company').append('<option value="'+obj.id+'" '+selected+'>'+obj.name+'</options>');
 		}
 
-		$('#company').trigger('change');
+		if(companyid){
+			$('#company').trigger('change');
+			$('#company').attr('disabled',true)
+		}
 	});
 }
 
@@ -33,13 +36,25 @@ $(function() {
 
 	$( "#company" ).change(function() {
 		if($(this).val() != ''){
-		   $.get( "/api/user-locations/", { business:$(this).val() ,csrftoken: getCookie('csrftoken') }).done(function( data ) {
-			   for (var key in data) {
+			$.get( "/api/user-locations/", { business:$(this).val() ,csrftoken: getCookie('csrftoken') }).done(function( data ) {
+				for (var key in data) {
 					var obj = data[key];
-					$('#location').append('<option value="'+obj.id+'">'+obj.name+'</options>');
+
+					selected = '';
+					if(location_id && obj.id == location_id){
+						selected = 'selected=""';
+					}
+
+					$('#location').append('<option value="'+obj.id+'" '+selected+' >'+obj.name+'</options>');
 				}
-			   $('#locationSelect').show();
-			   })
+
+				$('#locationSelect').show();
+
+				if(location_id){
+					$('#location').trigger('change');
+					$('#location').attr('disabled',true)
+				}
+			})
 			.fail(function( data ) {
 				console.log( data );
 			});
@@ -83,13 +98,14 @@ $(function() {
 					$('#location').append('<option value="'+obj.id+'">'+obj.name+'</options>');
 				}
 				$('#location').val(location_id);
-			   $('#locationSelect').show();
+				$('#locationSelect').show();
 
 				})
 			.fail(function( data ) {
 				console.log( data );
 
 			});
+
 			$('#mainFormAreaCreateJob').show();
 		});
 
@@ -149,72 +165,78 @@ $(function() {
 		var contract = $('#contract').val();
 		var hours = $('#hours').val();
 
-			$.post( "/api/user-jobs/", { title: title, description: description, sector: job_sector, contract: contract, hours: hours, location:location_id, status:open_job_status, csrftoken: getCookie('csrftoken') }).done(function( data ) {
-				$('#job_id').val(data.id);
-				if($('#job_image').val() != ''){
-					var formData = new FormData($('#create-job')[0]);
-					$.ajax({
-						url: '/api/user-job-images/',
-						type: 'POST',
-						data: formData,
-						async: false,
-						cache: false,
-						contentType: false,
-						processData: false,
-						success: function (data) {
-							window.location.href = "/profile/list-jobs/?id="+location_id;
-						}
-				  });
-				}else{
-					//window.location.href = "/profile/list-jobs/?id="+location_id;
-					$.get( "/api/user-locations/"+location_id, { token: getCookie('key') ,csrftoken: getCookie('csrftoken') }).done(function( data ) {
-						console.log( data );
-						$('#currentLogo').attr('src', data.images[0].thumbnail).show();
-						var xhr = new XMLHttpRequest();
+		$.post( "/api/user-jobs/", { title: title, description: description, sector: job_sector, contract: contract, hours: hours, location:location_id, status:open_job_status, csrftoken: getCookie('csrftoken') }).done(function( data ) {
+			$('#job_id').val(data.id);
+			if($('#job_image').val() != ''){
+				var formData = new FormData($('#create-job')[0]);
+				$.ajax({
+					url: '/api/user-job-images/',
+					type: 'POST',
+					data: formData,
+					async: false,
+					cache: false,
+					contentType: false,
+					processData: false,
+					success: function (data) {
+						window.location.href = "/profile/list-jobs/?id="+location_id;
+					}
+			  });
+			}else{
+				//window.location.href = "/profile/list-jobs/?id="+location_id;
+				$.get( "/api/user-locations/"+location_id, { token: getCookie('key') ,csrftoken: getCookie('csrftoken') }).done(function( data ) {
+					console.log( data );
+					$('#currentLogo').attr('src', data.images[0].thumbnail).show();
+					var xhr = new XMLHttpRequest();
 
-						xhr.onreadystatechange = function(){
-							if (this.readyState == 4 && this.status == 200){
-								//this.response is what you're looking for
-								//console.log(this.response, typeof this.response);
-								//console.log(data.images[0].image.split('.').pop());
-								$('#job_image').remove();
-								var formData = new FormData($('#create-job')[0]);
-								formData.append('image',this.response, 'location-'+location_id+'.'+data.images[0].image.split('.').pop());
-								  $.ajax({
-										url: '/api/user-job-images/',
-										type: 'POST',
-										data: formData,
-										async: false,
-										cache: false,
-										contentType: false,
-										processData: false,
-										success: function (data) {
-											console.log(data);
-											window.location.href = "/profile/list-jobs/?id="+location_id;
-										}
-								  });
-							}
+					xhr.onreadystatechange = function(){
+						if (this.readyState == 4 && this.status == 200){
+							//this.response is what you're looking for
+							//console.log(this.response, typeof this.response);
+							//console.log(data.images[0].image.split('.').pop());
+							$('#job_image').remove();
+							var formData = new FormData($('#create-job')[0]);
+
+							formData.append('image',this.response, 'location-'+location_id+'.'+data.images[0].image.split('.').pop());
+
+						  $.ajax({
+								url: '/api/user-job-images/',
+								type: 'POST',
+								data: formData,
+								async: false,
+								cache: false,
+								contentType: false,
+								processData: false,
+								success: function (data) {
+									console.log(data);
+									window.location.href = "/profile/list-jobs/?id="+location_id;
+								}
+						  });
 						}
-						xhr.open('GET', data.images[0].image);
-						xhr.responseType = 'blob';
-						xhr.send();
-					});
+					}
+					xhr.open('GET', data.images[0].image);
+					xhr.responseType = 'blob';
+					xhr.send();
+				});
+			}
+
+			})
+			.fail(function( data ) {
+				for (var key in data.responseJSON) {
+					var obj = data.responseJSON[key];
+
+					if(key == 'non_field_errors'){
+						messageError = messageError+obj+'<br>';
+					}
+
+					fieldError(obj,key);
 				}
 
-				})
-				.fail(function( data ) {
-				for (var key in data.responseJSON) {
-						var obj = data.responseJSON[key];
-						if(key == 'non_field_errors'){
-							messageError = messageError+obj+'<br>';
-						}
-						fieldError(obj,key);
-					}
-						if(messageError != ''){
-							formAlert('danger', messageError);
-						}
-					$('.btn-primary').attr( "disabled", false );
-			  });
+				if(messageError != ''){
+					formAlert('danger', messageError);
+				}
+
+				$('.btn-primary').attr( "disabled", false );
+		  });
 	});
 
 	var text_max = 500;

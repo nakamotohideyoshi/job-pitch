@@ -34,7 +34,7 @@ $(function() {
 					+	'<td onclick="goToLocation('+obj.id+');">'+obj.locations.length+'</td>'
 					+	'<td>'
 					+		'<a class="find-staff-btn btn btn-primary" href="/profile/edit-business/?id='+obj.id+'"><i class="fa fa-pencil"></i></a>'
-					+		' <a class="find-staff-btn btn btn-primary" href="/profile/create-job/?companyid='+obj.id+'"><i class="fa fa-tasks"></i></a>'
+					+		' <a class="add-job-btn btn btn-primary" href="/profile/create-job/?companyid='+obj.id+'"><i class="fa fa-tasks"></i></a>'
 					+		' <a href="javascript:deleteRow('+obj.id+',\'user-businesses\' , \'business-list-\');" data-apiFunction="user-businesses" data-rowPrefix="business-list-" data-id="'+obj.id+'" class="delete-action-btn btn btn-primary"><i class="fa fa-trash"></i></a>'
 					+	'</td>'
 					+'</tr>';

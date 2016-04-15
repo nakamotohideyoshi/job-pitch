@@ -21,7 +21,7 @@ def create_thumbnail(image, thumbnail, name=None, content_type=None):
     # Set our max thumbnail size in a tuple (max width, max height)
     THUMBNAIL_SIZE = (280, 280) # for android: 70dp at xxxhdpi
 
-    if content_type is None: 
+    if content_type is None:
         content_type = image.file.content_type
     if name is None:
         name = image.name
@@ -65,7 +65,7 @@ def create_thumbnail(image, thumbnail, name=None, content_type=None):
 class Sector(models.Model):
     name = models.CharField(max_length=255)
     description = models.TextField()
-    
+
     def __str__(self):
         return "%s: %s" % (type(self).__name__, self.name)
 
@@ -74,7 +74,7 @@ class Contract(models.Model):
     name = models.CharField(max_length=255)
     short_name = models.CharField(max_length=255)
     description = models.TextField()
-    
+
     def __str__(self):
         return "%s: %s" % (type(self).__name__, self.name)
 
@@ -83,10 +83,10 @@ class Hours(models.Model):
     name = models.CharField(max_length=255)
     short_name = models.CharField(max_length=255)
     description = models.TextField()
-    
+
     def __str__(self):
         return "%s: %s" % (type(self).__name__, self.name)
-    
+
     class Meta:
         verbose_name_plural = "hours"
 
@@ -95,10 +95,10 @@ class JobStatus(models.Model):
     name = models.CharField(max_length=20)
     friendly_name = models.CharField(max_length=255)
     description = models.TextField()
-    
+
     def __str__(self):
         return "%s: %s" % (type(self).__name__, self.name)
-    
+
     class Meta:
         verbose_name_plural = "job statuses"
 
@@ -106,10 +106,10 @@ class JobStatus(models.Model):
 class Sex(models.Model):
     name = models.CharField(max_length=255)
     short_name = models.CharField(max_length=255)
-    
+
     def __str__(self):
         return "%s: %s" % (type(self).__name__, self.name)
-    
+
     class Meta:
         verbose_name_plural = "sexes"
 
@@ -117,10 +117,10 @@ class Sex(models.Model):
 class Nationality(models.Model):
     name = models.CharField(max_length=255)
     short_name = models.CharField(max_length=255)
-    
+
     def __str__(self):
         return "%s: %s" % (type(self).__name__, self.name)
-    
+
     class Meta:
         verbose_name_plural = "nationalities"
 
@@ -129,17 +129,17 @@ class ApplicationStatus(models.Model):
     name = models.CharField(max_length=20)
     friendly_name = models.CharField(max_length=255)
     description = models.TextField()
-    
+
     def __str__(self):
         return "%s: %s" % (type(self).__name__, self.name)
-    
+
     class Meta:
         verbose_name_plural = "application statuses"
 
 
 class Role(models.Model):
     name = models.CharField(max_length=20)
-    
+
     def __str__(self):
         return "%s: %s" % (type(self).__name__, self.name)
 
@@ -149,10 +149,10 @@ class Business(models.Model):
     name = models.CharField(max_length=255)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
-    
+
     def __str__(self):
         return "%s: %s" % (type(self).__name__, self.name)
-    
+
     class Meta:
         verbose_name_plural = "businesses"
         ordering = ('name',)
@@ -164,7 +164,7 @@ class BusinessImage(models.Model):
     image = models.ImageField(upload_to='business/%Y/%m/%d', max_length=255)
     thumbnail = models.ImageField(upload_to='business/%Y/%m/%d', max_length=255)
     order = models.IntegerField()
-    
+
     def save(self, *args, **kwargs):
         create_thumbnail(self.image, self.thumbnail)
         super(BusinessImage, self).save(*args, **kwargs)
@@ -203,14 +203,14 @@ class LocationImage(models.Model):
     image = models.ImageField(upload_to='location/%Y/%m/%d', max_length=255)
     thumbnail = models.ImageField(upload_to='location/%Y/%m/%d', max_length=255)
     order = models.IntegerField()
-    
+
     def save(self, *args, **kwargs):
         create_thumbnail(self.image, self.thumbnail)
         super(LocationImage, self).save(*args, **kwargs)
-        
+
     class Meta:
         ordering = ['order']
-    
+
 
 class Job(models.Model):
     title = models.CharField(max_length=255)
@@ -222,7 +222,7 @@ class Job(models.Model):
     status = models.ForeignKey(JobStatus, related_name='jobs')
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
-    
+
     def __str__(self):
         return "%s: %s (%s)" % (type(self).__name__, self.title, self.location.name)
 
@@ -235,11 +235,11 @@ class JobImage(models.Model):
     image = models.ImageField(upload_to='job/%Y/%m/%d', max_length=255)
     thumbnail = models.ImageField(upload_to='job/%Y/%m/%d', max_length=255)
     order = models.IntegerField()
-    
+
     def save(self, *args, **kwargs):
         create_thumbnail(self.image, self.thumbnail)
         super(JobImage, self).save(*args, **kwargs)
-        
+
     class Meta:
         ordering = ['order']
 
@@ -261,14 +261,15 @@ class JobSeeker(models.Model):
     nationality = models.ForeignKey(Nationality, related_name='job_seekers', null=True)
     nationality_public = models.BooleanField(default=None)
     description = models.TextField()
+    rating = models.DecimalField(default=0, max_digits=3, decimal_places=2)
     active = models.BooleanField(default=True)
     cv = models.FileField(upload_to='cv/%Y/%m/%d', max_length=255, null=True)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
-    
+
     def get_full_name(self):
         return " ".join((self.first_name, self.last_name))
-    
+
     def __str__(self):
         return "%s: %s" % (type(self).__name__, self.get_full_name())
 
@@ -292,7 +293,7 @@ class JobProfile(models.Model):
     postcode_lookup = models.CharField(max_length=10, blank=True)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
-    
+
     def __str__(self):
         return "%s: %s" % (type(self).__name__, self.job_seeker.get_full_name())
 
@@ -306,10 +307,10 @@ class Application(models.Model):
     status = models.ForeignKey(ApplicationStatus, related_name='applications')
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
-    
+
     class Meta:
         unique_together = ('job', 'job_seeker')
-    
+
     def __str__(self):
         return "%s: %s for %s" % (type(self).__name__, self.job.title, self.job_seeker.get_full_name())
 
@@ -321,6 +322,6 @@ class Message(models.Model):
     content = models.TextField()
     read = models.BooleanField(default=False)
     created = models.DateTimeField(auto_now_add=True)
-    
+
     class Meta:
         ordering = ('created',)

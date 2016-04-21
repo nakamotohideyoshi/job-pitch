@@ -65,8 +65,9 @@ function fileReady(fileName) {
 		//$.post( "/api/pitches/", { csrftoken: getCookie('csrftoken') }).done(function( data ) {
 		console.log( data );
 
+		//	video: 'https://s3-eu-west-1.amazonaws.com/mjp-media-upload/'+filenameOnly,
 		$.put( "/api/pitches/"+data.id+"/?token="+data.token, {
-			video: 'https://s3-eu-west-1.amazonaws.com/mjp-media-upload/'+filenameOnly,
+			video: fileName,
 			thumb: 'https://s3-eu-west-1.amazonaws.com/mjp-media-upload/'+filenameOnlyNoExt+'.jpg',
 			csrftoken: getCookie('csrftoken')
 		}).done(function( data ) {

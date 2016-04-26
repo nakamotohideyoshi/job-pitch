@@ -23,4 +23,17 @@
     <color name="message_background">#7ccc</color>
     <color name="mjp_teal">#ff009688</color>
     <color name="white">#fff</color>
+
+    <color name="button_state_color">#D3D3D3</color>
+    <color name="button_press_color">#fff</color>
+    <color name="wx_primary_color">#FFFFFF</color>
+    <color name="wx_secondary_color">#F1F1F1</color>
+    <color name="wx_third_color">#E3E3E3</color>
+    <color name="wx_fourth_color">#999999</color>
+    <color name="wx_accent_color">#EF781A</color>
+    <color name="wx_enthusiastic_color">#FE6500</color>
+    <color name="wx_text_color">#575757</color>
+    <color name="wx_title_color">#575757</color>
+    <color name="wx_hint_color">#848484</color>
+    <color name="colorProductTextRed">#f51f1d</color>
 </resources>

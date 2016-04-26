@@ -2,12 +2,14 @@ package com.myjobpitch.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.myjobpitch.MJPApplication;
@@ -21,6 +23,7 @@ import com.myjobpitch.fragments.BusinessEditFragment;
 import com.myjobpitch.fragments.JobSeekerEditFragment;
 import com.myjobpitch.fragments.LocationEditFragment;
 import com.myjobpitch.tasks.CreateReadUpdateAPITaskListener;
+import com.myjobpitch.tasks.ReadLocationTask;
 import com.myjobpitch.tasks.jobseeker.CreateUpdateJobSeekerTask;
 import com.myjobpitch.tasks.recruiter.CreateUpdateBusinessTask;
 import com.myjobpitch.tasks.recruiter.CreateUpdateLocationTask;
@@ -42,6 +45,11 @@ public class CreateProfileActivity extends MJPProgressActionBarActivity {
     private CreateUpdateLocationTask mCreateLocationTask;
     private JobSeekerEditFragment mJobSeekerEditFragment;
     private CreateUpdateJobSeekerTask mCreateJobSeekerTask;
+
+    private MJPApi api,api1;
+
+    private ReadLocationTask mReadLocationTask;
+    public static final String LOCATION_ID = "LOCATION_ID";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -106,18 +114,81 @@ public class CreateProfileActivity extends MJPProgressActionBarActivity {
         // General views
         mProgressView = findViewById(R.id.progress);
         mCreateProfileView = findViewById(R.id.create_profile);
+
+
+//        //julia_kata
+//        if (savedInstanceState != null) {
+//            ObjectMapper mapper = new ObjectMapper();
+//            try {
+//                String location_data = savedInstanceState.getString("location_data");
+//                Log.d("EditLocationActivity", String.format("savedIntanceState['location_data']: %s", location_data));
+//                location = mapper.readValue(location_data, Location.class);
+//                mLocationEditFragment.load(location);
+//                showProgress(false);
+//            } catch (IOException e) {
+//                Log.e("EditLocationActivity", "Error", e);
+//            }
+//        } else if (getIntent().hasExtra("location_data")) {
+//            ObjectMapper mapper = new ObjectMapper();
+//            try {
+//                location = mapper.readValue(getIntent().getStringExtra("location_data"), Location.class);
+//                mLocationEditFragment.load(location);
+//                showProgress(false);
+//            } catch (IOException e) {}
+//        } else if (getIntent().hasExtra(LOCATION_ID)) {
+//            mReadLocationTask = new ReadLocationTask(getApi(), getIntent().getIntExtra(LOCATION_ID, -1));
+//            mReadLocationTask.addListener(new CreateReadUpdateAPITaskListener<Location>() {
+//                @Override
+//                public void onSuccess(Location result) {
+//                    location = result;
+//                    mLocationEditFragment.load(location);
+//                    showProgress(false);
+//                }
+//
+//                @Override
+//                public void onError(JsonNode errors) {
+//                    Toast toast = Toast.makeText(CreateProfileActivity.this, "Error loading location", Toast.LENGTH_LONG);
+//                    toast.show();
+//                    finish();
+//                }
+//
+//                @Override
+//                public void onConnectionError() {
+//                    Toast toast = Toast.makeText(CreateProfileActivity.this, "Connection Error: Please check your internet connection", Toast.LENGTH_LONG);
+//                    toast.show();
+//                    finish();
+//                }
+//
+//                @Override
+//                public void onCancelled() {
+//                }
+//            });
+//            mReadLocationTask.execute();
+//        } else {
+//            showProgress(false);
+//            setTitle(R.string.action_add_location);
+//            location = new Location();
+//            location.setBusiness(getIntent().getIntExtra("business_id", -1));
+//            mLocationEditFragment.load(location);
+//        }
+//        /////////////////////////////////////////////////////////////////////////////////////////////////////
+
     }
 
     private void attemptRecruiterContinue() {
         boolean result = mBusinessEditFragment.validateInput();
         result &= mLocationEditFragment.validateInput();
+
         if (result) {
             showProgress(true);
-                if (business == null)
-                business = new Business();
-                mBusinessEditFragment.save(business);
 
-                final MJPApi api = ((MJPApplication) getApplication()).getApi();
+
+
+                api = ((MJPApplication) getApplication()).getApi();
+
+                if (business == null)
+                    business = new Business();
+                mBusinessEditFragment.save(business);
                 mCreateBusinessTask = new CreateUpdateBusinessTask(api, business);
                 mCreateBusinessTask.addListener(new CreateReadUpdateAPITaskListener<Business>() {
                 @Override
@@ -126,18 +197,33 @@ public class CreateProfileActivity extends MJPProgressActionBarActivity {
 
                     if (location == null)
                         location = new Location();
+
                     location.setBusiness(business.getId());
                     mLocationEditFragment.save(location);
-                    mCreateLocationTask = mLocationEditFragment.getCreateLocationTask(api, location);
+                    api = ((MJPApplication) getApplication()).getApi();
+                    //mCreateLocationTask = mLocationEditFragment.getCreateLocationTask(api, location);
+                    mCreateLocationTask = new CreateUpdateLocationTask(api, location);
+
+
+                    Log.e("success","success!!!");
+                    Intent intent = new Intent(CreateProfileActivity.this, BusinessListActivity.class);
+                    //intent.putExtra("from_login", true);
+                    //intent.putExtra(LOCATION_ID, location.getId());
+                    intent.putExtra(LOCATION_ID, true);
+                    startActivity(intent);
+                    CreateProfileActivity.this.finish();
+
                     mCreateLocationTask.addListener(new CreateReadUpdateAPITaskListener<Location>() {
                         @Override
                         public void onSuccess(Location location) {
-                            CreateProfileActivity.this.location = location;
+//                            CreateProfileActivity.this.location = location;
+//                            Log.e("success","success---888!!!");
+//                            Intent intent = new Intent(CreateProfileActivity.this, BusinessListActivity.class);
+//                            //intent.putExtra("from_login", true);
+//                            intent.putExtra(LOCATION_ID, true);
+//                            startActivity(intent);
+//                            //CreateProfileActivity.this.finish();
 
-                            Intent intent = new Intent(CreateProfileActivity.this, BusinessListActivity.class);
-                            intent.putExtra("from_login", true);
-                            startActivity(intent);
-                            finish();
                         }
 
                         @Override
@@ -157,6 +243,7 @@ public class CreateProfileActivity extends MJPProgressActionBarActivity {
                             showProgress(false);
                         }
                     });
+
                     mCreateLocationTask.execute();
                 }
 
@@ -185,7 +272,8 @@ public class CreateProfileActivity extends MJPProgressActionBarActivity {
         boolean result = mJobSeekerEditFragment.validateInput();
         if (result) {
             showProgress(true);
-            final MJPApi api = ((MJPApplication) getApplication()).getApi();
+            //final MJPApi api = ((MJPApplication) getApplication()).getApi();
+            api = ((MJPApplication) getApplication()).getApi();
 
             if (jobSeeker == null)
                 jobSeeker = new JobSeeker();
@@ -193,6 +281,7 @@ public class CreateProfileActivity extends MJPProgressActionBarActivity {
             mJobSeekerEditFragment.save(jobSeeker);
 
             mCreateJobSeekerTask = mJobSeekerEditFragment.getCreateBusinessTask(api, jobSeeker);
+
             mCreateJobSeekerTask.addListener(new CreateReadUpdateAPITaskListener<JobSeeker>() {
                 @Override
                 public void onSuccess(JobSeeker jobSeeker) {
@@ -225,6 +314,7 @@ public class CreateProfileActivity extends MJPProgressActionBarActivity {
         }
     }
 
+
     private void createRecruiter() {
         mRecruiterProfile.setVisibility(View.VISIBLE);
         mJobSeekerProfile.setVisibility(View.GONE);
@@ -234,6 +324,17 @@ public class CreateProfileActivity extends MJPProgressActionBarActivity {
         mRecruiterProfile.setVisibility(View.GONE);
         mJobSeekerProfile.setVisibility(View.VISIBLE);
     }
+
+//    @Override
+//    protected void onSaveInstanceState(Bundle outState) {
+//        super.onSaveInstanceState(outState);
+//        mLocationEditFragment.save(location);
+//        ObjectMapper mapper = new ObjectMapper();
+//        try {
+//            outState.putString("location_data", mapper.writeValueAsString(location));
+//        } catch (JsonProcessingException e) {}
+//    }
+
 
     @Override
     public View getMainView() {

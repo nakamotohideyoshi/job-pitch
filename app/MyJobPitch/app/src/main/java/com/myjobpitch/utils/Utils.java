@@ -8,6 +8,7 @@ import java.util.Date;
  * Created by Jamie on 01/06/2015.
  */
 public class Utils {
+    public static boolean isLocation = false;
     public static String formatDateTime(Date dateTime) {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(dateTime);

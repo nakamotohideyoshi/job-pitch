@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,10 +17,13 @@ import android.widget.TextView;
 
 import com.myjobpitch.R;
 import com.myjobpitch.tasks.DownloadImageTask;
+import com.myjobpitch.tasks.recruiter.EventForLocationImage;
+import com.myjobpitch.utils.Utils;
+
+import org.greenrobot.eventbus.EventBus;
 
 public class ImageEditFragment extends Fragment {
     private static final int SELECT_PHOTO = 1;
-
     private ImageView mImageView;
     private TextView mImageMessage;
     private ProgressBar mImageProgress;
@@ -27,6 +31,8 @@ public class ImageEditFragment extends Fragment {
     private Button mDeleteImageButton;
     private DownloadImageTask mDownloadImageTask;
     private ImageEditFragmentListener mListener = null;
+    final String TAG = "ImageEditFrag";
+    public  boolean isLocation = false;
 
     public static ImageEditFragment newInstance() {
         ImageEditFragment fragment = new ImageEditFragment();
@@ -42,6 +48,7 @@ public class ImageEditFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.i(TAG, "onCreate ");
     }
 
     @Override
@@ -50,6 +57,7 @@ public class ImageEditFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_image_edit, container, false);
 
+
         mImageView = (ImageView) view.findViewById(R.id.image_preview);
         mImageMessage = (TextView) view.findViewById(R.id.no_image);
         mImageProgress = (ProgressBar) view.findViewById(R.id.image_progress);
@@ -57,6 +65,7 @@ public class ImageEditFragment extends Fragment {
         mChangeImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Utils.isLocation = isLocation;
                 if (mDownloadImageTask != null) {
                     mDownloadImageTask.cancel(true);
                     mDownloadImageTask = null;
@@ -66,18 +75,25 @@ public class ImageEditFragment extends Fragment {
                 startActivityForResult(photoPickerIntent, SELECT_PHOTO);
             }
         });
+
         mDeleteImageButton = (Button) view.findViewById(R.id.delete_image_button);
         mDeleteImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Utils.isLocation = isLocation;
                 if (mDownloadImageTask != null) {
                     mDownloadImageTask.cancel(true);
                     mDownloadImageTask = null;
                 }
-                if (mListener != null)
-                    mListener.onDelete();
+                if (Utils.isLocation){
+                    EventBus.getDefault().post(new EventForLocationImage(null));
+                }else{
+                    if (mListener != null)
+                        mListener.onDelete();
+                }
             }
         });
+        Log.i(TAG, "onCreate View");
         return view;
     }
 
@@ -130,8 +146,14 @@ public class ImageEditFragment extends Fragment {
         switch (requestCode) {
             case SELECT_PHOTO:
                 if (resultCode == Activity.RESULT_OK) {
-                    if (mListener != null)
-                        mListener.onChange(imageReturnedIntent.getData());
+                    Log.i(TAG, "onActivity Result");
+                    if (Utils.isLocation){
+                        EventBus.getDefault().post(new EventForLocationImage(imageReturnedIntent.getData()));
+                    }else{
+                        if (mListener != null)
+                            mListener.onChange(imageReturnedIntent.getData());
+                    }
+
                 }
         }
     }
@@ -142,6 +164,10 @@ public class ImageEditFragment extends Fragment {
     }
 
     public void setListener(ImageEditFragmentListener mListener) {
+        Log.i(TAG, "setListener");
         this.mListener = mListener;
+    }
+    public void removeListener(){
+        this.mListener = null;
     }
 }

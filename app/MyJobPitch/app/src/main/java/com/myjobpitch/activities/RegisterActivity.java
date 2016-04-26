@@ -37,6 +37,9 @@ public class RegisterActivity extends MJPProgressActivity {
     private RegisterTask registerTask;
     private TextView mProgressText;
 
+    public static String UserNameRegister = "";
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -153,6 +156,8 @@ public class RegisterActivity extends MJPProgressActivity {
             try {
                 try {
                     api.register(username, password1, password2);
+                    UserNameRegister = username;
+
                 } catch (MJPApiException e) {
                     errors = e.getErrors();
                     return null;

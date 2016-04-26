@@ -51,11 +51,14 @@
                 />
 
             <Button
+                style="@style/DefaultButtonPaint"
+                android:textColor="@drawable/accent_button_textcolor"
+                android:layout_height="@dimen/_30sdp"
                 android:id="@+id/add_job_button"
                 android:layout_marginTop="15dp"
                 android:text="@string/action_add_job"
                 android:layout_width="fill_parent"
-                android:layout_height="wrap_content" />
+                />
         </LinearLayout>
     </LinearLayout>
 </FrameLayout>

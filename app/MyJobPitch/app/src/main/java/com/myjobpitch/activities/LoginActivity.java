@@ -9,6 +9,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.location.Location;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -59,6 +60,8 @@ public class LoginActivity extends MJPProgressActivity implements LoaderCallback
     private static final String USERNAME = "USERNAME";
     private static final String PASSWORD = "PASSWORD";
     private static final String REMEMBER_PASSWORD = "REMEMBER_PASSWORD";
+
+    public static com.myjobpitch.api.data.Location userLocation = null;
 
 
     private LoginTask loginTask = null;
@@ -194,7 +197,7 @@ public class LoginActivity extends MJPProgressActivity implements LoaderCallback
      * If there are form errors (invalid email, missing fields, etc.), the
      * errors are presented and no actual login attempt is made.
      */
-    public void attemptLogin() {
+        public void attemptLogin() {
         if (logoutTask != null) {
             return;
         }

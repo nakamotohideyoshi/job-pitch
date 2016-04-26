@@ -28,10 +28,12 @@
             tools:text="Not set"
             android:layout_weight="1"/>
         <Button
+            style="@style/DefaultButtonPaint"
+            android:textColor="@drawable/accent_button_textcolor"
             android:id="@+id/job_profile_sectors_button"
             android:text="@string/change"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="@dimen/_30sdp" />
     </LinearLayout>
 
     <Spinner

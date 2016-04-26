@@ -12,26 +12,9 @@ $(document).ready(function() {
 	.done(function( data ) {
 		job_seeker_id = data.job_seeker;
 	});
-
-	$("#webcam").scriptcam({
-		fileReady:fileReady,
-		cornerRadius:20,
-		cornerColor:'e3e5e2',
-		onError:onError,
-		promptWillShow:promptWillShow,
-		showMicrophoneErrors:false,
-		onWebcamReady:onWebcamReady,
-		timeLeft:timeLeft,
-		fileName:'mjp_web_record',
-		path: '/static/web/js/ScriptCam/',
-		connected:showRecord,
-		width: 320,
-		height: 240,
-		maximumTime:30
-	});
 });
 
-function showRecord() {
+/* function showRecord() {
 	$( "#recordStartButton" ).attr( "disabled", false );
 }
 function startRecording() {
@@ -106,7 +89,7 @@ function changeCamera() {
 }
 function changeMicrophone() {
 	$.scriptcam.changeMicrophone($('#microphoneNames').val());
-}
+}*/
 function newPitchStart(){
 	$('.videoCheckEdit').hide();
 	$('.recordNewVideo').show();

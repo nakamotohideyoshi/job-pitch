@@ -26,4 +26,12 @@
         android:visibility="gone"
         android:layout_height="fill_parent"
         android:id="@+id/business_list" />
+
+    <Button
+        style="@style/DefaultButtonPaint"
+        android:textColor="@drawable/accent_button_textcolor"
+        android:id="@+id/empty_button_3"
+        android:layout_marginTop="15dp"
+        android:layout_width="fill_parent"
+        android:layout_height="@dimen/_30sdp" />
 </FrameLayout>

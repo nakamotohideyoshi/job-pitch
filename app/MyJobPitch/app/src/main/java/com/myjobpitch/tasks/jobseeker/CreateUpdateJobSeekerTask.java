@@ -20,3 +20,4 @@ public class CreateUpdateJobSeekerTask extends CreateUpdateAPITask<JobSeeker> {
         });
     }
 }
+

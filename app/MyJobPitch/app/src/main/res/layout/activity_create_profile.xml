@@ -107,8 +107,12 @@
                     tools:layout="@layout/fragment_business_edit" />
 
                 <Button
+                    style="@style/DefaultButtonPaint"
+                    android:textColor="@drawable/accent_button_textcolor"
+                    android:layout_marginRight="@dimen/_5sdp"
+                    android:layout_marginLeft="@dimen/_5sdp"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="@dimen/_30sdp"
                     android:text="@string/action_continue"
                     android:id="@+id/continue_button_recruiter"
                     android:layout_weight="1" />
@@ -130,8 +134,12 @@
                     tools:layout="@layout/fragment_job_seeker_edit" />
 
                 <Button
+                    style="@style/DefaultButtonPaint"
+                    android:textColor="@drawable/accent_button_textcolor"
+                    android:layout_marginRight="@dimen/_5sdp"
+                    android:layout_marginLeft="@dimen/_5sdp"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="@dimen/_30sdp"
                     android:text="@string/action_continue"
                     android:id="@+id/continue_button_job_seeker"
                     android:layout_weight="1" />

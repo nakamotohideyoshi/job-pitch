@@ -5,11 +5,13 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -48,6 +50,8 @@ public class JobProfileEditFragment extends EditFragment {
     private Double mLatitude;
     private String mPlaceId = "";
     private String mPlaceName;
+
+
     private List<String> radiusOptions = Arrays.asList(
         "1 mile", "2 miles", "5 miles", "10 miles", "50 miles"
     );
@@ -81,6 +85,7 @@ public class JobProfileEditFragment extends EditFragment {
                     sectorNames[i] = sector.getName();
                     checkedSectors[i] = selectedSectors.contains(sector);
                 }
+
                 AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                 builder.setTitle(R.string.select_sectors)
                         .setMultiChoiceItems(sectorNames, checkedSectors,
@@ -112,10 +117,16 @@ public class JobProfileEditFragment extends EditFragment {
 
         mPlaceView = (TextView) view.findViewById(R.id.place);
 
-        View placeButton = view.findViewById(R.id.place_button);
+        LinearLayout placeButton =(LinearLayout) view.findViewById(R.id.place_button);
         placeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                SelectPlaceActivity.mLongitudeJob = mLongitude;
+                SelectPlaceActivity.mLatitudeJob = mLatitude;
+                SelectPlaceActivity.mPlaceIdJob = mPlaceId;
+                SelectPlaceActivity. mPlaceNameJob = mPlaceName;
+
                 Intent intent = new Intent(getActivity(), SelectPlaceActivity.class);
                 if (mPlaceId != null && !mPlaceId.isEmpty())
                     intent.putExtra(SelectPlaceActivity.PLACE_ID, mPlaceId);
@@ -126,6 +137,9 @@ public class JobProfileEditFragment extends EditFragment {
                 if (mPlaceName != null)
                     intent.putExtra(SelectPlaceActivity.NAME, mPlaceName);
                 startActivityForResult(intent, SELECT_PLACE);
+
+
+
             }
         });
 
@@ -250,7 +264,22 @@ public class JobProfileEditFragment extends EditFragment {
         jobProfile.setPlace_id(mPlaceId);
         jobProfile.setLongitude(mLongitude);
         jobProfile.setLatitude(mLatitude);
+        jobProfile.setPostcode_lookup(SelectPlaceActivity.mPostCodeJob);
+
+//        ///julia_kata_168
+//        jobProfile.setPlace_name(SelectPlaceActivity.mPlaceNameJob);
+//        jobProfile.setPlace_id(SelectPlaceActivity.mPlaceIdJob);
+//        jobProfile.setLongitude(SelectPlaceActivity.mLongitudeJob);
+//        jobProfile.setLatitude(SelectPlaceActivity.mLatitudeJob);
+//
+//
+//        ///////////////////////////////////////
+
         jobProfile.setSearch_radius(radiusValues.get(mRadiusSpinner.getSelectedItemPosition()));
+
+
+
+
     }
 
     @Override
@@ -269,10 +298,13 @@ public class JobProfileEditFragment extends EditFragment {
                     mPlaceView.setText(mPlaceName);
                 else
                     mPlaceView.setText(mPlaceName + " (from Google)");
+                mPlaceView.setText(mPlaceName);
                 mPlaceView.setError(null);
             }
         }
     }
+
+
 
     @Override
     public boolean validateInput() {

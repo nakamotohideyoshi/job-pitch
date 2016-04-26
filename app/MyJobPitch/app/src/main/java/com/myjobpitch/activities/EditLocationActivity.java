@@ -126,7 +126,6 @@ public class EditLocationActivity extends MJPProgressActionBarActivity {
             showProgress(true);
 
             mLocationEditFragment.save(location);
-
             final MJPApi api = ((MJPApplication) getApplication()).getApi();
             mCreateUpdateLocationTask = new CreateUpdateLocationTask(api, location);
             mCreateUpdateLocationTask.addListener(new CreateReadUpdateAPITaskListener<Location>() {

@@ -16,6 +16,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.Surface;
+import android.view.SurfaceHolder;
 import android.view.TextureView;
 import android.view.View;
 import android.widget.Button;
@@ -32,7 +33,7 @@ public class CameraActivity extends MJPActionBarActivity {
     public static final String OUTPUT_FILE = "output_file";
 
     private static final int MAX_RECORD_TIME = 30;
-    private static final int COUNTDOWN_TIME = 10;
+    private static final int COUNTDOWN_TIME = 3;
 
     private final String mOutputFile = CameraHelper.getOutputMediaFile(CameraHelper.MEDIA_TYPE_VIDEO).toString();
 
@@ -49,8 +50,16 @@ public class CameraActivity extends MJPActionBarActivity {
 
     private boolean isRecording = false;
     private boolean isActive = false;
+    private boolean isBackpressed = false;
     private Object mRecordingLock = new Object();
     private TextView mCountdownView;
+
+    private Boolean camera_face_sel=true;
+
+    int currentCameraId = Camera.CameraInfo.CAMERA_FACING_FRONT;
+    private SurfaceHolder previewHolder = null;
+
+    private boolean isBack = false;
 
     private class CountDownAction implements Runnable {
         private final View view;
@@ -131,6 +140,10 @@ public class CameraActivity extends MJPActionBarActivity {
             @Override
             public void onSurfaceTextureUpdated(SurfaceTexture surface) {}
         });
+
+
+
+
         mCaptureButton = (Button) findViewById(R.id.record_button);
         mCaptureButton.setEnabled(false);
         mCaptureButton.setOnClickListener(new View.OnClickListener() {
@@ -143,7 +156,10 @@ public class CameraActivity extends MJPActionBarActivity {
                         }
                         isRecording = false;
                         isActive = false;
+                        isBack = true;
+
                     } else {
+                        isBackpressed = true;
                         AlertDialog.Builder builder = new AlertDialog.Builder(CameraActivity.this);
                         builder.setMessage(getString(R.string.pre_record_message, COUNTDOWN_TIME, MAX_RECORD_TIME))
                                 .setCancelable(false)
@@ -154,6 +170,7 @@ public class CameraActivity extends MJPActionBarActivity {
                                             if (isActive)
                                                 return; // This shouldn't ever happen...
                                             isActive = true;
+                                            isBack = false;
                                             setCaptureButtonText(getString(R.string.get_ready));
                                             mCountdownView.setVisibility(View.VISIBLE);
                                             mRotateCameraButton.setEnabled(false);
@@ -167,9 +184,14 @@ public class CameraActivity extends MJPActionBarActivity {
                                             countDown.onComplete(new Runnable() {
                                                 @Override
                                                 public void run() {
+                                                    isBackpressed = false;
                                                     mCamera.stopPreview();
                                                     isRecording = true;
+                                                    //stopRecording();
+                                                    //releaseMediaRecorder();
+                                                    //prepareMediaRecorder1();
                                                     new StartRecordingTask().execute(null, null, null);
+
                                                 }
                                             });
                                             countDown.onCancel(new Runnable() {
@@ -193,6 +215,7 @@ public class CameraActivity extends MJPActionBarActivity {
                 }
             }
         });
+
         mRotateCameraButton = (ImageButton) findViewById(R.id.rotate_camera_button);
         mRotateCameraButton.setEnabled(false);
         if (Camera.getNumberOfCameras() == 1)
@@ -200,14 +223,51 @@ public class CameraActivity extends MJPActionBarActivity {
         mRotateCameraButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                /*
                 releaseMediaRecorder();
                 releaseCamera();
                 toggleCamera();
+
+                isRecording = true;
                 StartPreviewTask startPreviewTask = new StartPreviewTask();
                 startPreviewTask.execute();
+                */
+
+                ///julia_kata_117
+                if (camera_face_sel==false) {
+                    mCamera.stopPreview();
+                    camera_face_sel =  true;
+                }else {
+                    camera_face_sel = false;
+                    //NB: if you don't release the current camera before switching, you app will crash
+                    mCamera.release();
+
+                    //swap the id of the camera to be used
+                    if (currentCameraId == Camera.CameraInfo.CAMERA_FACING_BACK) {
+                        currentCameraId = Camera.CameraInfo.CAMERA_FACING_FRONT;
+                    } else {
+                        currentCameraId = Camera.CameraInfo.CAMERA_FACING_BACK;
+                    }
+                    mCamera = Camera.open(currentCameraId);
+
+                    setCameraDisplayOrientation(CameraActivity.this, currentCameraId, mCamera);
+                    try {
+
+                        mCamera.setPreviewTexture(mPreview.getSurfaceTexture());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    mCamera.startPreview();
+                }
+                ////////////////////////////////
+
             }
         });
     }
+
+
+
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
@@ -222,7 +282,7 @@ public class CameraActivity extends MJPActionBarActivity {
                 mMediaRecorder.stop();  // stop the recording
         } catch (Exception e) {}
         releaseMediaRecorder(); // release the MediaRecorder object
-        mCamera.lock();         // take camera access back from MediaRecorder
+        //mCamera.lock();         // take camera access back from MediaRecorder
         setCaptureButtonText(getString(R.string.record));
 
         Intent intent = new Intent();
@@ -299,10 +359,79 @@ public class CameraActivity extends MJPActionBarActivity {
     }
 
     @Override
+    public void onBackPressed()
+    {
+        // code here to show dialog
+
+        if (isBackpressed){
+            return;
+        }
+
+        super.onBackPressed();  // optional depending on your needs
+
+
+
+
+
+
+
+//        //finish();
+
+//        try {
+//            if (isBack)
+//                mMediaRecorder.stop();  // stop the recording
+//        } catch (Exception e) {}
+//
+//        releaseMediaRecorder(); // release the MediaRecorder object
+//        // release the camera immediately on pause event
+//        //releaseCamera();
+//        mCamera.lock();         // take camera access back from MediaRecorder
+//
+//
+//
+//        mCountdownView.setVisibility(View.INVISIBLE);
+//        mRotateCameraButton.setEnabled(true);
+//
+//        setCaptureButtonText(getString(R.string.record));
+//////
+////        Intent intent = new Intent();
+////        intent.putExtra(OUTPUT_FILE, mOutputFile);
+////        setResult(Activity.RESULT_OK, intent);
+////
+////        finish();
+//
+        if (mOutputFile != null) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(CameraActivity.this);
+            builder.setMessage(getString(R.string.discard_recording_prompt))
+                    .setCancelable(false)
+                    .setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            dialog.cancel();
+                            finish();
+                        }
+                    })
+                    .setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            dialog.cancel();
+                        }
+                    }).create().show();
+        } else
+            finish();
+
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+//        switch (item.getItemId()) {
+//            case android.R.id.home:
+//                finish();
+//                return true;
+//            default:
+//                return super.onOptionsItemSelected(item);
+//        }
         switch (item.getItemId()) {
             case android.R.id.home:
-                finish();
+                onBackPressed();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -363,6 +492,9 @@ public class CameraActivity extends MJPActionBarActivity {
         return true;
     }
 
+
+
+
     public static void setCameraDisplayOrientation(Activity activity, int cameraId, android.hardware.Camera camera) {
         android.hardware.Camera.CameraInfo info =
                 new android.hardware.Camera.CameraInfo();
@@ -390,7 +522,7 @@ public class CameraActivity extends MJPActionBarActivity {
      * Asynchronous task for preparing the {@link android.media.MediaRecorder} since it's a long blocking
      * operation.
      */
-    class StartPreviewTask extends AsyncTask<Void, Void, Boolean> {
+    public class StartPreviewTask extends AsyncTask<Void, Void, Boolean> {
 
         @Override
         protected Boolean doInBackground(Void... voids) {
@@ -446,13 +578,24 @@ public class CameraActivity extends MJPActionBarActivity {
             } else
                 CameraActivity.this.finish();
         }
+        ///julia_kata_117
+        @Override
+        protected void onPreExecute() {
+        }
+
+        @Override
+        protected void onProgressUpdate(Void... values) {
+        }
+        /////////////////////////////////////////////////////////
+
+
     }
 
     /**
      * Asynchronous task for preparing the {@link android.media.MediaRecorder} since it's a long blocking
      * operation.
      */
-    class StartRecordingTask extends AsyncTask<Void, Void, Boolean> {
+    private class StartRecordingTask extends AsyncTask<Void, Void, Boolean> {
 
         @Override
         protected Boolean doInBackground(Void... voids) {
@@ -471,7 +614,7 @@ public class CameraActivity extends MJPActionBarActivity {
         @Override
         protected void onPostExecute(Boolean result) {
             if (result) {
-                mMediaRecorder.start();
+                mMediaRecorder.start();//julia_kata_117
                 setCaptureButtonText(getString(R.string.stop));
                 final CountDownAction countDown = new CountDownAction(MAX_RECORD_TIME, mCountdownView);
                 countDown.onTick(new Runnable() {
@@ -498,5 +641,24 @@ public class CameraActivity extends MJPActionBarActivity {
                 CameraActivity.this.finish();
             }
         }
+
+
+        ///julia_kata_117
+        @Override
+        protected void onPreExecute() {
+        }
+
+        @Override
+        protected void onProgressUpdate(Void... values) {
+        }
+        /////////////////////////////////////////////////////////
+
+
     }
+
+
+
+
+
+
 }

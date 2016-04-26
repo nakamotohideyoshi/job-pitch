@@ -41,6 +41,7 @@ public class BusinessEditFragment extends EditFragment<Business> {
 
         mNameView = (EditText) view.findViewById(R.id.business_name);
         mImageEdit = (ImageEditFragment) getChildFragmentManager().findFragmentById(R.id.image_edit_fragment);
+
         mImageEdit.setListener(new ImageEditFragment.ImageEditFragmentListener() {
             @Override
             public void onDelete() {

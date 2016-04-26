@@ -32,6 +32,9 @@ public class EditJobProfileActivity extends MJPProgressActionBarActivity {
     private View mProgressView;
     private JobSeeker mJobSeeker;
     private JobProfile mJobProfile;
+    private CreateUpdateJobProfileTask mCreateUpdateJobProfileTask;
+    private ReadJobSeekerTask mReadJobSeekerTask;
+    private ReadJobProfileTask mReadJobProfileTask;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,14 +68,17 @@ public class EditJobProfileActivity extends MJPProgressActionBarActivity {
             } catch (IOException e) {
                 Log.e("EditJobProfileActivity", "Error", e);
             }
+
+
         } else {
-            ReadJobSeekerTask mReadJobSeekerTask = new ReadJobSeekerTask(getApi(), getIntent().getIntExtra("job_seeker_id", -1));
+            //mReadJobSeekerTask = new ReadJobSeekerTask(getApi(), getIntent().getIntExtra("job_seeker_id", -1));
+            mReadJobSeekerTask = new ReadJobSeekerTask(getApi(), getApi().getUser().getJob_seeker());//julia_kata
             mReadJobSeekerTask.addListener(new CreateReadUpdateAPITaskListener<JobSeeker>() {
                 @Override
                 public void onSuccess(JobSeeker result) {
                     mJobSeeker = result;
                     if (result.getProfile() != null) {
-                        ReadJobProfileTask mReadJobProfileTask = new ReadJobProfileTask(getApi(), result.getProfile());
+                        mReadJobProfileTask= new ReadJobProfileTask(getApi(), result.getProfile());
                         mReadJobProfileTask.addListener(new CreateReadUpdateAPITaskListener<JobProfile>() {
                             @Override
                             public void onSuccess(JobProfile result) {
@@ -147,7 +153,7 @@ public class EditJobProfileActivity extends MJPProgressActionBarActivity {
             mJobProfileEditFragment.save(mJobProfile);
 
             final MJPApi api = ((MJPApplication) getApplication()).getApi();
-            CreateUpdateJobProfileTask mCreateUpdateJobProfileTask = new CreateUpdateJobProfileTask(api, mJobProfile);
+            mCreateUpdateJobProfileTask = new CreateUpdateJobProfileTask(api, mJobProfile);
             mCreateUpdateJobProfileTask.addListener(new CreateReadUpdateAPITaskListener<JobProfile>() {
                 @Override
                 public void onSuccess(JobProfile jobSeeker) {
@@ -173,9 +179,16 @@ public class EditJobProfileActivity extends MJPProgressActionBarActivity {
                     showProgress(false);
                 }
             });
+
             mCreateUpdateJobProfileTask.execute();
         }
     }
+
+
+
+
+
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

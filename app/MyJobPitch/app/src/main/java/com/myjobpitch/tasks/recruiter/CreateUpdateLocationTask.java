@@ -7,7 +7,7 @@ import com.myjobpitch.tasks.CreateUpdateAPITask;
 
 public class CreateUpdateLocationTask extends CreateUpdateAPITask<Location> {
     public CreateUpdateLocationTask(final MJPApi api, final Location location) {
-        super(location, new Action<Location>() {
+        super(location, new CreateUpdateAPITask.Action<Location>() {
             @Override
             public Location create(Location location) throws MJPApiException {
                 return api.createLocation(location);

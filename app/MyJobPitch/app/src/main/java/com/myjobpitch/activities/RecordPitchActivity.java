@@ -120,8 +120,10 @@ public class RecordPitchActivity extends MJPProgressActionBarActivity {
 
         mPitchUploader = new AWSPitchUploader(getApplicationContext(), getApi());
 
-        if (savedInstanceState != null && savedInstanceState.containsKey(OUTPUT_FILE))
+        if (savedInstanceState != null && savedInstanceState.containsKey(OUTPUT_FILE)) {
             mOutputFile = savedInstanceState.getString(OUTPUT_FILE);
+            Log.e("*****123*****",mOutputFile);
+        }
 
         if (getIntent().hasExtra("pitch_data")) {
             ObjectMapper mapper = new ObjectMapper();
@@ -131,6 +133,19 @@ public class RecordPitchActivity extends MJPProgressActionBarActivity {
         }
 
         setContentView(R.layout.activity_record_pitch);
+
+
+        mPreviewImageView = (ImageView) findViewById(R.id.image_preview);
+        mImageProgress = (ProgressBar) findViewById(R.id.image_progress);
+        mNoRecordingView = findViewById(R.id.no_recording);
+
+        mProgressView = findViewById(R.id.progress);
+        mProgressText = (TextView) findViewById(R.id.progress_text);
+
+        mUploadProgressView = findViewById(R.id.upload_progress);
+        mUploadProgressText = (TextView) findViewById(R.id.upload_progress_text);
+        mUploadProgressBar = (ProgressBar) findViewById(R.id.upload_progress_bar);
+
 
         Button recordPitchButton = (Button) findViewById(R.id.record_pitch_button);
         recordPitchButton.setOnClickListener(new View.OnClickListener() {
@@ -157,6 +172,7 @@ public class RecordPitchActivity extends MJPProgressActionBarActivity {
                 }
             }
         });
+
 
         mUploadButton = (Button) findViewById(R.id.upload_button);
         mUploadButton.setOnClickListener(new View.OnClickListener() {
@@ -197,7 +213,7 @@ public class RecordPitchActivity extends MJPProgressActionBarActivity {
                 startActivity(intent);
             }
         });
-
+        /*
         mPreviewImageView = (ImageView) findViewById(R.id.image_preview);
         mImageProgress = (ProgressBar) findViewById(R.id.image_progress);
         mNoRecordingView = findViewById(R.id.no_recording);
@@ -208,7 +224,7 @@ public class RecordPitchActivity extends MJPProgressActionBarActivity {
         mUploadProgressView = findViewById(R.id.upload_progress);
         mUploadProgressText = (TextView) findViewById(R.id.upload_progress_text);
         mUploadProgressBar = (ProgressBar) findViewById(R.id.upload_progress_bar);
-
+        */
         showProgress(true);
         ReadAPITask<List<Pitch>> getPitchData = new ReadAPITask<List<Pitch>>(new ReadAPITask.Action<List<Pitch>>() {
             @Override

@@ -65,15 +65,12 @@ public class SelectPlaceActivity extends ActionBarActivity implements GoogleApiC
     public static final String LATITUDE = "latitude";
     public static final String LONGITUDE = "longitude";
 
-    ///julia_fix_168
     public static Double mLongitudeJob;
     public static Double mLatitudeJob;
     public static String mPlaceIdJob = "";
     public static String mPlaceNameJob = "";
     public static String mAddresseJob = "";
     public static String mPostCodeJob = "";
-    //////////////////////////////////////////
-
 
     private GoogleMap mMap; // Might be null if Google Play services APK is not available.
     private AutoCompleteTextView mAutocompleteView;
@@ -111,13 +108,9 @@ public class SelectPlaceActivity extends ActionBarActivity implements GoogleApiC
         if (mGoogleApiClient == null) {
             rebuildGoogleApiClient();
         }
-
         setUpMapIfNeeded();
-
         if (mMap == null)
             return;
-
-
         mAutocompleteContainerView = findViewById(R.id.location_search_container);
         mAutocompleteView = (AutoCompleteTextView) findViewById(R.id.location_search);
         mAutocompleteView.setOnItemClickListener(mAutocompleteClickListener);
@@ -143,40 +136,6 @@ public class SelectPlaceActivity extends ActionBarActivity implements GoogleApiC
         // Select button
         mSelectButton = (Button) findViewById(R.id.select_button);
         mSelectButton.setOnClickListener(this);
-//        mSelectButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Log.e("!!!!!!!!!!", "ok!!!!");
-//                if (mLatLng != null) {
-//
-//                    ///julia_fix_168
-////                    mLongitudeJob = mLatLng.longitude;
-////                    mLatitudeJob = mLatLng.latitude;
-////                    mPlaceIdJob = mPlaceId;
-////                    mPlaceNameJob = mName;
-////                    mAddresseJob = mAddress;
-//
-//
-////                    Log.e("---mLongitudeJob-------", String.valueOf(mLongitudeJob));
-////                    Log.e("---mLatitudeJob-------", String.valueOf(mLatitudeJob));
-////                    Log.e("----mPlaceIdJob------", String.valueOf(mPlaceIdJob));
-////                    Log.e("------mPlaceNameJob----", String.valueOf(mPlaceNameJob));
-//
-//                    /////////////////////////////////////
-//
-//                    Intent intent = new Intent();
-//                    intent.putExtra(LATITUDE, mLatLng.latitude);
-//                    intent.putExtra(LONGITUDE, mLatLng.longitude);
-//                    intent.putExtra(NAME, mName);
-//                    if (mAddress != null)
-//                        intent.putExtra(ADDRESS, mAddress);
-//                    if (mPlaceId != null)
-//                        intent.putExtra(PLACE_ID, mPlaceId);
-//                    setResult(Activity.RESULT_OK, intent);
-//                    finish();
-//                }
-//            }
-//        });
 
         // Change maps padding on layout of top/bottom controls
         ViewTreeObserver.OnGlobalLayoutListener layoutListener = new ViewTreeObserver.OnGlobalLayoutListener() {
@@ -411,7 +370,6 @@ public class SelectPlaceActivity extends ActionBarActivity implements GoogleApiC
 
     }
 
-    ///julia_kata_168
     private GoogleMap.OnMyLocationChangeListener myLocationChangeListener = new GoogleMap.OnMyLocationChangeListener() {
         @Override
         public void onMyLocationChange(Location location) {
@@ -422,7 +380,6 @@ public class SelectPlaceActivity extends ActionBarActivity implements GoogleApiC
             }
         }
     };
-    /////////////////////////////////////////////////
 
 
     @Override
@@ -490,7 +447,6 @@ public class SelectPlaceActivity extends ActionBarActivity implements GoogleApiC
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-                //////////////////////////////////////////////////////////////////////////////////
 
                 CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 17);
                 mMap.animateCamera(cameraUpdate);
@@ -575,8 +531,6 @@ public class SelectPlaceActivity extends ActionBarActivity implements GoogleApiC
 
         // Zoom in the Google Map
         mMap.animateCamera(CameraUpdateFactory.zoomTo(15));
-        Log.e("**************", String.valueOf(latitude));
-
 
     }
 
@@ -644,7 +598,6 @@ public class SelectPlaceActivity extends ActionBarActivity implements GoogleApiC
             }
         }
         if (v.getId() == R.id.select_button){
-            Log.e("!!!!!!!!!!", "ok!!!!");
             if (mLatLng != null) {
 
                 Intent intent = new Intent();

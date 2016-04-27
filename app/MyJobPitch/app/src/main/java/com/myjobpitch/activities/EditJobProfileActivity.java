@@ -184,12 +184,6 @@ public class EditJobProfileActivity extends MJPProgressActionBarActivity {
         }
     }
 
-
-
-
-
-
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         Intent intent;

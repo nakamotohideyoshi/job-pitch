@@ -32,6 +32,8 @@ public class AWSPitchUploader implements PitchUploader {
         );
         AmazonS3 s3 = new AmazonS3Client(credentialsProvider);
         transferUtility = new TransferUtility(s3, applicationContext);
+
+
     }
 
     @Override

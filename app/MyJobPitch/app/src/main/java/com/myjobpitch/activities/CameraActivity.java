@@ -143,7 +143,6 @@ public class CameraActivity extends MJPActionBarActivity {
 
 
 
-
         mCaptureButton = (Button) findViewById(R.id.record_button);
         mCaptureButton.setEnabled(false);
         mCaptureButton.setOnClickListener(new View.OnClickListener() {
@@ -224,23 +223,11 @@ public class CameraActivity extends MJPActionBarActivity {
             @Override
             public void onClick(View v) {
 
-                /*
-                releaseMediaRecorder();
-                releaseCamera();
-                toggleCamera();
-
-                isRecording = true;
-                StartPreviewTask startPreviewTask = new StartPreviewTask();
-                startPreviewTask.execute();
-                */
-
-                ///julia_kata_117
                 if (camera_face_sel==false) {
                     mCamera.stopPreview();
                     camera_face_sel =  true;
                 }else {
                     camera_face_sel = false;
-                    //NB: if you don't release the current camera before switching, you app will crash
                     mCamera.release();
 
                     //swap the id of the camera to be used
@@ -260,7 +247,6 @@ public class CameraActivity extends MJPActionBarActivity {
                     }
                     mCamera.startPreview();
                 }
-                ////////////////////////////////
 
             }
         });
@@ -362,44 +348,10 @@ public class CameraActivity extends MJPActionBarActivity {
     public void onBackPressed()
     {
         // code here to show dialog
-
         if (isBackpressed){
             return;
         }
-
         super.onBackPressed();  // optional depending on your needs
-
-
-
-
-
-
-
-//        //finish();
-
-//        try {
-//            if (isBack)
-//                mMediaRecorder.stop();  // stop the recording
-//        } catch (Exception e) {}
-//
-//        releaseMediaRecorder(); // release the MediaRecorder object
-//        // release the camera immediately on pause event
-//        //releaseCamera();
-//        mCamera.lock();         // take camera access back from MediaRecorder
-//
-//
-//
-//        mCountdownView.setVisibility(View.INVISIBLE);
-//        mRotateCameraButton.setEnabled(true);
-//
-//        setCaptureButtonText(getString(R.string.record));
-//////
-////        Intent intent = new Intent();
-////        intent.putExtra(OUTPUT_FILE, mOutputFile);
-////        setResult(Activity.RESULT_OK, intent);
-////
-////        finish();
-//
         if (mOutputFile != null) {
             AlertDialog.Builder builder = new AlertDialog.Builder(CameraActivity.this);
             builder.setMessage(getString(R.string.discard_recording_prompt))
@@ -422,13 +374,6 @@ public class CameraActivity extends MJPActionBarActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-//        switch (item.getItemId()) {
-//            case android.R.id.home:
-//                finish();
-//                return true;
-//            default:
-//                return super.onOptionsItemSelected(item);
-//        }
         switch (item.getItemId()) {
             case android.R.id.home:
                 onBackPressed();
@@ -578,7 +523,7 @@ public class CameraActivity extends MJPActionBarActivity {
             } else
                 CameraActivity.this.finish();
         }
-        ///julia_kata_117
+
         @Override
         protected void onPreExecute() {
         }
@@ -586,8 +531,6 @@ public class CameraActivity extends MJPActionBarActivity {
         @Override
         protected void onProgressUpdate(Void... values) {
         }
-        /////////////////////////////////////////////////////////
-
 
     }
 
@@ -614,7 +557,7 @@ public class CameraActivity extends MJPActionBarActivity {
         @Override
         protected void onPostExecute(Boolean result) {
             if (result) {
-                mMediaRecorder.start();//julia_kata_117
+                mMediaRecorder.start();
                 setCaptureButtonText(getString(R.string.stop));
                 final CountDownAction countDown = new CountDownAction(MAX_RECORD_TIME, mCountdownView);
                 countDown.onTick(new Runnable() {
@@ -642,8 +585,6 @@ public class CameraActivity extends MJPActionBarActivity {
             }
         }
 
-
-        ///julia_kata_117
         @Override
         protected void onPreExecute() {
         }
@@ -651,14 +592,7 @@ public class CameraActivity extends MJPActionBarActivity {
         @Override
         protected void onProgressUpdate(Void... values) {
         }
-        /////////////////////////////////////////////////////////
-
 
     }
-
-
-
-
-
 
 }

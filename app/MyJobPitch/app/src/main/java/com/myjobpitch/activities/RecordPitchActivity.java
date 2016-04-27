@@ -18,6 +18,15 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.amazonaws.auth.CognitoCachingCredentialsProvider;
+import com.amazonaws.mobileconnectors.s3.transferutility.TransferListener;
+import com.amazonaws.mobileconnectors.s3.transferutility.TransferObserver;
+import com.amazonaws.mobileconnectors.s3.transferutility.TransferState;
+import com.amazonaws.mobileconnectors.s3.transferutility.TransferUtility;
+import com.amazonaws.regions.Region;
+import com.amazonaws.regions.Regions;
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.AmazonS3Client;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.myjobpitch.R;
@@ -26,6 +35,7 @@ import com.myjobpitch.api.data.Pitch;
 import com.myjobpitch.tasks.CreateReadUpdateAPITaskListener;
 import com.myjobpitch.tasks.DownloadImageTask;
 import com.myjobpitch.tasks.ReadAPITask;
+import com.myjobpitch.uploader.AWSPitchUpload;
 import com.myjobpitch.uploader.AWSPitchUploader;
 import com.myjobpitch.uploader.PitchUpload;
 import com.myjobpitch.uploader.PitchUploadListener;
@@ -38,7 +48,7 @@ import java.util.List;
 
 public class RecordPitchActivity extends MJPProgressActionBarActivity {
     private static final String TAG = "RecordPitchActivity";
-
+    public static File upload_outfile;
     PitchUploadListener pitchUploadListener = new PitchUploadListener() {
         public void onStateChange(int state) {
             switch (state) {
@@ -79,9 +89,47 @@ public class RecordPitchActivity extends MJPProgressActionBarActivity {
                 mUploadProgressBar.setIndeterminate(false);
                 mUploadProgressBar.setProgress(complete);
                 mUploadProgressText.setText(Integer.toString(complete) + "%");
-            } else {
+            }
+            else {
                 mUploadProgressText.setText(getString(R.string.processing));
                 mUploadProgressBar.setIndeterminate(true);
+
+                try {
+                    CognitoCachingCredentialsProvider credentialsProvider = new CognitoCachingCredentialsProvider(
+                            getApplicationContext(),
+                            "eu-west-1:93ae6986-5938-4130-a3c0-f96c39d75be2", // Identity Pool ID
+                            Regions.EU_WEST_1 // Region
+                    );
+
+                    // Create an S3 client
+                    AmazonS3 s3 = new AmazonS3Client(credentialsProvider);
+                    // Set the region of your S3 bucket
+                    s3.setRegion(Region.getRegion(Regions.US_EAST_1));
+                    TransferUtility transferUtility = new TransferUtility(s3, RecordPitchActivity.this);
+
+                    TransferObserver observer = transferUtility.upload(
+                            "mjp-android-uploads",
+                            String.format("%s/%s.%s.%s", AWSPitchUpload.upload_api.getApiRoot().replace("/", ""), AWSPitchUpload.upload_pitch.getToken(), AWSPitchUpload.upload_pitch.getId(), upload_outfile.getName()),
+                            upload_outfile
+                    );
+
+                    Log.e("upload end!!!","transferobser");
+                    observer.setTransferListener(new TransferListener() {
+                        public void onStateChanged(int id, TransferState state) {
+                            //check the state
+                        }
+                        @Override
+                        public void onProgressChanged(int id, long bytesCurrent, long bytesTotal) {
+                        }
+                        public void onError(int id, Exception ex) {
+                            Log.e("", "Error during upload: " + id, ex);
+                        }
+                    });
+
+                }catch (Exception e){
+                    e.printStackTrace();
+                    Toast.makeText(RecordPitchActivity.this,"Please pick a valid video",Toast.LENGTH_SHORT).show();
+                }
             }
         }
 
@@ -92,7 +140,6 @@ public class RecordPitchActivity extends MJPProgressActionBarActivity {
             Toast.makeText(RecordPitchActivity.this, "Error uploading video!", Toast.LENGTH_LONG).show();
         }
     };
-
 
     private static final int RECORD_PITCH = 1;
     private static final String OUTPUT_FILE = "output_file";
@@ -213,18 +260,7 @@ public class RecordPitchActivity extends MJPProgressActionBarActivity {
                 startActivity(intent);
             }
         });
-        /*
-        mPreviewImageView = (ImageView) findViewById(R.id.image_preview);
-        mImageProgress = (ProgressBar) findViewById(R.id.image_progress);
-        mNoRecordingView = findViewById(R.id.no_recording);
 
-        mProgressView = findViewById(R.id.progress);
-        mProgressText = (TextView) findViewById(R.id.progress_text);
-
-        mUploadProgressView = findViewById(R.id.upload_progress);
-        mUploadProgressText = (TextView) findViewById(R.id.upload_progress_text);
-        mUploadProgressBar = (ProgressBar) findViewById(R.id.upload_progress_bar);
-        */
         showProgress(true);
         ReadAPITask<List<Pitch>> getPitchData = new ReadAPITask<List<Pitch>>(new ReadAPITask.Action<List<Pitch>>() {
             @Override
@@ -323,6 +359,8 @@ public class RecordPitchActivity extends MJPProgressActionBarActivity {
             mImageProgress.setVisibility(View.INVISIBLE);
             mOutputFile = data.getStringExtra(CameraActivity.OUTPUT_FILE);
             updateInterface();
+
+
         }
     }
 

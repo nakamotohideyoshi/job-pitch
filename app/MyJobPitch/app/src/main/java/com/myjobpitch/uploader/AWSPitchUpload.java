@@ -3,6 +3,7 @@ package com.myjobpitch.uploader;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferObserver;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferUtility;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.myjobpitch.activities.RecordPitchActivity;
 import com.myjobpitch.api.MJPApi;
 import com.myjobpitch.api.data.Pitch;
 import com.myjobpitch.tasks.CreatePitchTask;
@@ -17,12 +18,16 @@ public class AWSPitchUpload extends AWSPitchUploadBase {
     private final File file;
     private final TransferUtility transferUtility;
     private TransferObserver mObserver;
+    public static TransferObserver upload_mObserver;
+    public static MJPApi upload_api;
+    public static Pitch upload_pitch;
     private boolean mCancelled = false;
 
     public AWSPitchUpload(TransferUtility transferUtility, MJPApi api, File file) {
         super(api, null);
         this.transferUtility = transferUtility;
         this.file = file;
+
     }
 
     @Override
@@ -34,6 +39,7 @@ public class AWSPitchUpload extends AWSPitchUploadBase {
         task.addListener(new CreateReadUpdateAPITaskListener<Pitch>() {
             @Override
             public void onSuccess(Pitch newPitch) {
+                RecordPitchActivity.upload_outfile = file;
                 pitch = newPitch;
                 synchronized (this) {
                     if (mCancelled)
@@ -43,6 +49,9 @@ public class AWSPitchUpload extends AWSPitchUploadBase {
                             String.format("%s/%s.%s.%s", api.getApiRoot().replace("/", ""), pitch.getToken(), pitch.getId(), file.getName()),
                             file
                     );
+                    upload_api = api;
+                    upload_pitch = pitch;
+                    upload_mObserver = mObserver;
                     mObserver.setTransferListener(AWSPitchUpload.this);
                     listener.onStateChange(PitchUpload.UPLOADING);
                 }

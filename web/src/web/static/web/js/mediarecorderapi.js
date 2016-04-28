@@ -13,9 +13,9 @@ if(getBrowser() == "Chrome"){
 	var constraints = {audio: true,video: {  width: { min: 320, ideal: 320, max: 1280 },  height: { min: 240, ideal: 240, max: 720 }}}; //Firefox
 }
 
-var recBtn = document.querySelector('button#rec');
-var pauseResBtn = document.querySelector('button#pauseRes');
-var stopBtn = document.querySelector('button#stop');
+var recBtn = document.querySelector('button.btn-js-start-pitch');
+//var pauseResBtn = document.querySelector('button#pauseRes');
+var stopBtn = document.querySelector('button.btn-js-stop-pitch');
 
 var videoElement = document.querySelector('video');
 var dataElement = document.querySelector('#data');
@@ -60,7 +60,7 @@ function startRecording(stream) {
 
 
 
-  pauseResBtn.textContent = "Pause";
+  //pauseResBtn.textContent = "Pause";
 
   mediaRecorder.start(10);
 
@@ -92,7 +92,9 @@ function startRecording(stream) {
   mediaRecorder.onstop = function(){
     log('Stopped  & state = ' + mediaRecorder.state);
 
-    var blob = new Blob(chunks, {type: "video/webm"});
+    var contentType = "video/webm";
+
+    var blob = new Blob(chunks, {type: contentType});
     chunks = [];
 
     var videoURL = window.URL.createObjectURL(blob);
@@ -102,7 +104,26 @@ function startRecording(stream) {
     downloadLink.innerHTML = 'Download video file';
 
     var rand =  Math.floor((Math.random() * 10000000));
-    var name  = "video_"+rand+".webm" ;
+    var name  = "video_test_"+rand+".webm" ;
+
+		var params = {
+			Key: "video_test_"+rand+".webm",
+			Body: blob
+		};
+
+		/* var params = {
+			Key: "video_test_"+rand+".txt",
+			Body: "There is some content"
+		};
+
+			ContentType: contentType
+
+		*/
+
+		bucket.putObject(params, function (err, data) {
+			console.log(err ? 'ERROR!' : 'SAVED.');
+    });
+
 
     downloadLink.setAttribute( "download", name);
     downloadLink.setAttribute( "name", name);
@@ -134,7 +155,7 @@ function onBtnRecordClicked (){
 	  }else {
 	    navigator.getUserMedia(constraints, startRecording, errorCallback);
 	    recBtn.disabled = true;
-	    pauseResBtn.disabled = false;
+//	    pauseResBtn.disabled = false;
 	    stopBtn.disabled = false;
 	  }
   }
@@ -144,7 +165,7 @@ function onBtnRecordClicked (){
 	videoElement.controls = true;
 
 	recBtn.disabled = false;
-	pauseResBtn.disabled = true;
+//	pauseResBtn.disabled = true;
 	stopBtn.disabled = true;
 }
 
@@ -154,7 +175,7 @@ function onPauseResumeClicked(){
 
 		console.log("pause");
 
-		pauseResBtn.textContent = "Resume";
+//		pauseResBtn.textContent = "Resume";
 		mediaRecorder.pause();
 
 		stopBtn.disabled = true;
@@ -162,14 +183,14 @@ function onPauseResumeClicked(){
 	}else{
 		console.log("resume");
 
-		pauseResBtn.textContent = "Pause";
+//		pauseResBtn.textContent = "Pause";
 		mediaRecorder.resume();
 
 		stopBtn.disabled = false;
 	}
 
 	recBtn.disabled = true;
-	pauseResBtn.disabled = false;
+	//pauseResBtn.disabled = false;
 
 }
 

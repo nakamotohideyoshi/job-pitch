@@ -1,10 +1,26 @@
+// Getting AWS credentials for uploading file to S3
+var creds =AWS.config.credentials = new AWS.CognitoIdentityCredentials({
+  IdentityPoolId: 'us-east-1:5e01a88d-f24a-45e8-b1f6-dc9e406fb042'
+});
+AWS.config.credentials = creds;
+AWS.config.region = 'us-east-1';
+
+var bucket = new AWS.S3({params: {Bucket: 'mjp-media-upload'}});
+
 $(document).ready(function() {
+	//
 	$.get( "/api/job-seekers/", { csrftoken: getCookie('csrftoken') })
-	.done(function( data ) {
-		console.log(data[0].pitches[0].video);
-		$('#pitchVideoCheck').html('<video width="320" height="240" controls>'
-			+	'<source src="'+data[0].pitches[0].video+'" type="video/mp4">'
-			+'</video>');
+	.done(function( jobSeeker ) {
+		if(jobSeeker[0].pitches[0] !== undefined){
+				pitch = jobSeeker[0].pitches[0];
+
+				if(pitch.video !== undefined){
+					console.log(jobSeeker[0].pitches[0].video);
+					$('#pitchVideoCheck').html('<video width="320" height="240" controls>'
+						+	'<source src="'+pitch.video+'" type="video/mp4">'
+						+'</video>');
+				}
+		}
 	});
 
 	var job_seeker_id = 0;
@@ -12,6 +28,23 @@ $(document).ready(function() {
 	.done(function( data ) {
 		job_seeker_id = data.job_seeker;
 	});
+
+
+  $('.btn-js-start-pitch').click(function(e) {
+  	onBtnRecordClicked();
+  });
+  $('.btn-js-stop-pitch').click(function(e) {
+  	onBtnStopClicked();
+  });
+  $('.btn-js-upload-pitch').click(function(e) {
+		//results.innerHTML = '';
+
+		var videoDataContainer = document.getElementById('data');
+		var params = {Key: 'pitch-'+job_seeker_id+'.webm', Body: videoDataContainer.value};
+		bucket.upload(params, function (err, data) {
+			console.log = err ? 'ERROR!' : 'SAVED.';
+    });
+  });
 });
 
 /* function showRecord() {

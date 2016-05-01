@@ -418,6 +418,7 @@ public class JobSeekerActivity extends MJPProgressActionBarActivity {
             mEmptyButtonView.setText(getString(R.string.setup_profile));
             mEmptyButton2View.setVisibility(View.GONE);
             mEmptyButton3View.setVisibility(View.VISIBLE);
+            mEmptyButton3View.setText(getString(R.string.edit_company));
             mButtons.setVisibility(View.INVISIBLE);
             showProgress(false);
         } else if (!mJobSeeker.hasPitch()) {
@@ -426,6 +427,7 @@ public class JobSeekerActivity extends MJPProgressActionBarActivity {
             mEmptyButtonView.setText(getString(R.string.record_pitch));
             mEmptyButton2View.setVisibility(View.GONE);
             mEmptyButton3View.setVisibility(View.VISIBLE);
+            mEmptyButton3View.setText(getString(R.string.edit_company));
             mButtons.setVisibility(View.INVISIBLE);
             showProgress(false);
         } else if (!mJobSeeker.isActive()) {
@@ -434,6 +436,7 @@ public class JobSeekerActivity extends MJPProgressActionBarActivity {
             mEmptyButtonView.setText(getString(R.string.activate_profile));
             mEmptyButton2View.setVisibility(View.GONE);
             mEmptyButton3View.setVisibility(View.VISIBLE);
+            mEmptyButton3View.setText(getString(R.string.edit_company));
             mButtons.setVisibility(View.INVISIBLE);
             showProgress(false);
         } else {

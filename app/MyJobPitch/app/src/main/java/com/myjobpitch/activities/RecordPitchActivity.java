@@ -94,42 +94,42 @@ public class RecordPitchActivity extends MJPProgressActionBarActivity {
                 mUploadProgressText.setText(getString(R.string.processing));
                 mUploadProgressBar.setIndeterminate(true);
 
-                try {
-                    CognitoCachingCredentialsProvider credentialsProvider = new CognitoCachingCredentialsProvider(
-                            getApplicationContext(),
-                            "eu-west-1:93ae6986-5938-4130-a3c0-f96c39d75be2", // Identity Pool ID
-                            Regions.EU_WEST_1 // Region
-                    );
-
-                    // Create an S3 client
-                    AmazonS3 s3 = new AmazonS3Client(credentialsProvider);
-                    // Set the region of your S3 bucket
-                    s3.setRegion(Region.getRegion(Regions.US_EAST_1));
-                    TransferUtility transferUtility = new TransferUtility(s3, RecordPitchActivity.this);
-
-                    TransferObserver observer = transferUtility.upload(
-                            "mjp-android-uploads",
-                            String.format("%s/%s.%s.%s", AWSPitchUpload.upload_api.getApiRoot().replace("/", ""), AWSPitchUpload.upload_pitch.getToken(), AWSPitchUpload.upload_pitch.getId(), upload_outfile.getName()),
-                            upload_outfile
-                    );
-
-                    Log.e("upload end!!!","transferobser");
-                    observer.setTransferListener(new TransferListener() {
-                        public void onStateChanged(int id, TransferState state) {
-                            //check the state
-                        }
-                        @Override
-                        public void onProgressChanged(int id, long bytesCurrent, long bytesTotal) {
-                        }
-                        public void onError(int id, Exception ex) {
-                            Log.e("", "Error during upload: " + id, ex);
-                        }
-                    });
-
-                }catch (Exception e){
-                    e.printStackTrace();
-                    Toast.makeText(RecordPitchActivity.this,"Please pick a valid video",Toast.LENGTH_SHORT).show();
-                }
+//                try {
+//                    CognitoCachingCredentialsProvider credentialsProvider = new CognitoCachingCredentialsProvider(
+//                            getApplicationContext(),
+//                            "eu-west-1:93ae6986-5938-4130-a3c0-f96c39d75be2", // Identity Pool ID
+//                            Regions.EU_WEST_1 // Region
+//                    );
+//
+//                    // Create an S3 client
+//                    AmazonS3 s3 = new AmazonS3Client(credentialsProvider);
+//                    // Set the region of your S3 bucket
+//                    s3.setRegion(Region.getRegion(Regions.US_EAST_1));
+//                    TransferUtility transferUtility = new TransferUtility(s3, RecordPitchActivity.this);
+//
+//                    TransferObserver observer = transferUtility.upload(
+//                            "mjp-android-uploads",
+//                            String.format("%s/%s.%s.%s", AWSPitchUpload.upload_api.getApiRoot().replace("/", ""), AWSPitchUpload.upload_pitch.getToken(), AWSPitchUpload.upload_pitch.getId(), upload_outfile.getName()),
+//                            upload_outfile
+//                    );
+//
+//                    Log.e("upload end!!!","transferobser");
+//                    observer.setTransferListener(new TransferListener() {
+//                        public void onStateChanged(int id, TransferState state) {
+//                            //check the state
+//                        }
+//                        @Override
+//                        public void onProgressChanged(int id, long bytesCurrent, long bytesTotal) {
+//                        }
+//                        public void onError(int id, Exception ex) {
+//                            Log.e("", "Error during upload: " + id, ex);
+//                        }
+//                    });
+//
+//                }catch (Exception e){
+//                    e.printStackTrace();
+//                    Toast.makeText(RecordPitchActivity.this,"Please pick a valid video",Toast.LENGTH_SHORT).show();
+//                }
             }
         }
 
@@ -331,9 +331,11 @@ public class RecordPitchActivity extends MJPProgressActionBarActivity {
             mUpload.cancel();
             mUpload = null;
         }
+
         mUpload = mPitchUploader.upload(new File(mOutputFile));
         mUpload.setPitchUploadListener(pitchUploadListener);
         mUpload.start();
+
     }
 
     private void showUploadProgress(boolean visible) {

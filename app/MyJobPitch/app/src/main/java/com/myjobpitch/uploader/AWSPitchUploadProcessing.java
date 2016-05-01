@@ -46,6 +46,7 @@ public class AWSPitchUploadProcessing extends AWSPitchUploadBase {
 
                         } catch (HttpClientErrorException e) {
                             mStopped = true;
+                            mCancelled = true;
                             return null;
                         }
                     }

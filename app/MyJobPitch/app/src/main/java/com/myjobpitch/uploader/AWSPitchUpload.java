@@ -52,6 +52,7 @@ public class AWSPitchUpload extends AWSPitchUploadBase {
                     upload_api = api;
                     upload_pitch = pitch;
                     upload_mObserver = mObserver;
+
                     mObserver.setTransferListener(AWSPitchUpload.this);
                     listener.onStateChange(PitchUpload.UPLOADING);
                 }

@@ -3,6 +3,7 @@ package com.myjobpitch.activities;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Matrix;
@@ -14,11 +15,13 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Display;
 import android.view.MenuItem;
 import android.view.Surface;
 import android.view.SurfaceHolder;
 import android.view.TextureView;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -27,6 +30,8 @@ import com.myjobpitch.R;
 import com.myjobpitch.media.CameraHelper;
 
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.List;
 
 public class CameraActivity extends MJPActionBarActivity {
@@ -60,6 +65,8 @@ public class CameraActivity extends MJPActionBarActivity {
     private SurfaceHolder previewHolder = null;
 
     private boolean isBack = false;
+
+    public static boolean camera_direction = false;
 
     private class CountDownAction implements Runnable {
         private final View view;
@@ -96,7 +103,7 @@ public class CameraActivity extends MJPActionBarActivity {
                         view.postDelayed(this, 1000);
                     }
                     count--;
-                } else {
+                 } else {
                     onCancelAction.run();
                 }
             }
@@ -302,6 +309,13 @@ public class CameraActivity extends MJPActionBarActivity {
     }
 
     private void adjustAspectRatio(int videoWidth, int videoHeight) {
+        int previewWidth = 0;
+        int previewHeight = 0;
+
+
+
+
+
         int viewWidth = mPreview.getWidth();
         int viewHeight = mPreview.getHeight();
         double aspectRatio = (double) videoHeight / videoWidth;
@@ -406,13 +420,28 @@ public class CameraActivity extends MJPActionBarActivity {
 
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     private boolean prepareMediaRecorder(){
+
+
+
+        android.hardware.Camera.CameraInfo info =
+                new android.hardware.Camera.CameraInfo();
         mMediaRecorder = new MediaRecorder();
 
         // Step 1: Unlock and set camera to MediaRecorder
+        if (info.facing == Camera.CameraInfo.CAMERA_FACING_BACK) {
+            mCamera.setDisplayOrientation(90);
+            camera_direction = true;
+        }
+        //mCamera.setDisplayOrientation(90);
+
         mCamera.unlock();
         mMediaRecorder.setCamera(mCamera);
 
         // Step 2: Set sources
+
+
+
+
         mMediaRecorder.setAudioSource(MediaRecorder.AudioSource.CAMCORDER);
         mMediaRecorder.setVideoSource(MediaRecorder.VideoSource.CAMERA);
 
@@ -423,6 +452,22 @@ public class CameraActivity extends MJPActionBarActivity {
         mMediaRecorder.setOutputFile(mOutputFile);
 
         // Step 5: Prepare configured MediaRecorder
+        mMediaRecorder.setOrientationHint(90);
+
+//        if (info.facing == Camera.CameraInfo.CAMERA_FACING_FRONT) {
+//            mMediaRecorder.setOrientationHint(180);
+//        } else {  // back-facing
+//            mMediaRecorder.setOrientationHint(90);
+//        }
+
+        if (cameraDirection == Camera.CameraInfo.CAMERA_FACING_FRONT) {
+            mMediaRecorder.setOrientationHint(90);
+        }
+        if (cameraDirection == Camera.CameraInfo.CAMERA_FACING_BACK) {
+            mMediaRecorder.setOrientationHint(0);
+        }
+
+
         try {
             mMediaRecorder.prepare();
         } catch (IllegalStateException e) {
@@ -455,8 +500,8 @@ public class CameraActivity extends MJPActionBarActivity {
 
         int result;
         if (info.facing == Camera.CameraInfo.CAMERA_FACING_FRONT) {
-            result = (info.orientation + degrees) % 360;
-            result = (360 - result) % 360;  // compensate the mirror
+            result = (info.orientation + degrees + 180) % 360;
+            //result = (360 - result) % 360;  // compensate the mirror
         } else {  // back-facing
             result = (info.orientation - degrees + 360) % 360;
         }
@@ -471,7 +516,7 @@ public class CameraActivity extends MJPActionBarActivity {
 
         @Override
         protected Boolean doInBackground(Void... voids) {
-            Log.d("CameraActivity", "Starting Preview: do in background");
+            //Log.d("CameraActivity", "Starting Preview: do in background");
             mCamera = CameraHelper.getDefaultCamera(cameraDirection);
 
             if (mCamera == null) {

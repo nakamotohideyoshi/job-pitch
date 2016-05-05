@@ -1,5 +1,7 @@
 package com.myjobpitch.uploader;
 
+import android.util.Log;
+
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferObserver;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferUtility;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -48,7 +50,9 @@ public class AWSPitchUpload extends AWSPitchUploadBase {
                             "mjp-android-uploads",
                             String.format("%s/%s.%s.%s", api.getApiRoot().replace("/", ""), pitch.getToken(), pitch.getId(), file.getName()),
                             file
+
                     );
+                    Log.e("api testing-----",String.format("%s/%s/%s/%s.%s.%s", api.getApiRoot().replace("/", ""),"api","pitches", pitch.getToken(), pitch.getId(), file.getName()));
                     upload_api = api;
                     upload_pitch = pitch;
                     upload_mObserver = mObserver;

@@ -38,8 +38,8 @@ public class AWSPitchUploadProcessing extends AWSPitchUploadBase {
                         try {
                             Pitch update = api.get(Pitch.class, pitch.getId());
                             if (update.getVideo() != null) {
-                                //mStopped = false;
-                                //mCancelled = false;
+                                mStopped = false;
+                                mCancelled = false;
                                 return null;
                             }
                         } catch (MJPApiException e) {

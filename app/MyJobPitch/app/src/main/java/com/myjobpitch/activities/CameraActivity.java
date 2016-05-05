@@ -260,8 +260,6 @@ public class CameraActivity extends MJPActionBarActivity {
     }
 
 
-
-
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
@@ -311,9 +309,6 @@ public class CameraActivity extends MJPActionBarActivity {
     private void adjustAspectRatio(int videoWidth, int videoHeight) {
         int previewWidth = 0;
         int previewHeight = 0;
-
-
-
 
 
         int viewWidth = mPreview.getWidth();

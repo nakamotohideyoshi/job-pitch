@@ -26,17 +26,10 @@ public class AWSPitchUploader implements PitchUploader {
     public AWSPitchUploader(Context applicationContext, MJPApi api) {
         this.applicationContext = applicationContext;
         this.api = api;
-//        CognitoCachingCredentialsProvider credentialsProvider = new CognitoCachingCredentialsProvider(
-//                applicationContext,
-//                "eu-west-1:93ae6986-5938-4130-a3c0-f96c39d75be2", // Identity Pool ID
-//
-//        Regions.EU_WEST_1 // Region
-//        );
-
+        // Initialize the Amazon Cognito credentials provider
         CognitoCachingCredentialsProvider credentialsProvider = new CognitoCachingCredentialsProvider(
                 applicationContext,
                 "us-east-1:5e01a88d-f24a-45e8-b1f6-dc9e406fb042", // Identity Pool ID
-
                 Regions.US_EAST_1 // Region
         );
         AmazonS3 s3 = new AmazonS3Client(credentialsProvider);

@@ -137,6 +137,7 @@
     <string name="action_record_pitch">Record My Pitch</string>
     <string name="home">Home</string>
     <string name="processing">Processing...</string>
+    <string name="completing">Completed</string>
     <string name="map_error">Error starting google maps!</string>
     <string name="search_location_hint">In order to match you with jobs in your area, you must tell us your location, and specify the maximum distance to search.</string>
     <string name="delete">Delete</string>

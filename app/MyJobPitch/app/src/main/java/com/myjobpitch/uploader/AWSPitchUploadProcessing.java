@@ -38,11 +38,13 @@ public class AWSPitchUploadProcessing extends AWSPitchUploadBase {
                         try {
                             Pitch update = api.get(Pitch.class, pitch.getId());
                             if (update.getVideo() != null) {
-                                mStopped = false;
-                                mCancelled = false;
+                                //mStopped = false;
+                                //mCancelled = false;
                                 return null;
                             }
                         } catch (MJPApiException e) {
+                            mStopped = true;
+                            mCancelled = true;
 
                         } catch (HttpClientErrorException e) {
                             mStopped = true;
@@ -52,10 +54,13 @@ public class AWSPitchUploadProcessing extends AWSPitchUploadBase {
                     }
                     try {
                         Thread.sleep(100);
-                    } catch (InterruptedException e) {}
+                    } catch (InterruptedException e) {
+                        mStopped = true;
+                        mCancelled = true;
+                    }
                     iterations++;
                 }
-                //return null;
+
             }
 
             @Override

@@ -197,7 +197,7 @@ public class LoginActivity extends MJPProgressActivity implements LoaderCallback
      * If there are form errors (invalid email, missing fields, etc.), the
      * errors are presented and no actual login attempt is made.
      */
-        public void attemptLogin() {
+     public void attemptLogin() {
         if (logoutTask != null) {
             return;
         }
@@ -287,6 +287,7 @@ public class LoginActivity extends MJPProgressActivity implements LoaderCallback
         return mProgressView;
     }
 
+
     @Override
     public View getMainView() {
         return mLoginFormView;
@@ -302,6 +303,7 @@ public class LoginActivity extends MJPProgressActivity implements LoaderCallback
         int IS_PRIMARY = 1;
     }
 
+
     private void addEmailsToAutoComplete(List<String> emailAddressCollection) {
         //Create adapter to tell the AutoCompleteTextView what to show in its dropdown list.
         ArrayAdapter<String> adapter =
@@ -310,6 +312,7 @@ public class LoginActivity extends MJPProgressActivity implements LoaderCallback
 
         mUsernameView.setAdapter(adapter);
     }
+
 
     class LoginTask extends AsyncTask<Void, Void, Boolean> {
 

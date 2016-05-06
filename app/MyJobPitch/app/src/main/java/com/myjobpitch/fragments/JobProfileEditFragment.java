@@ -265,20 +265,7 @@ public class JobProfileEditFragment extends EditFragment {
         jobProfile.setLongitude(mLongitude);
         jobProfile.setLatitude(mLatitude);
         jobProfile.setPostcode_lookup(SelectPlaceActivity.mPostCodeJob);
-
-//        ///julia_kata_168
-//        jobProfile.setPlace_name(SelectPlaceActivity.mPlaceNameJob);
-//        jobProfile.setPlace_id(SelectPlaceActivity.mPlaceIdJob);
-//        jobProfile.setLongitude(SelectPlaceActivity.mLongitudeJob);
-//        jobProfile.setLatitude(SelectPlaceActivity.mLatitudeJob);
-//
-//
-//        ///////////////////////////////////////
-
         jobProfile.setSearch_radius(radiusValues.get(mRadiusSpinner.getSelectedItemPosition()));
-
-
-
 
     }
 

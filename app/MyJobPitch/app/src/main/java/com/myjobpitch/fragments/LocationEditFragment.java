@@ -215,10 +215,6 @@ public class LocationEditFragment extends EditFragment<Location> {
         mImageEdit.load(mImageUri, mNoImageUri, mNoImageMessage, mNoImageAlpha);
     }
 
-//    private void loadImage() {
-//        mImageEdit.load(mImageUri);
-//    }
-
     public void save(Location location) {
         location.setName(mLocationNameView.getText().toString());
         location.setDescription(mLocationDescView.getText().toString());
@@ -306,9 +302,7 @@ public class LocationEditFragment extends EditFragment<Location> {
                 else
                     mPlaceView.setText(mPlaceName + " (from Google)");
                 mPlaceView.setError(null);
-                //julia_kata
-                //save_location();
-                ///////////////////
+
             }
         } else {
             mImageEdit.onActivityResult(requestCode, resultCode, data);

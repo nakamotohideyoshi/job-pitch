@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="9532" systemVersion="15D21" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9530"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="ErrorTextField">
+            <connections>
+                <outlet property="errorLabel" destination="WQd-v9-uWt" id="7QF-f5-QUo"/>
+                <outlet property="textField" destination="sh9-yo-URi" id="eJq-AP-ObJ"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="iN0-l3-epB">
+            <rect key="frame" x="0.0" y="0.0" width="334" height="56"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="sh9-yo-URi">
+                    <rect key="frame" x="0.0" y="0.0" width="334" height="46"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                    <textInputTraits key="textInputTraits"/>
+                </textField>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="WQd-v9-uWt">
+                    <rect key="frame" x="5" y="48" width="334" height="0.0"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                    <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                    <nil key="highlightedColor"/>
+                </label>
+            </subviews>
+            <constraints>
+                <constraint firstItem="WQd-v9-uWt" firstAttribute="left" secondItem="sh9-yo-URi" secondAttribute="left" constant="5" id="1QC-jh-QOP"/>
+                <constraint firstItem="sh9-yo-URi" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="267-ps-OhW"/>
+                <constraint firstAttribute="bottom" secondItem="WQd-v9-uWt" secondAttribute="bottom" constant="8" id="6dU-LU-M5q"/>
+                <constraint firstAttribute="right" secondItem="sh9-yo-URi" secondAttribute="right" id="WrB-Ay-Rrn"/>
+                <constraint firstItem="sh9-yo-URi" firstAttribute="left" secondItem="iN0-l3-epB" secondAttribute="left" id="qsN-so-Xml"/>
+                <constraint firstItem="WQd-v9-uWt" firstAttribute="right" secondItem="sh9-yo-URi" secondAttribute="right" constant="5" id="v9i-6K-poR"/>
+                <constraint firstItem="WQd-v9-uWt" firstAttribute="top" secondItem="sh9-yo-URi" secondAttribute="bottom" constant="2" id="vRq-5m-KaK"/>
+            </constraints>
+            <nil key="simulatedStatusBarMetrics"/>
+            <nil key="simulatedTopBarMetrics"/>
+            <nil key="simulatedBottomBarMetrics"/>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <point key="canvasLocation" x="382" y="-144"/>
+        </view>
+    </objects>
+</document>

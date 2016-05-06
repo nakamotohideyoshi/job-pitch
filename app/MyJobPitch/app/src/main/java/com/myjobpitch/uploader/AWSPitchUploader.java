@@ -45,6 +45,11 @@ public class AWSPitchUploader implements PitchUploader {
     }
 
     @Override
+    public PitchUpload download(File file) {
+        return new AWSPitchUpload(transferUtility, api, file);
+    }
+
+    @Override
     public void getUploadInProgress(List<Pitch> pitches, final UploadInProgressCallback callback) {
         for (Pitch pitch : pitches)
             if (pitch.getVideo() == null) {

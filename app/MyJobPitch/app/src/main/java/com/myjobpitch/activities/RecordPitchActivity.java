@@ -91,8 +91,8 @@ public class RecordPitchActivity extends MJPProgressActionBarActivity {
                 mUploadProgressText.setText(Integer.toString(complete) + "%");
             }
             else {
-                mUploadProgressText.setText(getString(R.string.processing));
-                mUploadProgressBar.setIndeterminate(true);
+                mUploadProgressText.setText(getString(R.string.completing));
+                mUploadProgressBar.setIndeterminate(false);
             }
         }
 

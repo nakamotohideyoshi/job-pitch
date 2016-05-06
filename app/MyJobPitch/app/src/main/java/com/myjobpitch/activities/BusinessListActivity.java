@@ -182,18 +182,6 @@ public class BusinessListActivity extends MJPProgressActionBarActivity  {
         });
         Log.d("RecruiterActivity", "created");
 
-
-
-        Button mEmptyButton3View = (Button) findViewById(R.id.empty_button_3);
-        mEmptyButton3View.setVisibility(View.VISIBLE);
-        mEmptyButton3View.setText(getString(R.string.create_profile));
-        mEmptyButton3View.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(BusinessListActivity.this, CreateProfileActivity.class);
-                startActivity(intent);
-            }
-        });
     }
 
     @Override

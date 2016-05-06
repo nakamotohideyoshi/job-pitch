@@ -18,6 +18,15 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.amazonaws.auth.CognitoCachingCredentialsProvider;
+import com.amazonaws.mobileconnectors.s3.transferutility.TransferListener;
+import com.amazonaws.mobileconnectors.s3.transferutility.TransferObserver;
+import com.amazonaws.mobileconnectors.s3.transferutility.TransferState;
+import com.amazonaws.mobileconnectors.s3.transferutility.TransferUtility;
+import com.amazonaws.regions.Region;
+import com.amazonaws.regions.Regions;
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.AmazonS3Client;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.myjobpitch.R;
@@ -26,6 +35,7 @@ import com.myjobpitch.api.data.Pitch;
 import com.myjobpitch.tasks.CreateReadUpdateAPITaskListener;
 import com.myjobpitch.tasks.DownloadImageTask;
 import com.myjobpitch.tasks.ReadAPITask;
+import com.myjobpitch.uploader.AWSPitchUpload;
 import com.myjobpitch.uploader.AWSPitchUploader;
 import com.myjobpitch.uploader.PitchUpload;
 import com.myjobpitch.uploader.PitchUploadListener;
@@ -38,7 +48,7 @@ import java.util.List;
 
 public class RecordPitchActivity extends MJPProgressActionBarActivity {
     private static final String TAG = "RecordPitchActivity";
-
+    public static File upload_outfile;
     PitchUploadListener pitchUploadListener = new PitchUploadListener() {
         public void onStateChange(int state) {
             switch (state) {
@@ -79,9 +89,10 @@ public class RecordPitchActivity extends MJPProgressActionBarActivity {
                 mUploadProgressBar.setIndeterminate(false);
                 mUploadProgressBar.setProgress(complete);
                 mUploadProgressText.setText(Integer.toString(complete) + "%");
-            } else {
-                mUploadProgressText.setText(getString(R.string.processing));
-                mUploadProgressBar.setIndeterminate(true);
+            }
+            else {
+                mUploadProgressText.setText(getString(R.string.completing));
+                mUploadProgressBar.setIndeterminate(false);
             }
         }
 
@@ -92,7 +103,6 @@ public class RecordPitchActivity extends MJPProgressActionBarActivity {
             Toast.makeText(RecordPitchActivity.this, "Error uploading video!", Toast.LENGTH_LONG).show();
         }
     };
-
 
     private static final int RECORD_PITCH = 1;
     private static final String OUTPUT_FILE = "output_file";
@@ -114,6 +124,8 @@ public class RecordPitchActivity extends MJPProgressActionBarActivity {
     private DownloadImageTask mDownloadImageTask;
     private PitchUpload mUpload;
 
+    private TransferUtility transferUtility;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -134,7 +146,6 @@ public class RecordPitchActivity extends MJPProgressActionBarActivity {
 
         setContentView(R.layout.activity_record_pitch);
 
-
         mPreviewImageView = (ImageView) findViewById(R.id.image_preview);
         mImageProgress = (ProgressBar) findViewById(R.id.image_progress);
         mNoRecordingView = findViewById(R.id.no_recording);
@@ -145,7 +156,6 @@ public class RecordPitchActivity extends MJPProgressActionBarActivity {
         mUploadProgressView = findViewById(R.id.upload_progress);
         mUploadProgressText = (TextView) findViewById(R.id.upload_progress_text);
         mUploadProgressBar = (ProgressBar) findViewById(R.id.upload_progress_bar);
-
 
         Button recordPitchButton = (Button) findViewById(R.id.record_pitch_button);
         recordPitchButton.setOnClickListener(new View.OnClickListener() {
@@ -172,7 +182,6 @@ public class RecordPitchActivity extends MJPProgressActionBarActivity {
                 }
             }
         });
-
 
         mUploadButton = (Button) findViewById(R.id.upload_button);
         mUploadButton.setOnClickListener(new View.OnClickListener() {
@@ -213,18 +222,7 @@ public class RecordPitchActivity extends MJPProgressActionBarActivity {
                 startActivity(intent);
             }
         });
-        /*
-        mPreviewImageView = (ImageView) findViewById(R.id.image_preview);
-        mImageProgress = (ProgressBar) findViewById(R.id.image_progress);
-        mNoRecordingView = findViewById(R.id.no_recording);
 
-        mProgressView = findViewById(R.id.progress);
-        mProgressText = (TextView) findViewById(R.id.progress_text);
-
-        mUploadProgressView = findViewById(R.id.upload_progress);
-        mUploadProgressText = (TextView) findViewById(R.id.upload_progress_text);
-        mUploadProgressBar = (ProgressBar) findViewById(R.id.upload_progress_bar);
-        */
         showProgress(true);
         ReadAPITask<List<Pitch>> getPitchData = new ReadAPITask<List<Pitch>>(new ReadAPITask.Action<List<Pitch>>() {
             @Override
@@ -295,9 +293,12 @@ public class RecordPitchActivity extends MJPProgressActionBarActivity {
             mUpload.cancel();
             mUpload = null;
         }
+
         mUpload = mPitchUploader.upload(new File(mOutputFile));
         mUpload.setPitchUploadListener(pitchUploadListener);
         mUpload.start();
+
+
     }
 
     private void showUploadProgress(boolean visible) {
@@ -323,6 +324,8 @@ public class RecordPitchActivity extends MJPProgressActionBarActivity {
             mImageProgress.setVisibility(View.INVISIBLE);
             mOutputFile = data.getStringExtra(CameraActivity.OUTPUT_FILE);
             updateInterface();
+
+
         }
     }
 

@@ -83,7 +83,7 @@ public class CreateProfileActivity extends MJPProgressActionBarActivity {
         mCreateRecruiterButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-            createRecruiter();
+                createRecruiter();
             }
         });
 
@@ -116,62 +116,7 @@ public class CreateProfileActivity extends MJPProgressActionBarActivity {
         mCreateProfileView = findViewById(R.id.create_profile);
 
 
-//        //julia_kata
-//        if (savedInstanceState != null) {
-//            ObjectMapper mapper = new ObjectMapper();
-//            try {
-//                String location_data = savedInstanceState.getString("location_data");
-//                Log.d("EditLocationActivity", String.format("savedIntanceState['location_data']: %s", location_data));
-//                location = mapper.readValue(location_data, Location.class);
-//                mLocationEditFragment.load(location);
-//                showProgress(false);
-//            } catch (IOException e) {
-//                Log.e("EditLocationActivity", "Error", e);
-//            }
-//        } else if (getIntent().hasExtra("location_data")) {
-//            ObjectMapper mapper = new ObjectMapper();
-//            try {
-//                location = mapper.readValue(getIntent().getStringExtra("location_data"), Location.class);
-//                mLocationEditFragment.load(location);
-//                showProgress(false);
-//            } catch (IOException e) {}
-//        } else if (getIntent().hasExtra(LOCATION_ID)) {
-//            mReadLocationTask = new ReadLocationTask(getApi(), getIntent().getIntExtra(LOCATION_ID, -1));
-//            mReadLocationTask.addListener(new CreateReadUpdateAPITaskListener<Location>() {
-//                @Override
-//                public void onSuccess(Location result) {
-//                    location = result;
-//                    mLocationEditFragment.load(location);
-//                    showProgress(false);
-//                }
-//
-//                @Override
-//                public void onError(JsonNode errors) {
-//                    Toast toast = Toast.makeText(CreateProfileActivity.this, "Error loading location", Toast.LENGTH_LONG);
-//                    toast.show();
-//                    finish();
-//                }
-//
-//                @Override
-//                public void onConnectionError() {
-//                    Toast toast = Toast.makeText(CreateProfileActivity.this, "Connection Error: Please check your internet connection", Toast.LENGTH_LONG);
-//                    toast.show();
-//                    finish();
-//                }
-//
-//                @Override
-//                public void onCancelled() {
-//                }
-//            });
-//            mReadLocationTask.execute();
-//        } else {
-//            showProgress(false);
-//            setTitle(R.string.action_add_location);
-//            location = new Location();
-//            location.setBusiness(getIntent().getIntExtra("business_id", -1));
-//            mLocationEditFragment.load(location);
-//        }
-//        /////////////////////////////////////////////////////////////////////////////////////////////////////
+
 
     }
 
@@ -184,13 +129,13 @@ public class CreateProfileActivity extends MJPProgressActionBarActivity {
 
 
 
-                api = ((MJPApplication) getApplication()).getApi();
+            api = ((MJPApplication) getApplication()).getApi();
 
-                if (business == null)
-                    business = new Business();
-                mBusinessEditFragment.save(business);
-                mCreateBusinessTask = new CreateUpdateBusinessTask(api, business);
-                mCreateBusinessTask.addListener(new CreateReadUpdateAPITaskListener<Business>() {
+            if (business == null)
+                business = new Business();
+            mBusinessEditFragment.save(business);
+            mCreateBusinessTask = new CreateUpdateBusinessTask(api, business);
+            mCreateBusinessTask.addListener(new CreateReadUpdateAPITaskListener<Business>() {
                 @Override
                 public void onSuccess(Business business) {
                     CreateProfileActivity.this.business = business;
@@ -324,16 +269,16 @@ public class CreateProfileActivity extends MJPProgressActionBarActivity {
         mRecruiterProfile.setVisibility(View.GONE);
         mJobSeekerProfile.setVisibility(View.VISIBLE);
     }
-
-//    @Override
-//    protected void onSaveInstanceState(Bundle outState) {
-//        super.onSaveInstanceState(outState);
-//        mLocationEditFragment.save(location);
-//        ObjectMapper mapper = new ObjectMapper();
-//        try {
-//            outState.putString("location_data", mapper.writeValueAsString(location));
-//        } catch (JsonProcessingException e) {}
-//    }
+    /*
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        mLocationEditFragment.save(location);
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            outState.putString("location_data", mapper.writeValueAsString(location));
+        } catch (JsonProcessingException e) {}
+    }*/
 
 
     @Override

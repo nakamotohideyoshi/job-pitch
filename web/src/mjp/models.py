@@ -261,9 +261,9 @@ class JobSeeker(models.Model):
     nationality = models.ForeignKey(Nationality, related_name='job_seekers', null=True)
     nationality_public = models.BooleanField(default=None)
     description = models.TextField()
-    # rating = models.DecimalField(default=0, max_digits=3, decimal_places=2)
     active = models.BooleanField(default=True)
     cv = models.FileField(upload_to='cv/%Y/%m/%d', max_length=255, null=True)
+    has_references = models.BooleanField(default=False)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
 

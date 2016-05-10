@@ -8,9 +8,34 @@ navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia 
 
 
 if(getBrowser() == "Chrome"){
-	var constraints = {"audio": true, "video": {  "mandatory": {  "minWidth": 320,  "maxWidth": 320, "minHeight": 240,"maxHeight": 240 }, "optional": [] } };//Chrome
+	var constraints = {
+		"audio": true,
+		"video": {
+			"mandatory": {
+				"minWidth": 320,
+				"maxWidth": 320,
+				"minHeight": 240,
+				"maxHeight": 240
+			},
+		"optional": []
+		}
+	};//Chrome
 }else if(getBrowser() == "Firefox"){
-	var constraints = {audio: true,video: {  width: { min: 320, ideal: 320, max: 1280 },  height: { min: 240, ideal: 240, max: 720 }}}; //Firefox
+	var constraints = {
+		audio: true,
+		video: {
+			width: {
+				min: 320,
+				ideal: 320,
+				max: 1280
+			},
+			height: {
+				min: 240,
+				ideal: 240,
+				max: 720
+			}
+		}
+	}; //Firefox
 }
 
 var recBtn = document.querySelector('button.btn-js-start-pitch');
@@ -21,10 +46,15 @@ var videoElement = document.querySelector('video');
 var dataElement = document.querySelector('#data');
 var downloadLink = document.querySelector('a#downloadLink');
 
+var successGetUserMedia = true;
+var rawMediaRecorded = false;
+
 videoElement.controls = false;
 
 function errorCallback(error){
-  console.log('navigator.getUserMedia error: ', error);
+	console.log('navigator.getUserMedia error: ', error);
+
+	successGetUserMedia = false;
 }
 
 /*
@@ -38,18 +68,18 @@ var chunks = [];
 var count = 0;
 
 function startRecording(stream) {
-  log('Start recording...');
+	log('Start recording...');
 	if (typeof MediaRecorder.isTypeSupported == 'function')
 	{
 		/*
 			MediaRecorder.isTypeSupported is a Chrome 49 function announced in https://developers.google.com/web/updates/2016/01/mediarecorder but it's not present in the MediaRecorder API spec http://www.w3.org/TR/mediastream-recording/
 		*/
 		if (MediaRecorder.isTypeSupported('video/webm;codecs=vp9')) {
-  	  var options = {mimeType: 'video/webm;codecs=vp9'};
-  	} else if (MediaRecorder.isTypeSupported('video/webm;codecs=vp8')) {
-  	  var options = {mimeType: 'video/webm;codecs=vp8'};
-  	}
-  	log('Using '+options.mimeType);
+		var options = {mimeType: 'video/webm;codecs=vp9'};
+	} else if (MediaRecorder.isTypeSupported('video/webm;codecs=vp8')) {
+		var options = {mimeType: 'video/webm;codecs=vp8'};
+	}
+	log('Using '+options.mimeType);
 		mediaRecorder = new MediaRecorder(stream, options);
 	}else{
 		log('Using default codecs for browser');
@@ -60,53 +90,51 @@ function startRecording(stream) {
 
 
 
-  //pauseResBtn.textContent = "Pause";
+	//pauseResBtn.textContent = "Pause";
 
-  mediaRecorder.start(10);
+	mediaRecorder.start(10);
 
-  var url = window.URL || window.webkitURL;
-  videoElement.src = url ? url.createObjectURL(stream) : stream;
-  videoElement.play();
+	var url = window.URL || window.webkitURL;
+	videoElement.src = url ? url.createObjectURL(stream) : stream;
+	videoElement.play();
 
-  mediaRecorder.ondataavailable = function(e) {
-    //log('Data available...');
-    //console.log(e.data);
-    //console.log(e.data.type);
-    //console.log(e);
+	mediaRecorder.ondataavailable = function(e) {
+		//log('Data available...');
+		//console.log(e.data);
+		//console.log(e.data.type);
+		//console.log(e);
 
-	chunks.push(e.data);
+		chunks.push(e.data);
+	};
 
-
-  };
-
-  mediaRecorder.onerror = function(e){
-    log('Error: ' + e);
-    console.log('Error: ', e);
-  };
+	mediaRecorder.onerror = function(e){
+		log('Error: ' + e);
+		console.log('Error: ', e);
+	};
 
 
-  mediaRecorder.onstart = function(){
-    log('Started & state = ' + mediaRecorder.state);
-  };
+	mediaRecorder.onstart = function(){
+		log('Started & state = ' + mediaRecorder.state);
+	};
 
-  mediaRecorder.onstop = function(){
-    log('Stopped  & state = ' + mediaRecorder.state);
+	mediaRecorder.onstop = function(){
+		log('Stopped  & state = ' + mediaRecorder.state);
 
-    var contentType = "video/webm";
+		var contentType = "video/webm";
 
-    var blob = new Blob(chunks, {type: contentType});
-    chunks = [];
+		var blob = new Blob(chunks, {type: contentType});
+		chunks = [];
 
-    var videoURL = window.URL.createObjectURL(blob);
+		var videoURL = window.URL.createObjectURL(blob);
 
-    downloadLink.href = videoURL;
-    videoElement.src = videoURL;
-    downloadLink.innerHTML = 'Download video file';
+		downloadLink.href = videoURL;
+		videoElement.src = videoURL;
+		downloadLink.innerHTML = 'Download video file';
 
-    var rand =  Math.floor((Math.random() * 10000000));
-    var name  = "video_test_"+rand+".webm" ;
+		var rand =  Math.floor((Math.random() * 10000000));
+		var name  = "video_test_"+rand+".webm" ;
 
-		var params = {
+		rawMediaRecorded = {
 			Key: "video_test_"+rand+".webm",
 			Body: blob
 		};
@@ -120,27 +148,21 @@ function startRecording(stream) {
 
 		*/
 
-		bucket.putObject(params, function (err, data) {
-			console.log(err ? 'ERROR!' : 'SAVED.');
-    });
+		downloadLink.setAttribute( "download", name);
+		downloadLink.setAttribute( "name", name);
+	}
 
+	mediaRecorder.onpause = function(){
+		log('Paused & state = ' + mediaRecorder.state);
+	}
 
-    downloadLink.setAttribute( "download", name);
-    downloadLink.setAttribute( "name", name);
+	mediaRecorder.onresume = function(){
+		log('Resumed  & state = ' + mediaRecorder.state);
+	}
 
-  };
-
-  mediaRecorder.onpause = function(){
-	  log('Paused & state = ' + mediaRecorder.state);
-  }
-
-  mediaRecorder.onresume = function(){
-	  log('Resumed  & state = ' + mediaRecorder.state);
-  }
-
-  mediaRecorder.onwarning = function(e){
-    log('Warning: ' + e);
-  };
+	mediaRecorder.onwarning = function(e){
+		log('Warning: ' + e);
+	};
 }
 
 //function handleSourceOpen(event) {
@@ -150,20 +172,29 @@ function startRecording(stream) {
 //}
 
 function onBtnRecordClicked (){
-	 if (typeof MediaRecorder === 'undefined' || !navigator.getUserMedia) {
-	    alert('MediaRecorder not supported on your browser, use Firefox 30 or Chrome 49 instead.');
-	  }else {
-	    navigator.getUserMedia(constraints, startRecording, errorCallback);
-	    recBtn.disabled = true;
-//	    pauseResBtn.disabled = false;
-	    stopBtn.disabled = false;
-	  }
-  }
+	var success = true;
 
-  function onBtnStopClicked(){
-	mediaRecorder.stop();
+	if (typeof MediaRecorder === 'undefined' || !navigator.getUserMedia) {
+		alert('MediaRecorder not supported on your browser, use Firefox 30 or Chrome 49 instead.');
+		success = false;
+	}else {
+		navigator.getUserMedia(constraints, startRecording, errorCallback);
+
+		if(successGetUserMedia){
+			recBtn.disabled = true;
+			//	    pauseResBtn.disabled = false;
+			stopBtn.disabled = false;
+		}
+		success = successGetUserMedia;
+	}
+
+	return success;
+}
+
+function onBtnStopClicked(){
+	mediaRecorder.onstop();
+
 	videoElement.controls = true;
-
 	recBtn.disabled = false;
 //	pauseResBtn.disabled = true;
 	stopBtn.disabled = true;
@@ -196,7 +227,7 @@ function onPauseResumeClicked(){
 
 
 function log(message){
-  dataElement.innerHTML = dataElement.innerHTML+'<br>'+message ;
+	dataElement.innerHTML = dataElement.innerHTML+'<br>'+message ;
 }
 
 
@@ -216,7 +247,7 @@ function getBrowser(){
 	 browserName = "Opera";
 	 fullVersion = nAgt.substring(verOffset+6);
 	 if ((verOffset=nAgt.indexOf("Version"))!=-1)
-	   fullVersion = nAgt.substring(verOffset+8);
+		 fullVersion = nAgt.substring(verOffset+8);
 	}
 	// In MSIE, the true version is after "MSIE" in userAgent
 	else if ((verOffset=nAgt.indexOf("MSIE"))!=-1) {
@@ -233,7 +264,7 @@ function getBrowser(){
 	 browserName = "Safari";
 	 fullVersion = nAgt.substring(verOffset+7);
 	 if ((verOffset=nAgt.indexOf("Version"))!=-1)
-	   fullVersion = nAgt.substring(verOffset+8);
+		 fullVersion = nAgt.substring(verOffset+8);
 	}
 	// In Firefox, the true version is after "Firefox"
 	else if ((verOffset=nAgt.indexOf("Firefox"))!=-1) {
@@ -242,19 +273,19 @@ function getBrowser(){
 	}
 	// In most other browsers, "name/version" is at the end of userAgent
 	else if ( (nameOffset=nAgt.lastIndexOf(' ')+1) <
-		   (verOffset=nAgt.lastIndexOf('/')) )
+			 (verOffset=nAgt.lastIndexOf('/')) )
 	{
 	 browserName = nAgt.substring(nameOffset,verOffset);
 	 fullVersion = nAgt.substring(verOffset+1);
 	 if (browserName.toLowerCase()==browserName.toUpperCase()) {
-	  browserName = navigator.appName;
+		browserName = navigator.appName;
 	 }
 	}
 	// trim the fullVersion string at semicolon/space if present
 	if ((ix=fullVersion.indexOf(";"))!=-1)
-	   fullVersion=fullVersion.substring(0,ix);
+		 fullVersion=fullVersion.substring(0,ix);
 	if ((ix=fullVersion.indexOf(" "))!=-1)
-	   fullVersion=fullVersion.substring(0,ix);
+		 fullVersion=fullVersion.substring(0,ix);
 
 	majorVersion = parseInt(''+fullVersion,10);
 	if (isNaN(majorVersion)) {

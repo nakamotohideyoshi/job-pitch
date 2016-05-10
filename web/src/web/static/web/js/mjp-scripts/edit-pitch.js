@@ -1,25 +1,34 @@
 // Getting AWS credentials for uploading file to S3
 var creds =AWS.config.credentials = new AWS.CognitoIdentityCredentials({
-  IdentityPoolId: 'us-east-1:5e01a88d-f24a-45e8-b1f6-dc9e406fb042'
+	IdentityPoolId: 'us-east-1:5e01a88d-f24a-45e8-b1f6-dc9e406fb042'
 });
 AWS.config.credentials = creds;
 AWS.config.region = 'us-east-1';
 
 var bucket = new AWS.S3({params: {Bucket: 'mjp-media-upload'}});
 
+var videoTimer;
+
 $(document).ready(function() {
 	//
 	$.get( "/api/job-seekers/", { csrftoken: getCookie('csrftoken') })
 	.done(function( jobSeeker ) {
 		if(jobSeeker[0].pitches[0] !== undefined){
-				pitch = jobSeeker[0].pitches[0];
+			pitch = jobSeeker[0].pitches[0];
 
-				if(pitch.video !== undefined){
-					console.log(jobSeeker[0].pitches[0].video);
-					$('#pitchVideoCheck').html('<video width="320" height="240" controls>'
-						+	'<source src="'+pitch.video+'" type="video/mp4">'
-						+'</video>');
+			var videoSource = '';
+			if(pitch.video !== undefined){
+				var videoType = 'video/webm';
+
+				if(pitch.video.indexOf('mp4')>=0){
+					videoType = 'video/mp4';
 				}
+				videoSource = '<source src="'+pitch.video+'" type="'+videoType+'">';
+			}
+
+			var htmlVideo = '<video width="320" height="240" controls>'+videoSource+'</video><br>';
+
+			$('#pitchVideoCheck').html(htmlVideo);
 		}
 	});
 
@@ -30,22 +39,89 @@ $(document).ready(function() {
 	});
 
 
-  $('.btn-js-start-pitch').click(function(e) {
-  	onBtnRecordClicked();
-  });
-  $('.btn-js-stop-pitch').click(function(e) {
-  	onBtnStopClicked();
-  });
-  $('.btn-js-upload-pitch').click(function(e) {
-		//results.innerHTML = '';
+	$('.btn-js-start-pitch').click(function(e) {
+		if(onBtnRecordClicked()){
+			startVideoTimer(19, $('.btn-js-stop-pitch'), stopRecordingProcess);
+		};
+	});
 
+
+	$('.btn-js-stop-pitch').click(function(e) {
+		stopRecordingProcess();
+	});
+
+
+	$('.btn-js-upload-pitch').click(function(e) {
 		var videoDataContainer = document.getElementById('data');
 		var params = {Key: 'pitch-'+job_seeker_id+'.webm', Body: videoDataContainer.value};
 		bucket.upload(params, function (err, data) {
 			console.log = err ? 'ERROR!' : 'SAVED.';
-    });
-  });
+		});
+	});
 });
+
+function startVideoTimer(duration, $display, callback) {
+	var timer = duration, minutes, seconds;
+	videoTimer = setInterval(function () {
+		minutes = parseInt(timer / 60, 10);
+		seconds = parseInt(timer % 60, 10);
+
+		minutes = minutes < 10 ? "0" + minutes : minutes;
+		seconds = seconds < 10 ? "0" + seconds : seconds;
+
+		$display.html('Stop (Time Left: <span class="timeLeft">' + minutes + ":" + seconds + '</span>)');
+
+		if (--timer < 0) {
+			timer = duration;
+			clearInterval(videoTimer);
+			callback();
+			$display.text('Stop');
+		}
+	}, 1000);
+
+}
+
+function stopRecordingProcess(){
+		onBtnStopClicked();
+
+		if(rawMediaRecorded != undefined && rawMediaRecorded){
+			saveS3object(rawMediaRecorded);
+		}
+}
+
+function saveS3object(object){
+	log('Start uploading ...');
+	bucket.putObject(object, function (err, data) {
+		if(!err){
+			log('Start transcoding ...')
+			poolingS3upload();
+		}
+		console.log(err ? 'ERROR!' : 'SAVED.');
+	});
+}
+
+function poolingS3upload(){
+	uploadingS3timer = setInterval(function(){
+		$.get( "/api/pitches/", { csrftoken: getCookie('csrftoken') })
+		.done(function( pitches ) {
+			if(pitches !== undefined && pitches.length > 0){
+				var oneIsNullAtLeast = false;
+
+				pitches.forEach(function(pitch) {
+					if(pitch.video == undefined || pitch.video == null || !pitch.video){
+						oneIsNullAtLeast = true;
+						return !true; // It found one
+					}
+				});
+
+				if(!oneIsNullAtLeast){
+					clearInterval(uploadingS3timer);
+					log('End of Uploading');
+				}
+			}
+		});
+	},3000);
+}
 
 /* function showRecord() {
 	$( "#recordStartButton" ).attr( "disabled", false );

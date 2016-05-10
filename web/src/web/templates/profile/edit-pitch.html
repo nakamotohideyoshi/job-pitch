@@ -20,91 +20,56 @@
 	</style>
 
 	<div class="container-fluid">
-				<!-- Page Heading -->
-				<div class="row">
-					<div class="col-lg-12">
-						<h1 class="page-header">
-							Record a New Pitch
-						</h1>
-							<div class="row videoCheckEdit">
-								<div class="col-lg-12">
-									<h3>Your Current Pitch:</h3>
-									<div id="pitchVideoCheck">
-										<!-- video width="320" height="240" controls><source src="" type="video/mp4"></video -->
-										<video width="320" height="240" controls autoplay></video><br>
-									</div>
-								  <button class="btn btn-small btn-js-start-pitch">Record a new Pitch</button>
-								  <button class="btn btn-small"   onclick="onPauseResumeClicked()" disabled>Pause</button>
-								  <button class="btn btn-small btn-js-stop-pitch"  onclick="onBtnStopClicked()" disabled>Stop</button>
-								  <button class="btn btn-small btn-js-upload-pitch">Upload</button>
-									<!-- button id="recordStartButtonBefore" class="btn btn-small" onclick="newPitchStart()">Record a new Pitch</button-->
-								</div>
-								<a id="downloadLink" download="mediarecorder.webm" name="mediarecorder.webm" href></a>
-								<p id="data"></p>
-							</div>
-							<div class="row recordNewVideo">
-								<div class="col-lg-6">
+		<!-- Page Heading -->
+		<h1 class="page-header">Record a New Pitch</h1>
 
-									<div id="message"></div>
-									<div id="recorder">
-										<span style="padding-left:5px;padding-right:5px;text-align:center;" id="recorderTimer">
-										Time left: <span class="timeLeft">00:30</span>
-										</span>
-										<br/>
-										<div id="webcam">
-										</div>
-										<br clear="both"/>
-										<br/>
-										<button id="recordStartButton" class="btn btn-small" onclick="startRecording()" disabled>Start Recording</button>
-
-
-										<button id="recordStopButton" class="btn btn-small" onclick="closeCamera()" disabled>Stop Recording</button>
-									</div>
-									<div id="fallback-upload">
-
-
-									</div>
-
-								</div>
-								<div class="col-lg-6">
-									<p>Setting up your job pitch here are some tips from one of our recruiting pros:
-										<br />
-										<ul>
-											<li>Dress smartly. You want to be taken seriously</li>
-											<li>Be careful what is in the background. Nothing should distract from your pitch</li>
-											<li>Record your pitch in a quiet location to avoid background noise</li>
-										</ul>
-										</p>
-										<p>Recording your job pitch:
-										<br />
-										<ul>
-											<li>Practise makes perfect – Record your pitch, play it back and perfect it. If in doubt, ask a friend</li>
-											<li>Be positive, confident and look straight into the camera to make eye contact</li>
-											<li>Be yourself, but don’t fidget such as waving your hands about in the air</li>
-											<li>Stand or sit up straight which helps you breath more easily</li>
-											<li>Don’t rush it and speak clearly</li>
-											<li>Remember to smile!</li>
-										</ul></p>
-										<p>Remember you only have 30 seconds, so what to say?
-										<br />
-										<ul>
-											<li>Your name and location</li>
-											<li>Your personality</li>
-											<li>Type of work you are looking for</li>
-											<li>Relevant experience</li>
-										</ul>
-										Finish your pitch confidently by saying something like, “Thank you and I look forward to hearing from you”.
-									</p>
-								</div>
-							</div>
-
-					</div>
+		<div class="row videoCheckEdit">
+			<div class="col-lg-12">
+				<h3>Your Current Pitch:</h3>
+				<div id="pitchVideoCheck">
+					<!-- video width="320" height="240" controls><source src="" type="video/mp4"></video -->
+					<video  controls autoplay width="320" height="240"></video>
 				</div>
-				<!-- /.row -->
-
-
+			  <button class="btn btn-small btn-js-start-pitch">Record a new Pitch</button>
+			  <button class="btn btn-small btn-js-stop-pitch" disabled>Stop</button>
+			  <button class="btn btn-small btn-js-upload-pitch">Upload</button>
 			</div>
-			<!-- /.container-fluid -->
+			<a id="downloadLink" download="mediarecorder.webm" name="mediarecorder.webm" href></a>
+			<p id="data"></p>
+		</div>
+		<div class="row">
+			<div class="col-lg-6">
+				<p>Setting up your job pitch here are some tips from one of our recruiting pros:
+					<br />
+					<ul>
+						<li>Dress smartly. You want to be taken seriously</li>
+						<li>Be careful what is in the background. Nothing should distract from your pitch</li>
+						<li>Record your pitch in a quiet location to avoid background noise</li>
+					</ul>
+					</p>
+					<p>Recording your job pitch:
+					<br />
+					<ul>
+						<li>Practise makes perfect – Record your pitch, play it back and perfect it. If in doubt, ask a friend</li>
+						<li>Be positive, confident and look straight into the camera to make eye contact</li>
+						<li>Be yourself, but don’t fidget such as waving your hands about in the air</li>
+						<li>Stand or sit up straight which helps you breath more easily</li>
+						<li>Don’t rush it and speak clearly</li>
+						<li>Remember to smile!</li>
+					</ul></p>
+					<p>Remember you only have 30 seconds, so what to say?
+					<br />
+					<ul>
+						<li>Your name and location</li>
+						<li>Your personality</li>
+						<li>Type of work you are looking for</li>
+						<li>Relevant experience</li>
+					</ul>
+					Finish your pitch confidently by saying something like, “Thank you and I look forward to hearing from you”.
+				</p>
+			</div>
+		</div><!-- /.row -->
+	</div><!-- /.container-fluid -->
 
 {% endblock %}
 

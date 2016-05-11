@@ -30,9 +30,8 @@ $(document).ready(function() {
 
 
 	$('.btn-js-start-pitch').click(function(e) {
-		var pitch = null;
-
-		renderVideoContainer(pitch);
+		// prepare video container;
+		$('#pitchVideoCheck video').html();
 
 		if(onBtnRecordClicked()){
 			startVideoTimer(19, $('.btn-js-stop-pitch'), stopRecordingProcess);
@@ -41,7 +40,7 @@ $(document).ready(function() {
 
 
 	$('.btn-js-stop-pitch').click(function(e) {
-		stopRecordingProcess();
+		stopRecordingProcess( $(this) );
 	});
 
 
@@ -85,15 +84,15 @@ function startVideoTimer(duration, $display, callback) {
 
 		if (--timer < 0) {
 			timer = duration;
-			clearInterval(videoTimer);
-			callback();
-			$display.text('Stop');
+			callback($display);
 		}
 	}, 1000);
 
 }
 
-function stopRecordingProcess(){
+function stopRecordingProcess($display){
+		$display.text('Stop');
+
 		clearInterval(videoTimer);
 
 		onBtnStopClicked();

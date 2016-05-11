@@ -16,19 +16,7 @@ $(document).ready(function() {
 		if(jobSeeker[0].pitches[0] !== undefined){
 			var pitch = jobSeeker[0].pitches[0];
 
-			var videoSource = '';
-			if(pitch.video !== undefined && pitch.video !== null){
-				var videoType = 'video/webm';
-
-				if(pitch.video.indexOf('mp4')>=0){
-					videoType = 'video/mp4';
-				}
-				videoSource = '<source src="'+pitch.video+'" type="'+videoType+'">';
-			}
-
-			var htmlVideo = '<video width="320" height="240" controls>'+videoSource+'</video><br>';
-
-			$('#pitchVideoCheck').html(htmlVideo);
+			renderVideoContainer(pitch);
 		}
 	});
 
@@ -41,6 +29,10 @@ $(document).ready(function() {
 
 	$('.btn-js-start-pitch').click(function(e) {
 		if(onBtnRecordClicked()){
+			var pitch = null;
+
+			renderVideoContainer(pitch);
+
 			startVideoTimer(19, $('.btn-js-stop-pitch'), stopRecordingProcess);
 		};
 	});
@@ -59,6 +51,23 @@ $(document).ready(function() {
 		});
 	});
 });
+
+function renderVideoContainer(pitch) {
+	var videoSource = '';
+
+	if(pitch !== null && pitch !== undefined && pitch.video !== undefined && pitch.video !== null){
+		var videoType = 'video/webm';
+
+		if(pitch.video.indexOf('mp4')>=0){
+			videoType = 'video/mp4';
+		}
+		videoSource = '<source src="'+pitch.video+'" type="'+videoType+'">';
+	}
+
+	var htmlVideo = '<video width="320" height="240" controls autoplay>'+videoSource+'</video><br>';
+
+	$('#pitchVideoCheck').html(htmlVideo);
+}
 
 function startVideoTimer(duration, $display, callback) {
 	var timer = duration, minutes, seconds;
@@ -129,7 +138,11 @@ function poolingS3upload(pitch){
 		$.ajax({
 			url: "/api/pitches/",
 			type: 'POST',
-			data: { id: pitch.id, csrftoken: getCookie('csrftoken') },
+			data: {
+				id: pitch.id,
+				token: pitch.token,
+				csrftoken: getCookie('csrftoken')
+			},
 			cache: false,
 			async: false
 		}).done(function( pitches ) {

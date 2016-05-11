@@ -9,14 +9,16 @@ var bucket = new AWS.S3({params: {Bucket: 'mjp-android-uploads'}});
 
 var videoTimer;
 
+var actualPitch = null;
+
 $(document).ready(function() {
 	//
 	$.get( "/api/job-seekers/", { csrftoken: getCookie('csrftoken') })
 	.done(function( jobSeeker ) {
 		if(jobSeeker[0].pitches[0] !== undefined){
-			var pitch = jobSeeker[0].pitches[0];
+			actualPitch = jobSeeker[0].pitches[0];
 
-			renderVideoContainer(pitch);
+			renderVideoContainer(actualPitch);
 		}
 	});
 
@@ -71,6 +73,7 @@ function renderVideoContainer(pitch) {
 
 function startVideoTimer(duration, $display, callback) {
 	var timer = duration, minutes, seconds;
+
 	videoTimer = setInterval(function () {
 		minutes = parseInt(timer / 60, 10);
 		seconds = parseInt(timer % 60, 10);
@@ -94,7 +97,12 @@ function stopRecordingProcess(){
 		onBtnStopClicked();
 
 		if(rawMediaRecorded != undefined && rawMediaRecorded){
-			var pitch = getNewPitchMetaData();
+			var pitch = actualPitch;
+
+			if(actualPitch==undefined || actualPitch==null){
+				pitch = getNewPitchMetaData();
+			}
+
 			saveS3object(pitch, rawMediaRecorded);
 		}
 }

@@ -5,7 +5,7 @@ var creds =AWS.config.credentials = new AWS.CognitoIdentityCredentials({
 AWS.config.credentials = creds;
 AWS.config.region = 'us-east-1';
 
-var bucket = new AWS.S3({params: {Bucket: 'mjp-media-upload'}});
+var bucket = new AWS.S3({params: {Bucket: 'mjp-android-uploads'}});
 
 var videoTimer;
 
@@ -14,10 +14,10 @@ $(document).ready(function() {
 	$.get( "/api/job-seekers/", { csrftoken: getCookie('csrftoken') })
 	.done(function( jobSeeker ) {
 		if(jobSeeker[0].pitches[0] !== undefined){
-			pitch = jobSeeker[0].pitches[0];
+			var pitch = jobSeeker[0].pitches[0];
 
 			var videoSource = '';
-			if(pitch.video !== undefined){
+			if(pitch.video !== undefined && pitch.video !== null){
 				var videoType = 'video/webm';
 
 				if(pitch.video.indexOf('mp4')>=0){
@@ -85,25 +85,54 @@ function stopRecordingProcess(){
 		onBtnStopClicked();
 
 		if(rawMediaRecorded != undefined && rawMediaRecorded){
-			saveS3object(rawMediaRecorded);
+			var pitch = getNewPitchMetaData();
+			saveS3object(pitch, rawMediaRecorded);
 		}
 }
 
-function saveS3object(object){
+function getNewPitchMetaData() {
+		var pitch;
+
+		$.ajax({
+			url: "/api/pitches/",
+			type: 'POST',
+			data: { csrftoken: getCookie('csrftoken') },
+			cache: false,
+			async: false
+		})
+		.done(function(data) {
+			pitch = data;
+		});
+
+		return pitch;
+}
+
+function saveS3object(pitch, object){
 	log('Start uploading ...');
+
+	object.Key = window.location.origin.replace('//','')
+	+ '.' + pitch.token
+	+ '.' + pitch.id
+	+ '.' + object.Key;
+
 	bucket.putObject(object, function (err, data) {
 		if(!err){
 			log('Start transcoding ...')
-			poolingS3upload();
+			poolingS3upload(pitch);
 		}
 		console.log(err ? 'ERROR!' : 'SAVED.');
 	});
 }
 
-function poolingS3upload(){
+function poolingS3upload(pitch){
 	uploadingS3timer = setInterval(function(){
-		$.get( "/api/pitches/", { csrftoken: getCookie('csrftoken') })
-		.done(function( pitches ) {
+		$.ajax({
+			url: "/api/pitches/",
+			type: 'POST',
+			data: { id: pitch.id, csrftoken: getCookie('csrftoken') },
+			cache: false,
+			async: false
+		}).done(function( pitches ) {
 			if(pitches !== undefined && pitches.length > 0){
 				var oneIsNullAtLeast = false;
 

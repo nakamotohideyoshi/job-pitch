@@ -97,11 +97,7 @@ function stopRecordingProcess(){
 		onBtnStopClicked();
 
 		if(rawMediaRecorded != undefined && rawMediaRecorded){
-			var pitch = actualPitch;
-
-			if(actualPitch==undefined || actualPitch==null){
-				pitch = getNewPitchMetaData();
-			}
+			var pitch = getNewPitchMetaData();
 
 			saveS3object(pitch, rawMediaRecorded);
 		}

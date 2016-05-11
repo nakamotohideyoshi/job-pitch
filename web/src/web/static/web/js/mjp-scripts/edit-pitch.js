@@ -141,7 +141,7 @@ function poolingS3upload(pitch){
 	uploadingS3timer = setInterval(function(){
 		$.ajax({
 			url: "/api/pitches/",
-			type: 'POST',
+			type: 'GET',
 			data: {
 				id: pitch.id,
 				token: pitch.token,

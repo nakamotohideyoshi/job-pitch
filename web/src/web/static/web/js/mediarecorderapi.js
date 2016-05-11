@@ -131,11 +131,17 @@ function startRecording(stream) {
 		videoElement.src = videoURL;
 		downloadLink.innerHTML = 'Download video file';
 
+		var date = new Date();
+		var yyyy = date.getFullYear().toString();
+		var mm = (date.getMonth()+1).toString(); // getMonth() is zero-based
+		var dd  = date.getDate().toString();
+		var date = yyyy + (mm[1]?mm:"0"+mm[0]) + (dd[1]?dd:"0"+dd[0]);
+
 		var rand =  Math.floor((Math.random() * 10000000));
-		var name  = "video_test_"+rand+".webm" ;
+		var name  = "VID_"+date+'_'+rand+".webm" ;
 
 		rawMediaRecorded = {
-			Key: "video_test_"+rand+".webm",
+			Key: name,
 			Body: blob
 		};
 

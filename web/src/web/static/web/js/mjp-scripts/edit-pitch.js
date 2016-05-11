@@ -30,11 +30,11 @@ $(document).ready(function() {
 
 
 	$('.btn-js-start-pitch').click(function(e) {
+		var pitch = null;
+
+		renderVideoContainer(pitch);
+
 		if(onBtnRecordClicked()){
-			var pitch = null;
-
-			renderVideoContainer(pitch);
-
 			startVideoTimer(19, $('.btn-js-stop-pitch'), stopRecordingProcess);
 		};
 	});
@@ -94,6 +94,8 @@ function startVideoTimer(duration, $display, callback) {
 }
 
 function stopRecordingProcess(){
+		clearInterval(videoTimer);
+
 		onBtnStopClicked();
 
 		if(rawMediaRecorded != undefined && rawMediaRecorded){

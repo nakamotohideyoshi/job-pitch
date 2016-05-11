@@ -160,39 +160,30 @@ public class JobSeekerEditFragment extends EditFragment<JobSeeker> {
         jobSeeker.setTelephone_public(mTelephonePublicView.isChecked());
         jobSeeker.setMobile(mMobileView.getText().toString());
         jobSeeker.setMobile_public(mMobilePublicView.isChecked());
-
-
         try {
             jobSeeker.setAge(Integer.parseInt(mAgeView.getText().toString()));
         } catch (NumberFormatException e) {}
         jobSeeker.setAge_public(mAgePublicView.isChecked());
 
-        if (jobSeeker.getAge()==null){
-            jobSeeker.setAge(0);
-        }
-
         MJPAPIObject selectedSex = (MJPAPIObject) mSexView.getSelectedItem();
         if (selectedSex != null)
             jobSeeker.setSex((int) selectedSex.getId());
         else
-            jobSeeker.setSex(1);
+            jobSeeker.setSex(null);
         jobSeeker.setSex_public(mSexPublicView.isChecked());
 
         MJPAPIObject selectedNationality = (MJPAPIObject) mNationalityView.getSelectedItem();
         if (selectedNationality != null)
             jobSeeker.setNationality((int) selectedNationality.getId());
         else
-            jobSeeker.setNationality(1);
+            jobSeeker.setNationality(null);
         jobSeeker.setNationality_public(mNationalityPublicView.isChecked());
         jobSeeker.setDescription(mDescriptionView.getText().toString());
         jobSeeker.setActive(mActiveView.isChecked());
 
-        jobSeeker.setCv("");
-        jobSeeker.setProfile(0);
-        jobSeeker.setPitches(null);
     }
 
-    public CreateUpdateJobSeekerTask getCreateBusinessTask(MJPApi api, JobSeeker jobSeeker) {
+    public CreateUpdateJobSeekerTask getCreateJobSeekerTask(MJPApi api, JobSeeker jobSeeker) {
         CreateUpdateJobSeekerTask task = new CreateUpdateJobSeekerTask(api, jobSeeker);
         task.addListener(this);
         return task;

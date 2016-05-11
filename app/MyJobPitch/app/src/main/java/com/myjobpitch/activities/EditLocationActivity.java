@@ -131,7 +131,6 @@ public class EditLocationActivity extends MJPProgressActionBarActivity {
         if (mLocationEditFragment.validateInput()) {
             showProgress(true);
 
-
             Geocoder geocoder = new Geocoder(this, Locale.ENGLISH);
             List<Address> addresses = null;
             try {
@@ -142,27 +141,18 @@ public class EditLocationActivity extends MJPProgressActionBarActivity {
             Address address=null;
             String addr="";
             String zipcode="";
-            String city="";
-            String state="";
             if (addresses != null && addresses.size() > 0) {
-
                 addr = addresses.get(0).getAddressLine(0) + "," + addresses.get(0).getSubAdminArea();
-                city = addresses.get(0).getLocality();
-                state = addresses.get(0).getAdminArea();
-
                 for (int i = 0; i < addresses.size(); i++) {
                     address = addresses.get(i);
                     if (address.getPostalCode() != null) {
                         zipcode = address.getPostalCode();
                         break;
                     }
-
                 }
             }
             location.setPostcode_lookup(zipcode);
             location.setAddress(addr);
-
-
             mLocationEditFragment.save(location);
             api = ((MJPApplication) getApplication()).getApi();
             mCreateUpdateLocationTask = new CreateUpdateLocationTask(api, location);

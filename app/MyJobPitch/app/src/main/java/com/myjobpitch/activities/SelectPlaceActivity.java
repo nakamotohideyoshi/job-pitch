@@ -9,6 +9,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
+import android.location.Address;
 import android.location.Criteria;
 import android.location.Geocoder;
 import android.location.Location;
@@ -166,7 +167,7 @@ public class SelectPlaceActivity extends ActionBarActivity implements GoogleApiC
             } else {
                 updateLocation(latLng, name);
             }
-            //mSelectButton.setEnabled(false);
+
         }
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);

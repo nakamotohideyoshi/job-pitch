@@ -1,0 +1,1019 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		8A670AFC6AF2FC453A25DE73 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0B006CB817BA624E01EDF19B /* libPods.a */; };
+		CE45AEC41C0B41390092AB75 /* MJPViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CE45AEC31C0B41390092AB75 /* MJPViewController.m */; };
+		CE45AECA1C0B45AD0092AB75 /* RegisterRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = CE45AEC91C0B45AD0092AB75 /* RegisterRequest.m */; };
+		CE45AECD1C0B461A0092AB75 /* User.m in Sources */ = {isa = PBXBuildFile; fileRef = CE45AECC1C0B461A0092AB75 /* User.m */; };
+		CE4696AE1C9A0BC8001E3FFE /* LockableNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = CE4696AD1C9A0BC8001E3FFE /* LockableNavigationController.m */; };
+		CE59737D1C1626630096B001 /* JobSeekerProfileView.m in Sources */ = {isa = PBXBuildFile; fileRef = CE59737C1C1626630096B001 /* JobSeekerProfileView.m */; };
+		CE6FD33C1C01F9BB001A04C3 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = CE6FD33B1C01F9BB001A04C3 /* main.m */; };
+		CE6FD33F1C01F9BB001A04C3 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = CE6FD33E1C01F9BB001A04C3 /* AppDelegate.m */; };
+		CE6FD3421C01F9BB001A04C3 /* Login.m in Sources */ = {isa = PBXBuildFile; fileRef = CE6FD3411C01F9BB001A04C3 /* Login.m */; };
+		CE6FD3451C01F9BB001A04C3 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CE6FD3431C01F9BB001A04C3 /* Main.storyboard */; };
+		CE6FD3471C01F9BC001A04C3 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CE6FD3461C01F9BC001A04C3 /* Assets.xcassets */; };
+		CE6FD34A1C01F9BC001A04C3 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CE6FD3481C01F9BC001A04C3 /* LaunchScreen.storyboard */; };
+		CE6FD3551C01F9BC001A04C3 /* My_Job_PitchTests.m in Sources */ = {isa = PBXBuildFile; fileRef = CE6FD3541C01F9BC001A04C3 /* My_Job_PitchTests.m */; };
+		CE7742351C92368200A9A2BA /* SimpleListCell.m in Sources */ = {isa = PBXBuildFile; fileRef = CE7742341C92368200A9A2BA /* SimpleListCell.m */; };
+		CE7742381C923D4900A9A2BA /* ListLocations.m in Sources */ = {isa = PBXBuildFile; fileRef = CE7742371C923D4900A9A2BA /* ListLocations.m */; };
+		CE77423B1C923EAD00A9A2BA /* ListJobs.m in Sources */ = {isa = PBXBuildFile; fileRef = CE77423A1C923EAD00A9A2BA /* ListJobs.m */; };
+		CE77423E1C92555900A9A2BA /* EditLocation.m in Sources */ = {isa = PBXBuildFile; fileRef = CE77423D1C92555900A9A2BA /* EditLocation.m */; };
+		CE7742411C95D6C000A9A2BA /* EditJob.m in Sources */ = {isa = PBXBuildFile; fileRef = CE7742401C95D6C000A9A2BA /* EditJob.m */; };
+		CE7742441C95D85300A9A2BA /* JobEditView.m in Sources */ = {isa = PBXBuildFile; fileRef = CE7742431C95D85300A9A2BA /* JobEditView.m */; };
+		CE7742461C95D88000A9A2BA /* JobEditView.xib in Resources */ = {isa = PBXBuildFile; fileRef = CE7742451C95D88000A9A2BA /* JobEditView.xib */; };
+		CE7742491C9623C300A9A2BA /* ViewJobMenu.m in Sources */ = {isa = PBXBuildFile; fileRef = CE7742481C9623C300A9A2BA /* ViewJobMenu.m */; };
+		CE77424C1C96244900A9A2BA /* ViewJob.m in Sources */ = {isa = PBXBuildFile; fileRef = CE77424B1C96244900A9A2BA /* ViewJob.m */; };
+		CE8395A81C3EF98F007A8213 /* EditProfile.m in Sources */ = {isa = PBXBuildFile; fileRef = CE8395A71C3EF98F007A8213 /* EditProfile.m */; };
+		CE8395AB1C42F279007A8213 /* SwipeView.m in Sources */ = {isa = PBXBuildFile; fileRef = CE8395AA1C42F279007A8213 /* SwipeView.m */; };
+		CE86847E1C0E570300D4B6C7 /* ScrollingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CE86847D1C0E570300D4B6C7 /* ScrollingViewController.m */; };
+		CE8AAFE51C56D93C0004F021 /* Pitch.m in Sources */ = {isa = PBXBuildFile; fileRef = CE8AAFE41C56D93C0004F021 /* Pitch.m */; };
+		CE8AAFE71C5848490004F021 /* JobSeekerSearchProfileView.xib in Resources */ = {isa = PBXBuildFile; fileRef = CE8AAFE61C5848490004F021 /* JobSeekerSearchProfileView.xib */; };
+		CE8AAFEA1C5848900004F021 /* JobSeekerSearchProfileView.m in Sources */ = {isa = PBXBuildFile; fileRef = CE8AAFE91C5848900004F021 /* JobSeekerSearchProfileView.m */; };
+		CE8AAFED1C5850C40004F021 /* EditSearchProfile.m in Sources */ = {isa = PBXBuildFile; fileRef = CE8AAFEC1C5850C40004F021 /* EditSearchProfile.m */; };
+		CE8AAFF71C599FA50004F021 /* DownPickerMultiple.m in Sources */ = {isa = PBXBuildFile; fileRef = CE8AAFF61C599FA50004F021 /* DownPickerMultiple.m */; };
+		CE8AAFF91C59A2DE0004F021 /* LocationMap.xib in Resources */ = {isa = PBXBuildFile; fileRef = CE8AAFF81C59A2DE0004F021 /* LocationMap.xib */; };
+		CE8AAFFC1C59A7820004F021 /* LocationMapView.m in Sources */ = {isa = PBXBuildFile; fileRef = CE8AAFFB1C59A7820004F021 /* LocationMapView.m */; };
+		CE8AAFFE1C5AD62E0004F021 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CE8AAFFD1C5AD62E0004F021 /* CoreLocation.framework */; };
+		CE8AB0011C5AF6250004F021 /* Application.m in Sources */ = {isa = PBXBuildFile; fileRef = CE8AB0001C5AF6250004F021 /* Application.m */; };
+		CE8AB0041C5B04320004F021 /* JobDetails.m in Sources */ = {isa = PBXBuildFile; fileRef = CE8AB0031C5B04320004F021 /* JobDetails.m */; };
+		CE8AB00B1C5EA9F60004F021 /* MessageListCell.m in Sources */ = {isa = PBXBuildFile; fileRef = CE8AB00A1C5EA9F60004F021 /* MessageListCell.m */; };
+		CE8AB0111C5EB66C0004F021 /* Messages.m in Sources */ = {isa = PBXBuildFile; fileRef = CE8AB0101C5EB66C0004F021 /* Messages.m */; };
+		CE8AB0141C5EBA850004F021 /* Message.m in Sources */ = {isa = PBXBuildFile; fileRef = CE8AB0131C5EBA850004F021 /* Message.m */; };
+		CE8AB0171C5EDB7B0004F021 /* MessageThread.m in Sources */ = {isa = PBXBuildFile; fileRef = CE8AB0161C5EDB7B0004F021 /* MessageThread.m */; };
+		CE8AB01A1C5EE4B80004F021 /* MessageThreadCell.m in Sources */ = {isa = PBXBuildFile; fileRef = CE8AB0191C5EE4B80004F021 /* MessageThreadCell.m */; };
+		CE8AB01D1C6029D90004F021 /* RecordPitch.m in Sources */ = {isa = PBXBuildFile; fileRef = CE8AB01C1C6029D90004F021 /* RecordPitch.m */; };
+		CE8AB0201C6038750004F021 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CE8AB01E1C6038750004F021 /* AVFoundation.framework */; };
+		CE8AB0211C6038750004F021 /* AVKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CE8AB01F1C6038750004F021 /* AVKit.framework */; };
+		CE8AB0241C617F550004F021 /* BusinessEditView.m in Sources */ = {isa = PBXBuildFile; fileRef = CE8AB0231C617F550004F021 /* BusinessEditView.m */; };
+		CE8AB0261C61826B0004F021 /* BusinessEditView.xib in Resources */ = {isa = PBXBuildFile; fileRef = CE8AB0251C61826B0004F021 /* BusinessEditView.xib */; };
+		CE8AB0281C6AA22E0004F021 /* LocationEditView.xib in Resources */ = {isa = PBXBuildFile; fileRef = CE8AB0271C6AA22E0004F021 /* LocationEditView.xib */; };
+		CE8AB02B1C6AA2490004F021 /* LocationEditView.m in Sources */ = {isa = PBXBuildFile; fileRef = CE8AB02A1C6AA2490004F021 /* LocationEditView.m */; };
+		CEB424131C9A35BC0012748B /* JobSeekerDetails.m in Sources */ = {isa = PBXBuildFile; fileRef = CEB424121C9A35BC0012748B /* JobSeekerDetails.m */; };
+		CEC2E4041C45A88100AC0F45 /* Job.m in Sources */ = {isa = PBXBuildFile; fileRef = CEC2E4031C45A88100AC0F45 /* Job.m */; };
+		CEC2E4071C45B4C200AC0F45 /* Location.m in Sources */ = {isa = PBXBuildFile; fileRef = CEC2E4061C45B4C200AC0F45 /* Location.m */; };
+		CEC2E40A1C45B4EC00AC0F45 /* MJPObjectWithDates.m in Sources */ = {isa = PBXBuildFile; fileRef = CEC2E4091C45B4EC00AC0F45 /* MJPObjectWithDates.m */; };
+		CEC2E40D1C45C7AB00AC0F45 /* Image.m in Sources */ = {isa = PBXBuildFile; fileRef = CEC2E40C1C45C7AB00AC0F45 /* Image.m */; };
+		CEC2E4191C4BE86400AC0F45 /* Sector.m in Sources */ = {isa = PBXBuildFile; fileRef = CEC2E4181C4BE86400AC0F45 /* Sector.m */; };
+		CEC2E41C1C4BEAA900AC0F45 /* ApplicationStatus.m in Sources */ = {isa = PBXBuildFile; fileRef = CEC2E41B1C4BEAA900AC0F45 /* ApplicationStatus.m */; };
+		CEC2E4221C4BEFDE00AC0F45 /* JobStatus.m in Sources */ = {isa = PBXBuildFile; fileRef = CEC2E4211C4BEFDE00AC0F45 /* JobStatus.m */; };
+		CEE005671C90D6D50065E43A /* CreateJobSeekerProfile.m in Sources */ = {isa = PBXBuildFile; fileRef = CEE005661C90D6D50065E43A /* CreateJobSeekerProfile.m */; };
+		CEE0056A1C90DEC90065E43A /* CreateRecruiterProfile.m in Sources */ = {isa = PBXBuildFile; fileRef = CEE005691C90DEC90065E43A /* CreateRecruiterProfile.m */; };
+		CEE04A9C1C0F896300697620 /* ListBusinesses.m in Sources */ = {isa = PBXBuildFile; fileRef = CEE04A9B1C0F896300697620 /* ListBusinesses.m */; };
+		CEE04A9F1C0F8A9100697620 /* JobSeekerHome.m in Sources */ = {isa = PBXBuildFile; fileRef = CEE04A9E1C0F8A9100697620 /* JobSeekerHome.m */; };
+		CEE04AA21C0F8C6700697620 /* CreateProfile.m in Sources */ = {isa = PBXBuildFile; fileRef = CEE04AA11C0F8C6700697620 /* CreateProfile.m */; };
+		CEE04AA41C10EAD900697620 /* ErrorTextField.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEE04AA31C10EAD900697620 /* ErrorTextField.xib */; };
+		CEE04AA71C10EE2000697620 /* ErrorTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = CEE04AA61C10EE2000697620 /* ErrorTextField.m */; };
+		CEE04AA91C10F8FE00697620 /* JobSeekerProfileView.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEE04AA81C10F8FE00697620 /* JobSeekerProfileView.xib */; };
+		CEE062531C28B77500ED60C0 /* Business.m in Sources */ = {isa = PBXBuildFile; fileRef = CEE062381C28B77500ED60C0 /* Business.m */; };
+		CEE062541C28B77500ED60C0 /* Contract.m in Sources */ = {isa = PBXBuildFile; fileRef = CEE0623A1C28B77500ED60C0 /* Contract.m */; };
+		CEE062551C28B77500ED60C0 /* Hours.m in Sources */ = {isa = PBXBuildFile; fileRef = CEE0623C1C28B77500ED60C0 /* Hours.m */; };
+		CEE062561C28B77500ED60C0 /* JobSeeker.m in Sources */ = {isa = PBXBuildFile; fileRef = CEE0623E1C28B77500ED60C0 /* JobSeeker.m */; };
+		CEE062571C28B77500ED60C0 /* MJPObject.m in Sources */ = {isa = PBXBuildFile; fileRef = CEE062401C28B77500ED60C0 /* MJPObject.m */; };
+		CEE062581C28B77500ED60C0 /* MJPObjectWithName.m in Sources */ = {isa = PBXBuildFile; fileRef = CEE062421C28B77500ED60C0 /* MJPObjectWithName.m */; };
+		CEE062591C28B77500ED60C0 /* MJPObjectWithNameDesc.m in Sources */ = {isa = PBXBuildFile; fileRef = CEE062441C28B77500ED60C0 /* MJPObjectWithNameDesc.m */; };
+		CEE0625A1C28B77500ED60C0 /* MJPObjectWithNameShortName.m in Sources */ = {isa = PBXBuildFile; fileRef = CEE062461C28B77500ED60C0 /* MJPObjectWithNameShortName.m */; };
+		CEE0625B1C28B77500ED60C0 /* MJPObjectWithNameShortNameDesc.m in Sources */ = {isa = PBXBuildFile; fileRef = CEE062481C28B77500ED60C0 /* MJPObjectWithNameShortNameDesc.m */; };
+		CEE0625C1C28B77500ED60C0 /* Nationality.m in Sources */ = {isa = PBXBuildFile; fileRef = CEE0624A1C28B77500ED60C0 /* Nationality.m */; };
+		CEE0625D1C28B77500ED60C0 /* Profile.m in Sources */ = {isa = PBXBuildFile; fileRef = CEE0624C1C28B77500ED60C0 /* Profile.m */; };
+		CEE0625E1C28B77500ED60C0 /* Role.m in Sources */ = {isa = PBXBuildFile; fileRef = CEE0624E1C28B77500ED60C0 /* Role.m */; };
+		CEE062601C28B77500ED60C0 /* Sex.m in Sources */ = {isa = PBXBuildFile; fileRef = CEE062521C28B77500ED60C0 /* Sex.m */; };
+		CEE52CED1C0654DD00881648 /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CEE52CEC1C0654DD00881648 /* MobileCoreServices.framework */; };
+		CEE52CEF1C0654E900881648 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CEE52CEE1C0654E900881648 /* Security.framework */; };
+		CEE52CF11C0654F200881648 /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CEE52CF01C0654F200881648 /* CFNetwork.framework */; };
+		CEE52CF31C0654FB00881648 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CEE52CF21C0654FB00881648 /* SystemConfiguration.framework */; };
+		CEE52CF51C06550500881648 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CEE52CF41C06550500881648 /* UIKit.framework */; };
+		CEE52CF71C06550E00881648 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CEE52CF61C06550E00881648 /* Foundation.framework */; };
+		CEE52CFA1C065C4100881648 /* API.m in Sources */ = {isa = PBXBuildFile; fileRef = CEE52CF91C065C4100881648 /* API.m */; };
+		CEE52CFE1C066AB000881648 /* AuthToken.m in Sources */ = {isa = PBXBuildFile; fileRef = CEE52CFD1C066AB000881648 /* AuthToken.m */; };
+		CEE52D011C066F2700881648 /* LoginRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = CEE52D001C066F2700881648 /* LoginRequest.m */; };
+		FF9A5040750B22C5222FF605 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0B006CB817BA624E01EDF19B /* libPods.a */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		CE6FD3511C01F9BC001A04C3 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = CE6FD32F1C01F9BB001A04C3 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = CE6FD3361C01F9BB001A04C3;
+			remoteInfo = "My Job Pitch";
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		0B006CB817BA624E01EDF19B /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		B0F6E4D8F0045A1E43790385 /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
+		CE45AEC21C0B41380092AB75 /* MJPViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MJPViewController.h; sourceTree = "<group>"; };
+		CE45AEC31C0B41390092AB75 /* MJPViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MJPViewController.m; sourceTree = "<group>"; };
+		CE45AEC81C0B45AD0092AB75 /* RegisterRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RegisterRequest.h; sourceTree = "<group>"; };
+		CE45AEC91C0B45AD0092AB75 /* RegisterRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RegisterRequest.m; sourceTree = "<group>"; };
+		CE45AECB1C0B461A0092AB75 /* User.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = User.h; sourceTree = "<group>"; };
+		CE45AECC1C0B461A0092AB75 /* User.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = User.m; sourceTree = "<group>"; };
+		CE4696AC1C9A0BC8001E3FFE /* LockableNavigationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LockableNavigationController.h; path = ../LockableNavigationController.h; sourceTree = "<group>"; };
+		CE4696AD1C9A0BC8001E3FFE /* LockableNavigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LockableNavigationController.m; path = ../LockableNavigationController.m; sourceTree = "<group>"; };
+		CE59737B1C1626630096B001 /* JobSeekerProfileView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JobSeekerProfileView.h; sourceTree = "<group>"; };
+		CE59737C1C1626630096B001 /* JobSeekerProfileView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JobSeekerProfileView.m; sourceTree = "<group>"; };
+		CE6FD3371C01F9BB001A04C3 /* My Job Pitch.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "My Job Pitch.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		CE6FD33B1C01F9BB001A04C3 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		CE6FD33D1C01F9BB001A04C3 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		CE6FD33E1C01F9BB001A04C3 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		CE6FD3401C01F9BB001A04C3 /* Login.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Login.h; sourceTree = "<group>"; };
+		CE6FD3411C01F9BB001A04C3 /* Login.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Login.m; sourceTree = "<group>"; };
+		CE6FD3441C01F9BB001A04C3 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		CE6FD3461C01F9BC001A04C3 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		CE6FD3491C01F9BC001A04C3 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		CE6FD34B1C01F9BC001A04C3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		CE6FD3501C01F9BC001A04C3 /* My Job PitchTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "My Job PitchTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		CE6FD3541C01F9BC001A04C3 /* My_Job_PitchTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = My_Job_PitchTests.m; sourceTree = "<group>"; };
+		CE6FD3561C01F9BC001A04C3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		CE7742331C92368200A9A2BA /* SimpleListCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SimpleListCell.h; sourceTree = "<group>"; };
+		CE7742341C92368200A9A2BA /* SimpleListCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SimpleListCell.m; sourceTree = "<group>"; };
+		CE7742361C923D4900A9A2BA /* ListLocations.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ListLocations.h; sourceTree = "<group>"; };
+		CE7742371C923D4900A9A2BA /* ListLocations.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ListLocations.m; sourceTree = "<group>"; };
+		CE7742391C923EAD00A9A2BA /* ListJobs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ListJobs.h; sourceTree = "<group>"; };
+		CE77423A1C923EAD00A9A2BA /* ListJobs.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ListJobs.m; sourceTree = "<group>"; };
+		CE77423C1C92555900A9A2BA /* EditLocation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EditLocation.h; sourceTree = "<group>"; };
+		CE77423D1C92555900A9A2BA /* EditLocation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EditLocation.m; sourceTree = "<group>"; };
+		CE77423F1C95D6C000A9A2BA /* EditJob.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EditJob.h; sourceTree = "<group>"; };
+		CE7742401C95D6C000A9A2BA /* EditJob.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EditJob.m; sourceTree = "<group>"; };
+		CE7742421C95D85300A9A2BA /* JobEditView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JobEditView.h; sourceTree = "<group>"; };
+		CE7742431C95D85300A9A2BA /* JobEditView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JobEditView.m; sourceTree = "<group>"; };
+		CE7742451C95D88000A9A2BA /* JobEditView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = JobEditView.xib; sourceTree = "<group>"; };
+		CE7742471C9623C300A9A2BA /* ViewJobMenu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ViewJobMenu.h; sourceTree = "<group>"; };
+		CE7742481C9623C300A9A2BA /* ViewJobMenu.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ViewJobMenu.m; sourceTree = "<group>"; };
+		CE77424A1C96244900A9A2BA /* ViewJob.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ViewJob.h; sourceTree = "<group>"; };
+		CE77424B1C96244900A9A2BA /* ViewJob.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ViewJob.m; sourceTree = "<group>"; };
+		CE8395A61C3EF98F007A8213 /* EditProfile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EditProfile.h; sourceTree = "<group>"; };
+		CE8395A71C3EF98F007A8213 /* EditProfile.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EditProfile.m; sourceTree = "<group>"; };
+		CE8395A91C42F279007A8213 /* SwipeView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SwipeView.h; sourceTree = "<group>"; };
+		CE8395AA1C42F279007A8213 /* SwipeView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SwipeView.m; sourceTree = "<group>"; };
+		CE86847C1C0E570300D4B6C7 /* ScrollingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ScrollingViewController.h; sourceTree = "<group>"; };
+		CE86847D1C0E570300D4B6C7 /* ScrollingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ScrollingViewController.m; sourceTree = "<group>"; };
+		CE8AAFE31C56D93C0004F021 /* Pitch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Pitch.h; sourceTree = "<group>"; };
+		CE8AAFE41C56D93C0004F021 /* Pitch.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Pitch.m; sourceTree = "<group>"; };
+		CE8AAFE61C5848490004F021 /* JobSeekerSearchProfileView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = JobSeekerSearchProfileView.xib; sourceTree = "<group>"; };
+		CE8AAFE81C5848900004F021 /* JobSeekerSearchProfileView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JobSeekerSearchProfileView.h; sourceTree = "<group>"; };
+		CE8AAFE91C5848900004F021 /* JobSeekerSearchProfileView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JobSeekerSearchProfileView.m; sourceTree = "<group>"; };
+		CE8AAFEB1C5850C40004F021 /* EditSearchProfile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EditSearchProfile.h; sourceTree = "<group>"; };
+		CE8AAFEC1C5850C40004F021 /* EditSearchProfile.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EditSearchProfile.m; sourceTree = "<group>"; };
+		CE8AAFF51C599FA50004F021 /* DownPickerMultiple.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DownPickerMultiple.h; sourceTree = "<group>"; };
+		CE8AAFF61C599FA50004F021 /* DownPickerMultiple.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DownPickerMultiple.m; sourceTree = "<group>"; };
+		CE8AAFF81C59A2DE0004F021 /* LocationMap.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LocationMap.xib; sourceTree = "<group>"; };
+		CE8AAFFA1C59A7820004F021 /* LocationMapView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LocationMapView.h; sourceTree = "<group>"; };
+		CE8AAFFB1C59A7820004F021 /* LocationMapView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LocationMapView.m; sourceTree = "<group>"; };
+		CE8AAFFD1C5AD62E0004F021 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
+		CE8AAFFF1C5AF6250004F021 /* Application.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Application.h; sourceTree = "<group>"; };
+		CE8AB0001C5AF6250004F021 /* Application.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Application.m; sourceTree = "<group>"; };
+		CE8AB0021C5B04320004F021 /* JobDetails.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JobDetails.h; sourceTree = "<group>"; };
+		CE8AB0031C5B04320004F021 /* JobDetails.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JobDetails.m; sourceTree = "<group>"; };
+		CE8AB0091C5EA9F60004F021 /* MessageListCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessageListCell.h; sourceTree = "<group>"; };
+		CE8AB00A1C5EA9F60004F021 /* MessageListCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessageListCell.m; sourceTree = "<group>"; };
+		CE8AB00F1C5EB66C0004F021 /* Messages.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Messages.h; sourceTree = "<group>"; };
+		CE8AB0101C5EB66C0004F021 /* Messages.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Messages.m; sourceTree = "<group>"; };
+		CE8AB0121C5EBA850004F021 /* Message.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Message.h; sourceTree = "<group>"; };
+		CE8AB0131C5EBA850004F021 /* Message.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Message.m; sourceTree = "<group>"; };
+		CE8AB0151C5EDB7B0004F021 /* MessageThread.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessageThread.h; sourceTree = "<group>"; };
+		CE8AB0161C5EDB7B0004F021 /* MessageThread.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessageThread.m; sourceTree = "<group>"; };
+		CE8AB0181C5EE4B70004F021 /* MessageThreadCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessageThreadCell.h; sourceTree = "<group>"; };
+		CE8AB0191C5EE4B80004F021 /* MessageThreadCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessageThreadCell.m; sourceTree = "<group>"; };
+		CE8AB01B1C6029D90004F021 /* RecordPitch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RecordPitch.h; sourceTree = "<group>"; };
+		CE8AB01C1C6029D90004F021 /* RecordPitch.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RecordPitch.m; sourceTree = "<group>"; };
+		CE8AB01E1C6038750004F021 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
+		CE8AB01F1C6038750004F021 /* AVKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVKit.framework; path = System/Library/Frameworks/AVKit.framework; sourceTree = SDKROOT; };
+		CE8AB0221C617F550004F021 /* BusinessEditView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BusinessEditView.h; sourceTree = "<group>"; };
+		CE8AB0231C617F550004F021 /* BusinessEditView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BusinessEditView.m; sourceTree = "<group>"; };
+		CE8AB0251C61826B0004F021 /* BusinessEditView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = BusinessEditView.xib; sourceTree = "<group>"; };
+		CE8AB0271C6AA22E0004F021 /* LocationEditView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LocationEditView.xib; sourceTree = "<group>"; };
+		CE8AB0291C6AA2490004F021 /* LocationEditView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LocationEditView.h; sourceTree = "<group>"; };
+		CE8AB02A1C6AA2490004F021 /* LocationEditView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LocationEditView.m; sourceTree = "<group>"; };
+		CEB424111C9A35BC0012748B /* JobSeekerDetails.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JobSeekerDetails.h; sourceTree = "<group>"; };
+		CEB424121C9A35BC0012748B /* JobSeekerDetails.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JobSeekerDetails.m; sourceTree = "<group>"; };
+		CEC2E4021C45A88100AC0F45 /* Job.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Job.h; path = Assets.xcassets/Job.h; sourceTree = "<group>"; };
+		CEC2E4031C45A88100AC0F45 /* Job.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Job.m; path = Assets.xcassets/Job.m; sourceTree = "<group>"; };
+		CEC2E4051C45B4C200AC0F45 /* Location.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Location.h; sourceTree = "<group>"; };
+		CEC2E4061C45B4C200AC0F45 /* Location.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Location.m; sourceTree = "<group>"; };
+		CEC2E4081C45B4EC00AC0F45 /* MJPObjectWithDates.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MJPObjectWithDates.h; sourceTree = "<group>"; };
+		CEC2E4091C45B4EC00AC0F45 /* MJPObjectWithDates.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MJPObjectWithDates.m; sourceTree = "<group>"; };
+		CEC2E40B1C45C7AB00AC0F45 /* Image.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Image.h; sourceTree = "<group>"; };
+		CEC2E40C1C45C7AB00AC0F45 /* Image.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Image.m; sourceTree = "<group>"; };
+		CEC2E4171C4BE86400AC0F45 /* Sector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Sector.h; sourceTree = "<group>"; };
+		CEC2E4181C4BE86400AC0F45 /* Sector.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Sector.m; sourceTree = "<group>"; };
+		CEC2E41A1C4BEAA900AC0F45 /* ApplicationStatus.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ApplicationStatus.h; sourceTree = "<group>"; };
+		CEC2E41B1C4BEAA900AC0F45 /* ApplicationStatus.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ApplicationStatus.m; sourceTree = "<group>"; };
+		CEC2E4201C4BEFDE00AC0F45 /* JobStatus.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JobStatus.h; sourceTree = "<group>"; };
+		CEC2E4211C4BEFDE00AC0F45 /* JobStatus.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JobStatus.m; sourceTree = "<group>"; };
+		CEE005651C90D6D50065E43A /* CreateJobSeekerProfile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CreateJobSeekerProfile.h; sourceTree = "<group>"; };
+		CEE005661C90D6D50065E43A /* CreateJobSeekerProfile.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CreateJobSeekerProfile.m; sourceTree = "<group>"; };
+		CEE005681C90DEC90065E43A /* CreateRecruiterProfile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CreateRecruiterProfile.h; sourceTree = "<group>"; };
+		CEE005691C90DEC90065E43A /* CreateRecruiterProfile.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CreateRecruiterProfile.m; sourceTree = "<group>"; };
+		CEE04A9A1C0F896300697620 /* ListBusinesses.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ListBusinesses.h; sourceTree = "<group>"; };
+		CEE04A9B1C0F896300697620 /* ListBusinesses.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ListBusinesses.m; sourceTree = "<group>"; };
+		CEE04A9D1C0F8A9100697620 /* JobSeekerHome.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JobSeekerHome.h; sourceTree = "<group>"; };
+		CEE04A9E1C0F8A9100697620 /* JobSeekerHome.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JobSeekerHome.m; sourceTree = "<group>"; };
+		CEE04AA01C0F8C6700697620 /* CreateProfile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CreateProfile.h; sourceTree = "<group>"; };
+		CEE04AA11C0F8C6700697620 /* CreateProfile.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CreateProfile.m; sourceTree = "<group>"; };
+		CEE04AA31C10EAD900697620 /* ErrorTextField.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ErrorTextField.xib; sourceTree = "<group>"; };
+		CEE04AA51C10EE2000697620 /* ErrorTextField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ErrorTextField.h; sourceTree = "<group>"; };
+		CEE04AA61C10EE2000697620 /* ErrorTextField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ErrorTextField.m; sourceTree = "<group>"; };
+		CEE04AA81C10F8FE00697620 /* JobSeekerProfileView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = JobSeekerProfileView.xib; sourceTree = "<group>"; };
+		CEE062371C28B77500ED60C0 /* Business.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Business.h; sourceTree = "<group>"; };
+		CEE062381C28B77500ED60C0 /* Business.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Business.m; sourceTree = "<group>"; };
+		CEE062391C28B77500ED60C0 /* Contract.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Contract.h; sourceTree = "<group>"; };
+		CEE0623A1C28B77500ED60C0 /* Contract.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Contract.m; sourceTree = "<group>"; };
+		CEE0623B1C28B77500ED60C0 /* Hours.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Hours.h; sourceTree = "<group>"; };
+		CEE0623C1C28B77500ED60C0 /* Hours.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Hours.m; sourceTree = "<group>"; };
+		CEE0623D1C28B77500ED60C0 /* JobSeeker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JobSeeker.h; sourceTree = "<group>"; };
+		CEE0623E1C28B77500ED60C0 /* JobSeeker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JobSeeker.m; sourceTree = "<group>"; };
+		CEE0623F1C28B77500ED60C0 /* MJPObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MJPObject.h; sourceTree = "<group>"; };
+		CEE062401C28B77500ED60C0 /* MJPObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MJPObject.m; sourceTree = "<group>"; };
+		CEE062411C28B77500ED60C0 /* MJPObjectWithName.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MJPObjectWithName.h; sourceTree = "<group>"; };
+		CEE062421C28B77500ED60C0 /* MJPObjectWithName.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MJPObjectWithName.m; sourceTree = "<group>"; };
+		CEE062431C28B77500ED60C0 /* MJPObjectWithNameDesc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MJPObjectWithNameDesc.h; sourceTree = "<group>"; };
+		CEE062441C28B77500ED60C0 /* MJPObjectWithNameDesc.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MJPObjectWithNameDesc.m; sourceTree = "<group>"; };
+		CEE062451C28B77500ED60C0 /* MJPObjectWithNameShortName.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MJPObjectWithNameShortName.h; sourceTree = "<group>"; };
+		CEE062461C28B77500ED60C0 /* MJPObjectWithNameShortName.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MJPObjectWithNameShortName.m; sourceTree = "<group>"; };
+		CEE062471C28B77500ED60C0 /* MJPObjectWithNameShortNameDesc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MJPObjectWithNameShortNameDesc.h; sourceTree = "<group>"; };
+		CEE062481C28B77500ED60C0 /* MJPObjectWithNameShortNameDesc.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MJPObjectWithNameShortNameDesc.m; sourceTree = "<group>"; };
+		CEE062491C28B77500ED60C0 /* Nationality.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Nationality.h; sourceTree = "<group>"; };
+		CEE0624A1C28B77500ED60C0 /* Nationality.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Nationality.m; sourceTree = "<group>"; };
+		CEE0624B1C28B77500ED60C0 /* Profile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Profile.h; sourceTree = "<group>"; };
+		CEE0624C1C28B77500ED60C0 /* Profile.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Profile.m; sourceTree = "<group>"; };
+		CEE0624D1C28B77500ED60C0 /* Role.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Role.h; sourceTree = "<group>"; };
+		CEE0624E1C28B77500ED60C0 /* Role.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Role.m; sourceTree = "<group>"; };
+		CEE062511C28B77500ED60C0 /* Sex.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Sex.h; sourceTree = "<group>"; };
+		CEE062521C28B77500ED60C0 /* Sex.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Sex.m; sourceTree = "<group>"; };
+		CEE52CEB1C0653AC00881648 /* PrefixHeader.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PrefixHeader.pch; sourceTree = "<group>"; };
+		CEE52CEC1C0654DD00881648 /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
+		CEE52CEE1C0654E900881648 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
+		CEE52CF01C0654F200881648 /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
+		CEE52CF21C0654FB00881648 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
+		CEE52CF41C06550500881648 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		CEE52CF61C06550E00881648 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		CEE52CF81C065C4100881648 /* API.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = API.h; sourceTree = "<group>"; };
+		CEE52CF91C065C4100881648 /* API.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = API.m; sourceTree = "<group>"; };
+		CEE52CFC1C066AB000881648 /* AuthToken.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AuthToken.h; sourceTree = "<group>"; };
+		CEE52CFD1C066AB000881648 /* AuthToken.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AuthToken.m; sourceTree = "<group>"; };
+		CEE52CFF1C066F2700881648 /* LoginRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoginRequest.h; sourceTree = "<group>"; };
+		CEE52D001C066F2700881648 /* LoginRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoginRequest.m; sourceTree = "<group>"; };
+		CFA3EA2BF05430C3C9894AA5 /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		CE6FD3341C01F9BB001A04C3 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CE8AB0201C6038750004F021 /* AVFoundation.framework in Frameworks */,
+				CE8AB0211C6038750004F021 /* AVKit.framework in Frameworks */,
+				CE8AAFFE1C5AD62E0004F021 /* CoreLocation.framework in Frameworks */,
+				CEE52CF71C06550E00881648 /* Foundation.framework in Frameworks */,
+				CEE52CF51C06550500881648 /* UIKit.framework in Frameworks */,
+				CEE52CF31C0654FB00881648 /* SystemConfiguration.framework in Frameworks */,
+				CEE52CF11C0654F200881648 /* CFNetwork.framework in Frameworks */,
+				CEE52CEF1C0654E900881648 /* Security.framework in Frameworks */,
+				CEE52CED1C0654DD00881648 /* MobileCoreServices.framework in Frameworks */,
+				8A670AFC6AF2FC453A25DE73 /* libPods.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		CE6FD34D1C01F9BC001A04C3 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				FF9A5040750B22C5222FF605 /* libPods.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		CE6FD32E1C01F9BB001A04C3 = {
+			isa = PBXGroup;
+			children = (
+				CE6FD3391C01F9BB001A04C3 /* My Job Pitch */,
+				CE6FD3531C01F9BC001A04C3 /* My Job PitchTests */,
+				CE6FD3381C01F9BB001A04C3 /* Products */,
+				DD5A9C6E26418BFD38D06ACE /* Pods */,
+				FFB8B70042B1AAA85F696FCB /* Frameworks */,
+			);
+			sourceTree = "<group>";
+		};
+		CE6FD3381C01F9BB001A04C3 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				CE6FD3371C01F9BB001A04C3 /* My Job Pitch.app */,
+				CE6FD3501C01F9BC001A04C3 /* My Job PitchTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		CE6FD3391C01F9BB001A04C3 /* My Job Pitch */ = {
+			isa = PBXGroup;
+			children = (
+				CEE52CFB1C06624600881648 /* API */,
+				CE6FD33D1C01F9BB001A04C3 /* AppDelegate.h */,
+				CE6FD33E1C01F9BB001A04C3 /* AppDelegate.m */,
+				CE6FD3401C01F9BB001A04C3 /* Login.h */,
+				CE6FD3411C01F9BB001A04C3 /* Login.m */,
+				CEE04AA01C0F8C6700697620 /* CreateProfile.h */,
+				CEE04AA11C0F8C6700697620 /* CreateProfile.m */,
+				CEE005651C90D6D50065E43A /* CreateJobSeekerProfile.h */,
+				CEE005661C90D6D50065E43A /* CreateJobSeekerProfile.m */,
+				CEE005681C90DEC90065E43A /* CreateRecruiterProfile.h */,
+				CEE005691C90DEC90065E43A /* CreateRecruiterProfile.m */,
+				CEE04A9D1C0F8A9100697620 /* JobSeekerHome.h */,
+				CEE04A9E1C0F8A9100697620 /* JobSeekerHome.m */,
+				CEE04A9A1C0F896300697620 /* ListBusinesses.h */,
+				CEE04A9B1C0F896300697620 /* ListBusinesses.m */,
+				CE7742361C923D4900A9A2BA /* ListLocations.h */,
+				CE7742371C923D4900A9A2BA /* ListLocations.m */,
+				CE7742391C923EAD00A9A2BA /* ListJobs.h */,
+				CE77423A1C923EAD00A9A2BA /* ListJobs.m */,
+				CE7742471C9623C300A9A2BA /* ViewJobMenu.h */,
+				CE7742481C9623C300A9A2BA /* ViewJobMenu.m */,
+				CE77424A1C96244900A9A2BA /* ViewJob.h */,
+				CE77424B1C96244900A9A2BA /* ViewJob.m */,
+				CE6FD3431C01F9BB001A04C3 /* Main.storyboard */,
+				CE77423C1C92555900A9A2BA /* EditLocation.h */,
+				CE77423D1C92555900A9A2BA /* EditLocation.m */,
+				CE77423F1C95D6C000A9A2BA /* EditJob.h */,
+				CE7742401C95D6C000A9A2BA /* EditJob.m */,
+				CE8395A61C3EF98F007A8213 /* EditProfile.h */,
+				CE8395A71C3EF98F007A8213 /* EditProfile.m */,
+				CE8AAFEB1C5850C40004F021 /* EditSearchProfile.h */,
+				CE8AAFEC1C5850C40004F021 /* EditSearchProfile.m */,
+				CE8AB0021C5B04320004F021 /* JobDetails.h */,
+				CE8AB0031C5B04320004F021 /* JobDetails.m */,
+				CEB424111C9A35BC0012748B /* JobSeekerDetails.h */,
+				CEB424121C9A35BC0012748B /* JobSeekerDetails.m */,
+				CE8AAFFA1C59A7820004F021 /* LocationMapView.h */,
+				CE8AAFFB1C59A7820004F021 /* LocationMapView.m */,
+				CE8AAFF81C59A2DE0004F021 /* LocationMap.xib */,
+				CE59737B1C1626630096B001 /* JobSeekerProfileView.h */,
+				CE59737C1C1626630096B001 /* JobSeekerProfileView.m */,
+				CEE04AA81C10F8FE00697620 /* JobSeekerProfileView.xib */,
+				CE8AAFE81C5848900004F021 /* JobSeekerSearchProfileView.h */,
+				CE8AAFE91C5848900004F021 /* JobSeekerSearchProfileView.m */,
+				CE8AAFE61C5848490004F021 /* JobSeekerSearchProfileView.xib */,
+				CE8AB0221C617F550004F021 /* BusinessEditView.h */,
+				CE8AB0231C617F550004F021 /* BusinessEditView.m */,
+				CE8AB0251C61826B0004F021 /* BusinessEditView.xib */,
+				CE8AB0291C6AA2490004F021 /* LocationEditView.h */,
+				CE8AB02A1C6AA2490004F021 /* LocationEditView.m */,
+				CE8AB0271C6AA22E0004F021 /* LocationEditView.xib */,
+				CE7742421C95D85300A9A2BA /* JobEditView.h */,
+				CE7742431C95D85300A9A2BA /* JobEditView.m */,
+				CE7742451C95D88000A9A2BA /* JobEditView.xib */,
+				CE7742331C92368200A9A2BA /* SimpleListCell.h */,
+				CE7742341C92368200A9A2BA /* SimpleListCell.m */,
+				CE8AB00F1C5EB66C0004F021 /* Messages.h */,
+				CE8AB0101C5EB66C0004F021 /* Messages.m */,
+				CE8AB0091C5EA9F60004F021 /* MessageListCell.h */,
+				CE8AB00A1C5EA9F60004F021 /* MessageListCell.m */,
+				CE8AB0151C5EDB7B0004F021 /* MessageThread.h */,
+				CE8AB0161C5EDB7B0004F021 /* MessageThread.m */,
+				CE8AB0181C5EE4B70004F021 /* MessageThreadCell.h */,
+				CE8AB0191C5EE4B80004F021 /* MessageThreadCell.m */,
+				CE8AB01B1C6029D90004F021 /* RecordPitch.h */,
+				CE8AB01C1C6029D90004F021 /* RecordPitch.m */,
+				CE8AAFF51C599FA50004F021 /* DownPickerMultiple.h */,
+				CE8AAFF61C599FA50004F021 /* DownPickerMultiple.m */,
+				CE8395A91C42F279007A8213 /* SwipeView.h */,
+				CE8395AA1C42F279007A8213 /* SwipeView.m */,
+				CEE04AA51C10EE2000697620 /* ErrorTextField.h */,
+				CEE04AA61C10EE2000697620 /* ErrorTextField.m */,
+				CEE04AA31C10EAD900697620 /* ErrorTextField.xib */,
+				CE6FD3461C01F9BC001A04C3 /* Assets.xcassets */,
+				CE6FD3481C01F9BC001A04C3 /* LaunchScreen.storyboard */,
+				CE6FD34B1C01F9BC001A04C3 /* Info.plist */,
+				CE6FD33A1C01F9BB001A04C3 /* Supporting Files */,
+				CE45AEC21C0B41380092AB75 /* MJPViewController.h */,
+				CE45AEC31C0B41390092AB75 /* MJPViewController.m */,
+				CE86847C1C0E570300D4B6C7 /* ScrollingViewController.h */,
+				CE86847D1C0E570300D4B6C7 /* ScrollingViewController.m */,
+				CE4696AC1C9A0BC8001E3FFE /* LockableNavigationController.h */,
+				CE4696AD1C9A0BC8001E3FFE /* LockableNavigationController.m */,
+			);
+			path = "My Job Pitch";
+			sourceTree = "<group>";
+		};
+		CE6FD33A1C01F9BB001A04C3 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				CE6FD33B1C01F9BB001A04C3 /* main.m */,
+				CEE52CEB1C0653AC00881648 /* PrefixHeader.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		CE6FD3531C01F9BC001A04C3 /* My Job PitchTests */ = {
+			isa = PBXGroup;
+			children = (
+				CE6FD3541C01F9BC001A04C3 /* My_Job_PitchTests.m */,
+				CE6FD3561C01F9BC001A04C3 /* Info.plist */,
+			);
+			path = "My Job PitchTests";
+			sourceTree = "<group>";
+		};
+		CEE52CFB1C06624600881648 /* API */ = {
+			isa = PBXGroup;
+			children = (
+				CEE52CF81C065C4100881648 /* API.h */,
+				CEE52CF91C065C4100881648 /* API.m */,
+				CE8AAFFF1C5AF6250004F021 /* Application.h */,
+				CE8AB0001C5AF6250004F021 /* Application.m */,
+				CEC2E41A1C4BEAA900AC0F45 /* ApplicationStatus.h */,
+				CEC2E41B1C4BEAA900AC0F45 /* ApplicationStatus.m */,
+				CEE52CFC1C066AB000881648 /* AuthToken.h */,
+				CEE52CFD1C066AB000881648 /* AuthToken.m */,
+				CEE52CFF1C066F2700881648 /* LoginRequest.h */,
+				CEE52D001C066F2700881648 /* LoginRequest.m */,
+				CE45AEC81C0B45AD0092AB75 /* RegisterRequest.h */,
+				CE45AEC91C0B45AD0092AB75 /* RegisterRequest.m */,
+				CEE062371C28B77500ED60C0 /* Business.h */,
+				CEE062381C28B77500ED60C0 /* Business.m */,
+				CEE062391C28B77500ED60C0 /* Contract.h */,
+				CEE0623A1C28B77500ED60C0 /* Contract.m */,
+				CEE0623B1C28B77500ED60C0 /* Hours.h */,
+				CEE0623C1C28B77500ED60C0 /* Hours.m */,
+				CEC2E40B1C45C7AB00AC0F45 /* Image.h */,
+				CEC2E40C1C45C7AB00AC0F45 /* Image.m */,
+				CEC2E4021C45A88100AC0F45 /* Job.h */,
+				CEC2E4031C45A88100AC0F45 /* Job.m */,
+				CEE0623D1C28B77500ED60C0 /* JobSeeker.h */,
+				CEE0623E1C28B77500ED60C0 /* JobSeeker.m */,
+				CEC2E4201C4BEFDE00AC0F45 /* JobStatus.h */,
+				CEC2E4211C4BEFDE00AC0F45 /* JobStatus.m */,
+				CEC2E4051C45B4C200AC0F45 /* Location.h */,
+				CEC2E4061C45B4C200AC0F45 /* Location.m */,
+				CE8AB0121C5EBA850004F021 /* Message.h */,
+				CE8AB0131C5EBA850004F021 /* Message.m */,
+				CEE0623F1C28B77500ED60C0 /* MJPObject.h */,
+				CEE062401C28B77500ED60C0 /* MJPObject.m */,
+				CEC2E4081C45B4EC00AC0F45 /* MJPObjectWithDates.h */,
+				CEC2E4091C45B4EC00AC0F45 /* MJPObjectWithDates.m */,
+				CEE062411C28B77500ED60C0 /* MJPObjectWithName.h */,
+				CEE062421C28B77500ED60C0 /* MJPObjectWithName.m */,
+				CEE062431C28B77500ED60C0 /* MJPObjectWithNameDesc.h */,
+				CEE062441C28B77500ED60C0 /* MJPObjectWithNameDesc.m */,
+				CEE062451C28B77500ED60C0 /* MJPObjectWithNameShortName.h */,
+				CEE062461C28B77500ED60C0 /* MJPObjectWithNameShortName.m */,
+				CEE062471C28B77500ED60C0 /* MJPObjectWithNameShortNameDesc.h */,
+				CEE062481C28B77500ED60C0 /* MJPObjectWithNameShortNameDesc.m */,
+				CEE062491C28B77500ED60C0 /* Nationality.h */,
+				CEE0624A1C28B77500ED60C0 /* Nationality.m */,
+				CE8AAFE31C56D93C0004F021 /* Pitch.h */,
+				CE8AAFE41C56D93C0004F021 /* Pitch.m */,
+				CEE0624B1C28B77500ED60C0 /* Profile.h */,
+				CEE0624C1C28B77500ED60C0 /* Profile.m */,
+				CEE0624D1C28B77500ED60C0 /* Role.h */,
+				CEE0624E1C28B77500ED60C0 /* Role.m */,
+				CEC2E4171C4BE86400AC0F45 /* Sector.h */,
+				CEC2E4181C4BE86400AC0F45 /* Sector.m */,
+				CEE062511C28B77500ED60C0 /* Sex.h */,
+				CEE062521C28B77500ED60C0 /* Sex.m */,
+				CE45AECB1C0B461A0092AB75 /* User.h */,
+				CE45AECC1C0B461A0092AB75 /* User.m */,
+			);
+			name = API;
+			sourceTree = "<group>";
+		};
+		DD5A9C6E26418BFD38D06ACE /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				CFA3EA2BF05430C3C9894AA5 /* Pods.debug.xcconfig */,
+				B0F6E4D8F0045A1E43790385 /* Pods.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
+		FFB8B70042B1AAA85F696FCB /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				CE8AB01E1C6038750004F021 /* AVFoundation.framework */,
+				CE8AB01F1C6038750004F021 /* AVKit.framework */,
+				CE8AAFFD1C5AD62E0004F021 /* CoreLocation.framework */,
+				CEE52CF61C06550E00881648 /* Foundation.framework */,
+				CEE52CF41C06550500881648 /* UIKit.framework */,
+				CEE52CF21C0654FB00881648 /* SystemConfiguration.framework */,
+				CEE52CF01C0654F200881648 /* CFNetwork.framework */,
+				CEE52CEE1C0654E900881648 /* Security.framework */,
+				CEE52CEC1C0654DD00881648 /* MobileCoreServices.framework */,
+				0B006CB817BA624E01EDF19B /* libPods.a */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		CE6FD3361C01F9BB001A04C3 /* My Job Pitch */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = CE6FD3641C01F9BC001A04C3 /* Build configuration list for PBXNativeTarget "My Job Pitch" */;
+			buildPhases = (
+				4468F164D62438DAA67B1A9A /* Check Pods Manifest.lock */,
+				CE6FD3331C01F9BB001A04C3 /* Sources */,
+				CE6FD3341C01F9BB001A04C3 /* Frameworks */,
+				CE6FD3351C01F9BB001A04C3 /* Resources */,
+				9816C2566EB6DA434DF644FC /* Copy Pods Resources */,
+				388A8D08B45503F266D314AB /* Embed Pods Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "My Job Pitch";
+			productName = "My Job Pitch";
+			productReference = CE6FD3371C01F9BB001A04C3 /* My Job Pitch.app */;
+			productType = "com.apple.product-type.application";
+		};
+		CE6FD34F1C01F9BC001A04C3 /* My Job PitchTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = CE6FD3671C01F9BC001A04C3 /* Build configuration list for PBXNativeTarget "My Job PitchTests" */;
+			buildPhases = (
+				BAA10D4E0805598B1DEEE89A /* Check Pods Manifest.lock */,
+				CE6FD34C1C01F9BC001A04C3 /* Sources */,
+				CE6FD34D1C01F9BC001A04C3 /* Frameworks */,
+				CE6FD34E1C01F9BC001A04C3 /* Resources */,
+				476C92B022CD8EA639441C80 /* Copy Pods Resources */,
+				970B2B02472CFD1986873A53 /* Embed Pods Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				CE6FD3521C01F9BC001A04C3 /* PBXTargetDependency */,
+			);
+			name = "My Job PitchTests";
+			productName = "My Job PitchTests";
+			productReference = CE6FD3501C01F9BC001A04C3 /* My Job PitchTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		CE6FD32F1C01F9BB001A04C3 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0710;
+				ORGANIZATIONNAME = "SC Labs Ltd";
+				TargetAttributes = {
+					CE6FD3361C01F9BB001A04C3 = {
+						CreatedOnToolsVersion = 7.1.1;
+						DevelopmentTeam = DH34L86UKU;
+					};
+					CE6FD34F1C01F9BC001A04C3 = {
+						CreatedOnToolsVersion = 7.1.1;
+						TestTargetID = CE6FD3361C01F9BB001A04C3;
+					};
+				};
+			};
+			buildConfigurationList = CE6FD3321C01F9BB001A04C3 /* Build configuration list for PBXProject "My Job Pitch" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = CE6FD32E1C01F9BB001A04C3;
+			productRefGroup = CE6FD3381C01F9BB001A04C3 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				CE6FD3361C01F9BB001A04C3 /* My Job Pitch */,
+				CE6FD34F1C01F9BC001A04C3 /* My Job PitchTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		CE6FD3351C01F9BB001A04C3 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CE7742461C95D88000A9A2BA /* JobEditView.xib in Resources */,
+				CE6FD34A1C01F9BC001A04C3 /* LaunchScreen.storyboard in Resources */,
+				CEE04AA91C10F8FE00697620 /* JobSeekerProfileView.xib in Resources */,
+				CE8AB0281C6AA22E0004F021 /* LocationEditView.xib in Resources */,
+				CE8AB0261C61826B0004F021 /* BusinessEditView.xib in Resources */,
+				CE6FD3471C01F9BC001A04C3 /* Assets.xcassets in Resources */,
+				CE8AAFF91C59A2DE0004F021 /* LocationMap.xib in Resources */,
+				CE6FD3451C01F9BB001A04C3 /* Main.storyboard in Resources */,
+				CEE04AA41C10EAD900697620 /* ErrorTextField.xib in Resources */,
+				CE8AAFE71C5848490004F021 /* JobSeekerSearchProfileView.xib in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		CE6FD34E1C01F9BC001A04C3 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		388A8D08B45503F266D314AB /* Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods/Pods-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		4468F164D62438DAA67B1A9A /* Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+		476C92B022CD8EA639441C80 /* Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods/Pods-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		970B2B02472CFD1986873A53 /* Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods/Pods-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		9816C2566EB6DA434DF644FC /* Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods/Pods-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		BAA10D4E0805598B1DEEE89A /* Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		CE6FD3331C01F9BB001A04C3 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CEE062571C28B77500ED60C0 /* MJPObject.m in Sources */,
+				CE6FD3421C01F9BB001A04C3 /* Login.m in Sources */,
+				CEE062531C28B77500ED60C0 /* Business.m in Sources */,
+				CE45AEC41C0B41390092AB75 /* MJPViewController.m in Sources */,
+				CEC2E4071C45B4C200AC0F45 /* Location.m in Sources */,
+				CEE062551C28B77500ED60C0 /* Hours.m in Sources */,
+				CEC2E4191C4BE86400AC0F45 /* Sector.m in Sources */,
+				CE8AB0171C5EDB7B0004F021 /* MessageThread.m in Sources */,
+				CE7742411C95D6C000A9A2BA /* EditJob.m in Sources */,
+				CE7742491C9623C300A9A2BA /* ViewJobMenu.m in Sources */,
+				CEE0625E1C28B77500ED60C0 /* Role.m in Sources */,
+				CE45AECD1C0B461A0092AB75 /* User.m in Sources */,
+				CE4696AE1C9A0BC8001E3FFE /* LockableNavigationController.m in Sources */,
+				CE8AB0011C5AF6250004F021 /* Application.m in Sources */,
+				CE8AB0241C617F550004F021 /* BusinessEditView.m in Sources */,
+				CE77423E1C92555900A9A2BA /* EditLocation.m in Sources */,
+				CE45AECA1C0B45AD0092AB75 /* RegisterRequest.m in Sources */,
+				CE8AAFE51C56D93C0004F021 /* Pitch.m in Sources */,
+				CEE52CFE1C066AB000881648 /* AuthToken.m in Sources */,
+				CEE0056A1C90DEC90065E43A /* CreateRecruiterProfile.m in Sources */,
+				CE59737D1C1626630096B001 /* JobSeekerProfileView.m in Sources */,
+				CE8395A81C3EF98F007A8213 /* EditProfile.m in Sources */,
+				CEE062581C28B77500ED60C0 /* MJPObjectWithName.m in Sources */,
+				CE8395AB1C42F279007A8213 /* SwipeView.m in Sources */,
+				CE7742351C92368200A9A2BA /* SimpleListCell.m in Sources */,
+				CE77424C1C96244900A9A2BA /* ViewJob.m in Sources */,
+				CEE04A9F1C0F8A9100697620 /* JobSeekerHome.m in Sources */,
+				CEE062541C28B77500ED60C0 /* Contract.m in Sources */,
+				CE77423B1C923EAD00A9A2BA /* ListJobs.m in Sources */,
+				CEE0625B1C28B77500ED60C0 /* MJPObjectWithNameShortNameDesc.m in Sources */,
+				CEE04AA71C10EE2000697620 /* ErrorTextField.m in Sources */,
+				CE6FD33F1C01F9BB001A04C3 /* AppDelegate.m in Sources */,
+				CEE52D011C066F2700881648 /* LoginRequest.m in Sources */,
+				CE8AB01A1C5EE4B80004F021 /* MessageThreadCell.m in Sources */,
+				CEC2E40A1C45B4EC00AC0F45 /* MJPObjectWithDates.m in Sources */,
+				CE7742441C95D85300A9A2BA /* JobEditView.m in Sources */,
+				CEE062601C28B77500ED60C0 /* Sex.m in Sources */,
+				CEE005671C90D6D50065E43A /* CreateJobSeekerProfile.m in Sources */,
+				CE8AB01D1C6029D90004F021 /* RecordPitch.m in Sources */,
+				CE8AAFFC1C59A7820004F021 /* LocationMapView.m in Sources */,
+				CEE0625C1C28B77500ED60C0 /* Nationality.m in Sources */,
+				CE7742381C923D4900A9A2BA /* ListLocations.m in Sources */,
+				CEE062561C28B77500ED60C0 /* JobSeeker.m in Sources */,
+				CE8AB0141C5EBA850004F021 /* Message.m in Sources */,
+				CE8AB0041C5B04320004F021 /* JobDetails.m in Sources */,
+				CEB424131C9A35BC0012748B /* JobSeekerDetails.m in Sources */,
+				CE8AAFF71C599FA50004F021 /* DownPickerMultiple.m in Sources */,
+				CE8AB02B1C6AA2490004F021 /* LocationEditView.m in Sources */,
+				CEE062591C28B77500ED60C0 /* MJPObjectWithNameDesc.m in Sources */,
+				CE8AAFED1C5850C40004F021 /* EditSearchProfile.m in Sources */,
+				CEC2E41C1C4BEAA900AC0F45 /* ApplicationStatus.m in Sources */,
+				CE86847E1C0E570300D4B6C7 /* ScrollingViewController.m in Sources */,
+				CEE0625A1C28B77500ED60C0 /* MJPObjectWithNameShortName.m in Sources */,
+				CEE0625D1C28B77500ED60C0 /* Profile.m in Sources */,
+				CEC2E4041C45A88100AC0F45 /* Job.m in Sources */,
+				CEC2E4221C4BEFDE00AC0F45 /* JobStatus.m in Sources */,
+				CE8AB00B1C5EA9F60004F021 /* MessageListCell.m in Sources */,
+				CE8AAFEA1C5848900004F021 /* JobSeekerSearchProfileView.m in Sources */,
+				CEE04A9C1C0F896300697620 /* ListBusinesses.m in Sources */,
+				CEE04AA21C0F8C6700697620 /* CreateProfile.m in Sources */,
+				CEE52CFA1C065C4100881648 /* API.m in Sources */,
+				CE8AB0111C5EB66C0004F021 /* Messages.m in Sources */,
+				CE6FD33C1C01F9BB001A04C3 /* main.m in Sources */,
+				CEC2E40D1C45C7AB00AC0F45 /* Image.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		CE6FD34C1C01F9BC001A04C3 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CE6FD3551C01F9BC001A04C3 /* My_Job_PitchTests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		CE6FD3521C01F9BC001A04C3 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = CE6FD3361C01F9BB001A04C3 /* My Job Pitch */;
+			targetProxy = CE6FD3511C01F9BC001A04C3 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		CE6FD3431C01F9BB001A04C3 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				CE6FD3441C01F9BB001A04C3 /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		CE6FD3481C01F9BC001A04C3 /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				CE6FD3491C01F9BC001A04C3 /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		CE6FD3621C01F9BC001A04C3 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		CE6FD3631C01F9BC001A04C3 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		CE6FD3651C01F9BC001A04C3 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = CFA3EA2BF05430C3C9894AA5 /* Pods.debug.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				GCC_PREFIX_HEADER = "My Job Pitch/PrefixHeader.pch";
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"${PODS_ROOT}/Headers/Public\"/**",
+					"\"${PODS_ROOT}/Headers/Public/AFNetworking\"/**",
+					"\"${PODS_ROOT}/Headers/Public/ISO8601DateFormatterValueTransformer\"/**",
+					"\"${PODS_ROOT}/Headers/Public/RKValueTransformers\"/**",
+					"\"${PODS_ROOT}/Headers/Public/RestKit\"/**",
+					"\"${PODS_ROOT}/Headers/Public/SOCKit\"/**",
+					"\"${PODS_ROOT}/Headers/Public/TransitionKit\"/**",
+				);
+				INFOPLIST_FILE = "My Job Pitch/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.myjobpitch.My-Job-Pitch";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
+			};
+			name = Debug;
+		};
+		CE6FD3661C01F9BC001A04C3 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = B0F6E4D8F0045A1E43790385 /* Pods.release.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				GCC_PREFIX_HEADER = "My Job Pitch/PrefixHeader.pch";
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"${PODS_ROOT}/Headers/Public\"/**",
+					"\"${PODS_ROOT}/Headers/Public/AFNetworking\"/**",
+					"\"${PODS_ROOT}/Headers/Public/ISO8601DateFormatterValueTransformer\"/**",
+					"\"${PODS_ROOT}/Headers/Public/RKValueTransformers\"/**",
+					"\"${PODS_ROOT}/Headers/Public/RestKit\"/**",
+					"\"${PODS_ROOT}/Headers/Public/SOCKit\"/**",
+					"\"${PODS_ROOT}/Headers/Public/TransitionKit\"/**",
+				);
+				INFOPLIST_FILE = "My Job Pitch/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.myjobpitch.My-Job-Pitch";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
+			};
+			name = Release;
+		};
+		CE6FD3681C01F9BC001A04C3 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = CFA3EA2BF05430C3C9894AA5 /* Pods.debug.xcconfig */;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				INFOPLIST_FILE = "My Job PitchTests/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.myjobpitch.My-Job-PitchTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/My Job Pitch.app/My Job Pitch";
+			};
+			name = Debug;
+		};
+		CE6FD3691C01F9BC001A04C3 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = B0F6E4D8F0045A1E43790385 /* Pods.release.xcconfig */;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				INFOPLIST_FILE = "My Job PitchTests/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.myjobpitch.My-Job-PitchTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/My Job Pitch.app/My Job Pitch";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		CE6FD3321C01F9BB001A04C3 /* Build configuration list for PBXProject "My Job Pitch" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				CE6FD3621C01F9BC001A04C3 /* Debug */,
+				CE6FD3631C01F9BC001A04C3 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		CE6FD3641C01F9BC001A04C3 /* Build configuration list for PBXNativeTarget "My Job Pitch" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				CE6FD3651C01F9BC001A04C3 /* Debug */,
+				CE6FD3661C01F9BC001A04C3 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		CE6FD3671C01F9BC001A04C3 /* Build configuration list for PBXNativeTarget "My Job PitchTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				CE6FD3681C01F9BC001A04C3 /* Debug */,
+				CE6FD3691C01F9BC001A04C3 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = CE6FD32F1C01F9BB001A04C3 /* Project object */;
+}

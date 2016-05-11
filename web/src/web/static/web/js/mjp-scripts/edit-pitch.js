@@ -31,7 +31,7 @@ $(document).ready(function() {
 
 	$('.btn-js-start-pitch').click(function(e) {
 		// prepare video container;
-		$('#pitchVideoCheck video').html();
+		$('#pitchVideoCheck video').html('');
 
 		if(onBtnRecordClicked()){
 			startVideoTimer(19, $('.btn-js-stop-pitch'), stopRecordingProcess);

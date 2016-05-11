@@ -143,6 +143,8 @@ public class JobSeeker extends MJPObjectWithDates implements JobSeekerContainer 
         return profile;
     }
 
+
+
     @Override
     public JobSeeker getJobSeeker() {
         return this;
@@ -151,6 +153,7 @@ public class JobSeeker extends MJPObjectWithDates implements JobSeekerContainer 
     public List<Pitch> getPitches() {
         return pitches;
     }
+
 
     public Pitch getUploadingPitch() {
         if (pitches != null)
@@ -194,5 +197,17 @@ public class JobSeeker extends MJPObjectWithDates implements JobSeekerContainer 
 
     public String getCV() {
         return cv;
+    }
+
+    public void setProfile(Integer profile) {
+        this.profile = profile;
+    }
+
+    public void setPitches(List<Pitch> pitches){
+        this.pitches = pitches;
+    }
+
+    public void setCv(String cv){
+        this.cv = cv;
     }
 }

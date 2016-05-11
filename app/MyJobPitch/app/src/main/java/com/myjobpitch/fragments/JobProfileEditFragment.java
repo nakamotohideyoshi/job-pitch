@@ -264,7 +264,8 @@ public class JobProfileEditFragment extends EditFragment {
         jobProfile.setPlace_id(mPlaceId);
         jobProfile.setLongitude(mLongitude);
         jobProfile.setLatitude(mLatitude);
-        jobProfile.setPostcode_lookup(SelectPlaceActivity.mPostCodeJob);
+        //jobProfile.setPostcode_lookup(SelectPlaceActivity.mPostCodeJob);
+        jobProfile.setPostcode_lookup("123");
         jobProfile.setSearch_radius(radiusValues.get(mRadiusSpinner.getSelectedItemPosition()));
 
     }

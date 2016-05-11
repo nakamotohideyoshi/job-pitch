@@ -822,11 +822,12 @@
     request.username = username;
     request.password1 = password1;
     request.password2 = password2;
+    
     [[RKObjectManager sharedManager] postObject:request
                                            path:@"/api-rest-auth/registration/"
                                      parameters:nil success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
                                          NSLog(@"Register success");
-                                         success([mappingResult firstObject]);
+                                         success([mappingResult firstObject]);                                         
                                      } failure:^(RKObjectRequestOperation *operation, NSError *error) {
                                          NSLog(@"Error registering: %@", error);
                                          failure(operation, error, [self getMessage:error], [self getErrors:error]);

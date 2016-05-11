@@ -564,7 +564,7 @@
 				TargetAttributes = {
 					CE6FD3361C01F9BB001A04C3 = {
 						CreatedOnToolsVersion = 7.1.1;
-						DevelopmentTeam = DH34L86UKU;
+						DevelopmentTeam = WWHPV59JD6;
 					};
 					CE6FD34F1C01F9BC001A04C3 = {
 						CreatedOnToolsVersion = 7.1.1;
@@ -838,7 +838,8 @@
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Kevin Ragsdale (92TNT9RM8B)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Kevin Ragsdale (92TNT9RM8B)";
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -882,7 +883,8 @@
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Kevin Ragsdale (92TNT9RM8B)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Kevin Ragsdale (92TNT9RM8B)";
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
@@ -908,8 +910,8 @@
 			baseConfigurationReference = CFA3EA2BF05430C3C9894AA5 /* Pods.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Kevin Ragsdale (92TNT9RM8B)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Kevin Ragsdale (92TNT9RM8B)";
 				GCC_PREFIX_HEADER = "My Job Pitch/PrefixHeader.pch";
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -926,7 +928,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.myjobpitch.My-Job-Pitch";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "1a95ec91-131c-4608-8b82-da8006f2ab60";
 			};
 			name = Debug;
 		};
@@ -935,8 +937,8 @@
 			baseConfigurationReference = B0F6E4D8F0045A1E43790385 /* Pods.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Kevin Ragsdale (92TNT9RM8B)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Kevin Ragsdale (92TNT9RM8B)";
 				GCC_PREFIX_HEADER = "My Job Pitch/PrefixHeader.pch";
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -953,7 +955,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.myjobpitch.My-Job-Pitch";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "1a95ec91-131c-4608-8b82-da8006f2ab60";
 			};
 			name = Release;
 		};

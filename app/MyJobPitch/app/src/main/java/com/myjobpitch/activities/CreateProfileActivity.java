@@ -111,12 +111,9 @@ public class CreateProfileActivity extends MJPProgressActionBarActivity {
             } catch (IOException e) {}
         }
 
-        // General views
+
         mProgressView = findViewById(R.id.progress);
         mCreateProfileView = findViewById(R.id.create_profile);
-
-
-
 
     }
 
@@ -211,7 +208,6 @@ public class CreateProfileActivity extends MJPProgressActionBarActivity {
         boolean result = mJobSeekerEditFragment.validateInput();
         if (result) {
             showProgress(true);
-            //final MJPApi api = ((MJPApplication) getApplication()).getApi();
             api = ((MJPApplication) getApplication()).getApi();
             if (jobSeeker == null)
                 jobSeeker = new JobSeeker();

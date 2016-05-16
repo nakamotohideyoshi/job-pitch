@@ -199,15 +199,4 @@ public class JobSeeker extends MJPObjectWithDates implements JobSeekerContainer 
         return cv;
     }
 
-    public void setProfile(Integer profile) {
-        this.profile = profile;
-    }
-
-    public void setPitches(List<Pitch> pitches){
-        this.pitches = pitches;
-    }
-
-    public void setCv(String cv){
-        this.cv = cv;
-    }
 }

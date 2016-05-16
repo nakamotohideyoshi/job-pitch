@@ -98,7 +98,7 @@ public class MJPApi {
 	}
 
 	public MJPApi() {
-		this("https://ec2-52-50-24-131.eu-west-1.compute.amazonaws.com/");
+		this("http://ec2-52-31-145-95.eu-west-1.compute.amazonaws.com/");
 	}
 
     private URI getTypeUrl(String path) {
@@ -244,38 +244,6 @@ public class MJPApi {
     public void deleteBusiness(Integer id) {
         rest.exchange(getObjectUrl("user-businesses", id), HttpMethod.DELETE, createAuthenticatedRequest(), Void.class);
     }
-
-
-    //julia_kata
-
-    public JobSeeker createJobSeeker(JobSeeker jobSeeker) throws MJPApiException {
-        try {
-            return rest.exchange(getTypeUrl("job-seekers"), HttpMethod.POST, createAuthenticatedRequest(jobSeeker), JobSeeker.class).getBody();
-        } catch (HttpClientErrorException e) {
-            if (e.getStatusCode().value() == 400) {
-                throw new MJPApiException(e);
-            }
-            throw e;
-        }
-
-    }
-
-    public JobSeeker updateJobSeeker(JobSeeker jobSeeker) throws MJPApiException {
-        try {
-            return rest.exchange(getObjectUrl("job-seekers", jobSeeker.getId()), HttpMethod.PUT, createAuthenticatedRequest(jobSeeker), JobSeeker.class).getBody();
-        } catch (HttpClientErrorException e) {
-            if (e.getStatusCode().value() == 400) {
-                throw new MJPApiException(e);
-            }
-            throw e;
-        }
-    }
-
-    public void deleteJobSeeker(Integer id) {
-        rest.exchange(getObjectUrl("job-seekers", id), HttpMethod.DELETE, createAuthenticatedRequest(), Void.class);
-    }
-
-    //////////////////////////////////////
 
     public Location createLocation(Location location) throws MJPApiException {
         try {

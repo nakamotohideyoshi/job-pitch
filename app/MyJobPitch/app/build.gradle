@@ -8,8 +8,8 @@ android {
         applicationId "com.myjobpitch"
         minSdkVersion 15
         targetSdkVersion 23
-        versionCode 6
-        versionName "1.1-beta.6"
+        versionCode 7
+        versionName "android-1.1-beta.7"
     }
     packagingOptions {
         exclude 'META-INF/LICENSE'
@@ -28,7 +28,6 @@ android {
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'com.android.support:appcompat-v7:23.1.1'
-    //compile 'com.google.android.gms:play-services:7.3.0'
     compile 'org.springframework.android:spring-android-rest-template:1.0.1.RELEASE'
     compile 'com.fasterxml.jackson.core:jackson-databind:2.3.2'
     compile 'com.lorentzos.swipecards:library:1.0.8@aar'
@@ -36,17 +35,9 @@ dependencies {
     compile 'com.amazonaws:aws-android-sdk-s3:2.2.5'
     compile 'org.greenrobot:eventbus:3.0.0'
     compile 'com.intuit.sdp:sdp-android:1.0.2'
-
-    //compile "com.google.android.gms:play-services-gcm:8.4.0"
-    //compile 'com.google.android.gms:play-services-ads:8.4.0'
-
-
     compile 'com.google.android.gms:play-services-gcm:8.4.0'
     compile 'com.google.android.gms:play-services-maps:8.4.0'
     compile 'com.google.android.gms:play-services-location:8.4.0'
-
-
-    //compile 'com.google.android.gms:play-services:8.4.0'
 
 }
 

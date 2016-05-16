@@ -111,12 +111,9 @@ public class CreateProfileActivity extends MJPProgressActionBarActivity {
             } catch (IOException e) {}
         }
 
-        // General views
+
         mProgressView = findViewById(R.id.progress);
         mCreateProfileView = findViewById(R.id.create_profile);
-
-
-
 
     }
 
@@ -143,14 +140,11 @@ public class CreateProfileActivity extends MJPProgressActionBarActivity {
                     location.setBusiness(business.getId());
                     mLocationEditFragment.save(location);
                     api = ((MJPApplication) getApplication()).getApi();
-                    //mCreateLocationTask = mLocationEditFragment.getCreateLocationTask(api, location);
                     mCreateLocationTask = new CreateUpdateLocationTask(api, location);
 
 
                     Log.e("success","success!!!");
                     Intent intent = new Intent(CreateProfileActivity.this, BusinessListActivity.class);
-                    //intent.putExtra("from_login", true);
-                    //intent.putExtra(LOCATION_ID, location.getId());
                     intent.putExtra(LOCATION_ID, true);
                     startActivity(intent);
                     CreateProfileActivity.this.finish();
@@ -214,24 +208,20 @@ public class CreateProfileActivity extends MJPProgressActionBarActivity {
         boolean result = mJobSeekerEditFragment.validateInput();
         if (result) {
             showProgress(true);
-            //final MJPApi api = ((MJPApplication) getApplication()).getApi();
             api = ((MJPApplication) getApplication()).getApi();
             if (jobSeeker == null)
                 jobSeeker = new JobSeeker();
-            //User user = api.getUser();
+            User user = api.getUser();
             mJobSeekerEditFragment.save(jobSeeker);
-
-            //mCreateJobSeekerTask = mJobSeekerEditFragment.getCreateBusinessTask(api, jobSeeker);
-            mCreateJobSeekerTask = new CreateUpdateJobSeekerTask(api, jobSeeker);
-
+            mCreateJobSeekerTask = mJobSeekerEditFragment.getCreateJobSeekerTask(api, jobSeeker);
             mCreateJobSeekerTask.addListener(new CreateReadUpdateAPITaskListener<JobSeeker>(){
 
                 @Override
                 public void onSuccess (JobSeeker jobSeeker){
-                    //CreateProfileActivity.this.jobSeeker = jobSeeker;
+                    CreateProfileActivity.this.jobSeeker = jobSeeker;
                     getApi().getUser().setJob_seeker(jobSeeker.getId());
                     Intent intent = new Intent(CreateProfileActivity.this, JobSeekerActivity.class);
-                    //intent.putExtra("from_login", true);
+                    intent.putExtra("from_login", true);
                     startActivity(intent);
                     CreateProfileActivity.this.finish();
                 }

@@ -232,7 +232,6 @@ public class LocationEditFragment extends EditFragment<Location> {
     }
 
     public void save_location() {
-
         LoginActivity.userLocation.setName(mLocationNameView.getText().toString());
         LoginActivity.userLocation.setAddress(mLocationAddressView.getText().toString());
         LoginActivity.userLocation.setEmail(mLocationEmailView.getText().toString());

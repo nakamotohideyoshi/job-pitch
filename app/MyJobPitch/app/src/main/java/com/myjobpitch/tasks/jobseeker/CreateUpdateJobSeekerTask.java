@@ -6,35 +6,19 @@ import com.myjobpitch.api.data.JobSeeker;
 import com.myjobpitch.tasks.CreateUpdateAPITask;
 
 public class CreateUpdateJobSeekerTask extends CreateUpdateAPITask<JobSeeker> {
-    public CreateUpdateJobSeekerTask(final MJPApi api, final JobSeeker jobSeeker) {
+        public CreateUpdateJobSeekerTask(final MJPApi api, final JobSeeker jobSeeker) {
         super(jobSeeker, new CreateUpdateAPITask.Action<JobSeeker>() {
             @Override
             public JobSeeker create(JobSeeker jobSeeker) throws MJPApiException {
-                return api.createJobSeeker(jobSeeker);
+                return api.create(JobSeeker.class, jobSeeker);
             }
 
             @Override
             public JobSeeker update(JobSeeker jobSeeker) throws MJPApiException {
-                return api.updateJobSeeker(jobSeeker);
+                return api.update(JobSeeker.class, jobSeeker);
             }
         });
     }
-
-
-//        public CreateUpdateJobSeekerTask(final MJPApi api, final JobSeeker jobSeeker) {
-//        super(jobSeeker, new CreateUpdateAPITask.Action<JobSeeker>() {
-//            @Override
-//            public JobSeeker create(JobSeeker jobSeeker) throws MJPApiException {
-//                return api.create(JobSeeker.class, jobSeeker);
-//            }
-//
-//            @Override
-//            public JobSeeker update(JobSeeker jobSeeker) throws MJPApiException {
-//                return api.update(JobSeeker.class, jobSeeker);
-//            }
-//        });
-//    }
-
 
 }
 

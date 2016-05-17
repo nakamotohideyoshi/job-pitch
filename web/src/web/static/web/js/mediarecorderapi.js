@@ -86,10 +86,6 @@ function startRecording(stream) {
 		mediaRecorder = new MediaRecorder(stream);
 	}
 
-
-
-
-
 	//pauseResBtn.textContent = "Pause";
 
 	mediaRecorder.start(10);

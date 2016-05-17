@@ -79,6 +79,7 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activities.LoginActivity" />
         </activity>
+
         <activity
             android:name=".activities.EditBusinessActivity"
             android:label="@string/edit_business"
@@ -87,6 +88,17 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activities.BusinessListActivity" />
         </activity>
+
+        <activity
+            android:name=".activities.EditCompanyActivity"
+            android:label="@string/edit_company"
+            android:parentActivityName=".activities.BusinessListActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activities.BusinessListActivity" />
+        </activity>
+
+
         <activity
             android:name=".activities.LocationListActivity"
             android:launchMode="singleTop"

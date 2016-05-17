@@ -19,6 +19,7 @@ $(document).ready(function() {
 			actualPitch = jobSeeker[0].pitches[0];
 
 			renderVideoContainer(actualPitch);
+			//poolingS3upload(actualPitch);
 		}
 	});
 
@@ -63,11 +64,11 @@ function renderVideoContainer(pitch) {
 			videoType = 'video/mp4';
 		}
 		videoSource = '<source src="'+pitch.video+'" type="'+videoType+'">';
+
+		var htmlVideo = '<video width="320" height="240" controls autoplay>'+videoSource+'</video><br>';
+
+		$('#pitchVideoCheck').html(htmlVideo);
 	}
-
-	var htmlVideo = '<video width="320" height="240" controls autoplay>'+videoSource+'</video><br>';
-
-	$('#pitchVideoCheck').html(htmlVideo);
 }
 
 function startVideoTimer(duration, $display, callback) {
@@ -98,27 +99,22 @@ function stopRecordingProcess($display){
 		onBtnStopClicked();
 
 		if(rawMediaRecorded != undefined && rawMediaRecorded){
-			var pitch = getNewPitchMetaData();
-
-			saveS3object(pitch, rawMediaRecorded);
+			getNewPitchMetaData(function(pitch){
+				saveS3object(pitch, rawMediaRecorded);
+			});
 		}
 }
 
-function getNewPitchMetaData() {
-		var pitch;
-
+function getNewPitchMetaData(callback) {
 		$.ajax({
 			url: "/api/pitches/",
 			type: 'POST',
 			data: { csrftoken: getCookie('csrftoken') },
-			cache: false,
-			async: false
+			cache: false
 		})
-		.done(function(data) {
-			pitch = data;
+		.done(function(pitch) {
+			callback(pitch);
 		});
-
-		return pitch;
 }
 
 function saveS3object(pitch, object){
@@ -131,7 +127,6 @@ function saveS3object(pitch, object){
 
 	bucket.putObject(object, function (err, data) {
 		if(!err){
-			log('Start transcoding ...')
 			poolingS3upload(pitch);
 		}
 		console.log(err ? 'ERROR!' : 'SAVED.');
@@ -139,12 +134,15 @@ function saveS3object(pitch, object){
 }
 
 function poolingS3upload(pitch){
+	log('Continues with transcoding ...');
+
+	$('.btn-js-start-pitch').addClass('disabled');
+
 	uploadingS3timer = setInterval(function(){
 		$.ajax({
 			url: "/api/pitches/",
 			type: 'GET',
 			data: {
-				id: pitch.id,
 				token: pitch.token,
 				csrftoken: getCookie('csrftoken')
 			},
@@ -152,18 +150,21 @@ function poolingS3upload(pitch){
 			async: false
 		}).done(function( pitches ) {
 			if(pitches !== undefined && pitches.length > 0){
-				var oneIsNullAtLeast = false;
+				var thereIsANullPitch = false;
 
 				pitches.forEach(function(pitch) {
 					if(pitch.video == undefined || pitch.video == null || !pitch.video){
-						oneIsNullAtLeast = true;
-						return !true; // It found one
+						thereIsANullPitch = true;
+						return false; // There is one
 					}
 				});
 
-				if(!oneIsNullAtLeast){
+				if(!thereIsANullPitch){
+					$('.btn-js-start-pitch').removeClass('disabled')
 					clearInterval(uploadingS3timer);
 					log('End of Uploading');
+				} else {
+
 				}
 			}
 		});

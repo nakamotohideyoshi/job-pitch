@@ -177,6 +177,11 @@ public class BusinessListActivity extends MJPProgressActionBarActivity  {
                 // Start the CAB using the ActionMode.Callback defined above
                 list.setItemChecked(position, true);
                 mActionMode = startActionMode(mActionModeCallback);
+
+                Intent intent = new Intent(BusinessListActivity.this, EditCompanyActivity.class);
+                intent.putExtra("business_id", ((Business) list.getItemAtPosition(position)).getId());
+                startActivity(intent);
+
                 return true;
             }
         });
@@ -254,6 +259,11 @@ public class BusinessListActivity extends MJPProgressActionBarActivity  {
                 return true;
             case R.id.action_messages:
                 startActivity(new Intent(this, ConversationListActivity.class));
+                return true;
+            case R.id.action_edit:
+                Intent intent = new Intent(BusinessListActivity.this, EditCompanyActivity.class);
+                intent.putExtra("business_id", ((Business) list.getItemAtPosition(0)).getId());
+                startActivity(intent);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

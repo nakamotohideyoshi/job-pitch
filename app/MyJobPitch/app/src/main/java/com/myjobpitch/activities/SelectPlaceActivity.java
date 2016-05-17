@@ -66,6 +66,8 @@ public class SelectPlaceActivity extends ActionBarActivity implements GoogleApiC
     public static final String LATITUDE = "latitude";
     public static final String LONGITUDE = "longitude";
 
+
+
     public static Double mLongitudeJob;
     public static Double mLatitudeJob;
     public static String mPlaceIdJob = "";
@@ -563,7 +565,7 @@ public class SelectPlaceActivity extends ActionBarActivity implements GoogleApiC
 
                 try {
                     // Getting a maximum of 3 Address that matches the input text
-                    addresses = geocoder.getFromLocationName(location, 3);
+                    addresses = geocoder.getFromLocationName(location, 1);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -600,6 +602,34 @@ public class SelectPlaceActivity extends ActionBarActivity implements GoogleApiC
         }
         if (v.getId() == R.id.select_button){
             if (mLatLng != null) {
+
+                Geocoder geocoder = new Geocoder(this, Locale.ENGLISH);
+                List<Address> addresses = null;
+                try {
+                    addresses = geocoder.getFromLocation(mLatLng.latitude, mLatLng.longitude, 1);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                Address address=null;
+                String addr="";
+                String zipcode="";
+                if (addresses != null && addresses.size() > 0) {
+                    addr = addresses.get(0).getAddressLine(0) + "," + addresses.get(0).getSubAdminArea();
+                    for (int i = 0; i < addresses.size(); i++) {
+                        address = addresses.get(i);
+                        if (address.getPostalCode() != null) {
+                            zipcode = address.getPostalCode();
+                            break;
+                        }
+                    }
+                }
+                mPostCodeJob = zipcode;
+                mAddresseJob = addr;
+
+
+
+
+
 
                 Intent intent = new Intent();
                 intent.putExtra(LATITUDE, mLatLng.latitude);

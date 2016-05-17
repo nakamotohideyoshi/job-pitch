@@ -130,7 +130,7 @@ public class EditLocationActivity extends MJPProgressActionBarActivity {
     private void attemptSave() {
         if (mLocationEditFragment.validateInput()) {
             showProgress(true);
-
+/*
             Geocoder geocoder = new Geocoder(this, Locale.ENGLISH);
             List<Address> addresses = null;
             try {
@@ -153,6 +153,11 @@ public class EditLocationActivity extends MJPProgressActionBarActivity {
             }
             location.setPostcode_lookup(zipcode);
             location.setAddress(addr);
+            */
+
+            location.setPostcode_lookup(SelectPlaceActivity.mPostCodeJob);
+            location.setAddress(SelectPlaceActivity.mAddresseJob);
+
             mLocationEditFragment.save(location);
             api = ((MJPApplication) getApplication()).getApi();
             mCreateUpdateLocationTask = new CreateUpdateLocationTask(api, location);

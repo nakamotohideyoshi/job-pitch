@@ -59,9 +59,6 @@ public class JobSeekerEditFragment extends EditFragment<JobSeeker> {
 
         mActiveView = (CheckBox) view.findViewById(R.id.job_seeker_active);
         mFirstNameView = (EditText) view.findViewById(R.id.job_seeker_first_name);
-        //julia_kata
-        mFirstNameView.setText(RegisterActivity.UserNameRegister.toString());
-
         mLastNameView = (EditText) view.findViewById(R.id.job_seeker_last_name);
         mEmailView = (EditText) view.findViewById(R.id.job_seeker_email);
         mEmailPublicView = (CheckBox) view.findViewById(R.id.job_seeker_email_public);

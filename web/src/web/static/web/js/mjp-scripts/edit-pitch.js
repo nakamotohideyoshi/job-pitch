@@ -22,17 +22,17 @@ $(document).ready(function() {
 		if(jobSeeker[0].pitches[0] !== undefined){
 			actualPitch = jobSeeker[0].pitches[0];
 			renderVideoContainer(actualPitch);
-			poolingS3upload(actualPitch);
+			//poolingS3upload(actualPitch);
 		}
 	});
 
-/*
+
 	$.get( "/api-rest-auth/user/", { token: getCookie('key') ,csrftoken: getCookie('csrftoken') })
 	.done(function( data ) {
 		job_seeker_id = data.job_seeker;
 	});
 
-*/
+
 
 	$('.btn-js-start-pitch').click(function(e) {
 		// prepare video container;

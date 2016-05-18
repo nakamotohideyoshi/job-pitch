@@ -158,16 +158,16 @@ function poolingS3upload(pitch){
 					}
 				});
 
-				if(!thereIsANullPitch){ // Uploaded already
+				if(thereIsANullPitch){ // Uploaded already
+					if(firstExecution){
+						log('Continues with uploading ...');
+						firstExecution = false;
+					}
+				} else {
 					if(!firstExecution){
 						$('.btn-js-start-pitch').removeClass('disabled')
 						clearInterval(uploadingS3timer);
 						log('End of Uploading');
-					}
-				} else {
-					if(firstExecution){
-						log('Continues with uploading ...');
-						firstExecution = false;
 					}
 				}
 			}

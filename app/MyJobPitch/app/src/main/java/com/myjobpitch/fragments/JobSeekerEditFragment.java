@@ -177,7 +177,7 @@ public class JobSeekerEditFragment extends EditFragment<JobSeeker> {
         jobSeeker.setNationality_public(mNationalityPublicView.isChecked());
         jobSeeker.setDescription(mDescriptionView.getText().toString());
         jobSeeker.setActive(mActiveView.isChecked());
-
+        jobSeeker.setHas_references(false);
     }
 
     public CreateUpdateJobSeekerTask getCreateJobSeekerTask(MJPApi api, JobSeeker jobSeeker) {

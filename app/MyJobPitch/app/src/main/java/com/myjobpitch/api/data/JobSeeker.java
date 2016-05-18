@@ -27,6 +27,14 @@ public class JobSeeker extends MJPObjectWithDates implements JobSeekerContainer 
     private String description;
     private String cv;
 
+    private boolean has_references;
+    public boolean getHas_references() {
+        return has_references;
+    }
+    public void setHas_references(boolean has_references){
+        this.has_references = has_references;
+    }
+
     public boolean getEmail_public() {
         return email_public;
     }
@@ -198,5 +206,6 @@ public class JobSeeker extends MJPObjectWithDates implements JobSeekerContainer 
     public String getCV() {
         return cv;
     }
+
 
 }

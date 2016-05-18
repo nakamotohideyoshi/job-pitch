@@ -16,9 +16,10 @@ $(document).ready(function() {
 	var job_seeker_id = 0;
 	$.get( "/api/job-seekers/", { csrftoken: getCookie('csrftoken') })
 	.done(function( jobSeeker ) {
+		job_seeker_id = jobSeeker[0].id;
+
 		if(jobSeeker[0].pitches[0] !== undefined){
 			actualPitch = jobSeeker[0].pitches[0];
-			job_seeker_id = jobSeeker[0].id;
 			renderVideoContainer(actualPitch);
 			//poolingS3upload(actualPitch);
 		}

@@ -11,9 +11,10 @@ var videoTimer;
 
 var actualPitch = null;
 
+var job_seeker_id = 0;
+
 $(document).ready(function() {
 	//
-	var job_seeker_id = 0;
 	$.get( "/api/job-seekers/", { csrftoken: getCookie('csrftoken') })
 	.done(function( jobSeeker ) {
 		job_seeker_id = jobSeeker[0].id;

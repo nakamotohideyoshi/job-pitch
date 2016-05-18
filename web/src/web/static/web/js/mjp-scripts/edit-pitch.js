@@ -13,22 +13,24 @@ var actualPitch = null;
 
 $(document).ready(function() {
 	//
+	var job_seeker_id = 0;
 	$.get( "/api/job-seekers/", { csrftoken: getCookie('csrftoken') })
 	.done(function( jobSeeker ) {
 		if(jobSeeker[0].pitches[0] !== undefined){
 			actualPitch = jobSeeker[0].pitches[0];
-
+			job_seeker_id = jobSeeker[0].id;
 			renderVideoContainer(actualPitch);
 			//poolingS3upload(actualPitch);
 		}
 	});
 
-	var job_seeker_id = 0;
+/*
 	$.get( "/api-rest-auth/user/", { token: getCookie('key') ,csrftoken: getCookie('csrftoken') })
 	.done(function( data ) {
 		job_seeker_id = data.job_seeker;
 	});
 
+*/
 
 	$('.btn-js-start-pitch').click(function(e) {
 		// prepare video container;

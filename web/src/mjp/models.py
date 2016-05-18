@@ -277,8 +277,8 @@ class JobSeeker(models.Model):
 class Pitch(models.Model):
     token = models.TextField(default=uuid.uuid4, editable=False)
     job_seeker = models.ForeignKey('JobSeeker', related_name='pitches')
-    video = models.URLField(null=True)
-    thumbnail = models.URLField(null=True)
+    video = models.URLField(max_length=512, null=True)
+    thumbnail = models.URLField(max_length=512, null=True)
 
 
 class JobProfile(models.Model):

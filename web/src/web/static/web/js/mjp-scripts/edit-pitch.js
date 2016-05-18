@@ -22,7 +22,7 @@ $(document).ready(function() {
 		if(jobSeeker[0].pitches[0] !== undefined){
 			actualPitch = jobSeeker[0].pitches[0];
 			renderVideoContainer(actualPitch);
-			//poolingS3upload(actualPitch);
+			poolingS3upload(actualPitch);
 		}
 	});
 
@@ -138,21 +138,14 @@ function saveS3object(pitch, object){
 }
 
 function poolingS3upload(pitch){
-	log('Continues with transcoding ...');
-
 	$('.btn-js-start-pitch').addClass('disabled');
+
+	var firstExecution = true;
 
 	uploadingS3timer = setInterval(function(){
 		$.ajax({
 			url: "/api/pitches/",
 			type: 'GET',
-			data: {
-			    "id": pitch.id,
-			    "token": pitch.token,
-			    "video": null,
-			    "thumbnail": null,
-			    "job_seeker": job_seeker_id
-			},
 			cache: false
 		}).done(function( pitches ) {
 			if(pitches !== undefined && pitches.length > 0){
@@ -165,12 +158,17 @@ function poolingS3upload(pitch){
 					}
 				});
 
-				if(!thereIsANullPitch){
-					$('.btn-js-start-pitch').removeClass('disabled')
-					clearInterval(uploadingS3timer);
-					log('End of Uploading');
+				if(!thereIsANullPitch){ // Uploaded already
+					if(!firstExecution){
+						$('.btn-js-start-pitch').removeClass('disabled')
+						clearInterval(uploadingS3timer);
+						log('End of Uploading');
+					}
 				} else {
-
+					if(firstExecution){
+						log('Continues with uploading ...');
+						firstExecution = false;
+					}
 				}
 			}
 		});

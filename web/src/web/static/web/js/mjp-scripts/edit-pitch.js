@@ -143,11 +143,13 @@ function poolingS3upload(pitch){
 			url: "/api/pitches/",
 			type: 'GET',
 			data: {
-				token: pitch.token,
-				csrftoken: getCookie('csrftoken')
+			    "id": pitch.id,
+			    "token": pitch.token,
+			    "video": null,
+			    "thumbnail": null,
+			    "job_seeker": job_seeker_id
 			},
-			cache: false,
-			async: false
+			cache: false
 		}).done(function( pitches ) {
 			if(pitches !== undefined && pitches.length > 0){
 				var thereIsANullPitch = false;

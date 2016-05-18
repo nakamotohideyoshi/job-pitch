@@ -121,7 +121,7 @@ function saveS3object(pitch, object){
 	log('Start uploading ...');
 
 	object.Key = window.location.origin.replace('//','')
-	+ '.' + pitch.token
+	+ '/' + pitch.token
 	+ '.' + pitch.id
 	+ '.' + object.Key;
 

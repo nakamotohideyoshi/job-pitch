@@ -34,7 +34,7 @@ public class AWSPitchUploadProcessing extends AWSPitchUploadBase {
                         if (mCancelled || mStopped)
                             return null;
                     }
-                    if (iterations % 5 == 0) {
+                    if (iterations % 8 == 0) {
                         try {
                             Pitch update = api.get(Pitch.class, pitch.getId());
                             if (update.getVideo() != null) {

@@ -230,6 +230,7 @@ public class RecordPitchActivity extends MJPProgressActionBarActivity {
                 return getApi().get(Pitch.class);
             }
         });
+
         getPitchData.addListener(new CreateReadUpdateAPITaskListener<List<Pitch>>() {
             @Override
             public void onSuccess(List<Pitch> pitches) {

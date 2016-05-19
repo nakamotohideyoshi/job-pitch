@@ -75,8 +75,6 @@ public class LocationEditFragment extends EditFragment<Location> {
 
 
         mLocationNameView = (EditText) view.findViewById(R.id.location_name);
-        //julia_kata
-        mLocationNameView.setText(RegisterActivity.UserNameRegister.toString());
         mLocationDescView = (EditText) view.findViewById(R.id.location_description);
         mLocationAddressView = (EditText) view.findViewById(R.id.location_address);
         mLocationEmailView = (EditText) view.findViewById(R.id.location_email);

@@ -164,8 +164,8 @@ function poolingTranscodeProcess(pitch){
 					if(firstExecution){
 						$('.btn-js-start-pitch').addClass('disabled');
 						log('Continues with uploading ...');
-						firstExecution = false;
 					}
+					firstExecution = false;
 				} else {
 					if(!firstExecution){
 						$('.btn-js-start-pitch').removeClass('disabled')

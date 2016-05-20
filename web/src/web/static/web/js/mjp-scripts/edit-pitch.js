@@ -142,8 +142,6 @@ function putIntoS3Bucket(pitch, object){
 
 
 function poolingTranscodeProcess(pitch){
-	$('.btn-js-start-pitch').addClass('disabled');
-
 	var firstExecution = true;
 
 	poolingInterval = setInterval(function(){
@@ -164,6 +162,7 @@ function poolingTranscodeProcess(pitch){
 
 				if(thereIsANullPitch){ // Uploaded already
 					if(firstExecution){
+						$('.btn-js-start-pitch').addClass('disabled');
 						log('Continues with uploading ...');
 						firstExecution = false;
 					}

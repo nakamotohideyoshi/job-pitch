@@ -42,9 +42,16 @@ header.carousel .fill {
     background-position: center;
     background-size: cover;
 }
+
 a{
 	outline: none;
 }
+
+.col-centered{
+    float: none;
+    margin: 0 auto;
+}
+
 /* 404 Page Styles */
 
 .error-404 {

@@ -179,7 +179,7 @@ function poolingTranscodeProcess(resolve){
 
 					$('.btn-js-start-pitch').removeClass('disabled');
 					clearInterval(poolingInterval);
-					resolve(pitches.pitches[0]);
+					resolve(pitches[0]);
 				}
 
 				firstExecution = false;

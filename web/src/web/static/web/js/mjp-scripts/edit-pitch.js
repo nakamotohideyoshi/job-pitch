@@ -7,14 +7,14 @@ AWS.config.region = 'us-east-1';
 
 var bucket = new AWS.S3({params: {Bucket: 'mjp-android-uploads'}});
 
-var videoTimer;
+var recordingTimer;
 
 var actualPitch = null;
 
 var job_seeker_id = 0;
 
 $(document).ready(function() {
-	//
+
 	$.get( "/api/job-seekers/", { csrftoken: getCookie('csrftoken') })
 	.done(function( jobSeeker ) {
 		job_seeker_id = jobSeeker[0].id;
@@ -22,7 +22,7 @@ $(document).ready(function() {
 		if(jobSeeker[0].pitches[0] !== undefined){
 			actualPitch = jobSeeker[0].pitches[0];
 			renderVideoContainer(actualPitch);
-			poolingS3upload(actualPitch);
+			poolingTranscodeProcess(actualPitch);
 		}
 	});
 
@@ -39,7 +39,7 @@ $(document).ready(function() {
 		$('#pitchVideoCheck video').html('');
 
 		if(onBtnRecordClicked()){
-			startVideoTimer(19, $('.btn-js-stop-pitch'), stopRecordingProcess);
+			startRecordingTimer(19, $('.btn-js-stop-pitch'), stopRecordingProcess);
 		};
 	});
 
@@ -58,27 +58,28 @@ $(document).ready(function() {
 	});
 });
 
+
 function renderVideoContainer(pitch) {
-	var videoSource = '';
-
 	if(pitch !== null && pitch !== undefined && pitch.video !== undefined && pitch.video !== null){
-		var videoType = 'video/webm';
+		var videoSource = '';
 
+		var videoType = 'video/webm';
 		if(pitch.video.indexOf('mp4')>=0){
 			videoType = 'video/mp4';
 		}
+
 		videoSource = '<source src="'+pitch.video+'" type="'+videoType+'">';
 
 		var htmlVideo = '<video width="320" height="240" controls autoplay>'+videoSource+'</video><br>';
-
 		$('#pitchVideoCheck').html(htmlVideo);
 	}
 }
 
-function startVideoTimer(duration, $display, callback) {
+
+function startRecordingTimer(duration, $display, callback) {
 	var timer = duration, minutes, seconds;
 
-	videoTimer = setInterval(function () {
+	recordingTimer = setInterval(function () {
 		minutes = parseInt(timer / 60, 10);
 		seconds = parseInt(timer % 60, 10);
 
@@ -92,36 +93,38 @@ function startVideoTimer(duration, $display, callback) {
 			callback($display);
 		}
 	}, 1000);
-
 }
+
 
 function stopRecordingProcess($display){
-		$display.text('Stop');
+	$display.text('Stop');
 
-		clearInterval(videoTimer);
+	clearInterval(recordingTimer);
 
-		onBtnStopClicked();
+	onBtnStopClicked();
 
-		if(rawMediaRecorded != undefined && rawMediaRecorded){
-			getNewPitchMetaData(function(pitch){
-				saveS3object(pitch, rawMediaRecorded);
-			});
-		}
+	if(rawMediaRecorded != undefined && rawMediaRecorded){
+		getNewPitchMetaData(function(pitch){
+			putIntoS3Bucket(pitch, rawMediaRecorded);
+		});
+	}
 }
+
 
 function getNewPitchMetaData(callback) {
-		$.ajax({
-			url: "/api/pitches/",
-			type: 'POST',
-			data: { csrftoken: getCookie('csrftoken') },
-			cache: false
-		})
-		.done(function(pitch) {
-			callback(pitch);
-		});
+	$.ajax({
+		url: "/api/pitches/",
+		type: 'POST',
+		data: { csrftoken: getCookie('csrftoken') },
+		cache: false
+	})
+	.done(function(pitch) {
+		callback(pitch);
+	});
 }
 
-function saveS3object(pitch, object){
+
+function putIntoS3Bucket(pitch, object){
 	log('Start uploading ...');
 
 	object.Key = window.location.origin.replace('//','')
@@ -131,18 +134,19 @@ function saveS3object(pitch, object){
 
 	bucket.putObject(object, function (err, data) {
 		if(!err){
-			poolingS3upload(pitch);
+			poolingTranscodeProcess(pitch);
 		}
 		console.log(err ? 'ERROR!' : 'SAVED.');
 	});
 }
 
-function poolingS3upload(pitch){
+
+function poolingTranscodeProcess(pitch){
 	$('.btn-js-start-pitch').addClass('disabled');
 
 	var firstExecution = true;
 
-	uploadingS3timer = setInterval(function(){
+	poolingInterval = setInterval(function(){
 		$.ajax({
 			url: "/api/pitches/",
 			type: 'GET',
@@ -166,7 +170,7 @@ function poolingS3upload(pitch){
 				} else {
 					if(!firstExecution){
 						$('.btn-js-start-pitch').removeClass('disabled')
-						clearInterval(uploadingS3timer);
+						clearInterval(poolingInterval);
 						log('End of Uploading');
 					}
 				}
@@ -175,83 +179,3 @@ function poolingS3upload(pitch){
 	},3000);
 }
 
-/* function showRecord() {
-	$( "#recordStartButton" ).attr( "disabled", false );
-}
-function startRecording() {
-	$( "#recordStartButton" ).hide();
-	$( "#recordStopButton" ).attr( "disabled", false );
-	$( "#recordStopButton" ).css('display', 'block');
-	$.scriptcam.startRecording();
-}
-function closeCamera() {
-	$("#recordStopButton" ).attr( "disabled", true );
-	$.scriptcam.closeCamera();
-	$('#message').html('Please wait while we process your upload.');
-}
-function fileReady(fileName) {
-	$('#recorder').hide();
-	var filenameOnly = fileName.replace("http://europe.www.scriptcam.com/dwnld/", "");
-	var filenameOnlyNoExt = filenameOnly.replace(".mp4", "");
-	console.log(filenameOnly);
-
-	$('#message').html('Pitch Uploaded: '+filenameOnly);
-
-	$('#mediaplayer').show();
-
-	$.ajax({
-		url: "/api/pitches/",
-		type: 'POST',
-		data: 'csrftoken='+getCookie('csrftoken'),
-		async: false,
-		cache: false
-	}).done(function( data ){
-		//$.post( "/api/pitches/", { csrftoken: getCookie('csrftoken') }).done(function( data ) {
-		console.log( data );
-
-		//	video: 'https://s3-eu-west-1.amazonaws.com/mjp-media-upload/'+filenameOnly,
-		$.put( "/api/pitches/"+data.id+"/?token="+data.token, {
-			video: fileName,
-			thumb: 'https://s3-eu-west-1.amazonaws.com/mjp-media-upload/'+filenameOnlyNoExt+'.jpg',
-			csrftoken: getCookie('csrftoken')
-		}).done(function( data ) {
-			window.location.href = "/profile/viewpitch";
-		})
-		.fail(function( data ) {
-			alert( data.responseJSON );
-		});
-	})
-	.fail(function( data ) {
-		alert( data.responseJSON );
-	});
-
-}
-function onError(errorId,errorMsg) {
-	console.log(errorMsg);
-}
-function onWebcamReady(cameraNames,camera,microphoneNames,microphone,volume) {
-	$.each(cameraNames, function(index, text) {
-		$('#cameraNames').append( $('<option></option>').val(index).html(text) )
-	});
-	$('#cameraNames').val(camera);
-	$.each(microphoneNames, function(index, text) {
-		$('#microphoneNames').append( $('<option></option>').val(index).html(text) )
-	});
-	$('#microphoneNames').val(microphone);
-}
-function promptWillShow() {
-	alert('A security dialog will be shown. Please click on ALLOW.');
-}
-function timeLeft(value) {
-	$('.timeLeft').html(value);
-}
-function changeCamera() {
-	$.scriptcam.changeCamera($('#cameraNames').val());
-}
-function changeMicrophone() {
-	$.scriptcam.changeMicrophone($('#microphoneNames').val());
-}*/
-function newPitchStart(){
-	$('.videoCheckEdit').hide();
-	$('.recordNewVideo').show();
-}

@@ -139,7 +139,9 @@ function putIntoS3Bucket(pitch, object){
 
 	bucket.putObject(object, function (err, data) {
 		if(!err){
-			poolingTranscodeProcess();
+			var poolingPromise = new Promise(function(resolve,reject){
+				poolingTranscodeProcess()
+			});
 		}
 		console.log(err ? 'ERROR!' : 'SAVED.');
 	});

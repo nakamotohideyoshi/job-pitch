@@ -165,7 +165,6 @@ function poolingTranscodeProcess(pitch){
 						$('.btn-js-start-pitch').addClass('disabled');
 						log('Continues with uploading ...');
 					}
-					firstExecution = false;
 				} else {
 					if(!firstExecution){
 						$('.btn-js-start-pitch').removeClass('disabled')
@@ -173,6 +172,8 @@ function poolingTranscodeProcess(pitch){
 						log('End of Uploading');
 					}
 				}
+
+				firstExecution = false;
 			}
 		});
 	},3000);

@@ -15,7 +15,7 @@ var job_seeker_id = 0;
 
 $(document).ready(function() {
 	var poolingPromise = new Promise(function(resolve,reject){
-		poolingTranscodeProcess()
+		poolingTranscodeProcess(resolve);
 	});
 
 	poolingPromise.then(function(pitch){
@@ -140,7 +140,7 @@ function putIntoS3Bucket(pitch, object){
 	bucket.putObject(object, function (err, data) {
 		if(!err){
 			var poolingPromise = new Promise(function(resolve,reject){
-				poolingTranscodeProcess()
+				poolingTranscodeProcess(resolve);
 			});
 		}
 		console.log(err ? 'ERROR!' : 'SAVED.');
@@ -148,7 +148,7 @@ function putIntoS3Bucket(pitch, object){
 }
 
 
-function poolingTranscodeProcess(){
+function poolingTranscodeProcess(resolve){
 	var firstExecution = true;
 
 	poolingInterval = setInterval(function(){

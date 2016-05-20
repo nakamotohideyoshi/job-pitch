@@ -3,6 +3,7 @@ package com.myjobpitch.activities;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.media.ThumbnailUtils;
 import android.net.Uri;
@@ -120,6 +121,7 @@ public class RecordPitchActivity extends MJPProgressActionBarActivity {
     private View mUploadProgressView;
     private TextView mUploadProgressText;
     private ProgressBar mUploadProgressBar;
+    private SharedPreferences sharedpreferences;
     private Pitch mPitch;
     private DownloadImageTask mDownloadImageTask;
     private PitchUpload mUpload;
@@ -223,6 +225,7 @@ public class RecordPitchActivity extends MJPProgressActionBarActivity {
             }
         });
 
+        InitVideoPitch();
         showProgress(true);
         ReadAPITask<List<Pitch>> getPitchData = new ReadAPITask<List<Pitch>>(new ReadAPITask.Action<List<Pitch>>() {
             @Override
@@ -239,8 +242,6 @@ public class RecordPitchActivity extends MJPProgressActionBarActivity {
                         mPitch = pitch;
                         break;
                     }
-                updateInterface();
-
                 mPitchUploader.getUploadInProgress(pitches, new UploadInProgressCallback() {
                     @Override
                     public void uploadInProgress(PitchUpload upload) {
@@ -294,7 +295,7 @@ public class RecordPitchActivity extends MJPProgressActionBarActivity {
             mUpload.cancel();
             mUpload = null;
         }
-
+        doSave();
         mUpload = mPitchUploader.upload(new File(mOutputFile));
         mUpload.setPitchUploadListener(pitchUploadListener);
         mUpload.start();
@@ -308,6 +309,27 @@ public class RecordPitchActivity extends MJPProgressActionBarActivity {
             mUploadProgressView.setVisibility(View.VISIBLE);
         } else
             mUploadProgressView.setVisibility(View.GONE);
+    }
+
+    private void doSave(){
+        String video;
+        if (mOutputFile != null)
+            video = Uri.fromFile(new File(mOutputFile)).toString();
+        else
+            video = mPitch.getVideo();
+        SharedPreferences.Editor editor = sharedpreferences.edit();
+        editor.putString("video", video);
+        editor.putString("mOutputFile", mOutputFile);
+        editor.commit();
+    }
+
+    private void InitVideoPitch(){
+        String video;
+        sharedpreferences = this.getSharedPreferences("video",this.MODE_PRIVATE);
+        video = sharedpreferences.getString("video", null);
+        mOutputFile = sharedpreferences.getString("mOutputFile",null);
+        updateInterface();
+
     }
 
     @Override

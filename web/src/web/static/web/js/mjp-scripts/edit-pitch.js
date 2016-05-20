@@ -14,6 +14,13 @@ var actualPitch = null;
 var job_seeker_id = 0;
 
 $(document).ready(function() {
+	var poolingPromise = new Promise(function(resolve,reject){
+		poolingTranscodeProcess()
+	});
+
+	poolingPromise.then(function(pitch){
+		renderVideoContainer(pitch);
+	});
 
 	$.get( "/api/job-seekers/", { csrftoken: getCookie('csrftoken') })
 	.done(function( jobSeeker ) {
@@ -21,8 +28,6 @@ $(document).ready(function() {
 
 		if(jobSeeker[0].pitches[0] !== undefined){
 			actualPitch = jobSeeker[0].pitches[0];
-			renderVideoContainer(actualPitch);
-			poolingTranscodeProcess(actualPitch);
 		}
 	});
 
@@ -134,14 +139,14 @@ function putIntoS3Bucket(pitch, object){
 
 	bucket.putObject(object, function (err, data) {
 		if(!err){
-			poolingTranscodeProcess(pitch);
+			poolingTranscodeProcess();
 		}
 		console.log(err ? 'ERROR!' : 'SAVED.');
 	});
 }
 
 
-function poolingTranscodeProcess(pitch){
+function poolingTranscodeProcess(){
 	var firstExecution = true;
 
 	poolingInterval = setInterval(function(){
@@ -166,12 +171,13 @@ function poolingTranscodeProcess(pitch){
 						log('Continues with uploading ...');
 					}
 				} else {
-					$('.btn-js-start-pitch').removeClass('disabled');
-					clearInterval(poolingInterval);
-
 					if(!firstExecution){
 						log('End of Uploading');
 					}
+
+					$('.btn-js-start-pitch').removeClass('disabled');
+					clearInterval(poolingInterval);
+					resolve(pitches.pitches[0]);
 				}
 
 				firstExecution = false;

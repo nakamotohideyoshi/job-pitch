@@ -14,20 +14,21 @@ var actualPitch = null;
 var job_seeker_id = 0;
 
 $(document).ready(function() {
-	var poolingPromise = new Promise(function(resolve,reject){
-		poolingTranscodeProcess(resolve);
-	});
-
-	poolingPromise.then(function(pitch){
-		renderVideoContainer(pitch);
-	});
-
 	$.get( "/api/job-seekers/", { csrftoken: getCookie('csrftoken') })
 	.done(function( jobSeeker ) {
 		job_seeker_id = jobSeeker[0].id;
 
 		if(jobSeeker[0].pitches[0] !== undefined){
 			actualPitch = jobSeeker[0].pitches[0];
+
+			renderVideoContainer(actualPitch);
+			var poolingPromise = new Promise(function(resolve,reject){
+				poolingTranscodeProcess(resolve);
+			});
+
+			poolingPromise.then(function(pitch){
+				renderVideoContainer(pitch);
+			});
 		}
 	});
 

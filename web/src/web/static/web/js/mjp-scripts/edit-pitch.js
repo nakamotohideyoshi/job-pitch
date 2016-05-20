@@ -166,9 +166,10 @@ function poolingTranscodeProcess(pitch){
 						log('Continues with uploading ...');
 					}
 				} else {
+					$('.btn-js-start-pitch').removeClass('disabled');
+					clearInterval(poolingInterval);
+
 					if(!firstExecution){
-						$('.btn-js-start-pitch').removeClass('disabled')
-						clearInterval(poolingInterval);
 						log('End of Uploading');
 					}
 				}

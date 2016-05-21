@@ -29,6 +29,7 @@ import java.io.IOException;
 
 public class CreateProfileActivity extends MJPProgressActionBarActivity {
 
+    private View mCreateProfileButtons;
     private LocationEditFragment mLocationEditFragment;
     private BusinessEditFragment mBusinessEditFragment;
     private View mRecruiterProfile;
@@ -47,6 +48,8 @@ public class CreateProfileActivity extends MJPProgressActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_profile);
+
+        mCreateProfileButtons = findViewById(R.id.create_profile_buttons);
 
         // Job seeker
         ImageButton mCreateJobSeekerButton = (ImageButton) findViewById(R.id.create_job_seeker);
@@ -226,11 +229,13 @@ public class CreateProfileActivity extends MJPProgressActionBarActivity {
     }
 
     private void createRecruiter() {
+        mCreateProfileButtons.setVisibility(View.GONE);
         mRecruiterProfile.setVisibility(View.VISIBLE);
         mJobSeekerProfile.setVisibility(View.GONE);
     }
 
     private void createJobSeeker() {
+        mCreateProfileButtons.setVisibility(View.GONE);
         mRecruiterProfile.setVisibility(View.GONE);
         mJobSeekerProfile.setVisibility(View.VISIBLE);
     }
@@ -247,11 +252,13 @@ public class CreateProfileActivity extends MJPProgressActionBarActivity {
 
     @Override
     public void onBackPressed() {
-        if (mRecruiterProfile.getVisibility() == View.VISIBLE)
+        if (mRecruiterProfile.getVisibility() == View.VISIBLE) {
             mRecruiterProfile.setVisibility(View.GONE);
-        else if (mJobSeekerProfile.getVisibility() == View.VISIBLE)
+            mCreateProfileButtons.setVisibility(View.VISIBLE);
+        } else if (mJobSeekerProfile.getVisibility() == View.VISIBLE) {
             mJobSeekerProfile.setVisibility(View.GONE);
-        else
+            mCreateProfileButtons.setVisibility(View.VISIBLE);
+        } else
             super.onBackPressed();
     }
 

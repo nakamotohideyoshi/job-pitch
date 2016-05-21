@@ -21,6 +21,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.myjobpitch.R;
 import com.myjobpitch.media.CameraHelper;
@@ -167,7 +168,8 @@ public class CameraActivity extends MJPActionBarActivity {
                                             countDown.onComplete(new Runnable() {
                                                 @Override
                                                 public void run() {
-                                                    mCamera.stopPreview();
+                                                    if (mCamera != null)
+                                                        mCamera.stopPreview();
                                                     isRecording = true;
                                                     new StartRecordingTask().execute(null, null, null);
                                                 }
@@ -292,6 +294,9 @@ public class CameraActivity extends MJPActionBarActivity {
     @Override
     protected void onPause() {
         super.onPause();
+        synchronized (mRecordingLock) {
+            isActive = false;
+        }
         // if we are using MediaRecorder, release it first
         releaseMediaRecorder();
         // release the camera immediately on pause event
@@ -395,11 +400,16 @@ public class CameraActivity extends MJPActionBarActivity {
         @Override
         protected Boolean doInBackground(Void... voids) {
             Log.d("CameraActivity", "Starting Preview: do in background");
-            mCamera = CameraHelper.getDefaultCamera(cameraDirection);
-
-            if (mCamera == null) {
-                toggleCamera();
+            try {
                 mCamera = CameraHelper.getDefaultCamera(cameraDirection);
+
+                if (mCamera == null) {
+                    toggleCamera();
+                    mCamera = CameraHelper.getDefaultCamera(cameraDirection);
+                }
+            } catch (RuntimeException e){
+                Toast.makeText(CameraActivity.this, e.getLocalizedMessage(), Toast.LENGTH_LONG).show();
+                finish();
             }
 
             if (mCamera == null)

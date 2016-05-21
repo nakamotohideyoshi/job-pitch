@@ -181,24 +181,18 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content">
                 <Button
-                    style="@style/DefaultButtonPaint"
-                    android:textColor="@drawable/accent_button_textcolor"
-                    android:layout_height="@dimen/_30sdp"
                     android:id="@+id/empty_view_button"
                     android:layout_marginTop="15dp"
                     android:layout_weight="1"
                     android:layout_width="wrap_content"
-                     />
+                    android:layout_height="wrap_content" />
                 <Button
-                    style="@style/DefaultButtonPaint"
-                    android:textColor="@drawable/accent_button_textcolor"
-                    android:layout_height="@dimen/_30sdp"
                     android:id="@+id/empty_view_button_2"
                     android:layout_marginTop="15dp"
                     android:visibility="gone"
                     android:layout_weight="1"
                     android:layout_width="wrap_content"
-                    />
+                    android:layout_height="wrap_content" />
             </LinearLayout>
         </LinearLayout>
 

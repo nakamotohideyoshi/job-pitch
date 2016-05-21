@@ -6,7 +6,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,17 +14,11 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.myjobpitch.R;
-import com.myjobpitch.activities.LoginActivity;
-import com.myjobpitch.activities.RegisterActivity;
 import com.myjobpitch.activities.SelectPlaceActivity;
 import com.myjobpitch.api.MJPApi;
 import com.myjobpitch.api.data.Business;
 import com.myjobpitch.api.data.Location;
 import com.myjobpitch.tasks.recruiter.CreateUpdateLocationTask;
-import com.myjobpitch.tasks.recruiter.EventForLocationImage;
-
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -57,7 +50,6 @@ public class LocationEditFragment extends EditFragment<Location> {
     private boolean mImageUriSet = false;
     private String mNoImageMessage;
     private float mNoImageAlpha;
-    final String TAG = "LocationFrag";
 
     public LocationEditFragment() {
         // Required empty public constructor
@@ -69,10 +61,33 @@ public class LocationEditFragment extends EditFragment<Location> {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_location_edit, container, false);
 
-        mImageEdit = (ImageEditFragment) getChildFragmentManager().findFragmentById(R.id.image_edit_fragment_location);
-        mImageEdit.isLocation = true;
-        Log.i(TAG, "onCreate setListener");
+        mImageEdit = (ImageEditFragment) getChildFragmentManager().findFragmentById(R.id.image_edit_fragment);
+        mImageEdit.setListener(new ImageEditFragment.ImageEditFragmentListener() {
+            @Override
+            public void onDelete() {
+                AlertDialog.Builder builder = new AlertDialog.Builder(LocationEditFragment.this.getActivity());
+                builder.setMessage(getString(R.string.delete_image_confirmation))
+                        .setCancelable(false)
+                        .setPositiveButton(getString(R.string.delete), new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                dialog.cancel();
+                                mImageUri = null;
+                                loadImage();
+                            }
+                        })
+                        .setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                dialog.cancel();
+                            }
+                        }).create().show();
+            }
 
+            @Override
+            public void onChange(Uri image) {
+                mImageUri = image;
+                loadImage();
+            }
+        });
 
         mLocationNameView = (EditText) view.findViewById(R.id.location_name);
         mLocationDescView = (EditText) view.findViewById(R.id.location_description);
@@ -119,50 +134,8 @@ public class LocationEditFragment extends EditFragment<Location> {
             mImageUri = savedInstanceState.getParcelable("mImageUri");
             mImageUriSet = true;
         }
-        EventBus.getDefault().register(this);
+
         return view;
-    }
-
-    @Override
-    public void onResume(){
-        super.onResume();
-
-    }
-
-    @Override
-    public void onDestroy(){
-        super.onDestroy();
-        EventBus.getDefault().unregister(this);
-    }
-
-
-
-    // This method will be called when a SomeOtherEvent is posted
-
-    @Subscribe
-    public void onMessageEvent(EventForLocationImage event){
-        if (event.imageData == null){
-            // delete
-            AlertDialog.Builder builder = new AlertDialog.Builder(LocationEditFragment.this.getActivity());
-            builder.setMessage(getString(R.string.delete_image_confirmation))
-                    .setCancelable(false)
-                    .setPositiveButton(getString(R.string.delete), new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                            dialog.cancel();
-                            mImageUri = null;
-                            loadImage();
-                        }
-                    })
-                    .setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                            dialog.cancel();
-                        }
-                    }).create().show();
-        }else{
-            // change
-            mImageUri = event.imageData;
-            loadImage();
-        }
     }
 
     @Override
@@ -229,22 +202,6 @@ public class LocationEditFragment extends EditFragment<Location> {
         location.setLatitude(mLatitude);
     }
 
-    public void save_location() {
-        LoginActivity.userLocation.setName(mLocationNameView.getText().toString());
-        LoginActivity.userLocation.setAddress(mLocationAddressView.getText().toString());
-        LoginActivity.userLocation.setEmail(mLocationEmailView.getText().toString());
-        LoginActivity.userLocation.setEmail_public(mLocationEmailPublicView.isChecked());
-        LoginActivity.userLocation.setTelephone(mLocationTelephoneView.getText().toString());
-        LoginActivity.userLocation.setTelephone_public(mLocationTelephonePublicView.isChecked());
-        LoginActivity.userLocation.setMobile(mLocationMobileView.getText().toString());
-        LoginActivity.userLocation.setMobile_public(mLocationMobilePublicView.isChecked());
-        LoginActivity.userLocation.setPlace_name(mPlaceName);
-        LoginActivity.userLocation.setPlace_id(mPlaceId);
-        LoginActivity.userLocation.setLongitude(mLongitude);
-        LoginActivity.userLocation.setLatitude(mLatitude);
-    }
-
-
     public void setEmail(String email) {
         ((TextView) getView().findViewById(R.id.location_email)).setText(email);
     }
@@ -262,7 +219,6 @@ public class LocationEditFragment extends EditFragment<Location> {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
         if (requestCode == SELECT_LOCATION) {
             if (resultCode == Activity.RESULT_OK) {
                 mPlaceName = data.getStringExtra(SelectPlaceActivity.NAME);
@@ -293,13 +249,11 @@ public class LocationEditFragment extends EditFragment<Location> {
                     mPlaceId = data.getStringExtra(SelectPlaceActivity.PLACE_ID);
                 else
                     mPlaceId = "";
-                //mPlaceView.setText(mPlaceName + " (from Google)");
                 if (mPlaceName.equals(getString(R.string.custom_location)))
                     mPlaceView.setText(mPlaceName);
                 else
                     mPlaceView.setText(mPlaceName + " (from Google)");
                 mPlaceView.setError(null);
-
             }
         } else {
             mImageEdit.onActivityResult(requestCode, resultCode, data);

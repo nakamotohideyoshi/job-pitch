@@ -128,6 +128,7 @@ public class LocationEditFragment extends EditFragment<Location> {
         Collection<View> requiredFields = new ArrayList<>();
         requiredFields.add(mLocationNameView);
         requiredFields.add(mLocationDescView);
+        requiredFields.add(mLocationEmailView);
         setRequiredFields(requiredFields);
 
         if (savedInstanceState != null && savedInstanceState.containsKey("mImageUri")) {

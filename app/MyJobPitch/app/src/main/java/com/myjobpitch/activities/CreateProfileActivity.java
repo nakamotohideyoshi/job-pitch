@@ -195,7 +195,7 @@ public class CreateProfileActivity extends MJPProgressActionBarActivity {
             User user = api.getUser();
             mJobSeekerEditFragment.save(jobSeeker);
 
-            mCreateJobSeekerTask = mJobSeekerEditFragment.getCreateBusinessTask(api, jobSeeker);
+            mCreateJobSeekerTask = mJobSeekerEditFragment.getCreateJobSeekerTask(api, jobSeeker);
             mCreateJobSeekerTask.addListener(new CreateReadUpdateAPITaskListener<JobSeeker>() {
                 @Override
                 public void onSuccess(JobSeeker jobSeeker) {

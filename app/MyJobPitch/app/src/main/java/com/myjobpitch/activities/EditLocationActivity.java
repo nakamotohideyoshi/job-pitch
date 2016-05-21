@@ -32,6 +32,7 @@ import java.io.IOException;
 public class EditLocationActivity extends MJPProgressActionBarActivity {
 
     public static final String LOCATION_ID = "LOCATION_ID";
+    public static final String BUSINESS_ID = "business_id";
     private LocationEditFragment mLocationEditFragment;
     private View mEditLocationView;
     private Location location;
@@ -107,7 +108,7 @@ public class EditLocationActivity extends MJPProgressActionBarActivity {
             showProgress(false);
             setTitle(R.string.action_add_location);
             location = new Location();
-            location.setBusiness(getIntent().getIntExtra("business_id", -1));
+            location.setBusiness(getIntent().getIntExtra(BUSINESS_ID, -1));
             mLocationEditFragment.load(location);
         }
     }

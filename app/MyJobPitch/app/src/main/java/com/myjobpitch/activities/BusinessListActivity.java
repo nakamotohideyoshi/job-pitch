@@ -6,8 +6,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v7.view.ActionMode;
 import android.util.Log;
-import android.view.ActionMode;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -61,7 +61,7 @@ public class BusinessListActivity extends MJPProgressActionBarActivity  {
             switch (item.getItemId()) {
                 case R.id.action_edit:
                     Intent intent = new Intent(BusinessListActivity.this, EditBusinessActivity.class);
-                    intent.putExtra("business_id", business.getId());
+                    intent.putExtra(EditBusinessActivity.BUSINESS_ID, business.getId());
                     startActivity(intent);
                     mode.finish();
                     return true;
@@ -164,7 +164,7 @@ public class BusinessListActivity extends MJPProgressActionBarActivity  {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
             Intent intent = new Intent(BusinessListActivity.this, LocationListActivity.class);
-            intent.putExtra("business_id", ((Business)list.getItemAtPosition(position)).getId());
+            intent.putExtra(LocationListActivity.BUSINESS_ID, ((Business)list.getItemAtPosition(position)).getId());
             startActivity(intent);
             }
         });
@@ -175,7 +175,7 @@ public class BusinessListActivity extends MJPProgressActionBarActivity  {
 
             // Start the CAB using the ActionMode.Callback defined above
             list.setItemChecked(position, true);
-            mActionMode = startActionMode(mActionModeCallback);
+            mActionMode = startSupportActionMode(mActionModeCallback);
             return true;
             }
         });

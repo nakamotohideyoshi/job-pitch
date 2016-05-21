@@ -178,4 +178,6 @@
     <string name="send_message">Send message</string>
     <string name="references_available">References available?</string>
     <string name="references_available_on_request">References available on request</string>
+    <string name="action_edit_business">Edit Company</string>
+    <string name="action_edit_location">Edit Work Place</string>
 </resources>

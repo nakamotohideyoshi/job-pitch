@@ -104,6 +104,7 @@ public class JobSeekerEditFragment extends EditFragment<JobSeeker> {
         Collection<View> requiredFields = new ArrayList<>();
         requiredFields.add(mFirstNameView);
         requiredFields.add(mLastNameView);
+        requiredFields.add(mEmailView);
         requiredFields.add(mDescriptionView);
         setRequiredFields(requiredFields);
 

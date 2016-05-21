@@ -31,6 +31,7 @@ import java.io.IOException;
 
 public class EditBusinessActivity extends MJPProgressActionBarActivity {
 
+    public static final String BUSINESS_ID = "business_id";
     private BusinessEditFragment mBusinessEditFragment;
     private View mEditBusinessView;
     private Business business;
@@ -74,8 +75,8 @@ public class EditBusinessActivity extends MJPProgressActionBarActivity {
                 showProgress(false);
             } catch (IOException e) {
             }
-        } else if (getIntent().hasExtra("business_id")) {
-            int business_id = getIntent().getIntExtra("business_id", -1);
+        } else if (getIntent().hasExtra(BUSINESS_ID)) {
+            int business_id = getIntent().getIntExtra(BUSINESS_ID, -1);
             mReadBusinessTask = new ReadUserBusinessTask(getApi(), business_id);
             mReadBusinessTask.addListener(new CreateReadUpdateAPITaskListener<Business>() {
                 @Override
@@ -217,7 +218,7 @@ public class EditBusinessActivity extends MJPProgressActionBarActivity {
 
     private void returnToListActivity(Business business) {
         Intent intent = new Intent(this, LocationListActivity.class);
-        intent.putExtra("business_id", business.getId());
+        intent.putExtra(LocationListActivity.BUSINESS_ID, business.getId());
         startActivity(intent);
         EditBusinessActivity.this.finish();
     }

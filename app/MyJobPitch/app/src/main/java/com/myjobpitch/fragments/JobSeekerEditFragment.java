@@ -186,7 +186,7 @@ public class JobSeekerEditFragment extends EditFragment<JobSeeker> {
         jobSeeker.setHasReferences(mHasReferencesView.isChecked());
     }
 
-    public CreateUpdateJobSeekerTask getCreateBusinessTask(MJPApi api, JobSeeker jobSeeker) {
+    public CreateUpdateJobSeekerTask getCreateJobSeekerTask(MJPApi api, JobSeeker jobSeeker) {
         CreateUpdateJobSeekerTask task = new CreateUpdateJobSeekerTask(api, jobSeeker);
         task.addListener(this);
         return task;

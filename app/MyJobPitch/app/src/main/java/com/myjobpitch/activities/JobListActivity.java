@@ -8,7 +8,7 @@ import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
-import android.view.ActionMode;
+import android.support.v7.view.ActionMode;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -225,7 +225,7 @@ public class JobListActivity extends MJPProgressActionBarActivity  {
 
                 // Start the CAB using the ActionMode.Callback defined above
                 list.setItemChecked(position, true);
-                mActionMode = startActionMode(mActionModeCallback);
+                mActionMode = startSupportActionMode(mActionModeCallback);
                 return true;
             }
         });
@@ -334,12 +334,9 @@ public class JobListActivity extends MJPProgressActionBarActivity  {
             case R.id.action_add:
                 addJob();
                 return true;
-            case R.id.action_add_business:
-                intent = new Intent(this, EditBusinessActivity.class);
-                startActivity(intent);
-                return true;
-            case R.id.action_add_location:
+            case R.id.action_edit_location:
                 intent = new Intent(this, EditLocationActivity.class);
+                intent.putExtra(EditLocationActivity.LOCATION_ID, mLocation.getId());
                 startActivity(intent);
                 return true;
             case android.R.id.home:

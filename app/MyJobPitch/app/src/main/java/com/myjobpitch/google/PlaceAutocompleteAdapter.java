@@ -17,6 +17,9 @@
 package com.myjobpitch.google;
 
 import android.content.Context;
+import android.graphics.Typeface;
+import android.text.style.CharacterStyle;
+import android.text.style.StyleSpan;
 import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.Filter;
@@ -55,6 +58,8 @@ public class PlaceAutocompleteAdapter
         extends ArrayAdapter<PlaceAutocompleteAdapter.PlaceAutocomplete> implements Filterable {
 
     private static final String TAG = "PlaceAutocompleteAda";
+    private static final CharacterStyle STYLE_BOLD = new StyleSpan(Typeface.BOLD);
+
     /**
      * Current results returned by this adapter.
      */
@@ -214,7 +219,7 @@ public class PlaceAutocompleteAdapter
                 AutocompletePrediction prediction = iterator.next();
                 // Get the details of this prediction and copy it into a new PlaceAutocomplete object.
                 resultList.add(new PlaceAutocomplete(prediction.getPlaceId(),
-                        prediction.getDescription()));
+                        prediction.getPrimaryText(STYLE_BOLD)));
             }
 
             // Release the buffer now that all data has been copied.

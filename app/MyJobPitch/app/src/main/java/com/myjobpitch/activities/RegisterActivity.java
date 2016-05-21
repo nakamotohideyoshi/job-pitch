@@ -176,7 +176,7 @@ public class RegisterActivity extends MJPProgressActivity {
             registerTask = null;
             if (errors != null) {
                 View errorView = null;
-                JsonNode generalError = errors.get("__all__");
+                JsonNode generalError = errors.get("non_field_errors");
                 if (generalError != null) {
                     mPassword2View.setError(generalError.get(0).asText());
                     errorView = mPassword2View;

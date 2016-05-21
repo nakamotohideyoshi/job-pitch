@@ -1,6 +1,7 @@
 package com.myjobpitch.api.data;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.myjobpitch.api.MJPObjectWithDates;
 
 import java.util.List;
@@ -26,6 +27,9 @@ public class JobSeeker extends MJPObjectWithDates implements JobSeekerContainer 
     private List<Pitch> pitches;
     private String description;
     private String cv;
+
+    @JsonProperty("has_references")
+    private boolean hasReferences;
 
     public boolean getEmail_public() {
         return email_public;
@@ -194,5 +198,13 @@ public class JobSeeker extends MJPObjectWithDates implements JobSeekerContainer 
 
     public String getCV() {
         return cv;
+    }
+
+    public boolean getHasReferences() {
+        return hasReferences;
+    }
+
+    public void setHasReferences(boolean hasReferences) {
+        this.hasReferences = hasReferences;
     }
 }

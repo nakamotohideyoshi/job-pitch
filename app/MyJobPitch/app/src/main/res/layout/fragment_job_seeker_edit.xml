@@ -163,4 +163,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
+    <CheckBox
+        android:id="@+id/job_seeker_has_references"
+        android:checked="false"
+        android:text="@string/references_available"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"/>
+
 </LinearLayout>

@@ -15,7 +15,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
@@ -164,29 +163,23 @@ public class BusinessListActivity extends MJPProgressActionBarActivity  {
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent = new Intent(BusinessListActivity.this, LocationListActivity.class);
-                intent.putExtra("business_id", ((Business) list.getItemAtPosition(position)).getId());
-                startActivity(intent);
+            Intent intent = new Intent(BusinessListActivity.this, LocationListActivity.class);
+            intent.putExtra("business_id", ((Business)list.getItemAtPosition(position)).getId());
+            startActivity(intent);
             }
         });
         list.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                if (mActionMode != null)
-                    return false;
+            if (mActionMode != null)
+                return false;
 
-                // Start the CAB using the ActionMode.Callback defined above
-                list.setItemChecked(position, true);
-                mActionMode = startActionMode(mActionModeCallback);
-
-                Intent intent = new Intent(BusinessListActivity.this, EditCompanyActivity.class);
-                intent.putExtra("business_id", ((Business) list.getItemAtPosition(position)).getId());
-                startActivity(intent);
-
-                return true;
+            // Start the CAB using the ActionMode.Callback defined above
+            list.setItemChecked(position, true);
+            mActionMode = startActionMode(mActionModeCallback);
+            return true;
             }
         });
         Log.d("RecruiterActivity", "created");
-
     }
 
     @Override
@@ -259,11 +252,6 @@ public class BusinessListActivity extends MJPProgressActionBarActivity  {
                 return true;
             case R.id.action_messages:
                 startActivity(new Intent(this, ConversationListActivity.class));
-                return true;
-            case R.id.action_edit:
-                Intent intent = new Intent(BusinessListActivity.this, EditCompanyActivity.class);
-                intent.putExtra("business_id", ((Business) list.getItemAtPosition(0)).getId());
-                startActivity(intent);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

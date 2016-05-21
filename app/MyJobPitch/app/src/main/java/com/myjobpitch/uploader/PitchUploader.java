@@ -7,6 +7,5 @@ import java.util.List;
 
 public interface PitchUploader {
     PitchUpload upload(File file);
-    PitchUpload download(File file);
     void getUploadInProgress(List<Pitch> pitches, UploadInProgressCallback callback);
 }

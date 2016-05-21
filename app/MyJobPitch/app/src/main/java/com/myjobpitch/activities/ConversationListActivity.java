@@ -161,7 +161,6 @@ public class ConversationListActivity extends MJPProgressActionBarActivity  {
         Log.d("ConversationList", "resumed");
     }
 
-
     private void loadConversations() {
         showProgress(true);
         ReadApplicationsTask readApplications;

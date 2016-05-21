@@ -124,7 +124,7 @@
 
     <fragment
         android:name="com.myjobpitch.fragments.ImageEditFragment"
-        android:id="@+id/image_edit_fragment_location"
+        android:id="@+id/image_edit_fragment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         tools:layout="@layout/fragment_image_edit" />

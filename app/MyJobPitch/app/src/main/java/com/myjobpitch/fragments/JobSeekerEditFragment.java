@@ -14,7 +14,6 @@ import android.widget.TextView;
 
 import com.myjobpitch.MJPApplication;
 import com.myjobpitch.R;
-import com.myjobpitch.activities.RegisterActivity;
 import com.myjobpitch.api.MJPAPIObject;
 import com.myjobpitch.api.MJPApi;
 import com.myjobpitch.api.data.JobSeeker;
@@ -177,10 +176,9 @@ public class JobSeekerEditFragment extends EditFragment<JobSeeker> {
         jobSeeker.setNationality_public(mNationalityPublicView.isChecked());
         jobSeeker.setDescription(mDescriptionView.getText().toString());
         jobSeeker.setActive(mActiveView.isChecked());
-        jobSeeker.setHas_references(false);
     }
 
-    public CreateUpdateJobSeekerTask getCreateJobSeekerTask(MJPApi api, JobSeeker jobSeeker) {
+    public CreateUpdateJobSeekerTask getCreateBusinessTask(MJPApi api, JobSeeker jobSeeker) {
         CreateUpdateJobSeekerTask task = new CreateUpdateJobSeekerTask(api, jobSeeker);
         task.addListener(this);
         return task;

@@ -169,6 +169,14 @@
                         android:paddingTop="15dp"
                         android:paddingBottom="8dp"
                         android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/references_available"
+                        android:text="@string/references_available_on_request"
+                        android:paddingBottom="8dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+
                     <Button
                         android:id="@+id/cv_button"
                         android:gravity="center"

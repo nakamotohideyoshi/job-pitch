@@ -3,6 +3,7 @@ package com.myjobpitch.fragments;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.CheckBox;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -67,8 +68,15 @@ public class EditFragment<T> extends Fragment implements CreateReadUpdateAPITask
         Iterator<Map.Entry<String, JsonNode>> error_data = errors.fields();
         while (error_data.hasNext()) {
             Map.Entry<String, JsonNode> error = error_data.next();
-            if (fields.containsKey(error.getKey()))
-                getTextViewForField(fields.get(error.getKey())).setError(error.getValue().get(0).asText());
+            String errorText = error.getValue().get(0).asText();
+            if (this.fields.containsKey(error.getKey())) {
+                TextView textView = getTextViewForField(this.fields.get(error.getKey()));
+                if (textView != null)
+                    textView.setError(errorText);
+                else
+                    Toast.makeText(getActivity(), String.format("Error: {}", errorText), Toast.LENGTH_LONG).show();
+            } else
+                Toast.makeText(getActivity(), String.format("Error: {}", errorText), Toast.LENGTH_LONG).show();
         }
     }
 

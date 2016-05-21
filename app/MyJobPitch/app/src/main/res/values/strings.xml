@@ -167,7 +167,7 @@
     <string name="connections">Connections</string>
     <string name="connections_description">View job seekers you have connected with</string>
     <string name="job_seeker_applications">Showing applications</string>
-    <string name="contact_details">Contact Details</string>
+    <string name="contact_details">Contact</string>
     <string name="contact_details_unavailable">Contact details unavailable until connected</string>
     <string name="recruiter_not_connected_reason">You must be connected to send messages</string>
     <string name="thread_deleted_reason">This conversation has been deleted.</string>
@@ -176,4 +176,6 @@
     <string name="cv">CV</string>
     <string name="download_cv">Download CV</string>
     <string name="send_message">Send message</string>
+    <string name="references_available">References available?</string>
+    <string name="references_available_on_request">References available on request</string>
 </resources>

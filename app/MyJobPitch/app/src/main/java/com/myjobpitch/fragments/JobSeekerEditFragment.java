@@ -47,6 +47,7 @@ public class JobSeekerEditFragment extends EditFragment<JobSeeker> {
     private List<Nationality> nationalities;
     private EditText mDescriptionView;
     private TextView mDescriptionCharacters;
+    private CheckBox mHasReferencesView;
 
     public JobSeekerEditFragment() {
         // Required empty public constructor
@@ -73,6 +74,7 @@ public class JobSeekerEditFragment extends EditFragment<JobSeeker> {
         mNationalityPublicView = (CheckBox) view.findViewById(R.id.job_seeker_nationality_public);
         mDescriptionView = (EditText) view.findViewById(R.id.job_seeker_description);
         mDescriptionCharacters = (TextView) view.findViewById(R.id.job_seeler_description_character_count);
+        mHasReferencesView = (CheckBox) view.findViewById(R.id.job_seeker_has_references);
 
         mDescriptionView.addTextChangedListener(new TextWatcher() {
             @Override
@@ -93,6 +95,10 @@ public class JobSeekerEditFragment extends EditFragment<JobSeeker> {
         fields.put("telephone", mTelephoneView);
         fields.put("mobile", mMobileView);
         fields.put("age", mAgeView);
+        fields.put("nationality", mNationalityView);
+        fields.put("sex", mSexView);
+        fields.put("description", mDescriptionView);
+        fields.put("has_references", mHasReferencesView);
         setFields(fields);
 
         Collection<View> requiredFields = new ArrayList<>();
@@ -145,6 +151,7 @@ public class JobSeekerEditFragment extends EditFragment<JobSeeker> {
         mNationalityPublicView.setChecked(jobSeeker.getNationality_public());
         mDescriptionView.setText(jobSeeker.getDescription());
         mActiveView.setChecked(jobSeeker.isActive());
+        mHasReferencesView.setChecked(jobSeeker.getHasReferences());
     }
 
     public void save(JobSeeker jobSeeker) {
@@ -176,6 +183,7 @@ public class JobSeekerEditFragment extends EditFragment<JobSeeker> {
         jobSeeker.setNationality_public(mNationalityPublicView.isChecked());
         jobSeeker.setDescription(mDescriptionView.getText().toString());
         jobSeeker.setActive(mActiveView.isChecked());
+        jobSeeker.setHasReferences(mHasReferencesView.isChecked());
     }
 
     public CreateUpdateJobSeekerTask getCreateBusinessTask(MJPApi api, JobSeeker jobSeeker) {

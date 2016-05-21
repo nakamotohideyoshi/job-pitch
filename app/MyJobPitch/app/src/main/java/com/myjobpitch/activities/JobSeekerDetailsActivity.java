@@ -59,6 +59,7 @@ public class JobSeekerDetailsActivity extends MJPProgressActionBarActivity {
     private View mJobSeekerCVView;
     private Button mJobSeekerCVButton;
     private Button mJobSeekerSendMessageButton;
+    private TextView mJobSeekerReferencesAvailableView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,6 +81,7 @@ public class JobSeekerDetailsActivity extends MJPProgressActionBarActivity {
         mJobSeekerMobileView = (TextView) findViewById(R.id.job_seeker_mobile);
         mJobSeekerEmailView = (TextView) findViewById(R.id.job_seeker_email);
         mJobSeekerCVView = findViewById(R.id.cv);
+        mJobSeekerReferencesAvailableView = (TextView) findViewById(R.id.references_available);
 
         mJobSeekerCVButton = (Button) findViewById(R.id.cv_button);
         mJobSeekerCVButton.setOnClickListener(new View.OnClickListener() {
@@ -287,8 +289,17 @@ public class JobSeekerDetailsActivity extends MJPProgressActionBarActivity {
             mJobSeekerSendMessageButton.setVisibility(View.GONE);
         }
 
-        if (jobSeeker.getCV() != null && !jobSeeker.getCV().isEmpty()) {
+        boolean hasCV = jobSeeker.getCV() != null && !jobSeeker.getCV().isEmpty();
+        if (hasCV || jobSeeker.getHasReferences()) {
             mJobSeekerCVView.setVisibility(View.VISIBLE);
+            if (hasCV)
+                mJobSeekerCVButton.setVisibility(View.VISIBLE);
+            else
+                mJobSeekerCVButton.setVisibility(View.GONE);
+            if (jobSeeker.getHasReferences())
+                mJobSeekerReferencesAvailableView.setVisibility(View.VISIBLE);
+            else
+                mJobSeekerReferencesAvailableView.setVisibility(View.GONE);
         } else {
             mJobSeekerCVView.setVisibility(View.GONE);
         }

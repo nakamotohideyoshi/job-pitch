@@ -456,7 +456,7 @@ public class CameraActivity extends MJPActionBarActivity {
 //        }
 
         if (cameraDirection == Camera.CameraInfo.CAMERA_FACING_FRONT) {
-            mMediaRecorder.setOrientationHint(90);
+            mMediaRecorder.setOrientationHint(0);
         }
         if (cameraDirection == Camera.CameraInfo.CAMERA_FACING_BACK) {
             mMediaRecorder.setOrientationHint(0);

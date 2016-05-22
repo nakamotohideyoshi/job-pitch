@@ -109,7 +109,7 @@
     <orderEntry type="library" exported="" name="support-annotations-23.1.1" level="project" />
     <orderEntry type="library" exported="" name="appcompat-v7-23.1.1" level="project" />
     <orderEntry type="library" exported="" name="play-services-basement-8.4.0" level="project" />
-    <orderEntry type="library" exported="" name="spring-android-core-1.0.1.RELEASE" level="project" />
     <orderEntry type="library" exported="" name="aws-android-sdk-s3-2.2.5" level="project" />
+    <orderEntry type="library" exported="" name="spring-android-core-1.0.1.RELEASE" level="project" />
   </component>
 </module>

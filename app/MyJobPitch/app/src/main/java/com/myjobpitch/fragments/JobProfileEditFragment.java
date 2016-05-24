@@ -251,6 +251,7 @@ public class JobProfileEditFragment extends EditFragment {
         jobProfile.setLongitude(mLongitude);
         jobProfile.setLatitude(mLatitude);
         jobProfile.setSearch_radius(radiusValues.get(mRadiusSpinner.getSelectedItemPosition()));
+        jobProfile.setPostcode_lookup(""); // Not available in android places API (9.0.0)
     }
 
     @Override

@@ -201,6 +201,7 @@ public class LocationEditFragment extends EditFragment<Location> {
         location.setPlace_id(mPlaceId);
         location.setLongitude(mLongitude);
         location.setLatitude(mLatitude);
+        location.setPostcode_lookup(""); // Not available in android places API (9.0.0)
     }
 
     public void setEmail(String email) {

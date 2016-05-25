@@ -105,12 +105,6 @@ public class RegisterActivity extends MJPProgressActivity {
             error = true;
         }
 
-//        if (password1!=password2){
-//            mPassword2View.setError(getString(R.string.error_field_required1));
-//            errorView = mPassword2View;
-//            error = true;
-//        }
-
         if (error) {
             // There was an error; don't attempt login and focus the first
             // form field with an error.

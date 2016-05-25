@@ -51,7 +51,7 @@ public class CameraActivity extends MJPActionBarActivity {
     private static final String TAG = "CameraActivity";
 
     private ImageButton mRotateCameraButton;
-    private int cameraDirection = Camera.CameraInfo.CAMERA_FACING_BACK;
+    private int cameraDirection = Camera.CameraInfo.CAMERA_FACING_FRONT;
 
     private boolean isRecording = false;
     private boolean isActive = false;
@@ -61,7 +61,7 @@ public class CameraActivity extends MJPActionBarActivity {
 
     private Boolean camera_face_sel=true;
 
-    int currentCameraId = Camera.CameraInfo.CAMERA_FACING_BACK;
+    int currentCameraId = Camera.CameraInfo.CAMERA_FACING_FRONT;
     private SurfaceHolder previewHolder = null;
 
     private boolean isBack = false;
@@ -424,7 +424,7 @@ public class CameraActivity extends MJPActionBarActivity {
 
         // Step 1: Unlock and set camera to MediaRecorder
         if (info.facing == Camera.CameraInfo.CAMERA_FACING_BACK) {
-           //mCamera.setDisplayOrientation(90);
+            mCamera.setDisplayOrientation(90);
             camera_direction = true;
         }
         //mCamera.setDisplayOrientation(90);
@@ -443,25 +443,23 @@ public class CameraActivity extends MJPActionBarActivity {
         // Step 3: Set a CamcorderProfile (requires API Level 8 or higher)
         mMediaRecorder.setProfile(mProfile);
 
-
         // Step 4: Set output file
         mMediaRecorder.setOutputFile(mOutputFile);
 
         // Step 5: Prepare configured MediaRecorder
-       // mMediaRecorder.setOrientationHint(90);
+        mMediaRecorder.setOrientationHint(90);
 
 //        if (info.facing == Camera.CameraInfo.CAMERA_FACING_FRONT) {
-//            mMediaRecorder.setOrientationHint(0);
+//            mMediaRecorder.setOrientationHint(180);
 //        } else {  // back-facing
 //            mMediaRecorder.setOrientationHint(90);
 //        }
 
-        if (currentCameraId == Camera.CameraInfo.CAMERA_FACING_FRONT) {
-
-            mMediaRecorder.setOrientationHint(270);
-        }
-        if (currentCameraId == Camera.CameraInfo.CAMERA_FACING_BACK) {
+        if (cameraDirection == Camera.CameraInfo.CAMERA_FACING_FRONT) {
             mMediaRecorder.setOrientationHint(90);
+        }
+        if (cameraDirection == Camera.CameraInfo.CAMERA_FACING_BACK) {
+            mMediaRecorder.setOrientationHint(0);
         }
 
 

@@ -2,14 +2,12 @@ package com.myjobpitch.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.myjobpitch.MJPApplication;
@@ -23,7 +21,6 @@ import com.myjobpitch.fragments.BusinessEditFragment;
 import com.myjobpitch.fragments.JobSeekerEditFragment;
 import com.myjobpitch.fragments.LocationEditFragment;
 import com.myjobpitch.tasks.CreateReadUpdateAPITaskListener;
-import com.myjobpitch.tasks.ReadLocationTask;
 import com.myjobpitch.tasks.jobseeker.CreateUpdateJobSeekerTask;
 import com.myjobpitch.tasks.recruiter.CreateUpdateBusinessTask;
 import com.myjobpitch.tasks.recruiter.CreateUpdateLocationTask;
@@ -32,6 +29,7 @@ import java.io.IOException;
 
 public class CreateProfileActivity extends MJPProgressActionBarActivity {
 
+    private View mCreateProfileButtons;
     private LocationEditFragment mLocationEditFragment;
     private BusinessEditFragment mBusinessEditFragment;
     private View mRecruiterProfile;
@@ -46,15 +44,12 @@ public class CreateProfileActivity extends MJPProgressActionBarActivity {
     private JobSeekerEditFragment mJobSeekerEditFragment;
     private CreateUpdateJobSeekerTask mCreateJobSeekerTask;
 
-    private MJPApi api,api1;
-
-    private ReadLocationTask mReadLocationTask;
-    public static final String LOCATION_ID = "LOCATION_ID";
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_profile);
+
+        mCreateProfileButtons = findViewById(R.id.create_profile_buttons);
 
         // Job seeker
         ImageButton mCreateJobSeekerButton = (ImageButton) findViewById(R.id.create_job_seeker);
@@ -83,7 +78,7 @@ public class CreateProfileActivity extends MJPProgressActionBarActivity {
         mCreateRecruiterButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                createRecruiter();
+            createRecruiter();
             }
         });
 
@@ -111,55 +106,41 @@ public class CreateProfileActivity extends MJPProgressActionBarActivity {
             } catch (IOException e) {}
         }
 
-
+        // General views
         mProgressView = findViewById(R.id.progress);
         mCreateProfileView = findViewById(R.id.create_profile);
-
     }
 
     private void attemptRecruiterContinue() {
         boolean result = mBusinessEditFragment.validateInput();
         result &= mLocationEditFragment.validateInput();
-
         if (result) {
             showProgress(true);
-            api = ((MJPApplication) getApplication()).getApi();
-
-            if (business == null)
+                if (business == null)
                 business = new Business();
-            mBusinessEditFragment.save(business);
-            mCreateBusinessTask = new CreateUpdateBusinessTask(api, business);
-            mCreateBusinessTask.addListener(new CreateReadUpdateAPITaskListener<Business>() {
+                mBusinessEditFragment.save(business);
+
+                final MJPApi api = ((MJPApplication) getApplication()).getApi();
+                mCreateBusinessTask = new CreateUpdateBusinessTask(api, business);
+                mCreateBusinessTask.addListener(new CreateReadUpdateAPITaskListener<Business>() {
                 @Override
                 public void onSuccess(Business business) {
                     CreateProfileActivity.this.business = business;
 
                     if (location == null)
                         location = new Location();
-
                     location.setBusiness(business.getId());
                     mLocationEditFragment.save(location);
-                    api = ((MJPApplication) getApplication()).getApi();
-                    mCreateLocationTask = new CreateUpdateLocationTask(api, location);
-
-
-                    Log.e("success","success!!!");
-                    Intent intent = new Intent(CreateProfileActivity.this, BusinessListActivity.class);
-                    intent.putExtra(LOCATION_ID, true);
-                    startActivity(intent);
-                    CreateProfileActivity.this.finish();
-
+                    mCreateLocationTask = mLocationEditFragment.getCreateLocationTask(api, location);
                     mCreateLocationTask.addListener(new CreateReadUpdateAPITaskListener<Location>() {
                         @Override
                         public void onSuccess(Location location) {
-//                            CreateProfileActivity.this.location = location;
-//                            Log.e("success","success---888!!!");
-//                            Intent intent = new Intent(CreateProfileActivity.this, BusinessListActivity.class);
-//                            //intent.putExtra("from_login", true);
-//                            intent.putExtra(LOCATION_ID, true);
-//                            startActivity(intent);
-//                            //CreateProfileActivity.this.finish();
+                            CreateProfileActivity.this.location = location;
 
+                            Intent intent = new Intent(CreateProfileActivity.this, BusinessListActivity.class);
+                            intent.putExtra("from_login", true);
+                            startActivity(intent);
+                            finish();
                         }
 
                         @Override
@@ -179,7 +160,6 @@ public class CreateProfileActivity extends MJPProgressActionBarActivity {
                             showProgress(false);
                         }
                     });
-
                     mCreateLocationTask.execute();
                 }
 
@@ -208,68 +188,57 @@ public class CreateProfileActivity extends MJPProgressActionBarActivity {
         boolean result = mJobSeekerEditFragment.validateInput();
         if (result) {
             showProgress(true);
-            api = ((MJPApplication) getApplication()).getApi();
+            final MJPApi api = ((MJPApplication) getApplication()).getApi();
+
             if (jobSeeker == null)
                 jobSeeker = new JobSeeker();
             User user = api.getUser();
             mJobSeekerEditFragment.save(jobSeeker);
-            mCreateJobSeekerTask = mJobSeekerEditFragment.getCreateJobSeekerTask(api, jobSeeker);
-            mCreateJobSeekerTask.addListener(new CreateReadUpdateAPITaskListener<JobSeeker>(){
 
+            mCreateJobSeekerTask = mJobSeekerEditFragment.getCreateJobSeekerTask(api, jobSeeker);
+            mCreateJobSeekerTask.addListener(new CreateReadUpdateAPITaskListener<JobSeeker>() {
                 @Override
-                public void onSuccess (JobSeeker jobSeeker){
+                public void onSuccess(JobSeeker jobSeeker) {
                     CreateProfileActivity.this.jobSeeker = jobSeeker;
                     getApi().getUser().setJob_seeker(jobSeeker.getId());
+
                     Intent intent = new Intent(CreateProfileActivity.this, JobSeekerActivity.class);
                     intent.putExtra("from_login", true);
                     startActivity(intent);
-                    CreateProfileActivity.this.finish();
                 }
 
                 @Override
-                public void onError (JsonNode errors){
+                public void onError(JsonNode errors) {
                     showProgress(false);
                 }
 
                 @Override
-                public void onConnectionError ()
-                {
+                public void onConnectionError() {
                     showProgress(false);
                     Toast toast = Toast.makeText(CreateProfileActivity.this, "Connection Error: Please check your internet connection", Toast.LENGTH_LONG);
                     toast.show();
                 }
 
                 @Override
-                public void onCancelled () {
+                public void onCancelled() {
                     showProgress(false);
                 }
-
-                });
-                mCreateJobSeekerTask.execute();
-            }
+            });
+            mCreateJobSeekerTask.execute();
         }
-
+    }
 
     private void createRecruiter() {
+        mCreateProfileButtons.setVisibility(View.GONE);
         mRecruiterProfile.setVisibility(View.VISIBLE);
         mJobSeekerProfile.setVisibility(View.GONE);
     }
 
     private void createJobSeeker() {
+        mCreateProfileButtons.setVisibility(View.GONE);
         mRecruiterProfile.setVisibility(View.GONE);
         mJobSeekerProfile.setVisibility(View.VISIBLE);
     }
-    /*
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        mLocationEditFragment.save(location);
-        ObjectMapper mapper = new ObjectMapper();
-        try {
-            outState.putString("location_data", mapper.writeValueAsString(location));
-        } catch (JsonProcessingException e) {}
-    }*/
-
 
     @Override
     public View getMainView() {
@@ -283,11 +252,13 @@ public class CreateProfileActivity extends MJPProgressActionBarActivity {
 
     @Override
     public void onBackPressed() {
-        if (mRecruiterProfile.getVisibility() == View.VISIBLE)
+        if (mRecruiterProfile.getVisibility() == View.VISIBLE) {
             mRecruiterProfile.setVisibility(View.GONE);
-        else if (mJobSeekerProfile.getVisibility() == View.VISIBLE)
+            mCreateProfileButtons.setVisibility(View.VISIBLE);
+        } else if (mJobSeekerProfile.getVisibility() == View.VISIBLE) {
             mJobSeekerProfile.setVisibility(View.GONE);
-        else
+            mCreateProfileButtons.setVisibility(View.VISIBLE);
+        } else
             super.onBackPressed();
     }
 

@@ -7,8 +7,8 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
+import android.support.v7.view.ActionMode;
 import android.util.Log;
-import android.view.ActionMode;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -39,6 +39,7 @@ import java.util.List;
 
 public class LocationListActivity extends MJPProgressActionBarActivity  {
 
+    public static final String BUSINESS_ID = "business_id";
     private Integer business_id;
     private Business business;
 
@@ -169,7 +170,7 @@ public class LocationListActivity extends MJPProgressActionBarActivity  {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_location_list);
-        business_id = getIntent().getIntExtra("business_id", -1);
+        business_id = getIntent().getIntExtra(BUSINESS_ID, -1);
         list = (ListView) findViewById(R.id.location_list);
         list.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
         list.setLongClickable(true);
@@ -188,7 +189,7 @@ public class LocationListActivity extends MJPProgressActionBarActivity  {
 
                 // Start the CAB using the ActionMode.Callback defined above
                 list.setItemChecked(position, true);
-                mActionMode = startActionMode(mActionModeCallback);
+                mActionMode = startSupportActionMode(mActionModeCallback);
                 return true;
             }
         });
@@ -290,8 +291,9 @@ public class LocationListActivity extends MJPProgressActionBarActivity  {
             case R.id.action_add:
                 addLocation();
                 return true;
-            case R.id.action_add_business:
+            case R.id.action_edit_business:
                 intent = new Intent(this, EditBusinessActivity.class);
+                intent.putExtra(EditBusinessActivity.BUSINESS_ID, business.getId());
                 startActivity(intent);
                 return true;
             case android.R.id.home:
@@ -310,7 +312,7 @@ public class LocationListActivity extends MJPProgressActionBarActivity  {
     private void addLocation() {
         Intent intent;
         intent = new Intent(this, EditLocationActivity.class);
-        intent.putExtra("business_id", business_id);
+        intent.putExtra(EditLocationActivity.BUSINESS_ID, business_id);
         startActivity(intent);
     }
 }

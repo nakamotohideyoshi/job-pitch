@@ -1,8 +1,6 @@
 package com.myjobpitch.activities;
 
 import android.content.Intent;
-import android.location.Address;
-import android.location.Geocoder;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
@@ -30,20 +28,17 @@ import com.myjobpitch.tasks.recruiter.CreateUpdateLocationTask;
 import com.myjobpitch.tasks.recruiter.DeleteLocationImageTask;
 
 import java.io.IOException;
-import java.util.List;
-import java.util.Locale;
 
 public class EditLocationActivity extends MJPProgressActionBarActivity {
 
     public static final String LOCATION_ID = "LOCATION_ID";
+    public static final String BUSINESS_ID = "business_id";
     private LocationEditFragment mLocationEditFragment;
     private View mEditLocationView;
     private Location location;
     private View mProgressView;
     private ReadLocationTask mReadLocationTask;
     private CreateUpdateLocationTask mCreateUpdateLocationTask;
-
-    private MJPApi api;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -113,7 +108,7 @@ public class EditLocationActivity extends MJPProgressActionBarActivity {
             showProgress(false);
             setTitle(R.string.action_add_location);
             location = new Location();
-            location.setBusiness(getIntent().getIntExtra("business_id", -1));
+            location.setBusiness(getIntent().getIntExtra(BUSINESS_ID, -1));
             mLocationEditFragment.load(location);
         }
     }
@@ -130,36 +125,10 @@ public class EditLocationActivity extends MJPProgressActionBarActivity {
     private void attemptSave() {
         if (mLocationEditFragment.validateInput()) {
             showProgress(true);
-/*
-            Geocoder geocoder = new Geocoder(this, Locale.ENGLISH);
-            List<Address> addresses = null;
-            try {
-                addresses = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            Address address=null;
-            String addr="";
-            String zipcode="";
-            if (addresses != null && addresses.size() > 0) {
-                addr = addresses.get(0).getAddressLine(0) + "," + addresses.get(0).getSubAdminArea();
-                for (int i = 0; i < addresses.size(); i++) {
-                    address = addresses.get(i);
-                    if (address.getPostalCode() != null) {
-                        zipcode = address.getPostalCode();
-                        break;
-                    }
-                }
-            }
-            location.setPostcode_lookup(zipcode);
-            location.setAddress(addr);
-            */
-
-            location.setPostcode_lookup(SelectPlaceActivity.mPostCodeJob);
-            location.setAddress(SelectPlaceActivity.mAddresseJob);
 
             mLocationEditFragment.save(location);
-            api = ((MJPApplication) getApplication()).getApi();
+
+            final MJPApi api = ((MJPApplication) getApplication()).getApi();
             mCreateUpdateLocationTask = new CreateUpdateLocationTask(api, location);
             mCreateUpdateLocationTask.addListener(new CreateReadUpdateAPITaskListener<Location>() {
                 @Override

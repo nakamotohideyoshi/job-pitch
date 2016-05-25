@@ -19,14 +19,6 @@
     <uses-feature android:name="android.hardware.camera" />
     <uses-feature android:name="android.hardware.camera.autofocus"/>
 
-
-
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
-    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
-    <permission android:name="com.myjobpitch.permission.C2D_MESSAGE" android:protectionLevel="signature" />
-    <uses-permission android:name="com.myjobpitch.gcm.permission.C2D_MESSAGE"/>
-
     <application
         android:name=".MJPApplication"
         android:allowBackup="true"
@@ -44,7 +36,6 @@
             android:name=".activities.LoginActivity"
             android:label="@string/app_name"
             android:launchMode="singleTask"
-            android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize|stateVisible" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -79,7 +70,6 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activities.LoginActivity" />
         </activity>
-
         <activity
             android:name=".activities.EditBusinessActivity"
             android:label="@string/edit_business"
@@ -88,17 +78,6 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activities.BusinessListActivity" />
         </activity>
-
-        <activity
-            android:name=".activities.EditCompanyActivity"
-            android:label="@string/edit_company"
-            android:parentActivityName=".activities.BusinessListActivity" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.BusinessListActivity" />
-        </activity>
-
-
         <activity
             android:name=".activities.LocationListActivity"
             android:launchMode="singleTop"
@@ -214,23 +193,19 @@
         <activity
             android:name=".activities.CameraActivity"
             android:label="@string/record_pitch"
-
-            android:parentActivityName=".activities.RecordPitchActivity">
+            android:parentActivityName=".activities.RecordPitchActivity"
+            android:screenOrientation="sensorLandscape">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activities.RecordPitchActivity" />
         </activity>
-
-        <!--android:screenOrientation="sensorLandscape"-->
-
         <activity
-            android:screenOrientation="portrait"
             android:name=".activities.MediaPlayerActivity" />
 
         <service
             android:name="com.amazonaws.mobileconnectors.s3.transferutility.TransferService"
             android:enabled="true" />
-
-        </application>
+        
+    </application>
 
 </manifest>

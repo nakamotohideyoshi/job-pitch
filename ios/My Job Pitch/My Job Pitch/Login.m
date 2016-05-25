@@ -128,29 +128,6 @@
         [self showProgress:true];
         [[self appDelegate].api registerWithUsername:username.text password1:password.text password2:password2.text success:^(User *user) {
             [[self appDelegate].api loginWithUsername:username.text password:password.text success:^(AuthToken *authToken) {
-                [[self appDelegate].api getUser:^(User *user) {
-                    [self completeLoginWithUser:user];
-                } failure:^(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors) {
-                    [self handleErrors:errors message:message];
-                    [self showProgress:false];
-                }];
-            } failure:^(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors) {
-                [self handleErrors:errors message:message];
-                [self showProgress:false];
-            }];
-        } failure:^(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors) {
-            [self handleErrors:errors message:message];
-            [self showProgress:false];
-        }];
-    }
-    
-    
-    /*
-    NSLog(@"register");
-    if ([self validate]) {
-        [self showProgress:true];
-        [[self appDelegate].api registerWithUsername:username.text password1:password.text password2:password2.text success:^(User *user) {
-            [[self appDelegate].api loginWithUsername:username.text password:password.text success:^(AuthToken *authToken) {
                 [self completeLoginWithUser:user];
             } failure:^(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors) {
                 [self handleErrors:errors message:message];
@@ -160,9 +137,7 @@
             [self handleErrors:errors message:message];
             [self showProgress:false];
         }];
-    }*/
-    
-    
+    }
 }
 
 - (IBAction)registrationForm:(id)sender {

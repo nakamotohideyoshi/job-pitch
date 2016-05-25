@@ -34,23 +34,16 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <Button
-            android:layout_marginTop="@dimen/_3sdp"
-            style="@style/DefaultButtonPaint"
-            android:textColor="@drawable/accent_button_textcolor"
             android:id="@+id/change_image_button"
             android:text="@string/change"
             android:layout_width="wrap_content"
-            android:layout_height="@dimen/_30sdp" />
+            android:layout_height="wrap_content" />
 
         <Button
-            android:layout_marginTop="@dimen/_3sdp"
-            style="@style/DefaultButtonPaint"
-            android:textColor="@drawable/accent_button_textcolor"
-            android:layout_marginLeft="@dimen/_10sdp"
             android:id="@+id/delete_image_button"
             android:text="@string/delete"
             android:layout_width="wrap_content"
-            android:layout_height="@dimen/_30sdp" />
+            android:layout_height="wrap_content" />
 
     </LinearLayout>
 

@@ -58,10 +58,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp">
 
-                <Button
-                    style="@style/DefaultButtonPaint"
-                    android:textColor="@drawable/accent_button_textcolor"
-                    android:id="@+id/sign_in_button"
+                <Button android:id="@+id/sign_in_button"
                     android:layout_marginRight="5dp"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -69,8 +66,6 @@
                     android:layout_weight="1" />
 
                 <Button
-                    style="@style/DefaultButtonPaint"
-                    android:textColor="@drawable/accent_button_textcolor"
                     android:id="@+id/register_button"
                     android:layout_marginLeft="5dp"
                     android:layout_width="0dp"

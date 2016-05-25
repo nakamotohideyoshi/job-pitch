@@ -1,6 +1,5 @@
 package com.myjobpitch.activities;
 
-import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -8,15 +7,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentSender;
-import android.content.pm.PackageManager;
-import android.location.Address;
-import android.location.Criteria;
-import android.location.Geocoder;
 import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
 import android.os.Bundle;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
@@ -27,7 +19,6 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
@@ -36,7 +27,6 @@ import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
 import com.google.android.gms.common.api.ResultCallback;
-//import com.google.android.gms.identity.intents.Address;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.PlaceBuffer;
@@ -49,15 +39,10 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
-
 import com.myjobpitch.R;
 import com.myjobpitch.google.PlaceAutocompleteAdapter;
 
-import java.io.IOException;
-import java.util.List;
-import java.util.Locale;
-
-public class SelectPlaceActivity extends ActionBarActivity implements GoogleApiClient.OnConnectionFailedListener, GoogleApiClient.ConnectionCallbacks, LocationListener, View.OnClickListener {
+public class SelectPlaceActivity extends ActionBarActivity implements GoogleApiClient.OnConnectionFailedListener, GoogleApiClient.ConnectionCallbacks {
 
     private static final String STATE_RESOLVING_ERROR = "resolving_error";
     public static final String PLACE_ID = "place_id";
@@ -65,15 +50,6 @@ public class SelectPlaceActivity extends ActionBarActivity implements GoogleApiC
     public static final String ADDRESS = "address";
     public static final String LATITUDE = "latitude";
     public static final String LONGITUDE = "longitude";
-
-
-
-    public static Double mLongitudeJob;
-    public static Double mLatitudeJob;
-    public static String mPlaceIdJob = "";
-    public static String mPlaceNameJob = "";
-    public static String mAddresseJob = "";
-    public static String mPostCodeJob = "";
 
     private GoogleMap mMap; // Might be null if Google Play services APK is not available.
     private AutoCompleteTextView mAutocompleteView;
@@ -94,9 +70,6 @@ public class SelectPlaceActivity extends ActionBarActivity implements GoogleApiC
     private String mAddress;
     private View mAutocompleteContainerView;
 
-    private EditText location_edit;
-    private Button location_findBtn;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -106,14 +79,16 @@ public class SelectPlaceActivity extends ActionBarActivity implements GoogleApiC
 
         setContentView(R.layout.activity_select_place);
 
-
         // Set up the Google API Client if it has not been initialised yet.
         if (mGoogleApiClient == null) {
             rebuildGoogleApiClient();
         }
+
         setUpMapIfNeeded();
+
         if (mMap == null)
             return;
+
         mAutocompleteContainerView = findViewById(R.id.location_search_container);
         mAutocompleteView = (AutoCompleteTextView) findViewById(R.id.location_search);
         mAutocompleteView.setOnItemClickListener(mAutocompleteClickListener);
@@ -121,10 +96,6 @@ public class SelectPlaceActivity extends ActionBarActivity implements GoogleApiC
         mAdapter = new PlaceAutocompleteAdapter(this, android.R.layout.simple_list_item_1,
                 mMap.getProjection().getVisibleRegion().latLngBounds, null);
         mAutocompleteView.setAdapter(mAdapter);
-
-        location_edit = (EditText) findViewById(R.id.location_edit);
-        location_findBtn = (Button) findViewById(R.id.location_find);
-        location_findBtn.setOnClickListener(this);
 
 
         // Set up the 'clear text' button that clears the text in the autocomplete view
@@ -138,13 +109,28 @@ public class SelectPlaceActivity extends ActionBarActivity implements GoogleApiC
 
         // Select button
         mSelectButton = (Button) findViewById(R.id.select_button);
-        mSelectButton.setOnClickListener(this);
+        mSelectButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mLatLng != null) {
+                    Intent intent = new Intent();
+                    intent.putExtra(LATITUDE, mLatLng.latitude);
+                    intent.putExtra(LONGITUDE, mLatLng.longitude);
+                    intent.putExtra(NAME, mName);
+                    if (mAddress != null)
+                        intent.putExtra(ADDRESS, mAddress);
+                    if (mPlaceId != null)
+                        intent.putExtra(PLACE_ID, mPlaceId);
+                    setResult(Activity.RESULT_OK, intent);
+                    finish();
+                }
+            }
+        });
 
         // Change maps padding on layout of top/bottom controls
         ViewTreeObserver.OnGlobalLayoutListener layoutListener = new ViewTreeObserver.OnGlobalLayoutListener() {
             int mTopPadding, mBottomPadding;
             final int extraPadding = (int) (5 * getResources().getDisplayMetrics().density + 0.5f);
-
             @Override
             public void onGlobalLayout() {
                 int topPadding = mAutocompleteContainerView.getHeight() + extraPadding;
@@ -156,7 +142,6 @@ public class SelectPlaceActivity extends ActionBarActivity implements GoogleApiC
                 }
             }
         };
-
         mAutocompleteContainerView.getViewTreeObserver().addOnGlobalLayoutListener(layoutListener);
         mSelectButton.getViewTreeObserver().addOnGlobalLayoutListener(layoutListener);
 
@@ -169,7 +154,7 @@ public class SelectPlaceActivity extends ActionBarActivity implements GoogleApiC
             } else {
                 updateLocation(latLng, name);
             }
-
+            mSelectButton.setEnabled(false);
         }
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -195,11 +180,10 @@ public class SelectPlaceActivity extends ActionBarActivity implements GoogleApiC
 
     @Override
     protected void onStart() {
-
+        super.onStart();
         if (!mResolvingError) {
             mGoogleApiClient.connect();
         }
-        super.onStart();
     }
 
     @Override
@@ -241,7 +225,6 @@ public class SelectPlaceActivity extends ActionBarActivity implements GoogleApiC
             // Try to obtain the map from the SupportMapFragment.
             mMap = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map))
                     .getMap();
-
             // Check if we were successful in obtaining the map.
             if (mMap == null) {
                 finish();
@@ -250,7 +233,6 @@ public class SelectPlaceActivity extends ActionBarActivity implements GoogleApiC
                 setUpMap();
         }
     }
-
 
     private AdapterView.OnItemClickListener mAutocompleteClickListener
             = new AdapterView.OnItemClickListener() {
@@ -273,7 +255,7 @@ public class SelectPlaceActivity extends ActionBarActivity implements GoogleApiC
                     .getPlaceById(mGoogleApiClient, placeId);
             placeResult.setResultCallback(mUpdatePlaceDetailsCallback);
 
-            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(mAutocompleteView.getWindowToken(), 0);
         }
     };
@@ -303,7 +285,6 @@ public class SelectPlaceActivity extends ActionBarActivity implements GoogleApiC
         mPlaceId = placeId;
         mLatLng = latLng;
         mName = title;
-        mPostCodeJob = "";
         mAddress = address;
         mMap.clear();
         mMap.addMarker(new MarkerOptions()
@@ -331,7 +312,6 @@ public class SelectPlaceActivity extends ActionBarActivity implements GoogleApiC
 
     }
 
-
     /**
      * This is where we can add markers or lines, add listeners or move the camera. In this case, we
      * just add a marker near Africa.
@@ -339,16 +319,6 @@ public class SelectPlaceActivity extends ActionBarActivity implements GoogleApiC
      * This should only be called once and when we are sure that {@link #mMap} is not null.
      */
     private void setUpMap() {
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-            return;
-        }
         mMap.setMyLocationEnabled(true);
         mMap.getUiSettings().setMapToolbarEnabled(false);
         mMap.getUiSettings().setZoomControlsEnabled(true);
@@ -369,21 +339,7 @@ public class SelectPlaceActivity extends ActionBarActivity implements GoogleApiC
                 updateLocation(latLng, getString(R.string.custom_location));
             }
         });
-
-
     }
-
-    private GoogleMap.OnMyLocationChangeListener myLocationChangeListener = new GoogleMap.OnMyLocationChangeListener() {
-        @Override
-        public void onMyLocationChange(Location location) {
-            LatLng loc = new LatLng(location.getLatitude(), location.getLongitude());
-            mMap.addMarker(new MarkerOptions().position(loc));
-            if (mMap != null) {
-                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(loc, 16.0f));
-            }
-        }
-    };
-
 
     @Override
     public void onConnectionFailed(ConnectionResult result) {
@@ -406,57 +362,21 @@ public class SelectPlaceActivity extends ActionBarActivity implements GoogleApiC
         mAdapter.setGoogleApiClient(null);
     }
 
-
+    @Override
     public void onConnected(Bundle bundle) {
         mAdapter.setGoogleApiClient(mGoogleApiClient);
         Log.d("SelectPlaceActivity", "onConnected");
 
         // Try to get current location, and move map there, if no marker placed
         if (mLatLng == null) {
-            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                // TODO: Consider calling
-                //    ActivityCompat#requestPermissions
-                // here to request the missing permissions, and then overriding
-                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                //                                          int[] grantResults)
-                // to handle the case where the user grants the permission. See the documentation
-                // for ActivityCompat#requestPermissions for more details.
-                return;
-            }
             Location location = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
             if (location != null) {
                 LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
-                mLatLng = latLng;
-
-
-                Geocoder geocoder;
-                List<android.location.Address> addresses;
-                geocoder = new Geocoder(this, Locale.getDefault());
-
-                try {
-                    addresses = geocoder.getFromLocation(mLatLng.latitude, mLatLng.longitude, 1);
-
-                    mName = addresses.get(0).getCountryName();
-                    mPlaceId = addresses.get(0).getAddressLine(0);
-                    mAddress = addresses.get(0).getAddressLine(1);
-                    for(int i=0 ;i<addresses.size();i++){
-                        if (addresses.get(i).getPostalCode()!=null){
-                            mPostCodeJob = addresses.get(0).getPostalCode();
-                        }
-                    }
-
-
-
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-
                 CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 17);
                 mMap.animateCamera(cameraUpdate);
             }
         }
     }
-
 
     @Override
     public void onConnectionSuspended(int i) {
@@ -496,157 +416,6 @@ public class SelectPlaceActivity extends ActionBarActivity implements GoogleApiC
         mResolvingError = false;
     }
 
-    @Override
-    public void onLocationChanged(Location location) {
-        // Getting latitude of the current location
-        double latitude = location.getLatitude();
-
-        // Getting longitude of the current location
-        double longitude = location.getLongitude();
-
-        // Creating a LatLng object for the current location
-        mLatLng = new LatLng(latitude, longitude);
-
-        Geocoder geocoder;
-        List<android.location.Address> addresses;
-        geocoder = new Geocoder(this, Locale.getDefault());
-
-        try {
-            addresses = geocoder.getFromLocation(latitude, longitude, 1);
-
-
-                mName = addresses.get(0).getCountryName();
-                mPlaceId = addresses.get(0).getAddressLine(0);
-                mAddress = addresses.get(0).getAddressLine(1);
-                for(int i=0 ;i<addresses.size();i++){
-                    if (addresses.get(i).getPostalCode()!=null){
-                        mPostCodeJob = addresses.get(0).getPostalCode();
-                    }
-                }
-
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        // Showing the current location in Google Map
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(mLatLng));
-
-        // Zoom in the Google Map
-        mMap.animateCamera(CameraUpdateFactory.zoomTo(15));
-
-    }
-
-    @Override
-    public void onStatusChanged(String provider, int status, Bundle extras) {
-
-    }
-
-    @Override
-    public void onProviderEnabled(String provider) {
-
-    }
-
-    @Override
-    public void onProviderDisabled(String provider) {
-
-    }
-
-    @Override
-    public void onClick(View v) {
-        if (v.getId() == R.id.location_find){
-            String location = location_edit.getText().toString();
-            Log.e("location--",location);
-
-            if(location!=null && !location.equals("")){
-                //new GeocoderTask().execute(location);
-                Geocoder geocoder = new Geocoder(getBaseContext());
-                List<android.location.Address> addresses = null;
-
-                try {
-                    // Getting a maximum of 3 Address that matches the input text
-                    addresses = geocoder.getFromLocationName(location, 1);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                // Clears all the existing markers on the map
-                mMap.clear();
-
-                // Adding Markers on Google Map for each matching address
-                for(int i=0;i<addresses.size();i++){
-
-                    android.location.Address address = (android.location.Address) addresses.get(i);
-
-                    // Creating an instance of GeoPoint, to display in Google Map
-                    mLatLng = new LatLng(address.getLatitude(), address.getLongitude());
-
-                    String addressText = String.format("%s, %s",
-                            address.getMaxAddressLineIndex() > 0 ? address.getAddressLine(0) : "",
-                            address.getCountryName());
-                    Log.e("addresstext***", addressText);
-
-                    MarkerOptions markerOptions = new MarkerOptions();
-                    markerOptions.position(mLatLng);
-                    markerOptions.title(addressText);
-
-                    mMap.addMarker(markerOptions);
-                    mName = address.getAddressLine(0);
-                    mAddress= address.getAddressLine(1);
-                    mPlaceId = address.getAddressLine(2);
-
-                    // Locate the first location
-                    if(i==0)
-                        mMap.animateCamera(CameraUpdateFactory.newLatLng(mLatLng));
-                }
-            }
-        }
-        if (v.getId() == R.id.select_button){
-            if (mLatLng != null) {
-
-                Geocoder geocoder = new Geocoder(this, Locale.ENGLISH);
-                List<Address> addresses = null;
-                try {
-                    addresses = geocoder.getFromLocation(mLatLng.latitude, mLatLng.longitude, 1);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                Address address=null;
-                String addr="";
-                String zipcode="";
-                if (addresses != null && addresses.size() > 0) {
-                    addr = addresses.get(0).getAddressLine(0) + "," + addresses.get(0).getSubAdminArea();
-                    for (int i = 0; i < addresses.size(); i++) {
-                        address = addresses.get(i);
-                        if (address.getPostalCode() != null) {
-                            zipcode = address.getPostalCode();
-                            break;
-                        }
-                    }
-                }
-                mPostCodeJob = zipcode;
-                mAddresseJob = addr;
-
-
-
-
-
-
-                Intent intent = new Intent();
-                intent.putExtra(LATITUDE, mLatLng.latitude);
-                intent.putExtra(LONGITUDE, mLatLng.longitude);
-                intent.putExtra(NAME, mName);
-                if (mAddress != null)
-                    intent.putExtra(ADDRESS, mAddress);
-                if (mPlaceId != null)
-                    intent.putExtra(PLACE_ID, mPlaceId);
-                setResult(Activity.RESULT_OK, intent);
-                finish();
-            }
-        }
-
-
-    }
-
     /* A fragment to display an error dialog */
     public static class ErrorDialogFragment extends DialogFragment {
         public ErrorDialogFragment() { }
@@ -664,8 +433,4 @@ public class SelectPlaceActivity extends ActionBarActivity implements GoogleApiC
             ((SelectPlaceActivity)getActivity()).onDialogDismissed();
         }
     }
-
-
-
-
 }

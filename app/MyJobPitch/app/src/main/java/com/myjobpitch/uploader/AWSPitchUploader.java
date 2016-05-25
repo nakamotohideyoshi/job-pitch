@@ -7,7 +7,6 @@ import com.amazonaws.mobileconnectors.s3.transferutility.TransferObserver;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferState;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferType;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferUtility;
-import com.amazonaws.regions.Region;
 import com.amazonaws.regions.Regions;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
@@ -26,26 +25,17 @@ public class AWSPitchUploader implements PitchUploader {
     public AWSPitchUploader(Context applicationContext, MJPApi api) {
         this.applicationContext = applicationContext;
         this.api = api;
-        // Initialize the Amazon Cognito credentials provider
         CognitoCachingCredentialsProvider credentialsProvider = new CognitoCachingCredentialsProvider(
                 applicationContext,
-                "us-east-1:5e01a88d-f24a-45e8-b1f6-dc9e406fb042", // Identity Pool ID
-                Regions.US_EAST_1 // Region
+                "eu-west-1:93ae6986-5938-4130-a3c0-f96c39d75be2", // Identity Pool ID
+                Regions.EU_WEST_1 // Region
         );
         AmazonS3 s3 = new AmazonS3Client(credentialsProvider);
-        s3.setRegion(Region.getRegion(Regions.US_EAST_1));
         transferUtility = new TransferUtility(s3, applicationContext);
-
-
     }
 
     @Override
     public PitchUpload upload(File file) {
-        return new AWSPitchUpload(transferUtility, api, file);
-    }
-
-    @Override
-    public PitchUpload download(File file) {
         return new AWSPitchUpload(transferUtility, api, file);
     }
 

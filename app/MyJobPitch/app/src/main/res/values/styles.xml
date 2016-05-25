@@ -16,21 +16,8 @@
 
     <style name="MJPButton" parent="Widget.AppCompat.Button">
         <item name="android:textColor">@color/white</item>
-        <item name="android:background">@color/button_state_color</item>
+        <item name="android:background">@color/mjp_teal</item>
         <item name="android:layout_margin">5dp</item>
-    </style>
-
-    <!--<item name="android:background">@color/mjp_teal</item>-->
-    <!-- -->
-    <style name="DefaultButtonPaint">
-        <item name="android:layout_height">@dimen/_16sdp</item>
-        <item name="android:background">@drawable/stroke_round_accent_button_paint_selector</item>
-        <item name="android:textSize">@dimen/_12sdp</item>
-    </style>
-    <style name="DefaultButtonPaintSmall">
-        <item name="android:layout_height">@dimen/_13sdp</item>
-        <item name="android:background">@drawable/stroke_round_accent_button_paint_selector</item>
-        <item name="android:textSize">@dimen/_12sdp</item>
     </style>
 
 </resources>

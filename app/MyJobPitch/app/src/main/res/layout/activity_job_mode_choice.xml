@@ -20,42 +20,31 @@
         android:layout_height="wrap_content">
 
         <Button
-            style="@style/DefaultButtonPaint"
-            android:textColor="@drawable/accent_button_textcolor"
-            android:layout_marginLeft="@dimen/_5sdp"
-            android:layout_marginRight="@dimen/_5sdp"
             android:id="@+id/search_button"
             tools:text="@string/search"
+            android:padding="15dp"
             android:textAllCaps="false"
             android:gravity="left|center_vertical"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/_30sdp" />
+            android:layout_height="match_parent" />
 
         <Button
-            style="@style/DefaultButtonPaint"
-            android:textColor="@drawable/accent_button_textcolor"
-            android:layout_marginTop="@dimen/_5sdp"
-            android:layout_marginLeft="@dimen/_5sdp"
-            android:layout_marginRight="@dimen/_5sdp"
             android:id="@+id/applications_button"
             tools:text="@string/applications"
+            android:padding="15dp"
             android:textAllCaps="false"
             android:gravity="left|center_vertical"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/_30sdp" />
+            android:layout_height="match_parent" />
 
         <Button
-            style="@style/DefaultButtonPaint"
-            android:textColor="@drawable/accent_button_textcolor"
-            android:layout_marginTop="@dimen/_5sdp"
-            android:layout_marginLeft="@dimen/_5sdp"
-            android:layout_marginRight="@dimen/_5sdp"
             android:id="@+id/connections_button"
             tools:text="@string/connections"
+            android:padding="15dp"
             android:textAllCaps="false"
             android:gravity="left|center_vertical"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/_30sdp" />
+            android:layout_height="fill_parent" />
 
     </LinearLayout>
 </FrameLayout>

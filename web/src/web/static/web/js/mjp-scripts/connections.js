@@ -30,6 +30,7 @@ $(function() {
 			if(job_id !== undefined && job_id !== ''){
 				query.job = job_id // Recruiter looking for applications of a job
 			}
+			query.status = status.id;
 
 			$.get( "/api/applications/", query)
 			.done(function( applications ) {

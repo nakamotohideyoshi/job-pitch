@@ -408,7 +408,7 @@ public class JobSeekerActivity extends MJPProgressActionBarActivity {
             mEmptyButtonView.setText(getString(R.string.setup_profile));
             mEmptyButton2View.setVisibility(View.VISIBLE);
             mEmptyButton2View.setText(getString(R.string.record_pitch));
-            mEmptyButton3View.setVisibility(View.INVISIBLE);
+            mEmptyButton3View.setVisibility(View.VISIBLE);
             mEmptyButton3View.setText(getString(R.string.edit_company));
             mButtons.setVisibility(View.INVISIBLE);
             showProgress(false);

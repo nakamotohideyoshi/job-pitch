@@ -121,14 +121,10 @@
                         android:textStyle="bold" />
 
                     <Button
-                        style="@style/DefaultButtonPaint"
-                        android:textColor="@drawable/accent_button_textcolor"
-                        android:layout_marginBottom="@dimen/_5sdp"
-                        android:layout_marginLeft="@dimen/_5sdp"
                         android:id="@+id/send_message_button"
                         android:text="@string/send_message"
                         android:layout_width="wrap_content"
-                        android:layout_height="@dimen/_30sdp" />
+                        android:layout_height="wrap_content" />
 
                     <TextView
                         android:id="@+id/no_contact_details"
@@ -173,14 +169,20 @@
                         android:paddingTop="15dp"
                         android:paddingBottom="8dp"
                         android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/references_available"
+                        android:text="@string/references_available_on_request"
+                        android:paddingBottom="8dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+
                     <Button
-                        style="@style/DefaultButtonPaint"
-                        android:textColor="@drawable/accent_button_textcolor"
                         android:id="@+id/cv_button"
                         android:gravity="center"
                         android:text="@string/download_cv"
                         android:layout_width="wrap_content"
-                        android:layout_height="@dimen/_30sdp" />
+                        android:layout_height="wrap_content" />
                 </LinearLayout>
 
             </RelativeLayout>

@@ -50,13 +50,11 @@
                 />
 
             <Button
-                style="@style/DefaultButtonPaint"
-                android:textColor="@drawable/accent_button_textcolor"
                 android:id="@+id/add_location_button"
                 android:layout_marginTop="15dp"
                 android:text="@string/action_add_location"
                 android:layout_width="fill_parent"
-                android:layout_height="@dimen/_30sdp" />
+                android:layout_height="wrap_content" />
         </LinearLayout>
     </LinearLayout>
 </FrameLayout>

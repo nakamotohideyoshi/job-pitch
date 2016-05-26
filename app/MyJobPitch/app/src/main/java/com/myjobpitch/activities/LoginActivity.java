@@ -9,7 +9,6 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
-import android.location.Location;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -60,8 +59,6 @@ public class LoginActivity extends MJPProgressActivity implements LoaderCallback
     private static final String USERNAME = "USERNAME";
     private static final String PASSWORD = "PASSWORD";
     private static final String REMEMBER_PASSWORD = "REMEMBER_PASSWORD";
-
-    public static com.myjobpitch.api.data.Location userLocation = null;
 
 
     private LoginTask loginTask = null;
@@ -197,7 +194,7 @@ public class LoginActivity extends MJPProgressActivity implements LoaderCallback
      * If there are form errors (invalid email, missing fields, etc.), the
      * errors are presented and no actual login attempt is made.
      */
-     public void attemptLogin() {
+    public void attemptLogin() {
         if (logoutTask != null) {
             return;
         }
@@ -287,7 +284,6 @@ public class LoginActivity extends MJPProgressActivity implements LoaderCallback
         return mProgressView;
     }
 
-
     @Override
     public View getMainView() {
         return mLoginFormView;
@@ -303,7 +299,6 @@ public class LoginActivity extends MJPProgressActivity implements LoaderCallback
         int IS_PRIMARY = 1;
     }
 
-
     private void addEmailsToAutoComplete(List<String> emailAddressCollection) {
         //Create adapter to tell the AutoCompleteTextView what to show in its dropdown list.
         ArrayAdapter<String> adapter =
@@ -312,7 +307,6 @@ public class LoginActivity extends MJPProgressActivity implements LoaderCallback
 
         mUsernameView.setAdapter(adapter);
     }
-
 
     class LoginTask extends AsyncTask<Void, Void, Boolean> {
 
@@ -407,7 +401,7 @@ public class LoginActivity extends MJPProgressActivity implements LoaderCallback
                                         } else {
                                             // Single business, multiple locations: go straight to business
                                             intent = new Intent(LoginActivity.this, LocationListActivity.class);
-                                            intent.putExtra("business_id", mBusiness.getId());
+                                            intent.putExtra(LocationListActivity.BUSINESS_ID, mBusiness.getId());
                                         }
                                     } else {
                                         // Multiple businesses: goto business list
@@ -416,8 +410,6 @@ public class LoginActivity extends MJPProgressActivity implements LoaderCallback
                                 } else if (mUser.isJobSeeker()) {
                                     // JobSeeker: goto job seeker screen
                                     intent = new Intent(LoginActivity.this, JobSeekerActivity.class);
-                                    startActivity(intent);
-                                    LoginActivity.this.finish();
                                 } else {
                                     // NO businesses or job seeker profile
                                     intent = new Intent(LoginActivity.this, CreateProfileActivity.class);

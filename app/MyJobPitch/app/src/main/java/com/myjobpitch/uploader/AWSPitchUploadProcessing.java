@@ -26,41 +26,30 @@ public class AWSPitchUploadProcessing extends AWSPitchUploadBase {
         listener.onStateChange(PitchUpload.PROCESSING);
         AsyncTask<Void, Void, Void> pollPitch = new AsyncTask<Void, Void, Void>() {
             @Override
-            protected Void doInBackground(Void... params)
-            {
+            protected Void doInBackground(Void... params) {
                 int iterations = 0;
                 while (true) {
                     synchronized (this) {
                         if (mCancelled || mStopped)
                             return null;
                     }
-                    if (iterations % 8 == 0) {
+                    if (iterations % 5 == 0) {
                         try {
                             Pitch update = api.get(Pitch.class, pitch.getId());
-                            if (update.getVideo() != null) {
-                                //mStopped = false;
-                                //mCancelled = false;
+                            if (update.getVideo() != null)
                                 return null;
-                            }
                         } catch (MJPApiException e) {
-                            mStopped = true;
-                            mCancelled = true;
 
                         } catch (HttpClientErrorException e) {
                             mStopped = true;
-                            mCancelled = true;
                             return null;
                         }
                     }
                     try {
-                        Thread.sleep(100);
-                    } catch (InterruptedException e) {
-                        mStopped = true;
-                        mCancelled = true;
-                    }
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {}
                     iterations++;
                 }
-
             }
 
             @Override

@@ -21,7 +21,7 @@
 
     <ScrollView
         android:id="@+id/job_profile_edit"
-        android:visibility="visible"
+        android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
         <LinearLayout
@@ -37,10 +37,8 @@
                 tools:layout="@layout/fragment_job_profile_edit" />
 
             <Button
-                style="@style/DefaultButtonPaint"
-                android:textColor="@drawable/accent_button_textcolor"
-                android:layout_height="@dimen/_30sdp"
                 android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:text="@string/action_save"
                 android:id="@+id/save_button"
                 android:layout_weight="1" />

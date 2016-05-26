@@ -37,9 +37,6 @@ public class RegisterActivity extends MJPProgressActivity {
     private RegisterTask registerTask;
     private TextView mProgressText;
 
-    public static String UserNameRegister = "";
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -105,12 +102,6 @@ public class RegisterActivity extends MJPProgressActivity {
             error = true;
         }
 
-//        if (password1!=password2){
-//            mPassword2View.setError(getString(R.string.error_field_required1));
-//            errorView = mPassword2View;
-//            error = true;
-//        }
-
         if (error) {
             // There was an error; don't attempt login and focus the first
             // form field with an error.
@@ -162,8 +153,6 @@ public class RegisterActivity extends MJPProgressActivity {
             try {
                 try {
                     api.register(username, password1, password2);
-                    UserNameRegister = username;
-
                 } catch (MJPApiException e) {
                     errors = e.getErrors();
                     return null;
@@ -187,7 +176,7 @@ public class RegisterActivity extends MJPProgressActivity {
             registerTask = null;
             if (errors != null) {
                 View errorView = null;
-                JsonNode generalError = errors.get("__all__");
+                JsonNode generalError = errors.get("non_field_errors");
                 if (generalError != null) {
                     mPassword2View.setError(generalError.get(0).asText());
                     errorView = mPassword2View;

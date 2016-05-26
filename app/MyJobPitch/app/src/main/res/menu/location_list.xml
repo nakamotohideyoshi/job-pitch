@@ -16,9 +16,9 @@
         app:showAsAction="always" />
 
     <item
-        android:id="@+id/action_add_business"
-        android:icon="@drawable/ic_action_new"
-        android:title="@string/action_add_business"
+        android:id="@+id/action_edit_business"
+        android:icon="@drawable/ic_action_edit_light"
+        android:title="@string/action_edit_business"
         android:orderInCategory="100"
         app:showAsAction="never" />
 </menu>

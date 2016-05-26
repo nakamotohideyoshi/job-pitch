@@ -109,7 +109,6 @@ public class EditJobSeekerActivity extends MJPProgressActionBarActivity {
 
             mJobSeekerEditFragment.save(mJobSeeker);
 
-
             final MJPApi api = ((MJPApplication) getApplication()).getApi();
             mCreateUpdateJobSeekerTask = new CreateUpdateJobSeekerTask(api, mJobSeeker);
             mCreateUpdateJobSeekerTask.addListener(new CreateReadUpdateAPITaskListener<JobSeeker>() {
@@ -121,8 +120,6 @@ public class EditJobSeekerActivity extends MJPProgressActionBarActivity {
                 @Override
                 public void onError(JsonNode errors) {
                     showProgress(false);
-                    Toast toast = Toast.makeText(EditJobSeekerActivity.this, "Error saving job search profile", Toast.LENGTH_LONG);
-                    toast.show();
                 }
 
                 @Override

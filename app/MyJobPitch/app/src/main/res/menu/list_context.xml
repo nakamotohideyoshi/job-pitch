@@ -4,14 +4,14 @@
 
     <item
         android:id="@+id/action_edit"
-        android:icon="@drawable/ic_action_edit"
+        android:icon="@drawable/ic_action_edit_light"
         android:title="@string/action_edit"
         android:orderInCategory="100"
         app:showAsAction="always" />
 
     <item
         android:id="@+id/action_delete"
-        android:icon="@drawable/ic_action_discard"
+        android:icon="@drawable/ic_action_discard_light"
         android:title="@string/action_delete"
         android:orderInCategory="100"
         app:showAsAction="always" />

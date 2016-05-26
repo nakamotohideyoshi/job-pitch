@@ -14,10 +14,4 @@
         android:title="@string/action_add"
         android:orderInCategory="100"
         app:showAsAction="always" />
-    <item
-        android:id="@+id/action_edit"
-        android:icon="@drawable/ic_action_edit"
-        android:title="@string/edit_company"
-        android:orderInCategory="100"
-        app:showAsAction="always" />
 </menu>

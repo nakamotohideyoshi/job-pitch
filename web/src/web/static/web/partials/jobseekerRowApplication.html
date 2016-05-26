@@ -1,0 +1,6 @@
+<tr data-application-id="<%= application.id %>"
+class="application-list <%= inactiveClass %>"
+id="application-list-<%= application.id %>">
+	<td><%= application.job_data.title %></td>
+	<td <% if(!isDeleted) %>class="go-to-messages"<% } %>><%= messageShort %>...<br><span class="message-time-date"><%= messageTimeDate %></span></td>
+</tr>

@@ -1,0 +1,26 @@
+<tr data-application-id="<%= application.id %>"
+	class="application-list <%= inactiveClass %>"
+	id="application-list-<%= application.id %>">
+	<td><%= application.job_data.title %></td>
+	<% if(isDeleted){ %>
+	<td><%= application.job_seeker.first_name %> <%= application.job_seeker.last_name %></td>
+	<% }else{ %>
+	<td class="go-to-pitch"
+	data-video="<%= video %>"
+	data-job-id="<%= application.job_data.id %>"
+	data-jobseeker-id="<%= application.job_seeker.id %>">
+	<%= application.job_seeker.first_name %> <%= application.job_seeker.last_name %></td>
+	<% } %>
+	<td><%= application.job_seeker.description %></td>
+	<td>
+		<%= messageShort %>...<br>
+		<span class="message-time-date"><%= messageTimeDate %></span>
+	</td>
+	<% if(isDeleted){ %>
+	<td>Deleted</td>
+	<% }else{ %>
+	<td>
+		<a class="delete-action-btn btn btn-primary" href="javascript:deleteRowApplication('<%= application.id %>', 'application-list-');"><i class="fa fa-trash-o"></i></a>
+	</td>
+	<% } %>
+</tr>

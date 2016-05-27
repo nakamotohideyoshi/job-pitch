@@ -14,7 +14,7 @@ function renderApplication(template, application, $container){
 		video = application.job_seeker.pitches[0].video;
 	}
 
-	var isDeleted = (application.status == CONST.APPLICATION.DELETED);
+	var isDeleted = (application.status == CONST.STATUS.DELETED);
 	var inactiveClass = isDeleted ? 'inactive' : '';
 
 	var context = {
@@ -49,11 +49,24 @@ function renderApplications(userType, applications, $container){
 }
 
 
-function goToMessages(id){
-	window.location.href = "/messages/?id="+id;
+function goToMessages(jobId){
+	window.location.href = "/messages/?job="+jobId+"&id="+;
 }
 
 
 function goToUserProfile(id){
 	window.location.href = "/profile/list-jobs/?id="+id;
 }
+
+$(document).on('click','.go-to-messages',function(argument) {
+	$tr = $(this).parent();
+	goToMessages( $tr.data('job-id'), $tr.data('application-id') );
+});
+
+$(document).on('click','.go-to-details',function(argument) {
+	viewPitch2($(this).data('video'), $(this).data('job-id'), $(this).data('jobseeker-id'));
+});
+
+$(document).on('click','.delete-action-btn',function(argument) {
+	deleteRowApplication( $(this).data('application-id'), 'application-list-' );
+});

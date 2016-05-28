@@ -56,6 +56,12 @@ $(function() {
 			var index = _.findIndex(applications, ['id', applicationId]);
 			var application = applications[index];
 
+			var job = application.job_data;
+			var business = job.business_data;
+			var location = job.location_data;
+			var jobSeeker = application.job_seeker;
+			var messages = application.messages;
+
 			if((application.status == CONST.STATUS.APPLICATION && userType == CONST.USER.JOBSEEKER)
 				|| application.status == CONST.STATUS.CONNECTION
 			){
@@ -66,12 +72,6 @@ $(function() {
 				$('.send-message-functionality').removeClass('hide');
 			}
 
-			var job = application.job_data;
-			var business = job.business_data;
-			var location = job.location_data;
-			var jobSeeker = application.job_seeker;
-
-			console.log(data);
 			$('#job-title-single').html(job.title);
 
 			$.get("/api/hours/"+job.hours, query)
@@ -130,54 +130,74 @@ $(function() {
 			var map = new google.maps.Map(document.getElementById('map'), {
 				center: LatLng,
 				zoom: 12
-			  });
+			});
+
 			var marker = new google.maps.Marker({
 				position: LatLng,
 				map: map,
 				title: location.name
-			  });
+			});
 
-			for (var key in data.messages) {
-				var obj = data.messages[key];
-					  messageRead(obj.id);
-					  var length = 55;
-					  var date = new Date(obj.created);
-					  var minutesTwoDigitsWithLeadingZero = ("0" + date.getMinutes()).substr(-2);
-					  var readText = '';
-					  if(obj.read){
-						  readText  = ' - Message Read';
-					  }
-					  if(obj.from_role == recruiter_role.id){
-						  if(obj.system == true){
-							$('#list-table tbody').append('<tr data-message-id="'+obj.id+'" class="message-list" id="message-list-'+obj.id+'"><td onclick="goToUserProfile('+jobSeeker.id+');" class="col-sm-2">'+location.business_data.name+'<br><span class="systemMessageNotice">(system generated)</span></td><td class="col-sm-10">'+obj.content+'<br>'+date.getDate()+'/'+date.getMonth()+'/'+date.getFullYear()+' '+date.getHours()+':'+minutesTwoDigitsWithLeadingZero+readText+'</td></tr>');
-						  }else{
-							$('#list-table tbody').append('<tr data-message-id="'+obj.id+'" class="message-list" id="message-list-'+obj.id+'"><td onclick="goToUserProfile('+jobSeeker.id+');">'+location.business_data.name+'</td><td>'+obj.content+'<br>'+date.getDate()+'/'+date.getMonth()+'/'+date.getFullYear()+' '+date.getHours()+':'+minutesTwoDigitsWithLeadingZero+readText+'</td></tr>');
-						  }
-					  }else{
-						  if(obj.system == true){
-							$('#list-table tbody').append('<tr data-message-id="'+obj.id+'" class="message-list" id="message-list-'+obj.id+'"><td onclick="goToUserProfile('+jobSeeker.id+');">System</td><td>'+obj.content+'<br>'+date.getDate()+'/'+date.getMonth()+'/'+date.getFullYear()+' '+date.getHours()+':'+minutesTwoDigitsWithLeadingZero+readText+'</td></tr>');
-						  }else{
-						$('#list-table tbody').append('<tr data-message-id="'+obj.id+'" class="message-list" id="message-list-'+obj.id+'"><td onclick="goToUserProfile('+jobSeeker.id+');">'+jobSeeker.first_name+' '+jobSeeker.last_name+'</td><td>'+obj.content+'<br>'+date.getDate()+'/'+date.getMonth()+'/'+date.getFullYear()+' '+date.getHours()+':'+minutesTwoDigitsWithLeadingZero+readText+'</td></tr>');
-						  }
-					  }
-			}
+			var templateFile = CONST.PATH.PARTIALS+'messageRow.html';
+			$('<div>').load(templateFile,function(content){
+				var template = _.template(content);
 
-	  }).fail(function( data ) {
+				for (var key in messages) {
+					var message = messages[key];
+					messageRead(message.id);
+					var length = 55;
+					var readText = '';
+					if(message.read){
+						readText  = ' - Message Read';
+					}
+
+					var context = {
+						jobSeeker: jobSeeker,
+						message: message,
+						sender: location.business_data.name,
+						colSenderSize: ''
+					};
+
+					var date = new Date(message.created);
+					context.messageTimeDate = date.getHours()+':'+_.padStart(date.getMinutes(),2,'0')
+							+' '+date.getDate()+'/'+date.getMonth()+'/'+date.getFullYear();
+
+					if(message.from_role == recruiter_role.id){
+						context.colSenderSize = 'col-sm-2';
+					}else{
+						context.sender = jobSeeker.first_name+' '+jobSeeker.last_name;
+
+						if(message.system){
+							context.sender = 'System';
+						}
+					}
+
+					$('#list-table tbody').append(template(context));
+				}
+			});
+
+		}).fail(function( data ) {
 			console.log( data );
-	  });
+		});
 
 		//Form submit code
 		$('#send-messages').submit(function( event ) {
 			$('.btn-default').attr( "disabled", true );
 			event.preventDefault();
+
 			var content = $('#content-form').val();
-				$.post( "/api/messages/", { application:application_id,content:content, csrftoken: getCookie('csrftoken') }).done(function( data ) {
-					$('#content-form').val('');
-					location.reload();
-				  })
-				  .fail(function( data ) {
-					console.log( data.responseJSON );
-				  });
+
+			query.application = application_id;
+			query.content = content;
+
+			$.post( "/api/messages/", query)
+			.done(function( data ) {
+				$('#content-form').val('');
+				location.reload();
+
+			}).fail(function( data ) {
+				console.log( data.responseJSON );
+			});
 		});
 	});
 });

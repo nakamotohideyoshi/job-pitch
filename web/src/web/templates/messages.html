@@ -11,7 +11,7 @@
 						<h1 class="page-header">Job Details:</h1>
 
 						<div class="row job-details-messages" style="">
-							<div class="col-lg-8 col-centered">
+							<div class="col-sm-12 col-lg-10 col-centered">
 								<img src="/static/web/images/no_image_available.png" class="job-image-messages" />
 								<dl class="dl-horizontal">
 									<dt>Title</dt>
@@ -32,19 +32,23 @@
 					<div class="col-lg-12">
 						<h1 class="page-header">Work Place Details:</h1>
 
-						<dl class="dl-horizontal">
-							<dt>Name</dt>
-							<dd id="location-name-single" class="message-job-details">...</dd>
-							<dt>Description</dt>
-							<dd id="location-description-single" class="message-job-details">...</dd>
-							<dt>Address</dt>
-							<dd id="location-address-single" class="message-job-details">...</dd>
-							<dt></dt>
-							<dd id="location-place-name-single" class="message-job-details">...</dd>
-						</dl>
+						<div class="row job-details-messages" style="">
+							<div class="col-sm-12 col-lg-10 col-centered">
+								<dl class="dl-horizontal">
+									<dt>Name</dt>
+									<dd id="location-name-single" class="message-job-details">...</dd>
+									<dt>Description</dt>
+									<dd id="location-description-single" class="message-job-details">...</dd>
+									<dt>Address</dt>
+									<dd id="location-address-single" class="message-job-details">...</dd>
+									<dt></dt>
+									<dd id="location-place-name-single" class="message-job-details">...</dd>
+								</dl>
 
-						<div class="row">
-							<div id="map"></div>
+								<div class="row">
+									<div id="map"></div>
+								</div>
+							</div>
 						</div>
 					</div>
 				</div>
@@ -53,32 +57,38 @@
 					<div class="col-lg-12">
 						<h1 class="page-header">Job Seeker Details:</h1>
 
-						<div class="row job-seeker-details-messages" style="/* display:none; */">
-							<span id="job-seeker-pitch"></span>
-							<br />
-							<dl class="dl-horizontal">
-								<dt>Name</dt>
-								<dd id="job-seeker-name" class="message-job-details">...</dd>
-								<dt>Description</dt>
-								<dd id="job-seeker-description" class="message-job-details">...</dd>
-								<dt class="job-seeker-age">Age</dt>
-								<dd id="job-seeker-age" class="job-seeker-age message-job-details">...</dd>
-								<dt class="job-seeker-sex">Sex</dt>
-								<dd id="job-seeker-sex" class="job-seeker-sex message-job-details">...</dd>
-								<dt class="job-seeker-nationality">Nationality</dt>
-								<dd id="job-seeker-nationality" class="job-seeker-nationality message-job-details">...</dd>
+						<div class="row job-seeker-details-messages" style="display:none;">
+							<div class="col-sm-12 col-lg-10 col-centered">
+								<div class="row">
+									<div id="job-seeker-pitch" class="col-centered">
+									</div>
+								</div>
+								<div class="row">
+									<dl class="dl-horizontal">
+										<dt>Name</dt>
+										<dd id="job-seeker-name" class="message-job-details">...</dd>
+										<dt>Description</dt>
+										<dd id="job-seeker-description" class="message-job-details">...</dd>
+										<dt class="job-seeker-age">Age</dt>
+										<dd id="job-seeker-age" class="job-seeker-age message-job-details">...</dd>
+										<dt class="job-seeker-sex">Sex</dt>
+										<dd id="job-seeker-sex" class="job-seeker-sex message-job-details">...</dd>
+										<dt class="job-seeker-nationality">Nationality</dt>
+										<dd id="job-seeker-nationality" class="job-seeker-nationality message-job-details">...</dd>
 
-								<dt class="extra-functionality hide">Telephone</dt>
-								<dd id="job-seeker-telephone" class="extra-functionality hide">...</dd>
-								<dt class="extra-functionality hide">Mobile</dt>
-								<dd id="job-seeker-mobile" class="extra-functionality hide">...</dd>
-								<dt class="extra-functionality hide">eMail</dt>
-								<dd id="job-seeker-email" class="extra-functionality hide">...</dd>
-								<dt class="extra-functionality hide">CV</dt>
-								<dd id="job-seeker-cv" class="extra-functionality hide">...</dd>
-								<dt class="extra-functionality hide">References</dt>
-								<dd id="job-seeker-references" class="extra-functionality hide">...</dd>
-							</dl>
+										<dt class="extra-functionality hide">Telephone</dt>
+										<dd id="job-seeker-telephone" class="extra-functionality hide">...</dd>
+										<dt class="extra-functionality hide">Mobile</dt>
+										<dd id="job-seeker-mobile" class="extra-functionality hide">...</dd>
+										<dt class="extra-functionality hide">eMail</dt>
+										<dd id="job-seeker-email" class="extra-functionality hide">...</dd>
+										<dt class="extra-functionality hide">CV</dt>
+										<dd id="job-seeker-cv" class="extra-functionality hide">...</dd>
+										<dt class="extra-functionality hide">References</dt>
+										<dd id="job-seeker-references" class="extra-functionality hide">...</dd>
+									</dl>
+								</div>
+							</div>
 						</div>
 					</div>
 				</div>
@@ -87,19 +97,22 @@
 					<div class="col-lg-12">
 						<h1 class="page-header">Messages</h1>
 
-						<div class="table-responsive">
-							<table class="table table-hover" id="list-table">
-								<thead>
+						<div class="row">
+							<div class="col-sm-12 col-lg-10 col-centered">
+								<div class="table-responsive">
+									<table class="table table-hover" id="list-table">
+										<thead>
 
-								</thead>
-								<tbody>
+										</thead>
+										<tbody>
 
-								</tbody>
-							</table>
+										</tbody>
+									</table>
+								</div>
+							</div>
 						</div>
-
 						<div class="row send-message-functionality hide">
-							<div class="col-lg-12">
+							<div class="col-sm-12 col-lg-10 col-centered">
 								<div class="new-message">
 									<form id="send-messages" action="/api/messages">
 										<textarea class="form-control" rows="3" name="content" id="content-form" style="resize: none;"></textarea>

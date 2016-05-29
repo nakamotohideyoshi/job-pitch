@@ -478,11 +478,11 @@ footer {
     min-height: 100%;
     height: auto !important;
     height: 100%;
-    margin: 0 auto -221px; /* the bottom margin is the negative value of the footer's height */
+    margin: 0 auto -351px; /* the bottom margin is the negative value of the footer's height */
 }
 
 .mjp-footer, .push {
-    min-height: 121px; /* .push must be the same height as .footer */
+    min-height: 351px; /* .push must be the same height as .footer, original was 121px */
 }
 
 .page-container{

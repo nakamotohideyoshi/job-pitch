@@ -2,12 +2,18 @@ function renderApplication(template, application, $container){
 	var imageThumb = '';
 
 	var length = 60;
-	var latest_message = application.messages[application.messages.length - 1];
-	var messageShort = latest_message.content.substring(0, length);
 
-	var date = new Date(latest_message.created);
-	var messageTimeDate = date.getHours()+':'+_.padStart(date.getMinutes(),2,'0')
-			+' '+date.getDate()+'/'+date.getMonth()+'/'+date.getFullYear();
+	var messageShort = "There is not message for this application";
+	var messageTimeDate = "";
+	if( ! _.isEmpty(application.messages)){
+		var latest_message = application.messages[application.messages.length - 1];
+		messageShort = latest_message.content.substring(0, length);
+
+		var date = new Date(latest_message.created);
+		var messageTimeDate = date.getHours()+':'+_.padStart(date.getMinutes(),2,'0')
+				+' '+date.getDate()+'/'+date.getMonth()+'/'+date.getFullYear();
+	}
+
 
 	var video = '';
 	if( ! _.isEmpty(application.job_seeker.pitches[0])){
@@ -49,8 +55,8 @@ function renderApplications(userType, applications, $container){
 }
 
 
-function goToMessages(jobId){
-	window.location.href = "/messages/?job="+jobId+"&id="+;
+function goToMessages(query){
+	window.location.href = "/messages/"+serialize(query);
 }
 
 
@@ -60,7 +66,10 @@ function goToUserProfile(id){
 
 $(document).on('click','.go-to-messages',function(argument) {
 	$tr = $(this).parent();
-	goToMessages( $tr.data('job-id'), $tr.data('application-id') );
+	goToMessages({
+		job: $tr.data('job-id'),
+		id: $tr.data('application-id')
+	});
 });
 
 $(document).on('click','.go-to-details',function(argument) {

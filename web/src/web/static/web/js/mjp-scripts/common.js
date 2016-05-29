@@ -345,35 +345,27 @@ function viewPitch2(url, job_id, job_seeker){
 }
 
 function getHtmlForVideoOrThumbnail(pitches){
-	var urlVideo = '',
-		urlThumbnail = '';
+	var link = '';
+
+	var content = '<img src="/static/web/images/no_image_available.png" styles="width:160px;">';
 
 	$.each(pitches, function(index, pitch) {
-		if(_.isEmpty(urlVideo)){
-			if( _.hasIn(pitch,'video') && ! _.isEmpty(pitch.video)){
-				urlVideo = pitch.video;
-			}
+		if( _.hasIn(pitch,'video') && ! _.isEmpty(pitch.video)){
+			link = pitch.video;
+			content = '<video width="320" height="240" controls><source src="<%= url %>" type="video/mp4"></video>';
+			return false;
 		}
 
-		if(_.isEmpty(urlThumbnail)){
-			if( _.hasIn(pitch, 'thumbnail') && _.isEmpty(pitch.thumbnail)){
-				urlThumbnail = pitch.thumbnail;
-			}
+		if( _.hasIn(pitch, 'thumbnail') && ! _.isEmpty(pitch.thumbnail)){
+			link = pitch.thumbnail;
+			content = '<img src="<%= url %>">';
+			return false;
 		}
 	});
 
-	if( ! _.isEmpty(urlVideo)){
-		var template = _.template('<video width="320" height="240" controls><source src="<%= url %>" type="video/mp4"></video>');
+	var template = _.template(content);
 
-		return template({url: urlVideo});
-	}
-
-	if( ! _.isEmpty(urlThumbnail)){
-		var template = _.template('<img src="<%= url %>" style="width:320px;height:240px;">');
-
-		return template({url: urlVideo});
-	}
-	return '<video width="320" height="240" controls></video>';
+	return template({url: link});
 }
 
 function serialize(query){
@@ -390,7 +382,13 @@ function serialize(query){
 	return queryString;
 }
 
-
+function urlExists(url)
+{
+    var http = new XMLHttpRequest();
+    http.open('HEAD', url, false);
+    http.send();
+    return http.status!=404;
+}
 /* Site wide on-load functions */
 
 $(function() {

@@ -344,6 +344,53 @@ function viewPitch2(url, job_id, job_seeker){
 	$('#viewPitchModal').modal('show');
 }
 
+function getHtmlForVideoOrThumbnail(pitches){
+	var urlVideo = '',
+		urlThumbnail = '';
+
+	$.each(pitches, function(index, pitch) {
+		if(_.isEmpty(urlVideo)){
+			if( _.hasIn(pitch,'video') && ! _.isEmpty(pitch.video)){
+				urlVideo = pitch.video;
+			}
+		}
+
+		if(_.isEmpty(urlThumbnail)){
+			if( _.hasIn(pitch, 'thumbnail') && _.isEmpty(pitch.thumbnail)){
+				urlThumbnail = pitch.thumbnail;
+			}
+		}
+	});
+
+	if( ! _.isEmpty(urlVideo)){
+		var template = _.template('<video width="320" height="240" controls><source src="<%= url %>" type="video/mp4"></video>');
+
+		return template({url: urlVideo});
+	}
+
+	if( ! _.isEmpty(urlThumbnail)){
+		var template = _.template('<img src="<%= url %>" style="width:320px;height:240px;">');
+
+		return template({url: urlVideo});
+	}
+	return '<video width="320" height="240" controls></video>';
+}
+
+function serialize(query){
+	var queryString = '';
+	var connector = '?';
+
+	_.forIn(query,function(key, value) {
+		if( ! _.isEmpty(value)){
+			queryString = queryString + connector + key + '=' + value;
+			connector = '&';
+		}
+	});
+
+	return queryString;
+}
+
+
 /* Site wide on-load functions */
 
 $(function() {

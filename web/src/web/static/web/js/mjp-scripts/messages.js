@@ -94,8 +94,9 @@ $(function() {
 			$('#location-address-single').html(location.address);
 			$('#location-place-name-single').html(location.place_name);
 
-			if( ! _.isEmpty(jobSeeker.pitches[0])){
-				$('#job-seeker-pitch').html('<video width="240" height="180" controls><source src="'+jobSeeker.pitches[0].video+'" type="video/mp4"></video>');
+			var html = getHtmlForVideoOrThumbnail(jobSeeker.pitches);
+			if( ! _.isEmpty(html)){
+				$('#job-seeker-pitch').html(html);
 			}
 			$('#job-seeker-name').html(jobSeeker.first_name+' '+jobSeeker.last_name);
 			$('#job-seeker-description').html(jobSeeker.description);
@@ -116,7 +117,7 @@ $(function() {
 			$('#job-seeker-age').html(jobSeeker.age);
 			$('#job-seeker-nationality').html(jobSeeker.nationality);
 
-
+			// TODO: there should be a default fallback image when the business has no images.
 			if(job.images.length != 0){
 				$('.job-image-messages').attr('src', job.images[0].image);
 			}else if(location.images.length != 0){
@@ -190,13 +191,15 @@ $(function() {
 			query.application = application_id;
 			query.content = content;
 
+
 			$.post( "/api/messages/", query)
 			.done(function( data ) {
 				$('#content-form').val('');
-				location.reload();
+				// TODO: insert the new message into the page, rather than reloading
+				location.reload(); // TODO: Should only happen on success.
 
 			}).fail(function( data ) {
-				console.log( data.responseJSON );
+				console.log( data.responseJSON ); // TODO: Need user indication of message failure.
 			});
 		});
 	});

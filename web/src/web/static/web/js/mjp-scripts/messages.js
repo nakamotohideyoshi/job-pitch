@@ -1,3 +1,52 @@
+function renderMessages(messages, fileTemplate, context) {
+	$('#list-table tbody').html('');
+
+	var messageTemplatePromise = new Promise(function(resolve, reject) {
+		gettingTemplate(fileTemplate, resolve, reject);
+	})
+	.then(function(messageTemplate) {
+		var tbodyHtml = '';
+
+		for (var key in messages) {
+			var message = messages[key];
+			messageRead(message.id);
+			var length = 55;
+			var readText = '';
+			if(message.read){
+				readText  = ' - Message Read';
+			}
+
+			context.message = message;
+
+			var date = new Date(message.created);
+			context.messageTimeDate = date.getHours()+':'+_.padStart(date.getMinutes(),2,'0')
+					+' '+date.getDate()+'/'+date.getMonth()+'/'+date.getFullYear();
+
+			context.colSenderSize = '';
+			if(message.from_role == context.recruiter_role.id){
+				context.colSenderSize = 'col-sm-2';
+				context.sender = context.business.name;
+			}else{
+				context.sender = context.jobSeeker.first_name+' '+context.jobSeeker.last_name;
+
+				if(message.system){
+					context.sender = 'System';
+				}
+			}
+
+			tbodyHtml += messageTemplate(context);
+		}
+
+		if(tbodyHtml){
+			$('#list-table tbody').append(tbodyHtml);
+		}
+
+	}).catch(function(argument) {
+		console.log('an error');
+
+	});
+
+}
 
 $(function() {
 	// Run login check funtion with auto-redirect
@@ -141,45 +190,15 @@ $(function() {
 			});
 
 			if( ! _.isEmpty(messages)){
-				$('#list-table tbody').html('');
+				var context = {
+					jobSeeker: jobSeeker,
+					business: location.business_data,
+					colSenderSize: '',
+					recruiter_role: recruiter_role
+				};
 
-				var templateFile = CONST.PATH.PARTIALS+'messageRow.html';
-				$('<div>').load(templateFile,function(content){
-					var template = _.template(content);
-
-					for (var key in messages) {
-						var message = messages[key];
-						messageRead(message.id);
-						var length = 55;
-						var readText = '';
-						if(message.read){
-							readText  = ' - Message Read';
-						}
-
-						var context = {
-							jobSeeker: jobSeeker,
-							message: message,
-							sender: location.business_data.name,
-							colSenderSize: ''
-						};
-
-						var date = new Date(message.created);
-						context.messageTimeDate = date.getHours()+':'+_.padStart(date.getMinutes(),2,'0')
-								+' '+date.getDate()+'/'+date.getMonth()+'/'+date.getFullYear();
-
-						if(message.from_role == recruiter_role.id){
-							context.colSenderSize = 'col-sm-2';
-						}else{
-							context.sender = jobSeeker.first_name+' '+jobSeeker.last_name;
-
-							if(message.system){
-								context.sender = 'System';
-							}
-						}
-
-						$('#list-table tbody').append(template(context));
-					}
-				});
+				var fullPathTemplate = CONST.PATH.PARTIALS+'messageRow.html';
+				renderMessages(messages, fullPathTemplate, context);
 			}
 
 		}).fail(function( data ) {
@@ -189,6 +208,8 @@ $(function() {
 		//Form submit code
 		$('#send-messages').submit(function( event ) {
 			$('.btn-default').attr( "disabled", true );
+			$('#message-alert')
+			.html('');
 			event.preventDefault();
 
 			var content = $('#content-form').val();
@@ -200,11 +221,42 @@ $(function() {
 			$.post( "/api/messages/", query)
 			.done(function( data ) {
 				$('#content-form').val('');
-				// TODO: insert the new message into the page, rather than reloading
-				location.reload(); // TODO: Should only happen on success.
+
+				var job_id = QueryString.job;
+				if(job_id !== undefined && job_id !== ''){
+					query.job = job_id // Recruiter looking for applications of a job
+				}
+
+				$.get( "/api/applications/", query)
+				.done(function( applications ) {
+					var applicationId = QueryString.id * 1;
+
+					var index = _.findIndex(applications, ['id', applicationId]);
+					var application = applications[index];
+					var job = application.job_data;
+					var location = job.location_data;
+					var jobSeeker = application.job_seeker;
+					var messages = application.messages;
+
+					if( ! _.isEmpty(messages)){
+						var context = {
+							jobSeeker: jobSeeker,
+							business: location.business_data,
+							colSenderSize: '',
+							recruiter_role: recruiter_role
+						};
+
+						var fullPathTemplate = CONST.PATH.PARTIALS+'messageRow.html';
+						renderMessages(messages, fullPathTemplate, context);
+
+						$('.btn-default').attr( "disabled", false );
+						showAlert('#message-alert', 'success','Message was sent sucessfully.');
+					}
+				});
 
 			}).fail(function( data ) {
-				console.log( data.responseJSON ); // TODO: Need user indication of message failure.
+				$('.btn-default').attr( "disabled", false );
+				showAlert('#message-alert', 'danger', '<strong>Error: </strong>The message could not be sent.');
 			});
 		});
 	});

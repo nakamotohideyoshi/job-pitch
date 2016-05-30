@@ -95,9 +95,8 @@ $(function() {
 			$('#location-place-name-single').html(location.place_name);
 
 			var html = getHtmlForVideoOrThumbnail(jobSeeker.pitches);
-			if( ! _.isEmpty(html)){
-				$('#job-seeker-pitch').html(html);
-			}
+			$('#job-seeker-pitch').html(html);
+
 			$('#job-seeker-name').html(jobSeeker.first_name+' '+jobSeeker.last_name);
 			$('#job-seeker-description').html(jobSeeker.description);
 
@@ -117,14 +116,16 @@ $(function() {
 			$('#job-seeker-age').html(jobSeeker.age);
 			$('#job-seeker-nationality').html(jobSeeker.nationality);
 
-			// TODO: there should be a default fallback image when the business has no images.
+			var urlJobImage = null;
 			if(job.images.length != 0){
-				$('.job-image-messages').attr('src', job.images[0].image);
+				urlJobImage = job.images[0].image;
 			}else if(location.images.length != 0){
-				$('.job-image-messages').attr("src", location.images[0].image);
+				urlJobImage = location.images[0].image;
 			}else{
-				console.log(business.images[0].image);
-				$('.job-image-messages').attr("src", business.images[0].image);
+				urlJobImage = business.images[0].image;
+			}
+			if(urlJobImage && urlExists(urlJobImage)){
+				$('.job-image-messages').attr('src', urlJobImage);
 			}
 
 			var LatLng = {lat: location.latitude, lng: location.longitude};
@@ -139,43 +140,47 @@ $(function() {
 				title: location.name
 			});
 
-			var templateFile = CONST.PATH.PARTIALS+'messageRow.html';
-			$('<div>').load(templateFile,function(content){
-				var template = _.template(content);
+			if( ! _.isEmpty(messages)){
+				$('#list-table tbody').html('');
 
-				for (var key in messages) {
-					var message = messages[key];
-					messageRead(message.id);
-					var length = 55;
-					var readText = '';
-					if(message.read){
-						readText  = ' - Message Read';
-					}
+				var templateFile = CONST.PATH.PARTIALS+'messageRow.html';
+				$('<div>').load(templateFile,function(content){
+					var template = _.template(content);
 
-					var context = {
-						jobSeeker: jobSeeker,
-						message: message,
-						sender: location.business_data.name,
-						colSenderSize: ''
-					};
-
-					var date = new Date(message.created);
-					context.messageTimeDate = date.getHours()+':'+_.padStart(date.getMinutes(),2,'0')
-							+' '+date.getDate()+'/'+date.getMonth()+'/'+date.getFullYear();
-
-					if(message.from_role == recruiter_role.id){
-						context.colSenderSize = 'col-sm-2';
-					}else{
-						context.sender = jobSeeker.first_name+' '+jobSeeker.last_name;
-
-						if(message.system){
-							context.sender = 'System';
+					for (var key in messages) {
+						var message = messages[key];
+						messageRead(message.id);
+						var length = 55;
+						var readText = '';
+						if(message.read){
+							readText  = ' - Message Read';
 						}
-					}
 
-					$('#list-table tbody').append(template(context));
-				}
-			});
+						var context = {
+							jobSeeker: jobSeeker,
+							message: message,
+							sender: location.business_data.name,
+							colSenderSize: ''
+						};
+
+						var date = new Date(message.created);
+						context.messageTimeDate = date.getHours()+':'+_.padStart(date.getMinutes(),2,'0')
+								+' '+date.getDate()+'/'+date.getMonth()+'/'+date.getFullYear();
+
+						if(message.from_role == recruiter_role.id){
+							context.colSenderSize = 'col-sm-2';
+						}else{
+							context.sender = jobSeeker.first_name+' '+jobSeeker.last_name;
+
+							if(message.system){
+								context.sender = 'System';
+							}
+						}
+
+						$('#list-table tbody').append(template(context));
+					}
+				});
+			}
 
 		}).fail(function( data ) {
 			console.log( data );

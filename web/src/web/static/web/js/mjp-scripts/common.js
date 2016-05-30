@@ -214,6 +214,21 @@ function putManyAlerts(parentId, messages ){
 	}
 }
 
+function showAlert(selector, type, text){
+	var icon = 'glyphicon-ok';
+
+	if(type=='danger'){
+		icon = 'glyphicon-exclamation-sign';
+	}
+
+	$(selector)
+	.html('<div class="alert alert-'+type+'" role="alert">'
+		+'<span class="glyphicon '+icon+'" aria-hidden="true">&nbsp;</span>'
+		+ text
+		+'</div>')
+	.find('.alert').show().fadeOut(10000);
+}
+
 function fieldError(error,field){
 	$('.formFieldError').remove();
 	$('.formFieldErrorInField').removeClass('formFieldErrorInField');
@@ -389,6 +404,19 @@ function urlExists(url)
     http.send();
     return http.status!=404;
 }
+
+function gettingTemplate(fullPathTemplate, resolve, reject){
+		// Using dummy div for dynamic loading and promise API
+		$('<div>').load(fullPathTemplate, function(response, status, xhr){
+			if ( status == "error" ) {
+    		var msg = "Sorry but there was an error: " +xhr.status + " " + xhr.statusText;
+    		reject(msg);
+  		}
+
+			resolve(_.template(response));
+		});
+}
+
 /* Site wide on-load functions */
 
 $(function() {

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="9532" systemVersion="15D21" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="c1x-Uz-Rpv">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10116" systemVersion="15F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="c1x-Uz-Rpv">
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9530"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
         <capability name="Alignment constraints with different attributes" minToolsVersion="5.1"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
@@ -262,7 +262,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="947" y="1269"/>
+            <point key="canvasLocation" x="947" y="1257"/>
         </scene>
         <!--Create Profile-->
         <scene sceneID="gzx-OK-5OY">
@@ -579,7 +579,7 @@
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Connect" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dEz-7m-CGE">
                                                 <rect key="frame" x="126" y="391" width="65" height="21"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="6yS-vE-ymz">
@@ -601,7 +601,7 @@
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Remove" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="h0Q-QC-gpp">
                                                 <rect key="frame" x="411" y="391" width="62" height="21"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                         </subviews>
@@ -1657,6 +1657,18 @@
                                                     <outletCollection property="gestureRecognizers" destination="AO8-pV-1iX" appends="YES" id="lig-Pk-mxQ"/>
                                                 </connections>
                                             </imageView>
+                                            <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="O2F-f4-6uO">
+                                                <rect key="frame" x="282" y="237" width="37" height="37"/>
+                                            </activityIndicatorView>
+                                            <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="no recording" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ysV-dm-iWu">
+                                                <rect key="frame" x="252" y="245" width="97" height="21"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <imageView hidden="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" semanticContentAttribute="playback" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="play" translatesAutoresizingMaskIntoConstraints="NO" id="ACW-EH-Kde">
+                                                <rect key="frame" x="252" y="208" width="96" height="96"/>
+                                            </imageView>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="CRs-n6-UjE">
                                                 <rect key="frame" x="232" y="398" width="137" height="32"/>
                                                 <color key="backgroundColor" red="0.0" green="0.58823529409999997" blue="0.53333333329999999" alpha="1" colorSpace="calibratedRGB"/>
@@ -1674,30 +1686,52 @@
                                                     <action selector="recordPitch:" destination="KaQ-qh-VKT" eventType="touchUpInside" id="xMe-QF-dKs"/>
                                                 </connections>
                                             </button>
-                                            <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="O2F-f4-6uO">
-                                                <rect key="frame" x="282" y="237" width="37" height="37"/>
-                                            </activityIndicatorView>
-                                            <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="no recording" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ysV-dm-iWu">
-                                                <rect key="frame" x="252" y="245" width="97" height="21"/>
-                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                                <nil key="highlightedColor"/>
-                                            </label>
-                                            <imageView hidden="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" semanticContentAttribute="playback" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="play" translatesAutoresizingMaskIntoConstraints="NO" id="ACW-EH-Kde">
-                                                <rect key="frame" x="252" y="208" width="96" height="96"/>
-                                            </imageView>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="oQU-Hn-gbG">
+                                                <rect key="frame" x="75" y="398" width="64" height="32"/>
+                                                <color key="backgroundColor" red="0.0" green="0.58823529409999997" blue="0.53333333329999999" alpha="1" colorSpace="calibratedRGB"/>
+                                                <inset key="contentEdgeInsets" minX="7" minY="7" maxX="7" maxY="7"/>
+                                                <state key="normal" title="Upload">
+                                                    <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                                </state>
+                                                <userDefinedRuntimeAttributes>
+                                                    <userDefinedRuntimeAttribute type="boolean" keyPath="layer.masksToBounds" value="YES"/>
+                                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                                        <integer key="value" value="7"/>
+                                                    </userDefinedRuntimeAttribute>
+                                                </userDefinedRuntimeAttributes>
+                                            </button>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="sBE-Rj-QDL">
+                                                <rect key="frame" x="388" y="398" width="137" height="32"/>
+                                                <color key="backgroundColor" red="0.0" green="0.58823529409999997" blue="0.53333333329999999" alpha="1" colorSpace="calibratedRGB"/>
+                                                <inset key="contentEdgeInsets" minX="7" minY="7" maxX="7" maxY="7"/>
+                                                <state key="normal" title="Record New Pitch">
+                                                    <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                                </state>
+                                                <userDefinedRuntimeAttributes>
+                                                    <userDefinedRuntimeAttribute type="boolean" keyPath="layer.masksToBounds" value="YES"/>
+                                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                                        <integer key="value" value="7"/>
+                                                    </userDefinedRuntimeAttribute>
+                                                </userDefinedRuntimeAttributes>
+                                                <connections>
+                                                    <action selector="recordPitch:" destination="KaQ-qh-VKT" eventType="touchUpInside" id="Mya-bc-w1S"/>
+                                                </connections>
+                                            </button>
                                         </subviews>
                                         <constraints>
+                                            <constraint firstItem="sBE-Rj-QDL" firstAttribute="centerY" secondItem="CRs-n6-UjE" secondAttribute="centerY" id="06C-bH-i6t"/>
                                             <constraint firstItem="ACW-EH-Kde" firstAttribute="centerY" secondItem="Gls-FS-6cB" secondAttribute="centerY" id="0M7-kT-xh3"/>
                                             <constraint firstItem="Gls-FS-6cB" firstAttribute="centerX" secondItem="P4C-g8-IHW" secondAttribute="centerX" id="1dZ-ro-0fs"/>
                                             <constraint firstAttribute="trailing" secondItem="hIT-Ow-thQ" secondAttribute="trailing" constant="16" id="2OP-eA-gZw"/>
                                             <constraint firstItem="ysV-dm-iWu" firstAttribute="centerY" secondItem="Gls-FS-6cB" secondAttribute="centerY" id="8aj-da-ofh"/>
                                             <constraint firstAttribute="bottom" secondItem="CRs-n6-UjE" secondAttribute="bottom" constant="20" id="Dfy-gg-Io7"/>
+                                            <constraint firstItem="oQU-Hn-gbG" firstAttribute="leading" secondItem="Gls-FS-6cB" secondAttribute="leading" id="E4u-OO-bbh"/>
                                             <constraint firstItem="ysV-dm-iWu" firstAttribute="centerX" secondItem="Gls-FS-6cB" secondAttribute="centerX" id="Gvi-18-sEU"/>
                                             <constraint firstItem="Gls-FS-6cB" firstAttribute="width" secondItem="P4C-g8-IHW" secondAttribute="width" multiplier="0.75" id="HFa-EK-L8p"/>
                                             <constraint firstItem="ACW-EH-Kde" firstAttribute="centerX" secondItem="Gls-FS-6cB" secondAttribute="centerX" id="HT3-J8-1iC"/>
                                             <constraint firstItem="CRs-n6-UjE" firstAttribute="top" secondItem="Gls-FS-6cB" secondAttribute="bottom" constant="16" id="OYI-Fx-wqK"/>
                                             <constraint firstItem="O2F-f4-6uO" firstAttribute="centerY" secondItem="Gls-FS-6cB" secondAttribute="centerY" id="U7f-ka-8wC"/>
+                                            <constraint firstItem="sBE-Rj-QDL" firstAttribute="trailing" secondItem="Gls-FS-6cB" secondAttribute="trailing" id="VS1-QW-c0p"/>
                                             <constraint firstItem="CRs-n6-UjE" firstAttribute="centerX" secondItem="P4C-g8-IHW" secondAttribute="centerX" id="Yve-bi-iNi"/>
                                             <constraint firstItem="hIT-Ow-thQ" firstAttribute="leading" secondItem="BXr-yH-tHu" secondAttribute="leading" id="aY5-1y-5fg"/>
                                             <constraint firstItem="BXr-yH-tHu" firstAttribute="leading" secondItem="P4C-g8-IHW" secondAttribute="leading" constant="16" id="avV-Xf-CVh"/>
@@ -1705,6 +1739,7 @@
                                             <constraint firstItem="hIT-Ow-thQ" firstAttribute="top" secondItem="BXr-yH-tHu" secondAttribute="bottom" constant="8" id="gDa-e9-u8D"/>
                                             <constraint firstItem="BXr-yH-tHu" firstAttribute="top" secondItem="P4C-g8-IHW" secondAttribute="top" constant="16" id="jY7-0w-vF5"/>
                                             <constraint firstItem="Gls-FS-6cB" firstAttribute="top" secondItem="hIT-Ow-thQ" secondAttribute="bottom" constant="24" id="mTG-k8-dww"/>
+                                            <constraint firstItem="oQU-Hn-gbG" firstAttribute="centerY" secondItem="CRs-n6-UjE" secondAttribute="centerY" id="sme-0X-cMD"/>
                                         </constraints>
                                     </view>
                                 </subviews>
@@ -1741,6 +1776,8 @@
                         <outlet property="noRecording" destination="ysV-dm-iWu" id="jLH-Sb-AkP"/>
                         <outlet property="playOverlay" destination="ACW-EH-Kde" id="ixv-Ja-XEu"/>
                         <outlet property="recordButton" destination="CRs-n6-UjE" id="yAy-hp-hG7"/>
+                        <outlet property="recordButton1" destination="sBE-Rj-QDL" id="GMj-Xz-DuF"/>
+                        <outlet property="uploadButton" destination="oQU-Hn-gbG" id="ZfX-R4-ZcA"/>
                         <segue destination="2iG-mk-uiW" kind="show" identifier="play_video" id="F33-gd-75U"/>
                     </connections>
                 </viewController>
@@ -2706,7 +2743,7 @@
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Shortlisted only" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="03J-em-kbK">
                                                 <rect key="frame" x="415" y="13" width="120" height="21"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <view contentMode="scaleAspectFit" placeholderIntrinsicWidth="560" placeholderIntrinsicHeight="446" translatesAutoresizingMaskIntoConstraints="NO" id="ECS-rL-yVr" customClass="SwipeView">
@@ -2831,7 +2868,7 @@
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Connect" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="64a-vb-3Mq">
                                                 <rect key="frame" x="116" y="435" width="65" height="21"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="PFy-FF-gPk">
@@ -2854,7 +2891,7 @@
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Remove" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jSv-Rv-W3P">
                                                 <rect key="frame" x="421" y="435" width="62" height="21"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Yfq-dM-adK">
@@ -3186,11 +3223,11 @@
         <image name="play" width="96" height="96"/>
     </resources>
     <inferredMetricsTieBreakers>
+        <segue reference="ouc-Of-Rbe"/>
+        <segue reference="bLg-hp-djS"/>
+        <segue reference="F33-gd-75U"/>
         <segue reference="0vK-0A-u9q"/>
         <segue reference="XoM-Rr-ZjD"/>
         <segue reference="ZpE-yw-NGD"/>
-        <segue reference="sDv-ZU-ZHl"/>
-        <segue reference="DDY-hC-ukR"/>
-        <segue reference="ouc-Of-Rbe"/>
     </inferredMetricsTieBreakers>
 </document>

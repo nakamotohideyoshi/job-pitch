@@ -53,7 +53,7 @@
 
 - (NSArray *)getRequiredFields {
     if (!jobSeekerProfile.hidden) {
-        return @[@"firstName", @"lastName", @"description"];
+        return @[@"firstName", @"lastName", @"email", @"description"];
     } else {
         return @[];
     }

@@ -29,8 +29,8 @@
 {
     [[self appDelegate].api logout];
     [[self appDelegate] clearData];
-    username.text = @"j1";
-    password.text = @"admin1";
+    username.text = @"io1";
+    password.text = @"aaaaaa";
     password2.text = @"";
     [self clearErrors];
     [self showProgress:false];
@@ -128,7 +128,12 @@
         [self showProgress:true];
         [[self appDelegate].api registerWithUsername:username.text password1:password.text password2:password2.text success:^(User *user) {
             [[self appDelegate].api loginWithUsername:username.text password:password.text success:^(AuthToken *authToken) {
-                [self completeLoginWithUser:user];
+                [[self appDelegate].api getUser:^(User *user) {
+                    [self completeLoginWithUser:user];
+                } failure:^(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors) {
+                    [self handleErrors:errors message:message];
+                    [self showProgress:false];
+                }];
             } failure:^(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors) {
                 [self handleErrors:errors message:message];
                 [self showProgress:false];

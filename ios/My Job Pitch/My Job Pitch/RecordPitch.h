@@ -16,6 +16,9 @@
 @property (weak, nonatomic) IBOutlet UILabel *noRecording;
 @property (weak, nonatomic) IBOutlet UIImageView *playOverlay;
 
+@property (weak, nonatomic) IBOutlet UIButton *uploadButton;
+@property (weak, nonatomic) IBOutlet UIButton *recordButton1;
+
 - (IBAction)recordPitch:(id)sender;
 
 @end

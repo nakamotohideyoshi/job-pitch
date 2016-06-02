@@ -180,4 +180,5 @@
     <string name="references_available_on_request">References available on request</string>
     <string name="action_edit_business">Edit Company</string>
     <string name="action_edit_location">Edit Work Place</string>
+    <string name="apply">Apply</string>
 </resources>

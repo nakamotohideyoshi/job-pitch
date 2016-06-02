@@ -409,7 +409,7 @@ public class LoginActivity extends MJPProgressActivity implements LoaderCallback
                                     }
                                 } else if (mUser.isJobSeeker()) {
                                     // JobSeeker: goto job seeker screen
-                                    intent = new Intent(LoginActivity.this, JobSeekerActivity.class);
+                                    intent = new Intent(LoginActivity.this, JobSearchActivity.class);
                                 } else {
                                     // NO businesses or job seeker profile
                                     intent = new Intent(LoginActivity.this, CreateProfileActivity.class);

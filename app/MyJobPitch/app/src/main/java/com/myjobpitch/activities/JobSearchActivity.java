@@ -432,9 +432,6 @@ public class JobSearchActivity extends MJPProgressActionBarActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_edit_profile:
-                startActivity(new Intent(this, EditJobSeekerActivity.class));
-                return true;
-            case R.id.action_edit_job_profile:
                 editProfile();
                 return true;
             case R.id.action_messages:
@@ -583,10 +580,7 @@ public class JobSearchActivity extends MJPProgressActionBarActivity {
     }
 
     private void editProfile() {
-        Intent intent;
-        intent = new Intent(this, EditJobProfileActivity.class);
-        intent.putExtra("job_seeker_id", getApi().getUser().getJob_seeker());
-        startActivity(intent);
+        startActivity(new Intent(this, JobSeekerEditChoiceActivity.class));
     }
 
     private void activateProfile() {

@@ -161,7 +161,7 @@
             android:name=".activities.JobSeekerDetailsActivity"
             android:label="@string/job_seeker_details" />
         <activity
-            android:name=".activities.EditJobSeekerActivity"
+            android:name=".activities.JobSeekerEditChoiceActivity"
             android:label="@string/edit_profile"
             android:launchMode="singleTop"
             android:parentActivityName=".activities.JobSearchActivity">
@@ -170,13 +170,22 @@
                 android:value=".activities.JobSearchActivity" />
         </activity>
         <activity
+            android:name=".activities.EditJobSeekerActivity"
+            android:label="@string/edit_profile"
+            android:launchMode="singleTop"
+            android:parentActivityName=".activities.JobSeekerEditChoiceActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activities.JobSeekerEditChoiceActivity" />
+        </activity>
+        <activity
             android:name=".activities.EditJobProfileActivity"
             android:label="@string/edit_job_profile"
             android:launchMode="singleTop"
-            android:parentActivityName=".activities.JobSearchActivity">
+            android:parentActivityName=".activities.JobSeekerEditChoiceActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.JobSearchActivity" />
+                android:value=".activities.JobSeekerEditChoiceActivity" />
         </activity>
         <activity
             android:name=".activities.SelectPlaceActivity"

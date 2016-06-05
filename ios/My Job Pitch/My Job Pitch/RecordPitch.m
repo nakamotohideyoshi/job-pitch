@@ -7,6 +7,8 @@
 //
 
 #import "RecordPitch.h"
+#import <AWSS3/AWSS3.h>
+#import "Pitch.h"
 
 @import AVKit;
 @import AVFoundation;
@@ -150,6 +152,36 @@
     if (buttonIndex == 1 && [alertView.title isEqualToString:@"Confirm"]) {
         [self showCamera];
     }
+}
+- (IBAction)videoUpload:(id)sender {
+    
+    Pitch *pitch = [[Pitch alloc] init];
+       
+    
+    NSURL *fileURL = self.videoURL;
+    NSString *keyname = [NSString stringWithFormat:@"%@%@.%@.%@", @"http:ec2-52-31-145-95.eu-west-1.compute.amazonaws.com", @"", @"", [fileURL absoluteString]];
+    
+    AWSS3TransferUtility *transferUtility = [AWSS3TransferUtility defaultS3TransferUtility];
+    [[transferUtility uploadFile:fileURL
+                          bucket:@"mjp-ios-uploads"
+                             key:@"YourObjectKeyName"
+                     contentType:@"video/mp4"
+                      expression:nil
+                completionHander:nil] continueWithBlock:^id(AWSTask *task) {
+        if (task.error) {
+            NSLog(@"Error: %@", task.error);
+        }
+        if (task.exception) {
+            NSLog(@"Exception: %@", task.exception);
+        }
+        if (task.result) {
+            AWSS3TransferUtilityUploadTask *uploadTask = task.result;
+            // Do something with uploadTask.
+        }
+        
+        return nil;
+    }];
+        
 }
 
 @end

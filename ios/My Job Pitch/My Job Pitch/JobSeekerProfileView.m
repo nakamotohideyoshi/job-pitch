@@ -125,6 +125,7 @@
     jobSeeker.sexPublic = self.sexPublic.isOn;
     jobSeeker.nationalityPublic = self.nationalityPublic.isOn;
     jobSeeker.desc = self.descriptionView.text;
+    jobSeeker.hasReferences = self.hasReferences.isOn;
 }
 
 -(void)load:(JobSeeker*)jobSeeker
@@ -159,6 +160,7 @@
     self.sexPublic.on = jobSeeker.sexPublic;
     self.nationalityPublic.on = jobSeeker.nationalityPublic;
     self.descriptionView.text = jobSeeker.desc;
+    self.hasReferences.on = jobSeeker.hasReferences;
 }
 
 @end

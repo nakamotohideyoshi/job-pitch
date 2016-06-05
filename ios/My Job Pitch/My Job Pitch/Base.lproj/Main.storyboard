@@ -1699,6 +1699,9 @@
                                                         <integer key="value" value="7"/>
                                                     </userDefinedRuntimeAttribute>
                                                 </userDefinedRuntimeAttributes>
+                                                <connections>
+                                                    <action selector="videoUpload:" destination="KaQ-qh-VKT" eventType="touchUpInside" id="rvE-JR-c6F"/>
+                                                </connections>
                                             </button>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="sBE-Rj-QDL">
                                                 <rect key="frame" x="388" y="398" width="137" height="32"/>

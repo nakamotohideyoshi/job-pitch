@@ -1,5 +1,9 @@
-platform :ios, '7.0'
-pod 'RestKit', '~> 0.24.1'
-pod 'DownPicker'
-pod 'GoogleMaps'
-link_with 'My Job Pitch', 'My Job PitchTests'
+platform :ios, '8.0'
+use_frameworks!
+
+target 'MyApp' do
+  pod 'RestKit', '~> 0.24.1'
+	pod 'DownPicker'
+	pod 'GoogleMaps'
+	pod 'AWSS3'
+end

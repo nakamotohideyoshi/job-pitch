@@ -67,9 +67,9 @@
               requestArray:@[@"username", @"password1", @"password2"]
          requestDictionary:nil
       requestRelationships:nil
-             responseClass:[User class]
-             responseArray:@[@"id", @"username", @"businesses"]
-        responseDictionary:@{@"job_seeker": @"jobSeeker"}
+             responseClass:[AuthToken class]
+             responseArray:@[@"key"]
+        responseDictionary:nil
      responseRelationships:nil
                       path:@"/api-rest-auth/registration/"
                     method:RKRequestMethodPOST
@@ -106,6 +106,7 @@
                                           @"agePublic": @"age_public",
                                           @"sexPublic": @"sex_public",
                                           @"nationalityPublic": @"nationality_public",
+                                          @"hasReferences": @"has_references",
                                           };
     
     NSArray* pitchArray = @[@"id",
@@ -814,7 +815,7 @@
 - (void)registerWithUsername:(NSString*)username
                    password1:(NSString*)password1
                    password2:(NSString*)password2
-                     success:(void (^)(User *user))success
+                     success:(void (^)(AuthToken *authToken))success
                      failure:(void (^)(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors))failure;
 {
     [self clearCookies];

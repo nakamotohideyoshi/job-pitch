@@ -126,7 +126,7 @@
     NSLog(@"register");
     if ([self validate]) {
         [self showProgress:true];
-        [[self appDelegate].api registerWithUsername:username.text password1:password.text password2:password2.text success:^(User *user) {
+        [[self appDelegate].api registerWithUsername:username.text password1:password.text password2:password2.text success:^(AuthToken *authToken) {
             [[self appDelegate].api loginWithUsername:username.text password:password.text success:^(AuthToken *authToken) {
                 [[self appDelegate].api getUser:^(User *user) {
                     [self completeLoginWithUser:user];

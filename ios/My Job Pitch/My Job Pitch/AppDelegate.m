@@ -12,6 +12,9 @@
 #import "Nationality.h"
 #import "JobStatus.h"
 #import "Role.h"
+
+#import <AWSS3/AWSS3.h>
+
 @import GoogleMaps;
 
 @interface AppDelegate ()
@@ -25,7 +28,20 @@
     _api = [[API alloc] init];
     self.loaded = false;
     [GMSServices provideAPIKey:@"AIzaSyCeseQMdrlh9E5d7DHHHm4GvW7yd8C_sZk"];
+    
+    AWSCognitoCredentialsProvider *credentialsProvider = [[AWSCognitoCredentialsProvider alloc]
+                                                          initWithRegionType:AWSRegionUSEast1
+                                                          identityPoolId:@"eu-west-1:93ae6986-5938-4130-a3c0-f96c39d75be2"];
+    AWSServiceConfiguration *configuration = [[AWSServiceConfiguration alloc] initWithRegion:AWSRegionUSEast1 credentialsProvider:credentialsProvider];
+    AWSServiceManager.defaultServiceManager.defaultServiceConfiguration = configuration;
+    
     return YES;
+}
+
+- (void)application:(UIApplication *)application handleEventsForBackgroundURLSession:(NSString *)identifier
+  completionHandler:(void (^)())completionHandler {
+    /* Store the completion handler.*/
+    [AWSS3TransferUtility interceptApplication:application handleEventsForBackgroundURLSession:identifier completionHandler:completionHandler];
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application {
@@ -49,6 +65,7 @@
 - (void)applicationWillTerminate:(UIApplication *)application {
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
 }
+
 
 - (void)loadData:(void (^)())success
          failure:(void (^)(NSDictionary *errors, NSString *message))failure

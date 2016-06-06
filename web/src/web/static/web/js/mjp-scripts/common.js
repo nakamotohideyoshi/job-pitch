@@ -388,10 +388,10 @@ function serialize(query){
 	var connector = '?';
 
 	_.forIn(query,function(value, key) {
-		if( ! _.isEmpty(value)){
+		//if( ! _.isEmpty(value)){
 			queryString = queryString + connector + key + '=' + value;
 			connector = '&';
-		}
+		//}
 	});
 
 	return queryString;

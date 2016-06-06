@@ -43,7 +43,7 @@ var recBtn = document.querySelector('button.btn-js-start-pitch');
 var stopBtn = document.querySelector('button.btn-js-stop-pitch');
 
 var videoElement = document.querySelector('video');
-var dataElement = document.querySelector('#data');
+var dataElement = jQuery('#data');
 var downloadLink = document.querySelector('a#downloadLink');
 
 var successGetUserMedia = true;
@@ -79,7 +79,7 @@ function startRecording(stream) {
 	} else if (MediaRecorder.isTypeSupported('video/webm;codecs=vp8')) {
 		var options = {mimeType: 'video/webm;codecs=vp8'};
 	}
-	log('Using '+options.mimeType);
+		log('Using '+options.mimeType);
 		mediaRecorder = new MediaRecorder(stream, options);
 	}else{
 		log('Using default codecs for browser');
@@ -228,8 +228,10 @@ function onPauseResumeClicked(){
 }
 
 
-function log(message){
-	dataElement.innerHTML = dataElement.innerHTML+'<br>'+message ;
+function log(alertType,message){
+	dataElement.parent().removeClass().addClass('alert '+alertType);
+
+	dataElement.html(message);
 }
 
 

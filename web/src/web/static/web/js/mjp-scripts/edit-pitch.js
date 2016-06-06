@@ -175,7 +175,11 @@ function poolingTranscodeProcess(resolve){
 					}
 				} else {
 					if(!firstExecution){
-						log('sucess', 'End of Uploading');
+						log('success', 'End of Uploading');
+
+						setTimeout(function(){
+							location.reload();
+						}, 1000)
 					}
 
 					$('.btn-js-start-pitch').removeClass('disabled');

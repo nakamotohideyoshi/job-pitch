@@ -229,9 +229,13 @@ function onPauseResumeClicked(){
 
 
 function log(alertType, message){
-	dataElement.parent().removeClass().addClass('alert alert-'+alertType);
+	dataElement.parent()
+	.hide()
+	.removeClass()
+	.addClass('alert alert-'+alertType)
+	.show();
 
-	dataElement.html(message).fadeIn();
+	dataElement.fadeOut('fast').html(message).fadeIn('slow');
 }
 
 

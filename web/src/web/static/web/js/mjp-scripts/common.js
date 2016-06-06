@@ -387,7 +387,7 @@ function serialize(query){
 	var queryString = '';
 	var connector = '?';
 
-	_.forIn(query,function(key, value) {
+	_.forIn(query,function(value, key) {
 		if( ! _.isEmpty(value)){
 			queryString = queryString + connector + key + '=' + value;
 			connector = '&';

@@ -79,7 +79,7 @@ function startRecording(stream) {
 	} else if (MediaRecorder.isTypeSupported('video/webm;codecs=vp8')) {
 		var options = {mimeType: 'video/webm;codecs=vp8'};
 	}
-		log('info', Using '+options.mimeType);
+		log('info', 'Using '+options.mimeType);
 		mediaRecorder = new MediaRecorder(stream, options);
 	}else{
 		log('info', 'Using default codecs for browser');

@@ -20,8 +20,8 @@
         android:layout_height="wrap_content">
 
         <Button
-            android:id="@+id/search_button"
-            tools:text="@string/search"
+            android:id="@+id/edit_search_button"
+            tools:text="@string/search_settings"
             android:padding="15dp"
             android:textAllCaps="false"
             android:gravity="left|center_vertical"
@@ -29,22 +29,13 @@
             android:layout_height="match_parent" />
 
         <Button
-            android:id="@+id/applications_button"
-            tools:text="@string/applications"
+            android:id="@+id/edit_job_seeker_button"
+            tools:text="@string/edit_personal_details"
             android:padding="15dp"
             android:textAllCaps="false"
             android:gravity="left|center_vertical"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
-
-        <Button
-            android:id="@+id/connections_button"
-            tools:text="@string/connections"
-            android:padding="15dp"
-            android:textAllCaps="false"
-            android:gravity="left|center_vertical"
-            android:layout_width="match_parent"
-            android:layout_height="fill_parent" />
 
     </LinearLayout>
 </FrameLayout>

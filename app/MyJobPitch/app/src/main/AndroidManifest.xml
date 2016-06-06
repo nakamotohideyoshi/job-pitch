@@ -145,7 +145,7 @@
                 android:value=".activities.ConversationListActivity" />
         </activity>
         <activity
-            android:name=".activities.JobSeekerActivity"
+            android:name=".activities.JobSearchActivity"
             android:label="@string/my_jobs"
             android:launchMode="singleTop"
             android:parentActivityName=".activities.LoginActivity"
@@ -161,22 +161,31 @@
             android:name=".activities.JobSeekerDetailsActivity"
             android:label="@string/job_seeker_details" />
         <activity
+            android:name=".activities.JobSeekerEditChoiceActivity"
+            android:label="@string/edit_profile"
+            android:launchMode="singleTop"
+            android:parentActivityName=".activities.JobSearchActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activities.JobSearchActivity" />
+        </activity>
+        <activity
             android:name=".activities.EditJobSeekerActivity"
             android:label="@string/edit_profile"
             android:launchMode="singleTop"
-            android:parentActivityName=".activities.JobSeekerActivity">
+            android:parentActivityName=".activities.JobSeekerEditChoiceActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.JobSeekerActivity" />
+                android:value=".activities.JobSeekerEditChoiceActivity" />
         </activity>
         <activity
             android:name=".activities.EditJobProfileActivity"
             android:label="@string/edit_job_profile"
             android:launchMode="singleTop"
-            android:parentActivityName=".activities.JobSeekerActivity">
+            android:parentActivityName=".activities.JobSeekerEditChoiceActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.JobSeekerActivity" />
+                android:value=".activities.JobSeekerEditChoiceActivity" />
         </activity>
         <activity
             android:name=".activities.SelectPlaceActivity"
@@ -185,10 +194,10 @@
         <activity
             android:name=".activities.RecordPitchActivity"
             android:label="@string/record_pitch"
-            android:parentActivityName=".activities.JobSeekerActivity">
+            android:parentActivityName=".activities.JobSearchActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.JobSeekerActivity" />
+                android:value=".activities.JobSearchActivity" />
         </activity>
         <activity
             android:name=".activities.CameraActivity"

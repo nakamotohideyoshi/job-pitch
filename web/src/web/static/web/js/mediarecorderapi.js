@@ -68,7 +68,7 @@ var chunks = [];
 var count = 0;
 
 function startRecording(stream) {
-	log('Start recording...');
+	log('info', Start recording...');
 	if (typeof MediaRecorder.isTypeSupported == 'function')
 	{
 		/*
@@ -79,10 +79,10 @@ function startRecording(stream) {
 	} else if (MediaRecorder.isTypeSupported('video/webm;codecs=vp8')) {
 		var options = {mimeType: 'video/webm;codecs=vp8'};
 	}
-		log('Using '+options.mimeType);
+		log('info', Using '+options.mimeType);
 		mediaRecorder = new MediaRecorder(stream, options);
 	}else{
-		log('Using default codecs for browser');
+		log('info', 'Using default codecs for browser');
 		mediaRecorder = new MediaRecorder(stream);
 	}
 
@@ -104,17 +104,17 @@ function startRecording(stream) {
 	};
 
 	mediaRecorder.onerror = function(e){
-		log('Error: ' + e);
+		log('error', 'Error: ' + e);
 		console.log('Error: ', e);
 	};
 
 
 	mediaRecorder.onstart = function(){
-		log('Started & state = ' + mediaRecorder.state);
+		log('info', 'Started & state = ' + mediaRecorder.state);
 	};
 
 	mediaRecorder.onstop = function(){
-		log('Stopped  & state = ' + mediaRecorder.state);
+		log('info', 'Stopped  & state = ' + mediaRecorder.state);
 
 		var contentType = "video/webm";
 
@@ -155,15 +155,15 @@ function startRecording(stream) {
 	}
 
 	mediaRecorder.onpause = function(){
-		log('Paused & state = ' + mediaRecorder.state);
+		log('info', 'Paused & state = ' + mediaRecorder.state);
 	}
 
 	mediaRecorder.onresume = function(){
-		log('Resumed  & state = ' + mediaRecorder.state);
+		log('info', 'Resumed  & state = ' + mediaRecorder.state);
 	}
 
 	mediaRecorder.onwarning = function(e){
-		log('Warning: ' + e);
+		log('warning', 'Warning: ' + e);
 	};
 }
 
@@ -228,8 +228,8 @@ function onPauseResumeClicked(){
 }
 
 
-function log(alertType,message){
-	dataElement.parent().removeClass().addClass('alert '+alertType);
+function log(alertType, message){
+	dataElement.parent().removeClass().addClass('alert alert-'+alertType);
 
 	dataElement.html(message);
 }

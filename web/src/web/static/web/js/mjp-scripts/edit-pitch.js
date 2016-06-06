@@ -131,7 +131,7 @@ function getNewPitchMetaData(callback) {
 
 
 function putIntoS3Bucket(pitch, object){
-	log('Start uploading ...');
+	log('info', 'Start uploading ...');
 
 	object.Key = window.location.origin.replace('//','')
 	+ '/' + pitch.token
@@ -171,11 +171,11 @@ function poolingTranscodeProcess(resolve){
 				if(thereIsANullPitch){ // Uploaded already
 					if(firstExecution){
 						$('.btn-js-start-pitch').addClass('disabled');
-						log('Continues with uploading ...');
+						log('info', 'Continues with uploading ...');
 					}
 				} else {
 					if(!firstExecution){
-						log('End of Uploading');
+						log('sucess', 'End of Uploading');
 					}
 
 					$('.btn-js-start-pitch').removeClass('disabled');

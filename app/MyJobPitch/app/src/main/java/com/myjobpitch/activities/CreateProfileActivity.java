@@ -202,7 +202,7 @@ public class CreateProfileActivity extends MJPProgressActionBarActivity {
                     CreateProfileActivity.this.jobSeeker = jobSeeker;
                     getApi().getUser().setJob_seeker(jobSeeker.getId());
 
-                    Intent intent = new Intent(CreateProfileActivity.this, JobSeekerActivity.class);
+                    Intent intent = new Intent(CreateProfileActivity.this, JobSearchActivity.class);
                     intent.putExtra("from_login", true);
                     startActivity(intent);
                 }

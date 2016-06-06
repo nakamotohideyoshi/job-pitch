@@ -43,8 +43,8 @@ import com.myjobpitch.tasks.jobseeker.ReadUserJobSeekerTask;
 import java.util.ArrayList;
 import java.util.List;
 
-public class JobSeekerActivity extends MJPProgressActionBarActivity {
-    public static final String TAG = "JobSeekerActivity";
+public class JobSearchActivity extends MJPProgressActionBarActivity {
+    public static final String TAG = "JobSearchActivity";
 
     private SwipeFlingAdapterView.OnItemClickListener onItemClickListener;
     private SwipeFlingAdapterView.onFlingListener onFlingListener;
@@ -83,14 +83,14 @@ public class JobSeekerActivity extends MJPProgressActionBarActivity {
     class JobAdapter extends CachingArrayAdapter<Job> {
 
         public JobAdapter(List<Job> list) {
-            super(JobSeekerActivity.this, R.layout.list_item, list);
+            super(JobSearchActivity.this, R.layout.list_item, list);
         }
 
         @Override
         public View createView(int position, View convertView, ViewGroup parent, Job job) {
             Log.d("JobAdapter", "getView(" + job.getTitle() + ")");
 
-            LayoutInflater inflater = (LayoutInflater) JobSeekerActivity.this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            LayoutInflater inflater = (LayoutInflater) JobSearchActivity.this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             View cardView = inflater.inflate(R.layout.card_job, parent, false);
 
             TextView titleView = (TextView) cardView.findViewById(R.id.job_title);
@@ -124,7 +124,7 @@ public class JobSeekerActivity extends MJPProgressActionBarActivity {
                 image = job.getLocation_data().getBusiness_data().getImages().get(0);
             if (image != null) {
                 Uri uri = Uri.parse(image.getThumbnail());
-                new DownloadImageTask(JobSeekerActivity.this, imageView, progress).executeOnExecutor(DownloadImageTask.executor, uri);
+                new DownloadImageTask(JobSearchActivity.this, imageView, progress).executeOnExecutor(DownloadImageTask.executor, uri);
             } else {
                 progress.setVisibility(View.INVISIBLE);
                 noImageView.setVisibility(View.VISIBLE);
@@ -144,7 +144,7 @@ public class JobSeekerActivity extends MJPProgressActionBarActivity {
             }
         });
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_job_seeker);
+        setContentView(R.layout.activity_job_search);
 
         mJobSeekerView = findViewById(R.id.job_seeker_main);
         mProgressView = findViewById(R.id.progress);
@@ -174,7 +174,7 @@ public class JobSeekerActivity extends MJPProgressActionBarActivity {
                     String name = job.getTitle();
                     String message = getString(R.string.remove_job_message, name);
 
-                    AlertDialog.Builder builder = new AlertDialog.Builder(JobSeekerActivity.this);
+                    AlertDialog.Builder builder = new AlertDialog.Builder(JobSearchActivity.this);
                     builder.setMessage(message)
                             .setCancelable(false)
                             .setPositiveButton(getString(R.string.remove), new DialogInterface.OnClickListener() {
@@ -301,7 +301,7 @@ public class JobSeekerActivity extends MJPProgressActionBarActivity {
             @Override
             public void onItemClicked(int itemPosition, Object dataObject) {
                 Job job = jobs.get(0);
-                Intent intent = new Intent(JobSeekerActivity.this, JobDetailsActivity.class);
+                Intent intent = new Intent(JobSearchActivity.this, JobDetailsActivity.class);
 
                 ObjectMapper mapper = new ObjectMapper();
                 try {
@@ -360,14 +360,14 @@ public class JobSeekerActivity extends MJPProgressActionBarActivity {
 
             @Override
             public void onError(JsonNode errors) {
-                Toast toast = Toast.makeText(JobSeekerActivity.this, "Error loading job seeker", Toast.LENGTH_LONG);
+                Toast toast = Toast.makeText(JobSearchActivity.this, "Error loading job seeker", Toast.LENGTH_LONG);
                 toast.show();
                 finish();
             }
 
             @Override
             public void onConnectionError() {
-                Toast toast = Toast.makeText(JobSeekerActivity.this, "Connection Error: Please check your internet connection", Toast.LENGTH_LONG);
+                Toast toast = Toast.makeText(JobSearchActivity.this, "Connection Error: Please check your internet connection", Toast.LENGTH_LONG);
                 toast.show();
                 finish();
             }
@@ -432,9 +432,6 @@ public class JobSeekerActivity extends MJPProgressActionBarActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_edit_profile:
-                startActivity(new Intent(this, EditJobSeekerActivity.class));
-                return true;
-            case R.id.action_edit_job_profile:
                 editProfile();
                 return true;
             case R.id.action_messages:
@@ -496,9 +493,9 @@ public class JobSeekerActivity extends MJPProgressActionBarActivity {
     private void loadData(boolean clearDismissed, final boolean append, boolean cancel, boolean background) {
         synchronized (loadingLock) {
             if (loadingTask != null) {
-                Log.d("JobSeekerActivity", "Task already running");
+                Log.d(TAG, "Task already running");
                 if (cancel) {
-                    Log.d("JobSeekerActivity", "Cancelling running loading task");
+                    Log.d(TAG, "Cancelling running loading task");
                     loadingTask.cancel(false);
                     loadingTask = null;
                 } else
@@ -508,7 +505,7 @@ public class JobSeekerActivity extends MJPProgressActionBarActivity {
                 showProgress(true);
             List<Integer> exclude = new ArrayList();
             if (clearDismissed) {
-                Log.d("JobSeekerActivity", "Resetting dismissed");
+                Log.d(TAG, "Resetting dismissed");
                 dismissed.clear();
             } else {
                 // Exclude jobs that have been dismissed, or are
@@ -536,7 +533,7 @@ public class JobSeekerActivity extends MJPProgressActionBarActivity {
                     synchronized (loadingLock) {
                         Log.d(TAG, "Error loading jobs");
                         loadingTask = null;
-                        Toast toast = Toast.makeText(JobSeekerActivity.this, "Error loading jobs", Toast.LENGTH_LONG);
+                        Toast toast = Toast.makeText(JobSearchActivity.this, "Error loading jobs", Toast.LENGTH_LONG);
                         toast.show();
                         finish();
                     }
@@ -546,7 +543,7 @@ public class JobSeekerActivity extends MJPProgressActionBarActivity {
                 public void onConnectionError() {
                     synchronized (loadingLock) {
                         loadingTask = null;
-                        Toast toast = Toast.makeText(JobSeekerActivity.this, "Connection Error: Please check your internet connection", Toast.LENGTH_LONG);
+                        Toast toast = Toast.makeText(JobSearchActivity.this, "Connection Error: Please check your internet connection", Toast.LENGTH_LONG);
                         toast.show();
                         finish();
                     }
@@ -583,10 +580,7 @@ public class JobSeekerActivity extends MJPProgressActionBarActivity {
     }
 
     private void editProfile() {
-        Intent intent;
-        intent = new Intent(this, EditJobProfileActivity.class);
-        intent.putExtra("job_seeker_id", getApi().getUser().getJob_seeker());
-        startActivity(intent);
+        startActivity(new Intent(this, JobSeekerEditChoiceActivity.class));
     }
 
     private void activateProfile() {
@@ -601,14 +595,14 @@ public class JobSeekerActivity extends MJPProgressActionBarActivity {
 
             @Override
             public void onError(JsonNode errors) {
-                Toast toast = Toast.makeText(JobSeekerActivity.this, "Error loading job seeker", Toast.LENGTH_LONG);
+                Toast toast = Toast.makeText(JobSearchActivity.this, "Error loading job seeker", Toast.LENGTH_LONG);
                 toast.show();
                 finish();
             }
 
             @Override
             public void onConnectionError() {
-                Toast toast = Toast.makeText(JobSeekerActivity.this, "Connection Error: Please check your internet connection", Toast.LENGTH_LONG);
+                Toast toast = Toast.makeText(JobSearchActivity.this, "Connection Error: Please check your internet connection", Toast.LENGTH_LONG);
                 toast.show();
                 finish();
             }
@@ -625,7 +619,7 @@ public class JobSeekerActivity extends MJPProgressActionBarActivity {
     }
 
     private void recordPitch() {
-        Log.d("JobSeekerActivity", "recordPitch()");
+        Log.d(TAG, "recordPitch()");
         Intent intent = new Intent(this, RecordPitchActivity.class);
         startActivity(intent);
     }

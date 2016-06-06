@@ -180,4 +180,9 @@
     <string name="references_available_on_request">References available on request</string>
     <string name="action_edit_business">Edit Company</string>
     <string name="action_edit_location">Edit Work Place</string>
+    <string name="apply">Apply</string>
+    <string name="search_settings">Job Match Profile</string>
+    <string name="search_settings_description">Edit job matching preferences</string>
+    <string name="edit_personal_details">Personal Details</string>
+    <string name="edit_personal_details_description">Edit your personal profile</string>
 </resources>

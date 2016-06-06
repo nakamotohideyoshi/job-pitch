@@ -66,7 +66,7 @@ public class EditJobProfileActivity extends MJPProgressActionBarActivity {
                 Log.e("EditJobProfileActivity", "Error", e);
             }
         } else {
-            ReadJobSeekerTask mReadJobSeekerTask = new ReadJobSeekerTask(getApi(), getIntent().getIntExtra("job_seeker_id", -1));
+            ReadJobSeekerTask mReadJobSeekerTask = new ReadJobSeekerTask(getApi(), getApi().getUser().getJob_seeker());
             mReadJobSeekerTask.addListener(new CreateReadUpdateAPITaskListener<JobSeeker>() {
                 @Override
                 public void onSuccess(JobSeeker result) {

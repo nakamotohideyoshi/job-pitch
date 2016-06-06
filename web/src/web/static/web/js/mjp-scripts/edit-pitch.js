@@ -45,7 +45,7 @@ $(document).ready(function() {
 		$('#pitchVideoCheck video').html('');
 
 		if(onBtnRecordClicked()){
-			startRecordingTimer(19, $('.btn-js-stop-pitch'), stopRecordingProcess);
+			startRecordingTimer(29, $('.btn-js-stop-pitch'), stopRecordingProcess);
 		};
 	});
 

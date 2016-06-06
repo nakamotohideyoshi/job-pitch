@@ -76,7 +76,7 @@ function renderVideoContainer(pitch) {
 
 		videoSource = '<source src="'+pitch.video+'" type="'+videoType+'">';
 
-		var htmlVideo = '<video width="320" height="240" controls autoplay>'+videoSource+'</video><br>';
+		var htmlVideo = '<video width="320" height="240" controls>'+videoSource+'</video><br>';
 		$('#pitchVideoCheck').html(htmlVideo);
 	}
 }

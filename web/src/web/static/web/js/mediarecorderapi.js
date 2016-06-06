@@ -68,7 +68,7 @@ var chunks = [];
 var count = 0;
 
 function startRecording(stream) {
-	log('info', Start recording...');
+	log('info', 'Start recording...');
 	if (typeof MediaRecorder.isTypeSupported == 'function')
 	{
 		/*
@@ -231,7 +231,7 @@ function onPauseResumeClicked(){
 function log(alertType, message){
 	dataElement.parent().removeClass().addClass('alert alert-'+alertType);
 
-	dataElement.html(message);
+	dataElement.html(message).fadeIn();
 }
 
 

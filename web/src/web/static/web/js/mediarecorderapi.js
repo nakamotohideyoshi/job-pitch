@@ -265,12 +265,16 @@ function log(alertType, message){
 		return;
 	}
 
+	var glyphicon = 'glyphicon glyphicon-refresh glyphicon-refresh-animate';
+
 	if(alertType=='success'){
-		$parent
-		.find('.glyphicon')
-		.removeClass('glyphicon-refresh glyphicon-refresh-animate')
-		.addClass('glyphicon-ok');
+		glyphicon = 'glyphicon glyphicon-ok';
 	}
+
+	$parent
+		.find('.glyphicon')
+		.removeClass()
+		.addClass(glyphicon);
 
 	dataElement.parent()
 	.hide()

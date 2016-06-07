@@ -75,6 +75,7 @@ $(document).ready(function() {
 		//bucket.upload(params, function (err, data) {
 		//	console.log = err ? 'ERROR!' : 'SAVED.';
 		//});
+		uploadBtn.disabled = true;
 		videoElement.controls= false;
 
 		if(rawMediaRecorded != undefined && rawMediaRecorded){
@@ -105,6 +106,8 @@ function renderVideoContainer(pitch) {
 
 function startRecordingTimer(duration, $display, callback) {
 	var timer = duration, minutes, seconds;
+
+	clearInterval(poolingInterval); // Clear any existent pooling process
 
 	recordingTimer = setInterval(function () {
 		minutes = parseInt(timer / 60, 10);
@@ -187,7 +190,7 @@ function poolingTranscodeProcess(resolve){
 
 				if(thereIsANullPitch){ // Uploaded already
 					if(firstExecution){
-						$('.btn-js-start-pitch').addClass('disabled');
+						//$('.btn-js-start-pitch').addClass('disabled');
 						log('info', 'Transcoding a previous recorded video ...');
 					}
 				} else {
@@ -200,6 +203,7 @@ function poolingTranscodeProcess(resolve){
 					}
 
 					$('.btn-js-start-pitch').removeClass('disabled');
+					uploadBtn.disabled = true;
 					clearInterval(poolingInterval);
 					resolve(pitches);
 				}

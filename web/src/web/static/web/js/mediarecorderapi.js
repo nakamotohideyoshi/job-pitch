@@ -48,7 +48,7 @@ var downloadLink = document.querySelector('a#downloadLink');
 var successGetUserMedia = true;
 var rawMediaRecorded = false;
 
-var videoElements;
+var videoElement;
 
 function errorCallback(error){
 	console.log('navigator.getUserMedia error: ', error);

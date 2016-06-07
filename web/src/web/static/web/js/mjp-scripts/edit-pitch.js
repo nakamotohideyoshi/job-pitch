@@ -21,7 +21,7 @@ $(document).ready(function() {
 		actualPitch = jobSeeker[0].pitches[0];
 
 		var html = getHtmlForVideoOrThumbnail(jobSeeker[0].pitches);
-		$('#job-seeker-pitch').html(html);
+		$('#pitchVideoCheck').html(html);
 
 		var poolingPromise = new Promise(function(resolve,reject){
 			poolingTranscodeProcess(resolve);
@@ -29,9 +29,9 @@ $(document).ready(function() {
 		.then(function(pitches){
 			var html = getHtmlForVideoOrThumbnail(pitches);
 
-			$('#job-seeker-pitch').html(html);
+			$('#pitchVideoCheck').html(html);
 
-			var videoLoading = document.querySelector('video#viewing-container');
+			var videoLoading = document.querySelectorById('#viewing-container');
 			log('info','Loading...');
 
 			var intervalVideoLoading = setInterval(function(argument) {

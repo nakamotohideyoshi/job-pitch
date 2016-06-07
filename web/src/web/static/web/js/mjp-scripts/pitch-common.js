@@ -56,8 +56,8 @@ function poolingTranscodeProcess(resolve){
 						}, 1000);
 					}
 
-					$('.btn-js-start-pitch').removeClass('disabled');
-					$('.btn-js-upload-pitch').addClass('disabled');
+					$('.btn-js-start-pitch').attr('disabled', false);
+					$('.btn-js-upload-pitch').attr('disabled', false);
 
 					clearInterval(poolingInterval);
 					resolve(pitches);

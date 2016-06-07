@@ -405,6 +405,38 @@ function urlExists(url)
   return http.status!=404;
 }
 
+function log(alertType, message){
+	var $dataElement = $('#data');
+	var $parent = $dataElement.parent();
+	if(alertType=='hide'){
+		$parent.hide();
+
+		return;
+	}
+
+	var glyphicon = 'glyphicon glyphicon-refresh glyphicon-refresh-animate';
+
+	if(alertType=='success'){
+		glyphicon = 'glyphicon glyphicon-ok';
+	}
+
+	$parent
+		.find('.glyphicon')
+		.removeClass()
+		.addClass(glyphicon);
+
+	$parent
+		.hide()
+		.removeClass()
+		.addClass('alert alert-'+alertType)
+		.show();
+
+	$dataElement
+		.fadeOut('fast')
+		.html(message)
+		.fadeIn('slow');
+}
+
 function gettingTemplate(fullPathTemplate, resolve, reject){
 		// Using dummy div for dynamic loading and promise API
 		$('<div>').load(fullPathTemplate, function(response, status, xhr){

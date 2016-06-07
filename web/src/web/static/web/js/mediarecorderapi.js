@@ -41,7 +41,7 @@ if(getBrowser() == "Chrome"){
 var recBtn = document.querySelector('button.btn-js-start-pitch');
 //var pauseResBtn = document.querySelector('button#pauseRes');
 var stopBtn = document.querySelector('button.btn-js-stop-pitch');
-var uploadBtn = document.querySelector('button.btn-js-upload-pitch');
+var $uploadBtn = $('button.btn-js-upload-pitch');
 
 var dataElement = jQuery('#data');
 var downloadLink = document.querySelector('a#downloadLink');
@@ -211,7 +211,7 @@ function onBtnRecordClicked (){
 				recBtn.disabled = true;
 				//	    pauseResBtn.disabled = false;
 				stopBtn.disabled = false;
-				uploadBtn.disabled = true;
+				$uploadBtn.addClass('disabled');
 			}
 
 			success = successGetUserMedia;
@@ -228,7 +228,7 @@ function onBtnStopClicked(){
 	recBtn.disabled = false;
 //	pauseResBtn.disabled = true;
 	stopBtn.disabled = true;
-	uploadBtn.disabled = false;
+	$uploadBtn.removeClass('disabled');
 }
 
 function onPauseResumeClicked(){
@@ -255,36 +255,6 @@ function onPauseResumeClicked(){
 	//pauseResBtn.disabled = false;
 
 }
-
-
-function log(alertType, message){
-	var $parent = dataElement.parent();
-	if(alertType=='hide'){
-		$parent.hide();
-
-		return;
-	}
-
-	var glyphicon = 'glyphicon glyphicon-refresh glyphicon-refresh-animate';
-
-	if(alertType=='success'){
-		glyphicon = 'glyphicon glyphicon-ok';
-	}
-
-	$parent
-		.find('.glyphicon')
-		.removeClass()
-		.addClass(glyphicon);
-
-	dataElement.parent()
-	.hide()
-	.removeClass()
-	.addClass('alert alert-'+alertType)
-	.show();
-
-	dataElement.fadeOut('fast').html(message).fadeIn('slow');
-}
-
 
 
 //browser ID

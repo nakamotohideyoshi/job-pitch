@@ -14,45 +14,8 @@ var actualPitch = null;
 var job_seeker_id = 0;
 
 $(document).ready(function() {
-	$.get( "/api/job-seekers/", { csrftoken: getCookie('csrftoken') })
-	.done(function( jobSeeker ) {
-		job_seeker_id = jobSeeker[0].id;
 
-		actualPitch = jobSeeker[0].pitches[0];
-
-		log('info','Looking for a pitch...');
-		//var html = getHtmlForVideoOrThumbnail(jobSeeker[0].pitches);
-		//$('#pitchVideoCheck').html(html);
-
-		var poolingPromise = new Promise(function(resolve,reject){
-			poolingTranscodeProcess(resolve);
-		})
-		.then(function(pitches){
-			var html = getHtmlForVideoOrThumbnail(pitches);
-
-			$('#pitchVideoCheck').html(html);
-
-			var videoLoading = document.getElementById('viewing-container');
-			if(videoLoading != undefined && videoLoading.readyState !== 4) {// Video is not ready to play
-				log('info','Loading...');
-
-				var intervalVideoLoading = setInterval(function(argument) {
-					if(videoLoading.readyState === 4){
-						log('hide');
-						clearInterval(intervalVideoLoading);
-					};
-				},2000);
-			}
-		});
-	});
-
-
-	$.get( "/api-rest-auth/user/", { token: getCookie('key') ,csrftoken: getCookie('csrftoken') })
-	.done(function( data ) {
-		job_seeker_id = data.job_seeker;
-	});
-
-
+	checkIfThereIsApitch();
 
 	$('.btn-js-start-pitch').click(function(e) {
 		// prepare video container;
@@ -133,7 +96,7 @@ function stopRecordingProcess($display){
 
 	onBtnStopClicked();
 
-	log('success', 'Video is ready for uploading.')
+	log('success', 'Video is ready for uploading.');
 }
 
 
@@ -167,50 +130,3 @@ function putIntoS3Bucket(pitch, object){
 		console.log(err ? 'ERROR!' : 'SAVED.');
 	});
 }
-
-
-function poolingTranscodeProcess(resolve){
-	var firstExecution = true;
-
-	poolingInterval = setInterval(function(){
-		$.ajax({
-			url: "/api/pitches/",
-			type: 'GET',
-			cache: false
-		}).done(function( pitches ) {
-			if(pitches !== undefined && pitches.length > 0){
-				var thereIsANullPitch = false;
-
-				pitches.forEach(function(pitch) {
-					if(pitch.video == undefined || pitch.video == null || !pitch.video){
-						thereIsANullPitch = true;
-						return false; // There is one
-					}
-				});
-
-				if(thereIsANullPitch){ // Uploaded already
-					if(firstExecution){
-						//$('.btn-js-start-pitch').addClass('disabled');
-						log('info', 'Transcoding a previous recorded video ...');
-					}
-				} else {
-					if(!firstExecution){
-						log('success', 'End of Uploading');
-
-						setTimeout(function(){
-							location.reload();
-						}, 1000)
-					}
-
-					$('.btn-js-start-pitch').removeClass('disabled');
-					uploadBtn.disabled = true;
-					clearInterval(poolingInterval);
-					resolve(pitches);
-				}
-
-				firstExecution = false;
-			}
-		});
-	},3000);
-}
-

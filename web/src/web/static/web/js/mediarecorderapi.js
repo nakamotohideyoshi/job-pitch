@@ -211,7 +211,7 @@ function onBtnRecordClicked (){
 				recBtn.disabled = true;
 				//	    pauseResBtn.disabled = false;
 				stopBtn.disabled = false;
-				$uploadBtn.addClass('disabled');
+				$uploadBtn.attr('disabled', true);
 			}
 
 			success = successGetUserMedia;
@@ -228,7 +228,7 @@ function onBtnStopClicked(){
 	recBtn.disabled = false;
 //	pauseResBtn.disabled = true;
 	stopBtn.disabled = true;
-	$uploadBtn.removeClass('disabled');
+	$uploadBtn.attr('disabled', false);
 }
 
 function onPauseResumeClicked(){

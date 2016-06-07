@@ -18,18 +18,17 @@ $(document).ready(function() {
 	.done(function( jobSeeker ) {
 		job_seeker_id = jobSeeker[0].id;
 
-		if(jobSeeker[0].pitches[0] !== undefined){
-			actualPitch = jobSeeker[0].pitches[0];
+		actualPitch = jobSeeker[0].pitches[0];
 
-			renderVideoContainer(actualPitch);
-			var poolingPromise = new Promise(function(resolve,reject){
-				poolingTranscodeProcess(resolve);
-			});
+		var html = getHtmlForVideoOrThumbnail(jobSeeker[0].pitches);
+		$('#job-seeker-pitch').html(html);
 
-			poolingPromise.then(function(pitch){
-				renderVideoContainer(pitch);
-			});
-		}
+		var poolingPromise = new Promise(function(resolve,reject){
+			poolingTranscodeProcess(resolve);
+		})
+		.then(function(pitch){
+			renderVideoContainer(pitch);
+		});
 	});
 
 
@@ -171,7 +170,7 @@ function poolingTranscodeProcess(resolve){
 				if(thereIsANullPitch){ // Uploaded already
 					if(firstExecution){
 						$('.btn-js-start-pitch').addClass('disabled');
-						log('info', 'Continues with uploading ...');
+						log('info', 'Transcoding a previous recorded video ...');
 					}
 				} else {
 					if(!firstExecution){

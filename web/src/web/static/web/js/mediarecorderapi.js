@@ -42,14 +42,13 @@ var recBtn = document.querySelector('button.btn-js-start-pitch');
 //var pauseResBtn = document.querySelector('button#pauseRes');
 var stopBtn = document.querySelector('button.btn-js-stop-pitch');
 
-var videoElement = document.querySelector('video');
 var dataElement = jQuery('#data');
 var downloadLink = document.querySelector('a#downloadLink');
 
 var successGetUserMedia = true;
 var rawMediaRecorded = false;
 
-videoElement.controls = false;
+var videoElements;
 
 function errorCallback(error){
 	console.log('navigator.getUserMedia error: ', error);
@@ -74,15 +73,19 @@ function startRecording(stream) {
 		/*
 			MediaRecorder.isTypeSupported is a Chrome 49 function announced in https://developers.google.com/web/updates/2016/01/mediarecorder but it's not present in the MediaRecorder API spec http://www.w3.org/TR/mediastream-recording/
 		*/
+
 		if (MediaRecorder.isTypeSupported('video/webm;codecs=vp9')) {
-		var options = {mimeType: 'video/webm;codecs=vp9'};
-	} else if (MediaRecorder.isTypeSupported('video/webm;codecs=vp8')) {
-		var options = {mimeType: 'video/webm;codecs=vp8'};
-	}
+			var options = {mimeType: 'video/webm;codecs=vp9'};
+		} else if (MediaRecorder.isTypeSupported('video/webm;codecs=vp8')) {
+			var options = {mimeType: 'video/webm;codecs=vp8'};
+		}
+
 		log('info', 'Using '+options.mimeType);
+
 		mediaRecorder = new MediaRecorder(stream, options);
 	}else{
 		log('info', 'Using default codecs for browser');
+
 		mediaRecorder = new MediaRecorder(stream);
 	}
 
@@ -173,6 +176,20 @@ function startRecording(stream) {
 //  console.log('Source buffer: ', sourceBuffer);
 //}
 
+function checkingForVideoContainer(resolve){
+	$('#pitchVideoCheck').html('<video id="recording-container" autoplay=""><video>');
+
+	intervalForChekingVideoContainer = setInterval(function(){
+		var videoContainer = document.querySelector('video#recording-container');
+
+		if(videoContainer){
+			clearInterval(intervalForChekingVideoContainer);
+			resolve(videoContainer);
+		}
+	}, 1000);
+}
+
+
 function onBtnRecordClicked (){
 	var success = true;
 
@@ -180,14 +197,23 @@ function onBtnRecordClicked (){
 		alert('MediaRecorder not supported on your browser, use Firefox 30 or Chrome 49 instead.');
 		success = false;
 	}else {
-		navigator.getUserMedia(constraints, startRecording, errorCallback);
+		var promiseVideoContainer = new Promise(function(resolve,reject){
+			chekingForVideoContainer(resolve);
+		})
+		.then(function(videoContainer){
+			videoElement = videoContainer;
+			videoElement.controls = false;
 
-		if(successGetUserMedia){
-			recBtn.disabled = true;
-			//	    pauseResBtn.disabled = false;
-			stopBtn.disabled = false;
-		}
-		success = successGetUserMedia;
+			navigator.getUserMedia(constraints, startRecording, errorCallback);
+
+			if(successGetUserMedia){
+				recBtn.disabled = true;
+				//	    pauseResBtn.disabled = false;
+				stopBtn.disabled = false;
+			}
+
+			success = successGetUserMedia;
+		});
 	}
 
 	return success;

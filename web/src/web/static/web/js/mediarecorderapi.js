@@ -198,7 +198,7 @@ function onBtnRecordClicked (){
 		success = false;
 	}else {
 		var promiseVideoContainer = new Promise(function(resolve,reject){
-			chekingForVideoContainer(resolve);
+			checkingForVideoContainer(resolve);
 		})
 		.then(function(videoContainer){
 			videoElement = videoContainer;

@@ -20,8 +20,8 @@ $(document).ready(function() {
 
 		actualPitch = jobSeeker[0].pitches[0];
 
-		//var html = getHtmlForVideoOrThumbnail(jobSeeker[0].pitches);
-		//$('#pitchVideoCheck').html(html);
+		var html = getHtmlForVideoOrThumbnail(jobSeeker[0].pitches);
+		$('#pitchVideoCheck').html(html);
 
 		var poolingPromise = new Promise(function(resolve,reject){
 			poolingTranscodeProcess(resolve);
@@ -32,14 +32,16 @@ $(document).ready(function() {
 			$('#pitchVideoCheck').html(html);
 
 			var videoLoading = document.getElementById('viewing-container');
-			log('info','Loading...');
+			if(videoLoading.readyState !== 4) {// Video is ready to play
+				log('info','Loading...');
 
-			var intervalVideoLoading = setInterval(function(argument) {
-				if(videoLoading.readyState === 4){
-					log('hide');
-					clearInterval(intervalVideoLoading);
-				};
-			},2000);
+				var intervalVideoLoading = setInterval(function(argument) {
+					if(videoLoading.readyState === 4){
+						log('hide');
+						clearInterval(intervalVideoLoading);
+					};
+				},2000);
+			}
 		});
 	});
 

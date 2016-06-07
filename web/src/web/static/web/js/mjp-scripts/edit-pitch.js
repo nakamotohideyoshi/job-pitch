@@ -20,8 +20,8 @@ $(document).ready(function() {
 
 		actualPitch = jobSeeker[0].pitches[0];
 
-		var html = getHtmlForVideoOrThumbnail(jobSeeker[0].pitches);
-		$('#pitchVideoCheck').html(html);
+		//var html = getHtmlForVideoOrThumbnail(jobSeeker[0].pitches);
+		//$('#pitchVideoCheck').html(html);
 
 		var poolingPromise = new Promise(function(resolve,reject){
 			poolingTranscodeProcess(resolve);

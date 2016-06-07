@@ -258,7 +258,7 @@ function onPauseResumeClicked(){
 
 
 function log(alertType, message){
-	$parent = dataElement.parent();
+	var $parent = dataElement.parent();
 	if(alertType=='hide'){
 		$parent.hide();
 

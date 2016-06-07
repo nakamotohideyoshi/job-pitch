@@ -509,6 +509,19 @@
                             path:@"/api/messages/"
                           method:RKRequestMethodPOST];
     
+    NSArray *createPitchArray = @[@"id",
+                                  @"video",
+                                  @"thumbnail",
+                                  ];
+    [self configureSimpleMapping:objectManager
+                           class:[Pitch class]
+                           array:createPitchArray
+                      dictionary:nil
+                   relationships:nil
+                            path:@"/api/pitches/"
+                          method:RKRequestMethodPOST];
+    
+    
     NSArray *nameArray = @[@"id",
                            @"name",
                            ];
@@ -1048,6 +1061,24 @@
                                      }
      ];
 }
+
+
+- (void)savePitch:(Pitch*)pitch
+            success:(void (^)(Pitch *pitch))success
+            failure:(void (^)(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors))failure
+{
+    [[RKObjectManager sharedManager] postObject:pitch
+                                           path:@"/api/pitches/"
+                                     parameters:nil success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
+                                         NSLog(@"Pitch sent");
+                                         success([mappingResult firstObject]);
+                                     } failure:^(RKObjectRequestOperation *operation, NSError *error) {
+                                         NSLog(@"Error sending message: %@", error);
+                                         failure(operation, error, [self getMessage:error], [self getErrors:error]);
+                                     }
+     ];
+}
+
 
 - (void)loadHours:(void (^)(NSArray *hours))success
           failure:(void (^)(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors))failure

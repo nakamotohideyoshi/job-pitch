@@ -3226,8 +3226,8 @@
         <image name="play" width="96" height="96"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="ouc-Of-Rbe"/>
         <segue reference="bLg-hp-djS"/>
+        <segue reference="ouc-Of-Rbe"/>
         <segue reference="F33-gd-75U"/>
         <segue reference="0vK-0A-u9q"/>
         <segue reference="XoM-Rr-ZjD"/>

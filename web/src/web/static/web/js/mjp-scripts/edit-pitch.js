@@ -33,11 +33,6 @@ $(document).ready(function() {
 
 
 	$('.btn-js-upload-pitch').click(function(e) {
-		//var videoDataContainer = document.getElementById('data');
-		//var params = {Key: 'pitch-'+job_seeker_id+'.webm', Body: videoDataContainer.value};
-		//bucket.upload(params, function (err, data) {
-		//	console.log = err ? 'ERROR!' : 'SAVED.';
-		//});
 		$uploadBtn.attr('disabled', true);
 		videoElement.controls= false;
 

@@ -26,8 +26,20 @@ $(document).ready(function() {
 		var poolingPromise = new Promise(function(resolve,reject){
 			poolingTranscodeProcess(resolve);
 		})
-		.then(function(pitch){
-			renderVideoContainer(pitch);
+		.then(function(pitches){
+			var html = getHtmlForVideoOrThumbnail(pitches);
+
+			$('#job-seeker-pitch').html(html);
+
+			var videoLoading = document.querySelector('video#viewing-container');
+			log('info','Loading...');
+
+			var intervalVideoLoading = setInterval(function(argument) {
+				if(videoLoading.readyState === 4){
+					log('hide');
+					clearInterval(intervalVideoLoading);
+				};
+			},2000);
 		});
 	});
 
@@ -183,7 +195,7 @@ function poolingTranscodeProcess(resolve){
 
 					$('.btn-js-start-pitch').removeClass('disabled');
 					clearInterval(poolingInterval);
-					resolve(pitches[0]);
+					resolve(pitches);
 				}
 
 				firstExecution = false;

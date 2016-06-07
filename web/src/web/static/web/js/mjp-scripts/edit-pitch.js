@@ -38,7 +38,7 @@ $(document).ready(function() {
 		//bucket.upload(params, function (err, data) {
 		//	console.log = err ? 'ERROR!' : 'SAVED.';
 		//});
-		uploadBtn.disabled = true;
+		$uploadBtn.attr('disabled', true);
 		videoElement.controls= false;
 
 		if(rawMediaRecorded != undefined && rawMediaRecorded){

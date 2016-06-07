@@ -20,6 +20,7 @@ $(document).ready(function() {
 
 		actualPitch = jobSeeker[0].pitches[0];
 
+		log('info','Loading...');
 		var html = getHtmlForVideoOrThumbnail(jobSeeker[0].pitches);
 		$('#pitchVideoCheck').html(html);
 
@@ -32,7 +33,7 @@ $(document).ready(function() {
 			$('#pitchVideoCheck').html(html);
 
 			var videoLoading = document.getElementById('viewing-container');
-			if(videoLoading.readyState !== 4) {// Video is ready to play
+			if(videoLoading != undefined && videoLoading.readyState !== 4) {// Video is not ready to play
 				log('info','Loading...');
 
 				var intervalVideoLoading = setInterval(function(argument) {

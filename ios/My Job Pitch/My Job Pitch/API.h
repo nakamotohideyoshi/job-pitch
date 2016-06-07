@@ -80,6 +80,10 @@
             success:(void (^)(MessageForCreation *message))success
             failure:(void (^)(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors))failure;
 
+- (void)savePitch:(Pitch*)pitch
+          success:(void (^)(Pitch *pitch))success
+          failure:(void (^)(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors))failure;
+
 - (void)loadHours:(void (^)(NSArray *hours))success
           failure:(void (^)(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors))failure;
 

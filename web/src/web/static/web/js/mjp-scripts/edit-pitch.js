@@ -31,7 +31,7 @@ $(document).ready(function() {
 
 			$('#pitchVideoCheck').html(html);
 
-			var videoLoading = document.querySelectorById('#viewing-container');
+			var videoLoading = document.getElementById('viewing-container');
 			log('info','Loading...');
 
 			var intervalVideoLoading = setInterval(function(argument) {

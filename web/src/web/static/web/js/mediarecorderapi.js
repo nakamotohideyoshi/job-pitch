@@ -255,6 +255,11 @@ function onPauseResumeClicked(){
 
 
 function log(alertType, message){
+	if(alertType=='hide'){
+		dataElement.parent().hide();
+		return;
+	}
+
 	dataElement.parent()
 	.hide()
 	.removeClass()

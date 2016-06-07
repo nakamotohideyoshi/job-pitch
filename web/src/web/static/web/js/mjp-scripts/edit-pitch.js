@@ -70,11 +70,18 @@ $(document).ready(function() {
 
 
 	$('.btn-js-upload-pitch').click(function(e) {
-		var videoDataContainer = document.getElementById('data');
-		var params = {Key: 'pitch-'+job_seeker_id+'.webm', Body: videoDataContainer.value};
-		bucket.upload(params, function (err, data) {
-			console.log = err ? 'ERROR!' : 'SAVED.';
-		});
+		//var videoDataContainer = document.getElementById('data');
+		//var params = {Key: 'pitch-'+job_seeker_id+'.webm', Body: videoDataContainer.value};
+		//bucket.upload(params, function (err, data) {
+		//	console.log = err ? 'ERROR!' : 'SAVED.';
+		//});
+		videoElement.controls= false;
+
+		if(rawMediaRecorded != undefined && rawMediaRecorded){
+			getNewPitchMetaData(function(pitch){
+				putIntoS3Bucket(pitch, rawMediaRecorded);
+			});
+		}
 	});
 });
 
@@ -123,11 +130,7 @@ function stopRecordingProcess($display){
 
 	onBtnStopClicked();
 
-	if(rawMediaRecorded != undefined && rawMediaRecorded){
-		getNewPitchMetaData(function(pitch){
-			putIntoS3Bucket(pitch, rawMediaRecorded);
-		});
-	}
+	log('success', 'Video is ready for uploading.')
 }
 
 

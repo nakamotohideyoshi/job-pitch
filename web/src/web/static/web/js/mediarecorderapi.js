@@ -41,6 +41,7 @@ if(getBrowser() == "Chrome"){
 var recBtn = document.querySelector('button.btn-js-start-pitch');
 //var pauseResBtn = document.querySelector('button#pauseRes');
 var stopBtn = document.querySelector('button.btn-js-stop-pitch');
+var uploadBtn = document.querySelector('button.btn-js-upload-pitch');
 
 var dataElement = jQuery('#data');
 var downloadLink = document.querySelector('a#downloadLink');
@@ -210,6 +211,7 @@ function onBtnRecordClicked (){
 				recBtn.disabled = true;
 				//	    pauseResBtn.disabled = false;
 				stopBtn.disabled = false;
+				uploadBtn.disabled = true;
 			}
 
 			success = successGetUserMedia;
@@ -226,6 +228,7 @@ function onBtnStopClicked(){
 	recBtn.disabled = false;
 //	pauseResBtn.disabled = true;
 	stopBtn.disabled = true;
+	uploadBtn.disabled = false;
 }
 
 function onPauseResumeClicked(){
@@ -255,9 +258,18 @@ function onPauseResumeClicked(){
 
 
 function log(alertType, message){
+	$parent = dataElement.parent();
 	if(alertType=='hide'){
-		dataElement.parent().hide();
+		$parent.hide();
+
 		return;
+	}
+
+	if(alertType=='success'){
+		$parent
+		.find('.glyphicon')
+		.removeClass('glyphicon-refresh glyphicon-refresh-animate')
+		.addClass('glyphicon-ok');
 	}
 
 	dataElement.parent()

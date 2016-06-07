@@ -179,7 +179,7 @@ function startRecording(stream) {
 function checkingForVideoContainer(resolve){
 	$('#pitchVideoCheck').html('<video id="recording-container" autoplay=""><video>');
 
-	intervalForChekingVideoContainer = setInterval(function(){
+	var intervalForChekingVideoContainer = setInterval(function(){
 		var videoContainer = document.querySelector('video#recording-container');
 
 		if(videoContainer){

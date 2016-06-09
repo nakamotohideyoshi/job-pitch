@@ -11,4 +11,6 @@
 @interface Pitch : MJPObject
 @property (nullable) NSString* video;
 @property (nullable) NSString* thumbnail;
+@property (nullable) NSString* token;
+@property (nullable) NSNumber* job_seeker;
 @end

@@ -23,6 +23,7 @@
 @implementation API
 {
     NSURL * apiRoot;
+    NSString *tokenKey;
 }
 
 - (instancetype)init
@@ -1079,6 +1080,20 @@
      ];
 }
 
+- (void)getPitch:(NSNumber*)pid
+         success:(void (^)(Pitch *pitch))success
+         failure:(void (^)(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors))failure
+{
+    NSString *path = [NSString stringWithFormat:@"/api/pitches/%d", [pid intValue]];
+    [[RKObjectManager sharedManager] getObjectsAtPath:path parameters:nil success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
+        NSLog(@"Pitch sent");
+        success([mappingResult firstObject]);
+    } failure:^(RKObjectRequestOperation *operation, NSError *error) {
+        NSLog(@"Error sending message: %@", error);
+        failure(operation, error, [self getMessage:error], [self getErrors:error]);
+    }];
+}
+
 
 - (void)loadHours:(void (^)(NSArray *hours))success
           failure:(void (^)(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors))failure
@@ -1404,8 +1419,13 @@
 
 - (void)setToken:(AuthToken*)token
 {
+    tokenKey = token.key;
     [[RKObjectManager sharedManager].HTTPClient
      setDefaultHeader:@"Authorization" value:[NSString stringWithFormat: @"Token %@", token.key]];
+}
+
+- (NSString*) getTokenKey {
+    return tokenKey;
 }
 
 - (void)clearToken

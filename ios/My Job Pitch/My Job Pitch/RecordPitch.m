@@ -37,10 +37,10 @@
                                                             into:self.image
                                                    withIndicator:self.imageActivity
                                                       completion:^{
-                                                          self.playOverlay.hidden = false;
+                                                          self.playOverlay.hidden = NO;
                                                       }];
                                           } else {
-                                              self.noRecording.hidden = false;
+                                              self.noRecording.hidden = NO;
                                           }
                                       } failure:^(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors) {
                                           [self showProgress:false];
@@ -154,55 +154,56 @@
     }
 }
 - (IBAction)videoUpload:(id)sender {
-    
-//    AWSS3TransferManager *transferManager = [AWSS3TransferManager defaultS3TransferManager];
-//    AWSS3TransferManagerUploadRequest *uploadRequest = [AWSS3TransferManagerUploadRequest new];
-//    uploadRequest.body = self.videoURL;
-//    uploadRequest.bucket = @"mjp-android-uploads";
-//    uploadRequest.contentType = @"video/mp4";
-//    uploadRequest.key = @"ddddd";
-//    
-//    [[transferManager upload:uploadRequest] continueWithExecutor:[AWSExecutor mainThreadExecutor] withBlock:^id(AWSTask *task) {
-//        if (task.error) {
-//            if ([task.error.domain isEqualToString:AWSS3TransferManagerErrorDomain]) {
-//                switch (task.error.code) {
-//                    case AWSS3TransferManagerErrorCancelled:
-//                    case AWSS3TransferManagerErrorPaused:
-//                        break;
-//                        
-//                    default:
-//                        NSLog(@"Error: %@", task.error);
-//                        break;
-//                }
-//            } else {
-//                // Unknown error.
-//                NSLog(@"Error: %@", task.error);
-//            }
-//        }
-//        
-//        if (task.result)
-//        {
-//            NSLog(@"First photo uploaded");
-//        }
-//        return nil;
-//    }];
+        
+    self.playOverlay.hidden = YES;
+    self.uploadButton.hidden = YES;
+    self.recordButton1.hidden = YES;
     
     [self showProgress:true];
     Pitch *pitch = [[Pitch alloc] init];
     [self.appDelegate.api savePitch:pitch success:^(Pitch *pitch) {
         
-        NSURL *fileURL = self.videoURL;
-        NSString *keyname = [NSString stringWithFormat:@"%@%@.%d.%@", @"http:ec2-52-31-145-95.eu-west-1.compute.amazonaws.com", @"", [pitch.id intValue], [fileURL absoluteString]];
+        AWSS3TransferUtilityUploadExpression *expression = [AWSS3TransferUtilityUploadExpression new];
+        expression.uploadProgress = ^(AWSS3TransferUtilityTask *task, int64_t bytesSent, int64_t totalBytesSent, int64_t totalBytesExpectedToSend) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                // Do something e.g. Update a progress bar.
+            });
+        };
+     
+        AWSS3TransferUtilityUploadCompletionHandlerBlock completionHandler = ^(AWSS3TransferUtilityUploadTask *task, NSError *error) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                // Do something e.g. Alert a user for transfer completion.
+                // On failed uploads, `error` contains the error object.
+                
+                if (error == nil) {
+                    [self.appDelegate.api getPitch:pitch.id success:^(Pitch *pitch) {
+                        Pitch *newPitch = pitch;
+                        int i = 0;
+                    } failure:^(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors) {
+                        
+                    }];
+                } else {
+                    
+                }
+            });
+        };
+        
+        NSString *keyname = [NSString stringWithFormat:@"%@%@.%d.%@", @"http://ec2-52-31-145-95.eu-west-1.compute.amazonaws.com", [self.appDelegate.api getTokenKey], [pitch.id intValue], [self.videoURL absoluteString]];
+        
+        keyname = [keyname stringByReplacingOccurrencesOfString: @"/" withString:@""];
         
         AWSS3TransferUtility *transferUtility = [AWSS3TransferUtility defaultS3TransferUtility];
-        [[transferUtility uploadFile:fileURL
+        [[transferUtility uploadFile:self.videoURL
                               bucket:@"mjp-android-uploads"
                                  key:keyname
                          contentType:@"video/mp4"
-                          expression:nil
-                    completionHander:nil] continueWithBlock:^id(AWSTask *task) {
-            [self showProgress:false];
-            if (task.error || task.exception) {
+                          expression:expression
+                    completionHander:completionHandler] continueWithBlock:^id(AWSTask *task) {
+            if (task.error) {
+                NSLog(@"Error: %@", task.error);
+            }
+            if (task.exception) {
+                NSLog(@"Exception: %@", task.exception);
                 [[[UIAlertView alloc] initWithTitle:@"Error"
                                             message:@"Error uploading video"
                                            delegate:self
@@ -211,6 +212,7 @@
             }
             if (task.result) {
                 AWSS3TransferUtilityUploadTask *uploadTask = task.result;
+                // Do something with uploadTask.
             }
             
             return nil;

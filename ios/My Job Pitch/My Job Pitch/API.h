@@ -84,6 +84,10 @@
           success:(void (^)(Pitch *pitch))success
           failure:(void (^)(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors))failure;
 
+- (void)getPitch:(NSNumber*)pid
+         success:(void (^)(Pitch *pitch))success
+         failure:(void (^)(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors))failure;
+
 - (void)loadHours:(void (^)(NSArray *hours))success
           failure:(void (^)(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors))failure;
 
@@ -160,5 +164,7 @@
                   failure:(void (^)(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors))failure;
 
 - (void)logout;
+
+- (NSString*) getTokenKey;
 
 @end

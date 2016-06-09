@@ -30,18 +30,10 @@
     [GMSServices provideAPIKey:@"AIzaSyCeseQMdrlh9E5d7DHHHm4GvW7yd8C_sZk"];
     
     AWSCognitoCredentialsProvider *credentialsProvider = [[AWSCognitoCredentialsProvider alloc]
-                                                          initWithRegionType:AWSRegionUSEast1
+                                                          initWithRegionType:AWSRegionEUWest1
                                                           identityPoolId:@"eu-west-1:93ae6986-5938-4130-a3c0-f96c39d75be2"];
     AWSServiceConfiguration *configuration = [[AWSServiceConfiguration alloc] initWithRegion:AWSRegionUSEast1 credentialsProvider:credentialsProvider];
     AWSServiceManager.defaultServiceManager.defaultServiceConfiguration = configuration;
-    
-//    AWSCognitoCredentialsProvider *credentialsProvider = [[AWSCognitoCredentialsProvider alloc]
-//                                                          initWithRegionType:AWSRegionAPNortheast1
-//                                                          identityPoolId:@"eu-west-1:93ae6986-5938-4130-a3c0-f96c39d75be2"];
-//    
-//    AWSServiceConfiguration *configuration = [[AWSServiceConfiguration alloc] initWithRegion:AWSRegionAPNortheast1 credentialsProvider:credentialsProvider];
-    
-    [AWSServiceManager defaultServiceManager].defaultServiceConfiguration = configuration;
     
     return YES;
 }

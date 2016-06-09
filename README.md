@@ -12,13 +12,45 @@ Commit messages should be in the format:
 
 `re #<issue number> - message`
 
-## Development Environment
+## Android Development
+
+The Android app is simply a user interface backed by a REST API.
+
+### Release Procedure
+
+To create a new release:
+
+1. Checkout the commit of the code you want to release
+2. Ensure that the `versioncode` has been incremented since the last release. For example, if the old `versioncode` was `17`, you should change it to `18`
+3. Ensure that the `versionname` has been incremented since the last release. For example, if the old `versionname` was "1.1-beta.17", the next release might be named "1.1-beta.18"
+4. Commit any changes you just made
+5. Create a git tag with name `android-<versionname>` (i.e. `android-1.1-beta.18`):
+
+   ```bash
+   git tag android-1.1-beta.18
+   git push android-1.1-beta.18
+   ```
+
+6. Generate a signed APK file (release or debug as required)
+7. [Draft a new release](https://github.com/daggaz/my-job-pitch/releases/new):
+   1. Select your new tag
+   2. Set the name to the same as the tag name
+   3. In the description, list the related issue numbers
+   4. Attach the APK binary
+
+## API/Web Development
+
+The API and web interface are django apps. The instructions below will allow you to set up your own instance of these system.
+
+The two mobile applications (in a debug build) will allow you to change the base url for the API to point at your own instance.
+
+### Development Environment
 
 To setup a local development environment, you will need a modern linux PC or VM.  Other OSs will work, but your mileage may vary!
 
 The following instructions are for debian flavor distros (i.e. ubuntu)
 
-### Install Virtualbox
+#### Install Virtualbox
 
 ```bash
   sudo apt-get install virtualbox
@@ -26,7 +58,7 @@ The following instructions are for debian flavor distros (i.e. ubuntu)
 
 Or download install from https://www.virtualbox.org/
 
-### Install Vagrant
+#### Install Vagrant
 
 ```bash
 sudo apt-get install vagrant
@@ -34,7 +66,7 @@ sudo apt-get install vagrant
 
 Or download and install from https://www.vagrantup.com/
 
-### Get sources
+#### Get sources
 
 ```bash
 mkdir ~/sources
@@ -42,7 +74,7 @@ cd ~/sources
 git clone git@github.com:daggaz/my-job-pitch.git
 ```
 
-### Vagrant up
+#### Vagrant up
 
 This will create a virtual machine with the ubuntu operating system, and install all the prerequisists.
 
@@ -51,7 +83,7 @@ cd ~/sources/my-job-pitch/web/
 vagrant up
 ```
 
-### Run the deveopment server
+#### Run the deveopment server
 
 To run the development server, we ssh to the new VM.
 

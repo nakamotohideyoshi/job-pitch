@@ -165,6 +165,4 @@
 
 - (void)logout;
 
-- (NSString*) getTokenKey;
-
 @end

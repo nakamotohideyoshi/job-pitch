@@ -113,6 +113,8 @@
     NSArray* pitchArray = @[@"id",
                             @"video",
                             @"thumbnail",
+                            @"job_seeker",
+                            @"token",
                             ];
     RKObjectMapping *pitchMapping = [self
                                      createResponseMappingForClass:[Pitch class]
@@ -510,13 +512,9 @@
                             path:@"/api/messages/"
                           method:RKRequestMethodPOST];
     
-    NSArray *createPitchArray = @[@"id",
-                                  @"video",
-                                  @"thumbnail",
-                                  ];
     [self configureSimpleMapping:objectManager
                            class:[Pitch class]
-                           array:createPitchArray
+                           array:pitchArray
                       dictionary:nil
                    relationships:nil
                             path:@"/api/pitches/"
@@ -1422,10 +1420,6 @@
     tokenKey = token.key;
     [[RKObjectManager sharedManager].HTTPClient
      setDefaultHeader:@"Authorization" value:[NSString stringWithFormat: @"Token %@", token.key]];
-}
-
-- (NSString*) getTokenKey {
-    return tokenKey;
 }
 
 - (void)clearToken

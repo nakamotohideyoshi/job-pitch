@@ -74,7 +74,7 @@ function checkPitchesIfExists(type, pitches){
 	var i;
 	var found = false;
 
-	pitches.forEach(function(index, pitch) {
+	pitches.forEach(function(pitch, index) {
 		i = index;
 
 		if( _.hasIn(pitch, type)){

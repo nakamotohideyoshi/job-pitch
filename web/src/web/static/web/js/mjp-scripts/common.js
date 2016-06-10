@@ -368,13 +368,13 @@ function getHtmlForVideoOrThumbnail(pitches){
 		if( _.hasIn(pitch,'video') && ! _.isEmpty(pitch.video)){
 			link = pitch.video;
 			content = '<video id="viewing-container" width="320" height="240" controls><source src="<%= url %>" type="video/mp4"></video>';
-			return false;
+			return false; // out of  $.each
 		}
 
 		if( _.hasIn(pitch, 'thumbnail') && ! _.isEmpty(pitch.thumbnail)){
 			link = pitch.thumbnail;
 			content = '<img src="<%= url %>">';
-			return false;
+			return false; // out of  $.each
 		}
 	});
 

@@ -19,6 +19,8 @@
 @property (nonnull) JobSeeker *jobSeeker;
 @property (strong, nonatomic) NSURL *videoURL;
 @property (nonnull) Pitch *pitch;
+@property (nonnull) NSString *mp4Path;
+
 @end
 
 @implementation RecordPitch
@@ -58,7 +60,7 @@
 
 - (IBAction)playPitch:(id)sender {
     if (self.videoURL) {
-        [self performSegueWithIdentifier:@"play_video" sender:[NSURL URLWithString:[self.videoURL absoluteString]]];
+        [self performSegueWithIdentifier:@"play_video" sender:self.videoURL];
     } else if (self.pitch && self.pitch.video) {
         [self performSegueWithIdentifier:@"play_video" sender:[NSURL URLWithString:self.pitch.video]];
     }
@@ -157,6 +159,7 @@
     }
 }
 
+
 - (IBAction)videoUpload:(id)sender {
     
 //    self.playOverlay.hidden = YES;
@@ -164,6 +167,57 @@
 //    self.recordButton1.hidden = YES;
     
     [self showProgress:true];
+    
+    
+    AVURLAsset *avAsset = [AVURLAsset URLAssetWithURL:self.videoURL options:nil];
+    NSArray *compatiblePresets = [AVAssetExportSession exportPresetsCompatibleWithAsset:avAsset];
+    NSLog(@"%@", compatiblePresets);
+    
+    if ([compatiblePresets containsObject:AVAssetExportPresetLowQuality])
+        
+    {
+        AVAssetExportSession *exportSession = [[AVAssetExportSession alloc]initWithAsset:avAsset
+                                                                              presetName:AVAssetExportPresetLowQuality];
+        NSLog(@"%@", exportSession.supportedFileTypes);
+        
+        NSDateFormatter* formater = [[NSDateFormatter alloc] init];
+        [formater setDateFormat:@"yyyyMMddHHmmss"];
+        self.mp4Path = [NSHomeDirectory() stringByAppendingFormat:@"/Documents/%@.mp4", [formater stringFromDate:[NSDate date]]];
+        
+        exportSession.outputURL = [NSURL fileURLWithPath: self.mp4Path];
+        exportSession.shouldOptimizeForNetworkUse = YES;
+        exportSession.outputFileType = AVFileTypeMPEG4;
+        [exportSession exportAsynchronouslyWithCompletionHandler:^{
+            if ([exportSession status] == AVAssetExportSessionStatusCompleted) {
+                NSLog(@"Successful!");
+                [self performSelectorOnMainThread:@selector(convertFinish) withObject:nil waitUntilDone:NO];
+            } else {
+                NSLog(@"Export canceled");
+            }
+        }];
+    }
+    else
+    {
+        
+    }
+    
+    return;
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
     Pitch *pitch = [[Pitch alloc] init];
     [self.appDelegate.api savePitch:pitch success:^(Pitch *pitch) {
@@ -173,8 +227,9 @@
         AVURLAsset *avAsset = [AVURLAsset URLAssetWithURL:self.videoURL options:nil];
         AVAssetExportSession *exportSession = [[AVAssetExportSession alloc]initWithAsset:avAsset presetName:AVAssetExportPresetPassthrough];
         NSString *path = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
-        NSString *videoPath = [NSString stringWithFormat:@"%@/%@.%@.mp4", path, pitch.token, pitch.id];
-        exportSession.outputURL = [NSURL fileURLWithPath:videoPath];
+        NSString *videoPath = [NSString stringWithFormat:@"%@/%@%@1.mp4", path, pitch.token, pitch.id];
+        NSURL *mp4URL = [NSURL fileURLWithPath:videoPath];
+        exportSession.outputURL = mp4URL;
         exportSession.outputFileType = AVFileTypeMPEG4;
         [exportSession exportAsynchronouslyWithCompletionHandler:^{
             if ([exportSession status] != AVAssetExportSessionStatusCompleted) {
@@ -183,8 +238,9 @@
                 return;
             }
             
-            UISaveVideoAtPathToSavedPhotosAlbum(videoPath, self, nil, nil);
-                        
+            UISaveVideoAtPathToSavedPhotosAlbum(videoPath, self, @selector(video:didFinishSavingWithError: contextInfo:), nil);
+            
+            
             AWSS3TransferUtilityUploadExpression *expression = [AWSS3TransferUtilityUploadExpression new];
             expression.uploadProgress = ^(AWSS3TransferUtilityTask *task, int64_t bytesSent, int64_t totalBytesSent, int64_t totalBytesExpectedToSend) {
                 dispatch_async(dispatch_get_main_queue(), ^{
@@ -210,10 +266,10 @@
                 });
             };
             
-            NSString *keyname = [NSString stringWithFormat:@"%@/%@.%@.%@", @"http:ec2-52-31-145-95.eu-west-1.compute.amazonaws.com", pitch.token, pitch.id, [self.videoURL lastPathComponent]];
+            NSString *keyname = [NSString stringWithFormat:@"%@/%@.%@.%@", @"http:ec2-52-31-145-95.eu-west-1.compute.amazonaws.com", pitch.token, pitch.id, [mp4URL lastPathComponent]];
             
             AWSS3TransferUtility *transferUtility = [AWSS3TransferUtility defaultS3TransferUtility];
-            [[transferUtility uploadFile:self.videoURL
+            [[transferUtility uploadFile:mp4URL
                                   bucket:@"mjp-android-uploads"
                                      key:keyname
                              contentType:@"video/mp4"
@@ -251,6 +307,85 @@
         
     }];
     
+}
+
+
+- (void) convertFinish
+{
+    
+    NSURL *mp4URL = [NSURL URLWithString:[NSString stringWithFormat:@"file://localhost/private%@", self.mp4Path]];
+//    MPMoviePlayerViewController* playerView = [[MPMoviePlayerViewController alloc] initWithContentURL:mp4URL];
+//    [self presentModalViewController:playerView animated:YES];
+    
+    
+    Pitch *pitch = [[Pitch alloc] init];
+    [self.appDelegate.api savePitch:pitch success:^(Pitch *pitch) {
+        
+        self.pitch = pitch;
+        
+        AWSS3TransferUtilityUploadExpression *expression = [AWSS3TransferUtilityUploadExpression new];
+        expression.uploadProgress = ^(AWSS3TransferUtilityTask *task, int64_t bytesSent, int64_t totalBytesSent, int64_t totalBytesExpectedToSend) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                // Do something e.g. Update a progress bar.
+            });
+        };
+        
+        AWSS3TransferUtilityUploadCompletionHandlerBlock completionHandler = ^(AWSS3TransferUtilityUploadTask *task, NSError *error) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                // Do something e.g. Alert a user for transfer completion.
+                // On failed uploads, `error` contains the error object.
+                [self showProgress:false];
+                if (error == nil) {
+                    //                    [self.appDelegate.api getPitch:pitch.id success:^(Pitch *pitch) {
+                    //                        Pitch *newPitch = pitch;
+                    //                        int i = 0;
+                    //                    } failure:^(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors) {
+                    //
+                    //                    }];
+                } else {
+                    
+                }
+            });
+        };
+        
+        NSString *keyname = [NSString stringWithFormat:@"%@/%@.%@.%@", @"http:ec2-52-31-145-95.eu-west-1.compute.amazonaws.com", pitch.token, pitch.id, [mp4URL lastPathComponent]];
+        
+        AWSS3TransferUtility *transferUtility = [AWSS3TransferUtility defaultS3TransferUtility];
+        [[transferUtility uploadFile:mp4URL
+                              bucket:@"mjp-android-uploads"
+                                 key:keyname
+                         contentType:@"video/mp4"
+                          expression:expression
+                    completionHander:completionHandler] continueWithBlock:^id(AWSTask *task) {
+            if (task.error) {
+                NSLog(@"Error: %@", task.error);
+            }
+            if (task.exception) {
+                NSLog(@"Exception: %@", task.exception);
+                [[[UIAlertView alloc] initWithTitle:@"Error"
+                                            message:@"Error uploading video"
+                                           delegate:self
+                                  cancelButtonTitle:@"Okay"
+                                  otherButtonTitles:nil] show];
+            }
+            if (task.result) {
+                AWSS3TransferUtilityUploadTask *uploadTask = task.result;
+                // Do something with uploadTask.
+            }
+            
+            return nil;
+        }];
+        
+    } failure:^(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors) {
+        [self showProgress:false];
+        [[[UIAlertView alloc] initWithTitle:@"Error"
+                                    message:@"Error uploading video"
+                                   delegate:self
+                          cancelButtonTitle:@"Okay"
+                          otherButtonTitles:nil] show];
+        
+    }];
+
 }
 
 @end

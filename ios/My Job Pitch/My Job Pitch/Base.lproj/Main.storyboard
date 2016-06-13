@@ -1632,7 +1632,7 @@
                                 <rect key="frame" x="0.0" y="64" width="600" height="536"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="P4C-g8-IHW" userLabel="Content View">
-                                        <rect key="frame" x="0.0" y="0.0" width="600" height="450"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="600" height="466"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" text="Record My Pitch" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BXr-yH-tHu">
                                                 <rect key="frame" x="16" y="16" width="255" height="40"/>
@@ -1646,8 +1646,20 @@
                                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Uploading:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3iz-Lv-QZE">
+                                                <rect key="frame" x="75" y="120" width="62" height="15"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Processing..." textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DV0-Lf-bxa">
+                                                <rect key="frame" x="451" y="120" width="74" height="15"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
                                             <imageView contentMode="scaleToFill" semanticContentAttribute="playback" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Gls-FS-6cB">
-                                                <rect key="frame" x="75" y="129" width="450" height="253"/>
+                                                <rect key="frame" x="75" y="145" width="450" height="253"/>
                                                 <color key="backgroundColor" white="0.66666666666666663" alpha="0.53604525862068964" colorSpace="calibratedWhite"/>
                                                 <gestureRecognizers/>
                                                 <constraints>
@@ -1658,36 +1670,19 @@
                                                 </connections>
                                             </imageView>
                                             <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="O2F-f4-6uO">
-                                                <rect key="frame" x="282" y="237" width="37" height="37"/>
+                                                <rect key="frame" x="282" y="253" width="37" height="37"/>
                                             </activityIndicatorView>
                                             <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="no recording" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ysV-dm-iWu">
-                                                <rect key="frame" x="252" y="245" width="97" height="21"/>
+                                                <rect key="frame" x="252" y="261" width="97" height="21"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <imageView hidden="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" semanticContentAttribute="playback" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="play" translatesAutoresizingMaskIntoConstraints="NO" id="ACW-EH-Kde">
-                                                <rect key="frame" x="252" y="208" width="96" height="96"/>
+                                                <rect key="frame" x="252" y="224" width="96" height="96"/>
                                             </imageView>
-                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="CRs-n6-UjE">
-                                                <rect key="frame" x="232" y="398" width="137" height="32"/>
-                                                <color key="backgroundColor" red="0.0" green="0.58823529409999997" blue="0.53333333329999999" alpha="1" colorSpace="calibratedRGB"/>
-                                                <inset key="contentEdgeInsets" minX="7" minY="7" maxX="7" maxY="7"/>
-                                                <state key="normal" title="Record New Pitch">
-                                                    <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                                                </state>
-                                                <userDefinedRuntimeAttributes>
-                                                    <userDefinedRuntimeAttribute type="boolean" keyPath="layer.masksToBounds" value="YES"/>
-                                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
-                                                        <integer key="value" value="7"/>
-                                                    </userDefinedRuntimeAttribute>
-                                                </userDefinedRuntimeAttributes>
-                                                <connections>
-                                                    <action selector="recordPitch:" destination="KaQ-qh-VKT" eventType="touchUpInside" id="xMe-QF-dKs"/>
-                                                </connections>
-                                            </button>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="oQU-Hn-gbG">
-                                                <rect key="frame" x="75" y="398" width="64" height="32"/>
+                                                <rect key="frame" x="75" y="414" width="64" height="32"/>
                                                 <color key="backgroundColor" red="0.0" green="0.58823529409999997" blue="0.53333333329999999" alpha="1" colorSpace="calibratedRGB"/>
                                                 <inset key="contentEdgeInsets" minX="7" minY="7" maxX="7" maxY="7"/>
                                                 <state key="normal" title="Upload">
@@ -1703,8 +1698,25 @@
                                                     <action selector="videoUpload:" destination="KaQ-qh-VKT" eventType="touchUpInside" id="rvE-JR-c6F"/>
                                                 </connections>
                                             </button>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="CRs-n6-UjE">
+                                                <rect key="frame" x="232" y="414" width="137" height="32"/>
+                                                <color key="backgroundColor" red="0.0" green="0.58823529409999997" blue="0.53333333329999999" alpha="1" colorSpace="calibratedRGB"/>
+                                                <inset key="contentEdgeInsets" minX="7" minY="7" maxX="7" maxY="7"/>
+                                                <state key="normal" title="Record New Pitch">
+                                                    <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                                </state>
+                                                <userDefinedRuntimeAttributes>
+                                                    <userDefinedRuntimeAttribute type="boolean" keyPath="layer.masksToBounds" value="YES"/>
+                                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                                        <integer key="value" value="7"/>
+                                                    </userDefinedRuntimeAttribute>
+                                                </userDefinedRuntimeAttributes>
+                                                <connections>
+                                                    <action selector="recordPitch:" destination="KaQ-qh-VKT" eventType="touchUpInside" id="xMe-QF-dKs"/>
+                                                </connections>
+                                            </button>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="sBE-Rj-QDL">
-                                                <rect key="frame" x="388" y="398" width="137" height="32"/>
+                                                <rect key="frame" x="388" y="414" width="137" height="32"/>
                                                 <color key="backgroundColor" red="0.0" green="0.58823529409999997" blue="0.53333333329999999" alpha="1" colorSpace="calibratedRGB"/>
                                                 <inset key="contentEdgeInsets" minX="7" minY="7" maxX="7" maxY="7"/>
                                                 <state key="normal" title="Record New Pitch">
@@ -1720,15 +1732,22 @@
                                                     <action selector="recordPitch:" destination="KaQ-qh-VKT" eventType="touchUpInside" id="Mya-bc-w1S"/>
                                                 </connections>
                                             </button>
+                                            <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="xnn-qL-Xyd">
+                                                <rect key="frame" x="145" y="127" width="290" height="2"/>
+                                            </progressView>
                                         </subviews>
                                         <constraints>
                                             <constraint firstItem="sBE-Rj-QDL" firstAttribute="centerY" secondItem="CRs-n6-UjE" secondAttribute="centerY" id="06C-bH-i6t"/>
                                             <constraint firstItem="ACW-EH-Kde" firstAttribute="centerY" secondItem="Gls-FS-6cB" secondAttribute="centerY" id="0M7-kT-xh3"/>
                                             <constraint firstItem="Gls-FS-6cB" firstAttribute="centerX" secondItem="P4C-g8-IHW" secondAttribute="centerX" id="1dZ-ro-0fs"/>
+                                            <constraint firstItem="3iz-Lv-QZE" firstAttribute="top" secondItem="hIT-Ow-thQ" secondAttribute="bottom" constant="15" id="2EP-Fn-Umy"/>
                                             <constraint firstAttribute="trailing" secondItem="hIT-Ow-thQ" secondAttribute="trailing" constant="16" id="2OP-eA-gZw"/>
+                                            <constraint firstItem="xnn-qL-Xyd" firstAttribute="centerY" secondItem="3iz-Lv-QZE" secondAttribute="centerY" id="47w-oP-UQI"/>
                                             <constraint firstItem="ysV-dm-iWu" firstAttribute="centerY" secondItem="Gls-FS-6cB" secondAttribute="centerY" id="8aj-da-ofh"/>
+                                            <constraint firstItem="xnn-qL-Xyd" firstAttribute="trailing" secondItem="Gls-FS-6cB" secondAttribute="trailing" constant="-90" id="B9h-Wl-wYY"/>
                                             <constraint firstAttribute="bottom" secondItem="CRs-n6-UjE" secondAttribute="bottom" constant="20" id="Dfy-gg-Io7"/>
                                             <constraint firstItem="oQU-Hn-gbG" firstAttribute="leading" secondItem="Gls-FS-6cB" secondAttribute="leading" id="E4u-OO-bbh"/>
+                                            <constraint firstItem="DV0-Lf-bxa" firstAttribute="centerY" secondItem="3iz-Lv-QZE" secondAttribute="centerY" id="EPm-G4-Reg"/>
                                             <constraint firstItem="ysV-dm-iWu" firstAttribute="centerX" secondItem="Gls-FS-6cB" secondAttribute="centerX" id="Gvi-18-sEU"/>
                                             <constraint firstItem="Gls-FS-6cB" firstAttribute="width" secondItem="P4C-g8-IHW" secondAttribute="width" multiplier="0.75" id="HFa-EK-L8p"/>
                                             <constraint firstItem="ACW-EH-Kde" firstAttribute="centerX" secondItem="Gls-FS-6cB" secondAttribute="centerX" id="HT3-J8-1iC"/>
@@ -1736,12 +1755,15 @@
                                             <constraint firstItem="O2F-f4-6uO" firstAttribute="centerY" secondItem="Gls-FS-6cB" secondAttribute="centerY" id="U7f-ka-8wC"/>
                                             <constraint firstItem="sBE-Rj-QDL" firstAttribute="trailing" secondItem="Gls-FS-6cB" secondAttribute="trailing" id="VS1-QW-c0p"/>
                                             <constraint firstItem="CRs-n6-UjE" firstAttribute="centerX" secondItem="P4C-g8-IHW" secondAttribute="centerX" id="Yve-bi-iNi"/>
+                                            <constraint firstItem="Gls-FS-6cB" firstAttribute="leading" secondItem="3iz-Lv-QZE" secondAttribute="leading" id="ZJR-Vo-EgP"/>
                                             <constraint firstItem="hIT-Ow-thQ" firstAttribute="leading" secondItem="BXr-yH-tHu" secondAttribute="leading" id="aY5-1y-5fg"/>
                                             <constraint firstItem="BXr-yH-tHu" firstAttribute="leading" secondItem="P4C-g8-IHW" secondAttribute="leading" constant="16" id="avV-Xf-CVh"/>
                                             <constraint firstItem="O2F-f4-6uO" firstAttribute="centerX" secondItem="Gls-FS-6cB" secondAttribute="centerX" id="bdD-Vs-cVe"/>
+                                            <constraint firstItem="Gls-FS-6cB" firstAttribute="top" secondItem="3iz-Lv-QZE" secondAttribute="bottom" constant="10" id="env-G3-Fq1"/>
                                             <constraint firstItem="hIT-Ow-thQ" firstAttribute="top" secondItem="BXr-yH-tHu" secondAttribute="bottom" constant="8" id="gDa-e9-u8D"/>
+                                            <constraint firstItem="xnn-qL-Xyd" firstAttribute="leading" secondItem="Gls-FS-6cB" secondAttribute="leading" constant="70" id="glt-MW-ocI"/>
                                             <constraint firstItem="BXr-yH-tHu" firstAttribute="top" secondItem="P4C-g8-IHW" secondAttribute="top" constant="16" id="jY7-0w-vF5"/>
-                                            <constraint firstItem="Gls-FS-6cB" firstAttribute="top" secondItem="hIT-Ow-thQ" secondAttribute="bottom" constant="24" id="mTG-k8-dww"/>
+                                            <constraint firstItem="DV0-Lf-bxa" firstAttribute="trailing" secondItem="Gls-FS-6cB" secondAttribute="trailing" id="rO3-nj-Def"/>
                                             <constraint firstItem="oQU-Hn-gbG" firstAttribute="centerY" secondItem="CRs-n6-UjE" secondAttribute="centerY" id="sme-0X-cMD"/>
                                         </constraints>
                                     </view>
@@ -1749,7 +1771,7 @@
                                 <constraints>
                                     <constraint firstAttribute="right" secondItem="P4C-g8-IHW" secondAttribute="right" id="14Y-yv-KcN"/>
                                     <constraint firstItem="P4C-g8-IHW" firstAttribute="left" secondItem="9iR-62-35b" secondAttribute="left" id="LGi-Xx-omS"/>
-                                    <constraint firstAttribute="bottom" secondItem="P4C-g8-IHW" secondAttribute="bottom" id="oat-jJ-u8B"/>
+                                    <constraint firstAttribute="bottom" secondItem="P4C-g8-IHW" secondAttribute="bottom" constant="64" id="oat-jJ-u8B"/>
                                     <constraint firstItem="P4C-g8-IHW" firstAttribute="top" secondItem="9iR-62-35b" secondAttribute="top" id="wb3-8R-r6N"/>
                                 </constraints>
                             </scrollView>
@@ -1775,6 +1797,9 @@
                         <outlet property="activityIndicator" destination="D9s-uY-8B0" id="hPs-jx-mFW"/>
                         <outlet property="image" destination="Gls-FS-6cB" id="yeo-O3-JfW"/>
                         <outlet property="imageActivity" destination="O2F-f4-6uO" id="azi-nY-2Cf"/>
+                        <outlet property="lblProcessing" destination="DV0-Lf-bxa" id="3so-T9-lGE"/>
+                        <outlet property="lblUploading" destination="3iz-Lv-QZE" id="hlx-qr-wsT"/>
+                        <outlet property="loadingBar" destination="xnn-qL-Xyd" id="78c-p0-Zq0"/>
                         <outlet property="mainView" destination="P4C-g8-IHW" id="ntD-cU-QLy"/>
                         <outlet property="noRecording" destination="ysV-dm-iWu" id="jLH-Sb-AkP"/>
                         <outlet property="playOverlay" destination="ACW-EH-Kde" id="ixv-Ja-XEu"/>

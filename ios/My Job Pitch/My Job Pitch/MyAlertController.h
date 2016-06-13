@@ -10,4 +10,8 @@
 
 @interface MyAlertController : UIAlertController
 
++ (void)title:(NSString*)title message:(NSString*)message
+           ok:(NSString*)ok okCallback:(void(^)())okCallback
+       cancel:(NSString*)cancel cancelCallback:(void(^)())cancelCallback;
+
 @end

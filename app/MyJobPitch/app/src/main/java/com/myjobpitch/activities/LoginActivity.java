@@ -110,7 +110,9 @@ public class LoginActivity extends MJPProgressActivity implements LoaderCallback
                     preferences.edit().remove(REMEMBER_PASSWORD).commit();
             }
         });
-        if (preferences.getBoolean(REMEMBER_PASSWORD, false)) {
+
+        boolean isRemember = preferences.getBoolean(REMEMBER_PASSWORD, false);
+        if (isRemember) {
             mPasswordView.setText(preferences.getString(PASSWORD, ""));
             mRememberPasswordView.setChecked(true);
         }
@@ -164,6 +166,10 @@ public class LoginActivity extends MJPProgressActivity implements LoaderCallback
                 }
             });
             apiRootView.setText(preferences.getString(API_ROOT, urls[0]));
+        }
+
+        if (isRemember) {
+            attemptLogin();
         }
     }
 

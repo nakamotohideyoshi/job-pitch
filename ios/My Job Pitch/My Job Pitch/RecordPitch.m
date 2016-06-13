@@ -68,22 +68,11 @@
                                       } failure:^(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors) {
                                           [self showProgress:false];
                                           
-                                          MyAlertController * alert=   [MyAlertController
-                                                                        alertControllerWithTitle:@"Error"
-                                                                        message:@"Error loading data"
-                                                                        preferredStyle:UIAlertControllerStyleAlert];
-                                          UIAlertAction* ok = [UIAlertAction
-                                                               actionWithTitle:@"Okay"
-                                                               style:UIAlertActionStyleDefault
-                                                               handler:^(UIAlertAction * action)
-                                                               {
-                                                                   [alert dismissViewControllerAnimated:YES completion:nil];
-                                                                   [self.navigationController popViewControllerAnimated:true];
-                                                               }];
-                                          
-                                          [alert addAction:ok];
-                                          [self presentViewController:alert animated:YES completion:nil];
-                                          
+                                          [MyAlertController title:@"Error"
+                                                           message:@"Error loading data"
+                                                                ok:@"OK" okCallback:^{
+                                                                    [self.navigationController popViewControllerAnimated:true];
+                                                                } cancel:nil cancelCallback:nil];
                                       }];
 }
 
@@ -98,30 +87,11 @@
 - (IBAction)recordPitch:(id)sender {
     
     if (self.videoURL) {
-        MyAlertController * alert=   [MyAlertController
-                                      alertControllerWithTitle:@"Confirm"
-                                      message:@"You have a pitch recorded but not uploaded. A new recording will replace this"
-                                      preferredStyle:UIAlertControllerStyleAlert];
-        UIAlertAction* ok = [UIAlertAction
-                             actionWithTitle:@"OK"
-                             style:UIAlertActionStyleDefault
-                             handler:^(UIAlertAction * action)
-                             {
-                                 [alert dismissViewControllerAnimated:YES completion:nil];
-                                 [self showCamera];
-                                 
-                             }];
-        UIAlertAction* cancel = [UIAlertAction
-                                 actionWithTitle:@"Cancel"
-                                 style:UIAlertActionStyleDefault
-                                 handler:^(UIAlertAction * action)
-                                 {
-                                     [alert dismissViewControllerAnimated:YES completion:nil];
-                                 }];
-        [alert addAction:ok];
-        [alert addAction:cancel];
-        [self presentViewController:alert animated:YES completion:nil];
-        
+        [MyAlertController title:@"Confirm"
+                         message:@"You have a pitch recorded but not uploaded. A new recording will replace this"
+                              ok:@"OK" okCallback:^{
+                                  [self showCamera];
+                              } cancel:@"Cancel" cancelCallback:nil];
     } else {
         [self showCamera];
     }
@@ -145,34 +115,16 @@
             }
             [self presentViewController:camera animated:YES completion:nil];
         } else {
-            MyAlertController * alert=   [MyAlertController
-                                          alertControllerWithTitle:@"Not supported"
-                                          message:@"Video recording is not supported on your device"
-                                          preferredStyle:UIAlertControllerStyleAlert];
-            UIAlertAction* ok = [UIAlertAction
-                                 actionWithTitle:@"Dismiss"
-                                 style:UIAlertActionStyleDefault
-                                 handler:^(UIAlertAction * action)
-                                 {
-                                     [alert dismissViewControllerAnimated:YES completion:nil];
-                                 }];
-            [alert addAction:ok];
-            [self presentViewController:alert animated:YES completion:nil];
+            [MyAlertController title:@"Not supported"
+                             message:@"Video recording is not supported on your device"
+                                  ok:@"Dismiss" okCallback:nil
+                              cancel:@"Cancel" cancelCallback:nil];
         }
     } else {
-        MyAlertController * alert=   [MyAlertController
-                                      alertControllerWithTitle:@"Not supported"
-                                      message:@"Video recording is not supported on your device"
-                                      preferredStyle:UIAlertControllerStyleAlert];
-        UIAlertAction* ok = [UIAlertAction
-                             actionWithTitle:@"Dismiss"
-                             style:UIAlertActionStyleDefault
-                             handler:^(UIAlertAction * action)
-                             {
-                                 [alert dismissViewControllerAnimated:YES completion:nil];
-                             }];
-        [alert addAction:ok];
-        [self presentViewController:alert animated:YES completion:nil];
+        [MyAlertController title:@"Not supported"
+                         message:@"Video recording is not supported on your device"
+                              ok:@"Dismiss" okCallback:nil
+                          cancel:@"Cancel" cancelCallback:nil];
     }
 }
 
@@ -201,29 +153,11 @@
 - (IBAction)videoUpload:(id)sender {
     
     if (self.loadingBar.hidden == NO) {
-        MyAlertController * alert=   [MyAlertController
-                                      alertControllerWithTitle:@"Confirm"
-                                      message:@"This will cancel your current upload! Continue?"
-                                      preferredStyle:UIAlertControllerStyleAlert];
-        UIAlertAction* ok = [UIAlertAction
-                             actionWithTitle:@"OK"
-                             style:UIAlertActionStyleDefault
-                             handler:^(UIAlertAction * action)
-                             {
-                                 [alert dismissViewControllerAnimated:YES completion:nil];
-                                 [self createPitch];
-                             }];
-        UIAlertAction* cancel = [UIAlertAction
-                                 actionWithTitle:@"Cancel"
-                                 style:UIAlertActionStyleDefault
-                                 handler:^(UIAlertAction * action)
-                                 {
-                                     [alert dismissViewControllerAnimated:YES completion:nil];
-                                 }];
-        [alert addAction:ok];
-        [alert addAction:cancel];
-        [self presentViewController:alert animated:YES completion:nil];
-        
+        [MyAlertController title:@"Confirm"
+                         message:@"This will cancel your current upload! Continue?"
+                              ok:@"OK" okCallback:^{
+                                  [self createPitch];
+                              } cancel:@"Cancel" cancelCallback:nil];
     } else {
         [self createPitch];
     }
@@ -323,20 +257,10 @@
     self.loadingBar.hidden = YES;
     self.lblProcessing.hidden = YES;
     
-    MyAlertController * alert=   [MyAlertController
-                                  alertControllerWithTitle:@"Failed to Upload"
-                                  message:@"Failed to Upload"
-                                  preferredStyle:UIAlertControllerStyleAlert];
-    UIAlertAction* ok = [UIAlertAction
-                         actionWithTitle:@"OK"
-                         style:UIAlertActionStyleDefault
-                         handler:^(UIAlertAction * action)
-                         {
-                             [alert dismissViewControllerAnimated:YES completion:nil];
-                         }];
-    [alert addAction:ok];
-    [self presentViewController:alert animated:YES completion:nil];
-    
+    [MyAlertController title:@"Failed to Upload"
+                     message:@"Failed to Upload"
+                          ok:@"OK" okCallback:nil
+                      cancel:nil cancelCallback:nil];
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {

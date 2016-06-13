@@ -8,6 +8,8 @@
 
 #import "MJPViewController.h"
 
+#import "MyAlertController.h"
+
 @interface MJPViewController ()
 
 
@@ -104,20 +106,13 @@
                     title = @"Error";
                 else
                     title = [NSString stringWithFormat:@"Error: %@", key];
-                [[[UIAlertView alloc] initWithTitle:title
-                                            message:[errors[key] firstObject]
-                                           delegate:nil
-                                  cancelButtonTitle:@"OK"
-                                  otherButtonTitles:nil, nil] show];
+                
+                [MyAlertController title:title message:[errors[key] firstObject] ok:@"OK" okCallback:nil cancel:nil cancelCallback:nil];
             }
         }
     }
     if (message) {
-        [[[UIAlertView alloc] initWithTitle:@"Error"
-                                    message:message
-                                   delegate:nil
-                          cancelButtonTitle:@"OK"
-                          otherButtonTitles:nil, nil] show];
+        [MyAlertController title:@"Error" message:message ok:@"OK" okCallback:nil cancel:nil cancelCallback:nil];
     }
 }
 

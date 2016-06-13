@@ -14,10 +14,25 @@
 @end
 
 @implementation Login
+{
+    bool isAutoLogin;
+}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     [activityIndicator setHidden:YES];
+    
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    BOOL isRemember = [defaults boolForKey:@"remember"];
+    username.text = [defaults stringForKey:@"username"];
+    password.text = isRemember ? [defaults stringForKey:@"password"] : @"";
+    password2.text = @"";
+    [switchRemember setOn:isRemember];
+    
+    if (isRemember) {
+        isAutoLogin = YES;
+        [self login:nil];
+    }
 }
 
 - (void)didReceiveMemoryWarning {
@@ -29,14 +44,17 @@
 {
     [[self appDelegate].api logout];
     [[self appDelegate] clearData];
-    username.text = @"io1";
-    password.text = @"aaaaaa";
-    password2.text = @"";
+    
     [self clearErrors];
-    [self showProgress:false];
     registrationForm.hidden = YES;
     loginForm.alpha = 1.0f;
     self.navigationController.navigationBarHidden = YES;
+    
+    if (isAutoLogin) {
+        isAutoLogin = NO;
+    } else {
+        [self showProgress:false];
+    }
 }
 
 - (void)viewDidDisappear:(BOOL)animated
@@ -49,6 +67,14 @@
     [self clearErrors];
     [self appDelegate].user = user;
     [self.appDelegate loadData:^() {
+        
+        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+        
+        [defaults setBool:switchRemember.isOn forKey:@"remember"];
+        [defaults setObject:username.text forKey:@"username"];
+        [defaults setObject:password.text forKey:@"password"];
+        [defaults synchronize];
+        
         if ([user isJobSeeker]) {
             [self performSegueWithIdentifier:@"goto_job_seeker" sender:@"login"];
         } else if ([user isRecruiter]) {

@@ -66,10 +66,19 @@
                                                         <nil key="highlightedColor"/>
                                                     </label>
                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Yk3-ZJ-s0C" userLabel="Login Form">
-                                                        <rect key="frame" x="0.0" y="80" width="225" height="30"/>
+                                                        <rect key="frame" x="0.0" y="80" width="225" height="71"/>
                                                         <subviews>
+                                                            <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Pp7-XZ-M4w">
+                                                                <rect key="frame" x="5" y="0.0" width="51" height="31"/>
+                                                            </switch>
+                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Remember password" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hNo-6x-hxO">
+                                                                <rect key="frame" x="64" y="7" width="136" height="17"/>
+                                                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                                <nil key="highlightedColor"/>
+                                                            </label>
                                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="itu-dt-9lY">
-                                                                <rect key="frame" x="0.0" y="0.0" width="106" height="30"/>
+                                                                <rect key="frame" x="0.0" y="41" width="106" height="30"/>
                                                                 <color key="backgroundColor" red="0.0" green="0.58823529409999997" blue="0.53333333329999999" alpha="1" colorSpace="calibratedRGB"/>
                                                                 <state key="normal" title="Login">
                                                                     <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -85,7 +94,7 @@
                                                                 </connections>
                                                             </button>
                                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="AqZ-72-bt7">
-                                                                <rect key="frame" x="119" y="0.0" width="106" height="30"/>
+                                                                <rect key="frame" x="119" y="41" width="106" height="30"/>
                                                                 <color key="backgroundColor" red="0.0" green="0.58823529409999997" blue="0.53333333329999999" alpha="1" colorSpace="calibratedRGB"/>
                                                                 <state key="normal" title="Register">
                                                                     <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -102,13 +111,17 @@
                                                             </button>
                                                         </subviews>
                                                         <constraints>
+                                                            <constraint firstItem="Pp7-XZ-M4w" firstAttribute="top" secondItem="Yk3-ZJ-s0C" secondAttribute="top" id="020-IA-aKM"/>
                                                             <constraint firstAttribute="trailing" secondItem="AqZ-72-bt7" secondAttribute="trailing" id="0U9-ED-wZa"/>
+                                                            <constraint firstItem="hNo-6x-hxO" firstAttribute="centerY" secondItem="Pp7-XZ-M4w" secondAttribute="centerY" id="5Jb-N6-UZB"/>
                                                             <constraint firstItem="AqZ-72-bt7" firstAttribute="width" secondItem="Yk3-ZJ-s0C" secondAttribute="width" multiplier="0.47" id="Gb3-5g-3v3"/>
+                                                            <constraint firstItem="Pp7-XZ-M4w" firstAttribute="leading" secondItem="Yk3-ZJ-s0C" secondAttribute="leading" constant="5" id="HlH-cl-RWr"/>
                                                             <constraint firstItem="itu-dt-9lY" firstAttribute="width" secondItem="Yk3-ZJ-s0C" secondAttribute="width" multiplier="0.47" id="Ni9-h0-Rof"/>
                                                             <constraint firstItem="itu-dt-9lY" firstAttribute="leading" secondItem="Yk3-ZJ-s0C" secondAttribute="leading" id="Pje-We-b7J"/>
                                                             <constraint firstAttribute="bottom" secondItem="AqZ-72-bt7" secondAttribute="bottom" id="Ydu-M2-Lnl"/>
                                                             <constraint firstItem="AqZ-72-bt7" firstAttribute="top" secondItem="itu-dt-9lY" secondAttribute="top" id="fTS-Oo-bTS"/>
-                                                            <constraint firstItem="itu-dt-9lY" firstAttribute="top" secondItem="Yk3-ZJ-s0C" secondAttribute="top" id="wC7-GE-PjV"/>
+                                                            <constraint firstItem="hNo-6x-hxO" firstAttribute="leading" secondItem="Pp7-XZ-M4w" secondAttribute="trailing" constant="10" id="fop-hJ-KsB"/>
+                                                            <constraint firstItem="itu-dt-9lY" firstAttribute="top" secondItem="Pp7-XZ-M4w" secondAttribute="bottom" constant="10" id="y0p-PT-3Yt"/>
                                                         </constraints>
                                                     </view>
                                                     <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="nvH-Uf-y8G" userLabel="Register Form">
@@ -253,6 +266,7 @@
                         <outlet property="passwordError" destination="Yfh-Le-zIJ" id="Bdo-Rz-5Ra"/>
                         <outlet property="registrationForm" destination="nvH-Uf-y8G" id="bYk-vN-RQy"/>
                         <outlet property="scrollView" destination="Yhh-uQ-M0h" id="2gZ-kZ-fpx"/>
+                        <outlet property="switchRemember" destination="Pp7-XZ-M4w" id="cOb-hp-DfC"/>
                         <outlet property="username" destination="Zff-yc-hTC" id="cdg-f2-C6O"/>
                         <outlet property="usernameError" destination="uGz-Nx-8jW" id="Gbz-n1-PaY"/>
                         <segue destination="4TA-uO-Eyq" kind="show" identifier="goto_create_profile" id="BGt-nD-SGF"/>

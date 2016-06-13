@@ -918,6 +918,25 @@ input {
 }
 
 
+/*
+ * CSS for an animated glyphicon refresh
+ */
+.glyphicon-refresh-animate {
+    -animation: spin .7s infinite linear;
+    -webkit-animation: spin2 .7s infinite linear;
+}
+
+@-webkit-keyframes spin2 {
+    from { -webkit-transform: rotate(0deg);}
+    to { -webkit-transform: rotate(120deg);}
+}
+
+@keyframes spin {
+    from { transform: scale(1) rotate(0deg);}
+    to { transform: scale(1) rotate(120deg);}
+}
+
+
 .jobs-list .btn{
 	margin-top:10px;
 }
@@ -970,6 +989,15 @@ input {
     background-color: #a9a9a9;
 	cursor:default;
 }
+
+
+#pitchVideoCheck video{
+	background: #222;
+	margin: 10px auto;
+	width: 320px;
+	height: 240px;
+}
+
 
 /* Only show the "mobile menu" fix */
 @media (max-width: 3000px) {

@@ -28,20 +28,16 @@
     _api = [[API alloc] init];
     self.loaded = false;
     [GMSServices provideAPIKey:@"AIzaSyCeseQMdrlh9E5d7DHHHm4GvW7yd8C_sZk"];
-    
-    AWSCognitoCredentialsProvider *credentialsProvider = [[AWSCognitoCredentialsProvider alloc]
-                                                          initWithRegionType:AWSRegionEUWest1
-                                                          identityPoolId:@"eu-west-1:93ae6986-5938-4130-a3c0-f96c39d75be2"];
-    AWSServiceConfiguration *configuration = [[AWSServiceConfiguration alloc] initWithRegion:AWSRegionUSEast1 credentialsProvider:credentialsProvider];
-    AWSServiceManager.defaultServiceManager.defaultServiceConfiguration = configuration;
-    
+   
     return YES;
 }
 
 - (void)application:(UIApplication *)application handleEventsForBackgroundURLSession:(NSString *)identifier
   completionHandler:(void (^)())completionHandler {
     /* Store the completion handler.*/
-    [AWSS3TransferUtility interceptApplication:application handleEventsForBackgroundURLSession:identifier completionHandler:completionHandler];
+    [AWSS3TransferUtility interceptApplication:application
+           handleEventsForBackgroundURLSession:identifier
+                             completionHandler:completionHandler];
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application {

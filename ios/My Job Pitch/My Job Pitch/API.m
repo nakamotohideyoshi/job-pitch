@@ -520,6 +520,13 @@
                             path:@"/api/pitches/"
                           method:RKRequestMethodPOST];
     
+    [self configureSimpleMapping:objectManager
+                           class:[Pitch class]
+                           array:pitchArray
+                      dictionary:nil
+                   relationships:nil
+                            path:@"/api/pitches/:pk/"
+                          method:RKRequestMethodGET];
     
     NSArray *nameArray = @[@"id",
                            @"name",
@@ -1066,6 +1073,7 @@
             success:(void (^)(Pitch *pitch))success
             failure:(void (^)(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors))failure
 {
+    [self clearCookies];
     [[RKObjectManager sharedManager] postObject:pitch
                                            path:@"/api/pitches/"
                                      parameters:nil success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
@@ -1082,14 +1090,15 @@
          success:(void (^)(Pitch *pitch))success
          failure:(void (^)(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors))failure
 {
-    NSString *path = [NSString stringWithFormat:@"/api/pitches/%d", [pid intValue]];
-    [[RKObjectManager sharedManager] getObjectsAtPath:path parameters:nil success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
-        NSLog(@"Pitch sent");
-        success([mappingResult firstObject]);
-    } failure:^(RKObjectRequestOperation *operation, NSError *error) {
-        NSLog(@"Error sending message: %@", error);
-        failure(operation, error, [self getMessage:error], [self getErrors:error]);
-    }];
+    [self clearCookies];
+    NSString *url = [NSString stringWithFormat:@"/api/pitches/%d/", [pid intValue]];
+    [[RKObjectManager sharedManager] getObjectsAtPath:url parameters:nil
+                                              success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
+                                                  success([mappingResult firstObject]);
+                                              }
+                                              failure:^(RKObjectRequestOperation *operation, NSError *error) {
+                                                  failure(operation, error, [self getMessage:error], [self getErrors:error]);
+                                              }];
 }
 
 

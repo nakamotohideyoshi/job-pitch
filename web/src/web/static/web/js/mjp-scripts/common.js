@@ -367,7 +367,7 @@ function getHtmlForVideoOrThumbnail(pitches){
 	$.each(pitches, function(index, pitch) {
 		if( _.hasIn(pitch,'video') && ! _.isEmpty(pitch.video)){
 			link = pitch.video;
-			content = '<video width="320" height="240" controls><source src="<%= url %>" type="video/mp4"></video>';
+			content = '<video id="viewing-container" width="320" height="240" controls><source src="<%= url %>" type="video/mp4"></video>';
 			return false;
 		}
 
@@ -399,10 +399,42 @@ function serialize(query){
 
 function urlExists(url)
 {
-    var http = new XMLHttpRequest();
-    http.open('HEAD', url, false);
-    http.send();
-    return http.status!=404;
+  var http = new XMLHttpRequest();
+  http.open('HEAD', url, false);
+  http.send();
+  return http.status!=404;
+}
+
+function log(alertType, message){
+	var $dataElement = $('#data');
+	var $parent = $dataElement.parent();
+	if(alertType=='hide'){
+		$parent.hide();
+
+		return;
+	}
+
+	var glyphicon = 'glyphicon glyphicon-refresh glyphicon-refresh-animate';
+
+	if(alertType=='success'){
+		glyphicon = 'glyphicon glyphicon-ok';
+	}
+
+	$parent
+		.find('.glyphicon')
+		.removeClass()
+		.addClass(glyphicon);
+
+	$parent
+		.hide()
+		.removeClass()
+		.addClass('alert alert-'+alertType)
+		.show();
+
+	$dataElement
+		.fadeOut('fast')
+		.html(message)
+		.fadeIn('slow');
 }
 
 function gettingTemplate(fullPathTemplate, resolve, reject){

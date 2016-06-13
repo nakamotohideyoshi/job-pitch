@@ -14,38 +14,15 @@ var actualPitch = null;
 var job_seeker_id = 0;
 
 $(document).ready(function() {
-	$.get( "/api/job-seekers/", { csrftoken: getCookie('csrftoken') })
-	.done(function( jobSeeker ) {
-		job_seeker_id = jobSeeker[0].id;
 
-		if(jobSeeker[0].pitches[0] !== undefined){
-			actualPitch = jobSeeker[0].pitches[0];
-
-			renderVideoContainer(actualPitch);
-			var poolingPromise = new Promise(function(resolve,reject){
-				poolingTranscodeProcess(resolve);
-			});
-
-			poolingPromise.then(function(pitch){
-				renderVideoContainer(pitch);
-			});
-		}
-	});
-
-
-	$.get( "/api-rest-auth/user/", { token: getCookie('key') ,csrftoken: getCookie('csrftoken') })
-	.done(function( data ) {
-		job_seeker_id = data.job_seeker;
-	});
-
-
+	checkIfThereIsApitch();
 
 	$('.btn-js-start-pitch').click(function(e) {
 		// prepare video container;
 		$('#pitchVideoCheck video').html('');
 
 		if(onBtnRecordClicked()){
-			startRecordingTimer(19, $('.btn-js-stop-pitch'), stopRecordingProcess);
+			startRecordingTimer(31, $('.btn-js-stop-pitch'), stopRecordingProcess);
 		};
 	});
 
@@ -56,11 +33,14 @@ $(document).ready(function() {
 
 
 	$('.btn-js-upload-pitch').click(function(e) {
-		var videoDataContainer = document.getElementById('data');
-		var params = {Key: 'pitch-'+job_seeker_id+'.webm', Body: videoDataContainer.value};
-		bucket.upload(params, function (err, data) {
-			console.log = err ? 'ERROR!' : 'SAVED.';
-		});
+		$uploadBtn.attr('disabled', true);
+		videoElement.controls= false;
+
+		if(rawMediaRecorded != undefined && rawMediaRecorded){
+			getNewPitchMetaData(function(pitch){
+				putIntoS3Bucket(pitch, rawMediaRecorded);
+			});
+		}
 	});
 });
 
@@ -76,7 +56,7 @@ function renderVideoContainer(pitch) {
 
 		videoSource = '<source src="'+pitch.video+'" type="'+videoType+'">';
 
-		var htmlVideo = '<video width="320" height="240" controls autoplay>'+videoSource+'</video><br>';
+		var htmlVideo = '<video width="320" height="240" controls>'+videoSource+'</video><br>';
 		$('#pitchVideoCheck').html(htmlVideo);
 	}
 }
@@ -84,6 +64,8 @@ function renderVideoContainer(pitch) {
 
 function startRecordingTimer(duration, $display, callback) {
 	var timer = duration, minutes, seconds;
+
+	clearInterval(poolingInterval); // Clear any existent pooling process
 
 	recordingTimer = setInterval(function () {
 		minutes = parseInt(timer / 60, 10);
@@ -109,11 +91,7 @@ function stopRecordingProcess($display){
 
 	onBtnStopClicked();
 
-	if(rawMediaRecorded != undefined && rawMediaRecorded){
-		getNewPitchMetaData(function(pitch){
-			putIntoS3Bucket(pitch, rawMediaRecorded);
-		});
-	}
+	log('success', 'Video is ready for uploading.');
 }
 
 
@@ -131,7 +109,7 @@ function getNewPitchMetaData(callback) {
 
 
 function putIntoS3Bucket(pitch, object){
-	log('Start uploading ...');
+	log('info', 'Start uploading ...');
 
 	object.Key = window.location.origin.replace('//','')
 	+ '/' + pitch.token
@@ -147,45 +125,3 @@ function putIntoS3Bucket(pitch, object){
 		console.log(err ? 'ERROR!' : 'SAVED.');
 	});
 }
-
-
-function poolingTranscodeProcess(resolve){
-	var firstExecution = true;
-
-	poolingInterval = setInterval(function(){
-		$.ajax({
-			url: "/api/pitches/",
-			type: 'GET',
-			cache: false
-		}).done(function( pitches ) {
-			if(pitches !== undefined && pitches.length > 0){
-				var thereIsANullPitch = false;
-
-				pitches.forEach(function(pitch) {
-					if(pitch.video == undefined || pitch.video == null || !pitch.video){
-						thereIsANullPitch = true;
-						return false; // There is one
-					}
-				});
-
-				if(thereIsANullPitch){ // Uploaded already
-					if(firstExecution){
-						$('.btn-js-start-pitch').addClass('disabled');
-						log('Continues with uploading ...');
-					}
-				} else {
-					if(!firstExecution){
-						log('End of Uploading');
-					}
-
-					$('.btn-js-start-pitch').removeClass('disabled');
-					clearInterval(poolingInterval);
-					resolve(pitches[0]);
-				}
-
-				firstExecution = false;
-			}
-		});
-	},3000);
-}
-

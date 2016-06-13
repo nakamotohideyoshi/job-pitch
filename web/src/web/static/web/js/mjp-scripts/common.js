@@ -2,8 +2,8 @@
 
 function setCookie(cname, cvalue, exdays) {
 	var d = new Date();
-	d.setTime(d.getTime() + (exdays*24*60*60*1000));
-	var expires = "expires="+d.toUTCString();
+	d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
+	var expires = "expires=" + d.toUTCString();
 	document.cookie = cname + "=" + cvalue + "; " + expires + "; path=/;";
 }
 
@@ -11,26 +11,27 @@ function getCookie(cname) {
 	var name = cname + "=";
 	var ca = document.cookie.split(';');
 
-	for(var i=0; i<ca.length; i++) {
+	for (var i = 0; i < ca.length; i++) {
 		var c = ca[i];
-		while (c.charAt(0)==' ') c = c.substring(1);
-		if (c.indexOf(name) == 0){
-			return c.substring(name.length,c.length);
+		while (c.charAt(0) == ' ') c = c.substring(1);
+		if (c.indexOf(name) == 0) {
+			return c.substring(name.length, c.length);
 		}
 	}
 
 	return "";
 }
 
-function deleteCookie(cname){
-	document.cookie = cname+"=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC";
+function deleteCookie(cname) {
+	document.cookie = cname + "=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC";
 }
 
 //get lat long and other data from postcode
-function postcodeLocationData(postcode, handleData){
-	if(postcode != ''){
-		$.ajax({ cache: false,
-			url: "http://api.postcodes.io/postcodes/"+postcode,
+function postcodeLocationData(postcode, handleData) {
+	if (postcode != '') {
+		$.ajax({
+			cache: false,
+			url: "http://api.postcodes.io/postcodes/" + postcode,
 			success: function (data) {
 				handleData(data);
 			},
@@ -41,24 +42,26 @@ function postcodeLocationData(postcode, handleData){
 				//formAlert('danger', 'Please enter a valid postcode.');
 			}
 		});
-	}else{
-		fieldError('Please enter a postcode.', 'postcode');
-		$('.btn-primary').attr( "disabled", false );
+
+		return;
 	}
+
+	fieldError('Please enter a postcode.', 'postcode');
+	$('.btn-primary').attr("disabled", false);
 }
 
 //if redirect is true, send user to login
-function checkLogin(redirect){
+function checkLogin(redirect) {
 	//Check if this is a mobile device, if so tell them to go use the mobile apps
-	if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
+	if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
 		window.location.href = "/mobile-app";
 	}
 
 	var username = getCookie('username');
-	if(username == ""){
-		if(redirect == true){
+	if (username == "") {
+		if (redirect == true) {
 			window.location.href = "/login";
-		}else{
+		} else {
 			//show login & reg links
 			$('.not_logged_in_menu').show();
 			$('.not_logged_in_element').show();
@@ -66,31 +69,31 @@ function checkLogin(redirect){
 
 			return false;
 		}
-	}else{
+	} else {
 		setHeaderUsername();
 
 		return true;
 	}
 }
 
-function logoutUser(){
+function logoutUser() {
 	deleteCookie('username');
 	deleteCookie('key');
 
-	$.post( "/api-rest-auth/logout/", {
+	$.post("/api-rest-auth/logout/", {
 		csrfmiddlewaretoken: getCookie('csrftoken')
 	})
-	.done(function( data ) {
-		window.location.href = "/";
-	})
-	.fail(function( data ) {
-		window.location.href = "/";
+		.done(function (data) {
+			window.location.href = "/";
+		})
+		.fail(function (data) {
+			window.location.href = "/";
 
-	});
+		});
 
 }
 
-function setHeaderUsername(){
+function setHeaderUsername() {
 	var username = getCookie('username');
 	$('#header_username').html(username);
 
@@ -98,43 +101,43 @@ function setHeaderUsername(){
 	$('.logged_in_menu').show();
 }
 
-function applyForJob(job_id, job_seeker_id){
-	$.post( "/api/applications/", {
+function applyForJob(job_id, job_seeker_id) {
+	$.post("/api/applications/", {
 		job: job_id,
 		job_seeker: job_seeker_id,
 		csrftoken: getCookie('csrftoken')
-	}).done(function( data ) {
-		$('#applyButton').fadeOut(200,function(){
+	}).done(function (data) {
+		$('#applyButton').fadeOut(200, function () {
 			$('#job_applied_for').show();
 		});
 	})
-	.fail(function( data ) {
+		.fail(function (data) {
 
-	});
+		});
 }
 
-function connectWithJob(job_id, job_seeker_id){
-	$.post( "/api/applications/", {
+function connectWithJob(job_id, job_seeker_id) {
+	$.post("/api/applications/", {
 		job: job_id,
 		job_seeker: job_seeker_id,
 		csrftoken: getCookie('csrftoken')
 	})
-	.done(function( data ) {
-		//location.reload();
-		$('#viewPitchModal')
-		.find('.modal-body')
-		.html('<div class="row"><div class="col-md-12"><h4 style="text-align: center; font-size:16px;">Thanks for requesting to connect. A message has been sent to the job seeker</h4></div></div><div class="row"><div class="col-md-12" style="text-align:center;"><button style="margin-left:0;" type="button" class="btn btn-custom" data-dismiss="modal" aria-label="Close">Back to List</button></div></row>');
-		$('#job-list-'+job_seeker_id).remove();
-	})
-	.fail(function( data ) {
+		.done(function (data) {
+			//location.reload();
+			$('#viewPitchModal')
+				.find('.modal-body')
+				.html('<div class="row"><div class="col-md-12"><h4 style="text-align: center; font-size:16px;">Thanks for requesting to connect. A message has been sent to the job seeker</h4></div></div><div class="row"><div class="col-md-12" style="text-align:center;"><button style="margin-left:0;" type="button" class="btn btn-custom" data-dismiss="modal" aria-label="Close">Back to List</button></div></row>');
+			$('#job-list-' + job_seeker_id).remove();
+		})
+		.fail(function (data) {
 
-	});
+		});
 }
 
 
-function messageRead(message_id){
-	$.put( "/api/messages/"+message_id+'/', {
-		read:true,
+function messageRead(message_id) {
+	$.put("/api/messages/" + message_id + '/', {
+		read: true,
 		csrftoken: getCookie('csrftoken')
 	});
 }
@@ -145,124 +148,127 @@ var QueryString = function () {
 	var query_string = {};
 	var query = window.location.search.substring(1);
 	var vars = query.split("&");
-	for (var i=0;i<vars.length;i++) {
+	for (var i = 0; i < vars.length; i++) {
 		var pair = vars[i].split("=");
 		// If first entry with this name
 		if (typeof query_string[pair[0]] === "undefined") {
 			query_string[pair[0]] = decodeURIComponent(pair[1]);
 
-		// If second entry with this name
+			// If second entry with this name
 		} else if (typeof query_string[pair[0]] === "string") {
-			var arr = [ query_string[pair[0]],decodeURIComponent(pair[1]) ];
+			var arr = [query_string[pair[0]], decodeURIComponent(pair[1])];
 			query_string[pair[0]] = arr;
 
-		// If third or later entry with this name
+			// If third or later entry with this name
 		} else {
 			query_string[pair[0]].push(decodeURIComponent(pair[1]));
 		}
 	}
-		return query_string;
+	return query_string;
 }();
 
 // Get the user type(business or job_seeker) & sort the menus out.
-function userTypeMenuConfiguration(redirectToProfile){
-	$.get( "/api-rest-auth/user/", {
+function userTypeMenuConfiguration(redirectToProfile) {
+	$.get("/api-rest-auth/user/", {
 		token: getCookie('key'),
 		csrftoken: getCookie('csrftoken')
 
 	})
-	.done(function( data ) {
-		if (data.businesses.length){
-			// business
-			$('.business-link').show();
-		}else if (data.job_seeker != null){
-			// job-seeker
-			$('.job-seeker-link').show();
-		}else{
-			// Go Finish registration
-			if(redirectToProfile == true){
-				window.location.href = "/profile";
+		.done(function (data) {
+			if (data.businesses.length) {
+				// business
+				$('.business-link').show();
+			} else if (data.job_seeker != null) {
+				// job-seeker
+				$('.job-seeker-link').show();
+			} else {
+				// Go Finish registration
+				if (redirectToProfile == true) {
+					window.location.href = "/profile";
+				}
 			}
-		}
-	})
-	.fail(function( data ) {
-		logoutUser();
-		console.log( data );
-	});
+		})
+		.fail(function (data) {
+			logoutUser();
+			console.log(data);
+		});
 
 }
 
-function formAlert(type, message){
-	$('.alert').addClass('alert-'+type);
+function formAlert(type, message) {
+	$('.alert').addClass('alert-' + type);
 	$('.alert').html(message);
 	$('.alert').show();
 }
 
-function putManyAlerts(parentId, messages ){
-	$(parentId+' > .alert').addClass('alert-'+messages[0].type);
-	$(parentId+' > .alert').html(messages[0].content);
-	$(parentId+' > .alert').show();
+function putManyAlerts(parentId, messages) {
+	$(parentId + ' > .alert').addClass('alert-' + messages[0].type);
+	$(parentId + ' > .alert').html(messages[0].content);
+	$(parentId + ' > .alert').show();
 
-	for (var i = 1;  i < messages.length ; i++) {
+	for (var i = 1; i < messages.length; i++) {
 		message = messages[i];
 
-		$(parentId+' > .alert:last')
-		.clone()
-		.addClass('alert-'+message.type)
-		.html(message.content)
-		.insertAfter(parentId+' > .alert:last');
+		$(parentId + ' > .alert:last')
+			.clone()
+			.addClass('alert-' + message.type)
+			.html(message.content)
+			.insertAfter(parentId + ' > .alert:last');
 	}
 }
 
-function showAlert(selector, type, text){
+function showAlert(selector, type, text) {
 	var icon = 'glyphicon-ok';
 
-	if(type=='danger'){
+	if (type == 'danger') {
 		icon = 'glyphicon-exclamation-sign';
 	}
 
 	$(selector)
-	.html('<div class="alert alert-'+type+'" role="alert">'
-		+'<span class="glyphicon '+icon+'" aria-hidden="true">&nbsp;</span>'
-		+ text
-		+'</div>')
-	.find('.alert').show().fadeOut(10000);
+		.html('<div class="alert alert-' + type + '" role="alert">' + '<span class="glyphicon ' + icon + '" aria-hidden="true">&nbsp;</span>' + text + '</div>')
+		.find('.alert').show().fadeOut(10000);
 }
 
-function fieldError(error,field){
+function fieldError(error, field) {
 	$('.formFieldError').remove();
 	$('.formFieldErrorInField').removeClass('formFieldErrorInField');
-	$('*[data-error-field="'+field+'"]').parent("div").append('<p class="formFieldError bg-danger">'+error+'</p>');
-	$('*[data-error-field="'+field+'"]').addClass('formFieldErrorInField');
+	$('*[data-error-field="' + field + '"]').parent("div").append('<p class="formFieldError bg-danger">' + error + '</p>');
+	$('*[data-error-field="' + field + '"]').addClass('formFieldErrorInField');
 }
-function clearErrors(){
+
+function clearErrors() {
 	$('.formFieldError').remove();
 	$('.formFieldErrorInField').removeClass('formFieldErrorInField');
 }
 
-function deleteRow(id, apiFunction, rowPrefix){
-	bootbox.confirm("Are you sure?", function(result) {
+function deleteRow(id, apiFunction, rowPrefix) {
+	bootbox.confirm("Are you sure?", function (result) {
 		$.ajax({
-			url: "/api/"+apiFunction+"/"+id+"/",
+			url: "/api/" + apiFunction + "/" + id + "/",
 			type: 'DELETE',
-			data:{ csrftoken: getCookie('csrftoken') },
-			success: function(result) {
-				console.log(rowPrefix+id);
-				$('#'+rowPrefix+id).fadeOut(250);
+			data: {
+				csrftoken: getCookie('csrftoken')
+			},
+			success: function (result) {
+				console.log(rowPrefix + id);
+				$('#' + rowPrefix + id).fadeOut(250);
 			}
 		});
 	});
 }
 
-function deleteRowApplication(id, rowPrefix){
-	bootbox.confirm("Are you sure?", function(result) {
+function deleteRowApplication(id, rowPrefix) {
+	bootbox.confirm("Are you sure?", function (result) {
 		$.ajax({
-			url: "/api/applications/"+id+"/",
+			url: "/api/applications/" + id + "/",
 			type: 'PUT',
-			data:{ csrftoken: getCookie('csrftoken'), status:3 },
-			success: function(result) {
-				console.log(rowPrefix+id);
-				$('#'+rowPrefix+id).fadeOut(250);
+			data: {
+				csrftoken: getCookie('csrftoken'),
+				status: 3
+			},
+			success: function (result) {
+				console.log(rowPrefix + id);
+				$('#' + rowPrefix + id).fadeOut(250);
 			}
 		});
 	});
@@ -270,29 +276,29 @@ function deleteRowApplication(id, rowPrefix){
 
 //check if a job seeker account is active. Returns true|false
 
-function account_active_check(){
-	$.get( "/api-rest-auth/user/", {
+function account_active_check() {
+	$.get("/api-rest-auth/user/", {
 		token: getCookie('key'),
 		csrftoken: getCookie('csrftoken')
 	})
-	.done(function( data ) {
-		job_seeker_id = data.job_seeker;
+		.done(function (data) {
+			job_seeker_id = data.job_seeker;
 
-		$.get( "/api/job-seekers/"+data.job_seeker, {
-			token: getCookie('key'),
-			csrftoken: getCookie('csrftoken')
-		}).done(function( data ) {
-			return data.active;
+			$.get("/api/job-seekers/" + data.job_seeker, {
+				token: getCookie('key'),
+				csrftoken: getCookie('csrftoken')
+			}).done(function (data) {
+				return data.active;
+			});
+
 		});
-
-	});
 }
 
 // Some handy helpers
 
-$.put = function(url, data, callback, type){
+$.put = function (url, data, callback, type) {
 
-	if ( $.isFunction(data) ){
+	if ($.isFunction(data)) {
 		type = type || callback,
 		callback = data,
 		data = {}
@@ -307,9 +313,9 @@ $.put = function(url, data, callback, type){
 	});
 }
 
-$.delete = function(url, data, callback, type){
+$.delete = function (url, data, callback, type) {
 
-	if ( $.isFunction(data) ){
+	if ($.isFunction(data)) {
 		type = type || callback,
 		callback = data,
 		data = {}
@@ -332,46 +338,46 @@ function csrfSafeMethod(method) {
 }
 
 $.ajaxSetup({
-	beforeSend: function(xhr, settings) {
+	beforeSend: function (xhr, settings) {
 		if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
 			xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
 		}
 	}
 });
 
-function deleteJobSeekerFromJob(job_id,job_seeker){
+function deleteJobSeekerFromJob(job_id, job_seeker) {
 
 }
 
-function viewPitch(url, job_id, job_seeker){
+function viewPitch(url, job_id, job_seeker) {
 	$('#pitchViewer').html('');
-	$('#pitchViewer').html('<video width="320" height="240" controls><source src="'+url+'" type="video/mp4"></video>');
-	$('#applyButtonModal').attr('href','javascript:connectWithJob('+job_id+','+job_seeker+');');
-	$('#deleteButtonModal').attr('href','javascript:deleteJobSeekerFromJob('+job_id+','+job_seeker+');');
+	$('#pitchViewer').html('<video width="320" height="240" controls><source src="' + url + '" type="video/mp4"></video>');
+	$('#applyButtonModal').attr('href', 'javascript:connectWithJob(' + job_id + ',' + job_seeker + ');');
+	$('#deleteButtonModal').attr('href', 'javascript:deleteJobSeekerFromJob(' + job_id + ',' + job_seeker + ');');
 	$('#applyButtonModal').show();
 	$('#deleteButtonModal').show();
 	$('#viewPitchModal').modal('show');
 }
 
-function viewPitch2(url, job_id, job_seeker){
+function viewPitch2(url, job_id, job_seeker) {
 	$('#pitchViewer').html('');
-	$('#pitchViewer').html('<video width="320" height="240" controls><source src="'+url+'" type="video/mp4"></video>');
+	$('#pitchViewer').html('<video width="320" height="240" controls><source src="' + url + '" type="video/mp4"></video>');
 	$('#viewPitchModal').modal('show');
 }
 
-function getHtmlForVideoOrThumbnail(pitches){
+function getHtmlForVideoOrThumbnail(pitches) {
 	var link = '';
 
 	var content = '<img src="/static/web/images/no_image_available.png" styles="width:160px;">';
 
-	$.each(pitches, function(index, pitch) {
-		if( _.hasIn(pitch,'video') && ! _.isEmpty(pitch.video)){
+	$.each(pitches, function (index, pitch) {
+		if (_.hasIn(pitch, 'video') && !_.isEmpty(pitch.video)) {
 			link = pitch.video;
 			content = '<video id="viewing-container" width="320" height="240" controls><source src="<%= url %>" type="video/mp4"></video>';
 			return false; // out of  $.each
 		}
 
-		if( _.hasIn(pitch, 'thumbnail') && ! _.isEmpty(pitch.thumbnail)){
+		if (_.hasIn(pitch, 'thumbnail') && !_.isEmpty(pitch.thumbnail)) {
 			link = pitch.thumbnail;
 			content = '<img src="<%= url %>">';
 			return false; // out of  $.each
@@ -380,35 +386,36 @@ function getHtmlForVideoOrThumbnail(pitches){
 
 	var template = _.template(content);
 
-	return template({url: link});
+	return template({
+		url: link
+	});
 }
 
-function serialize(query){
+function serialize(query) {
 	var queryString = '';
 	var connector = '?';
 
-	_.forIn(query,function(value, key) {
+	_.forIn(query, function (value, key) {
 		//if( ! _.isEmpty(value)){
-			queryString = queryString + connector + key + '=' + value;
-			connector = '&';
+		queryString = queryString + connector + key + '=' + value;
+		connector = '&';
 		//}
 	});
 
 	return queryString;
 }
 
-function urlExists(url)
-{
-  var http = new XMLHttpRequest();
-  http.open('HEAD', url, false);
-  http.send();
-  return http.status!=404;
+function urlExists(url) {
+	var http = new XMLHttpRequest();
+	http.open('HEAD', url, false);
+	http.send();
+	return http.status != 404;
 }
 
-function log(alertType, message){
+function log(alertType, message) {
 	var $dataElement = $('#data');
 	var $parent = $dataElement.parent();
-	if(alertType=='hide'){
+	if (alertType == 'hide') {
 		$parent.hide();
 
 		return;
@@ -416,7 +423,7 @@ function log(alertType, message){
 
 	var glyphicon = 'glyphicon glyphicon-refresh glyphicon-refresh-animate';
 
-	if(alertType=='success'){
+	if (alertType == 'success') {
 		glyphicon = 'glyphicon glyphicon-ok';
 	}
 
@@ -428,7 +435,7 @@ function log(alertType, message){
 	$parent
 		.hide()
 		.removeClass()
-		.addClass('alert alert-'+alertType)
+		.addClass('alert alert-' + alertType)
 		.show();
 
 	$dataElement
@@ -437,104 +444,104 @@ function log(alertType, message){
 		.fadeIn('slow');
 }
 
-function gettingTemplate(fullPathTemplate, resolve, reject){
-		// Using dummy div for dynamic loading and promise API
-		$('<div>').load(fullPathTemplate, function(response, status, xhr){
-			if ( status == "error" ) {
-    		var msg = "Sorry but there was an error: " +xhr.status + " " + xhr.statusText;
-    		reject(msg);
-  		}
+function gettingTemplate(fullPathTemplate, resolve, reject) {
+	// Using dummy div for dynamic loading and promise API
+	$('<div>').load(fullPathTemplate, function (response, status, xhr) {
+		if (status == "error") {
+			var msg = "Sorry but there was an error: " + xhr.status + " " + xhr.statusText;
+			reject(msg);
+		}
 
-			resolve(_.template(response));
-		});
+		resolve(_.template(response));
+	});
 }
 
 /* Site wide on-load functions */
 
-$(function() {
+$(function () {
 	/* Check if user is logged in and handel issues such as non completed reg. */
 	var login = checkLogin();
-	var pathArray = window.location.pathname.split( '/' );
+	var pathArray = window.location.pathname.split('/');
 	var segment_1 = pathArray[1];
 
-	if(login){
+	if (login) {
 		//redirect exeptions
-		if(segment_1 == 'profile'){
+		if (segment_1 == 'profile') {
 			userTypeMenuConfiguration();
-		}else{
+		} else {
 			userTypeMenuConfiguration(true);
 		}
 	}
 
 	//Form submit code - Login
-	$('#login').submit(function( event ) {
+	$('#login').submit(function (event) {
 		event.preventDefault();
 		var username = $('#username').val();
 		var password1 = $('#password').val();
 		var csrfmiddlewaretoken = $('[name="csrfmiddlewaretoken"]').val();
-		$.post( "/api-rest-auth/login/", {
+		$.post("/api-rest-auth/login/", {
 			username: username,
 			password: password1,
 			csrfmiddlewaretoken: csrfmiddlewaretoken
 
 		})
-		.done(function( data ) {
-			setCookie('username', username, 28);
-			setCookie('key', data.key, 28);
-			window.location.href = "/applications/";
+			.done(function (data) {
+				setCookie('username', username, 28);
+				setCookie('key', data.key, 28);
+				window.location.href = "/applications/";
 
-		})
-		.fail(function( data ) {
-			var messageError = '';
+			})
+			.fail(function (data) {
+				var messageError = '';
 
-			for (var key in data.responseJSON) {
-				var obj = data.responseJSON[key];
-				messageError = messageError+obj+'<br>';
-			}
+				for (var key in data.responseJSON) {
+					var obj = data.responseJSON[key];
+					messageError = messageError + obj + '<br>';
+				}
 
-			formAlert('danger', messageError);
-		});
+				formAlert('danger', messageError);
+			});
 	});
 
 	//Form submit code - Reg
-	$('#register').submit(function( event ) {
+	$('#register').submit(function (event) {
 		event.preventDefault();
 		var username = $('#reg_username').val();
 		var password1 = $('#password1').val();
 		var password2 = $('#password2').val();
 		var csrfmiddlewaretoken = $('[name="csrfmiddlewaretoken"]').val();
 
-		$.post( "/api-rest-auth/registration/", {
+		$.post("/api-rest-auth/registration/", {
 			username: username,
 			password1: password1,
 			password2: password2,
 			csrfmiddlewaretoken: csrfmiddlewaretoken
 		})
-		.done(function( data ) {
-			$.post( "/api-rest-auth/login/", {
-				username: username,
-				password: password1,
-				csrfmiddlewaretoken: csrfmiddlewaretoken
-			})
-			.done(function( data ) {
-				setCookie('username', username, 28);
-				setCookie('key', data.key, 28);
-				window.location.href = "/profile";
-			})
-			.fail(function( data ) {
+			.done(function (data) {
+				$.post("/api-rest-auth/login/", {
+					username: username,
+					password: password1,
+					csrfmiddlewaretoken: csrfmiddlewaretoken
+				})
+					.done(function (data) {
+						setCookie('username', username, 28);
+						setCookie('key', data.key, 28);
+						window.location.href = "/profile";
+					})
+					.fail(function (data) {
 
+					});
+			})
+			.fail(function (data) {
+				var messageError = ''
+
+				for (var key in data.responseJSON) {
+					var obj = data.responseJSON[key];
+					messageError = messageError + obj + '<br>';
+				}
+
+				formAlert('danger', messageError);
 			});
-		})
-		.fail(function( data ) {
-			var messageError = ''
-
-			for (var key in data.responseJSON) {
-				var obj = data.responseJSON[key];
-				messageError = messageError+obj+'<br>';
-			}
-
-			formAlert('danger', messageError);
-		});
 	});
 
 	$('#regModal').on('hidden.bs.modal', function () {

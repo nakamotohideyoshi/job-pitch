@@ -1,0 +1,26 @@
+var CONST = {
+	APPLICATION: {
+		APPLICATION: 'CREATED',
+		CONNECTION: 'ESTABLISHED'
+	},
+
+	STATUS: {
+		APPLICATION: 1,
+		CONNECTION: 2,
+		DELETED: 3
+	},
+
+	USER: {
+		JOBSEEKER: 0,
+		BUSINESS: 1
+	},
+
+	ROLE: {
+		RECRUITER: 'RECRUITER',
+		JOBSEEKER: 'JOB_SEEKER'
+	},
+
+	PATH:{
+		PARTIALS: "/static/web/partials/"
+	}
+}

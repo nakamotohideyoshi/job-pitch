@@ -214,6 +214,21 @@ function putManyAlerts(parentId, messages ){
 	}
 }
 
+function showAlert(selector, type, text){
+	var icon = 'glyphicon-ok';
+
+	if(type=='danger'){
+		icon = 'glyphicon-exclamation-sign';
+	}
+
+	$(selector)
+	.html('<div class="alert alert-'+type+'" role="alert">'
+		+'<span class="glyphicon '+icon+'" aria-hidden="true">&nbsp;</span>'
+		+ text
+		+'</div>')
+	.find('.alert').show().fadeOut(10000);
+}
+
 function fieldError(error,field){
 	$('.formFieldError').remove();
 	$('.formFieldErrorInField').removeClass('formFieldErrorInField');
@@ -342,6 +357,64 @@ function viewPitch2(url, job_id, job_seeker){
 	$('#pitchViewer').html('');
 	$('#pitchViewer').html('<video width="320" height="240" controls><source src="'+url+'" type="video/mp4"></video>');
 	$('#viewPitchModal').modal('show');
+}
+
+function getHtmlForVideoOrThumbnail(pitches){
+	var link = '';
+
+	var content = '<img src="/static/web/images/no_image_available.png" styles="width:160px;">';
+
+	$.each(pitches, function(index, pitch) {
+		if( _.hasIn(pitch,'video') && ! _.isEmpty(pitch.video)){
+			link = pitch.video;
+			content = '<video width="320" height="240" controls><source src="<%= url %>" type="video/mp4"></video>';
+			return false;
+		}
+
+		if( _.hasIn(pitch, 'thumbnail') && ! _.isEmpty(pitch.thumbnail)){
+			link = pitch.thumbnail;
+			content = '<img src="<%= url %>">';
+			return false;
+		}
+	});
+
+	var template = _.template(content);
+
+	return template({url: link});
+}
+
+function serialize(query){
+	var queryString = '';
+	var connector = '?';
+
+	_.forIn(query,function(value, key) {
+		//if( ! _.isEmpty(value)){
+			queryString = queryString + connector + key + '=' + value;
+			connector = '&';
+		//}
+	});
+
+	return queryString;
+}
+
+function urlExists(url)
+{
+    var http = new XMLHttpRequest();
+    http.open('HEAD', url, false);
+    http.send();
+    return http.status!=404;
+}
+
+function gettingTemplate(fullPathTemplate, resolve, reject){
+		// Using dummy div for dynamic loading and promise API
+		$('<div>').load(fullPathTemplate, function(response, status, xhr){
+			if ( status == "error" ) {
+    		var msg = "Sorry but there was an error: " +xhr.status + " " + xhr.statusText;
+    		reject(msg);
+  		}
+
+			resolve(_.template(response));
+		});
 }
 
 /* Site wide on-load functions */

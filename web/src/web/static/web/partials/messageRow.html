@@ -1,0 +1,12 @@
+<tr data-message-id="<%= message.id %>"
+ class="message-list"
+ id="message-list-<%= message.id %>">"
+ 	<td data-jobseeker-id="<%= jobSeeker.id %>"
+ 	class="<%= colSenderSize %> go-to-userprofile">
+ 		<%= sender %><br>
+ 		<% if(message.system) { %>
+ 		<span class="systemMessageNotice">(system generated)</span>
+ 		<% } %>
+ 	</td>
+ 	<td class="col-sm-10"><%= message.content %><br><%= messageTimeDate %></td>
+</tr>

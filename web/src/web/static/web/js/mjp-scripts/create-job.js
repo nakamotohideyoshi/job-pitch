@@ -1,27 +1,29 @@
-function populateCompanies(companyid){
-	$.get( "/api/user-businesses/", { token: getCookie('key') ,csrftoken: getCookie('csrftoken') }).done(function( data ) {
-		console.log(data);
+function populateCompanies(companyid) {
+	$.get("/api/user-businesses/", {
+		token: getCookie('key'),
+		csrftoken: getCookie('csrftoken')
+	}).done(function (data) {
 		var selected = '';
 		for (var key in data) {
 			var obj = data[key];
 
 			selected = '';
-			if(companyid && obj.id == companyid){
+			if (companyid && obj.id == companyid) {
 				selected = 'selected=""';
 			}
 
-			$('#company').append('<option value="'+obj.id+'" '+selected+'>'+obj.name+'</options>');
+			$('#company').append('<option value="' + obj.id + '" ' + selected + '>' + obj.name + '</options>');
 		}
 
-		if(companyid){
+		if (companyid) {
 			$('#company').trigger('change');
-			$('#company').attr('disabled',true)
+			$('#company').attr('disabled', true)
 		}
 	});
 }
 
 
-$(function() {
+$(function () {
 	// Run login check funtion with auto-redirect
 	checkLogin(true);
 
@@ -34,47 +36,50 @@ $(function() {
 	//variables defined
 	var open_job_status;
 
-	$( "#company" ).change(function() {
-		if($(this).val() != ''){
-			$.get( "/api/user-locations/", { business:$(this).val() ,csrftoken: getCookie('csrftoken') }).done(function( data ) {
+	$("#company").change(function () {
+		if ($(this).val() != '') {
+			$.get("/api/user-locations/", {
+				business: $(this).val(),
+				csrftoken: getCookie('csrftoken')
+			}).done(function (data) {
 				for (var key in data) {
 					var obj = data[key];
 
 					selected = '';
-					if(location_id && obj.id == location_id){
+					if (location_id && obj.id == location_id) {
 						selected = 'selected=""';
 					}
 
-					$('#location').append('<option value="'+obj.id+'" '+selected+' >'+obj.name+'</options>');
+					$('#location').append('<option value="' + obj.id + '" ' + selected + ' >' + obj.name + '</options>');
 				}
 
 				$('#locationSelect').show();
 
-				if(location_id){
+				if (location_id) {
 					$('#location').trigger('change');
-					$('#location').attr('disabled',true)
+					$('#location').attr('disabled', true)
 				}
-			})
-			.fail(function( data ) {
-				console.log( data );
 			});
-		}else{
+		} else {
 			$('#locationSelect').hide();
-			$( "#location" ).val('');
+			$("#location").val('');
 		}
 	});
 
-	$( "#location" ).change(function() {
-		if($(this).val() != ''){
+	$("#location").change(function () {
+		if ($(this).val() != '') {
 			$('#mainFormAreaCreateJob').show();
 			location_id = $(this).val();
-			$.get( "/api/user-locations/"+location_id, { token: getCookie('key') ,csrftoken: getCookie('csrftoken') }).done(function( data ) {
+			$.get("/api/user-locations/" + location_id, {
+				token: getCookie('key'),
+				csrftoken: getCookie('csrftoken')
+			}).done(function (data) {
 				$('#currentLogo').attr('src', data.images[0].thumbnail).show();
 			});
-		}else{
+		} else {
 			$('#locationSelect').hide();
 			$('#mainFormAreaCreateJob').hide();
-			$( "#location" ).val('');
+			$("#location").val('');
 		}
 	});
 
@@ -82,27 +87,32 @@ $(function() {
 	populateCompanies(company_id);
 
 	//if location id is set then go ahead with populating the fields and do other functions
-	if(typeof location_id !== "undefined"){
+	if (typeof location_id !== "undefined") {
 
-		$.get( "/api/user-locations/"+location_id, { token: getCookie('key') ,csrftoken: getCookie('csrftoken') }).done(function( data ) {
+		$.get("/api/user-locations/" + location_id, {
+			token: getCookie('key'),
+			csrftoken: getCookie('csrftoken')
+		}).done(function (data) {
 			$('#currentLogo').attr('src', data.images[0].thumbnail).show();
 		});
 
-		$.get( "/api/user-locations/"+location_id, { token: getCookie('key') ,csrftoken: getCookie('csrftoken') }).done(function( data ) {
+		$.get("/api/user-locations/" + location_id, {
+			token: getCookie('key'),
+			csrftoken: getCookie('csrftoken')
+		}).done(function (data) {
 
 			$('#company').val(data.business_data.id);
 
-			$.get( "/api/user-locations/", { business:$('#company').val() ,csrftoken: getCookie('csrftoken') }).done(function( data ) {
+			$.get("/api/user-locations/", {
+				business: $('#company').val(),
+				csrftoken: getCookie('csrftoken')
+			}).done(function (data) {
 				for (var key in data) {
 					var obj = data[key];
-					$('#location').append('<option value="'+obj.id+'">'+obj.name+'</options>');
+					$('#location').append('<option value="' + obj.id + '">' + obj.name + '</options>');
 				}
 				$('#location').val(location_id);
 				$('#locationSelect').show();
-
-				})
-			.fail(function( data ) {
-				console.log( data );
 
 			});
 
@@ -112,52 +122,49 @@ $(function() {
 	}
 
 	//Populate selects
-	$.get( "/api/hours/", { csrftoken: getCookie('csrftoken') }).done(function( data ) {
+	$.get("/api/hours/", {
+		csrftoken: getCookie('csrftoken')
+	}).done(function (data) {
 		for (var key in data) {
 			var obj = data[key];
-			$('#hours').append('<option value="'+obj.id+'">'+obj.name+'</options>');
+			$('#hours').append('<option value="' + obj.id + '">' + obj.name + '</options>');
 		}
-	})
-	.fail(function( data ) {
-		console.log( data );
+	});
 
-	});
-	$.get( "/api/contracts/", { csrftoken: getCookie('csrftoken') }).done(function( data ) {
+	$.get("/api/contracts/", {
+		csrftoken: getCookie('csrftoken')
+	}).done(function (data) {
 		for (var key in data) {
 			var obj = data[key];
-			$('#contract').append('<option value="'+obj.id+'">'+obj.name+'</options>');
+			$('#contract').append('<option value="' + obj.id + '">' + obj.name + '</options>');
 		}
-	})
-	.fail(function( data ) {
-		console.log( data );
 	});
-	$.get( "/api/sectors/", { csrftoken: getCookie('csrftoken') }).done(function( data ) {
+
+	$.get("/api/sectors/", {
+		csrftoken: getCookie('csrftoken')
+	}).done(function (data) {
 		for (var key in data) {
 			var obj = data[key];
-			$('#job_sector').append('<option value="'+obj.id+'">'+obj.name+'</options>');
+			$('#job_sector').append('<option value="' + obj.id + '">' + obj.name + '</options>');
 		}
-	})
-	.fail(function( data ) {
-		console.log( data );
 	});
 
 	//Get other data
 
-	$.get( "/api/job-statuses/", { csrftoken: getCookie('csrftoken') }).done(function( data ) {
+	$.get("/api/job-statuses/", {
+		csrftoken: getCookie('csrftoken')
+	}).done(function (data) {
 		for (var key in data) {
 			var obj = data[key];
-			if(obj.name == "OPEN"){
+			if (obj.name == "OPEN") {
 				open_job_status = obj.id;
 			}
 		}
-	})
-	.fail(function( data ) {
-		console.log( data );
 	});
 
 	//Form submit code
-	$('#create-job').submit(function( event ) {
-		$('.btn-primary').attr( "disabled", true );
+	$('#create-job').submit(function (event) {
+		$('.btn-primary').attr("disabled", true);
 		event.preventDefault();
 		var title = $('#title').val();
 		var description = $('#description').val();
@@ -165,52 +172,58 @@ $(function() {
 		var contract = $('#contract').val();
 		var hours = $('#hours').val();
 
-		$.post( "/api/user-jobs/", { title: title, description: description, sector: job_sector, contract: contract, hours: hours, location:location_id, status:open_job_status, csrftoken: getCookie('csrftoken') }).done(function( data ) {
+		$.post("/api/user-jobs/", {
+			title: title,
+			description: description,
+			sector: job_sector,
+			contract: contract,
+			hours: hours,
+			location: location_id,
+			status: open_job_status,
+			csrftoken: getCookie('csrftoken')
+		}).done(function (data) {
 			$('#job_id').val(data.id);
-			if($('#job_image').val() != ''){
+			if ($('#job_image').val() != '') {
 				var formData = new FormData($('#create-job')[0]);
 				$.ajax({
 					url: '/api/user-job-images/',
 					type: 'POST',
 					data: formData,
-					async: false,
 					cache: false,
 					contentType: false,
 					processData: false,
 					success: function (data) {
-						window.location.href = "/profile/list-jobs/?id="+location_id;
+						window.location.href = "/profile/list-jobs/?id=" + location_id;
 					}
-			  });
-			}else{
+				});
+			} else {
 				//window.location.href = "/profile/list-jobs/?id="+location_id;
-				$.get( "/api/user-locations/"+location_id, { token: getCookie('key') ,csrftoken: getCookie('csrftoken') }).done(function( data ) {
-					console.log( data );
+				$.get("/api/user-locations/" + location_id, {
+					token: getCookie('key'),
+					csrftoken: getCookie('csrftoken')
+				}).done(function (data) {
 					$('#currentLogo').attr('src', data.images[0].thumbnail).show();
 					var xhr = new XMLHttpRequest();
 
-					xhr.onreadystatechange = function(){
-						if (this.readyState == 4 && this.status == 200){
+					xhr.onreadystatechange = function () {
+						if (this.readyState == 4 && this.status == 200) {
 							//this.response is what you're looking for
-							//console.log(this.response, typeof this.response);
-							//console.log(data.images[0].image.split('.').pop());
 							$('#job_image').remove();
 							var formData = new FormData($('#create-job')[0]);
 
-							formData.append('image',this.response, 'location-'+location_id+'.'+data.images[0].image.split('.').pop());
+							formData.append('image', this.response, 'location-' + location_id + '.' + data.images[0].image.split('.').pop());
 
-						  $.ajax({
+							$.ajax({
 								url: '/api/user-job-images/',
 								type: 'POST',
 								data: formData,
-								async: false,
 								cache: false,
 								contentType: false,
 								processData: false,
 								success: function (data) {
-									console.log(data);
-									window.location.href = "/profile/list-jobs/?id="+location_id;
+									window.location.href = "/profile/list-jobs/?id=" + location_id;
 								}
-						  });
+							});
 						}
 					}
 					xhr.open('GET', data.images[0].image);
@@ -219,31 +232,31 @@ $(function() {
 				});
 			}
 
-			})
-			.fail(function( data ) {
+		})
+			.fail(function (data) {
 				for (var key in data.responseJSON) {
 					var obj = data.responseJSON[key];
 
-					if(key == 'non_field_errors'){
-						messageError = messageError+obj+'<br>';
+					if (key == 'non_field_errors') {
+						messageError = messageError + obj + '<br>';
 					}
 
-					fieldError(obj,key);
+					fieldError(obj, key);
 				}
 
-				if(messageError != ''){
+				if (messageError != '') {
 					formAlert('danger', messageError);
 				}
 
-				$('.btn-primary').attr( "disabled", false );
-		  });
+				$('.btn-primary').attr("disabled", false);
+			});
 	});
 
 	var text_max = 500;
 
 	$('#textarea_feedback').html(text_max + ' characters remaining');
 
-	$('#description').keyup(function() {
+	$('#description').keyup(function () {
 		var text_length = $('#description').val().length;
 		var text_remaining = text_max - text_length;
 

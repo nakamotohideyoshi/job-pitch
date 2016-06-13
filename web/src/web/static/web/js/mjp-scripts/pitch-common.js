@@ -69,3 +69,32 @@ function poolingTranscodeProcess(resolve){
 	},3000);
 }
 
+
+function checkPitchesIfExists(type, pitches){
+	var i;
+	var found = false;
+
+	pitches.forEach(function(pitch, index) {
+		i = index;
+
+		if( _.hasIn(pitch, type)){
+			if(type == 'video'){
+				if( ! _.isEmpty(pitch.video)){
+					found = true;
+					return false; // out of $.each
+				}
+			} else if(type == 'thumbnail'){
+				if( ! _.isEmpty(pitch.thumbnail)){
+					found = true;
+					return false; // out of $.each
+				}
+			}
+		}
+	});
+
+	if(found){
+		return i;
+	}
+
+	return false;
+}

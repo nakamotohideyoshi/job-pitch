@@ -14,10 +14,25 @@
 @end
 
 @implementation Login
+{
+    bool isAutoLogin;
+}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     [activityIndicator setHidden:YES];
+    
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    BOOL isRemember = [defaults boolForKey:@"remember"];
+    username.text = [defaults stringForKey:@"username"];
+    password.text = isRemember ? [defaults stringForKey:@"password"] : @"";
+    password2.text = @"";
+    [switchRemember setOn:isRemember];
+    
+    if (isRemember) {
+        isAutoLogin = YES;
+        [self login:nil];
+    }
 }
 
 - (void)didReceiveMemoryWarning {
@@ -29,14 +44,17 @@
 {
     [[self appDelegate].api logout];
     [[self appDelegate] clearData];
-    username.text = @"j1";
-    password.text = @"admin1";
-    password2.text = @"";
+    
     [self clearErrors];
-    [self showProgress:false];
     registrationForm.hidden = YES;
     loginForm.alpha = 1.0f;
     self.navigationController.navigationBarHidden = YES;
+    
+    if (isAutoLogin) {
+        isAutoLogin = NO;
+    } else {
+        [self showProgress:false];
+    }
 }
 
 - (void)viewDidDisappear:(BOOL)animated
@@ -49,6 +67,14 @@
     [self clearErrors];
     [self appDelegate].user = user;
     [self.appDelegate loadData:^() {
+        
+        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+        
+        [defaults setBool:switchRemember.isOn forKey:@"remember"];
+        [defaults setObject:username.text forKey:@"username"];
+        [defaults setObject:password.text forKey:@"password"];
+        [defaults synchronize];
+        
         if ([user isJobSeeker]) {
             [self performSegueWithIdentifier:@"goto_job_seeker" sender:@"login"];
         } else if ([user isRecruiter]) {
@@ -126,9 +152,14 @@
     NSLog(@"register");
     if ([self validate]) {
         [self showProgress:true];
-        [[self appDelegate].api registerWithUsername:username.text password1:password.text password2:password2.text success:^(User *user) {
+        [[self appDelegate].api registerWithUsername:username.text password1:password.text password2:password2.text success:^(AuthToken *authToken) {
             [[self appDelegate].api loginWithUsername:username.text password:password.text success:^(AuthToken *authToken) {
-                [self completeLoginWithUser:user];
+                [[self appDelegate].api getUser:^(User *user) {
+                    [self completeLoginWithUser:user];
+                } failure:^(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors) {
+                    [self handleErrors:errors message:message];
+                    [self showProgress:false];
+                }];
             } failure:^(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors) {
                 [self handleErrors:errors message:message];
                 [self showProgress:false];

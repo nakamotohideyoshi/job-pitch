@@ -105,7 +105,7 @@ typedef NS_ENUM(NSInteger, EmptyButtonAction) {
      loadJobSeekerWithId:self.appDelegate.user.jobSeeker
      success:^(JobSeeker *jobSeeker) {
          self.jobSeeker = jobSeeker;
-         if (jobSeeker.profile == nil && jobSeeker.pitches.count == 0) {
+         if (jobSeeker.profile == nil/* && jobSeeker.pitches.count == 0*/) {
              [self.emptyLabel setText:@"You have not yet setup your job preferences or recorded your pitch, once we have this information, you will see job matches here, and potential employers will be able to find you."];
              [self.emptyButton1 setHidden:false];
              [self.emptyButton1 setTitle:@"Setup Profile" forState:UIControlStateNormal];
@@ -115,7 +115,7 @@ typedef NS_ENUM(NSInteger, EmptyButtonAction) {
              [self setEmptyButton2Action:EmptyButtonActionRecordPitch];
              [self.swipeContainer setHidden:true];
              [self.emptyView setHidden:false];
-         } else if (jobSeeker.profile == nil) {
+         /*} else if (jobSeeker.profile == nil) {
              [self.emptyLabel setText:@"You have not yet setup your job preferences, once we know your search criteria, you will see job matches here, and potential employers will be able to find you."];
              [self.emptyButton1 setHidden:false];
              [self.emptyButton1 setTitle:@"Setup Profile" forState:UIControlStateNormal];
@@ -123,7 +123,7 @@ typedef NS_ENUM(NSInteger, EmptyButtonAction) {
              [self.emptyButton2 setHidden:true];
              [self setEmptyButton2Action:EmptyButtonActionNone];
              [self.swipeContainer setHidden:true];
-             [self.emptyView setHidden:false];
+             [self.emptyView setHidden:false];*/
          } else if (jobSeeker.pitches.count == 0) {
              [self.emptyLabel setText:@"You have not yet recorded your pitch, once we have this, you will see job matches here, and potential employers will be able to find you."];
              [self.emptyButton1 setHidden:false];
@@ -154,6 +154,7 @@ typedef NS_ENUM(NSInteger, EmptyButtonAction) {
                                     delegate:self
                            cancelButtonTitle:@"Okay"
                            otherButtonTitles:nil] show];
+         [self showProgress:false];
      }];
 }
 

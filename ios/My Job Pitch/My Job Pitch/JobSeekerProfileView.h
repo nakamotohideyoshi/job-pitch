@@ -39,6 +39,7 @@
 @property (weak, nonatomic) IBOutlet UITextView *descriptionView;
 @property (weak, nonatomic) IBOutlet UILabel *descriptionError;
 @property (weak, nonatomic) IBOutlet UILabel *descriptionCharactersRemaining;
+@property (weak, nonatomic) IBOutlet UISwitch *hasReferences;
 @property (weak, nonatomic) IBOutlet UIButton *continueButton;
 
 @property (weak, nonatomic, nullable) id<JobSeekerProfileViewDelegate> delegate;

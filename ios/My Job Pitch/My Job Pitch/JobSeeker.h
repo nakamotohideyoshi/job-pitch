@@ -18,6 +18,7 @@
 @property bool agePublic;
 @property bool sexPublic;
 @property bool nationalityPublic;
+@property bool hasReferences;
 @property (nullable) NSNumber* profile;
 @property (nullable) NSArray* pitches;
 @property (nullable) NSString* desc;

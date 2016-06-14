@@ -23,12 +23,11 @@
 @implementation API
 {
     NSURL * apiRoot;
-    NSString *tokenKey;
 }
 
 - (instancetype)init
 {
-    return [self initWithAPIRoot:@"http://ec2-52-31-145-95.eu-west-1.compute.amazonaws.com"];
+    return [self initWithAPIRoot:@"https://ec2-52-31-145-95.eu-west-1.compute.amazonaws.com"];
 }
 
 - (id)initWithAPIRoot:(NSString*)aApiRoot
@@ -1426,7 +1425,6 @@
 
 - (void)setToken:(AuthToken*)token
 {
-    tokenKey = token.key;
     [[RKObjectManager sharedManager].HTTPClient
      setDefaultHeader:@"Authorization" value:[NSString stringWithFormat: @"Token %@", token.key]];
 }

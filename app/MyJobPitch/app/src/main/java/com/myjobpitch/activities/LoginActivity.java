@@ -142,10 +142,7 @@ public class LoginActivity extends MJPProgressActivity implements LoaderCallback
             versionView.setTextColor(getResources().getColor(android.R.color.holo_red_dark));
             findViewById(R.id.debug).setVisibility(View.VISIBLE);
             String urls[] = new String[] {
-                    "http://ec2-52-31-145-95.eu-west-1.compute.amazonaws.com/",
-                    "http://mjp.digitalcrocodile.com:8000/",
-                    "http://mjp.digitalcrocodile.com:8001/",
-                    "http://mjp.digitalcrocodile.com/",
+                    "https://ec2-52-31-145-95.eu-west-1.compute.amazonaws.com/",
                     "http://localhost:8000/",
             };
             ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_dropdown_item_1line, urls);

@@ -9,8 +9,9 @@
 #import "ScrollingViewController.h"
 
 @interface JobSeekerDetails : ScrollingViewController
-@property (nonnull) Application *application;
-@property (nonnull) JobSeeker *jobSeeker;
+
+@property (weak, nonatomic) Application *application;
+@property (weak, nonatomic) JobSeeker *jobSeeker;
 
 @property (weak, nonatomic) IBOutlet UIImageView *jobSeekerImage;
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView *jobSeekerImageActivity;
@@ -19,5 +20,9 @@
 @property (weak, nonatomic) IBOutlet UILabel *desc;
 @property (weak, nonatomic) IBOutlet UILabel *contactDetails;
 @property (weak, nonatomic) IBOutlet UIButton *messagesButton;
+
+@property (weak, nonatomic) IBOutlet UIView *cvView;
+@property (weak, nonatomic) IBOutlet UILabel *lblReferencesAvailable;
+@property (weak, nonatomic) IBOutlet UIButton *cvButton;
 
 @end

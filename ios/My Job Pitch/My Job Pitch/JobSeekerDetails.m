@@ -63,6 +63,14 @@
         self.contactDetails.text = @"You cannot view contact details you have connected with this job seeker";
         self.messagesButton.hidden = true;
     }
+    
+    BOOL hasCV = self.jobSeeker.cv != nil && ![self.jobSeeker.cv isEqualToString:@""];
+    if (hasCV || self.jobSeeker.hasReferences) {
+        self.cvButton.hidden = !hasCV;
+        self.lblReferencesAvailable.hidden = !self.jobSeeker.hasReferences;
+    } else {
+        self.cvView.hidden = YES;
+    }
 }
 
 - (IBAction)playVideo:(id)sender {
@@ -74,6 +82,12 @@
 
 - (IBAction)messages:(id)sender {
     [self performSegueWithIdentifier:@"goto_message_thread" sender:nil];
+}
+
+- (IBAction)downloadCV:(id)sender {
+    if (self.jobSeeker.cv != nil && [self.jobSeeker.cv isEqualToString:@""]) {
+        
+    }
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {

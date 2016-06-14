@@ -27,7 +27,7 @@
 
 - (instancetype)init
 {
-    return [self initWithAPIRoot:@"http://ec2-52-31-145-95.eu-west-1.compute.amazonaws.com"];
+    return [self initWithAPIRoot:@"https://ec2-52-31-145-95.eu-west-1.compute.amazonaws.com"];
 }
 
 - (id)initWithAPIRoot:(NSString*)aApiRoot
@@ -67,9 +67,9 @@
               requestArray:@[@"username", @"password1", @"password2"]
          requestDictionary:nil
       requestRelationships:nil
-             responseClass:[User class]
-             responseArray:@[@"id", @"username", @"businesses"]
-        responseDictionary:@{@"job_seeker": @"jobSeeker"}
+             responseClass:[AuthToken class]
+             responseArray:@[@"key"]
+        responseDictionary:nil
      responseRelationships:nil
                       path:@"/api-rest-auth/registration/"
                     method:RKRequestMethodPOST
@@ -106,11 +106,14 @@
                                           @"agePublic": @"age_public",
                                           @"sexPublic": @"sex_public",
                                           @"nationalityPublic": @"nationality_public",
+                                          @"hasReferences": @"has_references",
                                           };
     
     NSArray* pitchArray = @[@"id",
                             @"video",
                             @"thumbnail",
+                            @"job_seeker",
+                            @"token",
                             ];
     RKObjectMapping *pitchMapping = [self
                                      createResponseMappingForClass:[Pitch class]
@@ -508,6 +511,22 @@
                             path:@"/api/messages/"
                           method:RKRequestMethodPOST];
     
+    [self configureSimpleMapping:objectManager
+                           class:[Pitch class]
+                           array:pitchArray
+                      dictionary:nil
+                   relationships:nil
+                            path:@"/api/pitches/"
+                          method:RKRequestMethodPOST];
+    
+    [self configureSimpleMapping:objectManager
+                           class:[Pitch class]
+                           array:pitchArray
+                      dictionary:nil
+                   relationships:nil
+                            path:@"/api/pitches/:pk/"
+                          method:RKRequestMethodGET];
+    
     NSArray *nameArray = @[@"id",
                            @"name",
                            ];
@@ -814,7 +833,7 @@
 - (void)registerWithUsername:(NSString*)username
                    password1:(NSString*)password1
                    password2:(NSString*)password2
-                     success:(void (^)(User *user))success
+                     success:(void (^)(AuthToken *authToken))success
                      failure:(void (^)(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors))failure;
 {
     [self clearCookies];
@@ -1047,6 +1066,40 @@
                                      }
      ];
 }
+
+
+- (void)savePitch:(Pitch*)pitch
+            success:(void (^)(Pitch *pitch))success
+            failure:(void (^)(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors))failure
+{
+    [self clearCookies];
+    [[RKObjectManager sharedManager] postObject:pitch
+                                           path:@"/api/pitches/"
+                                     parameters:nil success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
+                                         NSLog(@"Pitch sent");
+                                         success([mappingResult firstObject]);
+                                     } failure:^(RKObjectRequestOperation *operation, NSError *error) {
+                                         NSLog(@"Error sending message: %@", error);
+                                         failure(operation, error, [self getMessage:error], [self getErrors:error]);
+                                     }
+     ];
+}
+
+- (void)getPitch:(NSNumber*)pid
+         success:(void (^)(Pitch *pitch))success
+         failure:(void (^)(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors))failure
+{
+    [self clearCookies];
+    NSString *url = [NSString stringWithFormat:@"/api/pitches/%d/", [pid intValue]];
+    [[RKObjectManager sharedManager] getObjectsAtPath:url parameters:nil
+                                              success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
+                                                  success([mappingResult firstObject]);
+                                              }
+                                              failure:^(RKObjectRequestOperation *operation, NSError *error) {
+                                                  failure(operation, error, [self getMessage:error], [self getErrors:error]);
+                                              }];
+}
+
 
 - (void)loadHours:(void (^)(NSArray *hours))success
           failure:(void (^)(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors))failure

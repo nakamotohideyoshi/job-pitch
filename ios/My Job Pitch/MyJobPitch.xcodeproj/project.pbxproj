@@ -92,6 +92,7 @@
 		CEE52CFA1C065C4100881648 /* API.m in Sources */ = {isa = PBXBuildFile; fileRef = CEE52CF91C065C4100881648 /* API.m */; };
 		CEE52CFE1C066AB000881648 /* AuthToken.m in Sources */ = {isa = PBXBuildFile; fileRef = CEE52CFD1C066AB000881648 /* AuthToken.m */; };
 		CEE52D011C066F2700881648 /* LoginRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = CEE52D001C066F2700881648 /* LoginRequest.m */; };
+		D7FA423D1D0EB2D200E93C66 /* MyAlertController.m in Sources */ = {isa = PBXBuildFile; fileRef = D7FA423C1D0EB2D200E93C66 /* MyAlertController.m */; };
 		FF9A5040750B22C5222FF605 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0B006CB817BA624E01EDF19B /* libPods.a */; };
 /* End PBXBuildFile section */
 
@@ -118,7 +119,7 @@
 		CE4696AD1C9A0BC8001E3FFE /* LockableNavigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LockableNavigationController.m; path = ../LockableNavigationController.m; sourceTree = "<group>"; };
 		CE59737B1C1626630096B001 /* JobSeekerProfileView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JobSeekerProfileView.h; sourceTree = "<group>"; };
 		CE59737C1C1626630096B001 /* JobSeekerProfileView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JobSeekerProfileView.m; sourceTree = "<group>"; };
-		CE6FD3371C01F9BB001A04C3 /* My Job Pitch.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "My Job Pitch.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		CE6FD3371C01F9BB001A04C3 /* MyJobPitch.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MyJobPitch.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CE6FD33B1C01F9BB001A04C3 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		CE6FD33D1C01F9BB001A04C3 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		CE6FD33E1C01F9BB001A04C3 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -128,7 +129,7 @@
 		CE6FD3461C01F9BC001A04C3 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		CE6FD3491C01F9BC001A04C3 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		CE6FD34B1C01F9BC001A04C3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		CE6FD3501C01F9BC001A04C3 /* My Job PitchTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "My Job PitchTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		CE6FD3501C01F9BC001A04C3 /* MyJobPitch.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MyJobPitch.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		CE6FD3541C01F9BC001A04C3 /* My_Job_PitchTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = My_Job_PitchTests.m; sourceTree = "<group>"; };
 		CE6FD3561C01F9BC001A04C3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		CE7742331C92368200A9A2BA /* SimpleListCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SimpleListCell.h; sourceTree = "<group>"; };
@@ -261,6 +262,8 @@
 		CEE52CFF1C066F2700881648 /* LoginRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoginRequest.h; sourceTree = "<group>"; };
 		CEE52D001C066F2700881648 /* LoginRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoginRequest.m; sourceTree = "<group>"; };
 		CFA3EA2BF05430C3C9894AA5 /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
+		D7FA423B1D0EB2D200E93C66 /* MyAlertController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyAlertController.h; sourceTree = "<group>"; };
+		D7FA423C1D0EB2D200E93C66 /* MyAlertController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyAlertController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -306,8 +309,8 @@
 		CE6FD3381C01F9BB001A04C3 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				CE6FD3371C01F9BB001A04C3 /* My Job Pitch.app */,
-				CE6FD3501C01F9BC001A04C3 /* My Job PitchTests.xctest */,
+				CE6FD3371C01F9BB001A04C3 /* MyJobPitch.app */,
+				CE6FD3501C01F9BC001A04C3 /* MyJobPitch.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -398,6 +401,8 @@
 				CE86847D1C0E570300D4B6C7 /* ScrollingViewController.m */,
 				CE4696AC1C9A0BC8001E3FFE /* LockableNavigationController.h */,
 				CE4696AD1C9A0BC8001E3FFE /* LockableNavigationController.m */,
+				D7FA423B1D0EB2D200E93C66 /* MyAlertController.h */,
+				D7FA423C1D0EB2D200E93C66 /* MyAlertController.m */,
 			);
 			path = "My Job Pitch";
 			sourceTree = "<group>";
@@ -512,9 +517,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		CE6FD3361C01F9BB001A04C3 /* My Job Pitch */ = {
+		CE6FD3361C01F9BB001A04C3 /* MyJobPitch */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = CE6FD3641C01F9BC001A04C3 /* Build configuration list for PBXNativeTarget "My Job Pitch" */;
+			buildConfigurationList = CE6FD3641C01F9BC001A04C3 /* Build configuration list for PBXNativeTarget "MyJobPitch" */;
 			buildPhases = (
 				4468F164D62438DAA67B1A9A /* Check Pods Manifest.lock */,
 				CE6FD3331C01F9BB001A04C3 /* Sources */,
@@ -527,14 +532,14 @@
 			);
 			dependencies = (
 			);
-			name = "My Job Pitch";
+			name = MyJobPitch;
 			productName = "My Job Pitch";
-			productReference = CE6FD3371C01F9BB001A04C3 /* My Job Pitch.app */;
+			productReference = CE6FD3371C01F9BB001A04C3 /* MyJobPitch.app */;
 			productType = "com.apple.product-type.application";
 		};
-		CE6FD34F1C01F9BC001A04C3 /* My Job PitchTests */ = {
+		CE6FD34F1C01F9BC001A04C3 /* MyJobPitchTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = CE6FD3671C01F9BC001A04C3 /* Build configuration list for PBXNativeTarget "My Job PitchTests" */;
+			buildConfigurationList = CE6FD3671C01F9BC001A04C3 /* Build configuration list for PBXNativeTarget "MyJobPitchTests" */;
 			buildPhases = (
 				BAA10D4E0805598B1DEEE89A /* Check Pods Manifest.lock */,
 				CE6FD34C1C01F9BC001A04C3 /* Sources */,
@@ -548,9 +553,9 @@
 			dependencies = (
 				CE6FD3521C01F9BC001A04C3 /* PBXTargetDependency */,
 			);
-			name = "My Job PitchTests";
+			name = MyJobPitchTests;
 			productName = "My Job PitchTests";
-			productReference = CE6FD3501C01F9BC001A04C3 /* My Job PitchTests.xctest */;
+			productReference = CE6FD3501C01F9BC001A04C3 /* MyJobPitch.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
 /* End PBXNativeTarget section */
@@ -572,7 +577,7 @@
 					};
 				};
 			};
-			buildConfigurationList = CE6FD3321C01F9BB001A04C3 /* Build configuration list for PBXProject "My Job Pitch" */;
+			buildConfigurationList = CE6FD3321C01F9BB001A04C3 /* Build configuration list for PBXProject "MyJobPitch" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
@@ -585,8 +590,8 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				CE6FD3361C01F9BB001A04C3 /* My Job Pitch */,
-				CE6FD34F1C01F9BC001A04C3 /* My Job PitchTests */,
+				CE6FD3361C01F9BB001A04C3 /* MyJobPitch */,
+				CE6FD34F1C01F9BC001A04C3 /* MyJobPitchTests */,
 			);
 		};
 /* End PBXProject section */
@@ -755,6 +760,7 @@
 				CEE062601C28B77500ED60C0 /* Sex.m in Sources */,
 				CEE005671C90D6D50065E43A /* CreateJobSeekerProfile.m in Sources */,
 				CE8AB01D1C6029D90004F021 /* RecordPitch.m in Sources */,
+				D7FA423D1D0EB2D200E93C66 /* MyAlertController.m in Sources */,
 				CE8AAFFC1C59A7820004F021 /* LocationMapView.m in Sources */,
 				CEE0625C1C28B77500ED60C0 /* Nationality.m in Sources */,
 				CE7742381C923D4900A9A2BA /* ListLocations.m in Sources */,
@@ -796,7 +802,7 @@
 /* Begin PBXTargetDependency section */
 		CE6FD3521C01F9BC001A04C3 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = CE6FD3361C01F9BB001A04C3 /* My Job Pitch */;
+			target = CE6FD3361C01F9BB001A04C3 /* MyJobPitch */;
 			targetProxy = CE6FD3511C01F9BC001A04C3 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -908,8 +914,8 @@
 			baseConfigurationReference = CFA3EA2BF05430C3C9894AA5 /* Pods.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Eiji Kimura (VG6XFZ6ZNQ)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Eiji Kimura (VG6XFZ6ZNQ)";
 				GCC_PREFIX_HEADER = "My Job Pitch/PrefixHeader.pch";
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -922,11 +928,11 @@
 					"\"${PODS_ROOT}/Headers/Public/TransitionKit\"/**",
 				);
 				INFOPLIST_FILE = "My Job Pitch/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.4;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.myjobpitch.My-Job-Pitch";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
+				PRODUCT_NAME = MyJobPitch;
+				PROVISIONING_PROFILE = "b9967d2e-0f4c-4d77-aed9-80bf4028cb0f";
 			};
 			name = Debug;
 		};
@@ -935,8 +941,8 @@
 			baseConfigurationReference = B0F6E4D8F0045A1E43790385 /* Pods.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Eiji Kimura (VG6XFZ6ZNQ)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Eiji Kimura (VG6XFZ6ZNQ)";
 				GCC_PREFIX_HEADER = "My Job Pitch/PrefixHeader.pch";
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -949,11 +955,11 @@
 					"\"${PODS_ROOT}/Headers/Public/TransitionKit\"/**",
 				);
 				INFOPLIST_FILE = "My Job Pitch/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.4;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.myjobpitch.My-Job-Pitch";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
+				PRODUCT_NAME = MyJobPitch;
+				PROVISIONING_PROFILE = "b9967d2e-0f4c-4d77-aed9-80bf4028cb0f";
 			};
 			name = Release;
 		};
@@ -965,8 +971,8 @@
 				INFOPLIST_FILE = "My Job PitchTests/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.myjobpitch.My-Job-PitchTests";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/My Job Pitch.app/My Job Pitch";
+				PRODUCT_NAME = MyJobPitch;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/MyJobPitch.app/MyJobPitch";
 			};
 			name = Debug;
 		};
@@ -978,15 +984,15 @@
 				INFOPLIST_FILE = "My Job PitchTests/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.myjobpitch.My-Job-PitchTests";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/My Job Pitch.app/My Job Pitch";
+				PRODUCT_NAME = MyJobPitch;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/MyJobPitch.app/MyJobPitch";
 			};
 			name = Release;
 		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		CE6FD3321C01F9BB001A04C3 /* Build configuration list for PBXProject "My Job Pitch" */ = {
+		CE6FD3321C01F9BB001A04C3 /* Build configuration list for PBXProject "MyJobPitch" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				CE6FD3621C01F9BC001A04C3 /* Debug */,
@@ -995,7 +1001,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		CE6FD3641C01F9BC001A04C3 /* Build configuration list for PBXNativeTarget "My Job Pitch" */ = {
+		CE6FD3641C01F9BC001A04C3 /* Build configuration list for PBXNativeTarget "MyJobPitch" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				CE6FD3651C01F9BC001A04C3 /* Debug */,
@@ -1004,7 +1010,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		CE6FD3671C01F9BC001A04C3 /* Build configuration list for PBXNativeTarget "My Job PitchTests" */ = {
+		CE6FD3671C01F9BC001A04C3 /* Build configuration list for PBXNativeTarget "MyJobPitchTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				CE6FD3681C01F9BC001A04C3 /* Debug */,

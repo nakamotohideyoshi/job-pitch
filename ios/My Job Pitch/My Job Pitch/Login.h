@@ -12,14 +12,15 @@
 
 @interface Login : ScrollingViewController {
     
-    IBOutlet UITextField * username;
-    IBOutlet UILabel * usernameError;
-    IBOutlet UITextField * password;
-    IBOutlet UILabel * passwordError;
-    IBOutlet UITextField * password2;
-    IBOutlet UILabel * password2Error;
-    IBOutlet UIView * loginForm;
-    IBOutlet UIView * registrationForm;
+    __weak IBOutlet UITextField * username;
+    __weak IBOutlet UILabel * usernameError;
+    __weak IBOutlet UITextField * password;
+    __weak IBOutlet UILabel * passwordError;
+    __weak IBOutlet UITextField * password2;
+    __weak IBOutlet UILabel * password2Error;
+    __weak IBOutlet UIView * loginForm;
+    __weak IBOutlet UIView * registrationForm;
+    __weak IBOutlet UISwitch *switchRemember;
 }
 
 @end

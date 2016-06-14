@@ -98,7 +98,7 @@ public class MJPApi {
 	}
 
 	public MJPApi() {
-		this("http://ec2-52-31-145-95.eu-west-1.compute.amazonaws.com/");
+		this("https://ec2-52-31-145-95.eu-west-1.compute.amazonaws.com/");
 	}
 
     private URI getTypeUrl(String path) {

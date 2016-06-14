@@ -31,7 +31,7 @@
 - (void)registerWithUsername:(NSString*)username
                    password1:(NSString*)password1
                    password2:(NSString*)password2
-                     success:(void (^)(User *user))success
+                     success:(void (^)(AuthToken *authToken))success
                      failure:(void (^)(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors))failure;
 
 - (void)getUser:(void (^)(User *user))success
@@ -79,6 +79,14 @@
 - (void)sendMessage:(MessageForCreation*)message
             success:(void (^)(MessageForCreation *message))success
             failure:(void (^)(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors))failure;
+
+- (void)savePitch:(Pitch*)pitch
+          success:(void (^)(Pitch *pitch))success
+          failure:(void (^)(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors))failure;
+
+- (void)getPitch:(NSNumber*)pid
+         success:(void (^)(Pitch *pitch))success
+         failure:(void (^)(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors))failure;
 
 - (void)loadHours:(void (^)(NSArray *hours))success
           failure:(void (^)(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors))failure;

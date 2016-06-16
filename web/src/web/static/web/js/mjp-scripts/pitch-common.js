@@ -5,6 +5,11 @@ function checkIfThereIsApitch(argument) {
 			poolingTranscodeProcess(resolve);
 		})
 		.then(function (pitches) {
+			if (pitches == undefined || pitches.length == 0) {
+				log('info', 'There is not a pitch.');
+				return;
+			}
+
 			var html = getHtmlForVideoOrThumbnail(pitches);
 
 			$('#pitchVideoCheck').html(html);
@@ -33,38 +38,40 @@ function poolingTranscodeProcess(resolve) {
 			type: 'GET',
 			cache: false
 		}).done(function (pitches) {
-			if (pitches !== undefined && pitches.length > 0) {
-				var thereIsANullPitch = false;
+			if (pitches == undefined || pitches.length == 0) {
+				resolve([]); // There is not pitches
+			}
 
-				pitches.forEach(function (pitch) {
-					if (pitch.video == undefined || pitch.video == null || !pitch.video) {
-						thereIsANullPitch = true;
-						return false; // There is one
-					}
-				});
+			var thereIsANullPitch = false;
 
-				if (thereIsANullPitch) { // Uploaded already
-					if (firstExecution) {
-						log('info', 'Processing upload, please wait...');
-					}
-				} else {
-					if (!firstExecution) {
-						log('success', 'End of Uploading.');
+			pitches.forEach(function (pitch) {
+				if (pitch.video == undefined || pitch.video == null || !pitch.video) {
+					thereIsANullPitch = true;
+					return false; // There is one
+				}
+			});
 
-						setTimeout(function () {
-							location.reload();
-						}, 1000);
-					}
+			if (thereIsANullPitch) { // Uploaded already
+				if (firstExecution) {
+					log('info', 'Processing upload, please wait...');
+				}
+			} else {
+				if (!firstExecution) {
+					log('success', 'End of Uploading.');
 
-					$('.btn-js-start-pitch').attr('disabled', false);
-					$('.btn-js-upload-pitch').attr('disabled', true);
-
-					clearInterval(poolingInterval);
-					resolve(pitches);
+					setTimeout(function () {
+						location.reload();
+					}, 1000);
 				}
 
-				firstExecution = false;
+				$('.btn-js-start-pitch').attr('disabled', false);
+				$('.btn-js-upload-pitch').attr('disabled', true);
+
+				clearInterval(poolingInterval);
+				resolve(pitches);
 			}
+
+			firstExecution = false;
 		});
 	}, 3000);
 }

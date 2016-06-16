@@ -37,6 +37,7 @@ $(document).ready(function () {
 
 
 	$('.btn-js-upload-pitch').click(function (e) {
+		recBtn.disabled = true;
 		$uploadBtn.attr('disabled', true);
 		videoElement.controls = false;
 
@@ -124,6 +125,8 @@ function putIntoS3Bucket(pitch, object) {
 		if (!err) {
 			var poolingPromise = new Promise(function (resolve, reject) {
 				poolingTranscodeProcess(resolve);
+			}).then(function (pitches) {
+				recBtn.disabled = false;
 			});
 		}
 		console.log(err ? 'ERROR!' : 'SAVED.');

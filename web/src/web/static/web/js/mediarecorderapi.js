@@ -52,6 +52,14 @@ var rawMediaRecorded = false;
 var videoElement;
 
 function errorCallback(error) {
+	recBtn.disabled = true;
+	//	    pauseResBtn.disabled = false;
+	stopBtn.disabled = true;
+	$uploadBtn.attr('disabled', true);
+
+
+	log('danger', error.message);
+
 	console.log('navigator.getUserMedia error: ', error);
 
 	successGetUserMedia = false;

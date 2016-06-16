@@ -425,6 +425,8 @@ function log(alertType, message) {
 
 	if (alertType == 'success') {
 		glyphicon = 'glyphicon glyphicon-ok';
+	} else if (alertType == 'danger') {
+		glyphicon = 'glyphicon glyphicon-ban-circle';
 	}
 
 	$parent

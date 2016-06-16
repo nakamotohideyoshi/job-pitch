@@ -158,7 +158,11 @@ function startRecording(stream) {
 		downloadLink.setAttribute("download", name);
 		downloadLink.setAttribute("name", name);
 
-		localStream.stop();
+		// Stop active tracks
+		var tracks = mediaRecorder.stream.getTracks();
+		tracks.forEach(function (track) {
+			track.stop();
+		});
 	}
 
 	mediaRecorder.onpause = function () {

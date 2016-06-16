@@ -7,6 +7,8 @@
 //
 
 #import "LocationEditView.h"
+#import "MyAlertController.h"
+
 @import AssetsLibrary;
 
 @interface LocationEditView ()
@@ -127,13 +129,46 @@
 }
 
 - (IBAction)changeImage:(id)sender {
+    MyAlertController * sheet=   [MyAlertController
+                                  alertControllerWithTitle:@"Image"
+                                  message:@"Select you Choice"
+                                  preferredStyle:UIAlertControllerStyleActionSheet];
+    
+    UIAlertAction* camera = [UIAlertAction
+                             actionWithTitle:@"Camera"
+                             style:UIAlertActionStyleDefault
+                             handler:^(UIAlertAction * action) {
+                                 [sheet dismissViewControllerAnimated:YES completion:nil];
+                                 [self showImagePickerController:UIImagePickerControllerSourceTypeCamera];
+                             }];
+    [sheet addAction:camera];
+    
+    UIAlertAction* photoLibrary = [UIAlertAction
+                                   actionWithTitle:@"Photo Library"
+                                   style:UIAlertActionStyleDefault
+                                   handler:^(UIAlertAction * action) {
+                                       [sheet dismissViewControllerAnimated:YES completion:nil];
+                                       [self showImagePickerController:UIImagePickerControllerSourceTypePhotoLibrary];
+                                   }];
+    [sheet addAction:photoLibrary];
+    
+    UIAlertAction* cancel = [UIAlertAction
+                             actionWithTitle:@"Cancel"
+                             style:UIAlertActionStyleCancel
+                             handler:^(UIAlertAction * action) {
+                                 [sheet dismissViewControllerAnimated:YES completion:nil];
+                             }];
+    [sheet addAction:cancel];
+    
+    [self.window.rootViewController presentViewController:sheet animated:YES completion:nil];
+}
+
+-(void) showImagePickerController:(UIImagePickerControllerSourceType)type {
     ipc= [[UIImagePickerController alloc] init];
     ipc.delegate = self;
-    ipc.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
-    
+    ipc.sourceType = type;
     if(UI_USER_INTERFACE_IDIOM()==UIUserInterfaceIdiomPhone) {
-        [self.window.rootViewController
-         presentViewController:ipc animated:true completion:nil];
+        [self.window.rootViewController presentViewController:ipc animated:true completion:nil];
     } else {
         popover=[[UIPopoverController alloc]initWithContentViewController:ipc];
         [popover presentPopoverFromRect:self.changeButton.frame
@@ -146,17 +181,29 @@
 -(void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info
 {
     [self dismissPicker];
+    
     NSURL *referenceURL = [info objectForKey:UIImagePickerControllerReferenceURL];
-    ALAssetsLibrary *library = [[ALAssetsLibrary alloc] init];
-    [library assetForURL:referenceURL
-             resultBlock:^(ALAsset *asset) {
-                 self.imageForUpload = [UIImage imageWithCGImage:[[asset defaultRepresentation] fullResolutionImage]];
-                 self.imageView.image = self.imageForUpload;
-                 self.changeCenterContraint.priority = UILayoutPriorityDefaultLow;
-                 self.deleteButton.hidden = false;
-                 self.noImage.hidden = true;
-             }
-            failureBlock:^(NSError *error) {}];
+    if (referenceURL) {
+        ALAssetsLibrary *library = [[ALAssetsLibrary alloc] init];
+        [library assetForURL:referenceURL
+                 resultBlock:^(ALAsset *asset) {
+                     self.imageForUpload = [UIImage imageWithCGImage:[[asset defaultRepresentation] fullResolutionImage]];
+                     self.imageView.image = self.imageForUpload;
+                     self.changeCenterContraint.priority = UILayoutPriorityDefaultLow;
+                     self.deleteButton.hidden = false;
+                     self.noImage.hidden = true;
+                 }
+                failureBlock:^(NSError *error) {}];
+    } else {
+        UIImage *editedImage = (UIImage *) [info objectForKey: UIImagePickerControllerEditedImage];
+        UIImage *originalImage = (UIImage *) [info objectForKey: UIImagePickerControllerOriginalImage];
+        self.imageForUpload = editedImage ? editedImage : originalImage;
+        self.imageView.image = self.imageForUpload;
+        self.changeCenterContraint.priority = UILayoutPriorityDefaultLow;
+        self.deleteButton.hidden = false;
+        self.noImage.hidden = true;
+    }
+    
 }
 
 -(void)imagePickerControllerDidCancel:(UIImagePickerController *)picker

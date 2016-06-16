@@ -569,7 +569,7 @@
 				TargetAttributes = {
 					CE6FD3361C01F9BB001A04C3 = {
 						CreatedOnToolsVersion = 7.1.1;
-						DevelopmentTeam = DH34L86UKU;
+						DevelopmentTeam = YY7DF42BJ9;
 					};
 					CE6FD34F1C01F9BC001A04C3 = {
 						CreatedOnToolsVersion = 7.1.1;
@@ -930,7 +930,7 @@
 				INFOPLIST_FILE = "My Job Pitch/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.4;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = "com.myjobpitch.My-Job-Pitch";
+				PRODUCT_BUNDLE_IDENTIFIER = com.myjobpitch.pitch;
 				PRODUCT_NAME = MyJobPitch;
 				PROVISIONING_PROFILE = "b9967d2e-0f4c-4d77-aed9-80bf4028cb0f";
 			};
@@ -957,7 +957,7 @@
 				INFOPLIST_FILE = "My Job Pitch/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.4;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = "com.myjobpitch.My-Job-Pitch";
+				PRODUCT_BUNDLE_IDENTIFIER = com.myjobpitch.pitch;
 				PRODUCT_NAME = MyJobPitch;
 				PROVISIONING_PROFILE = "b9967d2e-0f4c-4d77-aed9-80bf4028cb0f";
 			};

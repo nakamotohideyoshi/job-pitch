@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="9532" systemVersion="15D21" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="10116" systemVersion="15F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9530"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="Constraints with non-1.0 multipliers" minToolsVersion="5.1"/>
     </dependencies>
@@ -12,7 +12,7 @@
                 <outlet property="address" destination="REl-rZ-amQ" id="361-UQ-K6b"/>
                 <outlet property="addressPublic" destination="ITj-MW-khC" id="DXT-eL-JBU"/>
                 <outlet property="changeButton" destination="gW9-AW-p2j" id="5Dr-jr-8y8"/>
-                <outlet property="changeCenterContraint" destination="lzo-AR-Sp7" id="Tlt-8D-8eM"/>
+                <outlet property="changeCenterContraint" destination="FzG-Ih-3WC" id="4iQ-Vc-EZb"/>
                 <outlet property="deleteButton" destination="5nz-b9-gSH" id="5Zn-xu-ICV"/>
                 <outlet property="desc" destination="Wip-7h-125" id="pgR-7K-nYI"/>
                 <outlet property="email" destination="kEQ-Ao-r5B" id="Pw5-MN-CHI"/>
@@ -89,22 +89,6 @@
                     <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                     <nil key="highlightedColor"/>
                 </label>
-                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gW9-AW-p2j">
-                    <rect key="frame" x="62" y="781" width="128" height="30"/>
-                    <color key="backgroundColor" red="0.0" green="0.58823529409999997" blue="0.53333333329999999" alpha="1" colorSpace="calibratedRGB"/>
-                    <state key="normal" title="Change">
-                        <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                    </state>
-                    <userDefinedRuntimeAttributes>
-                        <userDefinedRuntimeAttribute type="boolean" keyPath="layer.masksToBounds" value="YES"/>
-                        <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
-                            <integer key="value" value="7"/>
-                        </userDefinedRuntimeAttribute>
-                    </userDefinedRuntimeAttributes>
-                    <connections>
-                        <action selector="changeImage:" destination="-1" eventType="touchUpInside" id="rpV-5l-zAS"/>
-                    </connections>
-                </button>
                 <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ubB-S6-8jg">
                     <rect key="frame" x="351" y="77" width="51" height="31"/>
                 </switch>
@@ -221,6 +205,22 @@
                         <userDefinedRuntimeAttribute type="string" keyPath="placeholder" value="Location not set"/>
                     </userDefinedRuntimeAttributes>
                 </view>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gW9-AW-p2j">
+                    <rect key="frame" x="62" y="781" width="128" height="30"/>
+                    <color key="backgroundColor" red="0.0" green="0.58823529409999997" blue="0.53333333329999999" alpha="1" colorSpace="calibratedRGB"/>
+                    <state key="normal" title="Change">
+                        <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                    </state>
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="boolean" keyPath="layer.masksToBounds" value="YES"/>
+                        <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                            <integer key="value" value="7"/>
+                        </userDefinedRuntimeAttribute>
+                    </userDefinedRuntimeAttributes>
+                    <connections>
+                        <action selector="changeImage:" destination="-1" eventType="touchUpInside" id="rpV-5l-zAS"/>
+                    </connections>
+                </button>
             </subviews>
             <constraints>
                 <constraint firstItem="uY7-fk-l8w" firstAttribute="top" secondItem="MKN-Ll-mEO" secondAttribute="top" id="1L3-xo-zKJ"/>
@@ -248,7 +248,7 @@
                 <constraint firstItem="gW9-AW-p2j" firstAttribute="width" secondItem="5nz-b9-gSH" secondAttribute="width" id="DuW-Tk-60L"/>
                 <constraint firstItem="MKN-Ll-mEO" firstAttribute="leading" secondItem="wER-tr-9P2" secondAttribute="leading" id="EP8-tA-n0e"/>
                 <constraint firstAttribute="trailing" secondItem="ITj-MW-khC" secondAttribute="trailing" id="ESs-rN-Lew"/>
-                <constraint firstItem="gW9-AW-p2j" firstAttribute="centerX" secondItem="ha8-wD-n4f" secondAttribute="trailing" multiplier="0.35" priority="750" id="FzG-Ih-3WC"/>
+                <constraint firstItem="gW9-AW-p2j" firstAttribute="centerX" secondItem="ha8-wD-n4f" secondAttribute="centerX" priority="250" id="FzG-Ih-3WC"/>
                 <constraint firstItem="zyJ-EM-Mog" firstAttribute="leading" secondItem="Tpd-47-Jc0" secondAttribute="leading" id="GJL-fF-sZ9"/>
                 <constraint firstItem="d3W-zv-7Qk" firstAttribute="centerX" secondItem="ubB-S6-8jg" secondAttribute="centerX" id="GfL-Pe-WD0"/>
                 <constraint firstItem="zyJ-EM-Mog" firstAttribute="top" secondItem="Tpd-47-Jc0" secondAttribute="bottom" constant="16" id="HfV-Q8-gaF"/>
@@ -277,7 +277,7 @@
                 <constraint firstAttribute="trailing" secondItem="ubB-S6-8jg" secondAttribute="trailing" id="jRa-AV-maA"/>
                 <constraint firstAttribute="trailing" secondItem="79N-FR-2Ow" secondAttribute="trailing" id="k5O-DT-tR7"/>
                 <constraint firstItem="dlK-2u-wkl" firstAttribute="top" secondItem="60f-hH-oz2" secondAttribute="bottom" constant="-1" id="loJ-Bh-LKp"/>
-                <constraint firstItem="gW9-AW-p2j" firstAttribute="centerX" secondItem="ha8-wD-n4f" secondAttribute="centerX" priority="250" id="lzo-AR-Sp7"/>
+                <constraint firstItem="gW9-AW-p2j" firstAttribute="centerX" secondItem="ha8-wD-n4f" secondAttribute="trailing" multiplier="0.35" priority="749" id="lzo-AR-Sp7"/>
                 <constraint firstItem="JuM-uv-lPE" firstAttribute="leading" secondItem="Wip-7h-125" secondAttribute="trailing" constant="8" id="mcg-Xb-Iw9"/>
                 <constraint firstItem="d5n-9J-Wf2" firstAttribute="leading" secondItem="60f-hH-oz2" secondAttribute="leading" id="mdh-hN-ZHu"/>
                 <constraint firstItem="MKN-Ll-mEO" firstAttribute="top" secondItem="wER-tr-9P2" secondAttribute="bottom" constant="2" id="nEc-MS-HST"/>

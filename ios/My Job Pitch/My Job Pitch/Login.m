@@ -40,8 +40,15 @@
     // Dispose of any resources that can be recreated.
 }
 
-- (void)viewWillAppear:(BOOL)animated
-{
+- (void)viewWillAppear:(BOOL)animated {
+    
+//    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+//    BOOL isRemember = [defaults boolForKey:@"remember"];
+//    username.text = [defaults stringForKey:@"username"];
+//    password.text = isRemember ? [defaults stringForKey:@"password"] : @"";
+//    password2.text = @"";
+//    [switchRemember setOn:isRemember];
+    
     [[self appDelegate].api logout];
     [[self appDelegate] clearData];
     
@@ -62,8 +69,8 @@
     self.navigationController.navigationBarHidden = NO;
 }
 
-- (void)completeLoginWithUser:(User*)user
-{
+- (void)completeLoginWithUser:(User*)user {
+    [self.view endEditing:YES];
     [self clearErrors];
     [self appDelegate].user = user;
     [self.appDelegate loadData:^() {
@@ -155,6 +162,9 @@
         [[self appDelegate].api registerWithUsername:username.text password1:password.text password2:password2.text success:^(AuthToken *authToken) {
             [[self appDelegate].api loginWithUsername:username.text password:password.text success:^(AuthToken *authToken) {
                 [[self appDelegate].api getUser:^(User *user) {
+                    password.text = @"";
+                    password2.text = @"";
+                    [switchRemember setOn:NO];
                     [self completeLoginWithUser:user];
                 } failure:^(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors) {
                     [self handleErrors:errors message:message];

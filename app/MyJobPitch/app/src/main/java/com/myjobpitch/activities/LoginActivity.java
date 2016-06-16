@@ -54,11 +54,11 @@ import java.util.concurrent.atomic.AtomicInteger;
  * A login screen that offers login via email/password.
  */
 public class LoginActivity extends MJPProgressActivity implements LoaderCallbacks<Cursor> {
-    private static final String LOGIN_PREFERENCES = "LoginPreferences";
-    private static final String API_ROOT = "API_ROOT";
-    private static final String USERNAME = "USERNAME";
-    private static final String PASSWORD = "PASSWORD";
-    private static final String REMEMBER_PASSWORD = "REMEMBER_PASSWORD";
+    public static final String LOGIN_PREFERENCES = "LoginPreferences";
+    public static final String API_ROOT = "API_ROOT";
+    public static final String USERNAME = "USERNAME";
+    public static final String PASSWORD = "PASSWORD";
+    public static final String REMEMBER_PASSWORD = "REMEMBER_PASSWORD";
 
 
     private LoginTask loginTask = null;
@@ -180,6 +180,14 @@ public class LoginActivity extends MJPProgressActivity implements LoaderCallback
     @Override
     protected void onResume() {
         super.onResume();
+
+        final SharedPreferences preferences = getSharedPreferences(LOGIN_PREFERENCES, MODE_PRIVATE);
+        mUsernameView.setText(preferences.getString(USERNAME, ""));
+
+        boolean isRemember = preferences.getBoolean(REMEMBER_PASSWORD, false);
+        mRememberPasswordView.setChecked(isRemember);
+        mPasswordView.setText(isRemember ? preferences.getString(PASSWORD, "") : "");
+
         MJPApi api = ((MJPApplication) this.getApplication()).getApi();
         if (api.isAuthenticated()) {
             logoutTask = new LogoutTask();

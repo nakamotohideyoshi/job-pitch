@@ -2,6 +2,7 @@ package com.myjobpitch.activities;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -15,6 +16,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.myjobpitch.BuildConfig;
 import com.myjobpitch.MJPApplication;
 import com.myjobpitch.R;
 import com.myjobpitch.api.MJPApi;
@@ -228,6 +230,14 @@ public class RegisterActivity extends MJPProgressActivity {
                                 toast.show();
                                 showProgress(false);
                             } else {
+
+                                SharedPreferences.Editor preferences = getSharedPreferences(LoginActivity.LOGIN_PREFERENCES, MODE_PRIVATE)
+                                        .edit()
+                                        .putString(LoginActivity.USERNAME, username)
+                                        .putString(LoginActivity.PASSWORD, "")
+                                        .putBoolean(LoginActivity.REMEMBER_PASSWORD, false);
+                                preferences.commit();
+
                                 Log.d("LoginActivity", "application data loaded");
                                 Intent intent = new Intent(RegisterActivity.this, next);
                                 intent.putExtra("from_login", true);

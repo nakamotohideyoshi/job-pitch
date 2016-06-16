@@ -74,7 +74,7 @@
                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Remember password" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hNo-6x-hxO">
                                                                 <rect key="frame" x="64" y="7" width="136" height="17"/>
                                                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                                 <nil key="highlightedColor"/>
                                                             </label>
                                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="itu-dt-9lY">
@@ -1046,7 +1046,7 @@
                             <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="background_logo" translatesAutoresizingMaskIntoConstraints="NO" id="tuK-iR-goT">
                                 <rect key="frame" x="60" y="60" width="480" height="480"/>
                             </imageView>
-                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="hNc-Bd-zYK">
+                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="hNc-Bd-zYK">
                                 <rect key="frame" x="0.0" y="64" width="600" height="536"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Dwu-tN-pup" userLabel="Content View">
@@ -1400,7 +1400,7 @@
                                 <rect key="frame" x="60" y="60" width="480" height="480"/>
                             </imageView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Rrb-6A-csV">
-                                <rect key="frame" x="0.0" y="64" width="600" height="536"/>
+                                <rect key="frame" x="0.0" y="20" width="600" height="580"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="SVX-Mt-v3L">
                                         <rect key="frame" x="0.0" y="0.0" width="600" height="91"/>
@@ -1461,7 +1461,7 @@
                                         </connections>
                                     </view>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="xgA-tT-mNv">
-                                        <rect key="frame" x="0.0" y="452" width="600" height="84"/>
+                                        <rect key="frame" x="0.0" y="496" width="600" height="84"/>
                                         <subviews>
                                             <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="d7X-nK-QFJ">
                                                 <rect key="frame" x="8" y="8" width="524" height="68"/>
@@ -1499,10 +1499,10 @@
                                         </constraints>
                                     </view>
                                     <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="white" translatesAutoresizingMaskIntoConstraints="NO" id="7Av-Ij-uy8">
-                                        <rect key="frame" x="290" y="460" width="20" height="20"/>
+                                        <rect key="frame" x="290" y="504" width="20" height="20"/>
                                     </activityIndicatorView>
                                     <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" dataMode="prototypes" style="plain" separatorStyle="none" allowsSelection="NO" rowHeight="101" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="gSe-xC-hKC">
-                                        <rect key="frame" x="8" y="91" width="584" height="361"/>
+                                        <rect key="frame" x="8" y="91" width="584" height="405"/>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         <prototypes>
                                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="MessageThreadCell" rowHeight="96" id="Uxu-3c-FRc" customClass="MessageThreadCell">
@@ -1646,7 +1646,7 @@
                                 <rect key="frame" x="0.0" y="64" width="600" height="536"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="P4C-g8-IHW" userLabel="Content View">
-                                        <rect key="frame" x="0.0" y="0.0" width="600" height="466"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="600" height="456"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" text="Record My Pitch" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BXr-yH-tHu">
                                                 <rect key="frame" x="16" y="16" width="255" height="40"/>
@@ -1696,7 +1696,7 @@
                                                 <rect key="frame" x="252" y="224" width="96" height="96"/>
                                             </imageView>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="oQU-Hn-gbG">
-                                                <rect key="frame" x="75" y="414" width="64" height="32"/>
+                                                <rect key="frame" x="85" y="414" width="64" height="32"/>
                                                 <color key="backgroundColor" red="0.0" green="0.58823529409999997" blue="0.53333333329999999" alpha="1" colorSpace="calibratedRGB"/>
                                                 <inset key="contentEdgeInsets" minX="7" minY="7" maxX="7" maxY="7"/>
                                                 <state key="normal" title="Upload">
@@ -1713,7 +1713,7 @@
                                                 </connections>
                                             </button>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="CRs-n6-UjE">
-                                                <rect key="frame" x="232" y="414" width="137" height="32"/>
+                                                <rect key="frame" x="368" y="414" width="137" height="32"/>
                                                 <color key="backgroundColor" red="0.0" green="0.58823529409999997" blue="0.53333333329999999" alpha="1" colorSpace="calibratedRGB"/>
                                                 <inset key="contentEdgeInsets" minX="7" minY="7" maxX="7" maxY="7"/>
                                                 <state key="normal" title="Record New Pitch">
@@ -1729,29 +1729,11 @@
                                                     <action selector="recordPitch:" destination="KaQ-qh-VKT" eventType="touchUpInside" id="xMe-QF-dKs"/>
                                                 </connections>
                                             </button>
-                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="sBE-Rj-QDL">
-                                                <rect key="frame" x="388" y="414" width="137" height="32"/>
-                                                <color key="backgroundColor" red="0.0" green="0.58823529409999997" blue="0.53333333329999999" alpha="1" colorSpace="calibratedRGB"/>
-                                                <inset key="contentEdgeInsets" minX="7" minY="7" maxX="7" maxY="7"/>
-                                                <state key="normal" title="Record New Pitch">
-                                                    <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                                                </state>
-                                                <userDefinedRuntimeAttributes>
-                                                    <userDefinedRuntimeAttribute type="boolean" keyPath="layer.masksToBounds" value="YES"/>
-                                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
-                                                        <integer key="value" value="7"/>
-                                                    </userDefinedRuntimeAttribute>
-                                                </userDefinedRuntimeAttributes>
-                                                <connections>
-                                                    <action selector="recordPitch:" destination="KaQ-qh-VKT" eventType="touchUpInside" id="Mya-bc-w1S"/>
-                                                </connections>
-                                            </button>
                                             <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="xnn-qL-Xyd">
                                                 <rect key="frame" x="145" y="127" width="290" height="2"/>
                                             </progressView>
                                         </subviews>
                                         <constraints>
-                                            <constraint firstItem="sBE-Rj-QDL" firstAttribute="centerY" secondItem="CRs-n6-UjE" secondAttribute="centerY" id="06C-bH-i6t"/>
                                             <constraint firstItem="ACW-EH-Kde" firstAttribute="centerY" secondItem="Gls-FS-6cB" secondAttribute="centerY" id="0M7-kT-xh3"/>
                                             <constraint firstItem="Gls-FS-6cB" firstAttribute="centerX" secondItem="P4C-g8-IHW" secondAttribute="centerX" id="1dZ-ro-0fs"/>
                                             <constraint firstItem="3iz-Lv-QZE" firstAttribute="top" secondItem="hIT-Ow-thQ" secondAttribute="bottom" constant="15" id="2EP-Fn-Umy"/>
@@ -1759,16 +1741,15 @@
                                             <constraint firstItem="xnn-qL-Xyd" firstAttribute="centerY" secondItem="3iz-Lv-QZE" secondAttribute="centerY" id="47w-oP-UQI"/>
                                             <constraint firstItem="ysV-dm-iWu" firstAttribute="centerY" secondItem="Gls-FS-6cB" secondAttribute="centerY" id="8aj-da-ofh"/>
                                             <constraint firstItem="xnn-qL-Xyd" firstAttribute="trailing" secondItem="Gls-FS-6cB" secondAttribute="trailing" constant="-90" id="B9h-Wl-wYY"/>
-                                            <constraint firstAttribute="bottom" secondItem="CRs-n6-UjE" secondAttribute="bottom" constant="20" id="Dfy-gg-Io7"/>
-                                            <constraint firstItem="oQU-Hn-gbG" firstAttribute="leading" secondItem="Gls-FS-6cB" secondAttribute="leading" id="E4u-OO-bbh"/>
+                                            <constraint firstAttribute="bottom" secondItem="CRs-n6-UjE" secondAttribute="bottom" constant="10" id="Dfy-gg-Io7"/>
+                                            <constraint firstItem="oQU-Hn-gbG" firstAttribute="leading" secondItem="Gls-FS-6cB" secondAttribute="leading" constant="10" id="E4u-OO-bbh"/>
                                             <constraint firstItem="DV0-Lf-bxa" firstAttribute="centerY" secondItem="3iz-Lv-QZE" secondAttribute="centerY" id="EPm-G4-Reg"/>
                                             <constraint firstItem="ysV-dm-iWu" firstAttribute="centerX" secondItem="Gls-FS-6cB" secondAttribute="centerX" id="Gvi-18-sEU"/>
                                             <constraint firstItem="Gls-FS-6cB" firstAttribute="width" secondItem="P4C-g8-IHW" secondAttribute="width" multiplier="0.75" id="HFa-EK-L8p"/>
                                             <constraint firstItem="ACW-EH-Kde" firstAttribute="centerX" secondItem="Gls-FS-6cB" secondAttribute="centerX" id="HT3-J8-1iC"/>
                                             <constraint firstItem="CRs-n6-UjE" firstAttribute="top" secondItem="Gls-FS-6cB" secondAttribute="bottom" constant="16" id="OYI-Fx-wqK"/>
                                             <constraint firstItem="O2F-f4-6uO" firstAttribute="centerY" secondItem="Gls-FS-6cB" secondAttribute="centerY" id="U7f-ka-8wC"/>
-                                            <constraint firstItem="sBE-Rj-QDL" firstAttribute="trailing" secondItem="Gls-FS-6cB" secondAttribute="trailing" id="VS1-QW-c0p"/>
-                                            <constraint firstItem="CRs-n6-UjE" firstAttribute="centerX" secondItem="P4C-g8-IHW" secondAttribute="centerX" id="Yve-bi-iNi"/>
+                                            <constraint firstItem="CRs-n6-UjE" firstAttribute="centerX" secondItem="P4C-g8-IHW" secondAttribute="centerX" priority="250" id="Yve-bi-iNi"/>
                                             <constraint firstItem="Gls-FS-6cB" firstAttribute="leading" secondItem="3iz-Lv-QZE" secondAttribute="leading" id="ZJR-Vo-EgP"/>
                                             <constraint firstItem="hIT-Ow-thQ" firstAttribute="leading" secondItem="BXr-yH-tHu" secondAttribute="leading" id="aY5-1y-5fg"/>
                                             <constraint firstItem="BXr-yH-tHu" firstAttribute="leading" secondItem="P4C-g8-IHW" secondAttribute="leading" constant="16" id="avV-Xf-CVh"/>
@@ -1779,6 +1760,7 @@
                                             <constraint firstItem="BXr-yH-tHu" firstAttribute="top" secondItem="P4C-g8-IHW" secondAttribute="top" constant="16" id="jY7-0w-vF5"/>
                                             <constraint firstItem="DV0-Lf-bxa" firstAttribute="trailing" secondItem="Gls-FS-6cB" secondAttribute="trailing" id="rO3-nj-Def"/>
                                             <constraint firstItem="oQU-Hn-gbG" firstAttribute="centerY" secondItem="CRs-n6-UjE" secondAttribute="centerY" id="sme-0X-cMD"/>
+                                            <constraint firstItem="CRs-n6-UjE" firstAttribute="trailing" secondItem="Gls-FS-6cB" secondAttribute="trailing" priority="749" constant="-20" id="zYJ-lf-g2V"/>
                                         </constraints>
                                     </view>
                                 </subviews>
@@ -1817,8 +1799,7 @@
                         <outlet property="mainView" destination="P4C-g8-IHW" id="ntD-cU-QLy"/>
                         <outlet property="noRecording" destination="ysV-dm-iWu" id="jLH-Sb-AkP"/>
                         <outlet property="playOverlay" destination="ACW-EH-Kde" id="ixv-Ja-XEu"/>
-                        <outlet property="recordButton" destination="CRs-n6-UjE" id="yAy-hp-hG7"/>
-                        <outlet property="recordButton1" destination="sBE-Rj-QDL" id="GMj-Xz-DuF"/>
+                        <outlet property="recordCenterContraint" destination="Yve-bi-iNi" id="ifN-hZ-Fbf"/>
                         <outlet property="uploadButton" destination="oQU-Hn-gbG" id="ZfX-R4-ZcA"/>
                         <segue destination="2iG-mk-uiW" kind="show" identifier="play_video" id="F33-gd-75U"/>
                     </connections>
@@ -3079,7 +3060,7 @@
                                 <rect key="frame" x="60" y="60" width="480" height="480"/>
                             </imageView>
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="FVc-9w-QE3">
-                                <rect key="frame" x="0.0" y="64" width="600" height="536"/>
+                                <rect key="frame" x="0.0" y="20" width="600" height="580"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="C7m-R3-oLd" userLabel="Content View">
                                         <rect key="frame" x="0.0" y="0.0" width="600" height="599"/>
@@ -3241,10 +3222,10 @@
                                     </view>
                                 </subviews>
                                 <constraints>
-                                    <constraint firstItem="C7m-R3-oLd" firstAttribute="top" secondItem="FVc-9w-QE3" secondAttribute="top" id="AsG-cg-ife"/>
-                                    <constraint firstAttribute="right" secondItem="C7m-R3-oLd" secondAttribute="right" id="QFZ-0v-ADc"/>
-                                    <constraint firstItem="C7m-R3-oLd" firstAttribute="left" secondItem="FVc-9w-QE3" secondAttribute="left" id="S87-1C-31A"/>
-                                    <constraint firstAttribute="bottom" secondItem="C7m-R3-oLd" secondAttribute="bottom" id="rmL-e9-sdv"/>
+                                    <constraint firstItem="C7m-R3-oLd" firstAttribute="top" secondItem="FVc-9w-QE3" secondAttribute="top" id="9gu-dE-8ca"/>
+                                    <constraint firstItem="C7m-R3-oLd" firstAttribute="leading" secondItem="FVc-9w-QE3" secondAttribute="leading" id="SPV-jM-K3L"/>
+                                    <constraint firstAttribute="trailing" secondItem="C7m-R3-oLd" secondAttribute="trailing" id="hQp-c0-ZzJ"/>
+                                    <constraint firstAttribute="bottom" secondItem="C7m-R3-oLd" secondAttribute="bottom" id="rGg-dZ-rkD"/>
                                 </constraints>
                                 <variation key="heightClass=compact" ambiguous="YES">
                                     <rect key="frame" x="0.0" y="64" width="600" height="336"/>
@@ -3265,10 +3246,10 @@
                             <constraint firstItem="Px2-bU-uU2" firstAttribute="centerY" secondItem="UG1-qb-hNz" secondAttribute="centerY" id="Fww-QR-eX7"/>
                             <constraint firstItem="Px2-bU-uU2" firstAttribute="centerX" secondItem="UG1-qb-hNz" secondAttribute="centerX" id="IB1-Of-4gR"/>
                             <constraint firstItem="AJd-xi-DLw" firstAttribute="top" secondItem="FVc-9w-QE3" secondAttribute="bottom" id="LXu-tw-P5X"/>
+                            <constraint firstItem="C7m-R3-oLd" firstAttribute="width" secondItem="UG1-qb-hNz" secondAttribute="width" id="MRf-LY-t9y"/>
                             <constraint firstItem="c4O-MW-ypG" firstAttribute="centerX" secondItem="UG1-qb-hNz" secondAttribute="centerX" id="PeD-UY-8Na"/>
                             <constraint firstAttribute="trailing" secondItem="FVc-9w-QE3" secondAttribute="trailing" id="XQy-jL-yo8"/>
                             <constraint firstItem="FVc-9w-QE3" firstAttribute="top" secondItem="3n8-Oc-T80" secondAttribute="bottom" id="fPR-AT-R3y"/>
-                            <constraint firstItem="C7m-R3-oLd" firstAttribute="width" secondItem="UG1-qb-hNz" secondAttribute="width" id="mVv-Me-AMu"/>
                             <constraint firstItem="c4O-MW-ypG" firstAttribute="width" secondItem="UG1-qb-hNz" secondAttribute="width" multiplier="0.8" id="nhY-1S-SmV"/>
                         </constraints>
                     </view>
@@ -3315,11 +3296,11 @@
         <image name="play" width="96" height="96"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="0vK-0A-u9q"/>
         <segue reference="ouc-Of-Rbe"/>
-        <segue reference="ZpE-yw-NGD"/>
+        <segue reference="bLg-hp-djS"/>
+        <segue reference="F33-gd-75U"/>
+        <segue reference="0vK-0A-u9q"/>
         <segue reference="TnE-uG-nR3"/>
-        <segue reference="sDv-ZU-ZHl"/>
-        <segue reference="DDY-hC-ukR"/>
+        <segue reference="ZpE-yw-NGD"/>
     </inferredMetricsTieBreakers>
 </document>

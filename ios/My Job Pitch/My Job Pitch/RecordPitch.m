@@ -47,7 +47,7 @@
     
     self.playOverlay.hidden = YES;
     self.uploadButton.hidden = YES;
-    self.recordButton1.hidden = YES;
+    self.recordCenterContraint.priority = UILayoutPriorityDefaultHigh;
     
     [self.appDelegate.api loadJobSeekerWithId:self.appDelegate.user.jobSeeker
                                       success:^(JobSeeker *jobSeeker) {
@@ -141,8 +141,7 @@
     self.noRecording.hidden = YES;
     
     self.uploadButton.hidden = NO;
-    self.recordButton1.hidden = NO;
-    self.recordButton.hidden = YES;
+    self.recordCenterContraint.priority = UILayoutPriorityDefaultLow;
    
 }
 

@@ -122,11 +122,11 @@ function startRecording(stream) {
 	};
 
 	mediaRecorder.onstart = function () {
-		log('info', 'Started & state = ' + mediaRecorder.state);
+		log('info', 'Recording ...');
 	};
 
 	mediaRecorder.onstop = function () {
-		log('info', 'Stopped  & state = ' + mediaRecorder.state);
+		log('info', 'Stopped.');
 
 		var contentType = "video/webm";
 

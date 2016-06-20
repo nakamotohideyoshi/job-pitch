@@ -5,6 +5,7 @@
 
 #import "MyCameraViewController.h"
 #import "MyCameraPreviewView.h"
+#import "RecordPitch.h"
 
 static void * CapturingStillImageContext = &CapturingStillImageContext;
 static void * SessionRunningContext = &SessionRunningContext;
@@ -23,6 +24,7 @@ typedef NS_ENUM( NSInteger, AVCamSetupResult ) {
 @property (nonatomic, weak) IBOutlet UIButton *resumeButton;
 @property (nonatomic, weak) IBOutlet UIButton *recordButton;
 @property (nonatomic, weak) IBOutlet UIButton *cameraButton;
+@property (weak, nonatomic) IBOutlet UILabel *countLabel;
 
 // Session management.
 @property (nonatomic) dispatch_queue_t sessionQueue;
@@ -39,6 +41,9 @@ typedef NS_ENUM( NSInteger, AVCamSetupResult ) {
 @end
 
 @implementation MyCameraViewController
+{
+    int readyCount;
+}
 
 - (void)viewDidLoad
 {
@@ -47,6 +52,8 @@ typedef NS_ENUM( NSInteger, AVCamSetupResult ) {
 	// Disable UI. The UI is enabled if and only if the session starts running.
 	self.cameraButton.enabled = NO;
 	self.recordButton.enabled = NO;
+    self.countLabel.hidden = YES;
+    readyCount = -1;
 
 	// Create the AVCaptureSession.
 	self.session = [[AVCaptureSession alloc] init];
@@ -443,39 +450,82 @@ typedef NS_ENUM( NSInteger, AVCamSetupResult ) {
 
 - (IBAction)toggleMovieRecording:(id)sender
 {
+    if ( self.movieFileOutput.isRecording ) {
+        self.countLabel.hidden = YES;
+        readyCount = -1;
+        
+        [self stopRecord];
+        return;
+    }
+    
+    if (readyCount < 0) {
+        
+        [self.recordButton setTitle:@"GET READY!" forState:UIControlStateNormal];
+        self.countLabel.hidden = NO;
+        readyCount = 10;
+        
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+            while(readyCount > 0) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    self.countLabel.text = [NSString stringWithFormat:@"%d", readyCount];
+                });
+                
+                [NSThread sleepForTimeInterval: 1];
+                readyCount--;
+            }
+            
+            if (readyCount == 0) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [self startRecord];
+                });
+            }
+        });
+    } else if (readyCount > 0)  {
+        [self.recordButton setTitle:@"RECORD!" forState:UIControlStateNormal];
+        self.countLabel.hidden = YES;
+        readyCount = -1;
+    }
+    
+}
+
+- (void) startRecord {
+    
 	// Disable the Camera button until recording finishes, and disable the Record button until recording starts or finishes. See the
 	// AVCaptureFileOutputRecordingDelegate methods.
 	self.cameraButton.enabled = NO;
 	self.recordButton.enabled = NO;
 
 	dispatch_async( self.sessionQueue, ^{
-		if ( ! self.movieFileOutput.isRecording ) {
-			if ( [UIDevice currentDevice].isMultitaskingSupported ) {
-				// Setup background task. This is needed because the -[captureOutput:didFinishRecordingToOutputFileAtURL:fromConnections:error:]
-				// callback is not received until AVCam returns to the foreground unless you request background execution time.
-				// This also ensures that there will be time to write the file to the photo library when AVCam is backgrounded.
-				// To conclude this background execution, -endBackgroundTask is called in
-				// -[captureOutput:didFinishRecordingToOutputFileAtURL:fromConnections:error:] after the recorded file has been saved.
-				self.backgroundRecordingID = [[UIApplication sharedApplication] beginBackgroundTaskWithExpirationHandler:nil];
-			}
-
-			// Update the orientation on the movie file output video connection before starting recording.
-			AVCaptureConnection *connection = [self.movieFileOutput connectionWithMediaType:AVMediaTypeVideo];
-			AVCaptureVideoPreviewLayer *previewLayer = (AVCaptureVideoPreviewLayer *)self.previewView.layer;
-			connection.videoOrientation = previewLayer.connection.videoOrientation;
-
-			// Turn OFF flash for video recording.
-			[MyCameraViewController setFlashMode:AVCaptureFlashModeOff forDevice:self.videoDeviceInput.device];
-
-			// Start recording to a temporary file.
-			NSString *outputFileName = [NSProcessInfo processInfo].globallyUniqueString;
-			NSString *outputFilePath = [NSTemporaryDirectory() stringByAppendingPathComponent:[outputFileName stringByAppendingPathExtension:@"mov"]];
-			[self.movieFileOutput startRecordingToOutputFileURL:[NSURL fileURLWithPath:outputFilePath] recordingDelegate:self];
-		}
-		else {
-			[self.movieFileOutput stopRecording];
-		}
+        if ( [UIDevice currentDevice].isMultitaskingSupported ) {
+            // Setup background task. This is needed because the -[captureOutput:didFinishRecordingToOutputFileAtURL:fromConnections:error:]
+            // callback is not received until AVCam returns to the foreground unless you request background execution time.
+            // This also ensures that there will be time to write the file to the photo library when AVCam is backgrounded.
+            // To conclude this background execution, -endBackgroundTask is called in
+            // -[captureOutput:didFinishRecordingToOutputFileAtURL:fromConnections:error:] after the recorded file has been saved.
+            self.backgroundRecordingID = [[UIApplication sharedApplication] beginBackgroundTaskWithExpirationHandler:nil];
+        }
+        
+        // Update the orientation on the movie file output video connection before starting recording.
+        AVCaptureConnection *connection = [self.movieFileOutput connectionWithMediaType:AVMediaTypeVideo];
+        AVCaptureVideoPreviewLayer *previewLayer = (AVCaptureVideoPreviewLayer *)self.previewView.layer;
+        connection.videoOrientation = previewLayer.connection.videoOrientation;
+        
+        // Turn OFF flash for video recording.
+        [MyCameraViewController setFlashMode:AVCaptureFlashModeOff forDevice:self.videoDeviceInput.device];
+        
+        // Start recording to a temporary file.
+        NSString *outputFileName = [NSProcessInfo processInfo].globallyUniqueString;
+        NSString *outputFilePath = [NSTemporaryDirectory() stringByAppendingPathComponent:[outputFileName stringByAppendingPathExtension:@"mov"]];
+        [self.movieFileOutput startRecordingToOutputFileURL:[NSURL fileURLWithPath:outputFilePath] recordingDelegate:self];
 	} );
+}
+
+- (void) stopRecord {
+    self.cameraButton.enabled = NO;
+    self.recordButton.enabled = NO;
+    dispatch_async( self.sessionQueue, ^{
+        [self.movieFileOutput stopRecording];
+    });
 }
 
 - (IBAction)changeCamera:(id)sender
@@ -548,6 +598,25 @@ typedef NS_ENUM( NSInteger, AVCamSetupResult ) {
 	dispatch_async( dispatch_get_main_queue(), ^{
 		self.recordButton.enabled = YES;
 		[self.recordButton setTitle:NSLocalizedString( @"Stop", @"Recording button stop title") forState:UIControlStateNormal];
+        
+        self.countLabel.hidden = NO;
+        readyCount = 30;
+        
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+            while(readyCount > 0) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    self.countLabel.text = [NSString stringWithFormat:@"%d", readyCount];
+                });
+                
+                [NSThread sleepForTimeInterval: 1];
+                readyCount--;
+            }
+            
+            if (readyCount == 0) {
+                [self stopRecord];
+            }
+        });
+        
 	});
 }
 
@@ -574,8 +643,12 @@ typedef NS_ENUM( NSInteger, AVCamSetupResult ) {
 		success = [error.userInfo[AVErrorRecordingSuccessfullyFinishedKey] boolValue];
 	}
 	if ( success ) {
+        [self dismissViewControllerAnimated:YES completion:nil];
+        [self.recordPitch recordCompleted:outputFileURL.absoluteString];
+        return;
+        
 		// Check authorization status.
-		[PHPhotoLibrary requestAuthorization:^( PHAuthorizationStatus status ) {
+		/*[PHPhotoLibrary requestAuthorization:^( PHAuthorizationStatus status ) {
 			if ( status == PHAuthorizationStatusAuthorized ) {
 				// Save the movie file to the photo library and cleanup.
 				[[PHPhotoLibrary sharedPhotoLibrary] performChanges:^{
@@ -600,7 +673,7 @@ typedef NS_ENUM( NSInteger, AVCamSetupResult ) {
 			else {
 				cleanup();
 			}
-		}];
+		}];*/
 	}
 	else {
 		cleanup();
@@ -613,6 +686,10 @@ typedef NS_ENUM( NSInteger, AVCamSetupResult ) {
 		self.recordButton.enabled = YES;
 		[self.recordButton setTitle:NSLocalizedString( @"Record", @"Recording button record title" ) forState:UIControlStateNormal];
 	});
+}
+- (IBAction)cancel:(id)sender {
+    readyCount = -1;
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 #pragma mark Device Configuration

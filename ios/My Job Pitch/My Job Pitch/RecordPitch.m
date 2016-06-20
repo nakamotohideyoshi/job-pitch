@@ -87,10 +87,6 @@
 
 - (IBAction)recordPitch:(id)sender {
     
-    MyCameraViewController *controller = [self.storyboard instantiateViewControllerWithIdentifier:@"MyCameraController"];
-    [self presentViewController:controller animated:YES completion:nil];
-    return;
-    
     if (self.videoURL) {
         [MyAlertController title:@"Confirm"
                          message:@"You have a pitch recorded but not uploaded. A new recording will replace this"
@@ -105,39 +101,62 @@
 
 - (void)showCamera {
     
-    if ([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera]) {
-        
-        NSArray *availableMediaTypes = [UIImagePickerController
-                                        availableMediaTypesForSourceType:UIImagePickerControllerSourceTypeCamera];
-        if ([availableMediaTypes containsObject:(NSString *)kUTTypeMovie]) {
-            UIImagePickerController *camera = [[UIImagePickerController alloc] init];
-            camera.delegate = self;
-            camera.sourceType = UIImagePickerControllerSourceTypeCamera;
-            camera.mediaTypes = @[(NSString *)kUTTypeMovie];
-            camera.videoMaximumDuration = 30;
-            if ([UIImagePickerController isCameraDeviceAvailable:UIImagePickerControllerCameraDeviceFront]) {
-                camera.cameraDevice = UIImagePickerControllerCameraDeviceFront;
-            }
-            [self presentViewController:camera animated:YES completion:nil];
-        } else {
-            [MyAlertController title:@"Not supported"
-                             message:@"Video recording is not supported on your device"
-                                  ok:@"Dismiss" okCallback:nil
-                              cancel:@"Cancel" cancelCallback:nil];
-        }
-    } else {
-        [MyAlertController title:@"Not supported"
-                         message:@"Video recording is not supported on your device"
-                              ok:@"Dismiss" okCallback:nil
-                          cancel:@"Cancel" cancelCallback:nil];
-    }
+    MyCameraViewController *controller = [self.storyboard instantiateViewControllerWithIdentifier:@"MyCameraController"];
+    controller.recordPitch = self;
+    [self presentViewController:controller animated:YES completion:nil];
+    
+//    if ([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera]) {
+//        
+//        NSArray *availableMediaTypes = [UIImagePickerController
+//                                        availableMediaTypesForSourceType:UIImagePickerControllerSourceTypeCamera];
+//        if ([availableMediaTypes containsObject:(NSString *)kUTTypeMovie]) {
+//            UIImagePickerController *camera = [[UIImagePickerController alloc] init];
+//            camera.delegate = self;
+//            camera.sourceType = UIImagePickerControllerSourceTypeCamera;
+//            camera.mediaTypes = @[(NSString *)kUTTypeMovie];
+//            camera.videoMaximumDuration = 30;
+//            if ([UIImagePickerController isCameraDeviceAvailable:UIImagePickerControllerCameraDeviceFront]) {
+//                camera.cameraDevice = UIImagePickerControllerCameraDeviceFront;
+//            }
+//            [self presentViewController:camera animated:YES completion:nil];
+//        } else {
+//            [MyAlertController title:@"Not supported"
+//                             message:@"Video recording is not supported on your device"
+//                                  ok:@"Dismiss" okCallback:nil
+//                              cancel:@"Cancel" cancelCallback:nil];
+//        }
+//    } else {
+//        [MyAlertController title:@"Not supported"
+//                         message:@"Video recording is not supported on your device"
+//                              ok:@"Dismiss" okCallback:nil
+//                          cancel:@"Cancel" cancelCallback:nil];
+//    }
 }
 
-- (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info {
+//- (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info {
+//    
+//    [picker dismissViewControllerAnimated:YES completion:NULL];
+//    
+//    self.videoURL = info[UIImagePickerControllerMediaURL];
+//    
+//    MPMoviePlayerController *player = [[MPMoviePlayerController alloc] initWithContentURL: self.videoURL];
+//    self.image.image = [player thumbnailImageAtTime:1 timeOption:MPMovieTimeOptionExact];
+//    
+//    self.playOverlay.hidden = NO;
+//    self.noRecording.hidden = YES;
+//    
+//    self.uploadButton.hidden = NO;
+//    self.recordCenterContraint.priority = UILayoutPriorityDefaultLow;
+//   
+//}
+
+//- (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker {
+//    [picker dismissViewControllerAnimated:YES completion:NULL];
+//}
+
+- (void)recordCompleted:(NSString*)url {
     
-    [picker dismissViewControllerAnimated:YES completion:NULL];
-    
-    self.videoURL = info[UIImagePickerControllerMediaURL];
+    self.videoURL = [NSURL URLWithString:url];
     
     MPMoviePlayerController *player = [[MPMoviePlayerController alloc] initWithContentURL: self.videoURL];
     self.image.image = [player thumbnailImageAtTime:1 timeOption:MPMovieTimeOptionExact];
@@ -147,11 +166,6 @@
     
     self.uploadButton.hidden = NO;
     self.recordCenterContraint.priority = UILayoutPriorityDefaultLow;
-   
-}
-
-- (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker {
-    [picker dismissViewControllerAnimated:YES completion:NULL];
 }
 
 - (IBAction)videoUpload:(id)sender {

@@ -3304,9 +3304,21 @@
                             </view>
                             <label hidden="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Camera Unavailable" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="42w-Ns-Y7f" userLabel="Camera Unavailable">
                                 <rect key="frame" x="193" y="286" width="214" height="29"/>
-                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="24"/>
-                                <color key="textColor" red="1" green="1" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" usesAttributedText="YES" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1IX-iW-MDQ">
+                                <rect key="frame" x="518" y="455" width="34" height="35"/>
+                                <attributedString key="attributedText">
+                                    <fragment content="30">
+                                        <attributes>
+                                            <color key="NSColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
+                                            <font key="NSFont" size="30" name="HelveticaNeue"/>
+                                            <paragraphStyle key="NSParagraphStyle" alignment="center" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0"/>
+                                        </attributes>
+                                    </fragment>
+                                </attributedString>
                                 <nil key="highlightedColor"/>
                             </label>
                             <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="sMM-Hq-19l" userLabel="Resume">
@@ -3326,12 +3338,14 @@
                                     <action selector="resumeInterruptedSession:" destination="aSv-IJ-T0W" eventType="touchUpInside" id="gEf-EW-gEz"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rK6-wj-qkL" userLabel="Record">
-                                <rect key="frame" x="160" y="550" width="80" height="30"/>
-                                <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.29999999999999999" colorSpace="calibratedRGB"/>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rK6-wj-qkL" userLabel="Record">
+                                <rect key="frame" x="225" y="517" width="150" height="36"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="150" id="zfM-xs-IsU"/>
+                                </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="20"/>
                                 <state key="normal" title="Record">
-                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <userDefinedRuntimeAttributes>
                                     <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
@@ -3342,13 +3356,28 @@
                                     <action selector="toggleMovieRecording:" destination="aSv-IJ-T0W" eventType="touchUpInside" id="ekA-9C-QTx"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ygN-xd-Svs" userLabel="Camera">
-                                <rect key="frame" x="360" y="550" width="80" height="30"/>
-                                <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.29999999999999999" colorSpace="calibratedRGB"/>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="7K9-sX-g8l">
+                                <rect key="frame" x="30" y="517" width="63" height="36"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="20"/>
-                                <state key="normal" title="Camera">
-                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                <state key="normal" title="Cancel">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                        <integer key="value" value="4"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                                <connections>
+                                    <action selector="cancel:" destination="aSv-IJ-T0W" eventType="touchUpInside" id="X3n-JU-qos"/>
+                                    <action selector="toggleMovieRecording:" destination="aSv-IJ-T0W" eventType="touchUpInside" id="jHA-oO-fhU"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ygN-xd-Svs" userLabel="Camera">
+                                <rect key="frame" x="490" y="490" width="90" height="90"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" secondItem="ygN-xd-Svs" secondAttribute="height" multiplier="1:1" id="M7D-IW-8xy"/>
+                                </constraints>
+                                <state key="normal" image="switch_camera"/>
                                 <userDefinedRuntimeAttributes>
                                     <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
                                         <integer key="value" value="4"/>
@@ -3361,12 +3390,21 @@
                         </subviews>
                         <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="42w-Ns-Y7f" firstAttribute="centerY" secondItem="IlU-vt-52a" secondAttribute="centerY" id="Jtu-HI-Ycw"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="ygN-xd-Svs" secondAttribute="trailing" id="1xd-hp-SMI"/>
+                            <constraint firstItem="ygN-xd-Svs" firstAttribute="top" secondItem="1IX-iW-MDQ" secondAttribute="bottom" id="AWz-Mx-f6v"/>
+                            <constraint firstItem="rK6-wj-qkL" firstAttribute="centerX" secondItem="IlU-vt-52a" secondAttribute="centerX" id="OGg-0a-kHA"/>
                             <constraint firstItem="sMM-Hq-19l" firstAttribute="centerX" secondItem="IlU-vt-52a" secondAttribute="centerX" id="OVO-lj-8ZP"/>
                             <constraint firstItem="0tl-jX-1NQ" firstAttribute="width" secondItem="IlU-vt-52a" secondAttribute="width" id="PK4-Pt-tLh"/>
+                            <constraint firstItem="1IX-iW-MDQ" firstAttribute="centerX" secondItem="ygN-xd-Svs" secondAttribute="centerX" id="VTl-OF-4Tm"/>
+                            <constraint firstItem="7K9-sX-g8l" firstAttribute="centerY" secondItem="rK6-wj-qkL" secondAttribute="centerY" id="d7i-nn-3ox"/>
+                            <constraint firstItem="42w-Ns-Y7f" firstAttribute="centerY" secondItem="IlU-vt-52a" secondAttribute="centerY" id="dWT-r6-AE9"/>
                             <constraint firstItem="0tl-jX-1NQ" firstAttribute="centerX" secondItem="IlU-vt-52a" secondAttribute="centerX" id="ehd-A6-p2S"/>
-                            <constraint firstItem="42w-Ns-Y7f" firstAttribute="centerX" secondItem="IlU-vt-52a" secondAttribute="centerX" id="r3e-Eu-juP"/>
+                            <constraint firstItem="7K9-sX-g8l" firstAttribute="leading" secondItem="IlU-vt-52a" secondAttribute="leadingMargin" constant="10" id="hNA-0j-baV"/>
+                            <constraint firstItem="ZbF-Hr-KWm" firstAttribute="top" secondItem="ygN-xd-Svs" secondAttribute="bottom" constant="20" id="kZn-e3-HTk"/>
+                            <constraint firstItem="42w-Ns-Y7f" firstAttribute="centerX" secondItem="IlU-vt-52a" secondAttribute="centerX" id="poY-5k-doS"/>
+                            <constraint firstItem="ygN-xd-Svs" firstAttribute="centerY" secondItem="rK6-wj-qkL" secondAttribute="centerY" id="roP-bC-xr1"/>
                             <constraint firstItem="0tl-jX-1NQ" firstAttribute="centerY" secondItem="IlU-vt-52a" secondAttribute="centerY" id="sCs-rK-9AI"/>
+                            <constraint firstItem="ygN-xd-Svs" firstAttribute="width" secondItem="IlU-vt-52a" secondAttribute="width" multiplier="0.15" id="stM-2r-hVI"/>
                             <constraint firstItem="sMM-Hq-19l" firstAttribute="centerY" secondItem="IlU-vt-52a" secondAttribute="centerY" id="uVR-Uf-0Xk"/>
                             <constraint firstItem="0tl-jX-1NQ" firstAttribute="height" secondItem="IlU-vt-52a" secondAttribute="height" id="xtn-sC-LVT"/>
                         </constraints>
@@ -3375,6 +3413,7 @@
                     <connections>
                         <outlet property="cameraButton" destination="ygN-xd-Svs" id="Zhc-LV-YIY"/>
                         <outlet property="cameraUnavailableLabel" destination="42w-Ns-Y7f" id="wB1-fj-lMc"/>
+                        <outlet property="countLabel" destination="1IX-iW-MDQ" id="6aL-em-i9Z"/>
                         <outlet property="previewView" destination="0tl-jX-1NQ" id="H3C-T4-zI7"/>
                         <outlet property="recordButton" destination="rK6-wj-qkL" id="cBP-Ud-Vjo"/>
                         <outlet property="resumeButton" destination="sMM-Hq-19l" id="WpT-q8-ZxR"/>
@@ -3401,6 +3440,7 @@
         <image name="ic_star" width="90" height="90"/>
         <image name="logo" width="180" height="180"/>
         <image name="play" width="96" height="96"/>
+        <image name="switch_camera" width="48" height="48"/>
     </resources>
     <inferredMetricsTieBreakers>
         <segue reference="ouc-Of-Rbe"/>

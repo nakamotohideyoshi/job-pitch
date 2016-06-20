@@ -24,4 +24,6 @@
 
 - (IBAction)recordPitch:(id)sender;
 
+- (void)recordCompleted:(NSString*)url;
+
 @end

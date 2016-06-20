@@ -10,6 +10,7 @@
 #import <AWSS3/AWSS3.h>
 #import "Pitch.h"
 #import "MyAlertController.h"
+#import "MyCameraViewController.h"
 
 @import MediaPlayer;
 
@@ -85,6 +86,10 @@
 }
 
 - (IBAction)recordPitch:(id)sender {
+    
+    MyCameraViewController *controller = [self.storyboard instantiateViewControllerWithIdentifier:@"MyCameraController"];
+    [self presentViewController:controller animated:YES completion:nil];
+    return;
     
     if (self.videoURL) {
         [MyAlertController title:@"Confirm"

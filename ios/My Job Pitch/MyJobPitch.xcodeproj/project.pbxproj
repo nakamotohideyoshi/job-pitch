@@ -92,6 +92,8 @@
 		CEE52CFA1C065C4100881648 /* API.m in Sources */ = {isa = PBXBuildFile; fileRef = CEE52CF91C065C4100881648 /* API.m */; };
 		CEE52CFE1C066AB000881648 /* AuthToken.m in Sources */ = {isa = PBXBuildFile; fileRef = CEE52CFD1C066AB000881648 /* AuthToken.m */; };
 		CEE52D011C066F2700881648 /* LoginRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = CEE52D001C066F2700881648 /* LoginRequest.m */; };
+		D7E94F8C1D179D6700866604 /* MyCameraViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D7E94F891D179D6700866604 /* MyCameraViewController.m */; };
+		D7E94F8D1D179D6700866604 /* MyCameraPreviewView.m in Sources */ = {isa = PBXBuildFile; fileRef = D7E94F8B1D179D6700866604 /* MyCameraPreviewView.m */; };
 		D7FA423D1D0EB2D200E93C66 /* MyAlertController.m in Sources */ = {isa = PBXBuildFile; fileRef = D7FA423C1D0EB2D200E93C66 /* MyAlertController.m */; };
 		FF9A5040750B22C5222FF605 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0B006CB817BA624E01EDF19B /* libPods.a */; };
 /* End PBXBuildFile section */
@@ -262,6 +264,10 @@
 		CEE52CFF1C066F2700881648 /* LoginRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoginRequest.h; sourceTree = "<group>"; };
 		CEE52D001C066F2700881648 /* LoginRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoginRequest.m; sourceTree = "<group>"; };
 		CFA3EA2BF05430C3C9894AA5 /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
+		D7E94F881D179D6700866604 /* MyCameraViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyCameraViewController.h; sourceTree = "<group>"; };
+		D7E94F891D179D6700866604 /* MyCameraViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyCameraViewController.m; sourceTree = "<group>"; };
+		D7E94F8A1D179D6700866604 /* MyCameraPreviewView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyCameraPreviewView.h; sourceTree = "<group>"; };
+		D7E94F8B1D179D6700866604 /* MyCameraPreviewView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyCameraPreviewView.m; sourceTree = "<group>"; };
 		D7FA423B1D0EB2D200E93C66 /* MyAlertController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyAlertController.h; sourceTree = "<group>"; };
 		D7FA423C1D0EB2D200E93C66 /* MyAlertController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyAlertController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -319,6 +325,10 @@
 			isa = PBXGroup;
 			children = (
 				CEE52CFB1C06624600881648 /* API */,
+				D7E94F881D179D6700866604 /* MyCameraViewController.h */,
+				D7E94F891D179D6700866604 /* MyCameraViewController.m */,
+				D7E94F8A1D179D6700866604 /* MyCameraPreviewView.h */,
+				D7E94F8B1D179D6700866604 /* MyCameraPreviewView.m */,
 				CE6FD33D1C01F9BB001A04C3 /* AppDelegate.h */,
 				CE6FD33E1C01F9BB001A04C3 /* AppDelegate.m */,
 				CE6FD3401C01F9BB001A04C3 /* Login.h */,
@@ -732,9 +742,11 @@
 				CE7742411C95D6C000A9A2BA /* EditJob.m in Sources */,
 				CE7742491C9623C300A9A2BA /* ViewJobMenu.m in Sources */,
 				CEE0625E1C28B77500ED60C0 /* Role.m in Sources */,
+				D7E94F8C1D179D6700866604 /* MyCameraViewController.m in Sources */,
 				CE45AECD1C0B461A0092AB75 /* User.m in Sources */,
 				CE4696AE1C9A0BC8001E3FFE /* LockableNavigationController.m in Sources */,
 				CE8AB0011C5AF6250004F021 /* Application.m in Sources */,
+				D7E94F8D1D179D6700866604 /* MyCameraPreviewView.m in Sources */,
 				CE8AB0241C617F550004F021 /* BusinessEditView.m in Sources */,
 				CE77423E1C92555900A9A2BA /* EditLocation.m in Sources */,
 				CE45AECA1C0B45AD0092AB75 /* RegisterRequest.m in Sources */,
@@ -844,7 +856,8 @@
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Mike Christopherson (8QQAR73YPE)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Mike Christopherson (8QQAR73YPE)";
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -866,6 +879,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
+				PROVISIONING_PROFILE = "22a92c3f-f659-4a04-a76e-6d110be52d29";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -888,7 +902,8 @@
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Mike Christopherson (8QQAR73YPE)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Mike Christopherson (8QQAR73YPE)";
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
@@ -903,6 +918,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
+				PROVISIONING_PROFILE = "22a92c3f-f659-4a04-a76e-6d110be52d29";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
@@ -914,8 +930,8 @@
 			baseConfigurationReference = CFA3EA2BF05430C3C9894AA5 /* Pods.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_IDENTITY = "iPhone Developer: Eiji Kimura (VG6XFZ6ZNQ)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Eiji Kimura (VG6XFZ6ZNQ)";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Mike Christopherson (8QQAR73YPE)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Mike Christopherson (8QQAR73YPE)";
 				GCC_PREFIX_HEADER = "My Job Pitch/PrefixHeader.pch";
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -932,7 +948,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.myjobpitch.pitch;
 				PRODUCT_NAME = MyJobPitch;
-				PROVISIONING_PROFILE = "b9967d2e-0f4c-4d77-aed9-80bf4028cb0f";
+				PROVISIONING_PROFILE = "22a92c3f-f659-4a04-a76e-6d110be52d29";
 			};
 			name = Debug;
 		};
@@ -941,8 +957,8 @@
 			baseConfigurationReference = B0F6E4D8F0045A1E43790385 /* Pods.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_IDENTITY = "iPhone Developer: Eiji Kimura (VG6XFZ6ZNQ)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Eiji Kimura (VG6XFZ6ZNQ)";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Mike Christopherson (8QQAR73YPE)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Mike Christopherson (8QQAR73YPE)";
 				GCC_PREFIX_HEADER = "My Job Pitch/PrefixHeader.pch";
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -959,7 +975,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.myjobpitch.pitch;
 				PRODUCT_NAME = MyJobPitch;
-				PROVISIONING_PROFILE = "b9967d2e-0f4c-4d77-aed9-80bf4028cb0f";
+				PROVISIONING_PROFILE = "22a92c3f-f659-4a04-a76e-6d110be52d29";
 			};
 			name = Release;
 		};

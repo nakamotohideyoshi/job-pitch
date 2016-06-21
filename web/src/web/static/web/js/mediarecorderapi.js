@@ -198,142 +198,133 @@ function checkingForVideoContainer(resolve) {
 	}, 1000);
 }
 
-function onBtnBeReadyClicked() {
+function onBtnRecordClicked() {
 	var success = true;
 
 	if (typeof MediaRecorder === 'undefined' || !navigator.getUserMedia) {
 		alert('MediaRecorder not supported on your browser, use Firefox 30 or Chrome 49 instead.');
 		success = false;
+	} else {
+		var promiseVideoContainer = new Promise(function (resolve, reject) {
+				checkingForVideoContainer(resolve);
+			})
+			.then(function (videoContainer) {
+				videoElement = videoContainer;
+				videoElement.controls = false;
 
+				navigator.getUserMedia(constraints, startRecording, errorCallback);
+
+				if (successGetUserMedia) {
+					recBtn.disabled = true;
+					//	    pauseResBtn.disabled = false;
+					stopBtn.disabled = false;
+					$uploadBtn.attr('disabled', true);
+				}
+
+				success = successGetUserMedia;
+			});
 	}
 
-	function onBtnRecordClicked() {
-		var success = true;
+	return success;
+}
 
-		if (typeof MediaRecorder === 'undefined' || !navigator.getUserMedia) {
-			alert('MediaRecorder not supported on your browser, use Firefox 30 or Chrome 49 instead.');
-			success = false;
-		} else {
-			var promiseVideoContainer = new Promise(function (resolve, reject) {
-					checkingForVideoContainer(resolve);
-				})
-				.then(function (videoContainer) {
-					videoElement = videoContainer;
-					videoElement.controls = false;
+function onBtnStopClicked() {
+	mediaRecorder.onstop();
 
-					navigator.getUserMedia(constraints, startRecording, errorCallback);
+	videoElement.controls = true;
+	recBtn.disabled = false;
+	//	pauseResBtn.disabled = true;
+	stopBtn.disabled = true;
+	$uploadBtn.attr('disabled', false);
+}
 
-					if (successGetUserMedia) {
-						recBtn.disabled = true;
-						//	    pauseResBtn.disabled = false;
-						stopBtn.disabled = false;
-						$uploadBtn.attr('disabled', true);
-					}
+function onPauseResumeClicked() {
 
-					success = successGetUserMedia;
-				});
-		}
+	if (pauseResBtn.textContent === "Pause") {
 
-		return success;
-	}
+		console.log("pause");
 
-	function onBtnStopClicked() {
-		mediaRecorder.onstop();
+		//		pauseResBtn.textContent = "Resume";
+		mediaRecorder.pause();
 
-		videoElement.controls = true;
-		recBtn.disabled = false;
-		//	pauseResBtn.disabled = true;
 		stopBtn.disabled = true;
-		$uploadBtn.attr('disabled', false);
+
+	} else {
+		console.log("resume");
+
+		//		pauseResBtn.textContent = "Pause";
+		mediaRecorder.resume();
+
+		stopBtn.disabled = false;
 	}
 
-	function onPauseResumeClicked() {
+	recBtn.disabled = true;
+	//pauseResBtn.disabled = false;
 
-		if (pauseResBtn.textContent === "Pause") {
-
-			console.log("pause");
-
-			//		pauseResBtn.textContent = "Resume";
-			mediaRecorder.pause();
-
-			stopBtn.disabled = true;
-
-		} else {
-			console.log("resume");
-
-			//		pauseResBtn.textContent = "Pause";
-			mediaRecorder.resume();
-
-			stopBtn.disabled = false;
-		}
-
-		recBtn.disabled = true;
-		//pauseResBtn.disabled = false;
-
-	}
+}
 
 
-	//browser ID
-	function getBrowser() {
+//browser ID
+function getBrowser() {
 
-		var nVer = navigator.appVersion;
-		var nAgt = navigator.userAgent;
-		var browserName = navigator.appName;
-		var fullVersion = '' + parseFloat(navigator.appVersion);
-		var majorVersion = parseInt(navigator.appVersion, 10);
-		var nameOffset, verOffset, ix;
+	var nVer = navigator.appVersion;
+	var nAgt = navigator.userAgent;
+	var browserName = navigator.appName;
+	var fullVersion = '' + parseFloat(navigator.appVersion);
+	var majorVersion = parseInt(navigator.appVersion, 10);
+	var nameOffset, verOffset, ix;
 
-		// In Opera, the true version is after "Opera" or after "Version"
-		if ((verOffset = nAgt.indexOf("Opera")) != -1) {
-			browserName = "Opera";
-			fullVersion = nAgt.substring(verOffset + 6);
-			if ((verOffset = nAgt.indexOf("Version")) != -1)
-				fullVersion = nAgt.substring(verOffset + 8);
-		}
-		// In MSIE, the true version is after "MSIE" in userAgent
-		else if ((verOffset = nAgt.indexOf("MSIE")) != -1) {
-			browserName = "Microsoft Internet Explorer";
-			fullVersion = nAgt.substring(verOffset + 5);
-		}
-		// In Chrome, the true version is after "Chrome"
-		else if ((verOffset = nAgt.indexOf("Chrome")) != -1) {
-			browserName = "Chrome";
-			fullVersion = nAgt.substring(verOffset + 7);
-		}
-		// In Safari, the true version is after "Safari" or after "Version"
-		else if ((verOffset = nAgt.indexOf("Safari")) != -1) {
-			browserName = "Safari";
-			fullVersion = nAgt.substring(verOffset + 7);
-			if ((verOffset = nAgt.indexOf("Version")) != -1)
-				fullVersion = nAgt.substring(verOffset + 8);
-		}
-		// In Firefox, the true version is after "Firefox"
-		else if ((verOffset = nAgt.indexOf("Firefox")) != -1) {
-			browserName = "Firefox";
+	// In Opera, the true version is after "Opera" or after "Version"
+	if ((verOffset = nAgt.indexOf("Opera")) != -1) {
+		browserName = "Opera";
+		fullVersion = nAgt.substring(verOffset + 6);
+		if ((verOffset = nAgt.indexOf("Version")) != -1)
 			fullVersion = nAgt.substring(verOffset + 8);
-		}
-		// In most other browsers, "name/version" is at the end of userAgent
-		else if ((nameOffset = nAgt.lastIndexOf(' ') + 1) <
-			(verOffset = nAgt.lastIndexOf('/'))) {
-			browserName = nAgt.substring(nameOffset, verOffset);
-			fullVersion = nAgt.substring(verOffset + 1);
-			if (browserName.toLowerCase() == browserName.toUpperCase()) {
-				browserName = navigator.appName;
-			}
-		}
-		// trim the fullVersion string at semicolon/space if present
-		if ((ix = fullVersion.indexOf(";")) != -1)
-			fullVersion = fullVersion.substring(0, ix);
-		if ((ix = fullVersion.indexOf(" ")) != -1)
-			fullVersion = fullVersion.substring(0, ix);
-
-		majorVersion = parseInt('' + fullVersion, 10);
-		if (isNaN(majorVersion)) {
-			fullVersion = '' + parseFloat(navigator.appVersion);
-			majorVersion = parseInt(navigator.appVersion, 10);
-		}
-
-
-		return browserName;
-
 	}
+	// In MSIE, the true version is after "MSIE" in userAgent
+	else if ((verOffset = nAgt.indexOf("MSIE")) != -1) {
+		browserName = "Microsoft Internet Explorer";
+		fullVersion = nAgt.substring(verOffset + 5);
+	}
+	// In Chrome, the true version is after "Chrome"
+	else if ((verOffset = nAgt.indexOf("Chrome")) != -1) {
+		browserName = "Chrome";
+		fullVersion = nAgt.substring(verOffset + 7);
+	}
+	// In Safari, the true version is after "Safari" or after "Version"
+	else if ((verOffset = nAgt.indexOf("Safari")) != -1) {
+		browserName = "Safari";
+		fullVersion = nAgt.substring(verOffset + 7);
+		if ((verOffset = nAgt.indexOf("Version")) != -1)
+			fullVersion = nAgt.substring(verOffset + 8);
+	}
+	// In Firefox, the true version is after "Firefox"
+	else if ((verOffset = nAgt.indexOf("Firefox")) != -1) {
+		browserName = "Firefox";
+		fullVersion = nAgt.substring(verOffset + 8);
+	}
+	// In most other browsers, "name/version" is at the end of userAgent
+	else if ((nameOffset = nAgt.lastIndexOf(' ') + 1) <
+		(verOffset = nAgt.lastIndexOf('/'))) {
+		browserName = nAgt.substring(nameOffset, verOffset);
+		fullVersion = nAgt.substring(verOffset + 1);
+		if (browserName.toLowerCase() == browserName.toUpperCase()) {
+			browserName = navigator.appName;
+		}
+	}
+	// trim the fullVersion string at semicolon/space if present
+	if ((ix = fullVersion.indexOf(";")) != -1)
+		fullVersion = fullVersion.substring(0, ix);
+	if ((ix = fullVersion.indexOf(" ")) != -1)
+		fullVersion = fullVersion.substring(0, ix);
+
+	majorVersion = parseInt('' + fullVersion, 10);
+	if (isNaN(majorVersion)) {
+		fullVersion = '' + parseFloat(navigator.appVersion);
+		majorVersion = parseInt(navigator.appVersion, 10);
+	}
+
+
+	return browserName;
+
+}

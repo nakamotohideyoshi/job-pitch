@@ -126,11 +126,20 @@ function startRecording(stream) {
 	};
 
 	mediaRecorder.onstop = function () {
+		var index = 0;
+		var contentType = "video/webm";
+		var size = 0;
+		var length = chunks.length;
+
 		log('info', 'Stopped.');
 
-		var contentType = "video/webm";
+		// Deleting the first 10 beready seconds.
+		while (length && size < 1320000) {
+			size += chunks[0].size
+			chunks.shift();
+			length--;
+		}
 
-		chunks.shift(); // Deleting the first 10 beready seconds.
 		var blob = new Blob(chunks, {
 			type: contentType
 		});

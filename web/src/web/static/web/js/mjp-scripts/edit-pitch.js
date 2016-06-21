@@ -75,7 +75,7 @@ function renderVideoContainer(pitch) {
 
 function startTimer($display, message, duration, alertType) {
 
-	return new Promise(resolve, reject) {
+	return new Promise(function (resolve, reject) {
 		var minutes, seconds;
 
 		var timer = duration;
@@ -110,7 +110,7 @@ function startTimer($display, message, duration, alertType) {
 			}
 		}, 1000);
 
-	};
+	});
 
 }
 

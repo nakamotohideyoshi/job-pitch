@@ -22,23 +22,30 @@ $(document).ready(function () {
 	checkIfThereIsApitch();
 
 	$('.btn-js-start-pitch').click(function (e) {
+		if (!isMediaRecorderAPI()) {
+			log('danger', 'MediaRecorder not supported on your browser, use Firefox 30 or Chrome 49 instead.');
+			return false;
+		}
+
 		// prepare video container;
 		$('#pitchVideoCheck video').html('');
 
-		if (onBtnRecordClicked()) {
-			$display = $('.btn-js-stop-pitch');
-			$display.attr('disabled', true);
+		$display = $('.btn-js-stop-pitch');
+		$display.prop("disabled", true);
 
+		startBeReadyForRecording().then(function () {
 			startTimer($display, 'Be ready', 10, 'warning').then(function ($display) {
-				$display.attr('disabled', false);
+				$display.prop("disabled", false);
 
-				startTimer($display, 'Stop', 30, 'danger').then(function ($display) {
-					clearInterval(poolingInterval); // Clear any existent pooling process
+				onBeReadyCountdown();
 
-					stopRecordingProcess($display);
-				});
+				if (onBtnRecordClicked()) {
+					startTimer($display, 'Stop', 30, 'danger').then(function ($display) {
+						stopRecordingProcess($display);
+					});
+				}
 			});
-		}
+		});
 
 	});
 

@@ -5,14 +5,14 @@ function checkIfThereIsApitch(argument) {
 			poolingTranscodeProcess(resolve);
 		})
 		.then(function (pitches) {
-			if (pitches == undefined || pitches.length == 0) {
-				log('info', 'There is not a pitch.');
-				return;
-			}
-
 			var html = getHtmlForVideoOrThumbnail(pitches);
 
 			$('#pitchVideoCheck').html(html);
+
+			if (pitches == undefined || pitches.length == 0) {
+				log('danger', 'There is not a pitch.');
+				return;
+			}
 
 			var videoLoading = document.getElementById('viewing-container');
 			if (videoLoading != undefined && videoLoading.readyState !== 4) { // Video is not ready to play

@@ -76,10 +76,11 @@ var mediaRecorder;
 var chunks = [];
 var count = 0;
 
-function startRecording(stream) {
-	log('info', 'Start recording...');
-	localStream = stream;
+function isMediaRecorderAPI() {
+	return (typeof MediaRecorder !== 'undefined' || navigator.getUserMedia);
+}
 
+function getMediaRecorder(stream) {
 	if (typeof MediaRecorder.isTypeSupported == 'function') {
 		/*
 			MediaRecorder.isTypeSupported is a Chrome 49 function announced in https://developers.google.com/web/updates/2016/01/mediarecorder but it's not present in the MediaRecorder API spec http://www.w3.org/TR/mediastream-recording/
@@ -95,14 +96,44 @@ function startRecording(stream) {
 			};
 		}
 
-		log('info', 'Using ' + options.mimeType);
+		//log('info', 'Using ' + options.mimeType);
 
-		mediaRecorder = new MediaRecorder(stream, options);
-	} else {
-		log('info', 'Using default codecs for browser');
-
-		mediaRecorder = new MediaRecorder(stream);
+		return new MediaRecorder(stream, options);
 	}
+
+	//log('info', 'Using default codecs for browser');
+
+	return new MediaRecorder(stream);
+}
+
+
+function beReadyForRecording(stream) {
+	log('info', 'Be ready for recording...');
+
+	mediaRecorder = getMediaRecorder(stream);
+
+	mediaRecorder.start(10);
+
+	var url = window.URL || window.webkitURL;
+	videoElement.src = url ? url.createObjectURL(stream) : stream;
+	videoElement.play();
+
+	mediaRecorder.onstop = function () {
+		// Clean recorded chunks
+		chunks = [];
+		// Stop active tracks
+		var tracks = mediaRecorder.stream.getTracks();
+		tracks.forEach(function (track) {
+			track.stop();
+		});
+	}
+}
+
+
+function startRecording(stream) {
+	log('info', 'Start recording...');
+
+	mediaRecorder = getMediaRecorder(stream);
 
 	//pauseResBtn.textContent = "Pause";
 
@@ -126,19 +157,9 @@ function startRecording(stream) {
 	};
 
 	mediaRecorder.onstop = function () {
-		var index = 0;
 		var contentType = "video/webm";
-		var size = 0;
-		var length = chunks.length;
 
 		log('info', 'Stopped.');
-
-		// Deleting the first 10 beready seconds.
-		while (length && size < 1320000) {
-			size += chunks[0].size
-			chunks.shift();
-			length--;
-		}
 
 		var blob = new Blob(chunks, {
 			type: contentType
@@ -207,34 +228,49 @@ function checkingForVideoContainer(resolve) {
 	}, 1000);
 }
 
+
+function startBeReadyForRecording() {
+	return new Promise(function (resolve, reject) {
+			checkingForVideoContainer(resolve);
+		})
+		.then(function (videoContainer) {
+			videoElement = videoContainer;
+			videoElement.controls = false;
+
+			navigator.getUserMedia(constraints, beReadyForRecording, errorCallback);
+
+			return;
+		});
+}
+
+
 function onBtnRecordClicked() {
 	var success = true;
 
-	if (typeof MediaRecorder === 'undefined' || !navigator.getUserMedia) {
-		alert('MediaRecorder not supported on your browser, use Firefox 30 or Chrome 49 instead.');
-		success = false;
-	} else {
-		var promiseVideoContainer = new Promise(function (resolve, reject) {
-				checkingForVideoContainer(resolve);
-			})
-			.then(function (videoContainer) {
-				videoElement = videoContainer;
-				videoElement.controls = false;
+	var promiseVideoContainer = new Promise(function (resolve, reject) {
+			checkingForVideoContainer(resolve);
+		})
+		.then(function (videoContainer) {
+			videoElement = videoContainer;
+			videoElement.controls = false;
 
-				navigator.getUserMedia(constraints, startRecording, errorCallback);
+			navigator.getUserMedia(constraints, startRecording, errorCallback);
 
-				if (successGetUserMedia) {
-					recBtn.disabled = true;
-					//	    pauseResBtn.disabled = false;
-					stopBtn.disabled = false;
-					$uploadBtn.attr('disabled', true);
-				}
+			if (successGetUserMedia) {
+				recBtn.disabled = true;
+				//	    pauseResBtn.disabled = false;
+				stopBtn.disabled = false;
+				$uploadBtn.attr('disabled', true);
+			}
 
-				success = successGetUserMedia;
-			});
-	}
+			success = successGetUserMedia;
+		});
 
 	return success;
+}
+
+function onBeReadyCountdown() {
+	mediaRecorder.onstop();
 }
 
 function onBtnStopClicked() {

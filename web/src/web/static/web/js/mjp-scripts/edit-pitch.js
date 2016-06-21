@@ -26,8 +26,15 @@ $(document).ready(function () {
 		$('#pitchVideoCheck video').html('');
 
 		if (onBtnRecordClicked()) {
-			startRecordingTimer(30, $('.btn-js-stop-pitch'), stopRecordingProcess);
-		};
+			startTimer($('.btn-js-stop-pitch'), 'Be ready', 10, 'warning').then(function ($display) {
+				startTimer($display, 'Stop', 30, 'danger').then(function ($display) {
+					clearInterval(poolingInterval); // Clear any existent pooling process
+
+					stopRecordingProcess($display);
+				});
+			});
+		}
+
 	});
 
 
@@ -66,27 +73,45 @@ function renderVideoContainer(pitch) {
 	}
 }
 
+function startTimer($display, message, duration, alertType) {
 
-function startRecordingTimer(duration, $display, callback) {
-	var timer = duration,
-		minutes, seconds;
+	return new Promise(resolve, reject) {
+		var minutes, seconds;
 
-	clearInterval(poolingInterval); // Clear any existent pooling process
+		var timer = duration;
 
-	recordingTimer = setInterval(function () {
-		minutes = parseInt(timer / 60, 10);
-		seconds = parseInt(timer % 60, 10);
+		var colors = {
+			"background-color": "#d9534f",
+			"border-color": "#d43f3a"
+		};
 
-		minutes = minutes < 10 ? "0" + minutes : minutes;
-		seconds = seconds < 10 ? "0" + seconds : seconds;
-
-		$display.html('Stop (Time Left: <span class="timeLeft">' + minutes + ":" + seconds + '</span>)');
-
-		if (--timer < 0) {
-			timer = duration;
-			callback($display);
+		if (alertType !== undefined && alertType == 'warning') {
+			colors = {
+				"background-color": "#f0ad4e";
+				"border-color": "#eea236";
+			};
 		}
-	}, 1000);
+
+		$display.css(colors);
+
+		var interval = setInterval(function () {
+			minutes = parseInt(timer / 60, 10);
+			seconds = parseInt(timer % 60, 10);
+
+			minutes = minutes < 10 ? "0" + minutes : minutes;
+			seconds = seconds < 10 ? "0" + seconds : seconds;
+
+			$display.html(message + ' (Time Left: <span class="timeLeft">' + minutes + ":" + seconds + '</span>)');
+
+			if (--timer < 0) {
+				timer = duration;
+				clearInterval(interval);
+				resolve($display);
+			}
+		}, 1000);
+
+	}
+
 }
 
 

@@ -110,7 +110,7 @@ function startTimer($display, message, duration, alertType) {
 			}
 		}, 1000);
 
-	}
+	};
 
 }
 

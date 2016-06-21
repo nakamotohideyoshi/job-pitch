@@ -26,7 +26,12 @@ $(document).ready(function () {
 		$('#pitchVideoCheck video').html('');
 
 		if (onBtnRecordClicked()) {
-			startTimer($('.btn-js-stop-pitch'), 'Be ready', 10, 'warning').then(function ($display) {
+			$display = $('.btn-js-stop-pitch');
+			$display.attr('disabled', true);
+
+			startTimer($display, 'Be ready', 10, 'warning').then(function ($display) {
+				$display.attr('disabled', false);
+
 				startTimer($display, 'Stop', 30, 'danger').then(function ($display) {
 					clearInterval(poolingInterval); // Clear any existent pooling process
 

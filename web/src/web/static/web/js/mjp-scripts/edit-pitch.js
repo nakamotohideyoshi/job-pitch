@@ -87,8 +87,8 @@ function startTimer($display, message, duration, alertType) {
 
 		if (alertType !== undefined && alertType == 'warning') {
 			colors = {
-				"background-color": "#f0ad4e";
-				"border-color": "#eea236";
+				"background-color": "#f0ad4e",
+				"border-color": "#eea236"
 			};
 		}
 

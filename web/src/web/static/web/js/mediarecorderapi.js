@@ -237,10 +237,14 @@ function startBeReadyForRecording() {
 			videoElement = videoContainer;
 			videoElement.controls = false;
 
-			if (isBrowser('Firefox')) {
-				if ()
+			if (isBrowser('Firefox') && navigator.mediaDevices) {
+				navigator.getUserMedia(constraints)
+					.then(function (stream) {
+						beReadyForRecording(stream);
+					});
+			} else {
+				navigator.getUserMedia(constraints, beReadyForRecording, errorCallback);
 			}
-			navigator.getUserMedia(constraints, beReadyForRecording, errorCallback);
 
 			return;
 		});
@@ -257,7 +261,13 @@ function onBtnRecordClicked() {
 			videoElement = videoContainer;
 			videoElement.controls = false;
 
-			navigator.getUserMedia(constraints, startRecording, errorCallback);
+			if (isBrowser('Firefox') && navigator.mediaDevices) {
+				navigator.getUserMedia(constraints).then(function (stream) {
+					startRecording(stream);
+				});
+			} else {
+				navigator.getUserMedia(constraints, startRecording, errorCallback);
+			}
 
 			if (successGetUserMedia) {
 				recBtn.disabled = true;

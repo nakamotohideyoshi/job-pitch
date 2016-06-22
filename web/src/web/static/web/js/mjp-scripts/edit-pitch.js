@@ -159,6 +159,8 @@ function putIntoS3Bucket(pitch, object) {
 	object.Key = window.location.origin.replace('//', '') + '/' + pitch.token + '.' + pitch.id + '.' + object.Key;
 
 	bucket.putObject(object, function (err, data) {
+		closeMediaDevices();
+
 		if (!err) {
 			var poolingPromise = new Promise(function (resolve, reject) {
 				poolingTranscodeProcess(resolve);

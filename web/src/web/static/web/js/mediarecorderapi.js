@@ -189,7 +189,7 @@ function startRecording(stream) {
 		downloadLink.setAttribute("download", name);
 		downloadLink.setAttribute("name", name);
 
-		mediaRecorder.stream.getTracks(function (devices) {
+/*		mediaRecorder.stream.getTracks(function (devices) {
 			console.log(devices);
 
 			devices.forEach(function (tracks) {
@@ -201,7 +201,7 @@ function startRecording(stream) {
 				});
 			});
 		});
-
+*/
 		// Stop active tracks
 		//var tracks = mediaRecorder.stream.getTracks();
 		//tracks.forEach(function (track) {
@@ -332,4 +332,11 @@ function onPauseResumeClicked() {
 	recBtn.disabled = true;
 	//pauseResBtn.disabled = false;
 
+}
+
+function closeMediaDevices() {
+	var tracks = mediaRecorder.stream.getTracks();
+	tracks.forEach(function (track) {
+		track.stop();
+	});
 }

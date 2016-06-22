@@ -4,7 +4,7 @@
 
 // Spec is at http://dvcs.w3.org/hg/dap/raw-file/tip/media-stream-capture/RecordingProposal.html
 
-navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mediaDevices.getUserMedia || navigator.msGetUserMedia || navigator.mozGetUserMedia;
+navigator.getUserMedia = navigator.webkitGetUserMedia || navigator.mediaDevices.getUserMedia || navigator.msGetUserMedia || navigator.mozGetUserMedia || navigator.getUserMedia;
 
 
 if (isBrowser("Chrome")) {
@@ -133,7 +133,7 @@ function beReadyForRecording(stream) {
 function startRecording(stream) {
 	log('info', 'Start recording...');
 
-	//mediaRecorder = getMediaRecorder(stream);
+	mediaRecorder = getMediaRecorder(stream);
 
 	//pauseResBtn.textContent = "Pause";
 
@@ -237,6 +237,9 @@ function startBeReadyForRecording() {
 			videoElement = videoContainer;
 			videoElement.controls = false;
 
+			if (isBrowser('Firefox')) {
+				if ()
+			}
 			navigator.getUserMedia(constraints, beReadyForRecording, errorCallback);
 
 			return;

@@ -238,7 +238,7 @@ function startBeReadyForRecording() {
 			videoElement.controls = false;
 
 			if (isBrowser('Firefox') && navigator.mediaDevices) {
-				navigator.getUserMedia(constraints)
+				navigator.mediaDevices.getUserMedia(constraints)
 					.then(function (stream) {
 						beReadyForRecording(stream);
 					});
@@ -262,7 +262,7 @@ function onBtnRecordClicked() {
 			videoElement.controls = false;
 
 			if (isBrowser('Firefox') && navigator.mediaDevices) {
-				navigator.getUserMedia(constraints).then(function (stream) {
+				navigator.mediaDevices.getUserMedia(constraints).then(function (stream) {
 					startRecording(stream);
 				});
 			} else {

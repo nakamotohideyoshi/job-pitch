@@ -122,10 +122,10 @@ function beReadyForRecording(stream) {
 		// Clean recorded chunks
 		chunks = [];
 		// Stop active tracks
-		var tracks = mediaRecorder.stream.getTracks();
-		tracks.forEach(function (track) {
-			track.stop();
-		});
+		//var tracks = mediaRecorder.stream.getTracks();
+		//tracks.forEach(function (track) {
+		//	track.stop();
+		//});
 	}
 }
 
@@ -133,7 +133,7 @@ function beReadyForRecording(stream) {
 function startRecording(stream) {
 	log('info', 'Start recording...');
 
-	mediaRecorder = getMediaRecorder(stream);
+	//mediaRecorder = getMediaRecorder(stream);
 
 	//pauseResBtn.textContent = "Pause";
 

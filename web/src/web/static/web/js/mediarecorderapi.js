@@ -190,8 +190,12 @@ function startRecording(stream) {
 		downloadLink.setAttribute("name", name);
 
 		mediaRecorder.stream.getTracks(function (devices) {
+			console.log(devices);
+
 			devices.forEach(function (tracks) {
-				track.forEach(function (track) {
+				console.log(tracks);
+
+				tracks.forEach(function (track) {
 					console.log(track);
 					track.stop();
 				});

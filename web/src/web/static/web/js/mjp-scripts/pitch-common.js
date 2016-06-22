@@ -11,26 +11,25 @@ function checkIfThereIsApitch(argument) {
 			poolingTranscodeProcess(resolve);
 		})
 		.then(function (pitches) {
-				var html = getHtmlForVideoOrThumbnail(pitches);
+			var html = getHtmlForVideoOrThumbnail(pitches);
 
-				$('#pitchVideoCheck').html(html);
+			$('#pitchVideoCheck').html(html);
 
-				if (pitches == undefined || pitches.length == 0) {
-					log('danger', 'There is not a pitch.');
-					return;
-				}
+			if (pitches == undefined || pitches.length == 0) {
+				log('danger', 'There is not a pitch.');
+				return;
+			}
 
-				var videoLoading = document.getElementById('viewing-container');
-				if (!videoIsReadyForPlay(videoLoading)) {
-					log('info', 'Loading...');
+			var videoLoading = document.getElementById('viewing-container');
+			if (!videoIsReadyForPlay(videoLoading)) {
+				log('info', 'Loading...');
 
-					var intervalVideoLoading = setInterval(function (argument) {
-						if (videoIsReadyForPlay(videoLoading)) {
-							log('hide');
-							clearInterval(intervalVideoLoading);
-						};
-					}, 2000);
-				}
+				var intervalVideoLoading = setInterval(function (argument) {
+					if (videoIsReadyForPlay(videoLoading)) {
+						log('hide');
+						clearInterval(intervalVideoLoading);
+					}
+				}, 2000);
 			}
 		});
 }

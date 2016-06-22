@@ -1,3 +1,9 @@
+function videoIsReadyForPlay(video) {
+	return (video != undefined) && (
+		video.readyState === 4 || (isBrowser('Firefox') && video.readyState === 3)
+	);
+}
+
 function checkIfThereIsApitch(argument) {
 	log('info', 'Looking for a pitch...');
 
@@ -5,25 +11,26 @@ function checkIfThereIsApitch(argument) {
 			poolingTranscodeProcess(resolve);
 		})
 		.then(function (pitches) {
-			var html = getHtmlForVideoOrThumbnail(pitches);
+				var html = getHtmlForVideoOrThumbnail(pitches);
 
-			$('#pitchVideoCheck').html(html);
+				$('#pitchVideoCheck').html(html);
 
-			if (pitches == undefined || pitches.length == 0) {
-				log('danger', 'There is not a pitch.');
-				return;
-			}
+				if (pitches == undefined || pitches.length == 0) {
+					log('danger', 'There is not a pitch.');
+					return;
+				}
 
-			var videoLoading = document.getElementById('viewing-container');
-			if (videoLoading != undefined && videoLoading.readyState !== 4) { // Video is not ready to play
-				log('info', 'Loading...');
+				var videoLoading = document.getElementById('viewing-container');
+				if (!videoIsReadyForPlay(videoLoading)) {
+					log('info', 'Loading...');
 
-				var intervalVideoLoading = setInterval(function (argument) {
-					if (videoLoading.readyState === 4) {
-						log('hide');
-						clearInterval(intervalVideoLoading);
-					};
-				}, 2000);
+					var intervalVideoLoading = setInterval(function (argument) {
+						if (videoIsReadyForPlay(videoLoading)) {
+							log('hide');
+							clearInterval(intervalVideoLoading);
+						};
+					}, 2000);
+				}
 			}
 		});
 }

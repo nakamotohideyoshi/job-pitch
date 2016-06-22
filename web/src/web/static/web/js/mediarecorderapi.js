@@ -190,10 +190,10 @@ function startRecording(stream) {
 		downloadLink.setAttribute("name", name);
 
 		// Stop active tracks
-		var tracks = mediaRecorder.stream.getTracks();
-		tracks.forEach(function (track) {
-			track.stop();
-		});
+		//var tracks = mediaRecorder.stream.getTracks();
+		//tracks.forEach(function (track) {
+		//	track.stop();
+		//});
 	}
 
 	mediaRecorder.onpause = function () {

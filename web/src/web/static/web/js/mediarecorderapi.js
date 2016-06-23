@@ -281,7 +281,7 @@ function startBeReadyForRecording() {
 					beReadyForRecording(stream);
 				});
 
-			return stream;
+			return videoContainer;
 		});
 }
 
@@ -289,7 +289,7 @@ function startBeReadyForRecording() {
 function onBtnRecordClicked() {
 	var success = true;
 
-	var promiseVideoContainer = new Promise(function (resolve, reject) {
+	return new Promise(function (resolve, reject) {
 			checkingForVideoContainer(resolve);
 		})
 		.then(function (videoContainer) {
@@ -306,10 +306,8 @@ function onBtnRecordClicked() {
 					startRecording(stream);
 				});
 
-			return stream;
+			return videoContainer;
 		});
-
-	return success;
 }
 
 function onBeReadyCountdown() {

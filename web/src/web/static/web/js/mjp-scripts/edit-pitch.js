@@ -34,17 +34,19 @@ $(document).ready(function () {
 		$display.prop("disabled", true);
 
 		startBeReadyForRecording().then(function () {
-			startTimer($display, 'Be ready', 10, 'warning').then(function ($display) {
-				$display.prop("disabled", false);
+			startTimer($display, 'Be ready', 10, 'warning')
+				.then(function ($display) {
+					$display.prop("disabled", false);
 
-				onBeReadyCountdown();
+					onBeReadyCountdown();
 
-				if (onBtnRecordClicked()) {
-					startTimer($display, 'Stop', 30, 'danger').then(function ($display) {
-						stopRecordingProcess($display);
-					});
-				}
-			});
+					if (onBtnRecordClicked()) {
+						startTimer($display, 'Stop', 30, 'danger')
+							.then(function ($display) {
+								stopRecordingProcess($display);
+							});
+					}
+				});
 		});
 
 	});
@@ -107,6 +109,12 @@ function startTimer($display, message, duration, alertType) {
 		$display.css(colors);
 
 		var interval = setInterval(function () {
+			// Saving interval id in global scope for recording process
+			// , then it can be cleared on stop click button.
+			if (message == 'Stop') {
+				recordingTimer = interval;
+			}
+
 			minutes = parseInt(timer / 60, 10);
 			seconds = parseInt(timer % 60, 10);
 

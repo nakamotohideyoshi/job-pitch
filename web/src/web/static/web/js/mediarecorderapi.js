@@ -278,6 +278,11 @@ function startBeReadyForRecording() {
 
 			navigator.mediaDevices.getUserMedia(constraints)
 				.then(function (stream) {
+					recBtn.disabled = true;
+					//	    pauseResBtn.disabled = false;
+					stopBtn.disabled = false;
+					$uploadBtn.prop('disabled', true);
+
 					beReadyForRecording(stream);
 				});
 
@@ -298,11 +303,6 @@ function onBtnRecordClicked() {
 
 			navigator.mediaDevices.getUserMedia(constraints)
 				.then(function (stream) {
-					recBtn.disabled = true;
-					//	    pauseResBtn.disabled = false;
-					stopBtn.disabled = false;
-					$uploadBtn.prop('disabled', true);
-
 					startRecording(stream);
 				});
 

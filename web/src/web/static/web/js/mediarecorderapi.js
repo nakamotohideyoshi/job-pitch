@@ -196,7 +196,7 @@ function startRecording(stream) {
 		log('info', 'Recording ...');
 	};
 
-	mediaRecorder.onstop = function () {
+	mediaRecorder.onstop = function (e) {
 		var contentType = "video/webm";
 
 		log('info', 'Stopped.');
@@ -283,7 +283,6 @@ function startBeReadyForRecording() {
 				.then(function (stream) {
 					recBtn.disabled = true;
 					//	    pauseResBtn.disabled = false;
-					stopBtn.disabled = false;
 					$uploadBtn.prop('disabled', true);
 
 					beReadyForRecording(stream);
@@ -306,6 +305,7 @@ function onBtnRecordClicked() {
 
 			navigator.mediaDevices.getUserMedia(constraints)
 				.then(function (stream) {
+					stopBtn.disabled = false;
 					startRecording(stream);
 				});
 

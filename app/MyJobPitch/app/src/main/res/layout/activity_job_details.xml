@@ -122,17 +122,21 @@
 
                     <TextView
                         android:id="@+id/job_location_address"
-                        android:layout_weight="1"
-                        android:layout_width="match_parent"
+                        android:layout_weight="12"
+                        android:layout_width="0dp"
                         android:paddingBottom="5dp"
                         android:text="@string/location"
                         android:layout_height="wrap_content" />
 
                     <ImageButton
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
                         android:id="@+id/location_map_button"
-                        android:src="@android:drawable/ic_dialog_map"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
+                        android:src="@drawable/icon_location"
+                        android:background="@android:color/transparent"
+                        android:layout_weight="1"
+                        android:adjustViewBounds="true"
+                        android:scaleType="fitStart" />
 
 
                 </LinearLayout>

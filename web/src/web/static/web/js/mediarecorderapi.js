@@ -230,7 +230,10 @@ function startRecording(stream) {
 		downloadLink.setAttribute("name", name);
 
 		if (!isBrowser('Firefox')) {
-			closeMediaDevices();
+			var tracks = mediaRecorder.stream.getTracks();
+			tracks.forEach(function (track) {
+				track.stop();
+			});
 		}
 
 	}

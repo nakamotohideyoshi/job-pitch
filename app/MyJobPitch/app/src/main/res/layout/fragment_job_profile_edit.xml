@@ -69,16 +69,19 @@
             android:id="@+id/place"
             android:text="@string/not_set"
             android:textSize="@dimen/abc_text_size_medium_material"
-            android:layout_width="fill_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:layout_weight="12"
             android:layout_gravity="center_vertical"
             android:paddingLeft="15dp"
             android:layout_marginRight="5dp" />
         <ImageView
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:src="@android:drawable/ic_dialog_map" />
+            android:src="@drawable/icon_location"
+            android:layout_weight="1"
+            android:adjustViewBounds="true"
+            android:scaleType="fitStart" />
 
     </LinearLayout>
 

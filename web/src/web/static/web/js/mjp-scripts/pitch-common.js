@@ -1,90 +1,103 @@
+function videoIsReadyForPlay(video) {
+	return (video != undefined) && (
+		video.readyState === 4 || (isBrowser('Firefox') && video.readyState === 3)
+	);
+}
+
 function checkIfThereIsApitch(argument) {
-	log('info','Looking for a pitch...');
+	log('info', 'Looking for a pitch...');
 
-	var poolingPromise = new Promise(function(resolve,reject){
-		poolingTranscodeProcess(resolve);
-	})
-	.then(function(pitches){
-		var html = getHtmlForVideoOrThumbnail(pitches);
+	var poolingPromise = new Promise(function (resolve, reject) {
+			poolingTranscodeProcess(resolve);
+		})
+		.then(function (pitches) {
+			var html = getHtmlForVideoOrThumbnail(pitches);
 
-		$('#pitchVideoCheck').html(html);
+			$('#pitchVideoCheck').html(html);
 
-		var videoLoading = document.getElementById('viewing-container');
-		if(videoLoading != undefined && videoLoading.readyState !== 4) {// Video is not ready to play
-			log('info', 'Loading...');
+			if (pitches == undefined || pitches.length == 0) {
+				log('danger', 'There is not a pitch.');
+				return;
+			}
 
-			var intervalVideoLoading = setInterval(function(argument) {
-				if(videoLoading.readyState === 4){
-					log('hide');
-					clearInterval(intervalVideoLoading);
-				};
-			},2000);
-		}
-	});
+			var videoLoading = document.getElementById('viewing-container');
+			if (!videoIsReadyForPlay(videoLoading)) {
+				log('info', 'Loading...');
+
+				var intervalVideoLoading = setInterval(function (argument) {
+					if (videoIsReadyForPlay(videoLoading)) {
+						log('hide');
+						clearInterval(intervalVideoLoading);
+					}
+				}, 2000);
+			}
+		});
 }
 
 
-function poolingTranscodeProcess(resolve){
+function poolingTranscodeProcess(resolve) {
 	var firstExecution = true;
 
-	poolingInterval = setInterval(function(){
+	poolingInterval = setInterval(function () {
 		$.ajax({
 			url: "/api/pitches/",
 			type: 'GET',
 			cache: false
-		}).done(function( pitches ) {
-			if(pitches !== undefined && pitches.length > 0){
-				var thereIsANullPitch = false;
+		}).done(function (pitches) {
+			if (pitches == undefined || pitches.length == 0) {
+				resolve([]); // There is not pitches
+			}
 
-				pitches.forEach(function(pitch) {
-					if(pitch.video == undefined || pitch.video == null || !pitch.video){
-						thereIsANullPitch = true;
-						return false; // There is one
-					}
-				});
+			var thereIsANullPitch = false;
 
-				if(thereIsANullPitch){ // Uploaded already
-					if(firstExecution){
-						log('info', 'Transcoding a previous recorded video ...');
-					}
-				} else {
-					if(!firstExecution){
-						log('success', 'End of Uploading.');
+			pitches.forEach(function (pitch) {
+				if (pitch.video == undefined || pitch.video == null || !pitch.video) {
+					thereIsANullPitch = true;
+					return false; // There is one
+				}
+			});
 
-						setTimeout(function(){
-							location.reload();
-						}, 1000);
-					}
+			if (thereIsANullPitch) { // Uploaded already
+				if (firstExecution) {
+					log('info', 'Processing upload, please wait...');
+				}
+			} else {
+				if (!firstExecution) {
+					log('success', 'End of Uploading.');
 
-					$('.btn-js-start-pitch').attr('disabled', false);
-					$('.btn-js-upload-pitch').attr('disabled', true);
-
-					clearInterval(poolingInterval);
-					resolve(pitches);
+					setTimeout(function () {
+						location.reload();
+					}, 1000);
 				}
 
-				firstExecution = false;
+				$('.btn-js-start-pitch').attr('disabled', false);
+				$('.btn-js-upload-pitch').attr('disabled', true);
+
+				clearInterval(poolingInterval);
+				resolve(pitches);
 			}
+
+			firstExecution = false;
 		});
-	},3000);
+	}, 3000);
 }
 
 
-function checkPitchesIfExists(type, pitches){
+function checkPitchesIfExists(type, pitches) {
 	var i;
 	var found = false;
 
-	pitches.forEach(function(pitch, index) {
+	pitches.forEach(function (pitch, index) {
 		i = index;
 
-		if( _.hasIn(pitch, type)){
-			if(type == 'video'){
-				if( ! _.isEmpty(pitch.video)){
+		if (_.hasIn(pitch, type)) {
+			if (type == 'video') {
+				if (!_.isEmpty(pitch.video)) {
 					found = true;
 					return false; // out of $.each
 				}
-			} else if(type == 'thumbnail'){
-				if( ! _.isEmpty(pitch.thumbnail)){
+			} else if (type == 'thumbnail') {
+				if (!_.isEmpty(pitch.thumbnail)) {
 					found = true;
 					return false; // out of $.each
 				}
@@ -92,7 +105,7 @@ function checkPitchesIfExists(type, pitches){
 		}
 	});
 
-	if(found){
+	if (found) {
 		return i;
 	}
 

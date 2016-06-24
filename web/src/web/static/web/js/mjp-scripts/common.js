@@ -31,13 +31,12 @@ function postcodeLocationData(postcode, handleData) {
 	if (postcode != '') {
 		$.ajax({
 			cache: false,
-			url: "http://api.postcodes.io/postcodes/" + postcode,
+			url: "https://api.postcodes.io/postcodes/" + postcode,
 			success: function (data) {
 				handleData(data);
 			},
 			error: function (data) {
-				var response = JSON.parse(data.responseText);
-				console.log(response.error);
+				console.log(data.statusText);
 				fieldError('Please enter a valid postcode.', 'postcode');
 				//formAlert('danger', 'Please enter a valid postcode.');
 			}

@@ -1,4 +1,11 @@
 /* Common Functions */
+function goToTop() {
+	// This for hacking scrolltop because it does not work
+	// when body and html has 100% heigth.
+	document.location.hash = "#wrapper";
+	document.location.hash = "#hacked-top";
+}
+
 
 function setCookie(cname, cvalue, exdays) {
 	var d = new Date();
@@ -36,9 +43,10 @@ function postcodeLocationData(postcode, handleData) {
 				handleData(data);
 			},
 			error: function (data) {
-				console.log(data.statusText);
-				fieldError('Please enter a valid postcode.', 'postcode');
-				//formAlert('danger', 'Please enter a valid postcode.');
+				console.log(data.responseJSON.error);
+				//fieldError('Please enter a valid postcode.', 'postcode');
+				formAlert('danger', 'Please enter a valid postcode.');
+				goToTop();
 			}
 		});
 

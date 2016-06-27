@@ -52,6 +52,17 @@ a{
     margin: 0 auto;
 }
 
+
+/*
+ * This for hacking scrollTop because window.scrollTop does not work
+ * when html and body has heigth equal to 100%
+ */
+#hacked-top{
+  position: absolute;
+  top: -100px;
+}
+
+
 /* Animation of glyphicon-refresh */
 
 .glyphicon-refresh-animate {

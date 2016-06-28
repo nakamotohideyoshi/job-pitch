@@ -9,6 +9,7 @@
 #import "ListBusinesses.h"
 #import "SimpleListCell.h"
 #import "ListLocations.h"
+#import "CreateRecruiterProfile.h"
 
 @interface ListBusinesses () {
     NSArray *data;
@@ -20,14 +21,12 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.businesses.rowHeight = UITableViewAutomaticDimension;
-    self.businesses.estimatedRowHeight = 96;
     self.businesses.dataSource = self;
     self.businesses.delegate = self;
+    self.businesses.allowsMultipleSelectionDuringEditing = NO;
 }
 
--(void)viewWillAppear:(BOOL)animated
-{
+-(void)viewWillAppear:(BOOL)animated {
     [self showProgress:true];
     [self.appDelegate.api loadBusinesses:^(NSArray *businesses) {
         [self showProgress:false];
@@ -42,15 +41,15 @@
     }];
 }
 
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
-{
-    if (data)
-        return data.count;
-    return 0;
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+    return 85;
 }
 
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
-{
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    return data ? data.count : 0;
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     SimpleListCell *cell = [self.businesses dequeueReusableCellWithIdentifier:@"SimpleListCell"];
     Business *business = [self->data objectAtIndex:indexPath.row];
     cell.title.text = business.name;
@@ -64,13 +63,42 @@
         cell.imageActivity.hidden = true;
     }
     if (business.locations.count == 1)
-        cell.subtitle.text = [NSString stringWithFormat:@"Includes %ld work place", business.locations.count];
+        cell.subtitle.text = [NSString stringWithFormat:@"Includes %u work place", business.locations.count];
     else
-        cell.subtitle.text = [NSString stringWithFormat:@"Includes %ld work places", business.locations.count];
+        cell.subtitle.text = [NSString stringWithFormat:@"Includes %u work places", business.locations.count];
     cell.backgroundColor = [UIColor clearColor];
     cell.selectedBackgroundView = [[UIView alloc] init];
     cell.selectedBackgroundView.backgroundColor = [UIColor colorWithWhite:1.0 alpha:0.5];
+    
+    UIButton *editButton = [cell viewWithTag:100];
+    [editButton removeTarget:self action:@selector(editBusiness) forControlEvents:UIControlEventTouchUpInside];
+    [editButton addTarget:self action:@selector(editBusiness) forControlEvents:UIControlEventTouchUpInside];
     return cell;
+}
+
+- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
+    // Return YES if you want the specified item to be editable.
+    return NO;
+}
+
+- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
+    if (editingStyle == UITableViewCellEditingStyleDelete) {
+        //add code here for when you hit delete
+    }
+}
+
+- (void) editBusiness {
+    NSInteger index = self.businesses.indexPathForSelectedRow.row;
+    CreateRecruiterProfile *controller = [self.storyboard instantiateViewControllerWithIdentifier:@"CreateRecruiterProfile"];
+    controller.hiddenLocation = YES;
+    controller.business = [self->data objectAtIndex:index];
+    [self.navigationController pushViewController:controller animated:YES];
+}
+
+
+- (IBAction)addBusiness:(id)sender {
+    CreateRecruiterProfile *controller = [self.storyboard instantiateViewControllerWithIdentifier:@"CreateRecruiterProfile"];
+    [self.navigationController pushViewController:controller animated:YES];
 }
 
 - (IBAction)logout {

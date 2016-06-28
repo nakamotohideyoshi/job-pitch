@@ -12,13 +12,17 @@
 #import "BusinessEditView.h"
 #import "LocationEditView.h"
 
-@interface CreateRecruiterProfile : ScrollingViewController {
-    __weak IBOutlet BusinessEditView *businessEditView;
-    __weak IBOutlet LocationEditView *locationEditView;
-
-}
+@interface CreateRecruiterProfile : ScrollingViewController
 
 @property (weak, nonatomic) IBOutlet UILabel *activityLabel;
+
+@property (nonatomic, nonnull) Business* business;
+@property (nonatomic, nonnull) Location *location;
+
+@property BOOL hiddenBusiness;
+@property BOOL hiddenLocation;
+
+- (void)load:(nonnull Business*)business;
 
 - (IBAction)continue;
 

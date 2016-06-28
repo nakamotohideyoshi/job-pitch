@@ -56,14 +56,16 @@
     return [[nib instantiateWithOwner:self options:nil] objectAtIndex:0];
 }
 
-- (void)load:(nonnull Business*)business
-{
+- (void)load:(Business*)business {
+    if (business == nil) return;
+    
     self.name.textField.text = business.name;
     self.image = [business getImage];
     if (self.image && self.image.image) {
         [self.imageActivity setHidden:false];
         [self.imageActivity startAnimating];
         self.imageView.image = nil;
+        self.noImage.hidden = YES;
         self.changeButton.enabled = false;
         self.changeButton.alpha = 0.5;
         self.changeCenterContraint.priority = UILayoutPriorityDefaultLow;

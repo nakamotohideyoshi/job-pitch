@@ -10,18 +10,50 @@
 #import "CreateProfile.h"
 
 @interface CreateRecruiterProfile ()
-@property (nonatomic, nonnull) Business* business;
-@property (nonatomic, nonnull) Location *location;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *layoutBusinessHeight0;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *layoutLocationHeight0;
+@property (weak, nonatomic) IBOutlet BusinessEditView *businessEditView;
+@property (weak, nonatomic) IBOutlet LocationEditView *locationEditView;
+@property (weak, nonatomic) IBOutlet UIButton *saveButton;
 @end
 
 @implementation CreateRecruiterProfile
 
-- (void)viewWillAppear:(BOOL)animated
-{
+- (void) viewDidLoad {
+    [super viewDidLoad];
+    
+    _businessEditView.hidden = _hiddenBusiness;
+    _layoutBusinessHeight0.active = _hiddenBusiness;
+    if (!_businessEditView.hidden) {
+        [_businessEditView load:_business];
+    }
+    
+    _locationEditView.hidden = _hiddenLocation;
+    _layoutLocationHeight0.active = _hiddenLocation;
+    if (!_locationEditView.hidden) {
+        [_locationEditView load:_location];
+    }
+   
+    NSString *buttunTitle = (_business==nil || (!_hiddenLocation && _location==nil)) ? @"Continue" : @"Edit";
+    [_saveButton setTitle:buttunTitle forState:UIControlStateNormal];
+}
+
+- (void)viewWillAppear:(BOOL)animated {
     activityIndicator.hidden = YES;
 }
 
 - (NSArray *)getRequiredFields {
+    
+    if (_hiddenLocation) {
+        return @[@"business_name"];
+    }
+    
+    if (_hiddenBusiness) {
+        return @[@"location_name",
+                 @"location_description",
+                 @"location_location"];
+    }
+    
     return @[@"business_name",
              @"location_name",
              @"location_description",
@@ -29,64 +61,125 @@
 }
 
 - (NSDictionary*)getFieldMap {
-    return @{@"business_name": businessEditView.name.textField,
-             @"location_name": locationEditView.name.textField,
-             @"location_description": locationEditView.desc.textField,
-             @"location_address": locationEditView.address.textField,
-             @"location_email": locationEditView.email.textField,
-             @"location_telephone": locationEditView.telephone.textField,
-             @"location_mobile": locationEditView.mobile.textField,
-             @"location_location": locationEditView.location.textField,
-             };
+    
+    if (_hiddenLocation) {
+        return @{@"business_name": _businessEditView.name.textField };
+    }
+    
+    if (_hiddenBusiness) {
+        return @{@"location_name": _locationEditView.name.textField,
+                 @"location_description": _locationEditView.desc.textField,
+                 @"location_address": _locationEditView.address.textField,
+                 @"location_email": _locationEditView.email.textField,
+                 @"location_telephone": _locationEditView.telephone.textField,
+                 @"location_mobile": _locationEditView.mobile.textField,
+                 @"location_location": _locationEditView.location.textField };
+    }
+    
+    return @{@"business_name": _businessEditView.name.textField,
+             @"location_name": _locationEditView.name.textField,
+             @"location_description": _locationEditView.desc.textField,
+             @"location_address": _locationEditView.address.textField,
+             @"location_email": _locationEditView.email.textField,
+             @"location_telephone": _locationEditView.telephone.textField,
+             @"location_mobile": _locationEditView.mobile.textField,
+             @"location_location": _locationEditView.location.textField };
 }
 
 - (NSDictionary *)getErrorViewMap {
-    return @{@"business_name": businessEditView.name.errorLabel,
-             @"location_name": locationEditView.name.errorLabel,
-             @"location_description": locationEditView.desc.errorLabel,
-             @"location_address": locationEditView.address.errorLabel,
-             @"location_email": locationEditView.email.errorLabel,
-             @"location_telephone": locationEditView.telephone.errorLabel,
-             @"location_mobile": locationEditView.mobile.errorLabel,
-             @"location_location": locationEditView.location.errorLabel,
-             };
+    
+    if (_hiddenLocation) {
+        return @{@"business_name": _businessEditView.name.errorLabel };
+    }
+    
+    if (_hiddenBusiness) {
+        return @{@"location_name": _locationEditView.name.errorLabel,
+                 @"location_description": _locationEditView.desc.errorLabel,
+                 @"location_address": _locationEditView.address.errorLabel,
+                 @"location_email": _locationEditView.email.errorLabel,
+                 @"location_telephone": _locationEditView.telephone.errorLabel,
+                 @"location_mobile": _locationEditView.mobile.errorLabel,
+                 @"location_location": _locationEditView.location.errorLabel };
+    }
+    
+    return @{@"business_name": _businessEditView.name.errorLabel,
+             @"location_name": _locationEditView.name.errorLabel,
+             @"location_description": _locationEditView.desc.errorLabel,
+             @"location_address": _locationEditView.address.errorLabel,
+             @"location_email": _locationEditView.email.errorLabel,
+             @"location_telephone": _locationEditView.telephone.errorLabel,
+             @"location_mobile": _locationEditView.mobile.errorLabel,
+             @"location_location": _locationEditView.location.errorLabel };
 }
 
-- (IBAction)continue
+- (IBAction)continue 
 {
-    NSLog(@"continue");
-    if ([self validate]) {
-        [self showProgress:true];
-        if ([self appDelegate].user.businesses == nil || [[self appDelegate].user.businesses count] > 0) {
-            [self continueBusinessImage];
-        } else {
-            Business *business = [Business alloc];
-            [businessEditView save:business];
-            [[self appDelegate].api
-             saveBusiness:business
-             success:^(Business *business) {
-                 [self clearErrors];
-                 [businessEditView setAlpha:0.5];
-                 [businessEditView setUserInteractionEnabled:false];
-                 [self appDelegate].user.businesses = @[business.id];
-                 self.business = business;
-                 [self continueBusinessImage];
-             }
-             failure:^(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors) {
-                 NSMutableDictionary *detail = [[NSMutableDictionary alloc] init];
-                 for (id key in errors)
-                     detail[[NSString stringWithFormat:@"business_%@", key]] = errors[key];
-                 [self handleErrors:detail message:message];
-                 [self showProgress:false];
-             }];
+    if (![self validate]) return;
+    
+    [self showProgress:true];
+    
+    if (!_hiddenBusiness) {
+        if (_business == nil) {
+            _business = [Business alloc];
         }
+        [_businessEditView save:_business];
+        [[self appDelegate].api saveBusiness:_business
+                                     success:^(Business *business) {
+                                         [self clearErrors];
+                                         [self.businessEditView setAlpha:0.5];
+                                         [self.businessEditView setUserInteractionEnabled:false];
+                                         [self appDelegate].user.businesses = @[business.id];
+                                         self.business = business;
+                                         [self continueBusinessImage];
+                                     }
+                                     failure:^(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors) {
+                                         NSMutableDictionary *detail = [[NSMutableDictionary alloc] init];
+                                         for (id key in errors)
+                                             detail[[NSString stringWithFormat:@"business_%@", key]] = errors[key];
+                                         [self handleErrors:detail message:message];
+                                         [self showProgress:false];
+                                     }];
+         
+    
+    } else {
+        [self continueLocation];
     }
+
+//    NSLog(@"continue");
+//    if ([self validate]) {
+//        [self showProgress:true];
+//        if ([self appDelegate].user.businesses == nil || [[self appDelegate].user.businesses count] > 0) {
+//            [self continueBusinessImage];
+//        } else {
+//            Business *business = [Business alloc];
+//            [businessEditView save:business];
+//            [[self appDelegate].api
+//             saveBusiness:business
+//             success:^(Business *business) {
+//                 [self clearErrors];
+//                 [businessEditView setAlpha:0.5];
+//                 [businessEditView setUserInteractionEnabled:false];
+//                 [self appDelegate].user.businesses = @[business.id];
+//                 self.business = business;
+//                 [self continueBusinessImage];
+//             }
+//             failure:^(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors) {
+//                 NSMutableDictionary *detail = [[NSMutableDictionary alloc] init];
+//                 for (id key in errors)
+//                     detail[[NSString stringWithFormat:@"business_%@", key]] = errors[key];
+//                 [self handleErrors:detail message:message];
+//                 [self showProgress:false];
+//             }];
+//        }
+//    }
+    
+    //if (self.location)
 }
 
 - (void)continueBusinessImage
 {
-    if (businessEditView.imageForUpload) {
-        [[self appDelegate].api uploadImage:businessEditView.imageForUpload
+    if (_businessEditView.imageForUpload) {
+        [[self appDelegate].api uploadImage:_businessEditView.imageForUpload
                                          to:@"user-business-images"
                                   objectKey:@"business"
                                    objectId:self.business.id
@@ -96,7 +189,7 @@
                                        [self.activityLabel setText:[NSString stringWithFormat:@"Uploading image (%ld%%)", lround(percent)]];
                                    }
                                     success:^(Image *image) {
-                                        businessEditView.imageForUpload = nil;
+                                        self.businessEditView.imageForUpload = nil;
                                         [self.activityLabel setText:@""];
                                         [self continueLocation];
                                     }
@@ -112,33 +205,58 @@
 
 - (void)continueLocation
 {
-    if (self.location == nil) {
-        Location *location = [Location alloc];
-        [locationEditView save:location];
-        location.business = self.business.id;
-        [[self appDelegate].api
-         saveLocation:location
-         success:^(Location *location) {
-             [self clearErrors];
-             self.location = location;
-             [self continueLocationImage];
-         }
-         failure:^(RKObjectRequestOperation *operation, NSError *error, NSString*message, NSDictionary *errors) {
-             NSMutableDictionary *detail = [[NSMutableDictionary alloc] init];
-             for (id key in errors)
-                 detail[[NSString stringWithFormat:@"location_%@", key]] = errors[key];
-             [self handleErrors:detail message:message];
-             [self showProgress:false];
-         }];
+    if (!_hiddenLocation) {
+        if (_location == nil) {
+            _location = [Location alloc];
+            _location.business = _business.id;
+        }
+        [_locationEditView save:_location];
+        
+        [[self appDelegate].api saveLocation:_location
+                                     success:^(Location *location) {
+                                         [self clearErrors];
+                                         self.location = location;
+                                         [self continueLocationImage];
+                                     }
+                                     failure:^(RKObjectRequestOperation *operation, NSError *error, NSString*message, NSDictionary *errors) {
+                                         NSMutableDictionary *detail = [[NSMutableDictionary alloc] init];
+                                         for (id key in errors)
+                                             detail[[NSString stringWithFormat:@"location_%@", key]] = errors[key];
+                                         [self handleErrors:detail message:message];
+                                         [self showProgress:false];
+                                     }];
     } else {
-        [self continueLocationImage];
+        [self replaceWithViewControllerNamed:@"recruiter_home"];
     }
+    
+    
+//    if (self.location == nil) {
+//        Location *location = [Location alloc];
+//        [_locationEditView save:location];
+//        location.business = self.business.id;
+//        [[self appDelegate].api
+//         saveLocation:location
+//         success:^(Location *location) {
+//             [self clearErrors];
+//             self.location = location;
+//             [self continueLocationImage];
+//         }
+//         failure:^(RKObjectRequestOperation *operation, NSError *error, NSString*message, NSDictionary *errors) {
+//             NSMutableDictionary *detail = [[NSMutableDictionary alloc] init];
+//             for (id key in errors)
+//                 detail[[NSString stringWithFormat:@"location_%@", key]] = errors[key];
+//             [self handleErrors:detail message:message];
+//             [self showProgress:false];
+//         }];
+//    } else {
+//        [self continueLocationImage];
+//    }
 }
 
 - (void)continueLocationImage
 {
-    if (locationEditView.imageForUpload) {
-        [[self appDelegate].api uploadImage:locationEditView.imageForUpload
+    if (_locationEditView.imageForUpload) {
+        [[self appDelegate].api uploadImage:_locationEditView.imageForUpload
                                          to:@"user-business-images"
                                   objectKey:@"business"
                                    objectId:self.business.id
@@ -148,7 +266,7 @@
                                        [self.activityLabel setText:[NSString stringWithFormat:@"Uploading image (%ld%%)", lround(percent)]];
                                    }
                                     success:^(Image *image) {
-                                        locationEditView.imageForUpload = nil;
+                                        self.locationEditView.imageForUpload = nil;
                                         [self.activityLabel setText:@""];
                                         [self replaceWithViewControllerNamed:@"recruiter_home"];
                                     }

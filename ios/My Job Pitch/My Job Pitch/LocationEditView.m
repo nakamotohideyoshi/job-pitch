@@ -62,8 +62,9 @@
     return [[nib instantiateWithOwner:self options:nil] objectAtIndex:0];
 }
 
-- (void)load:(nonnull Location*)location
-{
+- (void)load:(Location*)location {
+    if (location == nil) return;
+    
     self.name.textField.text = location.name;
     self.desc.textField.text = location.desc;
     self.address.textField.text = location.address;

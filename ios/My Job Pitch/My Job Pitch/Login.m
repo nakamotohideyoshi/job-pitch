@@ -82,10 +82,10 @@
         [defaults setObject:password.text forKey:@"password"];
         [defaults synchronize];
         
-        if ([user isJobSeeker]) {
-            [self performSegueWithIdentifier:@"goto_job_seeker" sender:@"login"];
-        } else if ([user isRecruiter]) {
+        if ([user isRecruiter]) {
             [self performSegueWithIdentifier:@"goto_recruiter" sender:@"login"];
+        } else if ([user isJobSeeker]) {
+            [self performSegueWithIdentifier:@"goto_job_seeker" sender:@"login"];
         } else {
             [self performSegueWithIdentifier:@"goto_create_profile" sender:@"login"];
         }

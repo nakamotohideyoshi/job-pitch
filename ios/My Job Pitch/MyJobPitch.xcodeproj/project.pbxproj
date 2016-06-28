@@ -948,7 +948,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.myjobpitch.pitch;
 				PRODUCT_NAME = MyJobPitch;
-				PROVISIONING_PROFILE = "22a92c3f-f659-4a04-a76e-6d110be52d29";
+				PROVISIONING_PROFILE = "9fcf717c-fcc5-400b-b610-e0fdc047e519";
 			};
 			name = Debug;
 		};
@@ -975,7 +975,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.myjobpitch.pitch;
 				PRODUCT_NAME = MyJobPitch;
-				PROVISIONING_PROFILE = "22a92c3f-f659-4a04-a76e-6d110be52d29";
+				PROVISIONING_PROFILE = "9fcf717c-fcc5-400b-b610-e0fdc047e519";
 			};
 			name = Release;
 		};

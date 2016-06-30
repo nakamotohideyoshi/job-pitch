@@ -10,11 +10,6 @@
 
 @interface ListLocations : MJPViewController<UITableViewDelegate, UITableViewDataSource>
 
-@property (nonnull) Business *business;
-
-@property (weak, nonatomic) IBOutlet UITableView *locations;
-@property (weak, nonatomic) IBOutlet UIView *emptyView;
-
-- (IBAction)addWorkPlace:(nullable id)sender;
+@property (nonatomic, nonnull) Business *business;
 
 @end

@@ -10,8 +10,6 @@
 
 @interface ListBusinesses : MJPViewController<UITableViewDelegate, UITableViewDataSource>
 
-@property (weak, nonatomic) IBOutlet UITableView *businesses;
-
 - (IBAction)logout;
 
 @end

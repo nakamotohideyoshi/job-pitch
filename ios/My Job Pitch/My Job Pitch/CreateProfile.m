@@ -7,6 +7,8 @@
 //
 
 #import "CreateProfile.h"
+#import "CreateRecruiterProfile.h"
+#import "MyAlertController.h"
 
 @implementation CreateProfile
 
@@ -16,29 +18,23 @@
 }
 
 - (IBAction)logout {
-    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Logout"
-                                                    message:@"Are you sure you want to logout?"
-                                                   delegate:self
-                                          cancelButtonTitle:@"No"
-                                          otherButtonTitles:@"Yes", nil];
-    [alert show];
-}
-
-- (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex {
-    if (buttonIndex == 1) {
+    [MyAlertController title:@"Logout" message:@"Are you sure you want to logout?" ok:@"Yes" okCallback:^{
         [self.navigationController popViewControllerAnimated:true];
-    }
+    } cancel:@"No" cancelCallback:nil];
 }
 
 - (void)showJobSeeker {
     NSLog(@"showJobSeeker");
     [self performSegueWithIdentifier:@"goto_create_job_seeker_profile" sender:self];
+    
 }
 
 - (void)showRecruiter {
     NSLog(@"showRecruiter");
     
-    [self performSegueWithIdentifier:@"goto_create_recruiter_profile" sender:self];
+    CreateRecruiterProfile *controller = [self.storyboard instantiateViewControllerWithIdentifier:@"CreateRecruiterProfile"];
+    controller.isFirst = YES;
+    [self.navigationController pushViewController:controller animated:YES];
 }
 
 @end

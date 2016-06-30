@@ -9,11 +9,15 @@
 #import "ListLocations.h"
 #import "SimpleListCell.h"
 #import "ListJobs.h"
-#import "EditLocation.h"
+#import "CreateRecruiterProfile.h"
+#import "MyAlertController.h"
 
 @interface ListLocations () {
     NSArray *data;
 }
+
+@property (weak, nonatomic) IBOutlet UITableView *locations;
+@property (weak, nonatomic) IBOutlet UIView *emptyView;
 
 @end
 
@@ -21,21 +25,16 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.locations.rowHeight = UITableViewAutomaticDimension;
-    self.locations.estimatedRowHeight = 96;
-    self.locations.dataSource = self;
-    self.locations.delegate = self;
+    self.locations.allowsMultipleSelectionDuringEditing = NO;
 }
 
--(void)viewWillAppear:(BOOL)animated
-{
+-(void)viewWillAppear:(BOOL)animated {
     [self.emptyView setHidden:true];
     [self showProgress:true];
     [self.appDelegate.api loadLocationsForBusiness:self.business.id success:^(NSArray *locations) {
         if (locations.count) {
             data = locations;
             [self.locations setHidden:false];
-            [self.emptyView setHidden:true];
             [self.locations reloadData];
         } else {
             [self.locations setHidden:true];
@@ -43,23 +42,19 @@
         }
         [self showProgress:false];
     } failure:^(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors) {
-        [[[UIAlertView alloc] initWithTitle:@"Error"
-                                    message:@"Error loading data"
-                                   delegate:self
-                          cancelButtonTitle:@"Okay"
-                          otherButtonTitles:nil] show];
+        [MyAlertController title:@"Error" message:@"Error loading data" ok:@"Okay" okCallback:nil cancel:nil cancelCallback:nil];
     }];
 }
 
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
-{
-    if (data)
-        return data.count;
-    return 0;
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+    return 85;
 }
 
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
-{
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    return data ? data.count : 0;
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     SimpleListCell *cell = [self.locations dequeueReusableCellWithIdentifier:@"SimpleListCell"];
     Location *location = [self->data objectAtIndex:indexPath.row];
     cell.title.text = location.name;
@@ -73,28 +68,51 @@
         cell.imageActivity.hidden = true;
     }
     if (location.jobs.count == 1)
-        cell.subtitle.text = [NSString stringWithFormat:@"Includes %ld job", location.jobs.count];
+        cell.subtitle.text = [NSString stringWithFormat:@"Includes %u job", location.jobs.count];
     else
-        cell.subtitle.text = [NSString stringWithFormat:@"Includes %ld jobs", location.jobs.count];
+        cell.subtitle.text = [NSString stringWithFormat:@"Includes %u jobs", location.jobs.count];
     cell.backgroundColor = [UIColor clearColor];
     cell.selectedBackgroundView = [[UIView alloc] init];
     cell.selectedBackgroundView.backgroundColor = [UIColor colorWithWhite:1.0 alpha:0.5];
+    
+    UIButton *editButton = [cell viewWithTag:100];
+    [editButton removeTarget:self action:@selector(editLocation) forControlEvents:UIControlEventTouchUpInside];
+    [editButton addTarget:self action:@selector(editLocation) forControlEvents:UIControlEventTouchUpInside];
+    
     return cell;
 }
 
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    if ([[segue identifier] isEqualToString:@"goto_jobs_list"]) {
-        ListJobs *jobsView = [segue destinationViewController];
-        Location *selectedLocation = [data objectAtIndex:self.locations.indexPathForSelectedRow.row];
-        [jobsView setLocation:selectedLocation];
-    } else if ([[segue identifier] isEqualToString:@"goto_edit_location"]) {
-        EditLocation *editView = [segue destinationViewController];
-        [editView setBusiness:self.business];
+- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
+    // Return YES if you want the specified item to be editable.
+    return NO;
+}
+
+- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
+    if (editingStyle == UITableViewCellEditingStyleDelete) {
+        //add code here for when you hit delete
     }
 }
 
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    ListJobs *controller = [self.storyboard instantiateViewControllerWithIdentifier:@"ListJobs"];
+    NSInteger index = self.locations.indexPathForSelectedRow.row;
+    controller.location = [self->data objectAtIndex:index];
+    [self.navigationController pushViewController:controller animated:YES];
+}
+
+- (void) editLocation {
+    CreateRecruiterProfile *controller = [self.storyboard instantiateViewControllerWithIdentifier:@"CreateRecruiterProfile"];
+    controller.hiddenBusiness = YES;
+    controller.business = _business;
+    if (self.locations.indexPathForSelectedRow != nil) {
+        NSInteger index = self.locations.indexPathForSelectedRow.row;
+        controller.location = [self->data objectAtIndex:index];
+    }
+    [self.navigationController pushViewController:controller animated:YES];
+}
+
 - (IBAction)addWorkPlace:(id)sender {
-    [self performSegueWithIdentifier:@"goto_edit_location" sender:self];
+    [self editLocation];
 }
 
 @end

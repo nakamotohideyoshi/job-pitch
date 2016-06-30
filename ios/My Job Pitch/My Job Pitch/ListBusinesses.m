@@ -10,10 +10,13 @@
 #import "SimpleListCell.h"
 #import "ListLocations.h"
 #import "CreateRecruiterProfile.h"
+#import "MyAlertController.h"
 
 @interface ListBusinesses () {
     NSArray *data;
 }
+
+@property (weak, nonatomic) IBOutlet UITableView *businesses;
 
 @end
 
@@ -21,8 +24,6 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.businesses.dataSource = self;
-    self.businesses.delegate = self;
     self.businesses.allowsMultipleSelectionDuringEditing = NO;
 }
 
@@ -33,11 +34,7 @@
         data = businesses;
         [self.businesses reloadData];
     } failure:^(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors) {
-        [[[UIAlertView alloc] initWithTitle:@"Error"
-                                    message:@"Error loading data"
-                                   delegate:self
-                          cancelButtonTitle:@"Okay"
-                          otherButtonTitles:nil] show];
+        [MyAlertController title:@"Error" message:@"Error loading data" ok:@"Okay" okCallback:nil cancel:nil cancelCallback:nil];
     }];
 }
 
@@ -73,6 +70,7 @@
     UIButton *editButton = [cell viewWithTag:100];
     [editButton removeTarget:self action:@selector(editBusiness) forControlEvents:UIControlEventTouchUpInside];
     [editButton addTarget:self action:@selector(editBusiness) forControlEvents:UIControlEventTouchUpInside];
+
     return cell;
 }
 
@@ -87,43 +85,31 @@
     }
 }
 
-- (void) editBusiness {
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    ListLocations *controller = [self.storyboard instantiateViewControllerWithIdentifier:@"ListLocations"];
     NSInteger index = self.businesses.indexPathForSelectedRow.row;
-    CreateRecruiterProfile *controller = [self.storyboard instantiateViewControllerWithIdentifier:@"CreateRecruiterProfile"];
-    controller.hiddenLocation = YES;
     controller.business = [self->data objectAtIndex:index];
     [self.navigationController pushViewController:controller animated:YES];
 }
 
-
-- (IBAction)addBusiness:(id)sender {
+- (void) editBusiness {
     CreateRecruiterProfile *controller = [self.storyboard instantiateViewControllerWithIdentifier:@"CreateRecruiterProfile"];
+    if (self.businesses.indexPathForSelectedRow != nil) {
+        NSInteger index = self.businesses.indexPathForSelectedRow.row;
+        controller.hiddenLocation = YES;
+        controller.business = [self->data objectAtIndex:index];
+    }
     [self.navigationController pushViewController:controller animated:YES];
 }
 
+- (IBAction)addBusiness:(id)sender {
+    [self editBusiness];
+}
+
 - (IBAction)logout {
-    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Logout"
-                                                    message:@"Are you sure you want to logout?"
-                                                   delegate:self
-                                          cancelButtonTitle:@"No"
-                                          otherButtonTitles:@"Yes", nil];
-    [alert show];
-}
-
-- (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex {
-    if (buttonIndex == 1) {
+    [MyAlertController title:@"Logout" message:@"Are you sure you want to logout?" ok:@"Yes" okCallback:^{
         [self.navigationController popViewControllerAnimated:true];
-    }
+    } cancel:@"No" cancelCallback:nil];
 }
 
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    if ([[segue identifier] isEqualToString:@"goto_locations_list"]) {
-        ListLocations *locationsView = [segue destinationViewController];
-        Business *selectedBusiness = [data objectAtIndex:self.businesses.indexPathForSelectedRow.row];
-        [locationsView setBusiness:selectedBusiness];
-    } else if ([[segue identifier] isEqualToString:@"goto_edit_company"]) {
-//        EditCompany *editView = [segue destinationViewController];
-//        [editView setBusiness:self.business];
-    }
-}
 @end

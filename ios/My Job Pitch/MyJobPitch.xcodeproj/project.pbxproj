@@ -23,7 +23,6 @@
 		CE7742351C92368200A9A2BA /* SimpleListCell.m in Sources */ = {isa = PBXBuildFile; fileRef = CE7742341C92368200A9A2BA /* SimpleListCell.m */; };
 		CE7742381C923D4900A9A2BA /* ListLocations.m in Sources */ = {isa = PBXBuildFile; fileRef = CE7742371C923D4900A9A2BA /* ListLocations.m */; };
 		CE77423B1C923EAD00A9A2BA /* ListJobs.m in Sources */ = {isa = PBXBuildFile; fileRef = CE77423A1C923EAD00A9A2BA /* ListJobs.m */; };
-		CE77423E1C92555900A9A2BA /* EditLocation.m in Sources */ = {isa = PBXBuildFile; fileRef = CE77423D1C92555900A9A2BA /* EditLocation.m */; };
 		CE7742411C95D6C000A9A2BA /* EditJob.m in Sources */ = {isa = PBXBuildFile; fileRef = CE7742401C95D6C000A9A2BA /* EditJob.m */; };
 		CE7742441C95D85300A9A2BA /* JobEditView.m in Sources */ = {isa = PBXBuildFile; fileRef = CE7742431C95D85300A9A2BA /* JobEditView.m */; };
 		CE7742461C95D88000A9A2BA /* JobEditView.xib in Resources */ = {isa = PBXBuildFile; fileRef = CE7742451C95D88000A9A2BA /* JobEditView.xib */; };
@@ -140,8 +139,6 @@
 		CE7742371C923D4900A9A2BA /* ListLocations.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ListLocations.m; sourceTree = "<group>"; };
 		CE7742391C923EAD00A9A2BA /* ListJobs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ListJobs.h; sourceTree = "<group>"; };
 		CE77423A1C923EAD00A9A2BA /* ListJobs.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ListJobs.m; sourceTree = "<group>"; };
-		CE77423C1C92555900A9A2BA /* EditLocation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EditLocation.h; sourceTree = "<group>"; };
-		CE77423D1C92555900A9A2BA /* EditLocation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EditLocation.m; sourceTree = "<group>"; };
 		CE77423F1C95D6C000A9A2BA /* EditJob.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EditJob.h; sourceTree = "<group>"; };
 		CE7742401C95D6C000A9A2BA /* EditJob.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EditJob.m; sourceTree = "<group>"; };
 		CE7742421C95D85300A9A2BA /* JobEditView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JobEditView.h; sourceTree = "<group>"; };
@@ -352,8 +349,6 @@
 				CE77424A1C96244900A9A2BA /* ViewJob.h */,
 				CE77424B1C96244900A9A2BA /* ViewJob.m */,
 				CE6FD3431C01F9BB001A04C3 /* Main.storyboard */,
-				CE77423C1C92555900A9A2BA /* EditLocation.h */,
-				CE77423D1C92555900A9A2BA /* EditLocation.m */,
 				CE77423F1C95D6C000A9A2BA /* EditJob.h */,
 				CE7742401C95D6C000A9A2BA /* EditJob.m */,
 				CE8395A61C3EF98F007A8213 /* EditProfile.h */,
@@ -748,7 +743,6 @@
 				CE8AB0011C5AF6250004F021 /* Application.m in Sources */,
 				D7E94F8D1D179D6700866604 /* MyCameraPreviewView.m in Sources */,
 				CE8AB0241C617F550004F021 /* BusinessEditView.m in Sources */,
-				CE77423E1C92555900A9A2BA /* EditLocation.m in Sources */,
 				CE45AECA1C0B45AD0092AB75 /* RegisterRequest.m in Sources */,
 				CE8AAFE51C56D93C0004F021 /* Pitch.m in Sources */,
 				CEE52CFE1C066AB000881648 /* AuthToken.m in Sources */,

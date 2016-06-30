@@ -6,6 +6,8 @@
 //  Copyright © 2016 SC Labs Ltd. All rights reserved.
 //
 
+#import "BusinessEditView.h"
+#import "LocationEditView.h"
 #import "CreateRecruiterProfile.h"
 #import "CreateProfile.h"
 
@@ -15,6 +17,8 @@
 @property (weak, nonatomic) IBOutlet BusinessEditView *businessEditView;
 @property (weak, nonatomic) IBOutlet LocationEditView *locationEditView;
 @property (weak, nonatomic) IBOutlet UIButton *saveButton;
+@property (weak, nonatomic) IBOutlet UILabel *activityLabel;
+
 @end
 
 @implementation CreateRecruiterProfile
@@ -112,8 +116,8 @@
              @"location_location": _locationEditView.location.errorLabel };
 }
 
-- (IBAction)continue 
-{
+- (IBAction)save {
+    
     if (![self validate]) return;
     
     [self showProgress:true];
@@ -144,40 +148,10 @@
     } else {
         [self continueLocation];
     }
-
-//    NSLog(@"continue");
-//    if ([self validate]) {
-//        [self showProgress:true];
-//        if ([self appDelegate].user.businesses == nil || [[self appDelegate].user.businesses count] > 0) {
-//            [self continueBusinessImage];
-//        } else {
-//            Business *business = [Business alloc];
-//            [businessEditView save:business];
-//            [[self appDelegate].api
-//             saveBusiness:business
-//             success:^(Business *business) {
-//                 [self clearErrors];
-//                 [businessEditView setAlpha:0.5];
-//                 [businessEditView setUserInteractionEnabled:false];
-//                 [self appDelegate].user.businesses = @[business.id];
-//                 self.business = business;
-//                 [self continueBusinessImage];
-//             }
-//             failure:^(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors) {
-//                 NSMutableDictionary *detail = [[NSMutableDictionary alloc] init];
-//                 for (id key in errors)
-//                     detail[[NSString stringWithFormat:@"business_%@", key]] = errors[key];
-//                 [self handleErrors:detail message:message];
-//                 [self showProgress:false];
-//             }];
-//        }
-//    }
-    
-    //if (self.location)
 }
 
-- (void)continueBusinessImage
-{
+- (void)continueBusinessImage {
+    
     if (_businessEditView.imageForUpload) {
         [[self appDelegate].api uploadImage:_businessEditView.imageForUpload
                                          to:@"user-business-images"
@@ -203,8 +177,8 @@
     }
 }
 
-- (void)continueLocation
-{
+- (void)continueLocation {
+    
     if (!_hiddenLocation) {
         if (_location == nil) {
             _location = [Location alloc];
@@ -226,35 +200,12 @@
                                          [self showProgress:false];
                                      }];
     } else {
-        [self replaceWithViewControllerNamed:@"recruiter_home"];
+        [self saveCompleted];
     }
-    
-    
-//    if (self.location == nil) {
-//        Location *location = [Location alloc];
-//        [_locationEditView save:location];
-//        location.business = self.business.id;
-//        [[self appDelegate].api
-//         saveLocation:location
-//         success:^(Location *location) {
-//             [self clearErrors];
-//             self.location = location;
-//             [self continueLocationImage];
-//         }
-//         failure:^(RKObjectRequestOperation *operation, NSError *error, NSString*message, NSDictionary *errors) {
-//             NSMutableDictionary *detail = [[NSMutableDictionary alloc] init];
-//             for (id key in errors)
-//                 detail[[NSString stringWithFormat:@"location_%@", key]] = errors[key];
-//             [self handleErrors:detail message:message];
-//             [self showProgress:false];
-//         }];
-//    } else {
-//        [self continueLocationImage];
-//    }
 }
 
-- (void)continueLocationImage
-{
+- (void)continueLocationImage {
+    
     if (_locationEditView.imageForUpload) {
         [[self appDelegate].api uploadImage:_locationEditView.imageForUpload
                                          to:@"user-business-images"
@@ -268,7 +219,7 @@
                                     success:^(Image *image) {
                                         self.locationEditView.imageForUpload = nil;
                                         [self.activityLabel setText:@""];
-                                        [self replaceWithViewControllerNamed:@"recruiter_home"];
+                                        [self saveCompleted];
                                     }
                                     failure:^(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors) {
                                         [self handleErrors:errors message:message];
@@ -276,19 +227,25 @@
                                     }
          ];
     } else {
-        [self replaceWithViewControllerNamed:@"recruiter_home"];
+        [self saveCompleted];
     }
 }
 
-- (void)replaceWithViewControllerNamed:(NSString*)name
-{
-    UIViewController *destinationController = [self.storyboard instantiateViewControllerWithIdentifier:name];
-    [self.navigationController pushViewController:destinationController animated:YES];
-    NSMutableArray *navigationArray = [[NSMutableArray alloc] initWithArray: self.navigationController.viewControllers];
-    for (id vc in self.navigationController.viewControllers)
-        if ([vc isKindOfClass:[CreateProfile class]] || [vc isKindOfClass:[CreateRecruiterProfile class]])
-            [navigationArray removeObject:vc];
-    self.navigationController.viewControllers = navigationArray;
+- (void)saveCompleted {
+    
+    if (_isFirst) {
+        UIViewController *destinationController = [self.storyboard instantiateViewControllerWithIdentifier:@"recruiter_home"];
+        [self.navigationController pushViewController:destinationController animated:YES];
+        
+        NSMutableArray *navigationArray = [[NSMutableArray alloc] initWithArray: self.navigationController.viewControllers];
+        for (id vc in self.navigationController.viewControllers)
+            if ([vc isKindOfClass:[CreateProfile class]] || [vc isKindOfClass:[CreateRecruiterProfile class]])
+                [navigationArray removeObject:vc];
+        self.navigationController.viewControllers = navigationArray;
+    } else {
+        [self.navigationController popViewControllerAnimated:YES];
+    }
+    
 }
 
 - (void)showProgress:(BOOL)showProgress

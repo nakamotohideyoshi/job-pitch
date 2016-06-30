@@ -7,9 +7,6 @@
 //
 
 #import "ScrollingViewController.h"
-#import "JobSeekerProfileView.h"
-#import "BusinessEditView.h"
-#import "LocationEditView.h"
 
 @interface CreateProfile : ScrollingViewController
 

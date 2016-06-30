@@ -10,10 +10,14 @@
 #import "SimpleListCell.h"
 #import "EditJob.h"
 #import "ViewJobMenu.h"
+#import "MyAlertController.h"
 
 @interface ListJobs () {
     NSArray *data;
 }
+
+@property (weak, nonatomic) IBOutlet UITableView *jobs;
+@property (weak, nonatomic) IBOutlet UIView *emptyView;
 
 @end
 
@@ -21,10 +25,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.jobs.rowHeight = UITableViewAutomaticDimension;
-    self.jobs.estimatedRowHeight = 96;
-    self.jobs.dataSource = self;
-    self.jobs.delegate = self;
+    self.jobs.allowsMultipleSelectionDuringEditing = NO;
 }
 
 -(void)viewWillAppear:(BOOL)animated
@@ -42,19 +43,16 @@
         }
         [self showProgress:false];
     } failure:^(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors) {
-        [[[UIAlertView alloc] initWithTitle:@"Error"
-                                    message:@"Error loading data"
-                                   delegate:self
-                          cancelButtonTitle:@"Okay"
-                          otherButtonTitles:nil] show];
+        [MyAlertController title:@"Error" message:@"Error loading data" ok:@"Okay" okCallback:nil cancel:nil cancelCallback:nil];
     }];
 }
 
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
-{
-    if (data)
-        return data.count;
-    return 0;
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+    return 85;
+}
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    return data ? data.count : 0;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -75,21 +73,43 @@
     cell.backgroundColor = [UIColor clearColor];
     cell.selectedBackgroundView = [[UIView alloc] init];
     cell.selectedBackgroundView.backgroundColor = [UIColor colorWithWhite:1.0 alpha:0.5];
+    
+    [cell.editButton removeTarget:self action:@selector(editJob:) forControlEvents:UIControlEventTouchUpInside];
+    [cell.editButton addTarget:self action:@selector(editJob:) forControlEvents:UIControlEventTouchUpInside];
+    cell.editButton.tag = indexPath.row;
     return cell;
 }
 
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    if ([[segue identifier] isEqualToString:@"goto_edit_job"]) {
-        EditJob *jobsView = [segue destinationViewController];
-        [jobsView setLocation:self.location];
-    } else if ([[segue identifier] isEqualToString:@"goto_view_job_menu"]) {
-        ViewJobMenu *jobView = [segue destinationViewController];
-        Job *selectedJob = [data objectAtIndex:self.jobs.indexPathForSelectedRow.row];
-        [jobView setJob:selectedJob];
+- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
+    // Return YES if you want the specified item to be editable.
+    return NO;
+}
+
+- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
+    if (editingStyle == UITableViewCellEditingStyleDelete) {
+        //add code here for when you hit delete
     }
 }
 
-- (IBAction)addJob:(id)sender {
-    [self performSegueWithIdentifier:@"goto_edit_job" sender:self];
+- (void) editJob:(UIButton*)sender {
+    EditJob *controller = [self.storyboard instantiateViewControllerWithIdentifier:@"EditJob"];
+    controller.location = _location;
+    if (sender != nil) {
+        controller.job = [self->data objectAtIndex:sender.tag];
+    }
+    [self.navigationController pushViewController:controller animated:YES];
 }
+
+- (IBAction)addJob:(id)sender {
+    [self editJob:nil];
+}
+
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    if ([[segue identifier] isEqualToString:@"goto_view_job_menu"]) {
+        ViewJobMenu *controller = [segue destinationViewController];
+        NSInteger index = self.jobs.indexPathForSelectedRow.row;
+        controller.job = [self->data objectAtIndex:index];
+    }
+}
+
 @end

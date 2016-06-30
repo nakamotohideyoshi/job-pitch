@@ -75,10 +75,9 @@
     cell.selectedBackgroundView = [[UIView alloc] init];
     cell.selectedBackgroundView.backgroundColor = [UIColor colorWithWhite:1.0 alpha:0.5];
     
-    UIButton *editButton = [cell viewWithTag:100];
-    [editButton removeTarget:self action:@selector(editLocation) forControlEvents:UIControlEventTouchUpInside];
-    [editButton addTarget:self action:@selector(editLocation) forControlEvents:UIControlEventTouchUpInside];
-    
+    [cell.editButton removeTarget:self action:@selector(editLocation:) forControlEvents:UIControlEventTouchUpInside];
+    [cell.editButton addTarget:self action:@selector(editLocation:) forControlEvents:UIControlEventTouchUpInside];
+    cell.editButton.tag = indexPath.row;
     return cell;
 }
 
@@ -93,26 +92,26 @@
     }
 }
 
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    ListJobs *controller = [self.storyboard instantiateViewControllerWithIdentifier:@"ListJobs"];
-    NSInteger index = self.locations.indexPathForSelectedRow.row;
-    controller.location = [self->data objectAtIndex:index];
-    [self.navigationController pushViewController:controller animated:YES];
-}
-
-- (void) editLocation {
+- (void) editLocation:(UIButton*)sender {
     CreateRecruiterProfile *controller = [self.storyboard instantiateViewControllerWithIdentifier:@"CreateRecruiterProfile"];
     controller.hiddenBusiness = YES;
     controller.business = _business;
-    if (self.locations.indexPathForSelectedRow != nil) {
-        NSInteger index = self.locations.indexPathForSelectedRow.row;
-        controller.location = [self->data objectAtIndex:index];
+    if (sender != nil) {
+        controller.location = [self->data objectAtIndex:sender.tag];
     }
     [self.navigationController pushViewController:controller animated:YES];
 }
 
 - (IBAction)addWorkPlace:(id)sender {
-    [self editLocation];
+    [self editLocation:nil];
+}
+
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    if ([[segue identifier] isEqualToString:@"goto_job_list"]) {
+        ListJobs *controller = [segue destinationViewController];
+        NSInteger index = self.locations.indexPathForSelectedRow.row;
+        controller.location = [self->data objectAtIndex:index];
+    }
 }
 
 @end

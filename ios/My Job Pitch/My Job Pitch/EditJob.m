@@ -9,26 +9,33 @@
 #import "EditJob.h"
 
 @interface EditJob ()
+
+@property (weak, nonatomic) IBOutlet JobEditView *jobEditView;
+@property (weak, nonatomic) IBOutlet UILabel *activityLabel;
+@property (weak, nonatomic) IBOutlet UIButton *saveButton;
+
 @end
 
 @implementation EditJob
 
-- (void)viewDidLoad
-{
+- (void)viewDidLoad {
+    [_jobEditView setContractOptions:self.appDelegate.contracts];
+    [_jobEditView setHoursOptions:self.appDelegate.hours];
+    [_jobEditView setSectorOptions:self.appDelegate.sectors];
+    [_jobEditView setStatusOptions:self.appDelegate.jobStatuses];
+    
+    NSString *buttunTitle;
     if (self.job) {
-        [jobEditView load:self.job];
+        [_jobEditView load:self.job];
+        [_saveButton setTitle:@"Edit" forState:UIControlStateNormal];
     } else {
         self.job = [Job alloc];
         self.job.location = self.location.id;
+        [_saveButton setTitle:@"Continue" forState:UIControlStateNormal];
     }
-    [jobEditView setContractOptions:self.appDelegate.contracts];
-    [jobEditView setHoursOptions:self.appDelegate.hours];
-    [jobEditView setSectorOptions:self.appDelegate.sectors];
-    [jobEditView setStatusOptions:self.appDelegate.jobStatuses];
 }
 
-- (void)viewWillAppear:(BOOL)animated
-{
+- (void)viewWillAppear:(BOOL)animated {
     activityIndicator.hidden = true;
 }
 
@@ -42,27 +49,27 @@
 }
 
 - (NSDictionary*)getFieldMap {
-    return @{@"title": jobEditView.title.textField,
-             @"description": jobEditView.descriptionView,
-             @"sector": jobEditView.sector.textField,
-             @"hours": jobEditView.hours.textField,
-             @"contract": jobEditView.contract.textField,
+    return @{@"title": _jobEditView.title.textField,
+             @"description": _jobEditView.descriptionView,
+             @"sector": _jobEditView.sector.textField,
+             @"hours": _jobEditView.hours.textField,
+             @"contract": _jobEditView.contract.textField,
              };
 }
 
 - (NSDictionary *)getErrorViewMap {
-    return @{@"title": jobEditView.title.errorLabel,
-             @"description": jobEditView.descriptionError,
-             @"sector": jobEditView.sector.errorLabel,
-             @"hours": jobEditView.hours.errorLabel,
-             @"contract": jobEditView.contract.errorLabel,
+    return @{@"title": _jobEditView.title.errorLabel,
+             @"description": _jobEditView.descriptionError,
+             @"sector": _jobEditView.sector.errorLabel,
+             @"hours": _jobEditView.hours.errorLabel,
+             @"contract": _jobEditView.contract.errorLabel,
              };
 }
 
-- (IBAction)continue:(id)sender {
+- (IBAction)save:(id)sender {
     if ([self validate]) {
         [self showProgress:true];
-        [jobEditView save:self.job];
+        [_jobEditView save:self.job];
         [[self appDelegate].api
          saveJob:self.job
          success:^(Job *job) {
@@ -79,8 +86,8 @@
 
 - (void)continueJobImage
 {
-    if (jobEditView.imageForUpload) {
-        [[self appDelegate].api uploadImage:jobEditView.imageForUpload
+    if (_jobEditView.imageForUpload) {
+        [[self appDelegate].api uploadImage:_jobEditView.imageForUpload
                                          to:@"user-job-images"
                                   objectKey:@"job"
                                    objectId:self.job.id
@@ -90,7 +97,7 @@
                                        [self.activityLabel setText:[NSString stringWithFormat:@"Uploading image (%ld%%)", lround(percent)]];
                                    }
                                     success:^(Image *image) {
-                                        jobEditView.imageForUpload = nil;
+                                        _jobEditView.imageForUpload = nil;
                                         [self.activityLabel setText:@""];
                                         [self.navigationController popViewControllerAnimated:true];
                                     }

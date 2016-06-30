@@ -270,7 +270,7 @@
                         <outlet property="username" destination="Zff-yc-hTC" id="cdg-f2-C6O"/>
                         <outlet property="usernameError" destination="uGz-Nx-8jW" id="Gbz-n1-PaY"/>
                         <segue destination="4TA-uO-Eyq" kind="show" identifier="goto_create_profile" id="BGt-nD-SGF"/>
-                        <segue destination="Bh1-kr-uT8" kind="show" identifier="goto_recruiter" id="VDG-Vo-20z"/>
+                        <segue destination="Bh1-kr-uT8" kind="show" identifier="goto_business_list" id="VDG-Vo-20z"/>
                         <segue destination="B6U-eH-CfR" kind="show" identifier="goto_job_seeker" id="Oea-c7-Fre"/>
                     </connections>
                 </viewController>
@@ -792,7 +792,7 @@
                                                     <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <button opaque="NO" tag="100" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="lvQ-vT-xb3" userLabel="Edit">
+                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="lvQ-vT-xb3" userLabel="Edit">
                                                     <rect key="frame" x="542" y="-4" width="46" height="93"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" secondItem="lvQ-vT-xb3" secondAttribute="height" multiplier="1:2" id="u8j-7k-0dH"/>
@@ -828,6 +828,7 @@
                                             <outlet property="imageActivity" destination="vss-jd-wt2" id="yzx-Ma-2Gx"/>
                                             <outlet property="subtitle" destination="t0G-vV-v2r" id="DA3-et-Px6"/>
                                             <outlet property="title" destination="fdm-4Q-4uZ" id="o3a-LN-J7l"/>
+                                            <segue destination="bFr-cL-9tU" kind="show" identifier="goto_location_list" id="ITm-94-rfB"/>
                                         </connections>
                                     </tableViewCell>
                                 </prototypes>
@@ -871,7 +872,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="FKu-5p-xn1" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="619" y="2176"/>
+            <point key="canvasLocation" x="619" y="2464"/>
         </scene>
         <!--Edit Profile-->
         <scene sceneID="fAt-nl-ie9">
@@ -1388,7 +1389,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="XE0-iW-IpV" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2607" y="1757"/>
+            <point key="canvasLocation" x="2959" y="1641"/>
         </scene>
         <!--Messages-->
         <scene sceneID="W5W-dh-TiE">
@@ -1631,7 +1632,7 @@
                     </connections>
                 </tapGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="3286" y="1817"/>
+            <point key="canvasLocation" x="3638" y="1701"/>
         </scene>
         <!--Record Pitch-->
         <scene sceneID="VIx-nh-H5T">
@@ -2018,12 +2019,12 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Clc-2I-dqb" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="619" y="2877"/>
+            <point key="canvasLocation" x="619" y="3169"/>
         </scene>
         <!--Work Places-->
         <scene sceneID="yjF-oX-Lno">
             <objects>
-                <viewController storyboardIdentifier="ListLocations" id="bFr-cL-9tU" customClass="ListLocations" sceneMemberID="viewController">
+                <viewController id="bFr-cL-9tU" customClass="ListLocations" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="2We-GE-kMn"/>
                         <viewControllerLayoutGuide type="bottom" id="Cyy-KS-jd6"/>
@@ -2113,7 +2114,7 @@
                                                             <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
-                                                        <button opaque="NO" tag="100" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Uqa-fC-8si">
+                                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Uqa-fC-8si">
                                                             <rect key="frame" x="542" y="-4" width="46" height="93"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="width" secondItem="Uqa-fC-8si" secondAttribute="height" multiplier="1:2" id="Vld-62-Ned"/>
@@ -2163,6 +2164,7 @@
                                                     <outlet property="imageActivity" destination="W9T-rJ-Ksr" id="BFq-r8-9sM"/>
                                                     <outlet property="subtitle" destination="YT6-ZH-RIA" id="hQE-El-CAD"/>
                                                     <outlet property="title" destination="8LQ-TV-rZc" id="dcT-yM-sok"/>
+                                                    <segue destination="2bv-oc-xSL" kind="show" identifier="goto_job_list" id="xSG-9T-gvL"/>
                                                 </connections>
                                             </tableViewCell>
                                         </prototypes>
@@ -2214,12 +2216,12 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dL3-nY-Ltn" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1251" y="2176"/>
+            <point key="canvasLocation" x="1338" y="2464"/>
         </scene>
         <!--Jobs-->
         <scene sceneID="8YP-oo-D0x">
             <objects>
-                <viewController storyboardIdentifier="ListJobs" id="2bv-oc-xSL" customClass="ListJobs" sceneMemberID="viewController">
+                <viewController id="2bv-oc-xSL" customClass="ListJobs" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="sAn-NF-mfe"/>
                         <viewControllerLayoutGuide type="bottom" id="ufY-qx-UV3"/>
@@ -2365,6 +2367,10 @@
                                                 </connections>
                                             </tableViewCell>
                                         </prototypes>
+                                        <connections>
+                                            <outlet property="dataSource" destination="2bv-oc-xSL" id="CDv-5s-c8Q"/>
+                                            <outlet property="delegate" destination="2bv-oc-xSL" id="ZfA-IF-kSN"/>
+                                        </connections>
                                     </tableView>
                                 </subviews>
                                 <constraints>
@@ -2393,24 +2399,27 @@
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Jobs" id="0db-8I-gbC">
-                        <barButtonItem key="rightBarButtonItem" title="Add" id="SXD-s3-4hf"/>
+                        <barButtonItem key="rightBarButtonItem" title="Add" id="SXD-s3-4hf">
+                            <connections>
+                                <action selector="addJob:" destination="2bv-oc-xSL" id="N8Z-gl-XCz"/>
+                            </connections>
+                        </barButtonItem>
                     </navigationItem>
                     <connections>
                         <outlet property="activityIndicator" destination="pwc-ge-F6F" id="NLN-Q9-Ubl"/>
                         <outlet property="emptyView" destination="PzK-ll-UY8" id="CCm-Ih-ZJc"/>
                         <outlet property="jobs" destination="bPP-Ka-jxn" id="6vD-6x-lMT"/>
                         <outlet property="mainView" destination="Evn-Qh-aNp" id="Ro8-gr-f4i"/>
-                        <segue destination="hfD-7j-Gnd" kind="show" identifier="goto_edit_job" id="jic-dZ-8qq"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dvV-0j-Khl" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1878" y="2176"/>
+            <point key="canvasLocation" x="2037" y="2464"/>
         </scene>
         <!--Edit Job-->
         <scene sceneID="4DY-6d-ylZ">
             <objects>
-                <viewController id="hfD-7j-Gnd" customClass="EditJob" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="EditJob" id="hfD-7j-Gnd" customClass="EditJob" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="H4b-Kt-Xg9"/>
                         <viewControllerLayoutGuide type="bottom" id="G5t-cP-TfO"/>
@@ -2431,7 +2440,7 @@
                             <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="background_logo" translatesAutoresizingMaskIntoConstraints="NO" id="Wns-i2-Ees">
                                 <rect key="frame" x="60" y="60" width="480" height="480"/>
                             </imageView>
-                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Wni-yN-UtX">
+                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Wni-yN-UtX">
                                 <rect key="frame" x="0.0" y="20" width="600" height="580"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="bug-Pk-RJ9" userLabel="Content View">
@@ -2453,7 +2462,7 @@
                                                     </userDefinedRuntimeAttribute>
                                                 </userDefinedRuntimeAttributes>
                                                 <connections>
-                                                    <action selector="continue:" destination="hfD-7j-Gnd" eventType="touchUpInside" id="W8M-zf-LeN"/>
+                                                    <action selector="save:" destination="hfD-7j-Gnd" eventType="touchUpInside" id="PYl-BR-abu"/>
                                                 </connections>
                                             </button>
                                         </subviews>
@@ -2501,12 +2510,13 @@
                         <outlet property="activityLabel" destination="lQf-xg-dgf" id="qSV-hu-Ee2"/>
                         <outlet property="jobEditView" destination="mZ6-p2-ZYa" id="7cn-WJ-eD8"/>
                         <outlet property="mainView" destination="bug-Pk-RJ9" id="KKC-3w-RKP"/>
+                        <outlet property="saveButton" destination="fSe-xf-ASQ" id="ZAK-rj-4HS"/>
                         <outlet property="scrollView" destination="Wni-yN-UtX" id="rpM-VW-Grv"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="EEH-Z5-OUM" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3306" y="3366"/>
+            <point key="canvasLocation" x="1253" y="3169"/>
         </scene>
         <!--View Job-->
         <scene sceneID="3os-er-6en">
@@ -2646,7 +2656,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="nkc-lj-5Ht" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="4022" y="2605"/>
+            <point key="canvasLocation" x="2728" y="2464"/>
         </scene>
         <!--Home-->
         <scene sceneID="cLt-AH-Ku1">
@@ -3006,7 +3016,7 @@
                     </connections>
                 </tapGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="4797" y="2605"/>
+            <point key="canvasLocation" x="3433" y="2457"/>
         </scene>
         <!--Job Seeker-->
         <scene sceneID="RGd-eF-rte">
@@ -3412,9 +3422,9 @@
     </resources>
     <inferredMetricsTieBreakers>
         <segue reference="0vK-0A-u9q"/>
+        <segue reference="UT1-rY-E6H"/>
         <segue reference="XoM-Rr-ZjD"/>
-        <segue reference="ZpE-yw-NGD"/>
-        <segue reference="sDv-ZU-ZHl"/>
         <segue reference="DDY-hC-ukR"/>
+        <segue reference="sDv-ZU-ZHl"/>
     </inferredMetricsTieBreakers>
 </document>

@@ -9,14 +9,9 @@
 #import "ScrollingViewController.h"
 #import "JobEditView.h"
 
-@interface EditJob : ScrollingViewController {
-    __weak IBOutlet JobEditView *jobEditView;
-}
+@interface EditJob : ScrollingViewController
 
-@property (nonatomic, nonnull) Location *location;
 @property (nonatomic, nonnull) Job *job;
-@property (weak, nonatomic) IBOutlet UILabel *activityLabel;
-
-- (IBAction)continue:(nullable id)sender;
+@property (nonatomic, nonnull) Location *location;
 
 @end

@@ -67,10 +67,9 @@
     cell.selectedBackgroundView = [[UIView alloc] init];
     cell.selectedBackgroundView.backgroundColor = [UIColor colorWithWhite:1.0 alpha:0.5];
     
-    UIButton *editButton = [cell viewWithTag:100];
-    [editButton removeTarget:self action:@selector(editBusiness) forControlEvents:UIControlEventTouchUpInside];
-    [editButton addTarget:self action:@selector(editBusiness) forControlEvents:UIControlEventTouchUpInside];
-
+    [cell.editButton removeTarget:self action:@selector(editBusiness:) forControlEvents:UIControlEventTouchUpInside];
+    [cell.editButton addTarget:self action:@selector(editBusiness:) forControlEvents:UIControlEventTouchUpInside];
+    cell.editButton.tag = indexPath.row;
     return cell;
 }
 
@@ -85,31 +84,31 @@
     }
 }
 
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    ListLocations *controller = [self.storyboard instantiateViewControllerWithIdentifier:@"ListLocations"];
-    NSInteger index = self.businesses.indexPathForSelectedRow.row;
-    controller.business = [self->data objectAtIndex:index];
-    [self.navigationController pushViewController:controller animated:YES];
-}
-
-- (void) editBusiness {
+- (void) editBusiness:(UIButton*)sender {
     CreateRecruiterProfile *controller = [self.storyboard instantiateViewControllerWithIdentifier:@"CreateRecruiterProfile"];
-    if (self.businesses.indexPathForSelectedRow != nil) {
-        NSInteger index = self.businesses.indexPathForSelectedRow.row;
+    if (sender != nil) {
         controller.hiddenLocation = YES;
-        controller.business = [self->data objectAtIndex:index];
+        controller.business = [self->data objectAtIndex:sender.tag];
     }
     [self.navigationController pushViewController:controller animated:YES];
 }
 
 - (IBAction)addBusiness:(id)sender {
-    [self editBusiness];
+    [self editBusiness:nil];
 }
 
 - (IBAction)logout {
     [MyAlertController title:@"Logout" message:@"Are you sure you want to logout?" ok:@"Yes" okCallback:^{
         [self.navigationController popViewControllerAnimated:true];
     } cancel:@"No" cancelCallback:nil];
+}
+
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    if ([[segue identifier] isEqualToString:@"goto_location_list"]) {
+        ListLocations *controller = [segue destinationViewController];
+        NSInteger index = self.businesses.indexPathForSelectedRow.row;
+        controller.business = [self->data objectAtIndex:index];
+    }
 }
 
 @end

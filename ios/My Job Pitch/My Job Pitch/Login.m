@@ -83,7 +83,7 @@
         [defaults synchronize];
         
         if ([user isRecruiter]) {
-            [self performSegueWithIdentifier:@"goto_recruiter" sender:@"login"];
+            [self performSegueWithIdentifier:@"goto_business_list" sender:@"login"];
         } else if ([user isJobSeeker]) {
             [self performSegueWithIdentifier:@"goto_job_seeker" sender:@"login"];
         } else {

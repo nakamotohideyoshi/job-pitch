@@ -12,9 +12,4 @@
 
 @property (nonnull) Location *location;
 
-@property (weak, nonatomic) IBOutlet UITableView *jobs;
-@property (weak, nonatomic) IBOutlet UIView *emptyView;
-
-- (IBAction)addJob:(nullable id)sender;
-
 @end

@@ -222,9 +222,22 @@ strong {
 
 video {
   background: #222;
-   margin: 10px auto; 
+   margin: 10px auto;
   width: 320px;
   height:240px;
+}
+
+.js-only-if-html5-browser,
+.js-only-if-not-html5-browser{
+  display: none;
+}
+
+.js-only-if-not-html5-browser{
+  text-align: left;
+}
+
+.js-only-if-not-html5-browser > .input-group > .form-control{
+  padding: 0;
 }
 
 @media screen and (max-width: 650px) {

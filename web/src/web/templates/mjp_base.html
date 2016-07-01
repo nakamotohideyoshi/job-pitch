@@ -94,39 +94,37 @@
 		</div>
 		<!-- /Page Content -->
 	{% endblock %}
-	<div class="push"></div>
+		<div class="push"></div>
 	</div>
 	<!-- /#wrapper -->
 
-   <!-- Footer -->
-		<footer class="mjp-footer">
-			<div class="row">
-				<div class="container">
-					<div class="col-md-2">
-						<img src="/static/web/design/images/logo-footer.png">
+	<!-- Footer -->
+	<footer class="mjp-footer">
+		<div class="row">
+			<div class="container">
+				<div class="col-md-2">
+					<img src="/static/web/design/images/logo-footer.png">
+				</div>
+				<div class="col-md-offset-2 col-md-4">
+					<div class="center-contact-details-footer">
+						<p>
+						<a href="tel:123456789" class="footer-link-center">tel: 123 456 789</a><br>
+						<span class="email"><a href="mailto:email@mjp.com" class="footer-link-center">e-mail: email@mjp.com</a></span>
+						</p>
 					</div>
-					<div class="col-md-offset-2 col-md-4">
-						<div class="center-contact-details-footer">
-							<p>
-							<a href="tel:123456789" class="footer-link-center">tel: 123 456 789</a><br>
-							<span class="email"><a href="mailto:email@mjp.com" class="footer-link-center">e-mail: email@mjp.com</a></span>
-							</p>
-						</div>
-					</div>
-					<div class="col-md-4">
-						<div class="social-icons-footer">
-							<a href="#"><img src="/static/web/design/images/fb-icon.png"></a>
-							<a href="#"><img src="/static/web/design/images/twitter-icon.png"></a>
-							<a href="#"><img src="/static/web/design/images/yt-icon.png"></a>
-							<a href="#"><img src="/static/web/design/images/linkedin-icon.png"></a>
-							<a href="#"><img src="/static/web/design/images/gplus-icon.png"></a>
-						</div>
+				</div>
+				<div class="col-md-4">
+					<div class="social-icons-footer">
+						<a href="#"><img src="/static/web/design/images/fb-icon.png"></a>
+						<a href="#"><img src="/static/web/design/images/twitter-icon.png"></a>
+						<a href="#"><img src="/static/web/design/images/yt-icon.png"></a>
+						<a href="#"><img src="/static/web/design/images/linkedin-icon.png"></a>
+						<a href="#"><img src="/static/web/design/images/gplus-icon.png"></a>
 					</div>
 				</div>
 			</div>
-		</footer>
-
-	</div>
+		</div>
+	</footer>
 	<!-- /.container -->
 
 	<!-- Modals -->
@@ -157,26 +155,25 @@
 
 	<div class="modal fade" id="regModal">
 	  <div class="modal-dialog">
-		<div class="modal-content">
-		  <div class="modal-header">
-			<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-			<h4 class="modal-title">Registration</h4>
-		  </div>
-		  <div class="modal-body">
-			<div class="row">
-				<div class="col-md-8 col-md-offset-2">
-					<form role="form"  action="/api-auth/login/" method="post" id="register">
-						<div class="alert" role="alert"></div>
-						<input type="text" class="form-control" id="reg_username" name="reg_username" placeholder="Username">
-						<input type="password" class="form-control" id="password1" name="password1" placeholder="Password">
-						<input type="password" class="form-control" id="password2" name="password2" placeholder="Confirm Password">
-						<button type="submit" class="btn btn-custom-modal-2">Register</button>
+			<div class="modal-content">
+			  <div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+					<h4 class="modal-title">Registration</h4>
+			  </div>
+			  <div class="modal-body">
+					<div class="row">
+						<div class="col-md-8 col-md-offset-2">
+							<form role="form"  action="/api-auth/login/" method="post" id="register">
+								<div class="alert" role="alert"></div>
+								<input type="text" class="form-control" id="reg_username" name="reg_username" placeholder="Username">
+								<input type="password" class="form-control" id="password1" name="password1" placeholder="Password">
+								<input type="password" class="form-control" id="password2" name="password2" placeholder="Confirm Password">
+								<button type="submit" class="btn btn-custom-modal-2">Register</button>
+							</form>
 						</div>
-					</form>
+					</div>
 				</div>
-			</div>
-		  </div>
-		</div><!-- /.modal-content -->
+			</div><!-- /.modal-content -->
 	  </div><!-- /.modal-dialog -->
 	</div><!-- /.modal -->
 

@@ -21,6 +21,12 @@ $(document).ready(function () {
 
 	checkIfThereIsApitch();
 
+	if (isMediaRecorderAPI()) {
+		$('.js-only-if-html5-browser').show();
+	} else {
+		$('.js-only-if-not-html5-browser').show();
+	}
+
 	$('.btn-js-start-pitch').click(function (e) {
 		if (!isMediaRecorderAPI()) {
 			log('danger', 'MediaRecorder not supported on your browser, use Firefox 30 or Chrome 49 instead.');
@@ -65,8 +71,26 @@ $(document).ready(function () {
 		if (rawMediaRecorded != undefined && rawMediaRecorded) {
 			getNewPitchMetaData(function (pitch) {
 				putIntoS3Bucket(pitch, rawMediaRecorded);
+				closeMediaDevices();
 			});
 		}
+	});
+
+	$('.btn-js-upload-pitch-ie').click(function (e) {
+		getNewPitchMetaData(function (pitch) {
+			var fileChooser = document.getElementById('pitch_upload');
+			var file = fileChooser.files[0];
+
+			if (file) {
+				var params = {
+					Key: file.name,
+					Body: file
+				};
+
+				putIntoS3Bucket(pitch, params);
+			}
+		});
+
 	});
 });
 
@@ -154,10 +178,11 @@ function getNewPitchMetaData(callback) {
 			csrftoken: getCookie('csrftoken')
 		},
 		cache: false
-	})
-		.done(function (pitch) {
-			callback(pitch);
-		});
+
+	}).done(function (pitch) {
+		callback(pitch);
+
+	});
 }
 
 
@@ -167,8 +192,6 @@ function putIntoS3Bucket(pitch, object) {
 	object.Key = window.location.origin.replace('//', '') + '/' + pitch.token + '.' + pitch.id + '.' + object.Key;
 
 	bucket.putObject(object, function (err, data) {
-		closeMediaDevices();
-
 		if (!err) {
 			var poolingPromise = new Promise(function (resolve, reject) {
 				poolingTranscodeProcess(resolve);

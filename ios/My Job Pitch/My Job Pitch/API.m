@@ -1401,13 +1401,61 @@
                                               }
      ];
 }
+
+- (void)deleteBusiness:(Business*)business
+                  success:(void (^)(void))success
+                  failure:(void (^)(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors))failure
+{
+    [[RKObjectManager sharedManager] deleteObject:nil
+                                             path:[NSString stringWithFormat:@"/api/user-businesses/%@/", business.id]
+                                       parameters:nil
+                                          success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
+                                              success();
+                                          } failure:^(RKObjectRequestOperation *operation, NSError *error) {
+                                              NSLog(@"Error deleting business: %@", error);
+                                              failure(operation, error, [self getMessage:error], [self getErrors:error]);
+                                          }
+     ];
+}
+
+- (void)deleteLocation:(Location*)location
+               success:(void (^)(void))success
+               failure:(void (^)(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors))failure
+{
+    [[RKObjectManager sharedManager] deleteObject:nil
+                                             path:[NSString stringWithFormat:@"/api/user-locations/%@/", location.id]
+                                       parameters:nil
+                                          success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
+                                              success();
+                                          } failure:^(RKObjectRequestOperation *operation, NSError *error) {
+                                              NSLog(@"Error deleting business: %@", error);
+                                              failure(operation, error, [self getMessage:error], [self getErrors:error]);
+                                          }
+     ];
+}
+
+- (void)deleteJob:(Job*)job
+               success:(void (^)(void))success
+               failure:(void (^)(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors))failure
+{
+    [[RKObjectManager sharedManager] deleteObject:nil
+                                             path:[NSString stringWithFormat:@"/api/user-jobs/%@/", job.id]
+                                       parameters:nil
+                                          success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
+                                              success();
+                                          } failure:^(RKObjectRequestOperation *operation, NSError *error) {
+                                              NSLog(@"Error deleting business: %@", error);
+                                              failure(operation, error, [self getMessage:error], [self getErrors:error]);
+                                          }
+     ];
+}
+
 - (void)deleteApplication:(Application*)application
                   success:(void (^)(Application *application))success
                   failure:(void (^)(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors))failure
 {
-    NSString *url = [NSString stringWithFormat:@"/api/applications/%@/", application.id];
     [[RKObjectManager sharedManager] deleteObject:nil
-                                             path:url
+                                             path:[NSString stringWithFormat:@"/api/applications/%@/", application.id]
                                        parameters:nil
                                           success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
                                               success(mappingResult.firstObject);

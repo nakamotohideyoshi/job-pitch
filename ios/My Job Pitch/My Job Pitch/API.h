@@ -159,6 +159,18 @@
                        success:(void (^)(NSArray *applictions))success
                        failure:(void (^)(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors))failure;
 
+- (void)deleteBusiness:(Business*)business
+               success:(void (^)(void))success
+               failure:(void (^)(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors))failure;
+
+- (void)deleteLocation:(Location*)location
+               success:(void (^)(void))success
+               failure:(void (^)(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors))failure;
+
+- (void)deleteJob:(Job*)job
+          success:(void (^)(void))success
+          failure:(void (^)(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors))failure;
+
 - (void)deleteApplication:(Application*)application
                   success:(void (^)(Application *application))success
                   failure:(void (^)(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors))failure;

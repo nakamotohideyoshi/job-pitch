@@ -13,7 +13,8 @@
 #import "MyAlertController.h"
 
 @interface ListLocations () {
-    NSArray *data;
+    NSMutableArray *data;
+    NSInteger editRow;
 }
 
 @property (weak, nonatomic) IBOutlet UITableView *locations;
@@ -26,6 +27,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.locations.allowsMultipleSelectionDuringEditing = NO;
+    editRow = -1;
 }
 
 -(void)viewWillAppear:(BOOL)animated {
@@ -33,7 +35,7 @@
     [self showProgress:true];
     [self.appDelegate.api loadLocationsForBusiness:self.business.id success:^(NSArray *locations) {
         if (locations.count) {
-            data = locations;
+            data = (NSMutableArray*)locations;
             [self.locations setHidden:false];
             [self.locations reloadData];
         } else {
@@ -42,7 +44,8 @@
         }
         [self showProgress:false];
     } failure:^(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors) {
-        [MyAlertController title:@"Error" message:@"Error loading data" ok:@"Okay" okCallback:nil cancel:nil cancelCallback:nil];
+        [MyAlertController title:@"Error" message:@"Error loading data"
+                              ok:@"Okay" okCallback:nil cancel:nil cancelCallback:nil];
     }];
 }
 
@@ -67,43 +70,60 @@
         cell.image.image = nil;
         cell.imageActivity.hidden = true;
     }
-    if (location.jobs.count == 1)
-        cell.subtitle.text = [NSString stringWithFormat:@"Includes %u job", location.jobs.count];
-    else
-        cell.subtitle.text = [NSString stringWithFormat:@"Includes %u jobs", location.jobs.count];
+    cell.subtitle.text = [NSString stringWithFormat:@"Includes %u %@", location.jobs.count, (location.jobs.count == 1?@"job":@"jobs")];
     cell.backgroundColor = [UIColor clearColor];
     cell.selectedBackgroundView = [[UIView alloc] init];
     cell.selectedBackgroundView.backgroundColor = [UIColor colorWithWhite:1.0 alpha:0.5];
-    
-    [cell.editButton removeTarget:self action:@selector(editLocation:) forControlEvents:UIControlEventTouchUpInside];
-    [cell.editButton addTarget:self action:@selector(editLocation:) forControlEvents:UIControlEventTouchUpInside];
-    cell.editButton.tag = indexPath.row;
+
     return cell;
 }
 
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
     // Return YES if you want the specified item to be editable.
-    return NO;
+    return YES;
 }
 
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
+    
     if (editingStyle == UITableViewCellEditingStyleDelete) {
-        //add code here for when you hit delete
+        
+        Location *location = [self->data objectAtIndex:editRow];
+        NSString *msg = [NSString stringWithFormat:@"Are you sure you want to delete %@", location.name];
+        [MyAlertController title:@"Confirm" message:msg ok:@"Delete" okCallback:^{
+            [self showProgress:true];
+            [self.appDelegate.api deleteLocation:location
+                                         success:^(void) {
+                                             [self showProgress:false];
+                                             [self->data removeObject:location];
+                                             [self.locations reloadData];
+                                         } failure:^(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors) {
+                                             [MyAlertController title:@"Error" message:@"Error deleting data"
+                                                                   ok:@"Okay" okCallback:nil cancel:nil cancelCallback:nil];
+                                         }];
+            
+        } cancel:@"Cancel" cancelCallback:nil];
+        
     }
 }
 
-- (void) editLocation:(UIButton*)sender {
-    CreateRecruiterProfile *controller = [self.storyboard instantiateViewControllerWithIdentifier:@"CreateRecruiterProfile"];
-    controller.hiddenBusiness = YES;
-    controller.business = _business;
-    if (sender != nil) {
-        controller.location = [self->data objectAtIndex:sender.tag];
-    }
-    [self.navigationController pushViewController:controller animated:YES];
+- (void)tableView:(UITableView*)tableView willBeginEditingRowAtIndexPath:(NSIndexPath *)indexPath {
+    self.navigationItem.rightBarButtonItem.title = @"Edit";
+    editRow = indexPath.row;
+}
+
+- (void)tableView:(UITableView*)tableView didEndEditingRowAtIndexPath:(NSIndexPath *)indexPath {
+    self.navigationItem.rightBarButtonItem.title = @"Add";
+    editRow = -1;
 }
 
 - (IBAction)addWorkPlace:(id)sender {
-    [self editLocation:nil];
+    CreateRecruiterProfile *controller = [self.storyboard instantiateViewControllerWithIdentifier:@"CreateRecruiterProfile"];
+    controller.hiddenBusiness = YES;
+    controller.business = _business;
+    if (editRow != -1) {
+        controller.location = [self->data objectAtIndex:editRow];
+    }
+    [self.navigationController pushViewController:controller animated:YES];
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {

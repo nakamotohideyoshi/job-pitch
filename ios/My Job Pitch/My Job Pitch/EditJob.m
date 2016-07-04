@@ -7,6 +7,7 @@
 //
 
 #import "EditJob.h"
+#import "JobEditView.h"
 
 @interface EditJob ()
 
@@ -19,19 +20,18 @@
 @implementation EditJob
 
 - (void)viewDidLoad {
+    [super viewDidLoad];
+    
     [_jobEditView setContractOptions:self.appDelegate.contracts];
     [_jobEditView setHoursOptions:self.appDelegate.hours];
     [_jobEditView setSectorOptions:self.appDelegate.sectors];
     [_jobEditView setStatusOptions:self.appDelegate.jobStatuses];
     
-    NSString *buttunTitle;
     if (self.job) {
         [_jobEditView load:self.job];
-        [_saveButton setTitle:@"Edit" forState:UIControlStateNormal];
     } else {
         self.job = [Job alloc];
         self.job.location = self.location.id;
-        [_saveButton setTitle:@"Continue" forState:UIControlStateNormal];
     }
 }
 

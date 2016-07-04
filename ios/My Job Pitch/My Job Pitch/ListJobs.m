@@ -13,7 +13,8 @@
 #import "MyAlertController.h"
 
 @interface ListJobs () {
-    NSArray *data;
+    NSMutableArray *data;
+    NSInteger editRow;
 }
 
 @property (weak, nonatomic) IBOutlet UITableView *jobs;
@@ -26,6 +27,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.jobs.allowsMultipleSelectionDuringEditing = NO;
+    editRow = -1;
 }
 
 -(void)viewWillAppear:(BOOL)animated
@@ -33,7 +35,7 @@
     [self showProgress:true];
     [self.appDelegate.api loadJobsForLocation:self.location.id success:^(NSArray *jobs) {
         if (jobs.count) {
-            data = jobs;
+            data = (NSMutableArray*)jobs;
             [self.jobs setHidden:false];
             [self.emptyView setHidden:true];
             [self.jobs reloadData];
@@ -43,7 +45,8 @@
         }
         [self showProgress:false];
     } failure:^(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors) {
-        [MyAlertController title:@"Error" message:@"Error loading data" ok:@"Okay" okCallback:nil cancel:nil cancelCallback:nil];
+        [MyAlertController title:@"Error" message:@"Error loading data"
+                              ok:@"Okay" okCallback:nil cancel:nil cancelCallback:nil];
     }];
 }
 
@@ -74,34 +77,53 @@
     cell.selectedBackgroundView = [[UIView alloc] init];
     cell.selectedBackgroundView.backgroundColor = [UIColor colorWithWhite:1.0 alpha:0.5];
     
-    [cell.editButton removeTarget:self action:@selector(editJob:) forControlEvents:UIControlEventTouchUpInside];
-    [cell.editButton addTarget:self action:@selector(editJob:) forControlEvents:UIControlEventTouchUpInside];
-    cell.editButton.tag = indexPath.row;
     return cell;
 }
 
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
     // Return YES if you want the specified item to be editable.
-    return NO;
+    return YES;
 }
 
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
     if (editingStyle == UITableViewCellEditingStyleDelete) {
-        //add code here for when you hit delete
+        
+        Job *job = [self->data objectAtIndex:editRow];
+        NSString *msg = [NSString stringWithFormat:@"Are you sure you want to delete %@", job.title];
+        [MyAlertController title:@"Confirm" message:msg ok:@"Delete" okCallback:^{
+            [self showProgress:true];
+            [self.appDelegate.api deleteJob:job
+                                         success:^(void) {
+                                             [self showProgress:false];
+                                             [self->data removeObject:job];
+                                             [self.jobs reloadData];
+                                         } failure:^(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors) {
+                                             [MyAlertController title:@"Error" message:@"Error deleting data"
+                                                                   ok:@"Okay" okCallback:nil cancel:nil cancelCallback:nil];
+                                         }];
+            
+        } cancel:@"Cancel" cancelCallback:nil];
+        
     }
 }
 
-- (void) editJob:(UIButton*)sender {
-    EditJob *controller = [self.storyboard instantiateViewControllerWithIdentifier:@"EditJob"];
-    controller.location = _location;
-    if (sender != nil) {
-        controller.job = [self->data objectAtIndex:sender.tag];
-    }
-    [self.navigationController pushViewController:controller animated:YES];
+- (void)tableView:(UITableView*)tableView willBeginEditingRowAtIndexPath:(NSIndexPath *)indexPath {
+    self.navigationItem.rightBarButtonItem.title = @"Edit";
+    editRow = indexPath.row;
+}
+
+- (void)tableView:(UITableView*)tableView didEndEditingRowAtIndexPath:(NSIndexPath *)indexPath {
+    self.navigationItem.rightBarButtonItem.title = @"Add";
+    editRow = -1;
 }
 
 - (IBAction)addJob:(id)sender {
-    [self editJob:nil];
+    EditJob *controller = [self.storyboard instantiateViewControllerWithIdentifier:@"EditJob"];
+    controller.location = _location;
+    if (editRow != -1) {
+        controller.job = [self->data objectAtIndex:editRow];
+    }
+    [self.navigationController pushViewController:controller animated:YES];
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {

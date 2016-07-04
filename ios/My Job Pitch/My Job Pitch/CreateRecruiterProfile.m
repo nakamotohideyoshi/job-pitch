@@ -12,6 +12,7 @@
 #import "CreateProfile.h"
 
 @interface CreateRecruiterProfile ()
+
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *layoutBusinessHeight0;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *layoutLocationHeight0;
 @property (weak, nonatomic) IBOutlet BusinessEditView *businessEditView;
@@ -37,9 +38,6 @@
     if (!_locationEditView.hidden) {
         [_locationEditView load:_location];
     }
-   
-    NSString *buttunTitle = (_business==nil || (!_hiddenLocation && _location==nil)) ? @"Continue" : @"Edit";
-    [_saveButton setTitle:buttunTitle forState:UIControlStateNormal];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -55,12 +53,14 @@
     if (_hiddenBusiness) {
         return @[@"location_name",
                  @"location_description",
+                 @"location_email",
                  @"location_location"];
     }
     
     return @[@"business_name",
              @"location_name",
              @"location_description",
+             @"location_email",
              @"location_location"];
 }
 

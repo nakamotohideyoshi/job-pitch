@@ -7,7 +7,6 @@
 //
 
 #import "ScrollingViewController.h"
-#import "JobEditView.h"
 
 @interface EditJob : ScrollingViewController
 

@@ -1,17 +1,23 @@
 package com.myjobpitch.activities;
 
 import android.app.AlertDialog;
+import android.app.Fragment;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.text.Html;
+import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -20,6 +26,7 @@ import android.widget.Toast;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.myjobpitch.BuildConfig;
 import com.myjobpitch.R;
 import com.myjobpitch.api.MJPApiException;
 import com.myjobpitch.api.data.Pitch;
@@ -131,6 +138,32 @@ public class RecordPitchActivity extends MJPProgressActionBarActivity {
         }
 
         setContentView(R.layout.activity_record_pitch);
+
+        // instruction popup
+        SharedPreferences preferences = getSharedPreferences("PitchInstructions", MODE_PRIVATE);
+        if (preferences.getBoolean("dont_show", false) == false) {
+            TextView tvInstruction = (TextView)findViewById(R.id.instructions_text);
+            tvInstruction.setText(Html.fromHtml(getResources().getString(R.string.pitch_instructions)));
+            tvInstruction.setMovementMethod(new ScrollingMovementMethod());
+
+            Button popupClose = (Button) findViewById(R.id.close);
+            popupClose.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    CheckBox checkBox = (CheckBox)findViewById(R.id.dont_show);
+                    if (checkBox.isChecked()) {
+                        SharedPreferences.Editor preferences = getSharedPreferences("PitchInstructions", MODE_PRIVATE).edit();
+                        preferences.putBoolean("dont_show", true);
+                        preferences.commit();
+                    }
+                    FrameLayout popup = (FrameLayout)findViewById(R.id.pitch_instruction_popup);
+                    popup.setVisibility(View.INVISIBLE);
+                }
+            });
+        } else {
+            FrameLayout popup = (FrameLayout)findViewById(R.id.pitch_instruction_popup);
+            popup.setVisibility(View.INVISIBLE);
+        }
 
         Button recordPitchButton = (Button) findViewById(R.id.record_pitch_button);
         recordPitchButton.setOnClickListener(new View.OnClickListener() {

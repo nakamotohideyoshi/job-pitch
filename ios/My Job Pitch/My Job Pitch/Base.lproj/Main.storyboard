@@ -1770,6 +1770,112 @@
                                     <constraint firstItem="P4C-g8-IHW" firstAttribute="top" secondItem="9iR-62-35b" secondAttribute="top" id="wb3-8R-r6N"/>
                                 </constraints>
                             </scrollView>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="2gP-9d-3ep" userLabel="Popup">
+                                <rect key="frame" x="0.0" y="64" width="600" height="536"/>
+                                <subviews>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fEI-Op-ikz">
+                                        <rect key="frame" x="30" y="30" width="540" height="476"/>
+                                        <subviews>
+                                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="ajh-3m-3ZR">
+                                                <rect key="frame" x="20" y="30" width="500" height="333"/>
+                                                <mutableString key="text">Setting up your job pitch here are some tips from one of our recruiting pros:
+
+    Dress smartly. You want to be taken seriously
+    Be careful what is in the background. Nothing should distract from your pitch
+    Record your pitch in a quiet location to avoid background noise
+
+Recording your job pitch:
+
+    Practise makes perfect – Record your pitch, play it back and perfect it. If in doubt, ask a friend  
+    Be positive, confident and look straight into the camera to make eye contact
+    Be yourself, but don’t fidget such as waving your hands about in the air
+    Stand or sit up straight which helps you breath more easily
+    Don’t rush it and speak clearly
+    Remember to smile!
+
+Remember you only have 30 seconds, so what to say?
+
+    Your name and location
+    Your personality
+    Type of work you are looking for
+    Relevant experience
+
+Finish your pitch confidently by saying something like, “Thank you and I look forward to hearing from you”.</mutableString>
+                                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                                            </textView>
+                                            <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="xVp-hi-vCI">
+                                                <rect key="frame" x="20" y="373" width="51" height="31"/>
+                                            </switch>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Don't show me this again" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zjd-sr-pcM">
+                                                <rect key="frame" x="79" y="380" width="441" height="17"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="iQW-5A-7SH">
+                                                <rect key="frame" x="0.0" y="404" width="540" height="72"/>
+                                                <subviews>
+                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="BBm-1E-Jra">
+                                                        <rect key="frame" x="238" y="20" width="64" height="32"/>
+                                                        <color key="backgroundColor" red="0.0" green="0.58823529409999997" blue="0.53333333329999999" alpha="1" colorSpace="calibratedRGB"/>
+                                                        <constraints>
+                                                            <constraint firstAttribute="height" constant="32" id="ndJ-zL-ilV"/>
+                                                            <constraint firstAttribute="width" constant="64" id="ufl-7s-CkW"/>
+                                                        </constraints>
+                                                        <inset key="contentEdgeInsets" minX="7" minY="7" maxX="7" maxY="7"/>
+                                                        <state key="normal" title="Close">
+                                                            <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                                        </state>
+                                                        <userDefinedRuntimeAttributes>
+                                                            <userDefinedRuntimeAttribute type="boolean" keyPath="layer.masksToBounds" value="YES"/>
+                                                            <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                                                <integer key="value" value="7"/>
+                                                            </userDefinedRuntimeAttribute>
+                                                        </userDefinedRuntimeAttributes>
+                                                        <connections>
+                                                            <action selector="onPopupClose:" destination="KaQ-qh-VKT" eventType="touchUpInside" id="rIU-jn-GSv"/>
+                                                        </connections>
+                                                    </button>
+                                                </subviews>
+                                                <constraints>
+                                                    <constraint firstItem="BBm-1E-Jra" firstAttribute="centerX" secondItem="iQW-5A-7SH" secondAttribute="centerX" id="6Gs-My-nMm"/>
+                                                    <constraint firstItem="BBm-1E-Jra" firstAttribute="centerY" secondItem="iQW-5A-7SH" secondAttribute="centerY" id="6hO-pw-IRZ"/>
+                                                </constraints>
+                                            </view>
+                                        </subviews>
+                                        <color key="backgroundColor" red="0.92549019607843142" green="0.92549019607843142" blue="0.92549019607843142" alpha="1" colorSpace="calibratedRGB"/>
+                                        <constraints>
+                                            <constraint firstItem="iQW-5A-7SH" firstAttribute="top" secondItem="xVp-hi-vCI" secondAttribute="bottom" id="5pc-YB-My2"/>
+                                            <constraint firstAttribute="bottom" secondItem="iQW-5A-7SH" secondAttribute="bottom" id="6cL-2j-u1j"/>
+                                            <constraint firstItem="ajh-3m-3ZR" firstAttribute="leading" secondItem="fEI-Op-ikz" secondAttribute="leading" constant="20" id="8EA-FM-28J"/>
+                                            <constraint firstItem="xVp-hi-vCI" firstAttribute="leading" secondItem="ajh-3m-3ZR" secondAttribute="leading" id="8bb-du-0pn"/>
+                                            <constraint firstItem="xVp-hi-vCI" firstAttribute="top" secondItem="ajh-3m-3ZR" secondAttribute="bottom" constant="10" id="Nb2-tC-hrB"/>
+                                            <constraint firstItem="zjd-sr-pcM" firstAttribute="leading" secondItem="xVp-hi-vCI" secondAttribute="trailing" constant="10" id="Q2a-zo-L3R"/>
+                                            <constraint firstItem="iQW-5A-7SH" firstAttribute="top" secondItem="zjd-sr-pcM" secondAttribute="bottom" id="T5a-os-kiA"/>
+                                            <constraint firstItem="iQW-5A-7SH" firstAttribute="leading" secondItem="fEI-Op-ikz" secondAttribute="leading" id="Vvd-bV-RrF"/>
+                                            <constraint firstAttribute="trailing" secondItem="ajh-3m-3ZR" secondAttribute="trailing" constant="20" id="ZC2-v6-ePC"/>
+                                            <constraint firstAttribute="trailing" secondItem="iQW-5A-7SH" secondAttribute="trailing" id="a0J-sH-arS"/>
+                                            <constraint firstItem="zjd-sr-pcM" firstAttribute="trailing" secondItem="ajh-3m-3ZR" secondAttribute="trailing" id="azt-Nd-n1I"/>
+                                            <constraint firstItem="zjd-sr-pcM" firstAttribute="centerY" secondItem="xVp-hi-vCI" secondAttribute="centerY" id="d7e-fg-vIx"/>
+                                            <constraint firstItem="ajh-3m-3ZR" firstAttribute="height" secondItem="fEI-Op-ikz" secondAttribute="height" multiplier="0.7" id="h2z-wl-vy9"/>
+                                            <constraint firstItem="ajh-3m-3ZR" firstAttribute="top" secondItem="fEI-Op-ikz" secondAttribute="top" constant="30" id="qcr-Ro-T9i"/>
+                                        </constraints>
+                                        <variation key="default">
+                                            <mask key="constraints">
+                                                <exclude reference="T5a-os-kiA"/>
+                                            </mask>
+                                        </variation>
+                                    </view>
+                                </subviews>
+                                <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.29867575354609927" colorSpace="calibratedRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="trailing" secondItem="fEI-Op-ikz" secondAttribute="trailing" constant="30" id="K6n-vc-7uJ"/>
+                                    <constraint firstItem="fEI-Op-ikz" firstAttribute="leading" secondItem="2gP-9d-3ep" secondAttribute="leading" constant="30" id="aZH-U5-PAj"/>
+                                    <constraint firstItem="fEI-Op-ikz" firstAttribute="top" secondItem="2gP-9d-3ep" secondAttribute="top" constant="30" id="eVY-8K-ORs"/>
+                                    <constraint firstAttribute="bottom" secondItem="fEI-Op-ikz" secondAttribute="bottom" constant="30" id="ly3-63-UXA"/>
+                                </constraints>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" red="0.85098039219999999" green="0.85098039219999999" blue="0.85098039219999999" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
@@ -1778,9 +1884,13 @@
                             <constraint firstAttribute="trailing" secondItem="9iR-62-35b" secondAttribute="trailing" id="Fik-9Z-a5z"/>
                             <constraint firstItem="D9s-uY-8B0" firstAttribute="centerX" secondItem="R4A-pn-hYU" secondAttribute="centerX" id="LQ8-Tr-hQH"/>
                             <constraint firstItem="fAt-Kx-x6J" firstAttribute="height" secondItem="R4A-pn-hYU" secondAttribute="height" multiplier="0.8" id="MMd-UC-6ld"/>
+                            <constraint firstItem="2gP-9d-3ep" firstAttribute="leading" secondItem="R4A-pn-hYU" secondAttribute="leadingMargin" constant="-20" id="PWm-PU-RKN"/>
                             <constraint firstItem="fAt-Kx-x6J" firstAttribute="centerX" secondItem="R4A-pn-hYU" secondAttribute="centerX" id="Ppm-tJ-mIB"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="2gP-9d-3ep" secondAttribute="trailing" constant="-20" id="Sni-hN-xR9"/>
                             <constraint firstItem="D9s-uY-8B0" firstAttribute="centerY" secondItem="R4A-pn-hYU" secondAttribute="centerY" id="TXU-ty-mMF"/>
                             <constraint firstItem="fAt-Kx-x6J" firstAttribute="width" secondItem="R4A-pn-hYU" secondAttribute="width" multiplier="0.8" id="U6R-KF-ndy"/>
+                            <constraint firstItem="D0E-Dw-Jzs" firstAttribute="top" secondItem="2gP-9d-3ep" secondAttribute="bottom" id="Z4Z-9V-hIX"/>
+                            <constraint firstItem="2gP-9d-3ep" firstAttribute="top" secondItem="96X-sK-qiZ" secondAttribute="bottom" id="lId-wS-0Uv"/>
                             <constraint firstItem="D0E-Dw-Jzs" firstAttribute="top" secondItem="9iR-62-35b" secondAttribute="bottom" id="o74-wn-2On"/>
                             <constraint firstItem="fAt-Kx-x6J" firstAttribute="centerY" secondItem="R4A-pn-hYU" secondAttribute="centerY" id="ppa-dW-CiR"/>
                             <constraint firstItem="P4C-g8-IHW" firstAttribute="width" secondItem="R4A-pn-hYU" secondAttribute="width" id="xRD-fD-EfU"/>
@@ -1798,7 +1908,9 @@
                         <outlet property="mainView" destination="P4C-g8-IHW" id="ntD-cU-QLy"/>
                         <outlet property="noRecording" destination="ysV-dm-iWu" id="jLH-Sb-AkP"/>
                         <outlet property="playOverlay" destination="ACW-EH-Kde" id="ixv-Ja-XEu"/>
+                        <outlet property="popupView" destination="2gP-9d-3ep" id="B76-gA-9Jy"/>
                         <outlet property="recordCenterContraint" destination="Yve-bi-iNi" id="ifN-hZ-Fbf"/>
+                        <outlet property="switchDontShow" destination="xVp-hi-vCI" id="ntl-wP-R4Y"/>
                         <outlet property="uploadButton" destination="oQU-Hn-gbG" id="ZfX-R4-ZcA"/>
                         <segue destination="2iG-mk-uiW" kind="show" identifier="play_video" id="F33-gd-75U"/>
                     </connections>
@@ -3387,8 +3499,8 @@
     <inferredMetricsTieBreakers>
         <segue reference="0vK-0A-u9q"/>
         <segue reference="XoM-Rr-ZjD"/>
-        <segue reference="sDv-ZU-ZHl"/>
         <segue reference="ZpE-yw-NGD"/>
         <segue reference="bLg-hp-djS"/>
+        <segue reference="F33-gd-75U"/>
     </inferredMetricsTieBreakers>
 </document>

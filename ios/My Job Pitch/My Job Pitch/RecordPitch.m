@@ -19,6 +19,9 @@
 
 @interface RecordPitch ()
 
+@property (weak, nonatomic) IBOutlet UIView *popupView;
+@property (weak, nonatomic) IBOutlet UISwitch *switchDontShow;
+
 @property (nonnull) JobSeeker *jobSeeker;
 @property (nonnull) Pitch *pitch;
 @property (strong, nonatomic) NSURL *videoURL;
@@ -49,6 +52,16 @@
     self.playOverlay.hidden = YES;
     self.uploadButton.hidden = YES;
     self.recordCenterContraint.priority = UILayoutPriorityDefaultHigh;
+    
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    if ([defaults boolForKey:@"dontshow"]) {
+        _popupView.hidden = YES;
+    } else {
+        _popupView.layer.shadowColor = [UIColor blackColor].CGColor;
+        _popupView.layer.shadowOffset = CGSizeMake(0, 3);
+        _popupView.layer.shadowOpacity = 0.2;
+        _popupView.layer.shadowRadius = 1.0;
+    }
     
     [self.appDelegate.api loadJobSeekerWithId:self.appDelegate.user.jobSeeker
                                       success:^(JobSeeker *jobSeeker) {
@@ -104,55 +117,8 @@
     MyCameraViewController *controller = [self.storyboard instantiateViewControllerWithIdentifier:@"MyCameraController"];
     controller.recordPitch = self;
     [self presentViewController:controller animated:YES completion:nil];
-    
-//    if ([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera]) {
-//        
-//        NSArray *availableMediaTypes = [UIImagePickerController
-//                                        availableMediaTypesForSourceType:UIImagePickerControllerSourceTypeCamera];
-//        if ([availableMediaTypes containsObject:(NSString *)kUTTypeMovie]) {
-//            UIImagePickerController *camera = [[UIImagePickerController alloc] init];
-//            camera.delegate = self;
-//            camera.sourceType = UIImagePickerControllerSourceTypeCamera;
-//            camera.mediaTypes = @[(NSString *)kUTTypeMovie];
-//            camera.videoMaximumDuration = 30;
-//            if ([UIImagePickerController isCameraDeviceAvailable:UIImagePickerControllerCameraDeviceFront]) {
-//                camera.cameraDevice = UIImagePickerControllerCameraDeviceFront;
-//            }
-//            [self presentViewController:camera animated:YES completion:nil];
-//        } else {
-//            [MyAlertController title:@"Not supported"
-//                             message:@"Video recording is not supported on your device"
-//                                  ok:@"Dismiss" okCallback:nil
-//                              cancel:@"Cancel" cancelCallback:nil];
-//        }
-//    } else {
-//        [MyAlertController title:@"Not supported"
-//                         message:@"Video recording is not supported on your device"
-//                              ok:@"Dismiss" okCallback:nil
-//                          cancel:@"Cancel" cancelCallback:nil];
-//    }
+   
 }
-
-//- (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info {
-//    
-//    [picker dismissViewControllerAnimated:YES completion:NULL];
-//    
-//    self.videoURL = info[UIImagePickerControllerMediaURL];
-//    
-//    MPMoviePlayerController *player = [[MPMoviePlayerController alloc] initWithContentURL: self.videoURL];
-//    self.image.image = [player thumbnailImageAtTime:1 timeOption:MPMovieTimeOptionExact];
-//    
-//    self.playOverlay.hidden = NO;
-//    self.noRecording.hidden = YES;
-//    
-//    self.uploadButton.hidden = NO;
-//    self.recordCenterContraint.priority = UILayoutPriorityDefaultLow;
-//   
-//}
-
-//- (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker {
-//    [picker dismissViewControllerAnimated:YES completion:NULL];
-//}
 
 - (void)recordCompleted:(NSString*)url {
     
@@ -279,6 +245,18 @@
                      message:@"Failed to Upload"
                           ok:@"OK" okCallback:nil
                       cancel:nil cancelCallback:nil];
+}
+
+- (IBAction)onPopupClose:(id)sender {
+    
+    if (_switchDontShow.isOn) {
+        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+        [defaults setBool:YES forKey:@"dontshow"];
+        [defaults synchronize];
+    }
+
+    _popupView.hidden = YES;
+    
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {

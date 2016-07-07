@@ -347,10 +347,6 @@ public class LoginActivity extends MJPProgressActivity implements LoaderCallback
                     // Load user data
                     mUser = api.getUser();
                     mBusiness = null;
-                    if (mUser.isRecruiter())
-                        if (mUser.getBusinesses().size() == 1)
-                            mBusiness = api.getUserBusiness(mUser.getBusinesses().get(0));
-
                     return true;
                 } catch (Exception e) {
                     api.logout();
@@ -399,24 +395,12 @@ public class LoginActivity extends MJPProgressActivity implements LoaderCallback
                                 Log.d("LoginActivity", "application data loaded");
                                 Intent intent;
                                 if (mUser.isRecruiter()) {
-                                    if (mUser.getBusinesses().size() == 1) {
-                                        if (mBusiness.getLocations().isEmpty()) {
-                                            // Business but no location: still creating profile
-                                            ObjectMapper mapper = new ObjectMapper();
-                                            intent = new Intent(LoginActivity.this, CreateProfileActivity.class);
-                                            intent.putExtra("business_data", mapper.writeValueAsString(mBusiness));
-                                        } else if (mBusiness.getLocations().size() == 1) {
-                                            // Single business and single location: go straight to location
-                                            intent = new Intent(LoginActivity.this, JobListActivity.class);
-                                            intent.putExtra(JobListActivity.LOCATION_ID, mBusiness.getLocations().get(0));
-                                        } else {
-                                            // Single business, multiple locations: go straight to business
-                                            intent = new Intent(LoginActivity.this, LocationListActivity.class);
-                                            intent.putExtra(LocationListActivity.BUSINESS_ID, mBusiness.getId());
-                                        }
-                                    } else {
-                                        // Multiple businesses: goto business list
+                                    if (mUser.getBusinesses().size() > 0) {
                                         intent = new Intent(LoginActivity.this, BusinessListActivity.class);
+                                    } else {
+                                        ObjectMapper mapper = new ObjectMapper();
+                                        intent = new Intent(LoginActivity.this, CreateProfileActivity.class);
+                                        intent.putExtra("business_data", mapper.writeValueAsString(mBusiness));
                                     }
                                 } else if (mUser.isJobSeeker()) {
                                     // JobSeeker: goto job seeker screen

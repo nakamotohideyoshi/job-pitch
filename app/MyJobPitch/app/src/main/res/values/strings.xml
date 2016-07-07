@@ -180,4 +180,30 @@
     <string name="references_available_on_request">References available on request</string>
     <string name="action_edit_business">Edit Company</string>
     <string name="action_edit_location">Edit Work Place</string>
+    <string name="dont_show">Don\'t show me this again</string>
+    <string name="close">Close</string>
+    <string name="pitch_instructions"><![CDATA[
+    <b>Setting up your job pitch here are some tips from one of our recruiting pros:</b><br>
+        <br>
+        &nbsp;&middot; Dress smartly. You want to be taken seriously<br>
+        &nbsp;&bull; Be careful what is in the background. Nothing should distract from your pitch<br>
+        &nbsp;&bull; Record your pitch in a quiet location to avoid background noise<br>
+        <br>
+    <b>Recording your job pitch:</b><br>
+        <br>
+        &nbsp;&bull; Practise makes perfect – Record your pitch, play it back and perfect it. If in doubt, ask a friend<br>
+        &nbsp;&bull; Be positive, confident and look straight into the camera to make eye contact<br>
+        &nbsp;&bull; Be yourself, but don’t fidget such as waving your hands about in the air<br>
+        &nbsp;&bull; Stand or sit up straight which helps you breath more easily<br>
+        &nbsp;&bull; Don’t rush it and speak clearly<br>
+        &nbsp;&bull; Remember to smile!<br>
+        <br>
+    <b>Remember you only have 30 seconds, so what to say?</b><br>
+        <br>
+        &nbsp;&bull; Your name and location<br>
+        &nbsp;&bull; Your personality<br>
+        &nbsp;&bull; Type of work you are looking for<br>
+        &nbsp;&bull; Relevant experience<br>
+        <br>
+    <b>Finish your pitch confidently by saying something like, “Thank you and I look forward to hearing from you”.</b><br>]]></string>
 </resources>

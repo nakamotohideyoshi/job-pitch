@@ -180,6 +180,8 @@
     <string name="references_available_on_request">References available on request</string>
     <string name="action_edit_business">Edit Company</string>
     <string name="action_edit_location">Edit Work Place</string>
+    <string name="upload_cv">Upload CV</string>
+    <string name="no_file_chosen">No file chosen</string>
     <string name="dont_show">Don\'t show me this again</string>
     <string name="close">Close</string>
     <string name="pitch_instructions"><![CDATA[

@@ -131,12 +131,45 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/description"
+        android:text="@string/upload_cv"
         android:textColor="@color/mjp_teal"
         android:textSize="20sp"
         android:paddingTop="15dp"
         android:paddingBottom="8dp"
         android:textStyle="bold" />
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            tools:text="Not set"
+            android:id="@+id/textView3"
+            android:textSize="@dimen/abc_text_size_medium_material"
+            android:paddingRight="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/no_file_chosen" />
+
+        <Button
+            android:id="@+id/button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/select" />
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/description"
+        android:textColor="@color/mjp_teal"
+        android:textSize="20sp"
+        android:paddingTop="15dp"
+        android:paddingBottom="8dp"
+        android:textStyle="bold"
+        android:id="@+id/textView2" />
 
     <TextView
         android:layout_width="match_parent"

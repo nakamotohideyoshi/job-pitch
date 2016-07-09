@@ -16,6 +16,7 @@
 @property (weak, nonatomic) IBOutlet UIImageView *playOverlay;
 
 @property (weak, nonatomic) IBOutlet UIButton *uploadButton;
+@property (weak, nonatomic) IBOutlet UIButton *recordButton;
 
 @property (weak, nonatomic) IBOutlet UILabel *lblUploading;
 @property (weak, nonatomic) IBOutlet UIProgressView *loadingBar;

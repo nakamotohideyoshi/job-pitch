@@ -135,7 +135,9 @@
     [NSURLConnection sendAsynchronousRequest:[NSURLRequest requestWithURL:imageURL]
                                        queue:[NSOperationQueue mainQueue]
                            completionHandler:^(NSURLResponse *response, NSData *data, NSError *error) {
-                               imageView.image = [UIImage imageWithData:data];
+                               if (imageView.image == nil) {
+                                   imageView.image = [UIImage imageWithData:data];
+                               }
                                [indicator setHidden:true];
                                [indicator stopAnimating];
                                if (completion)

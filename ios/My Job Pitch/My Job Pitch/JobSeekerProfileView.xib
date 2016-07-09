@@ -42,100 +42,141 @@
                     <color key="textColor" red="0.0" green="0.58823529409999997" blue="0.53333333329999999" alpha="1" colorSpace="calibratedRGB"/>
                     <nil key="highlightedColor"/>
                 </label>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Active" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="RLR-w7-D2H">
+                    <rect key="frame" x="487" y="9" width="56" height="24"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="20"/>
+                    <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Zk5-eG-TOU">
+                    <rect key="frame" x="551" y="5" width="51" height="31"/>
+                    <color key="onTintColor" red="0.0" green="0.58823529409999997" blue="0.53333333329999999" alpha="1" colorSpace="calibratedRGB"/>
+                </switch>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Public" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="QCA-jf-DFb">
+                    <rect key="frame" x="552" y="55" width="47" height="21"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                    <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Cnf-iU-TGJ" customClass="ErrorTextField">
+                    <rect key="frame" x="0.0" y="84" width="543" height="40"/>
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="string" keyPath="placeholder" value="First Name"/>
+                    </userDefinedRuntimeAttributes>
+                </view>
+                <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="HjB-cc-4IV">
+                    <rect key="frame" x="551" y="84" width="51" height="31"/>
+                    <color key="onTintColor" red="0.0" green="0.58823529409999997" blue="0.53333333329999999" alpha="1" colorSpace="calibratedRGB"/>
+                </switch>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Description" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vD4-A9-R0Z">
                     <rect key="frame" x="0.0" y="430" width="138" height="30"/>
                     <fontDescription key="fontDescription" type="boldSystem" pointSize="25"/>
                     <color key="textColor" red="0.0" green="0.58823529409999997" blue="0.53333333329999999" alpha="1" colorSpace="calibratedRGB"/>
                     <nil key="highlightedColor"/>
                 </label>
-                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Public" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="QCA-jf-DFb">
-                    <rect key="frame" x="552" y="50" width="47" height="21"/>
-                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                    <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                    <nil key="highlightedColor"/>
-                </label>
-                <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="HjB-cc-4IV">
-                    <rect key="frame" x="551" y="79" width="51" height="31"/>
-                    <color key="onTintColor" red="0.0" green="0.58823529409999997" blue="0.53333333329999999" alpha="1" colorSpace="calibratedRGB"/>
-                </switch>
-                <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Cnf-iU-TGJ" customClass="ErrorTextField">
-                    <rect key="frame" x="0.0" y="79" width="543" height="51"/>
-                    <userDefinedRuntimeAttributes>
-                        <userDefinedRuntimeAttribute type="string" keyPath="placeholder" value="First Name"/>
-                    </userDefinedRuntimeAttributes>
-                </view>
                 <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" ambiguous="YES" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="lYv-VM-m7N">
-                    <rect key="frame" x="551" y="130" width="51" height="31"/>
+                    <rect key="frame" x="551" y="124" width="51" height="31"/>
                     <color key="onTintColor" red="0.0" green="0.58823529409999997" blue="0.53333333329999999" alpha="1" colorSpace="calibratedRGB"/>
                 </switch>
                 <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="TsK-H6-53D" customClass="ErrorTextField">
-                    <rect key="frame" x="0.0" y="130" width="543" height="40"/>
+                    <rect key="frame" x="0.0" y="124" width="543" height="40"/>
                     <userDefinedRuntimeAttributes>
                         <userDefinedRuntimeAttribute type="string" keyPath="placeholder" value="Last Name"/>
                     </userDefinedRuntimeAttributes>
                 </view>
                 <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="P77-oj-eti">
-                    <rect key="frame" x="551" y="170" width="51" height="31"/>
+                    <rect key="frame" x="551" y="164" width="51" height="31"/>
                     <color key="onTintColor" red="0.0" green="0.58823529409999997" blue="0.53333333329999999" alpha="1" colorSpace="calibratedRGB"/>
                 </switch>
-                <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="H0T-Sf-3ug" customClass="ErrorTextField">
-                    <rect key="frame" x="0.0" y="170" width="543" height="40"/>
+                <view contentMode="scaleToFill" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="H0T-Sf-3ug" customClass="ErrorTextField">
+                    <rect key="frame" x="0.0" y="164" width="543" height="10"/>
                     <userDefinedRuntimeAttributes>
                         <userDefinedRuntimeAttribute type="string" keyPath="placeholder" value="Email"/>
                         <userDefinedRuntimeAttribute type="string" keyPath="keyboardType" value="UIKeyboardTypeEmail"/>
                     </userDefinedRuntimeAttributes>
                 </view>
-                <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="KG8-3L-XTu">
-                    <rect key="frame" x="551" y="210" width="51" height="31"/>
+                <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" ambiguous="YES" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="KG8-3L-XTu">
+                    <rect key="frame" x="551" y="174" width="51" height="31"/>
                     <color key="onTintColor" red="0.0" green="0.58823529409999997" blue="0.53333333329999999" alpha="1" colorSpace="calibratedRGB"/>
                 </switch>
-                <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="1Fe-KE-hks" customClass="ErrorTextField">
-                    <rect key="frame" x="0.0" y="210" width="543" height="40"/>
+                <view contentMode="scaleToFill" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="1Fe-KE-hks" customClass="ErrorTextField">
+                    <rect key="frame" x="0.0" y="174" width="543" height="10"/>
                     <userDefinedRuntimeAttributes>
                         <userDefinedRuntimeAttribute type="string" keyPath="placeholder" value="Telephone (optional)"/>
                         <userDefinedRuntimeAttribute type="string" keyPath="keyboardType" value="UIKeyboardTypePhonePad"/>
                     </userDefinedRuntimeAttributes>
                 </view>
-                <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="05G-Yi-qxK">
-                    <rect key="frame" x="551" y="250" width="51" height="31"/>
+                <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" ambiguous="YES" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="05G-Yi-qxK">
+                    <rect key="frame" x="551" y="184" width="51" height="31"/>
                     <color key="onTintColor" red="0.0" green="0.58823529409999997" blue="0.53333333329999999" alpha="1" colorSpace="calibratedRGB"/>
                 </switch>
-                <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Y8K-Xe-KyD" customClass="ErrorTextField">
-                    <rect key="frame" x="0.0" y="250" width="543" height="40"/>
+                <view contentMode="scaleToFill" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Y8K-Xe-KyD" customClass="ErrorTextField">
+                    <rect key="frame" x="0.0" y="184" width="543" height="40"/>
                     <userDefinedRuntimeAttributes>
                         <userDefinedRuntimeAttribute type="string" keyPath="placeholder" value="Mobile (optional)"/>
                         <userDefinedRuntimeAttribute type="string" keyPath="keyboardType" value="UIKeyboardTypePhonePad"/>
                     </userDefinedRuntimeAttributes>
                 </view>
-                <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="XtK-Bc-fSb">
-                    <rect key="frame" x="551" y="290" width="51" height="31"/>
+                <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" ambiguous="YES" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="XtK-Bc-fSb">
+                    <rect key="frame" x="551" y="224" width="51" height="31"/>
                     <color key="onTintColor" red="0.0" green="0.58823529409999997" blue="0.53333333329999999" alpha="1" colorSpace="calibratedRGB"/>
                 </switch>
-                <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="o8g-Ph-3pv" customClass="ErrorTextField">
-                    <rect key="frame" x="0.0" y="290" width="543" height="40"/>
+                <view contentMode="scaleToFill" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="o8g-Ph-3pv" customClass="ErrorTextField">
+                    <rect key="frame" x="0.0" y="224" width="543" height="40"/>
                     <userDefinedRuntimeAttributes>
                         <userDefinedRuntimeAttribute type="string" keyPath="placeholder" value="Age (optional)"/>
                         <userDefinedRuntimeAttribute type="string" keyPath="keyboardType" value="UIKeyboardTypeNumberPad"/>
                     </userDefinedRuntimeAttributes>
                 </view>
-                <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="dFT-Dh-Xcp">
-                    <rect key="frame" x="551" y="330" width="51" height="31"/>
+                <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" ambiguous="YES" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="dFT-Dh-Xcp">
+                    <rect key="frame" x="551" y="264" width="51" height="31"/>
                     <color key="onTintColor" red="0.0" green="0.58823529409999997" blue="0.53333333329999999" alpha="1" colorSpace="calibratedRGB"/>
                 </switch>
-                <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="9ue-2I-JOq" customClass="ErrorTextField">
-                    <rect key="frame" x="0.0" y="330" width="543" height="40"/>
+                <view contentMode="scaleToFill" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="9ue-2I-JOq" customClass="ErrorTextField">
+                    <rect key="frame" x="0.0" y="264" width="543" height="40"/>
                     <userDefinedRuntimeAttributes>
                         <userDefinedRuntimeAttribute type="string" keyPath="placeholder" value="Sex (optional)"/>
                         <userDefinedRuntimeAttribute type="string" keyPath="keyboardType" value="UIKeyboardTypeNumberPad"/>
                     </userDefinedRuntimeAttributes>
                 </view>
-                <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="1gt-37-FxX" customClass="ErrorTextField">
-                    <rect key="frame" x="0.0" y="370" width="543" height="40"/>
+                <view contentMode="scaleToFill" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="1gt-37-FxX" customClass="ErrorTextField">
+                    <rect key="frame" x="0.0" y="304" width="543" height="27"/>
                     <userDefinedRuntimeAttributes>
                         <userDefinedRuntimeAttribute type="string" keyPath="placeholder" value="Nationality (optional)"/>
                         <userDefinedRuntimeAttribute type="string" keyPath="keyboardType" value="UIKeyboardTypeNumberPad"/>
                     </userDefinedRuntimeAttributes>
                 </view>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Upload CV" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="XT1-cX-gW5">
+                    <rect key="frame" x="0.0" y="351" width="127" height="30"/>
+                    <fontDescription key="fontDescription" type="boldSystem" pointSize="25"/>
+                    <color key="textColor" red="0.0" green="0.58823529409999997" blue="0.53333333329999999" alpha="1" colorSpace="calibratedRGB"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="No file chosen" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="C9d-GE-NuW">
+                    <rect key="frame" x="0.0" y="389" width="510" height="21"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                    <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Fvc-9m-UBV">
+                    <rect key="frame" x="520" y="385" width="80" height="30"/>
+                    <color key="backgroundColor" red="0.0" green="0.58823529409999997" blue="0.53333333329999999" alpha="1" colorSpace="calibratedRGB"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="80" id="x4K-vW-O29"/>
+                    </constraints>
+                    <state key="normal" title="Select">
+                        <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                    </state>
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="boolean" keyPath="layer.masksToBounds" value="YES"/>
+                        <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                            <integer key="value" value="7"/>
+                        </userDefinedRuntimeAttribute>
+                    </userDefinedRuntimeAttributes>
+                    <connections>
+                        <action selector="continue:" destination="-1" eventType="touchUpInside" id="Ksy-Zc-KtT"/>
+                    </connections>
+                </button>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="2Ei-Yb-BEa">
                     <rect key="frame" x="0.0" y="691" width="600" height="30"/>
                     <color key="backgroundColor" red="0.0" green="0.58823529409999997" blue="0.53333333329999999" alpha="1" colorSpace="calibratedRGB"/>
@@ -191,12 +232,8 @@
                     <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                     <nil key="highlightedColor"/>
                 </label>
-                <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="1W4-1K-u1A">
-                    <rect key="frame" x="551" y="370" width="51" height="31"/>
-                    <color key="onTintColor" red="0.0" green="0.58823529409999997" blue="0.53333333329999999" alpha="1" colorSpace="calibratedRGB"/>
-                </switch>
-                <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Zk5-eG-TOU">
-                    <rect key="frame" x="551" y="0.0" width="51" height="31"/>
+                <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" ambiguous="YES" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="1W4-1K-u1A">
+                    <rect key="frame" x="551" y="304" width="51" height="31"/>
                     <color key="onTintColor" red="0.0" green="0.58823529409999997" blue="0.53333333329999999" alpha="1" colorSpace="calibratedRGB"/>
                 </switch>
                 <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="fKP-0n-hhM">
@@ -209,14 +246,9 @@
                     <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                     <nil key="highlightedColor"/>
                 </label>
-                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Active" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="RLR-w7-D2H">
-                    <rect key="frame" x="487" y="4" width="56" height="24"/>
-                    <fontDescription key="fontDescription" type="system" pointSize="20"/>
-                    <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                    <nil key="highlightedColor"/>
-                </label>
             </subviews>
             <constraints>
+                <constraint firstItem="Fvc-9m-UBV" firstAttribute="centerY" secondItem="C9d-GE-NuW" secondAttribute="centerY" id="1f9-eY-ZKB"/>
                 <constraint firstItem="HjB-cc-4IV" firstAttribute="top" secondItem="QCA-jf-DFb" secondAttribute="bottom" constant="8" id="1oL-3n-yEv"/>
                 <constraint firstItem="RLR-w7-D2H" firstAttribute="centerY" secondItem="Zk5-eG-TOU" secondAttribute="centerY" id="2Ut-sj-BKL"/>
                 <constraint firstItem="vD4-A9-R0Z" firstAttribute="top" secondItem="1gt-37-FxX" secondAttribute="bottom" constant="20" id="2p4-e4-mJl"/>
@@ -236,17 +268,22 @@
                 <constraint firstAttribute="right" secondItem="2Ei-Yb-BEa" secondAttribute="right" id="Bbt-fH-C7z"/>
                 <constraint firstItem="N6M-BL-Bzr" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="BlM-Pa-OJd"/>
                 <constraint firstAttribute="right" secondItem="ezc-LO-2Yt" secondAttribute="right" id="Cfq-Dt-VyI"/>
+                <constraint firstItem="C9d-GE-NuW" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="EWI-Ps-vMa"/>
                 <constraint firstItem="Cnf-iU-TGJ" firstAttribute="left" secondItem="iN0-l3-epB" secondAttribute="left" id="Ep2-oc-YxJ"/>
                 <constraint firstItem="TsK-H6-53D" firstAttribute="left" secondItem="Cnf-iU-TGJ" secondAttribute="left" id="Esz-B1-Pd2"/>
+                <constraint firstItem="vD4-A9-R0Z" firstAttribute="top" secondItem="C9d-GE-NuW" secondAttribute="bottom" constant="20" id="Eya-dt-gji"/>
                 <constraint firstItem="Cnf-iU-TGJ" firstAttribute="top" secondItem="HjB-cc-4IV" secondAttribute="top" id="HAe-5i-Zpq"/>
                 <constraint firstItem="TsK-H6-53D" firstAttribute="right" secondItem="Cnf-iU-TGJ" secondAttribute="right" id="JPS-TJ-QHo"/>
                 <constraint firstItem="dFT-Dh-Xcp" firstAttribute="right" secondItem="XtK-Bc-fSb" secondAttribute="right" id="JYc-7b-tJo"/>
                 <constraint firstItem="KG8-3L-XTu" firstAttribute="right" secondItem="P77-oj-eti" secondAttribute="right" id="KYL-py-hXz"/>
                 <constraint firstItem="ezc-LO-2Yt" firstAttribute="left" secondItem="iN0-l3-epB" secondAttribute="left" id="LaG-13-LEN"/>
+                <constraint firstItem="vD4-A9-R0Z" firstAttribute="top" secondItem="C9d-GE-NuW" secondAttribute="bottom" constant="20" id="LgZ-nk-R6X"/>
                 <constraint firstItem="fKP-0n-hhM" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="MP0-8I-RZY"/>
                 <constraint firstItem="XtK-Bc-fSb" firstAttribute="right" secondItem="05G-Yi-qxK" secondAttribute="right" id="N6V-sP-s0b"/>
                 <constraint firstItem="1Fe-KE-hks" firstAttribute="left" secondItem="H0T-Sf-3ug" secondAttribute="left" id="Nsm-2l-G5B"/>
+                <constraint firstAttribute="trailing" secondItem="Fvc-9m-UBV" secondAttribute="trailing" id="NtP-Mb-5Hj"/>
                 <constraint firstItem="HjB-cc-4IV" firstAttribute="left" secondItem="Cnf-iU-TGJ" secondAttribute="right" constant="8" id="OWe-xd-wsu"/>
+                <constraint firstItem="XT1-cX-gW5" firstAttribute="top" secondItem="1gt-37-FxX" secondAttribute="top" constant="20" id="RAE-xF-7Nu"/>
                 <constraint firstItem="0O1-cr-jdq" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="SEj-02-hWG"/>
                 <constraint firstItem="lYv-VM-m7N" firstAttribute="right" secondItem="HjB-cc-4IV" secondAttribute="right" id="T7I-ZI-wiV"/>
                 <constraint firstItem="H0T-Sf-3ug" firstAttribute="right" secondItem="TsK-H6-53D" secondAttribute="right" id="TP1-Pv-pUb"/>
@@ -260,17 +297,20 @@
                 <constraint firstItem="1Fe-KE-hks" firstAttribute="right" secondItem="H0T-Sf-3ug" secondAttribute="right" id="Z4D-AO-esu"/>
                 <constraint firstItem="Zk5-eG-TOU" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="ZJU-Sj-Eq3"/>
                 <constraint firstItem="1W4-1K-u1A" firstAttribute="trailing" secondItem="dFT-Dh-Xcp" secondAttribute="trailing" id="ZmC-Tm-E3g"/>
+                <constraint firstItem="XT1-cX-gW5" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="ZuI-yr-1L5"/>
                 <constraint firstItem="N6M-BL-Bzr" firstAttribute="top" secondItem="ooD-lb-Fzw" secondAttribute="bottom" constant="2" id="aB7-kv-T3o"/>
                 <constraint firstItem="Y8K-Xe-KyD" firstAttribute="left" secondItem="1Fe-KE-hks" secondAttribute="left" id="b19-3o-ltS"/>
                 <constraint firstItem="o8g-Ph-3pv" firstAttribute="left" secondItem="Y8K-Xe-KyD" secondAttribute="left" id="bIj-4u-ZNf"/>
                 <constraint firstItem="TsK-H6-53D" firstAttribute="top" secondItem="Cnf-iU-TGJ" secondAttribute="bottom" id="dGF-tK-3dC"/>
                 <constraint firstItem="QCA-jf-DFb" firstAttribute="centerX" secondItem="HjB-cc-4IV" secondAttribute="centerX" id="eux-Ca-pTS"/>
+                <constraint firstItem="Fvc-9m-UBV" firstAttribute="leading" secondItem="C9d-GE-NuW" secondAttribute="trailing" constant="10" id="gCg-We-hXH"/>
                 <constraint firstItem="ooD-lb-Fzw" firstAttribute="top" secondItem="7ev-Cr-JL1" secondAttribute="bottom" constant="8" id="hl6-vc-em6"/>
                 <constraint firstItem="fKP-0n-hhM" firstAttribute="top" secondItem="ezc-LO-2Yt" secondAttribute="bottom" constant="10" id="iJ4-el-nkL"/>
                 <constraint firstItem="H0T-Sf-3ug" firstAttribute="top" secondItem="P77-oj-eti" secondAttribute="top" id="imS-80-O6U"/>
                 <constraint firstItem="1gt-37-FxX" firstAttribute="top" secondItem="9ue-2I-JOq" secondAttribute="bottom" id="ju6-H9-6HE"/>
                 <constraint firstItem="7ev-Cr-JL1" firstAttribute="left" secondItem="iN0-l3-epB" secondAttribute="left" id="kX3-fl-doW"/>
                 <constraint firstItem="H0T-Sf-3ug" firstAttribute="top" secondItem="TsK-H6-53D" secondAttribute="bottom" id="knC-Xf-DAW"/>
+                <constraint firstItem="XT1-cX-gW5" firstAttribute="top" secondItem="1gt-37-FxX" secondAttribute="bottom" constant="20" id="l1S-Gm-MDC"/>
                 <constraint firstItem="1W4-1K-u1A" firstAttribute="top" secondItem="1gt-37-FxX" secondAttribute="top" id="nDF-aE-VbD"/>
                 <constraint firstAttribute="bottom" secondItem="2Ei-Yb-BEa" secondAttribute="bottom" id="nJF-z9-CWi"/>
                 <constraint firstItem="Zk5-eG-TOU" firstAttribute="left" secondItem="RLR-w7-D2H" secondAttribute="right" constant="8" id="nQz-Zx-GGZ"/>
@@ -280,11 +320,13 @@
                 <constraint firstItem="2Ei-Yb-BEa" firstAttribute="top" secondItem="fKP-0n-hhM" secondAttribute="bottom" constant="20" id="q1f-Xm-4eN"/>
                 <constraint firstItem="1Fe-KE-hks" firstAttribute="top" secondItem="KG8-3L-XTu" secondAttribute="top" id="qBZ-3Q-AlG"/>
                 <constraint firstItem="3yq-ze-2jf" firstAttribute="leading" secondItem="fKP-0n-hhM" secondAttribute="trailing" constant="10" id="qwg-3s-nIq"/>
+                <constraint firstItem="C9d-GE-NuW" firstAttribute="top" secondItem="XT1-cX-gW5" secondAttribute="bottom" constant="8" id="qyz-8S-bD3"/>
                 <constraint firstItem="9ue-2I-JOq" firstAttribute="leading" secondItem="o8g-Ph-3pv" secondAttribute="leading" id="sBC-sd-yVA"/>
                 <constraint firstAttribute="right" secondItem="HjB-cc-4IV" secondAttribute="right" id="sPM-cX-YqX"/>
                 <constraint firstItem="o8g-Ph-3pv" firstAttribute="right" secondItem="Y8K-Xe-KyD" secondAttribute="right" id="smA-bN-i8S"/>
                 <constraint firstItem="dFT-Dh-Xcp" firstAttribute="top" secondItem="9ue-2I-JOq" secondAttribute="top" id="tuZ-1W-U14"/>
                 <constraint firstItem="Y8K-Xe-KyD" firstAttribute="top" secondItem="1Fe-KE-hks" secondAttribute="bottom" id="vR3-0E-P7c"/>
+                <constraint firstItem="Zk5-eG-TOU" firstAttribute="centerY" secondItem="0O1-cr-jdq" secondAttribute="centerY" id="yLA-gb-RL9"/>
                 <constraint firstItem="1gt-37-FxX" firstAttribute="trailing" secondItem="9ue-2I-JOq" secondAttribute="trailing" id="zFm-yg-F43"/>
                 <constraint firstItem="o8g-Ph-3pv" firstAttribute="top" secondItem="Y8K-Xe-KyD" secondAttribute="bottom" id="zRI-KH-9UC"/>
             </constraints>
@@ -292,6 +334,14 @@
             <nil key="simulatedTopBarMetrics"/>
             <nil key="simulatedBottomBarMetrics"/>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <variation key="default">
+                <mask key="constraints">
+                    <exclude reference="RAE-xF-7Nu"/>
+                    <exclude reference="2p4-e4-mJl"/>
+                    <exclude reference="LgZ-nk-R6X"/>
+                    <exclude reference="ZJU-Sj-Eq3"/>
+                </mask>
+            </variation>
             <point key="canvasLocation" x="136" y="554.5"/>
         </view>
     </objects>

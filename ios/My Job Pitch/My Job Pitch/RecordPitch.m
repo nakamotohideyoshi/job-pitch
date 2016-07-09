@@ -73,6 +73,7 @@
                                                             into:self.image
                                                    withIndicator:self.imageActivity
                                                       completion:^{
+                                                          if (self.videoURL) return;
                                                           self.pitch = pitch;
                                                           self.playOverlay.hidden = NO;
                                                       }];
@@ -129,6 +130,7 @@
     
     self.playOverlay.hidden = NO;
     self.noRecording.hidden = YES;
+    self.imageActivity.hidden = YES;
     
     self.uploadButton.hidden = NO;
     self.recordCenterContraint.priority = UILayoutPriorityDefaultLow;
@@ -153,6 +155,9 @@
     self.lblUploading.hidden = NO;
     self.loadingBar.hidden = NO;
     self.lblProcessing.hidden = NO;
+    
+    self.uploadButton.enabled = NO;
+    self.recordButton.enabled = NO;
     
     self.lblProcessing.text = @"processing...";
     
@@ -193,7 +198,7 @@
     AWSS3TransferUtilityUploadExpression *expression = [AWSS3TransferUtilityUploadExpression new];
     expression.progressBlock = weakSelf.progressBlock;
     
-    NSString *keyname = [NSString stringWithFormat:@"%@/%@.%@.%@", @"http:ec2-52-31-145-95.eu-west-1.compute.amazonaws.com", self.pitch.token, self.pitch.id, [self.videoURL lastPathComponent]];
+    NSString *keyname = [NSString stringWithFormat:@"%@/%@.%@.%@", @"https:ec2-52-31-145-95.eu-west-1.compute.amazonaws.com", self.pitch.token, self.pitch.id, [self.videoURL lastPathComponent]];
     
     AWSS3TransferUtility *transferUtility = [AWSS3TransferUtility defaultS3TransferUtility];
     [[transferUtility uploadFile:self.videoURL
@@ -240,6 +245,9 @@
     self.lblUploading.hidden = YES;
     self.loadingBar.hidden = YES;
     self.lblProcessing.hidden = YES;
+    
+    self.uploadButton.enabled = YES;
+    self.recordButton.enabled = YES;
     
     [MyAlertController title:@"Failed to Upload"
                      message:@"Failed to Upload"

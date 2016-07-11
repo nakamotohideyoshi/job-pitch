@@ -27,12 +27,4 @@
 @property (weak, nonatomic) IBOutlet UILabel *extraLabel;
 @property (weak, nonatomic) IBOutlet UILabel *descriptionLabel;
 
-- (IBAction)connect;
-- (IBAction)dismiss;
-- (IBAction)logout;
-- (IBAction)editProfile;
-- (IBAction)editSearch;
-- (IBAction)messages;
-- (IBAction)recordPitch;
-
 @end

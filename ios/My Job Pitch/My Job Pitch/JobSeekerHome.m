@@ -10,6 +10,7 @@
 #import "EditSearchProfile.h"
 #import "Application.h"
 #import "JobDetails.h"
+#import "KxMenu.h"
 
 typedef NS_ENUM(NSInteger, EmptyButtonAction) {
     EmptyButtonActionNone,
@@ -17,6 +18,7 @@ typedef NS_ENUM(NSInteger, EmptyButtonAction) {
     EmptyButtonActionSetupProfile,
     EmptyButtonActionRecordPitch,
     EmptyButtonActionActivateProfile,
+    EmptyButtonActionActivateMessage,
 };
 
 @interface JobSeekerHome ()
@@ -72,6 +74,9 @@ typedef NS_ENUM(NSInteger, EmptyButtonAction) {
         case EmptyButtonActionSetupProfile:
             [self performEditSearch];
             break;
+        case EmptyButtonActionActivateMessage:
+            [self performMessages];
+            break;
         case EmptyButtonActionNone:
         default:
             break;
@@ -85,7 +90,6 @@ typedef NS_ENUM(NSInteger, EmptyButtonAction) {
     if (resetOnAppearance)
         [self reset];
     resetOnAppearance = true;
-    [self.navigationController setToolbarHidden:NO animated:YES];
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -105,7 +109,7 @@ typedef NS_ENUM(NSInteger, EmptyButtonAction) {
      loadJobSeekerWithId:self.appDelegate.user.jobSeeker
      success:^(JobSeeker *jobSeeker) {
          self.jobSeeker = jobSeeker;
-         if (jobSeeker.profile == nil/* && jobSeeker.pitches.count == 0*/) {
+         if (jobSeeker.profile == nil && jobSeeker.pitches.count == 0) {
              [self.emptyLabel setText:@"You have not yet setup your job preferences or recorded your pitch, once we have this information, you will see job matches here, and potential employers will be able to find you."];
              [self.emptyButton1 setHidden:false];
              [self.emptyButton1 setTitle:@"Setup Profile" forState:UIControlStateNormal];
@@ -115,7 +119,7 @@ typedef NS_ENUM(NSInteger, EmptyButtonAction) {
              [self setEmptyButton2Action:EmptyButtonActionRecordPitch];
              [self.swipeContainer setHidden:true];
              [self.emptyView setHidden:false];
-         /*} else if (jobSeeker.profile == nil) {
+         } else if (jobSeeker.profile == nil) {
              [self.emptyLabel setText:@"You have not yet setup your job preferences, once we know your search criteria, you will see job matches here, and potential employers will be able to find you."];
              [self.emptyButton1 setHidden:false];
              [self.emptyButton1 setTitle:@"Setup Profile" forState:UIControlStateNormal];
@@ -123,7 +127,7 @@ typedef NS_ENUM(NSInteger, EmptyButtonAction) {
              [self.emptyButton2 setHidden:true];
              [self setEmptyButton2Action:EmptyButtonActionNone];
              [self.swipeContainer setHidden:true];
-             [self.emptyView setHidden:false];*/
+             [self.emptyView setHidden:false];
          } else if (jobSeeker.pitches.count == 0) {
              [self.emptyLabel setText:@"You have not yet recorded your pitch, once we have this, you will see job matches here, and potential employers will be able to find you."];
              [self.emptyButton1 setHidden:false];
@@ -193,15 +197,6 @@ typedef NS_ENUM(NSInteger, EmptyButtonAction) {
     }];
 }
 
-- (IBAction)messages
-{
-    [self performMessages];
-}
-
-- (IBAction)recordPitch {
-    [self performRecordPitch];
-}
-
 - (IBAction)logout {
     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Logout"
                                                     message:@"Are you sure you want to logout?"
@@ -209,16 +204,6 @@ typedef NS_ENUM(NSInteger, EmptyButtonAction) {
                                           cancelButtonTitle:@"No"
                                           otherButtonTitles:@"Yes", nil];
     [alert show];
-}
-
-- (IBAction)editProfile
-{
-    [self performEditProfile];
-}
-
-- (IBAction)editSearch
-{
-    [self performEditSearch];
 }
 
 - (void)performEditProfile
@@ -376,8 +361,9 @@ typedef NS_ENUM(NSInteger, EmptyButtonAction) {
             [self.emptyButton1 setHidden:false];
             [self.emptyButton1 setTitle:@"Restart search" forState:UIControlStateNormal];
             [self setEmptyButton1Action:EmptyButtonActionReset];
-            [self.emptyButton2 setHidden:true];
-            [self setEmptyButton2Action:EmptyButtonActionNone];
+            [self.emptyButton2 setHidden:false];
+            [self.emptyButton2 setTitle:@"Open Message Centre" forState:UIControlStateNormal];
+            [self setEmptyButton2Action:EmptyButtonActionActivateMessage];
             [self.swipeContainer setHidden:true];
             [self.emptyView setHidden:false];
         }
@@ -415,6 +401,40 @@ typedef NS_ENUM(NSInteger, EmptyButtonAction) {
 - (UIInterfaceOrientation)preferredInterfaceOrientationForPresentation
 {
     return UIInterfaceOrientationPortrait;
+}
+
+- (IBAction)showMenu:(id)sender {
+    
+    [KxMenu setTintColor: [UIColor colorWithRed:247/255.0f green:247/255.0f blue:247/255.0f alpha:1.0]];
+    NSArray *menuItems =
+    @[
+      
+      [KxMenuItem menuItem:@"Messages"
+                     image:nil
+                    target:self
+                    action:@selector(performMessages)],
+      [KxMenuItem menuItem:@"Edit Profile"
+                     image:nil
+                    target:self
+                    action:@selector(performEditProfile)],
+      [KxMenuItem menuItem:@"Match Settings"
+                     image:nil
+                    target:self
+                    action:@selector(performEditSearch)],
+      [KxMenuItem menuItem:@"Record My Pitch"
+                     image:nil
+                    target:self
+                    action:@selector(performRecordPitch)],
+      ];
+    
+    [KxMenu showMenuInView:self.view
+                  fromRect:CGRectMake(self.view.bounds.size.width - 50, 20, 50, 44)
+                 menuItems:menuItems];
+
+}
+
+- (void) pushMenuItem:(id)sender {
+    NSLog(@"%@", sender);
 }
 
 @end

@@ -91,6 +91,7 @@
 		CEE52CFA1C065C4100881648 /* API.m in Sources */ = {isa = PBXBuildFile; fileRef = CEE52CF91C065C4100881648 /* API.m */; };
 		CEE52CFE1C066AB000881648 /* AuthToken.m in Sources */ = {isa = PBXBuildFile; fileRef = CEE52CFD1C066AB000881648 /* AuthToken.m */; };
 		CEE52D011C066F2700881648 /* LoginRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = CEE52D001C066F2700881648 /* LoginRequest.m */; };
+		D71EAC6B1D33D04800E32ED1 /* KxMenu.m in Sources */ = {isa = PBXBuildFile; fileRef = D71EAC6A1D33D04800E32ED1 /* KxMenu.m */; };
 		D7E94F8C1D179D6700866604 /* MyCameraViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D7E94F891D179D6700866604 /* MyCameraViewController.m */; };
 		D7E94F8D1D179D6700866604 /* MyCameraPreviewView.m in Sources */ = {isa = PBXBuildFile; fileRef = D7E94F8B1D179D6700866604 /* MyCameraPreviewView.m */; };
 		D7FA423D1D0EB2D200E93C66 /* MyAlertController.m in Sources */ = {isa = PBXBuildFile; fileRef = D7FA423C1D0EB2D200E93C66 /* MyAlertController.m */; };
@@ -214,7 +215,7 @@
 		CEE04A9A1C0F896300697620 /* ListBusinesses.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ListBusinesses.h; sourceTree = "<group>"; };
 		CEE04A9B1C0F896300697620 /* ListBusinesses.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ListBusinesses.m; sourceTree = "<group>"; };
 		CEE04A9D1C0F8A9100697620 /* JobSeekerHome.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JobSeekerHome.h; sourceTree = "<group>"; };
-		CEE04A9E1C0F8A9100697620 /* JobSeekerHome.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JobSeekerHome.m; sourceTree = "<group>"; };
+		CEE04A9E1C0F8A9100697620 /* JobSeekerHome.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JobSeekerHome.m; sourceTree = "<group>"; wrapsLines = 1; };
 		CEE04AA01C0F8C6700697620 /* CreateProfile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CreateProfile.h; sourceTree = "<group>"; };
 		CEE04AA11C0F8C6700697620 /* CreateProfile.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CreateProfile.m; sourceTree = "<group>"; };
 		CEE04AA31C10EAD900697620 /* ErrorTextField.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ErrorTextField.xib; sourceTree = "<group>"; };
@@ -261,6 +262,8 @@
 		CEE52CFF1C066F2700881648 /* LoginRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoginRequest.h; sourceTree = "<group>"; };
 		CEE52D001C066F2700881648 /* LoginRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoginRequest.m; sourceTree = "<group>"; };
 		CFA3EA2BF05430C3C9894AA5 /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
+		D71EAC691D33D04800E32ED1 /* KxMenu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KxMenu.h; sourceTree = "<group>"; };
+		D71EAC6A1D33D04800E32ED1 /* KxMenu.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KxMenu.m; sourceTree = "<group>"; };
 		D7E94F881D179D6700866604 /* MyCameraViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyCameraViewController.h; sourceTree = "<group>"; };
 		D7E94F891D179D6700866604 /* MyCameraViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyCameraViewController.m; sourceTree = "<group>"; };
 		D7E94F8A1D179D6700866604 /* MyCameraPreviewView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyCameraPreviewView.h; sourceTree = "<group>"; };
@@ -324,6 +327,8 @@
 				CEE52CFB1C06624600881648 /* API */,
 				D7E94F881D179D6700866604 /* MyCameraViewController.h */,
 				D7E94F891D179D6700866604 /* MyCameraViewController.m */,
+				D71EAC691D33D04800E32ED1 /* KxMenu.h */,
+				D71EAC6A1D33D04800E32ED1 /* KxMenu.m */,
 				D7E94F8A1D179D6700866604 /* MyCameraPreviewView.h */,
 				D7E94F8B1D179D6700866604 /* MyCameraPreviewView.m */,
 				CE6FD33D1C01F9BB001A04C3 /* AppDelegate.h */,
@@ -753,6 +758,7 @@
 				CE8395AB1C42F279007A8213 /* SwipeView.m in Sources */,
 				CE7742351C92368200A9A2BA /* SimpleListCell.m in Sources */,
 				CE77424C1C96244900A9A2BA /* ViewJob.m in Sources */,
+				D71EAC6B1D33D04800E32ED1 /* KxMenu.m in Sources */,
 				CEE04A9F1C0F8A9100697620 /* JobSeekerHome.m in Sources */,
 				CEE062541C28B77500ED60C0 /* Contract.m in Sources */,
 				CE77423B1C923EAD00A9A2BA /* ListJobs.m in Sources */,

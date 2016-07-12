@@ -31,12 +31,14 @@
     _layoutBusinessHeight0.active = _hiddenBusiness;
     if (!_businessEditView.hidden) {
         [_businessEditView load:_business];
+        self.navigationItem.title = _business ? @"Edit Company" : @"Add Company";
     }
     
     _locationEditView.hidden = _hiddenLocation;
     _layoutLocationHeight0.active = _hiddenLocation;
     if (!_locationEditView.hidden) {
         [_locationEditView load:_location];
+        self.navigationItem.title = _location ?  @"Edit Work Place" : @"Add Work Place";
     }
 }
 

@@ -210,9 +210,9 @@
     
     if (_locationEditView.imageForUpload) {
         [[self appDelegate].api uploadImage:_locationEditView.imageForUpload
-                                         to:@"user-business-images"
-                                  objectKey:@"business"
-                                   objectId:self.business.id
+                                         to:@"user-location-images"
+                                  objectKey:@"location"
+                                   objectId:self.location.id
                                       order:@0
                                    progress:^(NSUInteger bytesWritten, long long totalBytesWritten, long long totalBytesExpectedToWrite) {
                                        double percent = ((double)totalBytesWritten/totalBytesExpectedToWrite)*100;

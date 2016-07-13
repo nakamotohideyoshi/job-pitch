@@ -404,7 +404,6 @@
 				CE6FD3461C01F9BC001A04C3 /* Assets.xcassets */,
 				CE6FD3481C01F9BC001A04C3 /* LaunchScreen.storyboard */,
 				CE6FD34B1C01F9BC001A04C3 /* Info.plist */,
-				CE6FD33A1C01F9BB001A04C3 /* Supporting Files */,
 				CE45AEC21C0B41380092AB75 /* MJPViewController.h */,
 				CE45AEC31C0B41390092AB75 /* MJPViewController.m */,
 				CE86847C1C0E570300D4B6C7 /* ScrollingViewController.h */,
@@ -413,6 +412,7 @@
 				CE4696AD1C9A0BC8001E3FFE /* LockableNavigationController.m */,
 				D7FA423B1D0EB2D200E93C66 /* MyAlertController.h */,
 				D7FA423C1D0EB2D200E93C66 /* MyAlertController.m */,
+				CE6FD33A1C01F9BB001A04C3 /* Supporting Files */,
 			);
 			path = "My Job Pitch";
 			sourceTree = "<group>";

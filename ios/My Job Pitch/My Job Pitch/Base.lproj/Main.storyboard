@@ -2751,7 +2751,6 @@ Finish your pitch confidently by saying something like, “Thank you and I look 
                                                 <state key="normal" title="Button"/>
                                                 <connections>
                                                     <action selector="emptyButton1ActionDelegate:" destination="d7i-Me-xBa" eventType="touchUpInside" id="SRw-Aq-Okg"/>
-                                                    <segue destination="q1w-Di-3vE" kind="show" identifier="goto_message_thread" id="UT1-rY-E6H"/>
                                                 </connections>
                                             </button>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="amQ-82-HhT">
@@ -3489,10 +3488,10 @@ Finish your pitch confidently by saying something like, “Thank you and I look 
         <image name="switch_camera" width="48" height="48"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="bLg-hp-djS"/>
         <segue reference="0vK-0A-u9q"/>
+        <segue reference="XoM-Rr-ZjD"/>
+        <segue reference="bLg-hp-djS"/>
         <segue reference="pxw-kR-sPa"/>
-        <segue reference="TnE-uG-nR3"/>
         <segue reference="F33-gd-75U"/>
     </inferredMetricsTieBreakers>
 </document>

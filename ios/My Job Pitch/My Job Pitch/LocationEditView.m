@@ -86,6 +86,12 @@
         self.deleteButton.hidden = false;
         self.deleteButton.enabled = false;
         self.deleteButton.alpha = 0.5;
+        
+        if (location.images && location.images.count > 0)
+            self.noImage.hidden = YES;
+        else
+            self.noImage.text = @"image set by company";
+                
         NSURL *imageURL = [NSURL URLWithString:self.image.image];
         [NSURLConnection sendAsynchronousRequest:[NSURLRequest requestWithURL:imageURL]
                                            queue:[NSOperationQueue mainQueue]

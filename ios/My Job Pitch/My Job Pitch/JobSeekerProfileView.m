@@ -167,4 +167,9 @@
     
 }
 
+- (IBAction)changedTickBox:(id)sender {
+    _continueButton.enabled = _tickBox.isOn;
+}
+
+
 @end

@@ -2,6 +2,11 @@ $(function () {
 	// Run login check funtion with auto-redirect
 	checkLogin(true);
 
+	var query = {
+		token: getCookie('key'),
+		csrftoken: getCookie('csrftoken')
+	};
+
 	var imageCurrentLogo = '';
 	var formData = '';
 	//Form submit code
@@ -9,30 +14,36 @@ $(function () {
 		event.preventDefault();
 
 		var company_name = $('#company_name').val();
-		$.post("/api/user-businesses/", {
+
+		userBusinessStore.post({
 			name: company_name
 		}).done(function (data) {
 			$('#business').val(data.id);
 
-			formData = new FormData($('#company_details')[0]);
-			$.ajax({
-				url: '/api/user-business-images/',
-				type: 'POST',
-				data: formData,
-				cache: false,
-				contentType: false,
-				processData: false,
-				success: function (data) {
-					$('#currentLogo').attr('src', data.thumbnail).show();
-					$.get(data.image, function (data2) {
-						imageCurrentLogo = data2;
-					});
+			var userContext = {
+				business_id: data.id,
+			};
 
-					$('#company_details').fadeOut(250, function () {
-						$('#work_place_details').fadeIn(250);
-						$('.page-header').html('Create your first recruitment location');
-					});
-				}
+			formData = new FormData($('#company_details')[0]);
+
+			userBusinessStore.postImages(formData).done(function (data) {
+				formAlert('success', 'Successfully Updated!').then(function(){
+					$('.btn-primary').attr("disabled", false);
+				});
+
+				//userBusinessStore.get(query, userContext).done(function (data) {
+				//	$('#currentLogo').attr('src', data.images[0].thumbnail).show();
+				//});
+
+				$('#currentLogo').attr('src', data.thumbnail).show();
+				$.get(data.image, function (data2) {
+					imageCurrentLogo = data2;
+				});
+
+				$('#company_details').fadeOut(250, function () {
+					$('#work_place_details').fadeIn(250);
+					$('.page-header').html('Create your first recruitment location');
+				});
 			});
 
 		});

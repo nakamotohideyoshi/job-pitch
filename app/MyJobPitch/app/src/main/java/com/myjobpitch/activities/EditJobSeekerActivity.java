@@ -50,6 +50,8 @@ public class EditJobSeekerActivity extends MJPProgressActionBarActivity {
             }
         });
 
+        mJobSeekerEditFragment.mSaveButton = saveButton;
+
         if (savedInstanceState != null) {
             ObjectMapper mapper = new ObjectMapper();
             try {

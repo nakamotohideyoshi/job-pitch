@@ -7,7 +7,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -49,6 +51,8 @@ public class JobSeekerEditFragment extends EditFragment<JobSeeker> {
     private TextView mDescriptionCharacters;
     private CheckBox mHasReferencesView;
 
+    public Button mSaveButton;
+
     public JobSeekerEditFragment() {
         // Required empty public constructor
     }
@@ -75,6 +79,16 @@ public class JobSeekerEditFragment extends EditFragment<JobSeeker> {
         mDescriptionView = (EditText) view.findViewById(R.id.job_seeker_description);
         mDescriptionCharacters = (TextView) view.findViewById(R.id.job_seeler_description_character_count);
         mHasReferencesView = (CheckBox) view.findViewById(R.id.job_seeker_has_references);
+
+        CheckBox tickBox = (CheckBox)view.findViewById(R.id.tickbox);
+        tickBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (mSaveButton != null) {
+                    mSaveButton.setEnabled(isChecked);
+                }
+            }
+        });
 
         mDescriptionView.addTextChangedListener(new TextWatcher() {
             @Override

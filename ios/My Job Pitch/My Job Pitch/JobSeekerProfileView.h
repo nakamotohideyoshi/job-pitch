@@ -42,6 +42,9 @@
 @property (weak, nonatomic) IBOutlet UISwitch *hasReferences;
 @property (weak, nonatomic) IBOutlet UIButton *continueButton;
 
+@property (weak, nonatomic) IBOutlet UISwitch *tickBox;
+
+
 @property (weak, nonatomic, nullable) id<JobSeekerProfileViewDelegate> delegate;
 
 - (IBAction)continue:(nullable id)sender;

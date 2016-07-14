@@ -203,4 +203,11 @@
         android:layout_height="wrap_content"
         android:layout_width="match_parent"/>
 
+    <CheckBox
+        android:id="@+id/tickbox"
+        android:checked="false"
+        android:text="@string/all_my_information"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent" />
+
 </LinearLayout>

@@ -203,9 +203,19 @@ function userTypeMenuConfiguration(redirectToProfile) {
 }
 
 function formAlert(type, message) {
-	$('.alert').addClass('alert-' + type);
-	$('.alert').html(message);
-	$('.alert').show();
+	return new Promise(function(resolve, reject) {
+		$('.alert').addClass('alert-' + type);
+		$('.alert').html(message);
+		$('.alert').show();
+
+		setTimeout(function () {
+			$('.alert').hide();
+
+		}, 5000);
+
+		resolve();
+	});
+
 }
 
 function putManyAlerts(parentId, messages) {

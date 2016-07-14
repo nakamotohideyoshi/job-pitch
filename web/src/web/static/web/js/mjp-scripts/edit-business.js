@@ -7,17 +7,22 @@ $(function () {
 
 	$('#business').val(business_id);
 
-	$.get("/api/user-businesses/" + business_id, {
+	var query = {
 		token: getCookie('key'),
 		csrftoken: getCookie('csrftoken')
-	}).done(function (data) {
+	};
+
+	var userContext = {
+		business_id: business_id,
+	};
+
+	userBusinessStore.get(query, userContext).done(function (data) {
 		if (data.name != null) {
 			$('#company_name').val(data.name);
 		}
+
 		$('#currentLogo').attr('src', data.images[0].thumbnail).show();
-
 	});
-
 
 	//Form submit code
 	$('#company_details').submit(function (event) {
@@ -25,33 +30,25 @@ $(function () {
 		event.preventDefault();
 
 		var company_name = $('#company_name').val();
-		$.put("/api/user-businesses/" + business_id + "/", {
-			name: company_name
-		}).done(function (data) {
+		userBusinessStore.put({	name: company_name }, userContext).done(function (data) {
 
 			if ($('#company_logo').val() != '') {
 				var formData = new FormData($('#company_details')[0]);
-				$.ajax({
-					url: '/api/user-business-images/',
-					type: 'POST',
-					data: formData,
-					cache: false,
-					contentType: false,
-					processData: false,
-					success: function (data) {
-						formAlert('success', 'Successfully Updated!');
-						setTimeout(function () {
-							$('.btn-primary').attr("disabled", false);
-							$('.alert').hide();
-						}, 5000);
-					}
+
+				userBusinessStore.postImages(formData).done(function(response) {
+					formAlert('success', 'Successfully Updated!').then(function(){
+						$('.btn-primary').attr("disabled", false);
+					});
+
+					userBusinessStore.get(query, userContext).done(function (data) {
+						$('#currentLogo').attr('src', data.images[0].thumbnail).show();
+					});
 				});
+
 			} else {
-				formAlert('success', 'Successfully Updated!');
-				setTimeout(function () {
+				formAlert('success', 'Successfully Updated!', function(){
 					$('.btn-primary').attr("disabled", false);
-					$('.alert').hide();
-				}, 5000);
+				});
 			}
 
 		})

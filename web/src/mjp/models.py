@@ -3,7 +3,7 @@ import os
 
 from cStringIO import StringIO
 from PIL import Image
-from apt.progress.text import _
+from django.utils.translation import gettext as _
 
 from django.conf import settings
 from django.contrib.auth.base_user import AbstractBaseUser, BaseUserManager

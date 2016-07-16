@@ -13,16 +13,7 @@ def registration(request):
 	
 def logout(request):
     return render(request, 'logout.html')
-	
-def password_reset(request):
-    return render(request, 'profile/password-reset.html')
 
-def password_reset_confirm(request):
-    return render(request, 'profile/password-reset-confirm.html')
-	
-def password_change(request):
-    return render(request, 'profile/password-change.html')
-	
 def profile(request):
     return render(request, 'profile/main.html')
 

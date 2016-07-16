@@ -3,7 +3,7 @@ $(function() {
 	var login = checkLogin();
 	$('#logged_in_menu').hide();
 	if(login == true){
-			deleteCookie('username');
+			deleteCookie('email');
 			deleteCookie('key');
 			
 			$.post( "/api-rest-auth/logout/", { csrfmiddlewaretoken: getCookie('csrftoken') }).done(function( data ) {

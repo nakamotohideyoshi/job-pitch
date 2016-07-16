@@ -7,12 +7,12 @@ $(function() {
 	//Form submit code
  	$('#login').submit(function( event ) {
 		event.preventDefault();
-		var username = $('#username').val();
+		var email = $('#email').val();
 		var password1 = $('#password').val();
 		var csrfmiddlewaretoken = $('[name="csrfmiddlewaretoken"]').val();
-			$.post( "/api-rest-auth/login/", { username: username, password: password1, csrfmiddlewaretoken: csrfmiddlewaretoken }).done(function( data ) {
+			$.post( "/api-rest-auth/login/", { email: email, password: password1, csrfmiddlewaretoken: csrfmiddlewaretoken }).done(function( data ) {
 				
-				setCookie('username', username, 28);
+				setCookie('email', email, 28);
 				setCookie('key', data.key, 28);
 				window.location.href = "/applications/";
 			  })

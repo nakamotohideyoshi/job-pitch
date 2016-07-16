@@ -708,15 +708,16 @@ Web App By Reiss Watson
 	text-align:center;
 }
 
-.login-username{
+.login-email {
 	font-size:18px;
 	color:#fff !important;
 	display:inline-block;
 	margin-top:18px;
 }
 
-#header_username{
+#header_email {
 	display:inline-block;
+	text-align: right;
 }
 
 #profile .col-md-12 {
@@ -737,7 +738,7 @@ Web App By Reiss Watson
 	display:none;
 }
 
-.login-username{
+.login-email {
 
 }
 

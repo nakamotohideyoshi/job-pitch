@@ -47,8 +47,8 @@
 				  <!--<div class="center-section-header col-md-6">Do you want to make a pitch?<a class="btn btn-custom">Create my Pitch</a></div>-->
 
 				  <div class="col-md-3 menu-container">
-					  <div class="login-username business-link job-seeker-link">
-						<h4 id="header_username"></h4>
+					  <div class="login-email business-link job-seeker-link">
+						<h4 id="header_email"></h4>
 					  </div>
 					  <a class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
 						<span class="icon-bar"></span>
@@ -141,7 +141,7 @@
 				<div class="col-md-8 col-md-offset-2">
 					<form role="form"  action="/api-rest-auth/login/" method="post" id="login">
 						<div class="alert" role="alert"></div>
-						<input type="text" class="form-control" id="username" name="username" placeholder="Username">
+						<input type="text" class="form-control" id="email" name="email" placeholder="Email address">
 						<input type="password" class="form-control" id="password" name="password" placeholder="Password">
 						<button type="submit" class="btn btn-custom-modal">Login</button>
 					</form>
@@ -165,7 +165,7 @@
 						<div class="col-md-8 col-md-offset-2">
 							<form role="form"  action="/api-auth/login/" method="post" id="register">
 								<div class="alert" role="alert"></div>
-								<input type="text" class="form-control" id="reg_username" name="reg_username" placeholder="Username">
+								<input type="text" class="form-control" id="reg_email" name="reg_email" placeholder="Email address">
 								<input type="password" class="form-control" id="password1" name="password1" placeholder="Password">
 								<input type="password" class="form-control" id="password2" name="password2" placeholder="Confirm Password">
 								<button type="submit" class="btn btn-custom-modal-2">Register</button>

@@ -24,17 +24,6 @@ function populateCompanies(companyid) {
 	});
 }
 
-function populateSelect($select, data) {
-	var options = '';
-
-	data.forEach(function (obj) {
-		options +=
-			'<option value="' + obj.id + '">' + obj.name + '</options>';
-	});
-
-	$select.append(options);
-}
-
 $(function () {
 	// Run login check funtion with auto-redirect
 	checkLogin(true);

@@ -975,8 +975,8 @@ input {
 .formFieldErrorInField{
 	border:#d43f3a 2px solid;
 }
-
-#locationSelect{
+#locationSelect,
+#jobSelect{
 	display:none;
 }
 #mainFormAreaCreateJob{

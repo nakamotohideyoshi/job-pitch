@@ -541,6 +541,32 @@ function isBrowser(queryBrowser) {
 
 }
 
+function populateSelect($select, data, selectedOption) {
+	var options = '';
+	var selected = '';
+	var text = '';
+
+	data.forEach(function (obj) {
+		selected = '';
+		text = '';
+		if(selectedOption !== undefined){
+			if (obj.id == selectedOption) {
+				selected = 'selected=""';
+			}
+		}
+
+		text = obj.name;
+		if(obj.name == undefined) {
+			text = obj.title;
+		}
+
+		options +=
+			'<option value="' + obj.id + selected + '">' + text + '</options>';
+	});
+
+	$select.append(options);
+}
+
 /* Site wide on-load functions */
 
 $(function () {

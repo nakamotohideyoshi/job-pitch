@@ -31,13 +31,8 @@ $(function () {
 					$('.btn-primary').attr("disabled", false);
 				});
 
-				//userBusinessStore.get(query, userContext).done(function (data) {
-				//	$('#currentLogo').attr('src', data.images[0].thumbnail).show();
-				//});
-
-				$('#currentLogo').attr('src', data.thumbnail).show();
-				$.get(data.image, function (data2) {
-					imageCurrentLogo = data2;
+				userBusinessStore.get(query, userContext).done(function (data) {
+					$('#currentLogo').attr('src', data.images[0].thumbnail).show();
 				});
 
 				$('#company_details').fadeOut(250, function () {

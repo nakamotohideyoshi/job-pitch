@@ -14,6 +14,8 @@ MIDDLEWARE_CLASSES += (
     'mjp.middleware.PlainExceptionsMiddleware',
 )
 
+EMAIL_PORT = 1025
+
 try:
     from local import *
 except ImportError:

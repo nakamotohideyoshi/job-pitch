@@ -64,27 +64,27 @@ function checkLogin(redirect) {
 		window.location.href = "/mobile-app";
 	}
 
-	var username = getCookie('username');
-	if (username == "") {
+	var email = getCookie('email');
+	if (email == "") {
 		if (redirect == true) {
 			window.location.href = "/login";
 		} else {
 			//show login & reg links
 			$('.not_logged_in_menu').show();
 			$('.not_logged_in_element').show();
-			$('.login-username').hide();
+			$('.login-email').hide();
 
 			return false;
 		}
 	} else {
-		setHeaderUsername();
+		setHeaderEmail();
 
 		return true;
 	}
 }
 
 function logoutUser() {
-	deleteCookie('username');
+	deleteCookie('email');
 	deleteCookie('key');
 
 	$.post("/api-rest-auth/logout/", {
@@ -100,9 +100,9 @@ function logoutUser() {
 
 }
 
-function setHeaderUsername() {
-	var username = getCookie('username');
-	$('#header_username').html(username);
+function setHeaderEmail() {
+	var email = getCookie('email');
+	$('#header_email').html(email);
 
 	// Display said menu
 	$('.logged_in_menu').show();
@@ -587,17 +587,17 @@ $(function () {
 	//Form submit code - Login
 	$('#login').submit(function (event) {
 		event.preventDefault();
-		var username = $('#username').val();
+		var email = $('#email').val();
 		var password1 = $('#password').val();
 		var csrfmiddlewaretoken = $('[name="csrfmiddlewaretoken"]').val();
 		$.post("/api-rest-auth/login/", {
-			username: username,
+			email: email,
 			password: password1,
 			csrfmiddlewaretoken: csrfmiddlewaretoken
 
 		})
 			.done(function (data) {
-				setCookie('username', username, 28);
+				setCookie('email', email, 28);
 				setCookie('key', data.key, 28);
 				window.location.href = "/applications/";
 
@@ -617,25 +617,25 @@ $(function () {
 	//Form submit code - Reg
 	$('#register').submit(function (event) {
 		event.preventDefault();
-		var username = $('#reg_username').val();
+		var email = $('#reg_email').val();
 		var password1 = $('#password1').val();
 		var password2 = $('#password2').val();
 		var csrfmiddlewaretoken = $('[name="csrfmiddlewaretoken"]').val();
 
 		$.post("/api-rest-auth/registration/", {
-			username: username,
+			email: email,
 			password1: password1,
 			password2: password2,
 			csrfmiddlewaretoken: csrfmiddlewaretoken
 		})
 			.done(function (data) {
 				$.post("/api-rest-auth/login/", {
-					username: username,
+					email: email,
 					password: password1,
 					csrfmiddlewaretoken: csrfmiddlewaretoken
 				})
 					.done(function (data) {
-						setCookie('username', username, 28);
+						setCookie('email', email, 28);
 						setCookie('key', data.key, 28);
 						window.location.href = "/profile";
 					})

@@ -51,7 +51,7 @@
     
     [self configureMapping:objectManager
               requestClass:[LoginRequest class]
-              requestArray:@[@"username", @"password"]
+              requestArray:@[@"email", @"password"]
          requestDictionary:nil
       requestRelationships:nil
              responseClass:[AuthToken class]
@@ -64,7 +64,7 @@
     
     [self configureMapping:objectManager
               requestClass:[RegisterRequest class]
-              requestArray:@[@"username", @"password1", @"password2"]
+              requestArray:@[@"email", @"password1", @"password2"]
          requestDictionary:nil
       requestRelationships:nil
              responseClass:[AuthToken class]
@@ -77,7 +77,7 @@
     
     [self configureResponseMapping:objectManager
                      responseClass:[User class]
-                     responseArray:@[@"id", @"username", @"businesses"]
+                     responseArray:@[@"id", @"email", @"businesses"]
                 responseDictionary:@{@"job_seeker": @"jobSeeker"}
              responseRelationships:nil
                               path:@"/api-rest-auth/user/"
@@ -807,14 +807,14 @@
     return nil;
 }
 
-- (void)loginWithUsername:(NSString*)username
+- (void)loginWithEmail:(NSString*)email
                  password:(NSString*)password
                   success:(void (^)(AuthToken *authToken))success
                   failure:(void (^)(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors))failure
 {
     [self clearCookies];
     LoginRequest* request = [LoginRequest alloc];
-    request.username = username;
+    request.email = email;
     request.password = password;
     [[RKObjectManager sharedManager] postObject:request path:@"/api-rest-auth/login/" parameters:nil
                                         success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
@@ -830,7 +830,7 @@
      ];
 }
 
-- (void)registerWithUsername:(NSString*)username
+- (void)registerWithEmail:(NSString*)email
                    password1:(NSString*)password1
                    password2:(NSString*)password2
                      success:(void (^)(AuthToken *authToken))success
@@ -838,7 +838,7 @@
 {
     [self clearCookies];
     RegisterRequest *request = [RegisterRequest alloc];
-    request.username = username;
+    request.email = email;
     request.password1 = password1;
     request.password2 = password2;
     [[RKObjectManager sharedManager] postObject:request

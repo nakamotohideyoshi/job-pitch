@@ -159,14 +159,14 @@ public class MJPApi {
         return this.token != null;
     }
 
-    public AuthToken login(String username, String password) throws MJPApiException {
-        Login login = new Login(username, password);
+    public AuthToken login(String email, String password) throws MJPApiException {
+        Login login = new Login(email, password);
         URI url = getAuthUrl("login");
         return doAuthentication(login, url);
     }
 
-    public AuthToken register(String username, String password1, String password2) throws MJPApiException {
-        Registration registration = new Registration(username, password1, password2);
+    public AuthToken register(String email, String password1, String password2) throws MJPApiException {
+        Registration registration = new Registration(email, password1, password2);
         URI url = getAuthUrl("registration");
         return doAuthentication(registration, url);
     }

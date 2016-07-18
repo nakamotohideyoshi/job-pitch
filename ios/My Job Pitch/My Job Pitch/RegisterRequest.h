@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 
 @interface RegisterRequest : NSObject
-@property NSString* username;
+@property NSString* email;
 @property NSString* password1;
 @property NSString* password2;
 @end

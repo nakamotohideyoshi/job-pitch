@@ -24,7 +24,7 @@
     
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     BOOL isRemember = [defaults boolForKey:@"remember"];
-    username.text = [defaults stringForKey:@"username"];
+    email.text = [defaults stringForKey:@"email"];
     password.text = isRemember ? [defaults stringForKey:@"password"] : @"";
     password2.text = @"";
     [switchRemember setOn:isRemember];
@@ -41,13 +41,6 @@
 }
 
 - (void)viewWillAppear:(BOOL)animated {
-    
-//    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-//    BOOL isRemember = [defaults boolForKey:@"remember"];
-//    username.text = [defaults stringForKey:@"username"];
-//    password.text = isRemember ? [defaults stringForKey:@"password"] : @"";
-//    password2.text = @"";
-//    [switchRemember setOn:isRemember];
     
     [[self appDelegate].api logout];
     [[self appDelegate] clearData];
@@ -78,7 +71,7 @@
         NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
         
         [defaults setBool:switchRemember.isOn forKey:@"remember"];
-        [defaults setObject:username.text forKey:@"username"];
+        [defaults setObject:email.text forKey:@"email"];
         [defaults setObject:password.text forKey:@"password"];
         [defaults synchronize];
         
@@ -124,14 +117,14 @@
 }
 
 - (NSDictionary*)getFieldMap {
-    return @{@"username": username,
+    return @{@"email": email,
              @"password": password,
              @"password2": password2,
              };
 }
 
 - (NSDictionary *)getErrorViewMap {
-    return @{@"username": usernameError,
+    return @{@"email": emailError,
              @"password": passwordError,
              @"password2": password2Error,
              };
@@ -141,7 +134,7 @@
     NSLog(@"login");
     if ([self validate]) {
         [self showProgress:true];
-        [[self appDelegate].api loginWithUsername:username.text password:password.text success:^(AuthToken *authToken) {
+        [[self appDelegate].api loginWithEmail:email.text password:password.text success:^(AuthToken *authToken) {
             [[self appDelegate].api getUser:^(User *user) {
                 [self completeLoginWithUser:user];
             } failure:^(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors) {
@@ -159,8 +152,8 @@
     NSLog(@"register");
     if ([self validate]) {
         [self showProgress:true];
-        [[self appDelegate].api registerWithUsername:username.text password1:password.text password2:password2.text success:^(AuthToken *authToken) {
-            [[self appDelegate].api loginWithUsername:username.text password:password.text success:^(AuthToken *authToken) {
+        [[self appDelegate].api registerWithEmail:email.text password1:password.text password2:password2.text success:^(AuthToken *authToken) {
+            [[self appDelegate].api loginWithEmail:email.text password:password.text success:^(AuthToken *authToken) {
                 [[self appDelegate].api getUser:^(User *user) {
                     password.text = @"";
                     password2.text = @"";

@@ -12,8 +12,8 @@
 
 @interface Login : ScrollingViewController {
     
-    __weak IBOutlet UITextField * username;
-    __weak IBOutlet UILabel * usernameError;
+    __weak IBOutlet UITextField * email;
+    __weak IBOutlet UILabel * emailError;
     __weak IBOutlet UITextField * password;
     __weak IBOutlet UILabel * passwordError;
     __weak IBOutlet UITextField * password2;

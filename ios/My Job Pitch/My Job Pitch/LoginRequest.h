@@ -9,6 +9,6 @@
 #import <Foundation/Foundation.h>
 
 @interface LoginRequest : NSObject
-@property NSString* username;
+@property NSString* email;
 @property NSString* password;
 @end

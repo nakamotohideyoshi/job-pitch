@@ -56,7 +56,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class LoginActivity extends MJPProgressActivity implements LoaderCallbacks<Cursor> {
     public static final String LOGIN_PREFERENCES = "LoginPreferences";
     public static final String API_ROOT = "API_ROOT";
-    public static final String USERNAME = "USERNAME";
+    public static final String EMAIL = "EMAIL";
     public static final String PASSWORD = "PASSWORD";
     public static final String REMEMBER_PASSWORD = "REMEMBER_PASSWORD";
 
@@ -65,7 +65,7 @@ public class LoginActivity extends MJPProgressActivity implements LoaderCallback
     private LogoutTask logoutTask = null;
 
     // UI references.
-    private AutoCompleteTextView mUsernameView;
+    private AutoCompleteTextView mEmailView;
     private EditText mPasswordView;
     private CheckBox mRememberPasswordView;
     private View mProgressView;
@@ -90,8 +90,8 @@ public class LoginActivity extends MJPProgressActivity implements LoaderCallback
         versionView.setText(String.format("Version: %s", version));
 
         // Set up the login form.
-        mUsernameView = (AutoCompleteTextView) findViewById(R.id.username);
-        mUsernameView.setText(preferences.getString(USERNAME, ""));
+        mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
+        mEmailView.setText(preferences.getString(EMAIL, ""));
 
         mPasswordView = (EditText) findViewById(R.id.password);
         mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -182,7 +182,7 @@ public class LoginActivity extends MJPProgressActivity implements LoaderCallback
         super.onResume();
 
         final SharedPreferences preferences = getSharedPreferences(LOGIN_PREFERENCES, MODE_PRIVATE);
-        mUsernameView.setText(preferences.getString(USERNAME, ""));
+        mEmailView.setText(preferences.getString(EMAIL, ""));
 
         boolean isRemember = preferences.getBoolean(REMEMBER_PASSWORD, false);
         mRememberPasswordView.setChecked(isRemember);
@@ -211,11 +211,11 @@ public class LoginActivity extends MJPProgressActivity implements LoaderCallback
         }
 
         // Reset errors.
-        mUsernameView.setError(null);
+        mEmailView.setError(null);
         mPasswordView.setError(null);
 
         // Store values at the time of the login attempt.
-        String username = mUsernameView.getText().toString();
+        String email = mEmailView.getText().toString();
         String password = mPasswordView.getText().toString();
 
         boolean error = false;
@@ -230,9 +230,9 @@ public class LoginActivity extends MJPProgressActivity implements LoaderCallback
         }
 
         // Check for a valid email address.
-        if (TextUtils.isEmpty(username)) {
-            mUsernameView.setError(getString(R.string.error_field_required));
-            errorView = mUsernameView;
+        if (TextUtils.isEmpty(email)) {
+            mEmailView.setError(getString(R.string.error_field_required));
+            errorView = mEmailView;
             error = true;
         }
 
@@ -245,14 +245,14 @@ public class LoginActivity extends MJPProgressActivity implements LoaderCallback
             // perform the user login attempt.
             showProgress(true);
             mProgressText.setText(getString(R.string.logging_in));
-            loginTask = new LoginTask(username, password);
+            loginTask = new LoginTask(email, password);
             loginTask.execute((Void) null);
         }
     }
 
     private void register() {
         Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
-        intent.putExtra("username", mUsernameView.getText().toString());
+        intent.putExtra("email", mEmailView.getText().toString());
         startActivity(intent);
     }
 
@@ -316,20 +316,20 @@ public class LoginActivity extends MJPProgressActivity implements LoaderCallback
                 new ArrayAdapter<>(LoginActivity.this,
                         android.R.layout.simple_dropdown_item_1line, emailAddressCollection);
 
-        mUsernameView.setAdapter(adapter);
+        mEmailView.setAdapter(adapter);
     }
 
     class LoginTask extends AsyncTask<Void, Void, Boolean> {
 
-        private final String mUsername;
+        private final String mEmail;
         private final String mPassword;
         private boolean clientException = false;
         private boolean loadError = false;
         private User mUser;
         private Business mBusiness;
 
-        LoginTask(String username, String password) {
-            mUsername = username;
+        LoginTask(String email, String password) {
+            mEmail = email;
             mPassword = password;
         }
 
@@ -339,7 +339,7 @@ public class LoginActivity extends MJPProgressActivity implements LoaderCallback
             MJPApi api = application.getApi();
             try {
                 try {
-                    api.login(mUsername, mPassword);
+                    api.login(mEmail, mPassword);
                 } catch (MJPApiException e) {
                     return false;
                 }
@@ -364,7 +364,7 @@ public class LoginActivity extends MJPProgressActivity implements LoaderCallback
             if (loginSuccess) {
                 SharedPreferences.Editor preferences = getSharedPreferences(LOGIN_PREFERENCES, MODE_PRIVATE)
                         .edit()
-                        .putString(USERNAME, mUsername)
+                        .putString(EMAIL, mEmail)
                         .putString(PASSWORD, mPassword)
                         .putBoolean(REMEMBER_PASSWORD, mRememberPasswordView.isChecked());
                 if (BuildConfig.DEBUG)

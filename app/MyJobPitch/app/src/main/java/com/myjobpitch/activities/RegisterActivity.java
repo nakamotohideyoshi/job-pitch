@@ -31,7 +31,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class RegisterActivity extends MJPProgressActivity {
 
-    private EditText mUsernameView;
+    private EditText mEmailView;
     private EditText mPassword1View;
     private EditText mPassword2View;
     private View mRegisterFormView;
@@ -43,7 +43,7 @@ public class RegisterActivity extends MJPProgressActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
-        mUsernameView = (EditText) findViewById(R.id.username);
+        mEmailView = (EditText) findViewById(R.id.email);
         mPassword1View = (EditText) findViewById(R.id.password1);
         mPassword2View = (EditText) findViewById(R.id.password2);
         mPassword2View.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -54,9 +54,9 @@ public class RegisterActivity extends MJPProgressActivity {
             }
         });
 
-        String username = getIntent().getStringExtra("username");
-        if (username != null) {
-            mUsernameView.setText(username);
+        String email = getIntent().getStringExtra("email");
+        if (email != null) {
+            mEmailView.setText(email);
         }
 
         Button mSignInButton = (Button) findViewById(R.id.register_button);
@@ -74,7 +74,7 @@ public class RegisterActivity extends MJPProgressActivity {
 
     private void attemptRegistration() {
         // Reset errors.
-        mUsernameView.setError(null);
+        mEmailView.setError(null);
         mPassword1View.setError(null);
         mPassword2View.setError(null);
 
@@ -82,13 +82,13 @@ public class RegisterActivity extends MJPProgressActivity {
         View errorView = null;
 
         // Store values at the time of the login attempt.
-        String username = mUsernameView.getText().toString();
+        String email = mEmailView.getText().toString();
         String password1 = mPassword1View.getText().toString();
         String password2 = mPassword2View.getText().toString();
 
-        if (TextUtils.isEmpty(username)) {
-            mUsernameView.setError(getString(R.string.error_field_required));
-            errorView = mUsernameView;
+        if (TextUtils.isEmpty(email)) {
+            mEmailView.setError(getString(R.string.error_field_required));
+            errorView = mEmailView;
             error = true;
         }
 
@@ -113,7 +113,7 @@ public class RegisterActivity extends MJPProgressActivity {
             // perform the user login attempt.
             showProgress(true);
             mProgressText.setText(getString(R.string.creating_account));
-            registerTask = new RegisterTask(username, password1, password2);
+            registerTask = new RegisterTask(email, password1, password2);
             registerTask.execute((Void) null);
         }
     }
@@ -135,15 +135,15 @@ public class RegisterActivity extends MJPProgressActivity {
     }
 
     private class RegisterTask extends AsyncTask<Void, Void, Class<?>> {
-        private final String username;
+        private final String email;
         private final String password1;
         private final String password2;
         private JsonNode errors;
         private boolean loadError = false;
         private boolean clientException = false;
 
-        public RegisterTask(String username, String password1, String password2) {
-            this.username = username;
+        public RegisterTask(String email, String password1, String password2) {
+            this.email = email;
             this.password1 = password1;
             this.password2 = password2;
         }
@@ -154,7 +154,7 @@ public class RegisterActivity extends MJPProgressActivity {
             MJPApi api = application.getApi();
             try {
                 try {
-                    api.register(username, password1, password2);
+                    api.register(email, password1, password2);
                 } catch (MJPApiException e) {
                     errors = e.getErrors();
                     return null;
@@ -196,10 +196,10 @@ public class RegisterActivity extends MJPProgressActivity {
                     errorView = mPassword1View;
                 }
 
-                JsonNode usernameError = errors.get("username");
-                if (usernameError != null) {
-                    mUsernameView.setError(usernameError.get(0).asText());
-                    errorView = mUsernameView;
+                JsonNode emailError = errors.get("email");
+                if (emailError != null) {
+                    mEmailView.setError(emailError.get(0).asText());
+                    errorView = mEmailView;
                 }
 
                 if (errorView != null)
@@ -233,7 +233,7 @@ public class RegisterActivity extends MJPProgressActivity {
 
                                 SharedPreferences.Editor preferences = getSharedPreferences(LoginActivity.LOGIN_PREFERENCES, MODE_PRIVATE)
                                         .edit()
-                                        .putString(LoginActivity.USERNAME, username)
+                                        .putString(LoginActivity.EMAIL, email)
                                         .putString(LoginActivity.PASSWORD, "")
                                         .putBoolean(LoginActivity.REMEMBER_PASSWORD, false);
                                 preferences.commit();

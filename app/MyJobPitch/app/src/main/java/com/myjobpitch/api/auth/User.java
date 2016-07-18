@@ -5,12 +5,12 @@ import com.myjobpitch.api.MJPAPIObject;
 import java.util.List;
 
 public class User extends MJPAPIObject {
-	private String username;
+	private String email;
     private List<Integer> businesses;
     private Integer job_seeker;
 
-    public String getUsername() {
-		return username;
+    public String getEmail() {
+		return email;
 	}
 
     public List<Integer> getBusinesses() {

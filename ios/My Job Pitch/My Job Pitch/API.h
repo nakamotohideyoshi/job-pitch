@@ -23,12 +23,12 @@
 
 - (id)initWithAPIRoot:(NSString*)apiRoot;
 
-- (void)loginWithUsername:(NSString*)username
+- (void)loginWithEmail:(NSString*)email
                  password:(NSString*)password
                   success:(void (^)(AuthToken *authToken))success
                   failure:(void (^)(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors))failure;
 
-- (void)registerWithUsername:(NSString*)username
+- (void)registerWithEmail:(NSString*)email
                    password1:(NSString*)password1
                    password2:(NSString*)password2
                      success:(void (^)(AuthToken *authToken))success

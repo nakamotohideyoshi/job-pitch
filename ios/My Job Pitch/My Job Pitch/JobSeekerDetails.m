@@ -76,7 +76,15 @@
 - (IBAction)playVideo:(id)sender {
     Pitch *pitch = [self.jobSeeker getPitch];
     if (pitch && pitch.video) {
-        [self performSegueWithIdentifier:@"play_video" sender:pitch];
+        // create an AVPlayer
+        AVPlayer *player = [AVPlayer playerWithURL:[NSURL URLWithString:pitch.video]];
+        
+        // create a player view controller
+        AVPlayerViewController *controller = [[AVPlayerViewController alloc]init];
+        controller.player = player;
+        [player play];
+        
+        [self.navigationController pushViewController:controller animated:YES];
     }
 }
 
@@ -91,11 +99,7 @@
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    if ([segue.identifier isEqualToString:@"play_video"]) {
-        Pitch *pitch = sender;
-        AVPlayerViewController *playerViewController = segue.destinationViewController;
-        playerViewController.player = [AVPlayer playerWithURL:[NSURL URLWithString:pitch.video]];
-    } else if ([[segue identifier] isEqualToString:@"goto_message_thread"]) {
+    if ([[segue identifier] isEqualToString:@"goto_message_thread"]) {
         MessageThread *messageThreadView = [segue destinationViewController];
         [messageThreadView setApplication:self.application];
     }

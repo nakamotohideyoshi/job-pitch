@@ -6,9 +6,9 @@
 //  Copyright © 2016 SC Labs Ltd. All rights reserved.
 //
 
-#import "MJPViewController.h"
+#import "ScrollingViewController.h"
 
-@interface MessageThread : MJPViewController<UITableViewDelegate, UITableViewDataSource>
+@interface MessageThread : ScrollingViewController<UITableViewDelegate, UITableViewDataSource>
 
 @property (nonnull) Application *application;
 

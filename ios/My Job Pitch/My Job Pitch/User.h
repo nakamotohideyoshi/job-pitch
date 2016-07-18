@@ -10,7 +10,7 @@
 #import "MJPObject.h"
 
 @interface User : MJPObject
-@property NSString* username;
+@property NSString* email;
 @property NSArray* businesses;
 @property NSNumber* jobSeeker;
 

@@ -452,9 +452,7 @@ typedef NS_ENUM( NSInteger, AVCamSetupResult ) {
 {
     if ( self.movieFileOutput.isRecording ) {
         self.countLabel.hidden = YES;
-        readyCount = -1;
-        
-        [self stopRecord];
+        readyCount = 0;
         return;
     }
     
@@ -465,13 +463,18 @@ typedef NS_ENUM( NSInteger, AVCamSetupResult ) {
         readyCount = 10;
         
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+            
+            int oldCount;
             while(readyCount > 0) {
                 dispatch_async(dispatch_get_main_queue(), ^{
                     self.countLabel.text = [NSString stringWithFormat:@"%d", readyCount];
                 });
                 
-                [NSThread sleepForTimeInterval: 1];
                 readyCount--;
+                oldCount = readyCount;
+                [NSThread sleepForTimeInterval: 1];
+                
+                if (oldCount < readyCount) return;
             }
             
             if (readyCount == 0) {
@@ -603,13 +606,18 @@ typedef NS_ENUM( NSInteger, AVCamSetupResult ) {
         readyCount = 30;
         
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+            
+            int oldCount;
             while(readyCount > 0) {
                 dispatch_async(dispatch_get_main_queue(), ^{
                     self.countLabel.text = [NSString stringWithFormat:@"%d", readyCount];
                 });
                 
-                [NSThread sleepForTimeInterval: 1];
                 readyCount--;
+                oldCount = readyCount;
+                [NSThread sleepForTimeInterval: 1];
+                
+                if (oldCount < readyCount) return;
             }
             
             if (readyCount == 0) {
@@ -644,36 +652,10 @@ typedef NS_ENUM( NSInteger, AVCamSetupResult ) {
 	}
 	if ( success ) {
         [self dismissViewControllerAnimated:YES completion:nil];
-        [self.recordPitch recordCompleted:outputFileURL.absoluteString];
+        if (readyCount != -1) {
+            [self.recordPitch recordCompleted:outputFileURL.absoluteString];
+        }
         return;
-        
-		// Check authorization status.
-		/*[PHPhotoLibrary requestAuthorization:^( PHAuthorizationStatus status ) {
-			if ( status == PHAuthorizationStatusAuthorized ) {
-				// Save the movie file to the photo library and cleanup.
-				[[PHPhotoLibrary sharedPhotoLibrary] performChanges:^{
-					// In iOS 9 and later, it's possible to move the file into the photo library without duplicating the file data.
-					// This avoids using double the disk space during save, which can make a difference on devices with limited free disk space.
-					if ( [PHAssetResourceCreationOptions class] ) {
-						PHAssetResourceCreationOptions *options = [[PHAssetResourceCreationOptions alloc] init];
-						options.shouldMoveFile = YES;
-						PHAssetCreationRequest *changeRequest = [PHAssetCreationRequest creationRequestForAsset];
-						[changeRequest addResourceWithType:PHAssetResourceTypeVideo fileURL:outputFileURL options:options];
-					}
-					else {
-						[PHAssetChangeRequest creationRequestForAssetFromVideoAtFileURL:outputFileURL];
-					}
-				} completionHandler:^( BOOL success, NSError *error ) {
-					if ( ! success ) {
-						NSLog( @"Could not save movie to photo library: %@", error );
-					}
-					cleanup();
-				}];
-			}
-			else {
-				cleanup();
-			}
-		}];*/
 	}
 	else {
 		cleanup();

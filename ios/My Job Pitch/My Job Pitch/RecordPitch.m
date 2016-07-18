@@ -26,6 +26,9 @@
 @property (nonnull) Pitch *pitch;
 @property (strong, nonatomic) NSURL *videoURL;
 
+@property NSString *mp4Path;
+
+
 @property (copy, nonatomic) AWSS3TransferUtilityUploadCompletionHandlerBlock completionHandler;
 @property (copy, nonatomic) AWSS3TransferUtilityProgressBlock progressBlock;
 
@@ -92,11 +95,25 @@
 }
 
 - (IBAction)playPitch:(id)sender {
+    NSURL *url;
     if (self.videoURL) {
-        [self performSegueWithIdentifier:@"play_video" sender:self.videoURL];
+        url = self.videoURL;
     } else if (self.pitch && self.pitch.video) {
-        [self performSegueWithIdentifier:@"play_video" sender:[NSURL URLWithString:self.pitch.video]];
+        url = [NSURL URLWithString:self.pitch.video];
+    } else {
+        return;
     }
+    
+    // create an AVPlayer
+    AVPlayer *player = [AVPlayer playerWithURL:url];
+    
+    // create a player view controller
+    AVPlayerViewController *controller = [[AVPlayerViewController alloc]init];
+    controller.player = player;
+    [player play];
+    
+    [self.navigationController pushViewController:controller animated:YES];
+
 }
 
 - (IBAction)recordPitch:(id)sender {
@@ -166,11 +183,44 @@
     
     [self.appDelegate.api savePitch:pitch success:^(Pitch *pitch) {
         weakSelf.pitch = pitch;
-        [weakSelf startUpload];
+        [weakSelf videoConvert];
     } failure:^(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors) {
         [weakSelf uploadFailed];
     }];
     
+}
+
+- (void)videoConvert {
+    
+    AVURLAsset *avAsset = [AVURLAsset URLAssetWithURL:self.videoURL options:nil];
+    NSArray *compatiblePresets = [AVAssetExportSession exportPresetsCompatibleWithAsset:avAsset];
+    NSLog(@"%@", compatiblePresets);
+    
+    if ([compatiblePresets containsObject:AVAssetExportPresetLowQuality])
+    {
+        AVAssetExportSession *exportSession = [[AVAssetExportSession alloc]initWithAsset:avAsset
+                                                                              presetName:AVAssetExportPresetLowQuality];
+        NSLog(@"%@", exportSession.supportedFileTypes);
+        
+        NSDateFormatter* formater = [[NSDateFormatter alloc] init];
+        [formater setDateFormat:@"yyyyMMddHHmmss"];
+        self.mp4Path = [NSHomeDirectory() stringByAppendingFormat:@"/Documents/%@.mp4", [formater stringFromDate:[NSDate date]]];
+        
+        exportSession.outputURL = [NSURL fileURLWithPath: self.mp4Path];
+        exportSession.shouldOptimizeForNetworkUse = YES;
+        exportSession.outputFileType = AVFileTypeMPEG4;
+        [exportSession exportAsynchronouslyWithCompletionHandler:^{
+            if ([exportSession status] == AVAssetExportSessionStatusCompleted) {
+                NSLog(@"Successful!");
+                [self performSelectorOnMainThread:@selector(startUpload) withObject:nil waitUntilDone:NO];
+            } else {
+                NSLog(@"Export canceled");
+            }
+        }];
+    } else {
+        self.mp4Path = nil;
+        [self startUpload];
+    }
 }
 
 - (void) startUpload {
@@ -198,13 +248,14 @@
     AWSS3TransferUtilityUploadExpression *expression = [AWSS3TransferUtilityUploadExpression new];
     expression.progressBlock = weakSelf.progressBlock;
     
-    NSString *keyname = [NSString stringWithFormat:@"%@/%@.%@.%@", @"https:ec2-52-31-145-95.eu-west-1.compute.amazonaws.com", self.pitch.token, self.pitch.id, [self.videoURL lastPathComponent]];
+    NSURL *mp4URL = self.mp4Path ? [NSURL URLWithString:[NSString stringWithFormat:@"file://localhost/private%@", self.mp4Path]] : self.videoURL;
+    NSString *keyname = [NSString stringWithFormat:@"%@/%@.%@.%@", @"https:ec2-52-31-145-95.eu-west-1.compute.amazonaws.com", self.pitch.token, self.pitch.id, [mp4URL lastPathComponent]];
     
     AWSS3TransferUtility *transferUtility = [AWSS3TransferUtility defaultS3TransferUtility];
-    [[transferUtility uploadFile:self.videoURL
+    [[transferUtility uploadFile:mp4URL
                           bucket:@"mjp-android-uploads"
                              key:keyname
-                     contentType:@"video/quicktime"
+                     contentType:(self.mp4Path ? @"video/mp4" : @"video/quicktime")
                       expression:expression
                 completionHander:self.completionHandler] continueWithBlock:^id(AWSTask *task) {
         if (task.error || task.exception) {
@@ -265,13 +316,6 @@
 
     _popupView.hidden = YES;
     
-}
-
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    if ([segue.identifier isEqualToString:@"play_video"]) {
-        AVPlayerViewController *playerViewController = segue.destinationViewController;
-        playerViewController.player = [AVPlayer playerWithURL:sender];
-    }
 }
 
 @end

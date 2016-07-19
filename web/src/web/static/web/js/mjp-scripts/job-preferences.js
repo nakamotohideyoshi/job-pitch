@@ -12,11 +12,7 @@ $(function () {
 			var obj = data[key];
 			$('#hours').append('<option value="' + obj.id + '">' + obj.name + '</options>');
 		}
-	})
-		.fail(function (data) {
-			console.log(data);
-
-		});
+	});
 
 	$.get("/api/contracts/", {
 		csrftoken: getCookie('csrftoken')
@@ -25,11 +21,7 @@ $(function () {
 			var obj = data[key];
 			$('#contract').append('<option value="' + obj.id + '">' + obj.name + '</options>');
 		}
-	})
-		.fail(function (data) {
-			console.log(data);
-
-		});
+	});
 
 	$.get("/api/sectors/", {
 		csrftoken: getCookie('csrftoken')
@@ -39,11 +31,7 @@ $(function () {
 			console.log(obj);
 			$('#sectors').append('<option value="' + obj.id + '">' + obj.name + '</options>');
 		}
-	})
-		.fail(function (data) {
-			console.log(data);
-
-		});
+	});
 
 	$.get("/api-rest-auth/user/", {
 		csrftoken: getCookie('csrftoken')
@@ -54,11 +42,18 @@ $(function () {
 
 	$('#job-preferences').submit(function (event) {
 		event.preventDefault();
+		clearErrors();
+
 		var sectors = $('#sectors').val();
 		var contract = $('#contract').val();
 		var hours = $('#job_sector').val();
 		var location = $('#location').val();
 		var search_radius = $('#search_radius').val();
+
+		if(sectors[0] == ''){
+			fieldError('Please, select a sector', 'sectors');
+			return false;
+		}
 
 		postcodeLocationData(location, function (output) {
 			var postcodeData = output.result;
@@ -67,14 +62,11 @@ $(function () {
 			$('#place_name').val(postcodeData.nuts);
 			$('#postcode_lookup').val(location);
 
-			var formData = new FormData($('#job-preferences')[0]);
 			$.ajax({
 				url: "/api/job-profiles/",
 				type: 'POST',
-				data: formData,
+				data: $('#job-preferences').serialize(),
 				cache: false,
-				contentType: false,
-				processData: false,
 				success: function (data) {
 					window.location.href = "/profile/pitch";
 				}

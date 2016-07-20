@@ -33,6 +33,7 @@ ALL_AUTH_SETTINGS = {
     "ACCOUNT_USER_MODEL_USERNAME_FIELD": 'email',
     "ACCOUNT_EMAIL_REQUIRED": True,
     "ACCOUNT_AUTHENTICATION_METHOD": 'email',
+    "ACCOUNT_CONFIRM_EMAIL_ON_GET": True,
 #     'ACCOUNT_FORMS': {
 #         'signup': 'mjp.RegistrationForm'
 #     },
@@ -47,14 +48,14 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'mjp',
+    'web',
     'allauth',
     'allauth.account',
     'rest_framework',
     'rest_framework.authtoken',
     'rest_auth',
     'rest_auth.registration',
-    'mjp',
-    'web',
     'django.contrib.admin',
 )
 
@@ -96,6 +97,9 @@ REST_AUTH_SERIALIZERS = {
 REST_AUTH_REGISTER_SERIALIZERS = {
     'REGISTER_SERIALIZER': 'mjp.serializers.RegisterSerializer',
 }
+
+LOGIN_URL = '/login/'
+LOGIN_REDIRECT_URL = '/'
 
 ROOT_URLCONF = 'urls'
 

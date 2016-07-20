@@ -331,7 +331,6 @@ class JobSeeker(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, related_name='job_seeker')
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
-    email = models.EmailField(blank=True)
     email_public = models.BooleanField(default=None)
     telephone = models.CharField(max_length=100, blank=True)
     telephone_public = models.BooleanField(default=None)

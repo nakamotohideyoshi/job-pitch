@@ -371,8 +371,8 @@ router.register('jobs', JobViewSet, base_name='jobs')
 
 class ApplicationViewSet(viewsets.ModelViewSet):
     try:
-        RECRUITER = Role.objects.get(name='RECRUITER')
-        JOB_SEEKER = Role.objects.get(name='JOB_SEEKER')
+        RECRUITER = Role.objects.get(name=Role.RECRUITER)
+        JOB_SEEKER = Role.objects.get(name=Role.JOB_SEEKER)
     except:
         pass
     
@@ -534,10 +534,10 @@ class MessageViewSet(viewsets.ModelViewSet):
         def has_object_permission(self, request, view, message):
             if request.method == 'PUT':
                 is_recruiter = request.user.businesses.filter(locations__jobs__applications__messages=message).exists()
-                if is_recruiter and message.from_role.name == "JOB_SEEKER":
+                if is_recruiter and message.from_role.name == Role.JOB_SEEKER:
                     return True
                 is_job_seeker = message.application.job_seeker.user == request.user
-                if is_job_seeker and message.from_role.name == "RECRUITER":
+                if is_job_seeker and message.from_role.name == Role.RECRUITER:
                     return True
             return False
         
@@ -555,9 +555,9 @@ class MessageViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         application = Application.objects.get(pk=int(self.request.data.get('application')))
         if self.request.user.businesses.filter(locations__jobs__applications=application).exists():
-            role = Role.objects.get(name='RECRUITER')
+            role = Role.objects.get(name=Role.RECRUITER)
         else:
-            role = Role.objects.get(name='JOB_SEEKER')
+            role = Role.objects.get(name=Role.JOB_SEEKER)
         serializer.save(from_role=role)
         
     permission_classes = (permissions.IsAuthenticated, MessagePermission)

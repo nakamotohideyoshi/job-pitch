@@ -1,6 +1,4 @@
-import settings
-import sys
-globals().update(vars(sys.modules['settings']))
+from settings import *
 
 DEBUG = True
 

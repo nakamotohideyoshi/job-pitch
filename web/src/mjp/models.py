@@ -218,6 +218,9 @@ class ApplicationStatus(models.Model):
 
 
 class Role(models.Model):
+    RECRUITER = "RECRUITER"
+    JOB_SEEKER = "JOB_SEEKER"
+
     name = models.CharField(max_length=20)
 
     def __str__(self):
@@ -406,3 +409,20 @@ class Message(models.Model):
 
     class Meta:
         ordering = ('created',)
+
+
+class EmailTemplate(models.Model):
+    MESSAGE = 'MESSAGE'
+
+    NAME_CHOICES = (
+        (MESSAGE, 'Message'),
+    )
+
+    name = models.CharField(max_length=256, choices=NAME_CHOICES, unique=True)
+    from_address = models.EmailField()
+    subject = models.CharField(max_length=1000)
+    body = models.TextField()
+    context_help = models.TextField()
+
+    def __str__(self):
+        return self.name

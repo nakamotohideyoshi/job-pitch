@@ -1,5 +1,6 @@
 from django.contrib.auth import get_user_model
 from django.contrib.gis.geos import Point
+from django.db import transaction
 from rest_framework import serializers
 
 from models import (
@@ -11,6 +12,9 @@ from models import (
     Message,
     Application,
     Pitch,
+    ApplicationStatus,
+    Role,
+    TokenStore,
 )
 
 from rest_auth.serializers import LoginSerializer as BaseLoginSerializer
@@ -70,9 +74,11 @@ class BusinessSerializer(serializers.ModelSerializer):
     users = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
     locations = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
     images = RelatedImageURLField(many=True, read_only=True)
+    tokens = serializers.IntegerField(source='token_store.tokens', read_only=True)
     
     class Meta:
         model = Business
+        fields = ('id', 'users', 'locations', 'images', 'name', 'created', 'updated', 'tokens',)
 
 
 class LocationSerializer(serializers.ModelSerializer):
@@ -141,15 +147,38 @@ class ApplicationSerializer(serializers.ModelSerializer):
 
 
 class ApplicationCreateSerializer(serializers.ModelSerializer):
+    def create(self, validated_data):
+        with transaction.atomic():
+            if validated_data['created_by'] == Role.objects.get(name='RECRUITER'):
+                try:
+                    validated_data['job'].location.business.token_store.decrement()
+                except TokenStore.NoTokens:
+                    raise serializers.ValidationError('NO_TOKENS')
+            return super(ApplicationCreateSerializer, self).create(validated_data)
+
     class Meta:
         model = Application
         read_only_fields = ('status', 'created_by', 'deleted_by')
 
 
-class ApplicationStatusUpdateSerializer(serializers.ModelSerializer):
+class ApplicationConnectSerializer(serializers.ModelSerializer):
+    def validate(self, attrs):
+        if self.instance.status.name == ApplicationStatus.DELETED:
+            raise serializers.ValidationError('Application deleted')
+        return super(ApplicationConnectSerializer, self).validate(attrs)
+
+    def update(self, instance, validated_data):
+        with transaction.atomic():
+            try:
+                instance.location.business.token_store.decrement()
+            except TokenStore.NoTokens:
+                raise serializers.ValidationError('NO_TOKENS')
+            validated_data['status'] = ApplicationStatus.objects.get(name=ApplicationStatus.ESTABLISHED)
+            super(ApplicationConnectSerializer, self).update(instance, validated_data)
+
     class Meta:
         model = Application
-        fields = ('id', 'status',)
+        fields = ()
         read_only_fields = ('id',)
 
 

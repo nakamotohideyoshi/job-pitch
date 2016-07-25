@@ -10,9 +10,11 @@ $(function() {
 		for (var key in data) {
 			console.log(data);
 			var obj = data[key];
-
+			var imageThumb;
 			if(obj.images.length != 0){
-					imageThumb = obj.images[0].thumbnail;
+				imageThumb = obj.images[0].thumbnail;
+			} else {
+				imageThumb = "/static/web/images/no_image_available.png";
 			}
 
 

@@ -8,11 +8,11 @@ from rest_framework.routers import DefaultRouter
 from mjp.models import Sector, Hours, Contract, Business, Location,\
     JobStatus, Job, Sex, Nationality, JobSeeker, JobProfile,\
     ApplicationStatus, Application, Role, LocationImage, BusinessImage, \
-    JobImage, Message, Pitch
+    JobImage, Message, Pitch, TokenStore
 
 from mjp.serializers import SimpleSerializer, BusinessSerializer,\
     LocationSerializer, JobProfileSerializer, JobSerializer, JobSeekerSerializer,\
-    ApplicationSerializer, ApplicationCreateSerializer, ApplicationStatusUpdateSerializer, \
+    ApplicationSerializer, ApplicationCreateSerializer, ApplicationConnectSerializer, \
     ApplicationShortlistUpdateSerializer, MessageCreateSerializer, MessageUpdateSerializer, PitchSerializer
 
 
@@ -88,7 +88,11 @@ class UserBusinessViewSet(viewsets.ModelViewSet):
     serializer_class = BusinessSerializer
 
     def perform_create(self, serializer):
-        serializer.save().users.add(self.request.user)
+        token_store = TokenStore.objects.create(
+            tokens=0,
+            user=self.request.user,
+        )
+        serializer.save(token_store=token_store).users.add(self.request.user)
         
     def get_queryset(self):
         return Business.objects.filter(users=self.request.user)
@@ -130,6 +134,7 @@ class UserLocationViewSet(viewsets.ModelViewSet):
             pk = request.data.get('business')
             print "business pk: %s" % pk
             if pk:
+                pk = int(pk)
                 return Business.objects.filter(pk=pk, users__pk=int(request.user.pk)).exists()
             return True
         
@@ -408,7 +413,7 @@ class ApplicationViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.IsAuthenticated, ApplicationPermission)
     serializer_class = ApplicationSerializer
     create_serializer_class = ApplicationCreateSerializer
-    update_status_serializer_class = ApplicationStatusUpdateSerializer
+    update_status_serializer_class = ApplicationConnectSerializer
     update_shortlist_serializer_class = ApplicationShortlistUpdateSerializer
     
     def get_role(self):
@@ -450,11 +455,6 @@ class ApplicationViewSet(viewsets.ModelViewSet):
                     }
         message.save()
 
-    def perform_update(self, serializer):
-        serializer.save()
-        # if self.request.
-        # e = role
-
     def perform_destroy(self, application):
         application.status = ApplicationStatus.objects.get(name='DELETED')
         role = self.get_role()
@@ -476,8 +476,9 @@ class ApplicationViewSet(viewsets.ModelViewSet):
         if self.request.method == 'PUT':
             if self.request.data.get('shortlisted') is not None:
                 return self.update_shortlist_serializer_class
-            if self.request.data.get('status') is not None:
+            if self.request.data.get('connect') is not None:
                 return self.update_status_serializer_class
+            return None
         return self.serializer_class
     
     def get_queryset(self):

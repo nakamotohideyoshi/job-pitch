@@ -3,6 +3,7 @@ import os
 
 from cStringIO import StringIO
 from PIL import Image
+from django.db import transaction
 from django.utils.translation import gettext as _
 
 from django.conf import settings
@@ -230,6 +231,7 @@ class Role(models.Model):
 class Business(models.Model):
     users = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='businesses')
     name = models.CharField(max_length=255)
+    token_store = models.ForeignKey('TokenStore', related_name='businesses', on_delete=models.DO_NOTHING)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
 
@@ -239,7 +241,6 @@ class Business(models.Model):
     class Meta:
         verbose_name_plural = "businesses"
         ordering = ('name',)
-
 
 
 class BusinessImage(models.Model):
@@ -425,3 +426,27 @@ class EmailTemplate(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class TokenStore(models.Model):
+    class NoTokens(Exception):
+        pass
+
+    tokens = models.IntegerField()
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.DO_NOTHING, related_name='token_stores')
+
+    def decrement(self):
+        with transaction.atomic():
+            token_store = TokenStore.objects.select_for_update().get(pk=self.pk)
+            if token_store.tokens > 0:
+                token_store.tokens -= 1
+                token_store.save()
+                self.tokens = token_store.tokens
+                return self.tokens
+            raise TokenStore.NoTokens("No more tokens")
+
+    def business_list(self):
+        return ", ".join(b.name for b in self.businesses.all())
+
+    def __str__(self):
+        return "{} token(s) for {}: {}".format(self.tokens, self.user.email, self.business_list())

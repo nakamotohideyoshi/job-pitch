@@ -12,7 +12,12 @@ $(function () {
 		token: getCookie('key'),
 		csrftoken: getCookie('csrftoken')
 	}).done(function (data) {
-		$('#currentLogo').attr('src', data.images[0].thumbnail).show();
+		var src;
+		if (data.images.length)
+			src = data.images[0].thumbnail;
+		else
+			src = "/static/web/images/no_image_available.png";
+		$('#currentLogo').attr('src', src).show();
 	});
 
 	$('#work_place_details').submit(function (event) {
@@ -87,7 +92,12 @@ $(function () {
 						token: getCookie('key'),
 						csrftoken: getCookie('csrftoken')
 					}).done(function (data) {
-						$('#currentLogo').attr('src', data.images[0].thumbnail).show();
+						var src;
+						if (data.images.length)
+							src = data.images[0].thumbnail;
+						else
+							src = "/static/web/images/no_image_available.png";
+                        $('#currentLogo').attr('src', src).show();
 						var xhr = new XMLHttpRequest();
 						xhr.onreadystatechange = function () {
 							if (this.readyState == 4 && this.status == 200) {

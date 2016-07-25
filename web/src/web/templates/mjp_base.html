@@ -74,6 +74,7 @@
 					<li class="business-link"><a href="/profile/list-businesses/">Companies</a></li>
 					<li class="business-link job-seeker-link"><a href="/applications/">Applications and Messages</a></li>
 					<li class="not_logged_in_menu"><a href="/login">Log in</a></li>
+					<li class="business-link job-seeker-link"><a href="/password-change/">Change your password</a></li>
 					<li class="business-link job-seeker-link"><a href="javascript:logoutUser();">Log Out</a></li>
 					<li class="not_logged_in_menu"><a href="/registration">Register</a></li>
 					<li><a href="/mobile-app/">How it Works</a></li>
@@ -130,27 +131,32 @@
 	<!-- Modals -->
 
 	<div class="modal fade" id="loginModal">
-	  <div class="modal-dialog">
-		<div class="modal-content">
-		  <div class="modal-header">
-			<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-			<h4 class="modal-title">Login</h4>
-		  </div>
-		  <div class="modal-body">
-			<div class="row">
-				<div class="col-md-8 col-md-offset-2">
-					<form role="form"  action="/api-rest-auth/login/" method="post" id="login">
-						<div class="alert" role="alert"></div>
-						<input type="text" class="form-control" id="email" name="email" placeholder="Email address">
-						<input type="password" class="form-control" id="password" name="password" placeholder="Password">
-						<button type="submit" class="btn btn-custom-modal">Login</button>
-					</form>
-				</div>
-			</div>
-		  </div>
-		</div><!-- /.modal-content -->
-	  </div><!-- /.modal-dialog -->
-	</div><!-- /.modal -->
+		<div class="modal-dialog">
+			<div class="modal-content">
+			  <div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+					<h4 class="modal-title">Login</h4>
+			  </div>
+			  <div class="modal-body">
+					<div class="row">
+						<div class="col-md-8 col-md-offset-2">
+							<form role="form"  action="/api-rest-auth/login/" method="post" id="login">
+								<div class="alert" role="alert"></div>
+								<input type="text" class="form-control" id="email" name="email" placeholder="Email address">
+								<input type="password" class="form-control" id="password" name="password" placeholder="Password">
+								<button type="submit" class="btn btn-custom-modal">Login</button>
+							</form>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-md-8 col-md-offset-2">
+							<a class="pull-right" href="/password-reset/">I want to reset my password</a>
+					  </div>
+				  </div>
+				</div><!-- /.modal-content -->
+		  </div><!-- /.modal-dialog -->
+		</div><!-- /.modal -->
+	</div>
 
 
 	<div class="modal fade" id="regModal">

@@ -186,6 +186,7 @@
     <string name="close">Close</string>
     <string name="title_create_job_seeker">Create Job Seeker</string>
     <string name="all_my_information">All my information are truthful</string>
+    <string name="auto_set_location">Auto set my location</string>
 
     <string name="pitch_instructions"><![CDATA[
     <b>Setting up your job pitch here are some tips from one of our recruiting pros:</b><br>

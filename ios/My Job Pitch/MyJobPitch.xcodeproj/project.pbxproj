@@ -9,9 +9,6 @@
 /* Begin PBXBuildFile section */
 		8A670AFC6AF2FC453A25DE73 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0B006CB817BA624E01EDF19B /* libPods.a */; };
 		CE45AEC41C0B41390092AB75 /* MJPViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CE45AEC31C0B41390092AB75 /* MJPViewController.m */; };
-		CE45AECA1C0B45AD0092AB75 /* RegisterRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = CE45AEC91C0B45AD0092AB75 /* RegisterRequest.m */; };
-		CE45AECD1C0B461A0092AB75 /* User.m in Sources */ = {isa = PBXBuildFile; fileRef = CE45AECC1C0B461A0092AB75 /* User.m */; };
-		CE4696AE1C9A0BC8001E3FFE /* LockableNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = CE4696AD1C9A0BC8001E3FFE /* LockableNavigationController.m */; };
 		CE59737D1C1626630096B001 /* JobSeekerProfileView.m in Sources */ = {isa = PBXBuildFile; fileRef = CE59737C1C1626630096B001 /* JobSeekerProfileView.m */; };
 		CE6FD33C1C01F9BB001A04C3 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = CE6FD33B1C01F9BB001A04C3 /* main.m */; };
 		CE6FD33F1C01F9BB001A04C3 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = CE6FD33E1C01F9BB001A04C3 /* AppDelegate.m */; };
@@ -31,7 +28,6 @@
 		CE8395A81C3EF98F007A8213 /* EditProfile.m in Sources */ = {isa = PBXBuildFile; fileRef = CE8395A71C3EF98F007A8213 /* EditProfile.m */; };
 		CE8395AB1C42F279007A8213 /* SwipeView.m in Sources */ = {isa = PBXBuildFile; fileRef = CE8395AA1C42F279007A8213 /* SwipeView.m */; };
 		CE86847E1C0E570300D4B6C7 /* ScrollingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CE86847D1C0E570300D4B6C7 /* ScrollingViewController.m */; };
-		CE8AAFE51C56D93C0004F021 /* Pitch.m in Sources */ = {isa = PBXBuildFile; fileRef = CE8AAFE41C56D93C0004F021 /* Pitch.m */; };
 		CE8AAFE71C5848490004F021 /* JobSeekerSearchProfileView.xib in Resources */ = {isa = PBXBuildFile; fileRef = CE8AAFE61C5848490004F021 /* JobSeekerSearchProfileView.xib */; };
 		CE8AAFEA1C5848900004F021 /* JobSeekerSearchProfileView.m in Sources */ = {isa = PBXBuildFile; fileRef = CE8AAFE91C5848900004F021 /* JobSeekerSearchProfileView.m */; };
 		CE8AAFED1C5850C40004F021 /* EditSearchProfile.m in Sources */ = {isa = PBXBuildFile; fileRef = CE8AAFEC1C5850C40004F021 /* EditSearchProfile.m */; };
@@ -39,11 +35,9 @@
 		CE8AAFF91C59A2DE0004F021 /* LocationMap.xib in Resources */ = {isa = PBXBuildFile; fileRef = CE8AAFF81C59A2DE0004F021 /* LocationMap.xib */; };
 		CE8AAFFC1C59A7820004F021 /* LocationMapView.m in Sources */ = {isa = PBXBuildFile; fileRef = CE8AAFFB1C59A7820004F021 /* LocationMapView.m */; };
 		CE8AAFFE1C5AD62E0004F021 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CE8AAFFD1C5AD62E0004F021 /* CoreLocation.framework */; };
-		CE8AB0011C5AF6250004F021 /* Application.m in Sources */ = {isa = PBXBuildFile; fileRef = CE8AB0001C5AF6250004F021 /* Application.m */; };
 		CE8AB0041C5B04320004F021 /* JobDetails.m in Sources */ = {isa = PBXBuildFile; fileRef = CE8AB0031C5B04320004F021 /* JobDetails.m */; };
 		CE8AB00B1C5EA9F60004F021 /* MessageListCell.m in Sources */ = {isa = PBXBuildFile; fileRef = CE8AB00A1C5EA9F60004F021 /* MessageListCell.m */; };
 		CE8AB0111C5EB66C0004F021 /* Messages.m in Sources */ = {isa = PBXBuildFile; fileRef = CE8AB0101C5EB66C0004F021 /* Messages.m */; };
-		CE8AB0141C5EBA850004F021 /* Message.m in Sources */ = {isa = PBXBuildFile; fileRef = CE8AB0131C5EBA850004F021 /* Message.m */; };
 		CE8AB0171C5EDB7B0004F021 /* MessageThread.m in Sources */ = {isa = PBXBuildFile; fileRef = CE8AB0161C5EDB7B0004F021 /* MessageThread.m */; };
 		CE8AB01A1C5EE4B80004F021 /* MessageThreadCell.m in Sources */ = {isa = PBXBuildFile; fileRef = CE8AB0191C5EE4B80004F021 /* MessageThreadCell.m */; };
 		CE8AB01D1C6029D90004F021 /* RecordPitch.m in Sources */ = {isa = PBXBuildFile; fileRef = CE8AB01C1C6029D90004F021 /* RecordPitch.m */; };
@@ -54,13 +48,6 @@
 		CE8AB0281C6AA22E0004F021 /* LocationEditView.xib in Resources */ = {isa = PBXBuildFile; fileRef = CE8AB0271C6AA22E0004F021 /* LocationEditView.xib */; };
 		CE8AB02B1C6AA2490004F021 /* LocationEditView.m in Sources */ = {isa = PBXBuildFile; fileRef = CE8AB02A1C6AA2490004F021 /* LocationEditView.m */; };
 		CEB424131C9A35BC0012748B /* JobSeekerDetails.m in Sources */ = {isa = PBXBuildFile; fileRef = CEB424121C9A35BC0012748B /* JobSeekerDetails.m */; };
-		CEC2E4041C45A88100AC0F45 /* Job.m in Sources */ = {isa = PBXBuildFile; fileRef = CEC2E4031C45A88100AC0F45 /* Job.m */; };
-		CEC2E4071C45B4C200AC0F45 /* Location.m in Sources */ = {isa = PBXBuildFile; fileRef = CEC2E4061C45B4C200AC0F45 /* Location.m */; };
-		CEC2E40A1C45B4EC00AC0F45 /* MJPObjectWithDates.m in Sources */ = {isa = PBXBuildFile; fileRef = CEC2E4091C45B4EC00AC0F45 /* MJPObjectWithDates.m */; };
-		CEC2E40D1C45C7AB00AC0F45 /* Image.m in Sources */ = {isa = PBXBuildFile; fileRef = CEC2E40C1C45C7AB00AC0F45 /* Image.m */; };
-		CEC2E4191C4BE86400AC0F45 /* Sector.m in Sources */ = {isa = PBXBuildFile; fileRef = CEC2E4181C4BE86400AC0F45 /* Sector.m */; };
-		CEC2E41C1C4BEAA900AC0F45 /* ApplicationStatus.m in Sources */ = {isa = PBXBuildFile; fileRef = CEC2E41B1C4BEAA900AC0F45 /* ApplicationStatus.m */; };
-		CEC2E4221C4BEFDE00AC0F45 /* JobStatus.m in Sources */ = {isa = PBXBuildFile; fileRef = CEC2E4211C4BEFDE00AC0F45 /* JobStatus.m */; };
 		CEE005671C90D6D50065E43A /* CreateJobSeekerProfile.m in Sources */ = {isa = PBXBuildFile; fileRef = CEE005661C90D6D50065E43A /* CreateJobSeekerProfile.m */; };
 		CEE0056A1C90DEC90065E43A /* CreateRecruiterProfile.m in Sources */ = {isa = PBXBuildFile; fileRef = CEE005691C90DEC90065E43A /* CreateRecruiterProfile.m */; };
 		CEE04A9C1C0F896300697620 /* ListBusinesses.m in Sources */ = {isa = PBXBuildFile; fileRef = CEE04A9B1C0F896300697620 /* ListBusinesses.m */; };
@@ -69,29 +56,46 @@
 		CEE04AA41C10EAD900697620 /* ErrorTextField.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEE04AA31C10EAD900697620 /* ErrorTextField.xib */; };
 		CEE04AA71C10EE2000697620 /* ErrorTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = CEE04AA61C10EE2000697620 /* ErrorTextField.m */; };
 		CEE04AA91C10F8FE00697620 /* JobSeekerProfileView.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEE04AA81C10F8FE00697620 /* JobSeekerProfileView.xib */; };
-		CEE062531C28B77500ED60C0 /* Business.m in Sources */ = {isa = PBXBuildFile; fileRef = CEE062381C28B77500ED60C0 /* Business.m */; };
-		CEE062541C28B77500ED60C0 /* Contract.m in Sources */ = {isa = PBXBuildFile; fileRef = CEE0623A1C28B77500ED60C0 /* Contract.m */; };
-		CEE062551C28B77500ED60C0 /* Hours.m in Sources */ = {isa = PBXBuildFile; fileRef = CEE0623C1C28B77500ED60C0 /* Hours.m */; };
-		CEE062561C28B77500ED60C0 /* JobSeeker.m in Sources */ = {isa = PBXBuildFile; fileRef = CEE0623E1C28B77500ED60C0 /* JobSeeker.m */; };
-		CEE062571C28B77500ED60C0 /* MJPObject.m in Sources */ = {isa = PBXBuildFile; fileRef = CEE062401C28B77500ED60C0 /* MJPObject.m */; };
-		CEE062581C28B77500ED60C0 /* MJPObjectWithName.m in Sources */ = {isa = PBXBuildFile; fileRef = CEE062421C28B77500ED60C0 /* MJPObjectWithName.m */; };
-		CEE062591C28B77500ED60C0 /* MJPObjectWithNameDesc.m in Sources */ = {isa = PBXBuildFile; fileRef = CEE062441C28B77500ED60C0 /* MJPObjectWithNameDesc.m */; };
-		CEE0625A1C28B77500ED60C0 /* MJPObjectWithNameShortName.m in Sources */ = {isa = PBXBuildFile; fileRef = CEE062461C28B77500ED60C0 /* MJPObjectWithNameShortName.m */; };
-		CEE0625B1C28B77500ED60C0 /* MJPObjectWithNameShortNameDesc.m in Sources */ = {isa = PBXBuildFile; fileRef = CEE062481C28B77500ED60C0 /* MJPObjectWithNameShortNameDesc.m */; };
-		CEE0625C1C28B77500ED60C0 /* Nationality.m in Sources */ = {isa = PBXBuildFile; fileRef = CEE0624A1C28B77500ED60C0 /* Nationality.m */; };
-		CEE0625D1C28B77500ED60C0 /* Profile.m in Sources */ = {isa = PBXBuildFile; fileRef = CEE0624C1C28B77500ED60C0 /* Profile.m */; };
-		CEE0625E1C28B77500ED60C0 /* Role.m in Sources */ = {isa = PBXBuildFile; fileRef = CEE0624E1C28B77500ED60C0 /* Role.m */; };
-		CEE062601C28B77500ED60C0 /* Sex.m in Sources */ = {isa = PBXBuildFile; fileRef = CEE062521C28B77500ED60C0 /* Sex.m */; };
 		CEE52CED1C0654DD00881648 /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CEE52CEC1C0654DD00881648 /* MobileCoreServices.framework */; };
 		CEE52CEF1C0654E900881648 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CEE52CEE1C0654E900881648 /* Security.framework */; };
 		CEE52CF11C0654F200881648 /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CEE52CF01C0654F200881648 /* CFNetwork.framework */; };
 		CEE52CF31C0654FB00881648 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CEE52CF21C0654FB00881648 /* SystemConfiguration.framework */; };
 		CEE52CF51C06550500881648 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CEE52CF41C06550500881648 /* UIKit.framework */; };
 		CEE52CF71C06550E00881648 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CEE52CF61C06550E00881648 /* Foundation.framework */; };
-		CEE52CFA1C065C4100881648 /* API.m in Sources */ = {isa = PBXBuildFile; fileRef = CEE52CF91C065C4100881648 /* API.m */; };
-		CEE52CFE1C066AB000881648 /* AuthToken.m in Sources */ = {isa = PBXBuildFile; fileRef = CEE52CFD1C066AB000881648 /* AuthToken.m */; };
-		CEE52D011C066F2700881648 /* LoginRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = CEE52D001C066F2700881648 /* LoginRequest.m */; };
 		D71EAC6B1D33D04800E32ED1 /* KxMenu.m in Sources */ = {isa = PBXBuildFile; fileRef = D71EAC6A1D33D04800E32ED1 /* KxMenu.m */; };
+		D74588EB1D48771800A85472 /* LockableNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = D74588EA1D48771800A85472 /* LockableNavigationController.m */; };
+		D74588EE1D48772E00A85472 /* API.m in Sources */ = {isa = PBXBuildFile; fileRef = D74588ED1D48772E00A85472 /* API.m */; };
+		D74589251D48773B00A85472 /* Application.m in Sources */ = {isa = PBXBuildFile; fileRef = D74588F01D48773B00A85472 /* Application.m */; };
+		D74589261D48773B00A85472 /* ApplicationStatus.m in Sources */ = {isa = PBXBuildFile; fileRef = D74588F21D48773B00A85472 /* ApplicationStatus.m */; };
+		D74589271D48773B00A85472 /* AuthToken.m in Sources */ = {isa = PBXBuildFile; fileRef = D74588F41D48773B00A85472 /* AuthToken.m */; };
+		D74589281D48773B00A85472 /* Business.m in Sources */ = {isa = PBXBuildFile; fileRef = D74588F61D48773B00A85472 /* Business.m */; };
+		D74589291D48773B00A85472 /* Contract.m in Sources */ = {isa = PBXBuildFile; fileRef = D74588F81D48773B00A85472 /* Contract.m */; };
+		D745892A1D48773B00A85472 /* Hours.m in Sources */ = {isa = PBXBuildFile; fileRef = D74588FA1D48773B00A85472 /* Hours.m */; };
+		D745892B1D48773B00A85472 /* Image.m in Sources */ = {isa = PBXBuildFile; fileRef = D74588FC1D48773B00A85472 /* Image.m */; };
+		D745892C1D48773B00A85472 /* Job.m in Sources */ = {isa = PBXBuildFile; fileRef = D74588FE1D48773B00A85472 /* Job.m */; };
+		D745892D1D48773B00A85472 /* JobSeeker.m in Sources */ = {isa = PBXBuildFile; fileRef = D74589001D48773B00A85472 /* JobSeeker.m */; };
+		D745892E1D48773B00A85472 /* JobStatus.m in Sources */ = {isa = PBXBuildFile; fileRef = D74589021D48773B00A85472 /* JobStatus.m */; };
+		D745892F1D48773B00A85472 /* Location.m in Sources */ = {isa = PBXBuildFile; fileRef = D74589041D48773B00A85472 /* Location.m */; };
+		D74589301D48773B00A85472 /* LoginRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = D74589061D48773B00A85472 /* LoginRequest.m */; };
+		D74589311D48773B00A85472 /* Message.m in Sources */ = {isa = PBXBuildFile; fileRef = D74589081D48773B00A85472 /* Message.m */; };
+		D74589321D48773B00A85472 /* MJPObject.m in Sources */ = {isa = PBXBuildFile; fileRef = D745890A1D48773B00A85472 /* MJPObject.m */; };
+		D74589331D48773B00A85472 /* MJPObjectWithDates.m in Sources */ = {isa = PBXBuildFile; fileRef = D745890C1D48773B00A85472 /* MJPObjectWithDates.m */; };
+		D74589341D48773B00A85472 /* MJPObjectWithName.m in Sources */ = {isa = PBXBuildFile; fileRef = D745890E1D48773B00A85472 /* MJPObjectWithName.m */; };
+		D74589351D48773B00A85472 /* MJPObjectWithNameDesc.m in Sources */ = {isa = PBXBuildFile; fileRef = D74589101D48773B00A85472 /* MJPObjectWithNameDesc.m */; };
+		D74589361D48773B00A85472 /* MJPObjectWithNameShortName.m in Sources */ = {isa = PBXBuildFile; fileRef = D74589121D48773B00A85472 /* MJPObjectWithNameShortName.m */; };
+		D74589371D48773B00A85472 /* MJPObjectWithNameShortNameDesc.m in Sources */ = {isa = PBXBuildFile; fileRef = D74589141D48773B00A85472 /* MJPObjectWithNameShortNameDesc.m */; };
+		D74589381D48773B00A85472 /* Nationality.m in Sources */ = {isa = PBXBuildFile; fileRef = D74589161D48773B00A85472 /* Nationality.m */; };
+		D74589391D48773B00A85472 /* Pitch.m in Sources */ = {isa = PBXBuildFile; fileRef = D74589181D48773B00A85472 /* Pitch.m */; };
+		D745893A1D48773B00A85472 /* Profile.m in Sources */ = {isa = PBXBuildFile; fileRef = D745891A1D48773B00A85472 /* Profile.m */; };
+		D745893B1D48773B00A85472 /* RegisterRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = D745891C1D48773B00A85472 /* RegisterRequest.m */; };
+		D745893C1D48773B00A85472 /* Role.m in Sources */ = {isa = PBXBuildFile; fileRef = D745891E1D48773B00A85472 /* Role.m */; };
+		D745893D1D48773B00A85472 /* Sector.m in Sources */ = {isa = PBXBuildFile; fileRef = D74589201D48773B00A85472 /* Sector.m */; };
+		D745893E1D48773B00A85472 /* Sex.m in Sources */ = {isa = PBXBuildFile; fileRef = D74589221D48773B00A85472 /* Sex.m */; };
+		D745893F1D48773B00A85472 /* User.m in Sources */ = {isa = PBXBuildFile; fileRef = D74589241D48773B00A85472 /* User.m */; };
+		D74589421D48963900A85472 /* PasswordChangeRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = D74589411D48963900A85472 /* PasswordChangeRequest.m */; };
+		D74589451D48ABB000A85472 /* PasswordResetRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = D74589441D48ABB000A85472 /* PasswordResetRequest.m */; };
+		D78904E91D47FC6600E980D9 /* ChangePassword.m in Sources */ = {isa = PBXBuildFile; fileRef = D78904E81D47FC6600E980D9 /* ChangePassword.m */; };
+		D78904EC1D48586D00E980D9 /* AppHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = D78904EB1D48586D00E980D9 /* AppHelper.m */; };
 		D7E94F8C1D179D6700866604 /* MyCameraViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D7E94F891D179D6700866604 /* MyCameraViewController.m */; };
 		D7E94F8D1D179D6700866604 /* MyCameraPreviewView.m in Sources */ = {isa = PBXBuildFile; fileRef = D7E94F8B1D179D6700866604 /* MyCameraPreviewView.m */; };
 		D7FA423D1D0EB2D200E93C66 /* MyAlertController.m in Sources */ = {isa = PBXBuildFile; fileRef = D7FA423C1D0EB2D200E93C66 /* MyAlertController.m */; };
@@ -113,12 +117,6 @@
 		B0F6E4D8F0045A1E43790385 /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 		CE45AEC21C0B41380092AB75 /* MJPViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MJPViewController.h; sourceTree = "<group>"; };
 		CE45AEC31C0B41390092AB75 /* MJPViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MJPViewController.m; sourceTree = "<group>"; };
-		CE45AEC81C0B45AD0092AB75 /* RegisterRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RegisterRequest.h; sourceTree = "<group>"; };
-		CE45AEC91C0B45AD0092AB75 /* RegisterRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RegisterRequest.m; sourceTree = "<group>"; };
-		CE45AECB1C0B461A0092AB75 /* User.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = User.h; sourceTree = "<group>"; };
-		CE45AECC1C0B461A0092AB75 /* User.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = User.m; sourceTree = "<group>"; };
-		CE4696AC1C9A0BC8001E3FFE /* LockableNavigationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LockableNavigationController.h; path = ../LockableNavigationController.h; sourceTree = "<group>"; };
-		CE4696AD1C9A0BC8001E3FFE /* LockableNavigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LockableNavigationController.m; path = ../LockableNavigationController.m; sourceTree = "<group>"; };
 		CE59737B1C1626630096B001 /* JobSeekerProfileView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JobSeekerProfileView.h; sourceTree = "<group>"; };
 		CE59737C1C1626630096B001 /* JobSeekerProfileView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JobSeekerProfileView.m; sourceTree = "<group>"; };
 		CE6FD3371C01F9BB001A04C3 /* MyJobPitch.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MyJobPitch.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -155,8 +153,6 @@
 		CE8395AA1C42F279007A8213 /* SwipeView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SwipeView.m; sourceTree = "<group>"; };
 		CE86847C1C0E570300D4B6C7 /* ScrollingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ScrollingViewController.h; sourceTree = "<group>"; };
 		CE86847D1C0E570300D4B6C7 /* ScrollingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ScrollingViewController.m; sourceTree = "<group>"; };
-		CE8AAFE31C56D93C0004F021 /* Pitch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Pitch.h; sourceTree = "<group>"; };
-		CE8AAFE41C56D93C0004F021 /* Pitch.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Pitch.m; sourceTree = "<group>"; };
 		CE8AAFE61C5848490004F021 /* JobSeekerSearchProfileView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = JobSeekerSearchProfileView.xib; sourceTree = "<group>"; };
 		CE8AAFE81C5848900004F021 /* JobSeekerSearchProfileView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JobSeekerSearchProfileView.h; sourceTree = "<group>"; };
 		CE8AAFE91C5848900004F021 /* JobSeekerSearchProfileView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JobSeekerSearchProfileView.m; sourceTree = "<group>"; };
@@ -168,16 +164,12 @@
 		CE8AAFFA1C59A7820004F021 /* LocationMapView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LocationMapView.h; sourceTree = "<group>"; };
 		CE8AAFFB1C59A7820004F021 /* LocationMapView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LocationMapView.m; sourceTree = "<group>"; };
 		CE8AAFFD1C5AD62E0004F021 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
-		CE8AAFFF1C5AF6250004F021 /* Application.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Application.h; sourceTree = "<group>"; };
-		CE8AB0001C5AF6250004F021 /* Application.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Application.m; sourceTree = "<group>"; };
 		CE8AB0021C5B04320004F021 /* JobDetails.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JobDetails.h; sourceTree = "<group>"; };
 		CE8AB0031C5B04320004F021 /* JobDetails.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JobDetails.m; sourceTree = "<group>"; };
 		CE8AB0091C5EA9F60004F021 /* MessageListCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessageListCell.h; sourceTree = "<group>"; };
 		CE8AB00A1C5EA9F60004F021 /* MessageListCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessageListCell.m; sourceTree = "<group>"; };
 		CE8AB00F1C5EB66C0004F021 /* Messages.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Messages.h; sourceTree = "<group>"; };
 		CE8AB0101C5EB66C0004F021 /* Messages.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Messages.m; sourceTree = "<group>"; };
-		CE8AB0121C5EBA850004F021 /* Message.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Message.h; sourceTree = "<group>"; };
-		CE8AB0131C5EBA850004F021 /* Message.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Message.m; sourceTree = "<group>"; };
 		CE8AB0151C5EDB7B0004F021 /* MessageThread.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessageThread.h; sourceTree = "<group>"; };
 		CE8AB0161C5EDB7B0004F021 /* MessageThread.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessageThread.m; sourceTree = "<group>"; };
 		CE8AB0181C5EE4B70004F021 /* MessageThreadCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessageThreadCell.h; sourceTree = "<group>"; };
@@ -194,20 +186,6 @@
 		CE8AB02A1C6AA2490004F021 /* LocationEditView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LocationEditView.m; sourceTree = "<group>"; };
 		CEB424111C9A35BC0012748B /* JobSeekerDetails.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JobSeekerDetails.h; sourceTree = "<group>"; };
 		CEB424121C9A35BC0012748B /* JobSeekerDetails.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JobSeekerDetails.m; sourceTree = "<group>"; };
-		CEC2E4021C45A88100AC0F45 /* Job.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Job.h; path = Assets.xcassets/Job.h; sourceTree = "<group>"; };
-		CEC2E4031C45A88100AC0F45 /* Job.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Job.m; path = Assets.xcassets/Job.m; sourceTree = "<group>"; };
-		CEC2E4051C45B4C200AC0F45 /* Location.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Location.h; sourceTree = "<group>"; };
-		CEC2E4061C45B4C200AC0F45 /* Location.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Location.m; sourceTree = "<group>"; };
-		CEC2E4081C45B4EC00AC0F45 /* MJPObjectWithDates.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MJPObjectWithDates.h; sourceTree = "<group>"; };
-		CEC2E4091C45B4EC00AC0F45 /* MJPObjectWithDates.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MJPObjectWithDates.m; sourceTree = "<group>"; };
-		CEC2E40B1C45C7AB00AC0F45 /* Image.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Image.h; sourceTree = "<group>"; };
-		CEC2E40C1C45C7AB00AC0F45 /* Image.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Image.m; sourceTree = "<group>"; };
-		CEC2E4171C4BE86400AC0F45 /* Sector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Sector.h; sourceTree = "<group>"; };
-		CEC2E4181C4BE86400AC0F45 /* Sector.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Sector.m; sourceTree = "<group>"; };
-		CEC2E41A1C4BEAA900AC0F45 /* ApplicationStatus.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ApplicationStatus.h; sourceTree = "<group>"; };
-		CEC2E41B1C4BEAA900AC0F45 /* ApplicationStatus.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ApplicationStatus.m; sourceTree = "<group>"; };
-		CEC2E4201C4BEFDE00AC0F45 /* JobStatus.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JobStatus.h; sourceTree = "<group>"; };
-		CEC2E4211C4BEFDE00AC0F45 /* JobStatus.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JobStatus.m; sourceTree = "<group>"; };
 		CEE005651C90D6D50065E43A /* CreateJobSeekerProfile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CreateJobSeekerProfile.h; sourceTree = "<group>"; };
 		CEE005661C90D6D50065E43A /* CreateJobSeekerProfile.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CreateJobSeekerProfile.m; sourceTree = "<group>"; };
 		CEE005681C90DEC90065E43A /* CreateRecruiterProfile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CreateRecruiterProfile.h; sourceTree = "<group>"; };
@@ -222,32 +200,6 @@
 		CEE04AA51C10EE2000697620 /* ErrorTextField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ErrorTextField.h; sourceTree = "<group>"; };
 		CEE04AA61C10EE2000697620 /* ErrorTextField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ErrorTextField.m; sourceTree = "<group>"; };
 		CEE04AA81C10F8FE00697620 /* JobSeekerProfileView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = JobSeekerProfileView.xib; sourceTree = "<group>"; };
-		CEE062371C28B77500ED60C0 /* Business.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Business.h; sourceTree = "<group>"; };
-		CEE062381C28B77500ED60C0 /* Business.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Business.m; sourceTree = "<group>"; };
-		CEE062391C28B77500ED60C0 /* Contract.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Contract.h; sourceTree = "<group>"; };
-		CEE0623A1C28B77500ED60C0 /* Contract.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Contract.m; sourceTree = "<group>"; };
-		CEE0623B1C28B77500ED60C0 /* Hours.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Hours.h; sourceTree = "<group>"; };
-		CEE0623C1C28B77500ED60C0 /* Hours.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Hours.m; sourceTree = "<group>"; };
-		CEE0623D1C28B77500ED60C0 /* JobSeeker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JobSeeker.h; sourceTree = "<group>"; };
-		CEE0623E1C28B77500ED60C0 /* JobSeeker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JobSeeker.m; sourceTree = "<group>"; };
-		CEE0623F1C28B77500ED60C0 /* MJPObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MJPObject.h; sourceTree = "<group>"; };
-		CEE062401C28B77500ED60C0 /* MJPObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MJPObject.m; sourceTree = "<group>"; };
-		CEE062411C28B77500ED60C0 /* MJPObjectWithName.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MJPObjectWithName.h; sourceTree = "<group>"; };
-		CEE062421C28B77500ED60C0 /* MJPObjectWithName.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MJPObjectWithName.m; sourceTree = "<group>"; };
-		CEE062431C28B77500ED60C0 /* MJPObjectWithNameDesc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MJPObjectWithNameDesc.h; sourceTree = "<group>"; };
-		CEE062441C28B77500ED60C0 /* MJPObjectWithNameDesc.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MJPObjectWithNameDesc.m; sourceTree = "<group>"; };
-		CEE062451C28B77500ED60C0 /* MJPObjectWithNameShortName.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MJPObjectWithNameShortName.h; sourceTree = "<group>"; };
-		CEE062461C28B77500ED60C0 /* MJPObjectWithNameShortName.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MJPObjectWithNameShortName.m; sourceTree = "<group>"; };
-		CEE062471C28B77500ED60C0 /* MJPObjectWithNameShortNameDesc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MJPObjectWithNameShortNameDesc.h; sourceTree = "<group>"; };
-		CEE062481C28B77500ED60C0 /* MJPObjectWithNameShortNameDesc.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MJPObjectWithNameShortNameDesc.m; sourceTree = "<group>"; };
-		CEE062491C28B77500ED60C0 /* Nationality.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Nationality.h; sourceTree = "<group>"; };
-		CEE0624A1C28B77500ED60C0 /* Nationality.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Nationality.m; sourceTree = "<group>"; };
-		CEE0624B1C28B77500ED60C0 /* Profile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Profile.h; sourceTree = "<group>"; };
-		CEE0624C1C28B77500ED60C0 /* Profile.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Profile.m; sourceTree = "<group>"; };
-		CEE0624D1C28B77500ED60C0 /* Role.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Role.h; sourceTree = "<group>"; };
-		CEE0624E1C28B77500ED60C0 /* Role.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Role.m; sourceTree = "<group>"; };
-		CEE062511C28B77500ED60C0 /* Sex.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Sex.h; sourceTree = "<group>"; };
-		CEE062521C28B77500ED60C0 /* Sex.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Sex.m; sourceTree = "<group>"; };
 		CEE52CEB1C0653AC00881648 /* PrefixHeader.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PrefixHeader.pch; sourceTree = "<group>"; };
 		CEE52CEC1C0654DD00881648 /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
 		CEE52CEE1C0654E900881648 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
@@ -255,15 +207,75 @@
 		CEE52CF21C0654FB00881648 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		CEE52CF41C06550500881648 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		CEE52CF61C06550E00881648 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
-		CEE52CF81C065C4100881648 /* API.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = API.h; sourceTree = "<group>"; };
-		CEE52CF91C065C4100881648 /* API.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = API.m; sourceTree = "<group>"; };
-		CEE52CFC1C066AB000881648 /* AuthToken.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AuthToken.h; sourceTree = "<group>"; };
-		CEE52CFD1C066AB000881648 /* AuthToken.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AuthToken.m; sourceTree = "<group>"; };
-		CEE52CFF1C066F2700881648 /* LoginRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoginRequest.h; sourceTree = "<group>"; };
-		CEE52D001C066F2700881648 /* LoginRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoginRequest.m; sourceTree = "<group>"; };
 		CFA3EA2BF05430C3C9894AA5 /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
 		D71EAC691D33D04800E32ED1 /* KxMenu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KxMenu.h; sourceTree = "<group>"; };
 		D71EAC6A1D33D04800E32ED1 /* KxMenu.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KxMenu.m; sourceTree = "<group>"; };
+		D74588E91D48771800A85472 /* LockableNavigationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LockableNavigationController.h; sourceTree = "<group>"; };
+		D74588EA1D48771800A85472 /* LockableNavigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LockableNavigationController.m; sourceTree = "<group>"; };
+		D74588EC1D48772E00A85472 /* API.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = API.h; path = API/API.h; sourceTree = "<group>"; };
+		D74588ED1D48772E00A85472 /* API.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = API.m; path = API/API.m; sourceTree = "<group>"; };
+		D74588EF1D48773B00A85472 /* Application.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Application.h; path = API/Application.h; sourceTree = "<group>"; };
+		D74588F01D48773B00A85472 /* Application.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Application.m; path = API/Application.m; sourceTree = "<group>"; };
+		D74588F11D48773B00A85472 /* ApplicationStatus.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ApplicationStatus.h; path = API/ApplicationStatus.h; sourceTree = "<group>"; };
+		D74588F21D48773B00A85472 /* ApplicationStatus.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ApplicationStatus.m; path = API/ApplicationStatus.m; sourceTree = "<group>"; };
+		D74588F31D48773B00A85472 /* AuthToken.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AuthToken.h; path = API/AuthToken.h; sourceTree = "<group>"; };
+		D74588F41D48773B00A85472 /* AuthToken.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AuthToken.m; path = API/AuthToken.m; sourceTree = "<group>"; };
+		D74588F51D48773B00A85472 /* Business.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Business.h; path = API/Business.h; sourceTree = "<group>"; };
+		D74588F61D48773B00A85472 /* Business.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Business.m; path = API/Business.m; sourceTree = "<group>"; };
+		D74588F71D48773B00A85472 /* Contract.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Contract.h; path = API/Contract.h; sourceTree = "<group>"; };
+		D74588F81D48773B00A85472 /* Contract.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Contract.m; path = API/Contract.m; sourceTree = "<group>"; };
+		D74588F91D48773B00A85472 /* Hours.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Hours.h; path = API/Hours.h; sourceTree = "<group>"; };
+		D74588FA1D48773B00A85472 /* Hours.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Hours.m; path = API/Hours.m; sourceTree = "<group>"; };
+		D74588FB1D48773B00A85472 /* Image.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Image.h; path = API/Image.h; sourceTree = "<group>"; };
+		D74588FC1D48773B00A85472 /* Image.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Image.m; path = API/Image.m; sourceTree = "<group>"; };
+		D74588FD1D48773B00A85472 /* Job.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Job.h; path = API/Job.h; sourceTree = "<group>"; };
+		D74588FE1D48773B00A85472 /* Job.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Job.m; path = API/Job.m; sourceTree = "<group>"; };
+		D74588FF1D48773B00A85472 /* JobSeeker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JobSeeker.h; path = API/JobSeeker.h; sourceTree = "<group>"; };
+		D74589001D48773B00A85472 /* JobSeeker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = JobSeeker.m; path = API/JobSeeker.m; sourceTree = "<group>"; };
+		D74589011D48773B00A85472 /* JobStatus.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JobStatus.h; path = API/JobStatus.h; sourceTree = "<group>"; };
+		D74589021D48773B00A85472 /* JobStatus.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = JobStatus.m; path = API/JobStatus.m; sourceTree = "<group>"; };
+		D74589031D48773B00A85472 /* Location.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Location.h; path = API/Location.h; sourceTree = "<group>"; };
+		D74589041D48773B00A85472 /* Location.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Location.m; path = API/Location.m; sourceTree = "<group>"; };
+		D74589051D48773B00A85472 /* LoginRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LoginRequest.h; path = API/LoginRequest.h; sourceTree = "<group>"; };
+		D74589061D48773B00A85472 /* LoginRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LoginRequest.m; path = API/LoginRequest.m; sourceTree = "<group>"; };
+		D74589071D48773B00A85472 /* Message.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Message.h; path = API/Message.h; sourceTree = "<group>"; };
+		D74589081D48773B00A85472 /* Message.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Message.m; path = API/Message.m; sourceTree = "<group>"; };
+		D74589091D48773B00A85472 /* MJPObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MJPObject.h; path = API/MJPObject.h; sourceTree = "<group>"; };
+		D745890A1D48773B00A85472 /* MJPObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MJPObject.m; path = API/MJPObject.m; sourceTree = "<group>"; };
+		D745890B1D48773B00A85472 /* MJPObjectWithDates.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MJPObjectWithDates.h; path = API/MJPObjectWithDates.h; sourceTree = "<group>"; };
+		D745890C1D48773B00A85472 /* MJPObjectWithDates.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MJPObjectWithDates.m; path = API/MJPObjectWithDates.m; sourceTree = "<group>"; };
+		D745890D1D48773B00A85472 /* MJPObjectWithName.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MJPObjectWithName.h; path = API/MJPObjectWithName.h; sourceTree = "<group>"; };
+		D745890E1D48773B00A85472 /* MJPObjectWithName.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MJPObjectWithName.m; path = API/MJPObjectWithName.m; sourceTree = "<group>"; };
+		D745890F1D48773B00A85472 /* MJPObjectWithNameDesc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MJPObjectWithNameDesc.h; path = API/MJPObjectWithNameDesc.h; sourceTree = "<group>"; };
+		D74589101D48773B00A85472 /* MJPObjectWithNameDesc.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MJPObjectWithNameDesc.m; path = API/MJPObjectWithNameDesc.m; sourceTree = "<group>"; };
+		D74589111D48773B00A85472 /* MJPObjectWithNameShortName.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MJPObjectWithNameShortName.h; path = API/MJPObjectWithNameShortName.h; sourceTree = "<group>"; };
+		D74589121D48773B00A85472 /* MJPObjectWithNameShortName.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MJPObjectWithNameShortName.m; path = API/MJPObjectWithNameShortName.m; sourceTree = "<group>"; };
+		D74589131D48773B00A85472 /* MJPObjectWithNameShortNameDesc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MJPObjectWithNameShortNameDesc.h; path = API/MJPObjectWithNameShortNameDesc.h; sourceTree = "<group>"; };
+		D74589141D48773B00A85472 /* MJPObjectWithNameShortNameDesc.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MJPObjectWithNameShortNameDesc.m; path = API/MJPObjectWithNameShortNameDesc.m; sourceTree = "<group>"; };
+		D74589151D48773B00A85472 /* Nationality.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Nationality.h; path = API/Nationality.h; sourceTree = "<group>"; };
+		D74589161D48773B00A85472 /* Nationality.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Nationality.m; path = API/Nationality.m; sourceTree = "<group>"; };
+		D74589171D48773B00A85472 /* Pitch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Pitch.h; path = API/Pitch.h; sourceTree = "<group>"; };
+		D74589181D48773B00A85472 /* Pitch.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Pitch.m; path = API/Pitch.m; sourceTree = "<group>"; };
+		D74589191D48773B00A85472 /* Profile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Profile.h; path = API/Profile.h; sourceTree = "<group>"; };
+		D745891A1D48773B00A85472 /* Profile.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Profile.m; path = API/Profile.m; sourceTree = "<group>"; };
+		D745891B1D48773B00A85472 /* RegisterRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RegisterRequest.h; path = API/RegisterRequest.h; sourceTree = "<group>"; };
+		D745891C1D48773B00A85472 /* RegisterRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RegisterRequest.m; path = API/RegisterRequest.m; sourceTree = "<group>"; };
+		D745891D1D48773B00A85472 /* Role.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Role.h; path = API/Role.h; sourceTree = "<group>"; };
+		D745891E1D48773B00A85472 /* Role.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Role.m; path = API/Role.m; sourceTree = "<group>"; };
+		D745891F1D48773B00A85472 /* Sector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Sector.h; path = API/Sector.h; sourceTree = "<group>"; };
+		D74589201D48773B00A85472 /* Sector.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Sector.m; path = API/Sector.m; sourceTree = "<group>"; };
+		D74589211D48773B00A85472 /* Sex.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Sex.h; path = API/Sex.h; sourceTree = "<group>"; };
+		D74589221D48773B00A85472 /* Sex.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Sex.m; path = API/Sex.m; sourceTree = "<group>"; };
+		D74589231D48773B00A85472 /* User.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = User.h; path = API/User.h; sourceTree = "<group>"; };
+		D74589241D48773B00A85472 /* User.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = User.m; path = API/User.m; sourceTree = "<group>"; };
+		D74589401D48963900A85472 /* PasswordChangeRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PasswordChangeRequest.h; path = API/PasswordChangeRequest.h; sourceTree = "<group>"; };
+		D74589411D48963900A85472 /* PasswordChangeRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PasswordChangeRequest.m; path = API/PasswordChangeRequest.m; sourceTree = "<group>"; };
+		D74589431D48ABB000A85472 /* PasswordResetRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PasswordResetRequest.h; path = API/PasswordResetRequest.h; sourceTree = "<group>"; };
+		D74589441D48ABB000A85472 /* PasswordResetRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PasswordResetRequest.m; path = API/PasswordResetRequest.m; sourceTree = "<group>"; };
+		D78904E71D47FC6600E980D9 /* ChangePassword.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChangePassword.h; sourceTree = "<group>"; };
+		D78904E81D47FC6600E980D9 /* ChangePassword.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChangePassword.m; sourceTree = "<group>"; };
+		D78904EA1D48586D00E980D9 /* AppHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppHelper.h; sourceTree = "<group>"; };
+		D78904EB1D48586D00E980D9 /* AppHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppHelper.m; sourceTree = "<group>"; };
 		D7E94F881D179D6700866604 /* MyCameraViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyCameraViewController.h; sourceTree = "<group>"; };
 		D7E94F891D179D6700866604 /* MyCameraViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyCameraViewController.m; sourceTree = "<group>"; };
 		D7E94F8A1D179D6700866604 /* MyCameraPreviewView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyCameraPreviewView.h; sourceTree = "<group>"; };
@@ -333,10 +345,14 @@
 				D7E94F8B1D179D6700866604 /* MyCameraPreviewView.m */,
 				CE6FD33D1C01F9BB001A04C3 /* AppDelegate.h */,
 				CE6FD33E1C01F9BB001A04C3 /* AppDelegate.m */,
+				D78904EA1D48586D00E980D9 /* AppHelper.h */,
+				D78904EB1D48586D00E980D9 /* AppHelper.m */,
 				CE6FD3401C01F9BB001A04C3 /* Login.h */,
 				CE6FD3411C01F9BB001A04C3 /* Login.m */,
 				CEE04AA01C0F8C6700697620 /* CreateProfile.h */,
 				CEE04AA11C0F8C6700697620 /* CreateProfile.m */,
+				D78904E71D47FC6600E980D9 /* ChangePassword.h */,
+				D78904E81D47FC6600E980D9 /* ChangePassword.m */,
 				CEE005651C90D6D50065E43A /* CreateJobSeekerProfile.h */,
 				CEE005661C90D6D50065E43A /* CreateJobSeekerProfile.m */,
 				CEE005681C90DEC90065E43A /* CreateRecruiterProfile.h */,
@@ -407,9 +423,9 @@
 				CE45AEC21C0B41380092AB75 /* MJPViewController.h */,
 				CE45AEC31C0B41390092AB75 /* MJPViewController.m */,
 				CE86847C1C0E570300D4B6C7 /* ScrollingViewController.h */,
+				D74588E91D48771800A85472 /* LockableNavigationController.h */,
+				D74588EA1D48771800A85472 /* LockableNavigationController.m */,
 				CE86847D1C0E570300D4B6C7 /* ScrollingViewController.m */,
-				CE4696AC1C9A0BC8001E3FFE /* LockableNavigationController.h */,
-				CE4696AD1C9A0BC8001E3FFE /* LockableNavigationController.m */,
 				D7FA423B1D0EB2D200E93C66 /* MyAlertController.h */,
 				D7FA423C1D0EB2D200E93C66 /* MyAlertController.m */,
 				CE6FD33A1C01F9BB001A04C3 /* Supporting Files */,
@@ -438,62 +454,66 @@
 		CEE52CFB1C06624600881648 /* API */ = {
 			isa = PBXGroup;
 			children = (
-				CEE52CF81C065C4100881648 /* API.h */,
-				CEE52CF91C065C4100881648 /* API.m */,
-				CE8AAFFF1C5AF6250004F021 /* Application.h */,
-				CE8AB0001C5AF6250004F021 /* Application.m */,
-				CEC2E41A1C4BEAA900AC0F45 /* ApplicationStatus.h */,
-				CEC2E41B1C4BEAA900AC0F45 /* ApplicationStatus.m */,
-				CEE52CFC1C066AB000881648 /* AuthToken.h */,
-				CEE52CFD1C066AB000881648 /* AuthToken.m */,
-				CEE52CFF1C066F2700881648 /* LoginRequest.h */,
-				CEE52D001C066F2700881648 /* LoginRequest.m */,
-				CE45AEC81C0B45AD0092AB75 /* RegisterRequest.h */,
-				CE45AEC91C0B45AD0092AB75 /* RegisterRequest.m */,
-				CEE062371C28B77500ED60C0 /* Business.h */,
-				CEE062381C28B77500ED60C0 /* Business.m */,
-				CEE062391C28B77500ED60C0 /* Contract.h */,
-				CEE0623A1C28B77500ED60C0 /* Contract.m */,
-				CEE0623B1C28B77500ED60C0 /* Hours.h */,
-				CEE0623C1C28B77500ED60C0 /* Hours.m */,
-				CEC2E40B1C45C7AB00AC0F45 /* Image.h */,
-				CEC2E40C1C45C7AB00AC0F45 /* Image.m */,
-				CEC2E4021C45A88100AC0F45 /* Job.h */,
-				CEC2E4031C45A88100AC0F45 /* Job.m */,
-				CEE0623D1C28B77500ED60C0 /* JobSeeker.h */,
-				CEE0623E1C28B77500ED60C0 /* JobSeeker.m */,
-				CEC2E4201C4BEFDE00AC0F45 /* JobStatus.h */,
-				CEC2E4211C4BEFDE00AC0F45 /* JobStatus.m */,
-				CEC2E4051C45B4C200AC0F45 /* Location.h */,
-				CEC2E4061C45B4C200AC0F45 /* Location.m */,
-				CE8AB0121C5EBA850004F021 /* Message.h */,
-				CE8AB0131C5EBA850004F021 /* Message.m */,
-				CEE0623F1C28B77500ED60C0 /* MJPObject.h */,
-				CEE062401C28B77500ED60C0 /* MJPObject.m */,
-				CEC2E4081C45B4EC00AC0F45 /* MJPObjectWithDates.h */,
-				CEC2E4091C45B4EC00AC0F45 /* MJPObjectWithDates.m */,
-				CEE062411C28B77500ED60C0 /* MJPObjectWithName.h */,
-				CEE062421C28B77500ED60C0 /* MJPObjectWithName.m */,
-				CEE062431C28B77500ED60C0 /* MJPObjectWithNameDesc.h */,
-				CEE062441C28B77500ED60C0 /* MJPObjectWithNameDesc.m */,
-				CEE062451C28B77500ED60C0 /* MJPObjectWithNameShortName.h */,
-				CEE062461C28B77500ED60C0 /* MJPObjectWithNameShortName.m */,
-				CEE062471C28B77500ED60C0 /* MJPObjectWithNameShortNameDesc.h */,
-				CEE062481C28B77500ED60C0 /* MJPObjectWithNameShortNameDesc.m */,
-				CEE062491C28B77500ED60C0 /* Nationality.h */,
-				CEE0624A1C28B77500ED60C0 /* Nationality.m */,
-				CE8AAFE31C56D93C0004F021 /* Pitch.h */,
-				CE8AAFE41C56D93C0004F021 /* Pitch.m */,
-				CEE0624B1C28B77500ED60C0 /* Profile.h */,
-				CEE0624C1C28B77500ED60C0 /* Profile.m */,
-				CEE0624D1C28B77500ED60C0 /* Role.h */,
-				CEE0624E1C28B77500ED60C0 /* Role.m */,
-				CEC2E4171C4BE86400AC0F45 /* Sector.h */,
-				CEC2E4181C4BE86400AC0F45 /* Sector.m */,
-				CEE062511C28B77500ED60C0 /* Sex.h */,
-				CEE062521C28B77500ED60C0 /* Sex.m */,
-				CE45AECB1C0B461A0092AB75 /* User.h */,
-				CE45AECC1C0B461A0092AB75 /* User.m */,
+				D74588EC1D48772E00A85472 /* API.h */,
+				D74588ED1D48772E00A85472 /* API.m */,
+				D74588EF1D48773B00A85472 /* Application.h */,
+				D74588F01D48773B00A85472 /* Application.m */,
+				D74588F11D48773B00A85472 /* ApplicationStatus.h */,
+				D74588F21D48773B00A85472 /* ApplicationStatus.m */,
+				D74588F31D48773B00A85472 /* AuthToken.h */,
+				D74589431D48ABB000A85472 /* PasswordResetRequest.h */,
+				D74589441D48ABB000A85472 /* PasswordResetRequest.m */,
+				D74589401D48963900A85472 /* PasswordChangeRequest.h */,
+				D74589411D48963900A85472 /* PasswordChangeRequest.m */,
+				D74588F41D48773B00A85472 /* AuthToken.m */,
+				D74588F51D48773B00A85472 /* Business.h */,
+				D74588F61D48773B00A85472 /* Business.m */,
+				D74588F71D48773B00A85472 /* Contract.h */,
+				D74588F81D48773B00A85472 /* Contract.m */,
+				D74588F91D48773B00A85472 /* Hours.h */,
+				D74588FA1D48773B00A85472 /* Hours.m */,
+				D74588FB1D48773B00A85472 /* Image.h */,
+				D74588FC1D48773B00A85472 /* Image.m */,
+				D74588FD1D48773B00A85472 /* Job.h */,
+				D74588FE1D48773B00A85472 /* Job.m */,
+				D74588FF1D48773B00A85472 /* JobSeeker.h */,
+				D74589001D48773B00A85472 /* JobSeeker.m */,
+				D74589011D48773B00A85472 /* JobStatus.h */,
+				D74589021D48773B00A85472 /* JobStatus.m */,
+				D74589031D48773B00A85472 /* Location.h */,
+				D74589041D48773B00A85472 /* Location.m */,
+				D74589051D48773B00A85472 /* LoginRequest.h */,
+				D74589061D48773B00A85472 /* LoginRequest.m */,
+				D74589071D48773B00A85472 /* Message.h */,
+				D74589081D48773B00A85472 /* Message.m */,
+				D74589091D48773B00A85472 /* MJPObject.h */,
+				D745890A1D48773B00A85472 /* MJPObject.m */,
+				D745890B1D48773B00A85472 /* MJPObjectWithDates.h */,
+				D745890C1D48773B00A85472 /* MJPObjectWithDates.m */,
+				D745890D1D48773B00A85472 /* MJPObjectWithName.h */,
+				D745890E1D48773B00A85472 /* MJPObjectWithName.m */,
+				D745890F1D48773B00A85472 /* MJPObjectWithNameDesc.h */,
+				D74589101D48773B00A85472 /* MJPObjectWithNameDesc.m */,
+				D74589111D48773B00A85472 /* MJPObjectWithNameShortName.h */,
+				D74589121D48773B00A85472 /* MJPObjectWithNameShortName.m */,
+				D74589131D48773B00A85472 /* MJPObjectWithNameShortNameDesc.h */,
+				D74589141D48773B00A85472 /* MJPObjectWithNameShortNameDesc.m */,
+				D74589151D48773B00A85472 /* Nationality.h */,
+				D74589161D48773B00A85472 /* Nationality.m */,
+				D74589171D48773B00A85472 /* Pitch.h */,
+				D74589181D48773B00A85472 /* Pitch.m */,
+				D74589191D48773B00A85472 /* Profile.h */,
+				D745891A1D48773B00A85472 /* Profile.m */,
+				D745891B1D48773B00A85472 /* RegisterRequest.h */,
+				D745891C1D48773B00A85472 /* RegisterRequest.m */,
+				D745891D1D48773B00A85472 /* Role.h */,
+				D745891E1D48773B00A85472 /* Role.m */,
+				D745891F1D48773B00A85472 /* Sector.h */,
+				D74589201D48773B00A85472 /* Sector.m */,
+				D74589211D48773B00A85472 /* Sex.h */,
+				D74589221D48773B00A85472 /* Sex.m */,
+				D74589231D48773B00A85472 /* User.h */,
+				D74589241D48773B00A85472 /* User.m */,
 			);
 			name = API;
 			sourceTree = "<group>";
@@ -731,73 +751,77 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				CEE062571C28B77500ED60C0 /* MJPObject.m in Sources */,
 				CE6FD3421C01F9BB001A04C3 /* Login.m in Sources */,
-				CEE062531C28B77500ED60C0 /* Business.m in Sources */,
 				CE45AEC41C0B41390092AB75 /* MJPViewController.m in Sources */,
-				CEC2E4071C45B4C200AC0F45 /* Location.m in Sources */,
-				CEE062551C28B77500ED60C0 /* Hours.m in Sources */,
-				CEC2E4191C4BE86400AC0F45 /* Sector.m in Sources */,
 				CE8AB0171C5EDB7B0004F021 /* MessageThread.m in Sources */,
+				D745892A1D48773B00A85472 /* Hours.m in Sources */,
+				D745892D1D48773B00A85472 /* JobSeeker.m in Sources */,
+				D745892F1D48773B00A85472 /* Location.m in Sources */,
 				CE7742411C95D6C000A9A2BA /* EditJob.m in Sources */,
 				CE7742491C9623C300A9A2BA /* ViewJobMenu.m in Sources */,
-				CEE0625E1C28B77500ED60C0 /* Role.m in Sources */,
+				D745893E1D48773B00A85472 /* Sex.m in Sources */,
 				D7E94F8C1D179D6700866604 /* MyCameraViewController.m in Sources */,
-				CE45AECD1C0B461A0092AB75 /* User.m in Sources */,
-				CE4696AE1C9A0BC8001E3FFE /* LockableNavigationController.m in Sources */,
-				CE8AB0011C5AF6250004F021 /* Application.m in Sources */,
 				D7E94F8D1D179D6700866604 /* MyCameraPreviewView.m in Sources */,
+				D745892E1D48773B00A85472 /* JobStatus.m in Sources */,
 				CE8AB0241C617F550004F021 /* BusinessEditView.m in Sources */,
-				CE45AECA1C0B45AD0092AB75 /* RegisterRequest.m in Sources */,
-				CE8AAFE51C56D93C0004F021 /* Pitch.m in Sources */,
-				CEE52CFE1C066AB000881648 /* AuthToken.m in Sources */,
+				D78904EC1D48586D00E980D9 /* AppHelper.m in Sources */,
+				D74589251D48773B00A85472 /* Application.m in Sources */,
 				CEE0056A1C90DEC90065E43A /* CreateRecruiterProfile.m in Sources */,
 				CE59737D1C1626630096B001 /* JobSeekerProfileView.m in Sources */,
 				CE8395A81C3EF98F007A8213 /* EditProfile.m in Sources */,
-				CEE062581C28B77500ED60C0 /* MJPObjectWithName.m in Sources */,
+				D74588EE1D48772E00A85472 /* API.m in Sources */,
+				D745892C1D48773B00A85472 /* Job.m in Sources */,
 				CE8395AB1C42F279007A8213 /* SwipeView.m in Sources */,
 				CE7742351C92368200A9A2BA /* SimpleListCell.m in Sources */,
+				D745893D1D48773B00A85472 /* Sector.m in Sources */,
+				D74589351D48773B00A85472 /* MJPObjectWithNameDesc.m in Sources */,
 				CE77424C1C96244900A9A2BA /* ViewJob.m in Sources */,
+				D745893C1D48773B00A85472 /* Role.m in Sources */,
+				D74589361D48773B00A85472 /* MJPObjectWithNameShortName.m in Sources */,
 				D71EAC6B1D33D04800E32ED1 /* KxMenu.m in Sources */,
 				CEE04A9F1C0F8A9100697620 /* JobSeekerHome.m in Sources */,
-				CEE062541C28B77500ED60C0 /* Contract.m in Sources */,
+				D745892B1D48773B00A85472 /* Image.m in Sources */,
+				D74589391D48773B00A85472 /* Pitch.m in Sources */,
+				D74589331D48773B00A85472 /* MJPObjectWithDates.m in Sources */,
 				CE77423B1C923EAD00A9A2BA /* ListJobs.m in Sources */,
-				CEE0625B1C28B77500ED60C0 /* MJPObjectWithNameShortNameDesc.m in Sources */,
+				D74589341D48773B00A85472 /* MJPObjectWithName.m in Sources */,
 				CEE04AA71C10EE2000697620 /* ErrorTextField.m in Sources */,
+				D745893F1D48773B00A85472 /* User.m in Sources */,
+				D74589271D48773B00A85472 /* AuthToken.m in Sources */,
 				CE6FD33F1C01F9BB001A04C3 /* AppDelegate.m in Sources */,
-				CEE52D011C066F2700881648 /* LoginRequest.m in Sources */,
 				CE8AB01A1C5EE4B80004F021 /* MessageThreadCell.m in Sources */,
-				CEC2E40A1C45B4EC00AC0F45 /* MJPObjectWithDates.m in Sources */,
 				CE7742441C95D85300A9A2BA /* JobEditView.m in Sources */,
-				CEE062601C28B77500ED60C0 /* Sex.m in Sources */,
 				CEE005671C90D6D50065E43A /* CreateJobSeekerProfile.m in Sources */,
 				CE8AB01D1C6029D90004F021 /* RecordPitch.m in Sources */,
 				D7FA423D1D0EB2D200E93C66 /* MyAlertController.m in Sources */,
 				CE8AAFFC1C59A7820004F021 /* LocationMapView.m in Sources */,
-				CEE0625C1C28B77500ED60C0 /* Nationality.m in Sources */,
+				D74589451D48ABB000A85472 /* PasswordResetRequest.m in Sources */,
+				D74589281D48773B00A85472 /* Business.m in Sources */,
+				D74589381D48773B00A85472 /* Nationality.m in Sources */,
 				CE7742381C923D4900A9A2BA /* ListLocations.m in Sources */,
-				CEE062561C28B77500ED60C0 /* JobSeeker.m in Sources */,
-				CE8AB0141C5EBA850004F021 /* Message.m in Sources */,
 				CE8AB0041C5B04320004F021 /* JobDetails.m in Sources */,
 				CEB424131C9A35BC0012748B /* JobSeekerDetails.m in Sources */,
+				D74589371D48773B00A85472 /* MJPObjectWithNameShortNameDesc.m in Sources */,
 				CE8AAFF71C599FA50004F021 /* DownPickerMultiple.m in Sources */,
 				CE8AB02B1C6AA2490004F021 /* LocationEditView.m in Sources */,
-				CEE062591C28B77500ED60C0 /* MJPObjectWithNameDesc.m in Sources */,
 				CE8AAFED1C5850C40004F021 /* EditSearchProfile.m in Sources */,
-				CEC2E41C1C4BEAA900AC0F45 /* ApplicationStatus.m in Sources */,
+				D74589311D48773B00A85472 /* Message.m in Sources */,
+				D74588EB1D48771800A85472 /* LockableNavigationController.m in Sources */,
 				CE86847E1C0E570300D4B6C7 /* ScrollingViewController.m in Sources */,
-				CEE0625A1C28B77500ED60C0 /* MJPObjectWithNameShortName.m in Sources */,
-				CEE0625D1C28B77500ED60C0 /* Profile.m in Sources */,
-				CEC2E4041C45A88100AC0F45 /* Job.m in Sources */,
-				CEC2E4221C4BEFDE00AC0F45 /* JobStatus.m in Sources */,
+				D745893B1D48773B00A85472 /* RegisterRequest.m in Sources */,
 				CE8AB00B1C5EA9F60004F021 /* MessageListCell.m in Sources */,
+				D745893A1D48773B00A85472 /* Profile.m in Sources */,
+				D74589291D48773B00A85472 /* Contract.m in Sources */,
 				CE8AAFEA1C5848900004F021 /* JobSeekerSearchProfileView.m in Sources */,
 				CEE04A9C1C0F896300697620 /* ListBusinesses.m in Sources */,
 				CEE04AA21C0F8C6700697620 /* CreateProfile.m in Sources */,
-				CEE52CFA1C065C4100881648 /* API.m in Sources */,
+				D78904E91D47FC6600E980D9 /* ChangePassword.m in Sources */,
 				CE8AB0111C5EB66C0004F021 /* Messages.m in Sources */,
+				D74589321D48773B00A85472 /* MJPObject.m in Sources */,
+				D74589301D48773B00A85472 /* LoginRequest.m in Sources */,
+				D74589261D48773B00A85472 /* ApplicationStatus.m in Sources */,
+				D74589421D48963900A85472 /* PasswordChangeRequest.m in Sources */,
 				CE6FD33C1C01F9BB001A04C3 /* main.m in Sources */,
-				CEC2E40D1C45C7AB00AC0F45 /* Image.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -930,8 +954,8 @@
 			baseConfigurationReference = CFA3EA2BF05430C3C9894AA5 /* Pods.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_IDENTITY = "iPhone Developer: Mike Christopherson (8QQAR73YPE)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Mike Christopherson (8QQAR73YPE)";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Mike Christopherson (YY7DF42BJ9)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Mike Christopherson (YY7DF42BJ9)";
 				GCC_PREFIX_HEADER = "My Job Pitch/PrefixHeader.pch";
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -948,7 +972,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.myjobpitch.pitch;
 				PRODUCT_NAME = MyJobPitch;
-				PROVISIONING_PROFILE = "9fcf717c-fcc5-400b-b610-e0fdc047e519";
+				PROVISIONING_PROFILE = "d8df9a97-736b-4201-bf55-aa36f57ce71b";
 			};
 			name = Debug;
 		};
@@ -957,8 +981,8 @@
 			baseConfigurationReference = B0F6E4D8F0045A1E43790385 /* Pods.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_IDENTITY = "iPhone Developer: Mike Christopherson (8QQAR73YPE)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Mike Christopherson (8QQAR73YPE)";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Mike Christopherson (YY7DF42BJ9)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Mike Christopherson (YY7DF42BJ9)";
 				GCC_PREFIX_HEADER = "My Job Pitch/PrefixHeader.pch";
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -975,7 +999,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.myjobpitch.pitch;
 				PRODUCT_NAME = MyJobPitch;
-				PROVISIONING_PROFILE = "9fcf717c-fcc5-400b-b610-e0fdc047e519";
+				PROVISIONING_PROFILE = "d8df9a97-736b-4201-bf55-aa36f57ce71b";
 			};
 			name = Release;
 		};

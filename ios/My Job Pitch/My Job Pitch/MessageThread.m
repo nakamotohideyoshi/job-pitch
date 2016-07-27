@@ -27,6 +27,8 @@
     self.messages.estimatedRowHeight = 96;
     self.messages.delegate = self;
     self.messages.dataSource = self;
+    
+    activeField = self.messageInput;
 }
 
 - (void)viewWillAppear:(BOOL)animated

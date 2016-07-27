@@ -21,6 +21,8 @@
     __weak IBOutlet UIView * loginForm;
     __weak IBOutlet UIView * registrationForm;
     __weak IBOutlet UISwitch *switchRemember;
+    __weak IBOutlet UIView *resetForm;
+    __weak IBOutlet UIButton *wantToResetButton;
 }
 
 @end

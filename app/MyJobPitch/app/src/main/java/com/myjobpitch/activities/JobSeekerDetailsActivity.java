@@ -1,6 +1,7 @@
 package com.myjobpitch.activities;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
@@ -82,6 +83,9 @@ public class JobSeekerDetailsActivity extends MJPProgressActionBarActivity {
         mJobSeekerEmailView = (TextView) findViewById(R.id.job_seeker_email);
         mJobSeekerCVView = findViewById(R.id.cv);
         mJobSeekerReferencesAvailableView = (TextView) findViewById(R.id.references_available);
+
+        mJobSeekerEmailView.setText(LoginActivity.myEmail);
+        mJobSeekerEmailView.setEnabled(false);
 
         mJobSeekerCVButton = (Button) findViewById(R.id.cv_button);
         mJobSeekerCVButton.setOnClickListener(new View.OnClickListener() {
@@ -275,9 +279,8 @@ public class JobSeekerDetailsActivity extends MJPProgressActionBarActivity {
             } else {
                 mJobSeekerMobileView.setVisibility(View.GONE);
             }
-            if (jobSeeker.getEmail_public() && jobSeeker.getEmail() != null && !jobSeeker.getEmail().isEmpty()) {
+            if (jobSeeker.getEmail_public()) {
                 mJobSeekerEmailView.setVisibility(View.VISIBLE);
-                mJobSeekerEmailView.setText(Html.fromHtml(String.format("Email: <u>%s</u>", jobSeeker.getEmail())));
             } else {
                 mJobSeekerEmailView.setVisibility(View.GONE);
             }

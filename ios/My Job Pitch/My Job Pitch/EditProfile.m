@@ -62,7 +62,6 @@
 - (NSDictionary*)getFieldMap {
     return @{@"firstName": jobSeekerProfile.firstName.textField,
              @"lastName": jobSeekerProfile.lastName.textField,
-             @"email": jobSeekerProfile.email.textField,
              @"telephone": jobSeekerProfile.telephone.textField,
              @"mobile": jobSeekerProfile.mobile.textField,
              @"age": jobSeekerProfile.age.textField,
@@ -73,7 +72,6 @@
 - (NSDictionary *)getErrorViewMap {
     return @{@"firstName": jobSeekerProfile.firstName.errorLabel,
              @"lastName": jobSeekerProfile.lastName.errorLabel,
-             @"email": jobSeekerProfile.email.errorLabel,
              @"telephone": jobSeekerProfile.telephone.errorLabel,
              @"mobile": jobSeekerProfile.mobile.errorLabel,
              @"age": jobSeekerProfile.age.errorLabel,

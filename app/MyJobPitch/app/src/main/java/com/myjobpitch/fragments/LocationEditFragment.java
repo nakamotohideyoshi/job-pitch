@@ -1,18 +1,38 @@
 package com.myjobpitch.fragments;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.PendingResult;
+import com.google.android.gms.common.api.ResolvingResultCallbacks;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.common.api.ResultCallbacks;
+import com.google.android.gms.common.api.Status;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.PlaceLikelihood;
+import com.google.android.gms.location.places.PlaceLikelihoodBuffer;
+import com.google.android.gms.location.places.Places;
+import com.google.android.gms.maps.model.LatLng;
 import com.myjobpitch.R;
 import com.myjobpitch.activities.SelectPlaceActivity;
 import com.myjobpitch.api.MJPApi;
@@ -25,7 +45,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-public class LocationEditFragment extends EditFragment<Location> {
+public class LocationEditFragment extends EditFragment<Location> implements GoogleApiClient.OnConnectionFailedListener{
     public static final int SELECT_LOCATION = 1000;
 
     private CheckBox mLocationMobilePublicView;
@@ -50,6 +70,8 @@ public class LocationEditFragment extends EditFragment<Location> {
     private boolean mImageUriSet = false;
     private String mNoImageMessage;
     private float mNoImageAlpha;
+
+    private GoogleApiClient mGoogleApiClient;
 
     public LocationEditFragment() {
         // Required empty public constructor
@@ -136,8 +158,77 @@ public class LocationEditFragment extends EditFragment<Location> {
             mImageUriSet = true;
         }
 
+        mGoogleApiClient = new GoogleApiClient.Builder(getContext())
+                .addApi(Places.PLACE_DETECTION_API)
+                .addApi(Places.GEO_DATA_API)
+                .enableAutoManage(getActivity(), this)
+                .build();
+
+        Button autoLocationButton = (Button) view.findViewById(R.id.auto_location);
+        autoLocationButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (ContextCompat.checkSelfPermission(getContext(),Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                    ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 100);
+                } else {
+                    callPlaceDetectionApi();
+                }
+            }
+        });
+
         return view;
     }
+
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case 100:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    callPlaceDetectionApi();
+                }
+                break;
+        }
+    }
+
+
+    private void callPlaceDetectionApi() throws SecurityException {
+        PendingResult<PlaceLikelihoodBuffer> result = Places.PlaceDetectionApi.getCurrentPlace(mGoogleApiClient, null);
+        result.setResultCallback(new ResultCallback<PlaceLikelihoodBuffer>() {
+            @Override
+            public void onResult(@NonNull PlaceLikelihoodBuffer placeLikelihoods) {
+                if (!placeLikelihoods.getStatus().isSuccess()) {
+                    // Request did not complete successfully
+                    GooglePlayServicesUtil.showErrorDialogFragment(placeLikelihoods.getStatus().getStatusCode(), getActivity(), 1);
+                    placeLikelihoods.release();
+                    return;
+                }
+
+                for (PlaceLikelihood placeLikelihood : placeLikelihoods) {
+                    Place place = placeLikelihood.getPlace();
+                    LatLng latLng = place.getLatLng();
+                    mPlaceName = place.getName().toString();
+                    mPlaceId = place.getId();
+                    mLongitude = latLng.longitude;
+                    mLatitude = latLng.latitude;
+                    if (mPlaceName != null) {
+                        if (mPlaceId == null || mPlaceId.isEmpty())
+                            mPlaceView.setText(mPlaceName);
+                        else
+                            mPlaceView.setText(mPlaceName + " (from Google)");
+                    }
+                }
+                placeLikelihoods.release();
+            }
+        });
+    }
+
+    public void onConnectionFailed(ConnectionResult connectionResult) {
+
+    }
+
+
+
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
@@ -274,4 +365,5 @@ public class LocationEditFragment extends EditFragment<Location> {
 
         return success;
     }
+
 }

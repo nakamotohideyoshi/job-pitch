@@ -238,6 +238,8 @@ public class RegisterActivity extends MJPProgressActivity {
                                         .putBoolean(LoginActivity.REMEMBER_PASSWORD, false);
                                 preferences.commit();
 
+                                LoginActivity.myEmail = email;
+
                                 Log.d("LoginActivity", "application data loaded");
                                 Intent intent = new Intent(RegisterActivity.this, next);
                                 intent.putExtra("from_login", true);

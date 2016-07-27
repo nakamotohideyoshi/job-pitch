@@ -28,6 +28,13 @@
     _api = [[API alloc] init];
     self.loaded = false;
     [GMSServices provideAPIKey:@"AIzaSyCeseQMdrlh9E5d7DHHHm4GvW7yd8C_sZk"];
+    
+    [SVProgressHUD setDefaultStyle:SVProgressHUDStyleCustom];
+    [SVProgressHUD setBackgroundLayerColor:[UIColor colorWithRed:0 green:0 blue:0 alpha:0.4]];
+    [SVProgressHUD setBackgroundColor:[UIColor colorWithRed:0 green:0 blue:0 alpha:0]];
+    [SVProgressHUD setForegroundColor:[UIColor colorWithRed:40/255.0f green:40/255.0f blue:40/255.0f alpha:1]];
+    [SVProgressHUD setDefaultAnimationType:SVProgressHUDAnimationTypeNative];
+    [SVProgressHUD setDefaultMaskType:SVProgressHUDMaskTypeCustom];
    
     return YES;
 }

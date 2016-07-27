@@ -11,7 +11,6 @@ public class JobSeeker extends MJPObjectWithDates implements JobSeekerContainer 
     private boolean active;
     private String first_name;
     private String last_name;
-    private String email;
     private String telephone;
     private String mobile;
     private boolean email_public;
@@ -30,6 +29,9 @@ public class JobSeeker extends MJPObjectWithDates implements JobSeekerContainer 
 
     @JsonProperty("has_references")
     private boolean hasReferences;
+
+    @JsonProperty("truth_confirmation")
+    private boolean truthConfirmation;
 
     public boolean getEmail_public() {
         return email_public;
@@ -119,14 +121,6 @@ public class JobSeeker extends MJPObjectWithDates implements JobSeekerContainer 
         this.age_public = age_public;
     }
 
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
     public void setLast_name(String last_name) {
         this.last_name = last_name;
     }
@@ -206,5 +200,13 @@ public class JobSeeker extends MJPObjectWithDates implements JobSeekerContainer 
 
     public void setHasReferences(boolean hasReferences) {
         this.hasReferences = hasReferences;
+    }
+
+    public boolean getTruthConfirmation() {
+        return truthConfirmation;
+    }
+
+    public void setTruthConfirmation(boolean truthConfirmation) {
+        this.truthConfirmation = truthConfirmation;
     }
 }

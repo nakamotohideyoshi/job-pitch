@@ -9,6 +9,8 @@
 #import "API.h"
 #import "LoginRequest.h"
 #import "RegisterRequest.h"
+#import "PasswordResetRequest.h"
+#import "PasswordChangeRequest.h"
 #import "Image.h"
 #import "Hours.h"
 #import "Contract.h"
@@ -75,6 +77,17 @@
                     method:RKRequestMethodPOST
      ];
     
+    
+    [self configureSimpleMapping:objectManager
+                           class:[PasswordResetRequest class]
+                           array:@[@"email"]
+                      dictionary:nil
+                   relationships:nil
+                            path:@"/api-rest-auth/password/reset/"
+                          method:RKRequestMethodPOST];
+    
+    
+    
     [self configureResponseMapping:objectManager
                      responseClass:[User class]
                      responseArray:@[@"id", @"email", @"businesses"]
@@ -87,7 +100,6 @@
     NSArray* jobSeekerArray = @[@"id",
                                 @"created",
                                 @"updated",
-                                @"email",
                                 @"telephone",
                                 @"mobile",
                                 @"age",
@@ -107,6 +119,7 @@
                                           @"sexPublic": @"sex_public",
                                           @"nationalityPublic": @"nationality_public",
                                           @"hasReferences": @"has_references",
+                                          @"truthConfirmation": @"truth_confirmation",
                                           };
     
     NSArray* pitchArray = @[@"id",
@@ -411,6 +424,16 @@
                       dictionary:applictionCreateDictionary
                    relationships:nil
                             path:@"/api/applications/"
+                          method:RKRequestMethodPOST];
+    
+    
+    [self configureSimpleMapping:objectManager
+                           class:[PasswordChangeRequest class]
+                           array:@[@"email", @"old_password"]
+                      dictionary:@{@"password1": @"new_password1", @"password2": @"new_password2"
+                                   }
+                   relationships:nil
+                            path:@"/api-rest-auth/password/change/"
                           method:RKRequestMethodPOST];
     
     NSArray* applictionArray = @[@"id",
@@ -834,7 +857,7 @@
                    password1:(NSString*)password1
                    password2:(NSString*)password2
                      success:(void (^)(AuthToken *authToken))success
-                     failure:(void (^)(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors))failure;
+                     failure:(void (^)(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors))failure
 {
     [self clearCookies];
     RegisterRequest *request = [RegisterRequest alloc];
@@ -866,9 +889,53 @@
      ];
 }
 
+- (void)resetPassword:(NSString*)email
+               success:(void (^)())success
+               failure:(void (^)(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors))failure
+{
+    [self clearCookies];
+    PasswordResetRequest *request = [PasswordResetRequest alloc];
+    request.email = email;
+    [[RKObjectManager sharedManager] postObject:request
+                                           path:@"/api-rest-auth/password/reset/"
+                                     parameters:nil success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
+                                         NSLog(@"Register success");
+                                         success();
+                                     } failure:^(RKObjectRequestOperation *operation, NSError *error) {
+                                         NSLog(@"Error registering: %@", error);
+                                         failure(operation, error, [self getMessage:error], [self getErrors:error]);
+                                     }
+     ];
+}
+
+- (void)changePassword:(NSString*)email
+                oldpassword:(NSString*)oldPassword
+                password1:(NSString*)password1
+                password2:(NSString*)password2
+                  success:(void (^)())success
+                  failure:(void (^)(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors))failure
+{
+    [self clearCookies];
+    PasswordChangeRequest *request = [PasswordChangeRequest alloc];
+    request.email = email;
+    request.old_password = oldPassword;
+    request.password1 = password1;
+    request.password2 = password2;
+    [[RKObjectManager sharedManager] postObject:request
+                                           path:@"/api-rest-auth/password/change/"
+                                     parameters:nil success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
+                                         NSLog(@"Register success");
+                                         success();
+                                     } failure:^(RKObjectRequestOperation *operation, NSError *error) {
+                                         NSLog(@"Error registering: %@", error);
+                                         failure(operation, error, [self getMessage:error], [self getErrors:error]);
+                                     }
+     ];
+}
+
 - (void)loadJobSeekerWithId:(NSNumber*)pk
                     success:(void (^)(JobSeeker *jobSeeker))success
-                    failure:(void (^)(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors))failure;
+                    failure:(void (^)(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors))failure
 {
     [self clearCookies];
     NSString *url = [NSString stringWithFormat:@"/api/job-seekers/%@/", pk];
@@ -883,7 +950,7 @@
 
 - (void)saveJobSeeker:(JobSeeker*)jobSeeker
               success:(void (^)(JobSeeker *jobSeeker))success
-              failure:(void (^)(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors))failure;
+              failure:(void (^)(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors))failure
 {
     [self clearCookies];
     if (jobSeeker.id) {
@@ -913,7 +980,7 @@
 
 - (void)loadJobProfileWithId:(NSNumber*)pk
                     success:(void (^)(Profile *profile))success
-                    failure:(void (^)(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors))failure;
+                    failure:(void (^)(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors))failure
 {
     [self clearCookies];
     NSString *url = [NSString stringWithFormat:@"/api/job-profiles/%@/", pk];
@@ -928,7 +995,7 @@
 
 - (void)saveJobProfile:(Profile*)profile
               success:(void (^)(Profile *profile))success
-              failure:(void (^)(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors))failure;
+              failure:(void (^)(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors))failure
 {
     [self clearCookies];
     if (profile.id) {

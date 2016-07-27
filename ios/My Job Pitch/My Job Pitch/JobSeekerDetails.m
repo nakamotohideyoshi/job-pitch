@@ -48,8 +48,9 @@
     }
     if (showContactDetails) {
         NSMutableArray *contactDetails = [[NSMutableArray alloc] init];
-        if (self.jobSeeker.email != nil && self.jobSeeker.email.length && self.jobSeeker.emailPublic)
-            [contactDetails addObject:self.jobSeeker.email];
+        if (self.jobSeeker.emailPublic) {
+            [contactDetails addObject:[AppHelper getEmail]];
+        }
         if (self.jobSeeker.telephone != nil && self.jobSeeker.telephone.length && self.jobSeeker.telephonePublic)
             [contactDetails addObject:self.jobSeeker.telephone];
         if (self.jobSeeker.mobile != nil && self.jobSeeker.mobile.length && self.jobSeeker.mobilePublic)

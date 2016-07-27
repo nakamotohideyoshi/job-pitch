@@ -22,9 +22,10 @@
     [super viewDidLoad];
     [activityIndicator setHidden:YES];
     
+    email.text = [AppHelper getEmail];
+    
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     BOOL isRemember = [defaults boolForKey:@"remember"];
-    email.text = [defaults stringForKey:@"email"];
     password.text = isRemember ? [defaults stringForKey:@"password"] : @"";
     password2.text = @"";
     [switchRemember setOn:isRemember];
@@ -48,6 +49,7 @@
     [self clearErrors];
     registrationForm.hidden = YES;
     loginForm.alpha = 1.0f;
+    wantToResetButton.alpha = 1.0f;
     self.navigationController.navigationBarHidden = YES;
     
     if (isAutoLogin) {
@@ -68,10 +70,10 @@
     [self appDelegate].user = user;
     [self.appDelegate loadData:^() {
         
-        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+        [AppHelper setEmail:email.text];
         
+        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
         [defaults setBool:switchRemember.isOn forKey:@"remember"];
-        [defaults setObject:email.text forKey:@"email"];
         [defaults setObject:password.text forKey:@"password"];
         [defaults synchronize];
         
@@ -109,10 +111,12 @@
 }
 
 - (NSArray *)getRequiredFields {
-    if (registrationForm.hidden) {
-        return @[@"username", @"password"];
+    if (!registrationForm.hidden) {
+        return @[@"email", @"password", @"password2"];
+    } else if (!resetForm.hidden) {
+        return @[@"email"];
     } else {
-        return @[@"username", @"password", @"password2"];
+        return @[@"email", @"password"];
     }
 }
 
@@ -178,6 +182,7 @@
     NSLog(@"registrationForm");
     [UIView animateWithDuration:0.5f animations:^{
         [loginForm setAlpha:0.0f];
+        [wantToResetButton setAlpha:0.0f];
     } completion:^(BOOL finished) {
         registrationForm.alpha = 0.0f;
         registrationForm.hidden = NO;
@@ -194,8 +199,54 @@
         registrationForm.hidden = YES;
         [UIView animateWithDuration:0.5f animations:^{
             [loginForm setAlpha:1.0f];
+            [wantToResetButton setAlpha:1.0f];
         } completion:nil];
     }];
 }
+
+- (IBAction)resetForm:(id)sender {
+    NSLog(@"resetForm");
+    [UIView animateWithDuration:0.5f animations:^{
+        [loginForm setAlpha:0.0f];
+        [wantToResetButton setAlpha:0.0f];
+        [password setAlpha:0.0f];
+        [passwordError setAlpha:0.0f];
+    } completion:^(BOOL finished) {
+        resetForm.alpha = 0.0f;
+        resetForm.hidden = NO;
+        [UIView animateWithDuration:0.5f animations:^{
+            [resetForm setAlpha:1.0f];
+        } completion:nil];
+    }];
+}
+
+- (IBAction)resetCancel:(id)sender {
+    [UIView animateWithDuration:0.5f animations:^{
+        [resetForm setAlpha:0.0f];
+    } completion:^(BOOL finished) {
+        resetForm.hidden = YES;
+        [UIView animateWithDuration:0.5f animations:^{
+            [loginForm setAlpha:1.0f];
+            [wantToResetButton setAlpha:1.0f];
+            [password setAlpha:1.0f];
+            [passwordError setAlpha:1.0f];
+        } completion:nil];
+    }];
+}
+
+- (IBAction)reset:(id)sender {
+    NSLog(@"reset");
+    if ([self validate]) {
+        [SVProgressHUD show];
+        [[self appDelegate].api resetPassword:email.text success:^{
+            [self resetCancel:nil];
+            [SVProgressHUD dismiss];
+        } failure:^(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors) {
+            [self handleErrors:errors message:message];
+            [SVProgressHUD dismiss];
+        }];
+    }
+}
+
 
 @end

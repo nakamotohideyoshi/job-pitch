@@ -37,6 +37,17 @@
 - (void)getUser:(void (^)(User *user))success
         failure:(void (^)(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors))failure;
 
+- (void)resetPassword:(NSString*)email
+              success:(void (^)())success
+              failure:(void (^)(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors))failure;
+
+- (void)changePassword:(NSString*)email
+           oldpassword:(NSString*)oldPassword
+             password1:(NSString*)password1
+             password2:(NSString*)password2
+               success:(void (^)())success
+               failure:(void (^)(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors))failure;
+
 - (void)loadJobSeekerWithId:(NSNumber*)pk
                     success:(void (^)(JobSeeker *jobSeeker))success
                     failure:(void (^)(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors))failure;

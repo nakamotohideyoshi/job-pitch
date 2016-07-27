@@ -60,6 +60,7 @@ public class LoginActivity extends MJPProgressActivity implements LoaderCallback
     public static final String PASSWORD = "PASSWORD";
     public static final String REMEMBER_PASSWORD = "REMEMBER_PASSWORD";
 
+    public static String myEmail;
 
     private LoginTask loginTask = null;
     private LogoutTask logoutTask = null;
@@ -370,6 +371,8 @@ public class LoginActivity extends MJPProgressActivity implements LoaderCallback
                 if (BuildConfig.DEBUG)
                     preferences.putString(API_ROOT, getApi().getApiRoot());
                 preferences.commit();
+
+                LoginActivity.myEmail = mEmail;
 
                 final List<APITask<Boolean>> tasks = getMJPApplication().getLoadActions();
 

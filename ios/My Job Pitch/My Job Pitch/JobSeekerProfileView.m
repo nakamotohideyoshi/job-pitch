@@ -44,6 +44,10 @@
     [self addSubview:view];
     self.sexPicker = [[DownPicker alloc] initWithTextField:self.sex.textField];
     self.nationalityPicker = [[DownPicker alloc] initWithTextField:self.nationality.textField];
+    
+    self.email.textField.text = [AppHelper getEmail];
+    self.email.textField.textColor = [UIColor colorWithRed:0.5 green:0.5 blue:0.5 alpha:1];
+    self.email.textField.enabled = false;
 }
 
 - (UIView*)loadViewFromNib
@@ -95,7 +99,6 @@
     jobSeeker.active = self.active.isOn;
     jobSeeker.firstName = self.firstName.textField.text;
     jobSeeker.lastName = self.lastName.textField.text;
-    jobSeeker.email = self.email.textField.text;
     jobSeeker.telephone = self.telephone.textField.text;
     jobSeeker.mobile = self.mobile.textField.text;
     jobSeeker.age = @([self.age.textField.text integerValue]);
@@ -126,6 +129,7 @@
     jobSeeker.nationalityPublic = self.nationalityPublic.isOn;
     jobSeeker.desc = self.descriptionView.text;
     jobSeeker.hasReferences = self.hasReferences.isOn;
+    jobSeeker.truthConfirmation = self.tickBox.isOn;
 }
 
 -(void)load:(JobSeeker*)jobSeeker
@@ -133,7 +137,6 @@
     self.active.on = jobSeeker.active;
     self.firstName.textField.text = jobSeeker.firstName;
     self.lastName.textField.text = jobSeeker.lastName;
-    self.email.textField.text = jobSeeker.email;
     self.telephone.textField.text = jobSeeker.telephone;
     self.mobile.textField.text = jobSeeker.mobile;
     self.age.textField.text = [jobSeeker.age stringValue];
@@ -161,6 +164,9 @@
     self.nationalityPublic.on = jobSeeker.nationalityPublic;
     self.descriptionView.text = jobSeeker.desc;
     self.hasReferences.on = jobSeeker.hasReferences;
+    self.tickBox.on = jobSeeker.truthConfirmation;
+    
+    _continueButton.enabled = _tickBox.isOn;
 }
 
 - (IBAction)fileSelect:(id)sender {
@@ -168,7 +174,7 @@
 }
 
 - (IBAction)changedTickBox:(id)sender {
-    	_continueButton.enabled = _tickBox.isOn;
+    _continueButton.enabled = _tickBox.isOn;
 }
 
 

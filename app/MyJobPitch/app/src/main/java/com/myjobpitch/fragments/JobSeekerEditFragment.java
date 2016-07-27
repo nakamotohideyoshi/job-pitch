@@ -1,5 +1,6 @@
 package com.myjobpitch.fragments;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -16,6 +17,7 @@ import android.widget.TextView;
 
 import com.myjobpitch.MJPApplication;
 import com.myjobpitch.R;
+import com.myjobpitch.activities.LoginActivity;
 import com.myjobpitch.api.MJPAPIObject;
 import com.myjobpitch.api.MJPApi;
 import com.myjobpitch.api.data.JobSeeker;
@@ -50,6 +52,7 @@ public class JobSeekerEditFragment extends EditFragment<JobSeeker> {
     private EditText mDescriptionView;
     private TextView mDescriptionCharacters;
     private CheckBox mHasReferencesView;
+    private CheckBox mTickBox;
 
     public Button mSaveButton;
 
@@ -79,9 +82,12 @@ public class JobSeekerEditFragment extends EditFragment<JobSeeker> {
         mDescriptionView = (EditText) view.findViewById(R.id.job_seeker_description);
         mDescriptionCharacters = (TextView) view.findViewById(R.id.job_seeler_description_character_count);
         mHasReferencesView = (CheckBox) view.findViewById(R.id.job_seeker_has_references);
+        mTickBox = (CheckBox)view.findViewById(R.id.tickbox);
 
-        CheckBox tickBox = (CheckBox)view.findViewById(R.id.tickbox);
-        tickBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        mEmailView.setText(LoginActivity.myEmail);
+        mEmailView.setEnabled(false);
+
+        mTickBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (mSaveButton != null) {
@@ -113,12 +119,12 @@ public class JobSeekerEditFragment extends EditFragment<JobSeeker> {
         fields.put("sex", mSexView);
         fields.put("description", mDescriptionView);
         fields.put("has_references", mHasReferencesView);
+        fields.put("truth_confirmation", mTickBox);
         setFields(fields);
 
         Collection<View> requiredFields = new ArrayList<>();
         requiredFields.add(mFirstNameView);
         requiredFields.add(mLastNameView);
-        requiredFields.add(mEmailView);
         requiredFields.add(mDescriptionView);
         setRequiredFields(requiredFields);
 
@@ -135,7 +141,6 @@ public class JobSeekerEditFragment extends EditFragment<JobSeeker> {
     public void load(JobSeeker jobSeeker) {
         mFirstNameView.setText(jobSeeker.getFirst_name());
         mLastNameView.setText(jobSeeker.getLast_name());
-        mEmailView.setText(jobSeeker.getEmail());
         mEmailPublicView.setChecked(jobSeeker.getEmail_public());
         mTelephoneView.setText(jobSeeker.getTelephone());
         mTelephonePublicView.setChecked(jobSeeker.getTelephone_public());
@@ -167,12 +172,12 @@ public class JobSeekerEditFragment extends EditFragment<JobSeeker> {
         mDescriptionView.setText(jobSeeker.getDescription());
         mActiveView.setChecked(jobSeeker.isActive());
         mHasReferencesView.setChecked(jobSeeker.getHasReferences());
+        mTickBox.setChecked(jobSeeker.getTruthConfirmation());
     }
 
     public void save(JobSeeker jobSeeker) {
         jobSeeker.setFirst_name(mFirstNameView.getText().toString());
         jobSeeker.setLast_name(mLastNameView.getText().toString());
-        jobSeeker.setEmail(mEmailView.getText().toString());
         jobSeeker.setEmail_public(mEmailPublicView.isChecked());
         jobSeeker.setTelephone(mTelephoneView.getText().toString());
         jobSeeker.setTelephone_public(mTelephonePublicView.isChecked());
@@ -199,6 +204,7 @@ public class JobSeekerEditFragment extends EditFragment<JobSeeker> {
         jobSeeker.setDescription(mDescriptionView.getText().toString());
         jobSeeker.setActive(mActiveView.isChecked());
         jobSeeker.setHasReferences(mHasReferencesView.isChecked());
+        jobSeeker.setTruthConfirmation(mTickBox.isChecked());
     }
 
     public CreateUpdateJobSeekerTask getCreateJobSeekerTask(MJPApi api, JobSeeker jobSeeker) {

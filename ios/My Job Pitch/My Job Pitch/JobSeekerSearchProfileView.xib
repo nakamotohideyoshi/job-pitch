@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="9532" systemVersion="15D21" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="10116" systemVersion="15G31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9530"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
     </dependencies>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="JobSeekerSearchProfileView">
@@ -32,26 +32,26 @@
                     <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                     <nil key="highlightedColor"/>
                 </label>
-                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="hoc-ec-LmT" customClass="ErrorTextField">
+                <view contentMode="scaleToFill" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="hoc-ec-LmT" customClass="ErrorTextField">
                     <rect key="frame" x="0.0" y="71" width="398" height="40"/>
                 </view>
-                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Contract" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wxP-X9-1n9">
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" text="Contract" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wxP-X9-1n9">
                     <rect key="frame" x="0.0" y="111" width="67" height="21"/>
                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                     <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                     <nil key="highlightedColor"/>
                 </label>
-                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="aaA-DY-XlG" customClass="ErrorTextField">
+                <view contentMode="scaleToFill" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="aaA-DY-XlG" customClass="ErrorTextField">
                     <rect key="frame" x="0.0" y="134" width="398" height="40"/>
                 </view>
-                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="5pw-VS-jZy" customClass="ErrorTextField">
-                    <rect key="frame" x="0.0" y="345" width="317" height="40"/>
+                <view contentMode="scaleToFill" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="5pw-VS-jZy" customClass="ErrorTextField">
+                    <rect key="frame" x="0.0" y="317" width="317" height="40"/>
                     <userDefinedRuntimeAttributes>
                         <userDefinedRuntimeAttribute type="string" keyPath="placeholder" value="Location not set"/>
                     </userDefinedRuntimeAttributes>
                 </view>
-                <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="1000" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Nfq-Wk-gyQ">
-                    <rect key="frame" x="325" y="345" width="73" height="30"/>
+                <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="1000" ambiguous="YES" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Nfq-Wk-gyQ">
+                    <rect key="frame" x="325" y="317" width="73" height="30"/>
                     <color key="backgroundColor" red="0.0" green="0.58823529409999997" blue="0.53333333329999999" alpha="1" colorSpace="calibratedRGB"/>
                     <inset key="contentEdgeInsets" minX="10" minY="0.0" maxX="10" maxY="0.0"/>
                     <state key="normal" title="Change">
@@ -67,32 +67,49 @@
                         <action selector="changeLocation:" destination="-1" eventType="touchUpInside" id="U5f-kO-RK9"/>
                     </connections>
                 </button>
-                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Search radius" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tyg-Ii-VAl">
-                    <rect key="frame" x="0.0" y="385" width="105" height="21"/>
+                <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="1000" ambiguous="YES" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="HHH-Zu-GUy">
+                    <rect key="frame" x="239" y="355" width="159" height="30"/>
+                    <color key="backgroundColor" red="0.0" green="0.58823529409999997" blue="0.53333333329999999" alpha="1" colorSpace="calibratedRGB"/>
+                    <inset key="contentEdgeInsets" minX="10" minY="0.0" maxX="10" maxY="0.0"/>
+                    <state key="normal" title="auto set my location">
+                        <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </state>
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="boolean" keyPath="layer.masksToBounds" value="YES"/>
+                        <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                            <integer key="value" value="7"/>
+                        </userDefinedRuntimeAttribute>
+                    </userDefinedRuntimeAttributes>
+                    <connections>
+                        <action selector="autoSetLocation:" destination="-1" eventType="touchUpInside" id="b8V-mL-7pJ"/>
+                    </connections>
+                </button>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" text="Search radius" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tyg-Ii-VAl">
+                    <rect key="frame" x="0.0" y="385" width="398" height="21"/>
                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                     <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                     <nil key="highlightedColor"/>
                 </label>
-                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="RuE-cB-fsk" customClass="ErrorTextField">
+                <view contentMode="scaleToFill" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="RuE-cB-fsk" customClass="ErrorTextField">
                     <rect key="frame" x="0.0" y="408" width="398" height="40"/>
                 </view>
-                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Hours" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cxF-mY-OW4">
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" text="Hours" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cxF-mY-OW4">
                     <rect key="frame" x="0.0" y="174" width="46" height="21"/>
                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                     <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                     <nil key="highlightedColor"/>
                 </label>
-                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Xse-U6-7MV" customClass="ErrorTextField">
+                <view contentMode="scaleToFill" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Xse-U6-7MV" customClass="ErrorTextField">
                     <rect key="frame" x="0.0" y="197" width="398" height="40"/>
                 </view>
-                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Search Area" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Zyj-Xw-jnD">
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" text="Search Area" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Zyj-Xw-jnD">
                     <rect key="frame" x="0.0" y="245" width="146" height="30"/>
                     <fontDescription key="fontDescription" type="boldSystem" pointSize="25"/>
                     <color key="textColor" red="0.0" green="0.58823529409999997" blue="0.53333333329999999" alpha="1" colorSpace="calibratedRGB"/>
                     <nil key="highlightedColor"/>
                 </label>
-                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="In order to match you with jobs in your area, you must tell us your location, and specify the maximum distance to search" textAlignment="natural" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aKM-up-RIq">
-                    <rect key="frame" x="0.0" y="283" width="398" height="54"/>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" text="In order to match you with jobs in your area, you must tell us your location, and specify the maximum distance to search" textAlignment="natural" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aKM-up-RIq">
+                    <rect key="frame" x="0.0" y="283" width="398" height="26"/>
                     <fontDescription key="fontDescription" type="system" pointSize="15"/>
                     <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                     <nil key="highlightedColor"/>
@@ -124,7 +141,8 @@
                 <constraint firstItem="oLN-2K-Vns" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="CFC-9o-QkD"/>
                 <constraint firstItem="tyg-Ii-VAl" firstAttribute="leading" secondItem="5pw-VS-jZy" secondAttribute="leading" id="CQ5-OA-O9c"/>
                 <constraint firstItem="Xse-U6-7MV" firstAttribute="trailing" secondItem="aaA-DY-XlG" secondAttribute="trailing" id="DRJ-mv-t51"/>
-                <constraint firstItem="tyg-Ii-VAl" firstAttribute="top" secondItem="5pw-VS-jZy" secondAttribute="bottom" id="JlM-dP-B5l"/>
+                <constraint firstItem="HHH-Zu-GUy" firstAttribute="top" secondItem="Nfq-Wk-gyQ" secondAttribute="bottom" constant="8" id="DqZ-2a-Hrh"/>
+                <constraint firstItem="tyg-Ii-VAl" firstAttribute="top" secondItem="5pw-VS-jZy" secondAttribute="bottom" constant="50" id="JlM-dP-B5l"/>
                 <constraint firstItem="5pw-VS-jZy" firstAttribute="top" secondItem="aKM-up-RIq" secondAttribute="bottom" constant="8" id="KFG-4f-P7P"/>
                 <constraint firstItem="Zyj-Xw-jnD" firstAttribute="top" secondItem="Xse-U6-7MV" secondAttribute="bottom" constant="8" id="KWw-08-B8R"/>
                 <constraint firstItem="wxP-X9-1n9" firstAttribute="top" secondItem="hoc-ec-LmT" secondAttribute="bottom" id="MAR-aF-pVw"/>
@@ -144,6 +162,7 @@
                 <constraint firstItem="hoc-ec-LmT" firstAttribute="leading" secondItem="rpc-BM-BLQ" secondAttribute="leading" id="ban-me-OH9"/>
                 <constraint firstItem="RuE-cB-fsk" firstAttribute="trailing" secondItem="Nfq-Wk-gyQ" secondAttribute="trailing" id="cS4-MV-Rx7"/>
                 <constraint firstItem="aKM-up-RIq" firstAttribute="top" secondItem="Zyj-Xw-jnD" secondAttribute="bottom" constant="8" id="hBH-wx-qso"/>
+                <constraint firstItem="Nfq-Wk-gyQ" firstAttribute="trailing" secondItem="HHH-Zu-GUy" secondAttribute="trailing" id="iLO-L9-5tJ"/>
                 <constraint firstItem="Xse-U6-7MV" firstAttribute="leading" secondItem="aaA-DY-XlG" secondAttribute="leading" id="jJI-aU-Ira"/>
                 <constraint firstAttribute="trailing" secondItem="aaA-DY-XlG" secondAttribute="trailing" id="jqn-Yc-VyE"/>
                 <constraint firstItem="Zyj-Xw-jnD" firstAttribute="leading" secondItem="Xse-U6-7MV" secondAttribute="leading" id="kze-zZ-776"/>
@@ -151,13 +170,21 @@
                 <constraint firstItem="aaA-DY-XlG" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="mtd-qL-1vh"/>
                 <constraint firstItem="H1l-b2-huu" firstAttribute="top" secondItem="RuE-cB-fsk" secondAttribute="bottom" constant="17" id="neB-r8-O7I"/>
                 <constraint firstAttribute="bottom" secondItem="H1l-b2-huu" secondAttribute="bottom" id="oWf-Sl-Q2H"/>
+                <constraint firstItem="tyg-Ii-VAl" firstAttribute="top" secondItem="HHH-Zu-GUy" secondAttribute="bottom" id="rjg-pn-Aun"/>
                 <constraint firstAttribute="trailing" secondItem="aKM-up-RIq" secondAttribute="trailing" id="uZv-ev-fYh"/>
+                <constraint firstItem="HHH-Zu-GUy" firstAttribute="height" secondItem="Nfq-Wk-gyQ" secondAttribute="height" id="wjh-3L-X3n"/>
+                <constraint firstAttribute="trailing" secondItem="tyg-Ii-VAl" secondAttribute="trailing" id="ylF-Hj-Z0h"/>
             </constraints>
             <nil key="simulatedStatusBarMetrics"/>
             <nil key="simulatedTopBarMetrics"/>
             <nil key="simulatedBottomBarMetrics"/>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
-            <point key="canvasLocation" x="364" y="89"/>
+            <variation key="default">
+                <mask key="constraints">
+                    <exclude reference="JlM-dP-B5l"/>
+                </mask>
+            </variation>
+            <point key="canvasLocation" x="364" y="88.5"/>
         </view>
     </objects>
 </document>

@@ -11,7 +11,10 @@
 #import "Hours.h"
 #import "Sector.h"
 
+#import "MJPViewController.h"
+
 @interface JobSeekerSearchProfileView ()
+
 @property (nonatomic, nonnull) NSArray *contracts;
 @property (nonatomic, nonnull) NSArray *hoursList;
 @property (nonatomic, nonnull) NSArray *sectorList;
@@ -19,6 +22,7 @@
 @property (nonatomic, nonnull) NSString *placeName;
 @property (nonatomic, nonnull) NSNumber *placeLatitude;
 @property (nonatomic, nonnull) NSNumber *placeLongitude;
+
 @end
 
 @implementation JobSeekerSearchProfileView
@@ -58,6 +62,7 @@
                                                                 @"50 miles",
                                                                 ]];
     self.radius.textField.text = @"5 miles";
+    
 }
 
 - (UIView*)loadViewFromNib
@@ -222,6 +227,27 @@
     self.placeName = name;
     self.placeID = placeID;
     [self updateLocation];
+}
+
+- (IBAction)autoSetLocation:(id)sender {
+    
+    GMSPlacesClient *_placesClient = [GMSPlacesClient sharedClient];
+    
+    [SVProgressHUD show];
+   
+    [_placesClient currentPlaceWithCallback:^(GMSPlaceLikelihoodList *placeLikelihoodList, NSError *error){
+        if (error == nil && placeLikelihoodList != nil) {
+            GMSPlace *place = [[[placeLikelihoodList likelihoods] firstObject] place];
+            if (place != nil) {
+                [self setLocationWithLatitude:[NSNumber numberWithDouble:place.coordinate.latitude]
+                                    longitude:[NSNumber numberWithDouble:place.coordinate.longitude]
+                                         name:place.name
+                                      placeID:place.placeID];
+            }
+        }
+        
+        [SVProgressHUD dismiss];
+    }];
 }
 
 @end

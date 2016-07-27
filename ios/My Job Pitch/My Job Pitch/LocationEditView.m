@@ -274,4 +274,25 @@
     [self updateLocation];
 }
 
+- (IBAction)autoSetLocation:(id)sender {
+    
+    GMSPlacesClient *_placesClient = [GMSPlacesClient sharedClient];
+    
+    [SVProgressHUD show];
+    
+    [_placesClient currentPlaceWithCallback:^(GMSPlaceLikelihoodList *placeLikelihoodList, NSError *error){
+        if (error == nil && placeLikelihoodList != nil) {
+            GMSPlace *place = [[[placeLikelihoodList likelihoods] firstObject] place];
+            if (place != nil) {
+                [self setLocationWithLatitude:[NSNumber numberWithDouble:place.coordinate.latitude]
+                                    longitude:[NSNumber numberWithDouble:place.coordinate.longitude]
+                                         name:place.name
+                                      placeID:place.placeID];
+            }
+        }
+        
+        [SVProgressHUD dismiss];
+    }];
+}
+
 @end

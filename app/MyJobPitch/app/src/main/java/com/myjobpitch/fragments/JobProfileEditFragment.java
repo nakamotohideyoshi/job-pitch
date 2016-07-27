@@ -4,7 +4,9 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +15,16 @@ import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.PendingResult;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.PlaceLikelihood;
+import com.google.android.gms.location.places.PlaceLikelihoodBuffer;
+import com.google.android.gms.location.places.Places;
+import com.google.android.gms.maps.model.LatLng;
 import com.myjobpitch.MJPApplication;
 import com.myjobpitch.R;
 import com.myjobpitch.activities.SelectPlaceActivity;
@@ -29,7 +41,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class JobProfileEditFragment extends EditFragment {
+public class JobProfileEditFragment extends EditFragment implements GoogleApiClient.OnConnectionFailedListener {
     public static final int SELECT_PLACE = 1;
     public static final int DEFAULT_RADIUS_INDEX = 2;
 
@@ -54,6 +66,8 @@ public class JobProfileEditFragment extends EditFragment {
     private List<Integer> radiusValues = Arrays.asList(
         1, 2, 5, 10, 50
     );
+
+    private GoogleApiClient mGoogleApiClient;
 
     public JobProfileEditFragment() {
         // Required empty public constructor
@@ -144,6 +158,52 @@ public class JobProfileEditFragment extends EditFragment {
         setRequiredFields(fields.values());
 
         return view;
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case 100:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    callPlaceDetectionApi();
+                }
+                break;
+        }
+    }
+
+    private void callPlaceDetectionApi() throws SecurityException {
+        PendingResult<PlaceLikelihoodBuffer> result = Places.PlaceDetectionApi.getCurrentPlace(mGoogleApiClient, null);
+        result.setResultCallback(new ResultCallback<PlaceLikelihoodBuffer>() {
+            @Override
+            public void onResult(@NonNull PlaceLikelihoodBuffer placeLikelihoods) {
+                if (!placeLikelihoods.getStatus().isSuccess()) {
+                    // Request did not complete successfully
+                    GooglePlayServicesUtil.showErrorDialogFragment(placeLikelihoods.getStatus().getStatusCode(), getActivity(), 1);
+                    placeLikelihoods.release();
+                    return;
+                }
+
+                for (PlaceLikelihood placeLikelihood : placeLikelihoods) {
+                    Place place = placeLikelihood.getPlace();
+                    LatLng latLng = place.getLatLng();
+                    mPlaceName = place.getName().toString();
+                    mPlaceId = place.getId();
+                    mLongitude = latLng.longitude;
+                    mLatitude = latLng.latitude;
+                    if (mPlaceName != null) {
+                        if (mPlaceId == null || mPlaceId.isEmpty())
+                            mPlaceView.setText(mPlaceName);
+                        else
+                            mPlaceView.setText(mPlaceName + " (from Google)");
+                    }
+                }
+                placeLikelihoods.release();
+            }
+        });
+    }
+
+    public void onConnectionFailed(ConnectionResult connectionResult) {
+
     }
 
     public void loadApplicationData(MJPApplication application) {

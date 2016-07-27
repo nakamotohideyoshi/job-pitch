@@ -6,7 +6,6 @@
 @property bool active;
 @property (nonnull) NSString* firstName;
 @property (nonnull) NSString* lastName;
-@property (nullable) NSString* email;
 @property (nullable) NSString* telephone;
 @property (nullable) NSString* mobile;
 @property (nullable) NSNumber* age;
@@ -19,6 +18,7 @@
 @property bool sexPublic;
 @property bool nationalityPublic;
 @property bool hasReferences;
+@property bool truthConfirmation;
 @property (nullable) NSNumber* profile;
 @property (nullable) NSArray* pitches;
 @property (nullable) NSString* desc;

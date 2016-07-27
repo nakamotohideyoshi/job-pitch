@@ -13,7 +13,7 @@
     IBOutlet UIScrollView * scrollView;
     
 @protected
-    UITextField * activeField;
+    UIView *activeField;
 }
 
 @end

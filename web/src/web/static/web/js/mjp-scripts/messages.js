@@ -1,10 +1,7 @@
 function renderMessages(messages, fileTemplate, context) {
 	$('#list-table tbody').html('');
 
-	var messageTemplatePromise = new Promise(function(resolve, reject) {
-		gettingTemplate(fileTemplate, resolve, reject);
-	})
-	.then(function(messageTemplate) {
+	getTemplate(fileTemplate).then(function(messageTemplate) {
 		var tbodyHtml = '';
 
 		for (var key in messages) {

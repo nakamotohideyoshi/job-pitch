@@ -1,0 +1,10 @@
+<tr data-business-id="<%= id %>" class="business-list" id="business-list-<%= id %>">
+	<td onclick="goToLocation('<%= id %>');"><%= name %></td>
+	<td onclick="goToLocation('<%= id %>');"><img width="80px" src="<%= imageThumb %>"></td>
+	<td onclick="goToLocation('<%= id %>');"><%= locations.length %></td>
+	<td>
+		<a class="find-staff-btn btn btn-primary" href="/profile/edit-business/?id=<%= id %>" data-original-title="Edit ..."><i class="fa fa-pencil"></i></a>
+		<a class="add-job-btn btn btn-primary" href="/profile/create-job/?companyid=<%= id %>" data-original-title="Add job ..."><i class="fa fa-tasks"></i></a>
+		<a href="javascript:deleteRow('<%= id %>','user-businesses' , 'business-list-');" data-apiFunction="user-businesses" data-rowPrefix="business-list-" data-id="<%= id %>" class="delete-action-btn btn btn-primary" data-original-title="Delete"><i class="fa fa-trash"></i></a>
+	</td>
+</tr>

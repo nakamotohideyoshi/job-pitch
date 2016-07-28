@@ -3,44 +3,44 @@
 {% block content %}
 	<div class="container-fluid">
 
-                <!-- Page Heading -->
-                <div class="row">
-                    <div class="col-lg-12">
-                        <h1 class="page-header">
-							Job Details
-                        </h1>
-                        		<div  id="job_applied_for">
-                                	<h3>Your application has been sent and you will hear from the employer if they wish to progress your application. Good luck! </h3>
-                                	<a class="btn btn-custom" href="/jobs" style="margin:0 auto;">Return to Jobs</a>
-                                    <hr />
-                                </div>
-									<div class="row">
-                                    	<div class="col-lg-6">
-                                        	<img src="" class="image-job col-lg-12" />
-											<p><span class="col-lg-6"><strong>Job Title:</strong></span> <span class="job-title col-lg-6">&nbsp;</span></p>
-                                        	<p><span class="col-lg-6"><strong>Contract Type:</strong></span> <span class="contract-type col-lg-6">&nbsp;</span></p>
-                                            <p><span class="col-lg-6"><strong>Job Hours:</strong></span> <span class="job-hours col-lg-6">&nbsp;</span></p>
-                                            <p><span class="col-lg-6"><strong>Job Sector:</strong></span> <span class="job-sector col-lg-6">&nbsp;</span></p>
-                                            <a class="btn btn-custom" id="applyButton" style="margin-left: 18px;margin-top: 20px;">Apply for this job</a>
-                                            
-                                        </div>
-                                        <div class="col-lg-6">
-                                        <p><span class="col-lg-6"><strong>Job Description:</strong></span> <span class="job-description col-lg-6">&nbsp;</span></p>
-                                        </div>
-									</div>
-						
-                        
-                    </div>
-                </div>
-                <!-- /.row -->
-               
+		<!-- Page Heading -->
+		<div class="row">
+	    <div class="col-lg-12">
+				<h1 class="page-header">Job Details</h1>
+				<div id="job_applied_for">
+					<h3>Great! Your application has been sent to the employer, so now just await the connect message once the employer has reviewed your application. </h3>
+					<a class="btn btn-custom" href="/jobs" style="margin:0 auto;">Return to Jobs</a>
+			    <hr />
+				</div>
+			</div>
+		</div>
 
-            </div>
-            <!-- /.container-fluid -->
+		<div class="row">
+			<div class="col-lg-6">
+				<img src="" class="image-job col-lg-12" />
+				<p><span class="col-lg-6"><strong>Job Title:</strong></span> <span class="job-title col-lg-6">&nbsp;</span></p>
+				<p><span class="col-lg-6"><strong>Contract Type:</strong></span> <span class="contract-type col-lg-6">&nbsp;</span></p>
+		    <p><span class="col-lg-6"><strong>Job Hours:</strong></span> <span class="job-hours col-lg-6">&nbsp;</span></p>
+		    <p><span class="col-lg-6"><strong>Job Sector:</strong></span> <span class="job-sector col-lg-6">&nbsp;</span></p>
+		    <a class="btn btn-custom" id="applyButton" style="margin-left: 18px;margin-top: 20px;">Apply for this job</a>
+			</div>
+
+			<br />
+
+			<div class="col-lg-6">
+				<div class="row">
+					<p><span class="col-lg-6"><strong>Job Description:</strong></span> <span class="job-description col-lg-6">&nbsp;</span></p>
+				</div>
+			</div>
+		</div>
+		<!-- /.row -->
+
+  </div>
+  <!-- /.container-fluid -->
 
 {% endblock %}
 {% block pagescripts %}
 
 	<script src="/static/web/js/mjp-scripts/single-job.js"></script>
-	
+
 {% endblock %}

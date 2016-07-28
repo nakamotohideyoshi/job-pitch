@@ -116,11 +116,9 @@ function applyForJob(job_id, job_seeker_id) {
 	}).done(function (data) {
 		$('#applyButton').fadeOut(200, function () {
 			$('#job_applied_for').show();
+			goToTop();
 		});
-	})
-		.fail(function (data) {
-
-		});
+	});
 }
 
 function connectWithJob(job_id, job_seeker_id) {
@@ -259,18 +257,21 @@ function clearErrors() {
 }
 
 function deleteRow(id, apiFunction, rowPrefix) {
-	bootbox.confirm("Are you sure?", function (result) {
-		$.ajax({
-			url: "/api/" + apiFunction + "/" + id + "/",
-			type: 'DELETE',
-			data: {
-				csrftoken: getCookie('csrftoken')
-			},
-			success: function (result) {
-				console.log(rowPrefix + id);
-				$('#' + rowPrefix + id).fadeOut(250);
-			}
-		});
+
+	bootbox.confirm("Are you sure?", function (isOk) {
+		if(isOk){
+			$.ajax({
+				url: "/api/" + apiFunction + "/" + id + "/",
+				type: 'DELETE',
+				data: {
+					csrftoken: getCookie('csrftoken')
+				},
+				success: function (result) {
+					console.log(rowPrefix + id);
+					$('#' + rowPrefix + id).fadeOut(250);
+				}
+			});
+		}
 	});
 }
 
@@ -463,15 +464,18 @@ function log(alertType, message) {
 		.fadeIn('slow');
 }
 
-function gettingTemplate(fullPathTemplate, resolve, reject) {
-	// Using dummy div for dynamic loading and promise API
-	$('<div>').load(fullPathTemplate, function (response, status, xhr) {
-		if (status == "error") {
-			var msg = "Sorry but there was an error: " + xhr.status + " " + xhr.statusText;
-			reject(msg);
-		}
+function getTemplate(fullPathTemplate) {
 
-		resolve(_.template(response));
+	return new Promise(function(resolve, reject){
+		// Using dummy div for dynamic loading and promise API
+		$('<div>').load(fullPathTemplate, function (response, status, xhr) {
+			if (status == "error") {
+				var msg = "Sorry but there was an error: " + xhr.status + " " + xhr.statusText;
+				reject(msg);
+			}
+
+			resolve(_.template(response));
+		});
 	});
 }
 

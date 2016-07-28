@@ -14,11 +14,13 @@ $(function () {
 			window.location.href = "/password-reset/done/";
 
 		}).fail(function (data) {
-			var messageError = ''
+			var messageError = '';
+
 			for (var key in data.responseJSON) {
 				var obj = data.responseJSON[key];
 				messageError = messageError + obj + '<br>';
 			}
+
 			formAlert('danger', messageError);
 		});
 	});

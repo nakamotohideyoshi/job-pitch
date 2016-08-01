@@ -18,10 +18,14 @@
 
 @end
 
-@implementation ChangePassword
+@implementation ChangePassword {
+    NSString *oldPassword;
+}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    oldPassword = [AppHelper getPassword];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -52,9 +56,16 @@
 
 - (IBAction)change:(id)sender {
     if ([self validate]) {
+        
+        if(![oldPassword isEqualToString:_currentPassword.text]) {
+            _currentPassError.text = @"your old password was incorrect.";
+            return;
+        }
+        
         [SVProgressHUD show];
         [self.view endEditing:YES];
-        [[self appDelegate].api changePassword:[AppHelper getEmail] oldpassword:_currentPassword.text password1:_password1.text password2:_password2.text success:^{
+        [[self appDelegate].api changePassword:[AppHelper getEmail] password1:_password1.text password2:_password2.text success:^{
+            [AppHelper setPassword:_password1.text];
             [SVProgressHUD dismiss];
             [self cancel:nil];
         } failure:^(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors) {

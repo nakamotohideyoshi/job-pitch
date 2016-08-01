@@ -7,7 +7,6 @@
 //
 
 #import "BusinessEditView.h"
-#import "MyAlertController.h"
 @import AssetsLibrary;
 
 @interface BusinessEditView ()

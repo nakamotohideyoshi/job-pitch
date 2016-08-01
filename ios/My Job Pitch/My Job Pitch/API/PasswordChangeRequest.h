@@ -9,8 +9,6 @@
 #import <Foundation/Foundation.h>
 
 @interface PasswordChangeRequest : NSObject
-@property NSString* email;
-@property NSString* old_password;
 @property NSString* password1;
 @property NSString* password2;
 @end

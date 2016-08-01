@@ -61,6 +61,7 @@ public class LoginActivity extends MJPProgressActivity implements LoaderCallback
     public static final String REMEMBER_PASSWORD = "REMEMBER_PASSWORD";
 
     public static String myEmail;
+    public static String myPassword;
 
     private LoginTask loginTask = null;
     private LogoutTask logoutTask = null;
@@ -166,9 +167,18 @@ public class LoginActivity extends MJPProgressActivity implements LoaderCallback
             apiRootView.setText(preferences.getString(API_ROOT, urls[0]));
         }
 
+        TextView btnForgotPassword = (TextView)findViewById(R.id.forgot_password);
+        btnForgotPassword.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                resetPassword();
+            }
+        });
+
         if (isRemember) {
             attemptLogin();
         }
+
     }
 
     @Override
@@ -195,11 +205,6 @@ public class LoginActivity extends MJPProgressActivity implements LoaderCallback
             logoutTask.execute((Void) null);
         }
     }
-
-    private void populateAutoComplete() {
-        getLoaderManager().initLoader(0, null, this);
-    }
-
 
     /**
      * Attempts to sign in or register the account specified by the login form.
@@ -253,6 +258,12 @@ public class LoginActivity extends MJPProgressActivity implements LoaderCallback
 
     private void register() {
         Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
+        intent.putExtra("email", mEmailView.getText().toString());
+        startActivity(intent);
+    }
+
+    private void resetPassword() {
+        Intent intent = new Intent(LoginActivity.this, ResetPasswordActivity.class);
         intent.putExtra("email", mEmailView.getText().toString());
         startActivity(intent);
     }
@@ -373,6 +384,7 @@ public class LoginActivity extends MJPProgressActivity implements LoaderCallback
                 preferences.commit();
 
                 LoginActivity.myEmail = mEmail;
+                LoginActivity.myPassword = mPassword;
 
                 final List<APITask<Boolean>> tasks = getMJPApplication().getLoadActions();
 

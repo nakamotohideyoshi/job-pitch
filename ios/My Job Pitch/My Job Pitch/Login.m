@@ -14,9 +14,6 @@
 @end
 
 @implementation Login
-{
-    bool isAutoLogin;
-}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -26,12 +23,11 @@
     
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     BOOL isRemember = [defaults boolForKey:@"remember"];
-    password.text = isRemember ? [defaults stringForKey:@"password"] : @"";
+    password.text = isRemember ? [AppHelper getPassword] : @"";
     password2.text = @"";
     [switchRemember setOn:isRemember];
     
     if (isRemember) {
-        isAutoLogin = YES;
         [self login:nil];
     }
 }
@@ -52,11 +48,11 @@
     wantToResetButton.alpha = 1.0f;
     self.navigationController.navigationBarHidden = YES;
     
-    if (isAutoLogin) {
-        isAutoLogin = NO;
-    } else {
-        [self showProgress:false];
-    }
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    BOOL isRemember = [defaults boolForKey:@"remember"];
+    email.text = [AppHelper getEmail];
+    password.text = isRemember ? [AppHelper getPassword] : @"";
+    password2.text = @"";
 }
 
 - (void)viewDidDisappear:(BOOL)animated
@@ -71,12 +67,12 @@
     [self.appDelegate loadData:^() {
         
         [AppHelper setEmail:email.text];
-        
+        [AppHelper setPassword:password.text];
         NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
         [defaults setBool:switchRemember.isOn forKey:@"remember"];
-        [defaults setObject:password.text forKey:@"password"];
         [defaults synchronize];
         
+        [SVProgressHUD dismiss];
         if ([user isRecruiter]) {
             [self performSegueWithIdentifier:@"goto_business_list" sender:@"login"];
         } else if ([user isJobSeeker]) {
@@ -86,7 +82,6 @@
         }
     } failure:^(NSDictionary *errors, NSString *message) {
         [self handleErrors:errors message:message];
-        [self showProgress:false];
     }];
 }
 
@@ -137,17 +132,15 @@
 - (IBAction)login:(id)sender {
     NSLog(@"login");
     if ([self validate]) {
-        [self showProgress:true];
+        [SVProgressHUD show];
         [[self appDelegate].api loginWithEmail:email.text password:password.text success:^(AuthToken *authToken) {
             [[self appDelegate].api getUser:^(User *user) {
                 [self completeLoginWithUser:user];
             } failure:^(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors) {
                 [self handleErrors:errors message:message];
-                [self showProgress:false];
             }];
         } failure:^(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors) {
             [self handleErrors:errors message:message];
-            [self showProgress:false];
         }];
     }
 }
@@ -155,7 +148,7 @@
 - (IBAction)register:(id)sender {
     NSLog(@"register");
     if ([self validate]) {
-        [self showProgress:true];
+        [SVProgressHUD show];
         [[self appDelegate].api registerWithEmail:email.text password1:password.text password2:password2.text success:^(AuthToken *authToken) {
             [[self appDelegate].api loginWithEmail:email.text password:password.text success:^(AuthToken *authToken) {
                 [[self appDelegate].api getUser:^(User *user) {
@@ -165,15 +158,12 @@
                     [self completeLoginWithUser:user];
                 } failure:^(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors) {
                     [self handleErrors:errors message:message];
-                    [self showProgress:false];
                 }];
             } failure:^(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors) {
                 [self handleErrors:errors message:message];
-                [self showProgress:false];
             }];
         } failure:^(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors) {
             [self handleErrors:errors message:message];
-            [self showProgress:false];
         }];
     }
 }
@@ -239,11 +229,10 @@
     if ([self validate]) {
         [SVProgressHUD show];
         [[self appDelegate].api resetPassword:email.text success:^{
-            [self resetCancel:nil];
             [SVProgressHUD dismiss];
+            [self resetCancel:nil];
         } failure:^(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors) {
             [self handleErrors:errors message:message];
-            [SVProgressHUD dismiss];
         }];
     }
 }

@@ -151,7 +151,7 @@
     <string name="starting_upload">Starting upload...</string>
     <string name="cancel_upload_prompt">This will cancel your current upload! Continue?</string>
     <string name="description">Description</string>
-    <string name="job_seeker_description_hint">Give a short personal description about you, your work experience and your skills.</string>
+    <string name="job_seeker_description_hint">State your employers (0-3), your role, time at each employer and short about your personality.</string>
     <string name="no_active_jobs">No active jobs</string>
     <string name="no_inactive_jobs">No inactive jobs</string>
     <string name="cant_view_inactive_job">You can\'t view an inactive job!</string>
@@ -188,6 +188,15 @@
     <string name="all_my_information">All my information are truthful</string>
     <string name="auto_set_location">Auto set my location</string>
 
+    <string name="forgot_my_password">Forgot my password</string>
+    <string name="password_reset">Password reset</string>
+    <string name="reset_my_password">Reset my password</string>
+    <string name="action_change_password">Change Password</string>
+    <string name="current_password">Current password</string>
+    <string name="new_password">New password</string>
+    <string name="confirm_password">Confirm password</string>
+    <string name="password_incorrect">Your old password was incorrect</string>
+
     <string name="pitch_instructions"><![CDATA[
     <b>Setting up your job pitch here are some tips from one of our recruiting pros:</b><br>
         <br>
@@ -212,4 +221,8 @@
         &nbsp;&bull; Relevant experience<br>
         <br>
     <b>Finish your pitch confidently by saying something like, “Thank you and I look forward to hearing from you”.</b><br>]]></string>
+
+    <string name="title_activity_test">TestActivity</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
 </resources>

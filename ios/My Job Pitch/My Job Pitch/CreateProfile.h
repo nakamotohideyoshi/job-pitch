@@ -10,7 +10,6 @@
 
 @interface CreateProfile : ScrollingViewController
 
-- (IBAction)logout;
 - (IBAction)showJobSeeker;
 - (IBAction)showRecruiter;
 

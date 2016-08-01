@@ -7,7 +7,6 @@
 //
 
 #import "LocationEditView.h"
-#import "MyAlertController.h"
 
 @import AssetsLibrary;
 

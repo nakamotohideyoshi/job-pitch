@@ -429,7 +429,7 @@
     
     [self configureSimpleMapping:objectManager
                            class:[PasswordChangeRequest class]
-                           array:@[@"email", @"old_password"]
+                           array:nil
                       dictionary:@{@"password1": @"new_password1", @"password2": @"new_password2"
                                    }
                    relationships:nil
@@ -909,7 +909,6 @@
 }
 
 - (void)changePassword:(NSString*)email
-                oldpassword:(NSString*)oldPassword
                 password1:(NSString*)password1
                 password2:(NSString*)password2
                   success:(void (^)())success
@@ -917,8 +916,6 @@
 {
     [self clearCookies];
     PasswordChangeRequest *request = [PasswordChangeRequest alloc];
-    request.email = email;
-    request.old_password = oldPassword;
     request.password1 = password1;
     request.password2 = password2;
     [[RKObjectManager sharedManager] postObject:request

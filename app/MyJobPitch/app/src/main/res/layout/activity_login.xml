@@ -75,6 +75,15 @@
             </LinearLayout>
 
             <TextView
+                android:id="@+id/forgot_password"
+                android:layout_marginTop="10dp"
+                android:text="@string/forgot_my_password"
+                android:gravity="center|right"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/black" />
+
+            <TextView
                 android:id="@+id/version"
                 android:layout_marginTop="10dp"
                 android:text="debug build"

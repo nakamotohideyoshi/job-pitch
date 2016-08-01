@@ -197,15 +197,6 @@ typedef NS_ENUM(NSInteger, EmptyButtonAction) {
     }];
 }
 
-- (IBAction)logout {
-    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Logout"
-                                                    message:@"Are you sure you want to logout?"
-                                                   delegate:self
-                                          cancelButtonTitle:@"No"
-                                          otherButtonTitles:@"Yes", nil];
-    [alert show];
-}
-
 - (void)performEditProfile
 {
     resetOnAppearance = false;
@@ -435,6 +426,10 @@ typedef NS_ENUM(NSInteger, EmptyButtonAction) {
 
 - (void) pushMenuItem:(id)sender {
     NSLog(@"%@", sender);
+}
+
+- (IBAction)account:(id)sender {
+    [AppHelper showAccountMenu];
 }
 
 @end

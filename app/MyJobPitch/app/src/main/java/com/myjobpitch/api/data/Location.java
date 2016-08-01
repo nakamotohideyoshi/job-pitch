@@ -19,7 +19,6 @@ public class Location extends MJPObjectWithDates {
     private String place_name;
     private String place_id;
     private String postcode_lookup;
-    private String place_address;
     private Double longitude;
     private Double latitude;
     private String address;

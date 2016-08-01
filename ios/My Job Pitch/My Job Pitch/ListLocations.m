@@ -10,7 +10,6 @@
 #import "SimpleListCell.h"
 #import "ListJobs.h"
 #import "CreateRecruiterProfile.h"
-#import "MyAlertController.h"
 
 @interface ListLocations () {
     NSMutableArray *data;

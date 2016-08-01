@@ -1,6 +1,5 @@
 package com.myjobpitch.fragments;
 
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -173,6 +172,7 @@ public class JobSeekerEditFragment extends EditFragment<JobSeeker> {
         mActiveView.setChecked(jobSeeker.isActive());
         mHasReferencesView.setChecked(jobSeeker.getHasReferences());
         mTickBox.setChecked(jobSeeker.getTruthConfirmation());
+        mSaveButton.setEnabled(mTickBox.isChecked());
     }
 
     public void save(JobSeeker jobSeeker) {

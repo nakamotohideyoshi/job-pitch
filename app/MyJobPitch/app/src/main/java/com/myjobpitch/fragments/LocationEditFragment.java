@@ -1,16 +1,16 @@
 package com.myjobpitch.fragments;
 
-import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
+import android.location.Address;
+import android.location.Geocoder;
+import android.location.LocationManager;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,19 +20,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.PendingResult;
-import com.google.android.gms.common.api.ResolvingResultCallbacks;
-import com.google.android.gms.common.api.ResultCallback;
-import com.google.android.gms.common.api.ResultCallbacks;
-import com.google.android.gms.common.api.Status;
-import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.location.places.Place;
-import com.google.android.gms.location.places.PlaceLikelihood;
-import com.google.android.gms.location.places.PlaceLikelihoodBuffer;
-import com.google.android.gms.location.places.Places;
-import com.google.android.gms.maps.model.LatLng;
 import com.myjobpitch.R;
 import com.myjobpitch.activities.SelectPlaceActivity;
 import com.myjobpitch.api.MJPApi;
@@ -40,12 +28,27 @@ import com.myjobpitch.api.data.Business;
 import com.myjobpitch.api.data.Location;
 import com.myjobpitch.tasks.recruiter.CreateUpdateLocationTask;
 
+import org.apache.http.HttpResponse;
+import org.apache.http.HttpStatus;
+import org.apache.http.StatusLine;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
-public class LocationEditFragment extends EditFragment<Location> implements GoogleApiClient.OnConnectionFailedListener{
+import static android.location.LocationManager.GPS_PROVIDER;
+
+public class LocationEditFragment extends EditFragment<Location> implements GoogleApiClient.OnConnectionFailedListener {
     public static final int SELECT_LOCATION = 1000;
 
     private CheckBox mLocationMobilePublicView;
@@ -70,8 +73,6 @@ public class LocationEditFragment extends EditFragment<Location> implements Goog
     private boolean mImageUriSet = false;
     private String mNoImageMessage;
     private float mNoImageAlpha;
-
-    private GoogleApiClient mGoogleApiClient;
 
     public LocationEditFragment() {
         // Required empty public constructor
@@ -158,20 +159,21 @@ public class LocationEditFragment extends EditFragment<Location> implements Goog
             mImageUriSet = true;
         }
 
-        mGoogleApiClient = new GoogleApiClient.Builder(getContext())
-                .addApi(Places.PLACE_DETECTION_API)
-                .addApi(Places.GEO_DATA_API)
-                .enableAutoManage(getActivity(), this)
-                .build();
-
         Button autoLocationButton = (Button) view.findViewById(R.id.auto_location);
         autoLocationButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (ContextCompat.checkSelfPermission(getContext(),Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                    ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 100);
-                } else {
-                    callPlaceDetectionApi();
+                try {
+                    LocationManager locationManager = (LocationManager)getContext().getSystemService(Context.LOCATION_SERVICE);
+                    android.location.Location location = locationManager.getLastKnownLocation(GPS_PROVIDER);
+                    if (location != null) {
+                        mLatitude = location.getLatitude();
+                        mLongitude = location.getLongitude();
+                        mPlaceName = "";
+                        new RequestTask(mLatitude, mLongitude).execute();
+                    }
+                } catch(Exception e) {
+                    e.printStackTrace();
                 }
             }
         });
@@ -179,56 +181,70 @@ public class LocationEditFragment extends EditFragment<Location> implements Goog
         return view;
     }
 
+    class RequestTask extends AsyncTask<Void, Void, String> {
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
-        switch (requestCode) {
-            case 100:
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    callPlaceDetectionApi();
+        Double latitude, longitude;
+
+        public RequestTask(Double latitude, Double longitude) {
+            this.latitude = latitude;
+            this.longitude = longitude;
+        }
+
+        @Override
+        protected String doInBackground(Void ... params) {
+            String responseString = null;
+            try {
+                Geocoder gcd = new Geocoder(getContext(), Locale.getDefault());
+                try {
+                    List<Address> addresses = gcd.getFromLocation(latitude, longitude, 1);
+                    if ( addresses.size() > 0 ) {
+                        Address ad = addresses.get(0);
+                        mPlaceName = ad.getLocality();
+                        if (ad.getSubLocality() != null) {
+                            mPlaceName += " " + ad.getSubLocality();
+                        }
+                    }
+                } catch (Exception e) {
+
                 }
-                break;
+
+                String uri = "http://maps.googleapis.com/maps/api/geocode/json?latlng="+ latitude.toString() +"," + longitude.toString();
+                HttpClient httpclient = new DefaultHttpClient();
+                HttpResponse response = httpclient.execute(new HttpGet(uri));
+                StatusLine statusLine = response.getStatusLine();
+                if(statusLine.getStatusCode() == HttpStatus.SC_OK){
+                    ByteArrayOutputStream out = new ByteArrayOutputStream();
+                    response.getEntity().writeTo(out);
+                    responseString = out.toString();
+                    out.close();
+                } else{
+                    //Closes the connection.
+                    response.getEntity().getContent().close();
+                    throw new IOException(statusLine.getReasonPhrase());
+                }
+            } catch (Exception e) {
+            }
+            return responseString;
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            super.onPostExecute(result);
+
+            try {
+                JSONObject jObject = new JSONObject(result);
+                JSONArray jArray = jObject.getJSONArray("results");
+                mPlaceId = ((JSONObject)jArray.get(0)).getString("place_id");
+                if (mPlaceName != null) {
+                    if (mPlaceId == null || mPlaceId.isEmpty())
+                        mPlaceView.setText(mPlaceName);
+                    else
+                        mPlaceView.setText(mPlaceName + " (from Google)");
+                }
+            } catch (Exception e) {
+            }
         }
     }
-
-
-    private void callPlaceDetectionApi() throws SecurityException {
-        PendingResult<PlaceLikelihoodBuffer> result = Places.PlaceDetectionApi.getCurrentPlace(mGoogleApiClient, null);
-        result.setResultCallback(new ResultCallback<PlaceLikelihoodBuffer>() {
-            @Override
-            public void onResult(@NonNull PlaceLikelihoodBuffer placeLikelihoods) {
-                if (!placeLikelihoods.getStatus().isSuccess()) {
-                    // Request did not complete successfully
-                    GooglePlayServicesUtil.showErrorDialogFragment(placeLikelihoods.getStatus().getStatusCode(), getActivity(), 1);
-                    placeLikelihoods.release();
-                    return;
-                }
-
-                for (PlaceLikelihood placeLikelihood : placeLikelihoods) {
-                    Place place = placeLikelihood.getPlace();
-                    LatLng latLng = place.getLatLng();
-                    mPlaceName = place.getName().toString();
-                    mPlaceId = place.getId();
-                    mLongitude = latLng.longitude;
-                    mLatitude = latLng.latitude;
-                    if (mPlaceName != null) {
-                        if (mPlaceId == null || mPlaceId.isEmpty())
-                            mPlaceView.setText(mPlaceName);
-                        else
-                            mPlaceView.setText(mPlaceName + " (from Google)");
-                    }
-                }
-                placeLikelihoods.release();
-            }
-        });
-    }
-
-    public void onConnectionFailed(ConnectionResult connectionResult) {
-
-    }
-
-
-
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
@@ -364,6 +380,12 @@ public class LocationEditFragment extends EditFragment<Location> implements Goog
         }
 
         return success;
+    }
+
+
+    @Override
+    public void onConnectionFailed(ConnectionResult result) {
+
     }
 
 }

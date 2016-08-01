@@ -70,7 +70,7 @@
                     <color key="onTintColor" red="0.0" green="0.58823529409999997" blue="0.53333333329999999" alpha="1" colorSpace="calibratedRGB"/>
                 </switch>
                 <view contentMode="scaleToFill" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="TsK-H6-53D" customClass="ErrorTextField">
-                    <rect key="frame" x="0.0" y="115" width="543" height="40"/>
+                    <rect key="frame" x="0.0" y="115" width="543" height="26"/>
                     <userDefinedRuntimeAttributes>
                         <userDefinedRuntimeAttribute type="string" keyPath="placeholder" value="Last Name"/>
                     </userDefinedRuntimeAttributes>
@@ -80,85 +80,85 @@
                     <color key="onTintColor" red="0.0" green="0.58823529409999997" blue="0.53333333329999999" alpha="1" colorSpace="calibratedRGB"/>
                 </switch>
                 <view contentMode="scaleToFill" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="H0T-Sf-3ug" customClass="ErrorTextField">
-                    <rect key="frame" x="0.0" y="155" width="543" height="10"/>
+                    <rect key="frame" x="0.0" y="141" width="543" height="10"/>
                     <userDefinedRuntimeAttributes>
                         <userDefinedRuntimeAttribute type="string" keyPath="placeholder" value="Email"/>
                         <userDefinedRuntimeAttribute type="string" keyPath="keyboardType" value="UIKeyboardTypeEmail"/>
                     </userDefinedRuntimeAttributes>
                 </view>
-                <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" ambiguous="YES" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="P77-oj-eti">
-                    <rect key="frame" x="551" y="155" width="51" height="31"/>
+                <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="P77-oj-eti">
+                    <rect key="frame" x="551" y="141" width="51" height="31"/>
                     <color key="onTintColor" red="0.0" green="0.58823529409999997" blue="0.53333333329999999" alpha="1" colorSpace="calibratedRGB"/>
                 </switch>
                 <view contentMode="scaleToFill" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="1Fe-KE-hks" customClass="ErrorTextField">
-                    <rect key="frame" x="0.0" y="165" width="543" height="40"/>
+                    <rect key="frame" x="0.0" y="151" width="543" height="40"/>
                     <userDefinedRuntimeAttributes>
                         <userDefinedRuntimeAttribute type="string" keyPath="placeholder" value="Telephone (optional)"/>
                         <userDefinedRuntimeAttribute type="string" keyPath="keyboardType" value="UIKeyboardTypePhonePad"/>
                     </userDefinedRuntimeAttributes>
                 </view>
                 <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" ambiguous="YES" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="KG8-3L-XTu">
-                    <rect key="frame" x="551" y="165" width="51" height="31"/>
+                    <rect key="frame" x="551" y="151" width="51" height="31"/>
                     <color key="onTintColor" red="0.0" green="0.58823529409999997" blue="0.53333333329999999" alpha="1" colorSpace="calibratedRGB"/>
                 </switch>
                 <view contentMode="scaleToFill" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Y8K-Xe-KyD" customClass="ErrorTextField">
-                    <rect key="frame" x="0.0" y="205" width="543" height="40"/>
+                    <rect key="frame" x="0.0" y="191" width="543" height="40"/>
                     <userDefinedRuntimeAttributes>
                         <userDefinedRuntimeAttribute type="string" keyPath="placeholder" value="Mobile (optional)"/>
                         <userDefinedRuntimeAttribute type="string" keyPath="keyboardType" value="UIKeyboardTypePhonePad"/>
                     </userDefinedRuntimeAttributes>
                 </view>
                 <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" ambiguous="YES" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="05G-Yi-qxK">
-                    <rect key="frame" x="551" y="205" width="51" height="31"/>
+                    <rect key="frame" x="551" y="191" width="51" height="31"/>
                     <color key="onTintColor" red="0.0" green="0.58823529409999997" blue="0.53333333329999999" alpha="1" colorSpace="calibratedRGB"/>
                 </switch>
                 <view contentMode="scaleToFill" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="o8g-Ph-3pv" customClass="ErrorTextField">
-                    <rect key="frame" x="0.0" y="245" width="543" height="40"/>
+                    <rect key="frame" x="0.0" y="231" width="543" height="10"/>
                     <userDefinedRuntimeAttributes>
                         <userDefinedRuntimeAttribute type="string" keyPath="placeholder" value="Age (optional)"/>
                         <userDefinedRuntimeAttribute type="string" keyPath="keyboardType" value="UIKeyboardTypeNumberPad"/>
                     </userDefinedRuntimeAttributes>
                 </view>
                 <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" ambiguous="YES" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="XtK-Bc-fSb">
-                    <rect key="frame" x="551" y="245" width="51" height="31"/>
+                    <rect key="frame" x="551" y="231" width="51" height="31"/>
                     <color key="onTintColor" red="0.0" green="0.58823529409999997" blue="0.53333333329999999" alpha="1" colorSpace="calibratedRGB"/>
                 </switch>
                 <view contentMode="scaleToFill" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="9ue-2I-JOq" customClass="ErrorTextField">
-                    <rect key="frame" x="0.0" y="285" width="543" height="19"/>
+                    <rect key="frame" x="0.0" y="241" width="543" height="10"/>
                     <userDefinedRuntimeAttributes>
                         <userDefinedRuntimeAttribute type="string" keyPath="placeholder" value="Sex (optional)"/>
                         <userDefinedRuntimeAttribute type="string" keyPath="keyboardType" value="UIKeyboardTypeNumberPad"/>
                     </userDefinedRuntimeAttributes>
                 </view>
                 <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" ambiguous="YES" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="dFT-Dh-Xcp">
-                    <rect key="frame" x="551" y="285" width="51" height="31"/>
+                    <rect key="frame" x="551" y="241" width="51" height="31"/>
                     <color key="onTintColor" red="0.0" green="0.58823529409999997" blue="0.53333333329999999" alpha="1" colorSpace="calibratedRGB"/>
                 </switch>
                 <view contentMode="scaleToFill" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="1gt-37-FxX" customClass="ErrorTextField">
-                    <rect key="frame" x="0.0" y="304" width="543" height="10"/>
+                    <rect key="frame" x="0.0" y="251" width="543" height="40"/>
                     <userDefinedRuntimeAttributes>
                         <userDefinedRuntimeAttribute type="string" keyPath="placeholder" value="Nationality (optional)"/>
                         <userDefinedRuntimeAttribute type="string" keyPath="keyboardType" value="UIKeyboardTypeNumberPad"/>
                     </userDefinedRuntimeAttributes>
                 </view>
                 <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" ambiguous="YES" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="1W4-1K-u1A">
-                    <rect key="frame" x="551" y="304" width="51" height="31"/>
+                    <rect key="frame" x="551" y="251" width="51" height="31"/>
                     <color key="onTintColor" red="0.0" green="0.58823529409999997" blue="0.53333333329999999" alpha="1" colorSpace="calibratedRGB"/>
                 </switch>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Upload CV" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="XT1-cX-gW5">
-                    <rect key="frame" x="0.0" y="319" width="127" height="30"/>
+                    <rect key="frame" x="0.0" y="301" width="127" height="30"/>
                     <fontDescription key="fontDescription" type="boldSystem" pointSize="25"/>
                     <color key="textColor" red="0.0" green="0.58823529409999997" blue="0.53333333329999999" alpha="1" colorSpace="calibratedRGB"/>
                     <nil key="highlightedColor"/>
                 </label>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="No file chosen" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="C9d-GE-NuW">
-                    <rect key="frame" x="0.0" y="357" width="510" height="21"/>
+                    <rect key="frame" x="0.0" y="339" width="510" height="21"/>
                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                     <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                     <nil key="highlightedColor"/>
                 </label>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Fvc-9m-UBV">
-                    <rect key="frame" x="520" y="353" width="80" height="30"/>
+                    <rect key="frame" x="520" y="335" width="80" height="30"/>
                     <color key="backgroundColor" red="0.0" green="0.58823529409999997" blue="0.53333333329999999" alpha="1" colorSpace="calibratedRGB"/>
                     <constraints>
                         <constraint firstAttribute="width" constant="80" id="x4K-vW-O29"/>
@@ -177,13 +177,13 @@
                     </connections>
                 </button>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Description" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vD4-A9-R0Z">
-                    <rect key="frame" x="0.0" y="398" width="138" height="30"/>
+                    <rect key="frame" x="0.0" y="380" width="138" height="30"/>
                     <fontDescription key="fontDescription" type="boldSystem" pointSize="25"/>
                     <color key="textColor" red="0.0" green="0.58823529409999997" blue="0.53333333329999999" alpha="1" colorSpace="calibratedRGB"/>
                     <nil key="highlightedColor"/>
                 </label>
-                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Give a short personal description about you, your work experience and your skills" textAlignment="natural" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7ev-Cr-JL1">
-                    <rect key="frame" x="0.0" y="436" width="600" height="18"/>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="State your latest employers (0-3), your role, time at each employer and short about your personality." textAlignment="natural" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7ev-Cr-JL1">
+                    <rect key="frame" x="0.0" y="418" width="600" height="36"/>
                     <fontDescription key="fontDescription" type="system" pointSize="15"/>
                     <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                     <nil key="highlightedColor"/>
@@ -221,7 +221,7 @@
                     <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                     <nil key="highlightedColor"/>
                 </label>
-                <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="fKP-0n-hhM">
+                <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="fKP-0n-hhM">
                     <rect key="frame" x="0.0" y="599" width="51" height="31"/>
                     <color key="onTintColor" red="0.0" green="0.58823529409999997" blue="0.53333333329999999" alpha="1" colorSpace="calibratedRGB"/>
                 </switch>

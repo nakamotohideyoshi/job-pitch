@@ -5,6 +5,7 @@ import android.util.Log;
 import com.myjobpitch.api.auth.AuthToken;
 import com.myjobpitch.api.auth.Login;
 import com.myjobpitch.api.auth.Registration;
+import com.myjobpitch.api.auth.ResetPassword;
 import com.myjobpitch.api.auth.User;
 import com.myjobpitch.api.data.Application;
 import com.myjobpitch.api.data.ApplicationForCreation;
@@ -12,6 +13,7 @@ import com.myjobpitch.api.data.ApplicationShortlistUpdate;
 import com.myjobpitch.api.data.ApplicationStatus;
 import com.myjobpitch.api.data.ApplicationStatusUpdate;
 import com.myjobpitch.api.data.Business;
+import com.myjobpitch.api.data.ChangePassword;
 import com.myjobpitch.api.data.Contract;
 import com.myjobpitch.api.data.Hours;
 import com.myjobpitch.api.data.ImageUpload;
@@ -33,6 +35,7 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.http.converter.FormHttpMessageConverter;
 import org.springframework.http.converter.ResourceHttpMessageConverter;
@@ -169,6 +172,32 @@ public class MJPApi {
         Registration registration = new Registration(email, password1, password2);
         URI url = getAuthUrl("registration");
         return doAuthentication(registration, url);
+    }
+
+    public void resetPassword(String email) throws MJPApiException {
+        ResetPassword resetpassword = new ResetPassword(email);
+        URI url = getAuthUrl("password/reset");
+        try {
+            rest.postForObject(url, resetpassword, Object.class);
+        } catch (HttpClientErrorException e) {
+            if (e.getStatusCode().value() == 400) {
+                throw new MJPApiException(e);
+            }
+            throw e;
+        }
+    }
+
+    public void changePassword(String password1, String password2) throws MJPApiException {
+        ChangePassword changepassword = new ChangePassword(password1, password2);
+
+        try {
+            rest.exchange(getAuthUrl("password/change"), HttpMethod.POST, createAuthenticatedRequest(changepassword), Object.class);
+        } catch (HttpClientErrorException e) {
+            if (e.getStatusCode().value() == 400) {
+                throw new MJPApiException(e);
+            }
+            throw e;
+        }
     }
 
     private AuthToken doAuthentication(Object credentials, URI url) throws MJPApiException {
@@ -413,14 +442,6 @@ public class MJPApi {
             }
             throw e;
         }
-    }
-
-    public void setToken(AuthToken token) {
-        this.token = token;
-    }
-
-    public AuthToken getToken() {
-        return token;
     }
 
     public String getApiRoot() {

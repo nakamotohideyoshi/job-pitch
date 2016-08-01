@@ -448,6 +448,10 @@ public class JobSeekerActivity extends MJPProgressActionBarActivity {
                 } catch (JsonProcessingException e) {}
                 startActivity(intent);
                 return true;
+
+            case R.id.action_change_password:
+                startActivity(new Intent(this, ChangePasswordActivity.class));
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }

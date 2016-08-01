@@ -69,7 +69,7 @@
         [alert addAction:action];
     }
     
-    [[UIApplication sharedApplication].keyWindow.rootViewController presentViewController:alert animated:YES completion:nil];
+    [[AppHelper getCurrentVC] presentViewController:alert animated:YES completion:nil];
     
 }
 

@@ -1,5 +1,5 @@
 //
-//  MyAlertController.h
+//  AppHelper.h
 //  MyJobPitch
 //
 //  Created by dev on 6/13/16.
@@ -12,5 +12,14 @@
 
 + (NSString*) getEmail;
 + (void) setEmail:(NSString*)email;
+
++ (NSString*) getPassword;
++ (void) setPassword:(NSString*)password;
+
++ (UIViewController*) getCurrentVC;
+
++ (void) showAccountMenu;
++ (void)changePassword;
++ (void)logout;
 
 @end

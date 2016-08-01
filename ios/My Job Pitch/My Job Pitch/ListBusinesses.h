@@ -10,6 +10,4 @@
 
 @interface ListBusinesses : MJPViewController<UITableViewDelegate, UITableViewDataSource>
 
-- (IBAction)logout;
-
 @end

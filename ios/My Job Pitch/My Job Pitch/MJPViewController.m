@@ -8,8 +8,6 @@
 
 #import "MJPViewController.h"
 
-#import "MyAlertController.h"
-
 @interface MJPViewController ()
 
 
@@ -88,6 +86,11 @@
 }
 
 - (void)handleErrors:(NSDictionary*)errors message:(NSString*)message {
+    
+    if ([errors count]) {
+        [SVProgressHUD dismiss];
+    }
+    
     NSDictionary *errorViewMap = [self getErrorViewMap];
     for (id key in errorViewMap) {
         UILabel *view = errorViewMap[key];

@@ -9,7 +9,6 @@
 #import "RecordPitch.h"
 #import <AWSS3/AWSS3.h>
 #import "Pitch.h"
-#import "MyAlertController.h"
 #import "MyCameraViewController.h"
 
 @import MediaPlayer;

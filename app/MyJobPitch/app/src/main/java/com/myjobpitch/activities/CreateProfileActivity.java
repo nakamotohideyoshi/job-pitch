@@ -16,7 +16,6 @@ import com.myjobpitch.R;
 import com.myjobpitch.api.MJPApi;
 import com.myjobpitch.api.auth.User;
 import com.myjobpitch.api.data.Business;
-import com.myjobpitch.api.data.Image;
 import com.myjobpitch.api.data.JobSeeker;
 import com.myjobpitch.api.data.Location;
 import com.myjobpitch.fragments.BusinessEditFragment;
@@ -24,13 +23,10 @@ import com.myjobpitch.fragments.JobSeekerEditFragment;
 import com.myjobpitch.fragments.LocationEditFragment;
 import com.myjobpitch.tasks.APITaskListener;
 import com.myjobpitch.tasks.CreateReadUpdateAPITaskListener;
-import com.myjobpitch.tasks.DeleteAPITaskListener;
 import com.myjobpitch.tasks.UploadImageTask;
 import com.myjobpitch.tasks.jobseeker.CreateUpdateJobSeekerTask;
 import com.myjobpitch.tasks.recruiter.CreateUpdateBusinessTask;
 import com.myjobpitch.tasks.recruiter.CreateUpdateLocationTask;
-import com.myjobpitch.tasks.recruiter.DeleteBusinessImageTask;
-import com.myjobpitch.tasks.recruiter.DeleteLocationImageTask;
 
 import java.io.IOException;
 
@@ -119,10 +115,10 @@ public class CreateProfileActivity extends MJPProgressActionBarActivity {
 
 
         business = new Business();
-        mBusinessEditFragment.load(business);
+        //mBusinessEditFragment.load(business);
 
         location = new Location();
-        mLocationEditFragment.load(location);
+        //mLocationEditFragment.load(location);
     }
 
     private void attemptRecruiterContinue() {

@@ -1,7 +1,6 @@
 package com.myjobpitch.activities;
 
 import android.app.AlertDialog;
-import android.app.Fragment;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -26,7 +25,6 @@ import android.widget.Toast;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.myjobpitch.BuildConfig;
 import com.myjobpitch.R;
 import com.myjobpitch.api.MJPApiException;
 import com.myjobpitch.api.data.Pitch;

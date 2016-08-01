@@ -10,7 +10,6 @@
 #import "SimpleListCell.h"
 #import "EditJob.h"
 #import "ViewJobMenu.h"
-#import "MyAlertController.h"
 
 @interface ListJobs () {
     NSMutableArray *data;
@@ -119,9 +118,10 @@
 
 - (IBAction)addJob:(id)sender {
     EditJob *controller = [self.storyboard instantiateViewControllerWithIdentifier:@"EditJob"];
-    controller.location = _location;
     if (editRow != -1) {
         controller.job = [self->data objectAtIndex:editRow];
+    } else {
+        controller.location = _location;
     }
     [self.navigationController pushViewController:controller animated:YES];
 }

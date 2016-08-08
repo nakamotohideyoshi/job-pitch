@@ -19,7 +19,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    [self showProgress:false];
+    //[SVProgressHUD dismiss];
     self.name.text = [NSString stringWithFormat:@"%@ %@",
                       self.jobSeeker.firstName,
                       self.jobSeeker.lastName];

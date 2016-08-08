@@ -43,7 +43,7 @@
 - (void)viewDidLoad {
     
     [super viewDidLoad];
-    [self showProgress:true];
+    [SVProgressHUD show];
     
     self.lblUploading.hidden = YES;
     self.lblProcessing.hidden = YES;
@@ -68,7 +68,7 @@
     [self.appDelegate.api loadJobSeekerWithId:self.appDelegate.user.jobSeeker
                                       success:^(JobSeeker *jobSeeker) {
                                           self.jobSeeker = jobSeeker;
-                                          [self showProgress:false];
+                                          [SVProgressHUD dismiss];
                                           Pitch *pitch = [self.jobSeeker getPitch];
                                           if (pitch && pitch.thumbnail) {
                                               [self loadImageURL:pitch.thumbnail
@@ -83,13 +83,9 @@
                                               self.noRecording.hidden = NO;
                                           }
                                       } failure:^(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors) {
-                                          [self showProgress:false];
-                                          
-                                          [MyAlertController title:@"Error"
-                                                           message:@"Error loading data"
-                                                                ok:@"OK" okCallback:^{
-                                                                    [self.navigationController popViewControllerAnimated:true];
-                                                                } cancel:nil cancelCallback:nil];
+                                          [MyAlertController showError:@"Error loading data" callback:^{
+                                              [self.navigationController popViewControllerAnimated:true];
+                                          }];
                                       }];
 }
 

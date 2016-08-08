@@ -22,6 +22,7 @@ import android.widget.TextView;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.myjobpitch.R;
+import com.myjobpitch.activities.LoginActivity;
 import com.myjobpitch.activities.SelectPlaceActivity;
 import com.myjobpitch.api.MJPApi;
 import com.myjobpitch.api.data.Business;
@@ -122,6 +123,8 @@ public class LocationEditFragment extends EditFragment<Location> implements Goog
         mLocationMobileView = (EditText) view.findViewById(R.id.location_mobile);
         mLocationMobilePublicView = (CheckBox) view.findViewById(R.id.location_mobile_public);
         mPlaceView = (TextView) view.findViewById(R.id.location_place);
+
+        mLocationEmailView.setText(LoginActivity.myEmail);
 
         mPlaceButton = view.findViewById(R.id.location_place_button);
         mPlaceButton.setOnClickListener(new View.OnClickListener() {

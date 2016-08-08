@@ -7,6 +7,7 @@
 @property (nullable) NSArray* users;
 @property (nullable) NSArray* locations;
 @property (nullable) NSArray* images;
+@property (nullable) NSNumber* tokens;
 
 - (nullable Image*)getImage;
 

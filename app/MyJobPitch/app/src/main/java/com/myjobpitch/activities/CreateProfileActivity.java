@@ -67,6 +67,8 @@ public class CreateProfileActivity extends MJPProgressActionBarActivity {
         mJobSeekerEditFragment = (JobSeekerEditFragment) getSupportFragmentManager().findFragmentById(R.id.job_seeker_edit_fragment);
 
         Button jobSeekerContinueButton = (Button) findViewById(R.id.continue_button_job_seeker);
+        mJobSeekerEditFragment.mSaveButton = jobSeekerContinueButton;
+        jobSeekerContinueButton.setEnabled(false);
         jobSeekerContinueButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

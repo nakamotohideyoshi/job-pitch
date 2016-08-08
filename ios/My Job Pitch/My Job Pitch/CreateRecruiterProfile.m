@@ -42,10 +42,6 @@
     }
 }
 
-- (void)viewWillAppear:(BOOL)animated {
-    activityIndicator.hidden = YES;
-}
-
 - (NSArray *)getRequiredFields {
     
     if (_hiddenLocation) {
@@ -122,7 +118,7 @@
     
     if (![self validate]) return;
     
-    [self showProgress:true];
+    [SVProgressHUD show];
     
     if (!_hiddenBusiness) {
         if (_business == nil) {
@@ -143,7 +139,6 @@
                                          for (id key in errors)
                                              detail[[NSString stringWithFormat:@"business_%@", key]] = errors[key];
                                          [self handleErrors:detail message:message];
-                                         [self showProgress:false];
                                      }];
          
     
@@ -171,7 +166,6 @@
                                     }
                                     failure:^(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors) {
                                         [self handleErrors:errors message:message];
-                                        [self showProgress:false];
                                     }
          ];
     } else {
@@ -199,7 +193,6 @@
                                          for (id key in errors)
                                              detail[[NSString stringWithFormat:@"location_%@", key]] = errors[key];
                                          [self handleErrors:detail message:message];
-                                         [self showProgress:false];
                                      }];
     } else {
         [self saveCompleted];
@@ -225,7 +218,6 @@
                                     }
                                     failure:^(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors) {
                                         [self handleErrors:errors message:message];
-                                        [self showProgress:false];
                                     }
          ];
     } else {
@@ -250,11 +242,11 @@
     
 }
 
-- (void)showProgress:(BOOL)showProgress
-{
-    [super showProgress:showProgress];
-    [self.activityLabel setHidden:!showProgress];
-    [self.activityLabel setText:@""];
-}
+//- (void)showProgress:(BOOL)showProgress
+//{
+//    [super showProgress:showProgress];
+//    [self.activityLabel setHidden:!showProgress];
+//    [self.activityLabel setText:@""];
+//}
 
 @end

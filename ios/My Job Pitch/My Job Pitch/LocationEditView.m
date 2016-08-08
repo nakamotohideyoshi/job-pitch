@@ -52,6 +52,7 @@
     self.noImage.hidden = false;
     self.imageActivity.hidden = true;
     self.location.textField.enabled = false;
+    self.email.textField.text = [AppHelper getEmail];
 }
 
 - (UIView*)loadViewFromNib

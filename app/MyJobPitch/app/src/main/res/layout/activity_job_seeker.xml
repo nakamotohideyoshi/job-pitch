@@ -72,7 +72,7 @@
                     android:layout_alignBottom="@id/positive_button"
                     android:layout_marginBottom="27dp"
                     android:textColor="@color/button_text"
-                    android:text="@string/connect"/>
+                    android:text="@string/apply"/>
                 <ImageView
                     android:id="@+id/positive_button_icon"
                     android:src="@drawable/ic_connect"

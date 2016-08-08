@@ -20,7 +20,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    [self showProgress:false];
+    //[SVProgressHUD dismiss];
     self.messageData = [NSMutableArray arrayWithArray:self.application.messages];
     self.application.messages = self.messageData;
     self.messages.rowHeight = UITableViewAutomaticDimension;
@@ -97,11 +97,7 @@
                                                    [self newData:application.messages];
                                                }];
                           } failure:^(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors) {
-                              [[[UIAlertView alloc] initWithTitle:@"Error"
-                                                          message:@"Error checking messages"
-                                                         delegate:nil
-                                                cancelButtonTitle:@"Okay"
-                                                otherButtonTitles:nil] show];
+                              [MyAlertController showError:@"Error checking data" callback:nil];
                               [UIView animateWithDuration:1.0
                                                animations:^{
                                                    self.tableBottomContraint.constant = 0;
@@ -228,21 +224,13 @@
                   self.messageInput.editable = true;
                   self.messageInput.text = @"";
               } failure:^(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors) {
-                  [[[UIAlertView alloc] initWithTitle:@"Error"
-                                              message:@"Error checking messages"
-                                             delegate:nil
-                                    cancelButtonTitle:@"Okay"
-                                    otherButtonTitles:nil] show];
+                  [MyAlertController showError:@"Error checking data" callback:nil];
               }];
          } failure:^(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors) {
              self.sendButton.enabled = true;
              self.sendButton.alpha = 1.0;
              self.messageInput.editable = true;
-             [[[UIAlertView alloc] initWithTitle:@"Error"
-                                         message:@"Error sending message"
-                                        delegate:self
-                               cancelButtonTitle:@"Okay"
-                               otherButtonTitles:nil] show];
+             [MyAlertController showError:@"Error sending data" callback:nil];
          }];
     }
 }

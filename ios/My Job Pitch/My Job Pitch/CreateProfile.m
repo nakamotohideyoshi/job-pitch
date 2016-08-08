@@ -11,11 +11,6 @@
 
 @implementation CreateProfile
 
-- (void)viewWillAppear:(BOOL)animated
-{
-    activityIndicator.hidden = YES;
-}
-
 - (IBAction)logout:(id)sender {
     [AppHelper logout];
 }

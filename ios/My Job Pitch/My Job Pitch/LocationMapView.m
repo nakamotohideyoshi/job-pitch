@@ -53,11 +53,10 @@
     self.definesPresentationContext = YES;
     searchController.hidesNavigationBarDuringPresentation = NO;
     
-    [[[UIAlertView alloc] initWithTitle:nil
-                                message:@"Search for a location, or long-press on the map to manually select a location."
-                               delegate:nil
-                      cancelButtonTitle:@"Got it!"
-                      otherButtonTitles:nil] show];
+    [MyAlertController title:nil message:@"Search for a location, or long-press on the map to manually select a location."
+                          ok:@"Got it!"
+                  okCallback:nil cancel:nil cancelCallback:nil];
+    
 }
 
 

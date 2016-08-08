@@ -73,4 +73,14 @@
     
 }
 
++ (void)showError:(NSString*)message callback:(void(^)())callback {
+    [SVProgressHUD dismiss];
+    [MyAlertController title:@"Error"
+                     message:message
+                          ok:@"Okay"
+                  okCallback:callback
+                      cancel:nil
+              cancelCallback:nil];
+}
+
 @end

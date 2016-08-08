@@ -32,10 +32,6 @@
     [super didReceiveMemoryWarning];
 }
 
-- (void)viewWillAppear:(BOOL)animated {
-    activityIndicator.hidden = YES;
-}
-
 - (NSArray *)getRequiredFields {
     return @[@"old_password", @"new_password1", @"new_password2"];
 }

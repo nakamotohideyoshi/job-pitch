@@ -32,12 +32,12 @@
 
 - (void)viewWillAppear:(BOOL)animated
 {
-    [self showProgress:true];
+    [SVProgressHUD show];
     [[self appDelegate].api loadJobSeekerWithId:[self appDelegate].user.jobSeeker
                                         success:^(JobSeeker *jobSeeker) {
                                             myJobSeeker = jobSeeker;
                                             [jobSeekerProfile load:jobSeeker];
-                                            [self showProgress:false];
+                                            [SVProgressHUD dismiss];
                                         }
                                         failure:^(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors) {
                                             [self handleErrors:errors message:message];
@@ -84,7 +84,7 @@
     NSLog(@"continue");
     if ([self validate]) {
         [jobSeekerProfile save:myJobSeeker];
-        [self showProgress:true];
+        [SVProgressHUD show];
         [[self appDelegate].api saveJobSeeker:myJobSeeker
                                       success:^(JobSeeker *jobSeeker) {
                                           [self clearErrors];
@@ -92,7 +92,6 @@
                                       }
                                       failure:^(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors) {
                                           [self handleErrors:errors message:message];
-                                          [self showProgress:false];
                                       }
          ];
     }

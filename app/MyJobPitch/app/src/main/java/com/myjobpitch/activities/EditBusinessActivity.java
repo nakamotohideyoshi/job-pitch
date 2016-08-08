@@ -109,7 +109,7 @@ public class EditBusinessActivity extends MJPProgressActionBarActivity {
             showProgress(false);
             setTitle(R.string.action_add_business);
             business = new Business();
-            mBusinessEditFragment.load(business);
+            //mBusinessEditFragment.load(business);
             showProgress(false);
         }
     }

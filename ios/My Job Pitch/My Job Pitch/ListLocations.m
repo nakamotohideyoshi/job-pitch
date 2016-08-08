@@ -31,7 +31,7 @@
 
 -(void)viewWillAppear:(BOOL)animated {
     [self.emptyView setHidden:true];
-    [self showProgress:true];
+    [SVProgressHUD show];
     [self.appDelegate.api loadLocationsForBusiness:self.business.id success:^(NSArray *locations) {
         if (locations.count) {
             data = (NSMutableArray*)locations;
@@ -41,10 +41,9 @@
             [self.locations setHidden:true];
             [self.emptyView setHidden:false];
         }
-        [self showProgress:false];
+        [SVProgressHUD dismiss];
     } failure:^(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors) {
-        [MyAlertController title:@"Error" message:@"Error loading data"
-                              ok:@"Okay" okCallback:nil cancel:nil cancelCallback:nil];
+        [MyAlertController showError:@"Error loading data" callback:nil];
     }];
 }
 
@@ -89,15 +88,14 @@
         Location *location = [self->data objectAtIndex:editRow];
         NSString *msg = [NSString stringWithFormat:@"Are you sure you want to delete %@", location.name];
         [MyAlertController title:@"Confirm" message:msg ok:@"Delete" okCallback:^{
-            [self showProgress:true];
+            [SVProgressHUD show];
             [self.appDelegate.api deleteLocation:location
                                          success:^(void) {
-                                             [self showProgress:false];
+                                             [SVProgressHUD dismiss];
                                              [self->data removeObject:location];
                                              [self.locations reloadData];
                                          } failure:^(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors) {
-                                             [MyAlertController title:@"Error" message:@"Error deleting data"
-                                                                   ok:@"Okay" okCallback:nil cancel:nil cancelCallback:nil];
+                                             [MyAlertController showError:@"Error deleting data" callback:nil];
                                          }];
             
         } cancel:@"Cancel" cancelCallback:nil];

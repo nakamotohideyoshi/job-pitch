@@ -207,6 +207,7 @@
                                @"users",
                                @"locations",
                                @"name",
+                               @"tokens",
                                ];
     NSArray *businessRelationships = @[@{@"source": @"images",
                                          @"destination": @"images",

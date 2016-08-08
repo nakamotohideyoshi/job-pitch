@@ -17,7 +17,6 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    [activityIndicator setHidden:YES];
     
     email.text = [AppHelper getEmail];
     

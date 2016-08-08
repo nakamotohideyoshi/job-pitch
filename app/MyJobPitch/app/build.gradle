@@ -10,8 +10,8 @@ android {
         applicationId "com.myjobpitch"
         minSdkVersion 15
         targetSdkVersion 22
-        versionCode 19
-        versionName "1.1-beta.19"
+        versionCode 20
+        versionName "1.1-beta.20"
     }
     packagingOptions {
         exclude 'META-INF/LICENSE'

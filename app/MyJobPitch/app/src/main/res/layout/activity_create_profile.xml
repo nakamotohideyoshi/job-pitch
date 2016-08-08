@@ -135,7 +135,8 @@
                     android:layout_height="wrap_content"
                     android:text="@string/action_continue"
                     android:id="@+id/continue_button_job_seeker"
-                    android:layout_weight="1" />
+                    android:layout_weight="1"
+                    android:enabled="false" />
             </LinearLayout>
 
         </LinearLayout>

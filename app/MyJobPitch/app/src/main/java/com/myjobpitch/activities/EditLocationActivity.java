@@ -109,7 +109,7 @@ public class EditLocationActivity extends MJPProgressActionBarActivity {
             setTitle(R.string.action_add_location);
             location = new Location();
             location.setBusiness(getIntent().getIntExtra(BUSINESS_ID, -1));
-            mLocationEditFragment.load(location);
+            //mLocationEditFragment.load(location);
         }
     }
     @Override

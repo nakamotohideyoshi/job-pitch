@@ -23,11 +23,6 @@
     // Dispose of any resources that can be recreated.
 }
 
-- (void)viewWillAppear:(BOOL)animated
-{
-    activityIndicator.hidden = YES;
-}
-
 - (NSArray *)getRequiredFields {
     return @[@"firstName", @"lastName", @"description"];
 }
@@ -64,7 +59,7 @@
     if ([self validate]) {
         JobSeeker *jobSeeker = [JobSeeker alloc];
         [jobSeekerProfile save:jobSeeker];
-        [self showProgress:true];
+        [SVProgressHUD show];
         [[self appDelegate].api saveJobSeeker:jobSeeker
                                       success:^(JobSeeker *jobSeeker) {
                                           [self appDelegate].user.jobSeeker = jobSeeker.id;
@@ -72,8 +67,7 @@
                                           [self replaceWithViewControllerNamed:@"job_seeker_home"];
                                       }
                                       failure:^(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors) {
-                                          [self handleErrors:errors message:message];
-                                          [self showProgress:false];
+                                          [self handleErrors:errors message:message];                                          
                                       }
          ];
     }

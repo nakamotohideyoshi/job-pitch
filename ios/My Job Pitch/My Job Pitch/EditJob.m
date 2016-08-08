@@ -35,10 +35,6 @@
     }
 }
 
-- (void)viewWillAppear:(BOOL)animated {
-    activityIndicator.hidden = true;
-}
-
 - (NSArray *)getRequiredFields {
     return @[@"title",
              @"description",
@@ -68,7 +64,7 @@
 
 - (IBAction)save:(id)sender {
     if ([self validate]) {
-        [self showProgress:true];
+        [SVProgressHUD show];
         [_jobEditView save:self.job];
         [[self appDelegate].api
          saveJob:self.job
@@ -79,7 +75,6 @@
          }
          failure:^(RKObjectRequestOperation *operation, NSError *error, NSString*message, NSDictionary *errors) {
              [self handleErrors:errors message:message];
-             [self showProgress:false];
          }];
     }
 }
@@ -103,7 +98,6 @@
                                     }
                                     failure:^(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors) {
                                         [self handleErrors:errors message:message];
-                                        [self showProgress:false];
                                     }
          ];
     } else {
@@ -111,11 +105,11 @@
     }
 }
 
-- (void)showProgress:(BOOL)showProgress
-{
-    [super showProgress:showProgress];
-    [self.activityLabel setHidden:!showProgress];
-    [self.activityLabel setText:@""];
-}
+//- (void)showProgress:(BOOL)showProgress
+//{
+//    [super showProgress:showProgress];
+//    [self.activityLabel setHidden:!showProgress];
+//    [self.activityLabel setText:@""];
+//}
 
 @end

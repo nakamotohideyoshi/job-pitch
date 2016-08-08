@@ -282,7 +282,7 @@ public class JobSeekerActivity extends MJPProgressActionBarActivity {
                     switch (cardState) {
                         case LEFT:
                             hint.setVisibility(View.VISIBLE);
-                            hint.setText(R.string.connect);
+                            hint.setText(R.string.apply);
                             hint.setTextColor(getResources().getColor(R.color.card_hint_positive));
                             break;
                         case RIGHT:

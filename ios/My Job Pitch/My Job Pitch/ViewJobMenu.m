@@ -38,14 +38,13 @@
 - (IBAction)removeJob:(id)sender {
     NSString *msg = [NSString stringWithFormat:@"Are you sure you want to delete %@", _job.title];
     [MyAlertController title:@"Confirm" message:msg ok:@"Delete" okCallback:^{
-        [self showProgress:true];
+        [SVProgressHUD show];
         [self.appDelegate.api deleteJob:_job
                                 success:^(void) {
-                                    [self showProgress:false];
+                                    [SVProgressHUD dismiss];
                                     [self.navigationController popViewControllerAnimated:YES];
                                 } failure:^(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors) {
-                                    [MyAlertController title:@"Error" message:@"Error deleting data"
-                                                          ok:@"Okay" okCallback:nil cancel:nil cancelCallback:nil];
+                                    [MyAlertController showError:@"Error deleting data" callback:nil];
                                 }];
         
     } cancel:@"Cancel" cancelCallback:nil];

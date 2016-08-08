@@ -9,6 +9,7 @@ public class Business extends MJPObjectWithDates {
     private List<Integer> users;
     private List<Integer> locations;
     private List<Image> images;
+    private Integer  tokens;
 
     public String getName() {
         return name;
@@ -28,5 +29,9 @@ public class Business extends MJPObjectWithDates {
 
     public List<Image> getImages() {
         return images;
+    }
+
+    public Integer getTokens() {
+        return tokens;
     }
 }

@@ -104,7 +104,7 @@ typedef NS_ENUM(NSInteger, EmptyButtonAction) {
 
 - (void)reset
 {
-    [self showProgress:true];
+    [SVProgressHUD show];
     self.objects = [[NSMutableArray alloc] init];
     self.seen = [[NSMutableArray alloc] init];
     self.application = nil;
@@ -134,14 +134,10 @@ typedef NS_ENUM(NSInteger, EmptyButtonAction) {
      loadJobWithId:self.job.id
      success:^(Job *job) {
          self.job = job;
-         [self showProgress:false];
+         [SVProgressHUD dismiss];
          [self nextCard];
      } failure:^(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors) {
-         [[[UIAlertView alloc] initWithTitle:@"Error"
-                                     message:@"Error loading data"
-                                    delegate:self
-                           cancelButtonTitle:@"Okay"
-                           otherButtonTitles:nil] show];
+         [MyAlertController showError:@"Error loading data" callback:nil];
      }];
 }
 
@@ -162,11 +158,7 @@ typedef NS_ENUM(NSInteger, EmptyButtonAction) {
         }
     };
     void (^failure)(RKObjectRequestOperation*, NSError*, NSString*, NSDictionary*) = ^(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors) {
-        [[[UIAlertView alloc] initWithTitle:@"Error"
-                                    message:@"Error loading job seekers"
-                                   delegate:self
-                          cancelButtonTitle:@"Okay"
-                          otherButtonTitles:nil] show];
+        [MyAlertController showError:@"Error loading job seekers" callback:nil];
         @synchronized(self) {
             self.loading = false;
             failureCallback();
@@ -254,7 +246,7 @@ typedef NS_ENUM(NSInteger, EmptyButtonAction) {
             self.directionLabel.alpha = 0;
             [self.swipeView nextCard:^{}];
         } else if (self.lastLoad > 0) {
-            [self showProgress:true];
+            [SVProgressHUD show];
         } else {
             if (self.mode == JobViewModeSearch) {
                 [self.emptyLabel setText:@"There are no more potential candidates that match this job. You can switch to application mode or connections to see the people who have connected with you, or restart the search."];
@@ -299,7 +291,7 @@ typedef NS_ENUM(NSInteger, EmptyButtonAction) {
         
         if ([self.objects count] < 5 && !self.loading && self.lastLoad > 0) {
             [self loadData:^{
-                [self showProgress:false];
+                [SVProgressHUD dismiss];
                 if (self.jobSeeker == nil)
                     [self nextCard];
             } failure:^{}];
@@ -363,38 +355,26 @@ typedef NS_ENUM(NSInteger, EmptyButtonAction) {
 }
 
 - (IBAction)rightClick:(id)sender {
-    NSString *title = [NSString stringWithFormat:@"Remove %@ %@?",
-                       self.jobSeeker.firstName,
-                       self.jobSeeker.lastName];
-    NSString *message = @"This job seeker will never appear again for this job. If you want this item to appear again in this list, just swipe to the right to remove temporarily.";
-    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:title
-                                                    message:message
-                                                   delegate:self
-                                          cancelButtonTitle:@"Cancel"
-                                          otherButtonTitles:@"Okay", nil];
-    [alert show];
-}
-
-- (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex {
-    if (buttonIndex == 1) {
-        if (self.mode == JobViewModeSearch) {
-            // TODO permanenty exclude
-        } else {
-            [self.objects removeObject:self.application];
-            [self.appDelegate.api deleteApplication:self.application
-                                            success:^(Application *application) {
-                                                NSLog(@"Application deleted: %@", application);
-                                            } failure:^(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors) {
-                                                [[[UIAlertView alloc] initWithTitle:@"Error"
-                                                                            message:@"Error deleting application!"
-                                                                           delegate:nil
-                                                                  cancelButtonTitle:@"OK"
-                                                                  otherButtonTitles:nil] show];
-                                            }
-             ];
-        }
-        [self right];
-    }
+    NSString *title = [NSString stringWithFormat:@"Remove %@ %@?", self.jobSeeker.firstName, self.jobSeeker.lastName];
+    [MyAlertController title:title
+                     message:@"This job seeker will never appear again for this job. If you want this item to appear again in this list, just swipe to the right to remove temporarily."
+                          ok:@"Okay"
+                  okCallback:^{
+                      if (self.mode == JobViewModeSearch) {
+                          // TODO permanenty exclude
+                      } else {
+                          [self.objects removeObject:self.application];
+                          [self.appDelegate.api deleteApplication:self.application
+                                                          success:^(Application *application) {
+                                                              NSLog(@"Application deleted: %@", application);
+                                                          } failure:^(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors) {
+                                                              [MyAlertController showError:@"Error deleting application!" callback:nil];
+                                                          }
+                           ];
+                      }
+                      [self right];
+                  }
+                      cancel:@"Cancel" cancelCallback:nil];
 }
 
 - (void)left {
@@ -411,11 +391,7 @@ typedef NS_ENUM(NSInteger, EmptyButtonAction) {
                                         success:^(ApplicationForCreation *application) {
                                             NSLog(@"Application created %@", application);
                                         } failure:^(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors) {
-                                            [[[UIAlertView alloc] initWithTitle:@"Error"
-                                                                        message:@"Error creating application!"
-                                                                       delegate:nil
-                                                              cancelButtonTitle:@"OK"
-                                                              otherButtonTitles:nil] show];
+                                            [MyAlertController showError:@"Error creating application!" callback:nil];
                                         }];
     } else if (self.mode == JobViewModeApplications) {
         [self.objects removeObject:self.application];
@@ -427,11 +403,7 @@ typedef NS_ENUM(NSInteger, EmptyButtonAction) {
                                             NSLog(@"Application updated %@", update);
                                         }
                                         failure:^(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors) {
-                                            [[[UIAlertView alloc] initWithTitle:@"Error"
-                                                                        message:@"Error updating application!"
-                                                                       delegate:nil
-                                                              cancelButtonTitle:@"OK"
-                                                              otherButtonTitles:nil] show];
+                                            [MyAlertController showError:@"Error updating application!" callback:nil];
                                         }];
     }
     [self.swipeView swipeLeft:^{
@@ -477,11 +449,7 @@ typedef NS_ENUM(NSInteger, EmptyButtonAction) {
                                               }
                                           }
                                           failure:^(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors) {
-                                              [[[UIAlertView alloc] initWithTitle:@"Error"
-                                                                          message:@"Error updating application!"
-                                                                         delegate:nil
-                                                                cancelButtonTitle:@"OK"
-                                                                otherButtonTitles:nil] show];
+                                              [MyAlertController showError:@"Error updating application!" callback:nil];
                                               self.leftButton.enabled = true;
                                               self.rightButton.enabled = true;
                                               self.shortlisted.enabled = true;

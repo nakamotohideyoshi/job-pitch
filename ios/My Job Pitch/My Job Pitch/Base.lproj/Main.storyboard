@@ -309,9 +309,6 @@
                                                     </mask>
                                                 </variation>
                                             </view>
-                                            <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="6Qt-79-gCv">
-                                                <rect key="frame" x="290" y="358" width="20" height="20"/>
-                                            </activityIndicatorView>
                                         </subviews>
                                         <constraints>
                                             <constraint firstItem="L7T-UN-5Ab" firstAttribute="centerX" secondItem="aIC-ZR-ZpV" secondAttribute="centerX" id="56M-dl-3m4"/>
@@ -320,9 +317,7 @@
                                             <constraint firstItem="4Zo-fm-9cy" firstAttribute="width" secondItem="L7T-UN-5Ab" secondAttribute="width" multiplier="0.9" id="HFy-IQ-Ev3"/>
                                             <constraint firstItem="4Zo-fm-9cy" firstAttribute="top" secondItem="L7T-UN-5Ab" secondAttribute="bottom" constant="10" id="bBx-Lp-0j9"/>
                                             <constraint firstAttribute="bottom" secondItem="4Zo-fm-9cy" secondAttribute="bottom" id="iuX-JN-x4i"/>
-                                            <constraint firstItem="6Qt-79-gCv" firstAttribute="centerX" secondItem="aIC-ZR-ZpV" secondAttribute="centerX" id="osA-MO-7KE"/>
                                             <constraint firstAttribute="height" constant="517" id="yIH-pB-1yC"/>
-                                            <constraint firstItem="6Qt-79-gCv" firstAttribute="top" secondItem="L7T-UN-5Ab" secondAttribute="bottom" constant="38" id="yXy-Ri-19Y"/>
                                         </constraints>
                                     </view>
                                 </subviews>
@@ -345,11 +340,9 @@
                     </view>
                     <navigationItem key="navigationItem" id="VRa-Cj-dYe"/>
                     <connections>
-                        <outlet property="activityIndicator" destination="6Qt-79-gCv" id="UGM-0R-UU8"/>
                         <outlet property="email" destination="Zff-yc-hTC" id="7D1-7M-Imr"/>
                         <outlet property="emailError" destination="uGz-Nx-8jW" id="vt6-PN-8N6"/>
                         <outlet property="loginForm" destination="Yk3-ZJ-s0C" id="7jX-ie-yDd"/>
-                        <outlet property="mainView" destination="4Zo-fm-9cy" id="Rqa-ES-cqX"/>
                         <outlet property="password" destination="TfM-Js-coK" id="jka-hB-omL"/>
                         <outlet property="password2" destination="KkR-O2-tad" id="i4q-lD-OwT"/>
                         <outlet property="password2Error" destination="Cv9-bO-r9O" id="rPN-GY-Qhn"/>
@@ -380,9 +373,6 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="jhI-1W-Gly">
-                                <rect key="frame" x="290" y="290" width="20" height="20"/>
-                            </activityIndicatorView>
                             <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="background_logo" translatesAutoresizingMaskIntoConstraints="NO" id="Qfv-hH-auH">
                                 <rect key="frame" x="60" y="60" width="480" height="480"/>
                             </imageView>
@@ -476,10 +466,8 @@
                         <color key="backgroundColor" red="0.87843137250000003" green="0.87843137250000003" blue="0.87843137250000003" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
                             <constraint firstItem="Qfv-hH-auH" firstAttribute="centerX" secondItem="Xz4-8S-hlV" secondAttribute="centerX" id="4Cb-gm-E11"/>
-                            <constraint firstItem="jhI-1W-Gly" firstAttribute="centerY" secondItem="Xz4-8S-hlV" secondAttribute="centerY" id="6UJ-8v-vKR"/>
                             <constraint firstItem="Qfv-hH-auH" firstAttribute="centerY" secondItem="Xz4-8S-hlV" secondAttribute="centerY" id="9sv-EY-eNC"/>
                             <constraint firstItem="yd0-lH-82v" firstAttribute="left" secondItem="Xz4-8S-hlV" secondAttribute="left" id="NMD-eV-W3s"/>
-                            <constraint firstItem="jhI-1W-Gly" firstAttribute="centerX" secondItem="Xz4-8S-hlV" secondAttribute="centerX" id="VTI-7K-0kJ"/>
                             <constraint firstItem="95F-pS-Sf5" firstAttribute="width" secondItem="Xz4-8S-hlV" secondAttribute="width" id="VW9-GX-zRm"/>
                             <constraint firstItem="yd0-lH-82v" firstAttribute="top" secondItem="Yh5-e3-ne2" secondAttribute="bottom" id="am9-3i-yZN"/>
                             <constraint firstItem="Qfv-hH-auH" firstAttribute="height" secondItem="Xz4-8S-hlV" secondAttribute="height" multiplier="0.8" id="hBu-9D-ktl"/>
@@ -496,8 +484,6 @@
                         </barButtonItem>
                     </navigationItem>
                     <connections>
-                        <outlet property="activityIndicator" destination="jhI-1W-Gly" id="yax-vI-wS7"/>
-                        <outlet property="mainView" destination="95F-pS-Sf5" id="1EW-bv-rWH"/>
                         <outlet property="scrollView" destination="yd0-lH-82v" id="BzK-Zq-0Jc"/>
                         <segue destination="9Fw-v5-dmz" kind="show" identifier="goto_create_job_seeker_profile" id="tAO-up-ogP"/>
                     </connections>
@@ -540,14 +526,12 @@
                                             </label>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="EhT-Go-5Qa">
                                                 <rect key="frame" x="0.0" y="57" width="560" height="30"/>
-                                                <state key="normal" title="Button"/>
                                                 <connections>
                                                     <action selector="emptyButton1ActionDelegate:" destination="B6U-eH-CfR" eventType="touchUpInside" id="JxU-3o-weI"/>
                                                 </connections>
                                             </button>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="v5C-Fv-zGc">
                                                 <rect key="frame" x="0.0" y="95" width="560" height="30"/>
-                                                <state key="normal" title="Button"/>
                                                 <connections>
                                                     <action selector="emptyButton2ActionDelegate:" destination="B6U-eH-CfR" eventType="touchUpInside" id="Glo-kb-LeT"/>
                                                 </connections>
@@ -679,8 +663,8 @@
                                                     <constraint firstAttribute="width" secondItem="Kf2-p5-czF" secondAttribute="height" multiplier="1:1" id="X6z-ea-UK9"/>
                                                 </constraints>
                                             </imageView>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Connect" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dEz-7m-CGE">
-                                                <rect key="frame" x="126" y="435" width="65" height="21"/>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Apply" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dEz-7m-CGE">
+                                                <rect key="frame" x="137" y="435" width="44" height="21"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                 <nil key="highlightedColor"/>
@@ -747,9 +731,6 @@
                                     <constraint firstItem="pmf-kY-76p" firstAttribute="top" secondItem="ron-jM-WW7" secondAttribute="top" id="sz6-60-uR2"/>
                                 </constraints>
                             </view>
-                            <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="0m9-Xc-RT2">
-                                <rect key="frame" x="290" y="290" width="20" height="20"/>
-                            </activityIndicatorView>
                         </subviews>
                         <color key="backgroundColor" red="0.8784313725490196" green="0.8784313725490196" blue="0.8784313725490196" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
@@ -758,10 +739,8 @@
                             <constraint firstItem="woJ-aA-IvQ" firstAttribute="centerY" secondItem="VKz-Fl-eMn" secondAttribute="centerY" id="Tm5-e3-Yso"/>
                             <constraint firstAttribute="trailing" secondItem="ron-jM-WW7" secondAttribute="trailing" id="YZV-nn-2ns"/>
                             <constraint firstItem="woJ-aA-IvQ" firstAttribute="width" secondItem="VKz-Fl-eMn" secondAttribute="width" multiplier="0.8" id="Zqd-rG-O2P"/>
-                            <constraint firstItem="0m9-Xc-RT2" firstAttribute="centerX" secondItem="VKz-Fl-eMn" secondAttribute="centerX" id="ceo-YY-wUB"/>
                             <constraint firstItem="ron-jM-WW7" firstAttribute="top" secondItem="Ga3-vJ-Dbg" secondAttribute="bottom" id="d3C-Th-QrS"/>
                             <constraint firstItem="ron-jM-WW7" firstAttribute="leading" secondItem="VKz-Fl-eMn" secondAttribute="leading" id="f2s-Pj-wrE"/>
-                            <constraint firstItem="0m9-Xc-RT2" firstAttribute="centerY" secondItem="VKz-Fl-eMn" secondAttribute="centerY" id="gV7-Kl-X38"/>
                             <constraint firstItem="Zfz-1n-DLf" firstAttribute="top" secondItem="ron-jM-WW7" secondAttribute="bottom" id="n8b-cv-Kn3"/>
                         </constraints>
                     </view>
@@ -779,7 +758,6 @@
                         </barButtonItem>
                     </navigationItem>
                     <connections>
-                        <outlet property="activityIndicator" destination="0m9-Xc-RT2" id="5QR-GG-mpu"/>
                         <outlet property="connectButton" destination="cNh-na-cts" id="N2M-gn-gPc"/>
                         <outlet property="descriptionLabel" destination="EYe-fb-xHA" id="YwB-gr-X8V"/>
                         <outlet property="directionLabel" destination="52L-RD-C24" id="02Z-uy-SvQ"/>
@@ -791,7 +769,6 @@
                         <outlet property="extraLabel" destination="VBC-EA-t1B" id="EtV-hY-5Op"/>
                         <outlet property="image" destination="RaC-Zt-Qoo" id="aep-qI-Dfh"/>
                         <outlet property="imageActivity" destination="DYT-om-Gtz" id="WqO-5k-0BQ"/>
-                        <outlet property="mainView" destination="ron-jM-WW7" id="HXg-UX-h7b"/>
                         <outlet property="nameLabel" destination="B5K-17-alo" id="07O-uh-BJ8"/>
                         <outlet property="swipeContainer" destination="pmf-kY-76p" id="QL3-Qu-qjJ"/>
                         <outlet property="swipeView" destination="vw2-Ei-nOB" id="v9U-BX-PS7"/>
@@ -823,9 +800,6 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="MWK-DW-D4Q">
-                                <rect key="frame" x="290" y="290" width="20" height="20"/>
-                            </activityIndicatorView>
                             <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="background_logo" translatesAutoresizingMaskIntoConstraints="NO" id="gcd-jd-n79">
                                 <rect key="frame" x="60" y="60" width="480" height="480"/>
                             </imageView>
@@ -902,10 +876,8 @@
                         </subviews>
                         <color key="backgroundColor" red="0.87843137250000003" green="0.87843137250000003" blue="0.87843137250000003" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
-                            <constraint firstItem="MWK-DW-D4Q" firstAttribute="centerX" secondItem="yue-X8-nIh" secondAttribute="centerX" id="5zo-8a-d0z"/>
                             <constraint firstItem="t1d-Pd-5zD" firstAttribute="leading" secondItem="yue-X8-nIh" secondAttribute="leading" constant="8" id="DwD-fw-gaG"/>
                             <constraint firstItem="gcd-jd-n79" firstAttribute="centerY" secondItem="yue-X8-nIh" secondAttribute="centerY" id="I1n-xe-0Hf"/>
-                            <constraint firstItem="MWK-DW-D4Q" firstAttribute="centerY" secondItem="yue-X8-nIh" secondAttribute="centerY" id="VD9-bi-0w7"/>
                             <constraint firstItem="gcd-jd-n79" firstAttribute="height" secondItem="yue-X8-nIh" secondAttribute="height" multiplier="0.8" id="XMd-eE-SQ1"/>
                             <constraint firstItem="gcd-jd-n79" firstAttribute="centerX" secondItem="yue-X8-nIh" secondAttribute="centerX" id="ZcM-rz-qRS"/>
                             <constraint firstItem="t1d-Pd-5zD" firstAttribute="top" secondItem="SGN-Rr-hHW" secondAttribute="bottom" id="a1p-T6-ZmO"/>
@@ -927,9 +899,7 @@
                         </barButtonItem>
                     </navigationItem>
                     <connections>
-                        <outlet property="activityIndicator" destination="MWK-DW-D4Q" id="We8-jH-qkP"/>
                         <outlet property="businesses" destination="t1d-Pd-5zD" id="Gfb-1A-naq"/>
-                        <outlet property="mainView" destination="t1d-Pd-5zD" id="fod-hl-xAz"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="FKu-5p-xn1" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -948,9 +918,6 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="FO0-Lh-UBm">
-                                <rect key="frame" x="290" y="290" width="20" height="20"/>
-                            </activityIndicatorView>
                             <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="background_logo" translatesAutoresizingMaskIntoConstraints="NO" id="wc3-a3-SQy">
                                 <rect key="frame" x="60" y="60" width="480" height="480"/>
                             </imageView>
@@ -985,11 +952,9 @@
                             <constraint firstItem="wc3-a3-SQy" firstAttribute="height" secondItem="siU-Bw-tAy" secondAttribute="height" multiplier="0.8" id="3El-Vm-IQg"/>
                             <constraint firstItem="wc3-a3-SQy" firstAttribute="width" secondItem="siU-Bw-tAy" secondAttribute="width" multiplier="0.8" id="E3I-bF-96J"/>
                             <constraint firstItem="CcG-Xl-gtT" firstAttribute="top" secondItem="4Hl-hq-kfQ" secondAttribute="bottom" id="GvW-ZZ-fv3"/>
-                            <constraint firstItem="FO0-Lh-UBm" firstAttribute="centerX" secondItem="siU-Bw-tAy" secondAttribute="centerX" id="buw-aW-N3P"/>
                             <constraint firstItem="wc3-a3-SQy" firstAttribute="centerX" secondItem="siU-Bw-tAy" secondAttribute="centerX" id="eLQ-8x-UHU"/>
                             <constraint firstItem="CcG-Xl-gtT" firstAttribute="leading" secondItem="siU-Bw-tAy" secondAttribute="leading" id="gse-wY-tF8"/>
                             <constraint firstAttribute="trailing" secondItem="CcG-Xl-gtT" secondAttribute="trailing" id="lj8-hc-gI4"/>
-                            <constraint firstItem="FO0-Lh-UBm" firstAttribute="centerY" secondItem="siU-Bw-tAy" secondAttribute="centerY" id="nmK-s2-9Kb"/>
                             <constraint firstItem="MIw-KS-P2H" firstAttribute="width" secondItem="siU-Bw-tAy" secondAttribute="width" id="oI4-WA-36Q"/>
                             <constraint firstItem="ucr-bE-RNZ" firstAttribute="top" secondItem="CcG-Xl-gtT" secondAttribute="bottom" id="u2E-co-M4Q"/>
                             <constraint firstItem="wc3-a3-SQy" firstAttribute="centerY" secondItem="siU-Bw-tAy" secondAttribute="centerY" id="wg4-PJ-eZ7"/>
@@ -1000,9 +965,7 @@
                     </navigationItem>
                     <nil key="simulatedBottomBarMetrics"/>
                     <connections>
-                        <outlet property="activityIndicator" destination="FO0-Lh-UBm" id="bG7-pX-ryl"/>
                         <outlet property="jobSeekerProfile" destination="NSp-sf-325" id="1YN-bi-p5G"/>
-                        <outlet property="mainView" destination="MIw-KS-P2H" id="G49-Yf-NWI"/>
                         <outlet property="scrollView" destination="CcG-Xl-gtT" id="Xld-RN-iCz"/>
                     </connections>
                 </viewController>
@@ -1038,9 +1001,6 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="NNf-bt-K5S">
-                                <rect key="frame" x="290" y="290" width="20" height="20"/>
-                            </activityIndicatorView>
                             <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="background_logo" translatesAutoresizingMaskIntoConstraints="NO" id="Kvz-g5-lqM">
                                 <rect key="frame" x="60" y="60" width="480" height="480"/>
                             </imageView>
@@ -1074,13 +1034,11 @@
                         <constraints>
                             <constraint firstItem="Kvz-g5-lqM" firstAttribute="width" secondItem="mC7-mJ-Agk" secondAttribute="width" multiplier="0.8" id="7zR-eo-iUo"/>
                             <constraint firstItem="Kvz-g5-lqM" firstAttribute="height" secondItem="mC7-mJ-Agk" secondAttribute="height" multiplier="0.8" id="B95-XZ-nii"/>
-                            <constraint firstItem="NNf-bt-K5S" firstAttribute="centerX" secondItem="mC7-mJ-Agk" secondAttribute="centerX" id="BqV-Bh-cNl"/>
                             <constraint firstItem="Kvz-g5-lqM" firstAttribute="centerX" secondItem="mC7-mJ-Agk" secondAttribute="centerX" id="FGZ-nV-f2Q"/>
                             <constraint firstItem="Lov-qX-jQd" firstAttribute="leading" secondItem="mC7-mJ-Agk" secondAttribute="leading" id="FWN-yc-cvA"/>
                             <constraint firstItem="r5X-ll-F1U" firstAttribute="width" secondItem="mC7-mJ-Agk" secondAttribute="width" id="Iv1-FT-zl9"/>
                             <constraint firstItem="7Bf-Vb-eha" firstAttribute="top" secondItem="Lov-qX-jQd" secondAttribute="bottom" id="V0i-CI-L1L"/>
                             <constraint firstItem="Lov-qX-jQd" firstAttribute="top" secondItem="ZGa-mT-vAf" secondAttribute="bottom" id="VWq-ox-RsL"/>
-                            <constraint firstItem="NNf-bt-K5S" firstAttribute="centerY" secondItem="mC7-mJ-Agk" secondAttribute="centerY" id="W9U-Dk-WXZ"/>
                             <constraint firstAttribute="trailing" secondItem="Lov-qX-jQd" secondAttribute="trailing" id="gzj-b7-pTL"/>
                             <constraint firstItem="Kvz-g5-lqM" firstAttribute="centerY" secondItem="mC7-mJ-Agk" secondAttribute="centerY" id="qYJ-3F-Uf4"/>
                         </constraints>
@@ -1090,9 +1048,7 @@
                     </navigationItem>
                     <nil key="simulatedBottomBarMetrics"/>
                     <connections>
-                        <outlet property="activityIndicator" destination="NNf-bt-K5S" id="Tzh-IY-aa3"/>
                         <outlet property="jobSeekerSearchProfile" destination="eaB-sX-d7i" id="uhp-kH-lJL"/>
-                        <outlet property="mainView" destination="r5X-ll-F1U" id="ZY7-oS-LJS"/>
                         <outlet property="scrollView" destination="Lov-qX-jQd" id="sVV-Qs-FkI"/>
                     </connections>
                 </viewController>
@@ -1112,9 +1068,6 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="D7t-jo-r5A">
-                                <rect key="frame" x="290" y="290" width="20" height="20"/>
-                            </activityIndicatorView>
                             <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="background_logo" translatesAutoresizingMaskIntoConstraints="NO" id="tuK-iR-goT">
                                 <rect key="frame" x="60" y="60" width="480" height="480"/>
                             </imageView>
@@ -1290,11 +1243,9 @@
                             <constraint firstItem="hNc-Bd-zYK" firstAttribute="leading" secondItem="vJH-yR-Cyc" secondAttribute="leading" id="0J3-NR-Fkz"/>
                             <constraint firstItem="dFG-2c-cEV" firstAttribute="top" secondItem="hNc-Bd-zYK" secondAttribute="bottom" id="32l-3Z-Rkt"/>
                             <constraint firstAttribute="trailing" secondItem="hNc-Bd-zYK" secondAttribute="trailing" id="7LJ-sn-vQ0"/>
-                            <constraint firstItem="D7t-jo-r5A" firstAttribute="centerY" secondItem="vJH-yR-Cyc" secondAttribute="centerY" id="I8H-wg-rFb"/>
                             <constraint firstItem="hNc-Bd-zYK" firstAttribute="top" secondItem="NSA-DW-CYx" secondAttribute="bottom" id="MVT-pD-dVJ"/>
                             <constraint firstItem="Dwu-tN-pup" firstAttribute="width" secondItem="vJH-yR-Cyc" secondAttribute="width" id="Ymu-0R-kuv"/>
                             <constraint firstItem="tuK-iR-goT" firstAttribute="centerX" secondItem="vJH-yR-Cyc" secondAttribute="centerX" id="kux-OT-hQQ"/>
-                            <constraint firstItem="D7t-jo-r5A" firstAttribute="centerX" secondItem="vJH-yR-Cyc" secondAttribute="centerX" id="m4F-ty-uIh"/>
                             <constraint firstItem="tuK-iR-goT" firstAttribute="width" secondItem="vJH-yR-Cyc" secondAttribute="width" multiplier="0.8" id="v26-eI-wBE"/>
                             <constraint firstItem="tuK-iR-goT" firstAttribute="centerY" secondItem="vJH-yR-Cyc" secondAttribute="centerY" id="y2o-Tr-QWf"/>
                             <constraint firstItem="tuK-iR-goT" firstAttribute="height" secondItem="vJH-yR-Cyc" secondAttribute="height" multiplier="0.8" id="yGF-eF-dAO"/>
@@ -1303,7 +1254,6 @@
                     <navigationItem key="navigationItem" title="Job Details" id="Yiy-ZQ-6TI"/>
                     <nil key="simulatedBottomBarMetrics"/>
                     <connections>
-                        <outlet property="activityIndicator" destination="D7t-jo-r5A" id="TFP-8F-SRs"/>
                         <outlet property="attributes" destination="MS8-lo-gtJ" id="Gqc-sA-X71"/>
                         <outlet property="contactDetails" destination="5VF-Ve-nKE" id="PND-au-OCj"/>
                         <outlet property="jobBusinessLocation" destination="HqF-or-zB1" id="Ajl-7Q-BYU"/>
@@ -1313,7 +1263,6 @@
                         <outlet property="jobTitle" destination="jTy-yG-uEI" id="aPi-kH-34m"/>
                         <outlet property="locationDescription" destination="CCh-gg-KHi" id="8Bm-Mf-sKc"/>
                         <outlet property="locationName" destination="H3X-jw-GtF" id="u3a-Rd-RE6"/>
-                        <outlet property="mainView" destination="Dwu-tN-pup" id="gNo-g6-3Gs"/>
                         <outlet property="messagesButton" destination="FoS-z9-QSu" id="t5N-sf-IzE"/>
                         <outlet property="scrollView" destination="hNc-Bd-zYK" id="3B1-6R-GEd"/>
                     </connections>
@@ -1334,9 +1283,6 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="LQG-MT-BDy">
-                                <rect key="frame" x="290" y="290" width="20" height="20"/>
-                            </activityIndicatorView>
                             <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="background_logo" translatesAutoresizingMaskIntoConstraints="NO" id="tFI-Wp-bxG">
                                 <rect key="frame" x="60" y="60" width="480" height="480"/>
                             </imageView>
@@ -1429,14 +1375,12 @@
                         <constraints>
                             <constraint firstItem="aj1-8O-ToR" firstAttribute="top" secondItem="EEe-Zu-V1E" secondAttribute="bottom" id="1Yk-Gk-CvU"/>
                             <constraint firstItem="EEe-Zu-V1E" firstAttribute="leading" secondItem="Aaq-vM-gCO" secondAttribute="leading" constant="8" id="8SD-mJ-lJp"/>
-                            <constraint firstItem="LQG-MT-BDy" firstAttribute="centerX" secondItem="Aaq-vM-gCO" secondAttribute="centerX" id="8UQ-1U-9iQ"/>
                             <constraint firstAttribute="trailing" secondItem="EEe-Zu-V1E" secondAttribute="trailing" constant="8" id="PO6-FQ-xYQ"/>
                             <constraint firstItem="tFI-Wp-bxG" firstAttribute="centerY" secondItem="Aaq-vM-gCO" secondAttribute="centerY" id="Tl0-mb-Xfp"/>
                             <constraint firstItem="tFI-Wp-bxG" firstAttribute="height" secondItem="Aaq-vM-gCO" secondAttribute="height" multiplier="0.8" id="YfF-u6-ifR"/>
                             <constraint firstItem="EEe-Zu-V1E" firstAttribute="top" secondItem="M34-fH-NiD" secondAttribute="bottom" id="gtu-Ox-buy"/>
                             <constraint firstItem="tFI-Wp-bxG" firstAttribute="centerX" secondItem="Aaq-vM-gCO" secondAttribute="centerX" id="jlZ-vO-WZb"/>
                             <constraint firstItem="tFI-Wp-bxG" firstAttribute="width" secondItem="Aaq-vM-gCO" secondAttribute="width" multiplier="0.8" id="ktG-RD-A00"/>
-                            <constraint firstItem="LQG-MT-BDy" firstAttribute="centerY" secondItem="Aaq-vM-gCO" secondAttribute="centerY" id="l2A-la-IYQ"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Messages" id="0Uf-hT-uxu">
@@ -1444,8 +1388,6 @@
                     </navigationItem>
                     <nil key="simulatedBottomBarMetrics"/>
                     <connections>
-                        <outlet property="activityIndicator" destination="LQG-MT-BDy" id="Ptq-ZK-EZj"/>
-                        <outlet property="mainView" destination="EEe-Zu-V1E" id="Z83-tc-1ed"/>
                         <outlet property="messages" destination="EEe-Zu-V1E" id="JMf-My-bam"/>
                     </connections>
                 </viewController>
@@ -1465,16 +1407,13 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="Z8N-fR-DNu">
-                                <rect key="frame" x="290" y="290" width="20" height="20"/>
-                            </activityIndicatorView>
                             <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="background_logo" translatesAutoresizingMaskIntoConstraints="NO" id="wnm-4G-gec">
                                 <rect key="frame" x="60" y="60" width="480" height="480"/>
                             </imageView>
-                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="UBI-rE-6OS">
+                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="UBI-rE-6OS">
                                 <rect key="frame" x="0.0" y="64" width="600" height="536"/>
                                 <subviews>
-                                    <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Rrb-6A-csV">
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Rrb-6A-csV">
                                         <rect key="frame" x="0.0" y="0.0" width="600" height="536"/>
                                         <subviews>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="SVX-Mt-v3L">
@@ -1535,7 +1474,7 @@
                                                     <outletCollection property="gestureRecognizers" destination="RWQ-JG-9hD" appends="YES" id="zfc-Wc-V7g"/>
                                                 </connections>
                                             </view>
-                                            <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="xgA-tT-mNv">
+                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="xgA-tT-mNv">
                                                 <rect key="frame" x="0.0" y="452" width="600" height="84"/>
                                                 <subviews>
                                                     <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="d7X-nK-QFJ">
@@ -1573,10 +1512,10 @@
                                                     <constraint firstAttribute="trailing" secondItem="adB-Ad-lqU" secondAttribute="trailing" constant="8" id="jQD-pF-EHq"/>
                                                 </constraints>
                                             </view>
-                                            <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" misplaced="YES" style="white" translatesAutoresizingMaskIntoConstraints="NO" id="7Av-Ij-uy8">
+                                            <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="white" translatesAutoresizingMaskIntoConstraints="NO" id="7Av-Ij-uy8">
                                                 <rect key="frame" x="290" y="460" width="20" height="20"/>
                                             </activityIndicatorView>
-                                            <tableView clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" dataMode="prototypes" style="plain" separatorStyle="none" allowsSelection="NO" rowHeight="101" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="gSe-xC-hKC">
+                                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" dataMode="prototypes" style="plain" separatorStyle="none" allowsSelection="NO" rowHeight="101" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="gSe-xC-hKC">
                                                 <rect key="frame" x="8" y="91" width="584" height="361"/>
                                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                                 <prototypes>
@@ -1672,8 +1611,6 @@
                             <constraint firstItem="wnm-4G-gec" firstAttribute="centerX" secondItem="AXb-RS-gBB" secondAttribute="centerX" id="2Co-ZM-Iti"/>
                             <constraint firstItem="UBI-rE-6OS" firstAttribute="leading" secondItem="AXb-RS-gBB" secondAttribute="leadingMargin" constant="-20" id="3L7-Vj-3Fd"/>
                             <constraint firstAttribute="trailingMargin" secondItem="UBI-rE-6OS" secondAttribute="trailing" constant="-20" id="4l3-7p-dAW"/>
-                            <constraint firstItem="Z8N-fR-DNu" firstAttribute="centerX" secondItem="AXb-RS-gBB" secondAttribute="centerX" id="BZu-Ng-elV"/>
-                            <constraint firstItem="Z8N-fR-DNu" firstAttribute="centerY" secondItem="AXb-RS-gBB" secondAttribute="centerY" id="JXD-lB-mBc"/>
                             <constraint firstItem="UBI-rE-6OS" firstAttribute="top" secondItem="uec-ap-s5c" secondAttribute="bottom" id="Usl-Ef-dsH"/>
                             <constraint firstItem="wnm-4G-gec" firstAttribute="height" secondItem="AXb-RS-gBB" secondAttribute="height" multiplier="0.8" id="Xio-Py-5rK"/>
                             <constraint firstItem="Wm0-rr-ZzX" firstAttribute="top" secondItem="UBI-rE-6OS" secondAttribute="bottom" id="ZU1-ui-3IV"/>
@@ -1686,12 +1623,10 @@
                     </navigationItem>
                     <nil key="simulatedBottomBarMetrics"/>
                     <connections>
-                        <outlet property="activityIndicator" destination="Z8N-fR-DNu" id="11P-Ev-ygT"/>
                         <outlet property="from" destination="LHo-tX-xbs" id="Uet-uK-lwA"/>
                         <outlet property="image" destination="UPJ-TR-JwN" id="Byj-Ma-Knn"/>
                         <outlet property="imageActivity" destination="Yry-Js-mZI" id="026-c8-d70"/>
                         <outlet property="job" destination="nj8-Kd-kbA" id="U4t-Ay-9Xa"/>
-                        <outlet property="mainView" destination="Rrb-6A-csV" id="Bmv-Yv-zQK"/>
                         <outlet property="messageInput" destination="d7X-nK-QFJ" id="UYg-rj-khD"/>
                         <outlet property="messages" destination="gSe-xC-hKC" id="FAv-Ix-sfF"/>
                         <outlet property="scrollView" destination="UBI-rE-6OS" id="MDV-tL-We5"/>
@@ -1722,9 +1657,6 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="D9s-uY-8B0">
-                                <rect key="frame" x="290" y="290" width="20" height="20"/>
-                            </activityIndicatorView>
                             <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="background_logo" translatesAutoresizingMaskIntoConstraints="NO" id="fAt-Kx-x6J">
                                 <rect key="frame" x="60" y="60" width="480" height="480"/>
                             </imageView>
@@ -1969,12 +1901,10 @@ Finish your pitch confidently by saying something like, “Thank you and I look 
                             <constraint firstItem="9iR-62-35b" firstAttribute="leading" secondItem="R4A-pn-hYU" secondAttribute="leading" id="3Gj-br-OLq"/>
                             <constraint firstItem="9iR-62-35b" firstAttribute="top" secondItem="96X-sK-qiZ" secondAttribute="bottom" id="E5x-Xe-cP6"/>
                             <constraint firstAttribute="trailing" secondItem="9iR-62-35b" secondAttribute="trailing" id="Fik-9Z-a5z"/>
-                            <constraint firstItem="D9s-uY-8B0" firstAttribute="centerX" secondItem="R4A-pn-hYU" secondAttribute="centerX" id="LQ8-Tr-hQH"/>
                             <constraint firstItem="fAt-Kx-x6J" firstAttribute="height" secondItem="R4A-pn-hYU" secondAttribute="height" multiplier="0.8" id="MMd-UC-6ld"/>
                             <constraint firstItem="2gP-9d-3ep" firstAttribute="leading" secondItem="R4A-pn-hYU" secondAttribute="leadingMargin" constant="-20" id="PWm-PU-RKN"/>
                             <constraint firstItem="fAt-Kx-x6J" firstAttribute="centerX" secondItem="R4A-pn-hYU" secondAttribute="centerX" id="Ppm-tJ-mIB"/>
                             <constraint firstAttribute="trailingMargin" secondItem="2gP-9d-3ep" secondAttribute="trailing" constant="-20" id="Sni-hN-xR9"/>
-                            <constraint firstItem="D9s-uY-8B0" firstAttribute="centerY" secondItem="R4A-pn-hYU" secondAttribute="centerY" id="TXU-ty-mMF"/>
                             <constraint firstItem="fAt-Kx-x6J" firstAttribute="width" secondItem="R4A-pn-hYU" secondAttribute="width" multiplier="0.8" id="U6R-KF-ndy"/>
                             <constraint firstItem="D0E-Dw-Jzs" firstAttribute="top" secondItem="2gP-9d-3ep" secondAttribute="bottom" id="Z4Z-9V-hIX"/>
                             <constraint firstItem="2gP-9d-3ep" firstAttribute="top" secondItem="96X-sK-qiZ" secondAttribute="bottom" id="lId-wS-0Uv"/>
@@ -1986,13 +1916,11 @@ Finish your pitch confidently by saying something like, “Thank you and I look 
                     <navigationItem key="navigationItem" title="Record Pitch" id="hSm-cR-BCN"/>
                     <nil key="simulatedBottomBarMetrics"/>
                     <connections>
-                        <outlet property="activityIndicator" destination="D9s-uY-8B0" id="hPs-jx-mFW"/>
                         <outlet property="image" destination="Gls-FS-6cB" id="yeo-O3-JfW"/>
                         <outlet property="imageActivity" destination="O2F-f4-6uO" id="azi-nY-2Cf"/>
                         <outlet property="lblProcessing" destination="DV0-Lf-bxa" id="3so-T9-lGE"/>
                         <outlet property="lblUploading" destination="3iz-Lv-QZE" id="hlx-qr-wsT"/>
                         <outlet property="loadingBar" destination="xnn-qL-Xyd" id="78c-p0-Zq0"/>
-                        <outlet property="mainView" destination="P4C-g8-IHW" id="ntD-cU-QLy"/>
                         <outlet property="noRecording" destination="ysV-dm-iWu" id="jLH-Sb-AkP"/>
                         <outlet property="playOverlay" destination="ACW-EH-Kde" id="ixv-Ja-XEu"/>
                         <outlet property="popupView" destination="2gP-9d-3ep" id="B76-gA-9Jy"/>
@@ -2023,9 +1951,6 @@ Finish your pitch confidently by saying something like, “Thank you and I look 
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="2Fe-MV-2gY">
-                                <rect key="frame" x="290" y="290" width="20" height="20"/>
-                            </activityIndicatorView>
                             <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="background_logo" translatesAutoresizingMaskIntoConstraints="NO" id="rSV-Ku-SZN">
                                 <rect key="frame" x="60" y="60" width="480" height="480"/>
                             </imageView>
@@ -2058,9 +1983,7 @@ Finish your pitch confidently by saying something like, “Thank you and I look 
                         <color key="backgroundColor" red="0.87843137250000003" green="0.87843137250000003" blue="0.87843137250000003" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
                             <constraint firstItem="rSV-Ku-SZN" firstAttribute="height" secondItem="bLs-Oj-HP9" secondAttribute="height" multiplier="0.8" id="0jD-f9-Lar"/>
-                            <constraint firstItem="2Fe-MV-2gY" firstAttribute="centerX" secondItem="bLs-Oj-HP9" secondAttribute="centerX" id="8kg-pb-4Mc"/>
                             <constraint firstItem="rSV-Ku-SZN" firstAttribute="centerY" secondItem="bLs-Oj-HP9" secondAttribute="centerY" id="C8j-Nj-UIZ"/>
-                            <constraint firstItem="2Fe-MV-2gY" firstAttribute="centerY" secondItem="bLs-Oj-HP9" secondAttribute="centerY" id="GKA-XO-aFe"/>
                             <constraint firstAttribute="bottomMargin" secondItem="aop-Tu-3KM" secondAttribute="bottom" id="LX1-d6-oea"/>
                             <constraint firstItem="FyV-gm-Oqs" firstAttribute="width" secondItem="bLs-Oj-HP9" secondAttribute="width" id="XOM-IA-1CL"/>
                             <constraint firstItem="rSV-Ku-SZN" firstAttribute="centerX" secondItem="bLs-Oj-HP9" secondAttribute="centerX" id="bQ1-4r-vFB"/>
@@ -2074,9 +1997,7 @@ Finish your pitch confidently by saying something like, “Thank you and I look 
                         <barButtonItem key="backBarButtonItem" title="Cancel" id="KKF-O5-jVC"/>
                     </navigationItem>
                     <connections>
-                        <outlet property="activityIndicator" destination="2Fe-MV-2gY" id="Lv1-jY-Rlh"/>
                         <outlet property="jobSeekerProfile" destination="yCT-pS-xhk" id="cgp-D3-PMh"/>
-                        <outlet property="mainView" destination="FyV-gm-Oqs" id="UFX-l7-LwM"/>
                         <outlet property="scrollView" destination="aop-Tu-3KM" id="u3w-38-4D8"/>
                     </connections>
                 </viewController>
@@ -2096,10 +2017,7 @@ Finish your pitch confidently by saying something like, “Thank you and I look 
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="UwS-ZM-pSZ">
-                                <rect key="frame" x="290" y="290" width="20" height="20"/>
-                            </activityIndicatorView>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="VGO-cM-fkX">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="VGO-cM-fkX">
                                 <rect key="frame" x="300" y="318" width="0.0" height="0.0"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                 <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
@@ -2169,30 +2087,24 @@ Finish your pitch confidently by saying something like, “Thank you and I look 
                         <constraints>
                             <constraint firstAttribute="right" secondItem="IGg-If-W1h" secondAttribute="right" id="0xM-sh-7F8"/>
                             <constraint firstItem="9lQ-Qg-cAx" firstAttribute="width" secondItem="xew-pj-2ZY" secondAttribute="width" id="2a0-nD-hKH"/>
-                            <constraint firstItem="VGO-cM-fkX" firstAttribute="centerX" secondItem="UwS-ZM-pSZ" secondAttribute="centerX" id="AYH-fu-Rh4"/>
                             <constraint firstItem="iqK-o5-4Em" firstAttribute="centerY" secondItem="xew-pj-2ZY" secondAttribute="centerY" id="LRb-lz-TdZ"/>
                             <constraint firstItem="IGg-If-W1h" firstAttribute="top" secondItem="OO0-x8-oUE" secondAttribute="bottom" id="LUf-Cb-vJb"/>
                             <constraint firstAttribute="bottomMargin" secondItem="IGg-If-W1h" secondAttribute="bottom" id="naH-bd-SGB"/>
                             <constraint firstItem="iqK-o5-4Em" firstAttribute="width" secondItem="xew-pj-2ZY" secondAttribute="width" multiplier="0.8" id="p6d-pN-sEu"/>
-                            <constraint firstItem="UwS-ZM-pSZ" firstAttribute="centerY" secondItem="xew-pj-2ZY" secondAttribute="centerY" id="pt1-Ll-jAC"/>
                             <constraint firstItem="iqK-o5-4Em" firstAttribute="centerX" secondItem="xew-pj-2ZY" secondAttribute="centerX" id="sJv-0o-31H"/>
-                            <constraint firstItem="VGO-cM-fkX" firstAttribute="top" secondItem="UwS-ZM-pSZ" secondAttribute="bottom" constant="8" id="tcm-94-4df"/>
                             <constraint firstItem="iqK-o5-4Em" firstAttribute="height" secondItem="xew-pj-2ZY" secondAttribute="height" multiplier="0.8" id="uh4-Fj-E8q"/>
                             <constraint firstItem="IGg-If-W1h" firstAttribute="left" secondItem="xew-pj-2ZY" secondAttribute="left" id="wFx-uQ-yPc"/>
-                            <constraint firstItem="UwS-ZM-pSZ" firstAttribute="centerX" secondItem="xew-pj-2ZY" secondAttribute="centerX" id="yQc-yN-zBa"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Create Profile" id="UYa-dv-sok">
                         <barButtonItem key="backBarButtonItem" title="Cancel" id="icA-NO-uik"/>
                     </navigationItem>
                     <connections>
-                        <outlet property="activityIndicator" destination="UwS-ZM-pSZ" id="gGD-Xy-qDe"/>
                         <outlet property="activityLabel" destination="VGO-cM-fkX" id="yLD-8b-CTW"/>
                         <outlet property="businessEditView" destination="Gdf-eZ-Lww" id="6co-Bt-yCq"/>
                         <outlet property="layoutBusinessHeight0" destination="tJy-AN-wG0" id="LTJ-Yh-3ax"/>
                         <outlet property="layoutLocationHeight0" destination="Vjj-RT-Dqh" id="aVp-cc-3tt"/>
                         <outlet property="locationEditView" destination="8aj-Uv-Oz0" id="BdP-1v-btt"/>
-                        <outlet property="mainView" destination="9lQ-Qg-cAx" id="9ZK-Cy-ibZ"/>
                         <outlet property="saveButton" destination="UiC-F4-qmI" id="wxi-hh-o4U"/>
                         <outlet property="scrollView" destination="IGg-If-W1h" id="c9F-Pp-0HA"/>
                     </connections>
@@ -2213,9 +2125,6 @@ Finish your pitch confidently by saying something like, “Thank you and I look 
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="02n-2N-54E">
-                                <rect key="frame" x="290" y="290" width="20" height="20"/>
-                            </activityIndicatorView>
                             <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="background_logo" translatesAutoresizingMaskIntoConstraints="NO" id="HZM-qv-OxD">
                                 <rect key="frame" x="60" y="60" width="480" height="480"/>
                             </imageView>
@@ -2360,13 +2269,11 @@ Finish your pitch confidently by saying something like, “Thank you and I look 
                             <constraint firstItem="OQ2-WJ-7L1" firstAttribute="top" secondItem="2We-GE-kMn" secondAttribute="bottom" id="2ae-gO-nkV"/>
                             <constraint firstItem="HZM-qv-OxD" firstAttribute="height" secondItem="G4E-jm-1eG" secondAttribute="height" multiplier="0.8" id="9Qv-xl-TUH"/>
                             <constraint firstItem="HZM-qv-OxD" firstAttribute="width" secondItem="G4E-jm-1eG" secondAttribute="width" multiplier="0.8" id="Es5-LS-PDC"/>
-                            <constraint firstItem="02n-2N-54E" firstAttribute="centerY" secondItem="G4E-jm-1eG" secondAttribute="centerY" id="LOA-gN-r2q"/>
                             <constraint firstAttribute="trailing" secondItem="OQ2-WJ-7L1" secondAttribute="trailing" id="T6d-s8-hzf"/>
                             <constraint firstItem="HZM-qv-OxD" firstAttribute="centerY" secondItem="G4E-jm-1eG" secondAttribute="centerY" id="Xq9-Gk-u0c"/>
                             <constraint firstItem="OQ2-WJ-7L1" firstAttribute="leading" secondItem="G4E-jm-1eG" secondAttribute="leading" id="ifM-bp-0LN"/>
                             <constraint firstItem="Cyy-KS-jd6" firstAttribute="top" secondItem="OQ2-WJ-7L1" secondAttribute="bottom" id="ihA-30-dYN"/>
                             <constraint firstItem="HZM-qv-OxD" firstAttribute="centerX" secondItem="G4E-jm-1eG" secondAttribute="centerX" id="xA9-Bg-RMH"/>
-                            <constraint firstItem="02n-2N-54E" firstAttribute="centerX" secondItem="G4E-jm-1eG" secondAttribute="centerX" id="xK5-tq-RfR"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Work Places" id="KTx-Kq-ea9">
@@ -2377,10 +2284,8 @@ Finish your pitch confidently by saying something like, “Thank you and I look 
                         </barButtonItem>
                     </navigationItem>
                     <connections>
-                        <outlet property="activityIndicator" destination="02n-2N-54E" id="dB3-Qp-Geb"/>
                         <outlet property="emptyView" destination="b9X-s9-drt" id="WMK-ch-tEm"/>
                         <outlet property="locations" destination="o1e-hS-lV1" id="VH9-hg-N0v"/>
-                        <outlet property="mainView" destination="OQ2-WJ-7L1" id="k2N-t1-CIw"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dL3-nY-Ltn" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -2399,9 +2304,6 @@ Finish your pitch confidently by saying something like, “Thank you and I look 
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="pwc-ge-F6F">
-                                <rect key="frame" x="290" y="290" width="20" height="20"/>
-                            </activityIndicatorView>
                             <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="background_logo" translatesAutoresizingMaskIntoConstraints="NO" id="Udw-Ea-ZDz">
                                 <rect key="frame" x="60" y="60" width="480" height="480"/>
                             </imageView>
@@ -2549,8 +2451,6 @@ Finish your pitch confidently by saying something like, “Thank you and I look 
                             <constraint firstItem="Udw-Ea-ZDz" firstAttribute="centerY" secondItem="2El-Qv-v3o" secondAttribute="centerY" id="B0J-XO-8s3"/>
                             <constraint firstAttribute="trailing" secondItem="Evn-Qh-aNp" secondAttribute="trailing" id="Gwm-v2-H01"/>
                             <constraint firstItem="ufY-qx-UV3" firstAttribute="top" secondItem="Evn-Qh-aNp" secondAttribute="bottom" id="KMH-gF-KMc"/>
-                            <constraint firstItem="pwc-ge-F6F" firstAttribute="centerX" secondItem="2El-Qv-v3o" secondAttribute="centerX" id="gR3-S5-Eej"/>
-                            <constraint firstItem="pwc-ge-F6F" firstAttribute="centerY" secondItem="2El-Qv-v3o" secondAttribute="centerY" id="hB8-d2-wYA"/>
                             <constraint firstItem="Evn-Qh-aNp" firstAttribute="leading" secondItem="2El-Qv-v3o" secondAttribute="leading" id="zg4-w9-zdT"/>
                         </constraints>
                     </view>
@@ -2562,10 +2462,8 @@ Finish your pitch confidently by saying something like, “Thank you and I look 
                         </barButtonItem>
                     </navigationItem>
                     <connections>
-                        <outlet property="activityIndicator" destination="pwc-ge-F6F" id="NLN-Q9-Ubl"/>
                         <outlet property="emptyView" destination="PzK-ll-UY8" id="CCm-Ih-ZJc"/>
                         <outlet property="jobs" destination="bPP-Ka-jxn" id="6vD-6x-lMT"/>
-                        <outlet property="mainView" destination="Evn-Qh-aNp" id="Ro8-gr-f4i"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dvV-0j-Khl" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -2584,10 +2482,7 @@ Finish your pitch confidently by saying something like, “Thank you and I look 
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="EL0-fg-Rv9">
-                                <rect key="frame" x="290" y="290" width="20" height="20"/>
-                            </activityIndicatorView>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lQf-xg-dgf">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lQf-xg-dgf">
                                 <rect key="frame" x="300" y="318" width="0.0" height="0.0"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                 <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
@@ -2645,15 +2540,11 @@ Finish your pitch confidently by saying something like, “Thank you and I look 
                         <constraints>
                             <constraint firstAttribute="bottomMargin" secondItem="Wni-yN-UtX" secondAttribute="bottom" id="46a-Sn-LW3"/>
                             <constraint firstItem="Wni-yN-UtX" firstAttribute="left" secondItem="yeg-pt-M81" secondAttribute="left" id="7Yv-1S-9Gs"/>
-                            <constraint firstItem="lQf-xg-dgf" firstAttribute="top" secondItem="EL0-fg-Rv9" secondAttribute="bottom" constant="8" id="F91-i5-SCM"/>
                             <constraint firstItem="Wns-i2-Ees" firstAttribute="height" secondItem="yeg-pt-M81" secondAttribute="height" multiplier="0.8" id="OPp-cb-Xhb"/>
                             <constraint firstItem="Wni-yN-UtX" firstAttribute="top" secondItem="H4b-Kt-Xg9" secondAttribute="bottom" id="QmC-vg-MKw"/>
                             <constraint firstItem="Wns-i2-Ees" firstAttribute="centerX" secondItem="yeg-pt-M81" secondAttribute="centerX" id="Vbh-Mh-UBF"/>
                             <constraint firstAttribute="right" secondItem="Wni-yN-UtX" secondAttribute="right" id="X63-Vk-9jc"/>
-                            <constraint firstItem="EL0-fg-Rv9" firstAttribute="centerY" secondItem="yeg-pt-M81" secondAttribute="centerY" id="ZW4-hI-30s"/>
-                            <constraint firstItem="lQf-xg-dgf" firstAttribute="centerX" secondItem="EL0-fg-Rv9" secondAttribute="centerX" id="aBN-0F-vQJ"/>
                             <constraint firstItem="Wns-i2-Ees" firstAttribute="width" secondItem="yeg-pt-M81" secondAttribute="width" multiplier="0.8" id="bnO-gc-BKP"/>
-                            <constraint firstItem="EL0-fg-Rv9" firstAttribute="centerX" secondItem="yeg-pt-M81" secondAttribute="centerX" id="pQH-Ba-yrM"/>
                             <constraint firstItem="bug-Pk-RJ9" firstAttribute="width" secondItem="yeg-pt-M81" secondAttribute="width" id="uZa-u1-rwF"/>
                             <constraint firstItem="Wns-i2-Ees" firstAttribute="centerY" secondItem="yeg-pt-M81" secondAttribute="centerY" id="yfO-WR-VLi"/>
                         </constraints>
@@ -2662,10 +2553,8 @@ Finish your pitch confidently by saying something like, “Thank you and I look 
                         <barButtonItem key="backBarButtonItem" title="Cancel" id="42z-4L-m4L"/>
                     </navigationItem>
                     <connections>
-                        <outlet property="activityIndicator" destination="EL0-fg-Rv9" id="0NL-Kk-nfD"/>
                         <outlet property="activityLabel" destination="lQf-xg-dgf" id="qSV-hu-Ee2"/>
                         <outlet property="jobEditView" destination="mZ6-p2-ZYa" id="7cn-WJ-eD8"/>
-                        <outlet property="mainView" destination="bug-Pk-RJ9" id="KKC-3w-RKP"/>
                         <outlet property="saveButton" destination="fSe-xf-ASQ" id="ZAK-rj-4HS"/>
                         <outlet property="scrollView" destination="Wni-yN-UtX" id="rpM-VW-Grv"/>
                     </connections>
@@ -3155,9 +3044,6 @@ Finish your pitch confidently by saying something like, “Thank you and I look 
                                     <constraint firstAttribute="trailing" secondItem="pZA-qo-UbD" secondAttribute="trailing" id="e9c-lN-OaC"/>
                                 </constraints>
                             </view>
-                            <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="TrX-1L-EKI">
-                                <rect key="frame" x="290" y="290" width="20" height="20"/>
-                            </activityIndicatorView>
                         </subviews>
                         <color key="backgroundColor" red="0.87843137250000003" green="0.87843137250000003" blue="0.87843137250000003" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
@@ -3167,16 +3053,13 @@ Finish your pitch confidently by saying something like, “Thank you and I look 
                             <constraint firstItem="Y4Z-wW-q2R" firstAttribute="width" secondItem="ktZ-Av-shK" secondAttribute="width" multiplier="0.8" id="GFc-no-mIH"/>
                             <constraint firstItem="Y4Z-wW-q2R" firstAttribute="centerX" secondItem="ktZ-Av-shK" secondAttribute="centerX" id="Rn6-KW-SRy"/>
                             <constraint firstItem="eWc-wR-zCs" firstAttribute="top" secondItem="vQt-8g-FKb" secondAttribute="bottom" id="Twz-iv-WMS"/>
-                            <constraint firstItem="TrX-1L-EKI" firstAttribute="centerY" secondItem="ktZ-Av-shK" secondAttribute="centerY" id="WF0-p8-Fmc"/>
                             <constraint firstItem="eWc-wR-zCs" firstAttribute="leading" secondItem="ktZ-Av-shK" secondAttribute="leading" id="d8Y-Vm-tbd"/>
                             <constraint firstAttribute="trailing" secondItem="eWc-wR-zCs" secondAttribute="trailing" id="dIO-a2-IJZ"/>
-                            <constraint firstItem="TrX-1L-EKI" firstAttribute="centerX" secondItem="ktZ-Av-shK" secondAttribute="centerX" id="wVN-8v-SCS"/>
                         </constraints>
                     </view>
                     <toolbarItems/>
                     <navigationItem key="navigationItem" title="View Job" id="tSv-aa-Sd0"/>
                     <connections>
-                        <outlet property="activityIndicator" destination="TrX-1L-EKI" id="8y8-QK-caD"/>
                         <outlet property="descriptionLabel" destination="5Hp-xE-X3K" id="vF1-oh-7OB"/>
                         <outlet property="directionLabel" destination="XfU-mZ-Ihl" id="YmI-3p-UXr"/>
                         <outlet property="emptyButton1" destination="yYD-Ea-h1e" id="E44-xg-aqJ"/>
@@ -3190,7 +3073,6 @@ Finish your pitch confidently by saying something like, “Thank you and I look 
                         <outlet property="leftButton" destination="C32-TY-6Ln" id="ic7-wF-tmA"/>
                         <outlet property="leftIcon" destination="CwO-BB-XhH" id="ySY-xA-Nt4"/>
                         <outlet property="leftTitle" destination="64a-vb-3Mq" id="j45-99-Siu"/>
-                        <outlet property="mainView" destination="eWc-wR-zCs" id="daI-Zu-Ddm"/>
                         <outlet property="nameLabel" destination="tkg-gf-dEG" id="SzT-kQ-lMD"/>
                         <outlet property="playIcon" destination="nSG-6C-2EF" id="5EE-iJ-vqH"/>
                         <outlet property="rightButton" destination="PFy-FF-gPk" id="Yw3-Ww-zuv"/>
@@ -3228,13 +3110,10 @@ Finish your pitch confidently by saying something like, “Thank you and I look 
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="Px2-bU-uU2">
-                                <rect key="frame" x="290" y="290" width="20" height="20"/>
-                            </activityIndicatorView>
                             <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="background_logo" translatesAutoresizingMaskIntoConstraints="NO" id="c4O-MW-ypG">
                                 <rect key="frame" x="60" y="60" width="480" height="480"/>
                             </imageView>
-                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="FVc-9w-QE3">
+                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="FVc-9w-QE3">
                                 <rect key="frame" x="0.0" y="64" width="600" height="536"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="C7m-R3-oLd" userLabel="Content View">
@@ -3418,8 +3297,6 @@ Finish your pitch confidently by saying something like, “Thank you and I look 
                             <constraint firstItem="c4O-MW-ypG" firstAttribute="height" secondItem="UG1-qb-hNz" secondAttribute="height" multiplier="0.8" id="8bU-gE-6Hb"/>
                             <constraint firstItem="c4O-MW-ypG" firstAttribute="centerY" secondItem="UG1-qb-hNz" secondAttribute="centerY" id="AEd-u7-4EI"/>
                             <constraint firstItem="FVc-9w-QE3" firstAttribute="leading" secondItem="UG1-qb-hNz" secondAttribute="leading" id="FVl-zg-DBz"/>
-                            <constraint firstItem="Px2-bU-uU2" firstAttribute="centerY" secondItem="UG1-qb-hNz" secondAttribute="centerY" id="Fww-QR-eX7"/>
-                            <constraint firstItem="Px2-bU-uU2" firstAttribute="centerX" secondItem="UG1-qb-hNz" secondAttribute="centerX" id="IB1-Of-4gR"/>
                             <constraint firstItem="AJd-xi-DLw" firstAttribute="top" secondItem="FVc-9w-QE3" secondAttribute="bottom" id="LXu-tw-P5X"/>
                             <constraint firstItem="C7m-R3-oLd" firstAttribute="width" secondItem="UG1-qb-hNz" secondAttribute="width" id="MRf-LY-t9y"/>
                             <constraint firstItem="c4O-MW-ypG" firstAttribute="centerX" secondItem="UG1-qb-hNz" secondAttribute="centerX" id="PeD-UY-8Na"/>
@@ -3431,7 +3308,6 @@ Finish your pitch confidently by saying something like, “Thank you and I look 
                     <navigationItem key="navigationItem" title="Job Seeker" id="XiQ-LN-XOr"/>
                     <nil key="simulatedBottomBarMetrics"/>
                     <connections>
-                        <outlet property="activityIndicator" destination="Px2-bU-uU2" id="s6K-1Y-Cse"/>
                         <outlet property="attributes" destination="cFF-sk-yxe" id="NHh-YK-GSu"/>
                         <outlet property="contactDetails" destination="nOz-bV-t25" id="GIe-SR-Gen"/>
                         <outlet property="cvButton" destination="ygN-eH-mjV" id="Xfo-uy-ulW"/>
@@ -3440,7 +3316,6 @@ Finish your pitch confidently by saying something like, “Thank you and I look 
                         <outlet property="jobSeekerImage" destination="fJF-Fy-QU1" id="bWR-7F-yGw"/>
                         <outlet property="jobSeekerImageActivity" destination="Yes-eh-prP" id="Vpr-CL-0fx"/>
                         <outlet property="lblReferencesAvailable" destination="YZ6-LP-wZb" id="CTe-8X-tFc"/>
-                        <outlet property="mainView" destination="C7m-R3-oLd" id="rEo-0l-WE2"/>
                         <outlet property="messagesButton" destination="czx-3i-36s" id="8qW-a2-J2J"/>
                         <outlet property="name" destination="AWf-1z-tsB" id="SgD-mx-eDY"/>
                         <outlet property="scrollView" destination="FVc-9w-QE3" id="omd-FM-6nr"/>
@@ -3635,7 +3510,6 @@ Finish your pitch confidently by saying something like, “Thank you and I look 
                     <connections>
                         <outlet property="currentPassError" destination="Mr6-TA-dgB" id="eSi-Xn-hxO"/>
                         <outlet property="currentPassword" destination="yBO-ja-Zbk" id="nmc-gz-VtZ"/>
-                        <outlet property="mainView" destination="p1k-vA-aHV" id="6yp-8q-WMg"/>
                         <outlet property="passError" destination="zVp-fT-Xru" id="JxD-ff-0Qd"/>
                         <outlet property="password1" destination="Po3-8O-sIR" id="R1H-lR-hrl"/>
                         <outlet property="password2" destination="WNt-4I-pln" id="1vG-DM-eYp"/>
@@ -3831,9 +3705,9 @@ Finish your pitch confidently by saying something like, “Thank you and I look 
         <image name="switch_camera" width="48" height="48"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="0vK-0A-u9q"/>
         <segue reference="bLg-hp-djS"/>
-        <segue reference="ZpE-yw-NGD"/>
-        <segue reference="TnE-uG-nR3"/>
+        <segue reference="0vK-0A-u9q"/>
+        <segue reference="wj9-jy-mgT"/>
+        <segue reference="XoM-Rr-ZjD"/>
     </inferredMetricsTieBreakers>
 </document>

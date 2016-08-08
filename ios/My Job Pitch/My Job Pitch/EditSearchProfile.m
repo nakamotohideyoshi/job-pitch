@@ -27,18 +27,18 @@
     [jobSeekerSearchProfile setNavigationController:self.navigationController];
     
     if (self.profileId) {
-        [self showProgress:true];
+        [SVProgressHUD show];
         [[self appDelegate].api loadJobProfileWithId:self.profileId
                                              success:^(Profile *profile) {
                                                  myProfile = profile;
                                                  [jobSeekerSearchProfile load:profile];
-                                                 [self showProgress:false];
+                                                 [SVProgressHUD dismiss];
                                              }
                                              failure:^(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors) {
                                                  [self handleErrors:errors message:message];
                                              }];
     } else {
-        [self showProgress:false];
+        [SVProgressHUD dismiss];
         myProfile = [[Profile alloc] init];
         myProfile.jobSeeker = self.appDelegate.user.jobSeeker;
         [jobSeekerSearchProfile load:myProfile];
@@ -89,7 +89,7 @@
     NSLog(@"continue");
     if ([self validate]) {
         [jobSeekerSearchProfile save:myProfile];
-        [self showProgress:true];
+        [SVProgressHUD show];
         [[self appDelegate].api saveJobProfile:myProfile
                                        success:^(Profile *profile) {
                                            [self clearErrors];
@@ -97,7 +97,6 @@
                                        }
                                        failure:^(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors) {
                                            [self handleErrors:errors message:message];
-                                           [self showProgress:false];
                                        }
          ];
     }

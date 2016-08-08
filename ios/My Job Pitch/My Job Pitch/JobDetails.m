@@ -30,7 +30,7 @@
     } else {
         self.attributes.text = hours.name;
     }
-    [self showProgress:false];
+    //[SVProgressHUD dismiss];
     self.jobBusinessLocation.text = [NSString stringWithFormat:@"%@: %@", business.name, location.name];
     self.jobDescription.text = self.job.desc;
     self.locationName.text = location.name;

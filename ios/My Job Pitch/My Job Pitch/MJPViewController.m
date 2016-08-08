@@ -20,19 +20,6 @@
     return (AppDelegate *)[[UIApplication sharedApplication] delegate];
 }
 
-- (void)showProgress:(BOOL)showProgress
-{
-    if (showProgress) {
-        mainView.hidden = YES;
-        activityIndicator.hidden = NO;
-        [activityIndicator startAnimating];
-    } else {
-        mainView.hidden = NO;
-        activityIndicator.hidden = YES;
-        [activityIndicator stopAnimating];
-    }
-}
-
 - (NSArray*) getRequiredFields
 {
     return @[];

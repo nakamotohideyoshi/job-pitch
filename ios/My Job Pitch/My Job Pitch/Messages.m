@@ -30,17 +30,15 @@
 
 -(void)viewWillAppear:(BOOL)animated
 {
-    [self showProgress:true];
+    [SVProgressHUD show];
     [self.appDelegate.api loadApplications:^(NSArray *loadedApplications) {
-        [self showProgress:false];
+        [SVProgressHUD dismiss];
         self->applications = loadedApplications;
         [self.messages reloadData];
     } failure:^(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors) {
-        [[[UIAlertView alloc] initWithTitle:@"Error"
-                                    message:@"Error loading data"
-                                   delegate:self
-                          cancelButtonTitle:@"Okay"
-                          otherButtonTitles:nil] show];
+        [MyAlertController showError:@"Error loading data" callback:^{
+            [self.navigationController popViewControllerAnimated:true];
+        }];
     }];
 }
 
@@ -106,12 +104,6 @@
         MessageThread *messageThreadView = [segue destinationViewController];
         Application *selectedApplication = [applications objectAtIndex:self.messages.indexPathForSelectedRow.row];
         [messageThreadView setApplication:selectedApplication];
-    }
-}
-
-- (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex {
-    if (buttonIndex == 1) {
-        [self.navigationController popViewControllerAnimated:true];
     }
 }
 

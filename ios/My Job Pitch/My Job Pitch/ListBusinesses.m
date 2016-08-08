@@ -29,14 +29,13 @@
 }
 
 -(void)viewWillAppear:(BOOL)animated {
-    [self showProgress:true];
+    [SVProgressHUD show];
     [self.appDelegate.api loadBusinesses:^(NSArray *businesses) {
-        [self showProgress:false];
+        [SVProgressHUD dismiss];
         data = (NSMutableArray*)businesses;
         [self.businesses reloadData];
     } failure:^(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors) {
-        [MyAlertController title:@"Error" message:@"Error loading data"
-                              ok:@"Okay" okCallback:nil cancel:nil cancelCallback:nil];
+        [MyAlertController showError:@"Error loading data" callback:nil];
     }];
 }
 
@@ -81,15 +80,14 @@
         Business *business = [self->data objectAtIndex:editRow];
         NSString *msg = [NSString stringWithFormat:@"Are you sure you want to delete %@", business.name];
         [MyAlertController title:@"Confirm" message:msg ok:@"Delete" okCallback:^{
-            [self showProgress:true];
+            [SVProgressHUD show];
             [self.appDelegate.api deleteBusiness:business
                                          success:^(void) {
-                                             [self showProgress:false];
+                                             [SVProgressHUD dismiss];
                                              [self->data removeObject:business];
                                              [self.businesses reloadData];
                                          } failure:^(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors) {
-                                             [MyAlertController title:@"Error" message:@"Error deleting data"
-                                                                   ok:@"Okay" okCallback:nil cancel:nil cancelCallback:nil];
+                                             [MyAlertController showError:@"Error deleting data" callback:nil];
                                          }];
             
         } cancel:@"Cancel" cancelCallback:nil];

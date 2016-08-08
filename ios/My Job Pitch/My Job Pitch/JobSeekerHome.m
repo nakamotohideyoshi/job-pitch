@@ -99,7 +99,7 @@ typedef NS_ENUM(NSInteger, EmptyButtonAction) {
 
 - (void)reset
 {
-    [self showProgress:true];
+    [SVProgressHUD show];
     self.jobs = [[NSMutableArray alloc] init];
     self.seen = [[NSMutableArray alloc] init];
     self.job = nil;
@@ -151,14 +151,11 @@ typedef NS_ENUM(NSInteger, EmptyButtonAction) {
              [self.emptyView setHidden:true];
              [self nextCard];
          }
-         [self showProgress:false];
+         [SVProgressHUD dismiss];
      } failure:^(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors) {
-         [[[UIAlertView alloc] initWithTitle:@"Error"
-                                     message:@"Error loading data"
-                                    delegate:self
-                           cancelButtonTitle:@"Okay"
-                           otherButtonTitles:nil] show];
-         [self showProgress:false];
+         [MyAlertController showError:@"Error loading data" callback:^{
+             [self.navigationController popViewControllerAnimated:true];
+         }];
      }];
 }
 
@@ -178,11 +175,9 @@ typedef NS_ENUM(NSInteger, EmptyButtonAction) {
                                     success:^(ApplicationForCreation *application) {
                                         NSLog(@"Application created %@", application);
                                     } failure:^(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors) {
-                                        [[[UIAlertView alloc] initWithTitle:@"Error"
-                                                                    message:@"Error creating application!"
-                                                                   delegate:nil
-                                                          cancelButtonTitle:@"OK"
-                                                          otherButtonTitles:nil] show];
+                                        [MyAlertController showError:@"Error creating data" callback:^{
+                                            [self.navigationController popViewControllerAnimated:true];
+                                        }];
                                     }];
     [self.swipeView swipeLeft:^{
         [self nextCard];
@@ -228,24 +223,15 @@ typedef NS_ENUM(NSInteger, EmptyButtonAction) {
 - (void)performActivateProfile
 {
     self.jobSeeker.active = true;
-    [self showProgress:true];
+    [SVProgressHUD show];
     [self.appDelegate.api saveJobSeeker:self.jobSeeker
                                 success:^(JobSeeker *jobSeeker) {
                                     [self reset];
                                 } failure:^(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors) {
-                                    [[[UIAlertView alloc] initWithTitle:@"Error"
-                                                                message:@"Error activating profile"
-                                                               delegate:self
-                                                      cancelButtonTitle:@"Okay"
-                                                      otherButtonTitles:nil] show];
-                                    [self showProgress:false];
+                                    [MyAlertController showError:@"Error activating profile" callback:^{
+                                        [self.navigationController popViewControllerAnimated:true];
+                                    }];
                                 }];
-}
-
-- (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex {
-    if (buttonIndex == 1) {
-        [self.navigationController popViewControllerAnimated:true];
-    }
 }
 
 - (void)dragStarted
@@ -260,7 +246,7 @@ typedef NS_ENUM(NSInteger, EmptyButtonAction) {
         self.directionLabel.text = @"Dismiss";
         self.directionLabel.textColor = [UIColor colorWithRed:0.7 green:0 blue:0 alpha:0.8];
     } else if (distance <= 0) {
-        self.directionLabel.text = @"Connect";
+        self.directionLabel.text = @"Apply";
         self.directionLabel.textColor = [UIColor colorWithRed:0.2 green:0.5 blue:0.1 alpha:0.8];
     }
     CGFloat overlayStrength = MIN(fabs(distance) / 60, 1.0);
@@ -308,11 +294,9 @@ typedef NS_ENUM(NSInteger, EmptyButtonAction) {
          }
      }
      failure:^(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors) {
-         [[[UIAlertView alloc] initWithTitle:@"Error"
-                                     message:@"Error loading jobs"
-                                    delegate:self
-                           cancelButtonTitle:@"Okay"
-                           otherButtonTitles:nil] show];
+         [MyAlertController showError:@"Error loading jobs" callback:^{
+             [self.navigationController popViewControllerAnimated:true];
+         }];
          @synchronized(self) {
              self.loading = false;
              failure();
@@ -346,7 +330,7 @@ typedef NS_ENUM(NSInteger, EmptyButtonAction) {
             self.directionLabel.alpha = 0;
             [self.swipeView nextCard:^{}];
         } else if (self.lastLoad > 0) {
-            [self showProgress:true];
+            [SVProgressHUD show];
         } else {
             [self.emptyLabel setText:@"There are no more jobs that match your profile. You can restart the search to restore all the jobs you\'ve dismissed, or go to the message centre to check the status of your applications."];
             [self.emptyButton1 setHidden:false];
@@ -361,7 +345,7 @@ typedef NS_ENUM(NSInteger, EmptyButtonAction) {
         
         if ([self.jobs count] < 5 && !self.loading && self.lastLoad > 0) {
             [self loadJobs:^{
-                [self showProgress:false];
+                [SVProgressHUD dismiss];
                 if (self.job == nil)
                     [self nextCard];
             } failure:^{}];
@@ -400,14 +384,10 @@ typedef NS_ENUM(NSInteger, EmptyButtonAction) {
     NSArray *menuItems =
     @[
       
-      [KxMenuItem menuItem:@"Messages"
+      [KxMenuItem menuItem:@"Messages/Applications"
                      image:nil
                     target:self
                     action:@selector(performMessages)],
-      [KxMenuItem menuItem:@"Edit Profile"
-                     image:nil
-                    target:self
-                    action:@selector(performEditProfile)],
       [KxMenuItem menuItem:@"Match Settings"
                      image:nil
                     target:self
@@ -416,6 +396,10 @@ typedef NS_ENUM(NSInteger, EmptyButtonAction) {
                      image:nil
                     target:self
                     action:@selector(performRecordPitch)],
+      [KxMenuItem menuItem:@"Edit Profile"
+                     image:nil
+                    target:self
+                    action:@selector(performEditProfile)],
       ];
     
     [KxMenu showMenuInView:self.view

@@ -8,6 +8,9 @@ $(function () {
 	//grab business id from url
 	var business_id = QueryString.id;
 
+	// Looking for tokens
+	lookUpForCompany(business_id);
+
 	// Add ID to links
 	$('.link-create-location').attr('href', '/profile/create-location/?id=' + business_id);
 

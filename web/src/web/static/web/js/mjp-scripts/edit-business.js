@@ -5,6 +5,8 @@ $(function () {
 	//grab business id from url
 	var business_id = QueryString.id;
 
+	lookUpForCompany(business_id);
+
 	$('#business').val(business_id);
 
 	var query = {

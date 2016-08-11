@@ -648,8 +648,14 @@ Web App By Reiss Watson
 	display:none;
 }
 
+/*
 .alert{
 	display:none;
+}
+*/
+
+ul.messenger-theme-future .messenger-message{
+	font-size: 18px;
 }
 
 #work_place_details{
@@ -718,6 +724,12 @@ Web App By Reiss Watson
 #header_email {
 	display:inline-block;
 	text-align: right;
+	margin-bottom: 0;
+}
+
+#header-company {
+	text-align: right;
+	margin-top: 0;
 }
 
 #profile .col-md-12 {
@@ -976,6 +988,7 @@ input {
 .formFieldErrorInField{
 	border:#d43f3a 2px solid;
 }
+#companySelect,
 #locationSelect,
 #jobSelect{
 	display:none;

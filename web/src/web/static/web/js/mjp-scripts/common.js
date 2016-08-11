@@ -126,17 +126,16 @@ function connectWithJob(job_id, job_seeker_id) {
 		job: job_id,
 		job_seeker: job_seeker_id,
 		csrftoken: getCookie('csrftoken')
-	})
-		.done(function (data) {
-			//location.reload();
-			$('#viewPitchModal')
-				.find('.modal-body')
-				.html('<div class="row"><div class="col-md-12"><h4 style="text-align: center; font-size:16px;">Thanks for requesting to connect. A message has been sent to the job seeker</h4></div></div><div class="row"><div class="col-md-12" style="text-align:center;"><button style="margin-left:0;" type="button" class="btn btn-custom" data-dismiss="modal" aria-label="Close">Back to List</button></div></row>');
-			$('#job-list-' + job_seeker_id).remove();
-		})
-		.fail(function (data) {
-
-		});
+	}).done(function (data) {
+		log('info','Thanks for requesting to connect. A message has been sent to the job seeker.');
+		log('info','You have spent 1 token!');
+		/*
+		$('#viewPitchModal')
+			.find('.modal-body')
+			.html('<div class="row"><div class="col-md-12"><h4 style="text-align: center; font-size:16px;">Thanks for requesting to connect. A message has been sent to the job seeker</h4></div></div><div class="row"><div class="col-md-12" style="text-align:center;"><button style="margin-left:0;" type="button" class="btn btn-custom" data-dismiss="modal" aria-label="Close">Back to List</button></div></row>');
+		*/
+		$('#job-list-' + job_seeker_id).remove();
+	});
 }
 
 
@@ -200,7 +199,7 @@ function userTypeMenuConfiguration(redirectToProfile) {
 
 }
 
-function formAlert(type, message) {
+/*function formAlert(type, message) {
 	return new Promise(function(resolve, reject) {
 		$('.alert').addClass('alert-' + type);
 		$('.alert').html(message);
@@ -214,6 +213,10 @@ function formAlert(type, message) {
 		resolve();
 	});
 
+}*/
+
+function formAlert(type, message) {
+	return log(type, message);
 }
 
 function putManyAlerts(parentId, messages) {
@@ -430,7 +433,7 @@ function urlExists(url) {
 	return http.status != 404;
 }
 
-function log(alertType, message) {
+/* function log(alertType, message) {
 	var $dataElement = $('#data');
 	var $parent = $dataElement.parent();
 	if (alertType == 'hide') {
@@ -463,6 +466,15 @@ function log(alertType, message) {
 		.html(message)
 		.fadeIn('slow');
 }
+*/
+
+function log(alertType, message){
+	return Messenger().post({
+		message: message,
+		type: alertType
+	});
+}
+
 
 function getTemplate(fullPathTemplate) {
 
@@ -571,6 +583,16 @@ function populateSelect($select, data, selectedOption) {
 	$select.append(options);
 }
 
+function lookUpForCompany(business_id){
+	return $.get( "/api/user-businesses/"+business_id, {
+		csrftoken: getCookie('csrftoken')
+	}).then(function( company ) {
+		$('.login-email').append($('<h6 id="header-company">'+company.name + ' ('+company.tokens+' tokens)</h6>'));
+		return company;
+	});
+}
+
+
 /* Site wide on-load functions */
 
 $(function () {
@@ -586,6 +608,12 @@ $(function () {
 		} else {
 			userTypeMenuConfiguration(true);
 		}
+	}
+
+	// Config Messenger (Notification Systems)
+	Messenger.options = {
+		extraClasses: 'messenger-fixed messenger-on-bottom messenger-on-right',
+		theme: 'future'
 	}
 
 	//Form submit code - Login
@@ -672,4 +700,5 @@ $(function () {
 	$('#viewPitchModal').on('hidden.bs.modal', function () {
 		$('#viewPitchModal').find('.modal-body').html('<div class="col-md-12" id="pitchViewer"></div><div class="col-md-offset-4 col-md-4"><a class="btn btn-custom" id="applyButtonModal" style="display:none; margin-left: 18px;margin-top: 20px;">Connect</a></div>');
 	});
+
 });

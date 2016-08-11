@@ -1,6 +1,7 @@
 <tr data-business-id="<%= id %>" class="business-list" id="business-list-<%= id %>">
 	<td onclick="goToLocation('<%= id %>');"><%= name %></td>
 	<td onclick="goToLocation('<%= id %>');"><img width="80px" src="<%= imageThumb %>"></td>
+	<td onclick="goToLocation('<%= id %>');"><%= tokens %></td>
 	<td onclick="goToLocation('<%= id %>');"><%= locations.length %></td>
 	<td>
 		<a class="find-staff-btn btn btn-primary" href="/profile/edit-business/?id=<%= id %>" data-original-title="Edit ..."><i class="fa fa-pencil"></i></a>

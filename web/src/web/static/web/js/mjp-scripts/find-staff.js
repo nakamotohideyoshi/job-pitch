@@ -18,6 +18,8 @@ function populateCompanies(query, companyid) {
 			$('#company').trigger('change');
 			$('#company').attr('disabled', true)
 		}
+
+		$('#companySelect').show();
 	});
 }
 
@@ -73,6 +75,7 @@ $(function () {
 	if (job_id !== undefined) {
 		findStaffForJob(job_id, query);
 	} else {
+
 		populateCompanies(query);
 
 		$("#company").change(function () {

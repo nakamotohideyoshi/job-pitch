@@ -18,6 +18,7 @@ $(function () {
 		else
 			src = "/static/web/images/no_image_available.png";
 		$('#currentLogo').attr('src', src).show();
+		$('.login-email').append($('<h6 id="header-company">'+data.name + ' ('+data.tokens+' tokens)</h6>'));
 	});
 
 	$('#work_place_details').submit(function (event) {

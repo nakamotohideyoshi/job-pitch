@@ -47,4 +47,14 @@
             android:layout_height="fill_parent" />
 
     </LinearLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:id="@+id/tokensLabel"
+        android:gravity="right"
+        android:layout_gravity="bottom"
+        android:textSize="12sp" />
+
 </FrameLayout>

@@ -25,7 +25,8 @@
         android:orientation="vertical"
         android:gravity="center_horizontal"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_marginBottom="12sp">
         <ListView
             android:layout_width="fill_parent"
             android:visibility="gone"
@@ -57,4 +58,14 @@
                 android:layout_height="wrap_content" />
         </LinearLayout>
     </LinearLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:id="@+id/tokensLabel"
+        android:gravity="right"
+        android:layout_gravity="bottom"
+        android:textSize="12sp" />
+
 </FrameLayout>

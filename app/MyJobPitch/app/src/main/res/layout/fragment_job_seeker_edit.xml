@@ -145,7 +145,7 @@
 
         <TextView
             tools:text="Not set"
-            android:id="@+id/textView3"
+            android:id="@+id/cvFileName"
             android:textSize="@dimen/abc_text_size_medium_material"
             android:paddingRight="10dp"
             android:layout_width="wrap_content"
@@ -154,7 +154,7 @@
             android:text="@string/no_file_chosen" />
 
         <Button
-            android:id="@+id/button"
+            android:id="@+id/uploadCV"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/select" />

@@ -1,6 +1,7 @@
 package com.myjobpitch.activities;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.util.Log;
@@ -162,5 +163,16 @@ public class EditJobSeekerActivity extends MJPProgressActionBarActivity {
     @Override
     public View getMainView() {
         return mEditJobSeekerView;
+    }
+
+
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == RESULT_OK) {
+            Uri uri = data.getData();
+            String src = uri.getPath();
+            String[] tempStr = src.split("/");
+            mJobSeekerEditFragment.cvFileName.setText(tempStr[tempStr.length-1]);
+        }
+
     }
 }

@@ -144,11 +144,13 @@ public class BusinessListActivity extends MJPProgressActionBarActivity  {
             TextView titleView = (TextView) rowView.findViewById(R.id.title);
             titleView.setText(business.getName());
             TextView subtitleView = (TextView) rowView.findViewById(R.id.subtiltle);
+            TextView tokensLabel = (TextView) rowView.findViewById(R.id.tokensLabel);
             int locationCount = business.getLocations().size();
             if (locationCount == 1)
                 subtitleView.setText("Includes " + locationCount + " location");
             else
                 subtitleView.setText("Includes " + locationCount + " locations");
+            tokensLabel.setText(business.getTokens() + " tokens");
             return rowView;
         }
     }

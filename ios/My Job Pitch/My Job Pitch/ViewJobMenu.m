@@ -12,9 +12,14 @@
 
 @interface ViewJobMenu ()
 
+@property (weak, nonatomic) IBOutlet UILabel *tokensLabel;
 @end
 
 @implementation ViewJobMenu
+
+-(void)viewWillAppear:(BOOL)animated {
+    self.tokensLabel.text = [NSString stringWithFormat:@"%d tokens", self.job.locationData.businessData.tokens.intValue];
+}
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {

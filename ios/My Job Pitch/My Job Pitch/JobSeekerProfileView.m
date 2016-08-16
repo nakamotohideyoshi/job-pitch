@@ -9,8 +9,9 @@
 #import "JobSeekerProfileView.h"
 #import "Sex.h"
 #import "Nationality.h"
+#import "DropboxBrowserViewController.h"
 
-@interface JobSeekerProfileView ()
+@interface JobSeekerProfileView () <DropboxBrowserDelegate>
 
 @property (nonatomic, nonnull) NSArray *sexes;
 @property (nonatomic, nonnull) NSArray *nationalities;
@@ -171,6 +172,34 @@
 
 - (IBAction)fileSelect:(id)sender {
     
+//    MyAlertController *alertController = [MyAlertController alertControllerWithTitle:@"File Select" message:nil preferredStyle:UIAlertControllerStyleActionSheet];
+//    
+//    UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:nil];
+//    [alertController addAction:cancelAction];
+//    
+//    UIAlertAction *googleAction = [UIAlertAction actionWithTitle:@"from Google Drive" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+//        
+//    }];
+//    [alertController addAction:googleAction];
+//    
+//    UIAlertAction *dropboxAction = [UIAlertAction actionWithTitle:@"from DropBox" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+    
+        UIViewController *viewController = [AppHelper getCurrentVC];
+        DropboxBrowserViewController *browser = [viewController.storyboard instantiateViewControllerWithIdentifier:@"DropboxBrowser"];
+        browser.rootViewDelegate = self;
+        UINavigationController *modalDialog = [[UINavigationController alloc]initWithRootViewController:browser];
+        [viewController presentViewController:modalDialog animated:YES completion:nil];
+        
+//    }];
+//    [alertController addAction:dropboxAction];
+//    
+//    [[AppHelper getCurrentVC] presentViewController:alertController animated:YES completion:nil];
+    
+}
+
+- (void)dropboxBrowser:(DropboxBrowserViewController *)browser didDownloadFile:(NSString *)fileName didOverwriteFile:(BOOL)isLocalFileOverwritten {
+    self.cvFileName.text = fileName;
+    [browser removeDropboxBrowser];
 }
 
 - (IBAction)changedTickBox:(id)sender {

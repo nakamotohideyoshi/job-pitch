@@ -61,6 +61,7 @@
         cell.imageActivity.hidden = true;
     }
     cell.subtitle.text = [NSString stringWithFormat:@"Includes %u %@", business.locations.count, (business.locations.count == 1?@"location":@"locations")];
+    cell.tokensLabel.text = [NSString stringWithFormat:@"%d tokens", business.tokens.intValue];
     cell.backgroundColor = [UIColor clearColor];
     cell.selectedBackgroundView = [[UIView alloc] init];
     cell.selectedBackgroundView.backgroundColor = [UIColor colorWithWhite:1.0 alpha:0.5];

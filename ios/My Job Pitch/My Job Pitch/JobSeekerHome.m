@@ -42,6 +42,7 @@ typedef NS_ENUM(NSInteger, EmptyButtonAction) {
     self.swipeView.delegate = self;
     self.emptyButton1Action = EmptyButtonActionNone;
     self.emptyButton2Action = EmptyButtonActionNone;
+    [self.swipeContainer setHidden:true];
 }
 
 - (IBAction)cardTapAction:(id)sender

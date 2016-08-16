@@ -22,7 +22,8 @@
     <RelativeLayout
         android:id="@+id/job_seeker_search"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_marginBottom="12sp">
 
         <ProgressBar android:id="@+id/background_progress"
             style="?android:attr/progressBarStyleSmall"
@@ -197,5 +198,16 @@
         </LinearLayout>
 
     </RelativeLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:id="@+id/tokensLabel"
+        android:gravity="right"
+        android:layout_gravity="bottom"
+        android:textSize="12sp"
+        android:layout_marginRight="15sp"
+        android:layout_marginLeft="15sp" />
 
 </FrameLayout>

@@ -50,5 +50,6 @@ typedef NS_ENUM(NSInteger, JobViewMode) {
 
 @property (weak, nonatomic) IBOutlet UIButton *shortlistButton;
 @property (weak, nonatomic) IBOutlet UIImageView *shortlistButtonIcon;
+@property (weak, nonatomic) IBOutlet UILabel *tokensLabel;
 
 @end

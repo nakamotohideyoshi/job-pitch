@@ -203,6 +203,7 @@ public class JobListActivity extends MJPProgressActionBarActivity  {
                     Intent intent = new Intent(JobListActivity.this, JobModeChoiceActivity.class);
                     intent.putExtra(JobModeChoiceActivity.JOB_ID, job.getId());
                     intent.putExtra(JobModeChoiceActivity.LOCATION_ID, job.getLocation());
+                    intent.putExtra(JobModeChoiceActivity.TOKENS, job.getLocation_data().getBusiness_data().getTokens());
                     startActivity(intent);
                 } else {
                     new AlertDialog.Builder(JobListActivity.this)
@@ -257,6 +258,9 @@ public class JobListActivity extends MJPProgressActionBarActivity  {
                 mLocation = result;
                 getSupportActionBar().setTitle(mLocation.getName());
                 getSupportActionBar().setSubtitle(getString(R.string.jobs));
+
+                ((TextView)findViewById(R.id.tokensLabel)).setText(mLocation.getBusiness_data().getTokens() + " tokens");
+
                 if (completeTasks.incrementAndGet() == 2)
                     showProgress(false);
             }

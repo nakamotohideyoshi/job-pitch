@@ -1,41 +1,23 @@
 package com.myjobpitch.activities;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.myjobpitch.MJPApplication;
 import com.myjobpitch.R;
 import com.myjobpitch.api.MJPApi;
 import com.myjobpitch.api.MJPApiException;
-import com.myjobpitch.api.data.JobSeeker;
-import com.myjobpitch.fragments.JobSeekerEditFragment;
-import com.myjobpitch.tasks.APITask;
-import com.myjobpitch.tasks.APITaskListener;
-import com.myjobpitch.tasks.CreateReadUpdateAPITaskListener;
-import com.myjobpitch.tasks.ReadJobSeekerTask;
-import com.myjobpitch.tasks.jobseeker.CreateUpdateJobSeekerTask;
 
 import org.springframework.web.client.RestClientException;
-import org.w3c.dom.Text;
-
-import java.io.IOException;
-import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
 
 public class ChangePasswordActivity extends MJPProgressActionBarActivity {
 

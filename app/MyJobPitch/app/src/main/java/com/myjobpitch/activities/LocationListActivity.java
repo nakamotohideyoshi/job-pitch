@@ -218,6 +218,9 @@ public class LocationListActivity extends MJPProgressActionBarActivity  {
                 business = result;
                 getSupportActionBar().setTitle(business.getName());
                 getSupportActionBar().setSubtitle(getString(R.string.locations));
+
+                ((TextView)findViewById(R.id.tokensLabel)).setText(business.getTokens() + " tokens");
+
                 ReadUserLocationsTask readLocations = new ReadUserLocationsTask(getApi(), business_id);
                 readLocations.addListener(new CreateReadUpdateAPITaskListener<List<Location>>() {
                     @Override

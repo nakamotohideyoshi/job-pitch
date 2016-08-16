@@ -18,6 +18,7 @@
 
 @property (weak, nonatomic) IBOutlet UITableView *locations;
 @property (weak, nonatomic) IBOutlet UIView *emptyView;
+@property (weak, nonatomic) IBOutlet UILabel *tokensLabel;
 
 @end
 
@@ -41,6 +42,7 @@
             [self.locations setHidden:true];
             [self.emptyView setHidden:false];
         }
+        self.tokensLabel.text = [NSString stringWithFormat:@"%d tokens", self.business.tokens.intValue];
         [SVProgressHUD dismiss];
     } failure:^(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors) {
         [MyAlertController showError:@"Error loading data" callback:nil];

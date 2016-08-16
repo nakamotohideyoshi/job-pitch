@@ -535,6 +535,9 @@ public class JobActivity extends MJPProgressActionBarActivity {
             public void onSuccess(Job result) {
                 job = result;
                 getSupportActionBar().setTitle(job.getTitle());
+
+                ((TextView)findViewById(R.id.tokensLabel)).setText(job.getLocation_data().getBusiness_data().getTokens() + " tokens");
+
                 loadDataPreserveSeenAndAppendCards();
             }
 
@@ -799,6 +802,7 @@ public class JobActivity extends MJPProgressActionBarActivity {
                     intent = NavUtils.getParentActivityIntent(JobActivity.this);
                     intent.putExtra(JobModeChoiceActivity.JOB_ID, job.getId());
                     intent.putExtra(JobModeChoiceActivity.LOCATION_ID, job.getLocation());
+                    intent.putExtra(JobModeChoiceActivity.TOKENS, job.getLocation_data().getBusiness_data().getTokens());
                     startActivity(intent);
                 }
                 return true;

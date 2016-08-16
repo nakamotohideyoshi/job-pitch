@@ -63,6 +63,9 @@
 		CEE52CF51C06550500881648 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CEE52CF41C06550500881648 /* UIKit.framework */; };
 		CEE52CF71C06550E00881648 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CEE52CF61C06550E00881648 /* Foundation.framework */; };
 		D71EAC6B1D33D04800E32ED1 /* KxMenu.m in Sources */ = {isa = PBXBuildFile; fileRef = D71EAC6A1D33D04800E32ED1 /* KxMenu.m */; };
+		D72756161D63AA5F0055943A /* DropboxSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D72756151D63AA5F0055943A /* DropboxSDK.framework */; };
+		D727561E1D63ABD80055943A /* DropboxMedia.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D727561D1D63ABD80055943A /* DropboxMedia.xcassets */; };
+		D72756251D63AFDD0055943A /* DropboxBrowserViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D72756241D63AFDD0055943A /* DropboxBrowserViewController.m */; };
 		D74588EB1D48771800A85472 /* LockableNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = D74588EA1D48771800A85472 /* LockableNavigationController.m */; };
 		D74588EE1D48772E00A85472 /* API.m in Sources */ = {isa = PBXBuildFile; fileRef = D74588ED1D48772E00A85472 /* API.m */; };
 		D74589251D48773B00A85472 /* Application.m in Sources */ = {isa = PBXBuildFile; fileRef = D74588F01D48773B00A85472 /* Application.m */; };
@@ -210,6 +213,13 @@
 		CFA3EA2BF05430C3C9894AA5 /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
 		D71EAC691D33D04800E32ED1 /* KxMenu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KxMenu.h; sourceTree = "<group>"; };
 		D71EAC6A1D33D04800E32ED1 /* KxMenu.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KxMenu.m; sourceTree = "<group>"; };
+		D72756151D63AA5F0055943A /* DropboxSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = DropboxSDK.framework; sourceTree = "<group>"; };
+		D72756171D63AAE20055943A /* AssetsLibrary.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AssetsLibrary.framework; path = System/Library/Frameworks/AssetsLibrary.framework; sourceTree = SDKROOT; };
+		D72756191D63AAF40055943A /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		D727561B1D63AB000055943A /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		D727561D1D63ABD80055943A /* DropboxMedia.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = DropboxMedia.xcassets; sourceTree = "<group>"; };
+		D72756231D63AFDD0055943A /* DropboxBrowserViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DropboxBrowserViewController.h; sourceTree = "<group>"; };
+		D72756241D63AFDD0055943A /* DropboxBrowserViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DropboxBrowserViewController.m; sourceTree = "<group>"; };
 		D74588E91D48771800A85472 /* LockableNavigationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LockableNavigationController.h; sourceTree = "<group>"; };
 		D74588EA1D48771800A85472 /* LockableNavigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LockableNavigationController.m; sourceTree = "<group>"; };
 		D74588EC1D48772E00A85472 /* API.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = API.h; path = API/API.h; sourceTree = "<group>"; };
@@ -289,6 +299,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D72756161D63AA5F0055943A /* DropboxSDK.framework in Frameworks */,
 				CE8AB0201C6038750004F021 /* AVFoundation.framework in Frameworks */,
 				CE8AB0211C6038750004F021 /* AVKit.framework in Frameworks */,
 				CE8AAFFE1C5AD62E0004F021 /* CoreLocation.framework in Frameworks */,
@@ -337,8 +348,6 @@
 			isa = PBXGroup;
 			children = (
 				CEE52CFB1C06624600881648 /* API */,
-				D7E94F881D179D6700866604 /* MyCameraViewController.h */,
-				D7E94F891D179D6700866604 /* MyCameraViewController.m */,
 				D71EAC691D33D04800E32ED1 /* KxMenu.h */,
 				D71EAC6A1D33D04800E32ED1 /* KxMenu.m */,
 				D7E94F8A1D179D6700866604 /* MyCameraPreviewView.h */,
@@ -417,7 +426,6 @@
 				CEE04AA51C10EE2000697620 /* ErrorTextField.h */,
 				CEE04AA61C10EE2000697620 /* ErrorTextField.m */,
 				CEE04AA31C10EAD900697620 /* ErrorTextField.xib */,
-				CE6FD3461C01F9BC001A04C3 /* Assets.xcassets */,
 				CE6FD3481C01F9BC001A04C3 /* LaunchScreen.storyboard */,
 				CE6FD34B1C01F9BC001A04C3 /* Info.plist */,
 				CE45AEC21C0B41380092AB75 /* MJPViewController.h */,
@@ -428,6 +436,12 @@
 				CE86847D1C0E570300D4B6C7 /* ScrollingViewController.m */,
 				D7FA423B1D0EB2D200E93C66 /* MyAlertController.h */,
 				D7FA423C1D0EB2D200E93C66 /* MyAlertController.m */,
+				D7E94F881D179D6700866604 /* MyCameraViewController.h */,
+				D7E94F891D179D6700866604 /* MyCameraViewController.m */,
+				D72756231D63AFDD0055943A /* DropboxBrowserViewController.h */,
+				D72756241D63AFDD0055943A /* DropboxBrowserViewController.m */,
+				D727561D1D63ABD80055943A /* DropboxMedia.xcassets */,
+				CE6FD3461C01F9BC001A04C3 /* Assets.xcassets */,
 				CE6FD33A1C01F9BB001A04C3 /* Supporting Files */,
 			);
 			path = "My Job Pitch";
@@ -530,6 +544,10 @@
 		FFB8B70042B1AAA85F696FCB /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				D727561B1D63AB000055943A /* CoreGraphics.framework */,
+				D72756191D63AAF40055943A /* QuartzCore.framework */,
+				D72756171D63AAE20055943A /* AssetsLibrary.framework */,
+				D72756151D63AA5F0055943A /* DropboxSDK.framework */,
 				CE8AB01E1C6038750004F021 /* AVFoundation.framework */,
 				CE8AB01F1C6038750004F021 /* AVKit.framework */,
 				CE8AAFFD1C5AD62E0004F021 /* CoreLocation.framework */,
@@ -640,6 +658,7 @@
 				CE8AAFF91C59A2DE0004F021 /* LocationMap.xib in Resources */,
 				CE6FD3451C01F9BB001A04C3 /* Main.storyboard in Resources */,
 				CEE04AA41C10EAD900697620 /* ErrorTextField.xib in Resources */,
+				D727561E1D63ABD80055943A /* DropboxMedia.xcassets in Resources */,
 				CE8AAFE71C5848490004F021 /* JobSeekerSearchProfileView.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -809,6 +828,7 @@
 				D74588EB1D48771800A85472 /* LockableNavigationController.m in Sources */,
 				CE86847E1C0E570300D4B6C7 /* ScrollingViewController.m in Sources */,
 				D745893B1D48773B00A85472 /* RegisterRequest.m in Sources */,
+				D72756251D63AFDD0055943A /* DropboxBrowserViewController.m in Sources */,
 				CE8AB00B1C5EA9F60004F021 /* MessageListCell.m in Sources */,
 				D745893A1D48773B00A85472 /* Profile.m in Sources */,
 				D74589291D48773B00A85472 /* Contract.m in Sources */,
@@ -954,8 +974,13 @@
 			baseConfigurationReference = CFA3EA2BF05430C3C9894AA5 /* Pods.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_IDENTITY = "iPhone Developer: Mike Christopherson (8QQAR73YPE)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Mike Christopherson (8QQAR73YPE)";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Mike Christopherson (YY7DF42BJ9)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Mike Christopherson (YY7DF42BJ9)";
+				ENABLE_BITCODE = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
 				GCC_PREFIX_HEADER = "My Job Pitch/PrefixHeader.pch";
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -972,7 +997,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.myjobpitch.pitch;
 				PRODUCT_NAME = MyJobPitch;
-				PROVISIONING_PROFILE = "9fcf717c-fcc5-400b-b610-e0fdc047e519";
+				PROVISIONING_PROFILE = "d8df9a97-736b-4201-bf55-aa36f57ce71b";
 			};
 			name = Debug;
 		};
@@ -981,8 +1006,13 @@
 			baseConfigurationReference = B0F6E4D8F0045A1E43790385 /* Pods.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_IDENTITY = "iPhone Developer: Mike Christopherson (8QQAR73YPE)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Mike Christopherson (8QQAR73YPE)";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Mike Christopherson (YY7DF42BJ9)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Mike Christopherson (YY7DF42BJ9)";
+				ENABLE_BITCODE = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
 				GCC_PREFIX_HEADER = "My Job Pitch/PrefixHeader.pch";
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -999,7 +1029,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.myjobpitch.pitch;
 				PRODUCT_NAME = MyJobPitch;
-				PROVISIONING_PROFILE = "9fcf717c-fcc5-400b-b610-e0fdc047e519";
+				PROVISIONING_PROFILE = "d8df9a97-736b-4201-bf55-aa36f57ce71b";
 			};
 			name = Release;
 		};

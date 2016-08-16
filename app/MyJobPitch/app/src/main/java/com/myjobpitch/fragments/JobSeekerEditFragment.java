@@ -1,5 +1,6 @@
 package com.myjobpitch.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -55,6 +56,8 @@ public class JobSeekerEditFragment extends EditFragment<JobSeeker> {
 
     public Button mSaveButton;
 
+    public TextView cvFileName;
+
     public JobSeekerEditFragment() {
         // Required empty public constructor
     }
@@ -85,6 +88,17 @@ public class JobSeekerEditFragment extends EditFragment<JobSeeker> {
 
         mEmailView.setText(LoginActivity.myEmail);
         mEmailView.setEnabled(false);
+
+        cvFileName = (TextView)view.findViewById(R.id.cvFileName);
+
+        view.findViewById(R.id.uploadCV).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+                intent.setType("*/*");
+                startActivityForResult(Intent.createChooser(intent, "Select File"), 10000);
+            }
+        });
 
         mTickBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -212,4 +226,5 @@ public class JobSeekerEditFragment extends EditFragment<JobSeeker> {
         task.addListener(this);
         return task;
     }
+
 }

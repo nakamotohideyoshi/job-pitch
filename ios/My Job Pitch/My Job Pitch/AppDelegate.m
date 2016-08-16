@@ -14,6 +14,7 @@
 #import "Role.h"
 
 #import <AWSS3/AWSS3.h>
+#import <DropboxSDK/DropboxSDK.h>
 
 @import GoogleMaps;
 
@@ -28,6 +29,9 @@
     _api = [[API alloc] init];
     self.loaded = false;
     [GMSServices provideAPIKey:@"AIzaSyCeseQMdrlh9E5d7DHHHm4GvW7yd8C_sZk"];
+    
+    DBSession *dbSession = [[DBSession alloc] initWithAppKey:@"nak1dgydjvp40gz" appSecret:@"vfzm3llfz2wcdbh" root:kDBRootDropbox];
+    [DBSession setSharedSession:dbSession];
     
     [SVProgressHUD setDefaultStyle:SVProgressHUDStyleCustom];
     [SVProgressHUD setBackgroundLayerColor:[UIColor colorWithRed:0 green:0 blue:0 alpha:0.4]];
@@ -45,6 +49,18 @@
     [AWSS3TransferUtility interceptApplication:application
            handleEventsForBackgroundURLSession:identifier
                              completionHandler:completionHandler];
+}
+
+- (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation {
+    if ([[DBSession sharedSession] handleOpenURL:url]) {
+        if ([[DBSession sharedSession] isLinked]) {
+            NSLog(@"App linked successfully!");
+            // At this point you can start making API calls
+        }
+        return YES;
+    }
+    // Add whatever other url handling code your app requires here
+    return NO;
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application {

@@ -7,6 +7,7 @@ import android.text.Html;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.myjobpitch.R;
 
@@ -14,6 +15,7 @@ public class JobModeChoiceActivity extends MJPActionBarActivity  {
 
     public static final String JOB_ID = "JOB_ID";
     public static final String LOCATION_ID = "LOCATION_ID";
+    public static final String TOKENS = "TOKENS";
 
     private Integer job_id;
     private Integer location_id;
@@ -25,9 +27,11 @@ public class JobModeChoiceActivity extends MJPActionBarActivity  {
         setContentView(R.layout.activity_job_mode_choice);
         job_id = getIntent().getIntExtra(JOB_ID, -1);
         location_id = getIntent().getIntExtra(LOCATION_ID, -1);
+        Integer tokens = getIntent().getIntExtra(TOKENS, 0);
         if (savedInstanceState != null) {
             job_id = savedInstanceState.getInt(JOB_ID, -1);
             location_id = savedInstanceState.getInt(LOCATION_ID, -1);
+            tokens = savedInstanceState.getInt(TOKENS, 0);
         }
 
         Button searchButton = (Button)findViewById(R.id.search_button);
@@ -65,6 +69,8 @@ public class JobModeChoiceActivity extends MJPActionBarActivity  {
                 startActivity(intent);
             }
         });
+
+        ((TextView)findViewById(R.id.tokensLabel)).setText(tokens + " tokens");
     }
 
     @Override

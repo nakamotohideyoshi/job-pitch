@@ -205,7 +205,7 @@
                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="I want to reset my password" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vdS-sS-uT8">
                                                                 <rect key="frame" x="0.0" y="5" width="225" height="21"/>
                                                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                                 <nil key="highlightedColor"/>
                                                             </label>
                                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="wQa-Bj-qUH">
@@ -557,7 +557,7 @@
                                             </userDefinedRuntimeAttribute>
                                         </userDefinedRuntimeAttributes>
                                     </view>
-                                    <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="pmf-kY-76p">
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="pmf-kY-76p">
                                         <rect key="frame" x="0.0" y="0.0" width="600" height="536"/>
                                         <subviews>
                                             <view contentMode="scaleAspectFit" placeholderIntrinsicWidth="560" placeholderIntrinsicHeight="446" translatesAutoresizingMaskIntoConstraints="NO" id="vw2-Ei-nOB" customClass="SwipeView">
@@ -663,8 +663,8 @@
                                                     <constraint firstAttribute="width" secondItem="Kf2-p5-czF" secondAttribute="height" multiplier="1:1" id="X6z-ea-UK9"/>
                                                 </constraints>
                                             </imageView>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Apply" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dEz-7m-CGE">
-                                                <rect key="frame" x="137" y="435" width="44" height="21"/>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Apply" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dEz-7m-CGE">
+                                                <rect key="frame" x="136" y="435" width="44" height="21"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                 <nil key="highlightedColor"/>
@@ -716,9 +716,18 @@
                                             <constraint firstAttribute="bottom" secondItem="cNh-na-cts" secondAttribute="bottom" constant="20" id="nTZ-mD-2SR"/>
                                             <constraint firstItem="dEz-7m-CGE" firstAttribute="centerX" secondItem="cNh-na-cts" secondAttribute="centerX" id="nq1-UJ-amA"/>
                                             <constraint firstItem="AVF-MT-Wi9" firstAttribute="width" secondItem="AVF-MT-Wi9" secondAttribute="height" multiplier="1:1" id="r26-7d-nU3"/>
+                                            <constraint firstItem="h0Q-QC-gpp" firstAttribute="top" secondItem="dEz-7m-CGE" secondAttribute="top" id="s6c-Pg-3zX"/>
                                             <constraint firstAttribute="trailing" secondItem="vw2-Ei-nOB" secondAttribute="trailing" constant="20" id="u15-IG-TEM"/>
                                             <constraint firstItem="6yS-vE-ymz" firstAttribute="bottom" secondItem="cNh-na-cts" secondAttribute="bottom" id="wq9-mT-HpP"/>
+                                            <constraint firstItem="Kf2-p5-czF" firstAttribute="height" secondItem="cNh-na-cts" secondAttribute="height" multiplier="0.4" id="y92-0G-Stk"/>
                                         </constraints>
+                                        <variation key="default">
+                                            <mask key="constraints">
+                                                <exclude reference="d0U-NT-8lh"/>
+                                                <exclude reference="YdB-fs-eH2"/>
+                                                <exclude reference="r26-7d-nU3"/>
+                                            </mask>
+                                        </variation>
                                     </view>
                                 </subviews>
                                 <constraints>
@@ -815,7 +824,7 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="gPN-H5-XGW">
-                                                    <rect key="frame" x="13" y="13" width="79" height="59"/>
+                                                    <rect key="frame" x="8" y="13" width="79" height="59"/>
                                                     <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" secondItem="gPN-H5-XGW" secondAttribute="height" multiplier="4:3" id="773-be-l6u"/>
@@ -828,18 +837,24 @@
                                                     </variation>
                                                 </imageView>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fdm-4Q-4uZ">
-                                                    <rect key="frame" x="102" y="8" width="469" height="34"/>
+                                                    <rect key="frame" x="97" y="8" width="474" height="34"/>
                                                     <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
                                                     <color key="textColor" red="0.0" green="0.58823529409999997" blue="0.53333333329999999" alpha="1" colorSpace="calibratedRGB"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="vss-jd-wt2">
-                                                    <rect key="frame" x="43" y="33" width="20" height="20"/>
+                                                    <rect key="frame" x="38" y="33" width="20" height="20"/>
                                                 </activityIndicatorView>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Subtitle" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="t0G-vV-v2r">
-                                                    <rect key="frame" x="102" y="38" width="469" height="34"/>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <rect key="frame" x="97" y="38" width="414" height="34"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                     <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="99 tokens" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="e2K-yP-Xsv">
+                                                    <rect key="frame" x="511" y="47" width="65" height="17"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                    <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                             </subviews>
@@ -848,15 +863,18 @@
                                                 <constraint firstItem="t0G-vV-v2r" firstAttribute="leading" secondItem="gPN-H5-XGW" secondAttribute="trailing" constant="10" id="AVU-qV-9BI"/>
                                                 <constraint firstAttribute="topMargin" secondItem="gPN-H5-XGW" secondAttribute="top" constant="-5" id="D9a-WP-vum"/>
                                                 <constraint firstItem="vss-jd-wt2" firstAttribute="centerY" secondItem="gPN-H5-XGW" secondAttribute="centerY" id="LuA-ua-1tj"/>
-                                                <constraint firstAttribute="trailingMargin" secondItem="t0G-vV-v2r" secondAttribute="trailing" constant="5" id="OeL-LG-3ED"/>
+                                                <constraint firstAttribute="trailingMargin" secondItem="t0G-vV-v2r" secondAttribute="trailing" constant="65" id="OeL-LG-3ED"/>
+                                                <constraint firstItem="e2K-yP-Xsv" firstAttribute="centerY" secondItem="t0G-vV-v2r" secondAttribute="centerY" id="QUM-gZ-mOW"/>
                                                 <constraint firstItem="t0G-vV-v2r" firstAttribute="height" secondItem="VOJ-Ga-a0I" secondAttribute="height" multiplier="0.4" id="U1B-wf-xww"/>
                                                 <constraint firstItem="fdm-4Q-4uZ" firstAttribute="leading" secondItem="gPN-H5-XGW" secondAttribute="trailing" constant="10" id="XJn-TP-xv0"/>
                                                 <constraint firstItem="fdm-4Q-4uZ" firstAttribute="top" secondItem="VOJ-Ga-a0I" secondAttribute="topMargin" id="Yy4-nQ-n37"/>
                                                 <constraint firstAttribute="bottomMargin" secondItem="gPN-H5-XGW" secondAttribute="bottom" constant="5" id="aC8-KE-uSb"/>
-                                                <constraint firstItem="gPN-H5-XGW" firstAttribute="leading" secondItem="VOJ-Ga-a0I" secondAttribute="leadingMargin" constant="5" id="dJD-lQ-cKp"/>
+                                                <constraint firstItem="gPN-H5-XGW" firstAttribute="leading" secondItem="VOJ-Ga-a0I" secondAttribute="leadingMargin" id="dJD-lQ-cKp"/>
                                                 <constraint firstAttribute="bottomMargin" secondItem="t0G-vV-v2r" secondAttribute="bottom" constant="5" id="gnZ-Al-QRe"/>
                                                 <constraint firstItem="fdm-4Q-4uZ" firstAttribute="height" secondItem="VOJ-Ga-a0I" secondAttribute="height" multiplier="0.4" id="hQN-iH-a4v"/>
                                                 <constraint firstAttribute="trailingMargin" secondItem="fdm-4Q-4uZ" secondAttribute="trailing" constant="5" id="lCg-7e-Nn8"/>
+                                                <constraint firstItem="e2K-yP-Xsv" firstAttribute="leading" secondItem="t0G-vV-v2r" secondAttribute="trailing" id="nI8-qf-ZQK"/>
+                                                <constraint firstItem="e2K-yP-Xsv" firstAttribute="trailing" secondItem="VOJ-Ga-a0I" secondAttribute="trailingMargin" id="yPq-DU-xqQ"/>
                                             </constraints>
                                         </tableViewCellContentView>
                                         <connections>
@@ -864,6 +882,7 @@
                                             <outlet property="imageActivity" destination="vss-jd-wt2" id="yzx-Ma-2Gx"/>
                                             <outlet property="subtitle" destination="t0G-vV-v2r" id="DA3-et-Px6"/>
                                             <outlet property="title" destination="fdm-4Q-4uZ" id="o3a-LN-J7l"/>
+                                            <outlet property="tokensLabel" destination="e2K-yP-Xsv" id="1kI-JR-gFC"/>
                                             <segue destination="bFr-cL-9tU" kind="show" identifier="goto_location_list" id="ITm-94-rfB"/>
                                         </connections>
                                     </tableViewCell>
@@ -2166,7 +2185,7 @@ Finish your pitch confidently by saying something like, “Thank you and I look 
                                         </userDefinedRuntimeAttributes>
                                     </view>
                                     <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="85" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="o1e-hS-lV1">
-                                        <rect key="frame" x="8" y="0.0" width="584" height="536"/>
+                                        <rect key="frame" x="8" y="0.0" width="584" height="516"/>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         <prototypes>
                                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="SimpleListCell" rowHeight="85" id="Vol-Ko-Od8" customClass="SimpleListCell">
@@ -2177,7 +2196,7 @@ Finish your pitch confidently by saying something like, “Thank you and I look 
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <subviews>
                                                         <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="H8N-Ze-E5c">
-                                                            <rect key="frame" x="13" y="13" width="79" height="59"/>
+                                                            <rect key="frame" x="8" y="13" width="79" height="59"/>
                                                             <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="width" constant="100" id="9C5-XG-15M"/>
@@ -2192,19 +2211,19 @@ Finish your pitch confidently by saying something like, “Thank you and I look 
                                                             </variation>
                                                         </imageView>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8LQ-TV-rZc">
-                                                            <rect key="frame" x="102" y="13" width="469" height="34"/>
+                                                            <rect key="frame" x="97" y="13" width="474" height="34"/>
                                                             <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
                                                             <color key="textColor" red="0.0" green="0.58823529409999997" blue="0.53333333329999999" alpha="1" colorSpace="calibratedRGB"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Subtitle" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="YT6-ZH-RIA">
-                                                            <rect key="frame" x="102" y="38" width="469" height="34"/>
-                                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                            <rect key="frame" x="97" y="38" width="474" height="34"/>
+                                                            <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                                             <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
                                                         <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="W9T-rJ-Ksr">
-                                                            <rect key="frame" x="43" y="33" width="20" height="20"/>
+                                                            <rect key="frame" x="38" y="33" width="20" height="20"/>
                                                         </activityIndicatorView>
                                                     </subviews>
                                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
@@ -2215,7 +2234,7 @@ Finish your pitch confidently by saying something like, “Thank you and I look 
                                                         <constraint firstItem="W9T-rJ-Ksr" firstAttribute="centerY" secondItem="H8N-Ze-E5c" secondAttribute="centerY" id="FTN-IR-Zge"/>
                                                         <constraint firstItem="8LQ-TV-rZc" firstAttribute="top" secondItem="YEy-Fr-jpO" secondAttribute="topMargin" constant="5" id="Fbv-wF-J7I"/>
                                                         <constraint firstItem="W9T-rJ-Ksr" firstAttribute="centerX" secondItem="H8N-Ze-E5c" secondAttribute="centerX" id="Hdg-dM-Oh8"/>
-                                                        <constraint firstItem="H8N-Ze-E5c" firstAttribute="leading" secondItem="YEy-Fr-jpO" secondAttribute="leadingMargin" constant="5" id="K1l-sz-uQ3"/>
+                                                        <constraint firstItem="H8N-Ze-E5c" firstAttribute="leading" secondItem="YEy-Fr-jpO" secondAttribute="leadingMargin" id="K1l-sz-uQ3"/>
                                                         <constraint firstItem="YT6-ZH-RIA" firstAttribute="leading" secondItem="H8N-Ze-E5c" secondAttribute="trailing" constant="10" id="L9a-0T-uOz"/>
                                                         <constraint firstAttribute="trailingMargin" secondItem="8LQ-TV-rZc" secondAttribute="trailing" constant="5" id="Tbm-Y2-7PC"/>
                                                         <constraint firstItem="YT6-ZH-RIA" firstAttribute="height" secondItem="YEy-Fr-jpO" secondAttribute="height" multiplier="0.4" id="U5q-Ri-LVB"/>
@@ -2251,12 +2270,21 @@ Finish your pitch confidently by saying something like, “Thank you and I look 
                                             <outlet property="delegate" destination="bFr-cL-9tU" id="xm3-DN-lkE"/>
                                         </connections>
                                     </tableView>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text=" " textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Qmt-Y9-9j2">
+                                        <rect key="frame" x="2" y="516" width="596" height="18"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                        <color key="textColor" red="0.43529411759999997" green="0.4431372549" blue="0.47450980390000003" alpha="1" colorSpace="calibratedRGB"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
                                 </subviews>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <constraints>
-                                    <constraint firstAttribute="bottom" secondItem="o1e-hS-lV1" secondAttribute="bottom" id="3ZS-GW-Shu"/>
+                                    <constraint firstAttribute="trailing" secondItem="Qmt-Y9-9j2" secondAttribute="trailing" constant="2" id="08S-9c-aQf"/>
+                                    <constraint firstItem="Qmt-Y9-9j2" firstAttribute="leading" secondItem="OQ2-WJ-7L1" secondAttribute="leading" constant="2" id="2zT-FD-rAc"/>
+                                    <constraint firstAttribute="bottom" secondItem="o1e-hS-lV1" secondAttribute="bottom" constant="20" id="3ZS-GW-Shu"/>
                                     <constraint firstItem="o1e-hS-lV1" firstAttribute="leading" secondItem="OQ2-WJ-7L1" secondAttribute="leading" constant="8" id="DVd-sD-HEL"/>
                                     <constraint firstItem="b9X-s9-drt" firstAttribute="top" secondItem="OQ2-WJ-7L1" secondAttribute="top" constant="20" id="Lmc-xy-dc1"/>
+                                    <constraint firstAttribute="bottom" secondItem="Qmt-Y9-9j2" secondAttribute="bottom" constant="2" id="Mly-wq-raG"/>
                                     <constraint firstAttribute="trailing" secondItem="b9X-s9-drt" secondAttribute="trailing" constant="20" id="RvX-ld-eNK"/>
                                     <constraint firstAttribute="trailing" secondItem="o1e-hS-lV1" secondAttribute="trailing" constant="8" id="Zff-Vh-wnr"/>
                                     <constraint firstItem="b9X-s9-drt" firstAttribute="leading" secondItem="OQ2-WJ-7L1" secondAttribute="leading" constant="20" id="iNl-bG-TME"/>
@@ -2283,9 +2311,11 @@ Finish your pitch confidently by saying something like, “Thank you and I look 
                             </connections>
                         </barButtonItem>
                     </navigationItem>
+                    <nil key="simulatedBottomBarMetrics"/>
                     <connections>
                         <outlet property="emptyView" destination="b9X-s9-drt" id="WMK-ch-tEm"/>
                         <outlet property="locations" destination="o1e-hS-lV1" id="VH9-hg-N0v"/>
+                        <outlet property="tokensLabel" destination="Qmt-Y9-9j2" id="UGh-Aj-8vi"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dL3-nY-Ltn" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -2345,7 +2375,7 @@ Finish your pitch confidently by saying something like, “Thank you and I look 
                                         </userDefinedRuntimeAttributes>
                                     </view>
                                     <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="85" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="bPP-Ka-jxn">
-                                        <rect key="frame" x="8" y="0.0" width="584" height="536"/>
+                                        <rect key="frame" x="8" y="0.0" width="584" height="516"/>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         <prototypes>
                                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="SimpleListCell" rowHeight="85" id="UVx-W4-IUW" customClass="SimpleListCell">
@@ -2356,7 +2386,7 @@ Finish your pitch confidently by saying something like, “Thank you and I look 
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <subviews>
                                                         <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="944-uX-7uW">
-                                                            <rect key="frame" x="13" y="13" width="79" height="59"/>
+                                                            <rect key="frame" x="8" y="13" width="79" height="59"/>
                                                             <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="width" constant="100" id="72L-qb-WHz"/>
@@ -2371,19 +2401,19 @@ Finish your pitch confidently by saying something like, “Thank you and I look 
                                                             </variation>
                                                         </imageView>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Tsb-tJ-iq7">
-                                                            <rect key="frame" x="102" y="8" width="469" height="34"/>
+                                                            <rect key="frame" x="97" y="8" width="474" height="34"/>
                                                             <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
                                                             <color key="textColor" red="0.0" green="0.58823529409999997" blue="0.53333333329999999" alpha="1" colorSpace="calibratedRGB"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Subtitle" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="m0A-rW-GCN">
-                                                            <rect key="frame" x="102" y="48" width="469" height="34"/>
-                                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                            <rect key="frame" x="97" y="48" width="474" height="34"/>
+                                                            <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                                             <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
                                                         <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="j7R-vy-o9a">
-                                                            <rect key="frame" x="43" y="33" width="20" height="20"/>
+                                                            <rect key="frame" x="38" y="33" width="20" height="20"/>
                                                         </activityIndicatorView>
                                                     </subviews>
                                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
@@ -2397,7 +2427,7 @@ Finish your pitch confidently by saying something like, “Thank you and I look 
                                                         <constraint firstItem="944-uX-7uW" firstAttribute="leading" secondItem="sAx-X3-Fm8" secondAttribute="leadingMargin" id="YDm-kJ-GAZ"/>
                                                         <constraint firstItem="Tsb-tJ-iq7" firstAttribute="leading" secondItem="944-uX-7uW" secondAttribute="trailing" constant="10" id="b37-rB-8lk"/>
                                                         <constraint firstAttribute="topMargin" secondItem="944-uX-7uW" secondAttribute="top" id="eq4-nn-C3D"/>
-                                                        <constraint firstItem="944-uX-7uW" firstAttribute="leading" secondItem="sAx-X3-Fm8" secondAttribute="leadingMargin" constant="5" id="lrY-Cm-rSM"/>
+                                                        <constraint firstItem="944-uX-7uW" firstAttribute="leading" secondItem="sAx-X3-Fm8" secondAttribute="leadingMargin" id="lrY-Cm-rSM"/>
                                                         <constraint firstAttribute="trailingMargin" secondItem="m0A-rW-GCN" secondAttribute="trailing" constant="5" id="ntd-Ky-Fzv"/>
                                                         <constraint firstAttribute="trailingMargin" secondItem="Tsb-tJ-iq7" secondAttribute="trailing" constant="5" id="odZ-U2-1jz"/>
                                                         <constraint firstItem="m0A-rW-GCN" firstAttribute="height" secondItem="sAx-X3-Fm8" secondAttribute="height" multiplier="0.4" id="pRI-WR-HU5"/>
@@ -2430,12 +2460,21 @@ Finish your pitch confidently by saying something like, “Thank you and I look 
                                             <outlet property="delegate" destination="2bv-oc-xSL" id="ZfA-IF-kSN"/>
                                         </connections>
                                     </tableView>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text=" " textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5D7-Cl-Rit">
+                                        <rect key="frame" x="2" y="516" width="596" height="18"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                        <color key="textColor" red="0.43529411759999997" green="0.4431372549" blue="0.47450980390000003" alpha="1" colorSpace="calibratedRGB"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
                                 </subviews>
                                 <constraints>
                                     <constraint firstItem="PzK-ll-UY8" firstAttribute="leading" secondItem="Evn-Qh-aNp" secondAttribute="leading" constant="20" id="8Kh-cK-8VA"/>
+                                    <constraint firstItem="5D7-Cl-Rit" firstAttribute="leading" secondItem="Evn-Qh-aNp" secondAttribute="leading" constant="2" id="8LQ-2d-KIe"/>
                                     <constraint firstAttribute="trailing" secondItem="PzK-ll-UY8" secondAttribute="trailing" constant="20" id="BLX-f6-E8e"/>
+                                    <constraint firstAttribute="bottom" secondItem="5D7-Cl-Rit" secondAttribute="bottom" constant="2" id="JPf-yM-AJS"/>
+                                    <constraint firstAttribute="trailing" secondItem="5D7-Cl-Rit" secondAttribute="trailing" constant="2" id="SHp-cL-fjc"/>
                                     <constraint firstItem="PzK-ll-UY8" firstAttribute="top" secondItem="Evn-Qh-aNp" secondAttribute="top" constant="20" id="Z9R-cp-LzD"/>
-                                    <constraint firstAttribute="bottom" secondItem="bPP-Ka-jxn" secondAttribute="bottom" id="gNh-JE-Cq1"/>
+                                    <constraint firstAttribute="bottom" secondItem="bPP-Ka-jxn" secondAttribute="bottom" constant="20" id="gNh-JE-Cq1"/>
                                     <constraint firstAttribute="trailing" secondItem="bPP-Ka-jxn" secondAttribute="trailing" constant="8" id="gZr-ie-tJ6"/>
                                     <constraint firstItem="bPP-Ka-jxn" firstAttribute="leading" secondItem="Evn-Qh-aNp" secondAttribute="leading" constant="8" id="rtE-9M-goR"/>
                                     <constraint firstItem="bPP-Ka-jxn" firstAttribute="top" secondItem="Evn-Qh-aNp" secondAttribute="top" id="y4U-TX-QPk"/>
@@ -2464,6 +2503,7 @@ Finish your pitch confidently by saying something like, “Thank you and I look 
                     <connections>
                         <outlet property="emptyView" destination="PzK-ll-UY8" id="CCm-Ih-ZJc"/>
                         <outlet property="jobs" destination="bPP-Ka-jxn" id="6vD-6x-lMT"/>
+                        <outlet property="tokensLabel" destination="5D7-Cl-Rit" id="gJa-7s-J9F"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dvV-0j-Khl" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -2697,6 +2737,12 @@ Finish your pitch confidently by saying something like, “Thank you and I look 
                                     <action selector="removeJob:" destination="FHh-Ua-NIF" eventType="touchUpInside" id="p0J-Bm-R2I"/>
                                 </connections>
                             </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text=" " textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4am-32-9ir">
+                                <rect key="frame" x="10" y="580" width="580" height="18"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                <color key="textColor" red="0.43529411759999997" green="0.4431372549" blue="0.47450980390000003" alpha="1" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" red="0.87843137250000003" green="0.87843137250000003" blue="0.87843137250000003" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
@@ -2708,6 +2754,7 @@ Finish your pitch confidently by saying something like, “Thank you and I look 
                             <constraint firstItem="kSi-zc-vYW" firstAttribute="bottom" secondItem="nkV-SD-otb" secondAttribute="bottom" constant="7" id="AqE-Tg-d8j"/>
                             <constraint firstItem="kSi-zc-vYW" firstAttribute="leading" secondItem="ssn-UK-jdD" secondAttribute="leading" id="DDx-Tz-Dhb"/>
                             <constraint firstItem="ozu-mD-UFh" firstAttribute="top" secondItem="kSi-zc-vYW" secondAttribute="top" constant="7" id="ETW-OF-P7H"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="4am-32-9ir" secondAttribute="trailing" id="Gqa-5T-PzK"/>
                             <constraint firstItem="kSi-zc-vYW" firstAttribute="top" secondItem="ssn-UK-jdD" secondAttribute="bottom" constant="13" id="Ijt-zU-Ms9"/>
                             <constraint firstItem="Kv9-ou-O9U" firstAttribute="height" secondItem="7j2-8M-huL" secondAttribute="height" multiplier="0.8" id="Ixd-kx-uax"/>
                             <constraint firstItem="nkV-SD-otb" firstAttribute="leading" secondItem="ozu-mD-UFh" secondAttribute="leading" id="KVT-vn-H8o"/>
@@ -2719,15 +2766,22 @@ Finish your pitch confidently by saying something like, “Thank you and I look 
                             <constraint firstItem="1Y7-Dv-y90" firstAttribute="top" secondItem="SAy-Yl-iK9" secondAttribute="top" constant="7" id="VOC-A5-x8F"/>
                             <constraint firstItem="SAy-Yl-iK9" firstAttribute="leading" secondItem="kSi-zc-vYW" secondAttribute="leading" id="Wqh-d1-iez"/>
                             <constraint firstItem="RsH-9Q-W1g" firstAttribute="top" secondItem="ssn-UK-jdD" secondAttribute="top" constant="7" id="Xx6-4g-B9Q"/>
+                            <constraint firstItem="hXJ-ZM-XF1" firstAttribute="top" secondItem="4am-32-9ir" secondAttribute="bottom" constant="2" id="YU1-dP-yNp"/>
+                            <constraint firstAttribute="leadingMargin" secondItem="4am-32-9ir" secondAttribute="leading" constant="-5" id="dvu-qb-c9Q"/>
+                            <constraint firstItem="4am-32-9ir" firstAttribute="leading" secondItem="7j2-8M-huL" secondAttribute="leadingMargin" id="ef2-00-mxA"/>
+                            <constraint firstItem="hXJ-ZM-XF1" firstAttribute="top" secondItem="4am-32-9ir" secondAttribute="bottom" constant="2" id="f5K-tm-SgG"/>
                             <constraint firstItem="kGq-tW-5ga" firstAttribute="width" secondItem="mFk-Hg-R0Z" secondAttribute="width" id="fjm-v8-VAq"/>
                             <constraint firstItem="8Hc-dr-2DJ" firstAttribute="leading" secondItem="RsH-9Q-W1g" secondAttribute="leading" id="g8u-jv-WOe"/>
                             <constraint firstItem="SAy-Yl-iK9" firstAttribute="top" secondItem="kSi-zc-vYW" secondAttribute="bottom" constant="13" id="hAr-T4-I3F"/>
                             <constraint firstItem="kSi-zc-vYW" firstAttribute="trailing" secondItem="ssn-UK-jdD" secondAttribute="trailing" id="izG-Nz-anW"/>
                             <constraint firstItem="Kv9-ou-O9U" firstAttribute="centerX" secondItem="7j2-8M-huL" secondAttribute="centerX" id="jaE-Qu-Utf"/>
                             <constraint firstItem="ssn-UK-jdD" firstAttribute="bottom" secondItem="8Hc-dr-2DJ" secondAttribute="bottom" constant="7" id="mhL-gd-4xM"/>
+                            <constraint firstItem="4am-32-9ir" firstAttribute="trailing" secondItem="7j2-8M-huL" secondAttribute="trailingMargin" constant="10" id="ojv-Wm-bvs"/>
                             <constraint firstItem="SAy-Yl-iK9" firstAttribute="trailing" secondItem="kSi-zc-vYW" secondAttribute="trailing" id="ovZ-qP-039"/>
                             <constraint firstItem="ssn-UK-jdD" firstAttribute="top" secondItem="WWU-5c-bhf" secondAttribute="bottom" constant="18" id="pso-5p-Ec5"/>
                             <constraint firstItem="vEO-iO-1aA" firstAttribute="leading" secondItem="1Y7-Dv-y90" secondAttribute="leading" id="rVa-5r-YXf"/>
+                            <constraint firstItem="4am-32-9ir" firstAttribute="leading" secondItem="7j2-8M-huL" secondAttribute="leadingMargin" constant="-10" id="tBX-88-kKd"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="4am-32-9ir" secondAttribute="trailing" constant="2" id="tdB-kN-DvU"/>
                             <constraint firstAttribute="trailing" secondItem="ssn-UK-jdD" secondAttribute="trailing" constant="13" id="uLS-vR-TSh"/>
                             <constraint firstItem="Kv9-ou-O9U" firstAttribute="centerY" secondItem="7j2-8M-huL" secondAttribute="centerY" id="uai-Th-edG"/>
                             <constraint firstItem="mFk-Hg-R0Z" firstAttribute="top" secondItem="vEO-iO-1aA" secondAttribute="bottom" constant="30" id="v3S-Kd-APQ"/>
@@ -2736,10 +2790,22 @@ Finish your pitch confidently by saying something like, “Thank you and I look 
                             <constraint firstItem="ozu-mD-UFh" firstAttribute="leading" secondItem="kSi-zc-vYW" secondAttribute="leading" constant="7" id="wz2-8i-2Yx"/>
                             <constraint firstItem="vEO-iO-1aA" firstAttribute="top" secondItem="1Y7-Dv-y90" secondAttribute="bottom" constant="4" id="y6S-9V-o3W"/>
                         </constraints>
+                        <variation key="default">
+                            <mask key="constraints">
+                                <exclude reference="Gqa-5T-PzK"/>
+                                <exclude reference="dvu-qb-c9Q"/>
+                                <exclude reference="ef2-00-mxA"/>
+                                <exclude reference="tdB-kN-DvU"/>
+                                <exclude reference="YU1-dP-yNp"/>
+                            </mask>
+                        </variation>
                     </view>
                     <navigationItem key="navigationItem" title="View Job" id="9eJ-Gm-puo">
                         <barButtonItem key="backBarButtonItem" title="Cancel" id="spE-jh-9m2"/>
                     </navigationItem>
+                    <connections>
+                        <outlet property="tokensLabel" destination="4am-32-9ir" id="eaD-Hr-Pnh"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="nkc-lj-5Ht" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -2818,7 +2884,7 @@ Finish your pitch confidently by saying something like, “Thank you and I look 
                                         </userDefinedRuntimeAttributes>
                                     </view>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="pZA-qo-UbD">
-                                        <rect key="frame" x="0.0" y="0.0" width="600" height="536"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="600" height="516"/>
                                         <subviews>
                                             <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" verticalCompressionResistancePriority="1000" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="BLi-Mi-QzV">
                                                 <rect key="frame" x="543" y="8" width="51" height="31"/>
@@ -2833,44 +2899,44 @@ Finish your pitch confidently by saying something like, “Thank you and I look 
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <view contentMode="scaleAspectFit" placeholderIntrinsicWidth="560" placeholderIntrinsicHeight="446" translatesAutoresizingMaskIntoConstraints="NO" id="ECS-rL-yVr" customClass="SwipeView">
-                                                <rect key="frame" x="20" y="47" width="560" height="225"/>
+                                                <rect key="frame" x="20" y="47" width="560" height="205"/>
                                                 <subviews>
                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Jmi-fV-vmo">
-                                                        <rect key="frame" x="195" y="0.0" width="170" height="225"/>
+                                                        <rect key="frame" x="205" y="0.0" width="150" height="205"/>
                                                         <subviews>
                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" text="..." textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tkg-gf-dEG">
-                                                                <rect key="frame" x="15" y="163" width="116" height="21"/>
+                                                                <rect key="frame" x="15" y="143" width="96" height="21"/>
                                                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
                                                                 <color key="textColor" red="0.0" green="0.58823529409999997" blue="0.53333333329999999" alpha="1" colorSpace="calibratedRGB"/>
                                                                 <nil key="highlightedColor"/>
                                                             </label>
                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="..." textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hgQ-FN-mBK">
-                                                                <rect key="frame" x="141" y="163" width="14" height="21"/>
+                                                                <rect key="frame" x="121" y="143" width="14" height="21"/>
                                                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                                 <nil key="highlightedColor"/>
                                                             </label>
                                                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" semanticContentAttribute="playback" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="tpw-l1-1ck">
-                                                                <rect key="frame" x="15" y="15" width="140" height="140"/>
+                                                                <rect key="frame" x="15" y="15" width="120" height="120"/>
                                                                 <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                                 <constraints>
                                                                     <constraint firstAttribute="width" secondItem="tpw-l1-1ck" secondAttribute="height" multiplier="1:1" id="zsn-mj-m3J"/>
                                                                 </constraints>
                                                             </imageView>
                                                             <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="Etj-38-kz0">
-                                                                <rect key="frame" x="67" y="67" width="37" height="37"/>
+                                                                <rect key="frame" x="57" y="57" width="37" height="37"/>
                                                             </activityIndicatorView>
                                                             <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="play" translatesAutoresizingMaskIntoConstraints="NO" id="nSG-6C-2EF">
-                                                                <rect key="frame" x="64" y="37" width="42" height="96"/>
+                                                                <rect key="frame" x="57" y="27" width="36" height="96"/>
                                                             </imageView>
                                                             <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_star" translatesAutoresizingMaskIntoConstraints="NO" id="66M-U5-caO">
-                                                                <rect key="frame" x="137" y="19" width="14" height="14"/>
+                                                                <rect key="frame" x="119" y="19" width="12" height="12"/>
                                                                 <constraints>
                                                                     <constraint firstAttribute="width" secondItem="66M-U5-caO" secondAttribute="height" multiplier="1:1" id="xRN-kl-dKP"/>
                                                                 </constraints>
                                                             </imageView>
                                                             <label opaque="NO" userInteractionEnabled="NO" alpha="0.0" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="XfU-mZ-Ihl">
-                                                                <rect key="frame" x="15" y="58" width="140" height="55"/>
+                                                                <rect key="frame" x="15" y="48" width="120" height="55"/>
                                                                 <fontDescription key="fontDescription" type="system" pointSize="45"/>
                                                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                                 <nil key="highlightedColor"/>
@@ -2878,7 +2944,7 @@ Finish your pitch confidently by saying something like, “Thank you and I look 
                                                                 <size key="shadowOffset" width="-1" height="-1"/>
                                                             </label>
                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="..." textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5Hp-xE-X3K">
-                                                                <rect key="frame" x="15" y="192" width="140" height="21"/>
+                                                                <rect key="frame" x="15" y="172" width="120" height="21"/>
                                                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                                 <nil key="highlightedColor"/>
@@ -2932,7 +2998,7 @@ Finish your pitch confidently by saying something like, “Thank you and I look 
                                                 </constraints>
                                             </view>
                                             <button opaque="NO" contentMode="scaleToFill" verticalCompressionResistancePriority="1000" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="C32-TY-6Ln">
-                                                <rect key="frame" x="36" y="292" width="224" height="224"/>
+                                                <rect key="frame" x="36" y="272" width="224" height="224"/>
                                                 <constraints>
                                                     <constraint firstAttribute="width" secondItem="C32-TY-6Ln" secondAttribute="height" multiplier="1:1" id="2a8-DI-4yt"/>
                                                 </constraints>
@@ -2943,22 +3009,22 @@ Finish your pitch confidently by saying something like, “Thank you and I look 
                                                 </connections>
                                             </button>
                                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_connect" translatesAutoresizingMaskIntoConstraints="NO" id="CwO-BB-XhH">
-                                                <rect key="frame" x="103" y="337" width="90" height="90"/>
+                                                <rect key="frame" x="103" y="317" width="90" height="90"/>
                                                 <constraints>
                                                     <constraint firstAttribute="width" secondItem="CwO-BB-XhH" secondAttribute="height" multiplier="1:1" id="m4n-8n-jRe"/>
                                                 </constraints>
                                             </imageView>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="01j-Nt-xjg">
-                                                <rect key="frame" x="36" y="292" width="224" height="45"/>
+                                                <rect key="frame" x="36" y="272" width="224" height="45"/>
                                             </view>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Connect" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="64a-vb-3Mq">
-                                                <rect key="frame" x="116" y="435" width="65" height="21"/>
+                                                <rect key="frame" x="116" y="415" width="65" height="21"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="PFy-FF-gPk">
-                                                <rect key="frame" x="340" y="292" width="224" height="224"/>
+                                                <rect key="frame" x="340" y="272" width="224" height="224"/>
                                                 <constraints>
                                                     <constraint firstAttribute="width" secondItem="PFy-FF-gPk" secondAttribute="height" multiplier="1:1" id="zZA-s4-Eb7"/>
                                                 </constraints>
@@ -2969,19 +3035,19 @@ Finish your pitch confidently by saying something like, “Thank you and I look 
                                                 </connections>
                                             </button>
                                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_delete" translatesAutoresizingMaskIntoConstraints="NO" id="wcZ-st-EsD">
-                                                <rect key="frame" x="407" y="337" width="90" height="90"/>
+                                                <rect key="frame" x="407" y="317" width="90" height="90"/>
                                                 <constraints>
                                                     <constraint firstAttribute="width" secondItem="wcZ-st-EsD" secondAttribute="height" multiplier="1:1" id="tmu-CK-459"/>
                                                 </constraints>
                                             </imageView>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Remove" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jSv-Rv-W3P">
-                                                <rect key="frame" x="421" y="435" width="62" height="21"/>
+                                                <rect key="frame" x="421" y="415" width="62" height="21"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Yfq-dM-adK">
-                                                <rect key="frame" x="244" y="416" width="112" height="112"/>
+                                                <rect key="frame" x="244" y="396" width="112" height="112"/>
                                                 <constraints>
                                                     <constraint firstAttribute="width" secondItem="Yfq-dM-adK" secondAttribute="height" multiplier="1:1" id="LcI-Lx-KWD"/>
                                                 </constraints>
@@ -2992,7 +3058,7 @@ Finish your pitch confidently by saying something like, “Thank you and I look 
                                                 </connections>
                                             </button>
                                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_star" translatesAutoresizingMaskIntoConstraints="NO" id="2Ks-Hr-se7">
-                                                <rect key="frame" x="269" y="441" width="62" height="62"/>
+                                                <rect key="frame" x="269" y="421" width="62" height="62"/>
                                             </imageView>
                                         </subviews>
                                         <constraints>
@@ -3033,14 +3099,22 @@ Finish your pitch confidently by saying something like, “Thank you and I look 
                                             <constraint firstItem="ECS-rL-yVr" firstAttribute="top" secondItem="BLi-Mi-QzV" secondAttribute="bottom" constant="8" id="zHM-DL-prl"/>
                                         </constraints>
                                     </view>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="UEJ-hQ-Aht">
+                                        <rect key="frame" x="596" y="534" width="0.0" height="0.0"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                        <color key="textColor" red="0.43529411759999997" green="0.4431372549" blue="0.47450980390000003" alpha="1" colorSpace="calibratedRGB"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
                                 </subviews>
                                 <constraints>
+                                    <constraint firstAttribute="trailing" secondItem="UEJ-hQ-Aht" secondAttribute="trailing" constant="4" id="0yK-Cf-NKS"/>
                                     <constraint firstItem="I6c-tb-5Pb" firstAttribute="leading" secondItem="eWc-wR-zCs" secondAttribute="leading" constant="20" id="AT4-ad-54n"/>
                                     <constraint firstItem="pZA-qo-UbD" firstAttribute="top" secondItem="eWc-wR-zCs" secondAttribute="top" id="GCw-9Y-L9n"/>
-                                    <constraint firstAttribute="bottom" secondItem="pZA-qo-UbD" secondAttribute="bottom" id="Jy1-tQ-YvA"/>
+                                    <constraint firstAttribute="bottom" secondItem="pZA-qo-UbD" secondAttribute="bottom" constant="20" id="Jy1-tQ-YvA"/>
                                     <constraint firstAttribute="trailing" secondItem="I6c-tb-5Pb" secondAttribute="trailing" constant="20" id="L6T-cT-A7k"/>
                                     <constraint firstItem="pZA-qo-UbD" firstAttribute="leading" secondItem="eWc-wR-zCs" secondAttribute="leading" id="Q5k-9U-bks"/>
                                     <constraint firstItem="I6c-tb-5Pb" firstAttribute="top" secondItem="eWc-wR-zCs" secondAttribute="top" constant="20" id="Wiq-Wo-RxX"/>
+                                    <constraint firstAttribute="bottom" secondItem="UEJ-hQ-Aht" secondAttribute="bottom" constant="2" id="cHB-RI-ZET"/>
                                     <constraint firstAttribute="trailing" secondItem="pZA-qo-UbD" secondAttribute="trailing" id="e9c-lN-OaC"/>
                                 </constraints>
                             </view>
@@ -3085,6 +3159,7 @@ Finish your pitch confidently by saying something like, “Thank you and I look 
                         <outlet property="shortlistedLabel" destination="03J-em-kbK" id="tcd-El-gDp"/>
                         <outlet property="swipeContainer" destination="pZA-qo-UbD" id="Vpq-qt-fnp"/>
                         <outlet property="swipeView" destination="ECS-rL-yVr" id="AzX-S3-Y8T"/>
+                        <outlet property="tokensLabel" destination="UEJ-hQ-Aht" id="sip-ji-hXN"/>
                         <segue destination="GKH-yH-DKF" kind="show" identifier="goto_job_seeker_details" id="XoM-Rr-ZjD"/>
                         <segue destination="q1w-Di-3vE" kind="show" identifier="goto_message_thread" id="wj9-jy-mgT"/>
                     </connections>
@@ -3673,22 +3748,46 @@ Finish your pitch confidently by saying something like, “Thank you and I look 
             </objects>
             <point key="canvasLocation" x="3317" y="-993"/>
         </scene>
-        <!--View Controller-->
-        <scene sceneID="XCp-90-2Th">
+        <!--Dropbox-->
+        <scene sceneID="FMe-3H-mIT">
             <objects>
-                <viewController id="VZx-aL-tef" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="kG4-Cx-qJV"/>
-                        <viewControllerLayoutGuide type="bottom" id="JR8-4H-pen"/>
-                    </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="iw5-63-W6o">
+                <tableViewController storyboardIdentifier="DropboxBrowser" id="TfS-Rn-LxW" customClass="DropboxBrowserViewController" sceneMemberID="viewController">
+                    <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="dRI-yc-JM1">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                    </view>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="eTf-DS-22b" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                        <prototypes>
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="DropboxBrowserCell" textLabel="Uhn-ob-2Eq" detailTextLabel="Cvx-fO-Ax5" style="IBUITableViewCellStyleSubtitle" id="X6G-AD-0Zw">
+                                <rect key="frame" x="0.0" y="22" width="600" height="44"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="X6G-AD-0Zw" id="tp9-kE-mg5">
+                                    <rect key="frame" x="0.0" y="0.0" width="600" height="43"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <label opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="left" text="Title" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="Uhn-ob-2Eq">
+                                            <rect key="frame" x="15" y="3" width="36" height="22"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="18"/>
+                                            <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <label opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="left" text="Subtitle" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="Cvx-fO-Ax5">
+                                            <rect key="frame" x="15" y="25" width="44" height="15"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                            <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                    </subviews>
+                                </tableViewCellContentView>
+                            </tableViewCell>
+                        </prototypes>
+                    </tableView>
+                    <navigationItem key="navigationItem" title="Dropbox" id="uBT-RU-q9U"/>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="b0Y-y9-2RT" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
+            <point key="canvasLocation" x="1221" y="-325"/>
         </scene>
     </scenes>
     <resources>
@@ -3705,9 +3804,9 @@ Finish your pitch confidently by saying something like, “Thank you and I look 
         <image name="switch_camera" width="48" height="48"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="bLg-hp-djS"/>
-        <segue reference="0vK-0A-u9q"/>
+        <segue reference="beN-Hw-Pdh"/>
         <segue reference="wj9-jy-mgT"/>
         <segue reference="XoM-Rr-ZjD"/>
+        <segue reference="bLg-hp-djS"/>
     </inferredMetricsTieBreakers>
 </document>

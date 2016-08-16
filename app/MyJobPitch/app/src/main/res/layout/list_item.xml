@@ -36,12 +36,22 @@
         android:layout_width="fill_parent"
         android:layout_height="26dip"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
         android:layout_toRightOf="@id/icon"
         android:ellipsize="marquee"
         android:singleLine="true"
         android:text="Description"
         android:textSize="12sp" />
+
+    <TextView
+        android:id="@+id/tokensLabel"
+        android:layout_width="fill_parent"
+        android:layout_height="26dip"
+        android:layout_alignParentBottom="true"
+        android:layout_toRightOf="@id/icon"
+        android:ellipsize="marquee"
+        android:singleLine="true"
+        android:textSize="12sp"
+        android:gravity="right" />
 
     <TextView
         android:id="@+id/title"

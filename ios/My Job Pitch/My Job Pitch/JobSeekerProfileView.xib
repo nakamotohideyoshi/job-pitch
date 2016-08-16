@@ -11,6 +11,7 @@
                 <outlet property="age" destination="o8g-Ph-3pv" id="3CH-dx-Ope"/>
                 <outlet property="agePublic" destination="XtK-Bc-fSb" id="LAb-21-ApI"/>
                 <outlet property="continueButton" destination="2Ei-Yb-BEa" id="qvs-FH-BaA"/>
+                <outlet property="cvFileName" destination="C9d-GE-NuW" id="mvq-0d-ktq"/>
                 <outlet property="descriptionCharactersRemaining" destination="ezc-LO-2Yt" id="051-kJ-fE0"/>
                 <outlet property="descriptionError" destination="N6M-BL-Bzr" id="fdx-Rc-akN"/>
                 <outlet property="descriptionView" destination="ooD-lb-Fzw" id="YZk-0q-aI1"/>

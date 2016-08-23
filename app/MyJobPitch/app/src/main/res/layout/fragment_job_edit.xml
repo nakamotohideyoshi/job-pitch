@@ -16,11 +16,19 @@
             android:paddingBottom="8dp"
             android:textStyle="bold" />
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/active"
+            android:layout_column="1"
+            android:id="@+id/textView3"
+            android:layout_gravity="center_vertical|right"
+            android:layout_marginRight="35dp" />
+
         <CheckBox
             android:id="@+id/job_active"
-            android:text="@string/active"
             android:checked="true"
-            android:layout_gravity="right"
+            android:layout_gravity="center_vertical|right"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
     </FrameLayout>
@@ -46,17 +54,17 @@
     <com.myjobpitch.widgets.NoDefaultSpinner
         android:prompt="@string/prompt_sector"
         android:id="@+id/job_sector" android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="40dp" />
 
     <com.myjobpitch.widgets.NoDefaultSpinner
         android:prompt="@string/prompt_contract"
         android:id="@+id/job_contract" android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="40dp" />
 
     <com.myjobpitch.widgets.NoDefaultSpinner
         android:prompt="@string/prompt_hours"
         android:id="@+id/job_hours" android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="40dp" />
 
     <TextView
         android:layout_width="match_parent"

@@ -202,6 +202,8 @@ public class CameraActivity extends MJPActionBarActivity {
         mRotateCameraButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                mCaptureButton.setEnabled(false);
+                mRotateCameraButton.setEnabled(false);
                 releaseMediaRecorder();
                 releaseCamera();
                 toggleCamera();
@@ -481,7 +483,12 @@ public class CameraActivity extends MJPActionBarActivity {
         @Override
         protected void onPostExecute(Boolean result) {
             if (result) {
-                mMediaRecorder.start();
+                try {
+                    mMediaRecorder.start();
+                } catch (Exception e) {
+                    int i = 0;
+                }
+
                 setCaptureButtonText(getString(R.string.stop));
                 final CountDownAction countDown = new CountDownAction(MAX_RECORD_TIME, mCountdownView);
                 countDown.onTick(new Runnable() {

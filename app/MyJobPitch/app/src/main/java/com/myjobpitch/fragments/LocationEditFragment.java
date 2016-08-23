@@ -6,7 +6,9 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.location.Address;
+import android.location.Criteria;
 import android.location.Geocoder;
+import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -46,8 +48,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-
-import static android.location.LocationManager.GPS_PROVIDER;
 
 public class LocationEditFragment extends EditFragment<Location> implements GoogleApiClient.OnConnectionFailedListener {
     public static final int SELECT_LOCATION = 1000;
@@ -168,13 +168,33 @@ public class LocationEditFragment extends EditFragment<Location> implements Goog
             public void onClick(View v) {
                 try {
                     LocationManager locationManager = (LocationManager)getContext().getSystemService(Context.LOCATION_SERVICE);
-                    android.location.Location location = locationManager.getLastKnownLocation(GPS_PROVIDER);
-                    if (location != null) {
-                        mLatitude = location.getLatitude();
-                        mLongitude = location.getLongitude();
-                        mPlaceName = "";
-                        new RequestTask(mLatitude, mLongitude).execute();
-                    }
+                    Criteria criteria = new Criteria();
+                    criteria.setAccuracy(Criteria.ACCURACY_LOW);
+                    criteria.setPowerRequirement(Criteria.POWER_LOW);
+                    locationManager.requestSingleUpdate(criteria, new LocationListener() {
+                        @Override
+                        public void onLocationChanged(android.location.Location location) {
+                            mLatitude = location.getLatitude();
+                            mLongitude = location.getLongitude();
+                            mPlaceName = "";
+                            new RequestTask(mLatitude, mLongitude).execute();
+                        }
+
+                        @Override
+                        public void onStatusChanged(String provider, int status, Bundle extras) {
+
+                        }
+
+                        @Override
+                        public void onProviderEnabled(String provider) {
+
+                        }
+
+                        @Override
+                        public void onProviderDisabled(String provider) {
+
+                        }
+                    }, null);
                 } catch(Exception e) {
                     e.printStackTrace();
                 }
@@ -183,6 +203,7 @@ public class LocationEditFragment extends EditFragment<Location> implements Goog
 
         return view;
     }
+
 
     class RequestTask extends AsyncTask<Void, Void, String> {
 

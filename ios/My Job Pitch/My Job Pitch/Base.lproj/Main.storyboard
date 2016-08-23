@@ -127,7 +127,7 @@
                                                     <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="nvH-Uf-y8G" userLabel="Register Form">
                                                         <rect key="frame" x="0.0" y="80" width="225" height="72"/>
                                                         <subviews>
-                                                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="password (again)" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="KkR-O2-tad" userLabel="password2">
+                                                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Confirm Password" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="KkR-O2-tad" userLabel="password2">
                                                                 <rect key="frame" x="0.0" y="0.0" width="225" height="30"/>
                                                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                                 <textInputTraits key="textInputTraits" secureTextEntry="YES"/>
@@ -261,8 +261,8 @@
                                                         </variation>
                                                     </view>
                                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="right" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="MNd-Oa-X3x">
-                                                        <rect key="frame" x="85" y="157" width="140" height="30"/>
-                                                        <state key="normal" title="Forgot my password"/>
+                                                        <rect key="frame" x="33" y="157" width="192" height="30"/>
+                                                        <state key="normal" title="I want to reset my password"/>
                                                         <connections>
                                                             <action selector="resetForm:" destination="BYZ-38-t0r" eventType="touchUpInside" id="Zau-iq-QnB"/>
                                                         </connections>
@@ -664,8 +664,8 @@
                                                 </constraints>
                                             </imageView>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Apply" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dEz-7m-CGE">
-                                                <rect key="frame" x="136" y="435" width="44" height="21"/>
-                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                <rect key="frame" x="138" y="435" width="40" height="18"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
@@ -686,8 +686,8 @@
                                                 </constraints>
                                             </imageView>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Remove" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="h0Q-QC-gpp">
-                                                <rect key="frame" x="411" y="435" width="62" height="21"/>
-                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                <rect key="frame" x="415" y="435" width="55" height="18"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
@@ -754,7 +754,7 @@
                         </constraints>
                     </view>
                     <toolbarItems/>
-                    <navigationItem key="navigationItem" title="Home" id="SOC-PA-dFI">
+                    <navigationItem key="navigationItem" title="My jobs" id="SOC-PA-dFI">
                         <barButtonItem key="leftBarButtonItem" title="Account" id="9yk-ag-3Nf">
                             <connections>
                                 <action selector="account:" destination="B6U-eH-CfR" id="kR9-ms-9tx"/>
@@ -797,7 +797,7 @@
             </objects>
             <point key="canvasLocation" x="1333" y="621"/>
         </scene>
-        <!--Businesses-->
+        <!--Companies-->
         <scene sceneID="MPK-xw-IQi">
             <objects>
                 <viewController storyboardIdentifier="recruiter_home" id="Bh1-kr-uT8" customClass="ListBusinesses" sceneMemberID="viewController">
@@ -905,7 +905,7 @@
                             <constraint firstItem="uCS-cf-ZFr" firstAttribute="top" secondItem="t1d-Pd-5zD" secondAttribute="bottom" id="zl5-Kb-UoS"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" title="Businesses" id="fXS-Fo-0Nv">
+                    <navigationItem key="navigationItem" title="Companies" id="fXS-Fo-0Nv">
                         <barButtonItem key="leftBarButtonItem" title="Account" id="5KU-uI-j19">
                             <connections>
                                 <action selector="account" destination="Bh1-kr-uT8" id="qQc-T2-cgs"/>
@@ -1664,7 +1664,7 @@
             </objects>
             <point key="canvasLocation" x="5370" y="2425"/>
         </scene>
-        <!--Record Pitch-->
+        <!--Record My Pitch-->
         <scene sceneID="VIx-nh-H5T">
             <objects>
                 <viewController id="KaQ-qh-VKT" customClass="RecordPitch" sceneMemberID="viewController">
@@ -1932,7 +1932,7 @@ Finish your pitch confidently by saying something like, “Thank you and I look 
                             <constraint firstItem="P4C-g8-IHW" firstAttribute="width" secondItem="R4A-pn-hYU" secondAttribute="width" id="xRD-fD-EfU"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" title="Record Pitch" id="hSm-cR-BCN"/>
+                    <navigationItem key="navigationItem" title="Record My Pitch" id="hSm-cR-BCN"/>
                     <nil key="simulatedBottomBarMetrics"/>
                     <connections>
                         <outlet property="image" destination="Gls-FS-6cB" id="yeo-O3-JfW"/>
@@ -2619,7 +2619,7 @@ Finish your pitch confidently by saying something like, “Thank you and I look 
                                 <rect key="frame" x="60" y="60" width="480" height="480"/>
                             </imageView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ssn-UK-jdD">
-                                <rect key="frame" x="13" y="82" width="574" height="60"/>
+                                <rect key="frame" x="13" y="82" width="574" height="56"/>
                                 <color key="backgroundColor" red="0.0" green="0.58823529409999997" blue="0.53333333329999999" alpha="1" colorSpace="calibratedRGB"/>
                                 <state key="normal">
                                     <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -2641,13 +2641,13 @@ Finish your pitch confidently by saying something like, “Thank you and I look 
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Search for job seekers matching this job" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8Hc-dr-2DJ">
-                                <rect key="frame" x="20" y="114" width="307" height="21"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <rect key="frame" x="20" y="114" width="260" height="17"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="kSi-zc-vYW">
-                                <rect key="frame" x="13" y="155" width="574" height="60"/>
+                                <rect key="frame" x="13" y="151" width="574" height="56"/>
                                 <color key="backgroundColor" red="0.0" green="0.58823529409999997" blue="0.53333333329999999" alpha="1" colorSpace="calibratedRGB"/>
                                 <state key="normal">
                                     <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -2663,19 +2663,19 @@ Finish your pitch confidently by saying something like, “Thank you and I look 
                                 </connections>
                             </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Applications" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ozu-mD-UFh">
-                                <rect key="frame" x="20" y="162" width="103" height="21"/>
+                                <rect key="frame" x="20" y="158" width="103" height="21"/>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
                                 <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="View job seekers who are interested in this job" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="nkV-SD-otb">
-                                <rect key="frame" x="20" y="187" width="353" height="21"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <rect key="frame" x="20" y="183" width="299" height="17"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="SAy-Yl-iK9">
-                                <rect key="frame" x="13" y="228" width="574" height="60"/>
+                                <rect key="frame" x="13" y="220" width="574" height="56"/>
                                 <color key="backgroundColor" red="0.0" green="0.58823529409999997" blue="0.53333333329999999" alpha="1" colorSpace="calibratedRGB"/>
                                 <state key="normal">
                                     <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -2691,19 +2691,19 @@ Finish your pitch confidently by saying something like, “Thank you and I look 
                                 </connections>
                             </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Connections" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1Y7-Dv-y90">
-                                <rect key="frame" x="20" y="235" width="104" height="21"/>
+                                <rect key="frame" x="20" y="227" width="104" height="21"/>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
                                 <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="View job seekers you have connected with" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vEO-iO-1aA">
-                                <rect key="frame" x="20" y="260" width="324" height="21"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <rect key="frame" x="20" y="252" width="274" height="17"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mFk-Hg-R0Z">
-                                <rect key="frame" x="13" y="311" width="258" height="40"/>
+                                <rect key="frame" x="13" y="299" width="258" height="40"/>
                                 <color key="backgroundColor" red="0.0" green="0.58823529409999997" blue="0.53333333329999999" alpha="1" colorSpace="calibratedRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="40" id="1wF-oO-nLZ"/>
@@ -2722,7 +2722,7 @@ Finish your pitch confidently by saying something like, “Thank you and I look 
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="kGq-tW-5ga">
-                                <rect key="frame" x="329" y="311" width="258" height="40"/>
+                                <rect key="frame" x="329" y="299" width="258" height="40"/>
                                 <color key="backgroundColor" red="0.0" green="0.58823529409999997" blue="0.53333333329999999" alpha="1" colorSpace="calibratedRGB"/>
                                 <state key="normal" title="Remove Job">
                                     <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -2904,6 +2904,25 @@ Finish your pitch confidently by saying something like, “Thank you and I look 
                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Jmi-fV-vmo">
                                                         <rect key="frame" x="205" y="0.0" width="150" height="205"/>
                                                         <subviews>
+                                                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" semanticContentAttribute="playback" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="tpw-l1-1ck">
+                                                                <rect key="frame" x="15" y="15" width="120" height="120"/>
+                                                                <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                                                <constraints>
+                                                                    <constraint firstAttribute="width" secondItem="tpw-l1-1ck" secondAttribute="height" multiplier="1:1" id="zsn-mj-m3J"/>
+                                                                </constraints>
+                                                            </imageView>
+                                                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="play" translatesAutoresizingMaskIntoConstraints="NO" id="nSG-6C-2EF">
+                                                                <rect key="frame" x="57" y="27" width="36" height="96"/>
+                                                            </imageView>
+                                                            <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="Etj-38-kz0">
+                                                                <rect key="frame" x="57" y="57" width="37" height="37"/>
+                                                            </activityIndicatorView>
+                                                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_star" translatesAutoresizingMaskIntoConstraints="NO" id="66M-U5-caO">
+                                                                <rect key="frame" x="119" y="19" width="12" height="12"/>
+                                                                <constraints>
+                                                                    <constraint firstAttribute="width" secondItem="66M-U5-caO" secondAttribute="height" multiplier="1:1" id="xRN-kl-dKP"/>
+                                                                </constraints>
+                                                            </imageView>
                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" text="..." textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tkg-gf-dEG">
                                                                 <rect key="frame" x="15" y="143" width="96" height="21"/>
                                                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
@@ -2916,25 +2935,6 @@ Finish your pitch confidently by saying something like, “Thank you and I look 
                                                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                                 <nil key="highlightedColor"/>
                                                             </label>
-                                                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" semanticContentAttribute="playback" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="tpw-l1-1ck">
-                                                                <rect key="frame" x="15" y="15" width="120" height="120"/>
-                                                                <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                                                <constraints>
-                                                                    <constraint firstAttribute="width" secondItem="tpw-l1-1ck" secondAttribute="height" multiplier="1:1" id="zsn-mj-m3J"/>
-                                                                </constraints>
-                                                            </imageView>
-                                                            <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="Etj-38-kz0">
-                                                                <rect key="frame" x="57" y="57" width="37" height="37"/>
-                                                            </activityIndicatorView>
-                                                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="play" translatesAutoresizingMaskIntoConstraints="NO" id="nSG-6C-2EF">
-                                                                <rect key="frame" x="57" y="27" width="36" height="96"/>
-                                                            </imageView>
-                                                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_star" translatesAutoresizingMaskIntoConstraints="NO" id="66M-U5-caO">
-                                                                <rect key="frame" x="119" y="19" width="12" height="12"/>
-                                                                <constraints>
-                                                                    <constraint firstAttribute="width" secondItem="66M-U5-caO" secondAttribute="height" multiplier="1:1" id="xRN-kl-dKP"/>
-                                                                </constraints>
-                                                            </imageView>
                                                             <label opaque="NO" userInteractionEnabled="NO" alpha="0.0" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="XfU-mZ-Ihl">
                                                                 <rect key="frame" x="15" y="48" width="120" height="55"/>
                                                                 <fontDescription key="fontDescription" type="system" pointSize="45"/>
@@ -2943,7 +2943,7 @@ Finish your pitch confidently by saying something like, “Thank you and I look 
                                                                 <color key="shadowColor" red="0.87843137250000003" green="0.87843137250000003" blue="0.87843137250000003" alpha="0.69999999999999996" colorSpace="calibratedRGB"/>
                                                                 <size key="shadowOffset" width="-1" height="-1"/>
                                                             </label>
-                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="..." textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5Hp-xE-X3K">
+                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="751" text="..." textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5Hp-xE-X3K">
                                                                 <rect key="frame" x="15" y="172" width="120" height="21"/>
                                                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
@@ -2967,6 +2967,7 @@ Finish your pitch confidently by saying something like, “Thank you and I look 
                                                             <constraint firstItem="tpw-l1-1ck" firstAttribute="top" secondItem="Jmi-fV-vmo" secondAttribute="top" constant="15" id="Xbd-xK-VHu"/>
                                                             <constraint firstItem="hgQ-FN-mBK" firstAttribute="trailing" secondItem="tpw-l1-1ck" secondAttribute="trailing" id="aS6-Pr-zda"/>
                                                             <constraint firstItem="nSG-6C-2EF" firstAttribute="width" secondItem="tpw-l1-1ck" secondAttribute="width" multiplier="0.3" id="b9Y-SZ-d2V"/>
+                                                            <constraint firstAttribute="width" secondItem="Jmi-fV-vmo" secondAttribute="height" multiplier="30:41" id="bgU-ZV-Qf0"/>
                                                             <constraint firstItem="hgQ-FN-mBK" firstAttribute="top" secondItem="tpw-l1-1ck" secondAttribute="bottom" constant="8" id="cYg-9s-T1m"/>
                                                             <constraint firstItem="XfU-mZ-Ihl" firstAttribute="trailing" secondItem="tpw-l1-1ck" secondAttribute="trailing" id="f1m-qk-6RP"/>
                                                             <constraint firstItem="Etj-38-kz0" firstAttribute="centerX" secondItem="tpw-l1-1ck" secondAttribute="centerX" id="gub-HR-eID"/>
@@ -2990,11 +2991,8 @@ Finish your pitch confidently by saying something like, “Thank you and I look 
                                                 </subviews>
                                                 <constraints>
                                                     <constraint firstItem="Jmi-fV-vmo" firstAttribute="top" secondItem="ECS-rL-yVr" secondAttribute="top" id="BlA-k3-QUa"/>
-                                                    <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="Jmi-fV-vmo" secondAttribute="bottom" id="GiJ-lb-Axo"/>
-                                                    <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="Jmi-fV-vmo" secondAttribute="trailing" id="YeJ-aX-e4k"/>
+                                                    <constraint firstAttribute="bottom" secondItem="Jmi-fV-vmo" secondAttribute="bottom" id="GiJ-lb-Axo"/>
                                                     <constraint firstItem="Jmi-fV-vmo" firstAttribute="centerX" secondItem="ECS-rL-yVr" secondAttribute="centerX" id="cdJ-8U-hgU"/>
-                                                    <constraint firstItem="Jmi-fV-vmo" firstAttribute="width" secondItem="ECS-rL-yVr" secondAttribute="width" priority="750" id="tL0-fk-RSe"/>
-                                                    <constraint firstItem="Jmi-fV-vmo" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="ECS-rL-yVr" secondAttribute="leading" id="w5h-QD-lmm"/>
                                                 </constraints>
                                             </view>
                                             <button opaque="NO" contentMode="scaleToFill" verticalCompressionResistancePriority="1000" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="C32-TY-6Ln">
@@ -3018,8 +3016,8 @@ Finish your pitch confidently by saying something like, “Thank you and I look 
                                                 <rect key="frame" x="36" y="272" width="224" height="45"/>
                                             </view>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Connect" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="64a-vb-3Mq">
-                                                <rect key="frame" x="116" y="415" width="65" height="21"/>
-                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                <rect key="frame" x="119" y="415" width="59" height="18"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
@@ -3041,8 +3039,8 @@ Finish your pitch confidently by saying something like, “Thank you and I look 
                                                 </constraints>
                                             </imageView>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Remove" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jSv-Rv-W3P">
-                                                <rect key="frame" x="421" y="415" width="62" height="21"/>
-                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                <rect key="frame" x="425" y="415" width="55" height="18"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
@@ -3234,10 +3232,10 @@ Finish your pitch confidently by saying something like, “Thank you and I look 
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="L7e-Nv-zjo" userLabel="Message View">
                                                 <rect key="frame" x="16" y="365" width="568" height="100"/>
                                                 <subviews>
-                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Contact Details" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rbL-UX-oM3">
-                                                        <rect key="frame" x="0.0" y="1" width="126" height="21"/>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Contact" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rbL-UX-oM3">
+                                                        <rect key="frame" x="0.0" y="1" width="66" height="21"/>
                                                         <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
-                                                        <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                                        <color key="textColor" red="0.0" green="0.58823529409999997" blue="0.53333333329999999" alpha="1" colorSpace="calibratedRGB"/>
                                                         <nil key="highlightedColor"/>
                                                     </label>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="nOz-bV-t25">
@@ -3281,7 +3279,7 @@ Finish your pitch confidently by saying something like, “Thank you and I look 
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="CV" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="HCX-Z7-7SW">
                                                         <rect key="frame" x="0.0" y="1" width="25" height="21"/>
                                                         <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
-                                                        <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                                        <color key="textColor" red="0.0" green="0.58823529409999997" blue="0.53333333329999999" alpha="1" colorSpace="calibratedRGB"/>
                                                         <nil key="highlightedColor"/>
                                                     </label>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="References available on request" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="YZ6-LP-wZb">
@@ -3418,9 +3416,6 @@ Finish your pitch confidently by saying something like, “Thank you and I look 
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="Nyi-Ox-sZk">
-                                <rect key="frame" x="290" y="290" width="20" height="20"/>
-                            </activityIndicatorView>
                             <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="background_logo" translatesAutoresizingMaskIntoConstraints="NO" id="MMK-yO-4DD">
                                 <rect key="frame" x="60" y="60" width="480" height="480"/>
                             </imageView>
@@ -3573,12 +3568,10 @@ Finish your pitch confidently by saying something like, “Thank you and I look 
                             <constraint firstItem="p1k-vA-aHV" firstAttribute="width" secondItem="w7e-37-Gfm" secondAttribute="width" id="Eqk-91-Nd5"/>
                             <constraint firstItem="MMK-yO-4DD" firstAttribute="centerY" secondItem="w7e-37-Gfm" secondAttribute="centerY" id="QzJ-gn-sj5"/>
                             <constraint firstItem="p1k-vA-aHV" firstAttribute="height" secondItem="w7e-37-Gfm" secondAttribute="height" id="a4I-OI-tzZ"/>
-                            <constraint firstItem="Nyi-Ox-sZk" firstAttribute="centerY" secondItem="w7e-37-Gfm" secondAttribute="centerY" id="cDA-Xr-xAF"/>
                             <constraint firstItem="MMK-yO-4DD" firstAttribute="centerX" secondItem="w7e-37-Gfm" secondAttribute="centerX" id="e7b-ji-DYq"/>
                             <constraint firstItem="MMK-yO-4DD" firstAttribute="height" secondItem="w7e-37-Gfm" secondAttribute="height" multiplier="0.8" id="g4y-6p-l8m"/>
                             <constraint firstItem="Leg-Rp-gUn" firstAttribute="top" secondItem="z66-DQ-JfG" secondAttribute="bottom" id="nlw-Nr-cuv"/>
                             <constraint firstItem="Leg-Rp-gUn" firstAttribute="leading" secondItem="w7e-37-Gfm" secondAttribute="leading" id="rZw-gM-n65"/>
-                            <constraint firstItem="Nyi-Ox-sZk" firstAttribute="centerX" secondItem="w7e-37-Gfm" secondAttribute="centerX" id="tjs-Jo-rL0"/>
                         </constraints>
                     </view>
                     <nil key="simulatedBottomBarMetrics"/>
@@ -3804,9 +3797,9 @@ Finish your pitch confidently by saying something like, “Thank you and I look 
         <image name="switch_camera" width="48" height="48"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="beN-Hw-Pdh"/>
-        <segue reference="wj9-jy-mgT"/>
-        <segue reference="XoM-Rr-ZjD"/>
         <segue reference="bLg-hp-djS"/>
+        <segue reference="0vK-0A-u9q"/>
+        <segue reference="XoM-Rr-ZjD"/>
+        <segue reference="wj9-jy-mgT"/>
     </inferredMetricsTieBreakers>
 </document>

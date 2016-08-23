@@ -11,14 +11,16 @@
 #import "Nationality.h"
 #import "DropboxBrowserViewController.h"
 
-@interface JobSeekerProfileView () <DropboxBrowserDelegate>
+@interface JobSeekerProfileView () <DropboxBrowserDelegate, UITextViewDelegate>
 
 @property (nonatomic, nonnull) NSArray *sexes;
 @property (nonatomic, nonnull) NSArray *nationalities;
 
 @end
 
-@implementation JobSeekerProfileView
+@implementation JobSeekerProfileView {
+    UILabel *descriPlaceholder;
+}
 
 - (instancetype)initWithCoder:(NSCoder *)aDecoder
 {
@@ -49,6 +51,13 @@
     self.email.textField.text = [AppHelper getEmail];
     self.email.textField.textColor = [UIColor colorWithRed:0.5 green:0.5 blue:0.5 alpha:1];
     self.email.textField.enabled = false;
+    
+    descriPlaceholder = [[UILabel alloc] initWithFrame:CGRectMake(10.0f, 0, self.descriptionView.frame.size.width - 10.0f, 34.0f)];
+    [descriPlaceholder setText:@"Description"];
+    [descriPlaceholder setBackgroundColor:[UIColor clearColor]];
+    [descriPlaceholder setTextColor:[UIColor colorWithRed:200/255.0f green:200/255.0f blue:200/255.0f alpha:200/255.0f]];
+    self.descriptionView.delegate = self;
+    [self.descriptionView addSubview:descriPlaceholder];
 }
 
 - (UIView*)loadViewFromNib
@@ -56,6 +65,20 @@
     NSBundle *bundle = [NSBundle bundleForClass:[self class]];
     UINib *nib = [UINib nibWithNibName:@"JobSeekerProfileView" bundle:bundle];
     return [[nib instantiateWithOwner:self options:nil] objectAtIndex:0];
+}
+
+- (void)textViewDidEndEditing:(UITextView *)textView {
+    if (![self.descriptionView hasText]) {
+        descriPlaceholder.hidden = NO;
+    }
+}
+
+- (void)textViewDidChange:(UITextView *)textView {
+    if (![self.descriptionView hasText]) {
+        descriPlaceholder.hidden = NO;
+    } else {
+        descriPlaceholder.hidden = YES;
+    }
 }
 
 - (void)setSexes:(NSArray*)sexObjects

@@ -26,7 +26,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             tools:text="Not set"
-            android:layout_weight="1"/>
+            android:layout_weight="1"
+            android:singleLine="true" />
         <Button
             android:id="@+id/job_profile_sectors_button"
             android:text="@string/change"

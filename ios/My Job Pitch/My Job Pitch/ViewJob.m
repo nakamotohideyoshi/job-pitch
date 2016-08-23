@@ -43,6 +43,7 @@ typedef NS_ENUM(NSInteger, EmptyButtonAction) {
     self.emptyButton2Action = EmptyButtonActionNone;
     self.emptyButton3Action = EmptyButtonActionNone;
     self.shortlisted.on = false;
+    self.navigationItem.title = self.strTitle;
 }
 
 - (IBAction)cardTapAction:(id)sender

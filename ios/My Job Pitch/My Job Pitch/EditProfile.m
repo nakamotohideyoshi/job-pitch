@@ -87,6 +87,7 @@
         [SVProgressHUD show];
         [[self appDelegate].api saveJobSeeker:myJobSeeker
                                       success:^(JobSeeker *jobSeeker) {
+                                          [SVProgressHUD dismiss];
                                           [self clearErrors];
                                           [self.navigationController popViewControllerAnimated:true];
                                       }

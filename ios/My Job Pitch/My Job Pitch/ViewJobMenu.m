@@ -27,10 +27,13 @@
     [jobView setJob:self.job];
     if ([[segue identifier] isEqualToString:@"goto_job_search"]) {
         [jobView setMode:JobViewModeSearch];
+        jobView.strTitle = @"Job seekers";
     } else if ([[segue identifier] isEqualToString:@"goto_job_applications"]) {
         [jobView setMode:JobViewModeApplications];
+        jobView.strTitle = @"Applications";
     } else if ([[segue identifier] isEqualToString:@"goto_job_connections"]) {
         [jobView setMode:JobViewModeConnections];
+        jobView.strTitle = @"Connections";
     }
 }
 

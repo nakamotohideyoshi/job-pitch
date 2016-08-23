@@ -13,7 +13,7 @@
 #import "JobStatus.h"
 @import AssetsLibrary;
 
-@interface JobEditView ()
+@interface JobEditView () <UITextViewDelegate>
 @property (nullable) Image *image;
 @property (nonatomic, nonnull) NSArray *contractList;
 @property (nonatomic, nonnull) NSArray *hoursList;
@@ -24,6 +24,7 @@
 @implementation JobEditView {
     UIImagePickerController *ipc;
     UIPopoverController *popover;
+    UILabel *descriPlaceholder;
 }
 
 - (instancetype)initWithCoder:(NSCoder *)aDecoder
@@ -58,6 +59,14 @@
     self.deleteButton.hidden = true;
     self.noImage.hidden = false;
     self.imageActivity.hidden = true;
+    
+    
+    descriPlaceholder = [[UILabel alloc] initWithFrame:CGRectMake(10.0f, 0, self.descriptionView.frame.size.width - 10.0f, 34.0f)];
+    [descriPlaceholder setText:@"Description"];
+    [descriPlaceholder setBackgroundColor:[UIColor clearColor]];
+    [descriPlaceholder setTextColor:[UIColor colorWithRed:200/255.0f green:200/255.0f blue:200/255.0f alpha:200/255.0f]];
+    self.descriptionView.delegate = self;
+    [self.descriptionView addSubview:descriPlaceholder];
 }
 
 - (UIView*)loadViewFromNib
@@ -65,6 +74,20 @@
     NSBundle *bundle = [NSBundle bundleForClass:[self class]];
     UINib *nib = [UINib nibWithNibName:@"JobEditView" bundle:bundle];
     return [[nib instantiateWithOwner:self options:nil] objectAtIndex:0];
+}
+
+- (void)textViewDidEndEditing:(UITextView *)textView {
+    if (![self.descriptionView hasText]) {
+        descriPlaceholder.hidden = NO;
+    }
+}
+
+- (void)textViewDidChange:(UITextView *)textView {
+    if (![self.descriptionView hasText]) {
+        descriPlaceholder.hidden = NO;
+    } else {
+        descriPlaceholder.hidden = YES;
+    }
 }
 
 

@@ -73,7 +73,12 @@ $(document).on('click','.go-to-messages',function(argument) {
 });
 
 $(document).on('click','.go-to-details',function(argument) {
-	viewPitch2($(this).data('video'), $(this).data('job-id'), $(this).data('jobseeker-id'));
+	var $this = $(this);
+	viewPitch2( $this.data('video'),
+		$this.data('job-id'),
+		$this.data('jobseeker-id'),
+		$this.data('application-id')
+	);
 });
 
 $(document).on('click','.delete-action-btn',function(argument) {

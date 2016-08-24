@@ -8,7 +8,9 @@
 	<% }else{ %>
 	<td class="go-to-details"
 	data-video="<%= video %>"
-	data-jobseeker-id="<%= application.job_seeker.id %>">
+	data-job-id="<%= application.job_data.id %>"
+	data-jobseeker-id="<%= application.job_seeker.id %>"
+	data-application-id="<%= application.id %>">
 	<%= application.job_seeker.first_name %> <%= application.job_seeker.last_name %></td>
 	<% } %>
 	<td><%= application.job_seeker.description %></td>

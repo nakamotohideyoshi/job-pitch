@@ -135,6 +135,19 @@ function connectWithJob(job_id, job_seeker_id) {
 			.html('<div class="row"><div class="col-md-12"><h4 style="text-align: center; font-size:16px;">Thanks for requesting to connect. A message has been sent to the job seeker</h4></div></div><div class="row"><div class="col-md-12" style="text-align:center;"><button style="margin-left:0;" type="button" class="btn btn-custom" data-dismiss="modal" aria-label="Close">Back to List</button></div></row>');
 		*/
 		$('#job-list-' + job_seeker_id).remove();
+	}).fail(function(data) {
+		if(data.responseText.indexOf('must make a unique set')>0){
+			log('info', 'The job seeker has already received a message with your requested connection.');
+		}
+	});
+}
+
+function setShortListedApplication(application_id) {
+	$.put("/api/applications/"+application_id+"/", {
+		shortlisted: true,
+		csrftoken: getCookie('csrftoken')
+	}).done(function (data) {
+		log('info','This application was set as short listed already.');
 	});
 }
 
@@ -301,8 +314,7 @@ function account_active_check() {
 	$.get("/api-rest-auth/user/", {
 		token: getCookie('key'),
 		csrftoken: getCookie('csrftoken')
-	})
-		.done(function (data) {
+	}).done(function (data) {
 			job_seeker_id = data.job_seeker;
 
 			$.get("/api/job-seekers/" + data.job_seeker, {
@@ -370,19 +382,25 @@ function deleteJobSeekerFromJob(job_id, job_seeker) {
 
 }
 
-function viewPitch(url, job_id, job_seeker) {
+function viewPitch(url, job_id, job_seeker, application_id) {
 	$('#pitchViewer').html('');
 	$('#pitchViewer').html('<video width="320" height="240" controls><source src="' + url + '" type="video/mp4"></video>');
 	$('#applyButtonModal').attr('href', 'javascript:connectWithJob(' + job_id + ',' + job_seeker + ');');
+	$('#shortListButtonModal').attr('href', 'javascript:setShortListedApplication(' + application_id + ');');
 	$('#deleteButtonModal').attr('href', 'javascript:deleteJobSeekerFromJob(' + job_id + ',' + job_seeker + ');');
 	$('#applyButtonModal').show();
 	$('#deleteButtonModal').show();
+	$('#shortListButtonModal').show();
 	$('#viewPitchModal').modal('show');
 }
 
-function viewPitch2(url, job_id, job_seeker) {
+function viewPitch2(url, job_id, job_seeker, application_id) {
 	$('#pitchViewer').html('');
 	$('#pitchViewer').html('<video width="320" height="240" controls><source src="' + url + '" type="video/mp4"></video>');
+	$('#applyButtonModal').attr('href', 'javascript:connectWithJob(' + job_id + ',' + job_seeker + ');');
+	$('#shortListButtonModal').attr('href', 'javascript:setShortListedApplication(' + application_id + ');');
+	$('#applyButtonModal').show();
+	$('#shortListButtonModal').show();
 	$('#viewPitchModal').modal('show');
 }
 

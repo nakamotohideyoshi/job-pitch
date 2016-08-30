@@ -131,6 +131,7 @@ class JobSeekerSerializer(serializers.ModelSerializer):
     user = serializers.PrimaryKeyRelatedField(read_only=True)
     profile = serializers.PrimaryKeyRelatedField(read_only=True)
     pitches = PitchSerializer(many=True, read_only=True)
+    email = serializers.EmailField(read_only=True, source='user.email')
     
     class Meta:
         model = JobSeeker

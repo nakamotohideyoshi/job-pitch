@@ -5,7 +5,7 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin"
-    tools:context=".JobModeChoiceActivity">
+    tools:context=".activities.JobModeChoiceActivity">
 
     <ImageView
         android:src="@drawable/background_logo"
@@ -26,7 +26,8 @@
             android:textAllCaps="false"
             android:gravity="left|center_vertical"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:textColor="@color/white"/>
 
         <Button
             android:id="@+id/applications_button"
@@ -35,7 +36,8 @@
             android:textAllCaps="false"
             android:gravity="left|center_vertical"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:textColor="@color/white"/>
 
         <Button
             android:id="@+id/connections_button"
@@ -44,7 +46,8 @@
             android:textAllCaps="false"
             android:gravity="left|center_vertical"
             android:layout_width="match_parent"
-            android:layout_height="fill_parent" />
+            android:layout_height="fill_parent"
+            android:textColor="@color/white"/>
 
     </LinearLayout>
 

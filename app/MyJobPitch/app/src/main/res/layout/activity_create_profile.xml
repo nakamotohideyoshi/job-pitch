@@ -112,7 +112,8 @@
                     android:layout_height="wrap_content"
                     android:text="@string/action_continue"
                     android:id="@+id/continue_button_recruiter"
-                    android:layout_weight="1" />
+                    android:layout_weight="1"
+                    android:textColor="@color/white"/>
 
             </LinearLayout>
 
@@ -136,7 +137,8 @@
                     android:text="@string/action_continue"
                     android:id="@+id/continue_button_job_seeker"
                     android:layout_weight="1"
-                    android:enabled="false" />
+                    android:enabled="false"
+                    android:textColor="@color/white"/>
             </LinearLayout>
 
         </LinearLayout>

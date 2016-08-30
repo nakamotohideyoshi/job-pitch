@@ -12,6 +12,7 @@
     <style name="AppTheme" parent="Base.AppTheme">
         <!-- Customize your theme here. -->
         <item name="android:buttonStyle">@style/MJPButton</item>
+        <item name="colorButtonNormal">@color/mjp_teal</item>
     </style>
 
     <style name="MJPButton" parent="Widget.AppCompat.Button">

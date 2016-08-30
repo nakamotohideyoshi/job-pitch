@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
 
@@ -12,7 +13,7 @@ import com.myjobpitch.MJPApplication;
 import com.myjobpitch.R;
 import com.myjobpitch.api.MJPApi;
 
-public class MJPActionBarActivity extends ActionBarActivity implements MJPActivityInterface {
+public class MJPActionBarActivity extends AppCompatActivity implements MJPActivityInterface {
     public static final String FROM_LOGIN = "from_login";
     private final MJPActivityDelegate mActivityDelegate = createDelegate();
     private boolean mFromLogin = false;

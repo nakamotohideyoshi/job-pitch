@@ -31,6 +31,9 @@
     } else if ([[segue identifier] isEqualToString:@"goto_job_applications"]) {
         [jobView setMode:JobViewModeApplications];
         jobView.strTitle = @"Applications";
+    } else if ([[segue identifier] isEqualToString:@"goto_shortlist"]) {
+        [jobView setMode:JobViewModeApplications];
+        jobView.strTitle = @"Shortlist";
     } else if ([[segue identifier] isEqualToString:@"goto_job_connections"]) {
         [jobView setMode:JobViewModeConnections];
         jobView.strTitle = @"Connections";

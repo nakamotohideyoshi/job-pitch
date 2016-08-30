@@ -186,7 +186,7 @@
     <string name="dont_show">Don\'t show me this again</string>
     <string name="close">Close</string>
     <string name="title_create_job_seeker">Create Job Seeker</string>
-    <string name="all_my_information">All my information are truthful</string>
+    <string name="all_my_information">All my information is truthful</string>
     <string name="auto_set_location">Auto set my location</string>
 
     <string name="forgot_my_password">I want to reset my password</string>

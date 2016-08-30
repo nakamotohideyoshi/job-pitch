@@ -2674,8 +2674,36 @@ Finish your pitch confidently by saying something like, “Thank you and I look 
                                 <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="SAy-Yl-iK9">
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9So-at-GW5">
                                 <rect key="frame" x="13" y="220" width="574" height="56"/>
+                                <color key="backgroundColor" red="0.0" green="0.58823529409999997" blue="0.53333333329999999" alpha="1" colorSpace="calibratedRGB"/>
+                                <state key="normal">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="boolean" keyPath="layer.masksToBounds" value="YES"/>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                        <integer key="value" value="7"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                                <connections>
+                                    <segue destination="d7i-Me-xBa" kind="show" identifier="goto_shortlist" id="E46-Lk-kdo"/>
+                                </connections>
+                            </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="My shortlist" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0sZ-Qb-3ud">
+                                <rect key="frame" x="20" y="227" width="98" height="21"/>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
+                                <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="View job seekers you have connected with" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="QTL-rF-Wzd">
+                                <rect key="frame" x="20" y="252" width="274" height="17"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="SAy-Yl-iK9">
+                                <rect key="frame" x="13" y="289" width="574" height="56"/>
                                 <color key="backgroundColor" red="0.0" green="0.58823529409999997" blue="0.53333333329999999" alpha="1" colorSpace="calibratedRGB"/>
                                 <state key="normal">
                                     <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -2691,19 +2719,19 @@ Finish your pitch confidently by saying something like, “Thank you and I look 
                                 </connections>
                             </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Connections" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1Y7-Dv-y90">
-                                <rect key="frame" x="20" y="227" width="104" height="21"/>
+                                <rect key="frame" x="20" y="296" width="104" height="21"/>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
                                 <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="View job seekers you have connected with" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vEO-iO-1aA">
-                                <rect key="frame" x="20" y="252" width="274" height="17"/>
+                                <rect key="frame" x="20" y="321" width="274" height="17"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mFk-Hg-R0Z">
-                                <rect key="frame" x="13" y="299" width="258" height="40"/>
+                                <rect key="frame" x="13" y="368" width="258" height="40"/>
                                 <color key="backgroundColor" red="0.0" green="0.58823529409999997" blue="0.53333333329999999" alpha="1" colorSpace="calibratedRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="40" id="1wF-oO-nLZ"/>
@@ -2722,7 +2750,7 @@ Finish your pitch confidently by saying something like, “Thank you and I look 
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="kGq-tW-5ga">
-                                <rect key="frame" x="329" y="299" width="258" height="40"/>
+                                <rect key="frame" x="329" y="368" width="258" height="40"/>
                                 <color key="backgroundColor" red="0.0" green="0.58823529409999997" blue="0.53333333329999999" alpha="1" colorSpace="calibratedRGB"/>
                                 <state key="normal" title="Remove Job">
                                     <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -2747,23 +2775,34 @@ Finish your pitch confidently by saying something like, “Thank you and I look 
                         <color key="backgroundColor" red="0.87843137250000003" green="0.87843137250000003" blue="0.87843137250000003" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
                             <constraint firstItem="1Y7-Dv-y90" firstAttribute="leading" secondItem="SAy-Yl-iK9" secondAttribute="leading" constant="7" id="0Ev-DF-qPR"/>
+                            <constraint firstItem="9So-at-GW5" firstAttribute="trailing" secondItem="kSi-zc-vYW" secondAttribute="trailing" id="0vy-Yc-lur"/>
                             <constraint firstItem="mFk-Hg-R0Z" firstAttribute="width" secondItem="SAy-Yl-iK9" secondAttribute="width" multiplier="0.45" id="10J-Zd-nhr"/>
+                            <constraint firstItem="SAy-Yl-iK9" firstAttribute="top" secondItem="9So-at-GW5" secondAttribute="bottom" constant="13" id="35b-Bb-j4u"/>
                             <constraint firstItem="kGq-tW-5ga" firstAttribute="height" secondItem="mFk-Hg-R0Z" secondAttribute="height" id="5cU-1O-Zi7"/>
+                            <constraint firstItem="QTL-rF-Wzd" firstAttribute="top" secondItem="0sZ-Qb-3ud" secondAttribute="bottom" constant="4" id="669-k3-qvw"/>
+                            <constraint firstItem="0sZ-Qb-3ud" firstAttribute="top" secondItem="kSi-zc-vYW" secondAttribute="bottom" constant="26" id="6EH-uo-SuL"/>
+                            <constraint firstItem="0sZ-Qb-3ud" firstAttribute="top" secondItem="9So-at-GW5" secondAttribute="top" constant="7" id="8ii-p7-62L"/>
                             <constraint firstItem="nkV-SD-otb" firstAttribute="top" secondItem="ozu-mD-UFh" secondAttribute="bottom" constant="4" id="9Fh-qT-lmg"/>
+                            <constraint firstItem="QTL-rF-Wzd" firstAttribute="leading" secondItem="0sZ-Qb-3ud" secondAttribute="leading" id="9Kk-Jb-dT6"/>
                             <constraint firstItem="RsH-9Q-W1g" firstAttribute="leading" secondItem="ssn-UK-jdD" secondAttribute="leading" constant="7" id="9LB-7b-WdX"/>
                             <constraint firstItem="kSi-zc-vYW" firstAttribute="bottom" secondItem="nkV-SD-otb" secondAttribute="bottom" constant="7" id="AqE-Tg-d8j"/>
+                            <constraint firstItem="QTL-rF-Wzd" firstAttribute="bottom" secondItem="9So-at-GW5" secondAttribute="bottom" constant="-7" id="CYI-9p-xvs"/>
                             <constraint firstItem="kSi-zc-vYW" firstAttribute="leading" secondItem="ssn-UK-jdD" secondAttribute="leading" id="DDx-Tz-Dhb"/>
                             <constraint firstItem="ozu-mD-UFh" firstAttribute="top" secondItem="kSi-zc-vYW" secondAttribute="top" constant="7" id="ETW-OF-P7H"/>
+                            <constraint firstItem="9So-at-GW5" firstAttribute="leading" secondItem="kSi-zc-vYW" secondAttribute="leading" id="GAW-WG-uEB"/>
                             <constraint firstAttribute="trailingMargin" secondItem="4am-32-9ir" secondAttribute="trailing" id="Gqa-5T-PzK"/>
                             <constraint firstItem="kSi-zc-vYW" firstAttribute="top" secondItem="ssn-UK-jdD" secondAttribute="bottom" constant="13" id="Ijt-zU-Ms9"/>
                             <constraint firstItem="Kv9-ou-O9U" firstAttribute="height" secondItem="7j2-8M-huL" secondAttribute="height" multiplier="0.8" id="Ixd-kx-uax"/>
                             <constraint firstItem="nkV-SD-otb" firstAttribute="leading" secondItem="ozu-mD-UFh" secondAttribute="leading" id="KVT-vn-H8o"/>
                             <constraint firstItem="8Hc-dr-2DJ" firstAttribute="top" secondItem="RsH-9Q-W1g" secondAttribute="bottom" constant="4" id="LAt-fh-3QE"/>
                             <constraint firstItem="SAy-Yl-iK9" firstAttribute="bottom" secondItem="vEO-iO-1aA" secondAttribute="bottom" constant="7" id="Nj3-4U-hSy"/>
+                            <constraint firstItem="SAy-Yl-iK9" firstAttribute="trailing" secondItem="9So-at-GW5" secondAttribute="trailing" id="Oso-8d-4T4"/>
                             <constraint firstItem="ssn-UK-jdD" firstAttribute="leading" secondItem="7j2-8M-huL" secondAttribute="leading" constant="13" id="Ox3-3Z-mB7"/>
                             <constraint firstItem="kGq-tW-5ga" firstAttribute="centerY" secondItem="mFk-Hg-R0Z" secondAttribute="centerY" id="PXK-cm-IIv"/>
                             <constraint firstItem="Kv9-ou-O9U" firstAttribute="width" secondItem="7j2-8M-huL" secondAttribute="width" multiplier="0.8" id="SOk-hn-F45"/>
+                            <constraint firstItem="QTL-rF-Wzd" firstAttribute="bottom" secondItem="9So-at-GW5" secondAttribute="bottom" constant="7" id="TmO-0L-pof"/>
                             <constraint firstItem="1Y7-Dv-y90" firstAttribute="top" secondItem="SAy-Yl-iK9" secondAttribute="top" constant="7" id="VOC-A5-x8F"/>
+                            <constraint firstItem="0sZ-Qb-3ud" firstAttribute="top" secondItem="kSi-zc-vYW" secondAttribute="bottom" constant="7" id="W8x-M7-oTD"/>
                             <constraint firstItem="SAy-Yl-iK9" firstAttribute="leading" secondItem="kSi-zc-vYW" secondAttribute="leading" id="Wqh-d1-iez"/>
                             <constraint firstItem="RsH-9Q-W1g" firstAttribute="top" secondItem="ssn-UK-jdD" secondAttribute="top" constant="7" id="Xx6-4g-B9Q"/>
                             <constraint firstItem="hXJ-ZM-XF1" firstAttribute="top" secondItem="4am-32-9ir" secondAttribute="bottom" constant="2" id="YU1-dP-yNp"/>
@@ -2771,14 +2810,19 @@ Finish your pitch confidently by saying something like, “Thank you and I look 
                             <constraint firstItem="4am-32-9ir" firstAttribute="leading" secondItem="7j2-8M-huL" secondAttribute="leadingMargin" id="ef2-00-mxA"/>
                             <constraint firstItem="hXJ-ZM-XF1" firstAttribute="top" secondItem="4am-32-9ir" secondAttribute="bottom" constant="2" id="f5K-tm-SgG"/>
                             <constraint firstItem="kGq-tW-5ga" firstAttribute="width" secondItem="mFk-Hg-R0Z" secondAttribute="width" id="fjm-v8-VAq"/>
+                            <constraint firstItem="9So-at-GW5" firstAttribute="trailing" secondItem="kSi-zc-vYW" secondAttribute="trailing" id="g7G-aB-2qU"/>
                             <constraint firstItem="8Hc-dr-2DJ" firstAttribute="leading" secondItem="RsH-9Q-W1g" secondAttribute="leading" id="g8u-jv-WOe"/>
                             <constraint firstItem="SAy-Yl-iK9" firstAttribute="top" secondItem="kSi-zc-vYW" secondAttribute="bottom" constant="13" id="hAr-T4-I3F"/>
                             <constraint firstItem="kSi-zc-vYW" firstAttribute="trailing" secondItem="ssn-UK-jdD" secondAttribute="trailing" id="izG-Nz-anW"/>
                             <constraint firstItem="Kv9-ou-O9U" firstAttribute="centerX" secondItem="7j2-8M-huL" secondAttribute="centerX" id="jaE-Qu-Utf"/>
+                            <constraint firstItem="9So-at-GW5" firstAttribute="leading" secondItem="kSi-zc-vYW" secondAttribute="leading" id="lFr-oN-QgN"/>
+                            <constraint firstItem="9So-at-GW5" firstAttribute="top" secondItem="kSi-zc-vYW" secondAttribute="bottom" constant="13" id="lWA-ay-lUi"/>
+                            <constraint firstItem="0sZ-Qb-3ud" firstAttribute="leading" secondItem="9So-at-GW5" secondAttribute="leading" constant="7" id="mKW-77-gH2"/>
                             <constraint firstItem="ssn-UK-jdD" firstAttribute="bottom" secondItem="8Hc-dr-2DJ" secondAttribute="bottom" constant="7" id="mhL-gd-4xM"/>
                             <constraint firstItem="4am-32-9ir" firstAttribute="trailing" secondItem="7j2-8M-huL" secondAttribute="trailingMargin" constant="10" id="ojv-Wm-bvs"/>
                             <constraint firstItem="SAy-Yl-iK9" firstAttribute="trailing" secondItem="kSi-zc-vYW" secondAttribute="trailing" id="ovZ-qP-039"/>
                             <constraint firstItem="ssn-UK-jdD" firstAttribute="top" secondItem="WWU-5c-bhf" secondAttribute="bottom" constant="18" id="pso-5p-Ec5"/>
+                            <constraint firstItem="SAy-Yl-iK9" firstAttribute="leading" secondItem="9So-at-GW5" secondAttribute="leading" id="qcl-lG-210"/>
                             <constraint firstItem="vEO-iO-1aA" firstAttribute="leading" secondItem="1Y7-Dv-y90" secondAttribute="leading" id="rVa-5r-YXf"/>
                             <constraint firstItem="4am-32-9ir" firstAttribute="leading" secondItem="7j2-8M-huL" secondAttribute="leadingMargin" constant="-10" id="tBX-88-kKd"/>
                             <constraint firstAttribute="trailingMargin" secondItem="4am-32-9ir" secondAttribute="trailing" constant="2" id="tdB-kN-DvU"/>
@@ -2792,6 +2836,14 @@ Finish your pitch confidently by saying something like, “Thank you and I look 
                         </constraints>
                         <variation key="default">
                             <mask key="constraints">
+                                <exclude reference="0vy-Yc-lur"/>
+                                <exclude reference="GAW-WG-uEB"/>
+                                <exclude reference="6EH-uo-SuL"/>
+                                <exclude reference="W8x-M7-oTD"/>
+                                <exclude reference="TmO-0L-pof"/>
+                                <exclude reference="Wqh-d1-iez"/>
+                                <exclude reference="hAr-T4-I3F"/>
+                                <exclude reference="ovZ-qP-039"/>
                                 <exclude reference="Gqa-5T-PzK"/>
                                 <exclude reference="dvu-qb-c9Q"/>
                                 <exclude reference="ef2-00-mxA"/>
@@ -3798,7 +3850,7 @@ Finish your pitch confidently by saying something like, “Thank you and I look 
     </resources>
     <inferredMetricsTieBreakers>
         <segue reference="bLg-hp-djS"/>
-        <segue reference="0vK-0A-u9q"/>
+        <segue reference="E46-Lk-kdo"/>
         <segue reference="XoM-Rr-ZjD"/>
         <segue reference="wj9-jy-mgT"/>
     </inferredMetricsTieBreakers>

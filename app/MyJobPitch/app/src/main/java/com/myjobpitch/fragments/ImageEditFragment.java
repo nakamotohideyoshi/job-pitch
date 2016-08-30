@@ -67,6 +67,7 @@ public class ImageEditFragment extends Fragment {
             }
         });
         mDeleteImageButton = (Button) view.findViewById(R.id.delete_image_button);
+        mDeleteImageButton.setVisibility(View.INVISIBLE);
         mDeleteImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -78,6 +79,9 @@ public class ImageEditFragment extends Fragment {
                     mListener.onDelete();
             }
         });
+
+        load(null);
+
         return view;
     }
 

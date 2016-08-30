@@ -26,6 +26,7 @@
                 <outlet property="mobilePublic" destination="05G-Yi-qxK" id="mIm-UZ-GhI"/>
                 <outlet property="nationality" destination="1gt-37-FxX" id="QEF-lG-LXY"/>
                 <outlet property="nationalityPublic" destination="1W4-1K-u1A" id="XWO-eu-gKn"/>
+                <outlet property="selectButton" destination="Fvc-9m-UBV" id="gdK-l1-zeF"/>
                 <outlet property="sex" destination="9ue-2I-JOq" id="P9W-PG-AUi"/>
                 <outlet property="sexPublic" destination="dFT-Dh-Xcp" id="TpB-pN-Q6z"/>
                 <outlet property="telephone" destination="1Fe-KE-hks" id="zrH-v8-WeD"/>
@@ -239,7 +240,7 @@
                         <action selector="changedTickBox:" destination="-1" eventType="valueChanged" id="352-ec-Hqo"/>
                     </connections>
                 </switch>
-                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="All my information are truthful" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8OI-SK-8ig">
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="All my information is truthful" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8OI-SK-8ig">
                     <rect key="frame" x="59" y="761" width="192" height="17"/>
                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                     <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>

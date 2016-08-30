@@ -1,7 +1,7 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".JobSeekerDetailsActivity">
+    tools:context=".activities.JobSeekerDetailsActivity">
 
     <ImageView
         android:src="@drawable/background_logo"
@@ -124,13 +124,15 @@
                         android:id="@+id/send_message_button"
                         android:text="@string/send_message"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/white"/>
 
                     <TextView
                         android:id="@+id/no_contact_details"
                         android:text="@string/contact_details_unavailable"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/white"/>
 
                     <TextView
                         android:id="@+id/job_seeker_mobile"
@@ -182,7 +184,8 @@
                         android:gravity="center"
                         android:text="@string/download_cv"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/white"/>
                 </LinearLayout>
 
             </RelativeLayout>

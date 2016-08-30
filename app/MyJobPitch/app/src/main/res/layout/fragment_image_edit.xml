@@ -37,13 +37,15 @@
             android:id="@+id/change_image_button"
             android:text="@string/change"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"/>
 
         <Button
             android:id="@+id/delete_image_button"
             android:text="@string/delete"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"/>
 
     </LinearLayout>
 

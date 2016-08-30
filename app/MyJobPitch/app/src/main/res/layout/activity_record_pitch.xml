@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".RecordPitchActivity">
+    tools:context=".activities.RecordPitchActivity">
 
     <ImageView
         android:src="@drawable/background_logo"
@@ -128,12 +128,14 @@
                     android:id="@+id/upload_button"
                     android:text="@string/upload"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/white"/>
                 <Button
                     android:id="@+id/record_pitch_button"
                     android:text="@string/record_new_pitch"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/white"/>
             </LinearLayout>
         </LinearLayout>
     </ScrollView>
@@ -185,7 +187,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:id="@+id/close" />
+                android:id="@+id/close"
+                android:textColor="@color/white"/>
 
         </LinearLayout>
     </FrameLayout>

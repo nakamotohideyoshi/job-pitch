@@ -45,6 +45,7 @@
 @property (weak, nonatomic) IBOutlet UISwitch *tickBox;
 
 @property (weak, nonatomic) IBOutlet UILabel *cvFileName;
+@property (weak, nonatomic) IBOutlet UIButton *selectButton;
 
 @property (weak, nonatomic, nullable) id<JobSeekerProfileViewDelegate> delegate;
 

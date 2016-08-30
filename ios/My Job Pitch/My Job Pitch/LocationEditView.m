@@ -75,23 +75,31 @@
     self.mobile.textField.text = location.mobile;
     self.mobilePublic.on = location.mobilePublic;
     
+    if (location.images && location.images.count > 0) {
+        self.changeCenterContraint.priority = UILayoutPriorityDefaultLow;
+        self.deleteButton.hidden = false;
+        self.noImage.hidden = true;
+        self.imageView.alpha = 1.0f;
+        
+    } else {
+        self.changeCenterContraint.priority = UILayoutPriorityDefaultHigh;
+        self.deleteButton.hidden = true;
+        self.noImage.hidden = false;
+        self.noImage.text = @"image set by company";
+        self.imageView.alpha = 0.5f;
+    }
+    
     self.image = [location getImage];
     if (self.image && self.image.image) {
         [self.imageActivity setHidden:false];
         [self.imageActivity startAnimating];
         self.imageView.image = nil;
+        
         self.changeButton.enabled = false;
         self.changeButton.alpha = 0.5;
-        self.changeCenterContraint.priority = UILayoutPriorityDefaultLow;
-        self.deleteButton.hidden = false;
         self.deleteButton.enabled = false;
         self.deleteButton.alpha = 0.5;
         
-        if (location.images && location.images.count > 0)
-            self.noImage.hidden = YES;
-        else
-            self.noImage.text = @"image set by company";
-                
         NSURL *imageURL = [NSURL URLWithString:self.image.image];
         [NSURLConnection sendAsynchronousRequest:[NSURLRequest requestWithURL:imageURL]
                                            queue:[NSOperationQueue mainQueue]
@@ -105,10 +113,8 @@
                                    self.changeButton.alpha = 1.0;
                                }];
     } else {
-        self.changeCenterContraint.priority = UILayoutPriorityDefaultHigh;
-        self.deleteButton.hidden = true;
-        self.noImage.hidden = false;
         self.imageActivity.hidden = true;
+        self.noImage.text = @"no image";
     }
     
     self.placeID = location.placeID;
@@ -196,6 +202,7 @@
                  resultBlock:^(ALAsset *asset) {
                      self.imageForUpload = [UIImage imageWithCGImage:[[asset defaultRepresentation] fullResolutionImage]];
                      self.imageView.image = self.imageForUpload;
+                     self.imageView.alpha = 1.0f;
                      self.changeCenterContraint.priority = UILayoutPriorityDefaultLow;
                      self.deleteButton.hidden = false;
                      self.noImage.hidden = true;
@@ -234,6 +241,7 @@
     self.changeCenterContraint.priority = UILayoutPriorityDefaultHigh;
     self.deleteButton.hidden = true;
     self.noImage.hidden = false;
+    self.noImage.text = @"no image";
 }
 
 - (IBAction)changeLocation:(id)sender {

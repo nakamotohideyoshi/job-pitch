@@ -11,15 +11,20 @@
 #import "Nationality.h"
 #import "DropboxBrowserViewController.h"
 
-@interface JobSeekerProfileView () <DropboxBrowserDelegate, UITextViewDelegate>
+@import AssetsLibrary;
+
+@interface JobSeekerProfileView () <DropboxBrowserDelegate, UITextViewDelegate, UIImagePickerControllerDelegate>
 
 @property (nonatomic, nonnull) NSArray *sexes;
 @property (nonatomic, nonnull) NSArray *nationalities;
+
 
 @end
 
 @implementation JobSeekerProfileView {
     UILabel *descriPlaceholder;
+    UIImagePickerController *ipc;
+    UIPopoverController *popover;
 }
 
 - (instancetype)initWithCoder:(NSCoder *)aDecoder
@@ -190,33 +195,61 @@
     self.hasReferences.on = jobSeeker.hasReferences;
     self.tickBox.on = jobSeeker.truthConfirmation;
     
+    [self textViewDidChange:self.descriptionView];
+    
+    _continueButton.enabled = _tickBox.isOn;
+}
+
+- (IBAction)changedTickBox:(id)sender {
     _continueButton.enabled = _tickBox.isOn;
 }
 
 - (IBAction)fileSelect:(id)sender {
     
-//    MyAlertController *alertController = [MyAlertController alertControllerWithTitle:@"File Select" message:nil preferredStyle:UIAlertControllerStyleActionSheet];
-//    
-//    UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:nil];
-//    [alertController addAction:cancelAction];
-//    
-//    UIAlertAction *googleAction = [UIAlertAction actionWithTitle:@"from Google Drive" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-//        
-//    }];
-//    [alertController addAction:googleAction];
-//    
-//    UIAlertAction *dropboxAction = [UIAlertAction actionWithTitle:@"from DropBox" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+    MyAlertController * sheet=   [MyAlertController
+                                  alertControllerWithTitle:nil
+                                  message:nil
+                                  preferredStyle:UIAlertControllerStyleActionSheet];
     
-        UIViewController *viewController = [AppHelper getCurrentVC];
-        DropboxBrowserViewController *browser = [viewController.storyboard instantiateViewControllerWithIdentifier:@"DropboxBrowser"];
-        browser.rootViewDelegate = self;
-        UINavigationController *modalDialog = [[UINavigationController alloc]initWithRootViewController:browser];
-        [viewController presentViewController:modalDialog animated:YES completion:nil];
-        
-//    }];
-//    [alertController addAction:dropboxAction];
-//    
-//    [[AppHelper getCurrentVC] presentViewController:alertController animated:YES completion:nil];
+    UIAlertAction* camera = [UIAlertAction
+                             actionWithTitle:@"Take Photo"
+                             style:UIAlertActionStyleDefault
+                             handler:^(UIAlertAction * action) {
+                                 [sheet dismissViewControllerAnimated:YES completion:nil];
+                                 [self showImagePickerController:UIImagePickerControllerSourceTypeCamera];
+                             }];
+    [sheet addAction:camera];
+    
+    UIAlertAction* photoLibrary = [UIAlertAction
+                                   actionWithTitle:@"Photo Library"
+                                   style:UIAlertActionStyleDefault
+                                   handler:^(UIAlertAction * action) {
+                                       [sheet dismissViewControllerAnimated:YES completion:nil];
+                                       [self showImagePickerController:UIImagePickerControllerSourceTypePhotoLibrary];
+                                   }];
+    [sheet addAction:photoLibrary];
+    
+    UIAlertAction* dropBox = [UIAlertAction
+                                   actionWithTitle:@"Dropbox"
+                                   style:UIAlertActionStyleDefault
+                                   handler:^(UIAlertAction * action) {
+                                       UIViewController *viewController = [AppHelper getCurrentVC];
+                                       DropboxBrowserViewController *browser = [viewController.storyboard instantiateViewControllerWithIdentifier:@"DropboxBrowser"];
+                                       browser.rootViewDelegate = self;
+                                       UINavigationController *modalDialog = [[UINavigationController alloc]initWithRootViewController:browser];
+                                       [viewController presentViewController:modalDialog animated:YES completion:nil];
+                                   }];
+    [sheet addAction:dropBox];
+    
+    UIAlertAction* cancel = [UIAlertAction
+                             actionWithTitle:@"Cancel"
+                             style:UIAlertActionStyleCancel
+                             handler:^(UIAlertAction * action) {
+                                 [sheet dismissViewControllerAnimated:YES completion:nil];
+                             }];
+    [sheet addAction:cancel];
+    
+    [self.window.rootViewController presentViewController:sheet animated:YES completion:nil];
     
 }
 
@@ -225,8 +258,42 @@
     [browser removeDropboxBrowser];
 }
 
-- (IBAction)changedTickBox:(id)sender {
-    _continueButton.enabled = _tickBox.isOn;
+-(void) showImagePickerController:(UIImagePickerControllerSourceType)type {
+    ipc= [[UIImagePickerController alloc] init];
+    ipc.delegate = self;
+    ipc.sourceType = type;
+    if(UI_USER_INTERFACE_IDIOM()==UIUserInterfaceIdiomPhone) {
+        [self.window.rootViewController presentViewController:ipc animated:true completion:nil];
+    } else {
+        popover=[[UIPopoverController alloc]initWithContentViewController:ipc];
+        [popover presentPopoverFromRect:self.selectButton.frame
+                                 inView:self
+               permittedArrowDirections:UIPopoverArrowDirectionAny
+                               animated:YES];
+    }
+}
+
+-(void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info {
+    [self dismissPicker];
+    
+    NSURL *referenceURL = [info objectForKey:UIImagePickerControllerReferenceURL];
+    if (referenceURL) {
+        self.cvFileName.text = referenceURL.absoluteString;
+    } else {
+        self.cvFileName.text = @"captured file";
+    }    
+}
+
+-(void)imagePickerControllerDidCancel:(UIImagePickerController *)picker {
+    [self dismissPicker];
+}
+
+- (void)dismissPicker {
+    if (UI_USER_INTERFACE_IDIOM()==UIUserInterfaceIdiomPhone) {
+        [ipc dismissViewControllerAnimated:true completion:nil];
+    } else {
+        [popover dismissPopoverAnimated:YES];
+    }
 }
 
 

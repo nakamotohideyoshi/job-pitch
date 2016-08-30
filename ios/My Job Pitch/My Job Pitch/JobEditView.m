@@ -60,7 +60,6 @@
     self.noImage.hidden = false;
     self.imageActivity.hidden = true;
     
-    
     descriPlaceholder = [[UILabel alloc] initWithFrame:CGRectMake(10.0f, 0, self.descriptionView.frame.size.width - 10.0f, 34.0f)];
     [descriPlaceholder setText:@"Description"];
     [descriPlaceholder setBackgroundColor:[UIColor clearColor]];
@@ -138,13 +137,46 @@
 }
 
 - (IBAction)changeImage:(id)sender {
+    MyAlertController * sheet=   [MyAlertController
+                                  alertControllerWithTitle:@"Image"
+                                  message:@"Select you Choice"
+                                  preferredStyle:UIAlertControllerStyleActionSheet];
+    
+    UIAlertAction* camera = [UIAlertAction
+                             actionWithTitle:@"Camera"
+                             style:UIAlertActionStyleDefault
+                             handler:^(UIAlertAction * action) {
+                                 [sheet dismissViewControllerAnimated:YES completion:nil];
+                                 [self showImagePickerController:UIImagePickerControllerSourceTypeCamera];
+                             }];
+    [sheet addAction:camera];
+    
+    UIAlertAction* photoLibrary = [UIAlertAction
+                                   actionWithTitle:@"Photo Library"
+                                   style:UIAlertActionStyleDefault
+                                   handler:^(UIAlertAction * action) {
+                                       [sheet dismissViewControllerAnimated:YES completion:nil];
+                                       [self showImagePickerController:UIImagePickerControllerSourceTypePhotoLibrary];
+                                   }];
+    [sheet addAction:photoLibrary];
+    
+    UIAlertAction* cancel = [UIAlertAction
+                             actionWithTitle:@"Cancel"
+                             style:UIAlertActionStyleCancel
+                             handler:^(UIAlertAction * action) {
+                                 [sheet dismissViewControllerAnimated:YES completion:nil];
+                             }];
+    [sheet addAction:cancel];
+    
+    [self.window.rootViewController presentViewController:sheet animated:YES completion:nil];
+}
+
+-(void) showImagePickerController:(UIImagePickerControllerSourceType)type {
     ipc= [[UIImagePickerController alloc] init];
     ipc.delegate = self;
-    ipc.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
-    
+    ipc.sourceType = type;
     if(UI_USER_INTERFACE_IDIOM()==UIUserInterfaceIdiomPhone) {
-        [self.window.rootViewController
-         presentViewController:ipc animated:true completion:nil];
+        [self.window.rootViewController presentViewController:ipc animated:true completion:nil];
     } else {
         popover=[[UIPopoverController alloc]initWithContentViewController:ipc];
         [popover presentPopoverFromRect:self.changeButton.frame
@@ -157,17 +189,30 @@
 -(void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info
 {
     [self dismissPicker];
+    
     NSURL *referenceURL = [info objectForKey:UIImagePickerControllerReferenceURL];
-    ALAssetsLibrary *library = [[ALAssetsLibrary alloc] init];
-    [library assetForURL:referenceURL
-             resultBlock:^(ALAsset *asset) {
-                 self.imageForUpload = [UIImage imageWithCGImage:[[asset defaultRepresentation] fullResolutionImage]];
-                 self.imageView.image = self.imageForUpload;
-                 self.changeCenterContraint.priority = UILayoutPriorityDefaultLow;
-                 self.deleteButton.hidden = false;
-                 self.noImage.hidden = true;
-             }
-            failureBlock:^(NSError *error) {}];
+    if (referenceURL) {
+        ALAssetsLibrary *library = [[ALAssetsLibrary alloc] init];
+        [library assetForURL:referenceURL
+                 resultBlock:^(ALAsset *asset) {
+                     self.imageForUpload = [UIImage imageWithCGImage:[[asset defaultRepresentation] fullResolutionImage]];
+                     self.imageView.image = self.imageForUpload;
+                     self.imageView.alpha = 1.0f;
+                     self.changeCenterContraint.priority = UILayoutPriorityDefaultLow;
+                     self.deleteButton.hidden = false;
+                     self.noImage.hidden = true;
+                 }
+                failureBlock:^(NSError *error) {}];
+    } else {
+        UIImage *editedImage = (UIImage *) [info objectForKey: UIImagePickerControllerEditedImage];
+        UIImage *originalImage = (UIImage *) [info objectForKey: UIImagePickerControllerOriginalImage];
+        self.imageForUpload = editedImage ? editedImage : originalImage;
+        self.imageView.image = self.imageForUpload;
+        self.changeCenterContraint.priority = UILayoutPriorityDefaultLow;
+        self.deleteButton.hidden = false;
+        self.noImage.hidden = true;
+    }
+    
 }
 
 -(void)imagePickerControllerDidCancel:(UIImagePickerController *)picker
@@ -191,6 +236,7 @@
     self.changeCenterContraint.priority = UILayoutPriorityDefaultHigh;
     self.deleteButton.hidden = true;
     self.noImage.hidden = false;
+    self.noImage.text = @"no image";
 }
 
 - (void)load:(nonnull Job*)job
@@ -208,6 +254,7 @@
     
     self.title.textField.text = job.title;
     self.descriptionView.text = job.desc;
+    [self textViewDidChange:self.descriptionView];
     
     NSString *newSector = nil;
     if (job.sector) {
@@ -242,17 +289,31 @@
     }
     self.hours.textField.text = newHours;
     
+    if (job.images && job.images.count > 0) {
+        self.changeCenterContraint.priority = UILayoutPriorityDefaultLow;
+        self.deleteButton.hidden = false;
+        self.noImage.hidden = true;
+        self.imageView.alpha = 1.0f;
+        
+    } else {
+        self.changeCenterContraint.priority = UILayoutPriorityDefaultHigh;
+        self.deleteButton.hidden = true;
+        self.noImage.hidden = false;
+        self.noImage.text = @"image set by company";
+        self.imageView.alpha = 0.5f;
+    }
+    
     self.image = [job getImage];
     if (self.image && self.image.image) {
         [self.imageActivity setHidden:false];
         [self.imageActivity startAnimating];
         self.imageView.image = nil;
+        
         self.changeButton.enabled = false;
         self.changeButton.alpha = 0.5;
-        self.changeCenterContraint.priority = UILayoutPriorityDefaultLow;
-        self.deleteButton.hidden = false;
         self.deleteButton.enabled = false;
         self.deleteButton.alpha = 0.5;
+        
         NSURL *imageURL = [NSURL URLWithString:self.image.image];
         [NSURLConnection sendAsynchronousRequest:[NSURLRequest requestWithURL:imageURL]
                                            queue:[NSOperationQueue mainQueue]
@@ -264,13 +325,13 @@
                                    self.deleteButton.alpha = 1.0;
                                    self.changeButton.enabled = true;
                                    self.changeButton.alpha = 1.0;
+                                   
                                }];
     } else {
-        self.changeCenterContraint.priority = UILayoutPriorityDefaultHigh;
-        self.deleteButton.hidden = true;
-        self.noImage.hidden = false;
         self.imageActivity.hidden = true;
+        self.noImage.text = @"no image";
     }
+    
 }
 
 - (void)save:(nonnull Job*)job

@@ -4,6 +4,8 @@ $(function () {
 
 	var job_seeker = '';
 
+	$('#search_radius').SumoSelect();
+
 	//Populate selects
 	$.get("/api/hours/", {
 		csrftoken: getCookie('csrftoken')
@@ -12,6 +14,7 @@ $(function () {
 			var obj = data[key];
 			$('#hours').append('<option value="' + obj.id + '">' + obj.name + '</options>');
 		}
+		$('#hours').SumoSelect();
 	});
 
 	$.get("/api/contracts/", {
@@ -21,16 +24,21 @@ $(function () {
 			var obj = data[key];
 			$('#contract').append('<option value="' + obj.id + '">' + obj.name + '</options>');
 		}
+		$('#contract').SumoSelect({placeholder:'Choose a contract'});
 	});
 
 	$.get("/api/sectors/", {
 		csrftoken: getCookie('csrftoken')
 	}).done(function (data) {
+		$('#sectors').html('');
+
 		for (var key in data) {
 			var obj = data[key];
 			console.log(obj);
 			$('#sectors').append('<option value="' + obj.id + '">' + obj.name + '</options>');
 		}
+
+		$('#sectors').SumoSelect();
 	});
 
 	$.get("/api-rest-auth/user/", {

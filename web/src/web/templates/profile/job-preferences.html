@@ -1,4 +1,11 @@
-{% extends "mjp_base.html" %} {% block content %}
+{% extends "mjp_base.html" %}
+
+{% block extra_head %}
+    <link href="/static/web/design/css/sumoselect.css" rel="stylesheet">
+    <link href="/static/web/design/css/mjp-sumoselect.css" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
 <div class="container-fluid">
 
 	<!-- Page Heading -->
@@ -67,9 +74,12 @@
 </div>
 <!-- /.container-fluid -->
 
-{% endblock %} {% block pagescripts %}
+{% endblock %}
 
-<script src="/static/web/js/mjp-scripts/job-preferences.js"></script>
+{% block pagescripts %}
+
+  <script src="/static/web/js/jquery.sumoselect.min.js"></script>
+	<script src="/static/web/js/mjp-scripts/job-preferences.js"></script>
 
 {% endblock %}
 

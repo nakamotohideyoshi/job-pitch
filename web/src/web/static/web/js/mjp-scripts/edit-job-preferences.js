@@ -27,10 +27,13 @@ $(function () {
 	$.get("/api/sectors/", {
 		csrftoken: getCookie('csrftoken')
 	}).done(function (data) {
+		$('#sectors').html('');
+
 		for (var key in data) {
 			var obj = data[key];
 			$('#sectors').append('<option value="' + obj.id + '">' + obj.name + '</options>');
 		}
+
 	});
 
 	$.get("/api-rest-auth/user/", {
@@ -51,10 +54,19 @@ $(function () {
 				csrftoken: getCookie('csrftoken')
 			}).done(function (data) {
 				$('#contract').val(data.contract);
+				$('#contract').SumoSelect();
+
 				$('#hours').val(data.hours);
+				$('#hours').SumoSelect();
+
 				$('#sectors').val(data.sectors);
+				$('#sectors').SumoSelect({placeholder:'Choose a job sector'});
+
 				$('#location').val(data.postcode_lookup);
+
 				$('#search_radius').val(data.search_radius);
+				$('#search_radius').SumoSelect();
+
 				$('#job_seeker').val(data.job_seeker);
 				$('#latitude').val(data.latitude);
 				$('#longitude').val(data.longitude);

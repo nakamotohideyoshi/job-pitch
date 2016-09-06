@@ -6,7 +6,6 @@ import com.myjobpitch.api.MJPAPIObject;
 public class Pitch extends MJPAPIObject {
     private String token;
     private String video;
-    private String image;
     private String thumbnail;
 
     @JsonProperty("job_seeker")

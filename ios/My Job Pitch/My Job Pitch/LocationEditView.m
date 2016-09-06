@@ -143,8 +143,8 @@
 
 - (IBAction)changeImage:(id)sender {
     MyAlertController * sheet=   [MyAlertController
-                                  alertControllerWithTitle:@"Image"
-                                  message:@"Select you Choice"
+                                  alertControllerWithTitle:nil
+                                  message:nil
                                   preferredStyle:UIAlertControllerStyleActionSheet];
     
     UIAlertAction* camera = [UIAlertAction
@@ -235,13 +235,15 @@
 }
 
 - (IBAction)deleteImage:(id)sender {
-    self.image = nil;
-    self.imageForUpload = nil;
-    self.imageView.image = nil;
-    self.changeCenterContraint.priority = UILayoutPriorityDefaultHigh;
-    self.deleteButton.hidden = true;
-    self.noImage.hidden = false;
-    self.noImage.text = @"no image";
+    [MyAlertController title:nil message:@"Are you sure you want to remove this image?" ok:@"Delete" okCallback:^{
+        self.image = nil;
+        self.imageForUpload = nil;
+        self.imageView.image = nil;
+        self.changeCenterContraint.priority = UILayoutPriorityDefaultHigh;
+        self.deleteButton.hidden = true;
+        self.noImage.hidden = false;
+        self.noImage.text = @"no image";
+    } cancel:@"Cancel" cancelCallback:nil];
 }
 
 - (IBAction)changeLocation:(id)sender {

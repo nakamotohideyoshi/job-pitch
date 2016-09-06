@@ -219,15 +219,9 @@ public class EditJobActivity extends MJPProgressActionBarActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        Intent intent;
         switch (item.getItemId()) {
             case android.R.id.home:
                 finish();
-                if (job != null) {
-                    intent = NavUtils.getParentActivityIntent(EditJobActivity.this);
-                    intent.putExtra(JobListActivity.LOCATION_ID, job.getLocation());
-                    startActivity(intent);
-                }
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

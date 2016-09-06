@@ -32,7 +32,7 @@
         [jobView setMode:JobViewModeApplications];
         jobView.strTitle = @"Applications";
     } else if ([[segue identifier] isEqualToString:@"goto_shortlist"]) {
-        [jobView setMode:JobViewModeApplications];
+        [jobView setMode:JobViewModeMyShort];
         jobView.strTitle = @"Shortlist";
     } else if ([[segue identifier] isEqualToString:@"goto_job_connections"]) {
         [jobView setMode:JobViewModeConnections];
@@ -48,7 +48,7 @@
 
 - (IBAction)removeJob:(id)sender {
     NSString *msg = [NSString stringWithFormat:@"Are you sure you want to delete %@", _job.title];
-    [MyAlertController title:@"Confirm" message:msg ok:@"Delete" okCallback:^{
+    [MyAlertController title:nil message:msg ok:@"Delete" okCallback:^{
         [SVProgressHUD show];
         [self.appDelegate.api deleteJob:_job
                                 success:^(void) {

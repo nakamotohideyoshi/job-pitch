@@ -143,6 +143,11 @@
             success:(void (^)(Image *image))success
             failure:(void (^)(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors))failure;
 
+- (void)deleteImage:(NSNumber*)imageid
+                 to:(NSString*)endpoint
+            success:(void (^)(void))success
+            failure:(void (^)(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors))failure;
+
 - (void)loadBusinesses:(void (^)(NSArray *businesses))success
                failure:(void (^)(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors))failure;
 

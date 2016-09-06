@@ -13,6 +13,7 @@ public class JobSeeker extends MJPObjectWithDates implements JobSeekerContainer 
     private String last_name;
     private String telephone;
     private String mobile;
+    private String email;
     private boolean email_public;
     private boolean mobile_public;
     private boolean telephone_public;
@@ -41,6 +42,10 @@ public class JobSeeker extends MJPObjectWithDates implements JobSeekerContainer 
         return mobile;
     }
 
+    public String getEmail() {
+        return email;
+    }
+
     public boolean getMobile_public() {
         return mobile_public;
     }
@@ -63,6 +68,10 @@ public class JobSeeker extends MJPObjectWithDates implements JobSeekerContainer 
 
     public void setMobile(String mobile) {
         this.mobile = mobile;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public void setEmail_public(boolean emailPublic) {

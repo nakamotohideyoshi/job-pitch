@@ -71,7 +71,22 @@
          success:^(Job *job) {
              [self clearErrors];
              self.job = job;
-             [self continueJobImage];
+             
+             UIImage *imageForUpload = self.jobEditView.imageForUpload;
+             Image *originalImage = nil;
+             if (self.job.images && self.job.images.count > 0) {
+                 originalImage = self.job.images[0];
+             }
+             
+             if (originalImage == nil || imageForUpload != nil) {
+                 [self continueJobImage];
+             } else if (imageForUpload == nil) {
+                 [[self appDelegate].api deleteImage:originalImage.id to:@"user-job-images" success:^{
+                     [self continueJobImage];
+                 } failure:^(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors) {
+                     [self handleErrors:errors message:message];
+                 }];
+             }
          }
          failure:^(RKObjectRequestOperation *operation, NSError *error, NSString*message, NSDictionary *errors) {
              [self handleErrors:errors message:message];

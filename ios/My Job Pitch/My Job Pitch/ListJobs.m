@@ -90,7 +90,7 @@
         
         Job *job = [self->data objectAtIndex:editRow];
         NSString *msg = [NSString stringWithFormat:@"Are you sure you want to delete %@", job.title];
-        [MyAlertController title:@"Confirm" message:msg ok:@"Delete" okCallback:^{
+        [MyAlertController title:nil message:msg ok:@"Delete" okCallback:^{
             [SVProgressHUD show];
             [self.appDelegate.api deleteJob:job
                                          success:^(void) {

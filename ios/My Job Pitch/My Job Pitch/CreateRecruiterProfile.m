@@ -132,7 +132,22 @@
                                          [self.businessEditView setUserInteractionEnabled:false];
                                          [self appDelegate].user.businesses = @[business.id];
                                          self.business = business;
-                                         [self continueBusinessImage];
+                                         
+                                         UIImage *imageForUpload = self.businessEditView.imageForUpload;
+                                         Image *originalImage = nil;
+                                         if (self.business.images && self.business.images.count > 0) {
+                                             originalImage = self.business.images[0];
+                                         }
+                                         
+                                         if (originalImage == nil || imageForUpload != nil) {
+                                             [self continueBusinessImage];
+                                         } else if (imageForUpload == nil) {
+                                             [[self appDelegate].api deleteImage:originalImage.id to:@"user-business-images" success:^{
+                                                 [self continueBusinessImage];
+                                             } failure:^(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors) {
+                                                 [self handleErrors:errors message:message];
+                                             }];
+                                         }
                                      }
                                      failure:^(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors) {
                                          NSMutableDictionary *detail = [[NSMutableDictionary alloc] init];
@@ -140,8 +155,6 @@
                                              detail[[NSString stringWithFormat:@"business_%@", key]] = errors[key];
                                          [self handleErrors:detail message:message];
                                      }];
-         
-    
     } else {
         [self continueLocation];
     }
@@ -186,7 +199,22 @@
                                      success:^(Location *location) {
                                          [self clearErrors];
                                          self.location = location;
-                                         [self continueLocationImage];
+                                         
+                                         UIImage *imageForUpload = self.locationEditView.imageForUpload;
+                                         Image *originalImage = nil;
+                                         if (self.location.images && self.location.images.count > 0) {
+                                            originalImage = self.location.images[0];
+                                         }
+                                         
+                                         if (originalImage == nil || imageForUpload != nil) {
+                                             [self continueLocationImage];
+                                         } else if (imageForUpload == nil) {
+                                             [[self appDelegate].api deleteImage:originalImage.id to:@"user-location-images" success:^{
+                                                 [self continueLocationImage];
+                                             } failure:^(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors) {
+                                                 [self handleErrors:errors message:message];
+                                             }];
+                                         }
                                      }
                                      failure:^(RKObjectRequestOperation *operation, NSError *error, NSString*message, NSDictionary *errors) {
                                          NSMutableDictionary *detail = [[NSMutableDictionary alloc] init];
@@ -241,12 +269,5 @@
     }
     
 }
-
-//- (void)showProgress:(BOOL)showProgress
-//{
-//    [super showProgress:showProgress];
-//    [self.activityLabel setHidden:!showProgress];
-//    [self.activityLabel setText:@""];
-//}
 
 @end

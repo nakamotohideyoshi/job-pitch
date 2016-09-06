@@ -77,7 +77,7 @@
 
 + (void)logout {
     UIViewController *currentVC = [AppHelper getCurrentVC];
-    [MyAlertController title:@"This will log you out. Are you sure?" message:@"" ok:@"Cancel" okCallback:nil cancel:@"Logout" cancelCallback:^{
+    [MyAlertController title:nil message:@"This will log you out. Are you sure?" ok:@"Cancel" okCallback:nil cancel:@"Logout" cancelCallback:^{
         [currentVC.navigationController popViewControllerAnimated:true];
     }];
 }

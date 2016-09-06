@@ -80,7 +80,7 @@
     
         Business *business = [self->data objectAtIndex:editRow];
         NSString *msg = [NSString stringWithFormat:@"Are you sure you want to delete %@", business.name];
-        [MyAlertController title:@"Confirm" message:msg ok:@"Delete" okCallback:^{
+        [MyAlertController title:nil message:msg ok:@"Delete" okCallback:^{
             [SVProgressHUD show];
             [self.appDelegate.api deleteBusiness:business
                                          success:^(void) {

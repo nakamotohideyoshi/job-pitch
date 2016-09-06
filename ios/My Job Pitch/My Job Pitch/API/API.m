@@ -252,6 +252,14 @@
                              path:@"/api/user-businesses/:pk/"
                            method:RKRequestMethodAny
      ];
+    [self configureResponseMapping:objectManager
+                     responseClass:[NSObject class]
+                     responseArray:nil
+                responseDictionary:nil
+             responseRelationships:nil
+                              path:@"/api/user-business-images/:pk/"
+                            method:RKRequestMethodDELETE
+     ];
     NSArray *locationArray = @[@"id",
                                @"created",
                                @"updated",
@@ -318,6 +326,14 @@
                              path:@"/api/user-locations/:pk/"
                            method:RKRequestMethodAny
      ];
+    [self configureResponseMapping:objectManager
+                     responseClass:[NSObject class]
+                     responseArray:nil
+                responseDictionary:nil
+             responseRelationships:nil
+                              path:@"/api/user-location-images/:pk/"
+                            method:RKRequestMethodDELETE
+     ];
     
     NSArray* jobArray = @[@"id",
                           @"created",
@@ -380,7 +396,14 @@
                              path:@"/api/user-jobs/:pk/"
                            method:RKRequestMethodAny
      ];
-    
+    [self configureResponseMapping:objectManager
+                     responseClass:[NSObject class]
+                     responseArray:nil
+                responseDictionary:nil
+             responseRelationships:nil
+                              path:@"/api/user-job-images/:pk/"
+                            method:RKRequestMethodDELETE
+     ];
     NSArray* profileArray = @[@"id",
                               @"created",
                               @"updated",
@@ -1380,6 +1403,24 @@
                                            }];
     [operation.HTTPRequestOperation setUploadProgressBlock:progress];
     [[RKObjectManager sharedManager] enqueueObjectRequestOperation:operation];
+}
+
+
+- (void)deleteImage:(NSNumber*)imageid
+                 to:(NSString*)endpoint
+            success:(void (^)(void))success
+            failure:(void (^)(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors))failure
+{
+    [[RKObjectManager sharedManager] deleteObject:nil
+                                             path:[NSString stringWithFormat:@"/api/%@/%@/", endpoint, imageid]
+                                       parameters:nil
+                                          success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
+                                              success();
+                                          } failure:^(RKObjectRequestOperation *operation, NSError *error) {
+                                              NSLog(@"Error deleting business: %@", error);
+                                              failure(operation, error, [self getMessage:error], [self getErrors:error]);
+                                          }
+     ];
 }
 
 - (void)loadBusinesses:(void (^)(NSArray *applications))success

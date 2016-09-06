@@ -57,6 +57,7 @@ public class JobActivity extends MJPProgressActionBarActivity {
     public static final String TAG = "JobActivity";
     public static final String SEARCH = "SEARCH";
     public static final String APPLICATIONS = "APPLICATIONS";
+    public static final String MYSHORTLIST = "MYSHORTLIST";
     public static final String CONNECTIONS = "CONNECTIONS";
     public static final String MODE = "MODE";
     public static final String JOB_ID = "JOB_ID";
@@ -202,7 +203,7 @@ public class JobActivity extends MJPProgressActionBarActivity {
             @Override
             public void onClick(View v) {
                 if (!adapter.isEmpty()) {
-                    if (mode.equals(CONNECTIONS)) {
+                    if (mode.equals(CONNECTIONS) || mode.equals(MYSHORTLIST)) {
                         Application application = (Application) adapter.getItem(0);
                         Intent intent = new Intent(JobActivity.this, ConversationThreadActivity.class);
                         intent.putExtra(ConversationThreadActivity.APPLICATION_ID, application.getId());
@@ -339,7 +340,7 @@ public class JobActivity extends MJPProgressActionBarActivity {
             public void onLeftCardExit(Object dataObject) {
                 JobSeekerContainer jobSeekerContainer = jobSeekers.remove(0);
                 JobSeeker jobSeeker = jobSeekerContainer.getJobSeeker();
-                if (mode.equals(CONNECTIONS)) {
+                if (mode.equals(CONNECTIONS) || mode.equals(MYSHORTLIST)) {
                     // Add to end of list so list loops around
                     jobSeekers.add(jobSeekerContainer);
                 } else if (mode.equals(SEARCH)) {
@@ -368,7 +369,7 @@ public class JobActivity extends MJPProgressActionBarActivity {
             @Override
             public void onRightCardExit(Object dataObject) {
                 JobSeekerContainer jobSeekerContainer = jobSeekers.remove(0);
-                if (mode.equals(CONNECTIONS)) {
+                if (mode.equals(CONNECTIONS) || mode.equals(MYSHORTLIST)) {
                     if (!mButtonActivation) {
                         // Add to end of list so list loops around
                         jobSeekers.add(jobSeekerContainer);
@@ -421,7 +422,7 @@ public class JobActivity extends MJPProgressActionBarActivity {
                     switch (cardState) {
                         case LEFT:
                             hint.setVisibility(View.VISIBLE);
-                            if (mode.equals(CONNECTIONS)) {
+                            if (mode.equals(CONNECTIONS) || mode.equals(MYSHORTLIST)) {
                                 hint.setText(R.string.next);
                                 hint.setTextColor(getResources().getColor(R.color.card_hint_positive));
                             } else {
@@ -431,7 +432,7 @@ public class JobActivity extends MJPProgressActionBarActivity {
                             break;
                         case RIGHT:
                             hint.setVisibility(View.VISIBLE);
-                            if (mode.equals(CONNECTIONS)) {
+                            if (mode.equals(CONNECTIONS) || mode.equals(MYSHORTLIST)) {
                                 hint.setText(R.string.next);
                                 hint.setTextColor(getResources().getColor(R.color.card_hint_positive));
                             } else {
@@ -519,6 +520,9 @@ public class JobActivity extends MJPProgressActionBarActivity {
         } else if (mode.equals(APPLICATIONS)){
             mEmptyMessageView.setText(getString(R.string.no_applications_message));
             mEmptyButtonView.setVisibility(View.GONE);
+        } else if (mode.equals(MYSHORTLIST)) {
+            mEmptyMessageView.setText(getString(R.string.no_shortlisted_applications_message));
+            mEmptyButtonView.setVisibility(View.INVISIBLE);
         }
     }
 
@@ -608,14 +612,14 @@ public class JobActivity extends MJPProgressActionBarActivity {
             }
             if (!background)
                 showProgress(true);
-            if (mode.equals(CONNECTIONS)) {
-                if (mShortListedSwitch.isChecked())
+            if (mode.equals(CONNECTIONS) || mode.equals(MYSHORTLIST)) {
+                if (mShortListedSwitch.isChecked() || mode.equals(MYSHORTLIST))
                     getSupportActionBar().setSubtitle(getString(R.string.shortlisted_job_seekers));
                 else
                     getSupportActionBar().setSubtitle(getString(R.string.applied_job_seekers));
                 Log.d(TAG, "Loading applications");
                 Integer status = getMJPApplication().get(ApplicationStatus.class, ApplicationStatus.ESTABLISHED).getId();
-                ReadApplicationsTask task = new ReadApplicationsTask(getApi(), job.getId(), status, mShortListedSwitch.isChecked());
+                ReadApplicationsTask task = new ReadApplicationsTask(getApi(), job.getId(), status, mShortListedSwitch.isChecked() || mode.equals(MYSHORTLIST));
                 loadingTask = task;
                 task.addListener(new CreateReadUpdateAPITaskListener<List<Application>>() {
                     @Override
@@ -742,6 +746,7 @@ public class JobActivity extends MJPProgressActionBarActivity {
                     }
                 });
             }
+
             if (background) {
                 mBackgroundProgress.setVisibility(View.VISIBLE);
                 backgroundTaskManager.addBackgroundTask(loadingTask);
@@ -752,10 +757,10 @@ public class JobActivity extends MJPProgressActionBarActivity {
 
     private void update() {
         boolean notEmpty = adapter.getCount() > 0;
-        if (mode.equals(CONNECTIONS)) {
+        if (mode.equals(CONNECTIONS) || mode.equals(MYSHORTLIST)) {
             mPositiveButtonText.setText(getString(R.string.messages));
             mPositiveButtonIcon.setImageDrawable(getResources().getDrawable(R.drawable.ic_email_blue));
-            mShortlistButtonContainer.setVisibility(View.VISIBLE);
+            mShortlistButtonContainer.setVisibility(mode.equals(CONNECTIONS) ? View.VISIBLE : View.INVISIBLE);
             if (notEmpty) {
                 if (adapter.getItem(0) instanceof Application) {
                     Application application = (Application) adapter.getItem(0);

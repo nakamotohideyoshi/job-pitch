@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="10116" systemVersion="15G31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="10116" systemVersion="15G1004" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
@@ -250,6 +250,7 @@
                 <constraint firstItem="d3W-zv-7Qk" firstAttribute="top" secondItem="kPX-7b-aei" secondAttribute="bottom" constant="5" id="P3o-lb-u6n"/>
                 <constraint firstItem="JuM-uv-lPE" firstAttribute="top" secondItem="ubB-S6-8jg" secondAttribute="bottom" constant="10" id="S3v-8a-Hkj"/>
                 <constraint firstItem="ha8-wD-n4f" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="SIN-ou-hxt"/>
+                <constraint firstAttribute="bottom" secondItem="gW9-AW-p2j" secondAttribute="bottom" constant="20" id="Z10-X0-zz8"/>
                 <constraint firstItem="kEQ-Ao-r5B" firstAttribute="trailing" secondItem="REl-rZ-amQ" secondAttribute="trailing" id="ZH3-77-RY7"/>
                 <constraint firstItem="ha8-wD-n4f" firstAttribute="top" secondItem="d5n-9J-Wf2" secondAttribute="bottom" constant="15" id="Zgy-1F-ova"/>
                 <constraint firstItem="Tse-9j-dWm" firstAttribute="centerX" secondItem="ITj-MW-khC" secondAttribute="centerX" id="a5p-Lk-auV"/>
@@ -285,6 +286,11 @@
             </constraints>
             <nil key="simulatedStatusBarMetrics"/>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <variation key="default">
+                <mask key="constraints">
+                    <exclude reference="N3Z-S2-QD4"/>
+                </mask>
+            </variation>
             <point key="canvasLocation" x="180" y="347"/>
         </view>
     </objects>

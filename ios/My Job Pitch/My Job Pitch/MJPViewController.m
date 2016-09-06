@@ -74,7 +74,7 @@
 
 - (void)handleErrors:(NSDictionary*)errors message:(NSString*)message {
     
-    if ([errors count]) {
+    if ([errors count] || message) {
         [SVProgressHUD dismiss];
     }
     

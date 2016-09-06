@@ -114,14 +114,14 @@ typedef NS_ENUM(NSInteger, EmptyButtonAction) {
     self.swipeView.alpha = 0.0;
     self.swipeContainer.hidden = false;
     self.emptyView.hidden = true;
-    if (self.mode == JobViewModeConnections) {
+    if (self.mode == JobViewModeConnections || self.mode == JobViewModeMyShort) {
         self.leftTitle.text = @"Messages";
         self.leftIcon.image = [UIImage imageNamed:@"ic_email_blue"];
         self.rightTitle.text = @"Remove";
-        self.shortlisted.hidden = false;
-        self.shortlistedLabel.hidden = false;
-        self.shortlistButton.hidden = false;
-        self.shortlistButtonIcon.hidden = false;
+        self.shortlisted.hidden = self.mode == JobViewModeMyShort;
+        self.shortlistedLabel.hidden = self.mode == JobViewModeMyShort;
+        self.shortlistButton.hidden = self.mode == JobViewModeMyShort;
+        self.shortlistButtonIcon.hidden = self.mode == JobViewModeMyShort;
     } else {
         self.leftTitle.text = @"Connect";
         self.leftIcon.image = [UIImage imageNamed:@"ic_connect"];
@@ -184,11 +184,11 @@ typedef NS_ENUM(NSInteger, EmptyButtonAction) {
                                                  success(jobSeekers);
                                              }
                                              failure:failure];
-    } else if (self.mode == JobViewModeConnections) {
+    } else if (self.mode == JobViewModeConnections || self.mode == JobViewModeMyShort) {
         [self.appDelegate.api loadApplicationsForJob:self.job
                                               status:[self.appDelegate
                                                       getApplicationStatusByName:APPLICATION_ESTABLISHED].id
-                                         shortlisted:self.shortlisted.on
+                                         shortlisted:self.shortlisted.on || self.mode == JobViewModeMyShort
                                              success:^(NSArray *jobSeekers) {
                                                  self.lastLoad = 0;
                                                  success(jobSeekers);
@@ -234,7 +234,7 @@ typedef NS_ENUM(NSInteger, EmptyButtonAction) {
                 self.extraLabel.text = nil;
             }
             
-            if(self.mode == JobViewModeConnections && self.application.shortlisted) {
+            if(self.mode == JobViewModeConnections) {
                 self.shortlistIcon.hidden = false;
                 self.shortlistButtonIcon.image = [UIImage imageNamed:@"ic_star_remove"];
             } else {
@@ -268,8 +268,8 @@ typedef NS_ENUM(NSInteger, EmptyButtonAction) {
                 [self.emptyButton3 setTitle:@"Switch to connections mode" forState:UIControlStateNormal];
                 [self setEmptyButton3Action:EmptyButtonActionGotoConnectionsMode];
                 [self.emptyButton3 setHidden:false];
-            } else if (self.mode == JobViewModeConnections) {
-                if (self.shortlisted.on) {
+            } else if (self.mode == JobViewModeConnections || self.mode == JobViewModeMyShort) {
+                if (self.shortlisted.on || self.mode == JobViewModeMyShort) {
                     [self.emptyLabel setText:@"You have not shortlisted any applications for this job, turn off shortlist view to see the non-shortlisted applications."];
                     [self.emptyButton1 setTitle:@"Restart search" forState:UIControlStateNormal];
                     [self setEmptyButton1Action:EmptyButtonActionReset];
@@ -310,7 +310,7 @@ typedef NS_ENUM(NSInteger, EmptyButtonAction) {
 
 - (void)updateDistance:(CGFloat)distance
 {
-    if (self.mode == JobViewModeConnections) {
+    if (self.mode == JobViewModeConnections || self.mode == JobViewModeMyShort) {
         self.directionLabel.text = @"Next";
         self.directionLabel.textColor = [UIColor colorWithRed:0.2 green:0.5 blue:0.1 alpha:0.8];
     } else {
@@ -349,7 +349,7 @@ typedef NS_ENUM(NSInteger, EmptyButtonAction) {
 }
 
 - (IBAction)leftClick:(id)sender {
-    if (self.mode == JobViewModeConnections) {
+    if (self.mode == JobViewModeConnections || self.mode == JobViewModeMyShort) {
         [self performMessages];
     } else {
         [self left];

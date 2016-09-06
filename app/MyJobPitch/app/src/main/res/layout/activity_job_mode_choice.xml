@@ -13,6 +13,14 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content" />
 
+    <ProgressBar
+        style="?android:attr/progressBarStyleLarge"
+        android:id="@+id/progress"
+        android:layout_gravity="center"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp" />
+
     <LinearLayout
         android:id="@+id/mode_choice"
         android:orientation="vertical"
@@ -30,8 +38,18 @@
             android:textColor="@color/white"/>
 
         <Button
-            android:id="@+id/applications_button"
-            tools:text="@string/applications"
+        android:id="@+id/applications_button"
+        tools:text="@string/applications"
+        android:padding="15dp"
+        android:textAllCaps="false"
+        android:gravity="left|center_vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:textColor="@color/white"/>
+
+        <Button
+            android:id="@+id/myshortlist_button"
+            tools:text="@string/myshortlist"
             android:padding="15dp"
             android:textAllCaps="false"
             android:gravity="left|center_vertical"
@@ -48,6 +66,32 @@
             android:layout_width="match_parent"
             android:layout_height="fill_parent"
             android:textColor="@color/white"/>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="10dp">
+            <Button
+                android:id="@+id/editjob_button"
+                android:padding="15dp"
+                android:textAllCaps="false"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:textColor="@color/white"
+                android:layout_weight="1"
+                android:text="@string/edit_job" />
+            <Button
+                android:id="@+id/removejob_button"
+                android:padding="15dp"
+                android:textAllCaps="false"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:textColor="@color/white"
+                android:layout_weight="1"
+                android:text="@string/removejob"/>
+
+        </LinearLayout>
 
     </LinearLayout>
 

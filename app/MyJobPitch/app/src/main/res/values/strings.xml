@@ -39,6 +39,7 @@
     <string name="job_seeker_details">Job Seeker Profile</string>
     <string name="prompt_job_description">Description</string>
     <string name="edit_job">Edit Job</string>
+    <string name="removejob">Remove Job</string>
     <string name="jobs">Jobs</string>
     <string name="profile">Profile</string>
     <string name="prompt_job_seeker_first_name">First Name</string>
@@ -165,6 +166,8 @@
     <string name="job_seeker_search_description">Search for job seekers matching this job</string>
     <string name="applications">Applications</string>
     <string name="applications_description">View job seekers who are interested in this job</string>
+    <string name="myshortlist">My shortlist</string>
+    <string name="myshortlist_description">View job seekers you have connected with</string>
     <string name="connections">Connections</string>
     <string name="connections_description">View job seekers you have connected with</string>
     <string name="job_seeker_applications">Showing applications</string>

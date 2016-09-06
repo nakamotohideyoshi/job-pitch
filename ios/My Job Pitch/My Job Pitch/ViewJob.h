@@ -13,6 +13,7 @@ typedef NS_ENUM(NSInteger, JobViewMode) {
     JobViewModeSearch = 0,
     JobViewModeApplications,
     JobViewModeConnections,
+    JobViewModeMyShort,
 };
 
 @interface ViewJob : MJPViewController<SwipeViewDelegate>

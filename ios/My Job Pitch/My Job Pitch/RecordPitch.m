@@ -114,7 +114,7 @@
 - (IBAction)recordPitch:(id)sender {
     
     if (self.videoURL) {
-        [MyAlertController title:@"Confirm"
+        [MyAlertController title:nil
                          message:@"You have a pitch recorded but not uploaded. A new recording will replace this"
                               ok:@"OK" okCallback:^{
                                   [self showCamera];
@@ -151,7 +151,7 @@
 - (IBAction)videoUpload:(id)sender {
     
     if (self.loadingBar.hidden == NO) {
-        [MyAlertController title:@"Confirm"
+        [MyAlertController title:nil
                          message:@"This will cancel your current upload! Continue?"
                               ok:@"OK" okCallback:^{
                                   [self createPitch];
@@ -295,7 +295,7 @@
     self.uploadButton.enabled = YES;
     self.recordButton.enabled = YES;
     
-    [MyAlertController title:@"Failed to Upload"
+    [MyAlertController title:nil
                      message:@"Failed to Upload"
                           ok:@"OK" okCallback:nil
                       cancel:nil cancelCallback:nil];

@@ -44,8 +44,8 @@
     
     self.changeCenterContraint.priority = UILayoutPriorityDefaultHigh;
     self.deleteButton.hidden = true;
-    self.noImage.hidden = false;
     self.imageActivity.hidden = true;
+    self.imageView.image = [UIImage imageNamed:@"no-img"];
 }
 
 - (UIView*)loadViewFromNib
@@ -64,7 +64,6 @@
         [self.imageActivity setHidden:false];
         [self.imageActivity startAnimating];
         self.imageView.image = nil;
-        self.noImage.hidden = YES;
         self.changeButton.enabled = false;
         self.changeButton.alpha = 0.5;
         self.changeCenterContraint.priority = UILayoutPriorityDefaultLow;
@@ -86,8 +85,8 @@
     } else {
         self.changeCenterContraint.priority = UILayoutPriorityDefaultHigh;
         self.deleteButton.hidden = true;
-        self.noImage.hidden = false;
         self.imageActivity.hidden = true;
+        self.imageView.image = [UIImage imageNamed:@"no-img"];
     }
 }
 
@@ -163,7 +162,6 @@
                      self.imageView.image = self.imageForUpload;
                      self.changeCenterContraint.priority = UILayoutPriorityDefaultLow;
                      self.deleteButton.hidden = false;
-                     self.noImage.hidden = true;
                  }
                 failureBlock:^(NSError *error) {}];
     } else {
@@ -173,7 +171,6 @@
         self.imageView.image = self.imageForUpload;
         self.changeCenterContraint.priority = UILayoutPriorityDefaultLow;
         self.deleteButton.hidden = false;
-        self.noImage.hidden = true;
     }
     
 }
@@ -196,11 +193,9 @@
     [MyAlertController title:nil message:@"Are you sure you want to remove this image?" ok:@"Delete" okCallback:^{
         self.image = nil;
         self.imageForUpload = nil;
-        self.imageView.image = nil;
+        self.imageView.image = [UIImage imageNamed:@"no-img"];
         self.deleteButton.hidden = true;
         self.changeCenterContraint.priority = UILayoutPriorityDefaultHigh;
-        self.noImage.hidden = false;
-        self.noImage.text = @"no image";
     } cancel:@"Cancel" cancelCallback:nil];
 }
 

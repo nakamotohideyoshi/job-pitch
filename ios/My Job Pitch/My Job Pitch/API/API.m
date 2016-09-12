@@ -970,21 +970,39 @@
 }
 
 - (void)saveJobSeeker:(JobSeeker*)jobSeeker
+               cvdata:(NSData*)cvdata
               success:(void (^)(JobSeeker *jobSeeker))success
               failure:(void (^)(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors))failure
 {
     [self clearCookies];
+    
+    if (cvdata == nil) jobSeeker.cv = nil;
     if (jobSeeker.id) {
-        [[RKObjectManager sharedManager] putObject:jobSeeker
-                                              path:[NSString stringWithFormat:@"/api/job-seekers/%@/", jobSeeker.id]
-                                         parameters:nil success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
-                                             NSLog(@"JobSeeker updated");
-                                             success([mappingResult firstObject]);
-                                         } failure:^(RKObjectRequestOperation *operation, NSError *error) {
-                                             NSLog(@"Error updating jobseeker: %@", error);
-                                             failure(operation, error, [self getMessage:error], [self getErrors:error]);
-                                         }
-         ];
+        NSMutableURLRequest *request = [[RKObjectManager sharedManager]
+                                        multipartFormRequestWithObject:jobSeeker
+                                        method:RKRequestMethodPUT
+                                        path:[NSString stringWithFormat:@"/api/job-seekers/%@/", jobSeeker.id]
+                                        parameters:nil
+                                        constructingBodyWithBlock:^(id<AFMultipartFormData> formData) {
+                                            if (cvdata) {
+                                                [formData appendPartWithFileData:cvdata
+                                                                            name:@"cv"
+                                                                        fileName:jobSeeker.cv
+                                                                        mimeType:@"application/octet-stream"];
+                                            }                                            
+                                        }];
+        
+        RKObjectRequestOperation *operation = [[RKObjectManager sharedManager]
+                                               objectRequestOperationWithRequest:request
+                                               success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
+                                                   NSLog(@"JobSeeker created");
+                                                   success([mappingResult firstObject]);
+                                               } failure:^(RKObjectRequestOperation *operation, NSError *error) {
+                                                   NSLog(@"Error creating jobseeker: %@", error);
+                                                   failure(operation, error, [self getMessage:error], [self getErrors:error]);
+                                               }];
+        [[RKObjectManager sharedManager] enqueueObjectRequestOperation:operation];
+        
     } else {
         [[RKObjectManager sharedManager] postObject:jobSeeker
                                                path:@"/api/job-seekers/"

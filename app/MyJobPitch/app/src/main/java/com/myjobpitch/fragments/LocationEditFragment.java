@@ -308,7 +308,7 @@ public class LocationEditFragment extends EditFragment<Location> implements Goog
             mNoImageMessage = getString(R.string.image_set_by_business);
             mNoImageAlpha = 0.3f;
         } else {
-            mNoImageMessage = getString(R.string.no_image);
+            //mNoImageMessage = getString(R.string.no_image);
             mNoImageAlpha = 1.0f;
         }
         loadImage();

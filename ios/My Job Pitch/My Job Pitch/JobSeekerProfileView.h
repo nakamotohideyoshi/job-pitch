@@ -55,4 +55,6 @@
 - (void)setSexes:(nonnull NSArray*)sexObjects;
 - (void)setNationalities:(nonnull NSArray*)nationalityObjects;
 
+@property (strong, nonatomic) NSData *cvdata;
+
 @end

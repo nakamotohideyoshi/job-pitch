@@ -15,7 +15,6 @@
 @property (weak, nonatomic) IBOutlet ErrorTextField *name;
 @property (weak, nonatomic) IBOutlet UIImageView *imageView;
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView *imageActivity;
-@property (weak, nonatomic) IBOutlet UILabel *noImage;
 @property (weak, nonatomic) IBOutlet UIButton *changeButton;
 @property (weak, nonatomic) IBOutlet UIButton *deleteButton;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *changeCenterContraint;

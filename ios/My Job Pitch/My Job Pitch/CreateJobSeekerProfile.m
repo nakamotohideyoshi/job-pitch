@@ -61,6 +61,7 @@
         [jobSeekerProfile save:jobSeeker];
         [SVProgressHUD show];
         [[self appDelegate].api saveJobSeeker:jobSeeker
+                                       cvdata:nil
                                       success:^(JobSeeker *jobSeeker) {
                                           [self appDelegate].user.jobSeeker = jobSeeker.id;
                                           [self clearErrors];

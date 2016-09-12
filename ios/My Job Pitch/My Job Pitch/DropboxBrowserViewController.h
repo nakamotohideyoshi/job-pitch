@@ -83,6 +83,8 @@ NS_CLASS_AVAILABLE_IOS(6_0) @interface DropboxBrowserViewController : UITableVie
 /// The current or most recently selected file name
 @property (nonatomic, strong, readonly) NSString *currentFileName;
 
+@property (nonatomic, strong) NSString *downloadedFilePath;
+
 /// The current file path of the DropboxBrowserViewController
 @property (nonatomic, strong, readonly) NSString *currentPath;
 

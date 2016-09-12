@@ -25,6 +25,7 @@
     UILabel *descriPlaceholder;
     UIImagePickerController *ipc;
     UIPopoverController *popover;
+    NSString *cv;
 }
 
 - (instancetype)initWithCoder:(NSCoder *)aDecoder
@@ -159,6 +160,7 @@
     jobSeeker.desc = self.descriptionView.text;
     jobSeeker.hasReferences = self.hasReferences.isOn;
     jobSeeker.truthConfirmation = self.tickBox.isOn;
+    jobSeeker.cv = cv;
 }
 
 -(void)load:(JobSeeker*)jobSeeker
@@ -254,22 +256,25 @@
 }
 
 - (void)dropboxBrowser:(DropboxBrowserViewController *)browser didDownloadFile:(NSString *)fileName didOverwriteFile:(BOOL)isLocalFileOverwritten {
+    cv = fileName;
     self.cvFileName.text = fileName;
+    NSString *s = browser.downloadedFilePath;
+    _cvdata = [NSData dataWithContentsOfFile:s];
+    
     [browser removeDropboxBrowser];
 }
 
 -(void) showImagePickerController:(UIImagePickerControllerSourceType)type {
-    ipc= [[UIImagePickerController alloc] init];
-    ipc.delegate = self;
-    ipc.sourceType = type;
-    if(UI_USER_INTERFACE_IDIOM()==UIUserInterfaceIdiomPhone) {
+    if ([UIImagePickerController isSourceTypeAvailable:type]) {
+        if (ipc == nil) {
+            ipc = [[UIImagePickerController alloc] init];
+            ipc.mediaTypes = @[(NSString*)kUTTypeImage];
+            ipc.delegate = self;
+        }
+        ipc.sourceType = type;
         [self.window.rootViewController presentViewController:ipc animated:true completion:nil];
     } else {
-        popover=[[UIPopoverController alloc]initWithContentViewController:ipc];
-        [popover presentPopoverFromRect:self.selectButton.frame
-                                 inView:self
-               permittedArrowDirections:UIPopoverArrowDirectionAny
-                               animated:YES];
+        [MyAlertController title:nil message:@"You don't have camera." ok:@"OK" okCallback:nil cancel:nil cancelCallback:nil];
     }
 }
 
@@ -278,10 +283,22 @@
     
     NSURL *referenceURL = [info objectForKey:UIImagePickerControllerReferenceURL];
     if (referenceURL) {
-        self.cvFileName.text = referenceURL.absoluteString;
+        ALAssetsLibrary *library = [[ALAssetsLibrary alloc] init];
+        [library assetForURL:referenceURL
+                 resultBlock:^(ALAsset *asset) {
+                     UIImage *image = [UIImage imageWithCGImage:[[asset defaultRepresentation] fullResolutionImage]];
+                     _cvdata = UIImagePNGRepresentation(image);
+                 }
+                failureBlock:^(NSError *error) {}];
     } else {
-        self.cvFileName.text = @"captured file";
-    }    
+        UIImage *editedImage = (UIImage *) [info objectForKey: UIImagePickerControllerEditedImage];
+        UIImage *originalImage = (UIImage *) [info objectForKey: UIImagePickerControllerOriginalImage];
+        UIImage *image = editedImage ? editedImage : originalImage;
+        _cvdata = UIImagePNGRepresentation(image);
+    }
+
+    cv = @"cv.jpg";
+    self.cvFileName.text = @"cv.jpg";
 }
 
 -(void)imagePickerControllerDidCancel:(UIImagePickerController *)picker {

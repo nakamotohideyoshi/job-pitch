@@ -2,6 +2,8 @@ package com.myjobpitch.api;
 
 import android.util.Log;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.myjobpitch.api.auth.AuthToken;
 import com.myjobpitch.api.auth.Login;
 import com.myjobpitch.api.auth.Registration;
@@ -49,6 +51,7 @@ import java.lang.reflect.Array;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -389,6 +392,27 @@ public class MJPApi {
 
     public void deleteJobImage(Integer id) {
         rest.exchange(getObjectUrl("user-job-images", id), HttpMethod.DELETE, createAuthenticatedRequest(), Void.class);
+    }
+
+    public JobSeeker updateJobSeeker(JobSeeker jobSeeker) throws MJPApiException {
+
+        MultiValueMap<String, Object> parts = new LinkedMultiValueMap<>();
+        //parts.put("image", Arrays.asList(new Object[] {image.getImage()}));
+
+        try {
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.MULTIPART_FORM_DATA);
+            //HttpEntity<MultiValueMap<String, Object>> request = createAuthenticatedRequest(parts, headers);
+            //rest.postForObject(getTypeUrl(endpoint), request, Object.class);
+
+            return rest.exchange(getObjectUrl("job-seekers", jobSeeker.getId()), HttpMethod.PUT, createAuthenticatedRequest(jobSeeker), JobSeeker.class).getBody();
+        } catch (HttpClientErrorException e) {
+            if (e.getStatusCode().value() == 400) {
+                throw new MJPApiException(e);
+            }
+            throw e;
+        }
     }
 
     public <T extends MJPAPIObject> List<T> get(Class<T> cls) throws MJPApiException {

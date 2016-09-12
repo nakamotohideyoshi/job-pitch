@@ -133,13 +133,12 @@ public class BusinessListActivity extends MJPProgressActionBarActivity  {
             ImageView imageView = (ImageView) rowView.findViewById(R.id.icon);
             List<Image> images = business.getImages();
             ProgressBar progress = (ProgressBar) rowView.findViewById(R.id.progress);
-            TextView noImageView = (TextView) rowView.findViewById(R.id.no_image);
             if (images != null && !images.isEmpty()) {
                 Uri uri = Uri.parse(images.get(0).getThumbnail());
                 new DownloadImageTask(BusinessListActivity.this, imageView, progress).executeOnExecutor(DownloadImageTask.executor, uri);
             } else {
                 progress.setVisibility(View.GONE);
-                noImageView.setVisibility(View.VISIBLE);
+                imageView.setImageResource(R.drawable.no_img);
             }
             TextView titleView = (TextView) rowView.findViewById(R.id.title);
             titleView.setText(business.getName());

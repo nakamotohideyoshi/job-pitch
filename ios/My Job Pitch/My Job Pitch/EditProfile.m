@@ -86,6 +86,7 @@
         [jobSeekerProfile save:myJobSeeker];
         [SVProgressHUD show];
         [[self appDelegate].api saveJobSeeker:myJobSeeker
+                                       cvdata:jobSeekerProfile.cvdata
                                       success:^(JobSeeker *jobSeeker) {
                                           [SVProgressHUD dismiss];
                                           [self clearErrors];

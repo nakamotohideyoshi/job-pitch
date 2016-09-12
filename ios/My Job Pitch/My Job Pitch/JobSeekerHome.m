@@ -226,6 +226,7 @@ typedef NS_ENUM(NSInteger, EmptyButtonAction) {
     self.jobSeeker.active = true;
     [SVProgressHUD show];
     [self.appDelegate.api saveJobSeeker:self.jobSeeker
+                                 cvdata:nil
                                 success:^(JobSeeker *jobSeeker) {
                                     [self reset];
                                 } failure:^(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors) {

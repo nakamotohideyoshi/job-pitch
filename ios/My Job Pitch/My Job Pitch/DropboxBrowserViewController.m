@@ -690,6 +690,7 @@ static NSUInteger const kDBSignOutAlertViewTag = 3;
 }
 
 - (void)restClient:(DBRestClient *)client loadedFile:(NSString *)localPath {
+    self.downloadedFilePath = localPath;
     [self downloadedFile];
 }
 

@@ -69,7 +69,7 @@
                       into:cell.image
              withIndicator:cell.imageActivity];
     } else {
-        cell.image.image = nil;
+        cell.image.image = [UIImage imageNamed:@"no-img"];
         cell.imageActivity.hidden = true;
     }
     cell.subtitle.text = job.desc;

@@ -52,6 +52,7 @@ public class ImageEditFragment extends Fragment {
 
         mImageView = (ImageView) view.findViewById(R.id.image_preview);
         mImageMessage = (TextView) view.findViewById(R.id.no_image);
+        mImageMessage.setVisibility(View.INVISIBLE);
         mImageProgress = (ProgressBar) view.findViewById(R.id.image_progress);
         mChangeImageButton = (Button) view.findViewById(R.id.change_image_button);
         mChangeImageButton.setOnClickListener(new View.OnClickListener() {
@@ -91,12 +92,10 @@ public class ImageEditFragment extends Fragment {
 
     public void load(final Uri uri, Uri noImageUri, String noImageMessage, float noImageAlpha) {
         mImageMessage.setText(noImageMessage);
-        mImageView.setVisibility(View.INVISIBLE);
         if (uri == null) {
-            mImageView.setAlpha(noImageAlpha);
+            mImageView.setImageResource(R.drawable.no_img);
             mDeleteImageButton.setVisibility(View.GONE);
         } else {
-            mImageView.setAlpha(1.0f);
             mDeleteImageButton.setVisibility(View.VISIBLE);
         }
 
@@ -106,10 +105,9 @@ public class ImageEditFragment extends Fragment {
 
         if (downloadUri == null) {
             mImageProgress.setVisibility(View.INVISIBLE);
-            mImageMessage.setVisibility(View.VISIBLE);
+            mImageView.setImageResource(R.drawable.no_img);
         } else {
             mImageProgress.setVisibility(View.VISIBLE);
-            mImageMessage.setVisibility(View.INVISIBLE);
             mDownloadImageTask = new DownloadImageTask(getActivity(), mImageView, mImageProgress);
             mDownloadImageTask.setListener(new DownloadImageTask.DownloadImageTaskListener() {
                 @Override

@@ -183,7 +183,6 @@ public class JobEditFragment extends EditFragment {
             mImageUri = Uri.parse(mJob.getImages().get(0).getThumbnail());
 
 
-        mNoImageMessage = getString(R.string.no_image);
         mNoImageAlpha = 1.0f;
         Location location = mJob.getLocation_data();
         if (location != null) {

@@ -142,7 +142,6 @@ public class LocationListActivity extends MJPProgressActionBarActivity  {
             ImageView imageView = (ImageView) rowView.findViewById(R.id.icon);
             Image image = null;
             ProgressBar progress = (ProgressBar) rowView.findViewById(R.id.progress);
-            TextView noImageView = (TextView) rowView.findViewById(R.id.no_image);
             if (location.getImages() != null && !location.getImages().isEmpty())
                 image = location.getImages().get(0);
             else if (location.getBusiness_data().getImages() != null && !location.getBusiness_data().getImages().isEmpty())
@@ -152,7 +151,7 @@ public class LocationListActivity extends MJPProgressActionBarActivity  {
                 new DownloadImageTask(LocationListActivity.this, imageView, progress).executeOnExecutor(DownloadImageTask.executor, uri);
             } else {
                 progress.setVisibility(View.GONE);
-                noImageView.setVisibility(View.VISIBLE);
+                imageView.setImageResource(R.drawable.no_img);
             }
             TextView titleView = (TextView) rowView.findViewById(R.id.title);
             titleView.setText(location.getName());

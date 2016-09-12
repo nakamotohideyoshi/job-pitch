@@ -21,6 +21,7 @@
 @implementation LocationEditView {
     UIImagePickerController *ipc;
     UIPopoverController *popover;
+    Location *mLocation;
 }
 
 - (instancetype)initWithCoder:(NSCoder *)aDecoder
@@ -49,9 +50,10 @@
     
     self.changeCenterContraint.priority = UILayoutPriorityDefaultHigh;
     self.deleteButton.hidden = true;
-    self.noImage.hidden = false;
     self.imageActivity.hidden = true;
     self.location.textField.enabled = false;
+    self.noImage.hidden = true;
+    self.imageView.image = [UIImage imageNamed:@"no-img"];
     self.email.textField.text = [AppHelper getEmail];
 }
 
@@ -64,6 +66,8 @@
 
 - (void)load:(Location*)location {
     if (location == nil) return;
+    
+    mLocation = location;
     
     self.name.textField.text = location.name;
     self.desc.textField.text = location.desc;
@@ -85,7 +89,6 @@
         self.changeCenterContraint.priority = UILayoutPriorityDefaultHigh;
         self.deleteButton.hidden = true;
         self.noImage.hidden = false;
-        self.noImage.text = @"image set by company";
         self.imageView.alpha = 0.5f;
     }
     
@@ -114,7 +117,8 @@
                                }];
     } else {
         self.imageActivity.hidden = true;
-        self.noImage.text = @"no image";
+        self.noImage.hidden = true;
+        self.imageView.image = [UIImage imageNamed:@"no-img"];
     }
     
     self.placeID = location.placeID;
@@ -241,8 +245,28 @@
         self.imageView.image = nil;
         self.changeCenterContraint.priority = UILayoutPriorityDefaultHigh;
         self.deleteButton.hidden = true;
-        self.noImage.hidden = false;
-        self.noImage.text = @"no image";
+        
+        self.image = [mLocation.businessData getImage];
+        if (self.image && self.image.image) {
+            [self.imageActivity setHidden:false];
+            [self.imageActivity startAnimating];
+            self.imageView.image = nil;
+            NSURL *imageURL = [NSURL URLWithString:self.image.image];
+            [NSURLConnection sendAsynchronousRequest:[NSURLRequest requestWithURL:imageURL]
+                                               queue:[NSOperationQueue mainQueue]
+                                   completionHandler:^(NSURLResponse *response, NSData *data, NSError *error) {
+                                       self.imageView.image = [UIImage imageWithData:data];
+                                       [self.imageActivity setHidden:true];
+                                       [self.imageActivity stopAnimating];
+                                       
+                                       self.noImage.hidden = false;
+                                       self.imageView.alpha = 0.5f;
+                                   }];
+        } else {
+            self.imageActivity.hidden = true;
+            self.imageView.image = [UIImage imageNamed:@"no-img"];
+        }
+        
     } cancel:@"Cancel" cancelCallback:nil];
 }
 

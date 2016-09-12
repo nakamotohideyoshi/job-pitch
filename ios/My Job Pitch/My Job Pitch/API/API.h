@@ -52,6 +52,7 @@
                     failure:(void (^)(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors))failure;
 
 - (void)saveJobSeeker:(JobSeeker*)jobSeeker
+               cvdata:(NSData*)cvdata
               success:(void (^)(JobSeeker *jobSeeker))success
               failure:(void (^)(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors))failure;
 

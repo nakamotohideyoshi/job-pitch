@@ -15,7 +15,7 @@ public class CreateUpdateJobSeekerTask extends CreateUpdateAPITask<JobSeeker> {
 
             @Override
             public JobSeeker update(JobSeeker jobSeeker) throws MJPApiException {
-                return api.update(JobSeeker.class, jobSeeker);
+                return api.updateJobSeeker(jobSeeker);
             }
         });
     }

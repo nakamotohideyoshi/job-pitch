@@ -153,7 +153,6 @@ public class JobListActivity extends MJPProgressActionBarActivity  {
             ImageView imageView = (ImageView) rowView.findViewById(R.id.icon);
             Image image = null;
             ProgressBar progress = (ProgressBar) rowView.findViewById(R.id.progress);
-            TextView noImageView = (TextView) rowView.findViewById(R.id.no_image);
             if (job.getImages() != null && !job.getImages().isEmpty())
                 image = job.getImages().get(0);
             else if (job.getLocation_data().getImages() != null && !job.getLocation_data().getImages().isEmpty())
@@ -165,7 +164,7 @@ public class JobListActivity extends MJPProgressActionBarActivity  {
                 new DownloadImageTask(JobListActivity.this, imageView, progress).executeOnExecutor(DownloadImageTask.executor, uri);
             } else {
                 progress.setVisibility(View.GONE);
-                noImageView.setVisibility(View.VISIBLE);
+                imageView.setImageResource(R.drawable.no_img);
             }
             TextView titleView = (TextView) rowView.findViewById(R.id.title);
             TextView subtitleView = (TextView) rowView.findViewById(R.id.subtiltle);

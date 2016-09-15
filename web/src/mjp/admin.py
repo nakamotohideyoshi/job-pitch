@@ -11,12 +11,22 @@ from .models import (
     Message,
     EmailTemplate,
     TokenStore,
+    InitialTokens,
 )
 
 
 @admin.register(Sex, Nationality, Contract, Hours, Sector, Business, JobSeeker, User, Message)
 class Admin(admin.ModelAdmin):
     pass
+
+
+@admin.register(InitialTokens)
+class InitialTokens(admin.ModelAdmin):
+    def has_add_permission(self, request):
+        return False
+
+    def has_delete_permission(self, request, obj=None):
+        return False
 
 
 @admin.register(EmailTemplate)

@@ -8,7 +8,7 @@ from rest_framework.routers import DefaultRouter
 from mjp.models import Sector, Hours, Contract, Business, Location,\
     JobStatus, Job, Sex, Nationality, JobSeeker, JobProfile,\
     ApplicationStatus, Application, Role, LocationImage, BusinessImage, \
-    JobImage, Message, Pitch, TokenStore
+    JobImage, Message, Pitch, TokenStore, InitialTokens
 
 from mjp.serializers import SimpleSerializer, BusinessSerializer,\
     LocationSerializer, JobProfileSerializer, JobSerializer, JobSeekerSerializer,\
@@ -89,7 +89,7 @@ class UserBusinessViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         token_store = TokenStore.objects.create(
-            tokens=0,
+            tokens=InitialTokens.objects.get().tokens,
             user=self.request.user,
         )
         serializer.save(token_store=token_store).users.add(self.request.user)

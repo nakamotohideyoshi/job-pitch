@@ -450,3 +450,7 @@ class TokenStore(models.Model):
 
     def __str__(self):
         return "{} token(s) for {}: {}".format(self.tokens, self.user.email, self.business_list())
+
+
+class InitialTokens(models.Model):
+    tokens = models.IntegerField()

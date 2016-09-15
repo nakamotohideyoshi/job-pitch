@@ -111,6 +111,7 @@ class User(AbstractBaseUser, PermissionsMixin):
                                     help_text=_('Designates whether this user should be treated as '
                                                 'active. Unselect this instead of deleting accounts.'))
     date_joined = models.DateTimeField(_('date joined'), default=timezone.now)
+    can_create_businesses = models.BooleanField(default=False)
 
     objects = UserManager()
 

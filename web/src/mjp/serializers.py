@@ -66,8 +66,8 @@ class UserDetailsSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = get_user_model()
-        fields = ('id', 'email', 'businesses', 'job_seeker')
-        read_only_fields = ('id', 'email', 'businesses', 'job_seeker')
+        fields = ('id', 'email', 'businesses', 'job_seeker', 'can_create_businesses')
+        read_only_fields = ('id', 'email', 'businesses', 'job_seeker', 'can_create_businesses')
 
 
 class BusinessSerializer(serializers.ModelSerializer):

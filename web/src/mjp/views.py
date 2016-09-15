@@ -80,9 +80,18 @@ router.register('businesses', BusinessViewSet, base_name='business')
 
 class UserBusinessViewSet(viewsets.ModelViewSet):
     class BusinessPermission(permissions.BasePermission):
+        def has_permission(self, request, view):
+            if request.method in permissions.SAFE_METHODS:
+                return True
+            if request.method in ('POST', 'DELETE'):
+                return request.user.can_create_businesses or not request.user.businesses.exists()
+            return True
+
         def has_object_permission(self, request, view, obj):
             if request.method in permissions.SAFE_METHODS:
                 return True
+            if request.method == 'DELETE':
+                return request.user.can_create_businesses and obj.users.filter(pk=int(request.user.pk)).exists()
             return obj.users.filter(pk=int(request.user.pk)).exists()
     permission_classes = (permissions.IsAuthenticated, BusinessPermission)
     serializer_class = BusinessSerializer

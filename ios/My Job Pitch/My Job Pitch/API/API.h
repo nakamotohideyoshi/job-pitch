@@ -152,6 +152,10 @@
 - (void)loadBusinesses:(void (^)(NSArray *businesses))success
                failure:(void (^)(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors))failure;
 
+- (void)loadBusiness:(NSNumber*)bid
+             success:(void (^)(Business *business))success
+             failure:(void (^)(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors))failure;
+
 - (void)loadJobsForLocation:(NSNumber*)location
                     success:(void (^)(NSArray *applications))success
                     failure:(void (^)(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors))failure;

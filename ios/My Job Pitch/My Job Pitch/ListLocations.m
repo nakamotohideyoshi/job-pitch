@@ -28,6 +28,11 @@
     [super viewDidLoad];
     self.locations.allowsMultipleSelectionDuringEditing = NO;
     editRow = -1;
+    
+    if ([self appDelegate].user.canCreateBusinesses == NO) {
+        UIBarButtonItem *accountButton = [[UIBarButtonItem alloc] initWithTitle:@"Account" style:UIBarButtonItemStylePlain target:self action:@selector(account:)];
+        self.navigationItem.leftBarButtonItem = accountButton;
+    }
 }
 
 -(void)viewWillAppear:(BOOL)animated {
@@ -123,6 +128,10 @@
         controller.location = [self->data objectAtIndex:editRow];
     }
     [self.navigationController pushViewController:controller animated:YES];
+}
+
+- (void) account:(id)sender {
+    [AppHelper showAccountMenu];
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {

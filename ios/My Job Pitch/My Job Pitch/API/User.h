@@ -13,6 +13,7 @@
 @property NSString* email;
 @property NSArray* businesses;
 @property NSNumber* jobSeeker;
+@property bool canCreateBusinesses;
 
 -(bool)isJobSeeker;
 -(bool)isRecruiter;

@@ -298,11 +298,6 @@ public class LocationListActivity extends MJPProgressActionBarActivity  {
                 intent.putExtra(EditBusinessActivity.BUSINESS_ID, business.getId());
                 startActivity(intent);
                 return true;
-            case android.R.id.home:
-                finish();
-                intent = NavUtils.getParentActivityIntent(LocationListActivity.this);
-                startActivity(intent);
-                return true;
             case R.id.action_messages:
                 startActivity(new Intent(LocationListActivity.this, ConversationListActivity.class));
                 return true;

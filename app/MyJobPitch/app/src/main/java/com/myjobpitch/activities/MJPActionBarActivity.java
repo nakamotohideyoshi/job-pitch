@@ -89,13 +89,7 @@ public class MJPActionBarActivity extends AppCompatActivity implements MJPActivi
     public boolean onOptionsItemSelected(final MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                Log.d("MJPActionBarActivity", "up");
-                DialogInterface.OnClickListener onLogout = new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        NavUtils.navigateUpFromSameTask(MJPActionBarActivity.this);
-                    }
-                };
-                confirmLogout(onLogout);
+                onBackPressed();
                 return true;
         }
         return super.onOptionsItemSelected(item);

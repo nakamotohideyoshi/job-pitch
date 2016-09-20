@@ -411,7 +411,12 @@ public class LoginActivity extends MJPProgressActivity implements LoaderCallback
                                 Intent intent;
                                 if (mUser.isRecruiter()) {
                                     if (mUser.getBusinesses().size() > 0) {
-                                        intent = new Intent(LoginActivity.this, BusinessListActivity.class);
+                                        if (mUser.getCan_create_businesses()) {
+                                            intent = new Intent(LoginActivity.this, BusinessListActivity.class);
+                                        } else {
+                                            intent = new Intent(LoginActivity.this, LocationListActivity.class);
+                                            intent.putExtra(LocationListActivity.BUSINESS_ID, mUser.getBusinesses().get(0));
+                                        }
                                     } else {
                                         ObjectMapper mapper = new ObjectMapper();
                                         intent = new Intent(LoginActivity.this, CreateProfileActivity.class);

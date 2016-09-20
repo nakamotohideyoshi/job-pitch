@@ -91,7 +91,7 @@
     [self configureResponseMapping:objectManager
                      responseClass:[User class]
                      responseArray:@[@"id", @"email", @"businesses"]
-                responseDictionary:@{@"job_seeker": @"jobSeeker"}
+                responseDictionary:@{@"job_seeker": @"jobSeeker", @"can_create_businesses": @"canCreateBusinesses"}
              responseRelationships:nil
                               path:@"/api-rest-auth/user/"
                             method:RKRequestMethodGET
@@ -1448,6 +1448,22 @@
                     success:success
                     failure:failure
      ];
+}
+
+- (void)loadBusiness:(NSNumber*)bid
+             success:(void (^)(Business *business))success
+             failure:(void (^)(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors))failure
+{
+    [self clearCookies];
+    NSString *url = [NSString stringWithFormat:@"/api/user-businesses/%@/", bid];
+    [[RKObjectManager sharedManager] getObjectsAtPath:url parameters:nil
+                                              success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
+                                                  success([mappingResult firstObject]);
+                                              }
+                                              failure:^(RKObjectRequestOperation *operation, NSError *error) {
+                                                  failure(operation, error, [self getMessage:error], [self getErrors:error]);
+                                              }];
+
 }
 
 - (void)loadLocationsForBusiness:(NSNumber*)business

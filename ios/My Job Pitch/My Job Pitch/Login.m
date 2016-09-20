@@ -8,6 +8,7 @@
 
 #import "Login.h"
 #import "AppDelegate.h"
+#import "ListLocations.h"
 
 @interface Login ()
 
@@ -73,7 +74,19 @@
         
         [SVProgressHUD dismiss];
         if ([user isRecruiter]) {
-            [self performSegueWithIdentifier:@"goto_business_list" sender:@"login"];
+            if (user.canCreateBusinesses) {
+                [self performSegueWithIdentifier:@"goto_business_list" sender:@"login"];
+            } else {
+                [SVProgressHUD show];
+                [self.appDelegate.api loadBusiness:user.businesses[0] success:^(Business *business) {
+                    [SVProgressHUD dismiss];
+                    ListLocations *listLocations = [self.storyboard instantiateViewControllerWithIdentifier:@"listLocations"];
+                    listLocations.business = business;
+                    [self.navigationController pushViewController:listLocations animated:YES];
+                } failure:^(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors) {
+                    [MyAlertController showError:@"Error loading data" callback:nil];
+                }];
+            }
         } else if ([user isJobSeeker]) {
             [self performSegueWithIdentifier:@"goto_job_seeker" sender:@"login"];
         } else {

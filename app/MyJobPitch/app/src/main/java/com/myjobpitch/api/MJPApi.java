@@ -396,16 +396,36 @@ public class MJPApi {
 
     public JobSeeker updateJobSeeker(JobSeeker jobSeeker) throws MJPApiException {
 
-        MultiValueMap<String, Object> parts = new LinkedMultiValueMap<>();
-        //parts.put("image", Arrays.asList(new Object[] {image.getImage()}));
+//        MultiValueMap<String, Object> parts = new LinkedMultiValueMap<>();
+//        parts.add("first_name", jobSeeker.getFirst_name());
+//        parts.add("last_name", jobSeeker.getLast_name());
+//        parts.add("email_public", jobSeeker.getEmail_public());
+//        parts.add("telephone", jobSeeker.getTelephone());
+//        parts.add("telephone_public", jobSeeker.getTelephone_public());
+//        parts.add("mobile", jobSeeker.getMobile());
+//        parts.add("mobile_public", jobSeeker.getMobile_public());
+//        parts.add("age", jobSeeker.getAge());
+//        parts.add("age_public", jobSeeker.getAge_public());
+//        parts.add("sex_public", jobSeeker.getSex_public());
+//        parts.add("nationality_public", jobSeeker.getNationality_public());
+//        parts.add("description", jobSeeker.getDescription());
+//        parts.add("active", jobSeeker.isActive());
+//        parts.add("has_references", jobSeeker.getHasReferences());
+//        parts.add("first_name", jobSeeker.getFirst_name());
+//
+//        try {
+//            HttpHeaders headers = new HttpHeaders();
+//            headers.setContentType(MediaType.MULTIPART_FORM_DATA);
+//            HttpEntity<MultiValueMap<String, Object>> request = createAuthenticatedRequest(parts, headers);
+//            return rest.exchange(getObjectUrl("job-seekers", jobSeeker.getId()), HttpMethod.PUT, request, JobSeeker.class).getBody();
+//        } catch (HttpClientErrorException e) {
+//            if (e.getStatusCode().value() == 400) {
+//                throw new MJPApiException(e);
+//            }
+//            throw e;
+//        }
 
         try {
-
-            HttpHeaders headers = new HttpHeaders();
-            headers.setContentType(MediaType.MULTIPART_FORM_DATA);
-            //HttpEntity<MultiValueMap<String, Object>> request = createAuthenticatedRequest(parts, headers);
-            //rest.postForObject(getTypeUrl(endpoint), request, Object.class);
-
             return rest.exchange(getObjectUrl("job-seekers", jobSeeker.getId()), HttpMethod.PUT, createAuthenticatedRequest(jobSeeker), JobSeeker.class).getBody();
         } catch (HttpClientErrorException e) {
             if (e.getStatusCode().value() == 400) {

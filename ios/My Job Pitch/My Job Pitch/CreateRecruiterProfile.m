@@ -10,6 +10,7 @@
 #import "LocationEditView.h"
 #import "CreateRecruiterProfile.h"
 #import "CreateProfile.h"
+#import "ListLocations.h"
 
 @interface CreateRecruiterProfile ()
 
@@ -254,11 +255,16 @@
 }
 
 - (void)saveCompleted {
-    
     if (_isFirst) {
-        UIViewController *destinationController = [self.storyboard instantiateViewControllerWithIdentifier:@"recruiter_home"];
-        [self.navigationController pushViewController:destinationController animated:YES];
-        
+        User *user = [self appDelegate].user;
+        if (user.canCreateBusinesses) {
+            UIViewController *destinationController = [self.storyboard instantiateViewControllerWithIdentifier:@"recruiter_home"];
+            [self.navigationController pushViewController:destinationController animated:YES];
+        } else {
+            ListLocations *listLocations = [self.storyboard instantiateViewControllerWithIdentifier:@"listLocations"];
+            listLocations.business = self.business;
+            [self.navigationController pushViewController:listLocations animated:YES];
+        }
         NSMutableArray *navigationArray = [[NSMutableArray alloc] initWithArray: self.navigationController.viewControllers];
         for (id vc in self.navigationController.viewControllers)
             if ([vc isKindOfClass:[CreateProfile class]] || [vc isKindOfClass:[CreateRecruiterProfile class]])

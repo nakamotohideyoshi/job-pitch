@@ -241,7 +241,14 @@ public class CreateProfileActivity extends MJPProgressActionBarActivity {
     }
 
     private void returnToListActivity() {
-        Intent intent = new Intent(CreateProfileActivity.this, BusinessListActivity.class);
+        Intent intent;
+        boolean canCreateBusinesses = ((MJPApplication)getApplication()).getApi().getUser().getCan_create_businesses();
+        if (canCreateBusinesses) {
+            intent = new Intent(CreateProfileActivity.this, BusinessListActivity.class);
+        } else {
+            intent = new Intent(CreateProfileActivity.this, LocationListActivity.class);
+            intent.putExtra(LocationListActivity.BUSINESS_ID, business.getId());
+        }
         intent.putExtra("from_login", true);
         startActivity(intent);
         finish();

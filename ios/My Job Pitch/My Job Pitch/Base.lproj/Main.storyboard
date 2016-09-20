@@ -923,7 +923,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="FKu-5p-xn1" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1333" y="1365"/>
+            <point key="canvasLocation" x="1365" y="1365"/>
         </scene>
         <!--Edit Profile-->
         <scene sceneID="fAt-nl-ie9">
@@ -2135,7 +2135,7 @@ Finish your pitch confidently by saying something like, “Thank you and I look 
         <!--Work Places-->
         <scene sceneID="yjF-oX-Lno">
             <objects>
-                <viewController id="bFr-cL-9tU" customClass="ListLocations" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="listLocations" id="bFr-cL-9tU" customClass="ListLocations" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="2We-GE-kMn"/>
                         <viewControllerLayoutGuide type="bottom" id="Cyy-KS-jd6"/>

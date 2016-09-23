@@ -244,7 +244,7 @@
     expression.progressBlock = weakSelf.progressBlock;
     
     NSURL *mp4URL = self.mp4Path ? [NSURL URLWithString:[NSString stringWithFormat:@"file://localhost/private%@", self.mp4Path]] : self.videoURL;
-    NSString *keyname = [NSString stringWithFormat:@"%@/%@.%@.%@", @"https:ec2-52-31-145-95.eu-west-1.compute.amazonaws.com", self.pitch.token, self.pitch.id, [mp4URL lastPathComponent]];
+    NSString *keyname = [NSString stringWithFormat:@"%@/%@.%@.%@", @"https:www.sclabs.co.uk", self.pitch.token, self.pitch.id, [mp4URL lastPathComponent]];
     
     AWSS3TransferUtility *transferUtility = [AWSS3TransferUtility defaultS3TransferUtility];
     [[transferUtility uploadFile:mp4URL

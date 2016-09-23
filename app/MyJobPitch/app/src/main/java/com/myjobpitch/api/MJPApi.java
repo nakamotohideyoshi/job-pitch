@@ -104,7 +104,7 @@ public class MJPApi {
 	}
 
 	public MJPApi() {
-		this("https://ec2-52-31-145-95.eu-west-1.compute.amazonaws.com/");
+		this("https://www.sclabs.co.uk/");
 	}
 
     private URI getTypeUrl(String path) {

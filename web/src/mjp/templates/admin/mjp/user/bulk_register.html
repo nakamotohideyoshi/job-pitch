@@ -1,0 +1,45 @@
+{% extends "admin/base_site.html" %}
+
+{% load admin_modify static %}
+
+{% block extrastyle %}
+    {{ block.super }}<link rel="stylesheet" type="text/css" href="{% static "admin/css/forms.css" %}" />
+{% endblock %}
+
+{% block breadcrumbs %}
+    {% if not is_popup %}
+        <div class="breadcrumbs">
+             <a href="../../../../">"Home"</a> ›
+             <a href="../../../">{{ opts.app_label|capfirst|escape }}</a> ›
+             <a href="../../">{{ opts.verbose_name_plural|capfirst }}</a> ›
+             'Bulk register'
+        </div>
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+    <form action="." method="post">
+        {% csrf_token %}
+        <div>
+            {% if form.errors %}
+                <p class="errornote">Please correct the errors below.</p>
+            {%  endif %}
+            <fieldset class="module aligned">
+                <div class="form-row">
+                    {% if form.errors.emails %}
+                        {{ form.errors.emails }}
+                    {% endif %}
+                    <div>
+                        <label class="required" for="id_emails">Emails:</label>
+                        <textarea class="vLargeTextField" cols="40" id="id_emails" name="emails" rows="10">{{ form.data.emails }}</textarea>
+                        <p class="help">One email address per line.</p>
+                    </div>
+                </div>
+            </fieldset>
+        </div>
+
+        <div class="submit-row">
+            <input class="default" type="submit" value="Send emails" />
+        </div>
+    </form>
+{% endblock %}

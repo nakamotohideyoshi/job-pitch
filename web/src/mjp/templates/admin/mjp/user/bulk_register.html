@@ -9,9 +9,9 @@
 {% block breadcrumbs %}
     {% if not is_popup %}
         <div class="breadcrumbs">
-             <a href="../../../../">"Home"</a> ›
-             <a href="../../../">{{ opts.app_label|capfirst|escape }}</a> ›
-             <a href="../../">{{ opts.verbose_name_plural|capfirst }}</a> ›
+             <a href="../../../">"Home"</a> ›
+             <a href="../../">{{ opts.app_label|capfirst|escape }}</a> ›
+             <a href="../">{{ opts.verbose_name_plural|capfirst }}</a> ›
              'Bulk register'
         </div>
     {% endif %}

@@ -106,6 +106,7 @@ class UserAdmin(admin.ModelAdmin):
             context_instance=RequestContext(request),
             context={
                 'form': form,
+                'opts': self.model._meta,
                 'title': 'Bulk register',
             },
         )

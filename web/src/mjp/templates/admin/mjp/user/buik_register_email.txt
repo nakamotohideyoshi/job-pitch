@@ -1,0 +1,12 @@
+{% autoescape off %}
+
+Welcome to My Job Pitch.
+
+You're receiving this email because you have handed in a CV. All our recruitment is done online through My Job Pitch.
+
+Your username is {{ user.get_username }}
+
+Please go to the following page to register your account, and start setting up your profile
+{{ protocol }}://{{ domain }}{% url 'password_reset_confirm' uidb64=uid token=token %}
+
+{% endautoescape %}

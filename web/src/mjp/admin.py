@@ -1,10 +1,11 @@
 from django.conf.urls import url
 from django.contrib import admin
 from django.contrib import messages
+from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import PasswordResetForm
 from django.core.validators import EMPTY_VALUES, EmailValidator
 from django.forms import forms
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponseRedirect
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 
@@ -63,6 +64,14 @@ class BulkRegisterForm(forms.Form):
     emails = CommaSeparatedEmailField(token='\n', required=True)
 
 
+class PreRegistrationPasswordResetForm(PasswordResetForm):
+    def get_users(self, email):
+        return get_user_model()._default_manager.filter(
+            email__iexact=email,
+            is_active=True,
+        )
+
+
 @admin.register(User)
 class UserAdmin(admin.ModelAdmin):
     def get_urls(self):
@@ -77,10 +86,10 @@ class UserAdmin(admin.ModelAdmin):
                 sent = []
                 skipped = []
                 for email in form.cleaned_data['emails']:
-                    user, created = User.objects.get_or_create(email=email)
+                    user, created = get_user_model().objects.get_or_create(email=email)
                     if created:
-                        reset_form = PasswordResetForm(data={'email': email})
-                        print reset_form.is_valid()
+                        reset_form = PreRegistrationPasswordResetForm(data={'email': email})
+                        reset_form.is_valid()
                         reset_form.save(
                             subject_template_name='admin/mjp/user/buik_register_email_subject.txt',
                             email_template_name='admin/mjp/user/buik_register_email.txt',

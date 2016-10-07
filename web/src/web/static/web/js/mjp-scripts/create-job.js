@@ -182,6 +182,7 @@ $(function () {
 							window.location.href = "/profile/list-jobs/?id=" + location_id;
 						}
 					});
+
 				} else {
 					//window.location.href = "/profile/list-jobs/?id="+location_id;
 					$.get("/api/user-locations/" + location_id, query).done(function (data) {

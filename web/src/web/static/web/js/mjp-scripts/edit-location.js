@@ -2,7 +2,12 @@ $(function () {
 	// Run login check funtion with auto-redirect
 	checkLogin(true);
 
-	$('#work_place_details').show();
+	var query = {
+		token: getCookie('key'),
+		csrftoken: getCookie('csrftoken')
+	};
+
+	$('#work_place_details').fadeIn();
 
 	//grab location id from url
 	var location_id = QueryString.id;
@@ -41,6 +46,10 @@ $(function () {
 			$('#work_place_location').val(data.postcode_lookup);
 		}
 
+		$.get("/api/user-locations/" + location_id, query).done(function (data) {
+			$('#currentLogo').attr('src', data.images[0].thumbnail).show();
+		});
+
 		$('#business').val(data.business_data.id);
 	});
 
@@ -49,6 +58,8 @@ $(function () {
 
 
 	$('#work_place_details').submit(function (event) {
+		formAlert('info', 'Wait, while updating...');
+
 		$('.btn-primary').attr("disabled", true);
 		event.preventDefault();
 
@@ -102,13 +113,41 @@ $(function () {
 				postcode_lookup: work_place_location,
 				place_name: postcodeData.nuts
 			}).done(function (data) {
-				formAlert('success', 'Successfully Updated!');
 
-				setTimeout(function () {
-					$('.btn-primary').attr("disabled", false);
-					$('.alert').hide();
-				}, 5000);
+				if ($('#work_place_image').val() != '') {
+					var formData2 = new FormData($('#work_place_details')[0]);
 
+					$.ajax({
+						url: '/api/user-location-images/' + location_id + '/',
+						type: 'PUT',
+						data: formData2,
+						cache: false,
+						contentType: false,
+						processData: false,
+						success: function (data) {
+							$.get("/api/user-locations/" + location_id, query).done(function (data) {
+								$('#currentLogo').attr('src', data.images[0].thumbnail).show();
+
+								formAlert('success', 'Successfully Updated!');
+
+								setTimeout(function () {
+									$('.btn-primary').attr("disabled", false);
+									$('.alert').hide();
+								}, 5000);
+							});
+						}
+					});
+
+				} else {
+
+					formAlert('success', 'Successfully Updated!');
+
+					setTimeout(function () {
+						$('.btn-primary').attr("disabled", false);
+						$('.alert').hide();
+					}, 5000);
+
+				}
 			}).fail(function (data) {
 				for (var key in data.responseJSON) {
 					var obj = data.responseJSON[key];

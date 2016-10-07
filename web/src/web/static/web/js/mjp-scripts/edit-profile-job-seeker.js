@@ -109,6 +109,8 @@ $(function () {
 
 	//Form submit code
 	$('#profile').submit(function (event) {
+		formAlert('info', 'Updating profile...');
+
 		$('.btn-primary').attr("disabled", true);
 		event.preventDefault();
 		var first_name = $('#first_name').val();
@@ -167,12 +169,20 @@ $(function () {
 			contentType: false,
 			processData: false
 		}).done(function (data) {
+			if (data.cv != '') {
+				$('#CVcurrent').show();
+				$('#CVcurrent').attr('href', data.cv);
+			}
+
 			clearErrors();
-			formAlert('success', 'Profile Updated!');
-			setTimeout(function () {
+
+			//setTimeout(function () {
 				$('.btn-primary').attr("disabled", false);
 				$('.alert').hide();
-			}, 5000);
+			//}, 5000);
+
+			formAlert('success', 'Profile Updated!');
+
 		}).fail(function (data) {
 			var messageError = ''
 			for (var key in data.responseJSON) {

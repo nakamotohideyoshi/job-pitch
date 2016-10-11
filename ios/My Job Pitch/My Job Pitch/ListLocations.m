@@ -47,7 +47,7 @@
             [self.locations setHidden:true];
             [self.emptyView setHidden:false];
         }
-        self.tokensLabel.text = [NSString stringWithFormat:@"%d tokens", self.business.tokens.intValue];
+        self.tokensLabel.text = [NSString stringWithFormat:@"%d Credit", self.business.tokens.intValue];
         [SVProgressHUD dismiss];
     } failure:^(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors) {
         [MyAlertController showError:@"Error loading data" callback:nil];

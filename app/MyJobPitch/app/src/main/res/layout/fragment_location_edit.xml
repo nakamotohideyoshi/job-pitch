@@ -32,7 +32,7 @@
         </TableRow>
 
         <TableRow>
-            <EditText android:id="@+id/location_description" android:layout_width="match_parent"
+            <EditText android:id="@+id/location_description" android:layout_width="0dp" android:layout_weight="1"
                 android:layout_height="wrap_content" android:hint="@string/prompt_location_description"
                 android:inputType="textMultiLine" android:maxLines="5"
                 android:singleLine="true" />
@@ -40,17 +40,6 @@
                 android:checked="true" />
         </TableRow>
 
-
-        <TableRow>
-            <EditText android:id="@+id/location_address" android:layout_width="match_parent"
-                android:layout_height="wrap_content" android:hint="@string/prompt_location_address"
-                android:inputType="textMultiLine" android:maxLines="5"
-                android:singleLine="true" />
-            <CheckBox
-                android:id="@+id/location_address_public"
-                android:layout_gravity="right"
-                android:checked="true" />
-        </TableRow>
 
         <TableRow>
             <EditText android:id="@+id/location_email" android:layout_width="match_parent"

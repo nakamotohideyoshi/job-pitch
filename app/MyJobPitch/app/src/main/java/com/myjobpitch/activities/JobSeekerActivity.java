@@ -308,7 +308,8 @@ public class JobSeekerActivity extends MJPProgressActionBarActivity {
                     String value = mapper.writeValueAsString(job);
                     intent.putExtra(JobDetailsActivity.JOB_DATA, value);
                 } catch (JsonProcessingException e) {}
-                startActivity(intent);
+                intent.putExtra("showApplyButton", true);
+                startActivityForResult(intent, 1);
             }
         };
 
@@ -341,6 +342,16 @@ public class JobSeekerActivity extends MJPProgressActionBarActivity {
         });
 
         createCardView();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == 1) {
+            if (data != null && data.getBooleanExtra("apply", false)) {
+                mButtonActivation = true;
+                mCards.getTopCardListener().selectLeft();
+            }
+        }
     }
 
     @Override

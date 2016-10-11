@@ -9,7 +9,6 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.NavUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -350,6 +349,33 @@ public class JobActivity extends MJPProgressActionBarActivity {
                     application.setJob_seeker(jobSeeker.getId());
                     application.setShortlisted(false);
                     CreateApplicationTask task = new CreateApplicationTask(getApi(), application);
+                    task.addListener(new CreateReadUpdateAPITaskListener<ApplicationForCreation>() {
+                        @Override
+                        public void onSuccess(ApplicationForCreation result) {
+                        }
+
+                        @Override
+                        public void onError(JsonNode errors) {
+                            if (errors.has(0) && errors.get(0).asText().equals("NO_TOKENS")) {
+                                AlertDialog.Builder builder = new AlertDialog.Builder(JobActivity.this);
+                                builder.setMessage(getString(R.string.no_tokens_error))
+                                        .setCancelable(false)
+                                        .setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int id) {
+                                                dialog.cancel();
+                                            }
+                                        }).create().show();
+                            }
+                        }
+
+                        @Override
+                        public void onConnectionError() {
+                        }
+
+                        @Override
+                        public void onCancelled() {
+                        }
+                    });
                     backgroundTaskManager.addBackgroundTask(task);
                     mBackgroundProgress.setVisibility(View.VISIBLE);
                     task.execute();
@@ -540,7 +566,7 @@ public class JobActivity extends MJPProgressActionBarActivity {
                 job = result;
                 getSupportActionBar().setTitle(job.getTitle());
 
-                ((TextView)findViewById(R.id.tokensLabel)).setText(job.getLocation_data().getBusiness_data().getTokens() + " tokens");
+                ((TextView)findViewById(R.id.tokensLabel)).setText(job.getLocation_data().getBusiness_data().getTokens() + " Credit");
 
                 loadDataPreserveSeenAndAppendCards();
             }
@@ -799,17 +825,9 @@ public class JobActivity extends MJPProgressActionBarActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        Intent intent;
         switch (item.getItemId()) {
             case android.R.id.home:
                 finish();
-                if (job != null) {
-                    intent = NavUtils.getParentActivityIntent(JobActivity.this);
-                    intent.putExtra(JobModeChoiceActivity.JOB_ID, job.getId());
-                    intent.putExtra(JobModeChoiceActivity.LOCATION_ID, job.getLocation());
-                    intent.putExtra(JobModeChoiceActivity.TOKENS, job.getLocation_data().getBusiness_data().getTokens());
-                    startActivity(intent);
-                }
                 return true;
             case R.id.action_messages:
                 startActivity(new Intent(JobActivity.this, ConversationListActivity.class));

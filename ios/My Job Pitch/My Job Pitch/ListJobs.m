@@ -10,10 +10,12 @@
 #import "SimpleListCell.h"
 #import "EditJob.h"
 #import "ViewJobMenu.h"
+#import "JobStatus.h"
 
 @interface ListJobs () {
     NSMutableArray *data;
     NSInteger editRow;
+    NSNumber *openStateID;
 }
 
 @property (weak, nonatomic) IBOutlet UITableView *jobs;
@@ -28,6 +30,14 @@
     [super viewDidLoad];
     self.jobs.allowsMultipleSelectionDuringEditing = NO;
     editRow = -1;
+    
+    for (JobStatus *status in self.appDelegate.jobStatuses) {
+        if ([status.name isEqualToString:JOB_STATUS_OPEN]) {
+            openStateID = status.id;
+            break;
+        }
+    }
+
 }
 
 -(void)viewWillAppear:(BOOL)animated
@@ -43,7 +53,7 @@
             [self.jobs setHidden:true];
             [self.emptyView setHidden:false];
         }
-        self.tokensLabel.text = [NSString stringWithFormat:@"%d tokens", self.location.businessData.tokens.intValue];
+        self.tokensLabel.text = [NSString stringWithFormat:@"%d Credit", self.location.businessData.tokens.intValue];
         [SVProgressHUD dismiss];
     } failure:^(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors) {
         [MyAlertController showError:@"Error loading data" callback:nil];
@@ -72,11 +82,39 @@
         cell.image.image = [UIImage imageNamed:@"no-img"];
         cell.imageActivity.hidden = true;
     }
-    cell.subtitle.text = job.desc;
+    
     cell.backgroundColor = [UIColor clearColor];
     cell.selectedBackgroundView = [[UIView alloc] init];
     cell.selectedBackgroundView.backgroundColor = [UIColor colorWithWhite:1.0 alpha:0.5];
-    
+
+    if (job.status == openStateID) {
+        cell.image.alpha = 1;
+        
+        UIFont *currentFont = cell.title.font;
+        UIFont *newFont = [UIFont fontWithName:[currentFont.fontName stringByReplacingOccurrencesOfString:@"Italic" withString:@"Bold"] size:currentFont.pointSize];
+        cell.title.font = newFont;
+        cell.title.alpha = 1;
+        
+        currentFont = cell.subtitle.font;
+        newFont = [UIFont fontWithName:[currentFont.fontName stringByReplacingOccurrencesOfString:@"-Italic" withString:@""] size:currentFont.pointSize];
+        cell.subtitle.font = newFont;
+        cell.subtitle.alpha = 1;
+        cell.subtitle.text = job.desc;
+    } else {
+        cell.image.alpha = 0.4f;
+        
+        UIFont *currentFont = cell.title.font;
+        UIFont *newFont = [UIFont fontWithName:[currentFont.fontName stringByReplacingOccurrencesOfString:@"Bold" withString:@"Italic"] size:currentFont.pointSize];
+        cell.title.font = newFont;
+        cell.title.alpha = 0.4f;
+        
+        currentFont = cell.subtitle.font;
+        newFont = [UIFont fontWithName:[NSString stringWithFormat:@"%@-Italic",currentFont.fontName] size:currentFont.pointSize];
+        cell.subtitle.font = newFont;
+        cell.subtitle.alpha = 0.4f;
+        cell.subtitle.text = [NSString stringWithFormat:@"(Inactive) %@", job.desc];
+    }
+ 
     return cell;
 }
 
@@ -116,6 +154,18 @@
     editRow = -1;
 }
 
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    Job *job = [self->data objectAtIndex:indexPath.row];
+    if (job.status == openStateID) {
+        ViewJobMenu *controller = [self.storyboard instantiateViewControllerWithIdentifier:@"ViewJobMenu"];
+        NSInteger index = self.jobs.indexPathForSelectedRow.row;
+        controller.job = [self->data objectAtIndex:index];
+        [self.navigationController pushViewController:controller animated:YES];
+    } else {
+        [MyAlertController title:nil message:@"You can't view an inactive job!" ok:@"OK" okCallback:nil cancel:nil cancelCallback:nil];
+    }
+}
+
 - (IBAction)addJob:(id)sender {
     EditJob *controller = [self.storyboard instantiateViewControllerWithIdentifier:@"EditJob"];
     if (editRow != -1) {
@@ -126,12 +176,5 @@
     [self.navigationController pushViewController:controller animated:YES];
 }
 
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    if ([[segue identifier] isEqualToString:@"goto_view_job_menu"]) {
-        ViewJobMenu *controller = [segue destinationViewController];
-        NSInteger index = self.jobs.indexPathForSelectedRow.row;
-        controller.job = [self->data objectAtIndex:index];
-    }
-}
 
 @end

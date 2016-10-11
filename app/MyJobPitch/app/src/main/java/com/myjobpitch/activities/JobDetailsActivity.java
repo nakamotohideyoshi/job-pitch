@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -20,6 +21,7 @@ import com.myjobpitch.api.data.Contract;
 import com.myjobpitch.api.data.Hours;
 import com.myjobpitch.api.data.Image;
 import com.myjobpitch.api.data.Job;
+import com.myjobpitch.api.data.JobStatus;
 import com.myjobpitch.tasks.CreateReadUpdateAPITaskListener;
 import com.myjobpitch.tasks.DownloadImageTask;
 import com.myjobpitch.tasks.jobseeker.ReadJobTask;
@@ -35,7 +37,6 @@ public class JobDetailsActivity extends MJPProgressActionBarActivity {
     private View mProgressView;
     private Job job;
     private ReadJobTask mReadJobTask;
-    private CreateUpdateJobTask mCreateUpdateJobTask;
     private TextView mJobTitleView;
     private TextView mJobDescriptionView;
     private TextView mJobLocationView;
@@ -126,6 +127,20 @@ public class JobDetailsActivity extends MJPProgressActionBarActivity {
             });
             mReadJobTask.execute();
         }
+
+        if (getIntent().getBooleanExtra("showApplyButton", false)) {
+            Button applyBtn = (Button)findViewById(R.id.apply_btn);
+            applyBtn.setVisibility(View.VISIBLE);
+            applyBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = getIntent();
+                    intent.putExtra("apply", true);
+                    setResult(RESULT_OK, intent);
+                    JobDetailsActivity.this.finish();
+                }
+            });
+        }
     }
 
     private void loadJob() {
@@ -179,7 +194,6 @@ public class JobDetailsActivity extends MJPProgressActionBarActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        Intent intent;
         switch (item.getItemId()) {
             case android.R.id.home:
                 finish();

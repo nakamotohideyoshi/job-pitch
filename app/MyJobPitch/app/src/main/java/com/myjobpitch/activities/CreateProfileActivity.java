@@ -262,7 +262,6 @@ public class CreateProfileActivity extends MJPProgressActionBarActivity {
 
             if (jobSeeker == null)
                 jobSeeker = new JobSeeker();
-            User user = api.getUser();
             mJobSeekerEditFragment.save(jobSeeker);
 
             mCreateJobSeekerTask = mJobSeekerEditFragment.getCreateJobSeekerTask(api, jobSeeker);

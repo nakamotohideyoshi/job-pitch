@@ -18,7 +18,7 @@
 @implementation ViewJobMenu
 
 -(void)viewWillAppear:(BOOL)animated {
-    self.tokensLabel.text = [NSString stringWithFormat:@"%d tokens", self.job.locationData.businessData.tokens.intValue];
+    self.tokensLabel.text = [NSString stringWithFormat:@"%d Credit", self.job.locationData.businessData.tokens.intValue];
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender

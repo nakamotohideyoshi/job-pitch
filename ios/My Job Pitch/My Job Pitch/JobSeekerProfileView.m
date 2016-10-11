@@ -13,7 +13,7 @@
 
 @import AssetsLibrary;
 
-@interface JobSeekerProfileView () <DropboxBrowserDelegate, UITextViewDelegate, UIImagePickerControllerDelegate>
+@interface JobSeekerProfileView () <DropboxBrowserDelegate, UITextViewDelegate, UIImagePickerControllerDelegate, UITextFieldDelegate>
 
 @property (nonatomic, nonnull) NSArray *sexes;
 @property (nonatomic, nonnull) NSArray *nationalities;
@@ -64,6 +64,28 @@
     [descriPlaceholder setTextColor:[UIColor colorWithRed:200/255.0f green:200/255.0f blue:200/255.0f alpha:200/255.0f]];
     self.descriptionView.delegate = self;
     [self.descriptionView addSubview:descriPlaceholder];
+    
+    self.firstName.textField.delegate = self;
+    self.lastName.textField.delegate = self;
+}
+
+- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string
+{
+    NSRange lowercaseCharRange = [string rangeOfCharacterFromSet:[NSCharacterSet lowercaseLetterCharacterSet]];
+    if (lowercaseCharRange.location != NSNotFound) {
+        UITextRange *selectedRange = [textField selectedTextRange];
+        
+        textField.text = [textField.text stringByReplacingCharactersInRange:range
+                                                                 withString:[string uppercaseString]];
+        
+        UITextPosition *newPosition = [textField positionFromPosition:selectedRange.start offset:1];
+        UITextRange *newRange = [textField textRangeFromPosition:newPosition toPosition:newPosition];
+        [textField setSelectedTextRange:newRange];
+        
+        return NO;
+    }
+    
+    return YES;
 }
 
 - (UIView*)loadViewFromNib
@@ -127,8 +149,8 @@
 -(void)save:(JobSeeker*)jobSeeker
 {
     jobSeeker.active = self.active.isOn;
-    jobSeeker.firstName = self.firstName.textField.text;
-    jobSeeker.lastName = self.lastName.textField.text;
+    jobSeeker.firstName = [self.firstName.textField.text uppercaseString];
+    jobSeeker.lastName = [self.lastName.textField.text uppercaseString];
     jobSeeker.telephone = self.telephone.textField.text;
     jobSeeker.mobile = self.mobile.textField.text;
     jobSeeker.age = @([self.age.textField.text integerValue]);
@@ -166,8 +188,8 @@
 -(void)load:(JobSeeker*)jobSeeker
 {
     self.active.on = jobSeeker.active;
-    self.firstName.textField.text = jobSeeker.firstName;
-    self.lastName.textField.text = jobSeeker.lastName;
+    self.firstName.textField.text = [jobSeeker.firstName uppercaseString];
+    self.lastName.textField.text = [jobSeeker.lastName uppercaseString];
     self.telephone.textField.text = jobSeeker.telephone;
     self.mobile.textField.text = jobSeeker.mobile;
     self.age.textField.text = [jobSeeker.age stringValue];

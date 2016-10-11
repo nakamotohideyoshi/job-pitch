@@ -30,7 +30,7 @@
     self.loaded = false;
     [GMSServices provideAPIKey:@"AIzaSyCeseQMdrlh9E5d7DHHHm4GvW7yd8C_sZk"];
     
-    DBSession *dbSession = [[DBSession alloc] initWithAppKey:@"nak1dgydjvp40gz" appSecret:@"vfzm3llfz2wcdbh" root:kDBRootDropbox];
+    DBSession *dbSession = [[DBSession alloc] initWithAppKey:@"gpwecvaun9wmvim" appSecret:@"s8al7ztjvaqbbh1" root:kDBRootDropbox];
     [DBSession setSharedSession:dbSession];
     
     [SVProgressHUD setDefaultStyle:SVProgressHUDStyleCustom];

@@ -1,8 +1,12 @@
 package com.myjobpitch.tasks;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.util.Log;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.TextNode;
+import com.myjobpitch.R;
 import com.myjobpitch.api.MJPAPIObject;
 import com.myjobpitch.api.MJPApiException;
 

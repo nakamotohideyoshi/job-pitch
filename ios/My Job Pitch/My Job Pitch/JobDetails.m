@@ -60,6 +60,8 @@
         self.contactDetails.text = @"You cannot view contact details until your application has been accepted";
         self.messagesButton.hidden = true;
     }
+    
+    self.applyButton.hidden = self.jobSeekerHome == nil;
 }
 
 - (void)didReceiveMemoryWarning {
@@ -87,6 +89,23 @@
         MessageThread *messageThreadView = [segue destinationViewController];
         [messageThreadView setApplication:self.application];
     }
+}
+
+- (IBAction)apply:(id)sender {
+    ApplicationForCreation *application = [ApplicationForCreation alloc];
+    application.job = self.job.id;
+    application.jobSeeker = self.appDelegate.user.jobSeeker;
+    application.shortlisted = false;
+    [SVProgressHUD show];
+    [self.appDelegate.api createApplication:application
+                                    success:^(ApplicationForCreation *application) {
+                                        NSLog(@"Application created %@", application);
+                                        [SVProgressHUD dismiss];
+                                        [self.jobSeekerHome nextCard];
+                                        [self.navigationController popViewControllerAnimated:YES];
+                                    } failure:^(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors) {
+                                        [MyAlertController showError:@"Error creating data" callback:nil];
+                                    }];
 }
 
 @end

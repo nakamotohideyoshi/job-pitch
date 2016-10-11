@@ -203,6 +203,10 @@ public class JobSeeker extends MJPObjectWithDates implements JobSeekerContainer 
         return cv;
     }
 
+    public void setCV(String cv) {
+        this.cv = cv;
+    }
+
     public boolean getHasReferences() {
         return hasReferences;
     }

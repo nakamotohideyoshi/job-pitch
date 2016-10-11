@@ -56,7 +56,6 @@ public class LocationEditFragment extends EditFragment<Location> implements Goog
     private EditText mLocationNameView;
     private EditText mLocationDescView;
     private EditText mLocationEmailView;
-    private EditText mLocationAddressView;
     private CheckBox mLocationEmailPublicView;
     private EditText mLocationTelephoneView;
     private CheckBox mLocationTelephonePublicView;
@@ -115,7 +114,6 @@ public class LocationEditFragment extends EditFragment<Location> implements Goog
 
         mLocationNameView = (EditText) view.findViewById(R.id.location_name);
         mLocationDescView = (EditText) view.findViewById(R.id.location_description);
-        mLocationAddressView = (EditText) view.findViewById(R.id.location_address);
         mLocationEmailView = (EditText) view.findViewById(R.id.location_email);
         mLocationEmailPublicView = (CheckBox) view.findViewById(R.id.location_email_public);
         mLocationTelephoneView = (EditText) view.findViewById(R.id.location_telephone);
@@ -280,7 +278,6 @@ public class LocationEditFragment extends EditFragment<Location> implements Goog
         mLocation = location;
         mLocationNameView.setText(mLocation.getName());
         mLocationDescView.setText(mLocation.getDescription());
-        mLocationAddressView.setText(mLocation.getAddress());
         mLocationEmailView.setText(mLocation.getEmail());
         mLocationEmailPublicView.setChecked(mLocation.getEmail_public());
         mLocationTelephoneView.setText(mLocation.getTelephone());
@@ -321,7 +318,6 @@ public class LocationEditFragment extends EditFragment<Location> implements Goog
     public void save(Location location) {
         location.setName(mLocationNameView.getText().toString());
         location.setDescription(mLocationDescView.getText().toString());
-        location.setAddress(mLocationAddressView.getText().toString());
         location.setEmail(mLocationEmailView.getText().toString());
         location.setEmail_public(mLocationEmailPublicView.isChecked());
         location.setTelephone(mLocationTelephoneView.getText().toString());
@@ -357,27 +353,6 @@ public class LocationEditFragment extends EditFragment<Location> implements Goog
                 mPlaceName = data.getStringExtra(SelectPlaceActivity.NAME);
                 mLatitude = data.getDoubleExtra(SelectPlaceActivity.LATITUDE, 0);
                 mLongitude = data.getDoubleExtra(SelectPlaceActivity.LONGITUDE, 0);
-                if (data.hasExtra(SelectPlaceActivity.ADDRESS)) {
-                    final String address = data.getStringExtra(SelectPlaceActivity.ADDRESS).replace(", ", "\n");
-                    if (!address.equals(mLocationAddressView.getText().toString())) {
-                        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                        builder.setMessage(getString(R.string.confirm_update_address, address))
-                                .setCancelable(false)
-                                .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        mLocationAddressView.setText(address);
-                                    }
-                                })
-                                .setNegativeButton(R.string.no_thanks, new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int id) {
-                                        dialog.cancel();
-                                    }
-                                });
-                        AlertDialog alert = builder.create();
-                        alert.show();
-                    }
-                }
                 if (data.hasExtra(SelectPlaceActivity.PLACE_ID))
                     mPlaceId = data.getStringExtra(SelectPlaceActivity.PLACE_ID);
                 else

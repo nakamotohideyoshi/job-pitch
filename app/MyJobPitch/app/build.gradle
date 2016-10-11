@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 23
-    buildToolsVersion "23.0.2"
+    buildToolsVersion '24.0.2'
 
     useLibrary 'org.apache.http.legacy'
 
@@ -10,8 +10,8 @@ android {
         applicationId "com.myjobpitch"
         minSdkVersion 15
         targetSdkVersion 22
-        versionCode 26
-        versionName "1.1-beta.26"
+        versionCode 27
+        versionName "1.1-beta.27"
     }
     packagingOptions {
         exclude 'META-INF/LICENSE'

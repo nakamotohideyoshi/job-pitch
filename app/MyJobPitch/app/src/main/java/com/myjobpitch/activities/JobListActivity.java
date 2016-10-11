@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.NavUtils;
 import android.support.v7.view.ActionMode;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -45,7 +44,8 @@ public class JobListActivity extends MJPProgressActionBarActivity  {
 
     public static final String LOCATION_ID = "LOCATION_ID";
             ;
-    private Integer mStatusOpenId;
+    private Integer mStatusOpenId
+            ;
 
     private Integer location_id;
     private Location mLocation;
@@ -258,7 +258,7 @@ public class JobListActivity extends MJPProgressActionBarActivity  {
                 getSupportActionBar().setTitle(mLocation.getName());
                 getSupportActionBar().setSubtitle(getString(R.string.jobs));
 
-                ((TextView)findViewById(R.id.tokensLabel)).setText(mLocation.getBusiness_data().getTokens() + " tokens");
+                ((TextView)findViewById(R.id.tokensLabel)).setText(mLocation.getBusiness_data().getTokens() + " Credit");
 
                 if (completeTasks.incrementAndGet() == 2)
                     showProgress(false);

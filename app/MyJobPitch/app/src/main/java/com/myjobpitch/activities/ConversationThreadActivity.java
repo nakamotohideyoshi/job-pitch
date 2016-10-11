@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.NavUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -402,13 +401,10 @@ public class ConversationThreadActivity extends MJPProgressActionBarActivity  {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        Intent intent;
         switch (item.getItemId()) {
             case android.R.id.home:
                 if (createMessageTask == null) {
                     finish();
-                    intent = NavUtils.getParentActivityIntent(this);
-                    startActivity(intent);
                 }
                 return true;
             default:

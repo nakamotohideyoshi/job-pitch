@@ -209,7 +209,6 @@ public class ConversationListActivity extends MJPProgressActionBarActivity  {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        Intent intent;
         switch (item.getItemId()) {
             case android.R.id.home:
                 finish();

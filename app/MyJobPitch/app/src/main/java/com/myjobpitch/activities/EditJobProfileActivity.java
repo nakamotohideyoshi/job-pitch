@@ -2,7 +2,6 @@ package com.myjobpitch.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.NavUtils;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -179,12 +178,9 @@ public class EditJobProfileActivity extends MJPProgressActionBarActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        Intent intent;
         switch (item.getItemId()) {
             case android.R.id.home:
                 finish();
-                intent = NavUtils.getParentActivityIntent(EditJobProfileActivity.this);
-                startActivity(intent);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

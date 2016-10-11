@@ -425,6 +425,7 @@ public class MJPApi {
 //            throw e;
 //        }
 
+        jobSeeker.setCV(null);
         try {
             return rest.exchange(getObjectUrl("job-seekers", jobSeeker.getId()), HttpMethod.PUT, createAuthenticatedRequest(jobSeeker), JobSeeker.class).getBody();
         } catch (HttpClientErrorException e) {

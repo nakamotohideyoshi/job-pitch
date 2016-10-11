@@ -37,9 +37,19 @@
         android:layout_toLeftOf="@id/right_border"
         android:layout_toRightOf="@id/left_border"
         android:paddingBottom="10dp"
-        android:paddingTop="10dp"
+        android:paddingTop="5dp"
         android:orientation="vertical"
         android:background="@android:color/white">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="Tap for description"
+            android:gravity="right"
+            android:textSize="11sp"
+            android:paddingBottom="5dp" />
+
         <LinearLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"

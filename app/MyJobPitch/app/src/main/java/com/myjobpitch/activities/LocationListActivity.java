@@ -6,7 +6,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.NavUtils;
 import android.support.v7.view.ActionMode;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -24,6 +23,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.myjobpitch.MJPApplication;
 import com.myjobpitch.R;
 import com.myjobpitch.api.data.Business;
 import com.myjobpitch.api.data.Image;
@@ -218,7 +218,7 @@ public class LocationListActivity extends MJPProgressActionBarActivity  {
                 getSupportActionBar().setTitle(business.getName());
                 getSupportActionBar().setSubtitle(getString(R.string.locations));
 
-                ((TextView)findViewById(R.id.tokensLabel)).setText(business.getTokens() + " tokens");
+                ((TextView)findViewById(R.id.tokensLabel)).setText(business.getTokens() + " Credit");
 
                 ReadUserLocationsTask readLocations = new ReadUserLocationsTask(getApi(), business_id);
                 readLocations.addListener(new CreateReadUpdateAPITaskListener<List<Location>>() {
@@ -282,7 +282,12 @@ public class LocationListActivity extends MJPProgressActionBarActivity  {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.location_list, menu);
+        boolean canCreateBusinesses = ((MJPApplication)getApplication()).getApi().getUser().getCan_create_businesses();
+        if (canCreateBusinesses) {
+            getMenuInflater().inflate(R.menu.location_list, menu);
+        } else {
+            getMenuInflater().inflate(R.menu.location_list1, menu);
+        }
         return true;
     }
 
@@ -300,6 +305,9 @@ public class LocationListActivity extends MJPProgressActionBarActivity  {
                 return true;
             case R.id.action_messages:
                 startActivity(new Intent(LocationListActivity.this, ConversationListActivity.class));
+                return true;
+            case R.id.action_change_password:
+                startActivity(new Intent(this, ChangePasswordActivity.class));
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

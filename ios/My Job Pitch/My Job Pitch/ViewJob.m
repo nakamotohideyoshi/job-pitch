@@ -135,7 +135,7 @@ typedef NS_ENUM(NSInteger, EmptyButtonAction) {
      loadJobWithId:self.job.id
      success:^(Job *job) {
          self.job = job;
-         self.tokensLabel.text = [NSString stringWithFormat:@"%d tokens", self.job.locationData.businessData.tokens.intValue];
+         self.tokensLabel.text = [NSString stringWithFormat:@"%d Credit", self.job.locationData.businessData.tokens.intValue];
          [SVProgressHUD dismiss];
          [self nextCard];
      } failure:^(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors) {
@@ -393,7 +393,17 @@ typedef NS_ENUM(NSInteger, EmptyButtonAction) {
                                         success:^(ApplicationForCreation *application) {
                                             NSLog(@"Application created %@", application);
                                         } failure:^(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors) {
-                                            [MyAlertController showError:@"Error creating application!" callback:nil];
+                                            if (errors[@"NO_TOKENS"]) {
+                                                [SVProgressHUD dismiss];
+                                                [MyAlertController title:nil
+                                                                 message:@"out off credit!"
+                                                                      ok:@"Okay"
+                                                              okCallback:nil
+                                                                  cancel:nil
+                                                          cancelCallback:nil];
+                                            } else {
+                                                [MyAlertController showError:@"Error creating application!" callback:nil];
+                                            }
                                         }];
     } else if (self.mode == JobViewModeApplications) {
         [self.objects removeObject:self.application];

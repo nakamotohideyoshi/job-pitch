@@ -8,6 +8,8 @@
 
 #import "EditJob.h"
 #import "JobEditView.h"
+#import "JobStatus.h"
+#import "ViewJobMenu.h"
 
 @interface EditJob ()
 
@@ -94,8 +96,7 @@
     }
 }
 
-- (void)continueJobImage
-{
+- (void)continueJobImage {
     if (_jobEditView.imageForUpload) {
         [[self appDelegate].api uploadImage:_jobEditView.imageForUpload
                                          to:@"user-job-images"
@@ -109,15 +110,36 @@
                                     success:^(Image *image) {
                                         _jobEditView.imageForUpload = nil;
                                         [self.activityLabel setText:@""];
-                                        [self.navigationController popViewControllerAnimated:true];
+                                        [self saveFinish];
                                     }
                                     failure:^(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors) {
                                         [self handleErrors:errors message:message];
                                     }
          ];
     } else {
-        [self.navigationController popViewControllerAnimated:true];
+        [self saveFinish];
     }
+}
+
+- (void) saveFinish {
+    [SVProgressHUD dismiss];
+    NSNumber *openStateID;
+    for (JobStatus *status in self.appDelegate.jobStatuses) {
+        if ([status.name isEqualToString:JOB_STATUS_OPEN]) {
+            openStateID = status.id;
+            break;
+        }
+    }
+    
+    if (_job.status != openStateID) {
+        NSMutableArray *navigationArray = [[NSMutableArray alloc] initWithArray: self.navigationController.viewControllers];
+        UIViewController *controller = navigationArray[navigationArray.count - 2];
+        if ([controller isKindOfClass:[ViewJobMenu class]]) {
+            [navigationArray removeObject:controller];
+        }
+        self.navigationController.viewControllers = navigationArray;
+    }
+    [self.navigationController popViewControllerAnimated:true];
 }
 
 //- (void)showProgress:(BOOL)showProgress

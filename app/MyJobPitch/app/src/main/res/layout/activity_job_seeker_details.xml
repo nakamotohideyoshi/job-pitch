@@ -120,16 +120,16 @@
                         android:paddingBottom="8dp"
                         android:textStyle="bold" />
 
-                    <Button
-                        android:id="@+id/send_message_button"
-                        android:text="@string/send_message"
+                    <TextView
+                        android:id="@+id/no_contact_details"
+                        android:text="@string/contact_details_unavailable"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textColor="@color/white"/>
 
-                    <TextView
-                        android:id="@+id/no_contact_details"
-                        android:text="@string/contact_details_unavailable"
+                    <Button
+                        android:id="@+id/send_message_button"
+                        android:text="@string/send_message"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textColor="@color/white"/>

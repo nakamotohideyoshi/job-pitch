@@ -363,6 +363,7 @@ typedef NS_ENUM(NSInteger, EmptyButtonAction) {
     } else if ([[segue identifier] isEqualToString:@"goto_job_details"]) {
         JobDetails *jobDetailsView = [segue destinationViewController];
         [jobDetailsView setJob:self.job];
+        [jobDetailsView setJobSeekerHome:self];
     }
 }
 

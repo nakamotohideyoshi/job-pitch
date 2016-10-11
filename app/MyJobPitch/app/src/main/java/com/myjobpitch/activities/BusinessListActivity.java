@@ -149,7 +149,7 @@ public class BusinessListActivity extends MJPProgressActionBarActivity  {
                 subtitleView.setText("Includes " + locationCount + " location");
             else
                 subtitleView.setText("Includes " + locationCount + " locations");
-            tokensLabel.setText(business.getTokens() + " tokens");
+            tokensLabel.setText(business.getTokens() + " Credit");
             return rowView;
         }
     }
@@ -247,6 +247,9 @@ public class BusinessListActivity extends MJPProgressActionBarActivity  {
                 return true;
             case R.id.action_messages:
                 startActivity(new Intent(this, ConversationListActivity.class));
+                return true;
+            case R.id.action_change_password:
+                startActivity(new Intent(this, ChangePasswordActivity.class));
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

@@ -1,7 +1,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".BusinessListActivity">
+    tools:context=".LocationListActivity">
     <item
         android:id="@+id/action_messages"
         android:icon="@drawable/ic_action_email"
@@ -14,6 +14,14 @@
         android:title="@string/action_add"
         android:orderInCategory="100"
         app:showAsAction="always" />
+
+    <item
+        android:id="@+id/action_edit_business"
+        android:icon="@drawable/ic_action_edit_light"
+        android:title="@string/action_edit_business"
+        android:orderInCategory="100"
+        app:showAsAction="never" />
+
     <item
         android:id="@+id/action_change_password"
         android:icon="@drawable/ic_action_change_password"

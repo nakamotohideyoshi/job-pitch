@@ -3,7 +3,6 @@ package com.myjobpitch.activities;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.app.NavUtils;
 import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.View;
@@ -107,12 +106,9 @@ public class ChangePasswordActivity extends MJPProgressActionBarActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        Intent intent;
         switch (item.getItemId()) {
             case android.R.id.home:
                 finish();
-                intent = NavUtils.getParentActivityIntent(ChangePasswordActivity.this);
-                startActivity(intent);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -182,8 +178,6 @@ public class ChangePasswordActivity extends MJPProgressActionBarActivity {
             } else {
                 LoginActivity.myPassword = password1;
                 ChangePasswordActivity.this.finish();
-                Intent intent = NavUtils.getParentActivityIntent(ChangePasswordActivity.this);
-                startActivity(intent);
             }
         }
 

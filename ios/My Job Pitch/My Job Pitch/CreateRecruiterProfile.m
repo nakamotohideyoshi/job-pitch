@@ -72,7 +72,6 @@
     if (_hiddenBusiness) {
         return @{@"location_name": _locationEditView.name.textField,
                  @"location_description": _locationEditView.desc.textField,
-                 @"location_address": _locationEditView.address.textField,
                  @"location_email": _locationEditView.email.textField,
                  @"location_telephone": _locationEditView.telephone.textField,
                  @"location_mobile": _locationEditView.mobile.textField,
@@ -82,7 +81,6 @@
     return @{@"business_name": _businessEditView.name.textField,
              @"location_name": _locationEditView.name.textField,
              @"location_description": _locationEditView.desc.textField,
-             @"location_address": _locationEditView.address.textField,
              @"location_email": _locationEditView.email.textField,
              @"location_telephone": _locationEditView.telephone.textField,
              @"location_mobile": _locationEditView.mobile.textField,
@@ -98,7 +96,6 @@
     if (_hiddenBusiness) {
         return @{@"location_name": _locationEditView.name.errorLabel,
                  @"location_description": _locationEditView.desc.errorLabel,
-                 @"location_address": _locationEditView.address.errorLabel,
                  @"location_email": _locationEditView.email.errorLabel,
                  @"location_telephone": _locationEditView.telephone.errorLabel,
                  @"location_mobile": _locationEditView.mobile.errorLabel,
@@ -108,7 +105,6 @@
     return @{@"business_name": _businessEditView.name.errorLabel,
              @"location_name": _locationEditView.name.errorLabel,
              @"location_description": _locationEditView.desc.errorLabel,
-             @"location_address": _locationEditView.address.errorLabel,
              @"location_email": _locationEditView.email.errorLabel,
              @"location_telephone": _locationEditView.telephone.errorLabel,
              @"location_mobile": _locationEditView.mobile.errorLabel,
@@ -255,6 +251,7 @@
 }
 
 - (void)saveCompleted {
+    [SVProgressHUD dismiss];
     if (_isFirst) {
         User *user = [self appDelegate].user;
         if (user.canCreateBusinesses) {

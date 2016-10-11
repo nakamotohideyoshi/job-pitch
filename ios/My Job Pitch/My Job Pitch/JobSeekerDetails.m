@@ -19,10 +19,12 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    //[SVProgressHUD dismiss];
     self.name.text = [NSString stringWithFormat:@"%@ %@",
                       self.jobSeeker.firstName,
                       self.jobSeeker.lastName];
+    
+    self.desc.text = self.jobSeeker.desc;
+    
     Sex *sex = nil;
     if (self.jobSeeker.sex)
         sex = [self.appDelegate getSex:self.jobSeeker.sex];
@@ -61,7 +63,7 @@
             self.contactDetails.text = @"No contact details supplied.";
         self.messagesButton.hidden = false;
     } else {
-        self.contactDetails.text = @"You cannot view contact details you have connected with this job seeker";
+        self.contactDetails.text = @"You cannot view contact details until you have connected with this job seeker";
         self.messagesButton.hidden = true;
     }
     
@@ -94,9 +96,15 @@
 }
 
 - (IBAction)downloadCV:(id)sender {
-    if (self.jobSeeker.cv != nil && [self.jobSeeker.cv isEqualToString:@""]) {
-        
-    }
+    [[UIApplication sharedApplication] openURL:[NSURL URLWithString:self.jobSeeker.cv]];
+//    [SVProgressHUD show];    
+//    NSURL *imageURL = [NSURL URLWithString:self.jobSeeker.cv];
+//    [NSURLConnection sendAsynchronousRequest:[NSURLRequest requestWithURL:imageURL]
+//                                       queue:[NSOperationQueue mainQueue]
+//                           completionHandler:^(NSURLResponse *response, NSData *data, NSError *error) {
+//                               [SVProgressHUD dismiss];
+//                               UIImageWriteToSavedPhotosAlbum([UIImage imageWithData:data], nil, nil, nil);
+//                           }];
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {

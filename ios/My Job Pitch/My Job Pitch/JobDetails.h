@@ -8,11 +8,14 @@
 
 #import "ScrollingViewController.h"
 #import "Job.h"
+#import "JobSeekerHome.h"
 
 @interface JobDetails : ScrollingViewController
 
 @property (nonnull) Application *application;
 @property (nonnull) Job *job;
+@property (weak, nonatomic) JobSeekerHome *jobSeekerHome;
+
 
 @property (weak, nonatomic) IBOutlet UIImageView *jobImage;
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView *jobImageActivity;
@@ -24,6 +27,7 @@
 @property (weak, nonatomic) IBOutlet UILabel *locationDescription;
 @property (weak, nonatomic) IBOutlet UILabel *contactDetails;
 @property (weak, nonatomic) IBOutlet UIButton *messagesButton;
+@property (weak, nonatomic) IBOutlet UIButton *applyButton;
 
 - (IBAction)openMap:(nullable id)sender;
 

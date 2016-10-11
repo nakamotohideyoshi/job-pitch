@@ -27,4 +27,6 @@
 @property (weak, nonatomic) IBOutlet UILabel *extraLabel;
 @property (weak, nonatomic) IBOutlet UILabel *descriptionLabel;
 
+- (void) nextCard;
+
 @end

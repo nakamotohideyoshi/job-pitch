@@ -15,8 +15,6 @@
 
 @property (weak, nonatomic) IBOutlet ErrorTextField *name;
 @property (weak, nonatomic) IBOutlet ErrorTextField *desc;
-@property (weak, nonatomic) IBOutlet ErrorTextField *address;
-@property (weak, nonatomic) IBOutlet UISwitch *addressPublic;
 @property (weak, nonatomic) IBOutlet ErrorTextField *email;
 @property (weak, nonatomic) IBOutlet UISwitch *emailPublic;
 @property (weak, nonatomic) IBOutlet ErrorTextField *telephone;

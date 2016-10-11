@@ -4,7 +4,6 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.NavUtils;
 import android.text.Html;
 import android.view.MenuItem;
 import android.view.View;
@@ -93,7 +92,7 @@ public class JobModeChoiceActivity extends MJPProgressActionBarActivity  {
             public void onClick(View v) {
                 Intent intent = new Intent(JobModeChoiceActivity.this, EditJobActivity.class);
                 intent.putExtra("job_id", job_id);
-                startActivity(intent);
+                startActivityForResult(intent, 1);
             }
         });
 
@@ -142,20 +141,25 @@ public class JobModeChoiceActivity extends MJPProgressActionBarActivity  {
             }
         });
 
-        ((TextView)findViewById(R.id.tokensLabel)).setText(tokens + " tokens");
+        ((TextView)findViewById(R.id.tokensLabel)).setText(tokens + " Credit");
 
         showProgress(false);
     }
 
     @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == 1) {
+            if (data != null && !data.getBooleanExtra("active", true)) {
+                finish();
+            }
+        }
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        Intent intent;
         switch (item.getItemId()) {
             case android.R.id.home:
                 finish();
-                intent = NavUtils.getParentActivityIntent(JobModeChoiceActivity.this);
-                intent.putExtra(JobListActivity.LOCATION_ID, location_id);
-                startActivity(intent);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

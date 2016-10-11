@@ -3,7 +3,6 @@ package com.myjobpitch.activities;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.NavUtils;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -127,6 +126,7 @@ public class EditJobActivity extends MJPProgressActionBarActivity {
     }
 
     private void attemptSave() {
+
         if (mJobEditFragment.validateInput()) {
             showProgress(true);
             mJobEditFragment.save(job);
@@ -145,14 +145,14 @@ public class EditJobActivity extends MJPProgressActionBarActivity {
                     }
                     if ((imageUri == null && originalUri == null) || (imageUri != null && imageUri.equals(originalUri))) {
                         // No change to image
-                        EditJobActivity.this.finish();
+                        saveFinish();
                     } else if (imageUri == null) {
                         // Image deleted
                         DeleteJobImageTask deleteTask = new DeleteJobImageTask(getApi(), originalImage.getId());
                         deleteTask.addListener(new DeleteAPITaskListener() {
                             @Override
                             public void onSuccess() {
-                                EditJobActivity.this.finish();
+                                saveFinish();
                             }
 
                             @Override
@@ -160,7 +160,7 @@ public class EditJobActivity extends MJPProgressActionBarActivity {
                                 showProgress(false);
                                 Toast toast = Toast.makeText(EditJobActivity.this, "Error deleting image", Toast.LENGTH_LONG);
                                 toast.show();
-                                EditJobActivity.this.finish();
+                                saveFinish();
                             }
 
                             @Override
@@ -180,12 +180,12 @@ public class EditJobActivity extends MJPProgressActionBarActivity {
                         uploadTask.addListener(new APITaskListener<Boolean>() {
                             @Override
                             public void onPostExecute(Boolean success) {
-                                EditJobActivity.this.finish();
+                                saveFinish();
                             }
 
                             @Override
                             public void onCancelled() {
-                                EditJobActivity.this.finish();
+                                saveFinish();
                                 Toast toast = Toast.makeText(EditJobActivity.this, "Error uploading job image", Toast.LENGTH_LONG);
                                 toast.show();
                             }
@@ -215,6 +215,14 @@ public class EditJobActivity extends MJPProgressActionBarActivity {
             });
             mCreateUpdateJobTask.execute();
         }
+    }
+
+    public void saveFinish() {
+        Intent intent = getIntent();
+        JobStatus mStatusOpen = getMJPApplication().get(JobStatus.class, "OPEN");
+        intent.putExtra("active", job.getStatus().equals(mStatusOpen.getId()));
+        setResult(RESULT_OK, intent);
+        EditJobActivity.this.finish();
     }
 
     @Override

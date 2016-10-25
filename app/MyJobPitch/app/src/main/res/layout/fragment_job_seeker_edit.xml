@@ -196,7 +196,7 @@
         android:layout_height="wrap_content"
         android:hint="@string/prompt_job_description"
         android:inputType="textMultiLine"
-        android:maxLength="500" />
+        android:maxLength="1000" />
 
     <TextView
         android:id="@+id/job_seeler_description_character_count"

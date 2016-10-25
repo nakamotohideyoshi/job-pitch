@@ -34,10 +34,11 @@ db.sqlite3
 
 # Mac
 .DS_Store
+ios/My Job Pitch/Podfile.lock
 ios/My Job Pitch/Pods/
-ios/My Job Pitch/My Job Pitch.xcodeproj/project.xcworkspace/
-ios/My Job Pitch/My Job Pitch.xcodeproj/xcuserdata/
-ios/My Job Pitch/My Job Pitch.xcworkspace/xcuserdata/
+ios/My Job Pitch/MyJobPitch.xcodeproj/project.xcworkspace/
+ios/My Job Pitch/MyJobPitch.xcodeproj/xcuserdata/
+ios/My Job Pitch/MyJobPitch.xcworkspace/
 
 web/src/local.py
 web/src/local_live.py

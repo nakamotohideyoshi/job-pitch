@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="11201" systemVersion="15G1004" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
     <dependencies>
-        <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11161"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="Constraints with non-1.0 multipliers" minToolsVersion="5.1"/>
@@ -69,7 +68,7 @@
                     <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     <nil key="highlightedColor"/>
                 </label>
-                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="500 characters remaining" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="m5U-5m-OaN">
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="1000 characters remaining" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="m5U-5m-OaN">
                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                     <color key="textColor" red="0.43529411759999997" green="0.4431372549" blue="0.47450980390000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     <nil key="highlightedColor"/>
@@ -184,9 +183,9 @@
                 <constraint firstItem="4Gy-5I-zLd" firstAttribute="centerY" secondItem="KQF-BF-vNy" secondAttribute="centerY" id="kcl-bC-WGA"/>
                 <constraint firstItem="KQF-BF-vNy" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="l1U-eE-D8E"/>
                 <constraint firstItem="Hd1-Rc-jNK" firstAttribute="left" secondItem="BcT-sQ-zkf" secondAttribute="right" constant="5" id="l3I-Le-61l"/>
-                <constraint firstAttribute="bottom" secondItem="pRv-uo-d2W" secondAttribute="bottom" constant="20" id="nGS-3X-HL5"/>
                 <constraint firstItem="KQF-BF-vNy" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="40" id="nHM-1o-SPB"/>
                 <constraint firstItem="LIb-4c-xRP" firstAttribute="leading" secondItem="IUQ-xA-9NP" secondAttribute="leading" id="ngD-Qq-LTe"/>
+                <constraint firstAttribute="bottom" secondItem="pRv-uo-d2W" secondAttribute="bottom" constant="20.5" id="p9Q-gV-Isa"/>
                 <constraint firstAttribute="trailing" secondItem="Hd1-Rc-jNK" secondAttribute="trailing" id="rBf-2e-Ird"/>
                 <constraint firstAttribute="bottom" secondItem="pRv-uo-d2W" secondAttribute="bottom" constant="20" id="rZX-fz-8cy"/>
                 <constraint firstItem="pRv-uo-d2W" firstAttribute="width" secondItem="KQF-BF-vNy" secondAttribute="width" multiplier="0.4" id="tgM-d7-3Q2"/>
@@ -204,12 +203,12 @@
             <variation key="default">
                 <mask key="constraints">
                     <exclude reference="14r-JV-ZHc"/>
+                    <exclude reference="4sn-pu-c2r"/>
                     <exclude reference="9N5-pC-BG9"/>
                     <exclude reference="K3e-Ra-dQQ"/>
                     <exclude reference="MyP-Ow-EqF"/>
                     <exclude reference="bVr-I9-vh0"/>
                     <exclude reference="rZX-fz-8cy"/>
-                    <exclude reference="4sn-pu-c2r"/>
                 </mask>
             </variation>
             <point key="canvasLocation" x="158" y="259"/>

@@ -208,10 +208,7 @@
 - (void)updateLocation
 {
     if (self.placeName) {
-        if (self.placeID == nil || [self.placeID isEqualToString:@""])
-            self.location.textField.text = self.placeName;
-        else
-            self.location.textField.text = [NSString stringWithFormat:@"%@ (from Google)", self.placeName];
+        self.location.textField.text = self.placeName;
     } else {
         self.location.textField.text = @"";
     }
@@ -227,27 +224,6 @@
     self.placeName = name;
     self.placeID = placeID;
     [self updateLocation];
-}
-
-- (IBAction)autoSetLocation:(id)sender {
-    
-    GMSPlacesClient *_placesClient = [GMSPlacesClient sharedClient];
-    
-    [SVProgressHUD show];
-   
-    [_placesClient currentPlaceWithCallback:^(GMSPlaceLikelihoodList *placeLikelihoodList, NSError *error){
-        if (error == nil && placeLikelihoodList != nil) {
-            GMSPlace *place = [[[placeLikelihoodList likelihoods] firstObject] place];
-            if (place != nil) {
-                [self setLocationWithLatitude:[NSNumber numberWithDouble:place.coordinate.latitude]
-                                    longitude:[NSNumber numberWithDouble:place.coordinate.longitude]
-                                         name:place.name
-                                      placeID:place.placeID];
-            }
-        }
-        
-        [SVProgressHUD dismiss];
-    }];
 }
 
 @end

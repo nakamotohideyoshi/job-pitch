@@ -8,6 +8,8 @@
 
 #import <UIKit/UIKit.h>
 @import GoogleMaps;
+@import GooglePlaces;
+
 
 @protocol LocationMapViewDelegate
 
@@ -29,10 +31,5 @@
                        longitude:(nonnull NSNumber*)newLongitude
                             name:(nonnull NSString*)newName
                          placeID:(nullable NSString *)newPlaceID;
-- (void) moveCameraToLocation;
-- (void) moveMarkerToLocation;
-- (void) moveCameraToMyLocation;
-
-- (IBAction)select:(nullable id)sender;
 
 @end

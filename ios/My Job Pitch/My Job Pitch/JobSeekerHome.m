@@ -30,6 +30,7 @@ typedef NS_ENUM(NSInteger, EmptyButtonAction) {
 @property Boolean loading;
 @property EmptyButtonAction emptyButton1Action;
 @property EmptyButtonAction emptyButton2Action;
+
 @end
 
 @implementation JobSeekerHome {
@@ -43,6 +44,7 @@ typedef NS_ENUM(NSInteger, EmptyButtonAction) {
     self.emptyButton1Action = EmptyButtonActionNone;
     self.emptyButton2Action = EmptyButtonActionNone;
     [self.swipeContainer setHidden:true];
+    
 }
 
 - (IBAction)cardTapAction:(id)sender
@@ -365,20 +367,6 @@ typedef NS_ENUM(NSInteger, EmptyButtonAction) {
         [jobDetailsView setJob:self.job];
         [jobDetailsView setJobSeekerHome:self];
     }
-}
-
-- (UIInterfaceOrientationMask)supportedInterfaceOrientations
-{
-    return UIInterfaceOrientationMaskPortrait;
-}
-
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation {
-    return UIInterfaceOrientationIsPortrait(toInterfaceOrientation);
-}
-
-- (UIInterfaceOrientation)preferredInterfaceOrientationForPresentation
-{
-    return UIInterfaceOrientationPortrait;
 }
 
 - (IBAction)showMenu:(id)sender {

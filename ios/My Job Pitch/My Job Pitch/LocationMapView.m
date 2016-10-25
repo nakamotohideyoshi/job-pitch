@@ -13,7 +13,10 @@
     NSNumber *longitude;
     NSString *name;
     NSString *placeID;
+    
     BOOL moveToMyLocation;
+    CLLocationCoordinate2D myLocation;
+    
     GMSMarker *marker;
     GMSAutocompleteResultsViewController *resultsViewController;
     UISearchController *searchController;
@@ -24,23 +27,25 @@
     if ([self respondsToSelector:@selector(edgesForExtendedLayout)])
         self.edgesForExtendedLayout = UIRectEdgeNone;
     
-    self.select.enabled = false;
-    
     [self.map setDelegate:self];
     [self.map setPadding:UIEdgeInsetsMake(0, 0, 40, 0)];
     [self.map setMyLocationEnabled:true];
-//    [self.map.settings setMyLocationButton:true];
+    [self.map.settings setMyLocationButton:true];
+    
     [self.map addObserver:self
                forKeyPath:@"myLocation"
                   options:NSKeyValueObservingOptionNew
                   context:NULL];
+    myLocation = CLLocationCoordinate2DMake(-1, -1);
+    
+    marker = [[GMSMarker alloc] init];
+    marker.map = self.map;
+    
     if (latitude == nil)
-        [self moveCameraToMyLocation];
+        moveToMyLocation = true;
     else {
-        [self moveMarkerToLocation];
+        [self moveMarkerToLocation:@"This is your currently selected location"];
         [self moveCameraToLocation];
-        marker.snippet = @"This is your currently selected search location";
-        [self.map setSelectedMarker:marker];
     }
 
     resultsViewController = [[GMSAutocompleteResultsViewController alloc] init];
@@ -59,7 +64,6 @@
     
 }
 
-
 // Handle the user's selection.
 - (void)resultsController:(GMSAutocompleteResultsViewController *)resultsController
  didAutocompleteWithPlace:(GMSPlace *)place {
@@ -68,11 +72,8 @@
     longitude = [NSNumber numberWithDouble:place.coordinate.longitude];
     name = place.name;
     placeID = place.placeID;
-    [self moveMarkerToLocation];
+    [self moveMarkerToLocation:nil];
     [self moveCameraToLocation];
-    [self.map setSelectedMarker:marker];
-    [self.select setEnabled:true];
-    [self.select setAlpha:1.0];
 }
 
 - (void)resultsController:(GMSAutocompleteResultsViewController *)resultsController
@@ -80,19 +81,6 @@
     [self dismissViewControllerAnimated:YES completion:nil];
     // TODO: handle the error.
     NSLog(@"Error: %@", [error description]);
-}
-
-- (IBAction)select:(id)sender {
-    [self.delegate setLocationWithLatitude:latitude
-                                 longitude:longitude
-                                      name:name
-                                   placeID:placeID];
-    [self.navigationController popViewControllerAnimated:true];
-}
-
-- (void) moveCameraToMyLocation
-{
-    moveToMyLocation = true;
 }
 
 - (void) setLocationWithLatitude:(NSNumber*)newLatitude
@@ -113,39 +101,62 @@
                                                          zoom:14]];
 }
 
-- (void)moveMarkerToLocation
+- (void)moveMarkerToLocation:(NSString *)snippet
 {
-    if (marker == nil) {
-        marker = [[GMSMarker alloc] init];
-        marker.map = self.map;
-    }
     marker.title = name;
-    marker.snippet = nil;
+    marker.snippet = snippet;
     marker.position = CLLocationCoordinate2DMake([latitude doubleValue], [longitude doubleValue]);
+    [self.map setSelectedMarker:marker];
 }
 
 - (void)observeValueForKeyPath:(NSString *)keyPath
                       ofObject:(id)object
                         change:(NSDictionary *)change
                        context:(void *)context {
+    
+    CLLocation *location = [change objectForKey:NSKeyValueChangeNewKey];
+    myLocation = location.coordinate;
+    
     if (moveToMyLocation) {
-        CLLocation *location = [change objectForKey:NSKeyValueChangeNewKey];
-        [self.map setCamera:[GMSCameraPosition cameraWithTarget:location.coordinate zoom:14]];
-        moveToMyLocation = false;
+        [self didTapMyLocationButtonForMapView:self.map];
     }
 }
-
 
 - (void)mapView:(GMSMapView *)mapView didLongPressAtCoordinate:(CLLocationCoordinate2D)coordinate
 {
     [self setLocationWithLatitude:[NSNumber numberWithDouble:coordinate.latitude]
                         longitude:[NSNumber numberWithDouble:coordinate.longitude]
-                             name:@"Custom location"
+                             name:@"Custom Location"
                           placeID:@""
      ];
-    [self moveMarkerToLocation];
-    [self.select setEnabled:true];
-    [self.select setAlpha:1.0];
+    [self moveMarkerToLocation:nil];
+}
+
+
+- (BOOL)didTapMyLocationButtonForMapView:(GMSMapView *)mapView {
+    
+    if (myLocation.latitude != -1) {
+        [self setLocationWithLatitude:[NSNumber numberWithDouble:myLocation.latitude]
+                            longitude:[NSNumber numberWithDouble:myLocation.longitude]
+                                 name:@"Custom Location"
+                              placeID:@""
+        ];
+        [self moveMarkerToLocation:@"This is your currently location"];
+        [self moveCameraToLocation];
+        moveToMyLocation = false;
+    } else {
+        moveToMyLocation = true;
+    }
+    
+    return YES;
+}
+
+- (IBAction)select:(id)sender {
+    [self.delegate setLocationWithLatitude:latitude
+                                 longitude:longitude
+                                      name:name
+                                   placeID:placeID];
+    [self.navigationController popViewControllerAnimated:true];
 }
 
 - (void)dealloc

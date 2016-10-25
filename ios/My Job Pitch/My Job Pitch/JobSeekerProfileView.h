@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "ErrorTextField.h"
 #import "JobSeeker.h"
-#import <DownPicker.h>
+#import "DownPicker.h"
 
 @protocol JobSeekerProfileViewDelegate
 - (void)continue;

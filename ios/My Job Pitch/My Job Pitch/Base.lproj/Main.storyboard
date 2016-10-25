@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11201" systemVersion="15G1004" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="c1x-Uz-Rpv">
     <dependencies>
-        <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11161"/>
         <capability name="Alignment constraints with different attributes" minToolsVersion="5.1"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
@@ -929,7 +928,7 @@
         <scene sceneID="Lry-wQ-ILw">
             <objects>
                 <navigationController id="c1x-Uz-Rpv" customClass="LockableNavigationController" sceneMemberID="viewController">
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="hYL-sX-fDF">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="hYL-sX-fDF">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -1682,7 +1681,7 @@
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fEI-Op-ikz">
                                         <subviews>
                                             <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="ajh-3m-3ZR">
-                                                <mutableString key="text">Setting up your job pitch here are some tips from one of our recruiting pros:
+                                                <string key="text">Setting up your job pitch here are some tips from one of our recruiting pros:
 
     Dress smartly. You want to be taken seriously
     Be careful what is in the background. Nothing should distract from your pitch
@@ -1704,7 +1703,7 @@ Remember you only have 30 seconds, so what to say?
     Type of work you are looking for
     Relevant experience
 
-Finish your pitch confidently by saying something like, “Thank you and I look forward to hearing from you”.</mutableString>
+Finish your pitch confidently by saying something like, “Thank you and I look forward to hearing from you”.</string>
                                                 <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                                             </textView>
@@ -3560,8 +3559,8 @@ Finish your pitch confidently by saying something like, “Thank you and I look 
     </resources>
     <inferredMetricsTieBreakers>
         <segue reference="bLg-hp-djS"/>
-        <segue reference="ZpE-yw-NGD"/>
-        <segue reference="TnE-uG-nR3"/>
+        <segue reference="XoM-Rr-ZjD"/>
         <segue reference="E46-Lk-kdo"/>
+        <segue reference="wj9-jy-mgT"/>
     </inferredMetricsTieBreakers>
 </document>

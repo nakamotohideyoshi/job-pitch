@@ -155,7 +155,7 @@ public class JobSeekerEditFragment extends EditFragment<JobSeeker> {
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                mDescriptionCharacters.setText(getString(R.string.characters_remaining, 500 - charSequence.length()));
+                mDescriptionCharacters.setText(getString(R.string.characters_remaining, 1000 - charSequence.length()));
             }
 
             @Override

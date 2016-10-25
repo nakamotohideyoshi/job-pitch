@@ -1,7 +1,13 @@
 platform :ios, '8.0'
-pod 'RestKit', '~> 0.24.1'
-pod 'DownPicker'
-pod 'GoogleMaps'
-pod 'AWSS3', '~> 2.4.1'
-pod 'SVProgressHUD'
-link_with 'MyJobPitch'
+use_frameworks!
+
+target 'MyJobPitch' do
+    
+    pod 'RestKit'
+    pod 'DownPicker'
+    pod 'GoogleMaps'
+    pod 'GooglePlaces'
+    pod 'AWSS3'
+    pod 'SVProgressHUD'
+       
+end

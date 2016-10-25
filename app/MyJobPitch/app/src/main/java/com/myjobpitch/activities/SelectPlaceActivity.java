@@ -35,9 +35,7 @@ import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.myjobpitch.R;
 import com.myjobpitch.google.PlaceAutocompleteAdapter;
@@ -57,7 +55,11 @@ public class SelectPlaceActivity extends ActionBarActivity implements GoogleApiC
     private GoogleApiClient mGoogleApiClient;
 
     private LatLng mLatLng;
+    private String mName;
     private String mPlaceId;
+    private String mAddress;
+
+    private Location mMyLocation;
 
     // Request code to use when launching the resolution activity
     private static final int REQUEST_RESOLVE_ERROR = 1001;
@@ -66,16 +68,13 @@ public class SelectPlaceActivity extends ActionBarActivity implements GoogleApiC
     // Bool to track whether the app is already resolving an error
     private boolean mResolvingError = false;
     private Button mSelectButton;
-    private String mName;
-    private String mAddress;
     private View mAutocompleteContainerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mResolvingError = savedInstanceState != null
-                && savedInstanceState.getBoolean(STATE_RESOLVING_ERROR, false);
+        mResolvingError = savedInstanceState != null && savedInstanceState.getBoolean(STATE_RESOLVING_ERROR, false);
 
         setContentView(R.layout.activity_select_place);
 
@@ -85,7 +84,6 @@ public class SelectPlaceActivity extends ActionBarActivity implements GoogleApiC
         }
 
         setUpMapIfNeeded();
-
         if (mMap == null)
             return;
 
@@ -96,7 +94,6 @@ public class SelectPlaceActivity extends ActionBarActivity implements GoogleApiC
         mAdapter = new PlaceAutocompleteAdapter(this, android.R.layout.simple_list_item_1,
                 mMap.getProjection().getVisibleRegion().latLngBounds, null);
         mAutocompleteView.setAdapter(mAdapter);
-
 
         // Set up the 'clear text' button that clears the text in the autocomplete view
         ImageButton clearButton = (ImageButton) findViewById(R.id.button_clear);
@@ -134,7 +131,7 @@ public class SelectPlaceActivity extends ActionBarActivity implements GoogleApiC
             @Override
             public void onGlobalLayout() {
                 int topPadding = mAutocompleteContainerView.getHeight() + extraPadding;
-                int bottomPadding = mSelectButton.getHeight();
+                int bottomPadding = mSelectButton.getHeight() + extraPadding;
                 if (topPadding != mTopPadding || bottomPadding != mBottomPadding) {
                     mTopPadding = topPadding;
                     mBottomPadding = bottomPadding;
@@ -143,18 +140,16 @@ public class SelectPlaceActivity extends ActionBarActivity implements GoogleApiC
             }
         };
         mAutocompleteContainerView.getViewTreeObserver().addOnGlobalLayoutListener(layoutListener);
-        mSelectButton.getViewTreeObserver().addOnGlobalLayoutListener(layoutListener);
 
         // If data passed, setup initial marker
         if (getIntent().hasExtra(NAME) && getIntent().hasExtra(LATITUDE) && getIntent().hasExtra(LONGITUDE)) {
             LatLng latLng = new LatLng(getIntent().getDoubleExtra(LATITUDE, 0), getIntent().getDoubleExtra(LONGITUDE, 0));
             String name = getIntent().getStringExtra(NAME);
             if (getIntent().hasExtra(PLACE_ID)) {
-                updateLocation(latLng, name, getIntent().getStringExtra(PLACE_ID), null);
+                updateLocation(latLng, name, getIntent().getStringExtra(PLACE_ID), null, "This is your currently selected location", true);
             } else {
-                updateLocation(latLng, name);
+                updateLocation(latLng, name, "This is your currently selected location", true);
             }
-            mSelectButton.setEnabled(false);
         }
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -272,27 +267,34 @@ public class SelectPlaceActivity extends ActionBarActivity implements GoogleApiC
             }
             // Get the Place object from the buffer.
             final Place place = places.get(0);
-            updateLocation(place.getLatLng(), place.getName().toString(), place.getId(), place.getAddress().toString());
+            updateLocation(place.getLatLng(), place.getName().toString(), place.getId(), place.getAddress().toString(), null, true);
             places.release();
         }
     };
 
-    private void updateLocation(LatLng latLng, String title) {
-        updateLocation(latLng, title, null, null);
+    private void updateLocation(LatLng latLng, String title, String snippet, boolean moveCamera) {
+        updateLocation(latLng, title, null, null, snippet, moveCamera);
     }
 
-    private void updateLocation(LatLng latLng, String title, String placeId, String address) {
+    private void updateLocation(LatLng latLng, String title, String placeId, String address, String snippet, boolean moveCamera) {
         mPlaceId = placeId;
         mLatLng = latLng;
         mName = title;
         mAddress = address;
+
         mMap.clear();
         mMap.addMarker(new MarkerOptions()
-                .position(latLng)
-                .title(title));
-        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 17);
-        mMap.animateCamera(cameraUpdate);
+                .title(title)
+                .snippet(snippet)
+                .position(latLng));
+
+        if (moveCamera) {
+            CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 10);
+            mMap.animateCamera(cameraUpdate);
+        }
+
         mSelectButton.setEnabled(true);
+        mSelectButton.setAlpha(1.0f);
     }
 
 
@@ -309,7 +311,6 @@ public class SelectPlaceActivity extends ActionBarActivity implements GoogleApiC
                 .addApi(Places.GEO_DATA_API)
                 .addApi(LocationServices.API)
                 .build();
-
     }
 
     /**
@@ -321,22 +322,36 @@ public class SelectPlaceActivity extends ActionBarActivity implements GoogleApiC
     private void setUpMap() {
         mMap.setMyLocationEnabled(true);
         mMap.getUiSettings().setMapToolbarEnabled(false);
-        mMap.getUiSettings().setZoomControlsEnabled(true);
+        mMap.getUiSettings().setZoomControlsEnabled(false);
         mMap.getUiSettings().setTiltGesturesEnabled(false);
         mMap.getUiSettings().setRotateGesturesEnabled(false);
         mMap.getUiSettings().setMyLocationButtonEnabled(true);
-        mMap.setOnCameraChangeListener(new GoogleMap.OnCameraChangeListener() {
-            @Override
-            public void onCameraChange(CameraPosition position) {
-                LatLngBounds bounds = mMap.getProjection().getVisibleRegion().latLngBounds;
-                if (mAdapter != null)
-                    mAdapter.setBounds(bounds);
-            }
-        });
         mMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
             @Override
             public void onMapLongClick(LatLng latLng) {
-                updateLocation(latLng, getString(R.string.custom_location));
+                updateLocation(latLng, getString(R.string.custom_location), null, false);
+            }
+        });
+
+        mMap.setOnMyLocationButtonClickListener(new GoogleMap.OnMyLocationButtonClickListener() {
+            @Override
+            public boolean onMyLocationButtonClick() {
+                if (mMyLocation != null) {
+                    LatLng latLng = new LatLng(mMyLocation.getLatitude(), mMyLocation.getLongitude());
+                    updateLocation(latLng, getString(R.string.custom_location), "This is your currently location", true);
+                }
+                return true;
+            }
+        });
+
+        mMap.setOnMyLocationChangeListener(new GoogleMap.OnMyLocationChangeListener() {
+            @Override
+            public void onMyLocationChange(Location location) {
+                mMyLocation = location;
+                if (mLatLng == null) {
+                    LatLng latLng = new LatLng(mMyLocation.getLatitude(), mMyLocation.getLongitude());
+                    updateLocation(latLng, getString(R.string.custom_location), "This is your currently location", true);
+                }
             }
         });
     }
@@ -366,16 +381,6 @@ public class SelectPlaceActivity extends ActionBarActivity implements GoogleApiC
     public void onConnected(Bundle bundle) {
         mAdapter.setGoogleApiClient(mGoogleApiClient);
         Log.d("SelectPlaceActivity", "onConnected");
-
-        // Try to get current location, and move map there, if no marker placed
-        if (mLatLng == null) {
-            Location location = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
-            if (location != null) {
-                LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
-                CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 17);
-                mMap.animateCamera(cameraUpdate);
-            }
-        }
     }
 
     @Override

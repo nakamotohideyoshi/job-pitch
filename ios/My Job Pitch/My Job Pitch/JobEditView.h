@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "Job.h"
 #import "ErrorTextField.h"
-#import <DownPicker.h>
+#import "DownPicker.h"
 
 @interface JobEditView : UIView<UIImagePickerControllerDelegate, UINavigationControllerDelegate>
 

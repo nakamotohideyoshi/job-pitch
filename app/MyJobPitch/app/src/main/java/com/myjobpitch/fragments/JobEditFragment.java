@@ -104,7 +104,7 @@ public class JobEditFragment extends EditFragment {
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                mJobDescCharacters.setText(getString(R.string.characters_remaining, 500 - charSequence.length()));
+                mJobDescCharacters.setText(getString(R.string.characters_remaining, 1000 - charSequence.length()));
             }
 
             @Override

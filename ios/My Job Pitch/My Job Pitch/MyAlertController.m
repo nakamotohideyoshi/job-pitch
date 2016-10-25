@@ -24,11 +24,6 @@
     // Dispose of any resources that can be recreated.
 }
 
-
-- (UIInterfaceOrientationMask)supportedInterfaceOrientations {
-    return UIInterfaceOrientationMaskPortrait;
-}
-
 - (BOOL)shouldAutorotate {
     return false;
 }
@@ -47,7 +42,6 @@
                                    actionWithTitle:ok
                                    style:UIAlertActionStyleDefault
                                    handler:^(UIAlertAction * action) {
-                                       [alert dismissViewControllerAnimated:YES completion:nil];
                                        if (okCallback) {
                                            okCallback();
                                        }
@@ -60,7 +54,6 @@
                                        actionWithTitle:cancel
                                        style:UIAlertActionStyleDefault
                                        handler:^(UIAlertAction * action) {
-                                           [alert dismissViewControllerAnimated:YES completion:nil];
                                            if (cancelCallback) {
                                                cancelCallback();
                                            }

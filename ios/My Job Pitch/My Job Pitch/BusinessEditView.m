@@ -120,14 +120,6 @@
                                    }];
     [sheet addAction:photoLibrary];
     
-//    UIAlertAction* fromWebsite = [UIAlertAction
-//                                   actionWithTitle:@"From Website"
-//                                   style:UIAlertActionStyleDefault
-//                                   handler:^(UIAlertAction * action) {
-//                                       [self showUrlInputBox];
-//                                   }];
-//    [sheet addAction:fromWebsite];
-    
     UIAlertAction* cancel = [UIAlertAction
                              actionWithTitle:@"Cancel"
                              style:UIAlertActionStyleCancel
@@ -138,54 +130,6 @@
     
     [self.window.rootViewController presentViewController:sheet animated:YES completion:nil];
 }
-
-//-(void)showUrlInputBox {
-//    MyAlertController * alert=   [MyAlertController
-//                                  alertControllerWithTitle:nil
-//                                  message:@"Enter Image Url"
-//                                  preferredStyle:UIAlertControllerStyleAlert];
-//    
-//    UIAlertAction* ok = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault
-//                                               handler:^(UIAlertAction * action) {
-//                                                   NSString *url = [alert.textFields.firstObject.text stringByTrimmingCharactersInSet:
-//                                                                    [NSCharacterSet whitespaceCharacterSet]];
-//                                                   if ([url isEqualToString:@""]) {
-//                                                       [alert dismissViewControllerAnimated:YES completion:nil];
-//                                                       return;
-//                                                   };
-//                                                   
-//                                                   [SVProgressHUD show];
-//                                                   NSURL *imageURL = [NSURL URLWithString:url];
-//                                                   [NSURLConnection sendAsynchronousRequest:[NSURLRequest requestWithURL:imageURL]
-//                                                                                      queue:[NSOperationQueue mainQueue]
-//                                                                          completionHandler:^(NSURLResponse *response, NSData *data, NSError *error) {
-//                                                                              if (error == nil) {
-//                                                                                  UIImage *image = [UIImage imageWithData:data];
-//                                                                                  if (image != nil) {
-//                                                                                      self.imageForUpload = image;
-//                                                                                      self.imageView.image = image;
-//                                                                                      self.changeCenterContraint.priority = UILayoutPriorityDefaultLow;
-//                                                                                      self.deleteButton.hidden = false;
-//                                                                                  }
-//                                                                              }
-//                                                                              [alert dismissViewControllerAnimated:YES completion:nil];
-//                                                                              [SVProgressHUD dismiss];
-//                                                                          }];
-//                                               }];
-//    UIAlertAction* cancel = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleDefault
-//                                                   handler:^(UIAlertAction * action) {
-//                                                       [alert dismissViewControllerAnimated:YES completion:nil];
-//                                                   }];
-//    
-//    [alert addAction:ok];
-//    [alert addAction:cancel];
-//    
-//    [alert addTextFieldWithConfigurationHandler:^(UITextField *textField) {
-//        textField.placeholder = @"Image Url";
-//    }];
-//    
-//    [self.window.rootViewController presentViewController:alert animated:YES completion:nil];
-//}
 
 -(void) showImagePickerController:(UIImagePickerControllerSourceType)type {
     ipc= [[UIImagePickerController alloc] init];

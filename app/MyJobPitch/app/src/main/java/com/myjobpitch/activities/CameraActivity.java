@@ -5,21 +5,30 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Matrix;
+import android.graphics.Paint;
+import android.graphics.RectF;
 import android.graphics.SurfaceTexture;
 import android.hardware.Camera;
 import android.media.CamcorderProfile;
 import android.media.MediaRecorder;
+
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.Surface;
 import android.view.TextureView;
 import android.view.View;
-import android.widget.Button;
+import android.view.WindowManager;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,7 +38,7 @@ import com.myjobpitch.media.CameraHelper;
 import java.io.IOException;
 import java.util.List;
 
-public class CameraActivity extends MJPActionBarActivity {
+public class CameraActivity extends AppCompatActivity {
     public static final String OUTPUT_FILE = "output_file";
 
     private static final int MAX_RECORD_TIME = 30;
@@ -39,7 +48,7 @@ public class CameraActivity extends MJPActionBarActivity {
 
     private Camera mCamera;
     private TextureView mPreview;
-    private Button mCaptureButton;
+    private ImageView mCaptureButton;
 
     private MediaRecorder mMediaRecorder;
     private CamcorderProfile mProfile;
@@ -53,16 +62,22 @@ public class CameraActivity extends MJPActionBarActivity {
     private Object mRecordingLock = new Object();
     private TextView mCountdownView;
 
+    private Canvas canvas;
+    private int buttonRadius;
+    private boolean showHelp = false;
+
     private class CountDownAction implements Runnable {
         private final View view;
         private Integer count;
+        private Integer delayTime;
         private Runnable onTickAction;
         private Runnable onCompleteAction;
         private Runnable onCancelAction;
 
-        public CountDownAction(Integer count, View view) {
+        public CountDownAction(Integer count, View view, Integer delayTime) {
             this.count = count;
             this.view = view;
+            this.delayTime = delayTime;
         }
 
         public void onTick(Runnable action) {
@@ -85,7 +100,7 @@ public class CameraActivity extends MJPActionBarActivity {
                         onCompleteAction.run();
                     } else {
                         onTickAction.run();
-                        view.postDelayed(this, 1000);
+                        view.postDelayed(this, delayTime);
                     }
                     count--;
                 } else {
@@ -97,7 +112,9 @@ public class CameraActivity extends MJPActionBarActivity {
         public Integer getCount() {
             return count;
         }
-    };
+    }
+
+    ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -105,9 +122,12 @@ public class CameraActivity extends MJPActionBarActivity {
         if (savedInstanceState != null && savedInstanceState.containsKey("cameraDirection"))
             cameraDirection = savedInstanceState.getInt("cameraDirection", Camera.CameraInfo.CAMERA_FACING_FRONT);
 
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
         setContentView(R.layout.activity_camera);
 
-        mCountdownView = (TextView) findViewById(R.id.countdown);
+        mCountdownView = (TextView) findViewById(R.id.textView);
 
         mPreview = (TextureView) findViewById(R.id.camera_preview);
         mPreview.setSurfaceTextureListener(new TextureView.SurfaceTextureListener() {
@@ -130,9 +150,11 @@ public class CameraActivity extends MJPActionBarActivity {
             }
 
             @Override
-            public void onSurfaceTextureUpdated(SurfaceTexture surface) {}
+            public void onSurfaceTextureUpdated(SurfaceTexture surface) {
+            }
         });
-        mCaptureButton = (Button) findViewById(R.id.record_button);
+
+        mCaptureButton = (ImageView) findViewById(R.id.record_button);
         mCaptureButton.setEnabled(false);
         mCaptureButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -145,52 +167,21 @@ public class CameraActivity extends MJPActionBarActivity {
                         isRecording = false;
                         isActive = false;
                     } else {
-                        AlertDialog.Builder builder = new AlertDialog.Builder(CameraActivity.this);
-                        builder.setMessage(getString(R.string.pre_record_message, COUNTDOWN_TIME, MAX_RECORD_TIME))
-                                .setCancelable(false)
-                                .setPositiveButton(getString(R.string.record), new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int id) {
-                                        dialog.cancel();
-                                        synchronized (mRecordingLock) {
-                                            if (isActive)
-                                                return; // This shouldn't ever happen...
-                                            isActive = true;
-                                            setCaptureButtonText(getString(R.string.get_ready));
-                                            mCountdownView.setVisibility(View.VISIBLE);
-                                            mRotateCameraButton.setEnabled(false);
-                                            final CountDownAction countDown = new CountDownAction(COUNTDOWN_TIME, v);
-                                            countDown.onTick(new Runnable() {
-                                                @Override
-                                                public void run() {
-                                                    mCountdownView.setText(countDown.getCount().toString());
-                                                }
-                                            });
-                                            countDown.onComplete(new Runnable() {
-                                                @Override
-                                                public void run() {
-                                                    if (mCamera != null)
-                                                        mCamera.stopPreview();
-                                                    isRecording = true;
-                                                    new StartRecordingTask().execute(null, null, null);
-                                                }
-                                            });
-                                            countDown.onCancel(new Runnable() {
-                                                @Override
-                                                public void run() {
-                                                    mCountdownView.setVisibility(View.INVISIBLE);
-                                                    mRotateCameraButton.setEnabled(true);
-                                                    setCaptureButtonText(getString(R.string.record));
-                                                }
-                                            });
-                                            countDown.run();
+                        if (!showHelp) {
+                            showHelp = true;
+                            AlertDialog.Builder builder = new AlertDialog.Builder(CameraActivity.this);
+                            builder.setMessage(getString(R.string.pre_record_message, COUNTDOWN_TIME, MAX_RECORD_TIME))
+                                    .setCancelable(false)
+                                    .setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int id) {
+                                            dialog.cancel();
+                                            startRecording(v);
                                         }
-                                    }
-                                })
-                                .setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int id) {
-                                        dialog.cancel();
-                                    }
-                                }).create().show();
+                                    }).create().show();
+                        } else {
+                            startRecording(v);
+                        }
+
                     }
                 }
             }
@@ -211,6 +202,56 @@ public class CameraActivity extends MJPActionBarActivity {
                 startPreviewTask.execute();
             }
         });
+
+
+        DisplayMetrics displaymetrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
+        buttonRadius = (int)(displaymetrics.heightPixels * 0.05f);
+
+        //Just create a bit map of size (width = screen width, height = depends on how big circle you want
+        Bitmap bitmap = Bitmap.createBitmap(buttonRadius*2, buttonRadius*2, Bitmap.Config.ARGB_8888);
+        ImageView imageView = (ImageView) findViewById(R.id.record_button);
+        imageView.setImageBitmap(bitmap);
+        canvas = new Canvas(bitmap);
+
+        setCaptureButtonState(-1);
+
+    }
+
+    private void startRecording(View v) {
+        synchronized (mRecordingLock) {
+            if (isActive)
+                return; // This shouldn't ever happen...
+            isActive = true;
+            setCaptureButtonState(0);
+            mCountdownView.setVisibility(View.VISIBLE);
+            mRotateCameraButton.setEnabled(false);
+            final CountDownAction countDown = new CountDownAction(COUNTDOWN_TIME, v, 1000);
+            countDown.onTick(new Runnable() {
+                @Override
+                public void run() {
+                    mCountdownView.setText("READY\n" + countDown.getCount().toString());
+                }
+            });
+            countDown.onComplete(new Runnable() {
+                @Override
+                public void run() {
+                    if (mCamera != null)
+                        mCamera.stopPreview();
+                    isRecording = true;
+                    new StartRecordingTask().execute(null, null, null);
+                }
+            });
+            countDown.onCancel(new Runnable() {
+                @Override
+                public void run() {
+                    mCountdownView.setVisibility(View.INVISIBLE);
+                    mRotateCameraButton.setEnabled(true);
+                    setCaptureButtonState(-1);
+                }
+            });
+            countDown.run();
+        }
     }
 
     @Override
@@ -224,10 +265,11 @@ public class CameraActivity extends MJPActionBarActivity {
         try {
             if (mMediaRecorder != null)
                 mMediaRecorder.stop();  // stop the recording
-        } catch (Exception e) {}
+        } catch (Exception e) {
+        }
         releaseMediaRecorder(); // release the MediaRecorder object
         mCamera.lock();         // take camera access back from MediaRecorder
-        setCaptureButtonText(getString(R.string.record));
+        setCaptureButtonState(-1);
 
         Intent intent = new Intent();
         intent.putExtra(OUTPUT_FILE, mOutputFile);
@@ -254,9 +296,35 @@ public class CameraActivity extends MJPActionBarActivity {
         return -1;
     }
 
+    private void setCaptureButtonState(int time) {
 
-    private void setCaptureButtonText(String title) {
-        mCaptureButton.setText(title);
+        Paint paint = new Paint();
+        paint.setAntiAlias(true);
+
+        paint.setStyle(Paint.Style.FILL);
+        paint.setColor(Color.rgb(255, 255, 255));
+        canvas.drawCircle(buttonRadius, buttonRadius, buttonRadius*0.96f, paint);
+        paint.setColor(Color.rgb(207, 15, 15));
+        if (time == -1) {
+            canvas.drawCircle(buttonRadius, buttonRadius, buttonRadius*0.3f, paint);
+        } else {
+            RectF rectF = new RectF(buttonRadius*0.7f, buttonRadius*0.7f, buttonRadius*1.3f, buttonRadius*1.3f);
+            canvas.drawRoundRect(rectF, buttonRadius*0.1f, buttonRadius*0.1f, paint);
+        }
+
+        paint.setStyle(Paint.Style.STROKE);
+        paint.setStrokeWidth(buttonRadius * 0.06f);
+        paint.setColor(Color.rgb(83, 83, 83));
+        canvas.drawCircle(buttonRadius, buttonRadius, buttonRadius*0.96f, paint);
+
+        if (time > 0) {
+            paint.setColor(Color.rgb(194, 24, 30));
+            paint.setStrokeWidth(buttonRadius * 0.08f);
+            RectF rectF = new RectF(buttonRadius*0.04f, buttonRadius*0.04f, buttonRadius*1.96f, buttonRadius*1.96f);
+            int t = 360*time/(MAX_RECORD_TIME*25);
+            if (t == 131) t = 130;
+            canvas.drawArc(rectF, -90, t, false, paint);
+        }
     }
 
     private void adjustAspectRatio(int videoWidth, int videoHeight) {
@@ -329,8 +397,8 @@ public class CameraActivity extends MJPActionBarActivity {
         }
     }
 
-    private void releaseCamera(){
-        if (mCamera != null){
+    private void releaseCamera() {
+        if (mCamera != null) {
             // release the camera for other applications
             mCamera.release();
             mCamera = null;
@@ -338,7 +406,7 @@ public class CameraActivity extends MJPActionBarActivity {
     }
 
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-    private boolean prepareMediaRecorder(){
+    private boolean prepareMediaRecorder() {
         mMediaRecorder = new MediaRecorder();
 
         // Step 1: Unlock and set camera to MediaRecorder
@@ -370,17 +438,25 @@ public class CameraActivity extends MJPActionBarActivity {
         return true;
     }
 
-    public static void setCameraDisplayOrientation(Activity activity, int cameraId, android.hardware.Camera camera) {
-        android.hardware.Camera.CameraInfo info =
-                new android.hardware.Camera.CameraInfo();
-        android.hardware.Camera.getCameraInfo(cameraId, info);
+    public static void setCameraDisplayOrientation(Activity activity, int cameraId, Camera camera) {
+        Camera.CameraInfo info =
+                new Camera.CameraInfo();
+        Camera.getCameraInfo(cameraId, info);
         int rotation = activity.getWindowManager().getDefaultDisplay().getRotation();
         int degrees = 0;
         switch (rotation) {
-            case Surface.ROTATION_0: degrees = 0; break;
-            case Surface.ROTATION_90: degrees = 90; break;
-            case Surface.ROTATION_180: degrees = 180; break;
-            case Surface.ROTATION_270: degrees = 270; break;
+            case Surface.ROTATION_0:
+                degrees = 0;
+                break;
+            case Surface.ROTATION_90:
+                degrees = 90;
+                break;
+            case Surface.ROTATION_180:
+                degrees = 180;
+                break;
+            case Surface.ROTATION_270:
+                degrees = 270;
+                break;
         }
 
         int result;
@@ -394,7 +470,7 @@ public class CameraActivity extends MJPActionBarActivity {
     }
 
     /**
-     * Asynchronous task for preparing the {@link android.media.MediaRecorder} since it's a long blocking
+     * Asynchronous task for preparing the {@link MediaRecorder} since it's a long blocking
      * operation.
      */
     class StartPreviewTask extends AsyncTask<Void, Void, Boolean> {
@@ -409,7 +485,7 @@ public class CameraActivity extends MJPActionBarActivity {
                     toggleCamera();
                     mCamera = CameraHelper.getDefaultCamera(cameraDirection);
                 }
-            } catch (RuntimeException e){
+            } catch (RuntimeException e) {
                 Toast.makeText(CameraActivity.this, e.getLocalizedMessage(), Toast.LENGTH_LONG).show();
                 finish();
             }
@@ -426,6 +502,7 @@ public class CameraActivity extends MJPActionBarActivity {
             // dimensions of our preview surface.
             Camera.Parameters parameters = mCamera.getParameters();
             List<Camera.Size> mSupportedPreviewSizes = parameters.getSupportedPreviewSizes();
+
             Camera.Size optimalSize = CameraHelper.getOptimalPreviewSize(mSupportedPreviewSizes,
                     mPreview.getWidth(), mPreview.getHeight());
             Log.d("CameraActivity", "preview size: " + mPreview.getWidth() + " x " + mPreview.getHeight());
@@ -461,7 +538,7 @@ public class CameraActivity extends MJPActionBarActivity {
     }
 
     /**
-     * Asynchronous task for preparing the {@link android.media.MediaRecorder} since it's a long blocking
+     * Asynchronous task for preparing the {@link MediaRecorder} since it's a long blocking
      * operation.
      */
     class StartRecordingTask extends AsyncTask<Void, Void, Boolean> {
@@ -489,13 +566,14 @@ public class CameraActivity extends MJPActionBarActivity {
                     int i = 0;
                 }
 
-                setCaptureButtonText(getString(R.string.stop));
-                final CountDownAction countDown = new CountDownAction(MAX_RECORD_TIME, mCountdownView);
+                final CountDownAction countDown = new CountDownAction(MAX_RECORD_TIME*25, mCountdownView, 1000/25);
                 countDown.onTick(new Runnable() {
                     @Override
                     public void run() {
-                        mCountdownView.setTextColor(getResources().getColor(android.R.color.holo_red_dark));
-                        mCountdownView.setText(countDown.getCount().toString());
+                        int n = MAX_RECORD_TIME*25 - countDown.getCount();
+                        int seconds = n  / 25;
+                        mCountdownView.setText((seconds < 10 ? "00:0" : "00:") + seconds + "\n");
+                        setCaptureButtonState(n);
                     }
                 });
                 countDown.onComplete(new Runnable() {
@@ -507,7 +585,7 @@ public class CameraActivity extends MJPActionBarActivity {
                 countDown.onCancel(new Runnable() {
                     @Override
                     public void run() {
-                        setCaptureButtonText(getString(R.string.record));
+                        setCaptureButtonState(-1);
                     }
                 });
                 countDown.run();

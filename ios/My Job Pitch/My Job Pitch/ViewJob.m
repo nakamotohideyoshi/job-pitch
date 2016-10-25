@@ -33,6 +33,7 @@ typedef NS_ENUM(NSInteger, EmptyButtonAction) {
 
 @implementation ViewJob {
     Boolean resetOnAppearance;
+    ToolTipHelper *helper;
 }
 
 - (void)viewDidLoad {
@@ -44,6 +45,48 @@ typedef NS_ENUM(NSInteger, EmptyButtonAction) {
     self.emptyButton3Action = EmptyButtonActionNone;
     self.shortlisted.on = false;
     self.navigationItem.title = self.strTitle;
+}
+
+- (void)viewDidAppear:(BOOL)animated {
+    if ([AppHelper getData:@"ViewJob"] != nil) {
+        NSArray *data = @[
+                          @{
+                              @"text": @"This is the profile of a job seeker who is looking for a job like yours.",
+                              @"target": self.descriptionLabel,
+                              @"dir": @"up",
+                              },
+                          @{
+                              @"text": @"You can click on a card to view a their 30 second pitch video and see a limited profile.",
+                              @"target": self.descriptionLabel,
+                              @"dir": @"up",
+                              },
+                          @{
+                              @"text": @"You can swipe left to connect with this job seeker. They will receive a notification of your interest and be able to respond.",
+                              @"target": self.descriptionLabel,
+                              @"dir": @"up",
+                              },
+                          @{
+                              @"text": @"You can also connect using this button.",
+                              @"target": self.leftButton,
+                              },
+                          @{
+                              @"text": @"Connecting with a job seeker costs on credit.",
+                              @"target": self.tokensLabel,
+                              },
+                          @{
+                              @"text": @"You can swipe right to temporarily dismiss a job seeker.",
+                              @"target": self.descriptionLabel,
+                              @"dir": @"up",
+                              },
+                          @{
+                              @"text": @"This button will permanently dismiss this job seeker, and they will not reappear for this job.",
+                              @"target": self.rightButton,
+                              },
+                          ];
+        helper = [ToolTipHelper tooltip:data inView:self.view callback:^{
+            [AppHelper setData:@"ViewJob" value:@"ok"];
+        }];
+    }
 }
 
 - (IBAction)cardTapAction:(id)sender
@@ -497,18 +540,5 @@ typedef NS_ENUM(NSInteger, EmptyButtonAction) {
     }
 }
 
-- (UIInterfaceOrientationMask)supportedInterfaceOrientations
-{
-    return UIInterfaceOrientationMaskPortrait;
-}
-
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation {
-    return UIInterfaceOrientationIsPortrait(toInterfaceOrientation);
-}
-
-- (UIInterfaceOrientation)preferredInterfaceOrientationForPresentation
-{
-    return UIInterfaceOrientationPortrait;
-}
 
 @end

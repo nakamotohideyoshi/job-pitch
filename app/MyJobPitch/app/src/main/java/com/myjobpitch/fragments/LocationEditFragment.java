@@ -2,21 +2,13 @@ package com.myjobpitch.fragments;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.location.Address;
-import android.location.Criteria;
-import android.location.Geocoder;
-import android.location.LocationListener;
-import android.location.LocationManager;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -31,22 +23,9 @@ import com.myjobpitch.api.data.Business;
 import com.myjobpitch.api.data.Location;
 import com.myjobpitch.tasks.recruiter.CreateUpdateLocationTask;
 
-import org.apache.http.HttpResponse;
-import org.apache.http.HttpStatus;
-import org.apache.http.StatusLine;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.json.JSONArray;
-import org.json.JSONObject;
-
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
 public class LocationEditFragment extends EditFragment<Location> implements GoogleApiClient.OnConnectionFailedListener {
@@ -160,112 +139,7 @@ public class LocationEditFragment extends EditFragment<Location> implements Goog
             mImageUriSet = true;
         }
 
-        Button autoLocationButton = (Button) view.findViewById(R.id.auto_location);
-        autoLocationButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                try {
-                    LocationManager locationManager = (LocationManager)getContext().getSystemService(Context.LOCATION_SERVICE);
-                    Criteria criteria = new Criteria();
-                    criteria.setAccuracy(Criteria.ACCURACY_LOW);
-                    criteria.setPowerRequirement(Criteria.POWER_LOW);
-                    locationManager.requestSingleUpdate(criteria, new LocationListener() {
-                        @Override
-                        public void onLocationChanged(android.location.Location location) {
-                            mLatitude = location.getLatitude();
-                            mLongitude = location.getLongitude();
-                            mPlaceName = "";
-                            new RequestTask(mLatitude, mLongitude).execute();
-                        }
-
-                        @Override
-                        public void onStatusChanged(String provider, int status, Bundle extras) {
-
-                        }
-
-                        @Override
-                        public void onProviderEnabled(String provider) {
-
-                        }
-
-                        @Override
-                        public void onProviderDisabled(String provider) {
-
-                        }
-                    }, null);
-                } catch(Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-
         return view;
-    }
-
-
-    class RequestTask extends AsyncTask<Void, Void, String> {
-
-        Double latitude, longitude;
-
-        public RequestTask(Double latitude, Double longitude) {
-            this.latitude = latitude;
-            this.longitude = longitude;
-        }
-
-        @Override
-        protected String doInBackground(Void ... params) {
-            String responseString = null;
-            try {
-                Geocoder gcd = new Geocoder(getContext(), Locale.getDefault());
-                try {
-                    List<Address> addresses = gcd.getFromLocation(latitude, longitude, 1);
-                    if ( addresses.size() > 0 ) {
-                        Address ad = addresses.get(0);
-                        mPlaceName = ad.getLocality();
-                        if (ad.getSubLocality() != null) {
-                            mPlaceName += " " + ad.getSubLocality();
-                        }
-                    }
-                } catch (Exception e) {
-
-                }
-
-                String uri = "http://maps.googleapis.com/maps/api/geocode/json?latlng="+ latitude.toString() +"," + longitude.toString();
-                HttpClient httpclient = new DefaultHttpClient();
-                HttpResponse response = httpclient.execute(new HttpGet(uri));
-                StatusLine statusLine = response.getStatusLine();
-                if(statusLine.getStatusCode() == HttpStatus.SC_OK){
-                    ByteArrayOutputStream out = new ByteArrayOutputStream();
-                    response.getEntity().writeTo(out);
-                    responseString = out.toString();
-                    out.close();
-                } else{
-                    //Closes the connection.
-                    response.getEntity().getContent().close();
-                    throw new IOException(statusLine.getReasonPhrase());
-                }
-            } catch (Exception e) {
-            }
-            return responseString;
-        }
-
-        @Override
-        protected void onPostExecute(String result) {
-            super.onPostExecute(result);
-
-            try {
-                JSONObject jObject = new JSONObject(result);
-                JSONArray jArray = jObject.getJSONArray("results");
-                mPlaceId = ((JSONObject)jArray.get(0)).getString("place_id");
-                if (mPlaceName != null) {
-                    if (mPlaceId == null || mPlaceId.isEmpty())
-                        mPlaceView.setText(mPlaceName);
-                    else
-                        mPlaceView.setText(mPlaceName + " (from Google)");
-                }
-            } catch (Exception e) {
-            }
-        }
     }
 
     @Override

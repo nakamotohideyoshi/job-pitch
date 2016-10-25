@@ -129,7 +129,7 @@
 
 - (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text
 {
-    int remaining = 500 - ((int)[[textView text] length] - (int)range.length + (int)text.length);
+    int remaining = 1000 - ((int)[[textView text] length] - (int)range.length + (int)text.length);
     if (remaining >= 0) {
         self.descriptionCharactersRemaining.text = [NSString
                                                     stringWithFormat:@"%d characters remaining", remaining];
@@ -162,14 +162,6 @@
                                    }];
     [sheet addAction:photoLibrary];
     
-//    UIAlertAction* fromWebsite = [UIAlertAction
-//                                  actionWithTitle:@"From Website"
-//                                  style:UIAlertActionStyleDefault
-//                                  handler:^(UIAlertAction * action) {
-//                                      [self showUrlInputBox];
-//                                  }];
-//    [sheet addAction:fromWebsite];
-    
     UIAlertAction* cancel = [UIAlertAction
                              actionWithTitle:@"Cancel"
                              style:UIAlertActionStyleCancel
@@ -180,56 +172,6 @@
     
     [self.window.rootViewController presentViewController:sheet animated:YES completion:nil];
 }
-
-//-(void)showUrlInputBox {
-//    MyAlertController * alert=   [MyAlertController
-//                                  alertControllerWithTitle:nil
-//                                  message:@"Enter Image Url"
-//                                  preferredStyle:UIAlertControllerStyleAlert];
-//    
-//    UIAlertAction* ok = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault
-//                                               handler:^(UIAlertAction * action) {
-//                                                   NSString *url = [alert.textFields.firstObject.text stringByTrimmingCharactersInSet:
-//                                                                    [NSCharacterSet whitespaceCharacterSet]];
-//                                                   if ([url isEqualToString:@""]) {
-//                                                       [alert dismissViewControllerAnimated:YES completion:nil];
-//                                                       return;
-//                                                   };
-//                                                   
-//                                                   [SVProgressHUD show];
-//                                                   NSURL *imageURL = [NSURL URLWithString:url];
-//                                                   [NSURLConnection sendAsynchronousRequest:[NSURLRequest requestWithURL:imageURL]
-//                                                                                      queue:[NSOperationQueue mainQueue]
-//                                                                          completionHandler:^(NSURLResponse *response, NSData *data, NSError *error) {
-//                                                                              if (error == nil) {
-//                                                                                  UIImage *image = [UIImage imageWithData:data];
-//                                                                                  if (image != nil) {
-//                                                                                      self.imageForUpload = image;
-//                                                                                      self.imageView.image = image;
-//                                                                                      self.imageView.alpha = 1.0f;
-//                                                                                      self.changeCenterContraint.priority = UILayoutPriorityDefaultLow;
-//                                                                                      self.deleteButton.hidden = false;
-//                                                                                      self.noImage.hidden = true;
-//                                                                                  }
-//                                                                              }
-//                                                                              [alert dismissViewControllerAnimated:YES completion:nil];
-//                                                                              [SVProgressHUD dismiss];
-//                                                                          }];
-//                                               }];
-//    UIAlertAction* cancel = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleDefault
-//                                                   handler:^(UIAlertAction * action) {
-//                                                       [alert dismissViewControllerAnimated:YES completion:nil];
-//                                                   }];
-//    
-//    [alert addAction:ok];
-//    [alert addAction:cancel];
-//    
-//    [alert addTextFieldWithConfigurationHandler:^(UITextField *textField) {
-//        textField.placeholder = @"Image Url";
-//    }];
-//    
-//    [self.window.rootViewController presentViewController:alert animated:YES completion:nil];
-//}
 
 -(void) showImagePickerController:(UIImagePickerControllerSourceType)type {
     ipc= [[UIImagePickerController alloc] init];
@@ -416,6 +358,9 @@
         self.noImage.text = @"";
         self.imageView.image = [UIImage imageNamed:@"no-img"];
     }
+    
+    int remaining = 1000 - (int)self.descriptionView.text.length;
+    self.descriptionCharactersRemaining.text = [NSString stringWithFormat:@"%d characters remaining", remaining];
     
 }
 

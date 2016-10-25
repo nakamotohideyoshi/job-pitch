@@ -16,33 +16,40 @@
 
 @implementation AppHelper
 
-+ (NSString*) getEmail {
++ (NSString*) getData:(NSString*)key {
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    return [defaults stringForKey:@"email"];
+    return [defaults stringForKey:key];
+}
+
++ (void) setData:(NSString*)key value:(NSString*)value {
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    [defaults setObject:value forKey:key];
+    [defaults synchronize];
+}
+
++ (NSString*) getEmail {
+    return [AppHelper getData:@"email"];
 }
 
 + (void) setEmail:(NSString*)email {
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    [defaults setObject:email forKey:@"email"];
-    [defaults synchronize];
+    [AppHelper setData:@"email" value:email];
 }
 
 + (NSString*) getPassword {
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    return [defaults stringForKey:@"password"];
+    return [AppHelper getData:@"password"];
 }
 
 + (void) setPassword:(NSString*)password {
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    [defaults setObject:password forKey:@"password"];
-    [defaults synchronize];
+    [AppHelper setData:@"password" value:password];
 }
-
 
 + (UIViewController*) getCurrentVC {
     UIViewController *vc = [UIApplication sharedApplication].keyWindow.rootViewController;
     if ([vc isKindOfClass:[UINavigationController class]]) {
         vc = ((UINavigationController*)vc).topViewController;
+    }
+    while (vc.presentedViewController) {
+        vc = vc.presentedViewController;
     }
     return vc;
 }

@@ -4,8 +4,11 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.DataSetObserver;
 import android.graphics.Bitmap;
+import android.graphics.Point;
+import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -28,6 +31,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lorentzos.flingswipe.SwipeFlingAdapterView;
+import com.myjobpitch.BuildConfig;
 import com.myjobpitch.R;
 import com.myjobpitch.api.data.Application;
 import com.myjobpitch.api.data.ApplicationForCreation;
@@ -47,9 +51,12 @@ import com.myjobpitch.tasks.UpdateApplicationShortlistTask;
 import com.myjobpitch.tasks.UpdateApplicationStatusTask;
 import com.myjobpitch.tasks.recruiter.ReadJobSeekersTask;
 import com.myjobpitch.tasks.recruiter.ReadUserJobTask;
+import com.myjobpitch.utils.ToolTipHelper;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import it.sephiroth.android.library.tooltip.Tooltip;
 
 public class JobActivity extends MJPProgressActionBarActivity {
 
@@ -100,7 +107,13 @@ public class JobActivity extends MJPProgressActionBarActivity {
     private boolean mButtonActivation = false;
     private View mBackgroundProgress;
 
+
+    private ToolTipHelper toolTipHelper;
+
     class JobSeekerAdapter extends CachingArrayAdapter<JobSeekerContainer> {
+
+        public TextView descriptionView;
+
         public JobSeekerAdapter(List<JobSeekerContainer> list) {
             super(JobActivity.this, R.layout.list_item, list);
         }
@@ -128,7 +141,7 @@ public class JobActivity extends MJPProgressActionBarActivity {
                 extraText += getMJPApplication().get(Sex.class, sexID).getShort_name();
             }
             extraView.setText(extraText);
-            TextView descriptionView = (TextView) cardView.findViewById(R.id.job_seeker_description);
+            descriptionView = (TextView) cardView.findViewById(R.id.job_seeker_description);
             descriptionView.setText(jobSeeker.getDescription());
 
             if (jobSeekerContainer instanceof Application) {
@@ -655,6 +668,7 @@ public class JobActivity extends MJPProgressActionBarActivity {
                             loadingTask = null;
                             updateList(result, false);
                         }
+                        showHelp();
                     }
 
                     @Override
@@ -707,6 +721,7 @@ public class JobActivity extends MJPProgressActionBarActivity {
                             loadingTask = null;
                             updateList(result, append);
                         }
+                        showHelp();
                     }
 
                     @Override
@@ -746,6 +761,7 @@ public class JobActivity extends MJPProgressActionBarActivity {
                             loadingTask = null;
                             updateList(result, false);
                         }
+                        showHelp();
                     }
 
                     @Override
@@ -779,6 +795,30 @@ public class JobActivity extends MJPProgressActionBarActivity {
             }
             loadingTask.execute();
         }
+    }
+
+    private void showHelp() {
+        if (toolTipHelper != null) return;
+        if(getSharedPreferences("Helper", MODE_PRIVATE).getBoolean("JobActivity", false)) return;
+
+        ArrayList<ToolTipHelper.ToolTipInfo> data = new ArrayList<>();
+        data.add(ToolTipHelper.makeInfo("This is the profile of a job seeker who is looking for a job like yours.", mCardContainer, Tooltip.Gravity.BOTTOM));
+        data.add(ToolTipHelper.makeInfo("You can click on a card to view a their 30 second pitch video and see a limited profile.", mCardContainer, Tooltip.Gravity.BOTTOM));
+        data.add(ToolTipHelper.makeInfo("You can swipe left to connect with this job seeker. They will receive a notification of your interest and be able to respond.", mCardContainer, Tooltip.Gravity.BOTTOM));
+        data.add(ToolTipHelper.makeInfo("You can also connect using this button.", findViewById(R.id.positive_button), Tooltip.Gravity.TOP));
+        data.add(ToolTipHelper.makeInfo("Connecting with a job seeker costs on credit.", findViewById(R.id.tokensLabel), Tooltip.Gravity.TOP));
+        data.add(ToolTipHelper.makeInfo("You can swipe right to temporarily dismiss a job seeker.", mCardContainer, Tooltip.Gravity.BOTTOM));
+        data.add(ToolTipHelper.makeInfo("This button will permanently dismiss this job seeker, and they will not reappear for this job.", findViewById(R.id.negative_button), Tooltip.Gravity.TOP));
+
+        toolTipHelper = new ToolTipHelper(this, data, new ToolTipHelper.Callback() {
+            @Override
+            public void onTooltipEnd() {
+                getSharedPreferences("Helper", MODE_PRIVATE)
+                        .edit()
+                        .putBoolean("JobActivity", true)
+                        .commit();
+            }
+        });
     }
 
     private void update() {

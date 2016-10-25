@@ -14,63 +14,42 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <LinearLayout
-            android:layout_alignParentTop="true"
-            android:layout_alignParentBottom="true"
-            android:layout_margin="20dp"
+        <TextureView
+            android:id="@+id/camera_preview"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-            <TextureView
-                android:id="@+id/camera_preview"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
 
-        </LinearLayout>
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/record_button"
+            android:layout_marginBottom="15dp"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"/>
 
         <TextView
-            android:id="@+id/countdown"
-            tools:text="30"
-            android:padding="10dp"
-            android:textSize="50dip"
-            android:textColor="@color/mjp_teal"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentRight="true"
+            android:text="READY\n5"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:id="@+id/camera_controls"
-        android:background="@color/grey_3"
-        android:layout_weight="4"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_centerInParent="true"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
-
-            <Button
-                android:id="@+id/record_button"
-                android:text="@string/record"
-                android:layout_width="wrap_content"
-                android:textColor="@color/white"
-                android:layout_height="wrap_content" />
-
-        </LinearLayout>
+            android:layout_height="wrap_content"
+            android:id="@+id/textView"
+            android:layout_centerHorizontal="true"
+            android:layout_above="@+id/record_button"
+            android:layout_marginBottom="5dp"
+            android:textColor="@android:color/white"
+            android:gravity="center"
+            android:textStyle="bold"
+            android:visibility="invisible"/>
 
         <ImageButton
             android:id="@+id/rotate_camera_button"
             android:background="@android:color/transparent"
             android:src="@drawable/ic_action_switch_camera"
-            android:layout_centerVertical="true"
-            android:layout_alignParentRight="true"
-            android:layout_marginRight="5dp"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentBottom="true"
+            android:layout_margin="25dp"/>
 
     </RelativeLayout>
 

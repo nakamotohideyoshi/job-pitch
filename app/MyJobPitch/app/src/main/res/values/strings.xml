@@ -124,7 +124,7 @@
     <string name="creating_account">Creating account...</string>
     <string name="rotate">rotate</string>
     <string name="get_ready">Get ready!</string>
-    <string name="pre_record_message">Before recording starts, you will get a %1$s second countdown to get ready. The recording will stop automatically after %2$s seconds, or if you hit the stop button.</string>
+    <string name="pre_record_message">Before recording starts, you will get a %1$d second countdown to get ready. The recording will stop automatically after %2$d seconds, or if you hit the stop button.</string>
     <string name="record_new_pitch">Record new pitch</string>
     <string name="no_pitch">no recording</string>
     <string name="record_pitch_title">Record My Pitch</string>

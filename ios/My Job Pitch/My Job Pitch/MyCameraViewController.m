@@ -189,6 +189,7 @@ typedef NS_ENUM( NSInteger, AVCamSetupResult ) {
 
 		[self.session commitConfiguration];
 	} );
+    
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -209,32 +210,34 @@ typedef NS_ENUM( NSInteger, AVCamSetupResult ) {
 			case AVCamSetupResultCameraNotAuthorized:
 			{
 				dispatch_async( dispatch_get_main_queue(), ^{
-					NSString *message = NSLocalizedString( @"AVCam doesn't have permission to use the camera, please change privacy settings", @"Alert message when the user has denied access to the camera" );
-					UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"AVCam" message:message preferredStyle:UIAlertControllerStyleAlert];
-					UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:NSLocalizedString( @"OK", @"Alert OK button" ) style:UIAlertActionStyleCancel handler:nil];
-					[alertController addAction:cancelAction];
-					// Provide quick access to Settings.
-					UIAlertAction *settingsAction = [UIAlertAction actionWithTitle:NSLocalizedString( @"Settings", @"Alert button to open Settings" ) style:UIAlertActionStyleDefault handler:^( UIAlertAction *action ) {
-						[[UIApplication sharedApplication] openURL:[NSURL URLWithString:UIApplicationOpenSettingsURLString]];
-					}];
-					[alertController addAction:settingsAction];
-					[self presentViewController:alertController animated:YES completion:nil];
+                    [MyAlertController title:nil
+                                     message:NSLocalizedString( @"AVCam doesn't have permission to use the camera, please change privacy settings", @"Alert message when the user has denied access to the camera" )
+                                          ok:NSLocalizedString( @"OK", @"Alert OK button" )
+                                  okCallback:nil
+                                      cancel:NSLocalizedString( @"Settings", @"Alert button to open Settings" )
+                              cancelCallback:^{
+                                  [[UIApplication sharedApplication] openURL:[NSURL URLWithString:UIApplicationOpenSettingsURLString]];
+                              }
+                     ];
 				} );
 				break;
 			}
 			case AVCamSetupResultSessionConfigurationFailed:
 			{
 				dispatch_async( dispatch_get_main_queue(), ^{
-					NSString *message = NSLocalizedString( @"Unable to capture media", @"Alert message when something goes wrong during capture session configuration" );
-					UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"AVCam" message:message preferredStyle:UIAlertControllerStyleAlert];
-					UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:NSLocalizedString( @"OK", @"Alert OK button" ) style:UIAlertActionStyleCancel handler:nil];
-					[alertController addAction:cancelAction];
-					[self presentViewController:alertController animated:YES completion:nil];
+                    [MyAlertController title:nil
+                                     message:NSLocalizedString( @"Unable to capture media", @"Alert message when something goes wrong during capture session configuration" )
+                                          ok:NSLocalizedString( @"OK", @"Alert OK button" )
+                                  okCallback:nil
+                                      cancel:nil
+                              cancelCallback:nil
+                    ];
 				} );
 				break;
 			}
 		}
 	} );
+    
 }
 
 - (void)viewDidDisappear:(BOOL)animated
@@ -255,11 +258,6 @@ typedef NS_ENUM( NSInteger, AVCamSetupResult ) {
 {
 	// Disable autorotation of the interface when recording is in progress.
 	return ! self.movieFileOutput.isRecording;
-}
-
-- (UIInterfaceOrientationMask)supportedInterfaceOrientations
-{
-	return UIInterfaceOrientationMaskAll;
 }
 
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator
@@ -433,11 +431,13 @@ typedef NS_ENUM( NSInteger, AVCamSetupResult ) {
 		self.sessionRunning = self.session.isRunning;
 		if ( ! self.session.isRunning ) {
 			dispatch_async( dispatch_get_main_queue(), ^{
-				NSString *message = NSLocalizedString( @"Unable to resume", @"Alert message when unable to resume the session running" );
-				UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"AVCam" message:message preferredStyle:UIAlertControllerStyleAlert];
-				UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:NSLocalizedString( @"OK", @"Alert OK button" ) style:UIAlertActionStyleCancel handler:nil];
-				[alertController addAction:cancelAction];
-				[self presentViewController:alertController animated:YES completion:nil];
+                [MyAlertController title:nil
+                                 message:NSLocalizedString( @"Unable to resume", @"Alert message when unable to resume the session running" )
+                                      ok:NSLocalizedString( @"OK", @"Alert OK button" )
+                              okCallback:nil
+                                  cancel:nil
+                          cancelCallback:nil
+                 ];                
 			} );
 		}
 		else {
@@ -458,31 +458,39 @@ typedef NS_ENUM( NSInteger, AVCamSetupResult ) {
     
     if (readyCount < 0) {
         
-        [self.recordButton setTitle:@"GET READY!" forState:UIControlStateNormal];
-        self.countLabel.hidden = NO;
-        readyCount = 10;
+        [MyAlertController title:nil
+                         message:@"Before recording starts, you will get a 10 second countdown to get ready. The recording will stop automatically after 30 seconds, or if you hit the stop button."
+                              ok:@"Record"
+                      okCallback:^{
+                          [self.recordButton setTitle:@"GET READY!" forState:UIControlStateNormal];
+                          self.countLabel.hidden = NO;
+                          readyCount = 10;
+                          
+                          dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+                              
+                              int oldCount;
+                              while(readyCount > 0) {
+                                  dispatch_async(dispatch_get_main_queue(), ^{
+                                      self.countLabel.text = [NSString stringWithFormat:@"%d", readyCount];
+                                  });
+                                  
+                                  readyCount--;
+                                  oldCount = readyCount;
+                                  [NSThread sleepForTimeInterval: 1];
+                                  
+                                  if (oldCount < readyCount) return;
+                              }
+                              
+                              if (readyCount == 0) {
+                                  dispatch_async(dispatch_get_main_queue(), ^{
+                                      [self startRecord];
+                                  });
+                              }
+                          });
+                      }
+                          cancel:@"Cancel"
+                  cancelCallback:nil];
         
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-            
-            int oldCount;
-            while(readyCount > 0) {
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    self.countLabel.text = [NSString stringWithFormat:@"%d", readyCount];
-                });
-                
-                readyCount--;
-                oldCount = readyCount;
-                [NSThread sleepForTimeInterval: 1];
-                
-                if (oldCount < readyCount) return;
-            }
-            
-            if (readyCount == 0) {
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    [self startRecord];
-                });
-            }
-        });
     } else if (readyCount > 0)  {
         [self.recordButton setTitle:@"RECORD!" forState:UIControlStateNormal];
         self.countLabel.hidden = YES;

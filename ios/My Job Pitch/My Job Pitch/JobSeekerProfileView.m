@@ -133,7 +133,7 @@
 
 - (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text
 {
-    int remaining = 500 - ((int)[[textView text] length] - (int)range.length + (int)text.length);
+    int remaining = 1000 - ((int)[[textView text] length] - (int)range.length + (int)text.length);
     if (remaining >= 0) {
         self.descriptionCharactersRemaining.text = [NSString
                                                     stringWithFormat:@"%d characters remaining", remaining];
@@ -220,6 +220,9 @@
     self.tickBox.on = jobSeeker.truthConfirmation;
     
     [self textViewDidChange:self.descriptionView];
+    
+    int remaining = 1000 - (int)jobSeeker.desc.length;
+    self.descriptionCharactersRemaining.text = [NSString stringWithFormat:@"%d characters remaining", remaining];
     
     _continueButton.enabled = _tickBox.isOn;
 }

@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		8A670AFC6AF2FC453A25DE73 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0B006CB817BA624E01EDF19B /* libPods.a */; };
+		C8AFD5CAD67D011262D1DE05 /* Pods_MyJobPitch.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6E6864CCF0C8B595D146A1EA /* Pods_MyJobPitch.framework */; };
 		CE45AEC41C0B41390092AB75 /* MJPViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CE45AEC31C0B41390092AB75 /* MJPViewController.m */; };
 		CE59737D1C1626630096B001 /* JobSeekerProfileView.m in Sources */ = {isa = PBXBuildFile; fileRef = CE59737C1C1626630096B001 /* JobSeekerProfileView.m */; };
 		CE6FD33C1C01F9BB001A04C3 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = CE6FD33B1C01F9BB001A04C3 /* main.m */; };
@@ -63,9 +63,9 @@
 		CEE52CF51C06550500881648 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CEE52CF41C06550500881648 /* UIKit.framework */; };
 		CEE52CF71C06550E00881648 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CEE52CF61C06550E00881648 /* Foundation.framework */; };
 		D71EAC6B1D33D04800E32ED1 /* KxMenu.m in Sources */ = {isa = PBXBuildFile; fileRef = D71EAC6A1D33D04800E32ED1 /* KxMenu.m */; };
-		D72756161D63AA5F0055943A /* DropboxSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D72756151D63AA5F0055943A /* DropboxSDK.framework */; };
 		D727561E1D63ABD80055943A /* DropboxMedia.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D727561D1D63ABD80055943A /* DropboxMedia.xcassets */; };
-		D72756251D63AFDD0055943A /* DropboxBrowserViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D72756241D63AFDD0055943A /* DropboxBrowserViewController.m */; };
+		D72BF2521DBDEE5600958EC2 /* DropboxBrowserViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D72BF2511DBDEE5600958EC2 /* DropboxBrowserViewController.m */; };
+		D72BF2571DBDEE8300958EC2 /* CMPopTipView.m in Sources */ = {isa = PBXBuildFile; fileRef = D72BF2561DBDEE8300958EC2 /* CMPopTipView.m */; };
 		D74588EB1D48771800A85472 /* LockableNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = D74588EA1D48771800A85472 /* LockableNavigationController.m */; };
 		D74588EE1D48772E00A85472 /* API.m in Sources */ = {isa = PBXBuildFile; fileRef = D74588ED1D48772E00A85472 /* API.m */; };
 		D74589251D48773B00A85472 /* Application.m in Sources */ = {isa = PBXBuildFile; fileRef = D74588F01D48773B00A85472 /* Application.m */; };
@@ -99,10 +99,11 @@
 		D74589451D48ABB000A85472 /* PasswordResetRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = D74589441D48ABB000A85472 /* PasswordResetRequest.m */; };
 		D78904E91D47FC6600E980D9 /* ChangePassword.m in Sources */ = {isa = PBXBuildFile; fileRef = D78904E81D47FC6600E980D9 /* ChangePassword.m */; };
 		D78904EC1D48586D00E980D9 /* AppHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = D78904EB1D48586D00E980D9 /* AppHelper.m */; };
+		D7CF0C941DBE9DD900E472CC /* DropboxSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D7CF0C931DBE9DD900E472CC /* DropboxSDK.framework */; };
 		D7E94F8C1D179D6700866604 /* MyCameraViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D7E94F891D179D6700866604 /* MyCameraViewController.m */; };
 		D7E94F8D1D179D6700866604 /* MyCameraPreviewView.m in Sources */ = {isa = PBXBuildFile; fileRef = D7E94F8B1D179D6700866604 /* MyCameraPreviewView.m */; };
+		D7F7B2AD1DBF1A7400A56C38 /* ToolTipHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = D7F7B2AC1DBF1A7400A56C38 /* ToolTipHelper.m */; };
 		D7FA423D1D0EB2D200E93C66 /* MyAlertController.m in Sources */ = {isa = PBXBuildFile; fileRef = D7FA423C1D0EB2D200E93C66 /* MyAlertController.m */; };
-		FF9A5040750B22C5222FF605 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0B006CB817BA624E01EDF19B /* libPods.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -116,8 +117,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		0B006CB817BA624E01EDF19B /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
-		B0F6E4D8F0045A1E43790385 /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
+		3EE6488F96A0B0BE24BCFB01 /* Pods-MyJobPitch.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MyJobPitch.debug.xcconfig"; path = "Pods/Target Support Files/Pods-MyJobPitch/Pods-MyJobPitch.debug.xcconfig"; sourceTree = "<group>"; };
+		6E6864CCF0C8B595D146A1EA /* Pods_MyJobPitch.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MyJobPitch.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		CE45AEC21C0B41380092AB75 /* MJPViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MJPViewController.h; sourceTree = "<group>"; };
 		CE45AEC31C0B41390092AB75 /* MJPViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MJPViewController.m; sourceTree = "<group>"; };
 		CE59737B1C1626630096B001 /* JobSeekerProfileView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JobSeekerProfileView.h; sourceTree = "<group>"; };
@@ -210,16 +211,16 @@
 		CEE52CF21C0654FB00881648 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		CEE52CF41C06550500881648 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		CEE52CF61C06550E00881648 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
-		CFA3EA2BF05430C3C9894AA5 /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
 		D71EAC691D33D04800E32ED1 /* KxMenu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KxMenu.h; sourceTree = "<group>"; };
 		D71EAC6A1D33D04800E32ED1 /* KxMenu.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KxMenu.m; sourceTree = "<group>"; };
-		D72756151D63AA5F0055943A /* DropboxSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = DropboxSDK.framework; sourceTree = "<group>"; };
 		D72756171D63AAE20055943A /* AssetsLibrary.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AssetsLibrary.framework; path = System/Library/Frameworks/AssetsLibrary.framework; sourceTree = SDKROOT; };
 		D72756191D63AAF40055943A /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		D727561B1D63AB000055943A /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		D727561D1D63ABD80055943A /* DropboxMedia.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = DropboxMedia.xcassets; sourceTree = "<group>"; };
-		D72756231D63AFDD0055943A /* DropboxBrowserViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DropboxBrowserViewController.h; sourceTree = "<group>"; };
-		D72756241D63AFDD0055943A /* DropboxBrowserViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DropboxBrowserViewController.m; sourceTree = "<group>"; };
+		D72BF2501DBDEE5600958EC2 /* DropboxBrowserViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DropboxBrowserViewController.h; path = DropboxBrowser/DropboxBrowserViewController.h; sourceTree = "<group>"; };
+		D72BF2511DBDEE5600958EC2 /* DropboxBrowserViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DropboxBrowserViewController.m; path = DropboxBrowser/DropboxBrowserViewController.m; sourceTree = "<group>"; };
+		D72BF2551DBDEE8300958EC2 /* CMPopTipView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CMPopTipView.h; path = CMPopTipView/CMPopTipView.h; sourceTree = "<group>"; };
+		D72BF2561DBDEE8300958EC2 /* CMPopTipView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CMPopTipView.m; path = CMPopTipView/CMPopTipView.m; sourceTree = "<group>"; };
 		D74588E91D48771800A85472 /* LockableNavigationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LockableNavigationController.h; sourceTree = "<group>"; };
 		D74588EA1D48771800A85472 /* LockableNavigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LockableNavigationController.m; sourceTree = "<group>"; };
 		D74588EC1D48772E00A85472 /* API.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = API.h; path = API/API.h; sourceTree = "<group>"; };
@@ -286,12 +287,16 @@
 		D78904E81D47FC6600E980D9 /* ChangePassword.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChangePassword.m; sourceTree = "<group>"; };
 		D78904EA1D48586D00E980D9 /* AppHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppHelper.h; sourceTree = "<group>"; };
 		D78904EB1D48586D00E980D9 /* AppHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppHelper.m; sourceTree = "<group>"; };
+		D7CF0C931DBE9DD900E472CC /* DropboxSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = DropboxSDK.framework; sourceTree = "<group>"; };
 		D7E94F881D179D6700866604 /* MyCameraViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyCameraViewController.h; sourceTree = "<group>"; };
 		D7E94F891D179D6700866604 /* MyCameraViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyCameraViewController.m; sourceTree = "<group>"; };
 		D7E94F8A1D179D6700866604 /* MyCameraPreviewView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyCameraPreviewView.h; sourceTree = "<group>"; };
 		D7E94F8B1D179D6700866604 /* MyCameraPreviewView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyCameraPreviewView.m; sourceTree = "<group>"; };
+		D7F7B2AB1DBF1A7400A56C38 /* ToolTipHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ToolTipHelper.h; sourceTree = "<group>"; };
+		D7F7B2AC1DBF1A7400A56C38 /* ToolTipHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ToolTipHelper.m; sourceTree = "<group>"; };
 		D7FA423B1D0EB2D200E93C66 /* MyAlertController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyAlertController.h; sourceTree = "<group>"; };
 		D7FA423C1D0EB2D200E93C66 /* MyAlertController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyAlertController.m; sourceTree = "<group>"; };
+		FB4066F75ABCD2939E3C3184 /* Pods-MyJobPitch.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MyJobPitch.release.xcconfig"; path = "Pods/Target Support Files/Pods-MyJobPitch/Pods-MyJobPitch.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -299,7 +304,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D72756161D63AA5F0055943A /* DropboxSDK.framework in Frameworks */,
+				D7CF0C941DBE9DD900E472CC /* DropboxSDK.framework in Frameworks */,
 				CE8AB0201C6038750004F021 /* AVFoundation.framework in Frameworks */,
 				CE8AB0211C6038750004F021 /* AVKit.framework in Frameworks */,
 				CE8AAFFE1C5AD62E0004F021 /* CoreLocation.framework in Frameworks */,
@@ -309,7 +314,7 @@
 				CEE52CF11C0654F200881648 /* CFNetwork.framework in Frameworks */,
 				CEE52CEF1C0654E900881648 /* Security.framework in Frameworks */,
 				CEE52CED1C0654DD00881648 /* MobileCoreServices.framework in Frameworks */,
-				8A670AFC6AF2FC453A25DE73 /* libPods.a in Frameworks */,
+				C8AFD5CAD67D011262D1DE05 /* Pods_MyJobPitch.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -317,7 +322,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				FF9A5040750B22C5222FF605 /* libPods.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -327,6 +331,8 @@
 		CE6FD32E1C01F9BB001A04C3 = {
 			isa = PBXGroup;
 			children = (
+				D72BF24F1DBDEE4500958EC2 /* DropboxBrowser */,
+				D72BF24E1DBDED7400958EC2 /* CMPopTipView */,
 				CE6FD3391C01F9BB001A04C3 /* My Job Pitch */,
 				CE6FD3531C01F9BC001A04C3 /* My Job PitchTests */,
 				CE6FD3381C01F9BB001A04C3 /* Products */,
@@ -438,8 +444,8 @@
 				D7FA423C1D0EB2D200E93C66 /* MyAlertController.m */,
 				D7E94F881D179D6700866604 /* MyCameraViewController.h */,
 				D7E94F891D179D6700866604 /* MyCameraViewController.m */,
-				D72756231D63AFDD0055943A /* DropboxBrowserViewController.h */,
-				D72756241D63AFDD0055943A /* DropboxBrowserViewController.m */,
+				D7F7B2AB1DBF1A7400A56C38 /* ToolTipHelper.h */,
+				D7F7B2AC1DBF1A7400A56C38 /* ToolTipHelper.m */,
 				D727561D1D63ABD80055943A /* DropboxMedia.xcassets */,
 				CE6FD3461C01F9BC001A04C3 /* Assets.xcassets */,
 				CE6FD33A1C01F9BB001A04C3 /* Supporting Files */,
@@ -532,11 +538,29 @@
 			name = API;
 			sourceTree = "<group>";
 		};
+		D72BF24E1DBDED7400958EC2 /* CMPopTipView */ = {
+			isa = PBXGroup;
+			children = (
+				D72BF2551DBDEE8300958EC2 /* CMPopTipView.h */,
+				D72BF2561DBDEE8300958EC2 /* CMPopTipView.m */,
+			);
+			name = CMPopTipView;
+			sourceTree = "<group>";
+		};
+		D72BF24F1DBDEE4500958EC2 /* DropboxBrowser */ = {
+			isa = PBXGroup;
+			children = (
+				D72BF2501DBDEE5600958EC2 /* DropboxBrowserViewController.h */,
+				D72BF2511DBDEE5600958EC2 /* DropboxBrowserViewController.m */,
+			);
+			name = DropboxBrowser;
+			sourceTree = "<group>";
+		};
 		DD5A9C6E26418BFD38D06ACE /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				CFA3EA2BF05430C3C9894AA5 /* Pods.debug.xcconfig */,
-				B0F6E4D8F0045A1E43790385 /* Pods.release.xcconfig */,
+				3EE6488F96A0B0BE24BCFB01 /* Pods-MyJobPitch.debug.xcconfig */,
+				FB4066F75ABCD2939E3C3184 /* Pods-MyJobPitch.release.xcconfig */,
 			);
 			name = Pods;
 			sourceTree = "<group>";
@@ -544,10 +568,10 @@
 		FFB8B70042B1AAA85F696FCB /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				D7CF0C931DBE9DD900E472CC /* DropboxSDK.framework */,
 				D727561B1D63AB000055943A /* CoreGraphics.framework */,
 				D72756191D63AAF40055943A /* QuartzCore.framework */,
 				D72756171D63AAE20055943A /* AssetsLibrary.framework */,
-				D72756151D63AA5F0055943A /* DropboxSDK.framework */,
 				CE8AB01E1C6038750004F021 /* AVFoundation.framework */,
 				CE8AB01F1C6038750004F021 /* AVKit.framework */,
 				CE8AAFFD1C5AD62E0004F021 /* CoreLocation.framework */,
@@ -557,7 +581,7 @@
 				CEE52CF01C0654F200881648 /* CFNetwork.framework */,
 				CEE52CEE1C0654E900881648 /* Security.framework */,
 				CEE52CEC1C0654DD00881648 /* MobileCoreServices.framework */,
-				0B006CB817BA624E01EDF19B /* libPods.a */,
+				6E6864CCF0C8B595D146A1EA /* Pods_MyJobPitch.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -569,12 +593,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = CE6FD3641C01F9BC001A04C3 /* Build configuration list for PBXNativeTarget "MyJobPitch" */;
 			buildPhases = (
-				4468F164D62438DAA67B1A9A /* Check Pods Manifest.lock */,
+				4468F164D62438DAA67B1A9A /* [CP] Check Pods Manifest.lock */,
 				CE6FD3331C01F9BB001A04C3 /* Sources */,
 				CE6FD3341C01F9BB001A04C3 /* Frameworks */,
 				CE6FD3351C01F9BB001A04C3 /* Resources */,
-				9816C2566EB6DA434DF644FC /* Copy Pods Resources */,
-				388A8D08B45503F266D314AB /* Embed Pods Frameworks */,
+				9816C2566EB6DA434DF644FC /* [CP] Copy Pods Resources */,
+				388A8D08B45503F266D314AB /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -589,12 +613,9 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = CE6FD3671C01F9BC001A04C3 /* Build configuration list for PBXNativeTarget "MyJobPitchTests" */;
 			buildPhases = (
-				BAA10D4E0805598B1DEEE89A /* Check Pods Manifest.lock */,
 				CE6FD34C1C01F9BC001A04C3 /* Sources */,
 				CE6FD34D1C01F9BC001A04C3 /* Frameworks */,
 				CE6FD34E1C01F9BC001A04C3 /* Resources */,
-				476C92B022CD8EA639441C80 /* Copy Pods Resources */,
-				970B2B02472CFD1986873A53 /* Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -673,94 +694,49 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		388A8D08B45503F266D314AB /* Embed Pods Frameworks */ = {
+		388A8D08B45503F266D314AB /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
-			name = "Embed Pods Frameworks";
+			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods/Pods-frameworks.sh\"\n";
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-MyJobPitch/Pods-MyJobPitch-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		4468F164D62438DAA67B1A9A /* Check Pods Manifest.lock */ = {
+		4468F164D62438DAA67B1A9A /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
-			name = "Check Pods Manifest.lock";
+			name = "[CP] Check Pods Manifest.lock";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
 			showEnvVarsInLog = 0;
 		};
-		476C92B022CD8EA639441C80 /* Copy Pods Resources */ = {
+		9816C2566EB6DA434DF644FC /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
-			name = "Copy Pods Resources";
+			name = "[CP] Copy Pods Resources";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods/Pods-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		970B2B02472CFD1986873A53 /* Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "Embed Pods Frameworks";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods/Pods-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		9816C2566EB6DA434DF644FC /* Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "Copy Pods Resources";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods/Pods-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		BAA10D4E0805598B1DEEE89A /* Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "Check Pods Manifest.lock";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-MyJobPitch/Pods-MyJobPitch-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -786,6 +762,7 @@
 				D78904EC1D48586D00E980D9 /* AppHelper.m in Sources */,
 				D74589251D48773B00A85472 /* Application.m in Sources */,
 				CEE0056A1C90DEC90065E43A /* CreateRecruiterProfile.m in Sources */,
+				D72BF2571DBDEE8300958EC2 /* CMPopTipView.m in Sources */,
 				CE59737D1C1626630096B001 /* JobSeekerProfileView.m in Sources */,
 				CE8395A81C3EF98F007A8213 /* EditProfile.m in Sources */,
 				D74588EE1D48772E00A85472 /* API.m in Sources */,
@@ -806,6 +783,7 @@
 				D74589341D48773B00A85472 /* MJPObjectWithName.m in Sources */,
 				CEE04AA71C10EE2000697620 /* ErrorTextField.m in Sources */,
 				D745893F1D48773B00A85472 /* User.m in Sources */,
+				D7F7B2AD1DBF1A7400A56C38 /* ToolTipHelper.m in Sources */,
 				D74589271D48773B00A85472 /* AuthToken.m in Sources */,
 				CE6FD33F1C01F9BB001A04C3 /* AppDelegate.m in Sources */,
 				CE8AB01A1C5EE4B80004F021 /* MessageThreadCell.m in Sources */,
@@ -828,7 +806,7 @@
 				D74588EB1D48771800A85472 /* LockableNavigationController.m in Sources */,
 				CE86847E1C0E570300D4B6C7 /* ScrollingViewController.m in Sources */,
 				D745893B1D48773B00A85472 /* RegisterRequest.m in Sources */,
-				D72756251D63AFDD0055943A /* DropboxBrowserViewController.m in Sources */,
+				D72BF2521DBDEE5600958EC2 /* DropboxBrowserViewController.m in Sources */,
 				CE8AB00B1C5EA9F60004F021 /* MessageListCell.m in Sources */,
 				D745893A1D48773B00A85472 /* Profile.m in Sources */,
 				D74589291D48773B00A85472 /* Contract.m in Sources */,
@@ -971,15 +949,17 @@
 		};
 		CE6FD3651C01F9BC001A04C3 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = CFA3EA2BF05430C3C9894AA5 /* Pods.debug.xcconfig */;
+			baseConfigurationReference = 3EE6488F96A0B0BE24BCFB01 /* Pods-MyJobPitch.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Distribution: Mike Christopherson (YY7DF42BJ9)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Mike Christopherson (YY7DF42BJ9)";
+				DEVELOPMENT_TEAM = YY7DF42BJ9;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
+					"$(PROJECT_DIR)/DropboxBrowser",
 				);
 				GCC_PREFIX_HEADER = "My Job Pitch/PrefixHeader.pch";
 				HEADER_SEARCH_PATHS = (
@@ -1004,15 +984,17 @@
 		};
 		CE6FD3661C01F9BC001A04C3 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B0F6E4D8F0045A1E43790385 /* Pods.release.xcconfig */;
+			baseConfigurationReference = FB4066F75ABCD2939E3C3184 /* Pods-MyJobPitch.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Distribution: Mike Christopherson (YY7DF42BJ9)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Mike Christopherson (YY7DF42BJ9)";
+				DEVELOPMENT_TEAM = YY7DF42BJ9;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
+					"$(PROJECT_DIR)/DropboxBrowser",
 				);
 				GCC_PREFIX_HEADER = "My Job Pitch/PrefixHeader.pch";
 				HEADER_SEARCH_PATHS = (
@@ -1037,7 +1019,6 @@
 		};
 		CE6FD3681C01F9BC001A04C3 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = CFA3EA2BF05430C3C9894AA5 /* Pods.debug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				INFOPLIST_FILE = "My Job PitchTests/Info.plist";
@@ -1050,7 +1031,6 @@
 		};
 		CE6FD3691C01F9BC001A04C3 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B0F6E4D8F0045A1E43790385 /* Pods.release.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				INFOPLIST_FILE = "My Job PitchTests/Info.plist";

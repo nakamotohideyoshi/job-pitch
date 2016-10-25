@@ -8,7 +8,10 @@
 
 #import <UIKit/UIKit.h>
 
-@interface AppHelper : NSObject 
+@interface AppHelper : NSObject
+
++ (NSString*) getData:(NSString*)key;
++ (void) setData:(NSString*)key value:(NSString*)value;
 
 + (NSString*) getEmail;
 + (void) setEmail:(NSString*)email;

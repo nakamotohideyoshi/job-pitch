@@ -45,7 +45,7 @@
 - (void)configureRestKit
 {
     // initialize AFNetworking HTTPClient
-    AFHTTPClient *client = [[AFHTTPClient alloc] initWithBaseURL:apiRoot];
+    AFRKHTTPClient *client = [[AFRKHTTPClient alloc] initWithBaseURL:apiRoot];
     
     // initialize RestKit
     RKObjectManager *objectManager = [[RKObjectManager alloc] initWithHTTPClient:client];
@@ -983,7 +983,7 @@
                                         method:RKRequestMethodPUT
                                         path:[NSString stringWithFormat:@"/api/job-seekers/%@/", jobSeeker.id]
                                         parameters:nil
-                                        constructingBodyWithBlock:^(id<AFMultipartFormData> formData) {
+                                        constructingBodyWithBlock:^(id<AFRKMultipartFormData> formData) {
                                             if (cvdata) {
                                                 [formData appendPartWithFileData:cvdata
                                                                             name:@"cv"
@@ -1399,7 +1399,7 @@
                                     method:RKRequestMethodPOST
                                     path:[NSString stringWithFormat:@"/api/%@/", endpoint]
                                     parameters:nil
-                                    constructingBodyWithBlock:^(id<AFMultipartFormData> formData) {
+                                    constructingBodyWithBlock:^(id<AFRKMultipartFormData> formData) {
                                         [formData appendPartWithFileData:UIImagePNGRepresentation(image)
                                                                     name:@"image"
                                                                 fileName:@"photo.png"

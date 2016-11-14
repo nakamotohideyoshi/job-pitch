@@ -59,7 +59,10 @@ public class CreateProfileActivity extends MJPProgressActionBarActivity {
         mCreateJobSeekerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                createJobSeeker();
+                Intent intent = new Intent(CreateProfileActivity.this, HowActivity.class);
+                intent.putExtra("isJobSeeker", true);
+                startActivityForResult(intent, 1);
+                //createJobSeeker();
             }
         });
 
@@ -83,7 +86,10 @@ public class CreateProfileActivity extends MJPProgressActionBarActivity {
         mCreateRecruiterButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-            createRecruiter();
+                Intent intent = new Intent(CreateProfileActivity.this, HowActivity.class);
+                intent.putExtra("isJobSeeker", false);
+                startActivityForResult(intent, 2);
+                //createRecruiter();
             }
         });
 
@@ -121,6 +127,15 @@ public class CreateProfileActivity extends MJPProgressActionBarActivity {
 
         location = new Location();
         //mLocationEditFragment.load(location);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == 1) {
+            createJobSeeker();
+        } else if (requestCode == 2) {
+            createRecruiter();
+        }
     }
 
     private void attemptRecruiterContinue() {

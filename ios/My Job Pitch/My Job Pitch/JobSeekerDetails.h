@@ -7,11 +7,14 @@
 //
 
 #import "ScrollingViewController.h"
+#import "ViewJob.h"
 
 @interface JobSeekerDetails : ScrollingViewController
 
 @property (weak, nonatomic) Application *application;
 @property (weak, nonatomic) JobSeeker *jobSeeker;
+
+@property (weak, nonatomic) ViewJob *viewJob;
 
 @property (weak, nonatomic) IBOutlet UIImageView *jobSeekerImage;
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView *jobSeekerImageActivity;
@@ -24,5 +27,8 @@
 @property (weak, nonatomic) IBOutlet UIView *cvView;
 @property (weak, nonatomic) IBOutlet UILabel *lblReferencesAvailable;
 @property (weak, nonatomic) IBOutlet UIButton *cvButton;
+
+@property (weak, nonatomic) IBOutlet UIImageView *connectButton;
+
 
 @end

@@ -57,7 +57,7 @@
                       into:cell.image
              withIndicator:cell.imageActivity];
     } else {
-        cell.image.image = [UIImage imageNamed:@"no-img"];
+        cell.image.image = [UIImage imageNamed:@"default-logo"];
         cell.imageActivity.hidden = true;
     }
     cell.subtitle.text = [NSString stringWithFormat:@"Includes %lu %@", business.locations.count, (business.locations.count == 1?@"location":@"locations")];

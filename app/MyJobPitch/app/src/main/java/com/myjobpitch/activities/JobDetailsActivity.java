@@ -170,7 +170,8 @@ public class JobDetailsActivity extends MJPProgressActionBarActivity {
             new DownloadImageTask(this, mJobImageView, mJobImageProgressView).executeOnExecutor(DownloadImageTask.executor, uri);
         } else {
             mJobImageProgressView.setVisibility(View.INVISIBLE);
-            mJobNoImageView.setVisibility(View.VISIBLE);
+           // mJobNoImageView.setVisibility(View.VISIBLE);
+            mJobImageView.setImageResource(R.drawable.default_logo);
         }
 
         mJobLocationAddressView.setText(String.format(

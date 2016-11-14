@@ -53,7 +53,7 @@
     self.imageActivity.hidden = true;
     self.location.textField.enabled = false;
     self.noImage.hidden = true;
-    self.imageView.image = [UIImage imageNamed:@"no-img"];
+    self.imageView.image = [UIImage imageNamed:@"default-logo"];
     self.email.textField.text = [AppHelper getEmail];
 }
 
@@ -117,7 +117,7 @@
     } else {
         self.imageActivity.hidden = true;
         self.noImage.hidden = true;
-        self.imageView.image = [UIImage imageNamed:@"no-img"];
+        self.imageView.image = [UIImage imageNamed:@"default-logo"];
     }
     
     self.placeID = location.placeID;
@@ -263,7 +263,7 @@
                                    }];
         } else {
             self.imageActivity.hidden = true;
-            self.imageView.image = [UIImage imageNamed:@"no-img"];
+            self.imageView.image = [UIImage imageNamed:@"default-logo"];
         }
         
     } cancel:@"Cancel" cancelCallback:nil];

@@ -187,6 +187,9 @@ public class LocationEditFragment extends EditFragment<Location> implements Goog
 
     private void loadImage() {
         mImageEdit.load(mImageUri, mNoImageUri, mNoImageMessage, mNoImageAlpha);
+        if (mImageUri == null && mNoImageUri == null) {
+            mImageEdit.mImageView.setImageResource(R.drawable.default_logo);
+        }
     }
 
     public void save(Location location) {

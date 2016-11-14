@@ -18,6 +18,10 @@ import android.widget.Toast;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.android.gms.appindexing.Action;
+import com.google.android.gms.appindexing.AppIndex;
+import com.google.android.gms.appindexing.Thing;
+import com.google.android.gms.common.api.GoogleApiClient;
 import com.myjobpitch.R;
 import com.myjobpitch.api.data.Application;
 import com.myjobpitch.api.data.ApplicationStatus;
@@ -60,6 +64,11 @@ public class JobSeekerDetailsActivity extends MJPProgressActionBarActivity {
     private Button mJobSeekerCVButton;
     private Button mJobSeekerSendMessageButton;
     private TextView mJobSeekerReferencesAvailableView;
+    /**
+     * ATTENTION: This was auto-generated to implement the App Indexing API.
+     * See https://g.co/AppIndexing/AndroidStudio for more information.
+     */
+    private GoogleApiClient client;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -156,6 +165,23 @@ public class JobSeekerDetailsActivity extends MJPProgressActionBarActivity {
         } else if (getIntent().hasExtra(JOB_SEEKER_ID)) {
             readJobSeeker();
         }
+
+        if (getIntent().getBooleanExtra("showConnectButton", false)) {
+            Button connectBtn = (Button) findViewById(R.id.connect_btn);
+            connectBtn.setVisibility(View.VISIBLE);
+            connectBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = getIntent();
+                    intent.putExtra("connect", true);
+                    setResult(RESULT_OK, intent);
+                    JobSeekerDetailsActivity.this.finish();
+                }
+            });
+        }
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }
 
     private void readJobSeeker() {
@@ -187,7 +213,8 @@ public class JobSeekerDetailsActivity extends MJPProgressActionBarActivity {
             }
 
             @Override
-            public void onCancelled() {}
+            public void onCancelled() {
+            }
         });
         mReadJobSeekerTask.execute();
     }
@@ -218,7 +245,8 @@ public class JobSeekerDetailsActivity extends MJPProgressActionBarActivity {
             }
 
             @Override
-            public void onCancelled() {}
+            public void onCancelled() {
+            }
         });
     }
 
@@ -315,7 +343,8 @@ public class JobSeekerDetailsActivity extends MJPProgressActionBarActivity {
             outState.putString(JOB_SEEKER_DATA, mapper.writeValueAsString(jobSeeker));
             if (application != null)
                 outState.putString(APPLICATION_DATA, mapper.writeValueAsString(application));
-        } catch (JsonProcessingException e) {}
+        } catch (JsonProcessingException e) {
+        }
     }
 
     @Override
@@ -352,5 +381,41 @@ public class JobSeekerDetailsActivity extends MJPProgressActionBarActivity {
     @Override
     public View getMainView() {
         return mJobSeekerDetailsView;
+    }
+
+    /**
+     * ATTENTION: This was auto-generated to implement the App Indexing API.
+     * See https://g.co/AppIndexing/AndroidStudio for more information.
+     */
+    public Action getIndexApiAction() {
+        Thing object = new Thing.Builder()
+                .setName("JobSeekerDetails Page") // TODO: Define a title for the content shown.
+                // TODO: Make sure this auto-generated URL is correct.
+                .setUrl(Uri.parse("http://[ENTER-YOUR-URL-HERE]"))
+                .build();
+        return new Action.Builder(Action.TYPE_VIEW)
+                .setObject(object)
+                .setActionStatus(Action.STATUS_TYPE_COMPLETED)
+                .build();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        client.connect();
+        AppIndex.AppIndexApi.start(client, getIndexApiAction());
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        AppIndex.AppIndexApi.end(client, getIndexApiAction());
+        client.disconnect();
     }
 }

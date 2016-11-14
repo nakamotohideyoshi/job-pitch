@@ -13,7 +13,7 @@
 
 @import AssetsLibrary;
 
-@interface JobSeekerProfileView () <DropboxBrowserDelegate, UITextViewDelegate, UIImagePickerControllerDelegate, UITextFieldDelegate>
+@interface JobSeekerProfileView () <DropboxBrowserDelegate, UITextViewDelegate, UIImagePickerControllerDelegate>
 
 @property (nonatomic, nonnull) NSArray *sexes;
 @property (nonatomic, nonnull) NSArray *nationalities;
@@ -65,27 +65,8 @@
     self.descriptionView.delegate = self;
     [self.descriptionView addSubview:descriPlaceholder];
     
-    self.firstName.textField.delegate = self;
-    self.lastName.textField.delegate = self;
-}
-
-- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string
-{
-    NSRange lowercaseCharRange = [string rangeOfCharacterFromSet:[NSCharacterSet lowercaseLetterCharacterSet]];
-    if (lowercaseCharRange.location != NSNotFound) {
-        UITextRange *selectedRange = [textField selectedTextRange];
-        
-        textField.text = [textField.text stringByReplacingCharactersInRange:range
-                                                                 withString:[string uppercaseString]];
-        
-        UITextPosition *newPosition = [textField positionFromPosition:selectedRange.start offset:1];
-        UITextRange *newRange = [textField textRangeFromPosition:newPosition toPosition:newPosition];
-        [textField setSelectedTextRange:newRange];
-        
-        return NO;
-    }
-    
-    return YES;
+    self.firstName.textField.autocapitalizationType = UITextAutocapitalizationTypeWords;
+    self.lastName.textField.autocapitalizationType = UITextAutocapitalizationTypeWords;
 }
 
 - (UIView*)loadViewFromNib
@@ -149,8 +130,8 @@
 -(void)save:(JobSeeker*)jobSeeker
 {
     jobSeeker.active = self.active.isOn;
-    jobSeeker.firstName = [self.firstName.textField.text uppercaseString];
-    jobSeeker.lastName = [self.lastName.textField.text uppercaseString];
+    jobSeeker.firstName = [self.firstName.textField.text capitalizedString];
+    jobSeeker.lastName = [self.lastName.textField.text capitalizedString];
     jobSeeker.telephone = self.telephone.textField.text;
     jobSeeker.mobile = self.mobile.textField.text;
     jobSeeker.age = @([self.age.textField.text integerValue]);
@@ -188,8 +169,8 @@
 -(void)load:(JobSeeker*)jobSeeker
 {
     self.active.on = jobSeeker.active;
-    self.firstName.textField.text = [jobSeeker.firstName uppercaseString];
-    self.lastName.textField.text = [jobSeeker.lastName uppercaseString];
+    self.firstName.textField.text = [jobSeeker.firstName capitalizedString];
+    self.lastName.textField.text = [jobSeeker.lastName capitalizedString];
     self.telephone.textField.text = jobSeeker.telephone;
     self.mobile.textField.text = jobSeeker.mobile;
     self.age.textField.text = [jobSeeker.age stringValue];

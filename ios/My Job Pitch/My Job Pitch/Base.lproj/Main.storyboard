@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11201" systemVersion="15G1004" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="c1x-Uz-Rpv">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11201" systemVersion="15G1108" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="c1x-Uz-Rpv">
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11161"/>
         <capability name="Alignment constraints with different attributes" minToolsVersion="5.1"/>
@@ -12,7 +12,7 @@
         <!--Login-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController id="BYZ-38-t0r" customClass="Login" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="goto_create_profile" id="BYZ-38-t0r" customClass="Login" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="y3c-jy-aDJ"/>
                         <viewControllerLayoutGuide type="bottom" id="wfy-db-euE"/>
@@ -328,9 +328,9 @@
                         <outlet property="scrollView" destination="Yhh-uQ-M0h" id="2gZ-kZ-fpx"/>
                         <outlet property="switchRemember" destination="Pp7-XZ-M4w" id="cOb-hp-DfC"/>
                         <outlet property="wantToResetButton" destination="MNd-Oa-X3x" id="Gps-lt-uY0"/>
-                        <segue destination="4TA-uO-Eyq" kind="show" identifier="goto_create_profile" id="BGt-nD-SGF"/>
                         <segue destination="Bh1-kr-uT8" kind="show" identifier="goto_business_list" id="VDG-Vo-20z"/>
                         <segue destination="B6U-eH-CfR" kind="show" identifier="goto_job_seeker" id="Oea-c7-Fre"/>
+                        <segue destination="4TA-uO-Eyq" kind="show" identifier="goto_create_profile" id="7xF-CP-jSm"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
@@ -366,7 +366,7 @@
                                                     </userDefinedRuntimeAttribute>
                                                 </userDefinedRuntimeAttributes>
                                                 <connections>
-                                                    <action selector="showJobSeeker" destination="4TA-uO-Eyq" eventType="touchUpInside" id="0hq-Ez-S0x"/>
+                                                    <action selector="clickJobSeeker:" destination="4TA-uO-Eyq" eventType="touchUpInside" id="z34-ak-kB0"/>
                                                 </connections>
                                             </button>
                                             <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="briefcase" translatesAutoresizingMaskIntoConstraints="NO" id="wds-5h-nw4"/>
@@ -388,7 +388,7 @@
                                                     </userDefinedRuntimeAttribute>
                                                 </userDefinedRuntimeAttributes>
                                                 <connections>
-                                                    <action selector="showRecruiter" destination="4TA-uO-Eyq" eventType="touchUpInside" id="4XR-Sr-rsr"/>
+                                                    <action selector="clickRecruiter:" destination="4TA-uO-Eyq" eventType="touchUpInside" id="Vw7-Kk-Gja"/>
                                                 </connections>
                                             </button>
                                             <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="head" translatesAutoresizingMaskIntoConstraints="NO" id="qaU-kw-Kei"/>
@@ -449,7 +449,8 @@
                     </navigationItem>
                     <connections>
                         <outlet property="scrollView" destination="yd0-lH-82v" id="BzK-Zq-0Jc"/>
-                        <segue destination="9Fw-v5-dmz" kind="show" identifier="goto_create_job_seeker_profile" id="tAO-up-ogP"/>
+                        <segue destination="9Fw-v5-dmz" kind="show" identifier="goto_create_job_seeker_profile" animates="NO" id="tAO-up-ogP"/>
+                        <segue destination="G2U-kB-2U1" kind="presentation" identifier="HowItWorks" modalTransitionStyle="crossDissolve" id="COZ-Wo-jX2"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Iub-or-YBE" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -605,16 +606,16 @@
                                                 </constraints>
                                                 <state key="normal" backgroundImage="ic_button"/>
                                                 <connections>
-                                                    <action selector="connect" destination="B6U-eH-CfR" eventType="touchUpInside" id="b9L-ME-ybl"/>
+                                                    <action selector="dismiss" destination="B6U-eH-CfR" eventType="touchUpInside" id="WtF-M4-cgz"/>
                                                 </connections>
                                             </button>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="IU9-Wf-kNr"/>
-                                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_connect" translatesAutoresizingMaskIntoConstraints="NO" id="Kf2-p5-czF">
+                                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_delete" translatesAutoresizingMaskIntoConstraints="NO" id="Kf2-p5-czF">
                                                 <constraints>
                                                     <constraint firstAttribute="width" secondItem="Kf2-p5-czF" secondAttribute="height" multiplier="1:1" id="X6z-ea-UK9"/>
                                                 </constraints>
                                             </imageView>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Apply" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dEz-7m-CGE">
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Remove" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dEz-7m-CGE">
                                                 <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                 <nil key="highlightedColor"/>
@@ -625,15 +626,15 @@
                                                 </constraints>
                                                 <state key="normal" backgroundImage="ic_button"/>
                                                 <connections>
-                                                    <action selector="dismiss" destination="B6U-eH-CfR" eventType="touchUpInside" id="ul0-N6-5fs"/>
+                                                    <action selector="connect" destination="B6U-eH-CfR" eventType="touchUpInside" id="YcW-PG-tlH"/>
                                                 </connections>
                                             </button>
-                                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_delete" translatesAutoresizingMaskIntoConstraints="NO" id="AVF-MT-Wi9">
+                                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_connect" translatesAutoresizingMaskIntoConstraints="NO" id="AVF-MT-Wi9">
                                                 <constraints>
                                                     <constraint firstAttribute="width" secondItem="AVF-MT-Wi9" secondAttribute="height" multiplier="1:1" id="dpT-yb-dOs"/>
                                                 </constraints>
                                             </imageView>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Remove" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="h0Q-QC-gpp">
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Apply" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="h0Q-QC-gpp">
                                                 <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                 <nil key="highlightedColor"/>
@@ -714,10 +715,10 @@
                         </barButtonItem>
                     </navigationItem>
                     <connections>
-                        <outlet property="connectButton" destination="cNh-na-cts" id="N2M-gn-gPc"/>
+                        <outlet property="connectButton" destination="6yS-vE-ymz" id="rEK-ez-8K3"/>
                         <outlet property="descriptionLabel" destination="EYe-fb-xHA" id="YwB-gr-X8V"/>
                         <outlet property="directionLabel" destination="52L-RD-C24" id="02Z-uy-SvQ"/>
-                        <outlet property="dismissButton" destination="6yS-vE-ymz" id="wpt-ea-jyH"/>
+                        <outlet property="dismissButton" destination="cNh-na-cts" id="OSf-Gr-oto"/>
                         <outlet property="emptyButton1" destination="EhT-Go-5Qa" id="8sV-du-fJe"/>
                         <outlet property="emptyButton2" destination="v5C-Fv-zGc" id="3Ow-Qq-YrI"/>
                         <outlet property="emptyLabel" destination="7p1-Me-v9x" id="Uvz-du-2YA"/>
@@ -770,7 +771,7 @@
                                                 <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="no-img" translatesAutoresizingMaskIntoConstraints="NO" id="gPN-H5-XGW">
                                                     <color key="backgroundColor" red="0.66666666666666663" green="0.66666666666666663" blue="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <constraints>
-                                                        <constraint firstAttribute="width" secondItem="gPN-H5-XGW" secondAttribute="height" multiplier="4:3" id="773-be-l6u"/>
+                                                        <constraint firstAttribute="width" secondItem="gPN-H5-XGW" secondAttribute="height" multiplier="760:631" id="773-be-l6u"/>
                                                         <constraint firstAttribute="width" constant="100" id="S7m-hn-brN"/>
                                                     </constraints>
                                                     <variation key="default">
@@ -924,11 +925,57 @@
             </objects>
             <point key="canvasLocation" x="2043" y="-317"/>
         </scene>
+        <!--How View Controller-->
+        <scene sceneID="R32-R5-Y01">
+            <objects>
+                <viewController automaticallyAdjustsScrollViewInsets="NO" id="G2U-kB-2U1" customClass="HowViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="bmW-o1-kUd"/>
+                        <viewControllerLayoutGuide type="bottom" id="q5Q-K5-Jny"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="yQR-sw-at3">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <webView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="8Dv-C8-7vM">
+                                <color key="backgroundColor" red="0.36078431372549019" green="0.38823529411764707" blue="0.40392156862745099" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            </webView>
+                            <navigationBar contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="u5K-zk-PUj">
+                                <items>
+                                    <navigationItem title="How it works" id="TeQ-JA-JrK">
+                                        <barButtonItem key="rightBarButtonItem" title="close" id="Zcr-As-LTJ">
+                                            <connections>
+                                                <action selector="next:" destination="G2U-kB-2U1" id="aDA-Rz-oKe"/>
+                                            </connections>
+                                        </barButtonItem>
+                                    </navigationItem>
+                                </items>
+                            </navigationBar>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="u5K-zk-PUj" firstAttribute="leading" secondItem="yQR-sw-at3" secondAttribute="leading" id="26v-dH-30g"/>
+                            <constraint firstItem="8Dv-C8-7vM" firstAttribute="leading" secondItem="yQR-sw-at3" secondAttribute="leading" id="6Mv-5i-5NF"/>
+                            <constraint firstItem="u5K-zk-PUj" firstAttribute="top" secondItem="bmW-o1-kUd" secondAttribute="bottom" id="JYL-V1-QPf"/>
+                            <constraint firstItem="q5Q-K5-Jny" firstAttribute="top" secondItem="8Dv-C8-7vM" secondAttribute="bottom" id="RTt-Rs-NzZ"/>
+                            <constraint firstAttribute="trailing" secondItem="8Dv-C8-7vM" secondAttribute="trailing" id="kyS-id-EDW"/>
+                            <constraint firstAttribute="trailing" secondItem="u5K-zk-PUj" secondAttribute="trailing" id="yGH-lY-jKm"/>
+                            <constraint firstItem="8Dv-C8-7vM" firstAttribute="top" secondItem="u5K-zk-PUj" secondAttribute="bottom" id="zBF-zd-BmJ"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="webView" destination="8Dv-C8-7vM" id="MeB-fi-Kni"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="hwZ-So-E1Y" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="616.79999999999995" y="2858.3208395802103"/>
+        </scene>
         <!--Lockable Navigation Controller-->
         <scene sceneID="Lry-wQ-ILw">
             <objects>
                 <navigationController id="c1x-Uz-Rpv" customClass="LockableNavigationController" sceneMemberID="viewController">
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="hYL-sX-fDF">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="hYL-sX-fDF">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -1229,11 +1276,11 @@
                                             <frame key="frameInset" width="359" height="96"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="xwP-D9-7Ft">
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="xwP-D9-7Ft">
                                                     <color key="backgroundColor" red="0.87843137250000003" green="0.87843137250000003" blue="0.87843137250000003" alpha="0.69999999999999996" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <constraints>
-                                                        <constraint firstAttribute="width" constant="100" id="Rfs-er-0Qf"/>
-                                                        <constraint firstAttribute="width" secondItem="xwP-D9-7Ft" secondAttribute="height" multiplier="4:3" id="mfO-lx-uk9"/>
+                                                        <constraint firstAttribute="height" constant="80" id="1N8-sV-hRl"/>
+                                                        <constraint firstAttribute="width" secondItem="xwP-D9-7Ft" secondAttribute="height" multiplier="760:631" id="mfO-lx-uk9"/>
                                                     </constraints>
                                                 </imageView>
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Ydx-Wn-7gc">
@@ -1280,7 +1327,7 @@
                                                 <constraint firstItem="7pq-Lw-j27" firstAttribute="centerX" secondItem="xwP-D9-7Ft" secondAttribute="centerX" id="My2-u6-kUi"/>
                                                 <constraint firstAttribute="bottomMargin" relation="greaterThanOrEqual" secondItem="Ydx-Wn-7gc" secondAttribute="bottom" id="V70-T8-Bzu"/>
                                                 <constraint firstAttribute="topMargin" secondItem="xwP-D9-7Ft" secondAttribute="top" id="geV-vg-MdA"/>
-                                                <constraint firstAttribute="bottomMargin" relation="greaterThanOrEqual" secondItem="xwP-D9-7Ft" secondAttribute="bottom" id="oXw-lx-HXq"/>
+                                                <constraint firstAttribute="bottomMargin" secondItem="xwP-D9-7Ft" secondAttribute="bottom" id="oXw-lx-HXq"/>
                                             </constraints>
                                         </tableViewCellContentView>
                                         <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
@@ -1318,7 +1365,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="XE0-iW-IpV" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2519" y="519"/>
+            <point key="canvasLocation" x="2620" y="480"/>
         </scene>
         <!--Messages-->
         <scene sceneID="W5W-dh-TiE">
@@ -1367,7 +1414,7 @@
                                                         <color key="backgroundColor" red="0.87843137250000003" green="0.87843137250000003" blue="0.87843137250000003" alpha="0.69999999999999996" colorSpace="custom" customColorSpace="sRGB"/>
                                                         <constraints>
                                                             <constraint firstAttribute="width" constant="100" id="7yC-uT-8In"/>
-                                                            <constraint firstAttribute="width" secondItem="UPJ-TR-JwN" secondAttribute="height" multiplier="4:3" id="VaD-cp-cPb"/>
+                                                            <constraint firstAttribute="width" secondItem="UPJ-TR-JwN" secondAttribute="height" multiplier="760:631" id="VaD-cp-cPb"/>
                                                         </constraints>
                                                     </imageView>
                                                     <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="Yry-Js-mZI"/>
@@ -2041,7 +2088,7 @@ Finish your pitch confidently by saying something like, “Thank you and I look 
                                                             <constraints>
                                                                 <constraint firstAttribute="width" constant="100" id="9C5-XG-15M"/>
                                                                 <constraint firstAttribute="width" secondItem="H8N-Ze-E5c" secondAttribute="height" multiplier="4:3" id="hVm-72-TQF"/>
-                                                                <constraint firstAttribute="width" secondItem="H8N-Ze-E5c" secondAttribute="height" multiplier="4:3" id="mXY-wE-D5e"/>
+                                                                <constraint firstAttribute="width" secondItem="H8N-Ze-E5c" secondAttribute="height" multiplier="760:631" id="mXY-wE-D5e"/>
                                                             </constraints>
                                                             <variation key="default">
                                                                 <mask key="constraints">
@@ -2217,7 +2264,7 @@ Finish your pitch confidently by saying something like, “Thank you and I look 
                                                             <constraints>
                                                                 <constraint firstAttribute="width" constant="100" id="72L-qb-WHz"/>
                                                                 <constraint firstAttribute="width" secondItem="944-uX-7uW" secondAttribute="height" multiplier="4:3" id="b4m-Gf-wds"/>
-                                                                <constraint firstAttribute="width" secondItem="944-uX-7uW" secondAttribute="height" multiplier="4:3" id="sXc-5p-IhT"/>
+                                                                <constraint firstAttribute="width" secondItem="944-uX-7uW" secondAttribute="height" multiplier="760:631" id="sXc-5p-IhT"/>
                                                             </constraints>
                                                             <variation key="default">
                                                                 <mask key="constraints">
@@ -2840,13 +2887,13 @@ Finish your pitch confidently by saying something like, “Thank you and I look 
                                                     <action selector="leftClick:" destination="d7i-Me-xBa" eventType="touchUpInside" id="MGZ-uY-OUn"/>
                                                 </connections>
                                             </button>
-                                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_connect" translatesAutoresizingMaskIntoConstraints="NO" id="CwO-BB-XhH">
+                                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_delete" translatesAutoresizingMaskIntoConstraints="NO" id="CwO-BB-XhH">
                                                 <constraints>
                                                     <constraint firstAttribute="width" secondItem="CwO-BB-XhH" secondAttribute="height" multiplier="1:1" id="m4n-8n-jRe"/>
                                                 </constraints>
                                             </imageView>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="01j-Nt-xjg"/>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Connect" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="64a-vb-3Mq">
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Remove" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="64a-vb-3Mq">
                                                 <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                 <nil key="highlightedColor"/>
@@ -2861,12 +2908,12 @@ Finish your pitch confidently by saying something like, “Thank you and I look 
                                                     <action selector="rightClick:" destination="d7i-Me-xBa" eventType="touchUpInside" id="h8G-zA-N8Z"/>
                                                 </connections>
                                             </button>
-                                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_delete" translatesAutoresizingMaskIntoConstraints="NO" id="wcZ-st-EsD">
+                                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_connect" translatesAutoresizingMaskIntoConstraints="NO" id="wcZ-st-EsD">
                                                 <constraints>
                                                     <constraint firstAttribute="width" secondItem="wcZ-st-EsD" secondAttribute="height" multiplier="1:1" id="tmu-CK-459"/>
                                                 </constraints>
                                             </imageView>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Remove" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jSv-Rv-W3P">
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Connect" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jSv-Rv-W3P">
                                                 <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                 <nil key="highlightedColor"/>
@@ -2997,7 +3044,7 @@ Finish your pitch confidently by saying something like, “Thank you and I look 
         <!--Job Seeker-->
         <scene sceneID="RGd-eF-rte">
             <objects>
-                <viewController id="GKH-yH-DKF" customClass="JobSeekerDetails" sceneMemberID="viewController">
+                <viewController automaticallyAdjustsScrollViewInsets="NO" id="GKH-yH-DKF" customClass="JobSeekerDetails" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="3n8-Oc-T80"/>
                         <viewControllerLayoutGuide type="bottom" id="AJd-xi-DLw"/>
@@ -3006,7 +3053,6 @@ Finish your pitch confidently by saying something like, “Thank you and I look 
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="background_logo" translatesAutoresizingMaskIntoConstraints="NO" id="c4O-MW-ypG"/>
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="FVc-9w-QE3">
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="C7m-R3-oLd" userLabel="Content View">
@@ -3121,6 +3167,26 @@ Finish your pitch confidently by saying something like, “Thank you and I look 
                                                     <constraint firstAttribute="bottom" secondItem="ygN-eH-mjV" secondAttribute="bottom" constant="7" id="bB0-XL-chA"/>
                                                 </constraints>
                                             </view>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="tRO-L9-LIM">
+                                                <color key="backgroundColor" red="0.0" green="0.58823529409999997" blue="0.53333333329999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="height" constant="34" id="R9h-mn-Di5"/>
+                                                </constraints>
+                                                <inset key="contentEdgeInsets" minX="8" minY="8" maxX="8" maxY="8"/>
+                                                <state key="normal" title="Connect">
+                                                    <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                </state>
+                                                <userDefinedRuntimeAttributes>
+                                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                                        <integer key="value" value="7"/>
+                                                    </userDefinedRuntimeAttribute>
+                                                    <userDefinedRuntimeAttribute type="boolean" keyPath="layer.masksToBounds" value="YES"/>
+                                                </userDefinedRuntimeAttributes>
+                                                <connections>
+                                                    <action selector="apply:" destination="AFt-YI-JVu" eventType="touchUpInside" id="bjQ-ZT-4fr"/>
+                                                    <action selector="connect:" destination="GKH-yH-DKF" eventType="touchUpInside" id="Dur-gB-dv1"/>
+                                                </connections>
+                                            </button>
                                         </subviews>
                                         <constraints>
                                             <constraint firstItem="Yes-eh-prP" firstAttribute="centerX" secondItem="fJF-Fy-QU1" secondAttribute="centerX" id="15f-aD-6Vc"/>
@@ -3135,14 +3201,17 @@ Finish your pitch confidently by saying something like, “Thank you and I look 
                                             <constraint firstItem="fJF-Fy-QU1" firstAttribute="leading" secondItem="C7m-R3-oLd" secondAttribute="leading" id="SUe-p5-cCW"/>
                                             <constraint firstItem="L7e-Nv-zjo" firstAttribute="leading" secondItem="uKz-Nq-HLr" secondAttribute="leading" id="WCC-42-Wfm"/>
                                             <constraint firstItem="AWf-1z-tsB" firstAttribute="top" secondItem="fJF-Fy-QU1" secondAttribute="bottom" constant="16" id="YS4-YN-Gtu"/>
+                                            <constraint firstAttribute="bottom" secondItem="tRO-L9-LIM" secondAttribute="bottom" constant="10" id="YUG-cc-1ag"/>
+                                            <constraint firstItem="tRO-L9-LIM" firstAttribute="width" secondItem="4gi-Fb-TGr" secondAttribute="width" multiplier="0.4" id="Ymc-dM-7ec"/>
                                             <constraint firstItem="uKz-Nq-HLr" firstAttribute="leading" secondItem="AWf-1z-tsB" secondAttribute="leading" id="Zlj-0u-uez"/>
+                                            <constraint firstItem="tRO-L9-LIM" firstAttribute="top" secondItem="4gi-Fb-TGr" secondAttribute="bottom" constant="5" id="c2i-ha-7tw"/>
                                             <constraint firstItem="Yes-eh-prP" firstAttribute="centerY" secondItem="fJF-Fy-QU1" secondAttribute="centerY" id="cle-Ki-EGs"/>
                                             <constraint firstAttribute="trailing" secondItem="cFF-sk-yxe" secondAttribute="trailing" constant="16" id="e9U-e5-uzG"/>
+                                            <constraint firstItem="tRO-L9-LIM" firstAttribute="trailing" secondItem="4gi-Fb-TGr" secondAttribute="trailing" id="eJb-86-bMW"/>
                                             <constraint firstItem="4gi-Fb-TGr" firstAttribute="top" secondItem="L7e-Nv-zjo" secondAttribute="bottom" constant="15" id="eLb-LM-9pb"/>
                                             <constraint firstItem="L7e-Nv-zjo" firstAttribute="top" secondItem="uKz-Nq-HLr" secondAttribute="bottom" constant="17" id="h5I-Jt-30X"/>
                                             <constraint firstItem="uKz-Nq-HLr" firstAttribute="top" secondItem="AWf-1z-tsB" secondAttribute="bottom" constant="8" id="mql-Ru-iM7"/>
                                             <constraint firstItem="AWf-1z-tsB" firstAttribute="leading" secondItem="C7m-R3-oLd" secondAttribute="leading" constant="16" id="nLA-Cf-JyR"/>
-                                            <constraint firstAttribute="bottom" secondItem="4gi-Fb-TGr" secondAttribute="bottom" constant="20" id="nsJ-fc-Jr7"/>
                                             <constraint firstItem="cFF-sk-yxe" firstAttribute="trailing" secondItem="4gi-Fb-TGr" secondAttribute="trailing" id="r5D-ei-TZd"/>
                                             <constraint firstItem="L7e-Nv-zjo" firstAttribute="trailing" secondItem="cFF-sk-yxe" secondAttribute="trailing" id="szg-o6-pJb"/>
                                             <constraint firstItem="4gi-Fb-TGr" firstAttribute="leading" secondItem="uKz-Nq-HLr" secondAttribute="leading" id="yJG-yq-1OZ"/>
@@ -3150,30 +3219,32 @@ Finish your pitch confidently by saying something like, “Thank you and I look 
                                     </view>
                                 </subviews>
                                 <constraints>
-                                    <constraint firstItem="C7m-R3-oLd" firstAttribute="top" secondItem="FVc-9w-QE3" secondAttribute="top" id="9gu-dE-8ca"/>
-                                    <constraint firstItem="C7m-R3-oLd" firstAttribute="leading" secondItem="FVc-9w-QE3" secondAttribute="leading" id="SPV-jM-K3L"/>
-                                    <constraint firstAttribute="trailing" secondItem="C7m-R3-oLd" secondAttribute="trailing" id="hQp-c0-ZzJ"/>
-                                    <constraint firstAttribute="bottom" secondItem="C7m-R3-oLd" secondAttribute="bottom" id="rGg-dZ-rkD"/>
+                                    <constraint firstAttribute="trailing" secondItem="C7m-R3-oLd" secondAttribute="trailing" id="6Us-uk-xwF"/>
+                                    <constraint firstAttribute="bottom" secondItem="C7m-R3-oLd" secondAttribute="bottom" id="Bqm-d4-0LP"/>
+                                    <constraint firstItem="C7m-R3-oLd" firstAttribute="leading" secondItem="FVc-9w-QE3" secondAttribute="leading" id="dT0-Mn-Yzt"/>
+                                    <constraint firstItem="C7m-R3-oLd" firstAttribute="top" secondItem="FVc-9w-QE3" secondAttribute="top" id="hyC-fL-wMf"/>
                                 </constraints>
                             </scrollView>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="background_logo" translatesAutoresizingMaskIntoConstraints="NO" id="c4O-MW-ypG">
+                                <frame key="frameInset" minX="38" minY="67" width="300" height="534"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            </imageView>
                         </subviews>
                         <color key="backgroundColor" red="0.85098039219999999" green="0.85098039219999999" blue="0.85098039219999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
-                            <constraint firstItem="c4O-MW-ypG" firstAttribute="height" secondItem="UG1-qb-hNz" secondAttribute="height" multiplier="0.8" id="8bU-gE-6Hb"/>
-                            <constraint firstItem="c4O-MW-ypG" firstAttribute="centerY" secondItem="UG1-qb-hNz" secondAttribute="centerY" id="AEd-u7-4EI"/>
-                            <constraint firstItem="FVc-9w-QE3" firstAttribute="leading" secondItem="UG1-qb-hNz" secondAttribute="leading" id="FVl-zg-DBz"/>
-                            <constraint firstItem="AJd-xi-DLw" firstAttribute="top" secondItem="FVc-9w-QE3" secondAttribute="bottom" id="LXu-tw-P5X"/>
-                            <constraint firstItem="C7m-R3-oLd" firstAttribute="width" secondItem="UG1-qb-hNz" secondAttribute="width" id="MRf-LY-t9y"/>
-                            <constraint firstItem="c4O-MW-ypG" firstAttribute="centerX" secondItem="UG1-qb-hNz" secondAttribute="centerX" id="PeD-UY-8Na"/>
-                            <constraint firstAttribute="trailing" secondItem="FVc-9w-QE3" secondAttribute="trailing" id="XQy-jL-yo8"/>
-                            <constraint firstItem="FVc-9w-QE3" firstAttribute="top" secondItem="3n8-Oc-T80" secondAttribute="bottom" id="fPR-AT-R3y"/>
-                            <constraint firstItem="c4O-MW-ypG" firstAttribute="width" secondItem="UG1-qb-hNz" secondAttribute="width" multiplier="0.8" id="nhY-1S-SmV"/>
+                            <constraint firstItem="FVc-9w-QE3" firstAttribute="leading" secondItem="UG1-qb-hNz" secondAttribute="leading" id="Ees-MP-cib"/>
+                            <constraint firstItem="FVc-9w-QE3" firstAttribute="top" secondItem="3n8-Oc-T80" secondAttribute="bottom" id="aIE-6G-CmK"/>
+                            <constraint firstAttribute="trailing" secondItem="FVc-9w-QE3" secondAttribute="trailing" id="dVd-OH-uo9"/>
+                            <constraint firstItem="C7m-R3-oLd" firstAttribute="width" secondItem="UG1-qb-hNz" secondAttribute="width" id="l32-yB-ZEZ"/>
+                            <constraint firstItem="AJd-xi-DLw" firstAttribute="top" secondItem="FVc-9w-QE3" secondAttribute="bottom" id="pCD-ur-1VS"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Job Seeker" id="XiQ-LN-XOr"/>
-                    <nil key="simulatedBottomBarMetrics"/>
+                    <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+                    <size key="freeformSize" width="375" height="667"/>
                     <connections>
                         <outlet property="attributes" destination="cFF-sk-yxe" id="NHh-YK-GSu"/>
+                        <outlet property="connectButton" destination="c4O-MW-ypG" id="xH4-Yr-R1Q"/>
                         <outlet property="contactDetails" destination="nOz-bV-t25" id="GIe-SR-Gen"/>
                         <outlet property="cvButton" destination="ygN-eH-mjV" id="Xfo-uy-ulW"/>
                         <outlet property="cvView" destination="4gi-Fb-TGr" id="Gue-eB-tPr"/>
@@ -3194,7 +3265,7 @@ Finish your pitch confidently by saying something like, “Thank you and I look 
                     </connections>
                 </tapGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="5999" y="1329"/>
+            <point key="canvasLocation" x="5997.6000000000004" y="1328.1859070464768"/>
         </scene>
         <!--Change Password-->
         <scene sceneID="ROu-cE-cBc">
@@ -3353,7 +3424,7 @@ Finish your pitch confidently by saying something like, “Thank you and I look 
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="4LD-mm-802" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="923" y="2885"/>
+            <point key="canvasLocation" x="1332" y="2859"/>
         </scene>
         <!--My Camera View Controller-->
         <scene sceneID="hGT-lL-QqH">
@@ -3558,9 +3629,9 @@ Finish your pitch confidently by saying something like, “Thank you and I look 
         <image name="switch_camera" width="48" height="48"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="bLg-hp-djS"/>
-        <segue reference="XoM-Rr-ZjD"/>
+        <segue reference="ZpE-yw-NGD"/>
+        <segue reference="TnE-uG-nR3"/>
+        <segue reference="DDY-hC-ukR"/>
         <segue reference="E46-Lk-kdo"/>
-        <segue reference="wj9-jy-mgT"/>
     </inferredMetricsTieBreakers>
 </document>

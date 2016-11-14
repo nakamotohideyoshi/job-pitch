@@ -11,6 +11,7 @@
 
 @interface BusinessEditView ()
 @property (nullable) Image *image;
+@property (weak, nonatomic) IBOutlet UILabel *noImage;
 @end
 
 @implementation BusinessEditView {
@@ -45,7 +46,7 @@
     self.changeCenterContraint.priority = UILayoutPriorityDefaultHigh;
     self.deleteButton.hidden = true;
     self.imageActivity.hidden = true;
-    self.imageView.image = [UIImage imageNamed:@"no-img"];
+    self.imageView.image = [UIImage imageNamed:@"default-logo"];
 }
 
 - (UIView*)loadViewFromNib
@@ -86,7 +87,7 @@
         self.changeCenterContraint.priority = UILayoutPriorityDefaultHigh;
         self.deleteButton.hidden = true;
         self.imageActivity.hidden = true;
-        self.imageView.image = [UIImage imageNamed:@"no-img"];
+        self.imageView.image = [UIImage imageNamed:@"default-logo"];
     }
 }
 
@@ -190,7 +191,7 @@
     [MyAlertController title:nil message:@"Are you sure you want to remove this image?" ok:@"Delete" okCallback:^{
         self.image = nil;
         self.imageForUpload = nil;
-        self.imageView.image = [UIImage imageNamed:@"no-img"];
+        self.imageView.image = [UIImage imageNamed:@"default-logo"];
         self.deleteButton.hidden = true;
         self.changeCenterContraint.priority = UILayoutPriorityDefaultHigh;
     } cancel:@"Cancel" cancelCallback:nil];

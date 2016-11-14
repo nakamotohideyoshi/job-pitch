@@ -43,7 +43,7 @@
                           into:self.image
                  withIndicator:self.imageActivity];
         } else {
-            self.image.image = nil;
+            self.image.image = [UIImage imageNamed:@"default-logo"];
             self.imageActivity.hidden = true;
         }
         if ([self.application.status isEqual:statusCreated.id]) {

@@ -72,7 +72,7 @@
                       into:cell.image
              withIndicator:cell.imageActivity];
     } else {
-        cell.image.image = [UIImage imageNamed:@"no-img"];
+        cell.image.image = [UIImage imageNamed:@"default-logo"];
         cell.imageActivity.hidden = true;
     }
     cell.subtitle.text = [NSString stringWithFormat:@"Includes %u %@", location.jobs.count, (location.jobs.count == 1?@"job":@"jobs")];

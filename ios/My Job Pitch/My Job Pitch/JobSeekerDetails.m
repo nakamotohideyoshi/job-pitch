@@ -74,6 +74,8 @@
     } else {
         self.cvView.hidden = YES;
     }
+    
+    self.connectButton.hidden = self.viewJob == nil;
 }
 
 - (IBAction)playVideo:(id)sender {
@@ -112,6 +114,11 @@
         MessageThread *messageThreadView = [segue destinationViewController];
         [messageThreadView setApplication:self.application];
     }
+}
+
+- (IBAction)connect:(id)sender {
+    [self.viewJob rightWithoutAni];
+    [self.navigationController popViewControllerAnimated:YES];
 }
 
 @end

@@ -96,6 +96,9 @@ public class BusinessEditFragment extends EditFragment<Business> {
 
     private void loadImage() {
         mImageEdit.load(mImageUri);
+        if (mImageUri == null) {
+            mImageEdit.mImageView.setImageResource(R.drawable.default_logo);
+        }
     }
 
     public void save(Business business) {

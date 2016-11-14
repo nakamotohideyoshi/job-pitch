@@ -151,7 +151,7 @@ public class LocationListActivity extends MJPProgressActionBarActivity  {
                 new DownloadImageTask(LocationListActivity.this, imageView, progress).executeOnExecutor(DownloadImageTask.executor, uri);
             } else {
                 progress.setVisibility(View.GONE);
-                imageView.setImageResource(R.drawable.no_img);
+                imageView.setImageResource(R.drawable.default_logo);
             }
             TextView titleView = (TextView) rowView.findViewById(R.id.title);
             titleView.setText(location.getName());
@@ -308,6 +308,12 @@ public class LocationListActivity extends MJPProgressActionBarActivity  {
                 return true;
             case R.id.action_change_password:
                 startActivity(new Intent(this, ChangePasswordActivity.class));
+                return true;
+            case R.id.action_payment:
+                intent = new Intent(this, PaymentActivity.class);
+                intent.putExtra("business_id", business.getId());
+                intent.putExtra("credits", business.getTokens());
+                startActivity(new Intent(this, PaymentActivity.class));
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

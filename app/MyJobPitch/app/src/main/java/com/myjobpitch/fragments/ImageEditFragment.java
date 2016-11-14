@@ -20,7 +20,7 @@ import com.myjobpitch.tasks.DownloadImageTask;
 public class ImageEditFragment extends Fragment {
     private static final int SELECT_PHOTO = 1;
 
-    private ImageView mImageView;
+    public ImageView mImageView;
     private TextView mImageMessage;
     private ProgressBar mImageProgress;
     private Button mChangeImageButton;
@@ -93,7 +93,7 @@ public class ImageEditFragment extends Fragment {
     public void load(final Uri uri, Uri noImageUri, String noImageMessage, float noImageAlpha) {
         mImageMessage.setText(noImageMessage);
         if (uri == null) {
-            mImageView.setImageResource(R.drawable.no_img);
+        //    mImageView.setImageResource(R.drawable.no_img);
             mDeleteImageButton.setVisibility(View.GONE);
         } else {
             mDeleteImageButton.setVisibility(View.VISIBLE);

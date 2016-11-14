@@ -23,6 +23,8 @@
     Image *image = [self.job getImage];
     if (image && image.image)
         [self loadImageURL:image.image into:self.jobImage withIndicator:self.jobImageActivity];
+    else
+        self.jobImage.image = [UIImage imageNamed:@"default-logo"];
     
     self.jobTitle.text = self.job.title;
     if (![contract isEqual:[self.appDelegate getContractByName:CONTRACT_PERMANENT]]) {

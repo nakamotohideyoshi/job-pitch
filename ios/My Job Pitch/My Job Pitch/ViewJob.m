@@ -48,7 +48,7 @@ typedef NS_ENUM(NSInteger, EmptyButtonAction) {
 }
 
 - (void)viewDidAppear:(BOOL)animated {
-    if ([AppHelper getData:@"ViewJob"] != nil) {
+    if ([AppHelper getData:@"ViewJob"] == nil) {
         NSArray *data = @[
                           @{
                               @"text": @"This is the profile of a job seeker who is looking for a job like yours.",
@@ -67,7 +67,7 @@ typedef NS_ENUM(NSInteger, EmptyButtonAction) {
                               },
                           @{
                               @"text": @"You can also connect using this button.",
-                              @"target": self.leftButton,
+                              @"target": self.rightButton,
                               },
                           @{
                               @"text": @"Connecting with a job seeker costs on credit.",
@@ -80,7 +80,7 @@ typedef NS_ENUM(NSInteger, EmptyButtonAction) {
                               },
                           @{
                               @"text": @"This button will permanently dismiss this job seeker, and they will not reappear for this job.",
-                              @"target": self.rightButton,
+                              @"target": self.leftButton,
                               },
                           ];
         helper = [ToolTipHelper tooltip:data inView:self.view callback:^{
@@ -158,17 +158,17 @@ typedef NS_ENUM(NSInteger, EmptyButtonAction) {
     self.swipeContainer.hidden = false;
     self.emptyView.hidden = true;
     if (self.mode == JobViewModeConnections || self.mode == JobViewModeMyShort) {
-        self.leftTitle.text = @"Messages";
-        self.leftIcon.image = [UIImage imageNamed:@"ic_email_blue"];
-        self.rightTitle.text = @"Remove";
+        self.rightTitle.text = @"Messages";
+        self.rightIcon.image = [UIImage imageNamed:@"ic_email_blue"];
+        self.leftTitle.text = @"Remove";
         self.shortlisted.hidden = self.mode == JobViewModeMyShort;
         self.shortlistedLabel.hidden = self.mode == JobViewModeMyShort;
         self.shortlistButton.hidden = self.mode == JobViewModeMyShort;
         self.shortlistButtonIcon.hidden = self.mode == JobViewModeMyShort;
     } else {
-        self.leftTitle.text = @"Connect";
-        self.leftIcon.image = [UIImage imageNamed:@"ic_connect"];
-        self.rightTitle.text = @"Remove";
+        self.rightTitle.text = @"Connect";
+        self.rightIcon.image = [UIImage imageNamed:@"ic_connect"];
+        self.leftTitle.text = @"Remove";
         self.shortlisted.hidden = true;
         self.shortlistedLabel.hidden = true;
         self.shortlistButton.hidden = true;
@@ -357,10 +357,10 @@ typedef NS_ENUM(NSInteger, EmptyButtonAction) {
         self.directionLabel.text = @"Next";
         self.directionLabel.textColor = [UIColor colorWithRed:0.2 green:0.5 blue:0.1 alpha:0.8];
     } else {
-        if (distance > 0) {
+        if (distance < 0) {
             self.directionLabel.text = @"Dismiss";
             self.directionLabel.textColor = [UIColor colorWithRed:0.7 green:0 blue:0 alpha:0.8];
-        } else if (distance <= 0) {
+        } else if (distance >= 0) {
             self.directionLabel.text = @"Connect";
             self.directionLabel.textColor = [UIColor colorWithRed:0.2 green:0.5 blue:0.1 alpha:0.8];
         }
@@ -374,7 +374,7 @@ typedef NS_ENUM(NSInteger, EmptyButtonAction) {
     NSLog(@"complete: %f", distance);
     if (distance >= 80) {
         [self right];
-    } else if (distance <= -80) {
+    } else if (distance < -80) {
         [self left];
     } else {
         [UIView animateWithDuration:0.2
@@ -391,15 +391,15 @@ typedef NS_ENUM(NSInteger, EmptyButtonAction) {
     }
 }
 
-- (IBAction)leftClick:(id)sender {
+- (IBAction)rightClick:(id)sender {
     if (self.mode == JobViewModeConnections || self.mode == JobViewModeMyShort) {
         [self performMessages];
     } else {
-        [self left];
+        [self right];
     }
 }
 
-- (IBAction)rightClick:(id)sender {
+- (IBAction)leftClick:(id)sender {
     NSString *title = [NSString stringWithFormat:@"Remove %@ %@?", self.jobSeeker.firstName, self.jobSeeker.lastName];
     [MyAlertController title:title
                      message:@"This job seeker will never appear again for this job. If you want this item to appear again in this list, just swipe to the right to remove temporarily."
@@ -417,12 +417,12 @@ typedef NS_ENUM(NSInteger, EmptyButtonAction) {
                                                           }
                            ];
                       }
-                      [self right];
+                      [self left];
                   }
                       cancel:@"Cancel" cancelCallback:nil];
 }
 
-- (void)left {
+- (void)right {
     self.leftButton.enabled = false;
     self.rightButton.enabled = false;
     self.shortlisted.enabled = false;
@@ -461,12 +461,54 @@ typedef NS_ENUM(NSInteger, EmptyButtonAction) {
                                             [MyAlertController showError:@"Error updating application!" callback:nil];
                                         }];
     }
-    [self.swipeView swipeLeft:^{
+    [self.swipeView swipeRight:^{
         [self nextCard];
     }];
 }
 
-- (void)right {
+- (void)rightWithoutAni {
+    self.leftButton.enabled = false;
+    self.rightButton.enabled = false;
+    self.shortlisted.enabled = false;
+    if (self.mode == JobViewModeSearch) {
+        [self.objects removeObject:self.jobSeeker];
+        ApplicationForCreation *application = [ApplicationForCreation alloc];
+        application.job = self.job.id;
+        application.jobSeeker = self.jobSeeker.id;
+        application.shortlisted = false;
+        [self.appDelegate.api createApplication:application
+                                        success:^(ApplicationForCreation *application) {
+                                            NSLog(@"Application created %@", application);
+                                        } failure:^(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors) {
+                                            if (errors[@"NO_TOKENS"]) {
+                                                [SVProgressHUD dismiss];
+                                                [MyAlertController title:nil
+                                                                 message:@"out off credit!"
+                                                                      ok:@"Okay"
+                                                              okCallback:nil
+                                                                  cancel:nil
+                                                          cancelCallback:nil];
+                                            } else {
+                                                [MyAlertController showError:@"Error creating application!" callback:nil];
+                                            }
+                                        }];
+    } else if (self.mode == JobViewModeApplications) {
+        [self.objects removeObject:self.application];
+        ApplicationStatusUpdate *update = [ApplicationStatusUpdate alloc];
+        update.id = self.application.id;
+        update.status = [self.appDelegate getApplicationStatusByName:APPLICATION_ESTABLISHED].id;
+        [self.appDelegate.api updateApplicationStatus:update
+                                              success:^(ApplicationStatusUpdate *update) {
+                                                  NSLog(@"Application updated %@", update);
+                                              }
+                                              failure:^(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors) {
+                                                  [MyAlertController showError:@"Error updating application!" callback:nil];
+                                              }];
+    }
+    [self nextCard];
+}
+
+- (void)left {
     self.leftButton.enabled = false;
     self.rightButton.enabled = false;
     self.shortlisted.enabled = false;
@@ -474,7 +516,7 @@ typedef NS_ENUM(NSInteger, EmptyButtonAction) {
         [self.objects removeObject:self.jobSeeker];
     else if (self.mode == JobViewModeApplications)
         [self.objects removeObject:self.application];
-    [self.swipeView swipeRight:^{
+    [self.swipeView swipeLeft:^{
         [self nextCard];
     }];
 }
@@ -500,7 +542,7 @@ typedef NS_ENUM(NSInteger, EmptyButtonAction) {
                                                   self.shortlistButtonIcon.image = [UIImage imageNamed:@"ic_star"];
                                               if (self.shortlisted.on) {
                                                   [self.objects removeObject:self.application];
-                                                  [self right];
+                                                  [self left];
                                               }
                                           }
                                           failure:^(RKObjectRequestOperation *operation, NSError *error, NSString *message, NSDictionary *errors) {
@@ -534,6 +576,9 @@ typedef NS_ENUM(NSInteger, EmptyButtonAction) {
         JobSeekerDetails *jobSeekerDetailsView = [segue destinationViewController];
         [jobSeekerDetailsView setJobSeeker:self.jobSeeker];
         [jobSeekerDetailsView setApplication:self.application];
+        if (self.mode == JobViewModeSearch || self.mode == JobViewModeApplications) {
+            jobSeekerDetailsView.viewJob = self;
+        }
     } else if ([[segue identifier] isEqualToString:@"goto_message_thread"]) {
         MessageThread *messageThreadView = [segue destinationViewController];
         [messageThreadView setApplication:self.application];

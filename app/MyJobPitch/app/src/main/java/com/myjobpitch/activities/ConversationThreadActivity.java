@@ -364,7 +364,8 @@ public class ConversationThreadActivity extends MJPProgressActionBarActivity  {
             new DownloadImageTask(ConversationThreadActivity.this, imageView, imageProgress).executeOnExecutor(DownloadImageTask.executor, uri);
         } else {
             imageProgress.setVisibility(View.GONE);
-            noImageView.setVisibility(View.VISIBLE);
+            //noImageView.setVisibility(View.VISIBLE);
+            imageView.setImageResource(R.drawable.default_logo);
         }
 
         showProgress(false);

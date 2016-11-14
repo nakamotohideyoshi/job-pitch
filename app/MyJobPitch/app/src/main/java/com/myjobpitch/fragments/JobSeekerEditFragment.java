@@ -192,8 +192,12 @@ public class JobSeekerEditFragment extends EditFragment<JobSeeker> {
     }
 
     public void load(JobSeeker jobSeeker) {
-        mFirstNameView.setText(jobSeeker.getFirst_name().toUpperCase());
-        mLastNameView.setText(jobSeeker.getLast_name().toUpperCase());
+
+        String firstname = jobSeeker.getFirst_name();
+        String lastname = jobSeeker.getLast_name();
+
+        mFirstNameView.setText(firstname.substring(0,1).toUpperCase()+firstname.substring(1).toLowerCase());
+        mLastNameView.setText(lastname.substring(0,1).toUpperCase()+lastname.substring(1).toLowerCase());
         mEmailPublicView.setChecked(jobSeeker.getEmail_public());
         mTelephoneView.setText(jobSeeker.getTelephone());
         mTelephonePublicView.setChecked(jobSeeker.getTelephone_public());
@@ -230,8 +234,12 @@ public class JobSeekerEditFragment extends EditFragment<JobSeeker> {
     }
 
     public void save(JobSeeker jobSeeker) {
-        jobSeeker.setFirst_name(mFirstNameView.getText().toString().toUpperCase());
-        jobSeeker.setLast_name(mLastNameView.getText().toString().toUpperCase());
+
+        String firstname = mFirstNameView.getText().toString();
+        String lastname = mLastNameView.getText().toString();
+
+        jobSeeker.setFirst_name(firstname.substring(0,1).toUpperCase()+firstname.substring(1).toLowerCase());
+        jobSeeker.setLast_name(lastname.substring(0,1).toUpperCase()+lastname.substring(1).toLowerCase());
         jobSeeker.setEmail_public(mEmailPublicView.isChecked());
         jobSeeker.setTelephone(mTelephoneView.getText().toString());
         jobSeeker.setTelephone_public(mTelephonePublicView.isChecked());

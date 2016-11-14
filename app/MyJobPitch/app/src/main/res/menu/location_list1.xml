@@ -28,4 +28,11 @@
         android:title="@string/action_change_password"
         android:orderInCategory="100"
         app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/action_payment"
+        android:icon="@drawable/ic_action_payment"
+        android:title="Payment"
+        android:orderInCategory="100"
+        app:showAsAction="ifRoom" />
 </menu>

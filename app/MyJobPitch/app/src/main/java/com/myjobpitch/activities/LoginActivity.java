@@ -40,7 +40,6 @@ import com.myjobpitch.api.auth.User;
 import com.myjobpitch.api.data.Business;
 import com.myjobpitch.tasks.APITask;
 import com.myjobpitch.tasks.APITaskListener;
-
 import org.springframework.web.client.RestClientException;
 
 import java.util.ArrayList;
@@ -48,7 +47,6 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
-
 
 /**
  * A login screen that offers login via email/password.
@@ -319,7 +317,6 @@ public class LoginActivity extends MJPProgressActivity implements LoaderCallback
         };
 
         int ADDRESS = 0;
-        int IS_PRIMARY = 1;
     }
 
     private void addEmailsToAutoComplete(List<String> emailAddressCollection) {
@@ -509,4 +506,5 @@ public class LoginActivity extends MJPProgressActivity implements LoaderCallback
             showProgress(false);
         }
     }
+
 }

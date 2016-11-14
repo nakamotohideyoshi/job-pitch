@@ -113,7 +113,8 @@ public class ConversationListActivity extends MJPProgressActionBarActivity  {
                 new DownloadImageTask(ConversationListActivity.this, imageView, progress).executeOnExecutor(DownloadImageTask.executor, uri);
             } else {
                 progress.setVisibility(View.GONE);
-                noImageView.setVisibility(View.VISIBLE);
+                //noImageView.setVisibility(View.VISIBLE);
+                imageView.setImageResource(R.drawable.default_logo);
             }
 
             titleView.setText(title);

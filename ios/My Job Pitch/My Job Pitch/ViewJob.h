@@ -55,4 +55,7 @@ typedef NS_ENUM(NSInteger, JobViewMode) {
 
 @property (strong, nonatomic) NSString *strTitle;
 
+
+- (void) rightWithoutAni;
+
 @end

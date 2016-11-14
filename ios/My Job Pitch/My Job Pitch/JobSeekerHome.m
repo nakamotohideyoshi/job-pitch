@@ -182,7 +182,7 @@ typedef NS_ENUM(NSInteger, EmptyButtonAction) {
                                             [self.navigationController popViewControllerAnimated:true];
                                         }];
                                     }];
-    [self.swipeView swipeLeft:^{
+    [self.swipeView swipeRight:^{
         [self nextCard];
     }];
 }
@@ -190,7 +190,7 @@ typedef NS_ENUM(NSInteger, EmptyButtonAction) {
 - (IBAction)dismiss {
     self.dismissButton.enabled = false;
     self.connectButton.enabled = false;
-    [self.swipeView swipeRight:^{
+    [self.swipeView swipeLeft:^{
         [self nextCard];
     }];
 }
@@ -246,10 +246,10 @@ typedef NS_ENUM(NSInteger, EmptyButtonAction) {
 
 - (void)updateDistance:(CGFloat)distance
 {
-    if (distance > 0) {
+    if (distance <= 0) {
         self.directionLabel.text = @"Dismiss";
         self.directionLabel.textColor = [UIColor colorWithRed:0.7 green:0 blue:0 alpha:0.8];
-    } else if (distance <= 0) {
+    } else if (distance > 0) {
         self.directionLabel.text = @"Apply";
         self.directionLabel.textColor = [UIColor colorWithRed:0.2 green:0.5 blue:0.1 alpha:0.8];
     }
@@ -260,9 +260,9 @@ typedef NS_ENUM(NSInteger, EmptyButtonAction) {
 - (void)dragComplete:(CGFloat)distance
 {
     NSLog(@"complete: %f", distance);
-    if (distance >= 80) {
+    if (distance < -80) {
         [self dismiss];
-    } else if (distance <= -80) {
+    } else if (distance >= 80) {
         [self connect];
     } else {
         [UIView animateWithDuration:0.2
@@ -319,8 +319,13 @@ typedef NS_ENUM(NSInteger, EmptyButtonAction) {
         if (self.job) {
             Image *image = [self.job getImage];
             self.image.image = nil;
-            if (image)
+            if (image) {
                 [self loadImageURL:image.image into:self.image withIndicator:self.imageActivity];
+            } else {
+                self.image.image = [UIImage imageNamed:@"default-logo"];
+                self.imageActivity.hidden = YES;
+            }
+                
             self.nameLabel.text = self.job.title;
             self.descriptionLabel.text = self.job.desc;
             Hours *hours = [self.appDelegate getHours:self.job.hours];

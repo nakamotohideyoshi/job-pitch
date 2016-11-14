@@ -127,7 +127,8 @@ public class JobSeekerActivity extends MJPProgressActionBarActivity {
                 new DownloadImageTask(JobSeekerActivity.this, imageView, progress).executeOnExecutor(DownloadImageTask.executor, uri);
             } else {
                 progress.setVisibility(View.INVISIBLE);
-                noImageView.setVisibility(View.VISIBLE);
+                //noImageView.setVisibility(View.VISIBLE);
+                imageView.setImageResource(R.drawable.default_logo);
             }
 
             return cardView;
@@ -159,7 +160,7 @@ public class JobSeekerActivity extends MJPProgressActionBarActivity {
             public void onClick(View v) {
                 if (!adapter.isEmpty()) {
                     mButtonActivation = true;
-                    mCards.getTopCardListener().selectLeft();
+                    mCards.getTopCardListener().selectRight();
                 }
             }
         });
@@ -181,7 +182,7 @@ public class JobSeekerActivity extends MJPProgressActionBarActivity {
                                 public void onClick(DialogInterface dialog, int id) {
                                     dialog.cancel();
                                     mButtonActivation = true;
-                                    mCards.getTopCardListener().selectRight();
+                                    mCards.getTopCardListener().selectLeft();
                                 }
                             })
                             .setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
@@ -219,7 +220,7 @@ public class JobSeekerActivity extends MJPProgressActionBarActivity {
             }
 
             @Override
-            public void onLeftCardExit(Object dataObject) {
+            public void onRightCardExit(Object dataObject) {
                 Job job = jobs.remove(0);
                 // Create application for job seeker
                 ApplicationForCreation application = new ApplicationForCreation();
@@ -235,7 +236,7 @@ public class JobSeekerActivity extends MJPProgressActionBarActivity {
             }
 
             @Override
-            public void onRightCardExit(Object dataObject) {
+            public void onLeftCardExit(Object dataObject) {
                 Job job = jobs.remove(0);
                 dismissed.add(job.getId());
                 if (mButtonActivation) {
@@ -280,12 +281,12 @@ public class JobSeekerActivity extends MJPProgressActionBarActivity {
                 if (!newState.equals(cardState)) {
                     cardState = newState;
                     switch (cardState) {
-                        case LEFT:
+                        case RIGHT:
                             hint.setVisibility(View.VISIBLE);
                             hint.setText(R.string.apply);
                             hint.setTextColor(getResources().getColor(R.color.card_hint_positive));
                             break;
-                        case RIGHT:
+                        case LEFT:
                             hint.setVisibility(View.VISIBLE);
                             hint.setText(R.string.dismiss);
                             hint.setTextColor(getResources().getColor(R.color.card_hint_negative));
@@ -349,7 +350,7 @@ public class JobSeekerActivity extends MJPProgressActionBarActivity {
         if (requestCode == 1) {
             if (data != null && data.getBooleanExtra("apply", false)) {
                 mButtonActivation = true;
-                mCards.getTopCardListener().selectLeft();
+                mCards.getTopCardListener().selectRight();
             }
         }
     }

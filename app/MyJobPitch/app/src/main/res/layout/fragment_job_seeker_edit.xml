@@ -49,7 +49,7 @@
         <TableRow>
             <AutoCompleteTextView android:id="@+id/job_seeker_first_name" android:layout_width="match_parent"
                 android:layout_height="wrap_content" android:hint="@string/prompt_job_seeker_first_name"
-                android:inputType="text" android:maxLines="1"
+                android:inputType="text|textCapWords" android:maxLines="1"
                 android:singleLine="true" />
             <CheckBox android:layout_gravity="center_vertical|right" android:enabled="false"
                 android:checked="true" />
@@ -58,7 +58,7 @@
         <TableRow>
             <AutoCompleteTextView android:id="@+id/job_seeker_last_name" android:layout_width="match_parent"
                 android:layout_height="wrap_content" android:hint="@string/prompt_job_seeker_last_name"
-                android:inputType="text" android:maxLines="1"
+                android:inputType="text|textCapWords" android:maxLines="1"
                 android:singleLine="true" />
             <CheckBox android:layout_gravity="center_vertical|right" android:enabled="false"
                 android:checked="true" />

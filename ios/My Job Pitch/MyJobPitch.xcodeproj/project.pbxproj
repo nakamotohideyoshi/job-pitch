@@ -66,6 +66,8 @@
 		D727561E1D63ABD80055943A /* DropboxMedia.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D727561D1D63ABD80055943A /* DropboxMedia.xcassets */; };
 		D72BF2521DBDEE5600958EC2 /* DropboxBrowserViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D72BF2511DBDEE5600958EC2 /* DropboxBrowserViewController.m */; };
 		D72BF2571DBDEE8300958EC2 /* CMPopTipView.m in Sources */ = {isa = PBXBuildFile; fileRef = D72BF2561DBDEE8300958EC2 /* CMPopTipView.m */; };
+		D730113D1DD5FBBB00A21655 /* jobseeker.html in Resources */ = {isa = PBXBuildFile; fileRef = D730113B1DD5FBBB00A21655 /* jobseeker.html */; };
+		D730113E1DD5FBBB00A21655 /* recruiter.html in Resources */ = {isa = PBXBuildFile; fileRef = D730113C1DD5FBBB00A21655 /* recruiter.html */; };
 		D74588EB1D48771800A85472 /* LockableNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = D74588EA1D48771800A85472 /* LockableNavigationController.m */; };
 		D74588EE1D48772E00A85472 /* API.m in Sources */ = {isa = PBXBuildFile; fileRef = D74588ED1D48772E00A85472 /* API.m */; };
 		D74589251D48773B00A85472 /* Application.m in Sources */ = {isa = PBXBuildFile; fileRef = D74588F01D48773B00A85472 /* Application.m */; };
@@ -99,6 +101,7 @@
 		D74589451D48ABB000A85472 /* PasswordResetRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = D74589441D48ABB000A85472 /* PasswordResetRequest.m */; };
 		D78904E91D47FC6600E980D9 /* ChangePassword.m in Sources */ = {isa = PBXBuildFile; fileRef = D78904E81D47FC6600E980D9 /* ChangePassword.m */; };
 		D78904EC1D48586D00E980D9 /* AppHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = D78904EB1D48586D00E980D9 /* AppHelper.m */; };
+		D7B0151E1DD5B96A00EE9BED /* HowViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D7B0151D1DD5B96A00EE9BED /* HowViewController.m */; };
 		D7CF0C941DBE9DD900E472CC /* DropboxSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D7CF0C931DBE9DD900E472CC /* DropboxSDK.framework */; };
 		D7E94F8C1D179D6700866604 /* MyCameraViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D7E94F891D179D6700866604 /* MyCameraViewController.m */; };
 		D7E94F8D1D179D6700866604 /* MyCameraPreviewView.m in Sources */ = {isa = PBXBuildFile; fileRef = D7E94F8B1D179D6700866604 /* MyCameraPreviewView.m */; };
@@ -221,6 +224,8 @@
 		D72BF2511DBDEE5600958EC2 /* DropboxBrowserViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DropboxBrowserViewController.m; path = DropboxBrowser/DropboxBrowserViewController.m; sourceTree = "<group>"; };
 		D72BF2551DBDEE8300958EC2 /* CMPopTipView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CMPopTipView.h; path = CMPopTipView/CMPopTipView.h; sourceTree = "<group>"; };
 		D72BF2561DBDEE8300958EC2 /* CMPopTipView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CMPopTipView.m; path = CMPopTipView/CMPopTipView.m; sourceTree = "<group>"; };
+		D730113B1DD5FBBB00A21655 /* jobseeker.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = jobseeker.html; sourceTree = "<group>"; };
+		D730113C1DD5FBBB00A21655 /* recruiter.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = recruiter.html; sourceTree = "<group>"; };
 		D74588E91D48771800A85472 /* LockableNavigationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LockableNavigationController.h; sourceTree = "<group>"; };
 		D74588EA1D48771800A85472 /* LockableNavigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LockableNavigationController.m; sourceTree = "<group>"; };
 		D74588EC1D48772E00A85472 /* API.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = API.h; path = API/API.h; sourceTree = "<group>"; };
@@ -287,6 +292,8 @@
 		D78904E81D47FC6600E980D9 /* ChangePassword.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChangePassword.m; sourceTree = "<group>"; };
 		D78904EA1D48586D00E980D9 /* AppHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppHelper.h; sourceTree = "<group>"; };
 		D78904EB1D48586D00E980D9 /* AppHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppHelper.m; sourceTree = "<group>"; };
+		D7B0151C1DD5B96A00EE9BED /* HowViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HowViewController.h; sourceTree = "<group>"; };
+		D7B0151D1DD5B96A00EE9BED /* HowViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HowViewController.m; sourceTree = "<group>"; };
 		D7CF0C931DBE9DD900E472CC /* DropboxSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = DropboxSDK.framework; sourceTree = "<group>"; };
 		D7E94F881D179D6700866604 /* MyCameraViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyCameraViewController.h; sourceTree = "<group>"; };
 		D7E94F891D179D6700866604 /* MyCameraViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyCameraViewController.m; sourceTree = "<group>"; };
@@ -446,6 +453,10 @@
 				D7E94F891D179D6700866604 /* MyCameraViewController.m */,
 				D7F7B2AB1DBF1A7400A56C38 /* ToolTipHelper.h */,
 				D7F7B2AC1DBF1A7400A56C38 /* ToolTipHelper.m */,
+				D7B0151C1DD5B96A00EE9BED /* HowViewController.h */,
+				D7B0151D1DD5B96A00EE9BED /* HowViewController.m */,
+				D730113B1DD5FBBB00A21655 /* jobseeker.html */,
+				D730113C1DD5FBBB00A21655 /* recruiter.html */,
 				D727561D1D63ABD80055943A /* DropboxMedia.xcassets */,
 				CE6FD3461C01F9BC001A04C3 /* Assets.xcassets */,
 				CE6FD33A1C01F9BB001A04C3 /* Supporting Files */,
@@ -675,8 +686,10 @@
 				CEE04AA91C10F8FE00697620 /* JobSeekerProfileView.xib in Resources */,
 				CE8AB0281C6AA22E0004F021 /* LocationEditView.xib in Resources */,
 				CE8AB0261C61826B0004F021 /* BusinessEditView.xib in Resources */,
+				D730113E1DD5FBBB00A21655 /* recruiter.html in Resources */,
 				CE6FD3471C01F9BC001A04C3 /* Assets.xcassets in Resources */,
 				CE8AAFF91C59A2DE0004F021 /* LocationMap.xib in Resources */,
+				D730113D1DD5FBBB00A21655 /* jobseeker.html in Resources */,
 				CE6FD3451C01F9BB001A04C3 /* Main.storyboard in Resources */,
 				CEE04AA41C10EAD900697620 /* ErrorTextField.xib in Resources */,
 				D727561E1D63ABD80055943A /* DropboxMedia.xcassets in Resources */,
@@ -746,6 +759,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D7B0151E1DD5B96A00EE9BED /* HowViewController.m in Sources */,
 				CE6FD3421C01F9BB001A04C3 /* Login.m in Sources */,
 				CE45AEC41C0B41390092AB75 /* MJPViewController.m in Sources */,
 				CE8AB0171C5EDB7B0004F021 /* MessageThread.m in Sources */,
@@ -977,8 +991,8 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.myjobpitch.pitch;
 				PRODUCT_NAME = MyJobPitch;
-				PROVISIONING_PROFILE = "ac05094a-8902-4fc3-a24e-d12db8c9149d";
-				PROVISIONING_PROFILE_SPECIFIER = "pitch-dist";
+				PROVISIONING_PROFILE = "4207d772-6f0b-45f8-9b2f-2cb52ae0544e";
+				PROVISIONING_PROFILE_SPECIFIER = pitch_dist2;
 			};
 			name = Debug;
 		};
@@ -1012,8 +1026,8 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.myjobpitch.pitch;
 				PRODUCT_NAME = MyJobPitch;
-				PROVISIONING_PROFILE = "ac05094a-8902-4fc3-a24e-d12db8c9149d";
-				PROVISIONING_PROFILE_SPECIFIER = "pitch-dist";
+				PROVISIONING_PROFILE = "4207d772-6f0b-45f8-9b2f-2cb52ae0544e";
+				PROVISIONING_PROFILE_SPECIFIER = pitch_dist2;
 			};
 			name = Release;
 		};

@@ -61,6 +61,9 @@
 }
 
 - (void)completeLoginWithUser:(User*)user {
+    
+    //user.canCreateBusinesses = YES;
+    
     [self.view endEditing:YES];
     [self clearErrors];
     [self appDelegate].user = user;

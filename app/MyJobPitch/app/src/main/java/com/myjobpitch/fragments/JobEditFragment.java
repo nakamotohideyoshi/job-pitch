@@ -207,6 +207,9 @@ public class JobEditFragment extends EditFragment {
 
     private void loadImage() {
         mImageEdit.load(mImageUri, mNoImageUri, mNoImageMessage, mNoImageAlpha);
+        if (mImageUri == null && mNoImageUri == null) {
+            mImageEdit.mImageView.setImageResource(R.drawable.default_logo);
+        }
     }
 
     public void save(Job job) {

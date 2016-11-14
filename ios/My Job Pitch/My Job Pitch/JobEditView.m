@@ -60,7 +60,7 @@
     self.deleteButton.hidden = true;
     self.noImage.text = @"";
     self.imageActivity.hidden = true;
-    self.imageView.image = [UIImage imageNamed:@"no-img"];
+    self.imageView.image = [UIImage imageNamed:@"default-logo"];
     
     descriPlaceholder = [[UILabel alloc] initWithFrame:CGRectMake(10.0f, 0, self.descriptionView.frame.size.width - 10.0f, 34.0f)];
     [descriPlaceholder setText:@"Description"];
@@ -258,7 +258,7 @@
                                    }];
         } else {
             self.imageActivity.hidden = true;
-            self.imageView.image = [UIImage imageNamed:@"no-img"];
+            self.imageView.image = [UIImage imageNamed:@"default-logo"];
         }
 
         
@@ -356,7 +356,7 @@
     } else {
         self.imageActivity.hidden = true;
         self.noImage.text = @"";
-        self.imageView.image = [UIImage imageNamed:@"no-img"];
+        self.imageView.image = [UIImage imageNamed:@"default-logo"];
     }
     
     int remaining = 1000 - (int)self.descriptionView.text.length;

@@ -222,7 +222,7 @@ public class JobActivity extends MJPProgressActionBarActivity {
                         startActivity(intent);
                     } else {
                         mButtonActivation = true;
-                        mCards.getTopCardListener().selectLeft();
+                        mCards.getTopCardListener().selectRight();
                     }
                 }
             }
@@ -247,7 +247,7 @@ public class JobActivity extends MJPProgressActionBarActivity {
                                 public void onClick(DialogInterface dialog, int id) {
                                     dialog.cancel();
                                     mButtonActivation = true;
-                                    mCards.getTopCardListener().selectRight();
+                                    mCards.getTopCardListener().selectLeft();
                                 }
                             })
                             .setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
@@ -349,7 +349,7 @@ public class JobActivity extends MJPProgressActionBarActivity {
             }
 
             @Override
-            public void onLeftCardExit(Object dataObject) {
+            public void onRightCardExit(Object dataObject) {
                 JobSeekerContainer jobSeekerContainer = jobSeekers.remove(0);
                 JobSeeker jobSeeker = jobSeekerContainer.getJobSeeker();
                 if (mode.equals(CONNECTIONS) || mode.equals(MYSHORTLIST)) {
@@ -406,7 +406,7 @@ public class JobActivity extends MJPProgressActionBarActivity {
             }
 
             @Override
-            public void onRightCardExit(Object dataObject) {
+            public void onLeftCardExit(Object dataObject) {
                 JobSeekerContainer jobSeekerContainer = jobSeekers.remove(0);
                 if (mode.equals(CONNECTIONS) || mode.equals(MYSHORTLIST)) {
                     if (!mButtonActivation) {
@@ -459,7 +459,7 @@ public class JobActivity extends MJPProgressActionBarActivity {
                 if (!newState.equals(cardState)) {
                     cardState = newState;
                     switch (cardState) {
-                        case LEFT:
+                        case RIGHT:
                             hint.setVisibility(View.VISIBLE);
                             if (mode.equals(CONNECTIONS) || mode.equals(MYSHORTLIST)) {
                                 hint.setText(R.string.next);
@@ -469,7 +469,7 @@ public class JobActivity extends MJPProgressActionBarActivity {
                                 hint.setTextColor(getResources().getColor(R.color.card_hint_positive));
                             }
                             break;
-                        case RIGHT:
+                        case LEFT:
                             hint.setVisibility(View.VISIBLE);
                             if (mode.equals(CONNECTIONS) || mode.equals(MYSHORTLIST)) {
                                 hint.setText(R.string.next);
@@ -502,7 +502,14 @@ public class JobActivity extends MJPProgressActionBarActivity {
                         intent.putExtra(JobSeekerDetailsActivity.APPLICATION_DATA, applicationData);
                     }
                 } catch (JsonProcessingException e) {}
-                startActivity(intent);
+
+                if (mode.equals(CONNECTIONS) || mode.equals(MYSHORTLIST)) {
+                    startActivity(intent);
+                } else {
+                    intent.putExtra("showConnectButton", true);
+                    startActivityForResult(intent, 1);
+                }
+
             }
         };
 
@@ -529,6 +536,16 @@ public class JobActivity extends MJPProgressActionBarActivity {
         updateEmptyView();
         createCardView();
         loadJob();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == 1) {
+            if (data != null && data.getBooleanExtra("connect", false)) {
+                mButtonActivation = true;
+                mCards.getTopCardListener().selectRight();
+            }
+        }
     }
 
     private void createCardView() {

@@ -164,7 +164,7 @@ public class JobListActivity extends MJPProgressActionBarActivity  {
                 new DownloadImageTask(JobListActivity.this, imageView, progress).executeOnExecutor(DownloadImageTask.executor, uri);
             } else {
                 progress.setVisibility(View.GONE);
-                imageView.setImageResource(R.drawable.no_img);
+                imageView.setImageResource(R.drawable.default_logo);
             }
             TextView titleView = (TextView) rowView.findViewById(R.id.title);
             TextView subtitleView = (TextView) rowView.findViewById(R.id.subtiltle);

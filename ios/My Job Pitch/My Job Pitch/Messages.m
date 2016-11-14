@@ -67,7 +67,7 @@
                           into:cell.image
                  withIndicator:cell.imageActivity];
         } else {
-            cell.image.image = nil;
+            cell.image.image = [UIImage imageNamed:@"default-logo"];
             cell.imageActivity.hidden = true;
         }
     } else {

@@ -13,7 +13,8 @@ $(function () {
 	$('#company_details').submit(function (event) {
 		event.preventDefault();
 
-		var company_name = $('#company_name').val();
+		var company_name = $('#company_name', this).val();
+
 
 		userBusinessStore.post({
 			name: company_name

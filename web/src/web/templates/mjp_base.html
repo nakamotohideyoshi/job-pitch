@@ -13,21 +13,34 @@
 	<meta http-equiv="Pragma" content="no-cache" />
 	<meta http-equiv="Expires" content="0" />
 
+  <!-- loadCSS -->
+  <script src="/static/web/design/js/loadCSS.js"></script>
+
 	<!-- Bootstrap Core CSS -->
 	<link href="/static/web/design/css/bootstrap.min.css" rel="stylesheet">
 
 	<!-- Bootstrap Extras CSS -->
 	<link href="/static/web/design/css/bootstrap-switch.min.css" rel="stylesheet">
 
+  <!-- Custom CSS -->
+  <link href="/static/web/design/css/mjp.css" rel="stylesheet">
+
+  <!-- loading some no-critical CSS asyncronously -->
+  <script type="text/javascript">
+    var stylesheet = loadCSS( "/static/web/design/css/messenger.css" );
+    onloadCSS( stylesheet, function () {
+      loadCSS( "/static/web/design/css/messenger-theme-future.css" );
+    });
+
+    loadCSS( "/static/web/design/font-awesome/css/font-awesome.min.css" );
+  </script>
+
 	<!-- Messenger CSS (Notification Sytems) -->
-	<link  href="/static/web/design/css/messenger.css" rel="stylesheet" type="text/css">
+	<!-- link  href="/static/web/design/css/messenger.css" rel="stylesheet" type="text/css">
 	<link  href="/static/web/design/css/messenger-theme-future.css" rel="stylesheet" type="text/css">
 
-	<!-- Custom CSS -->
-	<link href="/static/web/design/css/mjp.css" rel="stylesheet">
-
 	<!-- Custom Fonts -->
-	<link href="/static/web/design/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+	<!-- link href="/static/web/design/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css" -->
 
 	<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
 	<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -43,65 +56,36 @@
 	{% block body %}
 	<div id="wrapper">
 		{% block wrapper %}
-		<!-- Navigation -->
-		<nav class="navbar navbar-inverse navbar-fixed-top">
-			<div class="container">
-				<div class="navbar-header row">
-				  <a class="navbar-brand col-md-3" href="/"><img src="/static/web/design/images/logo.png"></a>
-				  <!--<div class="center-section-header col-md-6">Do you want to make a pitch?<a class="btn btn-custom">Create my Pitch</a></div>-->
-
-				  <div class="col-md-3 menu-container">
-					  <div class="login-email business-link job-seeker-link">
-							<h4 id="header_email"></h4>
-							<!-- h6 id="header_company" class="business-link">x</h6 -->
-					  </div>
-					  <a class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-						<span class="icon-bar"></span>
-						<span class="icon-bar"></span>
-						<span class="icon-bar"></span>
-					  </a>
-				  </div>
-				</div>
-
-				<div class="navbar-collapse collapse always-collapse">
-				  <ul class="nav navbar-nav">
-					<!--<li><a href="#">Create profile</a></li>
-					<li><a href="#">Record my pitch</a></li>
-					<li><a href="#">Company</a></li>
-					<li><a href="#">Individuals</a></li>
-					<li><a href="#">Vacancies</a></li>
-					<li><a href="#">Location</a></li>-->
-					<li class="business-link job-seeker-link"><a href="/dashboard">Dashboard</a></li>
-					<li class="job-seeker-link"><a href="/jobs">Find a Job</a></li>
-					<li class="job-seeker-link"><a href="/profile/edit-job-seeker/">Edit Profile</a></li>
-					<li class="job-seeker-link"><a href="/profile/edit-pitch/">Edit Pitch</a></li>
-					<li class="job-seeker-link"><a href="/profile/edit-job-preferences/">Edit Job Preferences</a></li>
-					<li class="business-link"><a href="/profile/list-businesses/">Companies</a></li>
-					<li class="business-link job-seeker-link"><a href="/applications/">Applications and Messages</a></li>
-					<li class="business-link job-seeker-link"><a href="/connections/">Connections</a></li>
-					<li class="not_logged_in_menu"><a href="/login">Log in</a></li>
-					<li class="business-link job-seeker-link"><a href="/password-change/">Change your password</a></li>
-					<li class="business-link job-seeker-link"><a href="javascript:logoutUser();">Log Out</a></li>
-					<li class="not_logged_in_menu"><a href="/registration">Register</a></li>
-					<li><a href="/mobile-app/">How it Works</a></li>
-					<li><a href="/about/">About</a></li>
-					<li><a href="/terms-conditions/">Terms and Conditions</a></li>
-					<li><a href="/privacy-policy/">Privacy Policy</a></li>
-					<li class="business-link job-seeker-link"><a href="javascript:logoutUser();">Log Out</a></li>
-				  </ul>
-				</div>
-			</div>
-		</nav><!--End Nav Area-->
+  		<!-- Navigation -->
+      <nav class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container">
+          <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand col-md-3" href="/"><img src="/static/web/design/images/logo.png"></a>
+          </div>
+          <div class="collapse navbar-collapse" id="myNavbar">
+            {% block navigation-menu %}{% endblock %}
+          </div>
+        </div>
+      </nav>
 
 
-		{% block headerslider %}{% endblock %}
+  		{% block headerslider %}{% endblock %}
 
-		<!-- Page Content -->
-		<div class="container page-container">
-			{% block content %}{% endblock %}
-		</div>
-		<!-- /Page Content -->
-	{% endblock %}
+      <!-- Page Content -->
+      <div class="content-page container-fluid page-container">
+        {% block page-title %}{% endblock %}
+        <div class="row">
+        {% block sidebar %}{% endblock %}
+        {% block content %}{% endblock %}
+        </div>
+      </div>
+  		<!-- /Page Content -->
+	  {% endblock %} <!-- /block wrapper -->
 		<div class="push"></div>
 	</div>
 	<!-- /#wrapper -->
@@ -109,26 +93,24 @@
 	<!-- Footer -->
 	<footer class="mjp-footer">
 		<div class="row">
-			<div class="container">
-				<div class="col-md-2">
-					<img src="/static/web/design/images/logo-footer.png">
+			<div class="col-xs-2 col-md-4">
+				<img src="/static/web/design/images/logo-footer.png">
+			</div>
+			<div class="col-xs-5 col-md-4">
+				<div class="center-contact-details-footer">
+					<p>
+					<a href="tel:123456789" class="footer-link-center">tel: 123 456 789</a><br>
+					<span class="email"><a href="mailto:email@mjp.com" class="footer-link-center">e-mail: email@mjp.com</a></span>
+					</p>
 				</div>
-				<div class="col-md-offset-2 col-md-4">
-					<div class="center-contact-details-footer">
-						<p>
-						<a href="tel:123456789" class="footer-link-center">tel: 123 456 789</a><br>
-						<span class="email"><a href="mailto:email@mjp.com" class="footer-link-center">e-mail: email@mjp.com</a></span>
-						</p>
-					</div>
-				</div>
-				<div class="col-md-4">
-					<div class="social-icons-footer">
-						<a href="#"><img src="/static/web/design/images/fb-icon.png"></a>
-						<a href="#"><img src="/static/web/design/images/twitter-icon.png"></a>
-						<a href="#"><img src="/static/web/design/images/yt-icon.png"></a>
-						<a href="#"><img src="/static/web/design/images/linkedin-icon.png"></a>
-						<a href="#"><img src="/static/web/design/images/gplus-icon.png"></a>
-					</div>
+			</div>
+			<div class="col-xs-5 col-md-4">
+				<div class="social-icons-footer">
+					<a href="#"><img src="/static/web/design/images/fb-icon.png"></a>
+					<a href="#"><img src="/static/web/design/images/twitter-icon.png"></a>
+					<a href="#"><img src="/static/web/design/images/yt-icon.png"></a>
+					<a href="#"><img src="/static/web/design/images/linkedin-icon.png"></a>
+					<a href="#"><img src="/static/web/design/images/gplus-icon.png"></a>
 				</div>
 			</div>
 		</div>
@@ -166,22 +148,30 @@
 	</div>
 
 
-	<div class="modal fade" id="regModal">
+	<div class="modal fade" id="regJobSeekerModal">
 	  <div class="modal-dialog">
 			<div class="modal-content">
 			  <div class="modal-header">
 					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-					<h4 class="modal-title">Registration</h4>
+					<h3 class="modal-title">Registration</h3>
 			  </div>
 			  <div class="modal-body">
 					<div class="row">
 						<div class="col-md-8 col-md-offset-2">
 							<form role="form"  action="/api-auth/login/" method="post" id="register">
 								<div class="alert" role="alert"></div>
-								<input type="text" class="form-control" id="reg_email" name="reg_email" placeholder="Email address">
-								<input type="password" class="form-control" id="password1" name="password1" placeholder="Password">
-								<input type="password" class="form-control" id="password2" name="password2" placeholder="Confirm Password">
-								<button type="submit" class="btn btn-custom-modal-2">Register</button>
+                <div class="form-group">
+                  <input type="text" class="form-control" id="reg_email" name="reg_email" placeholder="Email address">
+                </div>
+                <div class="form-group">
+                  <input type="password" class="form-control" id="password1" name="password1" placeholder="Password">
+                </div>
+                <div class="form-group">
+                  <input type="password" class="form-control" id="password2" name="password2" placeholder="Confirm Password">
+                </div>
+                <div class="form-group">
+  								<button type="submit" class="btn btn-custom-modal-2">Register</button>
+                </div>
 							</form>
 						</div>
 					</div>
@@ -189,6 +179,43 @@
 			</div><!-- /.modal-content -->
 	  </div><!-- /.modal-dialog -->
 	</div><!-- /.modal -->
+
+
+  <div class="modal fade" id="regRecruiterModal">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <h3 class="modal-title">Registration</h3>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-md-8 col-md-offset-2">
+              <form role="form"  action="/api-auth/login/" method="post" id="register">
+                <div class="alert" role="alert"></div>
+                <div class="form-group">
+                  <input type="text" class="form-control" id="reg_email" name="reg_email" placeholder="Email address">
+                </div>
+                <div class="form-group">
+                  <input type="text" class="form-control" id="reg_name" name="reg_name" placeholder="Company Name">
+                </div>
+                <div class="form-group">
+                  <input type="password" class="form-control" id="password1" name="password1" placeholder="Password">
+                </div>
+                <div class="form-group">
+                  <input type="password" class="form-control" id="password2" name="password2" placeholder="Confirm Password">
+                </div>
+                <div class="form-group">
+                  <button type="submit" class="btn btn-custom-modal-2">Register</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+  </div><!-- /.modal -->
+
 
 	<div class="modal fade" id="viewPitchModal">
 	  <div class="modal-dialog">
@@ -239,8 +266,7 @@
 	})
 	</script>
 
-	{% block pagescripts %}
-	{% endblock %}
+	{% block pagescripts %}{% endblock %}
 
 	{% endblock %}
 

@@ -1,0 +1,39 @@
+{% extends "mjp_base.html" %}
+
+
+  {% block navigation-menu %}
+  <ul class="nav navbar-nav navbar-right job-seeker-link">
+    <li><a href="/jobs/">Find a Job </a></li>
+    <li><a href="/messages/">Messages </a></li>
+    <li><a href="/applications/">Applications </a></li>
+    <li><a href="/profile/edit-job-seeker/">Profile </a></li>
+    <li><a href="javascript:logoutUser();">Log Out</a></li>
+  </ul>
+  <ul class="nav navbar-nav navbar-right business-link">
+    <li><a href="/find-staff/">Find Talent </a></li>
+    <li><a href="/profile/create-location/">Add Work Place </a></li>
+    <li><a href="/profile/create-job/">Post a Jobs </a></li>
+    <li><a href="/messages/">Messages </a></li>
+    <li><a href="/jobs/">Find a Post </a></li>
+    <li><a href="/profile/edit-business/">Profile </a></li>
+    <li><a href="javascript:logoutUser();">Log Out</a></li>
+  </ul>
+  {% endblock %}
+
+
+  {% block sidebar %}
+    <div class="col-sm-4">
+      <h4 class="sidebar-title">User Settings</h4>
+      <div role="tabpanel">
+        <ul class="nav nav-pills brand-pills nav-stacked" role="tablist">
+          <li role="presentation" class="brand-nav"><a href="/profile/edit-job-seeker"><h4>Profile Settings</h4></a></li>
+          <li role="presentation" class="brand-nav"><a href="/password-change"><h4>Change Password</h4></a></li>
+          <li role="presentation" class="brand-nav"><a href="#tab3"><h4>Notification Settings</h4></a></li>
+          <li role="presentation" class="brand-nav job-seeker-link"><a href="/profile/edit-job-preferences"><h4>Job Match Profile</h4></a></li>
+          <li role="presentation" class="brand-nav business-link"><a href="/profile/edit-job-preferences"><h4>Payments</h4></a></li>
+        </ul>
+      </div>
+    </div>
+  {% endblock %}
+
+

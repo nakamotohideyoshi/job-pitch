@@ -33,6 +33,8 @@ urlpatterns = [
     url(r'^privacy-policy/$', views.privacy_policy),
     url(r'^mobile-app/$', views.mobile_app),
     url(r'^about/$', views.about),
+    url(r'^howitworks/job-seeker/$', views.howitworks_jobseeker),
+    url(r'^howitworks/recruiter/$', views.howitworks_recruiter),
     url(r'^applications/$', views.applications),
     url(r'^connections/$', views.connections),
     url(r'^messages/$', views.messages),

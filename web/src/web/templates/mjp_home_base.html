@@ -1,0 +1,18 @@
+{% extends "mjp_base.html" %}
+
+
+  {% block navigation-menu %}
+    <li class="dropdown">
+      <a class="dropdown-toggle" data-toggle="dropdown" href="#">How it Works <span class="glyphicon glyphicon-chevron-down" aria-hidden="true"></span></a>
+      <ul class="dropdown-menu">
+        <div class="arrow-up"></div>
+        <li><a href="/howitworks/job-seeker">Job Seeker</a></li>
+        <li><a href="/howitworks/recruiter">Recruiter</a></li>
+      </ul>
+    </li>
+    <li><a href="/about/">About</a></li>
+    <li><a href="/terms-conditions/">Terms & Conditions</a></li>
+    <li class="not_logged_in_menu"><a href="#" data-toggle="modal" data-target="#loginModal">Login</a></li>
+    <li class="business-link job-seeker-link not_logged_in_element"><a href="javascript:logoutUser();">Log Out</a></li>
+  {% endblock %}
+

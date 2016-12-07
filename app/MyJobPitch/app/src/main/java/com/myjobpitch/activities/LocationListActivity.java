@@ -313,7 +313,7 @@ public class LocationListActivity extends MJPProgressActionBarActivity  {
                 intent = new Intent(this, PaymentActivity.class);
                 intent.putExtra("business_id", business.getId());
                 intent.putExtra("credits", business.getTokens());
-                startActivity(new Intent(this, PaymentActivity.class));
+                startActivity(intent);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

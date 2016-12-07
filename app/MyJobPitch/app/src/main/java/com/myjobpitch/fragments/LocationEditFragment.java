@@ -195,6 +195,7 @@ public class LocationEditFragment extends EditFragment<Location> implements Goog
     public void save(Location location) {
         location.setName(mLocationNameView.getText().toString());
         location.setDescription(mLocationDescView.getText().toString());
+        location.setAddress("");
         location.setEmail(mLocationEmailView.getText().toString());
         location.setEmail_public(mLocationEmailPublicView.isChecked());
         location.setTelephone(mLocationTelephoneView.getText().toString());

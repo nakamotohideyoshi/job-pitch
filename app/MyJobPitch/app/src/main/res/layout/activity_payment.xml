@@ -29,7 +29,7 @@
         android:paddingRight="@dimen/activity_horizontal_margin"
         android:paddingTop="@dimen/activity_vertical_margin" tools:context=".JobProfileEditFragment"
         android:layout_gravity="center"
-        android:id="@+id/change_password">
+        android:id="@+id/main_view">
 
 
         <TextView
@@ -50,7 +50,6 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/add_comment"
                 android:text="Add Credits"
                 android:textStyle="bold"
                 android:textSize="25sp"
@@ -60,6 +59,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:id="@+id/add_comment"
                 android:text="(30 Credits / £20)"
                 android:textStyle="bold"
                 android:textSize="15sp"
@@ -68,12 +68,37 @@
                 android:textColor="@color/grey_9"/>
 
             <Button
-                android:text="Add"
+                android:text="1. Purchase"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/add_button"
+                android:id="@+id/purchase_button"
                 android:enabled="false"
                 android:alpha="0.5"/>
+
+            <Button
+                android:text="2. Send to server"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/send_button"
+                android:enabled="false"
+                android:alpha="0.5"/>
+
+            <Button
+                android:text="3. Consume"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/consume_button"
+                android:enabled="false"
+                android:alpha="0.5"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/status_text"
+                android:text=""
+                android:textSize="15sp"
+                android:paddingRight="10dp"
+                android:paddingLeft="5dp"/>
 
         </LinearLayout>
 
@@ -81,7 +106,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:layout_marginTop="40dp">
+            android:layout_marginTop="40dp"
+            android:visibility="invisible">
 
             <TextView
                 android:layout_width="match_parent"

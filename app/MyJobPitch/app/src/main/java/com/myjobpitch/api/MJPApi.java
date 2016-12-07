@@ -28,6 +28,7 @@ import com.myjobpitch.api.data.MessageForCreation;
 import com.myjobpitch.api.data.MessageForUpdate;
 import com.myjobpitch.api.data.Nationality;
 import com.myjobpitch.api.data.Pitch;
+import com.myjobpitch.api.data.PurchaseInfo;
 import com.myjobpitch.api.data.Role;
 import com.myjobpitch.api.data.Sector;
 import com.myjobpitch.api.data.Sex;
@@ -428,6 +429,19 @@ public class MJPApi {
         jobSeeker.setCV(null);
         try {
             return rest.exchange(getObjectUrl("job-seekers", jobSeeker.getId()), HttpMethod.PUT, createAuthenticatedRequest(jobSeeker), JobSeeker.class).getBody();
+        } catch (HttpClientErrorException e) {
+            if (e.getStatusCode().value() == 400) {
+                throw new MJPApiException(e);
+            }
+            throw e;
+        }
+    }
+
+    public Business sendPurchaseInfo(Integer businessId, String productId, String purchaseToken) throws MJPApiException {
+        PurchaseInfo purchaseInfo = new PurchaseInfo(businessId, productId, purchaseToken);
+
+        try {
+            return rest.exchange(getTypeUrl("android/purchase"), HttpMethod.POST, createAuthenticatedRequest(purchaseInfo), Business.class).getBody();
         } catch (HttpClientErrorException e) {
             if (e.getStatusCode().value() == 400) {
                 throw new MJPApiException(e);

@@ -66,7 +66,7 @@ public class PaymentActivity extends MJPProgressActionBarActivity {
         String base64EncodedPublicKey = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAh6NSnG2gNpaDS8sf6VOIbjLo3pZNhwaO92Y58y3e5pMxoIDHZP0DdUNm36Nm/8W31lOed794EgAqevXu4yQZChGArzKYSOFaLOxTEuEhgBQEsstbwr84K4yrErOnM3yfy2KD5qS4DuEJf4cjlJbaCFMCvKWsk5oT/hNPwuGjJH5eDyxi/U6Hfo746sbvkhSyqQdg89Qfi//Jl2qNdBB4/UzEwJ+9YfpcU5cM7udN3kOaL1mQ8opkXqOWEAjXvuNZ4K2AqerU2ZZCJW+aLzX5bddlFnuq5H5anegJChXCnFsA3WXfxPUwIiiWP5m5GTop76iro6PTo9HZIDa0aUofHQIDAQAB";
 
         mHelper = new IabHelper(this, base64EncodedPublicKey);
-        mHelper.enableDebugLogging(true);
+        mHelper.enableDebugLogging(false);
         mHelper.startSetup(new IabHelper.OnIabSetupFinishedListener() {
             public void onIabSetupFinished(IabResult result) {
 
@@ -248,14 +248,14 @@ public class PaymentActivity extends MJPProgressActionBarActivity {
 //                subscribe_comment.setText("(50 Credits / " + subscribeDetails.getPrice() + ")");
 //            }
 
-            SkuDetails addDetails = inventory.getSkuDetails(SKU_CREDITS);
-            if (addDetails != null) {
-                TextView add_comment = (TextView)findViewById(R.id.add_comment);
-                add_comment.setText("(30 Credits / " + addDetails.getPrice() + ")");
-            }
+//            SkuDetails addDetails = inventory.getSkuDetails(SKU_CREDITS);
+//            if (addDetails != null) {
+//                TextView add_comment = (TextView)findViewById(R.id.add_comment);
+//                add_comment.setText("(30 Credits / " + addDetails.getPrice() + ")");
+//            }
 
             Purchase creditPurchase = inventory.getPurchase(SKU_CREDITS);
-            if (creditPurchase != null && creditPurchase.getDeveloperPayload() == PAYLOAD) {
+            if (creditPurchase != null && creditPurchase.getDeveloperPayload().equals(PAYLOAD)) {
                 //sendPurchaseInfoToServer(creditPurchase);
                 currentPurchase = creditPurchase;
                 setButtonEnable(sendButton, true);
@@ -279,7 +279,7 @@ public class PaymentActivity extends MJPProgressActionBarActivity {
                 complain("Error purchasing: " + result);
                 return;
             }
-            if (purchase.getDeveloperPayload() != PAYLOAD) {
+            if (!purchase.getDeveloperPayload().equals(PAYLOAD)) {
                 complain("Error purchasing. Authenticity verification failed.");
                 return;
             }
@@ -312,14 +312,14 @@ public class PaymentActivity extends MJPProgressActionBarActivity {
                 setButtonEnable(addButton, true);
                 statusText.setText("consume successfully!");
             } else {
-                complain("Error while consuming");
+                complain("Error while consuming: " + result);
             }
 
         }
     };
 
     void complain(String message) {
-        alert("Error: " + message);
+        alert(message);
         statusText.setText("Error: " + message);
     }
 

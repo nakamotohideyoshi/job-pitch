@@ -2,20 +2,20 @@ package com.myjobpitch.activities;
 
 import android.app.AlertDialog;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.myjobpitch.MJPApplication;
 import com.myjobpitch.R;
 import com.myjobpitch.api.MJPApi;
 import com.myjobpitch.api.MJPApiException;
 import com.myjobpitch.api.data.Business;
+import com.myjobpitch.utils.IabBroadcastReceiver;
+import com.myjobpitch.utils.IabBroadcastReceiver.IabBroadcastListener;
 import com.myjobpitch.utils.IabHelper;
 import com.myjobpitch.utils.IabResult;
 import com.myjobpitch.utils.Inventory;
@@ -24,7 +24,9 @@ import com.myjobpitch.utils.SkuDetails;
 
 import org.springframework.web.client.RestClientException;
 
-public class PaymentActivity extends MJPProgressActionBarActivity {
+import java.util.ArrayList;
+
+public class PaymentActivity extends MJPProgressActionBarActivity implements IabBroadcastListener {
 
     private View main_view;
     private View mProgressView;
@@ -39,7 +41,7 @@ public class PaymentActivity extends MJPProgressActionBarActivity {
     private Button subscribeButton;
 
     static final String PAYLOAD = "myjobpitch";
-    static final String SKU_CREDITS = "credits";
+    static final String SKU_CREDITS = "tokens_1";
     static final String SKU_SUBSCRIBE = "subscrip";
 
     static final int RC_REQUEST = 10001;
@@ -49,6 +51,7 @@ public class PaymentActivity extends MJPProgressActionBarActivity {
 
     Purchase currentPurchase;
     IabHelper mHelper;
+    IabBroadcastReceiver mBroadcastReceiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,7 +69,7 @@ public class PaymentActivity extends MJPProgressActionBarActivity {
         String base64EncodedPublicKey = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAh6NSnG2gNpaDS8sf6VOIbjLo3pZNhwaO92Y58y3e5pMxoIDHZP0DdUNm36Nm/8W31lOed794EgAqevXu4yQZChGArzKYSOFaLOxTEuEhgBQEsstbwr84K4yrErOnM3yfy2KD5qS4DuEJf4cjlJbaCFMCvKWsk5oT/hNPwuGjJH5eDyxi/U6Hfo746sbvkhSyqQdg89Qfi//Jl2qNdBB4/UzEwJ+9YfpcU5cM7udN3kOaL1mQ8opkXqOWEAjXvuNZ4K2AqerU2ZZCJW+aLzX5bddlFnuq5H5anegJChXCnFsA3WXfxPUwIiiWP5m5GTop76iro6PTo9HZIDa0aUofHQIDAQAB";
 
         mHelper = new IabHelper(this, base64EncodedPublicKey);
-        mHelper.enableDebugLogging(false);
+        mHelper.enableDebugLogging(true);
         mHelper.startSetup(new IabHelper.OnIabSetupFinishedListener() {
             public void onIabSetupFinished(IabResult result) {
 
@@ -77,7 +80,18 @@ public class PaymentActivity extends MJPProgressActionBarActivity {
 
                 if (mHelper == null) return;
 
-                mHelper.queryInventoryAsync(mGotInventoryListener);
+                mBroadcastReceiver = new IabBroadcastReceiver(PaymentActivity.this);
+                IntentFilter broadcastFilter = new IntentFilter(IabBroadcastReceiver.ACTION);
+                registerReceiver(mBroadcastReceiver, broadcastFilter);
+
+                // IAB is fully set up. Now, let's get an inventory of stuff we own.
+                try {
+                    ArrayList moreItemSkus = new ArrayList();
+                    moreItemSkus.add(SKU_CREDITS);
+                    mHelper.queryInventoryAsync(true, moreItemSkus, null, mGotInventoryListener);
+                } catch (IabHelper.IabAsyncInProgressException e) {
+                    complain("Error querying inventory. Another async operation in progress.");
+                }
 
             }
         });
@@ -88,8 +102,13 @@ public class PaymentActivity extends MJPProgressActionBarActivity {
             @Override
             public void onClick(View view) {
                 showProgress(true);
-                mHelper.launchPurchaseFlow(PaymentActivity.this, SKU_CREDITS, RC_REQUEST,
-                        mPurchaseFinishedListener, PAYLOAD);
+                try {
+                    mHelper.launchPurchaseFlow(PaymentActivity.this, SKU_CREDITS, RC_REQUEST,
+                            mPurchaseFinishedListener, PAYLOAD);
+                } catch (IabHelper.IabAsyncInProgressException e) {
+                    complain("Error launching purchase flow. Another async operation in progress.");
+                    showProgress(false);
+                }
             }
         });
 
@@ -106,7 +125,12 @@ public class PaymentActivity extends MJPProgressActionBarActivity {
             @Override
             public void onClick(View view) {
                 showProgress(true);
-                mHelper.consumeAsync(currentPurchase, mConsumeFinishedListener);
+                try {
+                    mHelper.consumeAsync(currentPurchase, mConsumeFinishedListener);
+                } catch (IabHelper.IabAsyncInProgressException e) {
+                    complain("Error consuming gas. Another async operation in progress.");
+                    showProgress(false);
+                }
             }
         });
 
@@ -150,8 +174,15 @@ public class PaymentActivity extends MJPProgressActionBarActivity {
     @Override
     public void onDestroy() {
         super.onDestroy();
+
+        // very important:
+        if (mBroadcastReceiver != null) {
+            unregisterReceiver(mBroadcastReceiver);
+        }
+
+        // very important:
         if (mHelper != null) {
-            mHelper.dispose();
+            mHelper.disposeWhenFinished();
             mHelper = null;
         }
     }
@@ -165,6 +196,16 @@ public class PaymentActivity extends MJPProgressActionBarActivity {
         if (!mHelper.handleActivityResult(requestCode, resultCode, data)) {
             super.onActivityResult(requestCode, resultCode, data);
         } else {
+        }
+    }
+
+    @Override
+    public void receivedBroadcast() {
+        // Received a broadcast notification that the inventory of items has changed
+        try {
+            mHelper.queryInventoryAsync(mGotInventoryListener);
+        } catch (IabHelper.IabAsyncInProgressException e) {
+            complain("Error querying inventory. Another async operation in progress.");
         }
     }
 
@@ -248,11 +289,11 @@ public class PaymentActivity extends MJPProgressActionBarActivity {
 //                subscribe_comment.setText("(50 Credits / " + subscribeDetails.getPrice() + ")");
 //            }
 
-//            SkuDetails addDetails = inventory.getSkuDetails(SKU_CREDITS);
-//            if (addDetails != null) {
-//                TextView add_comment = (TextView)findViewById(R.id.add_comment);
-//                add_comment.setText("(30 Credits / " + addDetails.getPrice() + ")");
-//            }
+            SkuDetails addDetails = inventory.getSkuDetails(SKU_CREDITS);
+            if (addDetails != null) {
+                TextView add_comment = (TextView)findViewById(R.id.add_comment);
+                add_comment.setText("(30 Credits / " + addDetails.getPrice() + ")");
+            }
 
             Purchase creditPurchase = inventory.getPurchase(SKU_CREDITS);
             if (creditPurchase != null && creditPurchase.getDeveloperPayload().equals(PAYLOAD)) {

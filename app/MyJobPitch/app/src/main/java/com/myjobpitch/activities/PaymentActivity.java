@@ -5,15 +5,23 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.system.ErrnoException;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+//import com.google.api.services.androidpublisher.AndroidPublisher;
+//import com.google.api.services.androidpublisher.model.InAppProduct;
+//import com.google.api.services.androidpublisher.model.InappproductsBatchResponse;
+//import com.google.api.services.androidpublisher.model.InappproductsListResponse;
 import com.myjobpitch.MJPApplication;
 import com.myjobpitch.R;
 import com.myjobpitch.api.MJPApi;
 import com.myjobpitch.api.MJPApiException;
 import com.myjobpitch.api.data.Business;
+//import com.myjobpitch.utils.AndroidPublisherHelper;
+//import com.myjobpitch.utils.ApplicationConfig;
 import com.myjobpitch.utils.IabBroadcastReceiver;
 import com.myjobpitch.utils.IabBroadcastReceiver.IabBroadcastListener;
 import com.myjobpitch.utils.IabHelper;
@@ -24,6 +32,7 @@ import com.myjobpitch.utils.SkuDetails;
 
 import org.springframework.web.client.RestClientException;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class PaymentActivity extends MJPProgressActionBarActivity implements IabBroadcastListener {
@@ -153,6 +162,19 @@ public class PaymentActivity extends MJPProgressActionBarActivity implements Iab
 //        });
 
         showProgress(false);
+
+
+//        try {
+//            AndroidPublisher androidPublisher = AndroidPublisherHelper.init(ApplicationConfig.APPLICATION_NAME);
+//            InappproductsListResponse list = androidPublisher.inappproducts().list(ApplicationConfig.PACKAGE_NAME).execute();
+//            for (InAppProduct p : list.getInappproduct()) {
+//                int i = 0;
+//            }
+//
+//        } catch (Exception ex) {
+//            complain(ex.getLocalizedMessage());
+//        }
+
 
     }
 

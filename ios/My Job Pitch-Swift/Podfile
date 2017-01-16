@@ -1,0 +1,19 @@
+platform :ios, '8.0'
+use_frameworks!
+
+target 'MyJobPitch' do
+
+    pod 'AWSS3'
+    pod 'RestKit'
+    pod 'GoogleMaps'
+    pod 'GooglePlaces'
+    pod 'MBProgressHUD'
+    pod 'UITextView+Placeholder'
+    pod 'STPopup'
+    pod 'MDCSwipeToChoose'
+    pod 'MGSwipeTableCell'
+    pod 'SVPullToRefresh'
+    pod 'CameraManager'
+    pod 'JSQMessagesViewController'
+    
+end

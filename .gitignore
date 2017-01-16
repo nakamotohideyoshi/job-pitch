@@ -40,5 +40,11 @@ ios/My Job Pitch/MyJobPitch.xcodeproj/project.xcworkspace/
 ios/My Job Pitch/MyJobPitch.xcodeproj/xcuserdata/
 ios/My Job Pitch/MyJobPitch.xcworkspace/
 
+ios/My Job Pitch-Swift/Podfile.lock
+ios/My Job Pitch-Swift/Pods/
+ios/My Job Pitch-Swift/MyJobPitch.xcodeproj/project.xcworkspace/
+ios/My Job Pitch-Swift/MyJobPitch.xcodeproj/xcuserdata/
+ios/My Job Pitch-Swift/MyJobPitch.xcworkspace/
+
 web/src/local.py
 web/src/local_live.py

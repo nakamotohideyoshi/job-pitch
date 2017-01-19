@@ -2,6 +2,7 @@
 
 
   {% block navigation-menu %}
+  <ul class="nav navbar-nav navbar-right">
     <li class="dropdown">
       <a class="dropdown-toggle" data-toggle="dropdown" href="#">How it Works <span class="glyphicon glyphicon-chevron-down" aria-hidden="true"></span></a>
       <ul class="dropdown-menu">
@@ -14,5 +15,6 @@
     <li><a href="/terms-conditions/">Terms & Conditions</a></li>
     <li class="not_logged_in_menu"><a href="#" data-toggle="modal" data-target="#loginModal">Login</a></li>
     <li class="business-link job-seeker-link not_logged_in_element"><a href="javascript:logoutUser();">Log Out</a></li>
+  </ul>
   {% endblock %}
 

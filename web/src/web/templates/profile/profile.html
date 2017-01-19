@@ -1,0 +1,54 @@
+{% extends "mjp_user_base.html" %}
+
+
+{% block page-title %}
+  <div class="row">
+    <h2>My Profile</h2>
+  </div>
+{% endblock %}
+
+
+{% block content %}
+  <div class="profile col-xs-12">
+    <div class="row">
+      <div class="profile-content col-xs-9">
+        <div class="row">
+          <div class="col-xs-12">
+            <div class="row">
+              <div class="col-xs-3"><img /></div>
+              <div class="col-xs-9">
+                <h2><strong>Name Here</strong></h2>
+                <h4><strong>Job title would go here</strong></h4>
+                <h4 style="color:#777">New York, NY</h4>
+              </div>
+            </div>
+            <div class="row dotted-line">
+              <div class="col-xs-1 col-xs-offset-5 pitch-replay-icon"></div>
+            </div>
+            <div class="row">
+              <div class="col-xs-12">
+                <h5><strong>Overview</strong></h5>
+                <p>Sed semper quam in volutpat posuere. Aliquam quis laoreet urna, sed consequat metus. Quisque in vestibulum felis, ac rutrum erat. Aenean at gravida massa. Nulla efficitur lacinia metus, pretium sollicitudin nunc posuere non. Vivamus id nibh ex. Nam urna quam, ornare a interdum nec, lobortis a elit. Praesent sit amet risus elit. Quisque tristique metus lorem, in consequat diam consequat ac. Pellentesque ac accumsan nisl. Vivamus dictum velit non velit mollis, a semper ex venenatis. Nunc facilisis mauris eu pulvinar semper. Aenean dapibus dictum orci, vulputate vulputate tellus commodo quis. Donec tincidunt ultricies maximus. Nulla facilisi.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="profile-sidebar col-xs-3">
+        <div class="row">
+          <a href="/profile/edit-job-seeker/" class="btn btn-primary sclabs-theme col-xs-12">Edit Profile</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+{% endblock %}
+
+{% block sidebar %}
+{% endblock %}
+
+{% block pagescripts %}
+  <script src="/static/web/js/lodash.min.js"></script>
+  <script src="/static/web/js/mjp-scripts/messages.js"></script>
+{% endblock %}

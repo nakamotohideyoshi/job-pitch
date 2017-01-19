@@ -1,36 +1,37 @@
-{% extends "mjp_jobseeker_base.html" %}
+{% extends "mjp_user_base.html" %}
 
 
-{% block page-title %}<h2 class="page-header">Edit Business</h2>{% endblock %}
+{% block page-title %}<h2 class="page-header">Profile Settings</h2>{% endblock %}
 
 
 {% block content %}
   <div class="col-sm-7 col-sm-offset-1">
+    <h3>My Account Summary</h3>
 
     <!-- Page Heading -->
     <div class="row">
-        <div class="col-lg-12">
-          <div class="alert" role="alert"></div>
-					<form role="form" method="post" id="company_details" enctype="multipart/form-data">
-						<div class="form-group">
-							<label>Company Details:</label>
-								<input type="text" required class="form-control" placeholder="Company Name" name="company_name" id="company_name">
-						</div>
+      <div class="col-lg-12">
+        <div class="alert" role="alert"></div>
+        <form role="form" method="post" id="company_details" enctype="multipart/form-data">
+          <div class="form-group">
+            <label>Company Details:</label>
+            <input type="text" required class="form-control" placeholder="Company Name" name="company_name" id="company_name">
+          </div>
 
-						<div class="form-group">
-								<label>Company Logo:</label>
-                                        <br />
-                                        <img src="" id="currentLogo" style="display:none;" width="200px" />
-                                        <input type="file" class="form-control" name="image" id="company_logo">
-								<input type="hidden" name="order" value="0">
-						</div>
+          <div class="form-group">
+            <label>Company Logo:</label>
+            <br />
+            <img src="" id="currentLogo" style="display:none;" width="200px" />
+            <input type="file" class="form-control" name="image" id="company_logo">
+            <input type="hidden" name="order" value="0">
+          </div>
 
-						<input type="hidden" name="business" id="business" value="0">
+          <input type="hidden" name="business" id="business" value="0">
 
-						<button type="submit" class="btn btn-primary form-buttons">Edit</button>
-						{% csrf_token %}
-					</form>
-        </div>
+          <button type="submit" class="btn btn-primary form-buttons">Edit</button>
+          {% csrf_token %}
+        </form>
+      </div>
     </div>
     <!-- /.row -->
   </div>
@@ -38,7 +39,7 @@
 {% endblock %}
 {% block pagescripts %}
 
-	<script src="/static/web/js/mjp-scripts/store/user-business-store.js"></script>
-	<script src="/static/web/js/mjp-scripts/edit-business.js"></script>
+  <script src="/static/web/js/mjp-scripts/store/user-business-store.js"></script>
+  <script src="/static/web/js/mjp-scripts/edit-business.js"></script>
 
 {% endblock %}

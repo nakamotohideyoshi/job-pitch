@@ -1,0 +1,95 @@
+{% extends "mjp_base.html" %}
+
+
+  {% block navigation-menu %}
+  <ul class="nav navbar-nav navbar-right job-seeker-link">
+    <li><a href="/jobs/">Find a Job </a></li>
+    <li><a href="/messages/">Messages </a></li>
+    <li><a href="/applications/">Applications </a></li>
+    <li><a href="/profile/">Profile </a></li>
+    <li><a href="javascript:logoutUser();">Log Out</a></li>
+  </ul>
+  <ul class="nav navbar-nav navbar-right business-link">
+    <li><a href="/find-staff/">Find Talent </a></li>
+    <li><a href="/profile/create-location/">Add Work Place </a></li>
+    <li><a href="/profile/create-job/">Post a Jobs </a></li>
+    <li><a href="/messages/" class="navbar-message-icon"></a></li>
+    <li><a href="/profile/list-jobs/" class="navbar-notification-icon"></a></li>
+    <li class="dropdown">
+      <a class="dropdown-toggle" data-toggle="dropdown" href="#">My Profile <span class="glyphicon glyphicon-chevron-down" aria-hidden="true"></span></a>
+      <ul class="dropdown-menu">
+        <div class="arrow-up"></div>
+        <li><a href="/profile/list-jobs/">My Postings</a></li>
+        <li><a href="/connections/">My Contacts</a></li>
+        <li><span><a href="/profile/">Profile</a>&nbsp;&nbsp;|&nbsp;&nbsp;<a href="/profile/edit-business/">Edit</a></span></li>
+        <li><a href="/howitworks/recruiter">Payments</a></li>
+        <li><a href="/howitworks/recruiter">Settings</a></li>
+      </ul>
+    </li>
+    <li><a href="javascript:logoutUser();">Log Out</a></li>
+  </ul>
+  {% endblock %}
+
+
+  {% block sidebar %}
+    <div class="col-sm-3">
+      <h3 class="sidebar-title">User Settings</h3>
+      <div role="tabpanel">
+        <ul class="nav nav-pills brand-pills nav-stacked" role="tablist">
+          <li role="presentation" class="brand-nav"><a href="/profile/edit-job-seeker"><h4>Profile Settings</h4></a></li>
+          <li role="presentation" class="brand-nav"><a href="/password-change"><h4>Change Password</h4></a></li>
+          <li role="presentation" class="brand-nav"><a href="/profile/notification-settings"><h4>Notification Settings</h4></a></li>
+          <li role="presentation" class="brand-nav job-seeker-link"><a href="/profile/edit-job-preferences"><h4>Job Match Profile</h4></a></li>
+          <li role="presentation" class="brand-nav business-link"><a href="/profile/edit-job-preferences"><h4>Payments</h4></a></li>
+          <li role="presentation" class="brand-nav business-link"><a href="/profile/edit-job-preferences"><h4>Payments</h4></a></li>
+          <li role="presentation" class="brand-nav business-link"><a href="/profile/edit-job-preferences"><h4>Payments</h4></a></li>
+        </ul>
+      </div>
+    </div>
+  {% endblock %}
+
+
+  {% block footer %}
+  <footer class="mjp-footer">
+    <div class="row">
+      <div class="col-xs-3 col-xs-offset-1 col-md-3 col-md-offset-1">
+        <img src="/static/web/design/images/logo-footer.png">
+      </div>
+
+      <div class="col-xs-4 col-md-4">
+        <ul>
+          <li><a href="/about/">About</a></li>
+          <li><a href="/terms-conditions/">Terms & Conditions</a></li>
+          <li class="dropdown">
+            <a class="dropdown-toggle" data-toggle="dropdown" href="#">How it Works <span class="glyphicon glyphicon-chevron-down" aria-hidden="true"></span></a>
+            <ul class="dropdown-menu">
+              <div class="arrow-up"></div>
+              <li><a href="/howitworks/job-seeker">Job Seeker</a></li>
+              <li><a href="/howitworks/recruiter">Recruiter</a></li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+
+      <div class="col-xs-4 col-md-4">
+        <div class="row">
+          <div class="col-xs-12">
+            <p>
+            <a href="tel:123456789" class="footer-link-center">tel: 123 456 789</a><br>
+            <span class="email"><a href="mailto:email@mjp.com" class="footer-link-center">e-mail: email@mjp.com</a></span>
+            </p>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-xs-12">
+            <a href="#"><img src="/static/web/design/images/fb-icon.png"></a>
+            <a href="#"><img src="/static/web/design/images/twitter-icon.png"></a>
+            <a href="#"><img src="/static/web/design/images/yt-icon.png"></a>
+            <a href="#"><img src="/static/web/design/images/linkedin-icon.png"></a>
+            <a href="#"><img src="/static/web/design/images/gplus-icon.png"></a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+  {% endblock %}

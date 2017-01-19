@@ -20,27 +20,23 @@
 	<link href="/static/web/design/css/bootstrap.min.css" rel="stylesheet">
 
 	<!-- Bootstrap Extras CSS -->
-	<link href="/static/web/design/css/bootstrap-switch.min.css" rel="stylesheet">
+  <!-- link href="/static/web/design/css/bootstrap-switch.min.css" rel="stylesheet" -->
+  <link href="/static/web/design/css/bootstrap-toggle.min.css" rel="stylesheet">
 
   <!-- Custom CSS -->
   <link href="/static/web/design/css/mjp.css" rel="stylesheet">
 
   <!-- loading some no-critical CSS asyncronously -->
   <script type="text/javascript">
+    // Load Messenger CSS (Notification Systems)
     var stylesheet = loadCSS( "/static/web/design/css/messenger.css" );
     onloadCSS( stylesheet, function () {
       loadCSS( "/static/web/design/css/messenger-theme-future.css" );
     });
 
+    // Custom Fonts
     loadCSS( "/static/web/design/font-awesome/css/font-awesome.min.css" );
   </script>
-
-	<!-- Messenger CSS (Notification Sytems) -->
-	<!-- link  href="/static/web/design/css/messenger.css" rel="stylesheet" type="text/css">
-	<link  href="/static/web/design/css/messenger-theme-future.css" rel="stylesheet" type="text/css">
-
-	<!-- Custom Fonts -->
-	<!-- link href="/static/web/design/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css" -->
 
 	<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
 	<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -91,6 +87,7 @@
 	<!-- /#wrapper -->
 
 	<!-- Footer -->
+  {% block footer %}
 	<footer class="mjp-footer">
 		<div class="row">
 			<div class="col-xs-2 col-md-4">
@@ -115,6 +112,7 @@
 			</div>
 		</div>
 	</footer>
+  {% endblock %}
 	<!-- /.container -->
 
 	<!-- Modals -->
@@ -248,7 +246,7 @@
 	<script src="/static/web/design/js/bootstrap.min.js"></script>
 
 	<!-- Bootstrap Extras JavaScript -->
-	<script src="/static/web/js/bootstrap-switch.min.js"></script>
+	<script src="/static/web/design/js/bootstrap-toggle.min.js"></script>
 	<script src="/static/web/js/bootbox.min.js"></script>
 
 	<!-- Messenger Core JavaScript -->

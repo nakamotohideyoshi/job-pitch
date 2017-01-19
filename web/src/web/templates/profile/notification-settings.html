@@ -1,0 +1,66 @@
+{% extends "mjp_user_base.html" %}
+
+
+{% block page-title %}<h2 class="page-header">Notification Settings</h2>{% endblock %}
+
+
+{% block content %}
+  <div class="col-sm-7 col-sm-offset-1">
+    <div class="row">
+      <div class="col-md-10 col-md-offset-1">
+        <form role="form"  method="post" id="job-preferences">
+          <div class="alert" role="alert"></div>
+
+          <div class="row">
+            <div class="col-sm-12">
+              <h3>Messages</h3>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-sm-6">
+              <div class="form-group">
+                <label>Show notifications for:</label>
+                <select class="form-control" name="message-settings" id="message-settings">
+                  <option value="" selected="">All activity</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div class="separator"></div>
+
+          <div class="row">
+            <div class="col-sm-12">
+              <h3>eMail</h3>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-sm-6">
+              <div class="form-group">
+                <label>Show notifications for:</label>
+                <select class="form-control" name="email-settings" id="email-settings">
+                  <option value="" selected="">All activity</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-sm-4">
+              <button type="submit" class="btn btn-primary sclabs-theme">&nbsp;&nbsp;&nbsp;&nbsp;Save&nbsp;&nbsp;&nbsp;&nbsp;</button>
+            </div>
+          </div>
+
+          {% csrf_token %}
+        </form>
+      </div>
+    </div>
+  </div>
+{% endblock %}
+
+
+{% block pagescripts %}
+<script src="/static/web/js/mjp-scripts/password-change.js"></script>
+{% endblock %}

@@ -15,7 +15,7 @@ $(function () {
 		csrftoken: getCookie('csrftoken')
 	};
 
-	$("#status_job").bootstrapSwitch();
+	$("#status_job").bootstrapToggle();
 
 	//grab job_id id from url
 	var job_id = QueryString.id;
@@ -55,7 +55,7 @@ $(function () {
 
 	$.get("/api/user-jobs/" + job_id, query).done(function (data) {
 		if (data.status == closed_job_status) {
-			$('#status_job').bootstrapSwitch('toggleState');
+			$('#status_job').bootstrapToggle(); //('toggleState');
 		}
 		$('.bootstrap-switch-label').css('font-size', '13px');
 

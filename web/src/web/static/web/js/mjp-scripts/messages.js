@@ -45,7 +45,33 @@ function renderMessages(messages, fileTemplate, context) {
 
 }
 
+function setInboxContainerHeight(){
+  var viewportWidth = $(window).width();
+  var viewportHeight = $(window).height();
+
+  //$('.content-page').css('max-height', 'calc(' + viewportHeight + 'px - 200px )');
+
+  var inboxHeaderHeight = $('.inbox-header').height();
+
+  //usedSpace = $('.inbox-content').prev().css('max-height');
+  var inboxContentHeight = viewportHeight - inboxHeaderHeight  - 200;
+  $('.inbox-contacts, .inbox-messages').css({
+    'max-height': (inboxContentHeight) + 'px',
+    'height': (inboxContentHeight) + 'px'
+  });
+
+  var inboxMessageHeight = $('.inbox-messages').height();
+  var newMessageBoxHeight = $('.new-message-box').height();
+  $('.message-history').css('max-height',  (inboxMessageHeight - newMessageBoxHeight - 20) + 'px');
+}
+
 $(function() {
+  // Set Inbox Container dinamically
+  setInboxContainerHeight();
+  $(window).resize(function() {
+    setInboxContainerHeight();
+  });
+
 	// Run login check funtion with auto-redirect
 	checkLogin(true);
 

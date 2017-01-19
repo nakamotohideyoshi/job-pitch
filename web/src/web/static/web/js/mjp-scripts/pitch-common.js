@@ -5,33 +5,69 @@ function videoIsReadyForPlay(video) {
 }
 
 function checkIfThereIsApitch(argument) {
-	log('info', 'Looking for a pitch...');
+  log('info', 'Looking for a pitch...');
 
-	var poolingPromise = new Promise(function (resolve, reject) {
-			poolingTranscodeProcess(resolve);
-		})
-		.then(function (pitches) {
-			var html = getHtmlForVideoOrThumbnail(pitches);
+  var poolingPromise = new Promise(function (resolve, reject) {
+      poolingTranscodeProcess(resolve);
+    })
+    .then(function (pitches) {
+      var html = getHtmlForVideoOrThumbnail(pitches);
 
-			$('#pitchVideoCheck').html(html);
+      $('#pitchVideoCheck').html(html);
 
-			if (pitches == undefined || pitches.length == 0) {
-				log('danger', 'There is not a pitch.');
-				return;
-			}
+      if (pitches == undefined || pitches.length == 0) {
+        log('danger', 'There is not a pitch.');
+        return;
+      }
 
-			var videoLoading = document.getElementById('viewing-container');
-			if (!videoIsReadyForPlay(videoLoading)) {
-				log('info', 'Loading...');
+      var videoLoading = document.getElementById('viewing-container');
+      if (!videoIsReadyForPlay(videoLoading)) {
+        log('info', 'Loading...');
 
-				var intervalVideoLoading = setInterval(function (argument) {
-					if (videoIsReadyForPlay(videoLoading)) {
-						log('hide');
-						clearInterval(intervalVideoLoading);
-					}
-				}, 2000);
-			}
-		});
+        var intervalVideoLoading = setInterval(function (argument) {
+          if (videoIsReadyForPlay(videoLoading)) {
+            log('hide');
+            clearInterval(intervalVideoLoading);
+          }
+        }, 2000);
+      }
+    });
+}
+
+
+function getHtmlThumbnailForApitch(argument) {
+  var content = '<img src="/static/web/images/no_image_available.png" styles="width:160px;">';
+
+  return new Promise(function (resolve, reject) {
+    poolingTranscodeProcess(resolve);
+  })
+  .then(function (pitches) {
+    var link = '';
+
+    $.each(pitches, function (index, pitch) {
+      if (_.hasIn(pitch, 'thumbnail') && !_.isEmpty(pitch.thumbnail)) {
+        link = pitch.thumbnail;
+        content = '<img src="<%= url %>">';
+        return false; // out of  $.each
+      }
+    });
+
+    var template = _.template(content);
+
+    return template({
+      url: link
+    });
+
+  })
+  .catch(function (pitches) {
+
+    var template = _.template(content);
+
+    return template({
+      url: link
+    });
+
+  });
 }
 
 

@@ -1,142 +1,208 @@
-{% extends "mjp_base.html" %}
+{% extends "mjp_user_base.html" %}
+
+{% block page-title %}<h2 class="page-header">Profile Settings</h2>{% endblock %}
 
 {% block content %}
-	<div class="container-fluid">
+  <div class="col-sm-9">
+    <!-- Page Heading -->
+    <div class="row">
+      <div class="col-sm-12">
+        <h3>My Account Summary</h3>
+      </div>
+    </div>
 
-                <!-- Page Heading -->
-                <div class="row">
-                    <div class="col-lg-12">
-                        <h1 class="page-header">
-                            Edit Profile
-                        </h1>
+    <div class="row">
+      <div class="col-sm-12">
+        <form class="form-horizontal" role="form"  method="put" id="profile" enctype="multipart/form-data">
+          <div class="alert hide" role="alert"></div>
 
-						<div class="col-lg-12">
-							<div class="col-md-4 col-md-offset-4">
-								<form role="form"  method="put" id="profile" enctype="multipart/form-data">
+          <div class="separator"></div>
 
-									<div class="alert" role="alert"></div>
-
-
-                                	<div class="form-group">
-										<label>Account Active:</label>
-										<input type="checkbox" name="active" id="active_account" checked>
-									</div>
-                                    <div id="account_details_not_active">
-                                    	<p>Your account is currently inactive, and will not be visible to employers.</p>
-                                    </div>
-                                	<div id="account_details_active_only">
-									<div class="form-group">
-										<label>Profile:</label>
-											<input type="text" class="form-control" required placeholder="First Name" name="first_name" id="first_name" data-error-field="first_name">
-									</div>
-
-									<div class="form-group">
-											<input type="text" class="form-control" required placeholder="Last Name" name="last_name" id="last_name" data-error-field="last_name">
-									</div>
-
-									<div class="form-group">
-										<div class="col-md-10">
-											<input type="text" class="form-control"  data-error-field="email" placeholder="Email (optional)" name="email" id="email">
-										</div>
-										<div class="col-md-2">
-											<label class="checkbox-inline">
-											  <input type="checkbox" id="email_public" name="email_public" value="true" checked> Public
-											</label>
-										</div>
-									</div>
-
-									<div class="form-group">
-										<div class="col-md-10">
-											<input type="text" class="form-control" placeholder="Telephone (optional)" data-error-field="telephone" name="telephone" id="telephone">
-										</div>
-										<div class="col-md-2">
-											<label class="checkbox-inline">
-											  <input type="checkbox" id="telephone_public" name="telephone_public" value="true" checked> Public
-											</label>
-										</div>
-									</div>
-
-									<div class="form-group">
-										<div class="col-md-10">
-											<input type="text" data-error-field="mobile" class="form-control" placeholder="Mobile (optional)" name="mobile" id="mobile">
-										</div>
-										<div class="col-md-2">
-											<label class="checkbox-inline">
-											  <input type="checkbox" id="mobile_public" name="mobile_public" value="true" checked> Public
-											</label>
-										</div>
-									</div>
-
-									<div class="form-group">
-										<div class="col-md-10">
-											<input type="text" data-error-field="age" class="form-control" placeholder="Age (optional)" name="age" id="age">
-										</div>
-										<div class="col-md-2">
-											<label class="checkbox-inline">
-											  <input type="checkbox" id="age_public" name="age_public" value="true" checked> Public
-											</label>
-										</div>
-									</div>
-
-									<div class="form-group">
-										<div class="col-md-10">
-											<select class="form-control" data-error-field="sex" name="sex" id="sex">
-												<option value="" selected="">Sex (optional)</option>
-											</select>
-										</div>
-										<div class="col-md-2">
-											<label class="checkbox-inline">
-											  <input type="checkbox" id="sex_public" name="sex_public" value="true" checked> Public
-											</label>
-										</div>
-									</div>
-
-									<div class="form-group">
-										<div class="col-md-10">
-											<select class="form-control" data-error-field="nationality" name="nationality" id="nationality">
-											  <option value="" selected="">Nationality (optional)</option>
-											</select>
-										</div>
-										<div class="col-md-2">
-											<label class="checkbox-inline">
-											  <input type="checkbox" id="nationality_public" name="nationality_public" value="true" checked> Public
-											</label>
-										</div>
-									</div>
-									<div class="form-group">
-												<label>Upload CV:</label>
-                                                <a href="#" target="_blank" id="CVcurrent">View Current CV</a>
-                                                <input type="file" data-error-field="cv"  class="form-control" name="cv" id="cv_upload">
-												<input type="hidden" name="order" value="0">
-									</div>
-                                    <div class="form-group">
-										<div class="col-md-12">
-											<textarea class="form-control" placeholder="Description (Required) - Tell us a little about you in less than 50 words. For example, work experience and personality." name="description" id="description" data-error-field="description" maxlength="250" rows="4"></textarea>
-                                            <div id="textarea_feedback"></div>
-										</div>
-									</div>
-                                    </div>
-									{% csrf_token %}
-
-									<button type="submit" class="btn btn-primary" name="_method" value="PUT">Submit</button>
-
-
-								</form>
-
-							</div>
-						</div>
-
-                    </div>
-                </div>
-                <!-- /.row -->
-
-
+          <div class="form-group row">
+            <label for="email" class="col-sm-4 control-label">Personal Email</label>
+            <div class="col-sm-5">
+              <input type="text" class="form-control"  data-error-field="email" placeholder="Email (optional)" name="email" id="email">
             </div>
-            <!-- /.container-fluid -->
+            <div class="col-sm-3 text-right sclabs-theme">
+              <input type="checkbox" id="email_public" data-toggle="toggle" data-style="ios" name="email_public" value="true" checked>
+            </div>
+          </div>
 
+          <div class="separator"></div>
+
+          <div class="row">
+            <label for="email" class="col-sm-4 control-label">Profile Completeness</label>
+
+            <div class="col-sm-5">
+              <div class="progress">
+                <div class="progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 60%;">
+                  <span class="sr-only">60% Complete</span>
+                </div>
+              </div>
+            </div>
+
+            <label class="col-sm-2">60%</label>
+          </div>
+
+          <div class="separator"></div>
+
+          <div class="row">
+            <div class="col-sm-12">
+              <h3>My Profile</h3>
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label class="col-sm-4 control-label">Visibility</label>
+            <div class="col-sm-8 text-right sclabs-theme">
+              <input type="checkbox " name="active" id="active_account" data-toggle="toggle" data-style="ios" checked>
+            </div>
+          </div>
+
+          <div id="account_details_not_active">
+            <p>Your account is currently inactive, and will not be visible to employers.</p>
+          </div>
+          <div id="account_details_active_only">
+            <div class="separator"></div>
+            <div class="form-group row">
+              <label for="first_name" class="col-sm-4 control-label">First Name</label>
+              <div class="col-sm-6">
+                <input type="text" class="form-control" required placeholder="First Name" name="first_name" id="first_name" data-error-field="first_name">
+              </div>
+            </div>
+
+            <div class="form-group row">
+              <label for="last_name" class="col-sm-4 control-label">Last Name</label>
+              <div class="col-sm-6">
+                <input type="text" class="form-control" required placeholder="Last Name" name="last_name" id="last_name" data-error-field="last_name">
+              </div>
+            </div>
+
+            <div class="separator"></div>
+
+            <div class="form-group row">
+              <label for="age" class="col-sm-4 control-label">Age (optional)</label>
+              <div class="col-sm-5">
+                <input type="text" data-error-field="age" class="form-control" placeholder="Age (optional)" name="age" id="age">
+              </div>
+              <div class="col-sm-3 text-right sclabs-theme">
+                <label class="checkbox-inline">
+                  <input type="checkbox" id="age_public" name="age_public" value="true" data-toggle="toggle" data-style="ios" checked>
+                </label>
+              </div>
+            </div>
+
+            <div class="form-group row">
+              <label for="age" class="col-sm-4 control-label">Sex (optional)</label>
+              <div class="col-sm-5">
+                <select class="form-control" data-error-field="sex" name="sex" id="sex">
+                  <option value="" selected="">Sex (optional)</option>
+                </select>
+              </div>
+              <div class="col-sm-3 text-right sclabs-theme">
+                <label class="checkbox-inline">
+                  <input type="checkbox" id="sex_public" name="sex_public" value="true" data-toggle="toggle" data-style="ios" checked>
+                </label>
+              </div>
+            </div>
+
+            <div class="form-group row">
+              <label for="telephone" class="col-sm-4 control-label">Telephone (optional)</label>
+              <div class="col-sm-5">
+                <input type="text" class="form-control" placeholder="Telephone (optional)" data-error-field="telephone" name="telephone" id="telephone">
+              </div>
+              <div class="col-sm-3 text-right sclabs-theme">
+                <label class="checkbox-inline">
+                <input type="checkbox" id="telephone_public" name="telephone_public" value="true" data-toggle="toggle" data-style="ios" checked>
+                </label>
+              </div>
+            </div>
+
+            <div class="form-group row">
+              <label for="mobile" class="col-sm-4 control-label">Mobile (optional)</label>
+              <div class="col-sm-5">
+                <input type="text" data-error-field="mobile" class="form-control" placeholder="Mobile (optional)" name="mobile" id="mobile">
+              </div>
+              <div class="col-sm-3 text-right sclabs-theme">
+                <label class="checkbox-inline">
+                  <input type="checkbox" id="mobile_public" name="mobile_public" value="true" data-toggle="toggle" data-style="ios" checked>
+                </label>
+              </div>
+            </div>
+
+            <div class="separator"></div>
+
+            <div class="form-group row">
+              <div class="col-sm-12">
+                <p><strong>Overview:</strong></p>
+                <textarea class="form-control" placeholder="Description (Required) - Tell us a little about you in less than 50 words. For example, work experience and personality." name="description" id="description" data-error-field="description" maxlength="250" rows="4"></textarea>
+                <div id="textarea_feedback"></div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-sm-12">
+                <h3>Upload CV</h3>
+              </div>
+            </div>
+
+            <div class="form-group row">
+              <div class="col-sm-12">
+                <a href="#" target="_blank" id="CVcurrent">View Current CV</a>
+                <input type="file" data-error-field="cv"  class="form-control" name="cv" id="cv_upload">
+                <input type="hidden" name="order" value="0">
+              </div>
+            </div>
+          </div>
+
+          <div class="separator"></div>
+
+          <p><strong>Pitch:</strong></p>
+          <div class="form-group row">
+            <div class="col-sm-3">
+              <div id="pitchVideoCheck" style="width: 90%;"><span style="font-size: 2em; padding: 35px;" class="glyphicon glyphicon-refresh glyphicon-refresh-animate"></span></div>
+            </div>
+            <div class="col-sm-6">
+              <div class="row">
+                <a href="/profile/edit-pitch/">
+                  <div class="col-sm-1 pitch-record-icon"></div>
+                  <div class="col-sm-10"><p style="margin-top: 15px;">Record new pitch</p></div>
+                </a>
+              </div>
+              <div class="row">
+                <a href="/profile/viewpitch/">
+                  <div class="col-sm-1 pitch-replay-icon"></div>
+                  <div class="col-sm-10"><p style="margin-top: 15px;">Retake pitch</p></div>
+                </a>
+              </div>
+            </div>
+            <div class="col-sm-3 text-right sclabs-theme">
+              <label class="checkbox-inline">
+                <input type="checkbox" id="pitch_public" name="pitch_public" value="true" data-toggle="toggle" data-style="ios"data-onstyle="primary" checked>
+              </label>
+            </div>
+          </div>
+
+          {% csrf_token %}
+
+          <br >
+
+          <div class="row">
+            <div class="col-sm-4">
+              <button type="submit" class="btn btn-primary sclabs-theme" name="_method" value="PUT">&nbsp;&nbsp;&nbsp;&nbsp;Save&nbsp;&nbsp;&nbsp;&nbsp;</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div><!-- /.row -->
+  </div>
 {% endblock %}
+
+
 {% block pagescripts %}
 
-	<script src="/static/web/js/mjp-scripts/edit-profile-job-seeker.js"></script>
+  <script src="/static/web/js/lodash.min.js"></script>
+  <script src="/static/web/js/mjp-scripts/pitch-common.js"></script>
+  <script src="/static/web/js/mjp-scripts/edit-profile-job-seeker.js"></script>
 
 {% endblock %}

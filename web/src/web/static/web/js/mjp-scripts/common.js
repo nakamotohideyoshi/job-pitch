@@ -195,8 +195,10 @@ function userTypeMenuConfiguration(redirectToProfile) {
 			if (data.businesses.length) {
 				// business
 				$('.business-link').show();
+        $('.job-seeker-link').remove();
 			} else if (data.job_seeker != null) {
 				// job-seeker
+        $('.business-link').remove();
 				$('.job-seeker-link').show();
 			} else {
 				// Go Finish registration
@@ -229,7 +231,9 @@ function userTypeMenuConfiguration(redirectToProfile) {
 }*/
 
 function formAlert(type, message) {
-	return log(type, message);
+  return new Promise(function(resolve, reject){
+    resolve(log(type, message));
+  });
 }
 
 function putManyAlerts(parentId, messages) {
@@ -610,7 +614,6 @@ function lookUpForCompany(business_id){
 	});
 }
 
-
 /* Site wide on-load functions */
 
 $(function () {
@@ -628,9 +631,19 @@ $(function () {
 		}
 	}
 
+  //$('.brand-pills > li.active').removeClass('active');
+
+  var pathname = window.location.pathname.split('/').filter(function(value){return value != ""});
+  var href = pathname[0];
+  if(pathname[1] != undefined &&  pathname[1] !== ''){
+    href = href + '/' + pathname[1];
+  }
+
+  $('a[href*="' + href + '"]').parent().addClass('active');
+
 	// Config Messenger (Notification Systems)
 	Messenger.options = {
-		extraClasses: 'messenger-fixed messenger-on-bottom messenger-on-right',
+		extraClasses: 'messenger-fixed messenger-on-top messenger-on-right',
 		theme: 'future'
 	}
 
@@ -665,11 +678,11 @@ $(function () {
 	});
 
 	//Form submit code - Reg
-	$('#register').submit(function (event) {
+	$('#regJobSeekerModal, #regRecruiterModal').submit(function (event) {
 		event.preventDefault();
-		var email = $('#reg_email').val();
-		var password1 = $('#password1').val();
-		var password2 = $('#password2').val();
+		var email = $('#reg_email', this).val();
+		var password1 = $('#password1', this).val();
+		var password2 = $('#password2', this).val();
 		var csrfmiddlewaretoken = $('[name="csrfmiddlewaretoken"]').val();
 
 		$.post("/api-rest-auth/registration/", {
@@ -719,4 +732,5 @@ $(function () {
 		$('#viewPitchModal').find('.modal-body').html('<div class="col-md-12" id="pitchViewer"></div><div class="col-md-offset-4 col-md-4"><a class="btn btn-custom" id="applyButtonModal" style="display:none; margin-left: 18px;margin-top: 20px;">Connect</a></div>');
 	});
 
+  $("input[type='checkbox']").bootstrapToggle();
 });

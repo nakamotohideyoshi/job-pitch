@@ -2,11 +2,16 @@ $(function () {
 	// Run login check funtion with auto-redirect
 	checkLogin(true);
 
+  getHtmlThumbnailForApitch().then(function(pitchThumbnail){
+    $('#pitchVideoCheck').html(pitchThumbnail);
+    $('#pitchVideoCheck img').attr('width', '100%');
+  });
 
-	$("#active_account").bootstrapSwitch();
+	$("#active_account").bootstrapToggle();
 
-	$('#active_account').on('switchChange.bootstrapSwitch', function (event, state) {
-		if (state) {
+	//$('#active_account').on('switchChange.bootstrapSwitch', function (event, state) {
+  $('#active_account').change(function() {
+		if ($(this).prop('checked')) {
 			$('#account_details_not_active').hide();
 			$('#account_details_active_only').show();
 		} else {

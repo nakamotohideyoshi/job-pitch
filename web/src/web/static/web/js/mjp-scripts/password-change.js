@@ -2,6 +2,27 @@ $(function () {
 	// Run login check funtion with auto-redirect
 	checkLogin(true);
 
+  // Populate any fields that have data
+  $.get("/api-rest-auth/user/", {
+    token: getCookie('key'),
+    csrftoken: getCookie('csrftoken')
+  }).done(function (data) {
+
+    job_seeker_id = data.job_seeker;
+
+    $.get("/api/job-seekers/" + data.job_seeker, {
+      token: getCookie('key'),
+      csrftoken: getCookie('csrftoken')
+    }).done(function (data) {
+
+      if (data.email != null) {
+        $('#email').html(data.email);
+      }
+
+    });
+  });
+
+
 	//If logged in send them somewhere useful
 	//Form submit code
 	$('#password-reset-confirm').submit(function (event) {
@@ -31,12 +52,21 @@ $(function () {
 			});
 
 		}).fail(function (data) {
+      var obj;
 			var messageError = ''
+      var field = '';
+
 			for (var key in data.responseJSON) {
-				var obj = data.responseJSON[key];
-				messageError = messageError + obj + '<br>';
+				obj = data.responseJSON[key][0];
+
+        if(key=="new_password1"){
+          obj = obj.replace('This', 'The new password');
+        }else if(key=="new_password2"){
+          obj = obj.replace('This', 'The confirm password');
+        }
+
+        formAlert('error', obj);
 			}
-			formAlert('danger', messageError);
 		});
 	});
 });

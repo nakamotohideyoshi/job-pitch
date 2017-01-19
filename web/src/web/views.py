@@ -14,8 +14,10 @@ def registration(request):
 def logout(request):
     return render(request, 'logout.html')
 
+#def profile(request):
+#    return render(request, 'profile/main.html')
 def profile(request):
-    return render(request, 'profile/main.html')
+    return render(request, 'profile/profile.html')
 
 def terms_conditions(request):
     return render(request, 'content/terms-conditions.html')
@@ -74,8 +76,10 @@ def edit_job(request):
 def create_location(request):
     return render(request, 'profile/create-location.html')
 
+#def messages(request):
+#    return render(request, 'messages.html')
 def messages(request):
-    return render(request, 'messages.html')
+    return render(request, 'inbox.html')
 
 def applications(request):
     return render(request, 'applications.html')
@@ -106,3 +110,7 @@ def find_staff(request):
 
 def viewpitch(request):
     return render(request, 'profile/viewpitch.html')
+
+def notification_settings(request):
+    return render(request, 'profile/notification-settings.html')
+

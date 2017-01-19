@@ -43,6 +43,7 @@ urlpatterns = [
     url(r'^dashboard/$', views.dashboard),
     url(r'^profile/edit-job-preferences/$', views.edit_job_preferences),
     url(r'^find-staff/$', views.find_staff),
+    url(r'^profile/notification-settings/$', views.notification_settings),
     url(r'^profile/viewpitch/$', views.viewpitch),
     url(r'^profile/edit-pitch/$', views.edit_pitch),
     url(r'^profile/edit-location/$', views.edit_location),

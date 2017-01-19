@@ -732,4 +732,5 @@ $(function () {
 		$('#viewPitchModal').find('.modal-body').html('<div class="col-md-12" id="pitchViewer"></div><div class="col-md-offset-4 col-md-4"><a class="btn btn-custom" id="applyButtonModal" style="display:none; margin-left: 18px;margin-top: 20px;">Connect</a></div>');
 	});
 
+  $("input[type='checkbox']").bootstrapToggle();
 });

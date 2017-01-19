@@ -1,19 +1,62 @@
+from django.db import transaction
 from django.db.models import F, Q, Max
 from django.contrib.gis.measure import D
 from django.contrib.gis.db.models.functions import Distance
+from django.http import HttpResponse
 
-from rest_framework import viewsets, permissions, serializers
+from rest_framework import viewsets, permissions, serializers, status
+from rest_framework.response import Response
 from rest_framework.routers import DefaultRouter
+from rest_framework.views import APIView
+from rest_framework.renderers import JSONRenderer
 
-from mjp.models import Sector, Hours, Contract, Business, Location,\
-    JobStatus, Job, Sex, Nationality, JobSeeker, JobProfile,\
-    ApplicationStatus, Application, Role, LocationImage, BusinessImage, \
-    JobImage, Message, Pitch, TokenStore, InitialTokens
+from mjp.models import (
+    Sector,
+    Hours,
+    Contract,
+    Business,
+    Location,
+    JobStatus,
+    Job,
+    Sex,
+    Nationality,
+    JobSeeker,
+    JobProfile,
+    ApplicationStatus,
+    Application,
+    Role,
+    LocationImage,
+    BusinessImage,
+    JobImage,
+    Message,
+    Pitch,
+    TokenStore,
+    InitialTokens,
+    AndroidPurchase,
+)
 
-from mjp.serializers import SimpleSerializer, BusinessSerializer,\
-    LocationSerializer, JobProfileSerializer, JobSerializer, JobSeekerSerializer,\
-    ApplicationSerializer, ApplicationCreateSerializer, ApplicationConnectSerializer, \
-    ApplicationShortlistUpdateSerializer, MessageCreateSerializer, MessageUpdateSerializer, PitchSerializer
+from mjp.serializers import (
+    SimpleSerializer,
+    BusinessSerializer,
+    LocationSerializer,
+    JobProfileSerializer,
+    JobSerializer,
+    JobSeekerSerializer,
+    ApplicationSerializer,
+    ApplicationCreateSerializer,
+    ApplicationConnectSerializer,
+    ApplicationShortlistUpdateSerializer,
+    MessageCreateSerializer,
+    MessageUpdateSerializer,
+    PitchSerializer,
+    AndroidPurchaseSerializer,
+)
+
+# For google APIs
+from oauth2client.service_account import ServiceAccountCredentials
+from httplib2 import Http
+from apiclient.discovery import build
+from apiclient.errors import HttpError
 
 
 router = DefaultRouter()
@@ -574,3 +617,51 @@ class MessageViewSet(viewsets.ModelViewSet):
     update_serializer_class = MessageUpdateSerializer
     serializer_class = MessageCreateSerializer
 router.register('messages', MessageViewSet, base_name='message')
+
+
+class AndroidPurchaseView(APIView):
+    permission_classes = (permissions.IsAuthenticated,)
+
+    def post(self, request):
+        serializer = AndroidPurchaseSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        credentials = ServiceAccountCredentials.from_json_keyfile_name(
+            '/web/mjp/keys/google-api.json', 
+            ['https://www.googleapis.com/auth/androidpublisher']
+        )
+        http_auth = credentials.authorize(Http())
+        service = build('androidpublisher', 'v2', http=http_auth)
+        request = service.purchases().products().get(
+            packageName='com.myjobpitch',
+            productId=serializer.data['product_code'],
+            token=serializer.data['purchase_token'],
+        )
+
+        try:
+            response = request.execute()
+        except HttpError as e:
+            return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+        with transaction.atomic():
+            if not AndroidPurchase.objects.filter(purchase_token=serializer.data['purchase_token']).exists():
+                token_store = TokenStore.objects.select_for_update().get(
+                    businesses__pk=serializer.data['business_id'],
+                )
+                AndroidPurchase.objects.create(
+                    product_code=serializer.data['product_code'],
+                    purchase_token=serializer.data['purchase_token'],
+                    token_store=token_store,
+                )
+                TokenStore.objects.filter(pk=token_store.pk).update(
+                    tokens=F('tokens') + 20,
+                )
+
+        business = Business.objects.get(pk=serializer.data['business_id'])
+        output_serializer = BusinessSerializer(business, context={
+            'request': self.request,
+            'format': self.format_kwarg,
+            'view': self
+        })
+        return Response(output_serializer.data)
+

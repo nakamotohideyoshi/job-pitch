@@ -206,3 +206,10 @@ class PitchSerializer(serializers.ModelSerializer):
     class Meta:
         model = Pitch
         read_only_fields = ('token', 'job_seeker',)
+
+
+class AndroidPurchaseSerializer(serializers.Serializer):
+    business_id = serializers.IntegerField()
+    product_code = serializers.CharField()
+    purchase_token = serializers.CharField()
+

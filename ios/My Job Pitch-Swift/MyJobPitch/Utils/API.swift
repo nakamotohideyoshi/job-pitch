@@ -351,35 +351,30 @@ class API: NSObject {
         if cvdata == nil {
             jobSeeker.cv = nil
         }
-
-        if jobSeeker.id == nil {
-
-            postObject("/api/job-seekers/", request: jobSeeker,
-                       success: success, failure: failure)
-        } else {
-
-            let request = manager.multipartFormRequest(with: jobSeeker,
-                                                       method: RKRequestMethod.PUT,
-                                                       path: String(format: "/api/job-seekers/%@/", jobSeeker.id),
-                                                       parameters: nil,
-                                                       constructingBodyWith: { (formData) in
-                                                        if cvdata != nil {
-                                                            formData?.appendPart(withFileData: cvdata,
-                                                                                 name: "cv",
-                                                                                 fileName: jobSeeker.cv,
-                                                                                 mimeType: "application/octet-stream")
-                                                        }
-            })
-
-            let operation = manager.objectRequestOperation(with: request as URLRequest!,
-                                                           success: { (_, mappingResult) in
-                                                            success(mappingResult?.firstObject as! JobSeeker)
-            }, failure: { (_, error) in
-                self.failureWithError(error, failure: failure)
-            })
-
-            manager.enqueue(operation)
-        }
+        
+        let method = jobSeeker.id == nil ? RKRequestMethod.POST : RKRequestMethod.PUT
+        let path = jobSeeker.id == nil ? "/api/job-seekers/" : String(format: "/api/job-seekers/%@/", jobSeeker.id)
+        let request = manager.multipartFormRequest(with: jobSeeker,
+                                                   method: method,
+                                                   path: path,
+                                                   parameters: nil,
+                                                   constructingBodyWith: { (formData) in
+                                                    if cvdata != nil {
+                                                        formData?.appendPart(withFileData: cvdata,
+                                                                             name: "cv",
+                                                                             fileName: jobSeeker.cv,
+                                                                             mimeType: "application/octet-stream")
+                                                    }
+        })
+        
+        let operation = manager.objectRequestOperation(with: request as URLRequest!,
+                                                       success: { (_, mappingResult) in
+                                                        success(mappingResult?.firstObject as! JobSeeker)
+        }, failure: { (_, error) in
+            self.failureWithError(error, failure: failure)
+        })
+        
+        manager.enqueue(operation)
     }
 
     func loadJobSeekerWithId(id: NSNumber,

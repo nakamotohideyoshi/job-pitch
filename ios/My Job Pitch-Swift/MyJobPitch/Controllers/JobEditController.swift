@@ -200,6 +200,14 @@ class JobEditController: MJPController {
         }
         actionSheetContoller.addAction(photoGalleryAction)
         
+        let dropboxAction = UIAlertAction(title: "Dropbox", style: .default) { (_) in
+            let browser = AppHelper.mainStoryboard.instantiateViewController(withIdentifier: "DropboxBrowser") as! DropboxBrowserViewController
+            browser.rootViewDelegate = self
+            let navController = UINavigationController(rootViewController: browser)
+            AppHelper.getFrontController().present(navController, animated: true, completion: nil)
+        }
+        actionSheetContoller.addAction(dropboxAction)
+        
         let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
         actionSheetContoller.addAction(cancelAction)
         
@@ -347,5 +355,32 @@ extension JobEditController: UIImagePickerControllerDelegate {
 }
 
 extension JobEditController: UINavigationControllerDelegate {
+}
+
+extension JobEditController: DropboxBrowserDelegate {
+    
+    func dropboxBrowser(_ browser: DropboxBrowserViewController!, didDownloadFile fileName: String!, didOverwriteFile isLocalFileOverwritten: Bool) {
+        
+        let url = URL(fileURLWithPath: browser.downloadedFilePath)
+        do {
+            let data = try Data(contentsOf: url)
+            logoImage = UIImage(data: data)
+            
+            if logoImage == nil {
+                //PopupController.showGray(fileName + "is not a image file", ok: "OK")
+            } else {
+                imgView.image = logoImage
+                imgView.alpha = 1
+                removeImageButton.isHidden = false
+                addImageButton.isHidden = true
+            }
+            
+        } catch {
+            print("error")
+        }
+        
+        browser.removeDropboxBrowser()
+    }
+    
 }
 

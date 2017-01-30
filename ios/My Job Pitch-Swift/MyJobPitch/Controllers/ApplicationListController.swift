@@ -31,8 +31,11 @@ class ApplicationListController: SearchController {
             self.getData()
         }
         
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
         tableView.triggerPullToRefresh()
-        
     }
     
     func getData() {
@@ -48,7 +51,7 @@ class ApplicationListController: SearchController {
         API.shared().loadApplicationsForJob(jobId: nil, status: status, shortlisted: shortlisted, success: { (data) in
             self.allData = NSMutableArray()
             for application in data as! [Application] {
-                if application.status == status && (!shortlisted || application.shortlisted == shortlisted) {
+                if (status == nil || status == application.status) && (!shortlisted || application.shortlisted == shortlisted) {
                     self.allData.add(application)
                 }
             }

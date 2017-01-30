@@ -194,6 +194,10 @@ class MessageController: JSQMessagesViewController {
         
         finishSendingMessage()
         
+        if SideMenuController.currentID == "messages" {
+            MessageListController.refreshRequest = true
+        }
+        
         let message = MessageForCreation()
         message.content = text
         message.application = application.id

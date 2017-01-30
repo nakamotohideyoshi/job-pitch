@@ -85,7 +85,7 @@ class PopupController: UIViewController {
         
         controller.boardView.backgroundColor = UIColor(red: 35/255.0, green: 35/255.0, blue: 35/255.0, alpha: 0.95)
         controller.boardView.layer.borderColor = UIColor(red: 1, green: 1, blue: 1, alpha: 0.3).cgColor
-        controller.boardView.layer.borderWidth = 1
+        controller.boardView.layer.borderWidth = 0.5
         
         if ok != nil {
             controller.okButton.setTitle(ok, for: .normal)

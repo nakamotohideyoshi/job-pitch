@@ -13,6 +13,7 @@ class AppData: NSObject {
     // const
 
     static let apiRoot = URL(string: "https://www.sclabs.co.uk")!
+    
     static let greenColor = UIColor(red: 0/255.0, green: 187/255.0, blue: 168/255.0, alpha: 1)
     static let yellowColor = UIColor(red: 255/255.0, green: 147/255.0, blue: 0/255.0, alpha: 1)
     static let greyColor = UIColor(red: 214/255.0, green: 214/255.0, blue: 214/255.0, alpha: 1)

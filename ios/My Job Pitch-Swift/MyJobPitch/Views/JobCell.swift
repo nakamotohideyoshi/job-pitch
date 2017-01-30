@@ -29,6 +29,15 @@ class JobCell: MGSwipeTableCell {
         businessName.text = job.locationData.businessData.name + ", " + job.locationData.name
         location.text = job.locationData.placeName
         desc.text = job.desc
+        
+    }
+    
+    func setOpacity(_ alpha: CGFloat) {
+        imgView.alpha = alpha
+        jobTitle.alpha = alpha
+        businessName.alpha = alpha
+        location.alpha = alpha
+        desc.alpha = alpha
     }
     
 }

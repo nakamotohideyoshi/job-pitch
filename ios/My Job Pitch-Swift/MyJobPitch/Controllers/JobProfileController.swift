@@ -16,7 +16,7 @@ class JobProfileController: MJPController {
     @IBOutlet weak var sectorsError: UILabel!
     @IBOutlet weak var contractField: ButtonTextField!
     @IBOutlet weak var hoursField: ButtonTextField!
-    @IBOutlet weak var addressField: ButtonTextField!
+    @IBOutlet weak var addressField: UITextField!
     @IBOutlet weak var addressError: UILabel!
     @IBOutlet weak var locationButton: YellowButton!
     @IBOutlet weak var radiusField: ButtonTextField!
@@ -134,10 +134,6 @@ class JobProfileController: MJPController {
             selectedRadiusNames.append("5 miles")
         }
         radiusField.text = selectedRadiusNames.joined(separator: ", ")
-        
-        addressField.clickCallback = {
-            self.myLocationAction(UIButton())
-        }
         
     }
     

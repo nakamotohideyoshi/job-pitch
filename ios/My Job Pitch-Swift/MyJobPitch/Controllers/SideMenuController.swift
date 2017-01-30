@@ -12,24 +12,22 @@ class SideMenuController: UIViewController {
     
     static var currentID = ""
     static let menuItems = [
-        "find_job":     ["icon": "menu-job-search",     "title": "Find Job",                "identifier": "Swipe",              "per": "profile"],
-        "applications": ["icon": "menu-application",    "title": "Applications",            "identifier": "ApplicationList",    "per": "profile"],
-        "messages":     ["icon": "menu-message",        "title": "Messages",                "identifier": "MessageList",        "per": "profile"],
-        "job_profile":  ["icon": "menu-job-profile",    "title": "Job Profile",             "identifier": "JobProfile",         "per": "jobseeker"],
-        "add_record":   ["icon": "menu-add-record",     "title": "Record Pitch",            "identifier": "Pitch",              "per": "jobseeker"],
-        "user_profile": ["icon": "menu-user-profile",   "title": "Profile",                 "identifier": "JobSeekerProfile",   "per": "full"],
+        "find_job":     ["icon": "menu-job-search",     "title": "Find Job",                "identifier": "Swipe",              "per": "P"],
+        "applications": ["icon": "menu-application",    "title": "Applications",            "identifier": "ApplicationList",    "per": "PB"],
+        "messages":     ["icon": "menu-message",        "title": "Messages",                "identifier": "MessageList",        "per": "PB"],
+        "job_profile":  ["icon": "menu-job-profile",    "title": "Job Profile",             "identifier": "JobProfile",         "per": "J"],
+        "add_record":   ["icon": "menu-add-record",     "title": "Record Pitch",            "identifier": "Pitch",              "per": "J"],
+        "user_profile": ["icon": "menu-user-profile",   "title": "Profile",                 "identifier": "JobSeekerProfile",   "per": ""],
         
-        "find_talent":  ["icon": "menu-user-search",    "title": "Find Talent",             "identifier": "JobList",            "per": "full"],
-        "connections":  ["icon": "menu-connect",        "title": "Connections",             "identifier": "ApplicationList",    "per": "full"],
-        "shortlist":    ["icon": "menu-shortlist",      "title": "My Shortlist",            "identifier": "ApplicationList",    "per": "full"],
-        //"job_post":     ["icon": "menu-job-post",       "title": "Job Post",            "identifier": "",    "per": "full"],
-        "businesses":   ["icon": "menu-business",       "title": "Businesses & Job Post",   "identifier": "BusinessList",       "per": "full"],
-        "locations":    ["icon": "menu-business",       "title": "Locations & Job Post",    "identifier": "LocationList",       "per": "full"],
-        "payment":      ["icon": "menu-payment",        "title": "Payment",                 "identifier": "",                   "per": "full"],
+        "find_talent":  ["icon": "menu-user-search",    "title": "Find Talent",             "identifier": "JobList",            "per": "B"],
+        "connections":  ["icon": "menu-connect",        "title": "Connections",             "identifier": "ApplicationList",    "per": "B"],
+        "shortlist":    ["icon": "menu-shortlist",      "title": "My Shortlist",            "identifier": "ApplicationList",    "per": "B"],
+        "businesses":   ["icon": "menu-business",       "title": "Businesses & Job Post",   "identifier": "BusinessList",       "per": ""],
+        "payment":      ["icon": "menu-payment",        "title": "Payment",                 "identifier": "",                   "per": ""],
         
-        "change_pass":  ["icon": "menu-key",            "title": "Change Password",         "identifier": "ChangePassword",     "per": "full"],
-        "help":         ["icon": "menu-help",           "title": "Help",                    "identifier": "Help",               "per": "full"],
-        "log_out":      ["icon": "menu-logout",         "title": "Log Out",                 "identifier": "Signin",             "per": "full"]
+        "change_pass":  ["icon": "menu-key",            "title": "Change Password",         "identifier": "ChangePassword",     "per": ""],
+        "help":         ["icon": "menu-help",           "title": "Help",                    "identifier": "Help",               "per": ""],
+        "log_out":      ["icon": "menu-logout",         "title": "Log Out",                 "identifier": "Signin",             "per": ""]
     ]
     
     static let jobSeekerMenu = [
@@ -97,9 +95,6 @@ class SideMenuController: UIViewController {
         AppHelper.hideLoading()
         
         SideMenuController.currentID = id
-        if SideMenuController.currentID == "businesses" && AppData.user.isRecruiter() && !AppData.user.canCreateBusinesses {
-            SideMenuController.currentID = "locations"
-        }
         
         let identifier = SideMenuController.menuItems[SideMenuController.currentID]?["identifier"]
         
@@ -125,10 +120,7 @@ extension SideMenuController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "SideMenuCell", for: indexPath) as! SideMenuCell
         
-        var id = data[indexPath.row]
-        if id == "businesses" && AppData.user.isRecruiter() && !AppData.user.canCreateBusinesses {
-            id = "locations"
-        }
+        let id = data[indexPath.row]
         let item = SideMenuController.menuItems[id]!
         
         cell.nameLabel.text = item["title"]
@@ -139,16 +131,17 @@ extension SideMenuController: UITableViewDataSource {
             cell.iconView.tintColor = AppData.greenColor
             cell.nameLabel.textColor = AppData.greenColor
         } else {
-            if AppData.user.isRecruiter() {
-                cell.isUserInteractionEnabled = true
+            cell.isUserInteractionEnabled = true
+            let pers = item["per"]?.characters
+            if AppData.user.isJobSeeker() || (!AppData.user.isRecruiter() && LoginController.userType == 1) {
+                if pers!.contains("J") && AppData.jobSeeker == nil {
+                    cell.isUserInteractionEnabled = false
+                } else if pers!.contains("P") && AppData.profile == nil {
+                    cell.isUserInteractionEnabled = false
+                }
             } else {
-                cell.isUserInteractionEnabled = true
-                if AppData.user.isJobSeeker() {
-                    if item["per"] == "jobseeker" && AppData.jobSeeker == nil {
-                        cell.isUserInteractionEnabled = false
-                    } else if item["per"] == "profile" && AppData.profile == nil {
-                        cell.isUserInteractionEnabled = false
-                    }
+                if pers!.contains("B") && AppData.user.businesses.count == 0 {
+                    cell.isUserInteractionEnabled = false
                 }
             }
             
@@ -178,10 +171,7 @@ extension SideMenuController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
-        var id = data[indexPath.row]
-        if id == "businesses" && AppData.user.isRecruiter() && !AppData.user.canCreateBusinesses {
-            id = "locations"
-        }
+        let id = data[indexPath.row]
         
         if SideMenuController.menuItems[id]?["identifier"] == "" {
             return

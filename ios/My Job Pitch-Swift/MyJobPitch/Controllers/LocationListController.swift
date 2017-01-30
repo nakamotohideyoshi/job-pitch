@@ -11,7 +11,10 @@ import MGSwipeTableCell
 
 class LocationListController: MJPController {
     
+    static var reloadRequest = false
+    
     @IBOutlet weak var tableView: UITableView!
+    @IBOutlet weak var emptyView: UIView!
     @IBOutlet weak var creditsLabel: UILabel!
     
     var business: Business!
@@ -42,6 +45,14 @@ class LocationListController: MJPController {
         
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        if LocationListController.reloadRequest {
+            LocationListController.reloadRequest = false
+            tableView.reloadData()
+        }
+    }
+    
     func refresh() {
         
         AppHelper.showLoading("Loading...")
@@ -50,6 +61,8 @@ class LocationListController: MJPController {
             AppHelper.hideLoading()
             self.data = data.mutableCopy() as! NSMutableArray
             self.tableView.reloadData()
+            self.emptyView.isHidden = self.data.count > 0
+            self.business.locations = self.data
         }) { (message, errors) in
             self.handleErrors(message: message, errors: errors)
         }
@@ -60,7 +73,10 @@ class LocationListController: MJPController {
         
         let controller = AppHelper.mainStoryboard.instantiateViewController(withIdentifier: "LocationEdit") as! LocationEditController
         controller.business = business
-        controller.savedLocation = refresh
+        controller.savedLocation = {
+            self.refresh()
+            BusinessListController.reloadRequest = true
+        }
         navigationController?.pushViewController(controller, animated: true)
         
     }
@@ -111,8 +127,10 @@ extension LocationListController: UITableViewDataSource {
                                 
                                 API.shared().deleteLocation(id: location.id, success: {
                                     AppHelper.hideLoading()
+                                    BusinessListController.reloadRequest = true
                                     self.data.remove(location)
                                     self.tableView.reloadData()
+                                    self.emptyView.isHidden = self.data.count > 0
                                 }) { (message, errors) in
                                     self.handleErrors(message: message, errors: errors)
                                 }

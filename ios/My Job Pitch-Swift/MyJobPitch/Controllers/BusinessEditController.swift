@@ -15,6 +15,7 @@ class BusinessEditController: MJPController {
     @IBOutlet weak var imgView: UIImageView!
     @IBOutlet weak var addImageButton: UIButton!
     @IBOutlet weak var removeImageButton: UIButton!
+    @IBOutlet weak var creditsLabel: UILabel!
     
     var business: Business!
     var savedBusiness: (() -> Void)!
@@ -35,6 +36,8 @@ class BusinessEditController: MJPController {
             navigationItem.title = "Edit Business"
             
             nameField.text = business.name
+            
+            creditsLabel.text = String(format: "%@", business.tokens)
             
             if let image = business.getImage() {
                 AppHelper.loadImageURL(imageUrl: (image.thumbnail)!, imageView: imgView, completion: nil)
@@ -78,6 +81,14 @@ class BusinessEditController: MJPController {
             self.present(self.imagePicker, animated: true, completion: nil)
         }
         actionSheetContoller.addAction(photoGalleryAction)
+        
+        let dropboxAction = UIAlertAction(title: "Dropbox", style: .default) { (_) in
+            let browser = AppHelper.mainStoryboard.instantiateViewController(withIdentifier: "DropboxBrowser") as! DropboxBrowserViewController
+            browser.rootViewDelegate = self
+            let navController = UINavigationController(rootViewController: browser)
+            AppHelper.getFrontController().present(navController, animated: true, completion: nil)
+        }
+        actionSheetContoller.addAction(dropboxAction)
         
         let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
         actionSheetContoller.addAction(cancelAction)
@@ -185,3 +196,31 @@ extension BusinessEditController: UIImagePickerControllerDelegate {
 
 extension BusinessEditController: UINavigationControllerDelegate {
 }
+
+extension BusinessEditController: DropboxBrowserDelegate {
+    
+    func dropboxBrowser(_ browser: DropboxBrowserViewController!, didDownloadFile fileName: String!, didOverwriteFile isLocalFileOverwritten: Bool) {
+        
+        let url = URL(fileURLWithPath: browser.downloadedFilePath)
+        do {
+            let data = try Data(contentsOf: url)
+            logoImage = UIImage(data: data)
+            
+            if logoImage == nil {
+                //PopupController.showGray(fileName + "is not a image file", ok: "OK")
+            } else {
+                imgView.image = logoImage
+                imgView.alpha = 1
+                removeImageButton.isHidden = false
+                addImageButton.isHidden = true
+            }
+            
+        } catch {
+            print("error")
+        }
+        
+        browser.removeDropboxBrowser()
+    }
+    
+}
+

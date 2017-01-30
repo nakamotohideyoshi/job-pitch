@@ -20,6 +20,7 @@ class JobSeekerDetailController: MJPController {
     @IBOutlet weak var contactView: UIView!
     @IBOutlet weak var contactDetailLabel: UILabel!
     @IBOutlet weak var applyButton: RoundButton!
+    @IBOutlet weak var shortlisted: UISwitch!
     
     var jobSeeker: JobSeeker!
     var application: Application!
@@ -77,6 +78,8 @@ class JobSeekerDetailController: MJPController {
                 contactDetailLabel.text = "No contact details supplied."
             }
             
+            shortlisted.isOn = application.shortlisted
+            
         } else {
             
             contactView.removeFromSuperview()
@@ -99,7 +102,26 @@ class JobSeekerDetailController: MJPController {
     
     @IBAction func viewCVAction(_ sender: Any) {
         
+        
     }
+    
+    @IBAction func shortlistedChanged(_ sender: Any) {
+        
+        application.shortlisted = shortlisted.isOn
+        
+        let update = ApplicationShortlistUpdate()
+        update.id = application.id
+        update.shortlisted = application.shortlisted
+        
+        AppHelper.showLoading("Updating...")
+        API.shared().updateApplicationShortlist(update: update, success: { (_) in
+            AppHelper.hideLoading()
+        }) { (message, errors) in
+            self.handleErrors(message: message, errors: errors)
+        }
+        
+    }
+    
 
     @IBAction func applyAction(_ sender: Any) {
         

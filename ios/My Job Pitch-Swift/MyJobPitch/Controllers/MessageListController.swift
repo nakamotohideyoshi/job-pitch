@@ -11,6 +11,8 @@ import SVPullToRefresh
 
 class MessageListController: SearchController {
 
+    static var refreshRequest = false
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -33,11 +35,16 @@ class MessageListController: SearchController {
             }
         }
         
+        MessageListController.refreshRequest = true
+        
     }
     
-    override func viewDidAppear(_ animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        tableView.triggerPullToRefresh()
+        if MessageListController.refreshRequest {
+            MessageListController.refreshRequest = false
+            tableView.triggerPullToRefresh()
+        }
     }
     
     override func filterItem(item: Any, text: String) -> Bool {

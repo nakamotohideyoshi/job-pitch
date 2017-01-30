@@ -36,10 +36,11 @@ class ApplicationCell1: MGSwipeTableCell {
 class ApplicationCell2: MGSwipeTableCell {
     
     @IBOutlet weak var imgView: UIImageView!;
+    @IBOutlet weak var starIcon: UIImageView!
     @IBOutlet weak var name: UILabel!;
     @IBOutlet weak var jobTitle: UILabel!;
     @IBOutlet weak var businessName: UILabel!;
-    @IBOutlet weak var location: UILabel!;
+    @IBOutlet weak var location: UILabel!;    
     
     func setData(_ application: Application) {
         
@@ -53,6 +54,7 @@ class ApplicationCell2: MGSwipeTableCell {
         jobTitle.text = application.job.title
         businessName.text = application.job.locationData.businessData.name + ", " + application.job.locationData.name
         location.text = application.job.locationData.placeName
+        starIcon.isHidden = SideMenuController.currentID != "connections" || !application.shortlisted
     }
     
 }

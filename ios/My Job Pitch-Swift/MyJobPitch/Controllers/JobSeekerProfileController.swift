@@ -20,7 +20,7 @@ class JobSeekerProfileController: MJPController {
     @IBOutlet weak var lastName: UITextField!
     @IBOutlet weak var lastNameError: UILabel!
     
-    @IBOutlet weak var email: UILabel!
+    @IBOutlet weak var email: UITextField!
     @IBOutlet weak var emailPublic: UISwitch!
     @IBOutlet weak var mobile: UITextField!
     @IBOutlet weak var mobilePublic: UISwitch!
@@ -33,9 +33,9 @@ class JobSeekerProfileController: MJPController {
     @IBOutlet weak var descView: UITextView!
     @IBOutlet weak var descError: UILabel!
     @IBOutlet weak var cvFileName: UILabel!
+    @IBOutlet weak var cvRemoveButton: UIButton!
     @IBOutlet weak var hasReferences: UISwitch!
     @IBOutlet weak var tickBox: UISwitch!
-    @IBOutlet weak var saveButton: RoundButton!
     @IBOutlet weak var playButtonView: UIView!
     
     var ipc: UIImagePickerController!
@@ -99,12 +99,13 @@ class JobSeekerProfileController: MJPController {
     
     func load() {
         
+        email.text = AppData.email
+        
         if let jobSeeker = AppData.jobSeeker {
             
             active.isOn = jobSeeker.active
             firstName.text = jobSeeker.firstName.capitalized
             lastName.text = jobSeeker.lastName.capitalized
-            email.text = AppData.email
             emailPublic.isOn = jobSeeker.emailPublic
             mobile.text = jobSeeker.mobile
             mobilePublic.isOn = jobSeeker.mobilePublic
@@ -133,8 +134,7 @@ class JobSeekerProfileController: MJPController {
             
             hasReferences.isOn = jobSeeker.hasReferences
             tickBox.isOn = jobSeeker.truthConfirmation
-            
-            changeTickBox(UIButton())
+           
         }
     }
     
@@ -184,6 +184,11 @@ class JobSeekerProfileController: MJPController {
         present(actionSheet, animated: true, completion: nil)
         
     }
+    @IBAction func cvRemoveAction(_ sender: Any) {
+        cvdata = nil
+        cvFileName.text = ""
+        cvRemoveButton.isHidden = true
+    }
     
     @IBAction func pitchHelpAction(_ sender: Any) {
         PopupController.showGray("Tips on how to record your pitch will be placed here.", ok: "Close")
@@ -227,14 +232,14 @@ class JobSeekerProfileController: MJPController {
         }
     }
     
-    @IBAction func changeTickBox(_ sender: Any) {
-        saveButton.isEnabled = tickBox.isOn
-        saveButton.alpha = tickBox.isOn ? 1 : 0.5
-    }
-    
     @IBAction func saveAction(_ sender: Any) {
         
         if !validate() {
+            return
+        }
+        
+        if !tickBox.isOn {
+            PopupController.showGray("The information provided should be guaranteed to be truthful to the best.", ok: "OK")
             return
         }
         
@@ -263,7 +268,7 @@ class JobSeekerProfileController: MJPController {
         
         if selectedNationalityNames.count > 0 {
             let nationalityName = selectedNationalityNames[0]
-            for nationality in AppData.nationalities as! [Sex] {
+            for nationality in AppData.nationalities as! [Nationality] {
                 if nationalityName == nationality.name {
                     jobSeeker.nationality = nationality.id
                     break
@@ -329,8 +334,9 @@ extension JobSeekerProfileController: UIImagePickerControllerDelegate {
             UIImageWriteToSavedPhotosAlbum(image, nil, nil, nil)
         }
         
-        cvFileName.text = "cv.jpg"
         cvdata = UIImagePNGRepresentation(image)
+        cvFileName.text = "cv.jpg"
+        cvRemoveButton.isHidden = false
         
         ipc.dismiss(animated: true, completion: nil)
     }
@@ -343,10 +349,11 @@ extension JobSeekerProfileController: DropboxBrowserDelegate {
     
     func dropboxBrowser(_ browser: DropboxBrowserViewController!, didDownloadFile fileName: String!, didOverwriteFile isLocalFileOverwritten: Bool) {
         
-        cvFileName.text = fileName
         let url = URL(fileURLWithPath: browser.downloadedFilePath)
         do {
             cvdata = try Data(contentsOf: url)
+            cvFileName.text = fileName
+            cvRemoveButton.isHidden = false
         } catch {
             print("error")
         }

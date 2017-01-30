@@ -43,8 +43,8 @@ class AppHelper: NSObject {
         
         hideLoading()
         
-        let rootViewController = UIApplication.shared.keyWindow?.rootViewController
-        let hud = MBProgressHUD.showAdded(to: (rootViewController?.view)!, animated: true)
+        let frontController = getFrontController()
+        let hud = MBProgressHUD.showAdded(to: (frontController?.view)!, animated: true)
         hud.backgroundView.color = UIColor(red: 0, green: 0, blue: 0, alpha: 0.65)
         hud.bezelView.style = MBProgressHUDBackgroundStyle.solidColor
         hud.bezelView.backgroundColor = UIColor(red: 35/255.0, green: 35/255.0, blue: 35/255.0, alpha: 0.95)
@@ -54,8 +54,8 @@ class AppHelper: NSObject {
     }
     
     static func hideLoading() {
-        let rootViewController = UIApplication.shared.keyWindow?.rootViewController
-        MBProgressHUD.hide(for: (rootViewController?.view)!, animated: true)
+        let frontController = getFrontController()
+        MBProgressHUD.hide(for: (frontController?.view)!, animated: true)
     }
     
     static func loadImageURL(imageUrl: String,

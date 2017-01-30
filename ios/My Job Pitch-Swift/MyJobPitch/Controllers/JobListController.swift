@@ -11,8 +11,12 @@ import MGSwipeTableCell
 
 class JobListController: SearchController {
 
-    var location: Location!
+    @IBOutlet weak var emptyView: UIView!
     @IBOutlet weak var creditsLabel: UILabel!
+    
+    var location: Location!
+    
+    var jobActive: NSNumber!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -31,6 +35,13 @@ class JobListController: SearchController {
             creditsLabel.text = String(format: "%@ Credit", location.businessData.tokens)
         }
         
+        for status in AppData.jobStatuses as! [JobStatus] {
+            if status.name == JobStatus.JOB_STATUS_OPEN {
+                jobActive = status.id
+                break
+            }
+        }
+        
     }
     
     func refresh() {
@@ -42,6 +53,10 @@ class JobListController: SearchController {
             self.allData = data.mutableCopy() as! NSMutableArray
             self.data = self.allData
             self.tableView.reloadData()
+            self.emptyView.isHidden = self.data.count > 0
+            if self.location != nil {
+                self.location.jobs = self.allData
+            }
         }) { (message, errors) in
             self.handleErrors(message: message, errors: errors)
         }
@@ -60,10 +75,17 @@ class JobListController: SearchController {
     
     func addAction(_ sender: Any) {
         
-        let controller = AppHelper.mainStoryboard.instantiateViewController(withIdentifier: "JobEdit") as! JobEditController
-        controller.location = location
-        controller.savedJob = refresh
-        navigationController?.pushViewController(controller, animated: true)
+        if location == nil {
+            SideMenuController.pushController(id: "businesses")
+        } else {
+            let controller = AppHelper.mainStoryboard.instantiateViewController(withIdentifier: "JobEdit") as! JobEditController
+            controller.location = location
+            controller.savedJob = {
+                self.refresh()
+                LocationListController.reloadRequest = true
+            }
+            navigationController?.pushViewController(controller, animated: true)
+        }
         
     }
     
@@ -82,6 +104,7 @@ extension JobListController: UITableViewDataSource {
         let cell = tableView.dequeueReusableCell(withIdentifier: "JobCell", for: indexPath) as! JobCell
         
         cell.setData(job)
+        cell.setOpacity(job.status==jobActive ? 1 : 0.5)
         
         if SideMenuController.currentID != "find_talent" {
         
@@ -115,9 +138,11 @@ extension JobListController: UITableViewDataSource {
                                     
                                     API.shared().deleteJob(id: job.id, success: {
                                         AppHelper.hideLoading()
+                                        LocationListController.reloadRequest = true
                                         self.allData.remove(job)
                                         self.data.remove(job)
                                         self.tableView.reloadData()
+                                        self.emptyView.isHidden = self.data.count > 0
                                     }) { (message, errors) in
                                         self.handleErrors(message: message, errors: errors)
                                     }
@@ -131,6 +156,10 @@ extension JobListController: UITableViewDataSource {
                                 return false
                 })
             ]
+            
+        } else {
+            
+            cell.isUserInteractionEnabled = job.status==jobActive
             
         }
         

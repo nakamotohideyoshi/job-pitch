@@ -295,6 +295,7 @@ class JobSeekerProfileController: MJPController {
         API.shared().saveJobSeeker(jobSeeker: jobSeeker, cvdata: cvdata, success: { (data) in
             
             AppData.jobSeeker = data as! JobSeeker
+            AppData.user.jobSeeker = AppData.jobSeeker.id
             
             if self.videoUrl != nil {
                 PitchController.uploadVideo(videoUrl: self.videoUrl, complete: { (pitch) in

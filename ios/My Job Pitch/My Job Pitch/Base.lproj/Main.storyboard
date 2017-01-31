@@ -197,8 +197,8 @@
                                                         </constraints>
                                                         <variation key="default">
                                                             <mask key="constraints">
-                                                                <exclude reference="KgL-y2-9Do"/>
                                                                 <exclude reference="vKg-2L-th5"/>
+                                                                <exclude reference="KgL-y2-9Do"/>
                                                             </mask>
                                                         </variation>
                                                     </view>
@@ -736,9 +736,9 @@
                                         </constraints>
                                         <variation key="default">
                                             <mask key="constraints">
+                                                <exclude reference="d0U-NT-8lh"/>
                                                 <exclude reference="YdB-fs-eH2"/>
                                                 <exclude reference="r26-7d-nU3"/>
-                                                <exclude reference="d0U-NT-8lh"/>
                                             </mask>
                                         </variation>
                                     </view>
@@ -2906,18 +2906,18 @@ Finish your pitch confidently by saying something like, “Thank you and I look 
                         </constraints>
                         <variation key="default">
                             <mask key="constraints">
-                                <exclude reference="6EH-uo-SuL"/>
-                                <exclude reference="W8x-M7-oTD"/>
-                                <exclude reference="Gqa-5T-PzK"/>
-                                <exclude reference="dvu-qb-c9Q"/>
-                                <exclude reference="ef2-00-mxA"/>
-                                <exclude reference="tdB-kN-DvU"/>
                                 <exclude reference="0vy-Yc-lur"/>
                                 <exclude reference="GAW-WG-uEB"/>
+                                <exclude reference="6EH-uo-SuL"/>
+                                <exclude reference="W8x-M7-oTD"/>
                                 <exclude reference="TmO-0L-pof"/>
                                 <exclude reference="Wqh-d1-iez"/>
                                 <exclude reference="hAr-T4-I3F"/>
                                 <exclude reference="ovZ-qP-039"/>
+                                <exclude reference="Gqa-5T-PzK"/>
+                                <exclude reference="dvu-qb-c9Q"/>
+                                <exclude reference="ef2-00-mxA"/>
+                                <exclude reference="tdB-kN-DvU"/>
                                 <exclude reference="YU1-dP-yNp"/>
                             </mask>
                         </variation>

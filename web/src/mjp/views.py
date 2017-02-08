@@ -530,7 +530,6 @@ class ApplicationViewSet(viewsets.ModelViewSet):
                 return self.update_shortlist_serializer_class
             if self.request.data.get('connect') is not None:
                 return self.update_status_serializer_class
-            return None
         return self.serializer_class
     
     def get_queryset(self):

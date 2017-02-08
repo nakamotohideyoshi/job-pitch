@@ -208,6 +208,10 @@ class Nationality(models.Model):
 
 
 class ApplicationStatus(models.Model):
+    CREATED = 'CREATED'
+    ESTABLISHED = 'ESTABLISHED'
+    DELETED = 'DELETED'
+
     name = models.CharField(max_length=20)
     friendly_name = models.CharField(max_length=255)
     description = models.TextField()

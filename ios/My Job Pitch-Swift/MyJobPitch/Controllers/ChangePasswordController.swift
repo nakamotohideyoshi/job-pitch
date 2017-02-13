@@ -38,7 +38,7 @@ class ChangePasswordController: MJPController {
     
     @IBAction func changeAction(_ sender: Any) {
         
-        if validate() {
+        if valid() {
             
             let password = AppData.password
             if password != currentPassword.text {

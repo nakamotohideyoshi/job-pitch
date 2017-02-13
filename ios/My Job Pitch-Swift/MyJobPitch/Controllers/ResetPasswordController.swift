@@ -29,7 +29,7 @@ class ResetPasswordController: MJPController {
 
     @IBAction func resetAction(_ sender: Any) {
         
-        if validate() {
+        if valid() {
             
             AppHelper.showLoading("")
             

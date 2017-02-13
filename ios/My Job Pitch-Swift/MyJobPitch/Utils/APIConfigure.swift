@@ -496,11 +496,11 @@ class APIConfigure: NSObject {
                                  method: .DELETE)
 
 
-        let applicationStatusUpdateArray = [ "id", "status" ]
+        let applicationStatusUpdateArray = [ "id"]
 
         configureSimpleMapping(ApplicationStatusUpdate.classForCoder(),
                                mappingArray: applicationStatusUpdateArray,
-                               mappingDictionary: nil,
+                               mappingDictionary: ["status": "connect"],
                                mappingRelationships: nil,
                                path: "/api/applications/:pk/",
                                method: .PUT)

@@ -30,6 +30,7 @@ class JobProfileController: MJPController {
     var hoursNames = [String]()
     var selectedHoursNames = [String]()
     
+    var radiusData = [(1, "1 mile"), (2, "2 miles"), (5, "5 miles"), (10, "10 miles"), (50, "50 miles")]
     var radiusNames = [String]()
     var selectedRadiusNames = [String]()
     
@@ -116,8 +117,8 @@ class JobProfileController: MJPController {
         
         // searchRadius data
         
-        for i in 1...5 {
-            radiusNames.append(String(format: "%d miles", i))
+        for (_, name) in radiusData {
+            radiusNames.append(name)
         }
         radiusField.clickCallback = {
             SelectionController.showPopup(title: "",
@@ -131,7 +132,7 @@ class JobProfileController: MJPController {
         }
         
         if selectedRadiusNames.count == 0 {
-            selectedRadiusNames.append("5 miles")
+            selectedRadiusNames.append(radiusData[2].1)
         }
         radiusField.text = selectedRadiusNames.joined(separator: ", ")
         
@@ -174,9 +175,8 @@ class JobProfileController: MJPController {
         
         // searchRadius data
         
-        for i in 1...5 {
-            let name = String(format: "%d miles", i)
-            if profile.searchRadius != nil && profile.searchRadius == i as NSNumber {
+        for (value, name) in radiusData {
+            if profile.searchRadius != nil && profile.searchRadius == value as NSNumber {
                 selectedRadiusNames.append(name)
                 break
             }
@@ -206,7 +206,7 @@ class JobProfileController: MJPController {
     
     @IBAction func saveAction(_ sender: Any) {
         
-        if !validate() {
+        if !valid() {
             return
         }
         
@@ -247,9 +247,9 @@ class JobProfileController: MJPController {
         // searchRadius data
         
         let radiusName = selectedRadiusNames[0]
-        for i in 1...5 {
-            if radiusName == String(format: "%d miles", i) {
-                profile.searchRadius = i as NSNumber
+        for (value, name) in radiusData {
+            if radiusName == name {
+                profile.searchRadius = value as NSNumber!
                 break
             }
         }

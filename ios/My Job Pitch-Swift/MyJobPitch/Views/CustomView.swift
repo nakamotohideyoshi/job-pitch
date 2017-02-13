@@ -66,6 +66,7 @@ class ButtonTextField: UITextField {
         delegate = self;
     }
 }
+
 extension ButtonTextField: UITextFieldDelegate {
     
     func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
@@ -73,4 +74,15 @@ extension ButtonTextField: UITextFieldDelegate {
         return false;
     }
 
+}
+
+extension UIView {
+    
+    func addUnderLine(paddingLeft: CGFloat, paddingRight: CGFloat, color: UIColor) {
+        let border = CALayer()
+        border.borderColor = color.cgColor
+        border.borderWidth = 0.5
+        border.frame = CGRect(x: paddingLeft, y: frame.size.height - 0.5, width: frame.size.width - paddingRight, height: 0.5)
+        layer.addSublayer(border)
+    }
 }

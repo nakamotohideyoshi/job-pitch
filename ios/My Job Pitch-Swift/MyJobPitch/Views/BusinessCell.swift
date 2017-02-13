@@ -27,7 +27,7 @@ class BusinessCell: MGSwipeTableCell {
         nameLabel.text = business.name
         let locationCount = business.locations.count
         subTitle.text = String(format: "Includes %lu %@", locationCount, locationCount == 1 ? "location" : "locations")
-        creditCount.text = String(format: "%@ Credit", business.tokens)
+        creditCount.text = String(format: "%@ %@", business.tokens, business.tokens.intValue > 1 ? "Credits" : "Credit")
         
     }
     

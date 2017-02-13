@@ -44,7 +44,11 @@ class HelpController: UITableViewController {
         webView.navigationItem.title = titles[segue.identifier!]
         if segue.identifier == "help" {
             if let user = AppData.user {
-                webView.file = user.isRecruiter() ? "help-recruiter" : "help-jobseeker"
+                if user.isJobSeeker() || (!user.isRecruiter() && LoginController.userType == 1) {
+                    webView.file = "help-jobseeker"
+                } else {
+                    webView.file = "help-recruiter"
+                }
             }
         } else {
             webView.file = segue.identifier

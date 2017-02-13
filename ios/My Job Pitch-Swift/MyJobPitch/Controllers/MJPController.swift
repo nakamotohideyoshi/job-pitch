@@ -75,7 +75,7 @@ class MJPController: UIViewController {
         return [String: NSArray]()
     }
     
-    func validate() -> Bool {
+    func valid() -> Bool {
         
         view.endEditing(true)
         

@@ -101,6 +101,8 @@ extension MessageListController: UITableViewDataSource {
             cell.messageLabel.text = lastMessage.content
         }
         
+        cell.addUnderLine(paddingLeft: 15, paddingRight: 0, color: AppData.greyBorderColor)
+        
         return cell
         
     }

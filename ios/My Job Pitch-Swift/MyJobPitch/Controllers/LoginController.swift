@@ -135,7 +135,7 @@ class LoginController: MJPController {
 
     @IBAction func loginAction(_ sender: Any) {
         
-        if validate() {
+        if valid() {
             
             AppHelper.showLoading("Signing in...")
             
@@ -152,7 +152,7 @@ class LoginController: MJPController {
 
     @IBAction func registerAction(_ sender: Any) {
 
-        if validate() {
+        if valid() {
             
             LoginController.userType = (sender as! UIButton).tag
             

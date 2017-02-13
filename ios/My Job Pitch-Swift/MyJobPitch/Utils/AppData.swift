@@ -271,6 +271,17 @@ class AppData: NSObject {
         }
         return nil
     }
+    
+    static func getJobStatusByName(_ name: String!) -> JobStatus! {
+        if name != nil {
+            for status in jobStatuses as! [JobStatus] {
+                if status.name == name {
+                    return status
+                }
+            }
+        }
+        return nil
+    }
 
     static func getApplicationStatus(_ id: NSNumber!) -> ApplicationStatus! {
         if id != nil {

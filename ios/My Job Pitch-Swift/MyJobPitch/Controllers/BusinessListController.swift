@@ -11,12 +11,13 @@ import MGSwipeTableCell
 
 class BusinessListController: MJPController {
     
-    static var reloadRequest = false
+    static var refreshRequest = false
     
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var emptyView: UIView!
     @IBOutlet weak var emptyMessage: UILabel!
     @IBOutlet weak var emptyButton: UIButton!
+    @IBOutlet weak var addButton: UIBarButtonItem!
     
     var data: NSMutableArray!
     
@@ -25,58 +26,59 @@ class BusinessListController: MJPController {
         
         // Do any additional setup after loading the view.
         
-        data = NSMutableArray()
-        refresh()
+        navigationItem.rightBarButtonItem = nil
         
-        if !AppData.user.canCreateBusinesses {
-            tableView.isScrollEnabled = false
-        }
+        BusinessListController.refreshRequest = true
         
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        if BusinessListController.reloadRequest {
-            BusinessListController.reloadRequest = false
-            tableView.reloadData()
+        if BusinessListController.refreshRequest {
+            BusinessListController.refreshRequest = false
+            
+            AppHelper.showLoading("Loading...")
+            
+            data = NSMutableArray()
+            
+            API.shared().loadBusinesses(success: { (data) in
+                AppHelper.hideLoading()
+                self.data = data.mutableCopy() as! NSMutableArray
+                self.updateBusinessList()
+            }) { (message, errors) in
+                self.handleErrors(message: message, errors: errors)
+            }
         }
     }
     
-    func refresh() {
-        
-        AppHelper.showLoading("Loading...")
-        
-        API.shared().loadBusinesses(success: { (data) in
-            AppHelper.hideLoading()
-            self.data = data.mutableCopy() as! NSMutableArray
-            self.tableView.reloadData()
-            self.updateUI()
-            AppData.user.businesses = self.data
-        }) { (message, errors) in
-            self.handleErrors(message: message, errors: errors)
-        }
-        
-    }
-    
-    func updateUI() {
-        
-        self.emptyView.isHidden = AppData.user.canCreateBusinesses && self.data.count > 0
-        if self.data.count == 0 {
-            self.emptyMessage.text = "You have not added any\n businesses yet."
-            self.emptyButton.setTitle("Create business", for: .normal)
+    func updateBusinessList() {
+        emptyView.isHidden = AppData.user.canCreateBusinesses && self.data.count > 0
+        if data.count == 0 {
+            emptyMessage.text = "You have not added any\n businesses yet."
+            emptyButton.setTitle("Create business", for: .normal)
+            tableView.isScrollEnabled = false
+            navigationItem.rightBarButtonItem = addButton
         } else if !AppData.user.canCreateBusinesses {
-            self.emptyMessage.text = "Have more than one company?\n Get in touch!"
-            self.emptyButton.setTitle("sales@myjobpitch.com", for: .normal)
+            emptyMessage.text = "Have more than one company?\n Get in touch!"
+            emptyButton.setTitle("sales@myjobpitch.com", for: .normal)
+            tableView.isScrollEnabled = false
+            navigationItem.rightBarButtonItem = nil
+        } else {
+            tableView.isScrollEnabled = true
+            if navigationItem.rightBarButtonItem == nil {
+                navigationItem.rightBarButtonItem = addButton
+            }
         }
-        
+        self.tableView.reloadData()
     }
     
     @IBAction func addAction(_ sender: Any) {
         
         if AppData.user.canCreateBusinesses || data.count == 0 {
-            let controller = AppHelper.mainStoryboard.instantiateViewController(withIdentifier: "BusinessEdit") as! BusinessEditController
-            controller.savedBusiness = refresh
-            navigationController?.pushViewController(controller, animated: true)
+            BusinessEditController.pushController(business: nil) { (business) in
+                self.data.add(business)
+                self.updateBusinessList()
+            }
         } else {
             let url = URL(string: "mailto:sales@myjobpitch.com")!
             UIApplication.shared.openURL(url)
@@ -105,12 +107,10 @@ extension BusinessListController: UITableViewDataSource {
                           backgroundColor: AppData.greenColor,
                           padding: 20,
                           callback: { (cell) -> Bool in
-                            
-                            let controller = AppHelper.mainStoryboard.instantiateViewController(withIdentifier: "BusinessEdit") as! BusinessEditController
-                            controller.business = business
-                            controller.savedBusiness = self.refresh
-                            self.navigationController?.pushViewController(controller, animated: true)
-                            
+                            BusinessEditController.pushController(business: business) { (business) in
+                                self.data[indexPath.row] = business
+                                self.updateBusinessList()
+                            }
                             return true
             })
         ]
@@ -132,8 +132,7 @@ extension BusinessListController: UITableViewDataSource {
                                     API.shared().deleteBusiness(id: business.id, success: {
                                         AppHelper.hideLoading()
                                         self.data.remove(business)
-                                        self.tableView.reloadData()
-                                        self.updateUI()
+                                        self.updateBusinessList()
                                     }) { (message, errors) in
                                         self.handleErrors(message: message, errors: errors)
                                     }
@@ -150,6 +149,8 @@ extension BusinessListController: UITableViewDataSource {
             
         }
         
+        cell.addUnderLine(paddingLeft: 15, paddingRight: 0, color: AppData.greyBorderColor)
+        
         return cell
         
     }
@@ -160,13 +161,9 @@ extension BusinessListController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
-        if indexPath.row < data.count {
-            
-            let controller = AppHelper.mainStoryboard.instantiateViewController(withIdentifier: "LocationList") as! LocationListController
-            controller.business = data[indexPath.row] as! Business
-            navigationController?.pushViewController(controller, animated: true)
-            
-        }
+        let controller = AppHelper.mainStoryboard.instantiateViewController(withIdentifier: "LocationList") as! LocationListController
+        controller.business = data[indexPath.row] as! Business
+        navigationController?.pushViewController(controller, animated: true)
         
     }
     

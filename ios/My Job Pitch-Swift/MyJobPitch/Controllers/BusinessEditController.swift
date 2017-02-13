@@ -18,7 +18,7 @@ class BusinessEditController: MJPController {
     @IBOutlet weak var creditsLabel: UILabel!
     
     var business: Business!
-    var savedBusiness: (() -> Void)!
+    var savedBusiness: ((Business) -> Void)!
     
     var imagePicker: UIImagePickerController!    
     var logoImage: UIImage!
@@ -31,7 +31,11 @@ class BusinessEditController: MJPController {
         imagePicker = UIImagePickerController()
         imagePicker.delegate = self
         
-        if business != nil {
+        if business == nil {
+            
+            navigationItem.title = "Add Business"
+            
+        } else {
         
             navigationItem.title = "Edit Business"
             
@@ -44,10 +48,6 @@ class BusinessEditController: MJPController {
                 addImageButton.isHidden = true
                 removeImageButton.isHidden = false
             }
-            
-        } else {
-            
-            navigationItem.title = "Add Business"
             
         }
         
@@ -109,19 +109,20 @@ class BusinessEditController: MJPController {
     
     @IBAction func saveAction(_ sender: Any) {
         
-        if !validate() {
+        if !valid() {
             return
         }
     
         AppHelper.showLoading("Saving...")
         
-        if business == nil {
-            business = Business()
-        }
+        let newBusiness = Business()
+        newBusiness.id = business?.id
         
-        business.name = nameField.text?.trimmingCharacters(in: .whitespacesAndNewlines)
+        newBusiness.name = nameField.text?.trimmingCharacters(in: .whitespacesAndNewlines)
     
-        API.shared().saveBusiness(business: business, success: { (data) in
+        API.shared().saveBusiness(business: newBusiness, success: { (data) in
+            
+            self.business = data as! Business
             
             let origImageID = self.business.getImage()?.id
             if origImageID != nil && self.removeImageButton.isHidden {
@@ -158,21 +159,25 @@ class BusinessEditController: MJPController {
                                      progress: { (bytesWriteen, totalBytesWritten, totalBytesExpectedToWrite) in
                                         hud.progress = Float(totalBytesWritten / totalBytesExpectedToWrite)
             }, success: { (data) in
-                self.saveCompleted()
+                AppHelper.hideLoading()
+                _ = self.navigationController?.popViewController(animated: true)
+                self.savedBusiness?(self.business)
             }) { (message, errors) in
                 self.handleErrors(message: message, errors: errors)
             }
             
         } else {
-            saveCompleted()
+            _ = navigationController?.popViewController(animated: true)
+            savedBusiness?(business)
         }
         
     }
     
-    func saveCompleted() {
-        AppHelper.hideLoading()
-        _ = navigationController?.popViewController(animated: true)
-        savedBusiness?()
+    static func pushController(business: Business!, callback: ((Business) -> Void)!) {
+        let controller = AppHelper.mainStoryboard.instantiateViewController(withIdentifier: "BusinessEdit") as! BusinessEditController
+        controller.business = business
+        controller.savedBusiness = callback
+        AppHelper.getFrontController().navigationController?.pushViewController(controller, animated: true)
     }
 
 }

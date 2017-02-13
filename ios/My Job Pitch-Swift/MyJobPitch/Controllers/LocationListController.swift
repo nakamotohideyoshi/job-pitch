@@ -11,11 +11,15 @@ import MGSwipeTableCell
 
 class LocationListController: MJPController {
     
-    static var reloadRequest = false
+    static var refreshRequest = false
     
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var emptyView: UIView!
-    @IBOutlet weak var creditsLabel: UILabel!
+    
+    @IBOutlet weak var imgView: UIImageView!
+    @IBOutlet weak var nameLabel: UILabel!
+    @IBOutlet weak var subTitle: UILabel!
+    @IBOutlet weak var creditCount: UILabel!
     
     var business: Business!
     
@@ -26,59 +30,82 @@ class LocationListController: MJPController {
         
         // Do any additional setup after loading the view.
         
-        data = NSMutableArray()
-        
-        if business == nil {
-            AppHelper.showLoading("Loading...")
-            let businessID = AppData.user.businesses.firstObject as! NSNumber
-            API.shared().loadBusiness(id: businessID, success: { (data) in
-                self.business = data as! Business
-                self.creditsLabel.text = String(format: "%@ Credit", self.business.tokens)
-                self.refresh()
-            }) { (message, errors) in
-                self.handleErrors(message: message, errors: errors)
-            }
-        } else {
-            creditsLabel.text = String(format: "%@ Credit", business.tokens)
-            refresh()
-        }
+        updateBusinessInfo()
+        LocationListController.refreshRequest = true
         
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        if LocationListController.reloadRequest {
-            LocationListController.reloadRequest = false
-            tableView.reloadData()
+        if LocationListController.refreshRequest {
+            LocationListController.refreshRequest = false
+            
+            AppHelper.showLoading("Loading...")
+            
+            data = NSMutableArray()
+            
+            API.shared().loadLocationsForBusiness(businessId: business.id, success: { (data) in
+                AppHelper.hideLoading()
+                self.data = data.mutableCopy() as! NSMutableArray
+                self.updateLocationList(superRefresh: false)
+            }) { (message, errors) in
+                self.handleErrors(message: message, errors: errors)
+            }
         }
     }
     
-    func refresh() {
-        
-        AppHelper.showLoading("Loading...")
-        
-        API.shared().loadLocationsForBusiness(businessId: business.id, success: { (data) in
-            AppHelper.hideLoading()
-            self.data = data.mutableCopy() as! NSMutableArray
-            self.tableView.reloadData()
-            self.emptyView.isHidden = self.data.count > 0
-            self.business.locations = self.data
-        }) { (message, errors) in
-            self.handleErrors(message: message, errors: errors)
+    func updateBusinessInfo() {
+        if let image = business.getImage() {
+            AppHelper.loadImageURL(imageUrl: (image.thumbnail)!, imageView: imgView, completion: nil)
+        } else {
+            imgView.image = UIImage(named: "default-logo")
         }
+        
+        nameLabel.text = business.name
+        creditCount.text = String(format: "%@ %@", business.tokens, business.tokens.intValue > 1 ? "Credits" : "Credit")
+    }
+    
+    func updateLocationList(superRefresh: Bool) {
+        if superRefresh {
+            BusinessListController.refreshRequest = true
+        }
+        subTitle.text = String(format: "Includes %lu %@", data.count, data.count > 1 ? "locations" : "location")
+        emptyView.isHidden = self.data.count > 0
+        tableView.reloadData()
+    }
+    
+    @IBAction func editBusinessAction(_ sender: Any) {
+        BusinessEditController.pushController(business: business) { (business) in
+            BusinessListController.refreshRequest = true
+            self.business = business
+            self.updateBusinessInfo()
+        }
+    }
+    
+    @IBAction func deleteBusinessAction(_ sender: Any) {
+        
+        let message = String(format: "Are you sure you want to delete %@", business.name)
+        PopupController.showYellow(message, ok: "Delete", okCallback: {
+            
+            AppHelper.showLoading("Deleting...")
+            
+            API.shared().deleteBusiness(id: self.business.id, success: {
+                AppHelper.hideLoading()
+                BusinessListController.refreshRequest = true
+                _ = self.navigationController?.popViewController(animated: true)
+            }) { (message, errors) in
+                self.handleErrors(message: message, errors: errors)
+            }
+            
+        }, cancel: "Cancel", cancelCallback: nil)
         
     }
     
-    @IBAction func addAction(_ sender: Any) {
-        
-        let controller = AppHelper.mainStoryboard.instantiateViewController(withIdentifier: "LocationEdit") as! LocationEditController
-        controller.business = business
-        controller.savedLocation = {
-            self.refresh()
-            BusinessListController.reloadRequest = true
+    @IBAction func addLocationAction(_ sender: Any) {
+        LocationEditController.pushController(business: business, location: nil) { (location) in
+            self.data.add(location)
+            self.updateLocationList(superRefresh: true)
         }
-        navigationController?.pushViewController(controller, animated: true)
-        
     }
     
 }
@@ -102,13 +129,11 @@ extension LocationListController: UITableViewDataSource {
                           icon: UIImage(named: "edit-big-icon"),
                           backgroundColor: AppData.greenColor,
                           padding: 20,
-                          callback: { (cell) -> Bool in
-                            
-                            let controller = AppHelper.mainStoryboard.instantiateViewController(withIdentifier: "LocationEdit") as! LocationEditController
-                            controller.location = location
-                            controller.savedLocation = self.refresh
-                            self.navigationController?.pushViewController(controller, animated: true)
-                            
+                          callback: { (cell) -> Bool in                            
+                            LocationEditController.pushController(business: nil, location: location) { (location) in
+                                self.data[indexPath.row] = location
+                                self.updateLocationList(superRefresh: false)
+                            }
                             return true
             })
         ]
@@ -127,10 +152,8 @@ extension LocationListController: UITableViewDataSource {
                                 
                                 API.shared().deleteLocation(id: location.id, success: {
                                     AppHelper.hideLoading()
-                                    BusinessListController.reloadRequest = true
                                     self.data.remove(location)
-                                    self.tableView.reloadData()
-                                    self.emptyView.isHidden = self.data.count > 0
+                                    self.updateLocationList(superRefresh: true)
                                 }) { (message, errors) in
                                     self.handleErrors(message: message, errors: errors)
                                 }
@@ -145,6 +168,8 @@ extension LocationListController: UITableViewDataSource {
             })
         ]
         
+        cell.addUnderLine(paddingLeft: 15, paddingRight: 0, color: AppData.greyBorderColor)
+        
         return cell
         
     }
@@ -155,10 +180,8 @@ extension LocationListController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
-        let location = data[indexPath.row] as! Location
-        
         let controller = AppHelper.mainStoryboard.instantiateViewController(withIdentifier: "JobList") as! JobListController
-        controller.location = location
+        controller.location = data[indexPath.row] as! Location
         navigationController?.pushViewController(controller, animated: true)
         
         

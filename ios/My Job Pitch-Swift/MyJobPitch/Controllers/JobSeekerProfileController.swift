@@ -234,7 +234,7 @@ class JobSeekerProfileController: MJPController {
     
     @IBAction func saveAction(_ sender: Any) {
         
-        if !validate() {
+        if !valid() {
             return
         }
         

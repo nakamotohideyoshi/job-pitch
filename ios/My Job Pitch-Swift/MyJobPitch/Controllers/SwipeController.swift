@@ -44,7 +44,7 @@ class SwipeController: MJPController {
         
         if AppData.user.isRecruiter() {
             credits = searchJob.locationData.businessData.tokens as Int
-            creditsLabel.text = String(format: "%d Credit", credits)
+            creditsLabel.text = String(format: "%d %@", credits, credits > 1 ? "Credits" : "Credit")
         }
         
     }
@@ -226,7 +226,7 @@ extension SwipeController: ChooseDelegate {
             
             if AppData.user.isRecruiter() {
                 self.credits = self.credits - 1
-                self.creditsLabel.text = String(format: "%d Credit", self.credits)
+                self.creditsLabel.text = String(format: "%d %@", self.credits, self.credits > 1 ? "Credits" : "Credit")
             }
             
         }) { (message, errors) in

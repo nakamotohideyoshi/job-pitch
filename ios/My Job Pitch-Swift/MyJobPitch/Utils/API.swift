@@ -108,7 +108,7 @@ class API: NSObject {
 
     private func putObject(_ path: String,
                             request: NSObject!,
-                            success: ((NSObject) -> Void)!,
+                            success: ((NSObject?) -> Void)!,
                             failure: ((String?, NSDictionary?) -> Void)!) {
         clearCookies()
 
@@ -116,7 +116,7 @@ class API: NSObject {
                     path: path,
                     parameters: nil,
                     success: { (_, mappingResult) in
-                        success(mappingResult?.firstObject as! NSObject)
+                        success(mappingResult?.firstObject as? NSObject)
         }) { (_, error) in
             self.failureWithError(error, failure: failure)
         }
@@ -490,12 +490,12 @@ class API: NSObject {
 //        getObjects("/api/user-jobs/", success: success, failure: failure)
 //    }
 
-    func loadJobsForLocation(locationId: NSNumber!,
+    func loadJobsForLocation(locationId: NSNumber?,
                              success: ((NSArray) -> Void)!,
                              failure: ((String?, NSDictionary?) -> Void)!) {
         var path = "/api/user-jobs/"
         if locationId != nil {
-            path = String(format: "%@?location=%@", path, locationId)
+            path = String(format: "%@?location=%@", path, locationId!)
         }
         getObjects(path, success: success, failure: failure)
     }
@@ -536,14 +536,14 @@ class API: NSObject {
     }
 
     func updateApplicationStatus(update: ApplicationStatusUpdate,
-                                 success: ((NSObject) -> Void)!,
+                                 success: ((NSObject?) -> Void)!,
                                  failure: ((String?, NSDictionary?) -> Void)!) {
         putObject(String(format: "/api/applications/%@/", update.id),
                   request: update, success: success, failure: failure)
     }
 
     func updateApplicationShortlist(update: ApplicationShortlistUpdate,
-                                    success: ((NSObject) -> Void)!,
+                                    success: ((NSObject?) -> Void)!,
                                     failure: ((String?, NSDictionary?) -> Void)!) {
         putObject(String(format: "/api/applications/%@/", update.id),
                   request: update, success: success, failure: failure)

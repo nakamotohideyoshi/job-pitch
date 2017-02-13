@@ -9,12 +9,19 @@
 import UIKit
 import MGSwipeTableCell
 
-class JobListController: SearchController {
+class JobListController: MJPController {
 
+    @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var emptyView: UIView!
-    @IBOutlet weak var creditsLabel: UILabel!
+    
+    @IBOutlet weak var imgView: UIImageView!
+    @IBOutlet weak var nameLabel: UILabel!
+    @IBOutlet weak var subTitle: UILabel!
+    @IBOutlet weak var creditCount: UILabel!
     
     var location: Location!
+    
+    var data: NSMutableArray!
     
     var jobActive: NSNumber!
     
@@ -23,70 +30,75 @@ class JobListController: SearchController {
 
         // Do any additional setup after loading the view.
         
-        if SideMenuController.currentID != "find_talent" {
-            let addButton = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addAction))
-            navigationItem.rightBarButtonItem = addButton
-            navigationItem.title = "Jobs"
-        }
+        jobActive = AppData.getJobStatusByName(JobStatus.JOB_STATUS_OPEN).id
         
-        refresh()
-        
-        if location != nil {
-            creditsLabel.text = String(format: "%@ Credit", location.businessData.tokens)
-        }
-        
-        for status in AppData.jobStatuses as! [JobStatus] {
-            if status.name == JobStatus.JOB_STATUS_OPEN {
-                jobActive = status.id
-                break
-            }
-        }
-        
-    }
-    
-    func refresh() {
+        updateLocationInfo()
         
         AppHelper.showLoading("Loading...")
         
+        data = NSMutableArray()
         API.shared().loadJobsForLocation(locationId: location?.id, success: { (data) in
             AppHelper.hideLoading()
-            self.allData = data.mutableCopy() as! NSMutableArray
-            self.data = self.allData
-            self.tableView.reloadData()
-            self.emptyView.isHidden = self.data.count > 0
-            if self.location != nil {
-                self.location.jobs = self.allData
-            }
+            self.data = data.mutableCopy() as! NSMutableArray
+            self.updateJobList(superRefresh: false)
         }) { (message, errors) in
             self.handleErrors(message: message, errors: errors)
         }
-        
     }
     
-    override func filterItem(item: Any, text: String) -> Bool {
-        
-        let job  = item as! Job
-        let businessName = job.locationData.businessData.name + ", " + job.locationData.name
-        return  job.title.lowercased().contains(text) ||
-                businessName.lowercased().contains(text) ||
-                job.locationData.placeName.lowercased().contains(text)
-
-    }
-    
-    func addAction(_ sender: Any) {
-        
-        if location == nil {
-            SideMenuController.pushController(id: "businesses")
+    func updateLocationInfo() {
+        if let image = location.getImage() {
+            AppHelper.loadImageURL(imageUrl: (image.thumbnail)!, imageView: imgView, completion: nil)
         } else {
-            let controller = AppHelper.mainStoryboard.instantiateViewController(withIdentifier: "JobEdit") as! JobEditController
-            controller.location = location
-            controller.savedJob = {
-                self.refresh()
-                LocationListController.reloadRequest = true
-            }
-            navigationController?.pushViewController(controller, animated: true)
+            imgView.image = UIImage(named: "default-logo")
         }
         
+        nameLabel.text = location.name
+        creditCount.text = String(format: "%@ %@", location.businessData.tokens, location.businessData.tokens.intValue > 1 ? "Credits" : "Credit")
+    }
+    
+    func updateJobList(superRefresh: Bool) {
+        if superRefresh {
+            BusinessListController.refreshRequest = true
+            LocationListController.refreshRequest = true
+        }
+        subTitle.text = String(format: "Includes %lu %@", data.count, data.count > 1 ? "jobs" : "job")
+        emptyView.isHidden = self.data.count > 0
+        tableView.reloadData()
+    }
+    
+    @IBAction func editLocationAction(_ sender: Any) {
+        LocationEditController.pushController(business: nil, location: location) { (location) in
+            BusinessListController.refreshRequest = true
+            LocationListController.refreshRequest = true
+            self.location = location
+            self.updateLocationInfo()
+        }
+    }
+    
+    @IBAction func deleteLocationAction(_ sender: Any) {
+        let message = String(format: "Are you sure you want to delete %@", location.name)
+        PopupController.showYellow(message, ok: "Delete", okCallback: {
+            
+            AppHelper.showLoading("Deleting...")
+            
+            API.shared().deleteLocation(id: self.location.id, success: {
+                AppHelper.hideLoading()
+                BusinessListController.refreshRequest = true
+                LocationListController.refreshRequest = true
+                _ = self.navigationController?.popViewController(animated: true)
+            }) { (message, errors) in
+                self.handleErrors(message: message, errors: errors)
+            }
+            
+        }, cancel: "Cancel", cancelCallback: nil)
+    }
+    
+    @IBAction func addJobAction(_ sender: Any) {
+        JobEditController.pushController(location: location, job: nil, callback: { (job) in
+            self.data.add(job)
+            self.updateJobList(superRefresh: true)
+        })
     }
     
 }
@@ -106,62 +118,51 @@ extension JobListController: UITableViewDataSource {
         cell.setData(job)
         cell.setOpacity(job.status==jobActive ? 1 : 0.5)
         
-        if SideMenuController.currentID != "find_talent" {
+        cell.leftButtons = [
+            MGSwipeButton(title: "",
+                          icon: UIImage(named: "edit-big-icon"),
+                          backgroundColor: AppData.greenColor,
+                          padding: 20,
+                          callback: { (cell) -> Bool in
+                            JobEditController.pushController(location: nil, job: job) { (job) in
+                                self.data[indexPath.row] = job
+                                self.updateJobList(superRefresh: false)
+                            }
+                            return true
+            })
+        ]
         
-            cell.leftButtons = [
-                MGSwipeButton(title: "",
-                              icon: UIImage(named: "edit-big-icon"),
-                              backgroundColor: AppData.greenColor,
-                              padding: 20,
-                              callback: { (cell) -> Bool in
+        cell.rightButtons = [
+            MGSwipeButton(title: "",
+                          icon: UIImage(named: "delete-big-icon"),
+                          backgroundColor: AppData.yellowColor,
+                          padding: 20,
+                          callback: { (cell) -> Bool in
+                            
+                            let message = String(format: "Are you sure you want to delete %@", job.title)
+                            PopupController.showYellow(message, ok: "Delete", okCallback: {
                                 
-                                let controller = AppHelper.mainStoryboard.instantiateViewController(withIdentifier: "JobEdit") as! JobEditController
-                                controller.job = job
-                                controller.savedJob = self.refresh
-                                self.navigationController?.pushViewController(controller, animated: true)
+                                AppHelper.showLoading("Deleting...")
                                 
-                                return true
-                })
-            ]
-            
-            cell.rightButtons = [
-                MGSwipeButton(title: "",
-                              icon: UIImage(named: "delete-big-icon"),
-                              backgroundColor: AppData.yellowColor,
-                              padding: 20,
-                              callback: { (cell) -> Bool in
+                                API.shared().deleteJob(id: job.id, success: {
+                                    AppHelper.hideLoading()
+                                    self.data.remove(job)
+                                    self.updateJobList(superRefresh: true)
+                                }) { (message, errors) in
+                                    self.handleErrors(message: message, errors: errors)
+                                }
                                 
-                                let message = String(format: "Are you sure you want to delete %@", job.title)
-                                PopupController.showYellow(message, ok: "Delete", okCallback: {
-                                    
-                                    AppHelper.showLoading("Deleting...")
-                                    
-                                    API.shared().deleteJob(id: job.id, success: {
-                                        AppHelper.hideLoading()
-                                        LocationListController.reloadRequest = true
-                                        self.allData.remove(job)
-                                        self.data.remove(job)
-                                        self.tableView.reloadData()
-                                        self.emptyView.isHidden = self.data.count > 0
-                                    }) { (message, errors) in
-                                        self.handleErrors(message: message, errors: errors)
-                                    }
-                                    
-                                    cell.hideSwipe(animated: true)
-                                    
-                                }, cancel: "Cancel", cancelCallback: {
-                                    cell.hideSwipe(animated: true)
-                                })
+                                cell.hideSwipe(animated: true)
                                 
-                                return false
-                })
-            ]
-            
-        } else {
-            
-            cell.isUserInteractionEnabled = job.status==jobActive
-            
-        }
+                            }, cancel: "Cancel", cancelCallback: {
+                                cell.hideSwipe(animated: true)
+                            })
+                            
+                            return false
+            })
+        ]
+        
+        cell.addUnderLine(paddingLeft: 15, paddingRight: 0, color: AppData.greyBorderColor)
         
         return cell
     }
@@ -171,16 +172,6 @@ extension JobListController: UITableViewDataSource {
 extension JobListController: UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        
-        if SideMenuController.currentID == "find_talent" {
-            
-            let job = data[indexPath.row] as! Job
-            
-            let controller = AppHelper.mainStoryboard.instantiateViewController(withIdentifier: "Swipe") as! SwipeController
-            controller.searchJob = job
-            navigationController?.pushViewController(controller, animated: true)
-            
-        }
         
     }
     

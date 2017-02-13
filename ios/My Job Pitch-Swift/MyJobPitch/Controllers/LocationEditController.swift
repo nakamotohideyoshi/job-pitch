@@ -28,7 +28,7 @@ class LocationEditController: MJPController {
     
     var business: Business!
     var location: Location!
-    var savedLocation: (() -> Void)!
+    var savedLocation: ((Location) -> Void)!
     
     var imagePicker: UIImagePickerController!
     var logoImage: UIImage!
@@ -53,8 +53,13 @@ class LocationEditController: MJPController {
         iconView.frame = CGRect(x: 10, y: 7, width: 25, height: 26)
         locationButton.addSubview(iconView)
         
-        if location != nil {
+        if location == nil {
             
+            navigationItem.title = "Add Location"
+            emailField.text = AppData.email
+            
+        } else {
+        
             navigationItem.title = "Edit Location"
             
             business = location.businessData
@@ -81,12 +86,6 @@ class LocationEditController: MJPController {
                 addImageButton.isHidden = origImage != nil
                 removeImageButton.isHidden = origImage == nil
             }
-            
-        } else {
-            
-            navigationItem.title = "Add Location"
-            
-            emailField.text = AppData.email
             
         }
         
@@ -173,32 +172,33 @@ class LocationEditController: MJPController {
     
     @IBAction func saveAction(_ sender: Any) {
         
-        if !validate() {
+        if !valid() {
             return
         }
         
         AppHelper.showLoading("Saving...")
         
-        if location == nil {
-            location = Location()
-            location.business = business?.id
-        }
+        let newLocation = Location()
+        newLocation.business = business.id
+        newLocation.id = location?.id
         
-        location.name = nameField.text?.trimmingCharacters(in: .whitespacesAndNewlines)
-        location.desc = descTextView.text?.trimmingCharacters(in: .whitespacesAndNewlines)
-        location.email = emailField.text?.trimmingCharacters(in: .whitespacesAndNewlines)
-        location.emailPublic = emailPublic.isOn
-        location.telephone = ""
-        location.telephonePublic = true
-        location.mobile = phoneField.text;
-        location.mobilePublic = phonePublic.isOn
-        location.placeID = placeID
-        location.placeName = placeName
-        location.latitude = latitude
-        location.longitude = longitude
-        location.address = ""
+        newLocation.name = nameField.text?.trimmingCharacters(in: .whitespacesAndNewlines)
+        newLocation.desc = descTextView.text?.trimmingCharacters(in: .whitespacesAndNewlines)
+        newLocation.email = emailField.text?.trimmingCharacters(in: .whitespacesAndNewlines)
+        newLocation.emailPublic = emailPublic.isOn
+        newLocation.telephone = ""
+        newLocation.telephonePublic = true
+        newLocation.mobile = phoneField.text;
+        newLocation.mobilePublic = phonePublic.isOn
+        newLocation.placeID = placeID
+        newLocation.placeName = placeName
+        newLocation.latitude = latitude
+        newLocation.longitude = longitude
+        newLocation.address = ""
         
-        API.shared().saveLocation(location: location, success: { (data) in
+        API.shared().saveLocation(location: newLocation, success: { (data) in
+            
+            self.location = data as! Location
             
             if self.origImage?.id != nil && self.removeImageButton.isHidden {
                 
@@ -234,21 +234,27 @@ class LocationEditController: MJPController {
                                      progress: { (bytesWriteen, totalBytesWritten, totalBytesExpectedToWrite) in
                                         hud.progress = Float(totalBytesWritten / totalBytesExpectedToWrite)
             }, success: { (data) in
-                self.saveCompleted()
+                AppHelper.hideLoading()
+                self.location.images = [data as Image]
+                _ = self.navigationController?.popViewController(animated: true)
+                self.savedLocation?(self.location)
             }) { (message, errors) in
                 self.handleErrors(message: message, errors: errors)
             }
             
         } else {
-            saveCompleted()
+            _ = navigationController?.popViewController(animated: true)
+            savedLocation?(location)
         }
         
     }
     
-    func saveCompleted() {
-        AppHelper.hideLoading()
-        _ = navigationController?.popViewController(animated: true)
-        savedLocation?()
+    static func pushController(business: Business!, location: Location!, callback: ((Location)->Void)!) {
+        let controller = AppHelper.mainStoryboard.instantiateViewController(withIdentifier: "LocationEdit") as! LocationEditController
+        controller.business = business
+        controller.location = location
+        controller.savedLocation = callback
+        AppHelper.getFrontController().navigationController?.pushViewController(controller, animated: true)
     }
     
 }

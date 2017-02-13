@@ -27,7 +27,7 @@ class JobEditController: MJPController {
     
     var location: Location!
     var job: Job!
-    var savedJob: (() -> Void)!
+    var savedJob: ((Job) -> Void)!
     
     var imagePicker: UIImagePickerController!
     var logoImage: UIImage!
@@ -51,7 +51,61 @@ class JobEditController: MJPController {
         imagePicker = UIImagePickerController()
         imagePicker.delegate = self
         
-        if job != nil {
+        // sector data
+        
+        for sector in AppData.sectors as! [Sector] {
+            sectorNames.append(sector.name)
+        }
+        sectorField.clickCallback = {
+            SelectionController.showPopup(title: "",
+                                          items: self.sectorNames,
+                                          selectedItems: self.selectedSectorNames,
+                                          multiSelection: false,
+                                          doneCallback: { (items) in
+                                            self.selectedSectorNames = items
+                                            self.sectorField.text = items.joined(separator: ", ")
+            })
+        }
+        
+        // contract data
+        
+        for contract in AppData.contracts as! [Contract] {
+            contractNames.append(contract.name)
+        }
+        contractField.clickCallback = {
+            SelectionController.showPopup(title: "",
+                                          items: self.contractNames,
+                                          selectedItems: self.selectedContractNames,
+                                          multiSelection: false,
+                                          doneCallback: { (items) in
+                                            self.selectedContractNames = items
+                                            self.contractField.text = items.joined(separator: ", ")
+            })
+        }
+        
+        // hours data
+        
+        for hours in AppData.hours as! [Hours] {
+            hoursNames.append(hours.name)
+        }
+        hoursField.clickCallback = {
+            SelectionController.showPopup(title: "",
+                                          items: self.hoursNames,
+                                          selectedItems: self.selectedHoursNames,
+                                          multiSelection: false,
+                                          doneCallback: { (items) in
+                                            self.selectedHoursNames = items
+                                            self.hoursField.text = items.joined(separator: ", ")
+            })
+        }
+
+        // load job
+        
+        if job == nil {
+            
+            navigationItem.title = "Add Job"
+            
+        } else {
             
             navigationItem.title = "Edit Job"
             
@@ -106,10 +160,6 @@ class JobEditController: MJPController {
                 removeImageButton.isHidden = origImage == nil
             }
             
-        } else {
-            
-            navigationItem.title = "Add Job"
-            
         }
         
         if removeImageButton.isHidden {
@@ -122,54 +172,6 @@ class JobEditController: MJPController {
             
             imgView.alpha = 0.2
             
-        }
-        
-        // sector data
-        
-        for sector in AppData.sectors as! [Sector] {
-            sectorNames.append(sector.name)
-        }
-        sectorField.clickCallback = {
-            SelectionController.showPopup(title: "",
-                                          items: self.sectorNames,
-                                          selectedItems: self.selectedSectorNames,
-                                          multiSelection: false,
-                                          doneCallback: { (items) in
-                                            self.selectedSectorNames = items
-                                            self.sectorField.text = items.joined(separator: ", ")
-            })
-        }
-        
-        // contract data
-        
-        for contract in AppData.contracts as! [Contract] {
-            contractNames.append(contract.name)
-        }
-        contractField.clickCallback = {
-            SelectionController.showPopup(title: "",
-                                          items: self.contractNames,
-                                          selectedItems: self.selectedContractNames,
-                                          multiSelection: false,
-                                          doneCallback: { (items) in
-                                            self.selectedContractNames = items
-                                            self.contractField.text = items.joined(separator: ", ")
-            })
-        }
-        
-        // hours data
-        
-        for hours in AppData.hours as! [Hours] {
-            hoursNames.append(hours.name)
-        }
-        hoursField.clickCallback = {
-            SelectionController.showPopup(title: "",
-                                          items: self.hoursNames,
-                                          selectedItems: self.selectedHoursNames,
-                                          multiSelection: false,
-                                          doneCallback: { (items) in
-                                            self.selectedHoursNames = items
-                                            self.hoursField.text = items.joined(separator: ", ")
-            })
         }
         
     }
@@ -231,33 +233,32 @@ class JobEditController: MJPController {
     
     @IBAction func saveAction(_ sender: Any) {
         
-        if !validate() {
+        if !valid() {
             return
         }
         
         AppHelper.showLoading("Saving...")
         
-        if job == nil {
-            job = Job()
-            job.location = location?.id
-        }
-        
+        let newJob = Job()
+        newJob.location = location.id
+        newJob.id = job?.id
+
         let statusName = active.isOn ? JobStatus.JOB_STATUS_OPEN : JobStatus.JOB_STATUS_CLOSED
         for status in AppData.jobStatuses as! [JobStatus] {
             if status.name == statusName {
-                job.status = status.id
+                newJob.status = status.id
                 break
             }
         }
         
-        job.title = titleField.text
-        job.desc = descTextView.text
+        newJob.title = titleField.text
+        newJob.desc = descTextView.text
         
         // sector data
         
         for sector in AppData.sectors as! [Sector] {
             if selectedSectorNames.contains(sector.name) {
-                job.sector = sector.id
+                newJob.sector = sector.id
                 break
             }
         }
@@ -266,7 +267,7 @@ class JobEditController: MJPController {
         
         for contract in AppData.contracts as! [Contract] {
             if selectedContractNames.contains(contract.name) {
-                job.contract = contract.id
+                newJob.contract = contract.id
                 break
             }
         }
@@ -275,12 +276,14 @@ class JobEditController: MJPController {
         
         for hours in AppData.hours as! [Hours] {
             if selectedHoursNames.contains(hours.name) {
-                job.hours = hours.id
+                newJob.hours = hours.id
                 break
             }
         }
         
-        API.shared().saveJob(job: job, success: { (data) in
+        API.shared().saveJob(job: newJob, success: { (data) in
+            
+            self.job = data as! Job
             
             if self.origImage?.id != nil && self.removeImageButton.isHidden {
                 
@@ -311,28 +314,34 @@ class JobEditController: MJPController {
             API.shared().uploadImage(image: logoImage,
                                      endpoint: "user-job-images",
                                      objectKey: "job",
-                                     objectId: job.id,
+                                     objectId: self.job.id,
                                      order: 0,
                                      progress: { (bytesWriteen, totalBytesWritten, totalBytesExpectedToWrite) in
                                         DispatchQueue.main.async {
                                             hud.progress = Float(totalBytesWritten / totalBytesExpectedToWrite)
                                         }
             }, success: { (data) in
-                self.saveCompleted()
+                AppHelper.hideLoading()
+                self.job.images = [data as Image]
+                _ = self.navigationController?.popViewController(animated: true)
+                self.savedJob?(self.job)
             }) { (message, errors) in
                 self.handleErrors(message: message, errors: errors)
             }
             
         } else {
-            saveCompleted()
+            _ = navigationController?.popViewController(animated: true)
+            savedJob?(job)
         }
         
     }
     
-    func saveCompleted() {
-        AppHelper.hideLoading()
-        _ = navigationController?.popViewController(animated: true)
-        savedJob?()
+    static func pushController(location: Location!, job: Job!, callback: ((Job)->Void)!) {
+        let controller = AppHelper.mainStoryboard.instantiateViewController(withIdentifier: "JobEdit") as! JobEditController
+        controller.location = location
+        controller.job = job
+        controller.savedJob = callback
+        AppHelper.getFrontController().navigationController?.pushViewController(controller, animated: true)
     }
 
 }

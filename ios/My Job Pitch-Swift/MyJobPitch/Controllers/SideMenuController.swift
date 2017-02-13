@@ -19,7 +19,7 @@ class SideMenuController: UIViewController {
         "add_record":   ["icon": "menu-add-record",     "title": "Record Pitch",            "identifier": "Pitch",              "per": "J"],
         "user_profile": ["icon": "menu-user-profile",   "title": "Profile",                 "identifier": "JobSeekerProfile",   "per": ""],
         
-        "find_talent":  ["icon": "menu-user-search",    "title": "Find Talent",             "identifier": "JobList",            "per": "B"],
+        "find_talent":  ["icon": "menu-user-search",    "title": "Find Talent",             "identifier": "SelectJob",          "per": "B"],
         "connections":  ["icon": "menu-connect",        "title": "Connections",             "identifier": "ApplicationList",    "per": "B"],
         "shortlist":    ["icon": "menu-shortlist",      "title": "My Shortlist",            "identifier": "ApplicationList",    "per": "B"],
         "businesses":   ["icon": "menu-business",       "title": "Businesses & Job Post",   "identifier": "BusinessList",       "per": ""],
@@ -67,6 +67,7 @@ class SideMenuController: UIViewController {
         
         data = [String]()
         if let user = AppData.user {
+            //if user.isJobSeeker() || (!user.isRecruiter() && LoginController.userType == 1)
             if user.isJobSeeker() {
                 data = SideMenuController.jobSeekerMenu
             } else if user.isRecruiter() {
@@ -154,7 +155,7 @@ extension SideMenuController: UITableViewDataSource {
             cell.addLine(frame: CGRect(x: 10, y: 0, width:  cell.frame.size.width - 60 - 20, height: 0.5),
                          color: UIColor(colorLiteralRed: 0, green: 0, blue: 0, alpha: 0.1))
             cell.addLine(frame: CGRect(x: 10, y: 0.5, width:  cell.frame.size.width - 60 - 20, height: 0.5),
-                         color: UIColor(colorLiteralRed: 1, green: 1, blue: 1, alpha: 0.1))
+                         color: UIColor(colorLiteralRed: 1, green: 1, blue: 1, alpha: 0.06))
         }
         
         cell.addLine(frame: CGRect(x: 10, y: cell.frame.size.height - 1, width:  cell.frame.size.width - 60 - 20, height: 0.5),

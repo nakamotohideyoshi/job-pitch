@@ -52,6 +52,7 @@
 		D7B07B881E08DDE1005B9EBE /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D7B07B861E08DDE1005B9EBE /* Main.storyboard */; };
 		D7B07B8A1E08DDE1005B9EBE /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D7B07B891E08DDE1005B9EBE /* Assets.xcassets */; };
 		D7B07B8D1E08DDE1005B9EBE /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D7B07B8B1E08DDE1005B9EBE /* LaunchScreen.storyboard */; };
+		D7C828031E51AC1000CD9C08 /* SelectJobController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7C828021E51AC1000CD9C08 /* SelectJobController.swift */; };
 		D7ECFBBB1E125F5E00E2E071 /* SelectionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7ECFBBA1E125F5E00E2E071 /* SelectionController.swift */; };
 		D7ECFBBD1E12D9A100E2E071 /* LocationMapController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7ECFBBC1E12D9A100E2E071 /* LocationMapController.swift */; };
 		D7ECFBBF1E12FCEF00E2E071 /* JobSeekerProfileController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7ECFBBE1E12FCEF00E2E071 /* JobSeekerProfileController.swift */; };
@@ -143,6 +144,7 @@
 		D7B07B891E08DDE1005B9EBE /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		D7B07B8C1E08DDE1005B9EBE /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		D7B07B8E1E08DDE1005B9EBE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		D7C828021E51AC1000CD9C08 /* SelectJobController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SelectJobController.swift; path = Controllers/SelectJobController.swift; sourceTree = "<group>"; };
 		D7ECFBBA1E125F5E00E2E071 /* SelectionController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SelectionController.swift; path = Controllers/SelectionController.swift; sourceTree = "<group>"; };
 		D7ECFBBC1E12D9A100E2E071 /* LocationMapController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = LocationMapController.swift; path = Controllers/LocationMapController.swift; sourceTree = "<group>"; };
 		D7ECFBBE1E12FCEF00E2E071 /* JobSeekerProfileController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = JobSeekerProfileController.swift; path = Controllers/JobSeekerProfileController.swift; sourceTree = "<group>"; };
@@ -259,6 +261,7 @@
 				D7896AEA1E0C854600533884 /* JobListController.swift */,
 				D787F63A1E287A8B00C47A88 /* JobEditController.swift */,
 				D7896AEE1E0CC51300533884 /* JobSeekerDetailController.swift */,
+				D7C828021E51AC1000CD9C08 /* SelectJobController.swift */,
 			);
 			name = Recruiter;
 			sourceTree = "<group>";
@@ -552,6 +555,7 @@
 				D7AF8DCB1E1C9CEA00C57DDC /* CameraController.swift in Sources */,
 				D7F770251E08E3D100ECB684 /* User.swift in Sources */,
 				D7F770201E08E3D100ECB684 /* Profile.swift in Sources */,
+				D7C828031E51AC1000CD9C08 /* SelectJobController.swift in Sources */,
 				D749E3571E0B2026000FD0B1 /* SwipeController.swift in Sources */,
 				D72AE42E1E11AD50004C3F02 /* ChangePasswordController.swift in Sources */,
 				D72AE4131E1049BE004C3F02 /* SearchController.swift in Sources */,

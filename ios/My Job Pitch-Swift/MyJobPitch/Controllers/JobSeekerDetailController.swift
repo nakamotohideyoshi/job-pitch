@@ -21,6 +21,7 @@ class JobSeekerDetailController: MJPController {
     @IBOutlet weak var contactDetailLabel: UILabel!
     @IBOutlet weak var applyButton: RoundButton!
     @IBOutlet weak var shortlisted: UISwitch!
+    @IBOutlet weak var otehrLabel: UILabel!
     
     var jobSeeker: JobSeeker!
     var application: Application!
@@ -32,7 +33,7 @@ class JobSeekerDetailController: MJPController {
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
-        
+
         isConnected = application?.status == AppData.getApplicationStatusByName(ApplicationStatus.APPLICATION_ESTABLISHED).id
         
         let pitch = jobSeeker.getPitch()
@@ -59,6 +60,13 @@ class JobSeekerDetailController: MJPController {
         
         if jobSeeker.cv == nil {
             cvButton.removeFromSuperview()
+        }
+        
+        if jobSeeker.hasReferences {
+            otehrLabel.text = "Reference available on request.\n\n"
+        }
+        if jobSeeker.truthConfirmation {
+            otehrLabel.text = otehrLabel.text! + "I confirm that all information provided is truthful to the best of my knowledge.\n"
         }
         
         // contact info
@@ -101,8 +109,7 @@ class JobSeekerDetailController: MJPController {
     }
     
     @IBAction func viewCVAction(_ sender: Any) {
-        
-        
+        UIApplication.shared.openURL(URL(string: jobSeeker.cv)!)
     }
     
     @IBAction func shortlistedChanged(_ sender: Any) {

@@ -12,6 +12,8 @@ import MGSwipeTableCell
 
 class ApplicationListController: SearchController {
     
+    var refreshRequest = false
+    
     var isRecruiter = false
     var isApplication = false
     var isConnectBtn = false
@@ -35,7 +37,11 @@ class ApplicationListController: SearchController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        tableView.triggerPullToRefresh()
+        //if refreshRequest {
+            refreshRequest = false
+            tableView.triggerPullToRefresh()
+        //}
+        
     }
     
     func getData() {
@@ -157,7 +163,7 @@ extension ApplicationListController: UITableViewDataSource {
             
         }
         
-        
+        cell.addUnderLine(paddingLeft: 15, paddingRight: 0, color: AppData.greyBorderColor)
         
         return cell
         

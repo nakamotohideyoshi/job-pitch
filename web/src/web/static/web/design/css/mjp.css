@@ -925,12 +925,25 @@ div.howitworks-page div.thumbnail{
 
 /* Navigation Sytles */
 
+<<<<<<< HEAD
 /*
 .navbar-toggle{
 	border: none;
     margin-top: 15px;
 	border-radius:none;
 }
+=======
+
+/*
+ * This for hacking Messenger Theme
+ */
+ul.messenger.messenger-fixed.messenger-on-bottom {
+    bottom: 130px;
+}
+
+
+/* Animation of glyphicon-refresh */
+>>>>>>> cde82a0bf3bcbb810e58ade37f095d2fae8e60ba
 
 .navbar-toggle .icon-bar{
 	width:43px;
@@ -991,6 +1004,163 @@ div.howitworks-page div.thumbnail{
   border-bottom:none !important;
 }
 
+<<<<<<< HEAD
+
+.navbar-nav>li.logged_in_menu{
+  display:none;
+}
+
+.navbar-nav>li.not_logged_in_menu{
+  display:none;
+}
+
+.navbar-nav>li.business-link{
+  display:none;
+=======
+
+/*
+ * Howitworks Page
+ */
+div.howitworks-page{
+  padding-top: 5%;
+}
+
+
+div.howitworks-page div.thumbnail{
+  border: 0;
+}
+
+
+/*
+ * Messages (Inbox/Notifications) Page
+ */
+.inbox {
+  margin-bottom: 15px;
+  padding: 25px;
+}
+
+.message-history {
+  border-bottom: 2px solid #C7C7C7;
+  overflow-y: visible;
+  position: relative;
+  overflow-x: hidden;
+}
+
+.inbox-contacts{
+  border-left: 2px solid #C7C7C7;
+  border-top: 2px solid #C7C7C7;
+  border-bottom: 2px solid #C7C7C7;
+  max-height: 100%;
+}
+
+.inbox-contacts h3 {
+  color: #00BAA5;
+}
+
+.inbox-contacts a {
+  color: #00BAA5;
+}
+
+.inbox-contacts .brand-nav{
+  border-bottom: 2px dotted #cccccc;
+}
+
+.inbox-contacts .brand-nav.active{
+  border-bottom: none;
+}
+
+.inbox-messages{
+  border-left: 2px solid #B9B9B9;
+  border-right: 2px solid #C7C7C7;
+  border-top: 2px solid #C7C7C7;
+  border-bottom: 2px solid #C7C7C7;
+  max-height: 100%;
+}
+
+.new-message-box{
+  width: 100%;
+  padding: 10px 10px 0 10px;
+}
+
+
+/*
+ * Application Page
+ */
+.counter-box{
+  border: 1px solid #cccccc;
+  padding: 30px;
+  margin-top: 30px;
+}
+
+
+/*
+ * Profile Page
+ */
+.profile {
+  border: 1px solid #cccccc;
+}
+
+.profile-content > .row {
+  border-right: 1px solid #cccccc;
+  padding-top: 15px;
+  padding-bottom: 15px;
+}
+
+.profile-sidebar > .row {
+  margin-bottom: 15px;
+  padding: 25px;
+}
+
+
+
+/* Navigation Sytles */
+
+/*
+.navbar-toggle{
+	border: none;
+    margin-top: 15px;
+	border-radius:none;
+>>>>>>> cde82a0bf3bcbb810e58ade37f095d2fae8e60ba
+}
+
+.navbar-nav>li.job-seeker-link{
+  display:none;
+}
+
+
+/* Only show the "mobile menu" fix
+@media (max-width: 3000px) {
+    .navbar-header {
+        float: none;
+    }
+    .navbar-toggle {
+        display: block;
+    }
+    .navbar-collapse {
+        border-top: 1px solid transparent;
+        box-shadow: inset 0 1px 0 rgba(255,255,255,0.1);
+    float:right;
+    }
+    .navbar-collapse.collapse {
+        display: none!important;
+    }
+    .navbar-collapse.collapse.in {
+        display: block!important;
+    }
+    .navbar-nav {
+        float: none!important;
+        margin: 0px 0px;
+    }
+    .navbar-nav>li {
+        float: none;
+    }
+    .navbar-nav>li>a {
+        padding-top: 10px;
+        padding-bottom: 10px;
+    }
+}
+
+
 
 .navbar-nav>li.logged_in_menu{
   display:none;
@@ -1042,6 +1212,7 @@ div.howitworks-page div.thumbnail{
 }
 
 
+>>>>>>> cde82a0bf3bcbb810e58ade37f095d2fae8e60ba
 
 
 */

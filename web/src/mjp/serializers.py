@@ -144,7 +144,7 @@ class ApplicationSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = Application
-        read_only_fields = ('status', 'created_by', 'deleted_by')
+        read_only_fields = ('status', 'created_by', 'deleted_by', 'job', 'shortlisted',)
 
 
 class ApplicationCreateSerializer(serializers.ModelSerializer):
@@ -166,16 +166,18 @@ class ApplicationConnectSerializer(serializers.ModelSerializer):
     def validate(self, attrs):
         if self.instance.status.name == ApplicationStatus.DELETED:
             raise serializers.ValidationError('Application deleted')
+        if self.instance.status.name == ApplicationStatus.ESTABLISHED:
+            raise serializers.ValidationError('Application already established')
         return super(ApplicationConnectSerializer, self).validate(attrs)
 
     def update(self, instance, validated_data):
         with transaction.atomic():
             try:
-                instance.location.business.token_store.decrement()
+                self.instance.job.location.business.token_store.decrement()
             except TokenStore.NoTokens:
                 raise serializers.ValidationError('NO_TOKENS')
             validated_data['status'] = ApplicationStatus.objects.get(name=ApplicationStatus.ESTABLISHED)
-            super(ApplicationConnectSerializer, self).update(instance, validated_data)
+            return super(ApplicationConnectSerializer, self).update(instance, validated_data)
 
     class Meta:
         model = Application
@@ -206,3 +208,10 @@ class PitchSerializer(serializers.ModelSerializer):
     class Meta:
         model = Pitch
         read_only_fields = ('token', 'job_seeker',)
+
+
+class AndroidPurchaseSerializer(serializers.Serializer):
+    business_id = serializers.IntegerField()
+    product_code = serializers.CharField()
+    purchase_token = serializers.CharField()
+

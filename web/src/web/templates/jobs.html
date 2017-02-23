@@ -1,11 +1,100 @@
 {% extends "mjp_user_base.html" %}
 
-{% block page-title %}<h2 class="page-header">Jobs</h2>{% endblock %}
+{% block page-title %}{% endblock %}
 
 {% block sidebar %}{% endblock %}
 
 {% block content %}
-  <div class="col-sm-12">
+  <div class="find-job page col-xs-12">
+    <div class="header row">
+      <div class="col-xs-3">
+        <h2>Find a Work</h2>
+      </div>
+      <div class="col-xs-9">
+        <div class="row">
+          <form>
+            <input class="col-xs-12" type="text" name="query" placeholder="Search for jobs">
+          </form>
+          <a href="#" class="sclabs-theme"><strong>Change Match Criteria</strong></a>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="left-sidebar col-xs-3">
+        <div class="row">
+          <h3 class="sclabs-theme">My Job Feed</h3>
+          <h4>Recent Contacts</h4>
+        </div>
+      </div>
+      <div class="content col-xs-6">
+        <div class="row">
+          <div class="col-xs-12">
+            <h3>My Job Feed</h3>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-xs-12 dotted-line before">
+            <h2>Company Name</h2>
+          </div>
+          <div class="col-xs-9">
+            <p>Sed semper quam in volutpat posuere. Aliquam quis laoreet urna, sed consequat metus. Quisque in vestibulum felis, ac rutrum erat. Aenean at gravida massa. Nulla efficitur lacinia metus, pretium sollicitudin nunc posuere non. Vivamus id nibh ex. Nam urna quam, ornare a interdum nec, lobortis a elit. Praesent sit amet risus elit.</p>
+          </div>
+          <div class="col-xs-3">
+            <div class="col-sm-1 like-icon"></div>
+            <div class="col-sm-1 love-icon"></div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-xs-12 dotted-line before">
+            <h2 class="row">Company Name</h2>
+          </div>
+          <div class="col-xs-9">
+            <p>Aliquam quis laoreet urna, sed consequat metus. Quisque in vestibulum felis, ac rutrum erat. Aenean at gravida massa. Nulla efficitur lacinia metus, pretium sollicitudin nunc posuere non. Vivamus id nibh ex. Nam urna quam, ornare a interdum nec, lobortis a elit. Praesent sit amet risus elit.</p>
+          </div>
+          <div class="col-xs-3">
+            <div class="col-sm-1 like-icon"></div>
+            <div class="col-sm-1 love-icon"></div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-xs-12 dotted-line before">
+            <h2>Company Name</h2>
+          </div>
+          <div class="col-xs-9">
+            <p>Nulla efficitur lacinia metus, pretium sollicitudin nunc posuere non. Vivamus id nibh ex. Nam urna quam, ornare a interdum nec, lobortis a elit. Praesent sit amet risus elit.</p>
+          </div>
+          <div class="col-xs-3">
+            <div class="col-sm-1 like-icon"></div>
+            <div class="col-sm-1 love-icon"></div>
+          </div>
+        </div>
+      </div>
+      <div class="right-sidebar col-xs-3">
+        <ul class="list-unstyled">
+          <li>
+            <div>My Profile</div>
+            <a class="sclabs-theme" href="">View</a>
+            <a class="sclabs-theme" href="">Edit</a>
+          </li>
+          <li>
+            <div>Messages</div>
+            <div><a class="sclabs-theme" href="">2 New</a></div>
+            <a class="sclabs-theme" href="">View</a>
+          </li>
+          <li>
+            <div>Invitations</div>
+            <div>10 Receiveds</div>
+            <a class="sclabs-theme" href="">View</a>
+          </li>          <li>
+            <div>My Contacts</div>
+            <div>Short List</div>
+            <a class="sclabs-theme" href="">View</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <!-- div class="col-sm-12">
     <div class="row">
       <div class="col-lg-12" id="jobListMessages">
         <span id="ajaxError">Sorry, something went wrong. Try again.</span>

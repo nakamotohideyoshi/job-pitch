@@ -1,9 +1,19 @@
 {% extends "mjp_user_base.html" %}
 
 
-{% block page-title %}<h2 class="page-header">Create Location</h2>{% endblock %}
+{% block page-title %}<h2 class="page-header">Add Work Place</h2>{% endblock %}
 
-{% block sidebar %}{% endblock %}
+{% block sidebar %}
+  <div class="col-sm-3">
+    <h3 class="sidebar-title">Company Settings</h3>
+    <div role="tabpanel">
+      <ul class="nav nav-pills brand-pills nav-stacked" role="tablist">
+        <li role="presentation" class="brand-nav"><a href="/profile/edit-job-seeker"><h4>Company Details</h4></a></li>
+        <li role="presentation" class="brand-nav"><a href="/password-change"><h4>Vacancies</h4></a></li>
+      </ul>
+    </div>
+  </div>
+{% endblock %}
 
 
 {% block content %}

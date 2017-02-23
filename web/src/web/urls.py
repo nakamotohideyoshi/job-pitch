@@ -18,7 +18,7 @@ urlpatterns = [
     url(r'^password-reset/complete/$', auth_views.password_reset_complete, name='password_reset_complete'),
     url(r'^profile/$', views.profile),
     url(r'^profile/create-job-seeker/$', views.create_profile_job_seeker),
-    url(r'^profile/create-business/$', views.create_business),
+    url(r'^profile/add-work-place/$', views.add_work_place),
     url(r'^profile/create-location/$', views.create_location),
     url(r'^profile/edit-job-seeker/$', views.edit_profile_job_seeker),
     url(r'^profile/list-businesses/$', views.list_businesses),
@@ -48,4 +48,5 @@ urlpatterns = [
     url(r'^profile/edit-pitch/$', views.edit_pitch),
     url(r'^profile/edit-location/$', views.edit_location),
     url(r'^profile/edit-business/$', views.edit_business),
+    url(r'^profile/payments/$', views.profile_payments),
 ]

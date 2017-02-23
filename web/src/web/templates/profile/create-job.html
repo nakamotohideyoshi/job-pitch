@@ -1,83 +1,122 @@
 {% extends "mjp_user_base.html" %}
 
 
-{% block page-title %}<h2 class="page-header">Add Job</h2>{% endblock %}
+{% block page-title %}
+  <div class="row">
+    <div class="col-sm-12">
+      <h2 class="page-header">Add Job</h2>
+    </div>
+  </div>
+{% endblock %}
 
 {% block sidebar %}{% endblock %}
 
 
 {% block content %}
-  <div class="col-sm-7 col-sm-offset-1">
+  <div class="col-sm-9">
 		<!-- Page Heading -->
 		<div class="row">
-			<div class="col-lg-12">
-				<h3>Job Details</h3>
+			<div class="col-sm-12">
+				<h3 class="dotted-line after">Job Details</h3>
 			</div>
 		</div>
 
 		<div class="row">
-      <div class="col-lg-12">
-				<div class="alert" role="alert"></div>
+      <div class="col-sm-12">
+  			<form class="form-horizontal" role="form-horizontal"  method="post" id="create-job" enctype="multipart/form-data">
+  				<div class="form-group">
+  					<label for="company" class="col-sm-4 control-label">Company</label>
+            <div class="col-sm-5">
+  						<select class="form-control" required name="company" id="company" data-error-field="company">
+  							<option value="" selected="">Select Work Place</option>
+  						</select>
+            </div>
+            <label class="control-label col-sm-3"><a href="/profile/add-work-place" class="sclabs-theme">Add Work Place</a></label>
+  				</div>
 
-				<form role="form"  method="post" id="create-job" enctype="multipart/form-data">
-					<div class="form-group">
-						<label>Company:</label>
-						<select class="form-control" required name="company" id="company" data-error-field="company">
-							<option value="" selected="">Please Select</option>
-						</select>
-					</div>
-					<div class="form-group" id="locationSelect">
-						<label>Location:</label>
-						<select class="form-control" required name="location" id="location" data-error-field="location">
-							<option value="" selected="">Please Select</option>
-						</select>
-					</div>
+  				<div class="form-group" id="locationSelect">
+  					<label for="location" class="col-sm-4 control-label">Location</label>
+            <div class="col-sm-5">
+  						<select class="form-control" required name="location" id="location" data-error-field="location">
+  							<option value="" selected="">Select Location</option>
+  						</select>
+            </div>
+  				</div>
 
-					<div id="mainFormAreaCreateJob">
-						<div class="form-group">
-							<input type="text" class="form-control" required placeholder="Title" name="title" id="title" data-error-field="title">
-						</div>
+  				<div id="mainFormAreaCreateJob">
+  					<div class="form-group">
+              <label for="title" class="col-sm-4 control-label">Job Title</label>
+              <div class="col-sm-5">
+     						<input type="text" class="form-control" required placeholder="Title" name="title" id="title" data-error-field="title">
+              </div>
+  					</div>
 
-						<div class="form-group">
-							<textarea type="text" class="form-control" required placeholder="Description" name="description" id="description" maxlength="500" data-error-field="description" rows="5"></textarea>
-							<div id="textarea_feedback"></div>
-						</div>
+  					<div class="form-group">
+              <label for="description" class="col-sm-6 control-label">Description</label>
+              <div class="col-sm-6">
+                <label class="pull-right">
+                  <a href="/profile/add-work-place">
+                    <div class="pitch-replay-icon"> </div><div style="margin-top: 15px;">Record Description</div>
+                  </a>
+                </label>
+              </div>
+              <div class="col-sm-12">
+    						<textarea type="text" class="col-sm-12 form-control" required placeholder="Description" name="description" id="description" maxlength="500" data-error-field="description" rows="5"></textarea>
+    						<div id="textarea_feedback"></div>
+              </div>
+            </div>
 
-						<div class="form-group">
-							<select class="form-control" required name="job_sector" id="job_sector" data-error-field="job_sector">
-								<option value="" selected="">Job Sector</option>
-							</select>
-						</div>
+  					<div class="form-group">
+              <label for="job_sector" class="col-sm-4 control-label">Job Sector</label>
+              <div class="col-sm-5">
+    						<select class="form-control" required name="job_sector" id="job_sector" data-error-field="job_sector">
+    							<option value="" selected="">Please Select</option>
+    						</select>
+              </div>
+  					</div>
 
-						<div class="form-group">
-							<select class="form-control" required name="contract" id="contract" data-error-field="contract">
-								<option value="" selected="">Contract</option>
-							</select>
-						</div>
+  					<div class="form-group">
+              <label for="contract" class="col-sm-4 control-label">Contract </label>
+              <div class="col-sm-5">
+    						<select class="form-control" required name="contract" id="contract" data-error-field="contract">
+    							<option value="" selected="">Please Select</option>
+    						</select>
+              </div>
+  					</div>
 
-						<div class="form-group">
-							<select class="form-control" required name="hours" id="hours" data-error-field="hours">
-								<option value="" selected="">Hours</option>
-							</select>
-						</div>
+  					<div class="form-group">
+              <label for="hours" class="col-sm-4 control-label">Position</label>
+              <div class="col-sm-5">
+    						<select class="form-control" required name="hours" id="hours" data-error-field="hours">
+    							<option value="" selected="">Please Select</option>
+    						</select>
+              </div>
+    					<input type="hidden" name="job" id="job_id" value="0">
+            </div>
 
-						<div class="form-group">
-							<label>Job Image:</label>
-							<img src="" id="currentLogo" style="display:none;" />
-							<p>If you do not wish to upload an image, your previously uploaded company logo will be used.</p>
-							<input type="file" class="form-control" name="image" id="job_image" data-error-field="job_image" accept="image/x-png, image/jpeg, image/png">
-							<input type="hidden" name="order" value="0">
-						</div>
+            <div class="form-group footer">
+              <div class="col-sm-3 col-sm-offset-4">
+                <button type="submit" class="btn btn-primary sclabs-theme col-sm-12">&nbsp;&nbsp;&nbsp;&nbsp;Save&nbsp;&nbsp;&nbsp;&nbsp;</button>
+              </div>
 
-						<input type="hidden" name="job" id="job_id" value="0">
+              <div class="col-sm-3">
+                <button class="btn btn-default sclabs-theme col-sm-12">Publish</button>
+              </div>
 
-						<button type="submit" class="btn btn-primary form-buttons">Save</button>
-					</div>
-					{% csrf_token %}
-				</form>
+              <div class="col-sm-2">
+                <a href="/profile/add-work-place" class="btn sclabs-theme">Cancel</a>
+              </div>
 
-			</div>
-		</div>
+            </div>
+  				</div>
+  				{% csrf_token %}
+  			</form>
+        <div class="row">
+          <!-- div class="alert" role="alert"></div -->
+        </div>
+      </div>
+
+  	</div>
 		<!-- /.row -->
 
 	</div>

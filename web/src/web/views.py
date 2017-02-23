@@ -49,8 +49,10 @@ def create_business(request):
 def edit_business(request):
     return render(request, 'profile/edit-business.html')
 
-def create_profile_location(request):
-    return render(request, 'profile/create-location.html')
+#def create_profile_location(request):
+#    return render(request, 'profile/create-location.html')
+def add_work_place(request):
+    return render(request, 'profile/add-work-place.html')
 
 def edit_location(request):
     return render(request, 'profile/edit-location.html')
@@ -110,6 +112,9 @@ def find_staff(request):
 
 def viewpitch(request):
     return render(request, 'profile/viewpitch.html')
+
+def profile_payments(request):
+    return render(request, 'profile/payments.html')
 
 def notification_settings(request):
     return render(request, 'profile/notification-settings.html')

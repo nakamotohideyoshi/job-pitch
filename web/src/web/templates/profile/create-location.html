@@ -49,6 +49,21 @@
                         <input type="checkbox" id="work_place_email_public" name="work_place_email_public" value="true" checked> Public
                     </label>
                 </div>
+                <div class="col-md-2">
+                    <label class="checkbox-inline">
+                        <input type="checkbox" id="work_place_mobile_public" name="work_place_mobile_public" value="true" checked> Public
+                    </label>
+                </div>
+            </div>
+            <div class="form-group">
+                <input type="text" class="form-control" placeholder="Postcode (required)" name="work_place_location" id="work_place_location" data-error-field="postcode">
+            </div>
+            <div class="form-group">
+                <label>Work Place Logo:</label>
+                <img src="" id="currentLogo" style="display:none;" width="200px" />
+                <p>If you do not wish to upload an image, your previously uploaded company logo will be used.</p>
+                <input type="file" class="form-control" name="image" id="work_place_image" accept="image/x-png, image/jpeg, image/png">
+                <input type="hidden" name="order" value="0">
             </div>
             <div class="form-group">
                 <div class="col-md-10">
@@ -80,6 +95,7 @@
                 <input type="file" class="form-control" name="image" id="work_place_image" accept="image/x-png, image/jpeg, image/png">
                 <input type="hidden" name="order" value="0">
             </div>
+
             <input type="hidden" name="location" id="location" value="0">
             <input type="hidden" name="business" id="business" value="0">
             <button type="submit" class="btn btn-primary form-buttons">Create</button>

@@ -208,6 +208,10 @@ class Nationality(models.Model):
 
 
 class ApplicationStatus(models.Model):
+    CREATED = 'CREATED'
+    ESTABLISHED = 'ESTABLISHED'
+    DELETED = 'DELETED'
+
     name = models.CharField(max_length=20)
     friendly_name = models.CharField(max_length=255)
     description = models.TextField()
@@ -455,3 +459,9 @@ class TokenStore(models.Model):
 
 class InitialTokens(models.Model):
     tokens = models.IntegerField()
+
+
+class AndroidPurchase(models.Model):
+    purchase_token = models.TextField(unique=True)
+    product_code = models.CharField(max_length=255)
+    token_store = models.ForeignKey(TokenStore, null=True, on_delete=models.SET_NULL)

@@ -63,7 +63,7 @@ $(function () {
 				})
 
 				$('#location').append(options);
-				$('#locationSelect').show();
+				//$('#locationSelect').show();
 
 				if (location_id) {
 					$('#location').trigger('change');
@@ -78,7 +78,7 @@ $(function () {
 
 	$("#location").change(function () {
 		if ($(this).val() != '') {
-			$('#mainFormAreaCreateJob').show();
+			//$('#mainFormAreaCreateJob').show();
 
 			location_id = $(this).val();
 
@@ -92,6 +92,9 @@ $(function () {
 			$("#location").val('');
 		}
 	});
+
+  $('#locationSelect').show();
+  $('#mainFormAreaCreateJob').show();
 
 	//Populate Companies and Locations selects
 	populateCompanies(company_id);

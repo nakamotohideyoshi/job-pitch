@@ -1,0 +1,158 @@
+{% extends "mjp_user_base.html" %}
+
+
+{% block page-title %}<h2 class="page-header">Add Work Place</h2>{% endblock %}
+
+{% block sidebar %}
+  <div class="col-sm-3">
+    <h3 class="sidebar-title">Company Settings</h3>
+    <div role="tabpanel">
+      <ul class="nav nav-pills brand-pills nav-stacked" role="tablist">
+        <li role="presentation" class="brand-nav"><a href="/profile/edit-work-place"><h4>Company Details</h4></a></li>
+        <li role="presentation" class="brand-nav"><a href="/password-change"><h4>Vacancies</h4></a></li>
+      </ul>
+    </div>
+  </div>
+{% endblock %}
+
+
+{% block content %}
+  <div class="col-sm-9">
+
+    <!-- Page Heading -->
+    <div class="row">
+      <div class="col-sm-12">
+        <div class="row">
+          <form class="form-horizontal" role="form-horizontal" method="post" id="work_place_details" enctype="multipart/form-data">
+            <!-- Page Heading -->
+            <div class="row">
+              <div class="col-sm-12">
+                <h3 class="dotted-line after">Work Place & Details:</h3>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="work_place_name" class="col-sm-4 control-label">Company Name</label>
+              <div class="col-sm-6">
+                <input type="text" class="form-control" placeholder="Name" name="work_place_name" id="work_place_name" required="required" data-error-field="name">
+              </div>
+              <div class="col-sm-2 text-right sclabs-theme">
+                <input type="checkbox" id="work_place_address_public" data-toggle="toggle" data-style="ios" name="work_place_name_public" value="true" checked>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="work_place_description_public" class="col-sm-10 control-label">Description</label>
+              <div class="col-sm-2 text-right sclabs-theme">
+                <input type="checkbox" id="work_place_description_public" data-toggle="toggle" data-style="ios" name="work_place_description_public" value="true" checked>
+              </div>
+            </div>
+            <div class="form-group">
+              <div class="col-sm-12">
+                <textarea type="text" class="form-control" required name="work_place_description" id="work_place_description" placeholder="Please describe what size of business you are, how many employees you have and what it is like to work at your company" maxlength="500" rows="4" data-error-field="description"></textarea>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="work_place_email" class="col-sm-4 control-label">Contact eMail</label>
+              <div class="col-sm-6">
+                <p class="form-control-static" id="work_place_email">email@server.com</p>
+                <!-- input type="text" class="form-control" placeholder="Email" name="work_place_email" id="work_place_email" required="required" data-error-field="email" -->
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="work_place_telephone" class="col-sm-4 control-label">Telephone</label>
+              <div class="col-sm-6">
+                <input type="text" class="form-control" placeholder="Telephone (optional)" name="work_place_telephone" id="work_place_telephone" data-error-field="telephone">
+              </div>
+              <div class="col-sm-2 text-right sclabs-theme">
+                <input type="checkbox" id="work_place_telephone_public" data-toggle="toggle" data-style="ios" name="work_place_telephone_public" value="true" checked>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="work_place_mobile" class="col-sm-4 control-label">Mobile</label>
+              <div class="col-sm-6">
+                <input type="text" class="form-control" placeholder="Mobile (optional)" name="work_place_mobile" id="work_place_mobile" data-error-field="mobile">
+              </div>
+              <div class="col-sm-2 text-right sclabs-theme">
+                <input type="checkbox" id="work_place_mobile_public" data-toggle="toggle" data-style="ios" name="work_place_mobile_public" value="true" checked>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-sm-12">
+                <h3 class="dotted-line after">Location (Required)</h3>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="work_place_mobile" class="col-sm-4 control-label">Address</label>
+              <div class="col-sm-6">
+                <input type="text" class="form-control" placeholder="Street" name="work_place_address" id="work_place_address" data-error-field="address">
+              </div>
+              <div class="col-sm-2 text-right sclabs-theme">
+                <input type="checkbox" id="work_place_address_public" data-toggle="toggle" data-style="ios" name="work_place_address_public" value="true" checked>
+              </div>
+            </div>
+            <div class="form-group">
+              <div class="col-sm-6 col-sm-offset-4">
+                <input type="text" class="form-control" placeholder="Street" name="work_place_address" id="work_place_address" data-error-field="address">
+              </div>
+            </div>
+            <div class="form-group">
+              <div class="col-sm-6 col-sm-offset-4">
+                <input type="text" class="form-control" placeholder="City" name="work_place_address" id="work_place_address" data-error-field="address">
+              </div>
+            </div>
+            <div class="form-group">
+              <div class="col-sm-6 col-sm-offset-4">
+                <input type="text" class="form-control" placeholder="State" name="work_place_address" id="work_place_address" data-error-field="address">
+              </div>
+            </div>
+            <div class="form-group">
+              <div class="col-sm-6 col-sm-offset-4">
+                <input type="text" class="form-control" placeholder="Zip/Postcode" name="work_place_location" id="work_place_location" data-error-field="address">
+              </div>
+            </div>
+
+            <div class="form-group">
+              <div class="col-sm-12">
+                <label for="work_place_email" class="control-label dotted-line after"><img src="/static/web/design/images/add-button.png"> Add Another Location</label>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <div class="col-sm-12">
+                <h3 class="dotted-line after">Upload Images</h3>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <div class="col-sm-6">
+                <p class="bordered padded">
+                  <label for="file-upload" class="control-label file-upload"> Choose file</label>
+                  <input id="file-upload" type="file" name="image" id="work_place_image" accept="image/x-png, image/jpeg, image/png"/>
+                  <input type="hidden" name="order" value="0">
+                </p>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <div class="col-sm-6">
+                <div class="bordered padded" style="height: 58px;">
+                  <div class="dropbox-icon" style="float: left; margin-top: -7px;"></div>
+                  <label for="file-upload" class="col-sm-5 control-label file-upload"> Choose file</label>
+                  <input id="file-upload" type="file" name="image" accept="image/x-png, image/jpeg, image/png">
+                </div>
+              </div>
+            </div>
+
+            <input type="hidden" name="location" id="location" value="0">
+            <input type="hidden" name="business" id="business" value="0">
+            <button type="submit" class="btn btn-primary form-buttons sclabs-theme">Create</button>
+            {% csrf_token %}
+          </form>
+        </div>
+      </div>
+    </div>
+    <!-- /.row -->
+</div>
+<!-- /.container-fluid -->
+{% endblock %} {% block pagescripts %}
+<script src="/static/web/js/mjp-scripts/create-location.js"></script>
+{% endblock %}

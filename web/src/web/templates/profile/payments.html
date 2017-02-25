@@ -1,0 +1,84 @@
+{% extends "mjp_user_base.html" %}
+
+
+{% block extra_head %}
+    <link href="/static/web/design/css/sumoselect.css" rel="stylesheet">
+    <link href="/static/web/design/css/mjp-sumoselect.css" rel="stylesheet">
+{% endblock %}
+
+
+{% block page-title %}<h2 class="page-header">Job Match Profile</h2>{% endblock %}
+
+
+{% block content %}
+  <div class="col-sm-7 col-sm-offset-1">
+    <div class="row">
+        <div class="col-md-10 col-md-offset-1">
+            <form role="form"  method="post" id="job-preferences">
+                <div class="alert" role="alert"></div>
+
+                <div class="row">
+                  <div class="col-sm-6">
+                    <div class="form-group">
+                      <label>Select Plan</label>
+                      <select class="form-control" required name="plan" id="plan">
+                        <option value="" selected="">Pay as you go</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-sm-6">
+                    <div class="form-group">
+                      <label>Select Amount of Credits</label>
+                      <select class="form-control" name="credits" id="credits">
+                       <option value="" selected="">5</option>
+                        <option value="" selected="">10</option>
+                        <option value="" selected="">20</option>
+                        <option value="" selected="">50</option>
+                        <option value="" selected="">100</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-sm-6">
+                    <div class="form-group">
+                      <a href="https://www.paypal.com/us/webapps/mpp/paypal-popup" title="How PayPal Works" onclick="javascript:window.open('https://www.paypal.com/webapps/mpp/paypal-popup','WIPaypal','toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=yes, resizable=yes, width=1060, height=700'); return false;">
+                          <img src="https://www.paypalobjects.com/webstatic/mktg/logo/AM_mc_vs_dc_ae.jpg" alt="PayPal Acceptance Mark">
+                      </a>
+                    </div>
+                  </div>
+                </div>
+
+                <br />
+
+                <div class="row">
+                  <div class="col-sm-4">
+                    <button type="submit" class="btn btn-primary sclabs-theme">&nbsp;&nbsp;&nbsp;&nbsp;Buy&nbsp;&nbsp;&nbsp;&nbsp;</button>
+                  </div>
+                  <div class="col-sm-5 col-sm-offset-3 text-right">
+                    <button class="btn btn-default sclabs-theme">Upgrade</button>
+                  </div>
+                </div>
+
+                <input type="hidden" name="job_seeker" id="job_seeker" />
+                <input type="hidden" name="latitude" id="latitude" />
+                <input type="hidden" name="longitude" id="longitude" />
+                <input type="hidden" name="place_name" id="place_name" />
+                <input type="hidden" name="postcode_lookup" id="postcode_lookup" />
+                {% csrf_token %}
+            </form>
+        </div>
+    </div><!-- /.row -->
+</div><!-- /.container-fluid -->
+
+{% endblock %}
+{% block pagescripts %}
+
+  <script src="/static/web/js/jquery.sumoselect.min.js"></script>
+  <script src="/static/web/js/mjp-scripts/edit-job-preferences.js"></script>
+
+{% endblock %}

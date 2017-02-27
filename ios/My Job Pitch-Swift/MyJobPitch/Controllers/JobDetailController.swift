@@ -2,101 +2,107 @@
 //  JobDetailController.swift
 //  MyJobPitch
 //
-//  Created by dev on 12/25/16.
-//  Copyright © 2016 myjobpitch. All rights reserved.
+//  Created by dev on 2/27/17.
+//  Copyright © 2017 myjobpitch. All rights reserved.
 //
 
 import UIKit
-import GoogleMaps
 
 class JobDetailController: MJPController {
 
+    @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var imgView: UIImageView!
-    @IBOutlet weak var jobTitle: UILabel!
-    @IBOutlet weak var distance: UILabel!
-    @IBOutlet weak var jobBusinessLocation: UILabel!
-    @IBOutlet weak var attributes: UILabel!
-    @IBOutlet weak var jobDescription: UILabel!
-    @IBOutlet weak var locationDescription: UILabel!
-    @IBOutlet weak var mapView: GMSMapView!
-    @IBOutlet weak var messageButton: RoundButton!
-    @IBOutlet weak var chooseView: UIView!
+    @IBOutlet weak var nameLabel: UILabel!
+    @IBOutlet weak var subTitle: UILabel!
     
     var job: Job!
-    var application: Application!
-    var chooseDelegate: ChooseDelegate!
+    
+    let menuItems = [
+        "find_talent", "applications", "connections", "shortlist", "messages"
+    ]
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        // Do any additional setup after loading the view.
-        
-        let image = job.getImage()
-        if image != nil {
-            AppHelper.loadImageURL(imageUrl: (image?.image)!, imageView: imgView, completion: nil)
+        updateJobInfo()
+    }
+    
+    func updateJobInfo() {
+        if let image = job.getImage() {
+            AppHelper.loadImageURL(imageUrl: (image.thumbnail)!, imageView: imgView, completion: nil)
         } else {
             imgView.image = UIImage(named: "default-logo")
         }
         
-        let profile = AppData.profile!
-        let location = job.locationData!
-        let business = location.businessData!
-        let contract = AppData.getContract(job.contract)!
-        let hours = AppData.getHours(job.hours)!
-        
-        jobTitle.text = job.title
-        distance.text = AppHelper.distance(latitude1: profile.latitude, longitude1: profile.longitude, latitude2: location.latitude, longitude2: location.longitude)
-        
-        jobBusinessLocation.text = String(format: "%@: %@",  business.name, location.name)
-        
-        if contract.id == AppData.getContractByName(Contract.CONTRACT_PERMANENT).id {
-            self.attributes.text = String(format: "%@ (%@)", hours.name, contract.shortName)
-        } else {
-            self.attributes.text = hours.name
-        }
-        
-        self.jobDescription.text = self.job.desc
-        self.locationDescription.text = location.desc
-        
-        if application != nil {
-            chooseView.removeFromSuperview()
-        } else {
-            messageButton.removeFromSuperview()
-        }
-        
-        let marker = GMSMarker()
-        marker.map = mapView
-        marker.position = CLLocationCoordinate2DMake(location.latitude.doubleValue, location.longitude.doubleValue)
-        mapView.camera = GMSCameraPosition.camera(withTarget: marker.position, zoom: 15)
+        nameLabel.text = job.title
+        subTitle.text = job.locationData.businessData.name + ", " + job.locationData.name
     }
     
-    @IBAction func messageAction(_ sender: Any) {
-        MessageController.showModal(application: application)
+    @IBAction func editJobAction(_ sender: Any) {
+        JobEditController.pushController(location: nil, job: job) { (job) in
+            BusinessListController.refreshRequest = true
+            BusinessDetailController.refreshRequest = true
+            self.job = job
+            self.updateJobInfo()
+        }
     }
     
-    @IBAction func applyAction(_ sender: Any) {
-        PopupController.showGreen("Are you sure you want to apply to this job?", ok: "Apply", okCallback: {
-            self.chooseDelegate?.apply()
-            _ = self.navigationController?.popViewController(animated: true)
+    @IBAction func deleteJobAction(_ sender: Any) {
+        let message = String(format: "Are you sure you want to delete %@", job.title)
+        PopupController.showYellow(message, ok: "Delete", okCallback: {
+            
+            AppHelper.showLoading("Deleting...")
+            
+            API.shared().deleteJob(id: self.job.id, success: {
+                AppHelper.hideLoading()
+                BusinessListController.refreshRequest = true
+                BusinessDetailController.refreshRequest = true
+                _ = self.navigationController?.popViewController(animated: true)
+            }) { (message, errors) in
+                self.handleErrors(message: message, errors: errors)
+            }
+            
         }, cancel: "Cancel", cancelCallback: nil)
     }
     
-    @IBAction func removeAction(_ sender: Any) {
-        PopupController.showYellow("Are you sure you are not interested in this job?", ok: "I'm Sure", okCallback: {
-            self.chooseDelegate?.remove()
-            _ = self.navigationController?.popViewController(animated: true)
-        }, cancel: "Cancel", cancelCallback: nil)
-    }
+}
 
-    static func pushController(job: Job!,
-                               application: Application!,
-                               chooseDelegate: ChooseDelegate!) {
-        let controller = AppHelper.mainStoryboard.instantiateViewController(withIdentifier: "JobDetail") as! JobDetailController
-        controller.job = job
-        controller.application = application
-        controller.chooseDelegate = chooseDelegate
-        AppHelper.getFrontController().navigationController?.pushViewController(controller, animated: true)
+
+extension JobDetailController: UITableViewDataSource {
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return menuItems.count
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        
+        let cell = tableView.dequeueReusableCell(withIdentifier: "JobMenuCell", for: indexPath)
+        cell.addUnderLine(paddingLeft: 10, paddingRight: 0, color: AppData.greyBorderColor)
+        
+        let iconView = cell.viewWithTag(1) as! UIImageView
+        let titleView = cell.viewWithTag(2) as! UILabel
+        
+        let item = SideMenuController.menuItems[menuItems[indexPath.row]]!
+        iconView.image = UIImage(named: item["icon"]!)?.withRenderingMode(.alwaysTemplate)
+        titleView.text = item["title"]
+        
+        return cell
+    }
+    
+}
+
+extension JobDetailController: UITableViewDelegate {
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        
+        let id = menuItems[indexPath.row]
+        if id == "find_talent" {
+            SwipeController.pushController(job: job)
+        } else if id == "messages" {
+            MessageListController.pushController(job: job)
+        } else {
+            ApplicationListController.pushController(job: job, mode: id)
+        }
         
     }
-
+    
 }

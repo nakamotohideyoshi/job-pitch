@@ -159,7 +159,7 @@ class LocationEditController: MJPController {
     
     @IBAction func myLocationAction(_ sender: Any) {
         
-        LocationMapController.showModal(latitude: latitude, longitude: longitude,
+        MapController.showModal(latitude: latitude, longitude: longitude,
                                         complete: { (locationCoordinate, placeID, placeName) in
                                             self.latitude = locationCoordinate.latitude as NSNumber!
                                             self.longitude = locationCoordinate.longitude as NSNumber!
@@ -200,16 +200,37 @@ class LocationEditController: MJPController {
             
             self.location = data as! Location
             
-            if self.origImage?.id != nil && self.removeImageButton.isHidden {
+            if self.logoImage != nil {
+                
+                let hud = AppHelper.createLoading()
+                hud.mode = .determinateHorizontalBar
+                hud.label.text = "Uploading..."
+                
+                API.shared().uploadImage(image: self.logoImage,
+                                         endpoint: "user-location-images",
+                                         objectKey: "location",
+                                         objectId: self.location.id,
+                                         order: 0,
+                                         progress: { (bytesWriteen, totalBytesWritten, totalBytesExpectedToWrite) in
+                                            hud.progress = Float(totalBytesWritten) / Float(totalBytesExpectedToWrite)
+                }, success: { (data) in
+                    self.location.images = [data as Image]
+                    self.saveFinished()
+                }) { (message, errors) in
+                    self.handleErrors(message: message, errors: errors)
+                }
+                
+            } else if self.origImage?.id != nil && self.removeImageButton.isHidden {
                 
                 API.shared().deleteImage(id: (self.origImage?.id)!, endpoint: "user-location-images", success: {
-                    self.saveLogoImage()
+                    self.location.images = []
+                    self.saveFinished()
                 }) { (message, errors) in
                     self.handleErrors(message: message, errors: errors)
                 }
                 
             } else {
-                self.saveLogoImage()
+                self.saveFinished()
             }
             
         }) { (message, errors) in
@@ -218,35 +239,10 @@ class LocationEditController: MJPController {
         
     }
     
-    func saveLogoImage() {
-        
-        if logoImage != nil {
-            
-            let hud = AppHelper.createLoading()
-            hud.mode = .determinateHorizontalBar
-            hud.label.text = "Uploading..."
-            
-            API.shared().uploadImage(image: logoImage,
-                                     endpoint: "user-location-images",
-                                     objectKey: "location",
-                                     objectId: location.id,
-                                     order: 0,
-                                     progress: { (bytesWriteen, totalBytesWritten, totalBytesExpectedToWrite) in
-                                        hud.progress = Float(totalBytesWritten / totalBytesExpectedToWrite)
-            }, success: { (data) in
-                AppHelper.hideLoading()
-                self.location.images = [data as Image]
-                _ = self.navigationController?.popViewController(animated: true)
-                self.savedLocation?(self.location)
-            }) { (message, errors) in
-                self.handleErrors(message: message, errors: errors)
-            }
-            
-        } else {
-            _ = navigationController?.popViewController(animated: true)
-            savedLocation?(location)
-        }
-        
+    func saveFinished() {
+        AppHelper.hideLoading()
+        _ = navigationController?.popViewController(animated: true)
+        savedLocation?(location)
     }
     
     static func pushController(business: Business!, location: Location!, callback: ((Location)->Void)!) {

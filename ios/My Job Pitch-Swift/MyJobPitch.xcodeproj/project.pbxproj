@@ -36,25 +36,27 @@
 		D76C905B1E255540009C35E4 /* terms.html in Resources */ = {isa = PBXBuildFile; fileRef = D76C90581E255540009C35E4 /* terms.html */; };
 		D76C905D1E261ABC009C35E4 /* JobProfileController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D76C905C1E261ABC009C35E4 /* JobProfileController.swift */; };
 		D787F6331E2879F900C47A88 /* BusinessListController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D787F6321E2879F900C47A88 /* BusinessListController.swift */; };
-		D787F6351E287A1F00C47A88 /* LocationListController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D787F6341E287A1F00C47A88 /* LocationListController.swift */; };
+		D787F6351E287A1F00C47A88 /* BusinessDetailController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D787F6341E287A1F00C47A88 /* BusinessDetailController.swift */; };
 		D787F6371E287A5000C47A88 /* BusinessEditController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D787F6361E287A5000C47A88 /* BusinessEditController.swift */; };
 		D787F6391E287A6700C47A88 /* LocationEditController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D787F6381E287A6700C47A88 /* LocationEditController.swift */; };
 		D787F63B1E287A8B00C47A88 /* JobEditController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D787F63A1E287A8B00C47A88 /* JobEditController.swift */; };
 		D787F63D1E287C8400C47A88 /* BusinessCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D787F63C1E287C8400C47A88 /* BusinessCell.swift */; };
 		D787F63F1E287D1400C47A88 /* LocationCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D787F63E1E287D1400C47A88 /* LocationCell.swift */; };
-		D7896AEB1E0C854600533884 /* JobListController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7896AEA1E0C854600533884 /* JobListController.swift */; };
+		D7896AEB1E0C854600533884 /* LocationDetailController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7896AEA1E0C854600533884 /* LocationDetailController.swift */; };
 		D7896AED1E0C85BF00533884 /* JobCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7896AEC1E0C85BF00533884 /* JobCell.swift */; };
 		D7896AEF1E0CC51300533884 /* JobSeekerDetailController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7896AEE1E0CC51300533884 /* JobSeekerDetailController.swift */; };
-		D7896AF11E0F0D6300533884 /* JobDetailController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7896AF01E0F0D6300533884 /* JobDetailController.swift */; };
+		D7896AF11E0F0D6300533884 /* ApplicationDetailController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7896AF01E0F0D6300533884 /* ApplicationDetailController.swift */; };
 		D7AF8DC91E1C997200C57DDC /* PitchController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7AF8DC81E1C997200C57DDC /* PitchController.swift */; };
 		D7AF8DCB1E1C9CEA00C57DDC /* CameraController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7AF8DCA1E1C9CEA00C57DDC /* CameraController.swift */; };
 		D7B07B831E08DDE1005B9EBE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7B07B821E08DDE1005B9EBE /* AppDelegate.swift */; };
 		D7B07B881E08DDE1005B9EBE /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D7B07B861E08DDE1005B9EBE /* Main.storyboard */; };
 		D7B07B8A1E08DDE1005B9EBE /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D7B07B891E08DDE1005B9EBE /* Assets.xcassets */; };
 		D7B07B8D1E08DDE1005B9EBE /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D7B07B8B1E08DDE1005B9EBE /* LaunchScreen.storyboard */; };
+		D7B6F5361E640B2F0026A7BD /* MessageController0.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7B6F5351E640B2F0026A7BD /* MessageController0.swift */; };
+		D7B6F5381E6466E50026A7BD /* JobDetailController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7B6F5371E6466E50026A7BD /* JobDetailController.swift */; };
 		D7C828031E51AC1000CD9C08 /* SelectJobController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7C828021E51AC1000CD9C08 /* SelectJobController.swift */; };
 		D7ECFBBB1E125F5E00E2E071 /* SelectionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7ECFBBA1E125F5E00E2E071 /* SelectionController.swift */; };
-		D7ECFBBD1E12D9A100E2E071 /* LocationMapController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7ECFBBC1E12D9A100E2E071 /* LocationMapController.swift */; };
+		D7ECFBBD1E12D9A100E2E071 /* MapController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7ECFBBC1E12D9A100E2E071 /* MapController.swift */; };
 		D7ECFBBF1E12FCEF00E2E071 /* JobSeekerProfileController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7ECFBBE1E12FCEF00E2E071 /* JobSeekerProfileController.swift */; };
 		D7F76FEB1E08E05F00ECB684 /* API.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7F76FEA1E08E05F00ECB684 /* API.swift */; };
 		D7F76FED1E08E08200ECB684 /* Application.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7F76FEC1E08E08200ECB684 /* Application.swift */; };
@@ -126,16 +128,16 @@
 		D76C90581E255540009C35E4 /* terms.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; name = terms.html; path = Resources/terms.html; sourceTree = "<group>"; };
 		D76C905C1E261ABC009C35E4 /* JobProfileController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = JobProfileController.swift; path = Controllers/JobProfileController.swift; sourceTree = "<group>"; };
 		D787F6321E2879F900C47A88 /* BusinessListController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = BusinessListController.swift; path = Controllers/BusinessListController.swift; sourceTree = "<group>"; };
-		D787F6341E287A1F00C47A88 /* LocationListController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = LocationListController.swift; path = Controllers/LocationListController.swift; sourceTree = "<group>"; };
+		D787F6341E287A1F00C47A88 /* BusinessDetailController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = BusinessDetailController.swift; path = Controllers/BusinessDetailController.swift; sourceTree = "<group>"; };
 		D787F6361E287A5000C47A88 /* BusinessEditController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = BusinessEditController.swift; path = Controllers/BusinessEditController.swift; sourceTree = "<group>"; };
 		D787F6381E287A6700C47A88 /* LocationEditController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = LocationEditController.swift; path = Controllers/LocationEditController.swift; sourceTree = "<group>"; };
 		D787F63A1E287A8B00C47A88 /* JobEditController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = JobEditController.swift; path = Controllers/JobEditController.swift; sourceTree = "<group>"; };
 		D787F63C1E287C8400C47A88 /* BusinessCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = BusinessCell.swift; path = Views/BusinessCell.swift; sourceTree = "<group>"; };
 		D787F63E1E287D1400C47A88 /* LocationCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = LocationCell.swift; path = Views/LocationCell.swift; sourceTree = "<group>"; };
-		D7896AEA1E0C854600533884 /* JobListController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = JobListController.swift; path = Controllers/JobListController.swift; sourceTree = "<group>"; };
+		D7896AEA1E0C854600533884 /* LocationDetailController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = LocationDetailController.swift; path = Controllers/LocationDetailController.swift; sourceTree = "<group>"; };
 		D7896AEC1E0C85BF00533884 /* JobCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = JobCell.swift; path = Views/JobCell.swift; sourceTree = "<group>"; };
 		D7896AEE1E0CC51300533884 /* JobSeekerDetailController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = JobSeekerDetailController.swift; path = Controllers/JobSeekerDetailController.swift; sourceTree = "<group>"; };
-		D7896AF01E0F0D6300533884 /* JobDetailController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = JobDetailController.swift; path = Controllers/JobDetailController.swift; sourceTree = "<group>"; };
+		D7896AF01E0F0D6300533884 /* ApplicationDetailController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ApplicationDetailController.swift; path = Controllers/ApplicationDetailController.swift; sourceTree = "<group>"; };
 		D7AF8DC81E1C997200C57DDC /* PitchController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PitchController.swift; path = Controllers/PitchController.swift; sourceTree = "<group>"; };
 		D7AF8DCA1E1C9CEA00C57DDC /* CameraController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CameraController.swift; path = Controllers/CameraController.swift; sourceTree = "<group>"; };
 		D7B07B7F1E08DDE1005B9EBE /* MyJobPitch.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MyJobPitch.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -144,9 +146,11 @@
 		D7B07B891E08DDE1005B9EBE /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		D7B07B8C1E08DDE1005B9EBE /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		D7B07B8E1E08DDE1005B9EBE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		D7B6F5351E640B2F0026A7BD /* MessageController0.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MessageController0.swift; path = Controllers/MessageController0.swift; sourceTree = "<group>"; };
+		D7B6F5371E6466E50026A7BD /* JobDetailController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = JobDetailController.swift; path = Controllers/JobDetailController.swift; sourceTree = "<group>"; };
 		D7C828021E51AC1000CD9C08 /* SelectJobController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SelectJobController.swift; path = Controllers/SelectJobController.swift; sourceTree = "<group>"; };
 		D7ECFBBA1E125F5E00E2E071 /* SelectionController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SelectionController.swift; path = Controllers/SelectionController.swift; sourceTree = "<group>"; };
-		D7ECFBBC1E12D9A100E2E071 /* LocationMapController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = LocationMapController.swift; path = Controllers/LocationMapController.swift; sourceTree = "<group>"; };
+		D7ECFBBC1E12D9A100E2E071 /* MapController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MapController.swift; path = Controllers/MapController.swift; sourceTree = "<group>"; };
 		D7ECFBBE1E12FCEF00E2E071 /* JobSeekerProfileController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = JobSeekerProfileController.swift; path = Controllers/JobSeekerProfileController.swift; sourceTree = "<group>"; };
 		D7F76FEA1E08E05F00ECB684 /* API.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = API.swift; path = Utils/API.swift; sourceTree = "<group>"; };
 		D7F76FEC1E08E08200ECB684 /* Application.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Application.swift; path = Models/Application.swift; sourceTree = "<group>"; };
@@ -242,7 +246,7 @@
 		D749E35C1E0B6AC0000FD0B1 /* JobSeeker */ = {
 			isa = PBXGroup;
 			children = (
-				D7896AF01E0F0D6300533884 /* JobDetailController.swift */,
+				D7896AF01E0F0D6300533884 /* ApplicationDetailController.swift */,
 				D7ECFBBE1E12FCEF00E2E071 /* JobSeekerProfileController.swift */,
 				D76C905C1E261ABC009C35E4 /* JobProfileController.swift */,
 				D7AF8DC81E1C997200C57DDC /* PitchController.swift */,
@@ -255,10 +259,11 @@
 			isa = PBXGroup;
 			children = (
 				D787F6321E2879F900C47A88 /* BusinessListController.swift */,
+				D787F6341E287A1F00C47A88 /* BusinessDetailController.swift */,
 				D787F6361E287A5000C47A88 /* BusinessEditController.swift */,
-				D787F6341E287A1F00C47A88 /* LocationListController.swift */,
+				D7896AEA1E0C854600533884 /* LocationDetailController.swift */,
 				D787F6381E287A6700C47A88 /* LocationEditController.swift */,
-				D7896AEA1E0C854600533884 /* JobListController.swift */,
+				D7B6F5371E6466E50026A7BD /* JobDetailController.swift */,
 				D787F63A1E287A8B00C47A88 /* JobEditController.swift */,
 				D7896AEE1E0CC51300533884 /* JobSeekerDetailController.swift */,
 				D7C828021E51AC1000CD9C08 /* SelectJobController.swift */,
@@ -344,8 +349,9 @@
 				D749E3561E0B2026000FD0B1 /* SwipeController.swift */,
 				D72AE41A1E106D0A004C3F02 /* ApplicationListController.swift */,
 				D72AE4101E10470A004C3F02 /* MessageListController.swift */,
+				D7B6F5351E640B2F0026A7BD /* MessageController0.swift */,
 				D72AE4151E1055AC004C3F02 /* MessageController.swift */,
-				D7ECFBBC1E12D9A100E2E071 /* LocationMapController.swift */,
+				D7ECFBBC1E12D9A100E2E071 /* MapController.swift */,
 				D76C90541E2540D1009C35E4 /* HelpController.swift */,
 				D76C90521E25405A009C35E4 /* WebViewController.swift */,
 			);
@@ -542,8 +548,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				D7F7702B1E099D3E00ECB684 /* PopupController.swift in Sources */,
-				D7896AF11E0F0D6300533884 /* JobDetailController.swift in Sources */,
+				D7896AF11E0F0D6300533884 /* ApplicationDetailController.swift in Sources */,
 				D7AF8DC91E1C997200C57DDC /* PitchController.swift in Sources */,
+				D7B6F5381E6466E50026A7BD /* JobDetailController.swift in Sources */,
+				D7B6F5361E640B2F0026A7BD /* MessageController0.swift in Sources */,
 				D7ECFBBB1E125F5E00E2E071 /* SelectionController.swift in Sources */,
 				D7F76FED1E08E08200ECB684 /* Application.swift in Sources */,
 				D76C905D1E261ABC009C35E4 /* JobProfileController.swift in Sources */,
@@ -564,7 +572,7 @@
 				D76C90461E238C90009C35E4 /* SideMenuController.swift in Sources */,
 				D7ECFBBF1E12FCEF00E2E071 /* JobSeekerProfileController.swift in Sources */,
 				D7F770171E08E3D100ECB684 /* MJPObjectWithDates.swift in Sources */,
-				D7ECFBBD1E12D9A100E2E071 /* LocationMapController.swift in Sources */,
+				D7ECFBBD1E12D9A100E2E071 /* MapController.swift in Sources */,
 				D7896AEF1E0CC51300533884 /* JobSeekerDetailController.swift in Sources */,
 				D7F7700C1E08E3D100ECB684 /* Business.swift in Sources */,
 				D7F770141E08E3D100ECB684 /* LoginRequest.swift in Sources */,
@@ -576,7 +584,7 @@
 				D7F7701F1E08E3D100ECB684 /* Pitch.swift in Sources */,
 				D7896AED1E0C85BF00533884 /* JobCell.swift in Sources */,
 				D7F770131E08E3D100ECB684 /* Location.swift in Sources */,
-				D7896AEB1E0C854600533884 /* JobListController.swift in Sources */,
+				D7896AEB1E0C854600533884 /* LocationDetailController.swift in Sources */,
 				D7F770161E08E3D100ECB684 /* MJPObject.swift in Sources */,
 				D7F7700B1E08E3D100ECB684 /* AuthToken.swift in Sources */,
 				D7F770221E08E3D100ECB684 /* Role.swift in Sources */,
@@ -591,7 +599,7 @@
 				D7F770241E08E3D100ECB684 /* Sex.swift in Sources */,
 				D787F63B1E287A8B00C47A88 /* JobEditController.swift in Sources */,
 				D7F7700D1E08E3D100ECB684 /* Contract.swift in Sources */,
-				D787F6351E287A1F00C47A88 /* LocationListController.swift in Sources */,
+				D787F6351E287A1F00C47A88 /* BusinessDetailController.swift in Sources */,
 				D7F770111E08E3D100ECB684 /* JobSeeker.swift in Sources */,
 				D7F770291E09196300ECB684 /* MJPController.swift in Sources */,
 				D7F7701A1E08E3D100ECB684 /* MJPObjectWithNameShortName.swift in Sources */,
@@ -749,8 +757,8 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.myjobpitch.pitch;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "4207d772-6f0b-45f8-9b2f-2cb52ae0544e";
-				PROVISIONING_PROFILE_SPECIFIER = pitch_dist2;
+				PROVISIONING_PROFILE = "99b6cb19-5e64-43cb-9b96-1237d77cca0f";
+				PROVISIONING_PROFILE_SPECIFIER = "pitch-dist1";
 				SWIFT_OBJC_BRIDGING_HEADER = "MyJobPitch/MyJobPitch-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 3.0;
@@ -775,8 +783,8 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.myjobpitch.pitch;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "4207d772-6f0b-45f8-9b2f-2cb52ae0544e";
-				PROVISIONING_PROFILE_SPECIFIER = pitch_dist2;
+				PROVISIONING_PROFILE = "99b6cb19-5e64-43cb-9b96-1237d77cca0f";
+				PROVISIONING_PROFILE_SPECIFIER = "pitch-dist1";
 				SWIFT_OBJC_BRIDGING_HEADER = "MyJobPitch/MyJobPitch-Bridging-Header.h";
 				SWIFT_VERSION = 3.0;
 			};

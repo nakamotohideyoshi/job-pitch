@@ -13,21 +13,28 @@ class MessageListController: SearchController {
 
     static var refreshRequest = false
     
+    @IBOutlet weak var emptyView: UILabel!
+    
+    var searchJob: Job!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        title = "Messages"
 
         // Do any additional setup after loading the view.
         
         tableView.addPullToRefresh {
-            API.shared().loadApplicationsForJob(jobId: nil, status: nil, shortlisted: false, success: { (data) in
-                self.allData = NSMutableArray()
-                let deletedID = AppData.getApplicationStatusByName(ApplicationStatus.APPLICATION_DELETED).id
-                for application in data as! [Application] {
-                    if application.status != deletedID {
-                        self.allData.add(application)
-                    }
-                }
+            API.shared().loadApplicationsForJob(jobId: self.searchJob?.id, status: nil, shortlisted: false, success: { (data) in
+//                self.allData = NSMutableArray()
+//                let deletedID = AppData.getApplicationStatusByName(ApplicationStatus.APPLICATION_DELETED).id
+//                for application in data as! [Application] {
+//                    if application.status != deletedID {
+//                        self.allData.add(application)
+//                    }
+//                }
+                self.allData = data.mutableCopy() as! NSMutableArray
                 self.data = self.allData
+                self.emptyView.isHidden = self.allData.count > 0
                 self.tableView.reloadData()
                 self.tableView.pullToRefreshView.stopAnimating()
             }) { (message, errors) in
@@ -53,6 +60,12 @@ class MessageListController: SearchController {
         return application.job.locationData.businessData.name.contains(text)
         
     }
+    
+    static func pushController(job: Job!) {
+        let controller = AppHelper.mainStoryboard.instantiateViewController(withIdentifier: "MessageList") as! MessageListController
+        controller.searchJob = job
+        AppHelper.getFrontController().navigationController?.pushViewController(controller, animated: true)
+    }
 
 }
 
@@ -77,7 +90,7 @@ extension MessageListController: UITableViewDataSource {
                 cell.imgView.image = UIImage(named: "default-logo")
             }
             
-            cell.fromLabel.text = application.job.locationData.businessData.name
+            cell.titleLabel.text = application.job.locationData.businessData.name
             
         } else {
             
@@ -86,10 +99,11 @@ extension MessageListController: UITableViewDataSource {
             } else {
                 cell.imgView.image = UIImage(named: "no-img")
             }
-            
-            cell.fromLabel.text = application.jobSeeker.firstName + " " + application.jobSeeker.lastName
+            cell.titleLabel.text = application.jobSeeker.firstName + " " + application.jobSeeker.lastName
             
         }
+        
+        cell.subTitleLabel.text = String(format: "%@ (%@, %@)", application.job.title, application.job.locationData.name, application.job.locationData.businessData.name);
         
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "MMM dd, HH:mm a"
@@ -114,7 +128,7 @@ extension MessageListController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
         let application = data[indexPath.row] as! Application
-        MessageController.showModal(application: application)
+        MessageController0.showModal(application: application)
         
     }
     

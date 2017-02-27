@@ -285,16 +285,37 @@ class JobEditController: MJPController {
             
             self.job = data as! Job
             
-            if self.origImage?.id != nil && self.removeImageButton.isHidden {
+            if self.logoImage != nil {
+                
+                let hud = AppHelper.createLoading()
+                hud.mode = .determinateHorizontalBar
+                hud.label.text = "Uploading..."
+                
+                API.shared().uploadImage(image: self.logoImage,
+                                         endpoint: "user-job-images",
+                                         objectKey: "job",
+                                         objectId: self.job.id,
+                                         order: 0,
+                                         progress: { (bytesWriteen, totalBytesWritten, totalBytesExpectedToWrite) in
+                                            hud.progress = Float(totalBytesWritten) / Float(totalBytesExpectedToWrite)
+                }, success: { (data) in
+                    self.job.images = [data as Image]
+                    self.saveFinished()
+                }) { (message, errors) in
+                    self.handleErrors(message: message, errors: errors)
+                }
+                
+            } else if self.origImage?.id != nil && self.removeImageButton.isHidden {
                 
                 API.shared().deleteImage(id: (self.origImage?.id)!, endpoint: "user-job-images", success: {
-                    self.saveLogoImage()
+                    self.job.images = []
+                    self.saveFinished()
                 }) { (message, errors) in
                     self.handleErrors(message: message, errors: errors)
                 }
                 
             } else {
-                self.saveLogoImage()
+                self.saveFinished()
             }
             
         }) { (message, errors) in
@@ -303,37 +324,10 @@ class JobEditController: MJPController {
         
     }
     
-    func saveLogoImage() {
-        
-        if logoImage != nil {
-            
-            let hud = AppHelper.createLoading()
-            hud.mode = .determinateHorizontalBar
-            hud.label.text = "Uploading..."
-            
-            API.shared().uploadImage(image: logoImage,
-                                     endpoint: "user-job-images",
-                                     objectKey: "job",
-                                     objectId: self.job.id,
-                                     order: 0,
-                                     progress: { (bytesWriteen, totalBytesWritten, totalBytesExpectedToWrite) in
-                                        DispatchQueue.main.async {
-                                            hud.progress = Float(totalBytesWritten / totalBytesExpectedToWrite)
-                                        }
-            }, success: { (data) in
-                AppHelper.hideLoading()
-                self.job.images = [data as Image]
-                _ = self.navigationController?.popViewController(animated: true)
-                self.savedJob?(self.job)
-            }) { (message, errors) in
-                self.handleErrors(message: message, errors: errors)
-            }
-            
-        } else {
-            _ = navigationController?.popViewController(animated: true)
-            savedJob?(job)
-        }
-        
+    func saveFinished() {
+        AppHelper.hideLoading()
+        _ = navigationController?.popViewController(animated: true)
+        savedJob?(job)
     }
     
     static func pushController(location: Location!, job: Job!, callback: ((Job)->Void)!) {

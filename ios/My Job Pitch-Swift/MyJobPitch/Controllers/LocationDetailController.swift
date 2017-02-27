@@ -1,5 +1,5 @@
 //
-//  JobListController.swift
+//  LocationDetailController.swift
 //  MyJobPitch
 //
 //  Created by dev on 12/23/16.
@@ -9,7 +9,7 @@
 import UIKit
 import MGSwipeTableCell
 
-class JobListController: MJPController {
+class LocationDetailController: MJPController {
 
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var emptyView: UIView!
@@ -17,7 +17,6 @@ class JobListController: MJPController {
     @IBOutlet weak var imgView: UIImageView!
     @IBOutlet weak var nameLabel: UILabel!
     @IBOutlet weak var subTitle: UILabel!
-    @IBOutlet weak var creditCount: UILabel!
     
     var location: Location!
     
@@ -54,13 +53,12 @@ class JobListController: MJPController {
         }
         
         nameLabel.text = location.name
-        creditCount.text = String(format: "%@ %@", location.businessData.tokens, location.businessData.tokens.intValue > 1 ? "Credits" : "Credit")
     }
     
     func updateJobList(superRefresh: Bool) {
         if superRefresh {
             BusinessListController.refreshRequest = true
-            LocationListController.refreshRequest = true
+            BusinessDetailController.refreshRequest = true
         }
         subTitle.text = String(format: "Includes %lu %@", data.count, data.count > 1 ? "jobs" : "job")
         emptyView.isHidden = self.data.count > 0
@@ -70,7 +68,7 @@ class JobListController: MJPController {
     @IBAction func editLocationAction(_ sender: Any) {
         LocationEditController.pushController(business: nil, location: location) { (location) in
             BusinessListController.refreshRequest = true
-            LocationListController.refreshRequest = true
+            BusinessDetailController.refreshRequest = true
             self.location = location
             self.updateLocationInfo()
         }
@@ -85,7 +83,7 @@ class JobListController: MJPController {
             API.shared().deleteLocation(id: self.location.id, success: {
                 AppHelper.hideLoading()
                 BusinessListController.refreshRequest = true
-                LocationListController.refreshRequest = true
+                BusinessDetailController.refreshRequest = true
                 _ = self.navigationController?.popViewController(animated: true)
             }) { (message, errors) in
                 self.handleErrors(message: message, errors: errors)
@@ -103,7 +101,7 @@ class JobListController: MJPController {
     
 }
 
-extension JobListController: UITableViewDataSource {
+extension LocationDetailController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return data.count
@@ -169,10 +167,12 @@ extension JobListController: UITableViewDataSource {
     
 }
 
-extension JobListController: UITableViewDelegate {
+extension LocationDetailController: UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        
+        let controller = AppHelper.mainStoryboard.instantiateViewController(withIdentifier: "JobDetail") as! JobDetailController
+        controller.job = data[indexPath.row] as! Job
+        navigationController?.pushViewController(controller, animated: true)
     }
     
 }

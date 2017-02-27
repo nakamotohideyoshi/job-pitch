@@ -94,11 +94,14 @@ class CameraController: UIViewController {
         recordButton.setTitle("RECORD", for: .normal)
         recordButton.backgroundColor = AppData.greenColor
         
+        AppHelper.showLoading("Saving...")
+        
         cameraManager.stopVideoRecording({ (videoURL, error) -> Void in
-            if let errorOccured = error {
-                self.cameraManager.showErrorBlock("Error occurred", errorOccured.localizedDescription)
-            } else {
-                DispatchQueue.main.sync {
+            DispatchQueue.main.sync {
+                AppHelper.hideLoading()
+                if let errorOccured = error {
+                    self.cameraManager.showErrorBlock("Error occurred", errorOccured.localizedDescription)
+                } else {
                     self.complete?(videoURL)
                     _ = self.dismiss(animated: true, completion: nil)
                 }

@@ -28,6 +28,18 @@ class AppHelper: NSObject {
         return controller!
     }
     
+    static func getFrontController1() -> UIViewController! {
+        
+        let revealViewController = UIApplication.shared.keyWindow?.rootViewController as? SWRevealViewController
+        var controller = revealViewController?.frontViewController
+        
+        while controller?.presentedViewController != nil {
+            controller = controller?.presentedViewController
+        }
+        
+        return controller!
+    }
+    
     static var mainStoryboard: UIStoryboard {
         get {
             return UIStoryboard(name: "Main", bundle: nil)
@@ -43,7 +55,7 @@ class AppHelper: NSObject {
         
         hideLoading()
         
-        let frontController = getFrontController()
+        let frontController = getFrontController1()
         let hud = MBProgressHUD.showAdded(to: (frontController?.view)!, animated: true)
         hud.backgroundView.color = UIColor(red: 0, green: 0, blue: 0, alpha: 0.65)
         hud.bezelView.style = MBProgressHUDBackgroundStyle.solidColor
@@ -54,7 +66,7 @@ class AppHelper: NSObject {
     }
     
     static func hideLoading() {
-        let frontController = getFrontController()
+        let frontController = getFrontController1()
         MBProgressHUD.hide(for: (frontController?.view)!, animated: true)
     }
     

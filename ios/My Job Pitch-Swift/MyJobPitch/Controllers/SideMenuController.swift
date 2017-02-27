@@ -20,26 +20,27 @@ class SideMenuController: UIViewController {
         "user_profile": ["icon": "menu-user-profile",   "title": "Profile",                 "identifier": "JobSeekerProfile",   "per": ""],
         
         "find_talent":  ["icon": "menu-user-search",    "title": "Find Talent",             "identifier": "SelectJob",          "per": "B"],
-        "connections":  ["icon": "menu-connect",        "title": "Connections",             "identifier": "ApplicationList",    "per": "B"],
-        "shortlist":    ["icon": "menu-shortlist",      "title": "My Shortlist",            "identifier": "ApplicationList",    "per": "B"],
-        "businesses":   ["icon": "menu-business",       "title": "Businesses & Job Post",   "identifier": "BusinessList",       "per": ""],
+        "connections":  ["icon": "menu-connect",        "title": "Connections",             "identifier": "SelectJob",          "per": "B"],
+        "shortlist":    ["icon": "menu-shortlist",      "title": "My Shortlist",            "identifier": "SelectJob",          "per": "B"],
+        "businesses":   ["icon": "menu-business",       "title": "Add or Edit Jobs",        "identifier": "BusinessList",       "per": ""],
         "payment":      ["icon": "menu-payment",        "title": "Payment",                 "identifier": "",                   "per": ""],
         
         "change_pass":  ["icon": "menu-key",            "title": "Change Password",         "identifier": "ChangePassword",     "per": ""],
         "help":         ["icon": "menu-help",           "title": "Help",                    "identifier": "Help",               "per": ""],
+        "contact_us":   ["icon": "menu-contact-us",     "title": "Contact Us",              "identifier": "ContactUs",          "per": ""],
         "log_out":      ["icon": "menu-logout",         "title": "Log Out",                 "identifier": "Signin",             "per": ""]
     ]
     
     static let jobSeekerMenu = [
-        "find_job", "applications", "messages", "job_profile", "add_record", "user_profile", "change_pass", "help", "log_out"
+        "find_job", "applications", "messages", "job_profile", "add_record", "user_profile", "change_pass", "help", "contact_us", "log_out"
     ]
     
     static let recruiterMenu = [
-        "find_talent", "applications", "connections", "shortlist", "messages", "businesses", "change_pass", "help", "log_out"
+        "find_talent", "applications", "connections", "shortlist", "messages", "businesses", "change_pass", "help", "contact_us", "log_out"
     ]
     
-    static func getCurrentTitle() -> String! {
-        return menuItems[currentID]?["title"]
+    static func getCurrentTitle(_ id: String!) -> String! {
+        return menuItems[id == nil ? currentID : id]?["title"]
     }
     
     
@@ -97,7 +98,10 @@ class SideMenuController: UIViewController {
         
         SideMenuController.currentID = id
         
-        let identifier = SideMenuController.menuItems[SideMenuController.currentID]?["identifier"]
+        var identifier = SideMenuController.menuItems[SideMenuController.currentID]?["identifier"]
+        if AppData.user.isRecruiter() && id == "applications" {
+            identifier = "SelectJob"
+        }
         
         let revealController = UIApplication.shared.keyWindow?.rootViewController as! SWRevealViewController
         let controller = AppHelper.mainStoryboard.instantiateViewController(withIdentifier: identifier!)
@@ -190,7 +194,11 @@ extension SideMenuController: UITableViewDelegate {
                                                         SideMenuController.pushController(id: id)
             }, cancel: "Cancel", cancelCallback: nil)
             popupController.okButton?.backgroundColor = AppData.greenColor
-        } else {
+        } else if id == "contact_us" {
+            let url = URL(string: "mailto:support@myjobpitch.com")!
+            UIApplication.shared.openURL(url)
+            //revealViewController().revealToggle(animated: false)
+        } else  {
             SideMenuController.pushController(id: id)
         }
 

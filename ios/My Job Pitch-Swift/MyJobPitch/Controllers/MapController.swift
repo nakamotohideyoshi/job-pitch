@@ -1,5 +1,5 @@
 //
-//  LocationMapController.swift
+//  MapController.swift
 //  MyJobPitch
 //
 //  Created by dev on 12/28/16.
@@ -14,7 +14,7 @@ protocol LocationMapDelegate {
     func selectedLocationMap(_ pos: CLLocationCoordinate2D, placeID: String, placeName: String)
 }
 
-class LocationMapController: UIViewController {
+class MapController: UIViewController {
 
     @IBOutlet weak var mapView: GMSMapView!
     
@@ -40,7 +40,7 @@ class LocationMapController: UIViewController {
         if currentPos != nil {
             mapView.camera = GMSCameraPosition.camera(withTarget: currentPos, zoom: 14)
         }
-        
+                
     }
     
     override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
@@ -99,7 +99,7 @@ class LocationMapController: UIViewController {
     static func showModal(latitude: NSNumber!, longitude: NSNumber!,
                           complete: ((CLLocationCoordinate2D, String, String) -> Void)!) {
         
-        let controller = AppHelper.mainStoryboard.instantiateViewController(withIdentifier: "LocationMapController") as! LocationMapController
+        let controller = AppHelper.mainStoryboard.instantiateViewController(withIdentifier: "MapController") as! MapController
         if latitude != nil {
             controller.currentPos = CLLocationCoordinate2DMake(latitude as CLLocationDegrees, longitude as CLLocationDegrees)
         }
@@ -112,7 +112,7 @@ class LocationMapController: UIViewController {
     
 }
 
-extension LocationMapController: GMSMapViewDelegate {
+extension MapController: GMSMapViewDelegate {
     
     func mapView(_ mapView: GMSMapView, idleAt position: GMSCameraPosition) {
         currentPos = position.target
@@ -120,7 +120,7 @@ extension LocationMapController: GMSMapViewDelegate {
     
 }
 
-extension LocationMapController: GMSAutocompleteResultsViewControllerDelegate {
+extension MapController: GMSAutocompleteResultsViewControllerDelegate {
     
     func resultsController(_ resultsController: GMSAutocompleteResultsViewController, didAutocompleteWith place: GMSPlace) {
         mapView.camera = GMSCameraPosition.camera(withTarget: place.coordinate, zoom: 14)

@@ -193,7 +193,7 @@ class JobProfileController: MJPController {
     
     @IBAction func myLocationAction(_ sender: Any) {
         
-        LocationMapController.showModal(latitude: latitude, longitude: longitude,
+        MapController.showModal(latitude: latitude, longitude: longitude,
                                         complete: { (locationCoordinate, placeID, placeName) in
                                             self.latitude = locationCoordinate.latitude as NSNumber!
                                             self.longitude = locationCoordinate.longitude as NSNumber!
@@ -265,9 +265,12 @@ class JobProfileController: MJPController {
         API.shared().saveJobProfile(profile: profile, success: { (data) in
             
             PopupController.showGreen("Success!", ok: "OK", okCallback: {
-                
                 if AppData.profile == nil {
-                    SideMenuController.pushController(id: "find_job")
+                    if AppData.jobSeeker?.getPitch() == nil {
+                        SideMenuController.pushController(id: "add_record")
+                    } else {
+                        SideMenuController.pushController(id: "find_job")
+                    }
                 }
                 AppData.profile = data as! Profile
                 

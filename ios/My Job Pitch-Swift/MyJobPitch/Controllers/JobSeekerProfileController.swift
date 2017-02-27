@@ -243,8 +243,6 @@ class JobSeekerProfileController: MJPController {
             return
         }
         
-        AppHelper.showLoading("Saving...")
-        
         let jobSeeker = JobSeeker()
         jobSeeker.active = active.isOn
         jobSeeker.firstName = firstName.text?.capitalized
@@ -292,7 +290,17 @@ class JobSeekerProfileController: MJPController {
             jobSeeker.telephonePublic = AppData.jobSeeker.telephonePublic
         }
         
-        API.shared().saveJobSeeker(jobSeeker: jobSeeker, cvdata: cvdata, success: { (data) in
+        let hud = AppHelper.createLoading()
+        if cvdata != nil {
+            hud.mode = .determinateHorizontalBar
+        }
+        hud.label.text = "Saving..."
+        
+        API.shared().saveJobSeeker(jobSeeker: jobSeeker, cvdata: cvdata,
+                                   progress: { (bytesWriteen, totalBytesWritten, totalBytesExpectedToWrite) in
+                                        hud.progress = Float(totalBytesWritten) / Float(totalBytesExpectedToWrite)
+                                   },
+                                   success: { (data) in
             
             AppData.jobSeeker = data as! JobSeeker
             AppData.user.jobSeeker = AppData.jobSeeker.id

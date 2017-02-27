@@ -21,10 +21,12 @@ class JobSeekerDetailController: MJPController {
     @IBOutlet weak var contactDetailLabel: UILabel!
     @IBOutlet weak var applyButton: RoundButton!
     @IBOutlet weak var shortlisted: UISwitch!
-    @IBOutlet weak var otehrLabel: UILabel!
+    @IBOutlet weak var availableView: UIView!
+    @IBOutlet weak var truthfulView: UIView!
     
     var jobSeeker: JobSeeker!
     var application: Application!
+    var job: Job!
     var chooseDelegate: ChooseDelegate!
     
     var isConnected = false
@@ -58,20 +60,20 @@ class JobSeekerDetailController: MJPController {
         
         descLabel.text = jobSeeker.desc
         
-        if jobSeeker.cv == nil {
-            cvButton.removeFromSuperview()
+        if !jobSeeker.hasReferences {
+            availableView.removeFromSuperview()
         }
-        
-        if jobSeeker.hasReferences {
-            otehrLabel.text = "Reference available on request.\n\n"
-        }
-        if jobSeeker.truthConfirmation {
-            otehrLabel.text = otehrLabel.text! + "I confirm that all information provided is truthful to the best of my knowledge.\n"
+        if !jobSeeker.truthConfirmation {
+            truthfulView.removeFromSuperview()
         }
         
         // contact info
         
         if isConnected {
+            
+            if jobSeeker.cv == nil {
+                cvButton.removeFromSuperview()
+            }
             
             let contactDetails = NSMutableArray()
             if jobSeeker.emailPublic {
@@ -90,6 +92,7 @@ class JobSeekerDetailController: MJPController {
             
         } else {
             
+            cvButton.removeFromSuperview()
             contactView.removeFromSuperview()
             applyButton.setTitle("Connect", for: .normal)
             
@@ -134,16 +137,20 @@ class JobSeekerDetailController: MJPController {
         
         if isConnected {
             
-            MessageController.showModal(application: application)
+            MessageController0.showModal(application: application)
             
         } else {
-        
-            let message = application == nil ? "Are you sure you want to connect this talent?" : "Are you sure you want to connect this application?"
             
-            PopupController.showGreen(message, ok: "Connect", okCallback: {
-                _ = self.navigationController?.popViewController(animated: true)
-                self.chooseDelegate?.apply()
-            }, cancel: "Cancel", cancelCallback: nil)
+            if job.locationData.businessData.tokens.intValue > 0 {
+                let message = application == nil ? "Are you sure you want to connect this talent?" : "Are you sure you want to connect this application?"
+                
+                PopupController.showGreen(message, ok: "Connect", okCallback: {
+                    _ = self.navigationController?.popViewController(animated: true)
+                    self.chooseDelegate?.apply()
+                }, cancel: "Cancel", cancelCallback: nil)
+            } else {
+                PopupController.showGray("You have no credits left so cannot compete this connection. Credits cannot be added through the app, please go to our web page.", ok: "Ok")
+            }
             
         }
         
@@ -162,11 +169,13 @@ class JobSeekerDetailController: MJPController {
     
     static func pushController(jobSeeker: JobSeeker!,
                                application: Application!,
+                               job: Job,
                                chooseDelegate: ChooseDelegate!) {
         
         let controller = AppHelper.mainStoryboard.instantiateViewController(withIdentifier: "JobSeekerDetail") as! JobSeekerDetailController
         controller.jobSeeker = jobSeeker
         controller.application = application
+        controller.job = job
         controller.chooseDelegate = chooseDelegate
         AppHelper.getFrontController().navigationController?.pushViewController(controller, animated: true)
         

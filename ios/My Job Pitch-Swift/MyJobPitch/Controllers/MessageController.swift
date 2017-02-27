@@ -10,7 +10,7 @@ import UIKit
 import JSQMessagesViewController
 
 class MessageController: JSQMessagesViewController {
-
+    
     var application: Application!
     
     var messages = [JSQMessage]()
@@ -24,6 +24,8 @@ class MessageController: JSQMessagesViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        application = MessageController0.application
 
         // Do any additional setup after loading the view.
         
@@ -37,7 +39,8 @@ class MessageController: JSQMessagesViewController {
         
         let jobImage = application.job.getImage()?.thumbnail
         let jobSeekerImage = application.jobSeeker.getPitch()?.thumbnail
-        let statusCreated = AppData.getApplicationStatusByName(ApplicationStatus.APPLICATION_CREATED)
+        let statusCreated = AppData.getApplicationStatusByName(ApplicationStatus.APPLICATION_CREATED).id
+        let statusDeleted = AppData.getApplicationStatusByName(ApplicationStatus.APPLICATION_DELETED).id
         
         if AppData.user.isJobSeeker() {
             
@@ -47,7 +50,7 @@ class MessageController: JSQMessagesViewController {
             setAavatar(sender: true, path: jobSeekerImage, local: "no-img")
             setAavatar(sender: false, path: jobImage, local: "default-logo")
             
-            if application.status == statusCreated?.id {
+            if application.status == statusCreated {
                 
                 inputToolbar.isUserInteractionEnabled = false
                 PopupController.showGray("You cannot send messages until your application is accepted", ok: "OK")
@@ -62,11 +65,12 @@ class MessageController: JSQMessagesViewController {
             setAavatar(sender: true, path: jobImage, local: "default-logo")
             setAavatar(sender: false, path: jobSeekerImage, local: "no-img")
             
-            if application.status == statusCreated?.id {
-                
+            if application.status == statusCreated {
                 inputToolbar.isUserInteractionEnabled = false
                 PopupController.showGray("You cannot send messages until you have connected", ok: "OK")
-                
+            } else if application.status == statusDeleted {
+                inputToolbar.isUserInteractionEnabled = false
+                PopupController.showGray("This application has been deleted.", ok: "OK")
             }
             
         }
@@ -206,19 +210,6 @@ class MessageController: JSQMessagesViewController {
         }) { (message, errors) in
             
         }
-    }
-    
-    @IBAction func closeAction(_ sender: Any) {
-        navigationController?.dismiss(animated: true, completion: nil)
-    }
-    
-    static func showModal(application: Application) {
-        
-        let controller = AppHelper.mainStoryboard.instantiateViewController(withIdentifier: "Message") as! MessageController
-        controller.application = application
-        let navController = UINavigationController(rootViewController: controller)
-        AppHelper.getFrontController().present(navController, animated: true, completion: nil)
-        
     }
     
 }

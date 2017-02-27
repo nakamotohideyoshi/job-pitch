@@ -123,6 +123,10 @@ class MJPController: UIViewController {
                     errorMessage = arr.firstObject as! String
                 }
                 
+                if errorMessage == nil {
+                    errorMessage = key as! String
+                }
+                
                 if let fields = requiredFields[key as! String] {
                     (fields.lastObject as! UILabel).text = errorMessage
                 } else {

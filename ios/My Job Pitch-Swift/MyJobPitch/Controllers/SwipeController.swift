@@ -14,7 +14,9 @@ class SwipeController: MJPController {
     @IBOutlet weak var nameLabel: UILabel!
     @IBOutlet weak var descriptionLabel: UILabel!
     @IBOutlet weak var cardsView: UIView!
-    @IBOutlet weak var creditsLabel: UILabel!
+    @IBOutlet weak var creditsButton: UIButton!
+    
+    @IBOutlet weak var emptyView: UILabel!
     
     var isFindJob = false
     var searchJob: Job!
@@ -34,7 +36,7 @@ class SwipeController: MJPController {
         
         isFindJob = SideMenuController.currentID == "find_job"
         
-        navigationItem.title = SideMenuController.getCurrentTitle()
+        navigationItem.title = SideMenuController.getCurrentTitle(isFindJob ? "find_job" : "find_talent")
         
         nameLabel.text = ""
         descriptionLabel.text = ""
@@ -44,7 +46,11 @@ class SwipeController: MJPController {
         
         if AppData.user.isRecruiter() {
             credits = searchJob.locationData.businessData.tokens as Int
-            creditsLabel.text = String(format: "%d %@", credits, credits > 1 ? "Credits" : "Credit")
+            creditsButton.setTitle(String(format: "%d %@", credits, credits > 1 ? "Credits" : "Credit"), for: .normal)
+            emptyView.text = "There are no more new matches for this job. You can restore your removed matches by clicking refresh above."
+        } else {
+            creditsButton.removeFromSuperview()
+            emptyView.text = "There are no more jobs that match your profile. You can restore your removed matches by clicking refresh above."
         }
         
     }
@@ -126,6 +132,8 @@ class SwipeController: MJPController {
             descriptionLabel.text = ""
         }
         
+        emptyView.isHidden = cards.count > 0
+        
     }
     
     func refresh() {
@@ -169,17 +177,24 @@ class SwipeController: MJPController {
         
     }
 
+    @IBAction func clickCredit(_ sender: Any) {
+        
+        BusinessEditController.pushController(business: searchJob.locationData.businessData, callback: nil)
+        
+    }
+    
     func clickCard() {
         
         if isFindJob {
             let job = data[currentIndex - cards.count] as! Job
-            JobDetailController.pushController(job: job,
+            ApplicationDetailController.pushController(job: job,
                                                application: nil,
                                                chooseDelegate: self)
         } else {
             let jobSeeker = data[currentIndex - cards.count] as! JobSeeker
             JobSeekerDetailController.pushController(jobSeeker: jobSeeker,
                                                      application: nil,
+                                                     job: searchJob,
                                                      chooseDelegate: self)
         }
         
@@ -187,6 +202,12 @@ class SwipeController: MJPController {
     
     @IBAction func refreshAction(_ sender: Any) {
         refresh()
+    }
+    
+    static func pushController(job: Job!) {
+        let controller = AppHelper.mainStoryboard.instantiateViewController(withIdentifier: "Swipe") as! SwipeController
+        controller.searchJob = job
+        AppHelper.getFrontController().navigationController?.pushViewController(controller, animated: true)
     }
     
 }
@@ -214,9 +235,25 @@ extension SwipeController: ChooseDelegate {
         let application = ApplicationForCreation()
         
         if isFindJob {
+            
+            if AppData.jobSeeker.getPitch() == nil {
+                PopupController.showGreen("You need to record your pitch video to apply.", ok: "Record my pitch", okCallback: {
+                    SideMenuController.pushController(id: "add_record")
+                }, cancel: "Cancel", cancelCallback: nil)
+                remove()
+                return
+            }
+            
             application.job = (data[currentIndex - cards.count] as! Job).id
             application.jobSeeker = AppData.user.jobSeeker
         } else {
+            
+            if searchJob.locationData.businessData.tokens == 0 {
+                PopupController.showGray("You have no credits left so cannot compete this connection. Credits cannot be added through the app, please go to our web page.", ok: "Ok")
+                remove()
+                return
+            }
+            
             application.job = searchJob?.id
             application.jobSeeker = (data[currentIndex - cards.count] as! JobSeeker).id
         }
@@ -226,7 +263,7 @@ extension SwipeController: ChooseDelegate {
             
             if AppData.user.isRecruiter() {
                 self.credits = self.credits - 1
-                self.creditsLabel.text = String(format: "%d %@", self.credits, self.credits > 1 ? "Credits" : "Credit")
+                self.creditsButton.setTitle(String(format: "%d %@", self.credits, self.credits > 1 ? "Credits" : "Credit"), for: .normal)
             }
             
         }) { (message, errors) in

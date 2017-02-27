@@ -12,35 +12,43 @@ import MGSwipeTableCell
 
 class ApplicationListController: SearchController {
     
-    var refreshRequest = false
+    @IBOutlet weak var emptyView: UILabel!
     
     var isRecruiter = false
     var isApplication = false
     var isConnectBtn = false
+    var isShortlisted = false
+    
+    var searchJob: Job!
+    var mode: String!   // if nil, applications
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         // Do any additional setup after loading the view.
         
-        navigationItem.title = SideMenuController.getCurrentTitle()
+        navigationItem.title = SideMenuController.getCurrentTitle(mode)
         
         isRecruiter = AppData.user.isRecruiter()
-        isApplication = SideMenuController.currentID == "applications"
+        isApplication = mode == nil || mode == "applications"
         isConnectBtn = isRecruiter && isApplication
+        isShortlisted = mode == "shortlist"
+        
+        if isShortlisted {
+            emptyView.text = "You have not shortlisted any applications for this job, turn off shortlist view to see the non-shortlisted applications."
+        } else if isConnectBtn {
+            emptyView.text = "You have not chosen anyone to connect with for this job. Once that happens, you will be able to sort through them from here. You can switch to search mode to look for potential applicants."
+        } else if isRecruiter {
+            emptyView.text = "No candidates have applied for this job yet. Once that happens, their applications will appear here."
+        } else {
+            emptyView.text = ""
+        }
         
         tableView.addPullToRefresh {
             self.getData()
         }
         
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        //if refreshRequest {
-            refreshRequest = false
-            tableView.triggerPullToRefresh()
-        //}
+        tableView.triggerPullToRefresh()
         
     }
     
@@ -52,16 +60,15 @@ class ApplicationListController: SearchController {
             status = AppData.getApplicationStatusByName(statusName).id
         }
         
-        let shortlisted = SideMenuController.currentID == "shortlist"
-        
-        API.shared().loadApplicationsForJob(jobId: nil, status: status, shortlisted: shortlisted, success: { (data) in
+        API.shared().loadApplicationsForJob(jobId: searchJob?.id, status: status, shortlisted: isShortlisted, success: { (data) in
             self.allData = NSMutableArray()
             for application in data as! [Application] {
-                if (status == nil || status == application.status) && (!shortlisted || application.shortlisted == shortlisted) {
+                if (status == nil || status == application.status) && (!self.isShortlisted || application.shortlisted == self.isShortlisted) {
                     self.allData.add(application)
                 }
             }
             self.data = self.allData
+            self.emptyView.isHidden = self.allData.count > 0            
             self.tableView.reloadData()
             self.tableView.pullToRefreshView.stopAnimating()
         }) { (message, errors) in
@@ -87,6 +94,13 @@ class ApplicationListController: SearchController {
                 businessName.lowercased().contains(text) ||
                 application.job.locationData.placeName.lowercased().contains(text)
         
+    }
+    
+    static func pushController(job: Job!, mode: String!) {
+        let controller = AppHelper.mainStoryboard.instantiateViewController(withIdentifier: "ApplicationList") as! ApplicationListController
+        controller.searchJob = job
+        controller.mode = mode
+        AppHelper.getFrontController().navigationController?.pushViewController(controller, animated: true)
     }
     
 }
@@ -182,10 +196,11 @@ extension ApplicationListController: UITableViewDelegate {
             
             JobSeekerDetailController.pushController(jobSeeker: application.jobSeeker,
                                                      application: application,
+                                                     job: application.job,
                                                      chooseDelegate: self)
         } else {
             
-            JobDetailController.pushController(job: application.job,
+            ApplicationDetailController.pushController(job: application.job,
                                                application: application,
                                                chooseDelegate: self)
         }
@@ -206,13 +221,14 @@ extension ApplicationListController: ChooseDelegate {
             
             API.shared().updateApplicationStatus(update: update, success: { (data) in
                 AppHelper.hideLoading()
+                self.tableView.triggerPullToRefresh()
             }) { (message, errors) in
                 self.handleErrors(message: message, errors: errors)
             }
             
         } else {
             
-            MessageController.showModal(application: selectedItem as! Application)
+            MessageController0.showModal(application: selectedItem as! Application)
             
         }
         

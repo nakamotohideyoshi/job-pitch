@@ -12,8 +12,8 @@ class SearchController: MJPController {
     
     @IBOutlet weak var tableView: UITableView!
     
-    var data: NSMutableArray!
     var allData: NSMutableArray!
+    var data: NSMutableArray!
     var selectedItem: Any!
     
     var navTitleView: UIView!

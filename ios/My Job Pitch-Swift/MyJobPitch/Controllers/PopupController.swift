@@ -25,17 +25,19 @@ class PopupController: UIViewController {
     }
     
     @IBAction func okAction(_ sender: Any) {
-        popupController?.dismiss()
-        if okCallback != nil {
-            okCallback()
-        }
+        popupController?.dismiss(completion: { 
+            if self.okCallback != nil {
+                self.okCallback()
+            }
+        })
     }
     
     @IBAction func cancelAction(_ sender: Any) {
-        popupController?.dismiss()
-        if cancelCallback != nil {
-            cancelCallback()
-        }
+        popupController?.dismiss(completion: { 
+            if self.cancelCallback != nil {
+                self.cancelCallback()
+            }
+        })        
     }
     
     static func showGreen(_ message: String!,

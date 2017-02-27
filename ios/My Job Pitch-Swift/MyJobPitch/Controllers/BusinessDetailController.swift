@@ -1,5 +1,5 @@
 //
-//  LocationListController.swift
+//  BusinessDetailController.swift
 //  MyJobPitch
 //
 //  Created by dev on 12/26/16.
@@ -9,7 +9,7 @@
 import UIKit
 import MGSwipeTableCell
 
-class LocationListController: MJPController {
+class BusinessDetailController: MJPController {
     
     static var refreshRequest = false
     
@@ -19,7 +19,7 @@ class LocationListController: MJPController {
     @IBOutlet weak var imgView: UIImageView!
     @IBOutlet weak var nameLabel: UILabel!
     @IBOutlet weak var subTitle: UILabel!
-    @IBOutlet weak var creditCount: UILabel!
+    @IBOutlet weak var creditCount: UIButton!
     
     var business: Business!
     
@@ -31,14 +31,14 @@ class LocationListController: MJPController {
         // Do any additional setup after loading the view.
         
         updateBusinessInfo()
-        LocationListController.refreshRequest = true
+        BusinessDetailController.refreshRequest = true
         
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        if LocationListController.refreshRequest {
-            LocationListController.refreshRequest = false
+        if BusinessDetailController.refreshRequest {
+            BusinessDetailController.refreshRequest = false
             
             AppHelper.showLoading("Loading...")
             
@@ -62,7 +62,7 @@ class LocationListController: MJPController {
         }
         
         nameLabel.text = business.name
-        creditCount.text = String(format: "%@ %@", business.tokens, business.tokens.intValue > 1 ? "Credits" : "Credit")
+        creditCount.setTitle(String(format: "%@ %@", business.tokens, business.tokens.intValue > 1 ? "Credits" : "Credit"), for: .normal);
     }
     
     func updateLocationList(superRefresh: Bool) {
@@ -110,7 +110,7 @@ class LocationListController: MJPController {
     
 }
 
-extension LocationListController: UITableViewDataSource {
+extension BusinessDetailController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return data.count
@@ -176,11 +176,11 @@ extension LocationListController: UITableViewDataSource {
     
 }
 
-extension LocationListController: UITableViewDelegate {
+extension BusinessDetailController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
-        let controller = AppHelper.mainStoryboard.instantiateViewController(withIdentifier: "JobList") as! JobListController
+        let controller = AppHelper.mainStoryboard.instantiateViewController(withIdentifier: "JobList") as! LocationDetailController
         controller.location = data[indexPath.row] as! Location
         navigationController?.pushViewController(controller, animated: true)
         

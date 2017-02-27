@@ -125,16 +125,38 @@ class BusinessEditController: MJPController {
             self.business = data as! Business
             
             let origImageID = self.business.getImage()?.id
-            if origImageID != nil && self.removeImageButton.isHidden {
+            
+            if self.logoImage != nil {
+                
+                let hud = AppHelper.createLoading()
+                hud.mode = .determinateHorizontalBar
+                hud.label.text = "Uploading..."
+                
+                API.shared().uploadImage(image: self.logoImage,
+                                         endpoint: "user-business-images",
+                                         objectKey: "business",
+                                         objectId: self.business.id,
+                                         order: 0,
+                                         progress: { (bytesWriteen, totalBytesWritten, totalBytesExpectedToWrite) in
+                                            hud.progress = Float(totalBytesWritten) / Float(totalBytesExpectedToWrite)
+                }, success: { (data) in
+                    self.business.images = [data as Image]
+                    self.saveFinished()
+                }) { (message, errors) in
+                    self.handleErrors(message: message, errors: errors)
+                }
+                
+            } else if origImageID != nil && self.removeImageButton.isHidden {
                 
                 API.shared().deleteImage(id: origImageID!, endpoint: "user-business-images", success: {
-                    self.saveLogoImage()
+                    self.business.images = []
+                    self.saveFinished()
                 }) { (message, errors) in
                     self.handleErrors(message: message, errors: errors)
                 }
                 
             } else {
-                self.saveLogoImage()
+                self.saveFinished()
             }
             
         }) { (message, errors) in
@@ -143,34 +165,10 @@ class BusinessEditController: MJPController {
         
     }
     
-    func saveLogoImage() {
-        
-        if logoImage != nil {
-            
-            let hud = AppHelper.createLoading()
-            hud.mode = .determinateHorizontalBar
-            hud.label.text = "Uploading..."
-            
-            API.shared().uploadImage(image: logoImage,
-                                     endpoint: "user-business-images",
-                                     objectKey: "business",
-                                     objectId: business.id,
-                                     order: 0,
-                                     progress: { (bytesWriteen, totalBytesWritten, totalBytesExpectedToWrite) in
-                                        hud.progress = Float(totalBytesWritten / totalBytesExpectedToWrite)
-            }, success: { (data) in
-                AppHelper.hideLoading()
-                _ = self.navigationController?.popViewController(animated: true)
-                self.savedBusiness?(self.business)
-            }) { (message, errors) in
-                self.handleErrors(message: message, errors: errors)
-            }
-            
-        } else {
-            _ = navigationController?.popViewController(animated: true)
-            savedBusiness?(business)
-        }
-        
+    func saveFinished() {
+        AppHelper.hideLoading()
+        _ = navigationController?.popViewController(animated: true)
+        savedBusiness?(business)
     }
     
     static func pushController(business: Business!, callback: ((Business) -> Void)!) {

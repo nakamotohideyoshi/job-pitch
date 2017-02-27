@@ -45,6 +45,17 @@ class BusinessListController: MJPController {
                 AppHelper.hideLoading()
                 self.data = data.mutableCopy() as! NSMutableArray
                 self.updateBusinessList()
+                
+                if AppData.user.businesses.count != data.count {
+                    AppHelper.showLoading("Loading...")
+                    API.shared().getUser(success: { (user) in
+                        AppHelper.hideLoading()
+                        AppData.user = user as! User
+                    }) { (message, errors) in
+                        self.handleErrors(message: message, errors: errors)
+                    }
+                }
+                
             }) { (message, errors) in
                 self.handleErrors(message: message, errors: errors)
             }
@@ -161,7 +172,7 @@ extension BusinessListController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
-        let controller = AppHelper.mainStoryboard.instantiateViewController(withIdentifier: "LocationList") as! LocationListController
+        let controller = AppHelper.mainStoryboard.instantiateViewController(withIdentifier: "LocationList") as! BusinessDetailController
         controller.business = data[indexPath.row] as! Business
         navigationController?.pushViewController(controller, animated: true)
         

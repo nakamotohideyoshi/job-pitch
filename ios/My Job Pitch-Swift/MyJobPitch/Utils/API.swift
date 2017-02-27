@@ -344,6 +344,7 @@ class API: NSObject {
     // ================= Job Seeker =====================
 
     func saveJobSeeker(jobSeeker: JobSeeker, cvdata: Data!,
+                       progress:((UInt, Int64, Int64) -> Void)!,
                        success: ((NSObject?) -> Void)!,
                        failure: ((String?, NSDictionary?) -> Void)!) {
         clearCookies()
@@ -374,7 +375,10 @@ class API: NSObject {
             self.failureWithError(error, failure: failure)
         })
         
+        operation?.httpRequestOperation.setUploadProgressBlock(progress)
+        
         manager.enqueue(operation)
+        
     }
 
     func loadJobSeekerWithId(id: NSNumber,
@@ -566,11 +570,11 @@ class API: NSObject {
         var link = "?"
         if jobId != nil {
             path = String(format: "%@%@job=%@", path, link, jobId)
-            link = "@"
+            link = "&"
         }
         if status != nil {
             path = String(format: "%@%@status=%@", path, link, status)
-            link = "@"
+            link = "&"
         }
         if shortlisted {
             path = String(format: "%@%@shortlisted=1", path, link)

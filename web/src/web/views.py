@@ -14,8 +14,6 @@ def registration(request):
 def logout(request):
     return render(request, 'logout.html')
 
-#def profile(request):
-#    return render(request, 'profile/main.html')
 def profile(request):
     return render(request, 'profile/profile.html')
 
@@ -49,8 +47,6 @@ def create_business(request):
 def edit_business(request):
     return render(request, 'profile/edit-business.html')
 
-#def create_profile_location(request):
-#    return render(request, 'profile/create-location.html')
 def add_work_place(request):
     return render(request, 'profile/add-work-place.html')
 

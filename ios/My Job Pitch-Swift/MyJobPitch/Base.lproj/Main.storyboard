@@ -224,7 +224,7 @@ sdafsdf</string>
             <objects>
                 <navigationController navigationBarHidden="YES" id="Tn3-dg-KpG" sceneMemberID="viewController">
                     <nil key="simulatedTopBarMetrics"/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" translucent="NO" id="pbS-fN-baU">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" translucent="NO" id="pbS-fN-baU">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>

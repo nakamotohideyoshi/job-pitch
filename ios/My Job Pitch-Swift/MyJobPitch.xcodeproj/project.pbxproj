@@ -745,7 +745,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer: Mike Christopherson (8QQAR73YPE)";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Mike Christopherson (YY7DF42BJ9)";
 				DEVELOPMENT_TEAM = YY7DF42BJ9;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -757,8 +757,8 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.myjobpitch.pitch;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "5180871f-9c96-436b-a95d-ff4210fd9b28";
-				PROVISIONING_PROFILE_SPECIFIER = "pitch-dev1";
+				PROVISIONING_PROFILE = "99b6cb19-5e64-43cb-9b96-1237d77cca0f";
+				PROVISIONING_PROFILE_SPECIFIER = "pitch-dist1";
 				SWIFT_OBJC_BRIDGING_HEADER = "MyJobPitch/MyJobPitch-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 3.0;
@@ -771,7 +771,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer: Mike Christopherson (8QQAR73YPE)";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Mike Christopherson (YY7DF42BJ9)";
 				DEVELOPMENT_TEAM = YY7DF42BJ9;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -783,8 +783,8 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.myjobpitch.pitch;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "5180871f-9c96-436b-a95d-ff4210fd9b28";
-				PROVISIONING_PROFILE_SPECIFIER = "pitch-dev1";
+				PROVISIONING_PROFILE = "99b6cb19-5e64-43cb-9b96-1237d77cca0f";
+				PROVISIONING_PROFILE_SPECIFIER = "pitch-dist1";
 				SWIFT_OBJC_BRIDGING_HEADER = "MyJobPitch/MyJobPitch-Bridging-Header.h";
 				SWIFT_VERSION = 3.0;
 			};

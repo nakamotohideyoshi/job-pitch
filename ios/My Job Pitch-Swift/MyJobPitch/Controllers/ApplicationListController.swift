@@ -20,7 +20,7 @@ class ApplicationListController: SearchController {
     var isShortlisted = false
     
     var searchJob: Job!
-    var mode: String!   // if nil, applications
+    var mode = ""   // if "", applications
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -30,7 +30,7 @@ class ApplicationListController: SearchController {
         navigationItem.title = SideMenuController.getCurrentTitle(mode)
         
         isRecruiter = AppData.user.isRecruiter()
-        isApplication = mode == nil || mode == "applications"
+        isApplication = mode == "" || mode == "applications"
         isConnectBtn = isRecruiter && isApplication
         isShortlisted = mode == "shortlist"
         

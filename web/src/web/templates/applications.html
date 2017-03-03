@@ -1,31 +1,31 @@
 {% extends "mjp_user_base.html" %}
 
 {% block page-title %}
-  <div class="row">
-    <h2>My Proposals</h2>
+  <div class="row page-title">
+    <div class="col-lg-12">
+      <h2>My Proposals</h2>
+    </div>
   </div>
 {% endblock %}
 
 {% block sidebar %}{% endblock %}
 
 {% block content %}
-  <div class="col-lg-12">
+  <div class="col-lg-12 applications content">
+    <h3>ACTIVE</h3>
     <div class="row">
-      <h3>ACTIVE</h3>
-    </div>
-    <div class="row">
-      <div class="col-lg-12 counter-box" id="job-connections">
-        <h3><span>0</span> My Job Connections</h3>
+      <div class="col-lg-12" id="job-connections">
+        <h3 class="counter-box"><span>0</span> My Job Connections</h3>
       </div>
     </div>
     <div class="row">
-      <div class="col-lg-12 counter-box" id="job-applieds">
-        <h3><span>0</span> Job Applieds</h3>
+      <div class="col-lg-12" id="job-applieds">
+        <h3 class="counter-box"><span>0</span> Job Applieds</h3>
       </div>
     </div>
     <div class="row">
-      <div class="col-lg-12 counter-box" id="job-interviews">
-        <h3><span>0</span> Invitations to Interview</h3>
+      <div class="col-lg-12" id="job-interviews">
+        <h3 class="counter-box"><span>0</span> Invitations to Interview</h3>
       </div>
     </div>
   </div>

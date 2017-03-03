@@ -102,7 +102,6 @@ input[type="file"] {
   color: #ffffff;
 }
 
-
 .sclabs-theme {
   color: #00BAA5;
   font-size: 18px;
@@ -112,7 +111,6 @@ a.sclabs-theme,
 a.sclabs-theme:hover {
   text-decoration: none
 }
-
 
 a.sclabs-theme,
 h3.sclabs-theme{
@@ -507,12 +505,23 @@ div#wrapper ul.nav.navbar-nav.navbar-right {
  * Page Layout
  */
 
-.page-header{
+#wrapper {
+  min-height: 100%;
+  height: auto !important;
+  height: 100%;
+  margin: 0 auto -121px; /*-351px; /* the bottom margin is the negative value of the footer's height */
+}
+
+.page-header {
   border:none;
   margin-bottom: 20px;
 }
 
-.page-header-form{
+.page-title {
+  margin-top: 95px;
+}
+
+.page-header-form {
   font-size: 30px;
 }
 
@@ -782,10 +791,15 @@ div.howitworks-page div.thumbnail{
  * Application Page
  *
  */
-.counter-box{
+.applications.content {
+  min-height: 640px;
+}
+
+.counter-box {
   border: 1px solid #cccccc;
-  padding: 30px;
-  margin-top: 30px;
+  padding: 41px;
+  margin-top: 40px;
+  margin-bottom: 0px;
 }
 
 
@@ -925,25 +939,12 @@ div.howitworks-page div.thumbnail{
 
 /* Navigation Sytles */
 
-<<<<<<< HEAD
 /*
 .navbar-toggle{
 	border: none;
     margin-top: 15px;
 	border-radius:none;
 }
-=======
-
-/*
- * This for hacking Messenger Theme
- */
-ul.messenger.messenger-fixed.messenger-on-bottom {
-    bottom: 130px;
-}
-
-
-/* Animation of glyphicon-refresh */
->>>>>>> cde82a0bf3bcbb810e58ade37f095d2fae8e60ba
 
 .navbar-toggle .icon-bar{
 	width:43px;
@@ -999,13 +1000,10 @@ ul.messenger.messenger-fixed.messenger-on-bottom {
 
 }
 
-
 .navbar-nav li:last-child a{
   border-bottom:none !important;
 }
 
-<<<<<<< HEAD
-
 .navbar-nav>li.logged_in_menu{
   display:none;
 }
@@ -1016,111 +1014,6 @@ ul.messenger.messenger-fixed.messenger-on-bottom {
 
 .navbar-nav>li.business-link{
   display:none;
-=======
-
-/*
- * Howitworks Page
- */
-div.howitworks-page{
-  padding-top: 5%;
-}
-
-
-div.howitworks-page div.thumbnail{
-  border: 0;
-}
-
-
-/*
- * Messages (Inbox/Notifications) Page
- */
-.inbox {
-  margin-bottom: 15px;
-  padding: 25px;
-}
-
-.message-history {
-  border-bottom: 2px solid #C7C7C7;
-  overflow-y: visible;
-  position: relative;
-  overflow-x: hidden;
-}
-
-.inbox-contacts{
-  border-left: 2px solid #C7C7C7;
-  border-top: 2px solid #C7C7C7;
-  border-bottom: 2px solid #C7C7C7;
-  max-height: 100%;
-}
-
-.inbox-contacts h3 {
-  color: #00BAA5;
-}
-
-.inbox-contacts a {
-  color: #00BAA5;
-}
-
-.inbox-contacts .brand-nav{
-  border-bottom: 2px dotted #cccccc;
-}
-
-.inbox-contacts .brand-nav.active{
-  border-bottom: none;
-}
-
-.inbox-messages{
-  border-left: 2px solid #B9B9B9;
-  border-right: 2px solid #C7C7C7;
-  border-top: 2px solid #C7C7C7;
-  border-bottom: 2px solid #C7C7C7;
-  max-height: 100%;
-}
-
-.new-message-box{
-  width: 100%;
-  padding: 10px 10px 0 10px;
-}
-
-
-/*
- * Application Page
- */
-.counter-box{
-  border: 1px solid #cccccc;
-  padding: 30px;
-  margin-top: 30px;
-}
-
-
-/*
- * Profile Page
- */
-.profile {
-  border: 1px solid #cccccc;
-}
-
-.profile-content > .row {
-  border-right: 1px solid #cccccc;
-  padding-top: 15px;
-  padding-bottom: 15px;
-}
-
-.profile-sidebar > .row {
-  margin-bottom: 15px;
-  padding: 25px;
-}
-
-
-
-/* Navigation Sytles */
-
-/*
-.navbar-toggle{
-	border: none;
-    margin-top: 15px;
-	border-radius:none;
->>>>>>> cde82a0bf3bcbb810e58ade37f095d2fae8e60ba
 }
 
 .navbar-nav>li.job-seeker-link{
@@ -1210,11 +1103,6 @@ div.howitworks-page div.thumbnail{
         padding-bottom: 10px;
     }
 }
-
-
->>>>>>> cde82a0bf3bcbb810e58ade37f095d2fae8e60ba
-
-
 */
 
 .message-get-app{
@@ -1475,7 +1363,7 @@ div.howitworks-page div.thumbnail{
   margin: 20px auto 0;
 }
 
-.buttons-slide > .donwnload-app{
+.buttons-slide > .download-app{
   color: #fff;
   font-family: 'Helvetica Neue Bold', sans-serif;
   font-size: 24px;
@@ -1528,13 +1416,6 @@ div.howitworks-page div.thumbnail{
     margin-top: 25px;
     margin-left: 115px;
 } */
-
-#wrapper {
-    min-height: 100%;
-    height: auto !important;
-    height: 100%;
-    margin: 0 auto -121px; /*-351px; /* the bottom margin is the negative value of the footer's height */
-}
 
 /*.page-container{
 	margin-top:50px;
@@ -2013,13 +1894,11 @@ input {
 }
 
 /* Responsive Styles */
-/*@media(max-width:1024px) {
+@media(max-width:1024px) {
 	.center-section-header{
 		display:none;
 	}
-}*/
 
-@media(max-width:992px) {
   .container-fluid {
     width: 75%;
   }
@@ -2042,7 +1921,7 @@ input {
   }
 }
 
-@media(max-width:768px) {
+@media(max-width:992px) {
   .img-portfolio {
       margin-bottom: 15px;
   }
@@ -2051,42 +1930,60 @@ input {
       height: 70%;
   }
 
-	.main-logo-home{
-		display:none;
-	}
+  .main-logo-home{
+    display:none;
+  }
 
-	.mobile-logo-home{
-		display:block;
-	}
+  .mobile-logo-home{
+    display:block;
+  }
 
-	.buttons-slide{
-		margin-left:0px;
-	}
+  .buttons-slide{
+    margin-left:0px;
+  }
 
 
   /*
    * Navigation Section
    */
-  .navbar-nav.business-link > li >a,
+  div#wrapper ul.nav.navbar-nav.navbar-right {
+    display: inline-flex !important;
+    width: 649px;
+    margin-top: 15px;
+  }
+
+  .navbar-nav.business-link > li > a,
   .navbar-nav.jobseeker-link > li >a {
     font-size: 1.1em;
   }
 }
 
+@media(max-width:768px) {
+  .btn-home-reg {
+    position: absolute;
+    margin-top: 13px;
+    margin-left: 0px;
+  }
+
+  .buttons-slide > div.download-app {
+    margin-top: 100px;
+  }
+
+  .home-buttons a {
+    display: block;
+  }
+}
+
 @media(max-width:640px) {
-	.btn-home-reg{
-		position: absolute;
-    	margin-top: 13px;
-	    margin-left: 0px;
-	}
+  .above-slide-detail{
+    width: 280px;
+  }
+
+  .above-slide-detail img{
+    width: 280px;
+  }
 }
 
 @media(max-width:320px) {
-	.above-slide-detail{
-		width: 280px;
-	}
-    .above-slide-detail img{
-		width: 280px;
-	}
 }
 

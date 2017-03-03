@@ -738,8 +738,9 @@ div.howitworks-page div.thumbnail{
  * Messages (Inbox/Notifications) Page
  */
 .inbox {
-  margin-bottom: 15px;
+  margin-bottom: 35px;
   padding: 25px;
+  margin-top: 115px;
 }
 
 .message-history {
@@ -809,6 +810,8 @@ div.howitworks-page div.thumbnail{
  */
 .profile {
   border: 1px solid #cccccc;
+  margin-top: 10px;
+  margin-bottom: 60px;
 }
 
 .profile-content > .row {
@@ -825,14 +828,23 @@ div.howitworks-page div.thumbnail{
 /*
  * Find a Job Page
  */
+.find-job.page {
+    margin-top: 100px;
+    margin-bottom: 80px;
+}
+
+.find-job.page .header {
+  margin-bottom: 20px;
+}
+
+.find-job.page .header {
+  margin-bottom: 20px;
+}
+
 .find-job > .row > .content {
   padding-top: 15px;
   padding-bottom: 15px;
   border: 1px solid #cccccc;
-}
-
-.find-job.page .header{
-  margin-bottom: 20px;
 }
 
 .find-job h2 {

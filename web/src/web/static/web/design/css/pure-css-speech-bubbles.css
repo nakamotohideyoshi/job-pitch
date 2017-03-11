@@ -1393,3 +1393,33 @@ blockquote p {
   /* reduce the damage in FF3.0 */
   display:block;
 }
+
+/*
+ * Set values according to Ssclabs Theme
+ */
+a:link,
+a:visited {
+  border: 0;
+  text-decoration:none;
+  color: #fff;
+}
+
+a:visited {
+  border:0;
+  color: #fff;
+}
+
+a:hover,
+a:focus,
+a:active {
+  border:0;
+  color: #00BAA5 !important;
+  background: inherit;
+}
+
+a:visited:hover,
+a:visited:focus,
+a:visited:active {
+  color: #00BAA5 !important;
+  background: inherit;
+}

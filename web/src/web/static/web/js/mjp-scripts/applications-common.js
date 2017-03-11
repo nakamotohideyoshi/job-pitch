@@ -61,7 +61,7 @@ function goToMessages(query){
 
 
 function goToUserProfile(id){
-	window.location.href = "/profile/list-jobs/?id="+id;
+	window.location.href = "/find-posts/?id="+id;
 }
 
 $(document).on('click','.go-to-messages',function(argument) {

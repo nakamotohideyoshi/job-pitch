@@ -105,9 +105,9 @@ $(function () {
 		$.put("/api/user-jobs/" + job_id + "/", job).done(function (data) {
 			$('#job_id').val(data.id);
 
-			formAlert('success', 'Successfully Updated! <br><a href="/profile/list-jobs/?id=' + location_id + '">Back to Job List</a>');
+			formAlert('success', 'Successfully Updated! <br><a href="/find-posts/?id=' + location_id + '">Back to Job List</a>');
 
-			//window.location.href = "/profile/list-jobs/?id="+location_id;
+			//window.location.href = "/find-posts/?id="+location_id;
 			setTimeout(function () {
 				$('.btn-primary').attr("disabled", false);
 				$('.alert').hide();

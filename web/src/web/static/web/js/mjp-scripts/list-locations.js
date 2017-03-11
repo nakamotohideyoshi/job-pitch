@@ -1,5 +1,5 @@
 function goToLocations(id) {
-	window.location.href = "/profile/list-jobs/?id=" + id;
+	window.location.href = "/find-posts/?id=" + id;
 }
 $(function () {
 	// Run login check funtion with auto-redirect

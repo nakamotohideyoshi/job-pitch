@@ -182,12 +182,12 @@ $(function () {
 						contentType: false,
 						processData: false,
 						success: function (data) {
-							window.location.href = "/profile/list-jobs/?id=" + location_id;
+							window.location.href = "/find-posts/?id=" + location_id;
 						}
 					});
 
 				} else {
-					//window.location.href = "/profile/list-jobs/?id="+location_id;
+					//window.location.href = "/find-posts/?id="+location_id;
 					$.get("/api/user-locations/" + location_id, query).done(function (data) {
 						$('#currentLogo').attr('src', data.images[0].thumbnail).show();
 						var xhr = new XMLHttpRequest();
@@ -208,7 +208,7 @@ $(function () {
 									contentType: false,
 									processData: false,
 									success: function (data) {
-										window.location.href = "/profile/list-jobs/?id=" + location_id;
+										window.location.href = "/find-posts/?id=" + location_id;
 									}
 								});
 							}

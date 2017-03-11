@@ -42,8 +42,8 @@ $(function () {
 				+		'<td onclick="goToLocations('+obj.id+');">'+obj.description+'</td>'
 				+		'<td onclick="goToLocations('+obj.id+');">'+obj.jobs.length+'</td>'
 				+		'<td>'
-				+			'<a class="find-staff-btn btn btn-primary" href="/profile/edit-location/?id='+obj.id+'"><i class="fa fa-pencil"></i></a>'
-				+			' <a class="add-job-btn btn btn-primary" href="/profile/create-job/?companyid='+obj.business+'&id='+obj.id+'"><i class="fa fa-tasks"></i></a>'
+				+			'<a class="find-talent-btn btn btn-primary" href="/profile/edit-location/?id='+obj.id+'"><i class="fa fa-pencil"></i></a>'
+				+			' <a class="add-job-btn btn btn-primary" href="/profile/post-a-job/?companyid='+obj.business+'&id='+obj.id+'"><i class="fa fa-tasks"></i></a>'
 				+			' <a class="delete-action-btn btn btn-primary" href="javascript:deleteRow('+obj.id+',\'user-locations\' , \'jobs-list-\');"><i class="fa fa-trash-o"></i></a>'
 				+		'</td>'
 				+	'</tr>';

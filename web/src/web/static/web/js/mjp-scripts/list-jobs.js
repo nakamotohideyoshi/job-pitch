@@ -6,7 +6,7 @@ $(function() {
 	var location_id = QueryString.id;
 
 	// Add ID to links
-	$('.link-create-job').attr('href', '/profile/create-job/?id='+location_id);
+	$('.link-create-job').attr('href', '/profile/post-a-job/?id='+location_id);
 
 	//get status data
 
@@ -56,9 +56,9 @@ $(function() {
 					  var status_text = 'Closed'
 				  }
 				  if(imageThumb != ''){
-					$('#list-table tbody').append('<tr data-business-id="'+obj.id+'" class="jobs-list" id="jobs-list-'+obj.id+'"><td>'+obj.title+'</td><td class="text-center"><img width="150px" src="'+imageThumb+'"></td><td class="jobTableDescription">'+obj.description+'</td><td>'+status_text+'</td><td><a class="find-staff-btn btn btn-primary" href="/profile/edit-job/?id='+obj.id+'"><i class="fa fa-pencil"></i></a> <a class="delete-action-btn btn btn-primary" href="javascript:deleteRow('+obj.id+',\'user-jobs\' , \'jobs-list-\');"><i class="fa fa-trash-o"></i></a> <a class="find-staff-btn btn btn-primary" href="/find-staff/?id='+obj.id+'">Find Staff</a> <a class="view-applications-btn btn btn-primary" href="/applications/?job='+obj.id+'">View Applicants</a> <a class="view-applications-btn btn btn-primary" href="/connections/?job='+obj.id+'">Connections</a></td></tr>');
+					$('#list-table tbody').append('<tr data-business-id="'+obj.id+'" class="jobs-list" id="jobs-list-'+obj.id+'"><td>'+obj.title+'</td><td class="text-center"><img width="150px" src="'+imageThumb+'"></td><td class="jobTableDescription">'+obj.description+'</td><td>'+status_text+'</td><td><a class="find-talent-btn btn btn-primary" href="/profile/edit-job/?id='+obj.id+'"><i class="fa fa-pencil"></i></a> <a class="delete-action-btn btn btn-primary" href="javascript:deleteRow('+obj.id+',\'user-jobs\' , \'jobs-list-\');"><i class="fa fa-trash-o"></i></a> <a class="find-talent-btn btn btn-primary" href="/find-talent/?id='+obj.id+'">Find Staff</a> <a class="view-applications-btn btn btn-primary" href="/applications/?job='+obj.id+'">View Applicants</a> <a class="view-applications-btn btn btn-primary" href="/connections/?job='+obj.id+'">Connections</a></td></tr>');
 				  }else{
-					 $('#list-table tbody').append('<tr data-business-id="'+obj.id+'" class="jobs-list" id="jobs-list-'+obj.id+'"><td>'+obj.title+'</td><td class="text-center"><img width="150px" src="/static/web/images/no_image_available.png"></td><td class="jobTableDescription">'+obj.description+'</td><td>'+status_text+'</td><td><a class="find-staff-btn btn btn-primary" href="/profile/edit-job/?id='+obj.id+'"><i class="fa fa-pencil"></i></a> <a class="delete-action-btn btn btn-primary" href="javascript:deleteRow('+obj.id+',\'user-jobs\' , \'jobs-list-\');"><i class="fa fa-trash-o"></i></a> <a class="find-staff-btn btn btn-primary" href="/find-staff/?id='+obj.id+'">Find Staff</a> <a class="view-applications-btn btn btn-primary" href="/applications/?job='+obj.id+'">View Applicants</a> <a class="view-applications-btn btn btn-primary" href="/connections/?job='+obj.id+'">Connections</a></td></tr>');
+					 $('#list-table tbody').append('<tr data-business-id="'+obj.id+'" class="jobs-list" id="jobs-list-'+obj.id+'"><td>'+obj.title+'</td><td class="text-center"><img width="150px" src="/static/web/images/no_image_available.png"></td><td class="jobTableDescription">'+obj.description+'</td><td>'+status_text+'</td><td><a class="find-talent-btn btn btn-primary" href="/profile/edit-job/?id='+obj.id+'"><i class="fa fa-pencil"></i></a> <a class="delete-action-btn btn btn-primary" href="javascript:deleteRow('+obj.id+',\'user-jobs\' , \'jobs-list-\');"><i class="fa fa-trash-o"></i></a> <a class="find-talent-btn btn btn-primary" href="/find-talent/?id='+obj.id+'">Find Staff</a> <a class="view-applications-btn btn btn-primary" href="/applications/?job='+obj.id+'">View Applicants</a> <a class="view-applications-btn btn btn-primary" href="/connections/?job='+obj.id+'">Connections</a></td></tr>');
 				  }
 			  }
 			  $('#table-container').show();

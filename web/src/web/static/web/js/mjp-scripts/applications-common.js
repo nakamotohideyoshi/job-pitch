@@ -56,7 +56,7 @@ function renderApplications(userType, applications, $container){
 
 
 function goToMessages(query){
-	window.location.href = "/messages/"+serialize(query);
+	window.location.href = "/inbox/"+serialize(query);
 }
 
 

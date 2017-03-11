@@ -60,6 +60,13 @@ function setInboxContainerHeight(){
     'height': (inboxContentHeight) + 'px'
   });
 
+  var inboxContactsHeader = 133; //pixels
+  var inboxContactListHeight = inboxContentHeight - inboxContactsHeader;
+  $('.inbox-contacts-list').css({
+    'max-height': (inboxContactListHeight) + 'px',
+    'height': (inboxContactListHeight) + 'px'
+  });
+
   var inboxMessageHeight = $('.inbox-messages').height();
   var newMessageBoxHeight = $('.new-message-box').height();
   $('.message-history').css('max-height',  (inboxMessageHeight - newMessageBoxHeight - 20) + 'px');

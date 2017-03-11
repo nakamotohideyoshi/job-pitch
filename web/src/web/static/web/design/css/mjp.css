@@ -1157,6 +1157,93 @@ div.howitworks-page div.thumbnail{
 
 
 /*
+ * Find Talent Page
+ *
+ */
+.find-post.page {
+  font-size: 18px;
+  margin-top: 72px;
+  margin-bottom: 140px;
+}
+
+.find-post .header {
+  margin-bottom: 66px;
+}
+
+.find-post.page h5 {
+  margin-top: 0;
+}
+
+.find-post.page h4 small {
+  display: block;
+  margin-top: 10px;
+}
+
+.find-post.page .post {
+  padding-bottom: 10px;
+}
+
+.find-post.page .list-icon{
+  position: absolute;
+  left: 125px;
+  display: inline-flex;
+  top: 5px;
+}
+
+.find-post.page button {
+  font-size: 18px;
+  height: 51px;
+  margin-top: 1px;
+  margin-bottom: 10px;
+}
+
+.find-post.page button.category-list{
+  font-size: 19px;
+  padding-top: 10px;
+  padding-left: 0px;
+}
+
+.find-post.page input {
+  border: 2px solid #000;
+  border-left: none;
+  font-size: 18px;
+  height: 51px;
+  margin-top: 1px;
+}
+
+.find-post .availability {
+  font-size: 20px;
+}
+
+.find-post.page .staff-buttons a {
+  line-height: 0.5em;
+  padding-top: 15px;
+}
+
+.find-post.page a.delete-link {
+  font-size: 18px;
+  border-left: 1px solid #b4b4b4;
+  color: #b4b4b4;
+}
+
+.find-post.page .talent-location-icon {
+  font-size: 30px;
+  color: #b4b4b4;
+}
+
+.find-post.page .overview {
+  margin-top: 10px;
+}
+
+.find-post .category-list {
+  margin-top: -12px;
+  padding-top: 15px;
+  padding-bottom: 15px;
+  width: 168.22px;
+}
+
+
+/*
  *  Add Work Place Page
  *
  */

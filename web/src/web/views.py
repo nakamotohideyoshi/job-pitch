@@ -62,11 +62,11 @@ def list_businesses(request):
 def list_locations(request):
     return render(request, 'profile/list-locations.html')
 
-def list_jobs(request):
-    return render(request, 'profile/list-jobs.html')
-
 def post_a_job(request):
     return render(request, 'profile/post-a-job.html')
+
+def find_posts(request):
+    return render(request, 'find-posts.html')
 
 def edit_job(request):
     return render(request, 'profile/edit-job.html')

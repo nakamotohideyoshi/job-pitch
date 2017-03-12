@@ -419,16 +419,16 @@ border-color: rgba(136, 183, 213, 0);
   width: 29px;
 }
 
-.like-icon {
-  background: url(/static/web/design/images/like-love-icons.png) 0 0;
-  height: 49px;
-  width: 49px;
+.like.icon {
+  background: url(/static/web/design/images/like-love-icons.png) -10px -10px;
+  height: 34px;
+  width: 32px;
 }
 
-.love-icon {
-  background: url(/static/web/design/images/like-love-icons.png) 45px 0;
-  height: 49px;
-  width: 49px;
+.love.icon {
+  background: url(/static/web/design/images/like-love-icons.png) 36px -11px;
+  height: 34px;
+  width: 34px;
 }
 
 .list-icon {
@@ -1032,11 +1032,6 @@ div.howitworks-page div.thumbnail{
   padding-top: 15px;
   padding-bottom: 15px;
   border: 1px solid #cccccc;
-}
-
-.find-job h2 {
-  padding-top: 11px;
-  margin: 0;
 }
 
 .find-job a {

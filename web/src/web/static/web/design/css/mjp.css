@@ -174,23 +174,27 @@ a.sclabs-theme:hover {
 /*
  * Hacking Bootstrap Styles
  */
-.container-fluid{
+.container-fluid {
   width: 95%;
 }
 
-.form-horizontal .control-label{
+.form-horizontal .control-label {
   text-align: left;
   font-weight: 600;
   letter-spacing: 1px;
 }
 
-.form-control{
+.form-control {
   border: 2px solid #ccc;
   border-radius: 0px;
   height: 41px;
   font-size: 20px;
   padding: 10px 10px;
   letter-spacing: 1px;
+}
+
+select.form-control {
+  padding: 8px 10px;
 }
 
 .form-group {
@@ -403,9 +407,9 @@ border-color: rgba(136, 183, 213, 0);
 }
 
 .pitch-record.icon {
-  background: url(/static/web/design/images/pitch-icons.png) 0 0;
-  height: 50px;
-  width: 50px;
+  background: url(/static/web/design/images/pitch-icons.png) -12px -8px;
+  height: 35px;
+  width: 29px;
 }
 
 .pitch-replay-icon,
@@ -413,7 +417,6 @@ border-color: rgba(136, 183, 213, 0);
   background: url(/static/web/design/images/pitch-icons.png) -10px -61px;
   height: 29px;
   width: 29px;
-  float: left;
 }
 
 .like-icon {
@@ -1006,6 +1009,7 @@ div.howitworks-page div.thumbnail{
  */
 .edit-profile.content {
   margin-top: -28px;
+  margin-bottom: 110px;
 }
 
 /*

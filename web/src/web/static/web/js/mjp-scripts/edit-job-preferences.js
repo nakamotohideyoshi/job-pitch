@@ -112,7 +112,7 @@ $(function () {
 					}]);
 
 					setTimeout(function () {
-						window.location.href = "/jobs/";
+						window.location.href = "/find-jobs/";
 					}, 5000);
 
 					window.scrollBy(0, -50);

@@ -44,7 +44,7 @@ urlpatterns = [
     url(r'^applications/$', views.applications),
     url(r'^connections/$', views.connections),
     url(r'^inbox/$', views.inbox),
-    url(r'^jobs/$', views.jobs),
+    url(r'^find-jobs/$', views.find_jobs),
     url(r'^single-job/$', views.single_job),
     url(r'^dashboard/$', views.dashboard),
     url(r'^profile/edit-job-preferences/$', views.edit_job_preferences),

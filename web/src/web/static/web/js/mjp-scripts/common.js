@@ -633,13 +633,15 @@ $(function () {
 
   //$('.brand-pills > li.active').removeClass('active');
 
+  // Screens menu highlight when page are active
   var pathname = window.location.pathname.split('/').filter(function(value){return value != ""});
   var href = pathname[0];
+  $('a[href*="' + href + '"]','#myNavbar').parent().addClass('active');
+
   if(pathname[1] != undefined &&  pathname[1] !== ''){
     href = href + '/' + pathname[1];
+    $('a[href*="' + href + '"]').parent().addClass('active');
   }
-
-  $('a[href*="' + href + '"]').parent().addClass('active');
 
 	// Config Messenger (Notification Systems)
 	Messenger.options = {

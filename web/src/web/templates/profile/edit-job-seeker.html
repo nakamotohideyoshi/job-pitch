@@ -3,7 +3,7 @@
 {% block page-title %}
 <div class="row page-title">
   <div class="col-sm-12">
-    <h2>Profile Settings</h2>
+    <h2><strong>Profile Settings</strong></h2>
   </div>
 </div>
 {% endblock %}
@@ -228,40 +228,63 @@
 
             <div class="row">
               <div class="col-sm-12">
-                <h3><strong>Upload CV</strong></h3>
+                <h3><strong>Upload CV</strong> <small>View Current CV</small></h3>
               </div>
             </div>
 
-            <div class="form-group row">
+            <!-- div class="form-group row">
               <div class="col-sm-12">
                 <a href="#" target="_blank" id="CVcurrent">View Current CV</a>
                 <input type="file" data-error-field="cv"  class="form-control" name="cv" id="cv_upload">
                 <input type="hidden" name="order" value="0">
               </div>
+            </div -->
+
+            <div class="form-group">
+              <div class="col-sm-6">
+                <p class="bordered padded">
+                  <label for="file-upload" class="control-label file-upload"> Choose file</label>
+                  <input id="file-upload" type="file" name="image" id="work_place_image" accept="image/x-png, image/jpeg, image/png"/>
+                  <input type="hidden" name="order" value="0">
+                </p>
+              </div>
             </div>
+
+            <div class="form-group">
+              <div class="col-sm-6">
+                <div class="bordered padded" style="height: 58px;">
+                  <div class="dropbox-icon" style="float: left; margin-top: -7px;"></div>
+                  <label for="file-upload" class="col-sm-5 control-label file-upload"> Choose file</label>
+                  <input id="file-upload" type="file" name="image" accept="image/x-png, image/jpeg, image/png">
+                </div>
+              </div>
+            </div>
+
           </div>
 
           <div class="separator"></div>
 
-          <p><strong>Pitch:</strong></p>
+          <h6 style="letter-spacing: 1px;"><strong>Pitch:</strong></h6>
           <div class="form-group row">
             <div class="col-sm-3">
               <div id="pitchVideoCheck" style="width: 90%;"><span style="font-size: 2em; padding: 35px;" class="glyphicon glyphicon-refresh glyphicon-refresh-animate"></span></div>
             </div>
             <div class="col-sm-6">
               <div class="row">
-                <a href="/profile/edit-pitch/">
-                  <div class="col-sm-1 pitch-record icon"></div>
-                  <div class="col-sm-10"><p style="margin-top: 15px;">Record new pitch</p></div>
-                </a>
+                <label class="col-sm-12 control-label">
+                  <span class="pitch-record icon">&nbsp</span><span>Record new pitch</span>
+                </label>
               </div>
               <div class="row">
-                <a href="/profile/viewpitch/">
-                  <div class="col-sm-1 pitch-replay icon"></div>
-                  <div class="col-sm-10"><p style="margin-top: 15px;">Retake pitch</p></div>
-                </a>
+                <label class="col-sm-12 control-label">
+                  <span class="pitch-replay icon">&nbsp</span><span>Retake pitch</span>
+                </label>
               </div>
             </div>
+              <!-- a href="/profile/edit-pitch/" class="row">
+                <img class="col-sm-1 pitch-record icon">Record new pitch</a>
+              <a href="/profile/viewpitch/" class="row">
+                <img class="col-sm-1 pitch-replay icon">Retake pitch</a -->
             <div class="col-sm-3 text-right sclabs-theme">
               <label class="checkbox-inline">
                 <input type="checkbox" id="pitch_public" name="pitch_public" value="true" data-toggle="toggle" data-style="ios"data-onstyle="primary" checked>

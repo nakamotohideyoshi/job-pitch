@@ -88,8 +88,8 @@ def connections(request):
 def job_preferences(request):
     return render(request, 'profile/job-preferences.html')
 
-def jobs(request):
-    return render(request, 'jobs.html')
+def find_jobs(request):
+    return render(request, 'find-jobs.html')
 
 def single_job(request):
     return render(request, 'single-job.html')

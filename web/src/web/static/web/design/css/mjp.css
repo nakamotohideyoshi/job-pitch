@@ -1026,6 +1026,11 @@ div.howitworks-page div.thumbnail{
   margin-bottom: 110px;
 }
 
+.edit-profile.content .row:first-child h6 {
+  padding-top: 6px;
+}
+
+
 /*
  * Match Profile Page
  */

@@ -735,4 +735,15 @@ $(function () {
 	});
 
   $("input[type='checkbox']").bootstrapToggle();
+
+  /* For not selected or default option on SELECT DOM element */
+  $("select").on('change',function(){
+    var sel = this;
+    if(sel.options[sel.selectedIndex].value == ''){
+      sel.style.color = '#999';
+    } else {
+      sel.style.color = 'black';
+    }
+  });
+
 });

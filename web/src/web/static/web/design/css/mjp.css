@@ -80,6 +80,10 @@ label, .label {
   letter-spacing: 1px;
 }
 
+p {
+  font-size: 18px;
+}
+
 input[type="file"] {
   display: none;
 }
@@ -1032,9 +1036,26 @@ div.howitworks-page div.thumbnail{
 
 
 /*
+ * Change Passowrd Page
+ */
+.change-password.content {
+  margin-top: 53px;
+  margin-bottom: 80px;
+}
+
+
+/*
+ * Notification Settings Page
+ */
+.notifications-settings.content {
+  margin-top: 53px;
+  margin-bottom: 80px;
+}
+
+
+/*
  * Match Profile Page
  */
-
 .match-profile.content {
   margin-top: 12px;
   margin-bottom: 80px;

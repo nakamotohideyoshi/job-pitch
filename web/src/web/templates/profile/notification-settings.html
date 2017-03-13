@@ -1,16 +1,20 @@
 {% extends "mjp_user_base.html" %}
 
 
-{% block page-title %}<h2 class="page-header">Notification Settings</h2>{% endblock %}
+{% block page-title %}
+<div class="row page-title">
+  <div class="col-xs-12">
+    <h2><strong>Notification Settings</strong></h2>
+  </div>
+</div>
+{% endblock %}
 
 
 {% block content %}
-  <div class="col-sm-7 col-sm-offset-1">
+  <div class="col-sm-7 notifications-settings content">
     <div class="row">
       <div class="col-md-10 col-md-offset-1">
         <form role="form"  method="post" id="job-preferences">
-          <div class="alert" role="alert"></div>
-
           <div class="row">
             <div class="col-sm-12">
               <h3><strong>Messages</strong></h3>

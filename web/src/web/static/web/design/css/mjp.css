@@ -77,6 +77,7 @@ label, .label {
 
 .h6, h6 {
   font-size: 18px;
+  letter-spacing: 1px;
 }
 
 input[type="file"] {
@@ -1024,6 +1025,11 @@ div.howitworks-page div.thumbnail{
   margin-top: -28px;
   margin-bottom: 110px;
 }
+
+.edit-profile.content .row:first-child h6 {
+  padding-top: 6px;
+}
+
 
 /*
  * Match Profile Page

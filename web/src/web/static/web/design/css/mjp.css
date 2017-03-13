@@ -92,6 +92,7 @@ input[type="file"] {
 }
 
 
+
 /*
  * SCLABS theme
  */
@@ -193,9 +194,21 @@ a.sclabs-theme:hover {
   letter-spacing: 1px;
 }
 
+/* For not selected option on SELECT DOM element */
 select.form-control {
+  color: #999;
   padding: 8px 10px;
 }
+
+option {
+  color: black;
+}
+
+option[value=""] {
+  color: #999;
+}
+/* End */
+
 
 .form-group {
   margin-bottom: 24px;

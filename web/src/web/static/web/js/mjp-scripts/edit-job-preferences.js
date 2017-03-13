@@ -47,7 +47,7 @@ $(function () {
 			profile_id = data.profile;
 
 			if (data.profile == null) {
-				window.location.href = "/profile/job-preferences/";
+				window.location.href = "/profile/edit-job-preferences/";
 			}
 
 			$.get("/api/job-profiles/" + data.profile, {

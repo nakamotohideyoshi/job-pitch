@@ -1026,6 +1026,16 @@ div.howitworks-page div.thumbnail{
 }
 
 /*
+ * Match Profile Page
+ */
+
+.match-profile.content {
+  margin-top: 12px;
+  margin-bottom: 80px;
+}
+
+
+/*
  * Find a Job Page
  */
 .find-job.page {

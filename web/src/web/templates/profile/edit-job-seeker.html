@@ -260,6 +260,16 @@
               </div>
             </div>
 
+            <div class="form-group row">
+              <div class="col-sm-1 text-left sclabs-theme">
+                <label class="checkbox-inline">
+                  <input type="checkbox" id="has_references" name="has_references" value="true" data-toggle="toggle" data-style="ios" checked>
+                </label>
+              </div>
+              <label class="col-sm-4 control-label" style="padding-left: 30px;">References Available</label>
+            </div>
+
+
           </div>
 
           <div class="separator"></div>
@@ -290,6 +300,15 @@
                 <input type="checkbox" id="pitch_public" name="pitch_public" value="true" data-toggle="toggle" data-style="ios"data-onstyle="primary" checked>
               </label>
             </div>
+          </div>
+
+          <div class="form-group row">
+            <div class="col-sm-1 text-left sclabs-theme">
+              <label class="checkbox-inline">
+                <input type="checkbox" id="has_references" name="has_references" value="true" data-toggle="toggle" data-style="ios" checked>
+              </label>
+            </div>
+            <label class="col-sm-10 control-label">All the information provided is truthful to the best of the of my knowledge</label>
           </div>
 
           {% csrf_token %}

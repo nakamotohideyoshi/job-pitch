@@ -65,7 +65,7 @@ $(function () {
 			processData: false
 
 		}).done(function (data) {
-			window.location.href = "/profile/job-preferences";
+			window.location.href = "/profile/edit-job-preferences";
 
 		}).fail(function (data) {
 			var messageError = '';

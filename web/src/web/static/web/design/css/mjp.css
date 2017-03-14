@@ -151,6 +151,10 @@ a.sclabs-theme:hover {
   padding-top: 15px;
 }
 
+button.btn.sclabs-theme {
+  padding-top: 2px;
+}
+
 .btn-primary.sclabs-theme:hover {
   background-color: #007C6E;
   border-color: #007C6E;

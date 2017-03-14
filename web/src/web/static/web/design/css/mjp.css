@@ -301,6 +301,12 @@ option[value=""] {
   margin-bottom: 10px;
 }
 
+small.as-block {
+  display: block;
+  margin-top: 5px;
+}
+
+
 /* Arrow boxes */
 .arrow-box{
   padding: 20px;

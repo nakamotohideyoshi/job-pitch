@@ -36,9 +36,7 @@ class ResetPasswordController: MJPController {
             API.shared().resetPassword(email: emailField.text!, success: { (_) in
                 AppHelper.hideLoading()
                 self.dismiss(animated: true, completion: nil)
-            }) { (message, errors) in
-                self.handleErrors(message: message, errors: errors)
-            }
+            }, failure: self.handleErrors)
         }
         
     }

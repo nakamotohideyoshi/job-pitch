@@ -19,8 +19,12 @@ class ApplicationListController: SearchController {
     var isConnectBtn = false
     var isShortlisted = false
     
-    var searchJob: Job!
+    var job: Job!
     var mode = ""   // if "", applications
+    
+    var status: NSNumber!
+    
+    static var refreshRequest = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -41,49 +45,55 @@ class ApplicationListController: SearchController {
         } else if isRecruiter {
             emptyView.text = "No candidates have applied for this job yet. Once that happens, their applications will appear here."
         } else {
-            emptyView.text = ""
+            emptyView.text = "You have no applications."
         }
         
         tableView.addPullToRefresh {
-            self.getData()
+            self.loadData()
         }
         
-        tableView.triggerPullToRefresh()
-        
-    }
-    
-    func getData() {
-        
-        var status: NSNumber!
         if isRecruiter {
             let statusName = isApplication ? ApplicationStatus.APPLICATION_CREATED: ApplicationStatus.APPLICATION_ESTABLISHED
             status = AppData.getApplicationStatusByName(statusName).id
         }
         
-        API.shared().loadApplicationsForJob(jobId: searchJob?.id, status: status, shortlisted: isShortlisted, success: { (data) in
+        ApplicationListController.refreshRequest = true
+        
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        if ApplicationListController.refreshRequest {
+            ApplicationListController.refreshRequest = false
+            AppHelper.showLoading("Loading...")
+            loadData()
+        }
+    }
+    
+    func loadData() {
+        
+        API.shared().loadApplicationsForJob(jobId: job?.id, status: status, shortlisted: isShortlisted, success: { (data) in
+            AppHelper.hideLoading()
             self.allData = NSMutableArray()
             for application in data as! [Application] {
-                if (status == nil || status == application.status) && (!self.isShortlisted || application.shortlisted == self.isShortlisted) {
+                if (self.status == nil || self.status == application.status) && (!self.isShortlisted || application.shortlisted == self.isShortlisted) {
                     self.allData.add(application)
                 }
             }
-            self.data = self.allData
-            self.emptyView.isHidden = self.allData.count > 0            
-            self.tableView.reloadData()
+            self.filter()
+            self.emptyView.isHidden = self.allData.count > 0
             self.tableView.pullToRefreshView.stopAnimating()
-        }) { (message, errors) in
-            self.handleErrors(message: message, errors: errors)
-        }
+        }, failure: self.handleErrors)
         
     }
     
     override func filterItem(item: Any, text: String) -> Bool {
         
         let application = item as! Application
-        let businessName = application.job.locationData.businessData.name + ", " + application.job.locationData.name
+        let businessName = application.job.getBusinessName()
         
         if isRecruiter {
-            let name = application.jobSeeker.firstName + " " + application.jobSeeker.lastName
+            let name = application.jobSeeker.getFullName()
             return  name.lowercased().contains(text) ||
                     application.job.title.lowercased().contains(text) ||
                     businessName.lowercased().contains(text) ||
@@ -98,7 +108,7 @@ class ApplicationListController: SearchController {
     
     static func pushController(job: Job!, mode: String!) {
         let controller = AppHelper.mainStoryboard.instantiateViewController(withIdentifier: "ApplicationList") as! ApplicationListController
-        controller.searchJob = job
+        controller.job = job
         controller.mode = mode
         AppHelper.getFrontController().navigationController?.pushViewController(controller, animated: true)
     }
@@ -139,15 +149,15 @@ extension ApplicationListController: UITableViewDataSource {
                             
                             if self.isConnectBtn {
                                 PopupController.showYellow("Are you sure you want to connect this application?", ok: "Connect", okCallback: {
-                                    cell.hideSwipe(animated: true)
-                                    AppHelper.showLoading("Connecting...")
-                                    self.apply()
-                                }, cancel: "Cancel", cancelCallback: {
-                                    cell.hideSwipe(animated: true)
-                                })
+                                    self.apply(callback: {
+                                        AppHelper.showLoading("")
+                                        cell.hideSwipe(animated: true)
+                                        self.loadData()
+                                    })
+                                }, cancel: "Cancel", cancelCallback: nil)
                             } else {
-                                cell.hideSwipe(animated: true)
-                                self.apply()
+                                ApplicationListController.refreshRequest = true
+                                MessageController0.showModal(application: self.selectedItem as! Application)
                             }
                             
                             return false
@@ -167,9 +177,7 @@ extension ApplicationListController: UITableViewDataSource {
                                     self.selectedItem = application
                                     cell.hideSwipe(animated: true)
                                     self.remove()
-                                }, cancel: "Cancel", cancelCallback: {
-                                    cell.hideSwipe(animated: true)
-                                })
+                                }, cancel: "Cancel", cancelCallback: nil)
                                 
                                 return false
                 })
@@ -189,18 +197,19 @@ extension ApplicationListController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
+        ApplicationListController.refreshRequest = true
+        
         let application = data[indexPath.row] as! Application
         self.selectedItem = application
         
         if isRecruiter {
             
-            JobSeekerDetailController.pushController(jobSeeker: application.jobSeeker,
+            JobSeekerDetailController.pushController(jobSeeker: nil,
                                                      application: application,
-                                                     job: application.job,
                                                      chooseDelegate: self)
         } else {
             
-            ApplicationDetailController.pushController(job: application.job,
+            ApplicationDetailController.pushController(job: nil,
                                                application: application,
                                                chooseDelegate: self)
         }
@@ -211,27 +220,25 @@ extension ApplicationListController: UITableViewDelegate {
 
 extension ApplicationListController: ChooseDelegate {
     
-    func apply() {
+    func apply(callback: (()->Void)!) {
         
-        if isConnectBtn {
-            
-            let update = ApplicationStatusUpdate()
-            update.id = (self.selectedItem as! Application).id
-            update.status = AppData.getApplicationStatusByName(ApplicationStatus.APPLICATION_ESTABLISHED).id
-            
-            API.shared().updateApplicationStatus(update: update, success: { (data) in
-                AppHelper.hideLoading()
-                self.tableView.triggerPullToRefresh()
-            }) { (message, errors) in
+        let update = ApplicationStatusUpdate()
+        update.id = (self.selectedItem as! Application).id
+        update.status = AppData.getApplicationStatusByName(ApplicationStatus.APPLICATION_ESTABLISHED).id
+        
+        AppHelper.showLoading("")
+        API.shared().updateApplicationStatus(update: update, success: { (data) in
+            AppHelper.hideLoading()
+            if callback != nil {
+                callback()
+            }
+        }) { (message, errors) in
+            if errors?["NO_TOKENS"] != nil {
+                PopupController.showGray("You have no credits left so cannot compete this connection. Credits cannot be added through the app, please go to our web page.", ok: "Ok")
+            } else {
                 self.handleErrors(message: message, errors: errors)
             }
-            
-        } else {
-            
-            MessageController0.showModal(application: selectedItem as! Application)
-            
         }
-        
     }
     
     func remove() {
@@ -243,9 +250,7 @@ extension ApplicationListController: ChooseDelegate {
         API.shared().deleteApplication(id: application.id, success: {
             AppHelper.hideLoading()
             self.removeItem(self.selectedItem)
-        }) { (message, errors) in
-            self.handleErrors(message: message, errors: errors)
-        }
+        }, failure: self.handleErrors)
         
     }
     

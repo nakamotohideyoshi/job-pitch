@@ -21,10 +21,10 @@ class LoginController: MJPController {
     
     static var userType: Int {
         get {
-            return UserDefaults.standard.integer(forKey: "usertype")
+            return UserDefaults.standard.integer(forKey: AppData.email)
         }
         set(newUserType) {
-            UserDefaults.standard.set(newUserType, forKey: "usertype")
+            UserDefaults.standard.set(newUserType, forKey: AppData.email)
             UserDefaults.standard.synchronize()
         }
     }
@@ -76,9 +76,9 @@ class LoginController: MJPController {
         
         AppHelper.showLoading("Loading...")
         
-        API.shared().getUser(success: { (user) in
+        API.shared().getUser(success: { (data) in
             
-            AppData.user = user as! User
+            AppData.user = data as! User
             
             AppData.loadData(success: {
                 
@@ -88,18 +88,16 @@ class LoginController: MJPController {
                     
                 } else if AppData.user.isJobSeeker() {
                     
-                    AppData.loadJobSeeker(success: {
-                        
-                        if AppData.jobSeeker.profile != nil {
+                    API.shared().loadJobSeekerWithId(id: AppData.user.jobSeeker, success: { (data) in
+                        let jobSeeker = data as! JobSeeker
+                        AppData.existProfile = jobSeeker.profile != nil
+                        if AppData.existProfile {
                             SideMenuController.pushController(id: "find_job")
                         } else {
                             SideMenuController.pushController(id: "job_profile")
                         }
-                        
-                    }) { (message, errors) in
-                        self.handleErrors(message: message, errors: errors)
-                    }
-                    
+                    }, failure: self.handleErrors)
+
                 } else {
                     
                     switch LoginController.userType {
@@ -123,13 +121,9 @@ class LoginController: MJPController {
                     
                 }
                 
-            }) { (message, errors) in
-                self.handleErrors(message: message, errors: errors)
-            }
+            }, failure: self.handleErrors)
             
-        }) { (message, errors) in
-            self.handleErrors(message: message, errors: errors)
-        }
+        }, failure: self.handleErrors)
         
     }
 
@@ -143,9 +137,7 @@ class LoginController: MJPController {
                                success: { (authToken) in
                                 API.shared().setToken((authToken as! AuthToken).key)
                                 self.loadData()
-            }) { (message, errors) in
-                self.handleErrors(message: message, errors: errors)
-            }
+            }, failure: self.handleErrors)
         }
         
     }
@@ -154,17 +146,16 @@ class LoginController: MJPController {
 
         if valid() {
             
-            LoginController.userType = (sender as! UIButton).tag
-            
             AppHelper.showLoading("Signing up...")
+            
+            AppData.email = emailField.text
+            LoginController.userType = (sender as! UIButton).tag
             
             API.shared().register(email: emailField.text!, password: passwordField.text!,
                                   success: { (authToken) in
                                     API.shared().setToken((authToken as! AuthToken).key)
                                     self.loadData()
-            }) { (message, errors) in
-                self.handleErrors(message: message, errors: errors)
-            }
+            }, failure: self.handleErrors)
         }
         
     }

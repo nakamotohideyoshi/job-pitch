@@ -53,9 +53,7 @@ class ChangePasswordController: MJPController {
                                         success: { (_) in
                                             AppData.password = self.password1.text
                                             PopupController.showGreen("Success!", ok: "OK", okCallback: nil, cancel: nil, cancelCallback: nil)
-            }) { (message, errors) in
-                self.handleErrors(message: message, errors: errors)
-            }
+            }, failure: self.handleErrors)
             
         }
         

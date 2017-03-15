@@ -37,6 +37,7 @@ class JobSeekerProfileController: MJPController {
     @IBOutlet weak var hasReferences: UISwitch!
     @IBOutlet weak var tickBox: UISwitch!
     @IBOutlet weak var playButtonView: UIView!
+    @IBOutlet weak var cvViewButtonHeightConstraint: NSLayoutConstraint!
     
     var ipc: UIImagePickerController!
     
@@ -46,18 +47,16 @@ class JobSeekerProfileController: MJPController {
     var nationalityNames = [String]()
     var selectedNationalityNames = [String]()
     
+    var cvName: String!
     var cvdata: Data!
     var videoUrl: URL!
     
-    var pitch: Pitch!
+    var jobSeeker: JobSeeker!
     
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        // Do any additional setup after loading the view.
-        
-        pitch = AppData.jobSeeker?.getPitch()
-        load()
+        // load sex data
         
         for sex in AppData.sexes as! [Sex] {
             sexNames.append(sex.name)
@@ -73,6 +72,8 @@ class JobSeekerProfileController: MJPController {
             })
         }
         
+        // load nationality data
+        
         for nationality in AppData.nationalities as! [Nationality] {
             nationalityNames.append(nationality.name)
         }
@@ -87,6 +88,20 @@ class JobSeekerProfileController: MJPController {
             })
         }
         
+        // load jobseeker data
+        
+        if (AppData.user.jobSeeker != nil) {
+            AppHelper.showLoading("Loading...")
+            API.shared().loadJobSeekerWithId(id: AppData.user.jobSeeker, success: { (data) in
+                AppHelper.hideLoading()
+                self.jobSeeker = data as! JobSeeker
+                self.load()
+                AppData.existProfile = self.jobSeeker.profile != nil
+            }, failure: self.handleErrors)
+        } else {
+            load()
+        }
+        
     }
     
     override func getRequiredFields() -> [String: NSArray] {
@@ -99,13 +114,11 @@ class JobSeekerProfileController: MJPController {
     
     func load() {
         
-        email.text = AppData.email
-        
-        if let jobSeeker = AppData.jobSeeker {
-            
+        if jobSeeker != nil {
             active.isOn = jobSeeker.active
             firstName.text = jobSeeker.firstName.capitalized
             lastName.text = jobSeeker.lastName.capitalized
+            email.text = jobSeeker.email
             emailPublic.isOn = jobSeeker.emailPublic
             mobile.text = jobSeeker.mobile
             mobilePublic.isOn = jobSeeker.mobilePublic
@@ -130,11 +143,15 @@ class JobSeekerProfileController: MJPController {
             
             descView.text = jobSeeker.desc
             
-            playButtonView.isHidden = pitch?.video == nil
+            playButtonView.isHidden = jobSeeker.getPitch()?.video == nil
             
             hasReferences.isOn = jobSeeker.hasReferences
             tickBox.isOn = jobSeeker.truthConfirmation
-           
+            
+            cvViewButtonHeightConstraint.constant = jobSeeker.cv != nil ? 50 : 0
+        } else {
+            email.text = AppData.email
+            cvViewButtonHeightConstraint.constant = 0
         }
     }
     
@@ -154,6 +171,10 @@ class JobSeekerProfileController: MJPController {
     
     @IBAction func cvHelpAction(_ sender: Any) {
         PopupController.showGray("CV summary is what the recruiter first see, write if you have previous relevant experience where and for how long.", ok: "Close")
+    }
+    
+    @IBAction func cvViewAction(_ sender: Any) {
+        UIApplication.shared.openURL(URL(string: jobSeeker.cv)!)
     }
     
     @IBAction func cvAddAction(_ sender: Any) {
@@ -186,6 +207,7 @@ class JobSeekerProfileController: MJPController {
     }
     @IBAction func cvRemoveAction(_ sender: Any) {
         cvdata = nil
+        cvName = ""
         cvFileName.text = ""
         cvRemoveButton.isHidden = true
     }
@@ -196,7 +218,7 @@ class JobSeekerProfileController: MJPController {
     
     @IBAction func pitchRecordAction(_ sender: Any) {
         
-        if pitch == nil {
+        if jobSeeker.getPitch() == nil {
             PopupController.showGreen("Here you can record your 30 second pitch. The 30 sec. video will be viewed by prospective employers.", ok: "OK", okCallback: {
                 self.showCamera()
             }, cancel: nil, cancelCallback: nil)
@@ -219,7 +241,7 @@ class JobSeekerProfileController: MJPController {
         var url = videoUrl
         
         if url == nil {
-            if let video = pitch?.video {
+            if let video = jobSeeker.getPitch()?.video {
                 url = URL(string: video)
             }
         }
@@ -243,7 +265,9 @@ class JobSeekerProfileController: MJPController {
             return
         }
         
-        let jobSeeker = JobSeeker()
+        if jobSeeker == nil {
+            jobSeeker = JobSeeker()
+        }
         jobSeeker.active = active.isOn
         jobSeeker.firstName = firstName.text?.capitalized
         jobSeeker.lastName = lastName.text?.capitalized
@@ -282,13 +306,7 @@ class JobSeekerProfileController: MJPController {
         jobSeeker.desc = descView.text
         jobSeeker.hasReferences = hasReferences.isOn
         jobSeeker.truthConfirmation = tickBox.isOn
-        jobSeeker.cv = cvFileName.text
-        
-        if AppData.jobSeeker != nil {
-            jobSeeker.id = AppData.jobSeeker.id
-            jobSeeker.telephone = AppData.jobSeeker.telephone
-            jobSeeker.telephonePublic = AppData.jobSeeker.telephonePublic
-        }
+        jobSeeker.cv = cvName
         
         let hud = AppHelper.createLoading()
         if cvdata != nil {
@@ -301,14 +319,15 @@ class JobSeekerProfileController: MJPController {
                                         hud.progress = Float(totalBytesWritten) / Float(totalBytesExpectedToWrite)
                                    },
                                    success: { (data) in
-            
-            AppData.jobSeeker = data as! JobSeeker
-            AppData.user.jobSeeker = AppData.jobSeeker.id
+                                    
+            self.jobSeeker = data as! JobSeeker
+            self.cvViewButtonHeightConstraint.constant = self.jobSeeker.cv != nil ? 50 : 0
+            AppData.user.jobSeeker = self.jobSeeker.id
+            AppData.existProfile = self.jobSeeker.profile != nil
             
             if self.videoUrl != nil {
                 PitchController.uploadVideo(videoUrl: self.videoUrl, complete: { (pitch) in
                     if pitch != nil {
-                        self.pitch = pitch
                         self.videoUrl = nil
                         self.saveCompleted()
                     }
@@ -317,15 +336,13 @@ class JobSeekerProfileController: MJPController {
                 self.saveCompleted()
             }
             
-        }) { (message, errors) in
-            self.handleErrors(message: message, errors: errors)
-        }
+        }, failure: self.handleErrors)
         
     }
     
     func saveCompleted() {
         PopupController.showGreen("Success!", ok: "OK", okCallback: {
-            if AppData.profile == nil {
+            if self.jobSeeker.profile == nil {
                 SideMenuController.pushController(id: "job_profile")
             }
         }, cancel: nil, cancelCallback: nil)
@@ -344,7 +361,8 @@ extension JobSeekerProfileController: UIImagePickerControllerDelegate {
         }
         
         cvdata = UIImagePNGRepresentation(image)
-        cvFileName.text = "cv.jpg"
+        cvName = "cv.jpg"
+        cvFileName.text = "CV added, save to upload."
         cvRemoveButton.isHidden = false
         
         ipc.dismiss(animated: true, completion: nil)
@@ -361,7 +379,8 @@ extension JobSeekerProfileController: DropboxBrowserDelegate {
         let url = URL(fileURLWithPath: browser.downloadedFilePath)
         do {
             cvdata = try Data(contentsOf: url)
-            cvFileName.text = fileName
+            cvName = fileName
+            cvFileName.text = "CV added, save to upload."
             cvRemoveButton.isHidden = false
         } catch {
             print("error")

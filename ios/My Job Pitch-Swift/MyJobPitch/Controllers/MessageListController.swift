@@ -10,48 +10,34 @@ import UIKit
 import SVPullToRefresh
 
 class MessageListController: SearchController {
-
-    static var refreshRequest = false
     
     @IBOutlet weak var emptyView: UILabel!
     
-    var searchJob: Job!
+    var job: Job!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         title = "Messages"
 
-        // Do any additional setup after loading the view.
-        
         tableView.addPullToRefresh {
-            API.shared().loadApplicationsForJob(jobId: self.searchJob?.id, status: nil, shortlisted: false, success: { (data) in
-//                self.allData = NSMutableArray()
-//                let deletedID = AppData.getApplicationStatusByName(ApplicationStatus.APPLICATION_DELETED).id
-//                for application in data as! [Application] {
-//                    if application.status != deletedID {
-//                        self.allData.add(application)
-//                    }
-//                }
-                self.allData = data.mutableCopy() as! NSMutableArray
-                self.data = self.allData
-                self.emptyView.isHidden = self.allData.count > 0
-                self.tableView.reloadData()
-                self.tableView.pullToRefreshView.stopAnimating()
-            }) { (message, errors) in
-                self.handleErrors(message: message, errors: errors)
-            }
+            self.loadData()
         }
-        
-        MessageListController.refreshRequest = true
-        
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        if MessageListController.refreshRequest {
-            MessageListController.refreshRequest = false
-            tableView.triggerPullToRefresh()
-        }
+        AppHelper.showLoading("Loading...")
+        loadData()
+    }
+    
+    func loadData() {
+        API.shared().loadApplicationsForJob(jobId: job?.id, status: nil, shortlisted: false, success: { (data) in
+            AppHelper.hideLoading()
+            self.allData = data.mutableCopy() as! NSMutableArray
+            self.filter()
+            self.emptyView.isHidden = self.allData.count > 0
+            self.tableView.pullToRefreshView.stopAnimating()
+        }, failure: self.handleErrors)
     }
     
     override func filterItem(item: Any, text: String) -> Bool {
@@ -63,7 +49,7 @@ class MessageListController: SearchController {
     
     static func pushController(job: Job!) {
         let controller = AppHelper.mainStoryboard.instantiateViewController(withIdentifier: "MessageList") as! MessageListController
-        controller.searchJob = job
+        controller.job = job
         AppHelper.getFrontController().navigationController?.pushViewController(controller, animated: true)
     }
 
@@ -81,16 +67,18 @@ extension MessageListController: UITableViewDataSource {
         
         let application = data[indexPath.row] as! Application
         let lastMessage = application.messages.lastObject as! Message
+        let job = application.job!
         
         if AppData.user.isJobSeeker() {
             
-            if let image = application.job.getImage() {
+            if let image = job.getImage() {
                 AppHelper.loadImageURL(imageUrl: (image.thumbnail)!, imageView: cell.imgView, completion: nil)
             } else {
                 cell.imgView.image = UIImage(named: "default-logo")
             }
             
-            cell.titleLabel.text = application.job.locationData.businessData.name
+            cell.titleLabel.text = job.title
+            cell.subTitleLabel.text = job.getBusinessName();
             
         } else {
             
@@ -99,11 +87,9 @@ extension MessageListController: UITableViewDataSource {
             } else {
                 cell.imgView.image = UIImage(named: "no-img")
             }
-            cell.titleLabel.text = application.jobSeeker.firstName + " " + application.jobSeeker.lastName
-            
+            cell.titleLabel.text = application.jobSeeker.getFullName()
+            cell.subTitleLabel.text = String(format: "%@ (%@)", job.title, job.getBusinessName());
         }
-        
-        cell.subTitleLabel.text = String(format: "%@ (%@, %@)", application.job.title, application.job.locationData.name, application.job.locationData.businessData.name);
         
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "MMM dd, HH:mm a"

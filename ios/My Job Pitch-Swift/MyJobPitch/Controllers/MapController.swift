@@ -86,8 +86,9 @@ class MapController: UIViewController {
                 }
             }
             
-            self.complete?(self.currentPos, "", address)
-            self.dismiss(animated: true, completion: nil)
+            self.dismiss(animated: true, completion: {
+                self.complete?(self.currentPos, "", address)
+            })
             
         }
     }

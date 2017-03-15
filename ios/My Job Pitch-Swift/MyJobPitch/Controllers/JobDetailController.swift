@@ -21,9 +21,15 @@ class JobDetailController: MJPController {
         "find_talent", "applications", "connections", "shortlist", "messages"
     ]
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        updateJobInfo()
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        AppHelper.showLoading("Loading...")
+        API.shared().loadJob(id: job.id, success: { (data) in
+            AppHelper.hideLoading()
+            self.job = data as! Job
+            self.updateJobInfo()
+        }, failure: self.handleErrors)
     }
     
     func updateJobInfo() {
@@ -34,16 +40,11 @@ class JobDetailController: MJPController {
         }
         
         nameLabel.text = job.title
-        subTitle.text = job.locationData.businessData.name + ", " + job.locationData.name
+        subTitle.text = job.getBusinessName()
     }
     
     @IBAction func editJobAction(_ sender: Any) {
-        JobEditController.pushController(location: nil, job: job) { (job) in
-            BusinessListController.refreshRequest = true
-            BusinessDetailController.refreshRequest = true
-            self.job = job
-            self.updateJobInfo()
-        }
+        JobEditController.pushController(location: nil, job: job)
     }
     
     @IBAction func deleteJobAction(_ sender: Any) {
@@ -51,15 +52,10 @@ class JobDetailController: MJPController {
         PopupController.showYellow(message, ok: "Delete", okCallback: {
             
             AppHelper.showLoading("Deleting...")
-            
             API.shared().deleteJob(id: self.job.id, success: {
                 AppHelper.hideLoading()
-                BusinessListController.refreshRequest = true
-                BusinessDetailController.refreshRequest = true
                 _ = self.navigationController?.popViewController(animated: true)
-            }) { (message, errors) in
-                self.handleErrors(message: message, errors: errors)
-            }
+            }, failure: self.handleErrors)
             
         }, cancel: "Cancel", cancelCallback: nil)
     }

@@ -139,9 +139,9 @@ extension SideMenuController: UITableViewDataSource {
             cell.isUserInteractionEnabled = true
             let pers = item["per"]?.characters
             if AppData.user.isJobSeeker() || (!AppData.user.isRecruiter() && LoginController.userType == 1) {
-                if pers!.contains("J") && AppData.jobSeeker == nil {
+                if pers!.contains("J") && AppData.user.jobSeeker == nil {
                     cell.isUserInteractionEnabled = false
-                } else if pers!.contains("P") && AppData.profile == nil {
+                } else if pers!.contains("P") && !AppData.existProfile {
                     cell.isUserInteractionEnabled = false
                 }
             } else {

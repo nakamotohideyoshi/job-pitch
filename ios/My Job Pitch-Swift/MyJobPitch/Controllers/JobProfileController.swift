@@ -39,21 +39,16 @@ class JobProfileController: MJPController {
     var placeID: String!
     var placeName: String!
     
+    var jobSeeker: JobSeeker!
+    var profile: Profile!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        // Do any additional setup after loading the view.
         
         let iconView = UIImageView(image: UIImage(named: "location-icon"))
         iconView.contentMode = .scaleAspectFit
         iconView.frame = CGRect(x: 10, y: 7, width: 25, height: 26)
         locationButton.addSubview(iconView)
-        
-        // load profile
-        
-        if let profile = AppData.profile {
-            load(profile)
-        }
         
         // sector data
         
@@ -88,11 +83,6 @@ class JobProfileController: MJPController {
             })
         }
         
-        if selectedContractNames.count == 0 {
-            selectedContractNames.append("Any")
-        }
-        contractField.text = selectedContractNames.joined(separator: ", ")
-        
         // hours data
         
         hoursNames.append("Any")
@@ -110,11 +100,6 @@ class JobProfileController: MJPController {
             })
         }
         
-        if selectedHoursNames.count == 0 {
-            selectedHoursNames.append("Any")
-        }
-        hoursField.text = selectedHoursNames.joined(separator: ", ")
-        
         // searchRadius data
         
         for (_, name) in radiusData {
@@ -131,11 +116,25 @@ class JobProfileController: MJPController {
             })
         }
         
-        if selectedRadiusNames.count == 0 {
-            selectedRadiusNames.append(radiusData[2].1)
-        }
-        radiusField.text = selectedRadiusNames.joined(separator: ", ")
+        // load profile
         
+        AppHelper.showLoading("Loading...")
+        API.shared().loadJobSeekerWithId(id: AppData.user.jobSeeker, success: { (data) in
+            self.jobSeeker = data as! JobSeeker
+            if self.jobSeeker.profile != nil {
+                AppData.existProfile = true
+                API.shared().loadJobProfileWithId(id: self.jobSeeker.profile, success: { (data) in
+                    AppHelper.hideLoading()
+                    self.profile = data as! Profile
+                    self.load()
+                }, failure: self.handleErrors)
+            } else {
+                AppHelper.hideLoading()
+                self.load()
+            }
+            
+        }, failure: self.handleErrors)
+
     }
     
     override func getRequiredFields() -> [String: NSArray] {
@@ -146,48 +145,73 @@ class JobProfileController: MJPController {
     }
     
     
-    func load(_ profile: Profile) {
+    func load() {
         
-        for sector in AppData.sectors as! [Sector] {
-            if profile.sectors != nil && profile.sectors.contains(sector.id) {
-                selectedSectorNames.append(sector.name)
+        if profile?.sectors != nil {
+            for sector in AppData.sectors as! [Sector] {
+                if profile.sectors.contains(sector.id) {
+                    selectedSectorNames.append(sector.name)
+                }
             }
         }
+        
         sectorsField.text = selectedSectorNames.joined(separator: ", ")
         
         // contract data
         
-        for contract in AppData.contracts as! [Contract] {
-            if profile.contract != nil && profile.contract == contract.id {
-                selectedContractNames.append(contract.name)
-                break
+        if profile?.contract != nil {
+            for contract in AppData.contracts as! [Contract] {
+                if profile.contract == contract.id {
+                    selectedContractNames.append(contract.name)
+                    break
+                }
             }
         }
+        
+        if selectedContractNames.count == 0 {
+            selectedContractNames.append("Any")
+        }
+        contractField.text = selectedContractNames.joined(separator: ", ")
         
         // hours data
         
-        for hours in AppData.hours as! [Hours] {
-            if profile.hours != nil && profile.hours == hours.id {
-                selectedHoursNames.append(hours.name)
-                break
+        if profile?.hours != nil {
+            for hours in AppData.hours as! [Hours] {
+                if profile.hours == hours.id {
+                    selectedHoursNames.append(hours.name)
+                    break
+                }
             }
         }
+        
+        if selectedHoursNames.count == 0 {
+            selectedHoursNames.append("Any")
+        }
+        hoursField.text = selectedHoursNames.joined(separator: ", ")
         
         // searchRadius data
         
-        for (value, name) in radiusData {
-            if profile.searchRadius != nil && profile.searchRadius == value as NSNumber {
-                selectedRadiusNames.append(name)
-                break
+        if profile?.searchRadius != nil {
+            for (value, name) in radiusData {
+                if profile.searchRadius == value as NSNumber {
+                    selectedRadiusNames.append(name)
+                    break
+                }
             }
         }
         
-        latitude = profile.latitude
-        longitude = profile.longitude
-        placeID = profile.placeID
-        placeName = profile.placeName
+        if selectedRadiusNames.count == 0 {
+            selectedRadiusNames.append(radiusData[2].1)
+        }
+        radiusField.text = selectedRadiusNames.joined(separator: ", ")
         
-        addressField.text = placeName
+        if profile != nil {
+            latitude = profile.latitude
+            longitude = profile.longitude
+            placeID = profile.placeID
+            placeName = profile.placeName
+            addressField.text = placeName
+        }
         
     }
     
@@ -212,7 +236,10 @@ class JobProfileController: MJPController {
         
         AppHelper.showLoading("Saving...")
         
-        let profile = Profile()
+        if profile == nil {
+            profile = Profile()
+            profile.jobSeeker = AppData.user.jobSeeker
+        }
         
         // sector data
         
@@ -258,27 +285,24 @@ class JobProfileController: MJPController {
         profile.longitude = longitude
         profile.placeID = placeID
         profile.placeName = placeName
-        
-        profile.jobSeeker = AppData.user.jobSeeker
-        profile.id = AppData.profile?.id
+        profile.postcodeLookup = ""
         
         API.shared().saveJobProfile(profile: profile, success: { (data) in
             
+            self.profile = data as! Profile
+            
             PopupController.showGreen("Success!", ok: "OK", okCallback: {
-                if AppData.profile == nil {
-                    if AppData.jobSeeker?.getPitch() == nil {
+                if self.jobSeeker.profile == nil {
+                    AppData.existProfile = true
+                    if self.jobSeeker.getPitch() == nil {
                         SideMenuController.pushController(id: "add_record")
                     } else {
                         SideMenuController.pushController(id: "find_job")
                     }
                 }
-                AppData.profile = data as! Profile
-                
             }, cancel: nil, cancelCallback: nil)
             
-        }) { (message, errors) in
-            self.handleErrors(message: message, errors: errors)
-        }
+        }, failure: self.handleErrors)
         
     }
     

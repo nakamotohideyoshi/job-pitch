@@ -42,6 +42,21 @@ class SearchController: MJPController {
         return true;
     }
     
+    func filter() {
+        if searchBar.text == "" {
+            data = allData
+        } else {
+            let str = searchBar.text?.lowercased()
+            data = NSMutableArray()
+            for item in allData {
+                if filterItem(item: item, text: str!) {
+                    data.add(item)
+                }
+            }
+        }
+        tableView.reloadData()
+    }
+    
     func searchAction(_ sender: Any) {
         
         self.navigationItem.rightBarButtonItem = nil
@@ -68,29 +83,13 @@ class SearchController: MJPController {
         }
         
     }
-
+    
 }
 
 extension SearchController: UISearchBarDelegate {
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        
-        if searchText == "" {
-            data = allData
-            tableView.reloadData()
-            return;
-        }
-        
-        let str = searchText.lowercased()
-        data = NSMutableArray()
-        for item in allData {
-            if filterItem(item: item, text: str) {
-                data.add(item)
-            }
-        }
-        
-        tableView.reloadData()
-        
+        filter()
     }
     
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {

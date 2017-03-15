@@ -110,9 +110,9 @@ static NSUInteger const kDBSignOutAlertViewTag = 3;
     
     // Setup Navigation Bar, use different styles for iOS 7 and higher
     UIBarButtonItem *rightButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Done", @"DropboxBrowser: Done Button to dismiss the DropboxBrowser View Controller") style:UIBarButtonItemStyleDone target:self action:@selector(removeDropboxBrowser)];
-    // UIBarButtonItem *leftButton = [[UIBarButtonItem alloc] initWithTitle:@"Logout" style:UIBarButtonItemStylePlain target:self action:@selector(logoutDropbox)];
+    UIBarButtonItem *leftButton = [[UIBarButtonItem alloc] initWithTitle:@"Logout" style:UIBarButtonItemStylePlain target:self action:@selector(logoutOfDropbox)];
     self.navigationItem.rightBarButtonItem = rightButton;
-    // self.navigationItem.leftBarButtonItem = leftButton;
+    self.navigationItem.leftBarButtonItem = leftButton;
     
     if (self.shouldDisplaySearchBar == YES) {
         // Create Search Bar
@@ -177,7 +177,11 @@ static NSUInteger const kDBSignOutAlertViewTag = 3;
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     if (![self isDropboxLinked]) {
-        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Login to Dropbox", @"DropboxBrowser: Alert Title") message:[NSString stringWithFormat:NSLocalizedString(@"%@ is not linked to your Dropbox. Would you like to login now and allow access?", @"DropboxBrowser: Alert Message. 'APP NAME' is not linked to Dropbox..."), [[NSBundle mainBundle] infoDictionary][@"CFBundleDisplayName"]] delegate:self cancelButtonTitle:NSLocalizedString(@"Cancel", @"DropboxBrowser: Alert Button") otherButtonTitles:NSLocalizedString(@"Login", @"DropboxBrowser: Alert Button"), nil];
+        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Login to Dropbox", @"DropboxBrowser: Alert Title")
+                                                            message:[NSString stringWithFormat:NSLocalizedString(@"%@ is not linked to your Dropbox. Would you like to login now and allow access?", @"DropboxBrowser: Alert Message. 'APP NAME' is not linked to Dropbox..."), [[NSBundle mainBundle] infoDictionary][@"CFBundleDisplayName"]]
+                                                           delegate:self
+                                                  cancelButtonTitle:NSLocalizedString(@"Cancel", @"DropboxBrowser: Alert Button")
+                                                  otherButtonTitles:NSLocalizedString(@"Login", @"DropboxBrowser: Alert Button"), nil];
         alertView.tag = kDBSignInAlertViewTag;
         [alertView show];
     } else {
@@ -373,7 +377,7 @@ static NSUInteger const kDBSignOutAlertViewTag = 3;
                 break;
             case 1:
                 [[DBSession sharedSession] linkFromController:self];
-                break;
+                 break;
             default:
                 break;
         }
@@ -676,6 +680,10 @@ static NSUInteger const kDBSignOutAlertViewTag = 3;
     self.fileList = dirList;
     
     [self updateTableData];
+}
+
+- (void)restClient:(DBRestClient*)client loadedAccountInfo:(DBAccountInfo*)info {
+    
 }
 
 - (void)restClient:(DBRestClient *)client loadedSearchResults:(NSArray *)results forPath:(NSString *)path keyword:(NSString *)keyword {

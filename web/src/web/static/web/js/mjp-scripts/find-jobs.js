@@ -58,6 +58,34 @@ $(function () {
 
 	});
 
+	// Fake button animations
 
+	$('.card .btn-primary').click(function () {
+		$('.card').css({
+			position: 'relative'
+		}).animate({
+			left: '100%'
+		}).animate({
+			opacity: 0,
+			left: 0
+		}, 0).animate({
+			opacity: 1
+		}, 600);
+	});
 
+	$('.card .btn-default').click(function () {
+		$('.card').animate({
+			opacity: 0
+		}).animate({
+			opacity: 1
+		}, 600);
+	});
+
+	$('.card .btn-danger').click(function () {
+		$('.card').animate({
+			opacity: 0
+		}).animate({
+			opacity: 1
+		}, 600);
+	});
 });

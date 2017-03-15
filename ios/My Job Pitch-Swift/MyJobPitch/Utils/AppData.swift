@@ -45,9 +45,9 @@ class AppData: NSObject {
         }
     }
     
+    static var existProfile = false
+    
     static var user: User!
-    static var jobSeeker: JobSeeker!
-    static var profile: Profile!
     static var hours: NSArray!
     static var contracts: NSArray!
     static var sexes: NSArray!
@@ -57,32 +57,10 @@ class AppData: NSObject {
     static var applicationStatuses: NSArray!
     static var roles: NSArray!
 
-    static func loadJobSeeker(success: (() -> Void)!,
-                              failure: ((String?, NSDictionary?) -> Void)!) {
-
-        API.shared().loadJobSeekerWithId(id: user.jobSeeker,
-                                         success: { (data) in
-                                            jobSeeker = data as! JobSeeker
-                                            if jobSeeker.profile != nil {
-                                                API.shared().loadJobProfileWithId(id: jobSeeker.profile, success: { (data) in
-                                                    profile = data as! Profile
-                                                    success()
-                                                }) { (message, errors) in
-                                                    failure(message, errors)
-                                                }
-                                            } else {
-                                                success()
-                                            }
-                                            
-        }) { (message, errors) in
-            failure(message, errors)
-        }
-    }
-
     static func clearData() {
+        existProfile = false
+        
         user = nil
-        jobSeeker = nil
-        profile = nil
         hours = nil
         contracts = nil
         sexes = nil

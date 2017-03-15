@@ -20,7 +20,7 @@ class LocationDetailController: MJPController {
     
     var location: Location!
     
-    var data: NSMutableArray!
+    var data: NSMutableArray! = NSMutableArray()
     
     var jobActive: NSNumber!
     
@@ -31,18 +31,29 @@ class LocationDetailController: MJPController {
         
         jobActive = AppData.getJobStatusByName(JobStatus.JOB_STATUS_OPEN).id
         
-        updateLocationInfo()
+        tableView.addPullToRefresh {
+            self.loadJobs()
+        }
+        
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
         
         AppHelper.showLoading("Loading...")
-        
-        data = NSMutableArray()
+        API.shared().loadLocation(id: location.id, success: { (data) in
+            self.updateLocationInfo()
+            self.loadJobs()
+        }, failure: self.handleErrors)
+    }
+    
+    func loadJobs() {
         API.shared().loadJobsForLocation(locationId: location?.id, success: { (data) in
             AppHelper.hideLoading()
             self.data = data.mutableCopy() as! NSMutableArray
-            self.updateJobList(superRefresh: false)
-        }) { (message, errors) in
-            self.handleErrors(message: message, errors: errors)
-        }
+            self.updateJobList()
+            self.tableView.pullToRefreshView.stopAnimating()
+        }, failure: self.handleErrors)
     }
     
     func updateLocationInfo() {
@@ -55,23 +66,14 @@ class LocationDetailController: MJPController {
         nameLabel.text = location.name
     }
     
-    func updateJobList(superRefresh: Bool) {
-        if superRefresh {
-            BusinessListController.refreshRequest = true
-            BusinessDetailController.refreshRequest = true
-        }
+    func updateJobList() {
         subTitle.text = String(format: "Includes %lu %@", data.count, data.count > 1 ? "jobs" : "job")
         emptyView.isHidden = self.data.count > 0
         tableView.reloadData()
     }
     
     @IBAction func editLocationAction(_ sender: Any) {
-        LocationEditController.pushController(business: nil, location: location) { (location) in
-            BusinessListController.refreshRequest = true
-            BusinessDetailController.refreshRequest = true
-            self.location = location
-            self.updateLocationInfo()
-        }
+        LocationEditController.pushController(business: nil, location: location)
     }
     
     @IBAction func deleteLocationAction(_ sender: Any) {
@@ -79,24 +81,16 @@ class LocationDetailController: MJPController {
         PopupController.showYellow(message, ok: "Delete", okCallback: {
             
             AppHelper.showLoading("Deleting...")
-            
             API.shared().deleteLocation(id: self.location.id, success: {
                 AppHelper.hideLoading()
-                BusinessListController.refreshRequest = true
-                BusinessDetailController.refreshRequest = true
                 _ = self.navigationController?.popViewController(animated: true)
-            }) { (message, errors) in
-                self.handleErrors(message: message, errors: errors)
-            }
+            }, failure: self.handleErrors)
             
         }, cancel: "Cancel", cancelCallback: nil)
     }
     
     @IBAction func addJobAction(_ sender: Any) {
-        JobEditController.pushController(location: location, job: nil, callback: { (job) in
-            self.data.add(job)
-            self.updateJobList(superRefresh: true)
-        })
+        JobEditController.pushController(location: location, job: nil)
     }
     
 }
@@ -122,10 +116,7 @@ extension LocationDetailController: UITableViewDataSource {
                           backgroundColor: AppData.greenColor,
                           padding: 20,
                           callback: { (cell) -> Bool in
-                            JobEditController.pushController(location: nil, job: job) { (job) in
-                                self.data[indexPath.row] = job
-                                self.updateJobList(superRefresh: false)
-                            }
+                            JobEditController.pushController(location: nil, job: job)
                             return true
             })
         ]
@@ -140,15 +131,12 @@ extension LocationDetailController: UITableViewDataSource {
                             let message = String(format: "Are you sure you want to delete %@", job.title)
                             PopupController.showYellow(message, ok: "Delete", okCallback: {
                                 
-                                AppHelper.showLoading("Deleting...")
-                                
+                                AppHelper.showLoading("Deleting...")                                
                                 API.shared().deleteJob(id: job.id, success: {
                                     AppHelper.hideLoading()
                                     self.data.remove(job)
-                                    self.updateJobList(superRefresh: true)
-                                }) { (message, errors) in
-                                    self.handleErrors(message: message, errors: errors)
-                                }
+                                    self.updateJobList()
+                                }, failure: self.handleErrors)
                                 
                                 cell.hideSwipe(animated: true)
                                 

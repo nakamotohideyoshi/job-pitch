@@ -24,7 +24,7 @@ class JobCell: MGSwipeTableCell {
         }
         
         nameLabel.text = job.title
-        subTitle.text = job.locationData.businessData.name + ", " + job.locationData.name
+        subTitle.text = job.getBusinessName()
         
     }
     

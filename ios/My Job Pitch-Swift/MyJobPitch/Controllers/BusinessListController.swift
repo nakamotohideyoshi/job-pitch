@@ -11,55 +11,44 @@ import MGSwipeTableCell
 
 class BusinessListController: MJPController {
     
-    static var refreshRequest = false
-    
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var emptyView: UIView!
     @IBOutlet weak var emptyMessage: UILabel!
     @IBOutlet weak var emptyButton: UIButton!
-    @IBOutlet weak var addButton: UIBarButtonItem!
     
-    var data: NSMutableArray!
+    var data: NSMutableArray! = NSMutableArray()
+    
+    var addButton: UIBarButtonItem!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        // Do any additional setup after loading the view.
-        
+        addButton = navigationItem.rightBarButtonItem
         navigationItem.rightBarButtonItem = nil
         
-        BusinessListController.refreshRequest = true
-        
+        tableView.addPullToRefresh {
+            self.loadBusinesses()
+        }        
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        if BusinessListController.refreshRequest {
-            BusinessListController.refreshRequest = false
-            
-            AppHelper.showLoading("Loading...")
-            
-            data = NSMutableArray()
-            
-            API.shared().loadBusinesses(success: { (data) in
-                AppHelper.hideLoading()
-                self.data = data.mutableCopy() as! NSMutableArray
-                self.updateBusinessList()
-                
-                if AppData.user.businesses.count != data.count {
-                    AppHelper.showLoading("Loading...")
-                    API.shared().getUser(success: { (user) in
-                        AppHelper.hideLoading()
-                        AppData.user = user as! User
-                    }) { (message, errors) in
-                        self.handleErrors(message: message, errors: errors)
-                    }
-                }
-                
-            }) { (message, errors) in
-                self.handleErrors(message: message, errors: errors)
+        AppHelper.showLoading("Loading...")
+        self.loadBusinesses()
+    }
+    
+    func loadBusinesses() {
+        API.shared().loadBusinesses(success: { (data) in
+            AppHelper.hideLoading()
+            self.data = data.mutableCopy() as! NSMutableArray
+            self.updateBusinessList()
+            self.tableView.pullToRefreshView.stopAnimating()
+            let businesses = NSMutableArray()
+            for business in self.data {
+                businesses.add((business as! Business).id)
             }
-        }
+            AppData.user.businesses = businesses
+        }, failure: self.handleErrors)
     }
     
     func updateBusinessList() {
@@ -67,15 +56,12 @@ class BusinessListController: MJPController {
         if data.count == 0 {
             emptyMessage.text = "You have not added any\n businesses yet."
             emptyButton.setTitle("Create business", for: .normal)
-            tableView.isScrollEnabled = false
             navigationItem.rightBarButtonItem = addButton
         } else if !AppData.user.canCreateBusinesses {
             emptyMessage.text = "Have more than one company?\n Get in touch!"
             emptyButton.setTitle("sales@myjobpitch.com", for: .normal)
-            tableView.isScrollEnabled = false
             navigationItem.rightBarButtonItem = nil
         } else {
-            tableView.isScrollEnabled = true
             if navigationItem.rightBarButtonItem == nil {
                 navigationItem.rightBarButtonItem = addButton
             }
@@ -86,15 +72,11 @@ class BusinessListController: MJPController {
     @IBAction func addAction(_ sender: Any) {
         
         if AppData.user.canCreateBusinesses || data.count == 0 {
-            BusinessEditController.pushController(business: nil) { (business) in
-                self.data.add(business)
-                self.updateBusinessList()
-            }
+            BusinessEditController.pushController(business: nil)
         } else {
             let url = URL(string: "mailto:sales@myjobpitch.com")!
             UIApplication.shared.openURL(url)
         }
-        
     }
     
 }
@@ -118,10 +100,7 @@ extension BusinessListController: UITableViewDataSource {
                           backgroundColor: AppData.greenColor,
                           padding: 20,
                           callback: { (cell) -> Bool in
-                            BusinessEditController.pushController(business: business) { (business) in
-                                self.data[indexPath.row] = business
-                                self.updateBusinessList()
-                            }
+                            BusinessEditController.pushController(business: business)
                             return true
             })
         ]
@@ -144,9 +123,7 @@ extension BusinessListController: UITableViewDataSource {
                                         AppHelper.hideLoading()
                                         self.data.remove(business)
                                         self.updateBusinessList()
-                                    }) { (message, errors) in
-                                        self.handleErrors(message: message, errors: errors)
-                                    }
+                                    }, failure: self.handleErrors)
                                     
                                     cell.hideSwipe(animated: true)
                                     

@@ -19,17 +19,15 @@ class SelectJobController: MJPController {
     
     @IBOutlet weak var emptyView: UILabel!
     
-    
-    var allData: NSMutableArray!
-    var data: NSMutableArray!
+    var data: NSMutableArray! = NSMutableArray()
     
     var jobActive: NSNumber!
     
     var titles = [
         "find_talent":  "Select job bellow to start finding talent for your business.",
-        "applications": "application ...",
-        "connections":  "connections ...",
-        "shortlist":    "shortlist ...",
+        "applications": "comment here.",
+        "connections":  "comment here.",
+        "shortlist":    "comment here.",
     ]
     
     override func viewDidLoad() {
@@ -43,37 +41,27 @@ class SelectJobController: MJPController {
         
         jobActive = AppData.getJobStatusByName(JobStatus.JOB_STATUS_OPEN).id
         
-        data = NSMutableArray();
-        
-        refresh()
-        
-    }
-    
-    func refresh() {
-        
-        AppHelper.showLoading("Loading...")
-        
-        API.shared().loadJobsForLocation(locationId: nil, success: { (data) in
-            AppHelper.hideLoading()
-            self.allData = data.mutableCopy() as! NSMutableArray
-            self.data = self.allData
-            self.emptyView.isHidden = self.allData.count > 0
-            self.tableView.reloadData()
-        }) { (message, errors) in
-            self.handleErrors(message: message, errors: errors)
+        tableView.addPullToRefresh {
+            self.refresh()
         }
         
     }
     
-//    override func filterItem(item: Any, text: String) -> Bool {
-//        
-//        let job  = item as! Job
-//        let businessName = job.locationData.businessData.name + ", " + job.locationData.name
-//        return  job.title.lowercased().contains(text) ||
-//            businessName.lowercased().contains(text) ||
-//            job.locationData.placeName.lowercased().contains(text)
-//        
-//    }
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        AppHelper.showLoading("Loading...")
+        refresh()
+    }
+    
+    func refresh() {
+        API.shared().loadJobsForLocation(locationId: nil, success: { (data) in
+            AppHelper.hideLoading()
+            self.data = data.mutableCopy() as! NSMutableArray
+            self.emptyView.isHidden = self.data.count > 0
+            self.tableView.reloadData()
+            self.tableView.pullToRefreshView.stopAnimating()
+        }, failure: self.handleErrors)        
+    }
     
     @IBAction func jobAddAction(_ sender: Any) {
         SideMenuController.pushController(id: "businesses")
@@ -111,7 +99,7 @@ extension SelectJobController: UITableViewDelegate {
         if SideMenuController.currentID == "find_talent" {
             SwipeController.pushController(job: job)
         } else {
-            ApplicationListController.pushController(job: job, mode: SideMenuController.currentID)            
+            ApplicationListController.pushController(job: job, mode: SideMenuController.currentID)
         }
     }
     

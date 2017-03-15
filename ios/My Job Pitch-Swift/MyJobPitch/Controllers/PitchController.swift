@@ -17,24 +17,32 @@ class PitchController: MJPController {
     @IBOutlet weak var playIcon: UIImageView!
     @IBOutlet weak var playButton: UIButton!
     @IBOutlet weak var uploadButton: YellowButton!
+    @IBOutlet weak var noRecording: UILabel!
 
     var videoUrl: URL!
     
+    var jobSeeker: JobSeeker!
     var pitch: Pitch!
     
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        // Do any additional setup after loading the view.
-        
-        if let thumbnail = AppData.jobSeeker?.getPitch()?.thumbnail {
-            AppHelper.loadImageURL(imageUrl: thumbnail, imageView: imgView, completion: {
-                self.playIcon.isHidden = false
-                self.playButton.isEnabled = true
-            })
-        }
-        
-        pitch = AppData.jobSeeker?.getPitch()
+        AppHelper.showLoading("Loading...")
+        API.shared().loadJobSeekerWithId(id: AppData.user.jobSeeker, success: { (data) in
+            AppHelper.hideLoading()
+            self.jobSeeker = data as! JobSeeker
+            AppData.existProfile = self.jobSeeker.profile != nil
+            
+            self.pitch = self.jobSeeker.getPitch()
+            if let thumbnail = self.pitch?.thumbnail {
+                AppHelper.loadImageURL(imageUrl: thumbnail, imageView: self.imgView, completion: {
+                    self.playIcon.isHidden = false
+                    self.playButton.isEnabled = true
+                })
+            } else {
+                self.noRecording.isHidden = false
+            }
+        }, failure: self.handleErrors)
         
     }
     
@@ -43,7 +51,7 @@ class PitchController: MJPController {
         var url = videoUrl
         
         if url == nil {
-            if let video = AppData.jobSeeker?.getPitch()?.video {
+            if let video = pitch.video {
                 url = URL(string: video)
             }
         }
@@ -67,6 +75,7 @@ class PitchController: MJPController {
             self.playButton.isEnabled = true
             self.uploadButton.alpha = 1
             self.uploadButton.isHidden = false
+            self.noRecording.isHidden = true
             
             // get image
             let asset = AVURLAsset(url: videoUrl!)
@@ -96,6 +105,7 @@ class PitchController: MJPController {
                 }, completion: { (finished) in
                     self.uploadButton.isHidden = true
                 })
+                PopupController.showGreen("Success!", ok: "OK", okCallback: nil, cancel: nil, cancelCallback: nil)
             }
         }
         

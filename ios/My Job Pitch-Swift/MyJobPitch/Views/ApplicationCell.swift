@@ -26,7 +26,7 @@ class ApplicationCell1: MGSwipeTableCell {
         }
         
         jobTitle.text = job.title
-        businessName.text = job.locationData.businessData.name + ", " + job.locationData.name
+        businessName.text = job.getBusinessName()
         location.text = job.locationData.placeName
         desc.text = job.desc
     }
@@ -50,9 +50,9 @@ class ApplicationCell2: MGSwipeTableCell {
             imgView.image = UIImage(named: "no-img")
         }
         
-        name.text = application.jobSeeker.firstName + " " + application.jobSeeker.lastName
+        name.text = application.jobSeeker.getFullName()
         jobTitle.text = application.job.title
-        businessName.text = application.job.locationData.businessData.name + ", " + application.job.locationData.name
+        businessName.text = application.job.getBusinessName()
         location.text = application.job.locationData.placeName
         starIcon.isHidden = SideMenuController.currentID != "connections" || !application.shortlisted
     }

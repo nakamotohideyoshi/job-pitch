@@ -23,10 +23,10 @@ class JobSeekerDetailController: MJPController {
     @IBOutlet weak var shortlisted: UISwitch!
     @IBOutlet weak var availableView: UIView!
     @IBOutlet weak var truthfulView: UIView!
+    @IBOutlet weak var pitchPlayButton: UIButton!
     
     var jobSeeker: JobSeeker!
     var application: Application!
-    var job: Job!
     var chooseDelegate: ChooseDelegate!
     
     var isConnected = false
@@ -35,9 +35,18 @@ class JobSeekerDetailController: MJPController {
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
-
-        isConnected = application?.status == AppData.getApplicationStatusByName(ApplicationStatus.APPLICATION_ESTABLISHED).id
         
+        if application != nil {
+            jobSeeker = application.jobSeeker
+            isConnected = application.status == AppData.getApplicationStatusByName(ApplicationStatus.APPLICATION_ESTABLISHED).id
+        }
+        
+        load()
+        
+    }
+    
+    func load() {
+    
         let pitch = jobSeeker.getPitch()
         if pitch != nil {
             AppHelper.loadImageURL(imageUrl: (pitch?.thumbnail)!, imageView: imgView, completion: nil)
@@ -45,7 +54,7 @@ class JobSeekerDetailController: MJPController {
             imgView.image = UIImage(named: "no-img")
         }
         
-        nameLabel.text = jobSeeker.firstName + " " + jobSeeker.lastName
+        nameLabel.text = jobSeeker.getFullName()
         
         let sex = AppData.getSex(jobSeeker.sex)
         if sex != nil && jobSeeker.sexPublic && jobSeeker.age != nil && jobSeeker.agePublic {
@@ -59,6 +68,10 @@ class JobSeekerDetailController: MJPController {
         }
         
         descLabel.text = jobSeeker.desc
+        
+        if jobSeeker.getPitch() == nil {
+            pitchPlayButton.isHidden = true
+        }
         
         if !jobSeeker.hasReferences {
             availableView.removeFromSuperview()
@@ -95,20 +108,17 @@ class JobSeekerDetailController: MJPController {
             cvButton.removeFromSuperview()
             contactView.removeFromSuperview()
             applyButton.setTitle("Connect", for: .normal)
-            
         }
         
     }
     
     @IBAction func videoPitchAction(_ sender: Any) {
-        
         if let video = jobSeeker.getPitch()?.video {
             let player = AVPlayer(url: URL(string: video)!)
             let playerController = AVPlayerViewController();
             playerController.player = player
             present(playerController, animated: true, completion: nil)
         }
-        
     }
     
     @IBAction func viewCVAction(_ sender: Any) {
@@ -126,59 +136,39 @@ class JobSeekerDetailController: MJPController {
         AppHelper.showLoading("Updating...")
         API.shared().updateApplicationShortlist(update: update, success: { (_) in
             AppHelper.hideLoading()
-        }) { (message, errors) in
-            self.handleErrors(message: message, errors: errors)
-        }
+        }, failure: self.handleErrors)
         
     }
     
-
     @IBAction func applyAction(_ sender: Any) {
-        
         if isConnected {
-            
             MessageController0.showModal(application: application)
-            
         } else {
-            
-            if job.locationData.businessData.tokens.intValue > 0 {
-                let message = application == nil ? "Are you sure you want to connect this talent?" : "Are you sure you want to connect this application?"
-                
-                PopupController.showGreen(message, ok: "Connect", okCallback: {
+            let message = application == nil ? "Are you sure you want to connect this talent?" : "Are you sure you want to connect this application?"
+            PopupController.showGreen(message, ok: "Connect", okCallback: {
+                self.chooseDelegate?.apply(callback: {
                     _ = self.navigationController?.popViewController(animated: true)
-                    self.chooseDelegate?.apply()
-                }, cancel: "Cancel", cancelCallback: nil)
-            } else {
-                PopupController.showGray("You have no credits left so cannot compete this connection. Credits cannot be added through the app, please go to our web page.", ok: "Ok")
-            }
-            
+                })
+            }, cancel: "Cancel", cancelCallback: nil)
         }
-        
     }
     
     @IBAction func removeAction(_ sender: Any) {
-        
         let message = application == nil ? "Are you sure you want to delete this talent?" : "Are you sure you want to delete this application?"
-        
         PopupController.showYellow(message, ok: "Delete", okCallback: {
             _ = self.navigationController?.popViewController(animated: true)
             self.chooseDelegate?.remove()
         }, cancel: "Cancel", cancelCallback: nil)
-        
     }
     
     static func pushController(jobSeeker: JobSeeker!,
                                application: Application!,
-                               job: Job,
                                chooseDelegate: ChooseDelegate!) {
-        
         let controller = AppHelper.mainStoryboard.instantiateViewController(withIdentifier: "JobSeekerDetail") as! JobSeekerDetailController
         controller.jobSeeker = jobSeeker
         controller.application = application
-        controller.job = job
         controller.chooseDelegate = chooseDelegate
         AppHelper.getFrontController().navigationController?.pushViewController(controller, animated: true)
-        
     }
     
 }

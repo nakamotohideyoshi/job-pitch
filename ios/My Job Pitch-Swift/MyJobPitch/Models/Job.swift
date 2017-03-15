@@ -26,4 +26,8 @@ class Job: MJPObjectWithDates {
         }
         return locationData.getImage()
     }
+    
+    func getBusinessName() -> String {
+        return locationData.businessData.name + ", " + locationData.name
+    }
 }

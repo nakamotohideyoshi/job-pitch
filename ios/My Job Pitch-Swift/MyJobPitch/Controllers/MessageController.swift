@@ -25,8 +25,6 @@ class MessageController: JSQMessagesViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        application = MessageController0.application
-
         // Do any additional setup after loading the view.
         
         inputToolbar.contentView.leftBarButtonItem = nil
@@ -37,15 +35,17 @@ class MessageController: JSQMessagesViewController {
         receiverBubbleImage = bubbleFactory?.incomingMessagesBubbleImage(with: AppData.yellowColor)
         senderBubbleImage = bubbleFactory?.outgoingMessagesBubbleImage(with: AppData.greenColor)
         
-        let jobImage = application.job.getImage()?.thumbnail
-        let jobSeekerImage = application.jobSeeker.getPitch()?.thumbnail
+        let job = application.job!
+        let jobSeeker = application.jobSeeker!
+        let jobImage = job.getImage()?.thumbnail
+        let jobSeekerImage = jobSeeker.getPitch()?.thumbnail
         let statusCreated = AppData.getApplicationStatusByName(ApplicationStatus.APPLICATION_CREATED).id
         let statusDeleted = AppData.getApplicationStatusByName(ApplicationStatus.APPLICATION_DELETED).id
         
         if AppData.user.isJobSeeker() {
             
-            senderDisplayName = application.jobSeeker.firstName + " " + application.jobSeeker.lastName
-            receiverDisplayName = application.job.locationData.businessData.name
+            senderDisplayName = jobSeeker.getFullName()
+            receiverDisplayName = job.locationData.businessData.name
             
             setAavatar(sender: true, path: jobSeekerImage, local: "no-img")
             setAavatar(sender: false, path: jobImage, local: "default-logo")
@@ -59,8 +59,8 @@ class MessageController: JSQMessagesViewController {
             
         } else {
             
-            senderDisplayName = application.job.locationData.businessData.name
-            receiverDisplayName = application.jobSeeker.firstName + " " + application.jobSeeker.lastName
+            senderDisplayName = job.locationData.businessData.name
+            receiverDisplayName = jobSeeker.getFullName()
             
             setAavatar(sender: true, path: jobImage, local: "default-logo")
             setAavatar(sender: false, path: jobSeekerImage, local: "no-img")
@@ -93,9 +93,7 @@ class MessageController: JSQMessagesViewController {
             
         }
         
-        
-        
-        if let pitch = application.jobSeeker.getPitch() {
+        if let pitch = jobSeeker.getPitch() {
             NSURLConnection.sendAsynchronousRequest(URLRequest(url: (URL(string:pitch.thumbnail))!),
                                                     queue: OperationQueue.main) { (response, data, error) in
                                                         if data != nil {
@@ -116,6 +114,7 @@ class MessageController: JSQMessagesViewController {
                 self.receiverAvatar = avatarImage
             }
         }
+
         
     }
     
@@ -197,10 +196,6 @@ class MessageController: JSQMessagesViewController {
         collectionView.reloadData()
         
         finishSendingMessage()
-        
-        if SideMenuController.currentID == "messages" {
-            MessageListController.refreshRequest = true
-        }
         
         let message = MessageForCreation()
         message.content = text

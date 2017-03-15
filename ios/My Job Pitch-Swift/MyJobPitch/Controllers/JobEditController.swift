@@ -27,7 +27,6 @@ class JobEditController: MJPController {
     
     var location: Location!
     var job: Job!
-    var savedJob: ((Job) -> Void)!
     
     var imagePicker: UIImagePickerController!
     var logoImage: UIImage!
@@ -102,12 +101,25 @@ class JobEditController: MJPController {
         // load job
         
         if job == nil {
-            
             navigationItem.title = "Add Job"
             
+            load()
         } else {
-            
             navigationItem.title = "Edit Job"
+            
+            AppHelper.showLoading("Loading...")
+            API.shared().loadJob(id: job.id, success: { (data) in
+                AppHelper.hideLoading()
+                self.job = data as! Job
+                self.load()
+            }, failure: self.handleErrors)
+        }
+        
+    }
+    
+    func load() {
+        
+        if job != nil {
             
             location = job.locationData
             
@@ -151,27 +163,21 @@ class JobEditController: MJPController {
             
             if let image = job.getImage() {
                 AppHelper.loadImageURL(imageUrl: (image.thumbnail)!, imageView: imgView, completion: nil)
-                
                 if job.images != nil && job.images.count > 0 {
                     origImage = image
+                    addImageButton.isHidden = true
+                    removeImageButton.isHidden = false
                 }
-                
-                addImageButton.isHidden = origImage != nil
-                removeImageButton.isHidden = origImage == nil
             }
-            
         }
         
         if removeImageButton.isHidden {
-            
             if let image = location?.getImage() {
                 AppHelper.loadImageURL(imageUrl: (image.thumbnail)!, imageView: imgView, completion: nil)
             } else {
                 imgView.image = UIImage(named: "default-logo")
             }
-            
             imgView.alpha = 0.2
-            
         }
         
     }
@@ -239,26 +245,27 @@ class JobEditController: MJPController {
         
         AppHelper.showLoading("Saving...")
         
-        let newJob = Job()
-        newJob.location = location.id
-        newJob.id = job?.id
-
+        if job == nil {
+            job = Job()
+            job.location = location.id
+        }
+        
         let statusName = active.isOn ? JobStatus.JOB_STATUS_OPEN : JobStatus.JOB_STATUS_CLOSED
         for status in AppData.jobStatuses as! [JobStatus] {
             if status.name == statusName {
-                newJob.status = status.id
+                job.status = status.id
                 break
             }
         }
         
-        newJob.title = titleField.text
-        newJob.desc = descTextView.text
+        job.title = titleField.text
+        job.desc = descTextView.text
         
         // sector data
         
         for sector in AppData.sectors as! [Sector] {
             if selectedSectorNames.contains(sector.name) {
-                newJob.sector = sector.id
+                job.sector = sector.id
                 break
             }
         }
@@ -267,7 +274,7 @@ class JobEditController: MJPController {
         
         for contract in AppData.contracts as! [Contract] {
             if selectedContractNames.contains(contract.name) {
-                newJob.contract = contract.id
+                job.contract = contract.id
                 break
             }
         }
@@ -276,14 +283,12 @@ class JobEditController: MJPController {
         
         for hours in AppData.hours as! [Hours] {
             if selectedHoursNames.contains(hours.name) {
-                newJob.hours = hours.id
+                job.hours = hours.id
                 break
             }
         }
         
-        API.shared().saveJob(job: newJob, success: { (data) in
-            
-            self.job = data as! Job
+        API.shared().saveJob(job: job, success: { (data) in
             
             if self.logoImage != nil {
                 
@@ -299,42 +304,32 @@ class JobEditController: MJPController {
                                          progress: { (bytesWriteen, totalBytesWritten, totalBytesExpectedToWrite) in
                                             hud.progress = Float(totalBytesWritten) / Float(totalBytesExpectedToWrite)
                 }, success: { (data) in
-                    self.job.images = [data as Image]
                     self.saveFinished()
-                }) { (message, errors) in
-                    self.handleErrors(message: message, errors: errors)
-                }
+                }, failure: self.handleErrors)
                 
             } else if self.origImage?.id != nil && self.removeImageButton.isHidden {
                 
                 API.shared().deleteImage(id: (self.origImage?.id)!, endpoint: "user-job-images", success: {
-                    self.job.images = []
                     self.saveFinished()
-                }) { (message, errors) in
-                    self.handleErrors(message: message, errors: errors)
-                }
+                }, failure: self.handleErrors)
                 
             } else {
                 self.saveFinished()
             }
             
-        }) { (message, errors) in
-            self.handleErrors(message: message, errors: errors)
-        }
+        }, failure: self.handleErrors)
         
     }
     
     func saveFinished() {
         AppHelper.hideLoading()
         _ = navigationController?.popViewController(animated: true)
-        savedJob?(job)
     }
     
-    static func pushController(location: Location!, job: Job!, callback: ((Job)->Void)!) {
+    static func pushController(location: Location!, job: Job!) {
         let controller = AppHelper.mainStoryboard.instantiateViewController(withIdentifier: "JobEdit") as! JobEditController
         controller.location = location
         controller.job = job
-        controller.savedJob = callback
         AppHelper.getFrontController().navigationController?.pushViewController(controller, animated: true)
     }
 

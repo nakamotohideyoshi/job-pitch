@@ -103,7 +103,7 @@ sdafsdf</string>
                                 </connections>
                             </tableView>
                             <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="OW2-wO-B54">
-                                <rect key="frame" x="31" y="306" width="313" height="119.5"/>
+                                <rect key="frame" x="31" y="306.5" width="313" height="119.5"/>
                                 <string key="text">You have no messages!  Once you have connected through the main interface with someone, you'll be able to communicate with them here.</string>
                                 <fontDescription key="fontDescription" type="system" pointSize="20"/>
                                 <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
@@ -601,7 +601,7 @@ et dolore magna aliqua.</string>
             </objects>
             <point key="canvasLocation" x="-9303" y="251"/>
         </scene>
-        <!--Edit Business-->
+        <!--Add Business-->
         <scene sceneID="Exg-a1-bHr">
             <objects>
                 <viewController storyboardIdentifier="BusinessEdit" automaticallyAdjustsScrollViewInsets="NO" id="xTs-5L-P6y" customClass="BusinessEditController" customModule="MyJobPitch" customModuleProvider="target" sceneMemberID="viewController">
@@ -658,7 +658,7 @@ et dolore magna aliqua.</string>
                                                 <color key="textColor" red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="calibratedRGB"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
-                                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="default-logo" translatesAutoresizingMaskIntoConstraints="NO" id="hAN-9a-Y1V">
+                                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" alpha="0.20000000000000001" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="default-logo" translatesAutoresizingMaskIntoConstraints="NO" id="hAN-9a-Y1V">
                                                 <rect key="frame" x="50" y="252" width="275" height="206"/>
                                                 <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                                                 <constraints>
@@ -742,7 +742,7 @@ et dolore magna aliqua.</string>
                             <constraint firstItem="yTB-VU-jwj" firstAttribute="top" secondItem="A9d-wm-tL6" secondAttribute="bottom" id="sxb-jR-dtg"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" title="Edit Business" id="XMp-Fa-cU4">
+                    <navigationItem key="navigationItem" title="Add Business" id="XMp-Fa-cU4">
                         <barButtonItem key="rightBarButtonItem" title="Save" id="h71-sw-DNb">
                             <connections>
                                 <action selector="saveAction:" destination="xTs-5L-P6y" id="87Q-hQ-aZU"/>
@@ -777,32 +777,38 @@ et dolore magna aliqua.</string>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Here you can record your 30 second pitch. The 30 sec. video will be viewed by prospective employers." textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="OHE-5f-Uf7">
-                                <rect key="frame" x="20" y="155.5" width="335" height="64.5"/>
+                                <rect key="frame" x="20" y="94" width="335" height="64.5"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="18"/>
                                 <color key="textColor" red="0.25882352939999997" green="0.25882352939999997" blue="0.25882352939999997" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="bPx-Ug-Eby">
-                                <rect key="frame" x="20" y="240" width="335" height="188"/>
+                                <rect key="frame" x="20" y="178.5" width="335" height="188"/>
                                 <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                                 <constraints>
                                     <constraint firstAttribute="width" secondItem="bPx-Ug-Eby" secondAttribute="height" multiplier="16:9" id="chu-Mg-T4v"/>
                                 </constraints>
                             </imageView>
                             <imageView hidden="YES" clipsSubviews="YES" userInteractionEnabled="NO" alpha="0.5" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="play" translatesAutoresizingMaskIntoConstraints="NO" id="g8p-7R-xmk">
-                                <rect key="frame" x="160" y="306" width="56" height="56"/>
+                                <rect key="frame" x="160" y="244.5" width="56" height="56"/>
                                 <constraints>
                                     <constraint firstAttribute="width" secondItem="g8p-7R-xmk" secondAttribute="height" multiplier="1:1" id="yJN-qk-4cK"/>
                                 </constraints>
                             </imageView>
+                            <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="no recording" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vwr-vs-jqo">
+                                <rect key="frame" x="139" y="262.5" width="97" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                             <button opaque="NO" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="trR-S1-GZs">
-                                <rect key="frame" x="20" y="240" width="335" height="188"/>
+                                <rect key="frame" x="20" y="178.5" width="335" height="188"/>
                                 <connections>
                                     <action selector="playVideoAction:" destination="z60-gs-9bt" eventType="touchUpInside" id="xdj-rb-V3O"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="c8c-2z-a3y" customClass="GreenButton" customModule="MyJobPitch" customModuleProvider="target">
-                                <rect key="frame" x="20" y="458" width="335" height="40"/>
+                                <rect key="frame" x="20" y="396.5" width="335" height="40"/>
                                 <color key="backgroundColor" red="0.0" green="0.73333333329999995" blue="0.6588235294" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="40" id="hOy-jk-uzQ"/>
@@ -816,7 +822,7 @@ et dolore magna aliqua.</string>
                                 </connections>
                             </button>
                             <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="PjT-Hp-9b7" customClass="YellowButton" customModule="MyJobPitch" customModuleProvider="target">
-                                <rect key="frame" x="20" y="518" width="335" height="40"/>
+                                <rect key="frame" x="20" y="456.5" width="335" height="40"/>
                                 <color key="backgroundColor" red="1" green="0.57647058819999997" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="40" id="M8L-VQ-Mi6"/>
@@ -834,9 +840,11 @@ et dolore magna aliqua.</string>
                         <constraints>
                             <constraint firstItem="trR-S1-GZs" firstAttribute="bottom" secondItem="bPx-Ug-Eby" secondAttribute="bottom" id="4cq-9g-xpc"/>
                             <constraint firstItem="PjT-Hp-9b7" firstAttribute="top" secondItem="c8c-2z-a3y" secondAttribute="bottom" constant="20" id="4ua-fv-PzD"/>
+                            <constraint firstItem="vwr-vs-jqo" firstAttribute="centerX" secondItem="bPx-Ug-Eby" secondAttribute="centerX" id="Bp8-X4-LaN"/>
                             <constraint firstAttribute="trailing" secondItem="bPx-Ug-Eby" secondAttribute="trailing" constant="20" id="Cuo-z5-O0t"/>
                             <constraint firstItem="c8c-2z-a3y" firstAttribute="top" secondItem="bPx-Ug-Eby" secondAttribute="bottom" constant="30" id="Ffd-Uw-bme"/>
                             <constraint firstItem="c8c-2z-a3y" firstAttribute="trailing" secondItem="bPx-Ug-Eby" secondAttribute="trailing" id="HLF-KV-o10"/>
+                            <constraint firstItem="OHE-5f-Uf7" firstAttribute="top" secondItem="2q8-F9-SGg" secondAttribute="bottom" constant="30" id="HVV-ML-4vv"/>
                             <constraint firstItem="trR-S1-GZs" firstAttribute="top" secondItem="bPx-Ug-Eby" secondAttribute="top" id="JMI-1X-yyD"/>
                             <constraint firstItem="trR-S1-GZs" firstAttribute="leading" secondItem="bPx-Ug-Eby" secondAttribute="leading" id="QaB-Yo-In7"/>
                             <constraint firstItem="c8c-2z-a3y" firstAttribute="leading" secondItem="bPx-Ug-Eby" secondAttribute="leading" id="Qc1-wf-sxe"/>
@@ -844,20 +852,20 @@ et dolore magna aliqua.</string>
                             <constraint firstItem="g8p-7R-xmk" firstAttribute="centerX" secondItem="bPx-Ug-Eby" secondAttribute="centerX" id="Ttc-qv-UTU"/>
                             <constraint firstItem="OHE-5f-Uf7" firstAttribute="leading" secondItem="bPx-Ug-Eby" secondAttribute="leading" id="ZOC-qi-mSr"/>
                             <constraint firstItem="g8p-7R-xmk" firstAttribute="height" secondItem="bPx-Ug-Eby" secondAttribute="height" multiplier="0.3" id="bUu-aX-GnY"/>
-                            <constraint firstItem="bPx-Ug-Eby" firstAttribute="centerY" secondItem="ub4-kK-NcR" secondAttribute="centerY" id="etV-YB-szG"/>
                             <constraint firstItem="g8p-7R-xmk" firstAttribute="centerY" secondItem="bPx-Ug-Eby" secondAttribute="centerY" id="ews-dI-eXe"/>
                             <constraint firstItem="bPx-Ug-Eby" firstAttribute="leading" secondItem="ub4-kK-NcR" secondAttribute="leading" constant="20" id="hSX-iq-pQR"/>
                             <constraint firstItem="PjT-Hp-9b7" firstAttribute="leading" secondItem="c8c-2z-a3y" secondAttribute="leading" id="ky4-es-UEa"/>
                             <constraint firstItem="trR-S1-GZs" firstAttribute="trailing" secondItem="bPx-Ug-Eby" secondAttribute="trailing" id="mFK-HJ-EAx"/>
                             <constraint firstItem="bPx-Ug-Eby" firstAttribute="top" secondItem="OHE-5f-Uf7" secondAttribute="bottom" constant="20" id="psl-Yn-pgx"/>
                             <constraint firstItem="OHE-5f-Uf7" firstAttribute="trailing" secondItem="bPx-Ug-Eby" secondAttribute="trailing" id="tOf-V7-9hI"/>
-                            <constraint firstItem="bPx-Ug-Eby" firstAttribute="centerX" secondItem="ub4-kK-NcR" secondAttribute="centerX" id="zck-Fo-xKy"/>
+                            <constraint firstItem="vwr-vs-jqo" firstAttribute="centerY" secondItem="bPx-Ug-Eby" secondAttribute="centerY" id="yg6-Ip-tsp"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Record Pitch" id="H1S-xe-AQx"/>
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
                     <connections>
                         <outlet property="imgView" destination="bPx-Ug-Eby" id="1Ze-Rx-8br"/>
+                        <outlet property="noRecording" destination="vwr-vs-jqo" id="3RA-hv-u6m"/>
                         <outlet property="playButton" destination="trR-S1-GZs" id="5kc-Xx-osN"/>
                         <outlet property="playIcon" destination="g8p-7R-xmk" id="Fj8-p3-T2O"/>
                         <outlet property="uploadButton" destination="PjT-Hp-9b7" id="n2n-zt-Yxf"/>
@@ -865,7 +873,7 @@ et dolore magna aliqua.</string>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="hWx-WN-h4H" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-7990" y="-2481"/>
+            <point key="canvasLocation" x="-7991.1999999999998" y="-2481.4092953523241"/>
         </scene>
         <!--Camera Controller-->
         <scene sceneID="iGV-2Z-F82">
@@ -1193,7 +1201,7 @@ et dolore magna aliqua.</string>
                                 </connections>
                             </tableView>
                             <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="No candidates have applied for this job yet. Once that happens, their applications will appear here." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="faJ-FA-sbE">
-                                <rect key="frame" x="31" y="329.5" width="313" height="72"/>
+                                <rect key="frame" x="31" y="330" width="313" height="72"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="20"/>
                                 <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                                 <nil key="highlightedColor"/>
@@ -1535,8 +1543,8 @@ jobs yet.</string>
                                                     <action selector="videoPitchAction:" destination="EIP-BZ-BaC" eventType="touchUpInside" id="KOJ-c5-ZBQ"/>
                                                 </connections>
                                             </button>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Overview:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aw8-6j-a1t">
-                                                <rect key="frame" x="20" y="123" width="85" height="22"/>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="CV overview:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aw8-6j-a1t">
+                                                <rect key="frame" x="20" y="123" width="111" height="22"/>
                                                 <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="18"/>
                                                 <color key="textColor" red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="calibratedRGB"/>
                                                 <nil key="highlightedColor"/>
@@ -1799,6 +1807,7 @@ et dolore magna aliqua.</string>
                         <outlet property="descLabel" destination="fWG-jR-Cn2" id="7f0-vU-tYh"/>
                         <outlet property="imgView" destination="8TY-b6-OoR" id="St1-eI-wRo"/>
                         <outlet property="nameLabel" destination="I5e-ZA-hNg" id="laR-WP-liX"/>
+                        <outlet property="pitchPlayButton" destination="0t4-Tp-zi9" id="USn-IC-UxE"/>
                         <outlet property="scrollView" destination="i8X-zR-NzG" id="NfU-jO-IjQ"/>
                         <outlet property="shortlisted" destination="3Ad-7Q-pFR" id="cbc-zR-9Wv"/>
                         <outlet property="truthfulView" destination="NQr-gz-Tfg" id="cPa-2K-NOG"/>
@@ -2207,7 +2216,7 @@ et dolore magna aliqua.</string>
                                                 </constraints>
                                                 <nil key="textColor"/>
                                                 <fontDescription key="fontDescription" type="system" weight="medium" pointSize="18"/>
-                                                <textInputTraits key="textInputTraits"/>
+                                                <textInputTraits key="textInputTraits" keyboardType="emailAddress"/>
                                             </textField>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Vk4-hP-xfS">
                                                 <rect key="frame" x="56" y="320" width="262" height="0.0"/>
@@ -2372,7 +2381,7 @@ et dolore magna aliqua.</string>
                                                 </constraints>
                                                 <nil key="textColor"/>
                                                 <fontDescription key="fontDescription" type="system" weight="medium" pointSize="18"/>
-                                                <textInputTraits key="textInputTraits"/>
+                                                <textInputTraits key="textInputTraits" keyboardType="emailAddress"/>
                                             </textField>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Atf-TD-LNz">
                                                 <rect key="frame" x="56" y="320" width="262" height="0.0"/>
@@ -2540,7 +2549,7 @@ et dolore magna aliqua.</string>
                                                 </constraints>
                                                 <nil key="textColor"/>
                                                 <fontDescription key="fontDescription" type="system" weight="medium" pointSize="18"/>
-                                                <textInputTraits key="textInputTraits"/>
+                                                <textInputTraits key="textInputTraits" keyboardType="emailAddress"/>
                                             </textField>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="PMB-pz-8Ip">
                                                 <rect key="frame" x="56" y="391" width="262" height="0.0"/>
@@ -3150,7 +3159,6 @@ businesses yet.</string>
                     </navigationItem>
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
                     <connections>
-                        <outlet property="addButton" destination="9CW-SB-LF1" id="BaZ-Da-u4t"/>
                         <outlet property="emptyButton" destination="YTu-g5-5T8" id="ffp-Ub-uZ0"/>
                         <outlet property="emptyMessage" destination="Tx0-PO-vMN" id="PlG-mi-2cy"/>
                         <outlet property="emptyView" destination="HUX-vu-9Ck" id="0jI-QP-z28"/>
@@ -3443,7 +3451,7 @@ locations yet.</string>
                                 <rect key="frame" x="0.0" y="64" width="375" height="1066"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="qbS-Xd-C1l" userLabel="Content View">
-                                        <rect key="frame" x="0.0" y="0.0" width="375" height="999.5"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="375" height="1049.5"/>
                                         <subviews>
                                             <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="cvK-8q-pDi">
                                                 <rect key="frame" x="306" y="20" width="51" height="31"/>
@@ -3601,8 +3609,8 @@ locations yet.</string>
                                             </label>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="UpM-6p-HPu">
                                                 <rect key="frame" x="60" y="623" width="265" height="0.0"/>
-                                                <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="18"/>
-                                                <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                                                <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="16"/>
+                                                <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="BUL-oj-D9B">
@@ -3616,8 +3624,32 @@ locations yet.</string>
                                                     <action selector="cvRemoveAction:" destination="sqq-9x-4UL" eventType="touchUpInside" id="hGZ-pC-vGT"/>
                                                 </connections>
                                             </button>
+                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="HYs-PI-oD8">
+                                                <rect key="frame" x="0.0" y="644" width="375" height="50"/>
+                                                <subviews>
+                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="AUj-lC-4Xu" customClass="YellowButton" customModule="MyJobPitch" customModuleProvider="target">
+                                                        <rect key="frame" x="20" y="0.0" width="335" height="40"/>
+                                                        <color key="backgroundColor" red="1" green="0.57254901960000004" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                                        <constraints>
+                                                            <constraint firstAttribute="height" constant="40" id="a4x-F9-q0c"/>
+                                                        </constraints>
+                                                        <fontDescription key="fontDescription" type="system" weight="medium" pointSize="18"/>
+                                                        <state key="normal" title="View CV">
+                                                            <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                        </state>
+                                                        <connections>
+                                                            <action selector="cvViewAction:" destination="sqq-9x-4UL" eventType="touchUpInside" id="LZQ-9v-puM"/>
+                                                        </connections>
+                                                    </button>
+                                                </subviews>
+                                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                <constraints>
+                                                    <constraint firstItem="AUj-lC-4Xu" firstAttribute="top" secondItem="HYs-PI-oD8" secondAttribute="top" id="2a2-7F-YM7"/>
+                                                    <constraint firstAttribute="height" constant="50" id="4Y6-89-vBU"/>
+                                                </constraints>
+                                            </view>
                                             <button opaque="NO" tag="1" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="CTk-0S-P8h" customClass="RoundButton" customModule="MyJobPitch" customModuleProvider="target">
-                                                <rect key="frame" x="20" y="644" width="335" height="40"/>
+                                                <rect key="frame" x="20" y="694" width="335" height="40"/>
                                                 <color key="backgroundColor" red="0.0" green="0.3803921569" blue="0.61176470589999998" alpha="1" colorSpace="calibratedRGB"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="40" id="2h9-fJ-6Aj"/>
@@ -3631,13 +3663,13 @@ locations yet.</string>
                                                 </connections>
                                             </button>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Video Pitch:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ke4-cf-hgA">
-                                                <rect key="frame" x="20" y="714" width="102" height="22"/>
+                                                <rect key="frame" x="20" y="764" width="102" height="22"/>
                                                 <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="18"/>
                                                 <color key="textColor" red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="calibratedRGB"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="S8o-tx-RV6">
-                                                <rect key="frame" x="330" y="713" width="25" height="25"/>
+                                                <rect key="frame" x="330" y="763" width="25" height="25"/>
                                                 <constraints>
                                                     <constraint firstAttribute="width" secondItem="S8o-tx-RV6" secondAttribute="height" multiplier="1:1" id="sGS-IX-Jyv"/>
                                                     <constraint firstAttribute="height" constant="25" id="uXt-jc-3Yp"/>
@@ -3648,7 +3680,7 @@ locations yet.</string>
                                                 </connections>
                                             </button>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="7rR-jW-jUU">
-                                                <rect key="frame" x="20" y="746" width="98" height="98"/>
+                                                <rect key="frame" x="20" y="796" width="98" height="98"/>
                                                 <subviews>
                                                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="record" translatesAutoresizingMaskIntoConstraints="NO" id="tUj-Fo-Hll">
                                                         <rect key="frame" x="29" y="20" width="39" height="39"/>
@@ -3687,7 +3719,7 @@ locations yet.</string>
                                                 </constraints>
                                             </view>
                                             <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="c1d-Qq-q1j">
-                                                <rect key="frame" x="138" y="746" width="98" height="98"/>
+                                                <rect key="frame" x="138" y="796" width="98" height="98"/>
                                                 <subviews>
                                                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="play" translatesAutoresizingMaskIntoConstraints="NO" id="0fe-VB-VFO">
                                                         <rect key="frame" x="29" y="20" width="39" height="39"/>
@@ -3725,21 +3757,21 @@ locations yet.</string>
                                                 </constraints>
                                             </view>
                                             <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="7H5-Lv-bid">
-                                                <rect key="frame" x="20" y="864" width="51" height="31"/>
+                                                <rect key="frame" x="20" y="914" width="51" height="31"/>
                                                 <color key="onTintColor" red="0.0" green="0.73333333329999995" blue="0.6588235294" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                             </switch>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="References Available" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="70o-pC-65u">
-                                                <rect key="frame" x="89" y="868" width="266" height="22"/>
+                                                <rect key="frame" x="89" y="918" width="266" height="22"/>
                                                 <fontDescription key="fontDescription" type="system" weight="medium" pointSize="18"/>
                                                 <color key="textColor" red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="calibratedRGB"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="M7W-ed-Wqt">
-                                                <rect key="frame" x="20" y="915" width="51" height="31"/>
+                                                <rect key="frame" x="20" y="965" width="51" height="31"/>
                                                 <color key="onTintColor" red="0.0" green="0.73333333329999995" blue="0.6588235294" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                             </switch>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="All of the information provided is truthful to the best of my knowledge." textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="YyG-SL-uo2">
-                                                <rect key="frame" x="89" y="915" width="266" height="64.5"/>
+                                                <rect key="frame" x="89" y="965" width="266" height="64.5"/>
                                                 <fontDescription key="fontDescription" type="system" weight="medium" pointSize="18"/>
                                                 <color key="textColor" red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="calibratedRGB"/>
                                                 <nil key="highlightedColor"/>
@@ -3799,6 +3831,7 @@ locations yet.</string>
                                             <constraint firstItem="HI3-XN-Cn2" firstAttribute="top" secondItem="AWa-Ay-cYP" secondAttribute="bottom" constant="20" id="M6T-Q0-WcY"/>
                                             <constraint firstItem="31b-MW-CYd" firstAttribute="centerY" secondItem="HI3-XN-Cn2" secondAttribute="centerY" id="MRE-5m-HES"/>
                                             <constraint firstItem="eyE-JJ-WPP" firstAttribute="leading" secondItem="TFu-K3-KAn" secondAttribute="leading" id="NWV-fT-3vO"/>
+                                            <constraint firstAttribute="trailing" secondItem="HYs-PI-oD8" secondAttribute="trailing" id="PIE-q1-JHm"/>
                                             <constraint firstItem="M7W-ed-Wqt" firstAttribute="leading" secondItem="7H5-Lv-bid" secondAttribute="leading" id="PQi-Ng-xI3"/>
                                             <constraint firstItem="UpM-6p-HPu" firstAttribute="centerY" secondItem="GPy-tp-XSo" secondAttribute="centerY" id="PRS-eH-SZH"/>
                                             <constraint firstItem="ke4-cf-hgA" firstAttribute="leading" secondItem="CTk-0S-P8h" secondAttribute="leading" id="RiK-8p-zJv"/>
@@ -3807,6 +3840,7 @@ locations yet.</string>
                                             <constraint firstItem="GPy-tp-XSo" firstAttribute="top" secondItem="YGs-9S-BDm" secondAttribute="bottom" constant="25" id="SoE-pD-CNK"/>
                                             <constraint firstItem="UpM-6p-HPu" firstAttribute="centerY" secondItem="BUL-oj-D9B" secondAttribute="centerY" id="TTx-4H-wbM"/>
                                             <constraint firstItem="YyG-SL-uo2" firstAttribute="top" secondItem="M7W-ed-Wqt" secondAttribute="top" id="TUV-Ev-wbU"/>
+                                            <constraint firstItem="AUj-lC-4Xu" firstAttribute="leading" secondItem="GPy-tp-XSo" secondAttribute="leading" id="UDz-dn-xtw"/>
                                             <constraint firstItem="bjt-y7-j7E" firstAttribute="trailing" secondItem="TFu-K3-KAn" secondAttribute="trailing" id="UIn-5V-Zla"/>
                                             <constraint firstItem="AWa-Ay-cYP" firstAttribute="top" secondItem="JjY-jZ-19N" secondAttribute="bottom" constant="20" id="Uc3-tb-a80"/>
                                             <constraint firstItem="twv-zg-9jl" firstAttribute="centerY" secondItem="oso-DK-Saf" secondAttribute="centerY" id="VjW-Zj-9bs"/>
@@ -3816,6 +3850,7 @@ locations yet.</string>
                                             <constraint firstItem="gpt-Bh-3KR" firstAttribute="leading" secondItem="JjY-jZ-19N" secondAttribute="trailing" constant="20" id="X7R-ZW-lA4"/>
                                             <constraint firstItem="VYs-v2-auk" firstAttribute="leading" secondItem="AWa-Ay-cYP" secondAttribute="trailing" constant="20" id="ZDR-IK-NF9"/>
                                             <constraint firstItem="bjt-y7-j7E" firstAttribute="leading" secondItem="TFu-K3-KAn" secondAttribute="leading" id="a7B-LJ-DkM"/>
+                                            <constraint firstItem="AUj-lC-4Xu" firstAttribute="trailing" secondItem="BUL-oj-D9B" secondAttribute="trailing" id="aGi-WP-5qb"/>
                                             <constraint firstItem="BUL-oj-D9B" firstAttribute="trailing" secondItem="CTk-0S-P8h" secondAttribute="trailing" id="aHC-53-TA1"/>
                                             <constraint firstItem="AWa-Ay-cYP" firstAttribute="leading" secondItem="JjY-jZ-19N" secondAttribute="leading" id="aXR-vB-XS0"/>
                                             <constraint firstItem="7rR-jW-jUU" firstAttribute="top" secondItem="ke4-cf-hgA" secondAttribute="bottom" constant="10" id="abt-8K-A5S"/>
@@ -3837,6 +3872,7 @@ locations yet.</string>
                                             <constraint firstItem="TZX-6A-KKN" firstAttribute="top" secondItem="EL6-bH-eYB" secondAttribute="bottom" constant="15" id="iUa-hq-xak"/>
                                             <constraint firstItem="c1d-Qq-q1j" firstAttribute="top" secondItem="7rR-jW-jUU" secondAttribute="top" id="jAF-7J-beU"/>
                                             <constraint firstItem="S8o-tx-RV6" firstAttribute="width" secondItem="S8o-tx-RV6" secondAttribute="height" multiplier="1:1" id="jx9-8l-aVI"/>
+                                            <constraint firstItem="CTk-0S-P8h" firstAttribute="top" secondItem="HYs-PI-oD8" secondAttribute="bottom" id="k61-lv-wlk"/>
                                             <constraint firstItem="VYs-v2-auk" firstAttribute="centerY" secondItem="AWa-Ay-cYP" secondAttribute="centerY" id="kKr-Sb-YLQ"/>
                                             <constraint firstItem="EL6-bH-eYB" firstAttribute="trailing" secondItem="TZX-6A-KKN" secondAttribute="trailing" id="kWG-tA-oHw"/>
                                             <constraint firstItem="31b-MW-CYd" firstAttribute="leading" secondItem="HI3-XN-Cn2" secondAttribute="trailing" constant="20" id="kfJ-n2-7AS"/>
@@ -3844,12 +3880,14 @@ locations yet.</string>
                                             <constraint firstItem="VYs-v2-auk" firstAttribute="trailing" secondItem="gpt-Bh-3KR" secondAttribute="trailing" id="lY6-jM-BKM"/>
                                             <constraint firstItem="7he-KV-swI" firstAttribute="leading" secondItem="JjY-jZ-19N" secondAttribute="leading" id="mu7-pJ-WOp"/>
                                             <constraint firstItem="TZX-6A-KKN" firstAttribute="trailing" secondItem="JTI-ni-j06" secondAttribute="trailing" id="mwW-37-hvK"/>
+                                            <constraint firstItem="HYs-PI-oD8" firstAttribute="leading" secondItem="qbS-Xd-C1l" secondAttribute="leading" id="nJz-WG-gBd"/>
                                             <constraint firstItem="cvK-8q-pDi" firstAttribute="top" secondItem="qbS-Xd-C1l" secondAttribute="top" constant="20" id="nV5-0k-vuU"/>
                                             <constraint firstItem="UpM-6p-HPu" firstAttribute="leading" secondItem="GPy-tp-XSo" secondAttribute="trailing" constant="5" id="oHF-gU-P1w"/>
+                                            <constraint firstItem="HYs-PI-oD8" firstAttribute="top" secondItem="GPy-tp-XSo" secondAttribute="bottom" constant="10" id="pbG-b1-w15"/>
                                             <constraint firstItem="EHX-8q-wCw" firstAttribute="leading" secondItem="JTI-ni-j06" secondAttribute="leading" id="sTc-xZ-XFX"/>
                                             <constraint firstItem="c1d-Qq-q1j" firstAttribute="width" secondItem="c1d-Qq-q1j" secondAttribute="height" multiplier="1:1" id="tIu-TS-4jC"/>
                                             <constraint firstItem="twv-zg-9jl" firstAttribute="trailing" secondItem="PTX-QH-j9Z" secondAttribute="trailing" id="ttm-bF-0mj"/>
-                                            <constraint firstItem="CTk-0S-P8h" firstAttribute="top" secondItem="GPy-tp-XSo" secondAttribute="bottom" constant="10" id="v7f-yK-VtG"/>
+                                            <constraint firstItem="CTk-0S-P8h" firstAttribute="top" secondItem="GPy-tp-XSo" secondAttribute="bottom" priority="250" constant="10" id="v7f-yK-VtG"/>
                                             <constraint firstItem="c1d-Qq-q1j" firstAttribute="leading" secondItem="7rR-jW-jUU" secondAttribute="trailing" constant="20" id="vW6-Qz-iiR"/>
                                             <constraint firstItem="7rR-jW-jUU" firstAttribute="leading" secondItem="ke4-cf-hgA" secondAttribute="leading" id="vvQ-AX-ubo"/>
                                             <constraint firstItem="7he-KV-swI" firstAttribute="leading" secondItem="JTI-ni-j06" secondAttribute="leading" id="yy6-Xs-e24"/>
@@ -3890,6 +3928,7 @@ locations yet.</string>
                         <outlet property="agePublic" destination="VYs-v2-auk" id="Rlh-qw-Ell"/>
                         <outlet property="cvFileName" destination="UpM-6p-HPu" id="uii-cI-TsA"/>
                         <outlet property="cvRemoveButton" destination="BUL-oj-D9B" id="5pa-V2-xwi"/>
+                        <outlet property="cvViewButtonHeightConstraint" destination="4Y6-89-vBU" id="oo0-qE-0G8"/>
                         <outlet property="descError" destination="YGs-9S-BDm" id="vcW-BE-uot"/>
                         <outlet property="descView" destination="HAm-aR-5Pa" id="UCp-dJ-ETS"/>
                         <outlet property="email" destination="7he-KV-swI" id="uia-dF-dPY"/>
@@ -3914,7 +3953,7 @@ locations yet.</string>
             </objects>
             <point key="canvasLocation" x="-7303.1999999999998" y="-2273.1634182908547"/>
         </scene>
-        <!--Edit Location-->
+        <!--Add Location-->
         <scene sceneID="dbN-B6-d59">
             <objects>
                 <viewController storyboardIdentifier="LocationEdit" automaticallyAdjustsScrollViewInsets="NO" id="8Ap-eK-You" customClass="LocationEditController" customModule="MyJobPitch" customModuleProvider="target" sceneMemberID="viewController">
@@ -4028,7 +4067,7 @@ locations yet.</string>
                                                     <action selector="myLocationAction:" destination="8Ap-eK-You" eventType="touchUpInside" id="LyV-qQ-ctR"/>
                                                 </connections>
                                             </button>
-                                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="default-logo" translatesAutoresizingMaskIntoConstraints="NO" id="VMf-H8-r9h">
+                                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" alpha="0.20000000000000001" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="default-logo" translatesAutoresizingMaskIntoConstraints="NO" id="VMf-H8-r9h">
                                                 <rect key="frame" x="50" y="416" width="275" height="206"/>
                                                 <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                                                 <constraints>
@@ -4125,7 +4164,7 @@ locations yet.</string>
                             <constraint firstAttribute="trailing" secondItem="nRu-Rb-BEU" secondAttribute="trailing" id="R6i-Lc-k7o"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" title="Edit Location" id="Lhh-T0-0zl">
+                    <navigationItem key="navigationItem" title="Add Location" id="Lhh-T0-0zl">
                         <barButtonItem key="rightBarButtonItem" title="Save" id="PcC-7h-F85">
                             <connections>
                                 <action selector="saveAction:" destination="8Ap-eK-You" id="r6a-Jl-02w"/>
@@ -4158,7 +4197,7 @@ locations yet.</string>
             </objects>
             <point key="canvasLocation" x="-5166" y="-2422"/>
         </scene>
-        <!--Edit Job-->
+        <!--Add Job-->
         <scene sceneID="dMV-Gq-Etz">
             <objects>
                 <viewController storyboardIdentifier="JobEdit" automaticallyAdjustsScrollViewInsets="NO" id="GBK-tD-aEd" customClass="JobEditController" customModule="MyJobPitch" customModuleProvider="target" sceneMemberID="viewController">
@@ -4251,7 +4290,7 @@ locations yet.</string>
                                                 <color key="textColor" red="1" green="0.0" blue="0.031372549020000001" alpha="1" colorSpace="calibratedRGB"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
-                                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="default-logo" translatesAutoresizingMaskIntoConstraints="NO" id="qzN-V4-5oG">
+                                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" alpha="0.20000000000000001" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="default-logo" translatesAutoresizingMaskIntoConstraints="NO" id="qzN-V4-5oG">
                                                 <rect key="frame" x="50" y="379" width="275" height="206"/>
                                                 <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                                                 <constraints>
@@ -4352,7 +4391,7 @@ locations yet.</string>
                             <constraint firstItem="5TY-e9-4WW" firstAttribute="width" secondItem="xt7-Xt-1HN" secondAttribute="width" id="z0M-OR-lZQ"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" title="Edit Job" id="Vab-Ft-IEE">
+                    <navigationItem key="navigationItem" title="Add Job" id="Vab-Ft-IEE">
                         <barButtonItem key="rightBarButtonItem" title="Save" id="UsJ-FE-UnU">
                             <connections>
                                 <action selector="saveAction:" destination="GBK-tD-aEd" id="3E5-qI-IWj"/>
@@ -4387,7 +4426,7 @@ locations yet.</string>
         <!--Messages-->
         <scene sceneID="z1o-6H-gOA">
             <objects>
-                <viewController storyboardIdentifier="Message" id="gls-pB-BRX" customClass="MessageController0" customModule="MyJobPitch" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="Message0" id="gls-pB-BRX" customClass="MessageController0" customModule="MyJobPitch" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="UXi-ui-vea"/>
                         <viewControllerLayoutGuide type="bottom" id="BdU-h9-5hB"/>
@@ -4435,9 +4474,6 @@ locations yet.</string>
                             </view>
                             <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Ejc-rD-IPC">
                                 <rect key="frame" x="0.0" y="134" width="375" height="533"/>
-                                <connections>
-                                    <segue destination="3Oc-1u-xUm" kind="embed" id="Jnf-LQ-cml"/>
-                                </connections>
                             </containerView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -4460,6 +4496,7 @@ locations yet.</string>
                     </navigationItem>
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
                     <connections>
+                        <outlet property="containerView" destination="Ejc-rD-IPC" id="jh8-h0-EsJ"/>
                         <outlet property="headerView" destination="sZZ-kh-0Ip" id="VUJ-zZ-80m"/>
                         <outlet property="imgView" destination="lUY-fe-dGJ" id="6mj-nL-oX7"/>
                         <outlet property="subTitleLabel" destination="btJ-c0-AgU" id="hd6-hs-LDn"/>
@@ -4634,7 +4671,7 @@ locations yet.</string>
                                 </connections>
                             </tableView>
                             <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9pV-Qy-Hob">
-                                <rect key="frame" x="79.5" y="401.5" width="216" height="48"/>
+                                <rect key="frame" x="80" y="402" width="216" height="48"/>
                                 <string key="text">You have not added any
 jobs yet.</string>
                                 <fontDescription key="fontDescription" type="system" pointSize="20"/>
@@ -4674,20 +4711,20 @@ jobs yet.</string>
         <!--Message Controller-->
         <scene sceneID="jJf-HM-hQj">
             <objects>
-                <viewController id="3Oc-1u-xUm" customClass="MessageController" customModule="MyJobPitch" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="Message" id="3Oc-1u-xUm" customClass="MessageController" customModule="MyJobPitch" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="neo-YZ-qYJ"/>
                         <viewControllerLayoutGuide type="bottom" id="lB2-kX-Hgm"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="gDP-PT-rfD">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="533"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="rjl-Ze-Gdn" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-5350" y="-470"/>
+            <point key="canvasLocation" x="-5450" y="-469"/>
         </scene>
         <!--Job Detail-->
         <scene sceneID="u5v-Im-b7f">

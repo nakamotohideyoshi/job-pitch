@@ -26,10 +26,33 @@ class ApplicationDetailController: MJPController {
     var application: Application!
     var chooseDelegate: ChooseDelegate!
     
+    var jobSeeker: JobSeeker!
+    var profile: Profile!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        // Do any additional setup after loading the view.
+        AppHelper.showLoading("Loading...")
+        scrollView.isHidden = true
+        
+        if application != nil {
+            job = application.job
+        }
+        
+        API.shared().loadJobSeekerWithId(id: AppData.user.jobSeeker, success: { (data) in
+            self.jobSeeker = data as! JobSeeker
+            API.shared().loadJobProfileWithId(id: self.jobSeeker.profile, success: { (data) in
+                AppHelper.hideLoading()
+                self.scrollView.isHidden = false
+                
+                self.profile = data as! Profile
+                self.load()
+            }, failure: self.handleErrors)
+        }, failure: self.handleErrors)
+        
+    }
+    
+    func load() {
         
         let image = job.getImage()
         if image != nil {
@@ -38,25 +61,23 @@ class ApplicationDetailController: MJPController {
             imgView.image = UIImage(named: "default-logo")
         }
         
-        let profile = AppData.profile!
         let location = job.locationData!
-        let business = location.businessData!
         let contract = AppData.getContract(job.contract)!
         let hours = AppData.getHours(job.hours)!
         
         jobTitle.text = job.title
         distance.text = AppHelper.distance(latitude1: profile.latitude, longitude1: profile.longitude, latitude2: location.latitude, longitude2: location.longitude)
         
-        jobBusinessLocation.text = String(format: "%@: %@",  business.name, location.name)
+        jobBusinessLocation.text = job.getBusinessName()
         
         if contract.id == AppData.getContractByName(Contract.CONTRACT_PERMANENT).id {
-            self.attributes.text = String(format: "%@ (%@)", hours.name, contract.shortName)
+            attributes.text = String(format: "%@ (%@)", hours.name, contract.shortName)
         } else {
-            self.attributes.text = hours.name
+            attributes.text = hours.name
         }
         
-        self.jobDescription.text = self.job.desc
-        self.locationDescription.text = location.desc
+        jobDescription.text = job.desc
+        locationDescription.text = location.desc
         
         if application != nil {
             chooseView.removeFromSuperview()
@@ -76,8 +97,9 @@ class ApplicationDetailController: MJPController {
     
     @IBAction func applyAction(_ sender: Any) {
         PopupController.showGreen("Are you sure you want to apply to this job?", ok: "Apply", okCallback: {
-            _ = self.navigationController?.popViewController(animated: true)
-            self.chooseDelegate?.apply()
+            self.chooseDelegate?.apply(callback: {
+                _ = self.navigationController?.popViewController(animated: true)
+            })
         }, cancel: "Cancel", cancelCallback: nil)
     }
     
@@ -96,7 +118,6 @@ class ApplicationDetailController: MJPController {
         controller.application = application
         controller.chooseDelegate = chooseDelegate
         AppHelper.getFrontController().navigationController?.pushViewController(controller, animated: true)
-        
     }
 
 }

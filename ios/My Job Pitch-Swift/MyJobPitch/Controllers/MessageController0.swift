@@ -14,36 +14,56 @@ class MessageController0: MJPController {
     @IBOutlet weak var imgView: UIImageView!;
     @IBOutlet weak var titleLabel: UILabel!;
     @IBOutlet weak var subTitleLabel: UILabel!;
+    @IBOutlet weak var containerView: UIView!
     
-    static var application: Application!
+    var application: Application!
     
     override func viewDidLoad() {
         super.viewDidLoad()
 
         headerView.addUnderLine(paddingLeft: 0, paddingRight: 0, color: AppData.greyBorderColor)
         
+        AppHelper.showLoading("Loading...")
+        API.shared().loadApplicationWithId(id: application.id, success: { (data) in
+            AppHelper.hideLoading()
+            self.application = data as! Application
+            self.load()
+        }, failure: self.handleErrors)
+        
+    }
+    
+    func load() {
+        
+        let job = application.job!
+        
         if AppData.user.isJobSeeker() {
             
-            if let image = MessageController0.application.job.getImage() {
+            if let image = job.getImage() {
                 AppHelper.loadImageURL(imageUrl: (image.thumbnail)!, imageView: imgView, completion: nil)
             } else {
                 imgView.image = UIImage(named: "default-logo")
             }
             
-            titleLabel.text = MessageController0.application.job.locationData.businessData.name
+            titleLabel.text = job.title
+            subTitleLabel.text = job.getBusinessName()
             
         } else {
             
-            if let pitch = MessageController0.application.jobSeeker.getPitch() {
+            let jobSeeker = application.jobSeeker!
+            if let pitch = jobSeeker.getPitch() {
                 AppHelper.loadImageURL(imageUrl: (pitch.thumbnail)!, imageView: imgView, completion: nil)
             } else {
                 imgView.image = UIImage(named: "no-img")
             }
-            titleLabel.text = MessageController0.application.jobSeeker.firstName + " " + MessageController0.application.jobSeeker.lastName
-            
+            titleLabel.text = jobSeeker.getFullName()
+            subTitleLabel.text = String(format: "%@ (%@)", job.title, job.getBusinessName())
         }
         
-        subTitleLabel.text = String(format: "%@ (%@, %@)", MessageController0.application.job.title, MessageController0.application.job.locationData.name, MessageController0.application.job.locationData.businessData.name);
+        let controller = AppHelper.mainStoryboard.instantiateViewController(withIdentifier: "Message") as! MessageController
+        controller.application = application
+        controller.view.frame = CGRect(origin: CGPoint.zero, size: containerView.frame.size)
+        containerView.addSubview(controller.view)
+        addChildViewController(controller)
         
     }
     
@@ -53,8 +73,8 @@ class MessageController0: MJPController {
 
     static func showModal(application: Application) {
         
-        let controller = AppHelper.mainStoryboard.instantiateViewController(withIdentifier: "Message") as! MessageController0
-        MessageController0.application = application
+        let controller = AppHelper.mainStoryboard.instantiateViewController(withIdentifier: "Message0") as! MessageController0
+        controller.application = application
         let navController = UINavigationController(rootViewController: controller)
         AppHelper.getFrontController().present(navController, animated: true, completion: nil)
         

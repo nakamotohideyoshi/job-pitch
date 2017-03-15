@@ -11,8 +11,6 @@ import MGSwipeTableCell
 
 class BusinessDetailController: MJPController {
     
-    static var refreshRequest = false
-    
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var emptyView: UIView!
     
@@ -23,35 +21,33 @@ class BusinessDetailController: MJPController {
     
     var business: Business!
     
-    var data: NSMutableArray!
+    var data: NSMutableArray! = NSMutableArray()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        // Do any additional setup after loading the view.
-        
-        updateBusinessInfo()
-        BusinessDetailController.refreshRequest = true
-        
+        tableView.addPullToRefresh {
+            self.loadLocations()
+        }
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        if BusinessDetailController.refreshRequest {
-            BusinessDetailController.refreshRequest = false
-            
-            AppHelper.showLoading("Loading...")
-            
-            data = NSMutableArray()
-            
-            API.shared().loadLocationsForBusiness(businessId: business.id, success: { (data) in
-                AppHelper.hideLoading()
-                self.data = data.mutableCopy() as! NSMutableArray
-                self.updateLocationList(superRefresh: false)
-            }) { (message, errors) in
-                self.handleErrors(message: message, errors: errors)
-            }
-        }
+        
+        AppHelper.showLoading("Loading...")
+        API.shared().loadBusiness(id: business.id, success: { (data) in
+            self.updateBusinessInfo()
+            self.loadLocations()
+        }, failure: self.handleErrors)
+    }
+    
+    func loadLocations() {
+        API.shared().loadLocationsForBusiness(businessId: business.id, success: { (data) in
+            AppHelper.hideLoading()
+            self.data = data.mutableCopy() as! NSMutableArray
+            self.updateLocationList()
+            self.tableView.pullToRefreshView.stopAnimating()
+        }, failure: self.handleErrors)
     }
     
     func updateBusinessInfo() {
@@ -65,21 +61,14 @@ class BusinessDetailController: MJPController {
         creditCount.setTitle(String(format: "%@ %@", business.tokens, business.tokens.intValue > 1 ? "Credits" : "Credit"), for: .normal);
     }
     
-    func updateLocationList(superRefresh: Bool) {
-        if superRefresh {
-            BusinessListController.refreshRequest = true
-        }
+    func updateLocationList() {
         subTitle.text = String(format: "Includes %lu %@", data.count, data.count > 1 ? "locations" : "location")
         emptyView.isHidden = self.data.count > 0
         tableView.reloadData()
     }
     
     @IBAction func editBusinessAction(_ sender: Any) {
-        BusinessEditController.pushController(business: business) { (business) in
-            BusinessListController.refreshRequest = true
-            self.business = business
-            self.updateBusinessInfo()
-        }
+        BusinessEditController.pushController(business: business)
     }
     
     @IBAction func deleteBusinessAction(_ sender: Any) {
@@ -88,24 +77,17 @@ class BusinessDetailController: MJPController {
         PopupController.showYellow(message, ok: "Delete", okCallback: {
             
             AppHelper.showLoading("Deleting...")
-            
             API.shared().deleteBusiness(id: self.business.id, success: {
                 AppHelper.hideLoading()
-                BusinessListController.refreshRequest = true
                 _ = self.navigationController?.popViewController(animated: true)
-            }) { (message, errors) in
-                self.handleErrors(message: message, errors: errors)
-            }
+            }, failure: self.handleErrors)
             
         }, cancel: "Cancel", cancelCallback: nil)
         
     }
     
     @IBAction func addLocationAction(_ sender: Any) {
-        LocationEditController.pushController(business: business, location: nil) { (location) in
-            self.data.add(location)
-            self.updateLocationList(superRefresh: true)
-        }
+        LocationEditController.pushController(business: business, location: nil)
     }
     
 }
@@ -130,10 +112,7 @@ extension BusinessDetailController: UITableViewDataSource {
                           backgroundColor: AppData.greenColor,
                           padding: 20,
                           callback: { (cell) -> Bool in                            
-                            LocationEditController.pushController(business: nil, location: location) { (location) in
-                                self.data[indexPath.row] = location
-                                self.updateLocationList(superRefresh: false)
-                            }
+                            LocationEditController.pushController(business: nil, location: location)
                             return true
             })
         ]
@@ -153,10 +132,8 @@ extension BusinessDetailController: UITableViewDataSource {
                                 API.shared().deleteLocation(id: location.id, success: {
                                     AppHelper.hideLoading()
                                     self.data.remove(location)
-                                    self.updateLocationList(superRefresh: true)
-                                }) { (message, errors) in
-                                    self.handleErrors(message: message, errors: errors)
-                                }
+                                    self.updateLocationList()
+                                }, failure: self.handleErrors)
                                 
                                 cell.hideSwipe(animated: true)
                                 

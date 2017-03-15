@@ -42,5 +42,9 @@ class JobSeeker: MJPObjectWithDates {
         }
         return nil
     }
+    
+    func getFullName() -> String {
+        return firstName + " " + lastName
+    }
 
 }

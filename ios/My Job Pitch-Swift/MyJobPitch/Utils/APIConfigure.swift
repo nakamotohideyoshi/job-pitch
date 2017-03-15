@@ -225,6 +225,7 @@ class APIConfigure: NSObject {
         let profileDictionary = [ "searchRadius": "search_radius",
                                   "placeID": "place_id",
                                   "placeName": "place_name",
+                                  "postcodeLookup": "postcode_lookup",
                                   "jobSeeker": "job_seeker" ]
 
         configureSimpleMapping(Profile.classForCoder(),
@@ -400,6 +401,13 @@ class APIConfigure: NSObject {
                                  responseRelationships: inverseRelationships(jobRelationships),
                                  path: "/api/jobs/",
                                  method: .GET)
+        
+        configureResponseMapping(Job.classForCoder(),
+                                 responseArray: jobArray,
+                                 responseDictionary: inverseDictionary(jobDictionary),
+                                 responseRelationships: inverseRelationships(jobRelationships),
+                                 path: "/api/jobs/:pk/",
+                                 method: .GET)
 
         configureMapping(Job.classForCoder(),
                          requestArray: jobArray,
@@ -486,15 +494,7 @@ class APIConfigure: NSObject {
                                  responseDictionary: inverseDictionary(applicationDictionary),
                                  responseRelationships: inverseRelationships(applicationRelationships),
                                  path: "/api/applications/:pk/",
-                                 method: .GET)
-
-        configureResponseMapping(Application.classForCoder(),
-                                 responseArray: applicationArray,
-                                 responseDictionary: inverseDictionary(applicationDictionary),
-                                 responseRelationships: inverseRelationships(applicationRelationships),
-                                 path: "/api/applications/:pk/",
-                                 method: .DELETE)
-
+                                 method: [.GET, .DELETE])
 
         let applicationStatusUpdateArray = [ "id"]
 

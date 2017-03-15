@@ -101,9 +101,10 @@ class CameraController: UIViewController {
                 AppHelper.hideLoading()
                 if let errorOccured = error {
                     self.cameraManager.showErrorBlock("Error occurred", errorOccured.localizedDescription)
-                } else {
-                    self.complete?(videoURL)
-                    _ = self.dismiss(animated: true, completion: nil)
+                } else {                    
+                    self.dismiss(animated: true, completion: {
+                        self.complete?(videoURL)
+                    })
                 }
             }
         })

@@ -10,7 +10,7 @@ import UIKit
 
 protocol ChooseDelegate {
         
-    func apply()
+    func apply(callback: (()->Void)!)
     func remove()
     
 }
@@ -42,6 +42,8 @@ class MJPController: UIViewController {
         
     }
     
+    // keyboard
+    
     func keyboardWasShown(_ notification: NSNotification) {
         
         showKeyboard = true
@@ -70,6 +72,8 @@ class MJPController: UIViewController {
         view.endEditing(true)
     }
     
+    
+    // data input
     
     func getRequiredFields() -> [String: NSArray] {
         return [String: NSArray]()
@@ -102,7 +106,9 @@ class MJPController: UIViewController {
         
     }
     
-    func handleErrors(message: String!, errors: NSDictionary!) {
+    // error
+    
+    func handleErrors(message: String?, errors: NSDictionary?) {
         
         AppHelper.hideLoading()
         
@@ -114,7 +120,7 @@ class MJPController: UIViewController {
         }
         
         if errors != nil {
-            for (key, errorMessages) in errors {
+            for (key, errorMessages) in errors! {
                 
                 var errorMessage: String!
                 if let msg = errorMessages as? String {
@@ -145,7 +151,7 @@ class MJPController: UIViewController {
         }
         
     }
-    
+        
 }
 
 extension MJPController: UIGestureRecognizerDelegate {

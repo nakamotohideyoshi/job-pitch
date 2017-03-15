@@ -463,6 +463,13 @@ class API: NSObject {
                    success: success,
                    failure: failure)
     }
+    
+    func loadLocation(id: NSNumber,
+                      success: ((NSObject) -> Void)!,
+                      failure: ((String?, NSDictionary?) -> Void)!) {
+        getObject(String(format: "/api/user-locations/%@/", id),
+                  success: success, failure: failure)
+    }
 
     func deleteLocation(id: NSNumber,
                         success: (() -> Void)!,
@@ -504,10 +511,17 @@ class API: NSObject {
         getObjects(path, success: success, failure: failure)
     }
 
+    func loadJob(id: NSNumber,
+                 success: ((NSObject) -> Void)!,
+                 failure: ((String?, NSDictionary?) -> Void)!) {
+        getObject(String(format: "/api/user-jobs/%@/", id),
+                  success: success, failure: failure)
+    }
+    
     func loadJobWithId(id: NSNumber,
                        success: ((NSObject) -> Void)!,
                        failure: ((String?, NSDictionary?) -> Void)!) {
-        getObject(String(format: "/api/user-jobs/%@/", id),
+        getObject(String(format: "/api/jobs/%@/", id),
                   success: success, failure: failure)
     }
 
@@ -553,12 +567,12 @@ class API: NSObject {
                   request: update, success: success, failure: failure)
     }
 
-//    func loadApplicationWithId(id: NSNumber,
-//                               success: ((NSObject) -> Void)!,
-//                               failure: ((String?, NSDictionary?) -> Void)!) {
-//        getObject(String(format: "/api/applications/%@/", id),
-//                  success: success, failure: failure)
-//    }
+    func loadApplicationWithId(id: NSNumber,
+                               success: ((NSObject) -> Void)!,
+                               failure: ((String?, NSDictionary?) -> Void)!) {
+        getObject(String(format: "/api/applications/%@/", id),
+                  success: success, failure: failure)
+    }
 
     func loadApplicationsForJob(jobId: NSNumber!,
                                 status: NSNumber!,

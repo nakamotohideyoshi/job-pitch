@@ -19,5 +19,6 @@ class Profile: MJPObjectWithDates {
     var longitude: NSNumber!
     var latitude: NSNumber!
     var searchRadius: NSNumber!
+    var postcodeLookup: String!
     
 }

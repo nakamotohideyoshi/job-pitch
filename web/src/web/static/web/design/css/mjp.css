@@ -138,7 +138,8 @@ a.sclabs-theme:hover {
   color: #007C6E;
 }
 
-.btn-primary.sclabs-theme {
+.btn-primary.sclabs-theme,
+.btn-primary.btn-xs.sclabs-theme {
   font-size: 18px;
   color: #fff;
   background-color: #00BAA5;
@@ -155,20 +156,23 @@ button.btn.sclabs-theme {
   padding-top: 2px;
 }
 
-.btn-primary.sclabs-theme:hover {
+.btn-primary.sclabs-theme:hover,
+.btn-primary.btn-xs.sclabs-theme:hover {
   background-color: #007C6E;
   border-color: #007C6E;
   color: #fff;
 }
 
-.btn-default.sclabs-theme {
+.btn-default.sclabs-theme,
+.btn-default.btn-xs.sclabs-theme {
   font-size: 18px;
   color: #007C6E;
   background-color: #fff;
   border-color: #007C6E;
 }
 
-.btn-default.sclabs-theme:hover {
+.btn-default.sclabs-theme:hover,
+.btn-default.btn-xs.sclabs-theme:hover {
   background-color: #007C6E;
   border-color: #007C6E;
   color: #fff;
@@ -180,6 +184,12 @@ button.btn.sclabs-theme {
   border-color: #00BAA5;
 }
 
+.btn.btn-xs.sclabs-theme {
+  padding: 1px 5px;
+  font-size: 12px;
+  line-height: 1.5;
+  height: auto;
+}
 
 /*
  * Hacking Bootstrap Styles
@@ -764,6 +774,7 @@ footer {
 #regJobSeekerModal .modal-dialog,
 #regRecruiterModal .modal-dialog {
   margin: 25% auto;
+  top: -100px;
   width: 40%;
 }
 
@@ -1866,13 +1877,13 @@ div.howitworks-page div.thumbnail{
 }
 
 .btn-custom-modal {
-    background: #04957b;
-    color: #fff;
-    margin-left: 1px;
-    padding: 12px;
-    padding-left: 75px;
-    padding-right: 75px;
-    font-size: 15px;
+  background: #04957b;
+  color: #fff;
+  margin-left: 1px;
+  padding: 12px;
+  padding-left: 75px;
+  padding-right: 75px;
+  font-size: 18px;
 	width: 100%;
 }
 

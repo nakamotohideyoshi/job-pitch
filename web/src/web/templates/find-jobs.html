@@ -1,5 +1,7 @@
 {% extends "mjp_user_base.html" %}
 
+{% load static %}
+
 {% block page-title %}{% endblock %}
 
 {% block sidebar %}{% endblock %}
@@ -29,40 +31,29 @@
             <h3><strong>My Job Feed</strong></h3>
           </div>
         </div>
-        <div class="row">
-          <div class="col-sm-12 dotted-line before">
-            <h2>Company Name</h2>
+        <div class="row card">
+          <div class="col-sm-12 card-header dotted-line before">
+            <div class="row">
+              <div class="col-sm-7 col-sm-push-3">
+                <h2><a href="#" class="sclabs-theme">Job Title</a></h2>
+                <div>Company - Location</div>
+                <div>Part time (permanent)</div>
+              </div>
+              <img class="col-sm-3 col-sm-pull-7" src="{% static "web/images/no_image_available.png" %}" />
+              <div class="col-sm-2 text-right">700m</div>
+            </div>
           </div>
-          <div class="col-sm-9">
+          <div class="col-sm-12 description">
             <p>Sed semper quam in volutpat posuere. Aliquam quis laoreet urna, sed consequat metus. Quisque in vestibulum felis, ac rutrum erat. Aenean at gravida massa. Nulla efficitur lacinia metus, pretium sollicitudin nunc posuere non. Vivamus id nibh ex. Nam urna quam, ornare a interdum nec, lobortis a elit. Praesent sit amet risus elit.</p>
           </div>
-          <div class="col-sm-3">
-            <span class="like icon"></span>
-            <span class="love icon"></span>
+          <div class="col-sm-4">
+            <a class="btn btn-primary sclabs-theme">Apply</a>
           </div>
-        </div>
-        <div class="row">
-          <div class="col-sm-12 dotted-line before">
-            <h2 class="row">Company Name</h2>
+          <div class="col-sm-4">
+            <a class="btn btn-default sclabs-theme">Skip</a>
           </div>
-          <div class="col-sm-9">
-            <p>Aliquam quis laoreet urna, sed consequat metus. Quisque in vestibulum felis, ac rutrum erat. Aenean at gravida massa. Nulla efficitur lacinia metus, pretium sollicitudin nunc posuere non. Vivamus id nibh ex. Nam urna quam, ornare a interdum nec, lobortis a elit. Praesent sit amet risus elit.</p>
-          </div>
-          <div class="col-sm-3">
-            <span class="like icon"></span>
-            <span class="love icon"></span>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-sm-12 dotted-line before">
-            <h2>Company Name</h2>
-          </div>
-          <div class="col-sm-9">
-            <p>Nulla efficitur lacinia metus, pretium sollicitudin nunc posuere non. Vivamus id nibh ex. Nam urna quam, ornare a interdum nec, lobortis a elit. Praesent sit amet risus elit.</p>
-          </div>
-          <div class="col-sm-3">
-            <span class="like icon"></span>
-            <span class="love icon"></span>
+          <div class="col-sm-4">
+            <a class="btn btn-danger sclabs-theme">Remove</a>
           </div>
         </div>
       </div>

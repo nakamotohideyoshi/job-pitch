@@ -132,7 +132,7 @@
 								<div class="alert" role="alert"></div>
 								<input type="text" class="form-control" id="email" name="email" placeholder="Email address">
 								<input type="password" class="form-control" id="password" name="password" placeholder="Password">
-								<button type="submit" class="btn btn-custom-modal">Login</button>
+								<button type="submit" class="col-xs-12 btn btn-primary sclabs-theme">Login</button>
 							</form>
 						</div>
 					</div>
@@ -141,6 +141,15 @@
 							<a class="pull-right" href="/password-reset/">I want to reset my password</a>
 					  </div>
 				  </div>
+          <div class="row">
+            <div class="col-md-8 col-md-offset-2">
+              <form role="form"  action="/api-rest-auth/login/" method="post" id="login">
+                <div class="text-center"><small>new user? register here</small></div>
+                <button class="col-xs-5 btn btn-default btn-xs sclabs-theme" data-dismiss="modal" aria-label="Close" data-toggle="modal" data-target="#regJobSeekerModal">Job Seeker</button>
+                <button class="col-xs-5 col-xs-12 col-xs-offset-2 btn btn-default btn-xs sclabs-theme" data-dismiss="modal" aria-label="Close" data-toggle="modal" data-target="#regRecruiterModal">Recruiter</button
+              </form>
+            </div>
+          </div>
 				</div><!-- /.modal-content -->
 		  </div><!-- /.modal-dialog -->
 		</div><!-- /.modal -->
@@ -158,7 +167,6 @@
 					<div class="row">
 						<div class="col-md-8 col-md-offset-2">
 							<form role="form"  action="/api-auth/login/" method="post" id="register">
-								<div class="alert" role="alert"></div>
                 <div class="form-group">
                   <input type="text" class="form-control" id="reg_email" name="reg_email" placeholder="Email address">
                 </div>
@@ -174,6 +182,14 @@
 							</form>
 						</div>
 					</div>
+          <div class="row">
+            <div class="col-md-8 col-md-offset-2">
+              <form role="form"  action="/api-rest-auth/login/" method="post" id="login">
+                <div class="text-center"><small>Existing user? Login</small></div>
+                <button class="col-xs-4 col-xs-offset-4 btn btn-default btn-xs sclabs-theme" data-dismiss="modal" aria-label="Close" data-toggle="modal" data-target="#loginModal">Login</button>
+              </form>
+            </div>
+          </div>
 				</div>
 			</div><!-- /.modal-content -->
 	  </div><!-- /.modal-dialog -->
@@ -191,7 +207,6 @@
           <div class="row">
             <div class="col-md-8 col-md-offset-2">
               <form role="form"  action="/api-auth/login/" method="post" id="register">
-                <div class="alert" role="alert"></div>
                 <div class="form-group">
                   <input type="text" class="form-control" id="reg_email" name="reg_email" placeholder="Email address">
                 </div>
@@ -210,6 +225,15 @@
               </form>
             </div>
           </div>
+          <div class="row">
+            <div class="col-md-8 col-md-offset-2">
+              <form role="form"  action="/api-rest-auth/login/" method="post" id="login">
+                <div class="text-center"><small>Existing user? Login</small></div>
+                <button class="col-xs-4 col-xs-offset-4 btn btn-default btn-xs sclabs-theme" data-dismiss="modal" aria-label="Close" data-toggle="modal" data-target="#loginModal">Login</button>
+              </form>
+            </div>
+          </div>
+
         </div>
       </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->

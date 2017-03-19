@@ -6,7 +6,6 @@ function goToTop() {
 	document.location.hash = "#hacked-top";
 }
 
-
 function setCookie(cname, cvalue, exdays) {
 	var d = new Date();
 	d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
@@ -39,10 +38,10 @@ function postcodeLocationData(postcode, handleData) {
 		$.ajax({
 			cache: false,
 			url: "https://api.postcodes.io/postcodes/" + postcode,
-			success: function (data) {
+			success: function(data) {
 				handleData(data);
 			},
-			error: function (data) {
+			error: function(data) {
 				console.log(data.responseJSON.error);
 				//fieldError('Please enter a valid postcode.', 'postcode');
 				formAlert('danger', 'Please enter a valid postcode.');
@@ -88,12 +87,12 @@ function logoutUser() {
 	deleteCookie('key');
 
 	$.post("/api-rest-auth/logout/", {
-		csrfmiddlewaretoken: getCookie('csrftoken')
-	})
-		.done(function (data) {
+			csrfmiddlewaretoken: getCookie('csrftoken')
+		})
+		.done(function(data) {
 			window.location.href = "/";
 		})
-		.fail(function (data) {
+		.fail(function(data) {
 			window.location.href = "/";
 
 		});
@@ -113,8 +112,8 @@ function applyForJob(job_id, job_seeker_id) {
 		job: job_id,
 		job_seeker: job_seeker_id,
 		csrftoken: getCookie('csrftoken')
-	}).done(function (data) {
-		$('#applyButton').fadeOut(200, function () {
+	}).done(function(data) {
+		$('#applyButton').fadeOut(200, function() {
 			$('#job_applied_for').show();
 			goToTop();
 		});
@@ -126,9 +125,9 @@ function connectWithJob(job_id, job_seeker_id) {
 		job: job_id,
 		job_seeker: job_seeker_id,
 		csrftoken: getCookie('csrftoken')
-	}).done(function (data) {
-		log('info','Thanks for requesting to connect. A message has been sent to the job seeker.');
-		log('info','You have spent 1 token!');
+	}).done(function(data) {
+		log('info', 'Thanks for requesting to connect. A message has been sent to the job seeker.');
+		log('info', 'You have spent 1 token!');
 		/*
 		$('#viewPitchModal')
 			.find('.modal-body')
@@ -136,21 +135,20 @@ function connectWithJob(job_id, job_seeker_id) {
 		*/
 		$('#job-list-' + job_seeker_id).remove();
 	}).fail(function(data) {
-		if(data.responseText.indexOf('must make a unique set')>0){
+		if (data.responseText.indexOf('must make a unique set') > 0) {
 			log('info', 'The job seeker has already received a message with your requested connection.');
 		}
 	});
 }
 
 function setShortListedApplication(application_id) {
-	$.put("/api/applications/"+application_id+"/", {
+	$.put("/api/applications/" + application_id + "/", {
 		shortlisted: true,
 		csrftoken: getCookie('csrftoken')
-	}).done(function (data) {
-		log('info','This application was set as short listed already.');
+	}).done(function(data) {
+		log('info', 'This application was set as short listed already.');
 	});
 }
-
 
 function messageRead(message_id) {
 	$.put("/api/messages/" + message_id + '/', {
@@ -159,7 +157,7 @@ function messageRead(message_id) {
 	});
 }
 
-var QueryString = function () {
+var QueryString = function() {
 	// This function is anonymous, is executed immediately and
 	// the return value is assigned to QueryString!
 	var query_string = {};
@@ -190,27 +188,38 @@ function userTypeMenuConfiguration(redirectToProfile) {
 		token: getCookie('key'),
 		csrftoken: getCookie('csrftoken')
 
-	})
-		.done(function (data) {
-			if (data.businesses.length) {
-				// business
-				$('.business-link').show();
-        $('.job-seeker-link').remove();
-			} else if (data.job_seeker != null) {
-				// job-seeker
-        $('.business-link').remove();
-				$('.job-seeker-link').show();
-			} else {
-				// Go Finish registration
-				if (redirectToProfile == true) {
-					window.location.href = "/profile";
-				}
+	}).done(function(user) {
+		if (user.businesses.length || user.can_create_bussiness) {
+			// business
+			$('.business-link').show();
+			$('.job-seeker-link').remove();
+		} else if (user.job_seeker != null || !user.can_create_bussiness) {
+			// job-seeker
+			$('.business-link').remove();
+			$('.job-seeker-link').show();
+		} else {
+			// Go Finish registration
+			if (redirectToProfile == true) {
+				window.location.href = "/profile/";
 			}
-		})
-		.fail(function (data) {
-			logoutUser();
-			console.log(data);
-		});
+		}
+
+		var pathArray = window.location.pathname.split('/');
+		var isNewUser = pathArray[1].toLowerCase() == "profile" && pathArray[3].toLowerCase() == "create";
+
+		if (!isNewUser) {
+			if (user.can_create_bussiness) {
+				window.location.href = "/profile/recruiter/create/";
+			} else {
+				window.location.href = "/profile/job-seeker/create/";
+
+			}
+		}
+
+	}).fail(function(user) {
+		logoutUser();
+		console.log(user);
+	});
 
 }
 
@@ -231,9 +240,9 @@ function userTypeMenuConfiguration(redirectToProfile) {
 }*/
 
 function formAlert(type, message) {
-  return new Promise(function(resolve, reject){
-    resolve(log(type, message));
-  });
+	return new Promise(function(resolve, reject) {
+		resolve(log(type, message));
+	});
 }
 
 function putManyAlerts(parentId, messages) {
@@ -278,15 +287,15 @@ function clearErrors() {
 
 function deleteRow(id, apiFunction, rowPrefix) {
 
-	bootbox.confirm("Are you sure?", function (isOk) {
-		if(isOk){
+	bootbox.confirm("Are you sure?", function(isOk) {
+		if (isOk) {
 			$.ajax({
 				url: "/api/" + apiFunction + "/" + id + "/",
 				type: 'DELETE',
 				data: {
 					csrftoken: getCookie('csrftoken')
 				},
-				success: function (result) {
+				success: function(result) {
 					console.log(rowPrefix + id);
 					$('#' + rowPrefix + id).fadeOut(250);
 				}
@@ -296,7 +305,7 @@ function deleteRow(id, apiFunction, rowPrefix) {
 }
 
 function deleteRowApplication(id, rowPrefix) {
-	bootbox.confirm("Are you sure?", function (result) {
+	bootbox.confirm("Are you sure?", function(result) {
 		$.ajax({
 			url: "/api/applications/" + id + "/",
 			type: 'PUT',
@@ -304,7 +313,7 @@ function deleteRowApplication(id, rowPrefix) {
 				csrftoken: getCookie('csrftoken'),
 				status: 3
 			},
-			success: function (result) {
+			success: function(result) {
 				console.log(rowPrefix + id);
 				$('#' + rowPrefix + id).fadeOut(250);
 			}
@@ -318,27 +327,27 @@ function account_active_check() {
 	$.get("/api-rest-auth/user/", {
 		token: getCookie('key'),
 		csrftoken: getCookie('csrftoken')
-	}).done(function (data) {
-			job_seeker_id = data.job_seeker;
+	}).done(function(data) {
+		job_seeker_id = data.job_seeker;
 
-			$.get("/api/job-seekers/" + data.job_seeker, {
-				token: getCookie('key'),
-				csrftoken: getCookie('csrftoken')
-			}).done(function (data) {
-				return data.active;
-			});
-
+		$.get("/api/job-seekers/" + data.job_seeker, {
+			token: getCookie('key'),
+			csrftoken: getCookie('csrftoken')
+		}).done(function(data) {
+			return data.active;
 		});
+
+	});
 }
 
 // Some handy helpers
 
-$.put = function (url, data, callback, type) {
+$.put = function(url, data, callback, type) {
 
 	if ($.isFunction(data)) {
 		type = type || callback,
-		callback = data,
-		data = {}
+			callback = data,
+			data = {}
 	}
 
 	return $.ajax({
@@ -350,12 +359,12 @@ $.put = function (url, data, callback, type) {
 	});
 }
 
-$.delete = function (url, data, callback, type) {
+$.delete = function(url, data, callback, type) {
 
 	if ($.isFunction(data)) {
 		type = type || callback,
-		callback = data,
-		data = {}
+			callback = data,
+			data = {}
 	}
 
 	return $.ajax({
@@ -375,7 +384,7 @@ function csrfSafeMethod(method) {
 }
 
 $.ajaxSetup({
-	beforeSend: function (xhr, settings) {
+	beforeSend: function(xhr, settings) {
 		if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
 			xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
 		}
@@ -413,7 +422,7 @@ function getHtmlForVideoOrThumbnail(pitches) {
 
 	var content = '<img src="/static/web/images/no_image_available.png" styles="width:160px;">';
 
-	$.each(pitches, function (index, pitch) {
+	$.each(pitches, function(index, pitch) {
 		if (_.hasIn(pitch, 'video') && !_.isEmpty(pitch.video)) {
 			link = pitch.video;
 			content = '<video id="viewing-container" width="320" height="240" controls><source src="<%= url %>" type="video/mp4"></video>';
@@ -438,7 +447,7 @@ function serialize(query) {
 	var queryString = '';
 	var connector = '?';
 
-	_.forIn(query, function (value, key) {
+	_.forIn(query, function(value, key) {
 		//if( ! _.isEmpty(value)){
 		queryString = queryString + connector + key + '=' + value;
 		connector = '&';
@@ -490,19 +499,18 @@ function urlExists(url) {
 }
 */
 
-function log(alertType, message){
+function log(alertType, message) {
 	return Messenger().post({
 		message: message,
 		type: alertType
 	});
 }
 
-
 function getTemplate(fullPathTemplate) {
 
-	return new Promise(function(resolve, reject){
+	return new Promise(function(resolve, reject) {
 		// Using dummy div for dynamic loading and promise API
-		$('<div>').load(fullPathTemplate, function (response, status, xhr) {
+		$('<div>').load(fullPathTemplate, function(response, status, xhr) {
 			if (status == "error") {
 				var msg = "Sorry but there was an error: " + xhr.status + " " + xhr.statusText;
 				reject(msg);
@@ -512,7 +520,6 @@ function getTemplate(fullPathTemplate) {
 		});
 	});
 }
-
 
 //browser ID
 function isBrowser(queryBrowser) {
@@ -574,7 +581,6 @@ function isBrowser(queryBrowser) {
 		majorVersion = parseInt(navigator.appVersion, 10);
 	}
 
-
 	return browserName === queryBrowser;
 
 }
@@ -584,17 +590,17 @@ function populateSelect($select, data, selectedOption) {
 	var selected = '';
 	var text = '';
 
-	data.forEach(function (obj) {
+	data.forEach(function(obj) {
 		selected = '';
 		text = '';
-		if(selectedOption !== undefined){
+		if (selectedOption !== undefined) {
 			if (obj.id == selectedOption) {
 				selected = 'selected=""';
 			}
 		}
 
 		text = obj.name;
-		if(obj.name == undefined) {
+		if (obj.name == undefined) {
 			text = obj.title;
 		}
 
@@ -605,18 +611,18 @@ function populateSelect($select, data, selectedOption) {
 	$select.append(options);
 }
 
-function lookUpForCompany(business_id){
-	return $.get( "/api/user-businesses/"+business_id, {
+function lookUpForCompany(business_id) {
+	return $.get("/api/user-businesses/" + business_id, {
 		csrftoken: getCookie('csrftoken')
-	}).then(function( company ) {
-		$('.login-email').append($('<h6 id="header-company">'+company.name + ' ('+company.tokens+' tokens)</h6>'));
+	}).then(function(company) {
+		$('.login-email').append($('<h6 id="header-company">' + company.name + ' (' + company.tokens + ' tokens)</h6>'));
 		return company;
 	});
 }
 
 /* Site wide on-load functions */
 
-$(function () {
+$(function() {
 	/* Check if user is logged in and handel issues such as non completed reg. */
 	var login = checkLogin();
 	var pathArray = window.location.pathname.split('/');
@@ -631,17 +637,19 @@ $(function () {
 		}
 	}
 
-  //$('.brand-pills > li.active').removeClass('active');
+	//$('.brand-pills > li.active').removeClass('active');
 
-  // Screens menu highlight when page are active
-  var pathname = window.location.pathname.split('/').filter(function(value){return value != ""});
-  var href = pathname[0];
-  $('a[href*="' + href + '"]','#myNavbar').parent().addClass('active');
+	// Screens menu highlight when page are active
+	var pathname = window.location.pathname.split('/').filter(function(value) {
+		return value != ""
+	});
+	var href = pathname[0];
+	$('a[href*="' + href + '"]', '#myNavbar').parent().addClass('active');
 
-  if(pathname[1] != undefined &&  pathname[1] !== ''){
-    href = href + '/' + pathname[1];
-    $('a[href*="' + href + '"]').parent().addClass('active');
-  }
+	if (pathname[1] != undefined && pathname[1] !== '') {
+		href = href + '/' + pathname[1];
+		$('a[href*="' + href + '"]').parent().addClass('active');
+	}
 
 	// Config Messenger (Notification Systems)
 	Messenger.options = {
@@ -650,7 +658,7 @@ $(function () {
 	}
 
 	//Form submit code - Login
-	$('#login').submit(function (event) {
+	$('#login').submit(function(event) {
 		event.preventDefault();
 		var email = $('#email').val();
 		var password1 = $('#password').val();
@@ -660,14 +668,82 @@ $(function () {
 			password: password1,
 			csrfmiddlewaretoken: csrfmiddlewaretoken
 
-		})
-			.done(function (data) {
-				setCookie('email', email, 28);
-				setCookie('key', data.key, 28);
-				window.location.href = "/applications/";
+		}).done(function(data) {
+			setCookie('email', email, 28);
+			setCookie('key', data.key, 28);
+			window.location.href = "/applications/";
 
-			})
-			.fail(function (data) {
+		}).fail(function(data) {
+			var messageError = '';
+
+			for (var key in data.responseJSON) {
+				var obj = data.responseJSON[key];
+				messageError = messageError + obj + '<br>';
+			}
+
+			formAlert('danger', messageError);
+		});
+	});
+
+	//Form submit code - Reg
+	//$('#regJobSeekerModal, #regRecruiterModal').submit(function (event) {
+	$('.register').submit(function(event) {
+		event.preventDefault();
+		var email = $('#reg_email', this).val();
+		var password1 = $('#password1', this).val();
+		var password2 = $('#password2', this).val();
+		var csrfmiddlewaretoken = $('input[name="csrfmiddlewaretoken"]').val();
+
+		log('info', 'Registering ...');
+
+		$.post("/api-rest-auth/registration/", {
+			email: email,
+			password1: password1,
+			password2: password2,
+			csrfmiddlewaretoken: csrfmiddlewaretoken
+
+		}).done(function(key) {
+
+			$.post("/api-rest-auth/login/", {
+				email: email,
+				password: password1,
+				csrfmiddlewaretoken: csrfmiddlewaretoken
+
+			}).done(function(data) {
+				var company_name = $('#reg_name').val();
+
+				if (company_name) {
+					userBusinessStore.post({
+						name: company_name
+
+					}).done(function(data) {
+						log('success', 'You are registered!');
+						log('info', 'Complete your profile...');
+
+						setCookie('email', email, 28);
+						setCookie('key', data.key, 28);
+						window.location.href = "/profile/recruiter/create/";
+
+					}).fail(function(data) {
+						var messageError = '';
+
+						for (var key in data.responseJSON) {
+							var obj = data.responseJSON[key];
+							messageError = messageError + obj + '<br>';
+						}
+
+						formAlert('error', messageError);
+					});
+				} else {
+					log('success', 'You are registered!');
+					log('info', 'Complete your profile...');
+
+					setCookie('email', email, 28);
+					setCookie('key', data.key, 28);
+					window.location.href = "/profile/job-seeker/create";
+				}
+
+			}).fail(function(argument) {
 				var messageError = '';
 
 				for (var key in data.responseJSON) {
@@ -675,75 +751,59 @@ $(function () {
 					messageError = messageError + obj + '<br>';
 				}
 
-				formAlert('danger', messageError);
+				formAlert('error', messageError);
 			});
-	});
 
-	//Form submit code - Reg
-	$('#regJobSeekerModal, #regRecruiterModal').submit(function (event) {
-		event.preventDefault();
-		var email = $('#reg_email', this).val();
-		var password1 = $('#password1', this).val();
-		var password2 = $('#password2', this).val();
-		var csrfmiddlewaretoken = $('[name="csrfmiddlewaretoken"]').val();
+		}).fail(function(data) {
+			$.post("/api-rest-auth/login/", {
+				email: email,
+				password: password1,
+				csrfmiddlewaretoken: csrfmiddlewaretoken
 
-		$.post("/api-rest-auth/registration/", {
-			email: email,
-			password1: password1,
-			password2: password2,
-			csrfmiddlewaretoken: csrfmiddlewaretoken
-		})
-			.done(function (data) {
-				$.post("/api-rest-auth/login/", {
-					email: email,
-					password: password1,
-					csrfmiddlewaretoken: csrfmiddlewaretoken
-				})
-					.done(function (data) {
-						setCookie('email', email, 28);
-						setCookie('key', data.key, 28);
-						window.location.href = "/profile";
-					})
-					.fail(function (data) {
+			}).done(function(argument) {
+				log('success', 'User registered!');
 
-					});
-			})
-			.fail(function (data) {
-				var messageError = ''
+				setCookie('email', email, 28);
+				setCookie('key', data.key, 28);
+				window.location.href = "/profile/job-seeker/edit";
+
+			}).fail(function(argument) {
+				var messageError = '';
 
 				for (var key in data.responseJSON) {
 					var obj = data.responseJSON[key];
 					messageError = messageError + obj + '<br>';
 				}
 
-				formAlert('danger', messageError);
+				formAlert('error', messageError);
 			});
+		});
 	});
 
-	$('#regModal').on('hidden.bs.modal', function () {
+	$('#regModal').on('hidden.bs.modal', function() {
 		$('.alert').html('');
 		$('.alert').hide();
 	});
 
-	$('#loginModal').on('hidden.bs.modal', function () {
+	$('#loginModal').on('hidden.bs.modal', function() {
 		$('.alert').html('');
 		$('.alert').hide();
 	});
 
-	$('#viewPitchModal').on('hidden.bs.modal', function () {
+	$('#viewPitchModal').on('hidden.bs.modal', function() {
 		$('#viewPitchModal').find('.modal-body').html('<div class="col-md-12" id="pitchViewer"></div><div class="col-md-offset-4 col-md-4"><a class="btn btn-custom" id="applyButtonModal" style="display:none; margin-left: 18px;margin-top: 20px;">Connect</a></div>');
 	});
 
-  $("input[type='checkbox']").bootstrapToggle();
+	// TODO: Change all checkbox html for using the new titatoggle library
+	//$("input[type='checkbox']").bootstrapToggle();
 
-  /* For not selected or default option on SELECT DOM element */
-  $("select").on('change',function(){
-    var sel = this;
-    if(sel.options[sel.selectedIndex].value == ''){
-      sel.style.color = '#999';
-    } else {
-      sel.style.color = 'black';
-    }
-  });
-
+	/* For not selected or default option on SELECT DOM element */
+	$("select").on('change', function() {
+		var sel = this;
+		if (sel.options[sel.selectedIndex].value == '') {
+			sel.style.color = '#999';
+		} else {
+			sel.style.color = 'black';
+		}
+	});
 });

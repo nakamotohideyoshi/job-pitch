@@ -130,7 +130,9 @@ a.sclabs-theme:hover {
 }
 
 a.sclabs-theme,
+h2.sclabs-theme,
 h3.sclabs-theme{
+  font-size: inherit;
   color: #00BAA5;
 }
 
@@ -1116,9 +1118,10 @@ div.howitworks-page div.thumbnail{
   padding-top: 15px;
   padding-bottom: 15px;
   border: 1px solid #cccccc;
+  overflow: hidden;
 }
 
-.find-job a {
+.find-job .right-sidebar a {
   font-size: 19px;
 }
 
@@ -1142,7 +1145,34 @@ div.howitworks-page div.thumbnail{
   margin-bottom: 25px;
 }
 
+.find-job.page .card .image {
+  width: 25%;
+  float: left;
+  padding-right: 1em;
+  padding-bottom: 1em;
+}
 
+.find-job.page .card .description {
+  margin-bottom: 1em;
+}
+
+.find-job.page .card .description p {
+  height: 8.57142858em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.find-job.page .card .btn {
+  width: 100%;
+}
+
+.find-job.page .card .btn.btn-danger {
+  color: white;
+}
+
+.find-job.page .card .card-header {
+  margin-bottom: 1em;
+}
 /*
  * Find Talent Page
  *

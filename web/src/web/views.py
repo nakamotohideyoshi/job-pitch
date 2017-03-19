@@ -39,7 +39,7 @@ def pitch(request):
     return render(request, 'profile/pitch.html')
 
 def create_profile_job_seeker(request):
-    return render(request, 'profile/post-a-job-seeker.html')
+    return render(request, 'profile/job-seeker-create.html')
 
 def create_business(request):
     return render(request, 'profile/create-business.html')
@@ -54,7 +54,7 @@ def edit_location(request):
     return render(request, 'profile/edit-location.html')
 
 def edit_profile_job_seeker(request):
-    return render(request, 'profile/edit-job-seeker.html')
+    return render(request, 'profile/job-seeker-edit.html')
 
 def list_businesses(request):
     return render(request, 'profile/list-businesses.html')
@@ -114,4 +114,14 @@ def profile_payments(request):
 
 def notification_settings(request):
     return render(request, 'profile/notification-settings.html')
+
+# New ones url
+def profile_job_seeker_create(request):
+    return render(request, 'profile/job-seeker-create.html')
+
+def profile_job_seeker_edit(request):
+    return render(request, 'profile/job-seeker-edit.html')
+
+def profile_recruiter_create(request):
+    return render(request, 'profile/recruiter-create.html')
 

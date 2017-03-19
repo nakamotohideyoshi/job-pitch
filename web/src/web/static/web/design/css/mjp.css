@@ -255,11 +255,24 @@ option[value=""] {
   border-radius: 20px;
 }
 
-.form-horizontal .checkbox,
-.form-horizontal .checkbox-inline,
-.form-horizontal .radio,
-.form-horizontal .radio-inline {
-  padding-top: 0;
+.form-horizontal .checkbox.sclabs-theme,
+.form-horizontal .checkbox-inline.sclabs-theme,
+.form-horizontal .radio.sclabs-theme,
+.form-horizontal .radio-inline.sclabs-theme,
+.form-horizontal .checkbox.sclabs-theme,
+.form-horizontal .checkbox-inline.sclabs-theme,
+.form-horizontal .radio.sclabs-theme,
+.form-horizontal .radio-inline.sclabs-theme {
+  margin-top: -7px;
+}
+
+
+.form-horizontal .checkbox.sclabs-theme.pull-right,
+.form-horizontal .checkbox-inline.sclabs-theme.pull-right,
+.form-horizontal .radio.sclabs-theme.pull-right,
+.form-horizontal .radio-inline.sclabs-theme.pull-right {
+  float: right;
+  margin-right: 10px;
 }
 
 
@@ -787,13 +800,35 @@ footer {
 
 /*
  * This for hacking bootstrap-switch
- */
 .bootstrap-switch .bootstrap-switch-handle-off.bootstrap-switch-primary,
 .bootstrap-switch .bootstrap-switch-handle-on.bootstrap-switch-primary {
   color: #fff;
   background: #00BAA5;
 }
+ */
 
+
+/*
+ * This for hacking titatoogle css
+ */
+.checkbox-slider--b.sclabs-theme input:checked+span:before {
+  background-color: #00BAA5;
+}
+
+.checkbox-slider-md input+span {
+  padding-left: 30px;
+}
+
+
+.checkbox-slider-md input+span label {
+  padding-top: 2px !important;
+}
+
+@media (min-width: 768px){
+  .checkbox-slider-md input+span label {
+    padding-top: 2px !important;
+  }
+}
 
 /*
  * This for hacking scrollTop because window.scrollTop does not work
@@ -1021,37 +1056,15 @@ div.howitworks-page div.thumbnail{
 
 
 /*
- * Profile Page
- *
- */
-.profile {
-  border: 1px solid #cccccc;
-  margin-top: 10px;
-  margin-bottom: 60px;
-}
-
-.profile-content > .row {
-  border-right: 1px solid #cccccc;
-  padding-top: 15px;
-  padding-bottom: 15px;
-}
-
-.profile-sidebar > .row {
-  /* margin-bottom: 15px; */
-  padding: 10px;
-}
-
-
-/*
  * Edit Profile Page
  *
  */
-.edit-profile.content {
+.profile.content {
   margin-top: -28px;
   margin-bottom: 110px;
 }
 
-.edit-profile.content .row:first-child h6 {
+.profile.content .row:first-child h6 {
   padding-top: 6px;
 }
 

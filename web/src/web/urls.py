@@ -49,4 +49,8 @@ urlpatterns = [
     url(r'^dashboard/$', views.dashboard),
     url(r'^profile/edit-job-preferences/$', views.edit_job_preferences),
     url(r'^find-talent/$', views.find_talent),
+
+    url(r'^profile/job-seeker/create/$', views.profile_job_seeker_create),
+    url(r'^profile/job-seeker/edit/$', views.profile_job_seeker_edit),
+    url(r'^profile/recruiter/create/$', views.profile_recruiter_create),
 ]

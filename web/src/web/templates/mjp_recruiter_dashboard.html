@@ -1,15 +1,8 @@
 {% extends "mjp_base.html" %}
 
 
-  {% block navigation-menu %}
-  <ul class="nav navbar-nav navbar-right job-seeker-link">
-    <li><a href="/find-jobs/">Find a Job </a></li>
-    <li><a href="/inbox/">Messages </a></li>
-    <li><a href="/applications/">Applications </a></li>
-    <li><a href="/profile/">Profile </a></li>
-    <li><a href="javascript:logoutUser();">Log Out</a></li>
-  </ul>
-  <ul class="nav navbar-nav navbar-right business-link">
+{% block navigation-menu %}
+  <ul class="nav navbar-nav navbar-right">
     <li><a href="/find-talent/">Find Talent </a></li>
     <li><a href="/profile/add-work-place/">Add Work Place </a></li>
     <li><a href="/profile/post-a-job/">Post a Job </a></li>
@@ -29,28 +22,35 @@
     <li><a href="javascript:logoutUser();">Log Out</a></li>
     <li><a href="#"><strong id="credits" style="color:#E4910E;">0</strong> Credits</a></li>
   </ul>
-  {% endblock %}
+{% endblock %}
 
 
-  {% block sidebar %}
-    <div class="col-xs-3">
-      <h4 class="sidebar title">User Settings</h4>
-      <div class="sidebar tabpanel" role="tabpanel">
-        <ul class="nav nav-pills brand-pills nav-stacked" role="tablist">
-          <li role="presentation" class="brand-nav"><a href="/profile/edit-job-seeker"><h5>Profile Settings</h5></a></li>
-          {% if 1 == 0 %}
-          <li role="presentation" class="brand-nav"><a href="/profile/notification-settings"><h5>Notification Settings</h5></a></li>
-          {% endif %}
-          <li role="presentation" class="brand-nav job-seeker-link"><a href="/profile/edit-job-preferences"><h5>Job Match Profile</h5></a></li>
-          <li role="presentation" class="brand-nav business-link"><a href="/profile/payments"><h5>Payments</h5></a></li>
-          <li role="presentation" class="brand-nav"><a href="/password-change"><h5>Change Password</h5></a></li>
-        </ul>
-      </div>
+{% block page-title %}
+{% endblock %}
+
+
+{% block sidebar %}
+  <div class="col-xs-3">
+    <h4 class="sidebar title">User Settings</h4>
+    <div class="sidebar tabpanel" role="tabpanel">
+      <ul class="nav nav-pills brand-pills nav-stacked" role="tablist">
+        <li role="presentation" class="brand-nav"><a href="/profile/recruiter/edit/"><h5>Profile Settings</h5></a></li>
+        {% if 1 == 0 %}
+        <li role="presentation" class="brand-nav"><a href="/profile/notification-settings/"><h5>Notification Settings</h5></a></li>
+        {% endif %}
+        <li role="presentation" class="brand-nav business-link"><a href="/profile/payments"><h5>Payments</h5></a></li>
+        <li role="presentation" class="brand-nav"><a href="/password-change"><h5>Change Password</h5></a></li>
+      </ul>
     </div>
-  {% endblock %}
+  </div>
+{% endblock %}
 
 
-  {% block footer %}
+{% block content %}
+{% endblock %}
+
+
+{% block footer %}
   <footer class="mjp-footer">
     <div class="row">
       <div class="col-xs-3 col-xs-offset-1 col-md-3 col-md-offset-1">
@@ -93,4 +93,4 @@
       </div>
     </div>
   </footer>
-  {% endblock %}
+{% endblock %}

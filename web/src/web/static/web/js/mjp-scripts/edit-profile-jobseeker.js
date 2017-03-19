@@ -1,16 +1,16 @@
-$(function () {
+$(function() {
 	// Run login check funtion with auto-redirect
 	checkLogin(true);
 
-  getHtmlThumbnailForApitch().then(function(pitchThumbnail){
-    $('#pitchVideoCheck').html(pitchThumbnail);
-    $('#pitchVideoCheck img').attr('width', '100%');
-  });
+	getHtmlThumbnailForApitch().then(function(pitchThumbnail) {
+		$('#pitchVideoCheck').html(pitchThumbnail);
+		$('#pitchVideoCheck img').attr('width', '100%');
+	});
 
-	$("#active_account").bootstrapToggle();
+	//$("#active_account").bootstrapToggle();
 
 	//$('#active_account').on('switchChange.bootstrapSwitch', function (event, state) {
-  $('#active_account').change(function() {
+	$('#active_account').change(function() {
 		if ($(this).prop('checked')) {
 			$('#account_details_not_active').hide();
 			$('#account_details_active_only').show();
@@ -18,14 +18,13 @@ $(function () {
 			$('#account_details_not_active').show();
 			$('#account_details_active_only').hide();
 
-
 		}
 	});
 
 	//Populate selects
 	$.get("/api/nationalities/", {
 		csrftoken: getCookie('csrftoken')
-	}).done(function (data) {
+	}).done(function(data) {
 		for (var key in data) {
 			var obj = data[key];
 			$('#nationality').append('<option value="' + obj.id + '">' + obj.name + '</options>');
@@ -34,7 +33,7 @@ $(function () {
 
 	$.get("/api/sexes/", {
 		csrftoken: getCookie('csrftoken')
-	}).done(function (data) {
+	}).done(function(data) {
 		for (var key in data) {
 			var obj = data[key];
 			$('#sex').append('<option value="' + obj.id + '">' + obj.name + '</options>');
@@ -47,14 +46,14 @@ $(function () {
 	$.get("/api-rest-auth/user/", {
 		token: getCookie('key'),
 		csrftoken: getCookie('csrftoken')
-	}).done(function (data) {
+	}).done(function(data) {
 
 		job_seeker_id = data.job_seeker;
 
 		$.get("/api/job-seekers/" + data.job_seeker, {
 			token: getCookie('key'),
 			csrftoken: getCookie('csrftoken')
-		}).done(function (data) {
+		}).done(function(data) {
 
 			if (data.cv != '') {
 				$('#CVcurrent').attr('href', data.cv);
@@ -113,7 +112,7 @@ $(function () {
 	});
 
 	//Form submit code
-	$('#profile').submit(function (event) {
+	$('#profile').submit(function(event) {
 		formAlert('info', 'Updating profile...');
 
 		$('.btn-primary').attr("disabled", true);
@@ -173,7 +172,7 @@ $(function () {
 			cache: false,
 			contentType: false,
 			processData: false
-		}).done(function (data) {
+		}).done(function(data) {
 			if (data.cv != '') {
 				$('#CVcurrent').show();
 				$('#CVcurrent').attr('href', data.cv);
@@ -182,13 +181,13 @@ $(function () {
 			clearErrors();
 
 			//setTimeout(function () {
-				$('.btn-primary').attr("disabled", false);
-				$('.alert').hide();
+			$('.btn-primary').attr("disabled", false);
+			$('.alert').hide();
 			//}, 5000);
 
 			formAlert('success', 'Profile Updated!');
 
-		}).fail(function (data) {
+		}).fail(function(data) {
 			var messageError = ''
 			for (var key in data.responseJSON) {
 				var obj = data.responseJSON[key];
@@ -208,7 +207,7 @@ $(function () {
 
 	$('#textarea_feedback').html(text_max + ' characters remaining');
 
-	$('#description').keyup(function () {
+	$('#description').keyup(function() {
 		var text_length = $('#description').val().length;
 		var text_remaining = text_max - text_length;
 

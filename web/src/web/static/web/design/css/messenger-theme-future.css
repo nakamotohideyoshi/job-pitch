@@ -410,3 +410,12 @@ ul.messenger-theme-future .messenger-spinner {
   width: 32px;
   z-index: 10;
 }
+
+
+/*
+ * Hacking Messenger for the SClabs Wep App
+ */
+ul.messenger-theme-future .messenger-message {
+  font-size: 18px;
+}
+

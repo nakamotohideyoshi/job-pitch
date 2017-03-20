@@ -189,11 +189,11 @@ function userTypeMenuConfiguration(redirectToProfile) {
 		csrftoken: getCookie('csrftoken')
 
 	}).done(function(user) {
-		if (user.businesses.length || user.can_create_bussiness) {
+		if (user.businesses.length) {
 			// business
 			$('.business-link').show();
 			$('.job-seeker-link').remove();
-		} else if (user.job_seeker != null || !user.can_create_bussiness) {
+		} else if (user.job_seeker != null) {
 			// job-seeker
 			$('.business-link').remove();
 			$('.job-seeker-link').show();
@@ -201,18 +201,17 @@ function userTypeMenuConfiguration(redirectToProfile) {
 			// Go Finish registration
 			if (redirectToProfile == true) {
 				window.location.href = "/profile/";
-			}
-		}
-
-		var pathArray = window.location.pathname.split('/');
-		var isNewUser = pathArray[1].toLowerCase() == "profile" && pathArray[3].toLowerCase() == "create";
-
-		if (!isNewUser) {
-			if (user.can_create_bussiness) {
-				window.location.href = "/profile/recruiter/create/";
 			} else {
-				window.location.href = "/profile/job-seeker/create/";
+				var pathArray = window.location.pathname.split('/');
+				var isNewUser = pathArray[1].toLowerCase() == "profile" && pathArray[3].toLowerCase() == "create";
 
+				if (isNewUser) {
+					if (user.can_create_bussiness) {
+						window.location.href = "/profile/recruiter/create/";
+					} else {
+						window.location.href = "/profile/job-seeker/create/";
+					}
+				}
 			}
 		}
 

@@ -117,10 +117,10 @@ def notification_settings(request):
 
 # New ones url
 def profile_job_seeker_create(request):
-    return render(request, 'profile/job-seeker-create.html')
+    return render(request, 'profile/jobseeker-create.html')
 
 def profile_job_seeker_edit(request):
-    return render(request, 'profile/job-seeker-edit.html')
+    return render(request, 'profile/jobseeker-edit.html')
 
 def profile_recruiter_create(request):
     return render(request, 'profile/recruiter-create.html')

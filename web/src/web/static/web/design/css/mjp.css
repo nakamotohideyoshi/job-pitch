@@ -1058,6 +1058,28 @@ div.howitworks-page div.thumbnail{
 
 
 /*
+ * Profile Page
+ *
+ */
+.profile-view {
+  border: 1px solid #cccccc;
+  margin-top: 10px;
+  margin-bottom: 60px;
+}
+
+.profile-view .content > .row {
+  border-right: 1px solid #cccccc;
+  padding-top: 15px;
+  padding-bottom: 15px;
+}
+
+.profile-view .sidebar > .row {
+  /* margin-bottom: 15px; */
+  padding: 10px;
+}
+
+
+/*
  * Edit Profile Page
  *
  */
@@ -1173,6 +1195,8 @@ div.howitworks-page div.thumbnail{
 .find-job.page .card .card-header {
   margin-bottom: 1em;
 }
+
+
 /*
  * Find Talent Page
  *

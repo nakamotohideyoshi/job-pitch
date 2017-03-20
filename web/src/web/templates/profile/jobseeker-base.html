@@ -1,4 +1,4 @@
-{% extends "mjp_jobseeker_base.html" %}
+{% extends "mjp_jobseeker_dashboard.html" %}
 
 {% block page-title %}
 <div class="row page-title">
@@ -352,12 +352,13 @@
           </div>
 
           <div class="form-group row">
-            <div class="col-xs-1 text-right sclabs-theme">
-              <label class="checkbox-inline">
-                <input type="checkbox" id="has_references" name="has_references" value="true" data-toggle="toggle" data-style="ios" checked>
-              </label>
+            <div class="col-xs-12 text-right sclabs-theme">
+              <div class="checkbox checkbox-slider--b checkbox-slider-md sclabs-theme">
+                <label>
+                  <input type="checkbox" id="truthful_info" name="truthful_info" value="true" checked><span><label class="control-label">All the information provided is truthful to the best of the my knowledge</label></span>
+                </label>
+              </div>
             </div>
-            <label class="col-xs-10 control-label" style="padding-left: 30px;">All the information provided is truthful to the best of the my knowledge</label>
           </div>
 
           {% csrf_token %}

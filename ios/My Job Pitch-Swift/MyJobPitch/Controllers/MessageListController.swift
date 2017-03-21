@@ -43,7 +43,12 @@ class MessageListController: SearchController {
     override func filterItem(item: Any, text: String) -> Bool {
         
         let application = item as! Application
-        return application.job.locationData.businessData.name.contains(text)
+        for message in application.messages as! [Message] {
+            if message.content.lowercased().contains(text) {
+                return true
+            }
+        }
+        return application.job.locationData.businessData.name.lowercased().contains(text)
         
     }
     

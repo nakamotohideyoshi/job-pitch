@@ -23,9 +23,12 @@ class MessageController0: MJPController {
 
         headerView.addUnderLine(paddingLeft: 0, paddingRight: 0, color: AppData.greyBorderColor)
         
+        headerView.isHidden = true
         AppHelper.showLoading("Loading...")
         API.shared().loadApplicationWithId(id: application.id, success: { (data) in
+            self.headerView.isHidden = false
             AppHelper.hideLoading()
+            
             self.application = data as! Application
             self.load()
         }, failure: self.handleErrors)
@@ -65,6 +68,20 @@ class MessageController0: MJPController {
         containerView.addSubview(controller.view)
         addChildViewController(controller)
         
+    }
+    
+    @IBAction func headerClickAction(_ sender: Any) {
+        if AppData.user.isJobSeeker() {
+            let controller = AppHelper.mainStoryboard.instantiateViewController(withIdentifier: "ApplicationDetail") as! ApplicationDetailController
+            controller.application = application
+            controller.onlyView = true
+            navigationController?.pushViewController(controller, animated: true)
+        } else {
+            let controller = AppHelper.mainStoryboard.instantiateViewController(withIdentifier: "JobSeekerDetail") as! JobSeekerDetailController
+            controller.application = application
+            controller.onlyView = true
+            navigationController?.pushViewController(controller, animated: true)
+        }
     }
     
     @IBAction func closeAction(_ sender: Any) {

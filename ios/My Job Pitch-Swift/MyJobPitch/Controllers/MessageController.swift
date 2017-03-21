@@ -67,7 +67,15 @@ class MessageController: JSQMessagesViewController {
             
             if application.status == statusCreated {
                 inputToolbar.isUserInteractionEnabled = false
-                PopupController.showGray("You cannot send messages until you have connected", ok: "OK")
+                PopupController.showGreen("You cannot send messages until you have connected", ok: "Connect", okCallback: {
+                    self.apply(callback: nil)
+                }, cancel: "View profile", cancelCallback: { 
+                    let controller = AppHelper.mainStoryboard.instantiateViewController(withIdentifier: "JobSeekerDetail") as! JobSeekerDetailController
+                    controller.application = self.application
+                    controller.chooseDelegate = self
+                    controller.onlyView = true
+                    self.parent?.navigationController?.pushViewController(controller, animated: true)
+                })
             } else if application.status == statusDeleted {
                 inputToolbar.isUserInteractionEnabled = false
                 PopupController.showGray("This application has been deleted.", ok: "OK")
@@ -205,6 +213,41 @@ class MessageController: JSQMessagesViewController {
         }) { (message, errors) in
             
         }
+    }
+    
+}
+
+extension MessageController: ChooseDelegate {
+    
+    func apply(callback: (()->Void)!) {
+        
+        let update = ApplicationStatusUpdate()
+        update.id = application.id
+        update.status = AppData.getApplicationStatusByName(ApplicationStatus.APPLICATION_ESTABLISHED).id
+        
+        AppHelper.showLoading("")
+        API.shared().updateApplicationStatus(update: update, success: { (data) in
+            AppHelper.hideLoading()
+            self.inputToolbar.isUserInteractionEnabled = true
+        }) { (message, errors) in
+            if errors?["NO_TOKENS"] != nil {
+                PopupController.showGray("You have no credits left so cannot compete this connection. Credits cannot be added through the app, please go to our web page.", ok: "Ok")
+            } else {
+                PopupController.showGray("error", ok: "Ok")
+            }
+        }
+    }
+    
+    func remove() {
+        
+        AppHelper.showLoading("Deleting...")
+        
+        API.shared().deleteApplication(id: application.id, success: {
+            AppHelper.hideLoading()
+        }) { (message, errors) in
+            PopupController.showGray("error", ok: "Ok")
+        }
+        
     }
     
 }

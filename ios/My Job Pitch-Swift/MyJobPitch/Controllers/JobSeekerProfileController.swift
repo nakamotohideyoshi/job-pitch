@@ -218,7 +218,7 @@ class JobSeekerProfileController: MJPController {
     
     @IBAction func pitchRecordAction(_ sender: Any) {
         
-        if jobSeeker.getPitch() == nil {
+        if jobSeeker?.getPitch() == nil {
             PopupController.showGreen("Here you can record your 30 second pitch. The 30 sec. video will be viewed by prospective employers.", ok: "OK", okCallback: {
                 self.showCamera()
             }, cancel: nil, cancelCallback: nil)

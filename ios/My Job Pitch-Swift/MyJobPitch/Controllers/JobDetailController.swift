@@ -10,10 +10,10 @@ import UIKit
 
 class JobDetailController: MJPController {
 
+    @IBOutlet weak var headerImgView: UIImageView!
+    @IBOutlet weak var headerName: UILabel!
+    @IBOutlet weak var headerSubTitle: UILabel!
     @IBOutlet weak var tableView: UITableView!
-    @IBOutlet weak var imgView: UIImageView!
-    @IBOutlet weak var nameLabel: UILabel!
-    @IBOutlet weak var subTitle: UILabel!
     
     var job: Job!
     
@@ -34,13 +34,13 @@ class JobDetailController: MJPController {
     
     func updateJobInfo() {
         if let image = job.getImage() {
-            AppHelper.loadImageURL(imageUrl: (image.thumbnail)!, imageView: imgView, completion: nil)
+            AppHelper.loadImageURL(imageUrl: (image.thumbnail)!, imageView: headerImgView, completion: nil)
         } else {
-            imgView.image = UIImage(named: "default-logo")
+            headerImgView.image = UIImage(named: "default-logo")
         }
         
-        nameLabel.text = job.title
-        subTitle.text = job.getBusinessName()
+        headerName.text = job.title
+        headerSubTitle.text = job.getBusinessName()
     }
     
     @IBAction func editJobAction(_ sender: Any) {

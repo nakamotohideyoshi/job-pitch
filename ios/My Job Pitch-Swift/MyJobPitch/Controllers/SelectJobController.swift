@@ -11,13 +11,11 @@ import MGSwipeTableCell
 
 class SelectJobController: MJPController {
     
-    @IBOutlet weak var tableView: UITableView!
-    
     @IBOutlet weak var headerView: UIView!
-    @IBOutlet weak var imgView: UIImageView!
-    @IBOutlet weak var titleView: UILabel!
-    
-    @IBOutlet weak var emptyView: UILabel!
+    @IBOutlet weak var headerImgView: UIImageView!
+    @IBOutlet weak var headerTitle: UILabel!
+    @IBOutlet weak var tableView: UITableView!
+    @IBOutlet weak var emptyView: UIView!
     
     var data: NSMutableArray! = NSMutableArray()
     
@@ -36,8 +34,8 @@ class SelectJobController: MJPController {
         // Do any additional setup after loading the view.
         
         var item = SideMenuController.menuItems[SideMenuController.currentID]!
-        imgView.image = UIImage(named: item["icon"]!)?.withRenderingMode(.alwaysTemplate)
-        titleView.text = titles[SideMenuController.currentID]
+        headerImgView.image = UIImage(named: item["icon"]!)?.withRenderingMode(.alwaysTemplate)
+        headerTitle.text = titles[SideMenuController.currentID]
         
         jobActive = AppData.getJobStatusByName(JobStatus.JOB_STATUS_OPEN).id
         
@@ -64,7 +62,21 @@ class SelectJobController: MJPController {
     }
     
     @IBAction func jobAddAction(_ sender: Any) {
-        SideMenuController.pushController(id: "businesses")
+        
+        if AppData.user.canCreateBusinesses || AppData.user.businesses.count==0 {
+            
+            let controller = AppHelper.mainStoryboard.instantiateViewController(withIdentifier: "BusinessList") as! BusinessListController
+            controller.addJobMode = true
+            AppHelper.getFrontController().navigationController?.pushViewController(controller, animated: true)
+            
+        } else {
+            
+            let controller = AppHelper.mainStoryboard.instantiateViewController(withIdentifier: "LocationList") as! BusinessDetailController
+            controller.addJobMode = true
+            controller.businessId = AppData.user.businesses[0] as! NSNumber
+            navigationController?.pushViewController(controller, animated: true)
+            
+        }
     }
     
 }

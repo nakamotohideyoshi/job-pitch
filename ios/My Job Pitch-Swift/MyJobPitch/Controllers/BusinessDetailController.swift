@@ -11,20 +11,41 @@ import MGSwipeTableCell
 
 class BusinessDetailController: MJPController {
     
+    @IBOutlet weak var headerImgView: UIImageView!
+    @IBOutlet weak var headerComment: UILabel!
+    @IBOutlet weak var headerName: UILabel!
+    @IBOutlet weak var headerSubTitle: UILabel!
+    @IBOutlet weak var headerCreditCount: UIButton!
+    @IBOutlet weak var headerNavTitle: UILabel!
+    @IBOutlet weak var removeButtonDisable: UIView!
+    @IBOutlet weak var controlHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var emptyView: UIView!
     
-    @IBOutlet weak var imgView: UIImageView!
-    @IBOutlet weak var nameLabel: UILabel!
-    @IBOutlet weak var subTitle: UILabel!
-    @IBOutlet weak var creditCount: UIButton!
+    var addJobMode = false
+    var businessId: NSNumber!
     
     var business: Business!
-    
     var data: NSMutableArray! = NSMutableArray()
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        headerName.text = ""
+        headerSubTitle.text = ""
+        headerCreditCount.setTitle("", for: .normal)
+        
+        if addJobMode {
+            title = "Add job"
+            headerImgView.image = UIImage(named: "menu-business-plus")?.withRenderingMode(.alwaysTemplate)
+            headerCreditCount.isHidden = true
+            headerSubTitle.isHidden = true
+            controlHeightConstraint.constant = 0
+            headerNavTitle.text = "Select work place"
+        } else {
+            headerComment.isHidden = true
+            removeButtonDisable.isHidden = AppData.user.canCreateBusinesses && AppData.user.businesses.count > 1
+        }
         
         tableView.addPullToRefresh {
             self.loadLocations()
@@ -35,14 +56,28 @@ class BusinessDetailController: MJPController {
         super.viewWillAppear(animated)
         
         AppHelper.showLoading("Loading...")
-        API.shared().loadBusiness(id: business.id, success: { (data) in
-            self.updateBusinessInfo()
+        API.shared().loadBusiness(id: businessId, success: { (data) in
+            self.business = data as! Business
+            if !self.addJobMode {
+                self.updateBusinessInfo()
+            }
             self.loadLocations()
         }, failure: self.handleErrors)
     }
     
+    func updateBusinessInfo() {
+        if let image = business.getImage() {
+            AppHelper.loadImageURL(imageUrl: (image.thumbnail)!, imageView: headerImgView, completion: nil)
+        } else {
+            headerImgView.image = UIImage(named: "default-logo")
+        }
+        
+        headerName.text = business.name
+        headerCreditCount.setTitle(String(format: "%@ %@", business.tokens, business.tokens.intValue > 1 ? "Credits" : "Credit"), for: .normal);
+    }
+    
     func loadLocations() {
-        API.shared().loadLocationsForBusiness(businessId: business.id, success: { (data) in
+        API.shared().loadLocationsForBusiness(businessId: businessId, success: { (data) in
             AppHelper.hideLoading()
             self.data = data.mutableCopy() as! NSMutableArray
             self.updateLocationList()
@@ -50,19 +85,8 @@ class BusinessDetailController: MJPController {
         }, failure: self.handleErrors)
     }
     
-    func updateBusinessInfo() {
-        if let image = business.getImage() {
-            AppHelper.loadImageURL(imageUrl: (image.thumbnail)!, imageView: imgView, completion: nil)
-        } else {
-            imgView.image = UIImage(named: "default-logo")
-        }
-        
-        nameLabel.text = business.name
-        creditCount.setTitle(String(format: "%@ %@", business.tokens, business.tokens.intValue > 1 ? "Credits" : "Credit"), for: .normal);
-    }
-    
     func updateLocationList() {
-        subTitle.text = String(format: "Includes %lu %@", data.count, data.count > 1 ? "locations" : "location")
+        headerSubTitle.text = String(format: "Includes %lu %@", data.count, data.count > 1 ? "work places" : "work place")
         emptyView.isHidden = self.data.count > 0
         tableView.reloadData()
     }
@@ -73,11 +97,11 @@ class BusinessDetailController: MJPController {
     
     @IBAction func deleteBusinessAction(_ sender: Any) {
         
-        let message = String(format: "Are you sure you want to delete %@", business.name)
+        let message = String(format: "Are you sure you want to delete %@", headerName.text!)
         PopupController.showYellow(message, ok: "Delete", okCallback: {
             
             AppHelper.showLoading("Deleting...")
-            API.shared().deleteBusiness(id: self.business.id, success: {
+            API.shared().deleteBusiness(id: self.businessId, success: {
                 AppHelper.hideLoading()
                 _ = self.navigationController?.popViewController(animated: true)
             }, failure: self.handleErrors)
@@ -106,44 +130,48 @@ extension BusinessDetailController: UITableViewDataSource {
         
         cell.setData(location)
         
-        cell.leftButtons = [
-            MGSwipeButton(title: "",
-                          icon: UIImage(named: "edit-big-icon"),
-                          backgroundColor: AppData.greenColor,
-                          padding: 20,
-                          callback: { (cell) -> Bool in                            
-                            LocationEditController.pushController(business: nil, location: location)
-                            return true
-            })
-        ]
-        
-        cell.rightButtons = [
-            MGSwipeButton(title: "",
-                          icon: UIImage(named: "delete-big-icon"),
-                          backgroundColor: AppData.yellowColor,
-                          padding: 20,
-                          callback: { (cell) -> Bool in
-                            
-                            let message = String(format: "Are you sure you want to delete %@", location.name)
-                            PopupController.showYellow(message, ok: "Delete", okCallback: {
+        if !addJobMode {
+            
+            cell.leftButtons = [
+                MGSwipeButton(title: "",
+                              icon: UIImage(named: "edit-big-icon"),
+                              backgroundColor: AppData.greenColor,
+                              padding: 20,
+                              callback: { (cell) -> Bool in
+                                LocationEditController.pushController(business: nil, location: location)
+                                return true
+                })
+            ]
+            
+            cell.rightButtons = [
+                MGSwipeButton(title: "",
+                              icon: UIImage(named: "delete-big-icon"),
+                              backgroundColor: AppData.yellowColor,
+                              padding: 20,
+                              callback: { (cell) -> Bool in
                                 
-                                AppHelper.showLoading("Deleting...")
+                                let message = String(format: "Are you sure you want to delete %@", location.name)
+                                PopupController.showYellow(message, ok: "Delete", okCallback: {
+                                    
+                                    AppHelper.showLoading("Deleting...")
+                                    
+                                    API.shared().deleteLocation(id: location.id, success: {
+                                        AppHelper.hideLoading()
+                                        self.data.remove(location)
+                                        self.updateLocationList()
+                                    }, failure: self.handleErrors)
+                                    
+                                    cell.hideSwipe(animated: true)
+                                    
+                                }, cancel: "Cancel", cancelCallback: {
+                                    cell.hideSwipe(animated: true)
+                                })
                                 
-                                API.shared().deleteLocation(id: location.id, success: {
-                                    AppHelper.hideLoading()
-                                    self.data.remove(location)
-                                    self.updateLocationList()
-                                }, failure: self.handleErrors)
-                                
-                                cell.hideSwipe(animated: true)
-                                
-                            }, cancel: "Cancel", cancelCallback: {
-                                cell.hideSwipe(animated: true)
-                            })
-                            
-                            return false
-            })
-        ]
+                                return false
+                })
+            ]
+            
+        }
         
         cell.addUnderLine(paddingLeft: 15, paddingRight: 0, color: AppData.greyBorderColor)
         
@@ -157,11 +185,18 @@ extension BusinessDetailController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
-        let controller = AppHelper.mainStoryboard.instantiateViewController(withIdentifier: "JobList") as! LocationDetailController
-        controller.location = data[indexPath.row] as! Location
-        navigationController?.pushViewController(controller, animated: true)
+        let location = data[indexPath.row] as! Location
         
-        
+        if !addJobMode {
+            let controller = AppHelper.mainStoryboard.instantiateViewController(withIdentifier: "JobList") as! LocationDetailController
+            controller.location = location
+            navigationController?.pushViewController(controller, animated: true)
+        } else {
+            let controller = AppHelper.mainStoryboard.instantiateViewController(withIdentifier: "JobEdit") as! JobEditController
+            controller.addJobMode = true
+            controller.location = location
+            navigationController?.pushViewController(controller, animated: true)
+        }
     }
     
 }

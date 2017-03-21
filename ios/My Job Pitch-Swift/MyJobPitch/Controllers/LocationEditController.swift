@@ -53,9 +53,10 @@ class LocationEditController: MJPController {
         locationButton.addSubview(iconView)
         
         if location == nil {
-            navigationItem.title = "Add Location"
+            navigationItem.title = "Add Work place"
+            load()
         } else {
-            navigationItem.title = "Edit Location"
+            navigationItem.title = "Edit Work place"
             
             AppHelper.showLoading("Loading...")
             API.shared().loadLocation(id: location.id, success: { (data) in

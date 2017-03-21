@@ -25,6 +25,8 @@ class JobEditController: MJPController {
     @IBOutlet weak var addImageButton: UIButton!
     @IBOutlet weak var removeImageButton: UIButton!
     
+    var addJobMode = false
+    
     var location: Location!
     var job: Job!
     
@@ -323,7 +325,24 @@ class JobEditController: MJPController {
     
     func saveFinished() {
         AppHelper.hideLoading()
+        
+        if addJobMode {
+            var controllers = navigationController?.viewControllers
+            while true {
+                if controllers?[(controllers?.count)!-2] is SelectJobController {
+                    break
+                }
+                if controllers?.count == 2 {
+                    _ = navigationController?.popViewController(animated: true)
+                    return
+                }
+                controllers?.remove(at: (controllers?.count)!-2)
+            }
+            navigationController?.viewControllers = controllers!
+        }
+        
         _ = navigationController?.popViewController(animated: true)
+        
     }
     
     static func pushController(location: Location!, job: Job!) {

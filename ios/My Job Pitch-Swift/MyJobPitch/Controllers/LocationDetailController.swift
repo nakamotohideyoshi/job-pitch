@@ -13,10 +13,10 @@ class LocationDetailController: MJPController {
 
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var emptyView: UIView!
-    
     @IBOutlet weak var imgView: UIImageView!
     @IBOutlet weak var nameLabel: UILabel!
     @IBOutlet weak var subTitle: UILabel!
+    @IBOutlet weak var controlHeightConstraint: NSLayoutConstraint!
     
     var location: Location!
     
@@ -27,8 +27,6 @@ class LocationDetailController: MJPController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        // Do any additional setup after loading the view.
-        
         jobActive = AppData.getJobStatusByName(JobStatus.JOB_STATUS_OPEN).id
         
         tableView.addPullToRefresh {
@@ -42,6 +40,7 @@ class LocationDetailController: MJPController {
         
         AppHelper.showLoading("Loading...")
         API.shared().loadLocation(id: location.id, success: { (data) in
+            self.location = data as! Location
             self.updateLocationInfo()
             self.loadJobs()
         }, failure: self.handleErrors)

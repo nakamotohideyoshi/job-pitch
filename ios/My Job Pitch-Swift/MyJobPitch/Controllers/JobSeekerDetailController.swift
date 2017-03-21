@@ -24,10 +24,12 @@ class JobSeekerDetailController: MJPController {
     @IBOutlet weak var availableView: UIView!
     @IBOutlet weak var truthfulView: UIView!
     @IBOutlet weak var pitchPlayButton: UIButton!
+    @IBOutlet weak var buttonContainer: UIView!
     
     var jobSeeker: JobSeeker!
     var application: Application!
     var chooseDelegate: ChooseDelegate!
+    var onlyView = false
     
     var isConnected = false
     
@@ -102,6 +104,10 @@ class JobSeekerDetailController: MJPController {
             }
             
             shortlisted.isOn = application.shortlisted
+            
+            if onlyView {
+                buttonContainer.removeFromSuperview()
+            }
             
         } else {
             

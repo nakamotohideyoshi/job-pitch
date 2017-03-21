@@ -45,11 +45,9 @@ class BusinessEditController: MJPController {
         
     }
     
-    func load() {
+    func load() {        
         nameField.text = business.name
-        
         creditsLabel.text = String(format: "%@", business.tokens)
-        
         if let image = business.getImage() {
             AppHelper.loadImageURL(imageUrl: (image.thumbnail)!, imageView: imgView, completion: nil)
             addImageButton.isHidden = true

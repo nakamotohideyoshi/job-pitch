@@ -25,6 +25,7 @@ class ApplicationDetailController: MJPController {
     var job: Job!
     var application: Application!
     var chooseDelegate: ChooseDelegate!
+    var onlyView = false
     
     var jobSeeker: JobSeeker!
     var profile: Profile!
@@ -79,9 +80,10 @@ class ApplicationDetailController: MJPController {
         jobDescription.text = job.desc
         locationDescription.text = location.desc
         
-        if application != nil {
+        if application != nil || onlyView {
             chooseView.removeFromSuperview()
-        } else {
+        }
+        if application == nil || onlyView {
             messageButton.removeFromSuperview()
         }
         

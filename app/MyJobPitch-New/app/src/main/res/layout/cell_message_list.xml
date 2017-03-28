@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.daimajia.swipe.SwipeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/application_list_item"
+    android:layout_width="match_parent"
+    android:layout_height="110dp">
+
+    <include
+        layout="@layout/view_cell_edit_buttons"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:padding="10dp">
+
+            <include
+                android:id="@+id/item_img"
+                layout="@layout/view_image_loader"
+                android:layout_width="90dp"
+                android:layout_height="90dp"
+                android:layout_marginRight="10dp"/>
+
+            <TextView
+                android:id="@+id/item_title"
+                android:text="Title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toEndOf="@+id/item_img"
+                android:layout_toRightOf="@+id/item_img"
+                android:textColor="@color/blackText"
+                android:textStyle="bold"
+                android:textSize="20sp"/>
+
+            <TextView
+                android:id="@+id/item_subtitle"
+                android:text="subtitle "
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/item_title"
+                android:layout_toEndOf="@+id/item_img"
+                android:layout_toRightOf="@+id/item_img"
+                android:textColor="@color/blackText"
+                android:textSize="14sp"/>
+
+            <TextView
+                android:id="@+id/item_desc"
+                android:text="description"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/item_subtitle"
+                android:layout_toRightOf="@+id/item_img"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginTop="8dp"
+                android:lines="2"
+                android:textColor="@color/blackText"
+                android:textSize="14sp"/>
+
+            <TextView
+                android:id="@+id/item_attributes"
+                android:text="attribute"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentTop="true"
+                android:layout_alignBottom="@+id/item_title"
+                android:gravity="center_vertical"
+                android:textSize="12sp" />
+
+        </RelativeLayout>
+
+        <ImageView
+            android:layout_width="8dp"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="10dp"
+            android:src="@drawable/icon_right_arrow"
+            android:scaleType="centerInside"/>
+    </LinearLayout>
+
+</com.daimajia.swipe.SwipeLayout>

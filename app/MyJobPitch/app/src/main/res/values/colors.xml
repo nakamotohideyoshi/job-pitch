@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="card_hint_positive">#7a00c900</color>
+    <color name="card_hint_positive">#7a00</color>
     <color name="card_hint_negative">#78ff0000</color>
     <color name="background">#e0e0e0</color>
     <color name="button_text">#ff3f3f3f</color>
@@ -21,6 +21,6 @@
     <color name="grey_14">#eee</color>
     <color name="grey_15">#fff</color>
     <color name="message_background">#7ccc</color>
-    <color name="mjp_teal">#ff009688</color>
+    <color name="mjp_teal">#ff9688</color>
     <color name="white">#ffffff</color>
 </resources>

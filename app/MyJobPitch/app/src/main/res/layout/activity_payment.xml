@@ -107,7 +107,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:layout_marginTop="40dp"
-            android:visibility="invisible">
+            android:visibility="visible">
 
             <TextView
                 android:layout_width="match_parent"
@@ -117,16 +117,17 @@
                 android:textSize="25sp"
                 android:paddingRight="10dp"
                 android:paddingLeft="5dp"/>
+
             <TextView
+                android:id="@+id/subscribe_comment"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/subscribe_comment"
-                android:text="(50 Credits / £25)"
-                android:textStyle="bold"
-                android:textSize="15sp"
-                android:paddingRight="10dp"
                 android:paddingLeft="5dp"
-                android:textColor="@color/grey_9" />
+                android:paddingRight="10dp"
+                android:text="(50 Credits / £25)"
+                android:textColor="@color/grey_9"
+                android:textSize="15sp"
+                android:textStyle="bold" />
 
             <Button
                 android:text="Subscribe"

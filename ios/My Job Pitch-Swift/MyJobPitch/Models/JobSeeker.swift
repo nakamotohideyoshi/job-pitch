@@ -14,7 +14,7 @@ class JobSeeker: MJPObjectWithDates {
     var firstName: String!
     var lastName: String!
     var email: String!
-    var telephone = ""
+    var telephone: String!
     var mobile: String!
     var age: NSNumber!
     var sex: NSNumber!

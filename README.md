@@ -13,7 +13,7 @@ Commit messages should be in the format:
 `re #<issue number> - message`
 
 ## Development Environment
-
+/Volumes/Work/my-job-pitch/mjp.keystore.jks
 To setup a local development environment, you will need a modern linux PC or VM.  Other OSs will work, but your mileage may vary!
 
 The following instructions are for debian flavor distros (i.e. ubuntu)

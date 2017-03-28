@@ -330,12 +330,18 @@ public class MJPApi {
     public void updateApplicationStatus(ApplicationStatusUpdate update) throws MJPApiException {
         try {
             rest.exchange(getObjectUrl(classEndPoints.get(ApplicationStatusUpdate.class), update.getId()), HttpMethod.PUT, createAuthenticatedRequest(update), ApplicationStatusUpdate.class);
+            int i = 0;
+            i = 1;
         } catch (HttpClientErrorException e) {
+            int j = 0;
+            j = 1;
             if (e.getStatusCode().value() == 400) {
                 throw new MJPApiException(e);
             }
             throw e;
         }
+        int k = 0;
+        k =1;
     }
 
     public Job createJob(Job job) throws MJPApiException {

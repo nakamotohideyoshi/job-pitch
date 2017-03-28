@@ -1,0 +1,111 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="#fff"
+    tools:context="com.myjobpitch.fragments.JobProfileFragment">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="16dp"
+        android:orientation="vertical">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <com.rengwuxian.materialedittext.MaterialEditText
+                android:id="@+id/job_profile_sectors"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textMultiLine"
+                android:imeOptions="actionDone"
+                android:hint="Sectors"
+                app:met_floatingLabel="normal"
+                app:met_primaryColor="@color/colorGreen"/>
+            <Button
+                android:id="@+id/job_profile_sectors_button"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@android:color/transparent"/>
+        </FrameLayout>
+
+        <com.weiwangcn.betterspinner.library.material.MaterialBetterSpinner
+            android:id="@+id/job_profile_contract"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:hint="Contract"
+            app:met_floatingLabel="normal"
+            app:met_primaryColor="@color/colorGreen"/>
+
+        <com.weiwangcn.betterspinner.library.material.MaterialBetterSpinner
+            android:id="@+id/job_profile_hours"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:hint="Hours"
+            app:met_floatingLabel="normal"
+            app:met_primaryColor="@color/colorGreen"/>
+
+        <TextView
+            android:text="Job match area"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginTop="20dp"
+            android:theme="@style/BoldLabel" />
+
+        <TextView
+            android:text="In order to match you with jobs in your area, you must tell us your location, and specify the maximum distance to search."
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginTop="10dp" />
+
+        <com.rengwuxian.materialedittext.MaterialEditText
+            android:id="@+id/job_profile_address"
+            android:layout_width="match_parent"
+            android:layout_marginTop="10dp"
+            android:layout_height="wrap_content"
+            android:hint="Address"
+            android:focusable="false"/>
+
+        <FrameLayout
+            android:id="@+id/job_profile_address_button"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/button_height"
+            android:layout_marginTop="5dp"
+            android:background="@drawable/button_yellow"
+            android:theme="@style/Button">
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="10dp"
+                android:src="@drawable/icon_location"
+                android:scaleType="centerCrop"/>
+            <TextView
+                android:text="Set My Location"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:theme="@style/Button"
+                />
+        </FrameLayout>
+
+        <com.weiwangcn.betterspinner.library.material.MaterialBetterSpinner
+            android:id="@+id/job_profile_radius"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:hint="Radius"
+            app:met_floatingLabel="normal"
+            app:met_primaryColor="@color/colorGreen"/>
+
+    </LinearLayout>
+
+</ScrollView>
+
+

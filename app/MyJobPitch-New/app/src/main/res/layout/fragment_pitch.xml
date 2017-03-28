@@ -1,0 +1,69 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/fragment_vertical_margin"
+    android:paddingLeft="@dimen/fragment_horizontal_margin"
+    android:paddingRight="@dimen/fragment_horizontal_margin"
+    android:paddingTop="@dimen/fragment_vertical_margin"
+    android:orientation="vertical"
+    tools:context="com.myjobpitch.fragments.PitchFragment">
+
+    <TextView
+        android:text="Here you can record your 30 second pitch. The 30 sec. video will be viewed by prospective employers."
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_marginTop="15dp"
+        android:layout_marginBottom="15dp"
+        android:textSize="@dimen/default_fontsize"
+        android:textStyle="bold"/>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="200dp">
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#dddddd"
+            android:scaleType="centerCrop"
+            android:id="@+id/image_preview"/>
+        <ImageView
+            android:id="@+id/play_icon"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_gravity="center"
+            android:src="@drawable/icon_play"
+            android:visibility="gone"/>
+        <ProgressBar
+            android:id="@+id/progress_bar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="40dp"
+            android:theme="@style/ProgressBar"
+            android:visibility="gone"
+            style="?android:attr/progressBarStyleSmall"/>
+    </FrameLayout>
+
+    <Button
+        android:text="Record New Pitch"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/button_height"
+        android:layout_marginTop="15dp"
+        android:background="@drawable/button_green"
+        android:theme="@style/Button"
+        android:id="@+id/new_record"/>
+
+    <Button
+        android:text="Upload"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/button_height"
+        android:layout_marginTop="15dp"
+        android:background="@drawable/button_yellow"
+        android:theme="@style/Button"
+        android:id="@+id/upload_button"
+        android:visibility="invisible"/>
+
+</LinearLayout>

@@ -1,0 +1,92 @@
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.myjobpitch.fragments.LoginFragment"
+    android:background="@color/colorPrimary">
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:layout_marginBottom="30dp"
+        android:layout_above="@+id/user_email"
+        android:layout_alignRight="@+id/user_email"
+        android:layout_alignLeft="@+id/user_email"
+        android:src="@drawable/logo"
+        android:id="@+id/logo" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/input_height"
+        android:inputType="textEmailAddress"
+        android:layout_marginBottom="15dp"
+        android:layout_above="@+id/user_password"
+        android:layout_alignLeft="@+id/user_password"
+        android:ems="15"
+        android:id="@+id/user_email"
+        android:background="@drawable/edit_text"
+        android:hint="Email Address"
+        android:theme="@style/EditText"/>
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/input_height"
+        android:inputType="textPassword"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"
+        android:ems="15"
+        android:id="@+id/user_password"
+        android:background="@drawable/edit_text"
+        android:hint="Password"
+        android:theme="@style/EditText" />
+
+    <CheckBox
+        android:text="Remember password"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/user_password"
+        android:layout_alignLeft="@+id/user_password"
+        android:layout_alignStart="@+id/user_password"
+        android:layout_marginTop="15dp"
+        android:id="@+id/login_remember"
+        android:textColor="@android:color/white"
+        android:theme="@style/CheckBox" />
+
+    <Button
+        android:text="Login"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/button_height"
+        android:layout_below="@+id/login_remember"
+        android:layout_alignLeft="@+id/user_password"
+        android:layout_alignRight="@+id/user_password"
+        android:layout_marginTop="25dp"
+        android:id="@+id/login_button"
+        android:background="@drawable/button_green"
+        android:theme="@style/Button" />
+
+    <Button
+        android:text="Forgot password?"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/button_height"
+        android:layout_below="@+id/login_button"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="5dp"
+        android:id="@+id/forgot_password"
+        android:background="@android:color/transparent"
+        android:textColor="#0095ff"
+        android:theme="@style/Button" />
+
+    <Button
+        android:text="Don't have an account? Sign up"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/button_height"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/go_register"
+        android:background="@android:color/transparent"
+        android:textColor="#0095ff"
+        android:theme="@style/Button" />
+
+</RelativeLayout>

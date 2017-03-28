@@ -1,0 +1,37 @@
+<com.daprlabs.aaron.swipedeck.layouts.SwipeFrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:swipedeck="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.myjobpitch.fragments.SwipeFragment">
+
+    <com.daprlabs.aaron.swipedeck.SwipeDeck
+        android:id="@+id/swipe_deck"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="10dp"
+        android:layout_marginBottom="60dp"
+        swipedeck:card_spacing="15dp"
+        swipedeck:max_visible="3"
+        swipedeck:preview_layout="@layout/view_swipe_card"/>
+
+    <TextView
+        android:id="@+id/credits"
+        android:text="99 credits"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|right"
+        android:layout_margin="5dp"
+        android:textSize="14dp"
+        android:textColor="@color/greyLabel"/>
+
+    <include
+        android:id="@+id/empty_view"
+        layout="@layout/view_empty_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:visibility="gone"/>
+
+</com.daprlabs.aaron.swipedeck.layouts.SwipeFrameLayout>

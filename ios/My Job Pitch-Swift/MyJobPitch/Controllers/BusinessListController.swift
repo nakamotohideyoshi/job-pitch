@@ -62,7 +62,7 @@ class BusinessListController: MJPController {
     func updateBusinessList() {
         if data.count == 0 {
             navigationItem.rightBarButtonItem = addButton
-            headerAddButtonDisable.isHidden = true
+            headerAddButtonDisable?.isHidden = true
             tableView.isScrollEnabled = false
             emptyView.isHidden = false
             emptyMessage.text = "You have not added any\n businesses yet."
@@ -78,7 +78,7 @@ class BusinessListController: MJPController {
             tableView.isScrollEnabled = false
         } else {
             navigationItem.rightBarButtonItem = addButton
-            headerAddButtonDisable.isHidden = true
+            headerAddButtonDisable?.isHidden = true
             emptyView.isHidden = true
         }
         self.tableView.reloadData()

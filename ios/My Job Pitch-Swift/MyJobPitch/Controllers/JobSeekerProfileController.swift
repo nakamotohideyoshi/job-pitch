@@ -22,6 +22,8 @@ class JobSeekerProfileController: MJPController {
     
     @IBOutlet weak var email: UITextField!
     @IBOutlet weak var emailPublic: UISwitch!
+    @IBOutlet weak var telephone: UITextField!
+    @IBOutlet weak var telephonePublic: UISwitch!
     @IBOutlet weak var mobile: UITextField!
     @IBOutlet weak var mobilePublic: UISwitch!
     @IBOutlet weak var age: UITextField!
@@ -120,6 +122,8 @@ class JobSeekerProfileController: MJPController {
             lastName.text = jobSeeker.lastName.capitalized
             email.text = jobSeeker.email
             emailPublic.isOn = jobSeeker.emailPublic
+            telephone.text = jobSeeker.telephone
+            telephonePublic.isOn = jobSeeker.telephonePublic
             mobile.text = jobSeeker.mobile
             mobilePublic.isOn = jobSeeker.mobilePublic
             age.text = jobSeeker.age?.stringValue
@@ -261,7 +265,7 @@ class JobSeekerProfileController: MJPController {
         }
         
         if !tickBox.isOn {
-            PopupController.showGray("The information provided should be guaranteed to be truthful to the best.", ok: "OK")
+            PopupController.showGray("You must check the box confirming the truth of the information you have provided.", ok: "OK")
             return
         }
         
@@ -272,6 +276,7 @@ class JobSeekerProfileController: MJPController {
         jobSeeker.firstName = firstName.text?.capitalized
         jobSeeker.lastName = lastName.text?.capitalized
         jobSeeker.email = AppData.email
+        jobSeeker.telephone = telephone.text
         jobSeeker.mobile = mobile.text
         
         if let intAge = Int(age.text!) {
@@ -299,6 +304,7 @@ class JobSeekerProfileController: MJPController {
         }
         
         jobSeeker.emailPublic = emailPublic.isOn
+        jobSeeker.telephonePublic = telephonePublic.isOn
         jobSeeker.mobilePublic = mobilePublic.isOn
         jobSeeker.agePublic = agePublic.isOn
         jobSeeker.sexPublic = sexPublic.isOn
@@ -342,7 +348,7 @@ class JobSeekerProfileController: MJPController {
     
     func saveCompleted() {
         PopupController.showGreen("Success!", ok: "OK", okCallback: {
-            if self.jobSeeker.profile == nil {
+            if !AppData.existProfile {
                 SideMenuController.pushController(id: "job_profile")
             }
         }, cancel: nil, cancelCallback: nil)

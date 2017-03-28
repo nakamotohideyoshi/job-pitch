@@ -15,5 +15,6 @@ target 'MyJobPitch' do
     pod 'SVPullToRefresh'
     pod 'CameraManager'
     pod 'JSQMessagesViewController'
+    pod 'JTSImageViewController'
     
 end

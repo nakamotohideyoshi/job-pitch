@@ -757,8 +757,8 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.myjobpitch.pitch;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "4207d772-6f0b-45f8-9b2f-2cb52ae0544e";
-				PROVISIONING_PROFILE_SPECIFIER = pitch_dist2;
+				PROVISIONING_PROFILE = "24270be1-75b9-46fb-9ff7-a5e82ec4ae6b";
+				PROVISIONING_PROFILE_SPECIFIER = pitch_dist1;
 				SWIFT_OBJC_BRIDGING_HEADER = "MyJobPitch/MyJobPitch-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 3.0;
@@ -783,8 +783,8 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.myjobpitch.pitch;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "4207d772-6f0b-45f8-9b2f-2cb52ae0544e";
-				PROVISIONING_PROFILE_SPECIFIER = pitch_dist2;
+				PROVISIONING_PROFILE = "24270be1-75b9-46fb-9ff7-a5e82ec4ae6b";
+				PROVISIONING_PROFILE_SPECIFIER = pitch_dist1;
 				SWIFT_OBJC_BRIDGING_HEADER = "MyJobPitch/MyJobPitch-Bridging-Header.h";
 				SWIFT_VERSION = 3.0;
 			};

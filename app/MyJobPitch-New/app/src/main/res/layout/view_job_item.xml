@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="10dp">
+
+    <include
+        android:id="@+id/item_img"
+        layout="@layout/view_image_loader"
+        android:layout_width="65dp"
+        android:layout_height="65dp"
+        android:layout_marginRight="10dp"/>
+
+    <TextView
+        android:id="@+id/item_title"
+        android:text="Name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/item_img"
+        android:layout_toEndOf="@+id/item_img"
+        android:layout_toRightOf="@+id/item_img"
+        android:layout_marginTop="5dp"
+        android:textColor="@color/blackText"
+        android:textStyle="bold"
+        android:textSize="20sp"/>
+
+    <TextView
+        android:id="@+id/item_subtitle"
+        android:text="Include 2 work places "
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/item_img"
+        android:layout_toEndOf="@+id/item_img"
+        android:layout_toRightOf="@+id/item_img"
+        android:layout_marginBottom="5dp"
+        android:textSize="16sp"
+         />
+
+    <TextView
+        android:id="@+id/item_attributes"
+        android:text="99 credits"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/item_subtitle"
+        android:layout_alignBottom="@+id/item_subtitle"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:gravity="center"
+        android:textSize="14sp"/>
+
+</RelativeLayout>

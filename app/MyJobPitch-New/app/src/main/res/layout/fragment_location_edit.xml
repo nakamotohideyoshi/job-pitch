@@ -1,0 +1,125 @@
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#fff"
+    tools:context="com.myjobpitch.fragments.LocationEditFragment">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="16dp"
+        android:orientation="vertical">
+
+        <com.rengwuxian.materialedittext.MaterialEditText
+            android:id="@+id/location_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="text"
+            android:imeOptions="actionDone"
+            android:hint="Name"
+            app:met_floatingLabel="normal"
+            app:met_primaryColor="@color/colorGreen"/>
+
+        <com.rengwuxian.materialedittext.MaterialEditText
+            android:id="@+id/location_desc"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:inputType="textMultiLine"
+            android:imeOptions="actionDone"
+            android:hint="Description"
+            android:maxLength="1000"
+            app:met_maxCharacters="1000"
+            app:met_floatingLabel="normal"
+            app:met_primaryColor="@color/colorGreen"/>
+
+        <TextView
+            android:text="Public"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:layout_marginTop="15dp"
+            android:theme="@style/GreyLabel" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="bottom">
+            <com.rengwuxian.materialedittext.MaterialEditText
+                android:id="@+id/location_email"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:inputType="textEmailAddress"
+                android:imeOptions="actionDone"
+                android:hint="Email Addresss"
+                app:met_floatingLabel="normal"
+                app:met_primaryColor="@color/colorGreen"/>
+            <CheckBox
+                android:id="@+id/location_email_public"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:checked="true"
+                android:theme="@style/CheckBox" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:orientation="horizontal"
+            android:gravity="bottom">
+            <com.rengwuxian.materialedittext.MaterialEditText
+                android:id="@+id/location_phone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:inputType="phone"
+                android:imeOptions="actionDone"
+                android:hint="Phone (optional)"
+                app:met_floatingLabel="normal"
+                app:met_primaryColor="@color/colorGreen"/>
+            <CheckBox
+                android:id="@+id/location_phone_public"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:checked="true"
+                android:theme="@style/CheckBox" />
+        </LinearLayout>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp">
+            <com.rengwuxian.materialedittext.MaterialEditText
+                android:id="@+id/location_address"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Address"
+                app:met_floatingLabel="normal"
+                app:met_primaryColor="@color/colorGreen"/>
+            <Button
+                android:id="@+id/location_address_button"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@android:color/transparent"/>
+        </FrameLayout>
+
+        <include
+            android:id="@+id/location_logo"
+            layout="@layout/view_image_selector"
+            android:layout_width="match_parent"
+            android:layout_height="240dp"
+            android:layout_marginTop="15dp"/>
+
+    </LinearLayout>
+
+</ScrollView>

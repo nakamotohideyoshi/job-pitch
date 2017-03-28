@@ -1,0 +1,380 @@
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#fff"
+    tools:context="com.myjobpitch.fragments.TalentProfileFragment">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+            <TextView
+                android:text="Active"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="5dp"
+                android:theme="@style/GreyLabel"/>
+            <CheckBox
+                android:id="@+id/job_seeker_active"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="true"
+                android:theme="@style/CheckBox" />
+        </LinearLayout>
+
+        <com.rengwuxian.materialedittext.MaterialEditText
+            android:id="@+id/job_seeker_first_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textPersonName"
+            android:imeOptions="actionDone"
+            android:hint="First Name"
+            app:met_floatingLabel="normal"
+            app:met_primaryColor="@color/colorGreen"/>
+
+        <com.rengwuxian.materialedittext.MaterialEditText
+            android:id="@+id/job_seeker_last_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:inputType="textPersonName"
+            android:imeOptions="actionDone"
+            android:hint="Last Name"
+            app:met_floatingLabel="normal"
+            app:met_primaryColor="@color/colorGreen"/>
+
+        <TextView
+            android:text="Public"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:layout_gravity="right"
+            android:theme="@style/GreyLabel"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="bottom"
+            android:orientation="horizontal">
+            <com.rengwuxian.materialedittext.MaterialEditText
+                android:id="@+id/job_seeker_email"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:inputType="textEmailAddress"
+                android:imeOptions="actionDone"
+                android:hint="Email Addresss"
+                app:met_floatingLabel="normal"
+                app:met_primaryColor="@color/colorGreen"/>
+            <CheckBox
+                android:id="@+id/job_seeker_email_public"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:checked="true"
+                android:theme="@style/CheckBox" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:gravity="bottom"
+            android:orientation="horizontal">
+            <com.rengwuxian.materialedittext.MaterialEditText
+                android:id="@+id/job_seeker_telephone"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:inputType="phone"
+                android:imeOptions="actionDone"
+                android:hint="Telephone (optional)"
+                app:met_floatingLabel="normal"
+                app:met_primaryColor="@color/colorGreen"/>
+            <CheckBox
+                android:id="@+id/job_seeker_telephone_public"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:checked="true"
+                android:theme="@style/CheckBox" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:gravity="bottom"
+            android:orientation="horizontal">
+            <com.rengwuxian.materialedittext.MaterialEditText
+                android:id="@+id/job_seeker_mobile"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:inputType="phone"
+                android:imeOptions="actionDone"
+                android:hint="Phone (optional)"
+                app:met_floatingLabel="normal"
+                app:met_primaryColor="@color/colorGreen"/>
+            <CheckBox
+                android:id="@+id/job_seeker_mobile_public"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:checked="true"
+                android:theme="@style/CheckBox" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+            <com.rengwuxian.materialedittext.MaterialEditText
+                android:id="@+id/job_seeker_age"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:inputType="number"
+                android:imeOptions="actionDone"
+                android:hint="Age (optional)"
+                app:met_floatingLabel="normal"
+                app:met_primaryColor="@color/colorGreen"/>
+            <CheckBox
+                android:id="@+id/job_seeker_age_public"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:checked="true"
+                android:theme="@style/CheckBox" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+            <com.weiwangcn.betterspinner.library.material.MaterialBetterSpinner
+                android:id="@+id/job_seeker_sex"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:hint="Sex (optional)"
+                app:met_floatingLabel="normal"
+                app:met_primaryColor="@color/colorGreen"/>
+            <CheckBox
+                android:id="@+id/job_seeker_sex_public"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:checked="true"
+                android:theme="@style/CheckBox" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+            <com.weiwangcn.betterspinner.library.material.MaterialBetterSpinner
+                android:id="@+id/job_seeker_nationality"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:hint="Nationality (optional)"
+                app:met_floatingLabel="normal"
+                app:met_primaryColor="@color/colorGreen"/>
+            <CheckBox
+                android:id="@+id/job_seeker_nationality_public"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:checked="true"
+                android:theme="@style/CheckBox" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="25dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+            <TextView
+                android:text="CV summary"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:theme="@style/BoldLabel" />
+            <ImageButton
+                android:id="@+id/job_seeker_cv_help"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginLeft="8dp"
+                android:background="@drawable/icon_help"/>
+        </LinearLayout>
+
+        <com.rengwuxian.materialedittext.MaterialEditText
+            android:id="@+id/job_seeker_description"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:inputType="textMultiLine"
+            android:imeOptions="actionDone"
+            android:hint="Enter text here"
+            android:maxLength="1000"
+            app:met_maxCharacters="1000"
+            app:met_primaryColor="@color/colorGreen"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:layout_marginTop="5dp"
+            android:orientation="horizontal">
+            <TextView
+                android:text="CV:"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:theme="@style/BoldLabel" />
+            <TextView
+                android:id="@+id/job_seeker_cv_filename"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="right"
+                android:singleLine="true"
+                android:visibility="gone"
+                android:textSize="14sp" />
+            <ImageButton
+                android:id="@+id/job_seeker_cv_remove"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginLeft="8dp"
+                android:visibility="gone"
+                android:background="@drawable/icon_remove"/>
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/job_seeker_cv_view"
+            android:text="View CV"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/button_height"
+            android:layout_marginTop="5dp"
+            android:background="@drawable/button_yellow"
+            android:theme="@style/Button"/>
+
+        <Button
+            android:id="@+id/job_seeker_cv_upload"
+            android:text="Upload CV"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/button_height"
+            android:layout_marginTop="15dp"
+            android:background="@drawable/button_blue"
+            android:theme="@style/Button"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="25dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+            <TextView
+                android:text="Video Pitch:"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:theme="@style/BoldLabel" />
+            <ImageButton
+                android:id="@+id/job_seeker_pitch_help"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:background="@drawable/icon_help"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:orientation="horizontal">
+            <LinearLayout
+                android:id="@+id/job_seeker_record_new"
+                android:layout_width="98dp"
+                android:layout_height="98dp"
+                android:layout_marginRight="15dp"
+                android:orientation="vertical"
+                android:background="@color/colorPrimary"
+                android:gravity="center">
+                <ImageView
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:layout_gravity="center"
+                    android:background="@drawable/icon_record" />
+                <TextView
+                    android:text="Record New"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="10dp"
+                    android:textColor="#fff"/>
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/job_seeker_video_play"
+                android:layout_width="98dp"
+                android:layout_height="98dp"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:background="@color/colorPrimary"
+                android:visibility="invisible">
+                <ImageView
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:layout_gravity="center"
+                    android:background="@drawable/icon_play" />
+                <TextView
+                    android:text="Play Current"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="10dp"
+                    android:textColor="#fff"/>
+            </LinearLayout>
+        </LinearLayout>
+
+        <CheckBox
+            android:id="@+id/job_seeker_has_references"
+            android:text="References Available"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:textColor="@color/colorAccent"
+            android:theme="@style/CheckBox" />
+
+        <CheckBox
+            android:id="@+id/job_seeker_tick_box"
+            android:text="All of the information provided is truthful to the best of my knowledge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:textColor="@color/colorAccent"
+            android:theme="@style/CheckBox" />
+
+    </LinearLayout>
+
+</ScrollView>
+
+
+

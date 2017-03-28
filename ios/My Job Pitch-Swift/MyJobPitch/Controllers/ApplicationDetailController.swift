@@ -8,6 +8,7 @@
 
 import UIKit
 import GoogleMaps
+import JTSImageViewController
 
 class ApplicationDetailController: MJPController {
 
@@ -91,6 +92,24 @@ class ApplicationDetailController: MJPController {
         marker.map = mapView
         marker.position = CLLocationCoordinate2DMake(location.latitude.doubleValue, location.longitude.doubleValue)
         mapView.camera = GMSCameraPosition.camera(withTarget: marker.position, zoom: 15)
+    }
+    
+    @IBAction func imageClickAction(_ sender: Any) {
+    
+        let imageInfo = JTSImageInfo()
+        imageInfo.referenceRect = imgView.frame
+        imageInfo.referenceView = view
+        
+        let image = job.getImage()
+        if image != nil {
+            imageInfo.imageURL = URL(string: (image?.image)!)
+        } else {
+            imageInfo.image = UIImage(named: "default-logo")
+        }
+        
+        let imageViewer = JTSImageViewController.init(imageInfo: imageInfo, mode: .image, backgroundStyle: .init(rawValue: 0))
+        imageViewer?.show(from: self, transition: .fromOriginalPosition)
+        
     }
     
     @IBAction func messageAction(_ sender: Any) {

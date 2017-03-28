@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="match_parent"
+    android:orientation="horizontal">
+    <ImageButton
+        android:id="@+id/edit_button"
+        android:layout_width="85dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:padding="15dp"
+        android:background="@color/colorGreen"
+        android:src="@drawable/swipe_icon_edit"
+        android:scaleType="fitCenter"/>
+    <ImageButton
+        android:id="@+id/remove_button"
+        android:layout_width="85dp"
+        android:layout_height="match_parent"
+        android:padding="15dp"
+        android:background="@color/colorYellow"
+        android:src="@drawable/swipe_icon_remove"
+        android:scaleType="fitCenter"/>
+</LinearLayout>

@@ -12,7 +12,8 @@ var CONST = {
 
 	USER: {
 		JOBSEEKER: 0,
-		BUSINESS: 1
+		BUSINESS: 1,
+		UNDEFINED: undefined
 	},
 
 	ROLE: {
@@ -20,7 +21,38 @@ var CONST = {
 		JOBSEEKER: 'JOB_SEEKER'
 	},
 
-	PATH:{
+	PATH: {
 		PARTIALS: "/static/web/partials/"
+	},
+
+	SITEMAP: {
+		COMMONS: [
+			'home',
+			'howitworks/job-seeker',
+			'howitworks/recruiter',
+			'about',
+			'terms-conditions'
+		],
+		RECRUITER: [
+			'profile/job-seeker',
+			'find-jobs',
+			'messages',
+			'applications',
+			'profile/job-seeker',
+			'profile/job-seeker/edit',
+			'profile/notification-settings',
+			'profile/job-preferences/edit',
+			'profile/job-seeker/edit',
+			'password-change'
+		],
+		RECRUITER: [
+			'profile/recruiter',
+			'find-talent',
+			'profile/add-work-place',
+			'profile/post-a-job',
+			'messages',
+			'find-posts',
+			'profile/payments'
+		]
 	}
 }

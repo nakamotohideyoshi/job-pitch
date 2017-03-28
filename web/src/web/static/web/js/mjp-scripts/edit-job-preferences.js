@@ -1,4 +1,4 @@
-$(function () {
+$(function() {
 	// Run login check funtion with auto-redirect
 	checkLogin(true);
 
@@ -8,7 +8,7 @@ $(function () {
 	//Populate selects
 	$.get("/api/hours/", {
 		csrftoken: getCookie('csrftoken')
-	}).done(function (data) {
+	}).done(function(data) {
 		for (var key in data) {
 			var obj = data[key];
 			$('#hours').append('<option value="' + obj.id + '">' + obj.name + '</options>');
@@ -17,7 +17,7 @@ $(function () {
 
 	$.get("/api/contracts/", {
 		csrftoken: getCookie('csrftoken')
-	}).done(function (data) {
+	}).done(function(data) {
 		for (var key in data) {
 			var obj = data[key];
 			$('#contract').append('<option value="' + obj.id + '">' + obj.name + '</options>');
@@ -26,7 +26,7 @@ $(function () {
 
 	$.get("/api/sectors/", {
 		csrftoken: getCookie('csrftoken')
-	}).done(function (data) {
+	}).done(function(data) {
 		$('#sectors').html('');
 
 		for (var key in data) {
@@ -38,21 +38,21 @@ $(function () {
 
 	$.get("/api-rest-auth/user/", {
 		csrftoken: getCookie('csrftoken')
-	}).done(function (data) {
+	}).done(function(data) {
 		job_seeker = data.job_seeker;
 
 		$.get("/api/job-seekers/" + job_seeker, {
 			csrftoken: getCookie('csrftoken')
-		}).done(function (data) {
+		}).done(function(data) {
 			profile_id = data.profile;
 
 			if (data.profile == null) {
-				window.location.href = "/profile/edit-job-preferences/";
+				window.location.href = "/profile/job-preferences/edit/";
 			}
 
 			$.get("/api/job-profiles/" + data.profile, {
 				csrftoken: getCookie('csrftoken')
-			}).done(function (data) {
+			}).done(function(data) {
 				$('#contract').val(data.contract);
 				$('#contract').SumoSelect();
 
@@ -60,7 +60,9 @@ $(function () {
 				$('#hours').SumoSelect();
 
 				$('#sectors').val(data.sectors);
-				$('#sectors').SumoSelect({placeholder:'Choose a job sector'});
+				$('#sectors').SumoSelect({
+					placeholder: 'Choose a job sector'
+				});
 
 				$('#location').val(data.postcode_lookup);
 
@@ -75,8 +77,7 @@ $(function () {
 		});
 	});
 
-
-	$('#job-preferences').submit(function (event) {
+	$('#job-preferences').submit(function(event) {
 		$('.btn-primary').attr("disabled", true);
 		event.preventDefault();
 		var sectors = $('#sectors').val();
@@ -85,7 +86,7 @@ $(function () {
 		var location = $('#location').val();
 		var search_radius = $('#search_radius').val();
 
-		postcodeLocationData(location, function (output) {
+		postcodeLocationData(location, function(output) {
 			var postcodeData = output.result;
 
 			$('#latitude').val(postcodeData.latitude);
@@ -102,7 +103,7 @@ $(function () {
 				cache: false,
 				contentType: false,
 				processData: false,
-				success: function (data) {
+				success: function(data) {
 					putManyAlerts('#job-preferences', [{
 						type: 'success',
 						content: 'Successfully Updated!'
@@ -111,7 +112,7 @@ $(function () {
 						content: '<i class="fa fa-spinner"></i> Wait a moment. Looking for matching jobs...'
 					}]);
 
-					setTimeout(function () {
+					setTimeout(function() {
 						window.location.href = "/find-jobs/";
 					}, 5000);
 

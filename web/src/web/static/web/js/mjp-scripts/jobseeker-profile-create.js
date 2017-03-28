@@ -1,20 +1,17 @@
-$(function () {
-	// Run login check funtion with auto-redirect
-	checkLogin(true);
+$(function() {
+	var query = {
+		csrftoken: getCookie('csrftoken')
+	};
 
 	//Populate selects
-	$.get("/api/nationalities/", {
-		csrftoken: getCookie('csrftoken')
-	}).done(function (data) {
+	$.get("/api/nationalities/", query).done(function(data) {
 		for (var key in data) {
 			var obj = data[key];
 			$('#nationality').append('<option value="' + obj.id + '">' + obj.name + '</options>');
 		}
 	});
 
-	$.get("/api/sexes/", {
-		csrftoken: getCookie('csrftoken')
-	}).done(function (data) {
+	$.get("/api/sexes/", query).done(function(data) {
 		for (var key in data) {
 			var obj = data[key];
 			$('#sex').append('<option value="' + obj.id + '">' + obj.name + '</options>');
@@ -22,7 +19,7 @@ $(function () {
 	});
 
 	//Form submit code
-	$('#profile').submit(function (event) {
+	$('#profile').submit(function(event) {
 		$('.btn-primary').attr("disabled", true);
 		event.preventDefault();
 
@@ -64,24 +61,10 @@ $(function () {
 			contentType: false,
 			processData: false
 
-		}).done(function (data) {
-			window.location.href = "/profile/edit-job-preferences";
+		}).done(function(data) {
+			window.location.href = "/profile/job-preferences/edit";
 
-		}).fail(function (data) {
-			var messageError = '';
-
-			for (var key in data.responseJSON) {
-				var obj = data.responseJSON[key];
-				if (key == 'non_field_errors') {
-					messageError = messageError + obj + '<br>';
-				}
-				fieldError(obj, key);
-			}
-
-			if (messageError != '') {
-				formAlert('danger', messageError);
-			}
-
+		}).fail(function(data) {
 			$('.btn-primary').attr("disabled", false);
 		});
 
@@ -90,7 +73,7 @@ $(function () {
 
 	$('#textarea_feedback').html(text_max + ' characters remaining');
 
-	$('#description').keyup(function () {
+	$('#description').keyup(function() {
 		var text_length = $('#description').val().length;
 		var text_remaining = text_max - text_length;
 

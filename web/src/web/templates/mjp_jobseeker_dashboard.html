@@ -2,11 +2,11 @@
 
 
 {% block navigation-menu %}
-<ul class="nav navbar-nav navbar-right job-seeker-link">
+<ul class="nav navbar-nav navbar-right">
   <li><a href="/find-jobs/">Find a Job </a></li>
-  <li><a href="/inbox/">Messages </a></li>
+  <li><a href="/messages/">Messages </a></li>
   <li><a href="/applications/">Applications </a></li>
-  <li><a href="/profile/">Profile </a></li>
+  <li><a href="/profile/job-seeker">Profile </a></li>
   <li><a href="javascript:logoutUser();">Log Out</a></li>
 </ul>
 {% endblock %}
@@ -18,10 +18,10 @@
     <div class="sidebar tabpanel" role="tabpanel">
       <ul class="nav nav-pills brand-pills nav-stacked" role="tablist">
         <li role="presentation" class="brand-nav"><a href="/profile/job-seeker/edit/"><h5>Profile Settings</h5></a></li>
-        {% if 1 == 0 %}
+        {% comment "Uncomment when need it" %}
         <li role="presentation" class="brand-nav"><a href="/profile/notification-settings/"><h5>Notification Settings</h5></a></li>
-        {% endif %}
-        <li role="presentation" class="brand-nav"><a href="/profile/edit-job-preferences"><h5>Job Match Profile</h5></a></li>
+        {% endcomment %}
+        <li role="presentation" class="brand-nav"><a href="/profile/job-preferences/edit"><h5>Job Match Profile</h5></a></li>
         <li role="presentation" class="brand-nav"><a href="/password-change"><h5>Change Password</h5></a></li>
       </ul>
     </div>

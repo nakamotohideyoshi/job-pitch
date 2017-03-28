@@ -699,6 +699,13 @@ div#wrapper ul.nav.navbar-nav.navbar-right {
   margin-top: 32px;
 }
 
+.about.page,
+.how-it-works.page,
+.term-conditions.page,
+.policies.page {
+  margin-top: 105px;
+}
+
 /*
  * Sidebar Section
  */

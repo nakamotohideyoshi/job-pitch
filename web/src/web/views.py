@@ -2,18 +2,6 @@ from django.shortcuts import render
 from django.http.response import HttpResponse
 
 
-def index(request):
-    return render(request, 'home.html')
-
-def login(request):
-    return render(request, 'login.html')
-
-def registration(request):
-    return render(request, 'registration.html')
-
-def logout(request):
-    return render(request, 'logout.html')
-
 def profile(request):
     return render(request, 'profile/profile.html')
 
@@ -115,12 +103,36 @@ def profile_payments(request):
 def notification_settings(request):
     return render(request, 'profile/notification-settings.html')
 
+
 # New ones url
+def index(request):
+    return render(request, 'home.html')
+
+def login(request):
+    return render(request, 'login.html')
+
+def registration(request):
+    return render(request, 'registration.html')
+
+def logout(request):
+    return render(request, 'logout.html')
+
+
+def profile_job_seeker_view(request):
+    return render(request, 'profile/jobseeker-view.html')
+
 def profile_job_seeker_create(request):
     return render(request, 'profile/jobseeker-create.html')
 
 def profile_job_seeker_edit(request):
     return render(request, 'profile/jobseeker-edit.html')
+
+def profile_job_preferences_edit(request):
+    return render(request, 'profile/job-preferences-edit.html')
+
+
+def profile_recruiter_view(request):
+    return render(request, 'profile/recruiter-view.html')
 
 def profile_recruiter_create(request):
     return render(request, 'profile/recruiter-create.html')

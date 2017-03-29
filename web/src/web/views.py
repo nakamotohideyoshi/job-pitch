@@ -118,22 +118,32 @@ def logout(request):
     return render(request, 'logout.html')
 
 
-def profile_job_seeker_view(request):
+# Job Seeker Views
+def job_seeker_profile_view(request):
     return render(request, 'profile/jobseeker-view.html')
 
-def profile_job_seeker_create(request):
+def job_seeker_profile_create(request):
     return render(request, 'profile/jobseeker-create.html')
 
-def profile_job_seeker_edit(request):
+def job_seeker_profile_edit(request):
     return render(request, 'profile/jobseeker-edit.html')
 
 def profile_job_preferences_edit(request):
     return render(request, 'profile/job-preferences-edit.html')
 
 
-def profile_recruiter_view(request):
+# Recruiters views
+def recruiter_profile_view(request):
     return render(request, 'profile/recruiter-view.html')
 
-def profile_recruiter_create(request):
+def recruiter_profile_create(request):
     return render(request, 'profile/recruiter-create.html')
+
+def recruiter_profile_edit(request):
+    return render(request, 'profile/recruiter-edit.html')
+
+
+# Common Views
+def messages(request):
+    return render(request, 'messages.html')
 

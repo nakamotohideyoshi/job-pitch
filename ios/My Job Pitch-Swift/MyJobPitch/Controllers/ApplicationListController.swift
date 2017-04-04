@@ -138,7 +138,7 @@ extension ApplicationListController: UITableViewDataSource {
         
         let applyIcon = isConnectBtn ? "connect-big-icon" : "message-big-icon"
         
-        cell.leftButtons = [
+        var buttons = [
             MGSwipeButton(title: "",
                           icon: UIImage(named: applyIcon),
                           backgroundColor: AppData.greenColor,
@@ -162,11 +162,10 @@ extension ApplicationListController: UITableViewDataSource {
                             
                             return false
             })
-        ]
+        ];
         
         if AppData.user.isRecruiter() {
-            
-            cell.rightButtons = [
+            buttons.insert(
                 MGSwipeButton(title: "",
                               icon: UIImage(named: "delete-big-icon"),
                               backgroundColor: AppData.yellowColor,
@@ -180,10 +179,12 @@ extension ApplicationListController: UITableViewDataSource {
                                 }, cancel: "Cancel", cancelCallback: nil)
                                 
                                 return false
-                })
-            ]
+                }), at: 0
+            )
             
         }
+        
+        cell.rightButtons = buttons
         
         cell.addUnderLine(paddingLeft: 15, paddingRight: 0, color: AppData.greyBorderColor)
         

@@ -109,17 +109,6 @@ extension LocationDetailController: UITableViewDataSource {
         cell.setData(job)
         cell.setOpacity(job.status==jobActive ? 1 : 0.5)
         
-        cell.leftButtons = [
-            MGSwipeButton(title: "",
-                          icon: UIImage(named: "edit-big-icon"),
-                          backgroundColor: AppData.greenColor,
-                          padding: 20,
-                          callback: { (cell) -> Bool in
-                            JobEditController.pushController(location: nil, job: job)
-                            return true
-            })
-        ]
-        
         cell.rightButtons = [
             MGSwipeButton(title: "",
                           icon: UIImage(named: "delete-big-icon"),
@@ -144,6 +133,14 @@ extension LocationDetailController: UITableViewDataSource {
                             })
                             
                             return false
+            }),
+            MGSwipeButton(title: "",
+                          icon: UIImage(named: "edit-big-icon"),
+                          backgroundColor: AppData.greenColor,
+                          padding: 20,
+                          callback: { (cell) -> Bool in
+                            JobEditController.pushController(location: nil, job: job)
+                            return true
             })
         ]
         

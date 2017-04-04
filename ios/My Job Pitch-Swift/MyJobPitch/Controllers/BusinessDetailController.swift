@@ -132,17 +132,6 @@ extension BusinessDetailController: UITableViewDataSource {
         
         if !addJobMode {
             
-            cell.leftButtons = [
-                MGSwipeButton(title: "",
-                              icon: UIImage(named: "edit-big-icon"),
-                              backgroundColor: AppData.greenColor,
-                              padding: 20,
-                              callback: { (cell) -> Bool in
-                                LocationEditController.pushController(business: nil, location: location)
-                                return true
-                })
-            ]
-            
             cell.rightButtons = [
                 MGSwipeButton(title: "",
                               icon: UIImage(named: "delete-big-icon"),
@@ -168,6 +157,14 @@ extension BusinessDetailController: UITableViewDataSource {
                                 })
                                 
                                 return false
+                }),
+                MGSwipeButton(title: "",
+                              icon: UIImage(named: "edit-big-icon"),
+                              backgroundColor: AppData.greenColor,
+                              padding: 20,
+                              callback: { (cell) -> Bool in
+                                LocationEditController.pushController(business: nil, location: location)
+                                return true
                 })
             ]
             

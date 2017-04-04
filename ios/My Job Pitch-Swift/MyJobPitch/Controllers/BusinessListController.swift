@@ -28,15 +28,15 @@ class BusinessListController: MJPController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        addButton = navigationItem.rightBarButtonItem
-        navigationItem.rightBarButtonItem = nil
-        
         if addJobMode {
             title = "Add job"
             headerImgView.image = UIImage(named: "menu-business-plus")?.withRenderingMode(.alwaysTemplate)
         } else {
             headerView.removeFromSuperview()
+            addButton = navigationItem.rightBarButtonItem
         }
+        
+        navigationItem.rightBarButtonItem = nil
         
     }
     
@@ -60,25 +60,25 @@ class BusinessListController: MJPController {
     }
     
     func updateBusinessList() {
+        navigationItem.rightBarButtonItem = addButton
+        headerAddButtonDisable?.isHidden = true
         if data.count == 0 {
-            navigationItem.rightBarButtonItem = addButton
-            headerAddButtonDisable?.isHidden = true
             tableView.isScrollEnabled = false
             emptyView.isHidden = false
             emptyMessage.text = "You have not added any\n businesses yet."
             emptyButton.setTitle("Create business", for: .normal)
         } else if !AppData.user.canCreateBusinesses {
-            if !addJobMode {
+            navigationItem.rightBarButtonItem = nil
+            headerAddButtonDisable?.isHidden = false
+            if addJobMode {
+                emptyView.isHidden = true 
+            } else {
                 emptyView.isHidden = false
                 emptyMessage.text = "Have more than one company?\n Get in touch!"
                 emptyButton.setTitle("sales@myjobpitch.com", for: .normal)
-            } else {
-                emptyView.isHidden = true
             }
             tableView.isScrollEnabled = false
         } else {
-            navigationItem.rightBarButtonItem = addButton
-            headerAddButtonDisable?.isHidden = true
             emptyView.isHidden = true
         }
         self.tableView.reloadData()
@@ -111,7 +111,7 @@ extension BusinessListController: UITableViewDataSource {
         
         if !addJobMode {
             
-            cell.leftButtons = [
+            var buttons = [
                 MGSwipeButton(title: "",
                               icon: UIImage(named: "edit-big-icon"),
                               backgroundColor: AppData.greenColor,
@@ -124,7 +124,7 @@ extension BusinessListController: UITableViewDataSource {
             
             if AppData.user.canCreateBusinesses && AppData.user.businesses.count > 1 {
                 
-                cell.rightButtons = [
+                buttons.insert(
                     MGSwipeButton(title: "",
                                   icon: UIImage(named: "delete-big-icon"),
                                   backgroundColor: AppData.yellowColor,
@@ -149,10 +149,12 @@ extension BusinessListController: UITableViewDataSource {
                                     })
                                     
                                     return false
-                    })
-                ]
+                    }), at: 0
+                )
                 
             }
+            
+            cell.rightButtons = buttons
             
         }
         

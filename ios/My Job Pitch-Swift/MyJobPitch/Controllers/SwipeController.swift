@@ -278,9 +278,13 @@ extension SwipeController: ChooseDelegate {
         API.shared().createApplication(application: application, success: { (data) in
             AppHelper.hideLoading()
             if AppData.user.isRecruiter() {
-                let application = data as! Application
-                let credits = application.job.locationData.businessData.tokens as Int
-                self.creditsButton.setTitle(String(format: "%d %@", credits, credits > 1 ? "Credits" : "Credit"), for: .normal)
+                let application = data as! ApplicationForCreation
+                API.shared().loadApplicationWithId(id: application.id, success: { (data) in
+                    let application = data as! Application
+                    let credits = application.job.locationData.businessData.tokens as Int
+                    self.creditsButton.setTitle(String(format: "%d %@", credits, credits > 1 ? "Credits" : "Credit"), for: .normal)
+                }, failure: { (message, errors) in
+                })
             }
             self.remove()
             if callback != nil {

@@ -1,57 +1,15 @@
-
-
 /* Common Functions */
 
 function checkUser(user) {
 	if (user.businesses.length) {
 		return CONST.USER.BUSINESS;
-	} else if (user.job_seeker != null) {
+	} else if (user.job_seeker !== null) {
 		return CONST.USER.JOBSEEKER;
 	} else {
 		return CONST.USER.UNDEFINED;
 	}
 }
 
-
-// Get the user type(business or job_seeker) & sort the menus out.
-function userTypeMenuConfiguration(redirectToProfile) {
-	$.get("/api-rest-auth/user/", {
-		token: getCookie('key'),
-		csrftoken: getCookie('csrftoken')
-
-	}).done(function(user) {
-		if (user.businesses.length) {
-			// business
-			$('.business-link').show();
-			$('.job-seeker-link').remove();
-		} else if (user.job_seeker != null) {
-			// job-seeker
-			$('.business-link').remove();
-			$('.job-seeker-link').show();
-		} else {
-			// Go Finish registration
-			if (redirectToProfile == true) {
-				window.location.href = "/profile/";
-			} else {
-				var pathArray = window.location.pathname.split('/');
-				var isNewUser = pathArray[1].toLowerCase() == "profile" && pathArray[3].toLowerCase() == "create";
-
-				if (isNewUser) {
-					if (user.can_create_bussiness) {
-						window.location.href = "/profile/recruiter/create/";
-					} else {
-						window.location.href = "/profile/job-seeker/create/";
-					}
-				}
-			}
-		}
-
-	}).fail(function(user) {
-		logoutUser();
-		console.log(user);
-	});
-
-}
 
 function checkIfSiteMapForUser(sitemap) {
 	var pathname = window.location.pathname;
@@ -72,9 +30,11 @@ function checkIfSiteMapForUser(sitemap) {
 	});
 }
 
+
 function isInUrl(url) {
 	return window.location.pathname.indexOf(url) >= 0;
 }
+
 
 function setHeaderEmail(email) {
 	$('#header_email').html(email);
@@ -82,6 +42,7 @@ function setHeaderEmail(email) {
 	// Display said menu
 	$('.logged_in_menu').show();
 }
+
 
 //if redirect is true, send user to login
 function checkLogin(redirect) {
@@ -91,9 +52,16 @@ function checkLogin(redirect) {
 	}
 
 	var email = getCookie('email');
-	if (email == "" || email == undefined) {
-		if (redirect == true) {
-			window.location.href = "/login";
+	if (email == undefined || email == '') {
+		if(redirect) {
+			// Verify if the user has been previously redirected to here
+			var url = '';
+			if(window.location.pathname.indexOf('login') == -1){
+				url = window.location.pathname;
+			}
+			var goToUrl = (url) ? '?url=' + url : '';
+
+			window.location.href = "/login/"+goToUrl;
 		} else {
 			//show login & reg links
 			$('.not_logged_in_menu').show();
@@ -113,17 +81,11 @@ function logoutUser() {
 	deleteCookie('email');
 	deleteCookie('key');
 
-	$.post("/api-rest-auth/logout/", {
-			csrfmiddlewaretoken: getCookie('csrftoken')
-		})
-		.done(function(data) {
-			window.location.href = "/";
-		})
-		.fail(function(data) {
-			window.location.href = "/";
-
-		});
-
+	$.post("/api-rest-auth/logout/", context.csrfmiddlewaretoken).done(function(data) {
+		window.location.href = "/";
+	}).fail(function(data) {
+		window.location.href = "/";
+	});
 }
 
 function redirectIfNotAllowedToSiteMap() {
@@ -131,27 +93,32 @@ function redirectIfNotAllowedToSiteMap() {
 		checkIfSiteMapForUser(CONST.SITEMAP.COMMONS).then(function() {
 			resolve({});
 		}).catch(function() {
-			ApiRestAuth.user.get().then(function(user) {
-				var userType = checkUser(user);
-				user.userType = userType;
+			context.userIsLoggedIn = checkLogin(context.redirectIfNotLoggedIn);
 
-				if (userType == CONST.USER.BUSINESS) {
+			ApiRestAuth.user.get().then(function(user) {
+				context.user = user;
+				context.userType = checkUser(user);
+
+				if (context.userType == CONST.USER.BUSINESS) {
 					checkIfSiteMapForUser(CONST.SITEMAP.RECRUITER).then(function() {
 						resolve(user);
 					}).catch(function(response) {
 						window.location.href = "/profile/recruiter/";
 					});
-				} else if (userType == CONST.USER.JOBSEEKER) {
+				} else if (context.userType == CONST.USER.JOBSEEKER) {
 					checkIfSiteMapForUser(CONST.SITEMAP.JOBSEEKER).then(function() {
 						resolve(user);
 					}).catch(function(response) {
 						window.location.href = "/profile/job-seeker/";
 					});
 				} else {
-					if(user !== undefined){
+					/* handel issues such as non completed reg. */
+					if(context.user !== undefined){
 						if(!isInUrl('/profile/job-seeker/create')){
 							window.location.href = "/profile/job-seeker/create";
 						}
+
+						resolve(user);
 					}else{
 						logoutUser();
 						window.location.href = "/";
@@ -421,9 +388,9 @@ function account_active_check() {
 $.put = function(url, data, callback, type) {
 
 	if ($.isFunction(data)) {
-		type = type || callback,
-			callback = data,
-			data = {}
+		type = type || callback;
+		callback = data;
+		data = {};
 	}
 
 	return $.ajax({
@@ -433,14 +400,14 @@ $.put = function(url, data, callback, type) {
 		data: data,
 		contentType: type
 	});
-}
+};
 
 $.delete = function(url, data, callback, type) {
 
 	if ($.isFunction(data)) {
-		type = type || callback,
-			callback = data,
-			data = {}
+		type = type || callback;
+		callback = data;
+		data = {};
 	}
 
 	return $.ajax({
@@ -450,7 +417,7 @@ $.delete = function(url, data, callback, type) {
 		data: data,
 		contentType: type
 	});
-}
+};
 
 //Fix the CSRF on the above functions
 
@@ -668,7 +635,7 @@ function populateSelect($select, data, selectedOption) {
 		}
 
 		text = obj.name;
-		if (obj.name == undefined) {
+		if (obj !== undefined  || obj.name == undefined) {
 			text = obj.title;
 		}
 
@@ -710,144 +677,171 @@ $.ajaxSetup({
 
 });
 
-/* Site wide on-load functions */
 
-$(function() {
-	/* Check if user is logged in and handel issues such as non completed reg. */
-	//var login = checkLogin();
-	//var pathArray = window.location.pathname.split('/');
-	//var segment_1 = pathArray[1];
+/* Global Variables */
+var context = {
+	user: undefined,
+	userType: undefined,
+	redirectIfNotLoggedIn: true,
+	userIsLoggedIn: false,
+	csrftoken: {
+		token: getCookie('key'),
+		csrftoken: getCookie('csrftoken')
+	},
+	csrfmiddlewaretoken: {
+		csrfmiddlewaretoken: getCookie('csrftoken')
+	}
+};
 
-	redirectIfNotAllowedToSiteMap().then(function(user) {
-		//$('.brand-pills > li.active').removeClass('active');
 
-		// Screens menu highlight when page are active
-		var pathname = window.location.pathname.split('/').filter(function(value) {
-			return (value != "");
+function home(localContext){
+	//Form submit code - Login
+	$('#login').submit(function(event) {
+		event.preventDefault();
+		var email = $('#email').val();
+		var password1 = $('#password').val();
+		var csrfmiddlewaretoken = $('[name="csrfmiddlewaretoken"]').val();
+
+		ApiRestAuth.login.post({
+			email: email,
+			password: password1,
+			csrfmiddlewaretoken: csrfmiddlewaretoken
+		}).then(function(data) {
+
+			setCookie('email', email, 28);
+			setCookie('key', data.key, 28);
+
+			redirectIfNotAllowedToSiteMap().then(function(user) {
+				if(user.userType == CONST.USER.BUSINESS){
+					window.location.href = "/find-posts/";
+				} else {
+					window.location.href = "/find-jobs/";
+				}
+			});
+
 		});
-		var href = pathname[0];
-		$('a[href*="' + href + '"]', '#myNavbar').parent().addClass('active');
+	});
 
-		if (pathname[1] != undefined && pathname[1] !== '') {
-			href = href + '/' + pathname[1];
-			$('a[href*="' + href + '"]').parent().addClass('active');
-		}
+	//Form submit code - Reg
+	//$('#regJobSeekerModal, #regRecruiterModal').submit(function (event) {
+	$('.register').submit(function(event) {
+		event.preventDefault();
+		var email = $('#reg_email', this).val();
+		var password1 = $('#password1', this).val();
+		var password2 = $('#password2', this).val();
+		var csrfmiddlewaretoken = $('input[name="csrfmiddlewaretoken"]').val();
 
-		// Config Messenger (Notification Systems)
-		Messenger.options = {
-			extraClasses: 'messenger-fixed messenger-on-top messenger-on-right',
-			theme: 'future'
-		};
+		log('info', 'Registering ...');
 
-		//Form submit code - Login
-		$('#login').submit(function(event) {
-			event.preventDefault();
-			var email = $('#email').val();
-			var password1 = $('#password').val();
-			var csrfmiddlewaretoken = $('[name="csrfmiddlewaretoken"]').val();
+		ApiRestAuth.registration.post({
+			email: email,
+			password1: password1,
+			password2: password2,
+			csrfmiddlewaretoken: csrfmiddlewaretoken
+
+		}).then(function(key) {
 
 			ApiRestAuth.login.post({
 				email: email,
 				password: password1,
 				csrfmiddlewaretoken: csrfmiddlewaretoken
-			}).then(function(data) {
-				setCookie('email', email, 28);
-				setCookie('key', data.key, 28);
-				window.location.href = "/applications/";
 
-			});
-		});
+			}).then(function(response) {
+				var company_name = $('#reg_name').val();
 
-		//Form submit code - Reg
-		//$('#regJobSeekerModal, #regRecruiterModal').submit(function (event) {
-		$('.register').submit(function(event) {
-			event.preventDefault();
-			var email = $('#reg_email', this).val();
-			var password1 = $('#password1', this).val();
-			var password2 = $('#password2', this).val();
-			var csrfmiddlewaretoken = $('input[name="csrfmiddlewaretoken"]').val();
-
-			log('info', 'Registering ...');
-
-			ApiRestAuth.registration.post({
-				email: email,
-				password1: password1,
-				password2: password2,
-				csrfmiddlewaretoken: csrfmiddlewaretoken
-
-			}).then(function(key) {
-
-				ApiRestAuth.login.post({
-					email: email,
-					password: password1,
-					csrfmiddlewaretoken: csrfmiddlewaretoken
-
-				}).then(function(response) {
-					var company_name = $('#reg_name').val();
-
-					if (company_name) {
-						userBusinessStore.post({
-							name: company_name
-						}).done(function(response) {
-							log('success', 'You are registered!');
-							log('info', 'Complete your profile...');
-
-							setCookie('email', email, 28);
-							setCookie('key', response.key, 28);
-							window.location.href = "/profile/recruiter/create/";
-						});
-
-					} else {
+				if (company_name) {
+					userBusinessStore.post({
+						name: company_name
+					}).done(function(response) {
 						log('success', 'You are registered!');
 						log('info', 'Complete your profile...');
 
 						setCookie('email', email, 28);
 						setCookie('key', response.key, 28);
-						window.location.href = "/profile/job-seeker/create";
-					}
-				});
+						window.location.href = "/profile/recruiter/create/";
+					});
 
-			}).catch(function(data) {
-				ApiRestAuth.login.post({
-					email: email,
-					password: password1,
-					csrfmiddlewaretoken: csrfmiddlewaretoken
-				}).then(function() {
-					log('success', 'User registered!');
+				} else {
+					log('success', 'You are registered!');
+					log('info', 'Complete your profile...');
 
 					setCookie('email', email, 28);
 					setCookie('key', response.key, 28);
-					window.location.href = "/profile/job-seeker/edit";
-				});
+					window.location.href = "/profile/job-seeker/create";
+				}
 			});
-		});
 
-		$('#regModal').on('hidden.bs.modal', function() {
-			$('.alert').html('');
-			$('.alert').hide();
-		});
+		}).catch(function(data) {
+			ApiRestAuth.login.post({
+				email: email,
+				password: password1,
+				csrfmiddlewaretoken: csrfmiddlewaretoken
+			}).then(function() {
+				log('success', 'User registered!');
 
-		$('#loginModal').on('hidden.bs.modal', function() {
-			$('.alert').html('');
-			$('.alert').hide();
-		});
-
-		$('#viewPitchModal').on('hidden.bs.modal', function() {
-			$('#viewPitchModal').find('.modal-body').html('<div class="col-md-12" id="pitchViewer"></div><div class="col-md-offset-4 col-md-4"><a class="btn btn-custom" id="applyButtonModal" style="display:none; margin-left: 18px;margin-top: 20px;">Connect</a></div>');
-		});
-
-		// TODO: Change all checkbox html for using the new titatoggle library
-		//$("input[type='checkbox']").bootstrapToggle();
-
-		/* For not selected or default option on SELECT DOM element */
-		$("select").on('change', function(){
-			var sel = this;
-			if (sel.options[sel.selectedIndex].value == ''){
-				sel.style.color = '#999';
-			} else {
-				sel.style.color = 'black';
-			}
+				setCookie('email', email, 28);
+				setCookie('key', response.key, 28);
+				window.location.href = "/profile/job-seeker/edit";
+			});
 		});
 	});
 
-});
+	$('#regModal').on('hidden.bs.modal', function() {
+		$('.alert').html('');
+		$('.alert').hide();
+	});
+
+	$('#loginModal').on('hidden.bs.modal', function() {
+		$('.alert').html('');
+		$('.alert').hide();
+	});
+}
+
+
+function app(localContext) {
+
+	return new Promise(function(resolve, reject) {
+		redirectIfNotAllowedToSiteMap().then(function(user) {
+			//$('.brand-pills > li.active').removeClass('active');
+
+			// Screens menu highlight when page are active
+			var pathname = window.location.pathname.split('/').filter(function(value) {
+				return (value !== "");
+			});
+			var href = pathname[0];
+			$('a[href*="' + href + '"]', '#myNavbar').parent().addClass('active');
+
+			if (pathname[1] !== undefined && pathname[1] !== '') {
+				href = href + '/' + pathname[1];
+				$('a[href*="' + href + '"]').parent().addClass('active');
+			}
+
+			// Config Messenger (Notification Systems)
+			Messenger.options = {
+				extraClasses: 'messenger-fixed messenger-on-top messenger-on-right',
+				theme: 'future'
+			};
+
+			$('#viewPitchModal').on('hidden.bs.modal', function() {
+				$('#viewPitchModal').find('.modal-body').html('<div class="col-md-12" id="pitchViewer"></div><div class="col-md-offset-4 col-md-4"><a class="btn btn-custom" id="applyButtonModal" style="display:none; margin-left: 18px;margin-top: 20px;">Connect</a></div>');
+			});
+
+			// TODO: Change all checkbox html for using the new titatoggle library
+			// $("input[type='checkbox']").bootstrapToggle();
+
+			/* For not selected or default option on SELECT DOM element */
+			$("select").on('change', function(){
+				var sel = this;
+				var color = 'black';
+				if (sel.options[sel.selectedIndex].value == ''){
+					color = '#999';
+				}
+				sel.style.color = color;
+			});
+
+			resolve(user);
+		}).catch(function() {
+			reject();
+		});
+	});
+}

@@ -1,22 +1,8 @@
-
 $(function() {
-	// Run login check funtion with auto-redirect
-	checkLogin(true);
-
-	var query = {
-		token: getCookie('key'),
-		csrftoken: getCookie('csrftoken')
-	};
-
-	$.get("/api-rest-auth/user/", query)
-	.done(function( user ) {
-		var userType = CONST.USER.JOBSEEKER;
-		if (user.businesses.length){ // business
-			userType = CONST.USER.BUSINESS;
-		}
-
-		$.get("/api/application-statuses/", query)
+	app(context).then(function() {
+		$.get("/api/application-statuses/", context.csrftoken)
 		.done(function(statuses) {
+			var query = context.csrftoken;
 			var index = _.findIndex(statuses, ['name', CONST.APPLICATION.APPLICATION]);
 			var status = statuses[index];
 
@@ -31,7 +17,7 @@ $(function() {
 				var fiteredApplications = _.filter(applications, {'status': status.id});
 
 				if( ! _.isEmpty(fiteredApplications)){
-					renderApplications(userType, fiteredApplications, $('#list-table tbody'));
+					renderApplications(context.userType, fiteredApplications, $('#list-table tbody'));
 
 					$('#list-table').show();
 				}else{
@@ -39,19 +25,14 @@ $(function() {
 					$('#no-items-create').show();
 				}
 
-				if (userType == CONST.USER.BUSINESS){
+				if (context.userType == CONST.USER.BUSINESS){
 					// business
 					$('.business-link').show();
 				}else{
 					$('.business-link').hide();
 					$('.job-seeker-link').show();
 				}
-			})
-			.fail(function( data ) {
 			});
-
 		});
-
 	});
-
 });

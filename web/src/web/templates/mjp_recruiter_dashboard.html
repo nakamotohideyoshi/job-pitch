@@ -4,12 +4,12 @@
 {% block navigation-menu %}
   <ul class="nav navbar-nav navbar-right">
     <li><a href="/find-talent/">Find Talent </a></li>
-    <li><a href="/profile/add-work-place/">Add Work Place </a></li>
-    <li><a href="/profile/post-a-job/">Post a Job </a></li>
+    <li><a href="/add-work-place/">Add Work Place </a></li>
+    <li><a href="/post-a-job/">Post a Job </a></li>
     <li><a href="/recruiter/messages/" class="navbar-message-icon"></a></li>
     <li><a href="#" class="navbar-notification-icon"></a></li>
     <li class="dropdown">
-      <a class="dropdown-toggle" data-toggle="dropdown" href="#">My Profile <span class="glyphicon glyphicon-menu-down" aria-hidden="true"></span></a>
+      <a class="dropdown-toggle" data-toggle="dropdown" href="profile">My Profile <span class="glyphicon glyphicon-menu-down" aria-hidden="true"></span></a>
       <ul class="dropdown-menu">
         <div class="arrow-up"></div>
         <li><a href="/find-posts/">My Postings</a></li>
@@ -94,3 +94,6 @@
     </div>
   </footer>
 {% endblock %}
+
+{% block extra_content %}
+{% endblock extra_content %}

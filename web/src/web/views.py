@@ -35,8 +35,6 @@ def create_business(request):
 def edit_business(request):
     return render(request, 'profile/edit-business.html')
 
-def add_work_place(request):
-    return render(request, 'profile/add-work-place.html')
 
 def edit_location(request):
     return render(request, 'profile/edit-location.html')
@@ -49,9 +47,6 @@ def list_businesses(request):
 
 def list_locations(request):
     return render(request, 'profile/list-locations.html')
-
-def post_a_job(request):
-    return render(request, 'profile/post-a-job.html')
 
 def find_posts(request):
     return render(request, 'find-posts.html')
@@ -133,6 +128,12 @@ def profile_job_preferences_edit(request):
 
 
 # Recruiters views
+def add_work_place(request):
+    return render(request, 'profile/add-work-place.html')
+
+def post_a_job(request):
+    return render(request, 'profile/post-a-job.html')
+
 def recruiter_profile_view(request):
     return render(request, 'profile/recruiter-view.html')
 
@@ -141,7 +142,6 @@ def recruiter_profile_create(request):
 
 def recruiter_profile_edit(request):
     return render(request, 'profile/recruiter-edit.html')
-
 
 # Common Views
 def messages(request):

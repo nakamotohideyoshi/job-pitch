@@ -18,12 +18,11 @@ urlpatterns = [
     url(r'^password-reset/complete/$', auth_views.password_reset_complete, name='password_reset_complete'),
     url(r'^profile/$', views.profile),
     url(r'^profile/create-job-seeker/$', views.create_profile_job_seeker),
-    url(r'^profile/add-work-place/$', views.add_work_place),
+    url(r'^profile/create-business/$', views.create_business),
     url(r'^profile/create-location/$', views.create_location),
     url(r'^profile/edit-job-seeker/$', views.edit_profile_job_seeker),
     url(r'^profile/list-businesses/$', views.list_businesses),
     url(r'^profile/list-locations/$', views.list_locations),
-    url(r'^profile/post-a-job/$', views.post_a_job),
     url(r'^profile/edit-job/$', views.edit_job),
     url(r'^profile/pitch/$', views.pitch),
     url(r'^profile/job-preferences/$', views.job_preferences),
@@ -58,6 +57,8 @@ urlpatterns = [
     url(r'^profile/recruiter/$', views.recruiter_profile_view),
     url(r'^profile/recruiter/create/$', views.recruiter_profile_create),
     url(r'^profile/recruiter/edit/$', views.recruiter_profile_create),
+    url(r'^add-work-place/$', views.add_work_place),
+    url(r'^post-a-job/$', views.post_a_job),
 
     url(r'^messages/$', views.messages),
 ]

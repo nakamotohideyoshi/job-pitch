@@ -31,13 +31,14 @@ var CONST = {
 			'howitworks/job-seeker',
 			'howitworks/recruiter',
 			'about',
-			'terms-conditions'
+			'terms-conditions',
+			'login',
+			'registration'
 		],
-		RECRUITER: [
+		JOBSEEKER: [
 			'profile/job-seeker',
 			'find-jobs',
 			'messages',
-			'applications',
 			'profile/job-seeker',
 			'profile/job-seeker/edit',
 			'profile/notification-settings',
@@ -46,13 +47,18 @@ var CONST = {
 			'password-change'
 		],
 		RECRUITER: [
-			'profile/recruiter',
+			'applications',
 			'find-talent',
-			'profile/add-work-place',
-			'profile/post-a-job',
+			'add-work-place',
+			'post-a-job',
 			'messages',
 			'find-posts',
-			'profile/payments'
+			'profile/recruiter',
+			'profile/recruiter/job-seeker',
+			'profile/recruiter/create',
+			'profile/recruiter/edit',
+			'profile/payments',
+			'profile/create-business'
 		]
 	}
 }

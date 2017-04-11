@@ -10,7 +10,7 @@ import com.myjobpitch.api.MJPApi;
 import com.myjobpitch.api.MJPApiException;
 import com.myjobpitch.api.data.Application;
 import com.myjobpitch.api.data.Job;
-import com.myjobpitch.utils.ImageLoader;
+import com.myjobpitch.utils.AppHelper;
 
 import java.util.List;
 
@@ -31,13 +31,13 @@ public class TalentApplicationsFragment extends ApplicationsFragment {
     @Override
     protected void showApplicationInfo(Application application, View view) {
         Job job = application.getJob_data();
-        ImageLoader.loadJobLogo(job, view);
+        AppHelper.loadJobLogo(job, view);
         setItemTitle(view, job.getTitle());
-        setItemSubTitle(view, job.getFullBusinessName());
+        setItemSubTitle(view, AppHelper.getBusinessName(job));
         setItemAttributes(view, job.getLocation_data().getPlace_name());
         setItemDesc(view, job.getDescription());
 
-        view.findViewById(R.id.remove_button).setVisibility(View.GONE);
+        AppHelper.getRemoveButton(view).setVisibility(View.GONE);
     }
 
     @Override

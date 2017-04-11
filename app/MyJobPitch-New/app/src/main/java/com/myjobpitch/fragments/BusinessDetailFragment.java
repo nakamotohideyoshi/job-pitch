@@ -1,8 +1,9 @@
 package com.myjobpitch.fragments;
 
 import android.content.Context;
-import android.os.AsyncTask;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,22 +13,19 @@ import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.myjobpitch.MainActivity;
 import com.myjobpitch.R;
 import com.myjobpitch.api.MJPApi;
 import com.myjobpitch.api.MJPApiException;
 import com.myjobpitch.api.data.Business;
 import com.myjobpitch.api.data.Location;
+import com.myjobpitch.tasks.APITask;
 import com.myjobpitch.utils.AppData;
 import com.myjobpitch.utils.AppHelper;
-import com.myjobpitch.utils.ImageLoader;
 import com.myjobpitch.utils.MJPArraySwipeAdapter;
 import com.myjobpitch.utils.Popup;
-import com.myjobpitch.utils.ResultListener;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -37,9 +35,13 @@ public class BusinessDetailFragment extends BaseFragment {
 
     @BindView(R.id.business_info)
     View infoView;
+    @BindView(R.id.header_comment)
+    TextView headerCommentView;
 
-    @BindView(R.id.remove_button_disable)
-    ImageButton removeButtonDisable;
+    @BindView(R.id.edit_buttons)
+    View editButtonsView;
+    @BindView(R.id.remove_button)
+    ImageButton removeButton;
 
     @BindView(R.id.nav_title)
     TextView navTitleView;
@@ -52,32 +54,37 @@ public class BusinessDetailFragment extends BaseFragment {
     @BindView(R.id.empty_view)
     View emptyView;
 
-    LocationAdapter adapter;
-    List<Location> locations = new ArrayList<>();
+    private Business business;
+    private LocationAdapter adapter;
 
-    public static boolean requestReloadLocations;
-    public static Location selectedLocation;
-
-    public BusinessDetailFragment() {
-        requestReloadLocations = true;
-    }
+    public boolean addJobMode = false;
+    public Integer businessId;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_business_detail, container, false);
+        final View view = inflater.inflate(R.layout.fragment_business_detail, container, false);
         ButterKnife.bind(this, view);
 
         // header view
 
-        title = "Business Detail";
-        navTitleView.setText("Locations");
+        if (addJobMode) {
+            title = "Add job";
+            AppHelper.getImageView(infoView).setColorFilter(ContextCompat.getColor(getApp(), R.color.colorGreen));
+            AppHelper.getImageView(infoView).setImageResource(R.drawable.menu_business_plus);
+            editButtonsView.setVisibility(View.GONE);
+            navTitleView.setText("Select work place");
+        } else {
+            title = "Business Detail";
+            headerCommentView.setVisibility(View.GONE);
+            navTitleView.setText("Locations");
 
-        if (!AppData.user.getCan_create_businesses()) {
-            removeButtonDisable.setVisibility(View.VISIBLE);
+            if (!AppData.user.getCan_create_businesses()) {
+                removeButton.setBackgroundColor(Color.parseColor("#7f4900"));
+                removeButton.setColorFilter(Color.parseColor("#7d7d7d"));
+                removeButton.setEnabled(false);
+            }
         }
-
-        showInfo(BusinessListFragment.selectedBusiness, infoView);
 
         // empty view
 
@@ -97,86 +104,137 @@ public class BusinessDetailFragment extends BaseFragment {
         // list view
 
         if (adapter == null) {
-            adapter = new LocationAdapter(getApp(), locations);
+            adapter = new LocationAdapter(getApp(), new ArrayList<Location>());
         } else {
-            adapter.closeAllItems();
+            adapter.clear();
         }
+
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                selectedLocation = adapter.getItem(position);
-                LocationDetailFragment fragment = new LocationDetailFragment();
-                getApp().pushFragment(fragment);
+                Location location = adapter.getItem(position);
+                if (addJobMode) {
+                    JobEditFragment fragment = new JobEditFragment();
+                    fragment.addJobMode = addJobMode;
+                    fragment.location = location;
+                    getApp().pushFragment(fragment);
+                } else {
+                    LocationDetailFragment fragment = new LocationDetailFragment();
+                    fragment.location = location;
+                    getApp().pushFragment(fragment);
+                }
             }
         });
 
-        if (requestReloadLocations) {
-            swipeRefreshLayout.setRefreshing(true);
-            loadLocations();
-        } else {
-            emptyView.setVisibility(locations.size()==0 ? View.VISIBLE : View.GONE);
-        }
+        // loading data
+
+        view.setVisibility(View.INVISIBLE);
+        new APITask("Loading...", this) {
+            @Override
+            protected void runAPI() throws MJPApiException {
+                business = MJPApi.shared().getUserBusiness(businessId);
+            }
+            @Override
+            protected void onSuccess() {
+                view.setVisibility(View.VISIBLE);
+                if (!addJobMode) {
+                    AppHelper.showBusinessInfo(business, infoView);
+                }
+                swipeRefreshLayout.setRefreshing(true);
+                loadLocations();
+            }
+        };
 
         return  view;
     }
 
-    void loadLocations() {
-        requestReloadLocations = false;
-        new AsyncTask<Void, Void, List<Location>>() {
-            @Override
-            protected List<Location> doInBackground(Void... params) {
-                try {
-                    return MJPApi.shared().getUserLocations(BusinessListFragment.selectedBusiness.getId());
-                } catch (MJPApiException e) {
-                    handleErrors(e);
-                    return null;
-                }
-            }
-            @Override
-            protected void onPostExecute(List<Location> data) {
-
-                swipeRefreshLayout.setRefreshing(false);
-
-                if (data != null) {
-                    adapter.clear();
-                    adapter.addAll(data);
-                    adapter.closeAllItems();
-                    locations = data;
-                    emptyView.setVisibility(locations.size()==0 ? View.VISIBLE : View.GONE);
-                }
-            }
-        }.execute();
-    }
-
     @OnClick(R.id.edit_button)
     void onEditBusiness() {
-        editBusiness(BusinessListFragment.selectedBusiness);
+        BusinessEditFragment fragment = new BusinessEditFragment();
+        fragment.business = business;
+        getApp().pushFragment(fragment);
     }
 
     @OnClick(R.id.remove_button)
     void onRemoveBusiness() {
-        deleteBusiness(BusinessListFragment.selectedBusiness, new ResultListener() {
+        Popup.showYellow("Are you sure you want to delete " + business.getName(), "Delete", new View.OnClickListener() {
             @Override
-            public void done(Object result) {
-                getApp().popFragment();
+            public void onClick(View view) {
+                new APITask("Deleting...", BusinessDetailFragment.this) {
+                    @Override
+                    protected void runAPI() throws MJPApiException {
+                        MJPApi.shared().deleteBusiness(business.getId());
+                    }
+                    @Override
+                    protected void onSuccess() {
+                        getApp().popFragment();
+                    }
+                };
             }
-        });
+        }, "Cancel", null, true);
     }
 
-    @OnClick(R.id.empty_button)
-    void onClickEmptyButton() {
-        LocationDetailFragment.editLocation(null);
+    private void loadLocations() {
+        new APITask(null, this) {
+            private List<Location> locations;
+            @Override
+            protected void runAPI() throws MJPApiException {
+                locations = MJPApi.shared().getUserLocations(businessId);
+            }
+            @Override
+            protected void onSuccess() {
+                adapter.clear();
+                adapter.addAll(locations);
+                updatedLocationList();
+                swipeRefreshLayout.setRefreshing(false);
+            }
+        };
+    }
+
+    private void updatedLocationList() {
+        adapter.closeAllItems();
+        emptyView.setVisibility(adapter.getCount()==0 ? View.VISIBLE : View.GONE);
+        if (!addJobMode) {
+            int locationCount = adapter.getCount();
+            AppHelper.getItemSubTitleView(infoView).setText("Includes " + locationCount + (locationCount > 1 ? " work places" : " work place"));
+        }
+    }
+
+    private void deleteLocation(final Location location) {
+        Popup.showYellow("Are you sure you want to delete " + location.getName(), "Delete", new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                new APITask("Deleting...", BusinessDetailFragment.this) {
+                    @Override
+                    protected void runAPI() throws MJPApiException {
+                        MJPApi.shared().deleteLocation(location.getId());
+                    }
+                    @Override
+                    protected void onSuccess() {
+                        adapter.remove(location);
+                        updatedLocationList();
+                    }
+                };
+            }
+        }, "Cancel", null, true);
     }
 
     @OnClick(R.id.nav_right_button)
     void onAddLocation() {
-        LocationDetailFragment.editLocation(null);
+        LocationEditFragment fragment = new LocationEditFragment();
+        fragment.business = business;
+        getApp().pushFragment(fragment);
+    }
+
+    @OnClick(R.id.empty_button)
+    void onClickEmptyButton() {
+        onAddLocation();
     }
 
     // location adapter ========================================
 
-    class LocationAdapter extends MJPArraySwipeAdapter<Location> {
+    private class LocationAdapter extends MJPArraySwipeAdapter<Location> {
 
         public LocationAdapter(Context context, List<Location> locations) {
             super(context, locations);
@@ -194,102 +252,31 @@ public class BusinessDetailFragment extends BaseFragment {
 
         @Override
         public void fillValues(final int position, View convertView) {
-            LocationDetailFragment.showInfo(adapter.getItem(position), convertView);
+            AppHelper.showLocationInfo(adapter.getItem(position), convertView);
 
-            // edit swipe button
-            convertView.findViewById(R.id.edit_button).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    LocationDetailFragment.editLocation(getItem(position));
-                }
-            });
 
-            // remove swipe button
-            convertView.findViewById(R.id.remove_button).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    LocationDetailFragment.deleteLocation(getItem(position), new ResultListener() {
-                        @Override
-                        public void done(Object result) {
-                            showInfo(BusinessListFragment.selectedBusiness, infoView);
-                            loadLocations();
-                        }
-                    });
-                }
-            });
-        }
-
-    }
-
-    // business info ========================================
-
-    public static void showInfo(Business business, View view) {
-
-        // logo
-
-        if (business.getImages().size() > 0) {
-            new ImageLoader(business.getImages().get(0).getThumbnail(), view, null);
-        } else {
-            ImageLoader.setImage(view, R.drawable.default_logo);
-        }
-
-        // business name
-
-        TextView titleView = (TextView)view.findViewById(R.id.item_title);
-        titleView.setText(business.getName());
-
-        // location count
-
-        int locationCount = business.getLocations().size();
-        TextView subtitleView = (TextView)view.findViewById(R.id.item_subtitle);
-        subtitleView.setText("Includes " + locationCount + (locationCount > 1 ? " work places" : " work place"));
-
-        // credit count
-
-        int creditCount = business.getTokens();
-        TextView creditsView = (TextView)view.findViewById(R.id.item_attributes);
-        creditsView.setText(creditCount + (creditCount > 1 ? " credits" : " credit"));
-
-    }
-
-    // business edit ========================================
-
-    public static void editBusiness(Business business) {
-        BusinessListFragment.selectedBusiness = business;
-        BusinessEditFragment fragment = new BusinessEditFragment();
-        MainActivity.instance.pushFragment(fragment);
-    }
-
-    public static void deleteBusiness(final Business business, final ResultListener listener) {
-
-        Popup.showYellow("Are you sure you want to delete " + business.getName(), "Delete", new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                AppHelper.showLoading("Deleting...");
-                new AsyncTask<Void, Void, Boolean>() {
+            if (addJobMode) {
+                AppHelper.getEditButton(convertView).setVisibility(View.GONE);
+                AppHelper.getRemoveButton(convertView).setVisibility(View.GONE);
+            } else {
+                AppHelper.getEditButton(convertView).setOnClickListener(new View.OnClickListener() {
                     @Override
-                    protected Boolean doInBackground(Void... params) {
-                        try {
-                            MJPApi.shared().deleteBusiness(business.getId());
-                            return true;
-                        } catch (MJPApiException e) {
-                            Popup.showGreen(e.getMessage(), null, null, "OK", null, true);
-                            return false;
-                        }
+                    public void onClick(View view) {
+                        closeItem(position);
+
+                        LocationEditFragment fragment = new LocationEditFragment();
+                        fragment.location = getItem(position);
+                        getApp().pushFragment(fragment);
                     }
+                });
+                AppHelper.getRemoveButton(convertView).setOnClickListener(new View.OnClickListener() {
                     @Override
-                    protected void onPostExecute(Boolean success) {
-                        if (success) {
-                            AppHelper.hideLoading();
-                            BusinessListFragment.requestReloadBusinesses = true;
-                            if (listener != null) {
-                                listener.done(null);
-                            }
-                        }
+                    public void onClick(View view) {
+                        deleteLocation(getItem(position));
                     }
-                }.execute();
+                });
             }
-        }, "Cancel", null, true);
+        }
 
     }
 

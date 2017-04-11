@@ -2,7 +2,6 @@ package com.myjobpitch.fragments;
 
 import android.content.Intent;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,24 +11,25 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.TextView;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.myjobpitch.MediaPlayerActivity;
 import com.myjobpitch.R;
 import com.myjobpitch.api.MJPApi;
 import com.myjobpitch.api.MJPApiException;
 import com.myjobpitch.api.data.Application;
+import com.myjobpitch.api.data.ApplicationForCreation;
 import com.myjobpitch.api.data.ApplicationShortlistUpdate;
 import com.myjobpitch.api.data.ApplicationStatus;
+import com.myjobpitch.api.data.ApplicationStatusUpdate;
 import com.myjobpitch.api.data.Job;
 import com.myjobpitch.api.data.JobSeeker;
 import com.myjobpitch.api.data.Sex;
-import com.myjobpitch.tasks.CreateApplication;
-import com.myjobpitch.tasks.DeleteApplication;
-import com.myjobpitch.tasks.TaskListener;
-import com.myjobpitch.tasks.UpdateApplication;
+import com.myjobpitch.tasks.APITask;
 import com.myjobpitch.utils.AppData;
 import com.myjobpitch.utils.AppHelper;
-import com.myjobpitch.utils.ImageLoader;
 import com.myjobpitch.utils.Popup;
+
+import org.apache.commons.lang3.SerializationUtils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -72,15 +72,14 @@ public class TalentDetailFragment extends BaseFragment {
     @BindView(R.id.remove_button)
     Button removeButton;
 
-    boolean connected;
+    private boolean connected;
+
+    public boolean viewMode = false;
 
     public Application application;
-
     public JobSeeker jobSeeker;
     public Job job;
     public Action action;
-
-    public boolean viewMode = false;
 
     public interface Action {
         void apply();
@@ -109,7 +108,7 @@ public class TalentDetailFragment extends BaseFragment {
 
         AppHelper.loadJobSeekerImage(jobSeeker, AppHelper.getImageView(imageView));
 
-        nameView.setText(jobSeeker.getFullName());
+        nameView.setText(AppHelper.getJobSeekerName(jobSeeker));
         Sex sex = AppData.get(Sex.class, jobSeeker.getSex());
 
         String subTitle = "";
@@ -178,23 +177,16 @@ public class TalentDetailFragment extends BaseFragment {
         application.setShortlisted(shortlistedView.isChecked());
         final ApplicationShortlistUpdate update = new ApplicationShortlistUpdate(application);
 
-        AppHelper.showLoading("Updating...");
-        new AsyncTask<Void, Void, Boolean>() {
+        new APITask("Updating...", this) {
             @Override
-            protected Boolean doInBackground(Void... params) {
-                try {
-                    MJPApi.shared().updateApplicationShortlist(update);
-                    return true;
-                } catch (MJPApiException e) {
-                    handleErrors(e);
-                    return false;
-                }
+            protected void runAPI() throws MJPApiException {
+                MJPApi.shared().updateApplicationShortlist(update);
             }
             @Override
-            protected void onPostExecute(Boolean success) {
-                AppHelper.hideLoading();
+            protected void onSuccess() {
             }
-        }.execute();
+        };
+
     }
 
     @OnClick(R.id.jobseeker_pitch_play)
@@ -223,33 +215,63 @@ public class TalentDetailFragment extends BaseFragment {
                 @Override
                 public void onClick(View view) {
                     if (application == null) {
-                        new CreateApplication(job.getId(), jobSeeker.getId(), new TaskListener<Application>() {
+
+                        final ApplicationForCreation applicationForCreation = new ApplicationForCreation();
+                        applicationForCreation.setJob(job.getId());
+                        applicationForCreation.setJob_seeker(jobSeeker.getId());
+                        applicationForCreation.setShortlisted(false);
+
+                        new APITask("", new APITask.ErrorListener() {
                             @Override
-                            public void done(Application application) {
+                            public void onError(MJPApiException e) {
+                                JsonNode errors = e.getErrors();
+                                if (errors.has(0) && errors.get(0).asText().equals("NO_TOKENS")) {
+                                    Popup.showError("You have no credits left so cannot compete this connection. Credits cannot be added through the app, please go to our web page.");
+                                } else {
+                                    onError(e);
+                                }
+                            }
+                        }) {
+                            @Override
+                            protected void runAPI() throws MJPApiException {
+                                ApplicationForCreation applicationForCreation1 = MJPApi.shared().create(ApplicationForCreation.class, applicationForCreation);
+                                application = MJPApi.shared().get(Application.class, applicationForCreation1.getId());
+                            }
+                            @Override
+                            protected void onSuccess() {
                                 action.apply();
                                 getApp().popFragment();
                             }
+                        };
+
+                    } else {
+
+                        Integer established = AppData.get(ApplicationStatus.class, ApplicationStatus.ESTABLISHED).getId();
+                        Application application1 = SerializationUtils.clone(application);
+                        application1.setStatus(established);
+                        final ApplicationStatusUpdate applicationStatusUpdate1 = new ApplicationStatusUpdate(application1);
+
+                        new APITask("Connecting...", new APITask.ErrorListener() {
                             @Override
-                            public void error(String error) {
-                                if (error.equals("NO_TOKENS")) {
-                                    Popup.showMessage("You have no credits left so cannot compete this connection. Credits cannot be added through the app, please go to our web page.");
+                            public void onError(MJPApiException e) {
+                                JsonNode errors = e.getErrors();
+                                if (errors.has(0) && errors.get(0).asText().equals("NO_TOKENS")) {
+                                    Popup.showError("You have no credits left so cannot compete this connection. Credits cannot be added through the app, please go to our web page.");
+                                } else {
+                                    onError(e);
                                 }
                             }
-                        });
-                    } else {
-                        Integer established = AppData.get(ApplicationStatus.class, ApplicationStatus.ESTABLISHED).getId();
-                        new UpdateApplication(application, established, new TaskListener() {
+                        }) {
                             @Override
-                            public void done(Object result) {
+                            protected void runAPI() throws MJPApiException {
+                                MJPApi.shared().updateApplicationStatus(applicationStatusUpdate1);
+                            }
+                            @Override
+                            protected void onSuccess() {
                                 getApp().popFragment();
                             }
-                            @Override
-                            public void error(String error) {
-                                if (error.equals("NO_TOKENS")) {
-                                    Popup.showMessage("You have no credits left so cannot compete this connection. Credits cannot be added through the app, please go to our web page.");
-                                }
-                            }
-                        });
+                        };
+
                     }
                 }
             }, "Cancel", null, true);
@@ -266,15 +288,16 @@ public class TalentDetailFragment extends BaseFragment {
                     action.remove();
                     getApp().popFragment();
                 } else {
-                    new DeleteApplication(application.getId(), new TaskListener() {
+                    new APITask("Deleting...", TalentDetailFragment.this) {
                         @Override
-                        public void done(Object result) {
+                        protected void runAPI() throws MJPApiException {
+                            MJPApi.shared().delete(Application.class, application.getId());
+                        }
+                        @Override
+                        protected void onSuccess() {
                             getApp().popFragment();
                         }
-                        @Override
-                        public void error(String error) {
-                        }
-                    });
+                    };
                 }
             }
         }, "Cancel", null, true);

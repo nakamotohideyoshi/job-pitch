@@ -2,14 +2,12 @@ package com.myjobpitch.fragments;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
+import android.widget.EditText;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.myjobpitch.R;
@@ -18,22 +16,23 @@ import com.myjobpitch.api.MJPApi;
 import com.myjobpitch.api.MJPApiException;
 import com.myjobpitch.api.data.Business;
 import com.myjobpitch.api.data.Location;
+import com.myjobpitch.tasks.APITask;
 import com.myjobpitch.tasks.APITaskListener;
 import com.myjobpitch.tasks.DeleteAPITaskListener;
 import com.myjobpitch.tasks.UploadImageTask;
 import com.myjobpitch.tasks.recruiter.DeleteLocationImageTask;
-import com.myjobpitch.utils.AppHelper;
 import com.myjobpitch.utils.ImageSelector;
+import com.myjobpitch.utils.Loading;
 import com.myjobpitch.utils.Popup;
 import com.rengwuxian.materialedittext.MaterialEditText;
 
-import org.apache.commons.lang3.SerializationUtils;
+import java.util.HashMap;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class LocationEditFragment extends BaseFragment {
+public class LocationEditFragment extends FormFragment {
 
     @BindView(R.id.location_name)
     MaterialEditText nameView;
@@ -57,68 +56,84 @@ public class LocationEditFragment extends BaseFragment {
     @BindView(R.id.location_logo)
     View logoView;
 
-    ImageSelector imageSelector;
+    private ImageSelector imageSelector;
 
-    Double latitude;
-    Double longitude;
-    String placeID = "";
-    String placeName;
+    private Double latitude;
+    private Double longitude;
+    private String placeID = "";
+    private String placeName;
+
+    public Business business;
+    public Location location;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_location_edit, container, false);
+        final View view = inflater.inflate(R.layout.fragment_location_edit, container, false);
         ButterKnife.bind(this, view);
 
         imageSelector = new ImageSelector(logoView, R.drawable.default_logo);
 
         // title and location info
 
-        Location location = BusinessDetailFragment.selectedLocation;
         if (location == null) {
             title = "Add Work Place";
             emailView.setText(getApp().getEmail());
         } else {
             title = "Edit Work Place";
 
-            nameView.setText(location.getName());
-            descView.setText(location.getDescription());
-            emailView.setText(location.getEmail());
-            emailPublicView.setChecked(location.getEmail_public());
-            phoneView.setText(location.getMobile());
-            phonePublicView.setChecked(location.getMobile_public());
-            addressView.setText(location.getPlace_name());
-            placeID = location.getPlace_id();
-            placeName = location.getPlace_name();
-            latitude = location.getLatitude();
-            longitude = location.getLongitude();
-
-            if (location.getImages().size() > 0) {
-                imageSelector.loadImage(location.getImages().get(0).getImage());
-            } else {
-                Business business = location.getBusiness_data();
-                if (business.getImages().size() > 0) {
-                    imageSelector.setDefaultImage(business.getImages().get(0).getImage());
+            view.setVisibility(View.INVISIBLE);
+            new APITask("Loading...", this) {
+                @Override
+                protected void runAPI() throws MJPApiException {
+                    location = MJPApi.shared().getUserLocation(location.getId());
                 }
-            }
+                @Override
+                protected void onSuccess() {
+                    view.setVisibility(View.VISIBLE);
+                    load();
+                }
+            };
         }
 
         // save button
-
-        Menu menu = getApp().getToolbarMenu();
-        MenuItem saveItem = menu.add(Menu.NONE, 100, 1, "Save");
-        saveItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+        addMenuItem("Save", -1);
 
         return  view;
     }
 
+    private void load() {
+        nameView.setText(location.getName());
+        descView.setText(location.getDescription());
+        emailView.setText(location.getEmail());
+        emailPublicView.setChecked(location.getEmail_public());
+        phoneView.setText(location.getMobile());
+        phonePublicView.setChecked(location.getMobile_public());
+        addressView.setText(location.getPlace_name());
+        placeID = location.getPlace_id();
+        placeName = location.getPlace_name();
+        latitude = location.getLatitude();
+        longitude = location.getLongitude();
+
+        if (location.getImages().size() > 0) {
+            imageSelector.loadImage(location.getImages().get(0).getImage());
+        } else {
+            Business business = location.getBusiness_data();
+            if (business.getImages().size() > 0) {
+                imageSelector.setDefaultImage(business.getImages().get(0).getImage());
+            }
+        }
+    }
+
     @Override
-    protected Object[][] getRequiredFields() {
-        return new Object[][] {
-                {"location_name", nameView},
-                {"location_description", descView},
-                {"location_email", emailView},
-                {"location_location", addressView}
+    protected HashMap<String, EditText> getRequiredFields() {
+        return new HashMap<String, EditText>() {
+            {
+                put("location_name", nameView);
+                put("location_description", descView);
+                put("location_email", emailView);
+                put("location_location", addressView);
+            }
         };
     }
 
@@ -150,20 +165,17 @@ public class LocationEditFragment extends BaseFragment {
     @Override
     public void onMenuSelected(int menuID) {
         if (menuID == 100) {
-            if (!valid()) return;
-            saveLocation();
+            if (valid()) {
+                saveLocation();
+            }
         }
     }
 
-    void saveLocation() {
-        AppHelper.showLoading("Saving...");
+    private void saveLocation() {
 
-        final Location location;
-        if (BusinessDetailFragment.selectedLocation == null) {
+        if (location == null) {
             location = new Location();
-            location.setBusiness(BusinessListFragment.selectedBusiness.getId());
-        } else {
-            location = SerializationUtils.clone(BusinessDetailFragment.selectedLocation);
+            location.setBusiness(business.getId());
         }
 
         location.setName(nameView.getText().toString().trim());
@@ -181,94 +193,72 @@ public class LocationEditFragment extends BaseFragment {
         location.setAddress("");
         location.setPostcode_lookup("");
 
-        new AsyncTask<Void, Void, Location>() {
+        Loading.show("Saving...");
+
+        new APITask(this) {
             @Override
-            protected Location doInBackground(Void... params) {
-                try {
-                    if (location.getId() == null) {
-                        Location newLocation = MJPApi.shared().createLocation(location);
-                        BusinessListFragment.selectedBusiness = MJPApi.shared().get(Business.class, BusinessListFragment.selectedBusiness.getId());
-                        BusinessListFragment.requestReloadBusinesses = true;
-                        return newLocation;
-                    } else {
-                        return MJPApi.shared().updateLocation(location);
-                    }
-                } catch (MJPApiException e) {
-                    handleErrors(e);
-                    return null;
+            protected void runAPI() throws MJPApiException {
+                if (location.getId() == null) {
+                    location = MJPApi.shared().createLocation(location);
+                } else {
+                    location = MJPApi.shared().updateLocation(location);
                 }
             }
             @Override
-            protected void onPostExecute(Location data) {
-                if (data != null) {
-                    BusinessDetailFragment.requestReloadLocations = true;
-                    BusinessDetailFragment.selectedLocation = data;
-                    saveLogo();
-                }
+            protected void onSuccess() {
+                saveLogo();
             }
-        }.execute();
+        };
+
     }
 
-    void saveLogo() {
-        Location location = BusinessDetailFragment.selectedLocation;
+    private void saveLogo() {
+
         if (imageSelector.getImageUri() != null) {
+
             UploadImageTask uploadTask = new UploadImageTask(getApp(), "user-location-images", "location", imageSelector.getImageUri(), location);
             uploadTask.addListener(new APITaskListener<Boolean>() {
                 @Override
                 public void onPostExecute(Boolean success) {
-                    reloadLocation();
+                    compltedSave();
                 }
                 @Override
                 public void onCancelled() {
                 }
             });
             uploadTask.execute();
+
         } else if (location.getImages().size() > 0 && imageSelector.getImage() == null) {
+
             DeleteLocationImageTask deleteTask = new DeleteLocationImageTask(location.getImages().get(0).getId());
             deleteTask.addListener(new DeleteAPITaskListener() {
                 @Override
                 public void onSuccess() {
-                    reloadLocation();
+                    compltedSave();
                 }
                 @Override
                 public void onError(JsonNode errors) {
-                    Popup.showGreen("Error deleting image", null, null, "OK", null, true);
+                    Popup.showError("Error deleting image");
                 }
                 @Override
                 public void onConnectionError() {
-                    Popup.showGreen("Connection Error: Please check your internet connection", null, null, "OK", null, true);
+                    Popup.showError("Connection Error: Please check your internet connection");
                 }
                 @Override
                 public void onCancelled() {}
             });
             deleteTask.execute();
+
         } else {
-            AppHelper.hideLoading();
-            getApp().popFragment();
+
+            compltedSave();
+
         }
     }
 
-    void reloadLocation() {
-        new AsyncTask<Void, Void, Location>() {
-            @Override
-            protected Location doInBackground(Void... params) {
-                try {
-                    return MJPApi.shared().get(Location.class, BusinessDetailFragment.selectedLocation.getId());
-                } catch (MJPApiException e) {
-                    Popup.showGreen(e.getMessage(), null, null, "OK", null, true);
-                    return null;
-                }
-            }
-            @Override
-            protected void onPostExecute(Location data) {
-                if (data != null) {
-                    AppHelper.hideLoading();
-                    LocationDetailFragment.requestReloadJobs = true;
-                    BusinessDetailFragment.selectedLocation = data;
-                    getApp().popFragment();
-                }
-            }
-        }.execute();
+    private void compltedSave() {
+        Loading.hide();
+        getApp().popFragment();
     }
 
 }

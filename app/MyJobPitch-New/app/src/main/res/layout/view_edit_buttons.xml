@@ -12,24 +12,13 @@
         android:background="@color/colorGreen"
         android:src="@drawable/swipe_icon_edit"
         android:scaleType="fitCenter"/>
-    <FrameLayout
+    <ImageButton
+        android:id="@+id/remove_button"
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_weight="1">
-        <ImageButton
-            android:id="@+id/remove_button"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:padding="5dp"
-            android:background="@color/colorYellow"
-            android:src="@drawable/swipe_icon_remove"
-            android:scaleType="fitCenter"/>
-        <ImageButton
-            android:id="@+id/remove_button_disable"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="#80000000"
-            android:visibility="gone"/>
-    </FrameLayout>
-
+        android:layout_weight="1"
+        android:padding="5dp"
+        android:background="@color/colorYellow"
+        android:src="@drawable/swipe_icon_remove"
+        android:scaleType="fitCenter"/>
 </LinearLayout>

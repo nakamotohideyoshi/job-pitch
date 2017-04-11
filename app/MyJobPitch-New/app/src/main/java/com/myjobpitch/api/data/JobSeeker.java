@@ -223,7 +223,4 @@ public class JobSeeker extends MJPObjectWithDates implements JobSeekerContainer 
         this.truthConfirmation = truthConfirmation;
     }
 
-    public String getFullName() {
-        return first_name + " " + last_name;
-    }
 }

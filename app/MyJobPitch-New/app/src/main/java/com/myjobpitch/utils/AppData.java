@@ -8,8 +8,6 @@ import com.myjobpitch.api.auth.User;
 import com.myjobpitch.api.data.ApplicationStatus;
 import com.myjobpitch.api.data.Contract;
 import com.myjobpitch.api.data.Hours;
-import com.myjobpitch.api.data.JobProfile;
-import com.myjobpitch.api.data.JobSeeker;
 import com.myjobpitch.api.data.JobStatus;
 import com.myjobpitch.api.data.Nationality;
 import com.myjobpitch.api.data.Role;
@@ -23,8 +21,6 @@ public class AppData {
 
     public static User user;
     public static boolean existProfile = false;
-    //public static JobProfile profile;
-    //public static JobSeeker jobSeeker;
 
     private static HashMap<Class<? extends MJPAPIObject>, List<? extends MJPAPIObject>> data = new HashMap<>();
 
@@ -33,19 +29,15 @@ public class AppData {
     }
 
     public static void loadData() throws MJPApiException {
-        try {
-            user = MJPApi.shared().getUser();
-            data.put(Sector.class, MJPApi.shared().get(Sector.class));
-            data.put(Contract.class, MJPApi.shared().get(Contract.class));
-            data.put(Hours.class, MJPApi.shared().get(Hours.class));
-            data.put(Nationality.class, MJPApi.shared().get(Nationality.class));
-            data.put(ApplicationStatus.class, MJPApi.shared().get(ApplicationStatus.class));
-            data.put(JobStatus.class, MJPApi.shared().get(JobStatus.class));
-            data.put(Sex.class, MJPApi.shared().get(Sex.class));
-            data.put(Role.class, MJPApi.shared().get(Role.class));
-        } catch (MJPApiException e) {
-            e.printStackTrace();
-        }
+        user = MJPApi.shared().getUser();
+        data.put(Sector.class, MJPApi.shared().get(Sector.class));
+        data.put(Contract.class, MJPApi.shared().get(Contract.class));
+        data.put(Hours.class, MJPApi.shared().get(Hours.class));
+        data.put(Nationality.class, MJPApi.shared().get(Nationality.class));
+        data.put(ApplicationStatus.class, MJPApi.shared().get(ApplicationStatus.class));
+        data.put(JobStatus.class, MJPApi.shared().get(JobStatus.class));
+        data.put(Sex.class, MJPApi.shared().get(Sex.class));
+        data.put(Role.class, MJPApi.shared().get(Role.class));
     }
 
     public static void clearData() {

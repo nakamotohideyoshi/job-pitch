@@ -12,6 +12,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -27,21 +28,24 @@ import com.myjobpitch.api.data.JobProfile;
 import com.myjobpitch.api.data.JobSeeker;
 import com.myjobpitch.api.data.Sector;
 import com.myjobpitch.api.data.Sex;
+import com.myjobpitch.tasks.APITask;
 import com.myjobpitch.utils.AppData;
 import com.myjobpitch.utils.AppHelper;
+import com.myjobpitch.utils.Loading;
 import com.myjobpitch.utils.Popup;
 import com.rengwuxian.materialedittext.MaterialEditText;
 import com.weiwangcn.betterspinner.library.material.MaterialBetterSpinner;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class JobProfileFragment extends BaseFragment {
+public class JobProfileFragment extends FormFragment {
 
     static final int MENU_SAVE = 10;
 
@@ -86,9 +90,7 @@ public class JobProfileFragment extends BaseFragment {
         ButterKnife.bind(this, view);
 
         // menu
-        Menu menu = getApp().getToolbarMenu();
-        MenuItem item = menu.add(Menu.NONE, MENU_SAVE, 1, "Save");
-        item.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+        addMenuItem("Save", -1);
 
         // data
         mSectors = AppData.get(Sector.class);
@@ -112,40 +114,34 @@ public class JobProfileFragment extends BaseFragment {
 
         // load
         view.setVisibility(View.INVISIBLE);
-        AppHelper.showLoading("Loading...");
-        new AsyncTask<Void, Void, Boolean>() {
+        new APITask("Loading...", this) {
             @Override
-            protected Boolean doInBackground(Void... params) {
-                try {
-                    jobSeeker = MJPApi.shared().get(JobSeeker.class, AppData.user.getJob_seeker());
-                    if (jobSeeker.getProfile() != null) {
-                        profile = MJPApi.shared().get(JobProfile.class, jobSeeker.getProfile());
-                        AppData.existProfile = true;
-                    }
-                    return true;
-                } catch (MJPApiException e) {
-                    handleErrors(e);
-                    return false;
+            protected void runAPI() throws MJPApiException {
+                jobSeeker = MJPApi.shared().get(JobSeeker.class, AppData.user.getJob_seeker());
+                if (jobSeeker.getProfile() != null) {
+                    profile = MJPApi.shared().get(JobProfile.class, jobSeeker.getProfile());
+                    AppData.existProfile = true;
                 }
             }
             @Override
-            protected void onPostExecute(Boolean success) {
+            protected void onSuccess() {
                 view.setVisibility(View.VISIBLE);
-                AppHelper.hideLoading();
                 if (profile != null) {
                     load();
                 }
             }
-        }.execute();
+        };
 
         return  view;
     }
 
     @Override
-    protected Object[][] getRequiredFields() {
-        return new Object[][] {
-                {"sectors", mSectorsView},
-                {"location", mAddressView}
+    protected HashMap<String, EditText> getRequiredFields() {
+        return new HashMap<String, EditText>() {
+            {
+                put("sectors", mSectorsView);
+                put("location", mAddressView);
+            }
         };
     }
 
@@ -257,8 +253,6 @@ public class JobProfileFragment extends BaseFragment {
         if (menuID == MENU_SAVE) {
             if (!valid()) return;
 
-            AppHelper.showLoading("Saving...");
-
             if (profile == null) {
                 profile = new JobProfile();
                 profile.setJob_seeker(jobSeeker.getId());
@@ -288,45 +282,34 @@ public class JobProfileFragment extends BaseFragment {
             profile.setLatitude(mLatitude);
             profile.setPostcode_lookup("");
 
-            new AsyncTask<Void, Void, Boolean>() {
-
+            new APITask("Saving...", this) {
                 @Override
-                protected Boolean doInBackground(Void... params) {
-                    try {
-                        if (profile.getId() == null) {
-                            profile = MJPApi.shared().create(JobProfile.class, profile);
-                        } else {
-                            profile = MJPApi.shared().update(JobProfile.class, profile);
-                        }
-                        return true;
-                    } catch (MJPApiException e) {
-                        handleErrors(e);
-                        return false;
+                protected void runAPI() throws MJPApiException {
+                    if (profile.getId() == null) {
+                        profile = MJPApi.shared().create(JobProfile.class, profile);
+                    } else {
+                        profile = MJPApi.shared().update(JobProfile.class, profile);
                     }
                 }
-
                 @Override
-                protected void onPostExecute(final Boolean success) {
-                    if (success) {
-                        AppHelper.hideLoading();
-                        Popup.showGreen("Success!", "OK", new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                if (!AppData.existProfile) {
-                                    getApp().reloadMenu();
-                                    if (jobSeeker.getPitch() == null) {
-                                        getApp().setRootFragement(AppData.PAGE_ADD_RECORD);
-                                    } else {
-                                        getApp().setRootFragement(AppData.PAGE_FIND_JOB);
-                                    }
-                                    AppData.existProfile = true;
+                protected void onSuccess() {
+                    Popup.showGreen("Success!", "OK", new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            if (!AppData.existProfile) {
+                                getApp().reloadMenu();
+                                if (jobSeeker.getPitch() == null) {
+                                    getApp().setRootFragement(AppData.PAGE_ADD_RECORD);
+                                } else {
+                                    getApp().setRootFragement(AppData.PAGE_FIND_JOB);
                                 }
+                                AppData.existProfile = true;
                             }
-                        }, null, null, true);
-                    }
+                        }
+                    }, null, null, true);
                 }
+            };
 
-            }.execute();
         }
     }
 

@@ -1,22 +1,22 @@
 package com.myjobpitch.fragments;
 
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.myjobpitch.R;
 import com.myjobpitch.api.MJPApi;
 import com.myjobpitch.api.MJPApiException;
 import com.myjobpitch.api.data.Application;
 import com.myjobpitch.api.data.Job;
 import com.myjobpitch.api.data.JobProfile;
 import com.myjobpitch.api.data.JobSeeker;
+import com.myjobpitch.tasks.APITask;
 import com.myjobpitch.tasks.CreateApplication;
 import com.myjobpitch.tasks.TaskListener;
 import com.myjobpitch.utils.AppData;
 import com.myjobpitch.utils.AppHelper;
-import com.myjobpitch.utils.ImageLoader;
 import com.myjobpitch.utils.Popup;
 
 import java.util.List;
@@ -37,30 +37,26 @@ public class FindJobFragment extends SwipeFragment<Job> {
 
     @Override
     protected void loadData() {
-        AppHelper.showLoading("Loading...");
-        new AsyncTask<Void, Void, List<Job>>() {
+
+        new APITask("Loading...", this) {
+            private List<Job> data;
             @Override
-            protected List<Job> doInBackground(Void... params) {
-                try {
-                    jobSeeker = MJPApi.shared().get(JobSeeker.class, AppData.user.getJob_seeker());
-                    profile = MJPApi.shared().get(JobProfile.class, jobSeeker.getProfile());
-                    return MJPApi.shared().get(Job.class);
-                } catch (MJPApiException e) {
-                    handleErrors(e);
-                    return null;
-                }
+            protected void runAPI() throws MJPApiException {
+                jobSeeker = MJPApi.shared().get(JobSeeker.class, AppData.user.getJob_seeker());
+                profile = MJPApi.shared().get(JobProfile.class, jobSeeker.getProfile());
+                data = MJPApi.shared().get(Job.class);
             }
             @Override
-            protected void onPostExecute(List<Job> data) {
-                AppHelper.hideLoading();
+            protected void onSuccess() {
                 setData(data);
             }
-        }.execute();
+        };
+
     }
 
     @Override
     protected void showDeckInfo(Job job, View view) {
-        ImageLoader.loadJobLogo(job, getCardImageContainer(view));
+        AppHelper.loadJobLogo(job, getCardImageContainer(view));
         setCardTitle(view, job.getTitle());
         setCardDesc(view, job.getDescription());
     }

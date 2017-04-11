@@ -40,12 +40,12 @@ public class MessageListFragment extends ApplicationsFragment {
         if (AppData.user.isJobSeeker()) {
             AppHelper.loadJobLogo(job, AppHelper.getImageView(view));
             setItemTitle(view, job.getTitle());
-            setItemSubTitle(view, job.getFullBusinessName());
+            setItemSubTitle(view, AppHelper.getBusinessName(job));
         } else {
             JobSeeker jobSeeker = application.getJobSeeker();
             AppHelper.loadJobSeekerImage(jobSeeker, AppHelper.getImageView(view));
-            setItemTitle(view, jobSeeker.getFullName());
-            setItemSubTitle(view, String.format("%s (%s)", job.getTitle(), job.getFullBusinessName()));
+            setItemTitle(view, AppHelper.getJobSeekerName(jobSeeker));
+            setItemSubTitle(view, String.format("%s (%s)", job.getTitle(), AppHelper.getBusinessName(job)));
         }
 
         SimpleDateFormat format = new SimpleDateFormat("MMM d, h:mm a");
@@ -57,8 +57,8 @@ public class MessageListFragment extends ApplicationsFragment {
             setItemDesc(view, lastMessage.getContent());
         }
 
-        view.findViewById(R.id.edit_button).setVisibility(View.GONE);
-        view.findViewById(R.id.remove_button).setVisibility(View.GONE);
+        AppHelper.getEditButton(view).setVisibility(View.GONE);
+        AppHelper.getRemoveButton(view).setVisibility(View.GONE);
     }
 
     @Override

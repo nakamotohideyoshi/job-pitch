@@ -96,7 +96,6 @@ public class MJPApi {
 	private RestTemplate rest;
     private RestTemplate unbufferedRest;
 	private AuthToken token;
-//    private User user;
 
     public MJPApi(String apiRoot) {
 		this.token = null;
@@ -217,7 +216,6 @@ public class MJPApi {
         if (this.token != null) {
             Log.e("MJPApi", "Already logged in!");
             token = null;
-//            this.user = null;
         }
         try {
             token = rest.postForObject(url, credentials, AuthToken.class);
@@ -238,7 +236,6 @@ public class MJPApi {
             Log.e("API", "Couldn't contact server to log out", e);
         } finally {
             this.token = null;
-//            this.user = null;
         }
 	}
 

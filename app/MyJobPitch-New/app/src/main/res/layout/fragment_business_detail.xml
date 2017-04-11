@@ -6,13 +6,69 @@
     android:orientation="vertical"
     tools:context="com.myjobpitch.fragments.BusinessDetailFragment">
 
-    <include
+    <RelativeLayout
         android:id="@+id/business_info"
-        layout="@layout/view_job_item"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:padding="10dp">
+
+        <include
+            android:id="@+id/item_img"
+            layout="@layout/view_image_loader"
+            android:layout_width="65dp"
+            android:layout_height="65dp"
+            android:layout_marginRight="10dp"/>
+
+        <TextView
+            android:id="@+id/item_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/item_img"
+            android:layout_toEndOf="@+id/item_img"
+            android:layout_toRightOf="@+id/item_img"
+            android:layout_marginTop="5dp"
+            android:textColor="@color/blackText"
+            android:textStyle="bold"
+            android:textSize="20sp"/>
+
+        <TextView
+            android:id="@+id/item_subtitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/item_img"
+            android:layout_toEndOf="@+id/item_img"
+            android:layout_toRightOf="@+id/item_img"
+            android:layout_marginBottom="5dp"
+            android:textSize="16sp"/>
+
+        <TextView
+            android:id="@+id/item_attributes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/item_subtitle"
+            android:layout_alignBottom="@+id/item_subtitle"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:gravity="center"
+            android:textSize="14sp"/>
+
+        <TextView
+            android:id="@+id/header_comment"
+            android:text="Select which work place to add job to"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/item_img"
+            android:layout_toEndOf="@+id/item_img"
+            android:layout_alignBottom="@+id/item_subtitle"
+            android:layout_alignParentTop="true"
+            android:gravity="center_vertical"
+            android:textColor="@color/blackText"
+            android:textSize="18sp" />
+
+    </RelativeLayout>
 
     <include
+        android:id="@+id/edit_buttons"
         layout="@layout/view_edit_buttons"
         android:layout_width="match_parent"
         android:layout_height="40dp"/>

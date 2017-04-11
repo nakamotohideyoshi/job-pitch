@@ -4,8 +4,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.media.ThumbnailUtils;
-import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.LayoutInflater;
@@ -13,7 +11,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 
 import com.kaopiz.kprogresshud.KProgressHUD;
 import com.myjobpitch.CameraActivity;
@@ -23,11 +20,13 @@ import com.myjobpitch.api.MJPApi;
 import com.myjobpitch.api.MJPApiException;
 import com.myjobpitch.api.data.JobSeeker;
 import com.myjobpitch.api.data.Pitch;
+import com.myjobpitch.tasks.APITask;
 import com.myjobpitch.uploader.AWSPitchUploader;
 import com.myjobpitch.uploader.PitchUpload;
 import com.myjobpitch.uploader.PitchUploadListener;
 import com.myjobpitch.utils.AppData;
 import com.myjobpitch.utils.AppHelper;
+import com.myjobpitch.utils.Loading;
 import com.myjobpitch.utils.Popup;
 
 import java.io.File;
@@ -57,30 +56,18 @@ public class PitchFragment extends BaseFragment {
         View view = inflater.inflate(R.layout.fragment_pitch, container, false);
         ButterKnife.bind(this, view);
 
-        AppHelper.showLoading("Loading...");
-        new AsyncTask<Void, Void, Boolean>() {
+        new APITask("Loading...", this) {
             @Override
-            protected Boolean doInBackground(Void... params) {
-                try {
-                    jobSeeker = MJPApi.shared().get(JobSeeker.class, AppData.user.getJob_seeker());
-                    AppData.existProfile = jobSeeker.getProfile() != null;
-                    mPitch = jobSeeker.getPitch();
-                    return true;
-                } catch (MJPApiException e) {
-                    handleErrors(e);
-                    return false;
-                }
+            protected void runAPI() throws MJPApiException {
+                jobSeeker = MJPApi.shared().get(JobSeeker.class, AppData.user.getJob_seeker());
+                AppData.existProfile = jobSeeker.getProfile() != null;
+                mPitch = jobSeeker.getPitch();
             }
-
             @Override
-            protected void onPostExecute(final Boolean success) {
-                if (success) {
-                    AppHelper.hideLoading();
-                    updateInterface();
-                }
+            protected void onSuccess() {
+                updateInterface();
             }
-
-        }.execute();
+        };
 
         return view;
     }
@@ -126,7 +113,8 @@ public class PitchFragment extends BaseFragment {
     @OnClick(R.id.upload_button)
     void onUpload() {
 
-        AppHelper.showLoading("");
+        Loading.show("");
+        Loading.getLoadingBar().setMaxProgress(100);
 
         AWSPitchUploader pitchUploader = new AWSPitchUploader(getApp());
         PitchUpload upload = pitchUploader.upload(new File(mVideoPath));
@@ -135,36 +123,30 @@ public class PitchFragment extends BaseFragment {
             public void onStateChange(int state) {
                 switch (state) {
                     case PitchUpload.STARTING:
-                        AppHelper.loadingbar.setLabel("Starting upload...");
+                        Loading.getLoadingBar().setLabel("Starting upload...");
                         break;
                     case PitchUpload.UPLOADING:
-                        AppHelper.loadingbar.setStyle(KProgressHUD.Style.BAR_DETERMINATE);
-                        AppHelper.loadingbar.setLabel("0%");
+                        Loading.getLoadingBar().setStyle(KProgressHUD.Style.BAR_DETERMINATE);
+                        Loading.getLoadingBar().setLabel("0%");
                         break;
                     case PitchUpload.PROCESSING:
-                        AppHelper.loadingbar.setStyle(KProgressHUD.Style.SPIN_INDETERMINATE);
-                        AppHelper.loadingbar.setLabel("Processing...");
+                        Loading.getLoadingBar().setStyle(KProgressHUD.Style.SPIN_INDETERMINATE);
+                        Loading.getLoadingBar().setLabel("Processing...");
                         break;
                     case PitchUpload.COMPLETE:
-                        new AsyncTask<Void, Void, Boolean>() {
+                        new APITask(null, PitchFragment.this) {
                             @Override
-                            protected Boolean doInBackground(Void... params) {
-                                try {
-                                    jobSeeker = MJPApi.shared().get(JobSeeker.class, AppData.user.getJob_seeker());
-                                    mPitch = jobSeeker.getPitch();
-                                    mVideoPath = null;
-                                    return true;
-                                } catch (MJPApiException e) {
-                                    handleErrors(e);
-                                    return false;
-                                }
+                            protected void runAPI() throws MJPApiException {
+                                jobSeeker = MJPApi.shared().get(JobSeeker.class, AppData.user.getJob_seeker());
+                                mPitch = jobSeeker.getPitch();
+                                mVideoPath = null;
                             }
                             @Override
-                            protected void onPostExecute(final Boolean success) {
-                                AppHelper.hideLoading();
+                            protected void onSuccess() {
+                                Loading.hide();
                                 updateInterface();
                             }
-                        }.execute();
+                        };
                         break;
                 }
             }
@@ -173,15 +155,15 @@ public class PitchFragment extends BaseFragment {
             public void onProgress(double current, long total) {
                 int complete = (int) (((float) current / total) * 100);
                 if (complete < 100) {
-                    AppHelper.loadingbar.setProgress(complete);
-                    AppHelper.loadingbar.setLabel(Integer.toString(complete) + "%");
+                    Loading.getLoadingBar().setProgress(complete);
+                    Loading.getLoadingBar().setLabel(Integer.toString(complete) + "%");
                 }
             }
 
             @Override
             public void onError(String message) {
-                AppHelper.hideLoading();
-                Popup.showGreen("Error uploading video!", null, null, "OK", null, true);
+                Loading.hide();
+                Popup.showError("Error uploading video!");
             }
         });
         upload.start();

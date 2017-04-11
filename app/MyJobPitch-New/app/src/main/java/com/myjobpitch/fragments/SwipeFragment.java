@@ -2,8 +2,6 @@ package com.myjobpitch.fragments;
 
 import android.content.Context;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -12,6 +10,7 @@ import android.widget.TextView;
 import com.myjobpitch.R;
 
 import com.daprlabs.aaron.swipedeck.SwipeDeck;
+import com.myjobpitch.api.data.Job;
 import com.myjobpitch.utils.AppHelper;
 
 import java.util.ArrayList;
@@ -32,12 +31,11 @@ public class SwipeFragment<T> extends BaseFragment {
     View emptyButton;
 
     @BindView(R.id.credits)
-    protected TextView creditsView;
+    TextView creditsView;
 
     protected int topCardItemId = 0;
 
-    SwipeDeckAdapter adapter;
-    List<T> deckData = new ArrayList<>();
+    protected SwipeDeckAdapter adapter;
 
     protected View initView(LayoutInflater inflater, ViewGroup container, String emptyText) {
         View view = inflater.inflate(R.layout.fragment_swipe, container, false);
@@ -51,13 +49,16 @@ public class SwipeFragment<T> extends BaseFragment {
         // card list
 
         if (adapter == null) {
-            adapter = new SwipeDeckAdapter(getApp(), deckData);
+            adapter = new SwipeDeckAdapter(getApp(), new ArrayList<T>());
             loadData();
         } else {
-            emptyView.setVisibility(deckData.size()==0 ? View.VISIBLE : View.GONE);
+            emptyView.setVisibility(adapter.getCount()==0 ? View.VISIBLE : View.GONE);
         }
+
         cardStack.setAdapter(adapter);
         cardStack.setAdapterIndex(topCardItemId);
+        cardStack.setLeftImage(R.id.left_mark);
+        cardStack.setRightImage(R.id.right_mark);
 
         cardStack.setCallback(new SwipeDeck.SwipeDeckCallback() {
             @Override
@@ -82,26 +83,22 @@ public class SwipeFragment<T> extends BaseFragment {
             }
         });
 
-        cardStack.setLeftImage(R.id.left_mark);
-        cardStack.setRightImage(R.id.right_mark);
+        if (adapter.getCount() != 0) {
+            adapter.notifyDataSetChanged();
+        }
 
         // save button
-
-        Menu menu = getApp().getToolbarMenu();
-        MenuItem refreshItem = menu.add(Menu.NONE, 100, 1, "Refresh");
-        refreshItem.setIcon(R.drawable.ic_refresh);
-        refreshItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+        addMenuItem("Refresh", R.drawable.ic_refresh);
 
         return  view;
     }
 
     protected void setData(List<T> data) {
         if (data != null) {
-            deckData = new ArrayList<>(data);
             adapter.clear();
-            adapter.addAll(deckData);
+            adapter.addAll(data);
             topCardItemId = 0;
-            emptyView.setVisibility(deckData.size()==0 ? View.VISIBLE : View.GONE);
+            emptyView.setVisibility(adapter.getCount()==0 ? View.VISIBLE : View.GONE);
         }
     }
 

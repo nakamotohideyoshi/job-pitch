@@ -1,7 +1,6 @@
 package com.myjobpitch.fragments;
 
 import android.content.Context;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,17 +12,13 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.myjobpitch.MainActivity;
 import com.myjobpitch.R;
 import com.myjobpitch.api.MJPApi;
 import com.myjobpitch.api.MJPApiException;
-import com.myjobpitch.api.data.Business;
 import com.myjobpitch.api.data.Job;
-import com.myjobpitch.api.data.Location;
+import com.myjobpitch.tasks.APITask;
 import com.myjobpitch.utils.AppHelper;
-import com.myjobpitch.utils.ImageLoader;
 import com.myjobpitch.utils.Popup;
-import com.myjobpitch.utils.ResultListener;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -44,17 +39,13 @@ public class JobDetailFragment extends BaseFragment {
 
     MenuAdapter adapter;
 
+    public Job job;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_job_detail, container, false);
+        final View view = inflater.inflate(R.layout.fragment_job_detail, container, false);
         ButterKnife.bind(this, view);
-
-        title = "Job Detail";
-        navTitleView.setVisibility(View.GONE);
-        navRightButton.setVisibility(View.GONE);
-
-        showInfo(LocationDetailFragment.selectedJob, infoView);
 
         // menu list
 
@@ -67,48 +58,76 @@ public class JobDetailFragment extends BaseFragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 if (position == 0) {
                     FindTalentFragment fragment = new FindTalentFragment();
-                    fragment.job = LocationDetailFragment.selectedJob;
+                    fragment.job = job;
                     getApp().pushFragment(fragment);
                 } else {
                     RecruiterApplicationsFragment fragment = new RecruiterApplicationsFragment();
-                    fragment.job = LocationDetailFragment.selectedJob;
+                    fragment.job = job;
                     fragment.listKind = position - 1;
                     getApp().pushFragment(fragment);
                 }
             }
         });
 
-        // remove menu
+        // header view, loading data
+
+        title = "Job Detail";
+        navTitleView.setVisibility(View.GONE);
+        navRightButton.setVisibility(View.GONE);
+
+        view.setVisibility(View.INVISIBLE);
+        new APITask("Loading...", this) {
+            @Override
+            protected void runAPI() throws MJPApiException {
+                job = MJPApi.shared().getUserJob(job.getId());
+            }
+            @Override
+            protected void onSuccess() {
+                view.setVisibility(View.VISIBLE);
+                AppHelper.showJobInfo(job, infoView);
+            }
+        };
 
         return view;
     }
 
     @OnClick(R.id.edit_button)
     void onEditJob() {
-        editJob(LocationDetailFragment.selectedJob);
+        JobEditFragment fragment = new JobEditFragment();
+        fragment.job = job;
+        getApp().pushFragment(fragment);
     }
 
     @OnClick(R.id.remove_button)
     void onRemoveJob() {
-        deleteJob(LocationDetailFragment.selectedJob, new ResultListener() {
+        Popup.showYellow("Are you sure you want to delete " + job.getTitle(), "Delete", new View.OnClickListener() {
             @Override
-            public void done(Object result) {
-                getApp().popFragment();
+            public void onClick(View view) {
+                new APITask("Deleting...", JobDetailFragment.this) {
+                    @Override
+                    protected void runAPI() throws MJPApiException {
+                        MJPApi.shared().deleteJob(job.getId());
+                    }
+                    @Override
+                    protected void onSuccess() {
+                        getApp().popFragment();
+                    }
+                };
             }
-        });
+        }, "Cancel", null, true);
     }
 
     // menu adapter ========================================
 
-    int[] images = {
+    private int[] images = {
             R.drawable.menu_user_search, R.drawable.menu_application, R.drawable.menu_connect, R.drawable.menu_shortlisted, R.drawable.menu_message
     };
 
-    String[] titles = {
+    private String[] titles = {
             "Find Talent", "Applications", "Connections", "My Shortlist", "Messages"
     };
 
-    class MenuAdapter extends ArrayAdapter<String> {
+    private class MenuAdapter extends ArrayAdapter<String> {
 
         public MenuAdapter(Context context, String[] titles) {
             super(context, 0, titles);
@@ -128,70 +147,6 @@ public class JobDetailFragment extends BaseFragment {
 
             return convertView;
         }
-    }
-
-    // job info ========================================
-
-    public static void showInfo(Job job, View view) {
-
-        // logo
-
-        ImageLoader.loadJobLogo(job, view);
-
-        // job title
-
-        TextView titleView = (TextView)view.findViewById(R.id.item_title);
-        titleView.setText(job.getTitle());
-
-        // business and location name
-
-        TextView subtitleView = (TextView)view.findViewById(R.id.item_subtitle);
-        subtitleView.setText(job.getFullBusinessName());
-        view.findViewById(R.id.item_attributes).setVisibility(View.GONE);
-
-    }
-
-    // job edit ========================================
-
-    public static void editJob(Job job) {
-        LocationDetailFragment.selectedJob = job;
-        JobEditFragment fragment = new JobEditFragment();
-        MainActivity.instance.pushFragment(fragment);
-    }
-
-    public static void deleteJob(final Job job, final ResultListener listener) {
-
-        Popup.showYellow("Are you sure you want to delete " + job.getTitle(), "Delete", new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                AppHelper.showLoading("Deleting...");
-                new AsyncTask<Void, Void, Boolean>() {
-                    @Override
-                    protected Boolean doInBackground(Void... params) {
-                        try {
-                            MJPApi.shared().deleteJob(job.getId());
-                            BusinessDetailFragment.selectedLocation = MJPApi.shared().get(Location.class, BusinessDetailFragment.selectedLocation.getId());
-                            return true;
-                        } catch (MJPApiException e) {
-                            Popup.showGreen(e.getMessage(), null, null, "OK", null, true);
-                            return false;
-                        }
-                    }
-                    @Override
-                    protected void onPostExecute(Boolean success) {
-                        if (success) {
-                            AppHelper.hideLoading();
-                            BusinessDetailFragment.requestReloadLocations = true;
-                            LocationDetailFragment.requestReloadJobs = true;
-                            if (listener != null) {
-                                listener.done(null);
-                            }
-                        }
-                    }
-                }.execute();
-            }
-        }, "Cancel", null, true);
-
     }
 
 }

@@ -11,7 +11,6 @@ import com.myjobpitch.utils.AppData;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-
 public class HelpFragment extends BaseFragment {
 
     @Override

@@ -1,7 +1,6 @@
 package com.myjobpitch.fragments;
 
 import android.content.pm.PackageManager;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.view.LayoutInflater;
@@ -28,11 +27,11 @@ import com.myjobpitch.api.data.Job;
 import com.myjobpitch.api.data.JobProfile;
 import com.myjobpitch.api.data.JobSeeker;
 import com.myjobpitch.api.data.Location;
+import com.myjobpitch.tasks.APITask;
 import com.myjobpitch.tasks.CreateApplication;
 import com.myjobpitch.tasks.TaskListener;
 import com.myjobpitch.utils.AppData;
 import com.myjobpitch.utils.AppHelper;
-import com.myjobpitch.utils.ImageLoader;
 import com.myjobpitch.utils.Popup;
 import com.myjobpitch.views.PhotoView;
 
@@ -113,27 +112,19 @@ public class ApplicationDetailFragment extends BaseFragment {
             job = application.getJob_data();
         }
 
-        AppHelper.showLoading("Loading...");
         view.setVisibility(View.INVISIBLE);
-        new AsyncTask<Void, Void, Boolean>() {
+        new APITask("Loading...", this) {
             @Override
-            protected Boolean doInBackground(Void... params) {
-                try {
-                    jobSeeker = MJPApi.shared().get(JobSeeker.class, AppData.user.getJob_seeker());
-                    profile = MJPApi.shared().get(JobProfile.class, jobSeeker.getProfile());
-                    return true;
-                } catch (MJPApiException e) {
-                    handleErrors(e);
-                    return false;
-                }
+            protected void runAPI() throws MJPApiException {
+                jobSeeker = MJPApi.shared().get(JobSeeker.class, AppData.user.getJob_seeker());
+                profile = MJPApi.shared().get(JobProfile.class, jobSeeker.getProfile());
             }
             @Override
-            protected void onPostExecute(Boolean success) {
-                AppHelper.hideLoading();
+            protected void onSuccess() {
                 view.setVisibility(View.VISIBLE);
                 load();
             }
-        }.execute();
+        };
 
         return view;
 
@@ -149,7 +140,7 @@ public class ApplicationDetailFragment extends BaseFragment {
 
         titleView.setText(job.getTitle());
         distanceView.setText(AppHelper.distance(profile.getLatitude(), profile.getLongitude(), location.getLatitude(), location.getLongitude()));
-        subtitleView.setText(job.getFullBusinessName());
+        subtitleView.setText(AppHelper.getBusinessName(job));
 
         attributesView.setText(hours.getName());
         if (contract.getId() == AppData.get(Contract.class, Contract.PERMANENT).getId()) {

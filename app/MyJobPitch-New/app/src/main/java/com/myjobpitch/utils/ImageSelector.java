@@ -11,9 +11,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 
 import com.myjobpitch.MainActivity;
 import com.myjobpitch.R;
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
 
@@ -48,7 +51,7 @@ public class ImageSelector {
         params.height = (displayMetrics.widthPixels - AppHelper.dp2px(30)) * 3 / 4;
         view.setLayoutParams(params);
 
-        imageView = ImageLoader.getImageView(view);
+        imageView = AppHelper.getImageView(view);
 
         if (defaultImageRes != -1) {
             defaultBitmap = BitmapFactory.decodeResource(MainActivity.instance.getResources(), defaultImageRes);
@@ -57,24 +60,40 @@ public class ImageSelector {
     }
 
     public void setDefaultImage(String path) {
-        new ImageLoader(path, null, new ImageLoader.Listener() {
-            @Override
-            public void success(Bitmap bitmap) {
-                defaultBitmap = bitmap;
-                if (imageView.getAlpha() == 0.2f) {
-                    setImage(null);
-                }
-            }
-        });
+//        new ImageLoader(path, null, new ImageLoader.Listener() {
+//            @Override
+//            public void success(Bitmap bitmap) {
+//                defaultBitmap = bitmap;
+//                if (imageView.getAlpha() == 0.2f) {
+//                    setImage(null);
+//                }
+//            }
+//        });
     }
 
     public void loadImage(String path) {
         removeButton.setVisibility(View.GONE);
         addButton.setVisibility(View.GONE);
-        new ImageLoader(path, (View)imageView.getParent(), new ImageLoader.Listener() {
+
+        final ProgressBar progressBar = AppHelper.getProgressBar(imageView);
+        if (progressBar != null) {
+            progressBar.setVisibility(View.VISIBLE);
+        }
+
+        Picasso.with(MainActivity.instance).load(path).into(imageView, new Callback() {
             @Override
-            public void success(Bitmap bitmap) {
+            public void onSuccess() {
+                if (progressBar != null) {
+                    progressBar.setVisibility(View.GONE);
+                }
                 setImage(bitmap);
+            }
+
+            @Override
+            public void onError() {
+                if (progressBar != null) {
+                    progressBar.setVisibility(View.GONE);
+                }
             }
         });
     }

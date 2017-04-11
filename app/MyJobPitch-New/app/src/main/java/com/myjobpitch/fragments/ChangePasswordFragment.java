@@ -1,6 +1,5 @@
 package com.myjobpitch.fragments;
 
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,14 +10,16 @@ import android.widget.TextView;
 import com.myjobpitch.R;
 import com.myjobpitch.api.MJPApi;
 import com.myjobpitch.api.MJPApiException;
-import com.myjobpitch.utils.AppHelper;
+import com.myjobpitch.tasks.APITask;
 import com.myjobpitch.utils.Popup;
+
+import java.util.HashMap;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class ChangePasswordFragment extends BaseFragment {
+public class ChangePasswordFragment extends FormFragment {
 
     @BindView(R.id.user_email)
     TextView mEmailView;
@@ -44,11 +45,13 @@ public class ChangePasswordFragment extends BaseFragment {
     }
 
     @Override
-    protected Object[][] getRequiredFields() {
-        return new Object[][] {
-                {"old_password", mCurrPasswordView},
-                {"new_password1", mPasswordView1},
-                {"new_password2", mPasswordView2}
+    protected HashMap<String, EditText> getRequiredFields() {
+        return new HashMap<String, EditText>() {
+            {
+                put("old_password", mCurrPasswordView);
+                put("new_password1", mPasswordView1);
+                put("new_password2", mPasswordView2);
+            }
         };
     };
 
@@ -64,28 +67,17 @@ public class ChangePasswordFragment extends BaseFragment {
         final String password1 = mPasswordView1.getText().toString();
         final String password2 = mPasswordView2.getText().toString();
 
-        AppHelper.showLoading("Updating...");
-        new AsyncTask<Void, Void, MJPApiException>() {
+        new APITask("Updating...", this) {
             @Override
-            protected MJPApiException doInBackground(Void... params) {
-                try {
-                    MJPApi.shared().changePassword(password1, password2);
-                    return null;
-                } catch (MJPApiException e) {
-                    return e;
-                }
+            protected void runAPI() throws MJPApiException {
+                MJPApi.shared().changePassword(password1, password2);
             }
             @Override
-            protected void onPostExecute(final MJPApiException e) {
-                if (e == null) {
-                    AppHelper.hideLoading();
-                    getApp().saveLoginInfo(getApp().getEmail(), password1, getApp().getRemember());
-                    Popup.showGreen("Success!", "OK", null, null, null, true);
-                } else {
-                    handleErrors(e);
-                }
+            protected void onSuccess() {
+                getApp().saveLoginInfo(getApp().getEmail(), password1, getApp().getRemember());
+                Popup.showMessage("Success!", null);
             }
-        }.execute();
+        };
 
     }
 

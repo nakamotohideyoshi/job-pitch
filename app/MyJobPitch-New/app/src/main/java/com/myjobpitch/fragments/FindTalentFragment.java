@@ -1,6 +1,5 @@
 package com.myjobpitch.fragments;
 
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,10 +10,10 @@ import com.myjobpitch.api.MJPApiException;
 import com.myjobpitch.api.data.Application;
 import com.myjobpitch.api.data.Job;
 import com.myjobpitch.api.data.JobSeeker;
+import com.myjobpitch.tasks.APITask;
 import com.myjobpitch.tasks.CreateApplication;
 import com.myjobpitch.tasks.TaskListener;
 import com.myjobpitch.utils.AppHelper;
-import com.myjobpitch.utils.ImageLoader;
 import com.myjobpitch.utils.Popup;
 
 import java.util.List;
@@ -31,7 +30,7 @@ public class FindTalentFragment extends SwipeFragment<JobSeeker> {
         return  view;
     }
 
-    void showCredits() {
+    private void showCredits() {
         if (job != null) {
             int creditCount = job.getLocation_data().getBusiness_data().getTokens();
             creditsView.setText(creditCount + (creditCount > 1 ? " credits" : " credit"));
@@ -40,31 +39,25 @@ public class FindTalentFragment extends SwipeFragment<JobSeeker> {
 
     @Override
     protected void loadData() {
-        AppHelper.showLoading("Loading...");
-        new AsyncTask<Void, Void, List<JobSeeker>>() {
+        new APITask("Loading...", this) {
+            List<JobSeeker> data;
             @Override
-            protected List<JobSeeker> doInBackground(Void... params) {
-                try {
-                    job = MJPApi.shared().getUserJob(job.getId());
-                    return MJPApi.shared().get(JobSeeker.class, "job=" + job.getId());
-                } catch (MJPApiException e) {
-                    handleErrors(e);
-                    return null;
-                }
+            protected void runAPI() throws MJPApiException {
+                job = MJPApi.shared().getUserJob(job.getId());
+                data = MJPApi.shared().get(JobSeeker.class, "job=" + job.getId());
             }
             @Override
-            protected void onPostExecute(List<JobSeeker> data) {
-                AppHelper.hideLoading();
+            protected void onSuccess() {
                 showCredits();
                 setData(data);
             }
-        }.execute();
+        };
     }
 
     @Override
     protected void showDeckInfo(JobSeeker jobSeeker, View view) {
-        ImageLoader.loadJobSeekerImage(jobSeeker, getCardImageContainer(view));
-        setCardTitle(view, jobSeeker.getFullName());
+        AppHelper.loadJobSeekerImage(jobSeeker, getCardImageContainer(view));
+        setCardTitle(view, AppHelper.getJobSeekerName(jobSeeker));
         setCardDesc(view, jobSeeker.getDescription());
     }
 
@@ -82,7 +75,7 @@ public class FindTalentFragment extends SwipeFragment<JobSeeker> {
             public void error(String error) {
                 cardStack.unSwipeCard();
                 if (error.equals("NO_TOKENS")) {
-                    Popup.showMessage("You have no credits left so cannot compete this connection. Credits cannot be added through the app, please go to our web page.");
+                    Popup.showError("You have no credits left so cannot compete this connection. Credits cannot be added through the app, please go to our web page.");
                 }
             }
         });

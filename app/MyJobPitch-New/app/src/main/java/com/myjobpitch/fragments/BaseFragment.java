@@ -1,20 +1,17 @@
 package com.myjobpitch.fragments;
 
 import android.content.Intent;
-import android.os.Handler;
+import android.support.annotation.DrawableRes;
 import android.support.v4.app.Fragment;
-import android.widget.TextView;
+import android.view.Menu;
+import android.view.MenuItem;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.myjobpitch.R;
 import com.myjobpitch.MainActivity;
 import com.myjobpitch.api.MJPApiException;
-import com.myjobpitch.utils.AppHelper;
+import com.myjobpitch.tasks.APITask;
 import com.myjobpitch.utils.Popup;
 
-import java.util.Iterator;
-
-public class BaseFragment extends Fragment {
+public class BaseFragment extends Fragment implements APITask.ErrorListener {
 
     public String title = "";
 
@@ -22,88 +19,17 @@ public class BaseFragment extends Fragment {
         return MainActivity.instance;
     }
 
-    protected Object[][] getRequiredFields() {
-        return null;
-    };
-
-    protected boolean valid() {
-
-        TextView errorView = null;
-
-        Object[][] requiredFields = getRequiredFields();
-
-        for (int i = 0; i < requiredFields.length; i++) {
-            Object[] fieldInfo = requiredFields[i];
-            if (fieldInfo.length == 2 && fieldInfo[1] instanceof TextView) {
-                TextView textView = (TextView) fieldInfo[1];
-                if (textView.getText().toString().isEmpty()) {
-                    textView.setError(getString(R.string.error_field_required));
-                    if (errorView == null) errorView = textView;
-                } else {
-                    textView.setError(null);
-                }
-            }
+    protected MenuItem addMenuItem(String text, @DrawableRes int iconRes) {
+        MenuItem menuItem = getApp().getToolbarMenu().add(Menu.NONE, 100, 1, text);
+        if (iconRes != -1) {
+            menuItem.setIcon(iconRes);
         }
-
-        if (errorView != null) {
-            errorView.requestFocus();
-        }
-
-        return errorView == null;
-
+        menuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+        return menuItem;
     }
 
-    protected void handleErrors(final MJPApiException e) {
-
-        AppHelper.hideLoading();
-
-        Handler mainHandler = new Handler(getApp().getMainLooper());
-
-        Runnable myRunnable = new Runnable() {
-            @Override
-            public void run() {
-
-                Object[][] requiredFields = getRequiredFields();
-                JsonNode errors = e.getErrors();
-                Iterator<String> fieldNames = errors.fieldNames();
-                boolean focus = false;
-
-                while (fieldNames.hasNext()) {
-                    String fieldName = fieldNames.next();
-                    JsonNode fieldValue = errors.get(fieldName);
-                    if (fieldValue.isArray()) {
-                        String message = fieldValue.get(0).asText();
-                        TextView errorView = null;
-
-                        for (int i = 0; i < requiredFields.length; i++) {
-                            Object[] fieldInfo = requiredFields[i];
-                            if (fieldInfo.length == 2 && fieldInfo[0].equals(fieldName) && fieldInfo[1] instanceof TextView) {
-                                errorView = (TextView) fieldInfo[1];
-                                errorView.setError(message);
-                                if (!focus) {
-                                    errorView.requestFocus();
-                                    focus = true;
-                                }
-                                break;
-                            }
-                        }
-
-                        if (errorView == null) {
-                            Popup.showMessage(message);
-                            return;
-                        }
-
-                    } else {
-                        String message = fieldValue.asText();
-                        Popup.showMessage(message);
-                        return;
-                    }
-                }
-            }
-        };
-
-        mainHandler.post(myRunnable);
-
+    public void onError(MJPApiException e) {
+        Popup.showError(e.getMessage());
     }
 
     public void onMenuSelected(int menuID) {
@@ -115,6 +41,9 @@ public class BaseFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+
+        getApp().hideKeyboard();
+
         if (getApp().getCurrentPageID() != -1) {
             if (!getApp().getSupportActionBar().isShowing())
                 getApp().getSupportActionBar().show();

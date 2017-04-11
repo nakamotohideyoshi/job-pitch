@@ -8,6 +8,7 @@ import com.myjobpitch.api.MJPApiException;
 import com.myjobpitch.api.data.Application;
 import com.myjobpitch.api.data.ApplicationForCreation;
 import com.myjobpitch.utils.AppHelper;
+import com.myjobpitch.utils.Loading;
 
 public class CreateApplication extends AsyncTask<Void, Void, Application> {
 
@@ -20,7 +21,7 @@ public class CreateApplication extends AsyncTask<Void, Void, Application> {
         this.jobId = jobId;
         this.jobSeekerId = jobSeekerId;
         this.listener = listener;
-        AppHelper.showLoading(null);
+        Loading.show(null);
         execute();
     }
 
@@ -43,7 +44,7 @@ public class CreateApplication extends AsyncTask<Void, Void, Application> {
     }
     @Override
     protected void onPostExecute(Application application) {
-        AppHelper.hideLoading();
+        Loading.hide();
         if (listener != null) {
             if (application != null) {
                 listener.done(application);

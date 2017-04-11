@@ -15,7 +15,7 @@ public class MediaPlayerActivity extends Activity {
 
     public static final String PATH = "path";
 
-    @BindView(R.id.video)
+    @BindView(R.id.videoView)
     VideoView mVideoView;
 
     @BindView(R.id.progress)
@@ -27,17 +27,20 @@ public class MediaPlayerActivity extends Activity {
         setContentView(R.layout.activity_media_player);
         ButterKnife.bind(this);
 
-        Uri video = Uri.parse(getIntent().getStringExtra(PATH));
-        MediaController controller = new MediaController(this);
-        mVideoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-            @Override
-            public void onPrepared(MediaPlayer mp) {
-                mProgressView.setVisibility(View.INVISIBLE);
+        if (getIntent().getExtras() != null) {
+            String url = getIntent().getStringExtra(PATH);
+            if (url != null) {
+                mVideoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                    @Override
+                    public void onPrepared(MediaPlayer mp) {
+                        mProgressView.setVisibility(View.INVISIBLE);
+                    }
+                });
+                mVideoView.setMediaController(new MediaController(this));
+                mVideoView.setVideoURI(Uri.parse(url));
+                mVideoView.start();
             }
-        });
-        mVideoView.setMediaController(controller);
-        mVideoView.setVideoURI(video);
-        mVideoView.requestFocus();
-        mVideoView.start();
+        }
     }
+
 }

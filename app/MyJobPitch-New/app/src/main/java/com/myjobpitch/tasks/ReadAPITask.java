@@ -4,14 +4,14 @@ import android.util.Log;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.myjobpitch.api.MJPApiException;
-import com.myjobpitch.utils.AppHelper;
+import com.myjobpitch.utils.Loading;
 
 import org.springframework.web.client.HttpStatusCodeException;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class ReadAPITask<T> extends APITask<T> {
+public class ReadAPITask<T> extends APITask0<T> {
     private List<CreateReadUpdateAPITaskListener<T>> listeners = new ArrayList<>();
     private boolean connectionError = false;
 
@@ -51,7 +51,7 @@ public class ReadAPITask<T> extends APITask<T> {
     protected void onPostExecute(T result) {
         super.onPostExecute(result);
         if (connectionError || errors != null) {
-            AppHelper.hideLoading();
+            Loading.hide();
         }
         for (CreateReadUpdateAPITaskListener<T> listener : listeners) {
             if (connectionError)

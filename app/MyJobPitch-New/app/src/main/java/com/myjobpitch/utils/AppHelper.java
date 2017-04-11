@@ -1,16 +1,13 @@
 package com.myjobpitch.utils;
 
-import android.content.Context;
 import android.location.Location;
-import android.os.Handler;
-import android.support.v4.content.ContextCompat;
 import android.util.TypedValue;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.kaopiz.kprogresshud.KProgressHUD;
 import com.myjobpitch.R;
 import com.myjobpitch.MainActivity;
 import com.myjobpitch.api.data.Business;
@@ -22,71 +19,17 @@ import com.squareup.picasso.Picasso;
 
 public class AppHelper {
 
-    public static KProgressHUD loadingbar;
-
-    public static void showLoading(final String label) {
-        showLoading(MainActivity.instance, label);
-    }
-
-    public static void showLoading(final Context context, final String label) {
-
-        if (loadingbar == null) {
-            loadingbar = KProgressHUD.create(context)
-                    .setStyle(KProgressHUD.Style.SPIN_INDETERMINATE)
-                    .setCancellable(false)
-                    .setDimAmount(0.65f)
-                    .setMaxProgress(1000)
-                    .setWindowColor(ContextCompat.getColor(context, R.color.colorPopup));
-        }
-
-        Handler mainHandler = new Handler(context.getMainLooper());
-
-        Runnable myRunnable = new Runnable() {
-            @Override
-            public void run() {
-                loadingbar.setLabel(label).show();
-            }
-        };
-
-        mainHandler.post(myRunnable);
-
-    }
-
-    public static void hideLoading() {
-        hideLoading(MainActivity.instance);
-    }
-
-    public static void hideLoading(Context context) {
-        if (loadingbar == null) return;
-
-        final KProgressHUD lb = loadingbar;
-        loadingbar = null;
-        Handler mainHandler = new Handler(context.getMainLooper());
-
-        Runnable myRunnable = new Runnable() {
-            @Override
-            public void run() {
-                lb.dismiss();
-            }
-        };
-
-        mainHandler.post(myRunnable);
-
-    }
-
     public static int dp2px(int dp) {
         return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp,
                 MainActivity.instance.getResources().getDisplayMetrics());
     }
 
-    // empty view
-
-    public static void setEmptyViewText(View emptyView, String title) {
-        ((TextView)emptyView.findViewById(R.id.empty_text)).setText(title);
+    public static String getJobSeekerName(JobSeeker jobSeeker) {
+        return jobSeeker.getFirst_name() + " " + jobSeeker.getLast_name();
     }
 
-    public static void setEmptyButtonText(View emptyView, String text) {
-        ((TextView)emptyView.findViewById(R.id.empty_button)).setText(text);
+    public static String getBusinessName(Job job) {
+        return job.getLocation_data().getBusiness_data().getName() + ", " + job.getLocation_data().getName();
     }
 
     // distance
@@ -106,6 +49,26 @@ public class AppHelper {
             return String.format("%.1f km", d/1000);
         }
         return String.format("%.0f km", d/1000);
+    }
+
+    // view_empty_view.xml
+
+    public static void setEmptyViewText(View emptyView, String title) {
+        ((TextView)emptyView.findViewById(R.id.empty_text)).setText(title);
+    }
+
+    public static void setEmptyButtonText(View emptyView, String text) {
+        ((TextView)emptyView.findViewById(R.id.empty_button)).setText(text);
+    }
+
+    // ..._edit_buttons.xml
+
+    public static ImageButton getEditButton(View view) {
+        return (ImageButton)view.findViewById(R.id.edit_button);
+    }
+
+    public static ImageButton getRemoveButton(View view) {
+        return (ImageButton)view.findViewById(R.id.remove_button);
     }
 
     // view_image_loader.xml
@@ -131,7 +94,73 @@ public class AppHelper {
         return (TextView) view.findViewById(R.id.item_attributes);
     }
 
+    public static void showBusinessInfo(Business business, View view) {
+
+        // logo
+        if (business.getImages().size() > 0) {
+            loadImage(business.getImages().get(0).getThumbnail(), view);
+        } else {
+            getImageView(view).setImageResource(R.drawable.default_logo);
+        }
+
+        // business name
+        getItemTitleView(view).setText(business.getName());
+
+        // location count
+        int locationCount = business.getLocations().size();
+        getItemSubTitleView(view).setText("Includes " + locationCount + (locationCount > 1 ? " work places" : " work place"));
+
+        // credit count
+        int creditCount = business.getTokens();
+        getItemAttributesView(view).setText(creditCount + (creditCount > 1 ? " credits" : " credit"));
+
+    }
+
+    public static void showLocationInfo(com.myjobpitch.api.data.Location location, View view) {
+
+        // logo
+        if (location.getImages().size() > 0) {
+            loadImage(location.getImages().get(0).getThumbnail(), view);
+        } else {
+            Business business = location.getBusiness_data();
+            if (business.getImages().size() > 0) {
+                loadImage(business.getImages().get(0).getThumbnail(), view);
+            } else {
+                getImageView(view).setImageResource(R.drawable.default_logo);
+            }
+        }
+
+        // location name
+        getItemTitleView(view).setText(location.getName());
+
+        // job count
+        int jobCount = location.getJobs().size();
+        getItemSubTitleView(view).setText("Includes " + jobCount + (jobCount > 1 ? " jobs" : " job"));
+
+        getItemAttributesView(view).setVisibility(View.GONE);
+
+    }
+
+    public static void showJobInfo(Job job, View view) {
+
+        // logo
+        AppHelper.loadJobLogo(job, view);
+
+        // job title
+        getItemTitleView(view).setText(job.getTitle());
+
+        // business and location name
+        getItemSubTitleView(view).setText(getBusinessName(job));
+
+        getItemAttributesView(view).setVisibility(View.GONE);
+
+    }
+
     // image loader
+
+    public static void loadImage(String url, View container) {
+        loadImage(url, getImageView(container));
+    }
 
     public static void loadImage(String url, ImageView imageView) {
         if (imageView == null) return;
@@ -158,6 +187,10 @@ public class AppHelper {
         });
     }
 
+    public static void loadJobLogo(Job job, View container) {
+        loadJobLogo(job, getImageView(container));
+    }
+
     public static void loadJobLogo(Job job, ImageView imageView) {
         if (job.getImages().size() > 0) {
             loadImage(job.getImages().get(0).getThumbnail(), imageView);
@@ -174,6 +207,10 @@ public class AppHelper {
                 }
             }
         }
+    }
+
+    public static void loadJobSeekerImage(JobSeeker jobSeeker, View container) {
+        loadJobSeekerImage(jobSeeker, getImageView(container));
     }
 
     public static void loadJobSeekerImage(JobSeeker jobSeeker, ImageView imageView) {

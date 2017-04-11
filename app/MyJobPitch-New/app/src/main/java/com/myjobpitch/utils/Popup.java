@@ -14,13 +14,13 @@ import com.myjobpitch.MainActivity;
 
 public class Popup {
 
-    private Dialog dialog;
-    private TextView titleView;
-    public Button button1;
-    public Button button2;
+    Dialog dialog;
+    TextView titleView;
+    Button button1;
+    Button button2;
 
-    private View.OnClickListener listner1;
-    private View.OnClickListener listner2;
+    View.OnClickListener listner1;
+    View.OnClickListener listner2;
 
     public Popup(Context context, String message, String textBtn1, final View.OnClickListener listener1, String textBtn2, final View.OnClickListener listener2, boolean cancelable) {
 
@@ -66,12 +66,12 @@ public class Popup {
             button2 = null;
         }
 
+        Loading.hide();
         dialog.show();
 
     }
 
-    public static Popup showGreen(String message, String textBtn1, final View.OnClickListener listener1, String textBtn2, final View.OnClickListener listener2, boolean cancelable) {
-        AppHelper.hideLoading();
+    public static Popup showGreen(String message, String textBtn1, View.OnClickListener listener1, String textBtn2, View.OnClickListener listener2, boolean cancelable) {
         Popup popup = new Popup(MainActivity.instance, message, textBtn1, listener1, textBtn2, listener2, cancelable);
         if (popup.button1 != null) {
             popup.button1.setBackgroundResource(R.drawable.button_green);
@@ -79,8 +79,7 @@ public class Popup {
         return popup;
     }
 
-    public static Popup showYellow(String message, String textBtn1, final View.OnClickListener listener1, String textBtn2, final View.OnClickListener listener2, boolean cancelable) {
-        AppHelper.hideLoading();
+    public static Popup showYellow(String message, String textBtn1, View.OnClickListener listener1, String textBtn2, View.OnClickListener listener2, boolean cancelable) {
         Popup popup = new Popup(MainActivity.instance, message, textBtn1, listener1, textBtn2, listener2, cancelable);
         if (popup.button1 != null) {
             popup.button1.setBackgroundResource(R.drawable.button_yellow);
@@ -88,10 +87,23 @@ public class Popup {
         return popup;
     }
 
-    public static Popup showMessage(String message) {
-        AppHelper.hideLoading();
-        Popup popup = new Popup(MainActivity.instance, message, null, null, "Ok", null, true);
+    public static Popup showGreenYellow(String message, String textBtn1, View.OnClickListener listener1, String textBtn2, View.OnClickListener listener2, boolean cancelable) {
+        Popup popup = new Popup(MainActivity.instance, message, textBtn1, listener1, textBtn2, listener2, cancelable);
+        if (popup.button1 != null) {
+            popup.button1.setBackgroundResource(R.drawable.button_green);
+        }
+        if (popup.button2 != null) {
+            popup.button1.setBackgroundResource(R.drawable.button_yellow);
+        }
         return popup;
+    }
+
+    public static Popup showMessage(String message, View.OnClickListener listener) {
+        return Popup.showGreen(message, "OK", listener, null, null, true);
+    }
+
+    public static Popup showError(String error) {
+        return new Popup(MainActivity.instance, error, null, null, "Ok", null, true);
     }
 
 }

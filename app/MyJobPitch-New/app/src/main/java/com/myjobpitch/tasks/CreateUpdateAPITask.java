@@ -5,7 +5,7 @@ import android.util.Log;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.myjobpitch.api.MJPAPIObject;
 import com.myjobpitch.api.MJPApiException;
-import com.myjobpitch.utils.AppHelper;
+import com.myjobpitch.utils.Loading;
 
 import org.springframework.web.client.HttpStatusCodeException;
 
@@ -15,7 +15,7 @@ import java.util.List;
 /**
 * Created by Jamie on 24/03/2015.
 */
-public class CreateUpdateAPITask<T extends MJPAPIObject> extends APITask<T> {
+public class CreateUpdateAPITask<T extends MJPAPIObject> extends APITask0<T> {
     private List<CreateReadUpdateAPITaskListener<T>> listeners = new ArrayList<>();
     private boolean connectionError = false;
 
@@ -61,7 +61,7 @@ public class CreateUpdateAPITask<T extends MJPAPIObject> extends APITask<T> {
     protected void onPostExecute(final T result) {
         super.onPostExecute(result);
         if (connectionError || errors != null) {
-            AppHelper.hideLoading();
+            Loading.hide();
         }
         for (CreateReadUpdateAPITaskListener<T> listener : listeners) {
             if (connectionError)

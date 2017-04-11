@@ -1,19 +1,18 @@
 package com.myjobpitch.fragments;
 
 import android.content.Context;
-import android.os.AsyncTask;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.myjobpitch.R;
 import com.myjobpitch.api.MJPApiException;
 import com.myjobpitch.api.data.Application;
+import com.myjobpitch.tasks.APITask;
 import com.myjobpitch.utils.AppHelper;
 import com.myjobpitch.utils.MJPArraySwipeAdapter;
 
@@ -34,11 +33,9 @@ public class ApplicationsFragment extends BaseFragment {
     @BindView(R.id.empty_view)
     View emptyView;
 
-    ApplicationAdapter adapter;
-    List<Application> applications = new ArrayList<>();
-
-    int applyButtonIcon;
-    int cellLayout;
+    private ApplicationAdapter adapter;
+    private int applyButtonIcon;
+    private int cellLayout;
 
     protected View initView(LayoutInflater inflater, ViewGroup container, int applyButtonIcon, String emptyText, int cellLayout) {
         this.applyButtonIcon = applyButtonIcon;
@@ -65,7 +62,9 @@ public class ApplicationsFragment extends BaseFragment {
         // list view
 
         if (adapter == null) {
-            adapter = new ApplicationAdapter(getApp(), applications);
+            adapter = new ApplicationAdapter(getApp(), new ArrayList<Application>());
+        } else {
+            adapter.clear();
         }
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -77,32 +76,25 @@ public class ApplicationsFragment extends BaseFragment {
 
         onRefresh();
 
-        return  view;
+        return view;
     }
 
-    protected void loadApplications() {
-        new AsyncTask<Void, Void, List<Application>>() {
+    private void loadApplications() {
+        new APITask(null, this) {
+            private List<Application> applications;
             @Override
-            protected List<Application> doInBackground(Void... params) {
-                try {
-                    return getApplications();
-                } catch (MJPApiException e) {
-                    handleErrors(e);
-                    return null;
-                }
+            protected void runAPI() throws MJPApiException {
+                applications = getApplications();
             }
             @Override
-            protected void onPostExecute(List<Application> data) {
+            protected void onSuccess() {
+                adapter.clear();
+                adapter.addAll(applications);
+                adapter.closeAllItems();
+                emptyView.setVisibility(applications.size()==0 ? View.VISIBLE : View.GONE);
                 swipeRefreshLayout.setRefreshing(false);
-                if (data != null) {
-                    applications = data;
-                    adapter.clear();
-                    adapter.addAll(applications);
-                    adapter.closeAllItems();
-                    emptyView.setVisibility(applications.size()==0 ? View.VISIBLE : View.GONE);
-                }
             }
-        }.execute();
+        };
     }
 
     @OnClick(R.id.empty_button)
@@ -113,10 +105,10 @@ public class ApplicationsFragment extends BaseFragment {
 
     // job adapter ========================================
 
-    class ApplicationAdapter extends MJPArraySwipeAdapter<Application> {
+    private class ApplicationAdapter extends MJPArraySwipeAdapter<Application> {
 
-        public ApplicationAdapter(Context context, List<Application> jobs) {
-            super(context, jobs);
+        public ApplicationAdapter(Context context, List<Application> applications) {
+            super(context, applications);
         }
 
         @Override
@@ -127,7 +119,7 @@ public class ApplicationsFragment extends BaseFragment {
         @Override
         public View generateView(int position, ViewGroup parent) {
             View view = LayoutInflater.from(getContext()).inflate(cellLayout, parent, false);
-            ((ImageButton)view.findViewById(R.id.edit_button)).setImageResource(applyButtonIcon);
+            AppHelper.getEditButton(view).setImageResource(applyButtonIcon);
             return view;
         }
 
@@ -135,16 +127,14 @@ public class ApplicationsFragment extends BaseFragment {
         public void fillValues(final int position, View convertView) {
             showApplicationInfo(getItem(position), convertView);
 
-            // edit swipe button
-            convertView.findViewById(R.id.edit_button).setOnClickListener(new View.OnClickListener() {
+            AppHelper.getEditButton(convertView).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     applyItem(getItem(position));
                 }
             });
 
-            // remove swipe button
-            convertView.findViewById(R.id.remove_button).setOnClickListener(new View.OnClickListener() {
+            AppHelper.getRemoveButton(convertView).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     removeItem(getItem(position));

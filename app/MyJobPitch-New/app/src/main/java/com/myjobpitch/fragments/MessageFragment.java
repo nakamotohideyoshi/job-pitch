@@ -13,10 +13,12 @@ import com.myjobpitch.api.MJPApiException;
 import com.myjobpitch.api.data.Application;
 import com.myjobpitch.api.data.Business;
 import com.myjobpitch.api.data.Job;
+import com.myjobpitch.api.data.JobProfile;
 import com.myjobpitch.api.data.JobSeeker;
 import com.myjobpitch.api.data.Location;
 import com.myjobpitch.api.data.Message;
 import com.myjobpitch.api.data.MessageForCreation;
+import com.myjobpitch.tasks.APITask;
 import com.myjobpitch.utils.AppData;
 import com.myjobpitch.utils.AppHelper;
 import com.stfalcon.chatkit.commons.ImageLoader;
@@ -103,9 +105,9 @@ public class MessageFragment extends BaseFragment {
 
             AppHelper.loadJobLogo(job, AppHelper.getImageView(headerView));
             AppHelper.getItemTitleView(headerView).setText(job.getTitle());
-            AppHelper.getItemSubTitleView(headerView).setText(job.getFullBusinessName());
+            AppHelper.getItemSubTitleView(headerView).setText(AppHelper.getBusinessName(job));
 
-            myName = jobSeeker.getFullName();
+            myName = AppHelper.getJobSeekerName(jobSeeker);
             myAvatar = jobSeekerImage;
             otherName = job.getLocation_data().getBusiness_data().getName();
             otherAvatar = jobImage;
@@ -113,12 +115,12 @@ public class MessageFragment extends BaseFragment {
         } else {
 
             AppHelper.loadJobSeekerImage(jobSeeker, AppHelper.getImageView(headerView));
-            AppHelper.getItemTitleView(headerView).setText(jobSeeker.getFullName());
-            AppHelper.getItemSubTitleView(headerView).setText(String.format("%s (%s)", job.getTitle(), job.getFullBusinessName()));
+            AppHelper.getItemTitleView(headerView).setText(AppHelper.getJobSeekerName(jobSeeker));
+            AppHelper.getItemSubTitleView(headerView).setText(String.format("%s (%s)", job.getTitle(), AppHelper.getBusinessName(job)));
 
             myName = job.getLocation_data().getBusiness_data().getName();
             myAvatar = jobImage;
-            otherName = jobSeeker.getFullName();
+            otherName = AppHelper.getJobSeekerName(jobSeeker);
             otherAvatar = jobSeekerImage;
 
         }
@@ -175,20 +177,15 @@ public class MessageFragment extends BaseFragment {
         messageForCreation.setApplication(application.getId());
         messageForCreation.setContent(text);
 
-        new AsyncTask<Void, Void, Boolean>() {
+        new APITask() {
             @Override
-            protected Boolean doInBackground(Void... params) {
-                try {
-                    MJPApi.shared().create(MessageForCreation.class, messageForCreation);
-                    return true;
-                } catch (MJPApiException e) {
-                    return false;
-                }
+            protected void runAPI() throws MJPApiException {
+                MJPApi.shared().create(MessageForCreation.class, messageForCreation);
             }
             @Override
-            protected void onPostExecute(final Boolean success) {
+            protected void onSuccess() {
             }
-        }.execute();
+        };
     }
 
     @OnClick(R.id.header_view)

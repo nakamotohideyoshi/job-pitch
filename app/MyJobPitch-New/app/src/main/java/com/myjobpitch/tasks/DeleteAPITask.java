@@ -3,14 +3,13 @@ package com.myjobpitch.tasks;
 import android.util.Log;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.myjobpitch.api.MJPApi;
 import com.myjobpitch.api.MJPApiException;
-import com.myjobpitch.utils.AppHelper;
+import com.myjobpitch.utils.Loading;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class DeleteAPITask extends APITask<Void> {
+public class DeleteAPITask extends APITask0<Void> {
     private List<DeleteAPITaskListener> listeners = new ArrayList<>();
     private boolean connectionError = false;
 
@@ -47,7 +46,7 @@ public class DeleteAPITask extends APITask<Void> {
     protected void onPostExecute(Void result) {
         super.onPostExecute(result);
         if (connectionError || errors != null) {
-            AppHelper.hideLoading();
+            Loading.hide();
         }
         for (DeleteAPITaskListener listener : listeners) {
             if (connectionError)

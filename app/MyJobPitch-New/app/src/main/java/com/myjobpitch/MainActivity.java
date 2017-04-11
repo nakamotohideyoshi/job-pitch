@@ -67,13 +67,13 @@ public class MainActivity extends AppCompatActivity
 
         Fresco.initialize(getApplicationContext());
 
-        instance = this;
-        mFragmentManager = getSupportFragmentManager();
-
         mDrawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
         mNavigationView.setNavigationItemSelectedListener(this);
         mToolbar.setNavigationIcon(R.drawable.ic_menu);
         setSupportActionBar(mToolbar);
+
+        instance = this;
+        mFragmentManager = getSupportFragmentManager();
 
         replaceFragment(new LoginFragment());
     }
@@ -84,6 +84,21 @@ public class MainActivity extends AppCompatActivity
 
     public void setRootFragement(int pageID) {
 
+        // remove all fragments
+
+        while (mFragmentManager.getBackStackEntryCount() > 0) {
+            mFragmentManager.popBackStackImmediate();
+        }
+
+        // new fragment
+        MenuItemInfo info = menuItemData[pageID];
+        try {
+            BaseFragment fragment = (BaseFragment) info.fragmentClass.newInstance();
+            fragment.title = info.title;
+            replaceFragment(fragment);
+        } catch (Exception e) {
+        }
+
         // checked menu item
 
         Menu menu = mNavigationView.getMenu();
@@ -93,23 +108,7 @@ public class MainActivity extends AppCompatActivity
         mCurrentPageID = pageID;
         menu.findItem(mCurrentPageID).setChecked(true);
 
-        // new fragment
-
-        MenuItemInfo info = menuItemData[pageID];
-
-        BaseFragment fragment = null;
-        try {
-            fragment = (BaseFragment) info.fragmentClass.newInstance();
-            fragment.title = info.title;
-        } catch (Exception e) {
-        }
-
-        while (mFragmentManager.getBackStackEntryCount() > 0) {
-            mFragmentManager.popBackStackImmediate();
-        }
         mToolbar.setNavigationIcon(R.drawable.ic_menu);
-
-        replaceFragment(fragment);
     }
 
     public void replaceFragment(BaseFragment fragment) {
@@ -121,7 +120,6 @@ public class MainActivity extends AppCompatActivity
                 .commit();
 
         mToolbar.getMenu().clear();
-        hideKeyboard();
     }
 
     public void pushFragment(BaseFragment fragment) {
@@ -139,7 +137,6 @@ public class MainActivity extends AppCompatActivity
         }
 
         mToolbar.getMenu().clear();
-        hideKeyboard();
     }
 
     public void popFragment() {
@@ -147,7 +144,7 @@ public class MainActivity extends AppCompatActivity
         if (mFragmentManager.getBackStackEntryCount() == 1) {
             mToolbar.setNavigationIcon(R.drawable.ic_menu);
         }
-        hideKeyboard();
+        mToolbar.getMenu().clear();
     }
 
     BaseFragment getCurrentFragment() {
@@ -186,11 +183,12 @@ public class MainActivity extends AppCompatActivity
                 }
             }
         }
+
+        mCurrentPageID = -1;
     }
 
     public void loggedin(int pageID) {
         mContentView.setBackgroundColor(0xFFFFFF);
-        mCurrentPageID = -1;
         reloadMenu();
         setRootFragement(pageID);
     }
@@ -205,7 +203,10 @@ public class MainActivity extends AppCompatActivity
 
                 mDrawer.closeDrawer(GravityCompat.START);
                 mContentView.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+
+                mNavigationView.getMenu().clear();
                 mCurrentPageID = -1;
+
                 replaceFragment(new LoginFragment());
             }
         }, "Cancel", null, true);
@@ -269,8 +270,6 @@ public class MainActivity extends AppCompatActivity
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
-
         int id = item.getItemId();
         if (mCurrentPageID != id) {
             if (id == AppData.PAGE_CONTACT_UP) {

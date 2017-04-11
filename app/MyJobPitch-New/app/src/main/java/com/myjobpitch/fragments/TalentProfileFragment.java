@@ -3,16 +3,14 @@ package com.myjobpitch.fragments;
 import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import com.kaopiz.kprogresshud.KProgressHUD;
@@ -25,24 +23,26 @@ import com.myjobpitch.api.data.JobSeeker;
 import com.myjobpitch.api.data.Nationality;
 import com.myjobpitch.api.data.Pitch;
 import com.myjobpitch.api.data.Sex;
+import com.myjobpitch.tasks.APITask;
 import com.myjobpitch.uploader.AWSPitchUploader;
 import com.myjobpitch.uploader.PitchUpload;
 import com.myjobpitch.uploader.PitchUploadListener;
 import com.myjobpitch.utils.AppData;
-import com.myjobpitch.utils.AppHelper;
+import com.myjobpitch.utils.Loading;
 import com.myjobpitch.utils.Popup;
 import com.rengwuxian.materialedittext.MaterialEditText;
 import com.weiwangcn.betterspinner.library.material.MaterialBetterSpinner;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class TalentProfileFragment extends BaseFragment {
+public class TalentProfileFragment extends FormFragment {
 
     static final int MENU_SAVE = 10;
     static final int CVULOAD_CODE = 1;
@@ -123,9 +123,7 @@ public class TalentProfileFragment extends BaseFragment {
         ButterKnife.bind(this, view);
 
         // menu
-        Menu menu = getApp().getToolbarMenu();
-        MenuItem item = menu.add(Menu.NONE, MENU_SAVE, 1, "Save");
-        item.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+        addMenuItem("Save", -1);
 
         // data
         for (Sex sex : AppData.get(Sex.class)) {
@@ -141,28 +139,19 @@ public class TalentProfileFragment extends BaseFragment {
         // loading
         if (AppData.user.getJob_seeker() != null) {
             view.setVisibility(View.INVISIBLE);
-            AppHelper.showLoading("Loading...");
-            new AsyncTask<Void, Void, Boolean>() {
+            new APITask("Loading...", this) {
                 @Override
-                protected Boolean doInBackground(Void... params) {
-                    try {
-                        jobSeeker = MJPApi.shared().get(JobSeeker.class, AppData.user.getJob_seeker());
-                        AppData.existProfile = jobSeeker.getProfile() != null;
-                        return true;
-                    } catch (MJPApiException e) {
-                        handleErrors(e);
-                        return false;
-                    }
+                protected void runAPI() throws MJPApiException {
+                    jobSeeker = MJPApi.shared().get(JobSeeker.class, AppData.user.getJob_seeker());
+                    AppData.existProfile = jobSeeker.getProfile() != null;
                 }
                 @Override
-                protected void onPostExecute(Boolean success) {
+                protected void onSuccess() {
                     view.setVisibility(View.VISIBLE);
-                    AppHelper.hideLoading();
-                    if (success) {
-                        load();
-                    }
+                    load();
                 }
-            }.execute();
+            };
+
         } else {
             mEmailView.setText(getApp().getEmail());
             mCVViewButton.setVisibility(View.GONE);
@@ -172,11 +161,13 @@ public class TalentProfileFragment extends BaseFragment {
     }
 
     @Override
-    protected Object[][] getRequiredFields() {
-        return new Object[][] {
-                {"firstName", mFirstNameView},
-                {"lastName", mLastNameView},
-                {"description", mDescriptionView}
+    protected HashMap<String, EditText> getRequiredFields() {
+        return new HashMap<String, EditText>() {
+            {
+                put("firstName", mFirstNameView);
+                put("lastName", mLastNameView);
+                put("description", mDescriptionView);
+            }
         };
     }
 
@@ -295,11 +286,11 @@ public class TalentProfileFragment extends BaseFragment {
             if (!valid()) return;
 
             if (!mTickBox.isChecked()) {
-                Popup.showGreen("You must check the box confirming the truth of the information you have provided.", null, null, "OK", null, true);
+                Popup.showError("You must check the box confirming the truth of the information you have provided.");
                 return;
             }
 
-            AppHelper.showLoading("Saving...");
+            Loading.show("Saving...");
 
             if (jobSeeker == null) {
                 jobSeeker = new JobSeeker();
@@ -327,41 +318,33 @@ public class TalentProfileFragment extends BaseFragment {
             jobSeeker.setHasReferences(mHasReferencesView.isChecked());
             jobSeeker.setTruthConfirmation(mTickBox.isChecked());
 
-            new AsyncTask<Void, Void, Boolean>() {
-
+            new APITask(this) {
                 @Override
-                protected Boolean doInBackground(Void... params) {
-                    try {
-                        if (jobSeeker.getId() == null) {
-                            jobSeeker = MJPApi.shared().create(JobSeeker.class, jobSeeker);
-                            AppData.user.setJob_seeker(jobSeeker.getId());
-                        } else {
-                            jobSeeker = MJPApi.shared().updateJobSeeker(jobSeeker);
-                        }
-                        AppData.existProfile = jobSeeker.getProfile() != null;
-                        return true;
-                    } catch (MJPApiException e) {
-                        handleErrors(e);
-                        return false;
+                protected void runAPI() throws MJPApiException {
+                    if (jobSeeker.getId() == null) {
+                        jobSeeker = MJPApi.shared().create(JobSeeker.class, jobSeeker);
+                        AppData.user.setJob_seeker(jobSeeker.getId());
+                    } else {
+                        jobSeeker = MJPApi.shared().updateJobSeeker(jobSeeker);
+                    }
+                    AppData.existProfile = jobSeeker.getProfile() != null;
+                }
+                @Override
+                protected void onSuccess() {
+                    if (mVideoPath == null) {
+                        saveCompleted();
+                    } else {
+                        uploadPitch();
                     }
                 }
+            };
 
-                @Override
-                protected void onPostExecute(final Boolean success) {
-                    if (success) {
-                        if (mVideoPath == null) {
-                            saveCompleted();
-                        } else {
-                            uploadPitch();
-                        }
-                    }
-                }
-
-            }.execute();
         }
     }
 
     void uploadPitch() {
+
+        Loading.getLoadingBar().setMaxProgress(100);
 
         AWSPitchUploader pitchUploader = new AWSPitchUploader(getApp());
         PitchUpload upload = pitchUploader.upload(new File(mVideoPath));
@@ -370,36 +353,29 @@ public class TalentProfileFragment extends BaseFragment {
             public void onStateChange(int state) {
                 switch (state) {
                     case PitchUpload.STARTING:
-                        AppHelper.loadingbar.setLabel("Starting upload...");
+                        Loading.getLoadingBar().setLabel("Starting upload...");
                         break;
                     case PitchUpload.UPLOADING:
-                        AppHelper.loadingbar.setStyle(KProgressHUD.Style.BAR_DETERMINATE);
-                        AppHelper.loadingbar.setLabel("0%");
+                        Loading.getLoadingBar().setStyle(KProgressHUD.Style.BAR_DETERMINATE);
+                        Loading.getLoadingBar().setLabel("0%");
                         break;
                     case PitchUpload.PROCESSING:
-                        AppHelper.loadingbar.setStyle(KProgressHUD.Style.SPIN_INDETERMINATE);
-                        AppHelper.loadingbar.setLabel("Processing...");
+                        Loading.getLoadingBar().setStyle(KProgressHUD.Style.SPIN_INDETERMINATE);
+                        Loading.getLoadingBar().setLabel("Processing...");
                         break;
                     case PitchUpload.COMPLETE:
-                        new AsyncTask<Void, Void, Boolean>() {
+                        new APITask(TalentProfileFragment.this) {
                             @Override
-                            protected Boolean doInBackground(Void... params) {
-                                try {
-                                    jobSeeker = MJPApi.shared().get(JobSeeker.class, AppData.user.getJob_seeker());
-                                    return true;
-                                } catch (MJPApiException e) {
-                                    handleErrors(e);
-                                    return false;
-                                }
+                            protected void runAPI() throws MJPApiException {
+                                jobSeeker = MJPApi.shared().get(JobSeeker.class, AppData.user.getJob_seeker());
                             }
                             @Override
-                            protected void onPostExecute(final Boolean success) {
+                            protected void onSuccess() {
                                 mPitch = jobSeeker.getPitch();
                                 mVideoPath = null;
                                 saveCompleted();
                             }
-                        }.execute();
-
+                        };
                         break;
                 }
             }
@@ -408,15 +384,15 @@ public class TalentProfileFragment extends BaseFragment {
             public void onProgress(double current, long total) {
                 int complete = (int) (((float) current / total) * 100);
                 if (complete < 100) {
-                    AppHelper.loadingbar.setProgress(complete);
-                    AppHelper.loadingbar.setLabel(Integer.toString(complete) + "%");
+                    Loading.getLoadingBar().setProgress(complete);
+                    Loading.getLoadingBar().setLabel(Integer.toString(complete) + "%");
                 }
             }
 
             @Override
             public void onError(String message) {
-                AppHelper.hideLoading();
-                Popup.showGreen("Error uploading video!", null, null, "OK", null, true);
+                Loading.hide();
+                Popup.showError("Error uploading video!");
             }
         });
         upload.start();
@@ -424,7 +400,7 @@ public class TalentProfileFragment extends BaseFragment {
     }
 
     void saveCompleted() {
-        AppHelper.hideLoading();
+        Loading.hide();
         Popup.showGreen("Success!", "OK", new View.OnClickListener() {
             @Override
             public void onClick(View view) {

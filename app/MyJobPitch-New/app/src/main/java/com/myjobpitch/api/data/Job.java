@@ -80,8 +80,4 @@ public class Job extends MJPObjectWithDates {
         return images;
     }
 
-    public String getFullBusinessName() {
-        return location_data.getBusiness_data().getName() + ", " + location_data.getName();
-    }
-
 }

@@ -20,7 +20,7 @@ import java.io.InputStream;
 /**
  * Created by jcockburn on 26/05/2015.
  */
-public class UploadImageTask extends APITask<Boolean> {
+public class UploadImageTask extends APITask0<Boolean> {
     private final Context context;
     private final String endpoint;
     private final String objectKey;

@@ -4,9 +4,6 @@ function goToLocation(id){
 
 $(function() {
 	app(context).then(function() {
-		// Run login check funtion with auto-redirect
-		checkLogin(true);
-
 		$.get( "/api/user-businesses/", { csrftoken: getCookie('csrftoken') }).done(function( data ) {
 
 			getTemplate(CONST.PATH.PARTIALS+'companyRow.html')

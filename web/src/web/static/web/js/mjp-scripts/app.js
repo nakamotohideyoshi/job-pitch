@@ -7,5 +7,8 @@ $(function() {
 
 	app(context).then(function(user) {
 		home(context);
+	}).catch(function(response) {
+		console.log("response", response);
+
 	});
 });

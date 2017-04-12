@@ -13,10 +13,7 @@
 		<!-- Page Heading -->
 		<div class="row">
 			<div class="col-md-6 col-md-offset-3">
-				<form role="form" action="/api-rest-auth/login/" method="post">
-
-					<div class="alert" role="alert"></div>
-
+				<form role="form" method="post">
 					<div class="form-group">
 							<label>Login Here</label>
 							<input type="text" class="form-control" placeholder="Email" name="email" id="email">
@@ -42,6 +39,10 @@
 </div>
 <!-- /.container-fluid -->
 
+{% endblock %}
+
+
+{% block extra_content %}
 {% endblock %}
 
 

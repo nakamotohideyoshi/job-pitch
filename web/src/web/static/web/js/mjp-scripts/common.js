@@ -1,33 +1,82 @@
 /* Common Functions */
+function getCookie(cname) {
+	var name = cname + "=";
+	var ca = document.cookie.split(';');
 
-function checkUser(user) {
-	if (user.businesses.length) {
-		return CONST.USER.BUSINESS;
-	} else if (user.job_seeker !== null) {
-		return CONST.USER.JOBSEEKER;
-	} else {
-		return CONST.USER.UNDEFINED;
+	for (var i = 0; i < ca.length; i++) {
+		var c = ca[i];
+		while (c.charAt(0) == ' ') c = c.substring(1);
+		if (c.indexOf(name) === 0) {
+			return c.substring(name.length, c.length);
+		}
 	}
+
+	return "";
+}
+
+
+
+/* Global Variables */
+var context = {
+	user: "undefined",
+	userType: "undefined",
+	userEmail: "undefined",
+	redirectIfNotLoggedIn: true,
+	userIsLoggedIn: false,
+	csrftoken: {
+		token: getCookie('key'),
+		csrftoken: getCookie('csrftoken')
+	},
+	csrfmiddlewaretoken: {
+		csrfmiddlewaretoken: getCookie('csrftoken')
+	}
+};
+
+
+function getUserType(user) {
+	if(typeof user !== "undefined" && user !== null){
+		if (typeof user.businesses !== "undefined" && user.businesses !== null && user.businesses.length) {
+			return CONST.USER.BUSINESS;
+		} else if (typeof user.job_seeker !== "undefined" && user.job_seeker !== null) {
+			return CONST.USER.JOBSEEKER;
+		}
+	}
+
+	return CONST.USER.UNDEFINED;
+}
+
+
+function getUserEmail(){
+	var email = getCookie('email');
+	if (!email || email === '') {
+		return null;
+	}
+
+	return email;
 }
 
 
 function checkIfSiteMapForUser(sitemap) {
 	var pathname = window.location.pathname;
-
-	return new Promise(function(resolve, reset) {
+	var isAllowed = false;
+	//return new Promise(function(resolve, reject) {
 		if (pathname == '/') {
-			return resolve();
+			return Promise.resolve(pathname);
 		}
 
 		sitemap.forEach(function(url) {
 			if (pathname.indexOf(url) >= 0) {
-				resolve();
+				isAllowed = true;
 				return true;
 			}
 		});
 
-		reject();
-	});
+		if(isAllowed){
+			return Promise.resolve(pathname);
+		}
+
+		return Promise.reject();
+	//});
 }
 
 
@@ -43,39 +92,122 @@ function setHeaderEmail(email) {
 	$('.logged_in_menu').show();
 }
 
-
-//if redirect is true, send user to login
-function checkLogin(redirect) {
-	//Check if this is a mobile device, if so tell them to go use the mobile apps
-	if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
-		window.location.href = "/mobile-app";
-	}
-
-	var email = getCookie('email');
-	if (email == undefined || email == '') {
-		if(redirect) {
-			// Verify if the user has been previously redirected to here
-			var url = '';
-			if(window.location.pathname.indexOf('login') == -1){
-				url = window.location.pathname;
-			}
-			var goToUrl = (url) ? '?url=' + url : '';
-
-			window.location.href = "/login/"+goToUrl;
-		} else {
-			//show login & reg links
-			$('.not_logged_in_menu').show();
-			$('.not_logged_in_element').show();
-			$('.login-email').hide();
-
-			return false;
+var checkAndRedirect = {
+	toMobileDevice: function() {
+		// Redirect if this is a mobile device, if so tell them to go use the mobile apps
+		if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+			window.location.href = "/mobile-app";
 		}
+
+	},
+
+	toUserHomePageFromRoot: function(forceFlag) {
+		var forceFlag = forceFlag || false;
+
+		// Redirect to default page if user is logged in and request / page(home)
+		if(forceFlag || window.location.pathname === '/'){
+			if(context.userIsLoggedIn){
+				ApiRestAuth.user.get().then(function(user) {
+					context.userType = getUserType(user);
+
+					checkAndRedirect.toUserHomePage();
+				});
+			}
+		}
+	},
+
+	toLoginPage: function(forceFlag) {
+		// Redirect to Login Page if user is accesing Required User Logged Pages
+		if (!context.userIsLoggedIn) {
+			if(forceFlag) {
+				// Verify if the user has been previously redirected to here
+				var url = '';
+				if(window.location.pathname.indexOf('login') == -1){
+					url = window.location.pathname;
+				}
+				var goToUrl = (url) ? '?url=' + url : '';
+
+				window.location.href = "/login/"+goToUrl;
+			}
+		}
+	},
+
+	toUserHomePage: function() {
+		var userHomePage = "/find-jobs/";
+		if (context.userType == CONST.USER.BUSINESS) {
+			userHomePage = "/find-talent/";
+		}
+
+		window.location.href = userHomePage;
+	},
+
+	toUserHomePageWhenNotSitemap: function(user) {
+
+		return new Promise(function(resolve, reject) {
+			if(context.userType === CONST.USER.UNDEFINED){
+				reject();
+			}
+
+			var sitemap = CONST.SITEMAP.JOBSEEKER;
+			if (context.userType == CONST.USER.BUSINESS) {
+				sitemap = CONST.SITEMAP.BUSINESS;
+			}
+
+			checkIfSiteMapForUser(sitemap).then(function() {
+				resolve(context.user);
+			}).catch(function(response) {
+				checkAndRedirect.toUserHomePage();
+			});
+
+		});
+
+	},
+
+	whenProfileIncomplete: function() {
+		// handel issues such as non completed reg.
+		if(context.user !== "undefined"){
+			if(!isInUrl('/profile/job-seeker/create')){
+				window.location.href = "/profile/job-seeker/create";
+			}
+		}else{
+			logoutUser();
+		}
+	},
+
+
+	ifNotInSiteMap: function() {
+		return checkIfSiteMapForUser(CONST.SITEMAP.COMMONS).then(function() {
+			return Promise.resolve(true);
+		}).catch(function() {
+			checkAndRedirect.toLoginPage(context.redirectIfNotLoggedIn);
+
+			setHeaderEmail();
+
+			ApiRestAuth.user.get().catch(function() {
+				return Promise.reject();
+			}).then(function(user) {
+				context.userType = getUserType(user); // default undefined
+
+				context.user = user; // default null
+
+				checkAndRedirect.toUserHomePageWhenNotSitemap().then(function() {
+					return Promise.resolve(user);
+				}).catch(function() {
+					checkAndRedirect.whenProfileIncomplete();
+				});
+			});
+		});
 	}
 
-	setHeaderEmail(email);
+};
 
-	return true;
-}
+
+context.userEmail = getUserEmail();
+context.userIsLoggedIn = typeof context.userEmail !== "undefined" && context.userEmail !== null;
+
+checkAndRedirect.toMobileDevice();
+checkAndRedirect.toUserHomePageFromRoot();
+
 
 function logoutUser() {
 	deleteCookie('email');
@@ -88,51 +220,6 @@ function logoutUser() {
 	});
 }
 
-function redirectIfNotAllowedToSiteMap() {
-	return new Promise(function(resolve, reject) {
-		checkIfSiteMapForUser(CONST.SITEMAP.COMMONS).then(function() {
-			resolve({});
-		}).catch(function() {
-			context.userIsLoggedIn = checkLogin(context.redirectIfNotLoggedIn);
-
-			ApiRestAuth.user.get().then(function(user) {
-				context.user = user;
-				context.userType = checkUser(user);
-
-				if (context.userType == CONST.USER.BUSINESS) {
-					checkIfSiteMapForUser(CONST.SITEMAP.RECRUITER).then(function() {
-						resolve(user);
-					}).catch(function(response) {
-						window.location.href = "/profile/recruiter/";
-					});
-				} else if (context.userType == CONST.USER.JOBSEEKER) {
-					checkIfSiteMapForUser(CONST.SITEMAP.JOBSEEKER).then(function() {
-						resolve(user);
-					}).catch(function(response) {
-						window.location.href = "/profile/job-seeker/";
-					});
-				} else {
-					/* handel issues such as non completed reg. */
-					if(context.user !== undefined){
-						if(!isInUrl('/profile/job-seeker/create')){
-							window.location.href = "/profile/job-seeker/create";
-						}
-
-						resolve(user);
-					}else{
-						logoutUser();
-						window.location.href = "/";
-					}
-				}
-
-			}).catch(function(response) {
-				logoutUser();
-				window.location.href = "/";
-			});
-		});
-	});
-}
-
 
 function goToTop() {
 	// This for hacking scrolltop because it does not work
@@ -141,26 +228,12 @@ function goToTop() {
 	document.location.hash = "#hacked-top";
 }
 
+
 function setCookie(cname, cvalue, exdays) {
 	var d = new Date();
 	d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
 	var expires = "expires=" + d.toUTCString();
 	document.cookie = cname + "=" + cvalue + "; " + expires + "; path=/;";
-}
-
-function getCookie(cname) {
-	var name = cname + "=";
-	var ca = document.cookie.split(';');
-
-	for (var i = 0; i < ca.length; i++) {
-		var c = ca[i];
-		while (c.charAt(0) == ' ') c = c.substring(1);
-		if (c.indexOf(name) == 0) {
-			return c.substring(name.length, c.length);
-		}
-	}
-
-	return "";
 }
 
 function deleteCookie(cname) {
@@ -169,7 +242,7 @@ function deleteCookie(cname) {
 
 //get lat long and other data from postcode
 function postcodeLocationData(postcode, handleData) {
-	if (postcode != '') {
+	if (postcode !== '') {
 		$.ajax({
 			cache: false,
 			url: "https://api.postcodes.io/postcodes/" + postcode,
@@ -419,6 +492,24 @@ $.delete = function(url, data, callback, type) {
 	});
 };
 
+
+$.whenAll = function(deferreds) {
+  var lastResolved = 0;
+  var wrappedDeferreds = [];
+
+  for (var i = 0; i < deferreds.length; i++) {
+    wrappedDeferreds.push($.Deferred());
+    if (deferreds[i] && deferreds[i].always) {
+      deferreds[i].always(wrappedDeferreds[lastResolved++].resolve);
+    } else {
+      wrappedDeferreds[lastResolved++].resolve(deferreds[i]);
+    }
+  }
+
+  return $.when.apply($, wrappedDeferreds).promise();
+};
+
+
 //Fix the CSRF on the above functions
 
 function csrfSafeMethod(method) {
@@ -635,7 +726,7 @@ function populateSelect($select, data, selectedOption) {
 		}
 
 		text = obj.name;
-		if (obj !== undefined  || obj.name == undefined) {
+		if (obj !== undefined  || obj.name === undefined) {
 			text = obj.title;
 		}
 
@@ -670,7 +761,11 @@ $.ajaxSetup({
 			messageError = messageError + obj + '<br>';
 		}
 
-		formAlert('error', messageError);
+		if(response.status === 403){
+			console.log('error', messageError);
+		} else {
+			formAlert('error', messageError);
+		}
 
 		return response;
 	}
@@ -678,20 +773,6 @@ $.ajaxSetup({
 });
 
 
-/* Global Variables */
-var context = {
-	user: undefined,
-	userType: undefined,
-	redirectIfNotLoggedIn: true,
-	userIsLoggedIn: false,
-	csrftoken: {
-		token: getCookie('key'),
-		csrftoken: getCookie('csrftoken')
-	},
-	csrfmiddlewaretoken: {
-		csrfmiddlewaretoken: getCookie('csrftoken')
-	}
-};
 
 
 function home(localContext){
@@ -711,14 +792,8 @@ function home(localContext){
 			setCookie('email', email, 28);
 			setCookie('key', data.key, 28);
 
-			redirectIfNotAllowedToSiteMap().then(function(user) {
-				if(user.userType == CONST.USER.BUSINESS){
-					window.location.href = "/find-posts/";
-				} else {
-					window.location.href = "/find-jobs/";
-				}
-			});
-
+			context.userIsLoggedIn = true;
+			checkAndRedirect.toUserHomePageFromRoot(true);
 		});
 	});
 
@@ -801,7 +876,8 @@ function home(localContext){
 function app(localContext) {
 
 	return new Promise(function(resolve, reject) {
-		redirectIfNotAllowedToSiteMap().then(function(user) {
+		checkAndRedirect.ifNotInSiteMap()
+		.then(function(user) {
 			//$('.brand-pills > li.active').removeClass('active');
 
 			// Screens menu highlight when page are active
@@ -833,15 +909,15 @@ function app(localContext) {
 			$("select").on('change', function(){
 				var sel = this;
 				var color = 'black';
-				if (sel.options[sel.selectedIndex].value == ''){
+				if (sel.options[sel.selectedIndex].value === ''){
 					color = '#999';
 				}
 				sel.style.color = color;
 			});
 
 			resolve(user);
-		}).catch(function() {
-			reject();
+		}).catch(function(response) {
+			reject(response);
 		});
 	});
 }

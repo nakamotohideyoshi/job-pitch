@@ -28,13 +28,7 @@ $(function() {
 					window.location.href = goToUrl;
 
 				} else {
-					ApiRestAuth.user.get().then(function(user) {
-						if(checkUser(user) == CONST.USER.BUSINESS){
-							window.location.href = "/applications/";
-						} else {
-							window.location.href = "/find-jobs/";
-						}
-					});
+					context.toUserHomePageFromRoot();
 				}
 			});
 		});

@@ -26,9 +26,6 @@ function populateCompanies(companyid) {
 
 $(function () {
 	app(context).then(function() {
-		// Run login check funtion with auto-redirect
-		checkLogin(true);
-
 		//grab company id from url
 		var company_id = QueryString.companyid;
 

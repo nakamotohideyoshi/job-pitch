@@ -13,7 +13,7 @@ var CONST = {
 	USER: {
 		JOBSEEKER: 0,
 		BUSINESS: 1,
-		UNDEFINED: undefined
+		UNDEFINED: "undefined"
 	},
 
 	ROLE: {
@@ -46,7 +46,7 @@ var CONST = {
 			'profile/job-seeker/edit',
 			'password-change'
 		],
-		RECRUITER: [
+		BUSINESS: [
 			'applications',
 			'find-talent',
 			'add-work-place',
@@ -61,4 +61,4 @@ var CONST = {
 			'profile/create-business'
 		]
 	}
-}
+};

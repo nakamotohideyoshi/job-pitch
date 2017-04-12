@@ -81,9 +81,6 @@ $(function() {
 	    setInboxContainerHeight();
 	  });
 
-		// Run login check funtion with auto-redirect
-		checkLogin(true);
-
 		var application_id = QueryString.id;
 
 		var recruiter_role;

@@ -51,26 +51,29 @@ public class PaymentFragment extends FormFragment implements IabBroadcastReceive
     @BindView(R.id.subscribe_comment)
     TextView sbuscribeView;
 
-    List<Business> businesses;
-    Business business;
+    public Business business;
 
-    Purchase currentPurchase;
-    IabHelper mHelper;
-    IabBroadcastReceiver mBroadcastReceiver;
+    private List<Business> businesses;
 
-    static final String PAYLOAD = "myjobpitch";
-    static final String SKU_CREDITS = "tokens_1";
-    static final String SKU_SUBSCRIBE = "subscrip";
+    private Purchase currentPurchase;
+    private IabHelper mHelper;
+    private IabBroadcastReceiver mBroadcastReceiver;
 
-    static final int RC_REQUEST = 10001;
-    static final int SUBSCRIBED_CREDITS = 50;
-    static final int ADD_CREDITS = 30;
+    private static final String PAYLOAD = "myjobpitch";
+    private static final String SKU_CREDITS = "tokens_1";
+    private static final String SKU_SUBSCRIBE = "subscrip";
+
+    private static final int RC_REQUEST = 10001;
+    private static final int SUBSCRIBED_CREDITS = 50;
+    private static final int ADD_CREDITS = 30;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_payment, container, false);
         ButterKnife.bind(this, view);
+
+        title = "Add Credits";
 
         businessSpinner.setAdapter(new ArrayAdapter<>(getApp(),  android.R.layout.simple_dropdown_item_1line, new ArrayList<String>()));
         businessSpinner.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -86,7 +89,7 @@ public class PaymentFragment extends FormFragment implements IabBroadcastReceive
         Loading.show("Loading...");
         loadBusinesses();
 
-        return  view;
+        return view;
     }
 
     void loadBusinesses() {
@@ -101,6 +104,10 @@ public class PaymentFragment extends FormFragment implements IabBroadcastReceive
                 List<String> businessNames = new ArrayList<>();
                 for (Business b : businesses) {
                     businessNames.add(b.getName());
+                    if (business != null && business.getName().equals(b.getName())) {
+                        businessSpinner.setText(business.getName());
+                        creditsView.setText("Credits: " + business.getTokens());
+                    }
                 }
                 businessSpinner.setAdapter(new ArrayAdapter<>(getApp(),  android.R.layout.simple_dropdown_item_1line, businessNames));
 

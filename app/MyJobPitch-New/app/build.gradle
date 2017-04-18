@@ -7,8 +7,8 @@ android {
         applicationId "com.myjobpitch"
         minSdkVersion 16
         targetSdkVersion 25
-        versionCode 39
-        versionName "1.1-beta.39"
+        versionCode 40
+        versionName "1.1-beta.40"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
     }
@@ -46,7 +46,6 @@ dependencies {
     compile 'com.amazonaws:aws-android-sdk-s3:2.3.9'
     compile 'com.kaopiz:kprogresshud:1.0.5'
     compile 'com.jakewharton:butterknife:8.5.1'
-    compile 'com.github.florent37:camerafragment:1.0.5'
     compile 'me.everything:overscroll-decor-android:1.0.4'
     compile 'com.daimajia.swipelayout:library:1.2.0@aar'
     compile 'com.weiwangcn.betterspinner:library:1.1.0'

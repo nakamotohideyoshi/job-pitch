@@ -172,7 +172,7 @@ public class PitchFragment extends BaseFragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == Activity.RESULT_OK) {
-            mVideoPath = data.getStringExtra(CameraActivity.FILEPATH);
+            mVideoPath = data.getStringExtra(CameraActivity.OUTPUT_FILE);
             updateInterface();
         }
     }

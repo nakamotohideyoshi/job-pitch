@@ -44,7 +44,6 @@ import butterknife.OnClick;
 
 public class TalentProfileFragment extends FormFragment {
 
-    static final int MENU_SAVE = 10;
     static final int CVULOAD_CODE = 1;
     static final int PITCH_CODE = 2;
 
@@ -274,7 +273,7 @@ public class TalentProfileFragment extends FormFragment {
                 mCVFilenameView.setVisibility(View.VISIBLE);
                 mCVUploadRemoveButton.setVisibility(View.VISIBLE);
             } else if (this.requestCode == PITCH_CODE) {
-                mVideoPath = data.getStringExtra(CameraActivity.FILEPATH);
+                mVideoPath = data.getStringExtra(CameraActivity.OUTPUT_FILE);
                 mRecordVideoPlay.setVisibility(View.VISIBLE);
             }
         }
@@ -282,64 +281,61 @@ public class TalentProfileFragment extends FormFragment {
 
     @Override
     public void onMenuSelected(int menuID) {
-        if (menuID == MENU_SAVE) {
-            if (!valid()) return;
+        if (!valid()) return;
 
-            if (!mTickBox.isChecked()) {
-                Popup.showError("You must check the box confirming the truth of the information you have provided.");
-                return;
-            }
-
-            Loading.show("Saving...");
-
-            if (jobSeeker == null) {
-                jobSeeker = new JobSeeker();
-            }
-            jobSeeker.setActive(mActiveView.isChecked());
-            jobSeeker.setFirst_name(mFirstNameView.getText().toString().trim());
-            jobSeeker.setLast_name(mLastNameView.getText().toString().trim());
-            jobSeeker.setEmail(mEmailView.getText().toString().trim());
-            jobSeeker.setEmail_public(mEmailPublicView.isChecked());
-            jobSeeker.setTelephone(mTelephoneView.getText().toString().trim());
-            jobSeeker.setTelephone_public(mTelephonePublicView.isChecked());
-            jobSeeker.setMobile(mMobileView.getText().toString().trim());
-            jobSeeker.setMobile_public(mMobilePublicView.isChecked());
-            int sexIndex = mSexNames.indexOf(mSexView.getText().toString());
-            if (sexIndex != -1) {
-                jobSeeker.setSex(AppData.get(Sex.class).get(sexIndex).getId());
-            }
-            jobSeeker.setSex_public(mSexPublicView.isChecked());
-            int nationalityIndex = mNationalityNames.indexOf(mNationalityView.getText().toString());
-            if (nationalityIndex != -1) {
-                jobSeeker.setNationality(AppData.get(Nationality.class).get(nationalityIndex).getId());
-            }
-            jobSeeker.setNationality_public(mNationalityPublicView.isChecked());
-            jobSeeker.setDescription(mDescriptionView.getText().toString().trim());
-            jobSeeker.setHasReferences(mHasReferencesView.isChecked());
-            jobSeeker.setTruthConfirmation(mTickBox.isChecked());
-
-            new APITask(this) {
-                @Override
-                protected void runAPI() throws MJPApiException {
-                    if (jobSeeker.getId() == null) {
-                        jobSeeker = MJPApi.shared().create(JobSeeker.class, jobSeeker);
-                        AppData.user.setJob_seeker(jobSeeker.getId());
-                    } else {
-                        jobSeeker = MJPApi.shared().updateJobSeeker(jobSeeker);
-                    }
-                    AppData.existProfile = jobSeeker.getProfile() != null;
-                }
-                @Override
-                protected void onSuccess() {
-                    if (mVideoPath == null) {
-                        saveCompleted();
-                    } else {
-                        uploadPitch();
-                    }
-                }
-            };
-
+        if (!mTickBox.isChecked()) {
+            Popup.showError("You must check the box confirming the truth of the information you have provided.");
+            return;
         }
+
+        Loading.show("Saving...");
+
+        if (jobSeeker == null) {
+            jobSeeker = new JobSeeker();
+        }
+        jobSeeker.setActive(mActiveView.isChecked());
+        jobSeeker.setFirst_name(mFirstNameView.getText().toString().trim());
+        jobSeeker.setLast_name(mLastNameView.getText().toString().trim());
+        jobSeeker.setEmail(mEmailView.getText().toString().trim());
+        jobSeeker.setEmail_public(mEmailPublicView.isChecked());
+        jobSeeker.setTelephone(mTelephoneView.getText().toString().trim());
+        jobSeeker.setTelephone_public(mTelephonePublicView.isChecked());
+        jobSeeker.setMobile(mMobileView.getText().toString().trim());
+        jobSeeker.setMobile_public(mMobilePublicView.isChecked());
+        int sexIndex = mSexNames.indexOf(mSexView.getText().toString());
+        if (sexIndex != -1) {
+            jobSeeker.setSex(AppData.get(Sex.class).get(sexIndex).getId());
+        }
+        jobSeeker.setSex_public(mSexPublicView.isChecked());
+        int nationalityIndex = mNationalityNames.indexOf(mNationalityView.getText().toString());
+        if (nationalityIndex != -1) {
+            jobSeeker.setNationality(AppData.get(Nationality.class).get(nationalityIndex).getId());
+        }
+        jobSeeker.setNationality_public(mNationalityPublicView.isChecked());
+        jobSeeker.setDescription(mDescriptionView.getText().toString().trim());
+        jobSeeker.setHasReferences(mHasReferencesView.isChecked());
+        jobSeeker.setTruthConfirmation(mTickBox.isChecked());
+
+        new APITask(this) {
+            @Override
+            protected void runAPI() throws MJPApiException {
+                if (jobSeeker.getId() == null) {
+                    jobSeeker = MJPApi.shared().create(JobSeeker.class, jobSeeker);
+                    AppData.user.setJob_seeker(jobSeeker.getId());
+                } else {
+                    jobSeeker = MJPApi.shared().updateJobSeeker(jobSeeker);
+                }
+                AppData.existProfile = jobSeeker.getProfile() != null;
+            }
+            @Override
+            protected void onSuccess() {
+                if (mVideoPath == null) {
+                    saveCompleted();
+                } else {
+                    uploadPitch();
+                }
+            }
+        };
     }
 
     void uploadPitch() {

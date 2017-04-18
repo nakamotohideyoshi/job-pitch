@@ -96,15 +96,11 @@
                             android:id="@+id/forgot_password"
                             android:layout_width="match_parent"
                             android:layout_height="@dimen/button_height"
+                            android:layout_marginTop="15dp"
                             android:background="@android:color/transparent"
                             android:text="Forgot password?"
                             android:textColor="#0095ff"
                             android:theme="@style/Button" />
-
-                        <View
-                            android:layout_width="match_parent"
-                            android:layout_height="0dp"
-                            android:layout_weight="1"/>
 
                         <Button
                             android:id="@+id/go_register"
@@ -139,11 +135,6 @@
                             android:layout_marginTop="15dp"
                             android:background="@drawable/button_green"
                             android:theme="@style/Button" />
-
-                        <View
-                            android:layout_width="match_parent"
-                            android:layout_height="0dp"
-                            android:layout_weight="1"/>
 
                         <Button
                             android:id="@+id/go_login"

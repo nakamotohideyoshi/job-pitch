@@ -6,7 +6,9 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.myjobpitch.R;
@@ -35,7 +37,10 @@ public class BusinessEditFragment extends FormFragment {
     MaterialEditText nameView;
 
     @BindView(R.id.business_credits)
-    MaterialEditText creditsView;
+    TextView creditsView;
+
+    @BindView(R.id.add_credits_button)
+    Button addCreditsButton;
 
     @BindView(R.id.business_logo)
     View logoView;
@@ -56,6 +61,7 @@ public class BusinessEditFragment extends FormFragment {
 
         if (business == null) {
             title = "Add Business";
+            addCreditsButton.setVisibility(View.GONE);
         } else {
             title = "Edit Business";
 
@@ -96,9 +102,11 @@ public class BusinessEditFragment extends FormFragment {
         };
     }
 
-    @OnClick(R.id.business_credits_button)
+    @OnClick(R.id.add_credits_button)
     void onCredits() {
-
+        PaymentFragment fragment = new PaymentFragment();
+        fragment.business = business;
+        getApp().pushFragment(fragment);
     }
 
     @Override

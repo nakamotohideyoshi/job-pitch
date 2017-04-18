@@ -72,13 +72,13 @@ public class SelectJobFragment extends BaseFragment {
                 commentView.setText("Select job bellow to start finding talent for your business.");
                 break;
             case AppData.PAGE_R_APPLICATIONS:
-                commentView.setText("comment here.");
+                commentView.setText("Select a job below to view job seekers who have expressed interest in a job.");
                 break;
             case AppData.PAGE_CONNECTIONS:
-                commentView.setText("comment here.");
+                commentView.setText("Select a job below to view job seekers you have connected with.");
                 break;
             case AppData.PAGE_MY_SHORTLIST:
-                commentView.setText("comment here.");
+                commentView.setText("Select a job below to view the job seekers you have shortlisted for that role.");
                 break;
         }
 

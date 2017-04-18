@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11762" systemVersion="15G1217" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="bVj-gg-QoO">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11762" systemVersion="15G1421" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="bVj-gg-QoO">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
@@ -172,7 +172,7 @@ sdafsdf</string>
                                 </connections>
                             </button>
                             <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="There are no more new matches for this job. You can restore your removed matches by clicking refresh above." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="oN5-3h-dvf">
-                                <rect key="frame" x="31" y="285" width="313" height="96"/>
+                                <rect key="frame" x="31" y="285.5" width="313" height="95.5"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="20"/>
                                 <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                                 <nil key="highlightedColor"/>
@@ -224,7 +224,7 @@ sdafsdf</string>
             <objects>
                 <navigationController navigationBarHidden="YES" id="Tn3-dg-KpG" sceneMemberID="viewController">
                     <nil key="simulatedTopBarMetrics"/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" translucent="NO" id="pbS-fN-baU">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" translucent="NO" id="pbS-fN-baU">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -658,8 +658,8 @@ et dolore magna aliqua.</string>
                                                 <color key="textColor" red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="calibratedRGB"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="IxZ-NM-uiX">
-                                                <rect key="frame" x="341" y="126" width="14" height="24"/>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="100" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="IxZ-NM-uiX">
+                                                <rect key="frame" x="319" y="126" width="36" height="24"/>
                                                 <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="20"/>
                                                 <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                                                 <nil key="highlightedColor"/>
@@ -899,10 +899,6 @@ et dolore magna aliqua.</string>
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="GWG-Jm-9aX">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
-                                <color key="backgroundColor" cocoaTouchSystemColor="darkTextColor"/>
-                            </view>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vCR-En-nwt">
                                 <rect key="frame" x="10" y="30" width="44" height="44"/>
                                 <constraints>
@@ -925,8 +921,8 @@ et dolore magna aliqua.</string>
                                     <action selector="cameraSwitchAction:" destination="kYN-Vx-JZK" eventType="touchUpInside" id="1UW-UH-TO8"/>
                                 </connections>
                             </button>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="30" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="sCO-Xq-8OG">
-                                <rect key="frame" x="173" y="523" width="30" height="29"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="sCO-Xq-8OG">
+                                <rect key="frame" x="188" y="552" width="0.0" height="0.0"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="24"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <nil key="highlightedColor"/>
@@ -943,31 +939,26 @@ et dolore magna aliqua.</string>
                                 </state>
                                 <connections>
                                     <action selector="recordAction:" destination="kYN-Vx-JZK" eventType="touchUpInside" id="7C5-Mo-Ujp"/>
-                                    <action selector="removeAction:" destination="dLn-iH-H0Z" eventType="touchUpInside" id="HDN-63-QKn"/>
                                 </connections>
                             </button>
                         </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="J7u-28-54B" firstAttribute="top" secondItem="GWG-Jm-9aX" secondAttribute="bottom" id="22j-Cq-f7m"/>
-                            <constraint firstItem="GWG-Jm-9aX" firstAttribute="top" secondItem="pVp-P2-fas" secondAttribute="top" id="2rk-ii-F3v"/>
                             <constraint firstItem="vCR-En-nwt" firstAttribute="top" secondItem="pNu-Ho-uP8" secondAttribute="bottom" constant="10" id="8J5-JE-huo"/>
                             <constraint firstAttribute="trailing" secondItem="iNw-kU-Ecq" secondAttribute="trailing" constant="10" id="98T-sR-PCF"/>
                             <constraint firstItem="6al-ve-zRO" firstAttribute="centerX" secondItem="pVp-P2-fas" secondAttribute="centerX" id="A4W-zX-Kg5"/>
                             <constraint firstItem="6al-ve-zRO" firstAttribute="top" secondItem="sCO-Xq-8OG" secondAttribute="bottom" constant="20" id="DUC-rM-BFB"/>
                             <constraint firstItem="6al-ve-zRO" firstAttribute="width" secondItem="pVp-P2-fas" secondAttribute="width" multiplier="0.2" id="HX3-lN-rUv"/>
                             <constraint firstItem="sCO-Xq-8OG" firstAttribute="centerX" secondItem="pVp-P2-fas" secondAttribute="centerX" id="JAB-nc-j6q"/>
-                            <constraint firstItem="GWG-Jm-9aX" firstAttribute="leading" secondItem="pVp-P2-fas" secondAttribute="leading" id="QBu-at-UqE"/>
-                            <constraint firstAttribute="trailing" secondItem="GWG-Jm-9aX" secondAttribute="trailing" id="ZC1-cy-eHb"/>
                             <constraint firstItem="vCR-En-nwt" firstAttribute="leading" secondItem="pVp-P2-fas" secondAttribute="leading" constant="10" id="ZrG-rl-udG"/>
                             <constraint firstItem="iNw-kU-Ecq" firstAttribute="top" secondItem="pNu-Ho-uP8" secondAttribute="bottom" constant="10" id="bLo-JB-YR6"/>
                             <constraint firstItem="J7u-28-54B" firstAttribute="top" secondItem="6al-ve-zRO" secondAttribute="bottom" constant="20" id="gxj-A3-6AL"/>
                         </constraints>
                     </view>
                     <connections>
-                        <outlet property="cameraView" destination="GWG-Jm-9aX" id="CFz-z0-b2b"/>
                         <outlet property="countLabel" destination="sCO-Xq-8OG" id="8EG-t9-Azk"/>
                         <outlet property="recordButton" destination="6al-ve-zRO" id="7m1-aW-oDS"/>
+                        <outlet property="switchButton" destination="iNw-kU-Ecq" id="awa-0T-fxj"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="WQq-di-4Mg" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -2269,7 +2260,7 @@ et dolore magna aliqua.</string>
                                                 </connections>
                                             </button>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ZVx-H6-QTl">
-                                                <rect key="frame" x="113" y="489" width="149" height="34"/>
+                                                <rect key="frame" x="113" y="504" width="149" height="34"/>
                                                 <fontDescription key="fontDescription" type="system" weight="medium" pointSize="18"/>
                                                 <state key="normal" title="Forgot password?">
                                                     <color key="titleColor" red="0.0" green="0.58431372550000005" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -2279,7 +2270,7 @@ et dolore magna aliqua.</string>
                                                 </connections>
                                             </button>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hqS-AM-W3P">
-                                                <rect key="frame" x="58" y="603" width="260" height="34"/>
+                                                <rect key="frame" x="58" y="548" width="260" height="34"/>
                                                 <fontDescription key="fontDescription" type="system" weight="medium" pointSize="18"/>
                                                 <state key="normal" title="Don't have an account? Sign up">
                                                     <color key="titleColor" red="0.0" green="0.58431372550000005" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -2295,17 +2286,17 @@ et dolore magna aliqua.</string>
                                             <constraint firstItem="ZVx-H6-QTl" firstAttribute="centerX" secondItem="pbn-eH-oxK" secondAttribute="centerX" id="4za-az-cBT"/>
                                             <constraint firstItem="oRJ-OX-CyF" firstAttribute="leading" secondItem="vSp-OV-dlH" secondAttribute="leading" id="6eE-gn-WWX"/>
                                             <constraint firstItem="Gw0-Rn-TFY" firstAttribute="top" secondItem="vg4-0R-yvU" secondAttribute="bottom" constant="30" id="BUA-d9-Tc2"/>
+                                            <constraint firstItem="hqS-AM-W3P" firstAttribute="top" secondItem="ZVx-H6-QTl" secondAttribute="bottom" constant="10" id="BWg-JG-19I"/>
                                             <constraint firstItem="VJE-h2-Ocj" firstAttribute="trailing" secondItem="oRJ-OX-CyF" secondAttribute="trailing" id="CHW-2B-7sd"/>
                                             <constraint firstItem="oRJ-OX-CyF" firstAttribute="height" secondItem="vSp-OV-dlH" secondAttribute="height" id="Eee-VI-ZVf"/>
                                             <constraint firstItem="vg4-0R-yvU" firstAttribute="leading" secondItem="oRJ-OX-CyF" secondAttribute="leading" id="KEZ-X1-Jyh"/>
                                             <constraint firstItem="VJE-h2-Ocj" firstAttribute="leading" secondItem="oRJ-OX-CyF" secondAttribute="leading" id="KpM-va-43V"/>
                                             <constraint firstItem="oRJ-OX-CyF" firstAttribute="trailing" secondItem="vSp-OV-dlH" secondAttribute="trailing" id="TLQ-UJ-ogc"/>
                                             <constraint firstItem="Gw0-Rn-TFY" firstAttribute="trailing" secondItem="oRJ-OX-CyF" secondAttribute="trailing" id="WOd-gY-v8X"/>
-                                            <constraint firstItem="ZVx-H6-QTl" firstAttribute="top" secondItem="Gw0-Rn-TFY" secondAttribute="bottom" id="WbX-sn-3ol"/>
+                                            <constraint firstItem="ZVx-H6-QTl" firstAttribute="top" secondItem="Gw0-Rn-TFY" secondAttribute="bottom" constant="15" id="WbX-sn-3ol"/>
                                             <constraint firstItem="kKQ-Mt-MiR" firstAttribute="centerX" secondItem="pbn-eH-oxK" secondAttribute="centerX" id="X0F-RK-Tf9"/>
                                             <constraint firstItem="Gw0-Rn-TFY" firstAttribute="leading" secondItem="oRJ-OX-CyF" secondAttribute="leading" id="b7X-lW-SRe"/>
                                             <constraint firstItem="hqS-AM-W3P" firstAttribute="centerX" secondItem="pbn-eH-oxK" secondAttribute="centerX" id="d24-mJ-qR6"/>
-                                            <constraint firstAttribute="bottom" secondItem="hqS-AM-W3P" secondAttribute="bottom" constant="10" id="eYs-8c-iby"/>
                                             <constraint firstItem="vSp-OV-dlH" firstAttribute="width" secondItem="pbn-eH-oxK" secondAttribute="width" multiplier="0.7" id="fA2-0R-JTR"/>
                                             <constraint firstItem="Vk4-hP-xfS" firstAttribute="trailing" secondItem="vSp-OV-dlH" secondAttribute="trailing" id="hGj-8P-uNf"/>
                                             <constraint firstItem="vSp-OV-dlH" firstAttribute="centerX" secondItem="pbn-eH-oxK" secondAttribute="centerX" id="iLc-uu-3cA"/>
@@ -2445,7 +2436,7 @@ et dolore magna aliqua.</string>
                                                 </connections>
                                             </button>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mmg-Ov-8MQ">
-                                                <rect key="frame" x="84" y="603" width="208" height="34"/>
+                                                <rect key="frame" x="84" y="549" width="208" height="34"/>
                                                 <fontDescription key="fontDescription" type="system" weight="medium" pointSize="18"/>
                                                 <state key="normal" title="Have an account? Sign in">
                                                     <color key="titleColor" red="0.0" green="0.58431372550000005" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -2471,7 +2462,6 @@ et dolore magna aliqua.</string>
                                             <constraint firstItem="yT9-i6-o48" firstAttribute="top" secondItem="Atf-TD-LNz" secondAttribute="bottom" constant="13" id="NhA-b3-d6o"/>
                                             <constraint firstItem="atM-51-Gec" firstAttribute="trailing" secondItem="dDG-kZ-3cP" secondAttribute="trailing" id="NpK-RH-81t"/>
                                             <constraint firstItem="mmg-Ov-8MQ" firstAttribute="centerX" secondItem="Pwf-wN-z0o" secondAttribute="centerX" id="OgA-An-thH"/>
-                                            <constraint firstAttribute="bottom" secondItem="mmg-Ov-8MQ" secondAttribute="bottom" constant="10" id="PeZ-IB-tvq"/>
                                             <constraint firstItem="qA6-BF-6xk" firstAttribute="centerY" secondItem="Pwf-wN-z0o" secondAttribute="centerY" multiplier="0.45" id="SUL-EQ-EBl"/>
                                             <constraint firstItem="yT9-i6-o48" firstAttribute="trailing" secondItem="lbD-kd-ugr" secondAttribute="trailing" id="YJI-wM-a8L"/>
                                             <constraint firstItem="A6H-CS-OL0" firstAttribute="leading" secondItem="yT9-i6-o48" secondAttribute="leading" id="aPS-g8-GJl"/>
@@ -2485,6 +2475,7 @@ et dolore magna aliqua.</string>
                                             <constraint firstItem="dDG-kZ-3cP" firstAttribute="leading" secondItem="yT9-i6-o48" secondAttribute="leading" id="lrC-ca-VyP"/>
                                             <constraint firstItem="A6H-CS-OL0" firstAttribute="centerY" secondItem="4kJ-7G-BaJ" secondAttribute="centerY" id="mOF-s1-pLT"/>
                                             <constraint firstItem="Atf-TD-LNz" firstAttribute="trailing" secondItem="lbD-kd-ugr" secondAttribute="trailing" id="qWT-1a-7Vf"/>
+                                            <constraint firstItem="mmg-Ov-8MQ" firstAttribute="top" secondItem="atM-51-Gec" secondAttribute="bottom" constant="5" id="yAM-bC-dvn"/>
                                             <constraint firstItem="yT9-i6-o48" firstAttribute="leading" secondItem="lbD-kd-ugr" secondAttribute="leading" id="ynn-TT-9bt"/>
                                         </constraints>
                                     </view>

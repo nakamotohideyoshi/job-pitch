@@ -3,7 +3,7 @@ use_frameworks!
 
 target 'MyJobPitch' do
 
-    pod 'AWSS3'
+    pod 'AWSS3','2.4.11'
     pod 'RestKit'
     pod 'GoogleMaps'
     pod 'GooglePlaces'
@@ -13,7 +13,7 @@ target 'MyJobPitch' do
     pod 'MDCSwipeToChoose'
     pod 'MGSwipeTableCell'
     pod 'SVPullToRefresh'
-    pod 'CameraManager'
+    pod 'LLSimpleCamera'
     pod 'JSQMessagesViewController'
     pod 'JTSImageViewController'
     

@@ -7,7 +7,7 @@
 //
 
 import UIKit
-import CameraManager
+import LLSimpleCamera
 
 class CameraController: UIViewController {
 
@@ -15,13 +15,13 @@ class CameraController: UIViewController {
         case none, ready, capture
     }
     
-    @IBOutlet weak var cameraView: UIView!
+    @IBOutlet weak var switchButton: UIButton!
     @IBOutlet weak var recordButton: UIButton!
     @IBOutlet weak var countLabel: UILabel!
     
-    let cameraManager = CameraManager()
-    
     var captureStatus = CaptureStatus.none
+    
+    var camera: LLSimpleCamera!
     
     var timer: Timer! {
         willSet(newTimer) {
@@ -52,40 +52,24 @@ class CameraController: UIViewController {
         recordButton.backgroundColor = AppData.greenColor
         
         count = 0
-                
-        cameraManager.cameraDevice = .front
-        cameraManager.cameraOutputQuality = .high
-        cameraManager.cameraOutputMode = .videoWithMic
         
-        let currentCameraState = cameraManager.currentCameraStatus()
-        
-        if currentCameraState == .notDetermined {
-            cameraManager.askUserForCameraPermission({ (permissionGranted) in
-                if permissionGranted {
-                    self.addCameraToView()
-                }
-            })
-        } else if (currentCameraState == .ready) {
-            addCameraToView()
-        }
+        let screenSize = UIScreen.main.bounds.size
+        camera = LLSimpleCamera(quality: AVCaptureSessionPresetHigh, position: LLCameraPositionFront, videoEnabled: true)
+        addChildViewController(camera)
+        camera.view.frame = CGRect(x: 0, y: 0, width: screenSize.width, height: screenSize.height)
+        view.insertSubview(camera.view, at: 0)
+        camera.didMove(toParentViewController: self)
+        camera.useDeviceOrientation = true
         
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        cameraManager.resumeCaptureSession()
+        camera.start()
     }
     
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-        cameraManager.stopCaptureSession()
-    }
-    
-    func addCameraToView() {
-        _ = cameraManager.addPreviewLayerToView(cameraView)
-        cameraManager.showErrorBlock = { (erTitle, erMessage) in
-            PopupController.showGray(erMessage, ok: "OK")
-        }
+    override var prefersStatusBarHidden: Bool {
+        return true
     }
     
     func finishCapture() {
@@ -93,21 +77,7 @@ class CameraController: UIViewController {
         timer = nil
         recordButton.setTitle("RECORD", for: .normal)
         recordButton.backgroundColor = AppData.greenColor
-        
-        AppHelper.showLoading("Saving...")
-        
-        cameraManager.stopVideoRecording({ (videoURL, error) -> Void in
-            DispatchQueue.main.sync {
-                AppHelper.hideLoading()
-                if let errorOccured = error {
-                    self.cameraManager.showErrorBlock("Error occurred", errorOccured.localizedDescription)
-                } else {                    
-                    self.dismiss(animated: true, completion: {
-                        self.complete?(videoURL)
-                    })
-                }
-            }
-        })
+        camera.stopRecording()
     }
     
     func countDown() {
@@ -116,9 +86,17 @@ class CameraController: UIViewController {
             if captureStatus == .ready {
                 captureStatus = .capture
                 count = 30
-                cameraManager.startRecordingVideo()
                 recordButton.setTitle("STOP", for: .normal)
                 recordButton.backgroundColor = UIColor.red
+                
+                let appDir = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).last!
+                let outputURL: URL = appDir.appendingPathComponent("myjobpitch").appendingPathExtension("mov")
+                camera.startRecording(withOutputUrl: outputURL, didRecord: { (_, videoURL, error) in
+                    if error == nil {
+                        self.complete?(videoURL)
+                        _ = self.dismiss(animated: true, completion: nil)
+                    }
+                })
             } else {
                 finishCapture()
             }
@@ -126,7 +104,7 @@ class CameraController: UIViewController {
     }
     
     @IBAction func cameraSwitchAction(_ sender: Any) {
-        cameraManager.cameraDevice = cameraManager.cameraDevice == .back ? .front : .back
+        camera.togglePosition()
     }
     
     @IBAction func closeAction(_ sender: Any) {
@@ -143,14 +121,14 @@ class CameraController: UIViewController {
             timer = Timer(timeInterval: 1, target: self, selector: #selector(countDown), userInfo: nil, repeats: true)
             recordButton.setTitle("READY", for: .normal)
             recordButton.backgroundColor = AppData.yellowColor
-            
+            switchButton.isHidden = true
         case .ready:
             captureStatus = .none
             count = 0
             timer = nil
             recordButton.setTitle("RECORD", for: .normal)
             recordButton.backgroundColor = AppData.greenColor
-            
+            switchButton.isHidden = false
         case .capture:
             finishCapture()
         }

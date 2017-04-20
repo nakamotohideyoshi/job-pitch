@@ -25,6 +25,10 @@ var ApiRestAuth = {
 	user: {
 		get: function() {
 			return new Promise(function(resolve, reject) {
+				if(typeof context.user !== "undefined" && context.user !== null){
+					resolve(context.user);
+				}
+
 				$.get("/api-rest-auth/user/", {
 					token: getCookie('key'),
 					csrftoken: getCookie('csrftoken')

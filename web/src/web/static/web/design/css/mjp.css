@@ -1,4 +1,4 @@
-/*!
+/*
  * Start Bootstrap - Modern Business HTML Template (http://startbootstrap.com)
  * Code licensed under the Apache License v2.0.
  * For details, see http://www.apache.org/licenses/LICENSE-2.0.
@@ -1484,7 +1484,7 @@ div.howitworks-page div.thumbnail{
   display:none;
 }
 
-.navbar-nav>li.not_logged_in_menu{
+.navbar-nav>li.not-logged-in-menu{
   display:none;
 }
 
@@ -1535,7 +1535,7 @@ div.howitworks-page div.thumbnail{
   display:none;
 }
 
-.navbar-nav>li.not_logged_in_menu{
+.navbar-nav>li.not-logged-in-menu{
   display:none;
 }
 
@@ -1989,7 +1989,8 @@ Web App By Reiss Watson
 	min-height:100vh;
 }
 
-.business-link{
+.business-link,
+.job-seeker-link{
 	display:none;
 }
 
@@ -2004,10 +2005,6 @@ Web App By Reiss Watson
 
 #list-table .business-link{
 	display:none !important;
-}
-
-.job-seeker-link{
-	display:none;
 }
 
 /*

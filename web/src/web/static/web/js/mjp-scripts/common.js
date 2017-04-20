@@ -15,11 +15,10 @@ function getCookie(cname) {
 }
 
 
-
 /* Global Variables */
 var context = {
-	user: "undefined",
-	userType: "undefined",
+	user: undefined,
+	userType: undefined,
 	userEmail: "undefined",
 	redirectIfNotLoggedIn: true,
 	userIsLoggedIn: false,
@@ -34,10 +33,14 @@ var context = {
 
 
 function getUserType(user) {
+	if(typeof context.userType !== "undefined" && context.userType !== null){
+		return context.userType;
+	}
+
 	if(typeof user !== "undefined" && user !== null){
 		if (typeof user.businesses !== "undefined" && user.businesses !== null && user.businesses.length) {
 			return CONST.USER.BUSINESS;
-		} else if (typeof user.job_seeker !== "undefined" && user.job_seeker !== null) {
+		} if (typeof user.job_seeker !== "undefined" && user.job_seeker !== null) {
 			return CONST.USER.JOBSEEKER;
 		}
 	}
@@ -59,24 +62,23 @@ function getUserEmail(){
 function checkIfSiteMapForUser(sitemap) {
 	var pathname = window.location.pathname;
 	var isAllowed = false;
-	//return new Promise(function(resolve, reject) {
-		if (pathname == '/') {
-			return Promise.resolve(pathname);
+
+	if (pathname == '/') {
+		return Promise.resolve(pathname);
+	}
+
+	sitemap.forEach(function(url) {
+		if (pathname.indexOf(url) >= 0) {
+			isAllowed = true;
+			return true;
 		}
+	});
 
-		sitemap.forEach(function(url) {
-			if (pathname.indexOf(url) >= 0) {
-				isAllowed = true;
-				return true;
-			}
-		});
+	if(isAllowed){
+		return Promise.resolve(pathname);
+	}
 
-		if(isAllowed){
-			return Promise.resolve(pathname);
-		}
-
-		return Promise.reject();
-	//});
+	return Promise.reject();
 }
 
 
@@ -92,17 +94,45 @@ function setHeaderEmail(email) {
 	$('.logged_in_menu').show();
 }
 
+
+function showOnlyAllowedDomElements(){
+	ApiRestAuth.user.get().then(function(user) {
+		context.userType = getUserType(user);
+
+		if (context.userType === CONST.USER.BUSINESS){
+			$('.not-logged-in-menu').hide();
+			$('.business-link').show();
+			$('.job-seeker-link').hide();
+		}else{
+			$('.not-logged-in-menu').hide();
+			$('.business-link').hide();
+			$('.job-seeker-link').show();
+		}
+	});
+}
+
+
 var checkAndRedirect = {
 	toMobileDevice: function() {
 		// Redirect if this is a mobile device, if so tell them to go use the mobile apps
 		if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
 			window.location.href = "/mobile-app";
 		}
-
 	},
 
+
+	toUserHomePage: function() {
+		var userHomePage = "/find-jobs/";
+		if (context.userType == CONST.USER.BUSINESS) {
+			userHomePage = "/find-talent/";
+		}
+
+		window.location.href = userHomePage;
+	},
+
+
 	toUserHomePageFromRoot: function(forceFlag) {
-		var forceFlag = forceFlag || false;
+		forceFlag = forceFlag || false;
 
 		// Redirect to default page if user is logged in and request / page(home)
 		if(forceFlag || window.location.pathname === '/'){
@@ -115,6 +145,7 @@ var checkAndRedirect = {
 			}
 		}
 	},
+
 
 	toLoginPage: function(forceFlag) {
 		// Redirect to Login Page if user is accesing Required User Logged Pages
@@ -132,14 +163,6 @@ var checkAndRedirect = {
 		}
 	},
 
-	toUserHomePage: function() {
-		var userHomePage = "/find-jobs/";
-		if (context.userType == CONST.USER.BUSINESS) {
-			userHomePage = "/find-talent/";
-		}
-
-		window.location.href = userHomePage;
-	},
 
 	toUserHomePageWhenNotSitemap: function(user) {
 
@@ -158,10 +181,10 @@ var checkAndRedirect = {
 			}).catch(function(response) {
 				checkAndRedirect.toUserHomePage();
 			});
-
 		});
 
 	},
+
 
 	whenProfileIncomplete: function() {
 		// handel issues such as non completed reg.
@@ -177,6 +200,8 @@ var checkAndRedirect = {
 
 	ifNotInSiteMap: function() {
 		return checkIfSiteMapForUser(CONST.SITEMAP.COMMONS).then(function() {
+			showOnlyAllowedDomElements();
+
 			return Promise.resolve(true);
 		}).catch(function() {
 			checkAndRedirect.toLoginPage(context.redirectIfNotLoggedIn);
@@ -191,6 +216,8 @@ var checkAndRedirect = {
 				context.user = user; // default null
 
 				checkAndRedirect.toUserHomePageWhenNotSitemap().then(function() {
+					showOnlyAllowedDomElements();
+
 					return Promise.resolve(user);
 				}).catch(function() {
 					checkAndRedirect.whenProfileIncomplete();
@@ -508,7 +535,6 @@ $.whenAll = function(deferreds) {
 
   return $.when.apply($, wrappedDeferreds).promise();
 };
-
 
 //Fix the CSRF on the above functions
 

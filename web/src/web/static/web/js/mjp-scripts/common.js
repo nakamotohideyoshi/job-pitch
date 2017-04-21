@@ -101,8 +101,8 @@ function showOnlyAllowedDomElements(){
 
 		if (context.userType === CONST.USER.BUSINESS){
 			$('.not-logged-in-menu').hide();
-			$('.business-link').show();
 			$('.job-seeker-link').hide();
+			$('.business-link').show();
 		}else{
 			$('.not-logged-in-menu').hide();
 			$('.business-link').hide();
@@ -200,8 +200,6 @@ var checkAndRedirect = {
 
 	ifNotInSiteMap: function() {
 		return checkIfSiteMapForUser(CONST.SITEMAP.COMMONS).then(function() {
-			showOnlyAllowedDomElements();
-
 			return Promise.resolve(true);
 		}).catch(function() {
 			checkAndRedirect.toLoginPage(context.redirectIfNotLoggedIn);
@@ -216,8 +214,6 @@ var checkAndRedirect = {
 				context.user = user; // default null
 
 				checkAndRedirect.toUserHomePageWhenNotSitemap().then(function() {
-					showOnlyAllowedDomElements();
-
 					return Promise.resolve(user);
 				}).catch(function() {
 					checkAndRedirect.whenProfileIncomplete();
@@ -799,8 +795,6 @@ $.ajaxSetup({
 });
 
 
-
-
 function home(localContext){
 	//Form submit code - Login
 	$('#login').submit(function(event) {
@@ -904,6 +898,8 @@ function app(localContext) {
 	return new Promise(function(resolve, reject) {
 		checkAndRedirect.ifNotInSiteMap()
 		.then(function(user) {
+			showOnlyAllowedDomElements();
+
 			//$('.brand-pills > li.active').removeClass('active');
 
 			// Screens menu highlight when page are active

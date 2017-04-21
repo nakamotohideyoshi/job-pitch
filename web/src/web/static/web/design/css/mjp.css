@@ -1989,8 +1989,11 @@ Web App By Reiss Watson
 	min-height:100vh;
 }
 
+
 .business-link,
-.job-seeker-link{
+.job-seeker-link,
+.nav>li.bussiness-link,
+.nav>li.job-seeker-link{
 	display:none;
 }
 

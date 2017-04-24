@@ -20,7 +20,6 @@ urlpatterns = [
     url(r'^profile/create-job-seeker/$', views.create_profile_job_seeker),
     url(r'^profile/create-business/$', views.create_business),
     url(r'^profile/create-location/$', views.create_location),
-    url(r'^profile/edit-job-seeker/$', views.edit_profile_job_seeker),
     url(r'^profile/list-businesses/$', views.list_businesses),
     url(r'^profile/list-locations/$', views.list_locations),
     url(r'^profile/edit-job/$', views.edit_job),

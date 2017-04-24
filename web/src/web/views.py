@@ -27,7 +27,7 @@ def pitch(request):
     return render(request, 'profile/pitch.html')
 
 def create_profile_job_seeker(request):
-    return render(request, 'profile/job-seeker-create.html')
+    return render(request, 'profile/jobseeker-create.html')
 
 def create_business(request):
     return render(request, 'profile/create-business.html')
@@ -40,7 +40,7 @@ def edit_location(request):
     return render(request, 'profile/edit-location.html')
 
 def edit_profile_job_seeker(request):
-    return render(request, 'profile/job-seeker-edit.html')
+    return render(request, 'profile/jobseeker-edit.html')
 
 def list_businesses(request):
     return render(request, 'profile/list-businesses.html')

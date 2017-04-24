@@ -15,6 +15,7 @@ from models import (
     ApplicationStatus,
     Role,
     TokenStore,
+    InitialTokens,
 )
 
 from rest_auth.serializers import LoginSerializer as BaseLoginSerializer
@@ -215,3 +216,8 @@ class AndroidPurchaseSerializer(serializers.Serializer):
     product_code = serializers.CharField()
     purchase_token = serializers.CharField()
 
+
+class InitialTokensSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = InitialTokens
+        fields = ('tokens',)

@@ -10,7 +10,7 @@ import com.myjobpitch.R;
 
 public class Loading {
 
-    static KProgressHUD loadingBar;
+    private static KProgressHUD loadingBar;
 
     public static KProgressHUD getLoadingBar() {
         return loadingBar;

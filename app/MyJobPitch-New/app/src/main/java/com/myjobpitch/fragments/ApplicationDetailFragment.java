@@ -20,6 +20,7 @@ import com.myjobpitch.R;
 import com.myjobpitch.api.MJPApi;
 import com.myjobpitch.api.MJPApiException;
 import com.myjobpitch.api.data.Application;
+import com.myjobpitch.api.data.ApplicationForCreation;
 import com.myjobpitch.api.data.Business;
 import com.myjobpitch.api.data.Contract;
 import com.myjobpitch.api.data.Hours;
@@ -28,8 +29,6 @@ import com.myjobpitch.api.data.JobProfile;
 import com.myjobpitch.api.data.JobSeeker;
 import com.myjobpitch.api.data.Location;
 import com.myjobpitch.tasks.APITask;
-import com.myjobpitch.tasks.CreateApplication;
-import com.myjobpitch.tasks.TaskListener;
 import com.myjobpitch.utils.AppData;
 import com.myjobpitch.utils.AppHelper;
 import com.myjobpitch.utils.Popup;
@@ -232,16 +231,21 @@ public class ApplicationDetailFragment extends BaseFragment {
                 Popup.showYellow("Are you sure you want to apply to this job?", "Apply", new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        new CreateApplication(job.getId(), jobSeeker.getId(), new TaskListener<Application>() {
+                        new APITask("") {
                             @Override
-                            public void done(Application application) {
+                            protected void runAPI() throws MJPApiException {
+                                ApplicationForCreation applicationForCreation = new ApplicationForCreation();
+                                applicationForCreation.setJob(job.getId());
+                                applicationForCreation.setJob_seeker(jobSeeker.getId());
+                                applicationForCreation.setShortlisted(false);
+                                MJPApi.shared().create(ApplicationForCreation.class, applicationForCreation);
+                            }
+                            @Override
+                            protected void onSuccess() {
                                 action.apply();
                                 getApp().popFragment();
                             }
-                            @Override
-                            public void error(String error) {
-                            }
-                        });
+                        };
                     }
                 }, "Cancel", null, true);
             }

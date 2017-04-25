@@ -56,6 +56,8 @@ class AppData: NSObject {
     static var jobStatuses: NSArray!
     static var applicationStatuses: NSArray!
     static var roles: NSArray!
+    
+    static var initialTokens: InitialTokens!
 
     static func clearData() {
         existProfile = false
@@ -69,6 +71,8 @@ class AppData: NSObject {
         jobStatuses = nil
         applicationStatuses = nil
         roles = nil
+        
+        initialTokens = nil
     }
 
     static func loadData(success: (() -> Void)!,
@@ -171,6 +175,16 @@ class AppData: NSObject {
                 failure(message, errors)
             }
         }
+        
+        API.shared().loadInitialTokens(success: { (data) in
+            initialTokens = data as! InitialTokens
+        }) { (message, errors) in
+            if !failed {
+                failed = true
+                failure(message, errors)
+            }
+        }
+        
     }
 
     private static func isDataLoaded() -> Bool {
@@ -181,7 +195,8 @@ class AppData: NSObject {
                 sectors != nil &&
                 jobStatuses != nil &&
                 applicationStatuses != nil &&
-                roles != nil
+                roles != nil &&
+                initialTokens != nil
     }
 
     static func getSex(_ id: NSNumber!) -> Sex! {

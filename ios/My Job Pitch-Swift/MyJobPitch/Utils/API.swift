@@ -206,6 +206,11 @@ class API: NSObject {
 
     // ================= Data =====================
 
+    func loadInitialTokens(success: ((NSObject) -> Void)!,
+                           failure: ((String?, NSDictionary?) -> Void)!) {
+        getObject("/api/initial-tokens/", success: success, failure: failure)
+    }
+    
     func loadHours(success: ((NSArray) -> Void)!,
                    failure: ((String?, NSDictionary?) -> Void)!) {
         getObjects("/api/hours/", success: success, failure: failure)
@@ -245,8 +250,7 @@ class API: NSObject {
                    failure: ((String?, NSDictionary?) -> Void)!) {
         getObjects("/api/roles/", success: success, failure: failure)
     }
-
-
+    
     // ================= Image =====================
 
     func uploadImage(image: UIImage, endpoint: String,

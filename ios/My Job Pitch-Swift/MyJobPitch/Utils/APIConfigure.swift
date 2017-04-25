@@ -85,6 +85,13 @@ class APIConfigure: NSObject {
         let friendlyNameDescDictionary = [ "shortName": "short_name",
                                            "desc":      "description" ]
 
+        configureResponseMapping(InitialTokens.classForCoder(),
+                                 responseArray: [ "tokens" ],
+                                 responseDictionary: nil,
+                                 responseRelationships: nil,
+                                 path: "/api/initial-tokens/",
+                                 method: .GET)
+        
         configureResponseMapping(Hours.classForCoder(),
                                  responseArray: nameArray,
                                  responseDictionary: inverseDictionary(shortNameDescDictionary),
@@ -328,7 +335,7 @@ class APIConfigure: NSObject {
                          path: "/api/user-businesses/:pk/",
                          method: .any)
 
-
+        
         // ================= Location =====================
 
         let locationArray = [ "id", "created", "updated", "business", "jobs", "name",

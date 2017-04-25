@@ -45,6 +45,8 @@ class JobProfileController: MJPController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        addressField.delegate = self
+        
         let iconView = UIImageView(image: UIImage(named: "location-icon"))
         iconView.contentMode = .scaleAspectFit
         iconView.frame = CGRect(x: 10, y: 7, width: 25, height: 26)
@@ -306,4 +308,13 @@ class JobProfileController: MJPController {
         
     }
     
+}
+
+extension JobProfileController: UITextFieldDelegate {
+    func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
+        if addressField == textField {
+            myLocationAction(textField)
+        }
+        return false
+    }
 }

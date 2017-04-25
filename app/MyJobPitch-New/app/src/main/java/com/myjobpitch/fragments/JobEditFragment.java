@@ -41,6 +41,8 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+import static android.content.Context.MODE_PRIVATE;
+
 public class JobEditFragment extends FormFragment {
 
     @BindView(R.id.job_active)
@@ -79,8 +81,6 @@ public class JobEditFragment extends FormFragment {
                              Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_job_edit, container, false);
         ButterKnife.bind(this, view);
-
-        imageSelector = new ImageSelector(logoView, R.drawable.default_logo);
 
         // title and job info
 
@@ -123,19 +123,30 @@ public class JobEditFragment extends FormFragment {
             jobContract = job.getContract();
             jobHours = job.getHours();
 
+            String defaultPath = null;
+            Location location = job.getLocation_data();
+            if (location.getImages().size() > 0) {
+                defaultPath = location.getImages().get(0).getImage();
+            } else {
+                Business business = location.getBusiness_data();
+                if (business.getImages().size() > 0) {
+                    defaultPath = business.getImages().get(0).getImage();
+                }
+            }
+
+            if (defaultPath == null) {
+                imageSelector = new ImageSelector(logoView, R.drawable.default_logo);
+            } else {
+                imageSelector = new ImageSelector(logoView, defaultPath);
+            }
             if (job.getImages().size() > 0) {
                 imageSelector.loadImage(job.getImages().get(0).getImage());
             } else {
-                Location location = job.getLocation_data();
-                if (location.getImages().size() > 0) {
-                    imageSelector.setDefaultImage(location.getImages().get(0).getImage());
-                } else {
-                    Business business = location.getBusiness_data();
-                    if (business.getImages().size() > 0) {
-                        imageSelector.setDefaultImage(business.getImages().get(0).getImage());
-                    }
-                }
+                imageSelector.loadImage(null);
             }
+
+        } else {
+            imageSelector = new ImageSelector(logoView, R.drawable.default_logo);
         }
 
         for (Sector sector : AppData.get(Sector.class)) {
@@ -282,6 +293,19 @@ public class JobEditFragment extends FormFragment {
 
     private void compltedSave() {
         Loading.hide();
+
+        if (BusinessDetailFragment.firstCrate) {
+            getApp().getSharedPreferences("firstCreate", MODE_PRIVATE).edit()
+                    .putBoolean("workplace", false)
+                    .commit();
+
+            getApp().getSupportFragmentManager().popBackStackImmediate();
+            LocationDetailFragment fragment = new LocationDetailFragment();
+            fragment.location = location;
+            getApp().pushFragment(fragment);
+            return;
+        }
+
         if (addJobMode) {
             FragmentManager fragmentManager = getApp().getSupportFragmentManager();
             while (fragmentManager.getBackStackEntryCount() > 1) {

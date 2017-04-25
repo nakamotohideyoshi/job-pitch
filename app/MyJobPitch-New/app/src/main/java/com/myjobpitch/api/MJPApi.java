@@ -19,6 +19,7 @@ import com.myjobpitch.api.data.ChangePassword;
 import com.myjobpitch.api.data.Contract;
 import com.myjobpitch.api.data.Hours;
 import com.myjobpitch.api.data.ImageUpload;
+import com.myjobpitch.api.data.InitialTokens;
 import com.myjobpitch.api.data.Job;
 import com.myjobpitch.api.data.JobProfile;
 import com.myjobpitch.api.data.JobSeeker;
@@ -262,6 +263,9 @@ public class MJPApi {
         return rest.exchange(getObjectUrl("user-businesses", id), HttpMethod.GET, createAuthenticatedRequest(), Business.class).getBody();
     }
 
+    public InitialTokens getInitialTokens() throws MJPApiException {
+        return rest.exchange(getTypeUrl("initial-tokens"), HttpMethod.GET, createAuthenticatedRequest(), InitialTokens.class).getBody();
+    }
     public Business createBusiness(Business business) throws MJPApiException {
         try {
             return rest.exchange(getTypeUrl("user-businesses"), HttpMethod.POST, createAuthenticatedRequest(business), Business.class).getBody();

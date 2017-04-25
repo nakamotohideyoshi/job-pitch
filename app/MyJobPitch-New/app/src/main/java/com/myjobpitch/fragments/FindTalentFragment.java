@@ -5,14 +5,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.myjobpitch.api.MJPApi;
 import com.myjobpitch.api.MJPApiException;
 import com.myjobpitch.api.data.Application;
+import com.myjobpitch.api.data.ApplicationForCreation;
 import com.myjobpitch.api.data.Job;
 import com.myjobpitch.api.data.JobSeeker;
 import com.myjobpitch.tasks.APITask;
-import com.myjobpitch.tasks.CreateApplication;
-import com.myjobpitch.tasks.TaskListener;
 import com.myjobpitch.utils.AppHelper;
 import com.myjobpitch.utils.Popup;
 
@@ -62,23 +62,35 @@ public class FindTalentFragment extends SwipeFragment<JobSeeker> {
     }
 
     @Override
-    protected void swipedRight(JobSeeker jobSeeker) {
-        new CreateApplication(job.getId(), jobSeeker.getId(), new TaskListener<Application>() {
+    protected void swipedRight(final JobSeeker jobSeeker) {
+
+        new APITask(new APITask.ErrorListener() {
             @Override
-            public void done(Application application) {
-                if (application != null) {
-                    int creditCount = application.getJob_data().getLocation_data().getBusiness_data().getTokens();
-                    creditsView.setText(creditCount + (creditCount > 1 ? " credits" : " credit"));
-                }
-            }
-            @Override
-            public void error(String error) {
-                cardStack.unSwipeCard();
-                if (error.equals("NO_TOKENS")) {
+            public void onError(MJPApiException e) {
+                JsonNode errors = e.getErrors();
+                if (errors.has(0) && errors.get(0).asText().equals("NO_TOKENS")) {
+                    cardStack.unSwipeCard();
                     Popup.showError("You have no credits left so cannot compete this connection. Credits cannot be added through the app, please go to our web page.");
                 }
             }
-        });
+        }) {
+            Application application;
+            @Override
+            protected void runAPI() throws MJPApiException {
+                ApplicationForCreation applicationForCreation = new ApplicationForCreation();
+                applicationForCreation.setJob(job.getId());
+                applicationForCreation.setJob_seeker(jobSeeker.getId());
+                applicationForCreation.setShortlisted(false);
+                applicationForCreation = MJPApi.shared().create(ApplicationForCreation.class, applicationForCreation);
+                application = MJPApi.shared().get(Application.class, applicationForCreation.getId());
+            }
+            @Override
+            protected void onSuccess() {
+                int creditCount = application.getJob_data().getLocation_data().getBusiness_data().getTokens();
+                creditsView.setText(creditCount + (creditCount > 1 ? " credits" : " credit"));
+            }
+        };
+
     }
 
     @Override

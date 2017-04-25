@@ -23,7 +23,7 @@ class LocationEditController: MJPController {
     @IBOutlet weak var addressError: UILabel!
     @IBOutlet weak var locationButton: YellowButton!
     @IBOutlet weak var imgView: UIImageView!
-    @IBOutlet weak var addImageButton: UIButton!
+    @IBOutlet weak var addLogoButton: UIButton!
     @IBOutlet weak var removeImageButton: UIButton!
     
     var business: Business!
@@ -47,10 +47,14 @@ class LocationEditController: MJPController {
         imagePicker = UIImagePickerController()
         imagePicker.delegate = self
         
+        addressField.delegate = self
+        
         let iconView = UIImageView(image: UIImage(named: "location-icon"))
         iconView.contentMode = .scaleAspectFit
         iconView.frame = CGRect(x: 10, y: 7, width: 25, height: 26)
         locationButton.addSubview(iconView)
+        
+        //imgView.addDotBorder(dotWidth: 4, color: UIColor.black)
         
         if location == nil {
             navigationItem.title = "Add Work Place"
@@ -90,8 +94,8 @@ class LocationEditController: MJPController {
                 AppHelper.loadImageURL(imageUrl: (image.thumbnail)!, imageView: imgView, completion: nil)
                 if location.images != nil && location.images.count > 0 {
                     origImage = image
-                    addImageButton.isHidden = true
                     removeImageButton.isHidden = false
+                    addLogoButton.setTitle("Change Logo", for: .normal)
                 }
             }
             
@@ -105,7 +109,9 @@ class LocationEditController: MJPController {
             } else {
                 imgView.image = UIImage(named: "default-logo")
             }
-            imgView.alpha = 0.2
+//            imgView.alpha = 0.2
+        } else {
+//            imgView.alpha = 1
         }
         
     }
@@ -119,7 +125,7 @@ class LocationEditController: MJPController {
         ]
     }
     
-    @IBAction func addImageAction(_ sender: Any) {
+    @IBAction func addLogoAction(_ sender: Any) {
         
         let actionSheetContoller = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
         
@@ -158,8 +164,8 @@ class LocationEditController: MJPController {
         } else {
             imgView.image = UIImage(named: "default-logo")
         }
-        imgView.alpha = 0.2
-        addImageButton.isHidden = false
+//        imgView.alpha = 0.2
+        addLogoButton.setTitle("Add Logo", for: .normal)
         removeImageButton.isHidden = true
         
     }
@@ -239,6 +245,17 @@ class LocationEditController: MJPController {
     
     func saveFinished() {
         AppHelper.hideLoading()
+        
+        if BusinessListController.firstCreate {
+            BusinessListController.firstCreate = false
+            
+            var controllers = navigationController?.viewControllers
+            let controller = AppHelper.mainStoryboard.instantiateViewController(withIdentifier: "LocationList") as! BusinessDetailController
+            controller.businessId = business.id
+            controllers?.insert(controller, at: (controllers?.count)!-1)
+            navigationController?.viewControllers = controllers!
+        }
+        
         _ = navigationController?.popViewController(animated: true)
     }
     
@@ -258,9 +275,9 @@ extension LocationEditController: UIImagePickerControllerDelegate {
         logoImage = info[UIImagePickerControllerOriginalImage] as? UIImage
         
         imgView.image = logoImage
-        imgView.alpha = 1
+//        imgView.alpha = 1
         removeImageButton.isHidden = false
-        addImageButton.isHidden = true
+        addLogoButton.setTitle("Change Logo", for: .normal)
         
         dismiss(animated: true, completion: nil)
         
@@ -269,6 +286,15 @@ extension LocationEditController: UIImagePickerControllerDelegate {
 }
 
 extension LocationEditController: UINavigationControllerDelegate {
+}
+
+extension LocationEditController: UITextFieldDelegate {
+    func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
+        if addressField == textField {
+            myLocationAction(textField)
+        }
+        return false
+    }
 }
 
 extension LocationEditController: DropboxBrowserDelegate {
@@ -284,9 +310,9 @@ extension LocationEditController: DropboxBrowserDelegate {
                 //PopupController.showGray(fileName + "is not a image file", ok: "OK")
             } else {
                 imgView.image = logoImage
-                imgView.alpha = 1
+//                imgView.alpha = 1
                 removeImageButton.isHidden = false
-                addImageButton.isHidden = true
+                addLogoButton.setTitle("Change Logo", for: .normal)
             }
             
         } catch {

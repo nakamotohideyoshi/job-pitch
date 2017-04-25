@@ -5,7 +5,9 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.media.ThumbnailUtils;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -113,8 +115,7 @@ public class PitchFragment extends BaseFragment {
     @OnClick(R.id.upload_button)
     void onUpload() {
 
-        Loading.show("");
-        Loading.getLoadingBar().setMaxProgress(100);
+        Loading.show("Starting upload...");
 
         AWSPitchUploader pitchUploader = new AWSPitchUploader(getApp());
         PitchUpload upload = pitchUploader.upload(new File(mVideoPath));
@@ -123,17 +124,19 @@ public class PitchFragment extends BaseFragment {
             public void onStateChange(int state) {
                 switch (state) {
                     case PitchUpload.STARTING:
-                        Loading.getLoadingBar().setLabel("Starting upload...");
                         break;
                     case PitchUpload.UPLOADING:
                         Loading.getLoadingBar().setStyle(KProgressHUD.Style.BAR_DETERMINATE);
+                        Loading.getLoadingBar().setMaxProgress(100);
                         Loading.getLoadingBar().setLabel("0%");
                         break;
                     case PitchUpload.PROCESSING:
                         Loading.getLoadingBar().setStyle(KProgressHUD.Style.SPIN_INDETERMINATE);
                         Loading.getLoadingBar().setLabel("Processing...");
+                        Log.d("upload", "Processing...");
                         break;
                     case PitchUpload.COMPLETE:
+                        Log.d("upload", "COMPLETE");
                         new APITask(null, PitchFragment.this) {
                             @Override
                             protected void runAPI() throws MJPApiException {
@@ -153,8 +156,19 @@ public class PitchFragment extends BaseFragment {
 
             @Override
             public void onProgress(double current, long total) {
-                int complete = (int) (((float) current / total) * 100);
+                final int complete = (int) (((float) current / total) * 100);
+                Log.d("upload", "" + current + ", " + complete);
                 if (complete < 100) {
+//                    Handler mainHandler = new Handler(getApp().getMainLooper());
+//                    Runnable myRunnable = new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            Loading.getLoadingBar().setProgress(complete);
+//                            Loading.getLoadingBar().setLabel(Integer.toString(complete) + "%");
+//                        }
+//                    };
+//                    mainHandler.post(myRunnable);
+
                     Loading.getLoadingBar().setProgress(complete);
                     Loading.getLoadingBar().setLabel(Integer.toString(complete) + "%");
                 }

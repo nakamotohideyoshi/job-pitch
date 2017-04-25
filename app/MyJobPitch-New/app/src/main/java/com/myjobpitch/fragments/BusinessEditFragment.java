@@ -20,6 +20,7 @@ import com.myjobpitch.tasks.APITaskListener;
 import com.myjobpitch.tasks.DeleteAPITaskListener;
 import com.myjobpitch.tasks.UploadImageTask;
 import com.myjobpitch.tasks.recruiter.DeleteBusinessImageTask;
+import com.myjobpitch.utils.AppData;
 import com.myjobpitch.utils.ImageSelector;
 import com.myjobpitch.utils.Loading;
 import com.myjobpitch.utils.Popup;
@@ -30,6 +31,8 @@ import java.util.HashMap;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+
+import static android.content.Context.MODE_PRIVATE;
 
 public class BusinessEditFragment extends FormFragment {
 
@@ -47,6 +50,8 @@ public class BusinessEditFragment extends FormFragment {
 
     private ImageSelector imageSelector;
 
+    private int businessCount;
+
     public Business business;
 
     @Override
@@ -57,10 +62,13 @@ public class BusinessEditFragment extends FormFragment {
 
         imageSelector = new ImageSelector(logoView, R.drawable.default_logo);
 
+        businessCount = AppData.user.getBusinesses().size();
+
         // title and business info
 
         if (business == null) {
             title = "Add Business";
+            creditsView.setText(AppData.initialTokens.getTokens().toString());
             addCreditsButton.setVisibility(View.GONE);
         } else {
             title = "Edit Business";
@@ -142,6 +150,7 @@ public class BusinessEditFragment extends FormFragment {
             protected void runAPI() throws MJPApiException {
                 if (business.getId() == null) {
                     business = MJPApi.shared().createBusiness(business);
+                    AppData.user = MJPApi.shared().getUser();
                 } else {
                     business = MJPApi.shared().updateBusiness(business);
                 }
@@ -199,6 +208,14 @@ public class BusinessEditFragment extends FormFragment {
     }
 
     private void compltedSave() {
+        if (businessCount == 0) {
+            getApp().reloadMenu(false);
+
+            BusinessListFragment.firstCreate = true;
+            getApp().getSharedPreferences("firstCreate", MODE_PRIVATE).edit()
+                    .putBoolean("workplace", true)
+                    .commit();
+        }
         Loading.hide();
         getApp().popFragment();
     }

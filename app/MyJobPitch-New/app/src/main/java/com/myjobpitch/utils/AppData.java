@@ -8,6 +8,7 @@ import com.myjobpitch.api.auth.User;
 import com.myjobpitch.api.data.ApplicationStatus;
 import com.myjobpitch.api.data.Contract;
 import com.myjobpitch.api.data.Hours;
+import com.myjobpitch.api.data.InitialTokens;
 import com.myjobpitch.api.data.JobStatus;
 import com.myjobpitch.api.data.Nationality;
 import com.myjobpitch.api.data.Role;
@@ -22,6 +23,8 @@ public class AppData {
     public static User user;
     public static boolean existProfile = false;
 
+    public static InitialTokens initialTokens;
+
     private static HashMap<Class<? extends MJPAPIObject>, List<? extends MJPAPIObject>> data = new HashMap<>();
 
     public static <T extends MJPAPIObject> List<T> get(Class<T> cls) {
@@ -30,6 +33,7 @@ public class AppData {
 
     public static void loadData() throws MJPApiException {
         user = MJPApi.shared().getUser();
+        initialTokens = MJPApi.shared().getInitialTokens();
         data.put(Sector.class, MJPApi.shared().get(Sector.class));
         data.put(Contract.class, MJPApi.shared().get(Contract.class));
         data.put(Hours.class, MJPApi.shared().get(Hours.class));

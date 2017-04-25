@@ -5,16 +5,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.myjobpitch.R;
 import com.myjobpitch.api.MJPApi;
 import com.myjobpitch.api.MJPApiException;
-import com.myjobpitch.api.data.Application;
+import com.myjobpitch.api.data.ApplicationForCreation;
 import com.myjobpitch.api.data.Job;
 import com.myjobpitch.api.data.JobProfile;
 import com.myjobpitch.api.data.JobSeeker;
 import com.myjobpitch.tasks.APITask;
-import com.myjobpitch.tasks.CreateApplication;
-import com.myjobpitch.tasks.TaskListener;
 import com.myjobpitch.utils.AppData;
 import com.myjobpitch.utils.AppHelper;
 import com.myjobpitch.utils.Popup;
@@ -62,25 +59,38 @@ public class FindJobFragment extends SwipeFragment<Job> {
     }
 
     @Override
-    protected void swipedRight(Job job) {
+    protected void swipedRight(final Job job) {
         if (jobSeeker.getPitch() == null) {
             Popup.showGreen("You need to record your pitch video to apply.", "Record my pitch", new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     getApp().setRootFragement(AppData.PAGE_ADD_RECORD);
                 }
-            }, "Cancel", null, true);
-            cardStack.unSwipeCard();
-        } else {
-            new CreateApplication(job.getId(), jobSeeker.getId(), new TaskListener<Application>() {
+            }, "Cancel", new View.OnClickListener() {
                 @Override
-                public void done(Application application) {
-                }
-                @Override
-                public void error(String error) {
+                public void onClick(View v) {
                     cardStack.unSwipeCard();
                 }
-            });
+            }, true);
+        } else {
+            new APITask(new APITask.ErrorListener() {
+                @Override
+                public void onError(MJPApiException e) {
+                    cardStack.unSwipeCard();
+                }
+            }) {
+                @Override
+                protected void runAPI() throws MJPApiException {
+                    ApplicationForCreation applicationForCreation = new ApplicationForCreation();
+                    applicationForCreation.setJob(job.getId());
+                    applicationForCreation.setJob_seeker(jobSeeker.getId());
+                    applicationForCreation.setShortlisted(false);
+                    MJPApi.shared().create(ApplicationForCreation.class, applicationForCreation);
+                }
+                @Override
+                protected void onSuccess() {
+                }
+            };
         }
     }
 

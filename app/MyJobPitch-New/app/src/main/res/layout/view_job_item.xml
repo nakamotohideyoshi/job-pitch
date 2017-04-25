@@ -10,43 +10,50 @@
         layout="@layout/view_image_loader"
         android:layout_width="65dp"
         android:layout_height="65dp"
-        android:layout_marginRight="10dp"/>
+        android:layout_marginRight="10dp"
+        android:layout_marginEnd="10dp"/>
 
     <TextView
         android:id="@+id/item_title"
-        android:text="Name"
+        android:text="Name Name Name Name Name Name"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="27dp"
         android:layout_alignTop="@+id/item_img"
         android:layout_toEndOf="@+id/item_img"
         android:layout_toRightOf="@+id/item_img"
-        android:layout_marginTop="5dp"
+        android:gravity="center_vertical"
+        android:lines="1"
+        android:ellipsize="end"
         android:textColor="@color/blackText"
         android:textStyle="bold"
         android:textSize="20sp"/>
 
     <TextView
         android:id="@+id/item_subtitle"
-        android:text="Include 2 work places "
+        android:text="Include 2 work places Include 2 work places"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignBottom="@+id/item_img"
-        android:layout_toEndOf="@+id/item_img"
         android:layout_toRightOf="@+id/item_img"
-        android:layout_marginBottom="5dp"
-        android:textSize="16sp"
-         />
+        android:layout_toEndOf="@+id/item_img"
+        android:layout_toLeftOf="@+id/item_attributes"
+        android:layout_toStartOf="@+id/item_attributes"
+        android:gravity="center_vertical"
+        android:lines="2"
+        android:ellipsize="end"
+        android:textSize="15sp"
+        android:layout_below="@+id/item_title" />
 
     <TextView
         android:id="@+id/item_attributes"
-        android:text="99 credits"
-        android:layout_width="wrap_content"
+        android:text="999 credits"
+        android:layout_width="80dp"
         android:layout_height="wrap_content"
         android:layout_alignTop="@+id/item_subtitle"
         android:layout_alignBottom="@+id/item_subtitle"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
-        android:gravity="center"
+        android:gravity="end|center_vertical"
         android:textSize="14sp"/>
 
 </RelativeLayout>

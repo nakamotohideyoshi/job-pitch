@@ -44,6 +44,7 @@
         android:layout_alignParentBottom="true"
         android:layout_margin="10dp"
         android:background="@drawable/button_green"
+        android:textColor="#fff"
         android:theme="@style/Button"
         android:enabled="false"
         android:alpha="0.5"/>

@@ -156,7 +156,7 @@ public class MainActivity extends AppCompatActivity
         return mToolbar.getMenu();
     }
 
-    public void reloadMenu() {
+    public void reloadMenu(boolean resetMenuId) {
         Menu menu = mNavigationView.getMenu();
         menu.clear();
 
@@ -184,12 +184,13 @@ public class MainActivity extends AppCompatActivity
             }
         }
 
-        mCurrentPageID = -1;
+        if (resetMenuId)
+            mCurrentPageID = -1;
     }
 
     public void loggedin(int pageID) {
         mContentView.setBackgroundColor(0xFFFFFF);
-        reloadMenu();
+        reloadMenu(true);
         setRootFragement(pageID);
     }
 

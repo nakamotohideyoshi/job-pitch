@@ -26,6 +26,8 @@ class PitchController: MJPController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        //imgView.addDotBorder(dotWidth: 4, color: UIColor.black)
 
         AppHelper.showLoading("Loading...")
         API.shared().loadJobSeekerWithId(id: AppData.user.jobSeeker, success: { (data) in

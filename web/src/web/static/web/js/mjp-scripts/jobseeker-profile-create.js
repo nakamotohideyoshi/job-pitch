@@ -2,6 +2,10 @@ $(function() {
 	app(context).then(function() {
 		var query = context.csrftoken;
 
+		$('#file-upload').on('change', function() {
+			$('#choosen-file').text($('#file-upload').val());
+		});
+
 		//Populate selects
 		$.get("/api/nationalities/", query).done(function(data) {
 			for (var key in data) {

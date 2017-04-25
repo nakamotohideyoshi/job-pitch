@@ -179,10 +179,10 @@
             </div -->
 
             <div class="form-group">
-              <div class="col-xs-6">
+              <div class="col-xs-12">
                 <p class="bordered padded">
                   <label for="file-upload" class="control-label file-upload"> Choose file</label>
-                  <input id="file-upload" type="file" name="image" id="work_place_image" accept="image/x-png, image/jpeg, image/png"/>
+                  <input id="file-upload" type="file" name="file_upload" accept="image/*,.doc, .docx,.ppt, .pptx,.txt,.pdf"/><span id="choosen-file"></span>
                   <input type="hidden" name="order" value="0">
                 </p>
               </div>
@@ -190,7 +190,7 @@
 
             {% comment "Hidden for using when it be required" %}
             <div class="form-group">
-              <div class="col-xs-6">
+              <div class="col-xs-12">
                 <div class="bordered padded" style="height: 58px;">
                   <div class="dropbox-icon" style="float: left; margin-top: -7px;"></div>
                   <label for="file-upload" class="col-xs-5 control-label file-upload"> Choose file</label>

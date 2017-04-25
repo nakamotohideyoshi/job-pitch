@@ -6,6 +6,9 @@ $(function() {
 		});
 
 		//$("#active_account").bootstrapToggle();
+		$('#file-upload').on('change', function() {
+			$('#choosen-file').text($('#file-upload').val());
+		});
 
 		//$('#active_account').on('switchChange.bootstrapSwitch', function (event, state) {
 		$('#active_account').change(function() {

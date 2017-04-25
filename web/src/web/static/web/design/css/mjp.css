@@ -1099,6 +1099,11 @@ div.howitworks-page div.thumbnail{
   padding-top: 6px;
 }
 
+#CVcurrent {
+  display: none;
+  color: #777;
+}
+
 
 /*
  * Change Passowrd Page

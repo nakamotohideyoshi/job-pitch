@@ -216,24 +216,21 @@ public class TalentDetailFragment extends BaseFragment {
                 public void onClick(View view) {
                     if (application == null) {
 
-                        final ApplicationForCreation applicationForCreation = new ApplicationForCreation();
-                        applicationForCreation.setJob(job.getId());
-                        applicationForCreation.setJob_seeker(jobSeeker.getId());
-                        applicationForCreation.setShortlisted(false);
-
                         new APITask("", new APITask.ErrorListener() {
                             @Override
                             public void onError(MJPApiException e) {
                                 JsonNode errors = e.getErrors();
                                 if (errors.has(0) && errors.get(0).asText().equals("NO_TOKENS")) {
                                     Popup.showError("You have no credits left so cannot compete this connection. Credits cannot be added through the app, please go to our web page.");
-                                } else {
-                                    onError(e);
                                 }
                             }
                         }) {
                             @Override
                             protected void runAPI() throws MJPApiException {
+                                final ApplicationForCreation applicationForCreation = new ApplicationForCreation();
+                                applicationForCreation.setJob(job.getId());
+                                applicationForCreation.setJob_seeker(jobSeeker.getId());
+                                applicationForCreation.setShortlisted(false);
                                 ApplicationForCreation applicationForCreation1 = MJPApi.shared().create(ApplicationForCreation.class, applicationForCreation);
                                 application = MJPApi.shared().get(Application.class, applicationForCreation1.getId());
                             }
@@ -246,24 +243,21 @@ public class TalentDetailFragment extends BaseFragment {
 
                     } else {
 
-                        Integer established = AppData.get(ApplicationStatus.class, ApplicationStatus.ESTABLISHED).getId();
-                        Application application1 = SerializationUtils.clone(application);
-                        application1.setStatus(established);
-                        final ApplicationStatusUpdate applicationStatusUpdate1 = new ApplicationStatusUpdate(application1);
-
-                        new APITask("Connecting...", new APITask.ErrorListener() {
+                        new APITask("", new APITask.ErrorListener() {
                             @Override
                             public void onError(MJPApiException e) {
                                 JsonNode errors = e.getErrors();
                                 if (errors.has(0) && errors.get(0).asText().equals("NO_TOKENS")) {
                                     Popup.showError("You have no credits left so cannot compete this connection. Credits cannot be added through the app, please go to our web page.");
-                                } else {
-                                    onError(e);
                                 }
                             }
                         }) {
                             @Override
                             protected void runAPI() throws MJPApiException {
+                                Integer established = AppData.get(ApplicationStatus.class, ApplicationStatus.ESTABLISHED).getId();
+                                Application application1 = SerializationUtils.clone(application);
+                                application1.setStatus(established);
+                                ApplicationStatusUpdate applicationStatusUpdate1 = new ApplicationStatusUpdate(application1);
                                 MJPApi.shared().updateApplicationStatus(applicationStatusUpdate1);
                             }
                             @Override

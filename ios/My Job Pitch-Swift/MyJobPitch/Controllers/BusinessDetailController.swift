@@ -21,6 +21,7 @@ class BusinessDetailController: MJPController {
     @IBOutlet weak var controlHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var emptyView: UIView!
+    @IBOutlet weak var firstCreateMessage: UIButton!
     
     var addJobMode = false
     var businessId: NSNumber!
@@ -28,12 +29,16 @@ class BusinessDetailController: MJPController {
     var business: Business!
     var data: NSMutableArray! = NSMutableArray()
     
+    static var firstCreate = false
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         headerName.text = ""
         headerSubTitle.text = ""
         headerCreditCount.setTitle("", for: .normal)
+        
+        BusinessDetailController.firstCreate = UserDefaults.standard.bool(forKey: "first_craete_wp")
         
         if addJobMode {
             title = "Add job"
@@ -89,6 +94,13 @@ class BusinessDetailController: MJPController {
         headerSubTitle.text = String(format: "Includes %lu %@", data.count, data.count > 1 ? "work places" : "work place")
         emptyView.isHidden = self.data.count > 0
         tableView.reloadData()
+        
+        if (BusinessDetailController.firstCreate) {
+            emptyView.isHidden = true
+            firstCreateMessage.isHidden = false
+        } else {
+            firstCreateMessage.isHidden = true
+        }
     }
     
     @IBAction func editBusinessAction(_ sender: Any) {
@@ -114,6 +126,10 @@ class BusinessDetailController: MJPController {
         LocationEditController.pushController(business: business, location: nil)
     }
     
+    @IBAction func clickFirstCreateMessage(_ sender: Any) {
+        JobEditController.pushController(location: data[0] as! Location, job: nil)
+    }
+        
 }
 
 extension BusinessDetailController: UITableViewDataSource {
@@ -183,6 +199,11 @@ extension BusinessDetailController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
         let location = data[indexPath.row] as! Location
+        
+        if BusinessDetailController.firstCreate {
+            JobEditController.pushController(location: location, job: nil)
+            return
+        }
         
         if !addJobMode {
             let controller = AppHelper.mainStoryboard.instantiateViewController(withIdentifier: "JobList") as! LocationDetailController

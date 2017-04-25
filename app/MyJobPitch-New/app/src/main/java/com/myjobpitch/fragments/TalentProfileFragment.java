@@ -401,7 +401,7 @@ public class TalentProfileFragment extends FormFragment {
             @Override
             public void onClick(View view) {
                 if (!AppData.existProfile) {
-                    getApp().reloadMenu();
+                    getApp().reloadMenu(true);
                     getApp().setRootFragement(AppData.PAGE_JOB_PROFILE);
                 }
             }

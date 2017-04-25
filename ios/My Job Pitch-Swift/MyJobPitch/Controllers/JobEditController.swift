@@ -22,7 +22,7 @@ class JobEditController: MJPController {
     @IBOutlet weak var hoursField: ButtonTextField!
     @IBOutlet weak var hoursError: UILabel!
     @IBOutlet weak var imgView: UIImageView!
-    @IBOutlet weak var addImageButton: UIButton!
+    @IBOutlet weak var addLogoButton: UIButton!
     @IBOutlet weak var removeImageButton: UIButton!
     
     var addJobMode = false
@@ -51,6 +51,8 @@ class JobEditController: MJPController {
         
         imagePicker = UIImagePickerController()
         imagePicker.delegate = self
+        
+        //imgView.addDotBorder(dotWidth: 4, color: UIColor.black)
         
         // sector data
         
@@ -167,8 +169,8 @@ class JobEditController: MJPController {
                 AppHelper.loadImageURL(imageUrl: (image.thumbnail)!, imageView: imgView, completion: nil)
                 if job.images != nil && job.images.count > 0 {
                     origImage = image
-                    addImageButton.isHidden = true
                     removeImageButton.isHidden = false
+                    addLogoButton.setTitle("Change Logo", for: .normal)
                 }
             }
         }
@@ -179,7 +181,9 @@ class JobEditController: MJPController {
             } else {
                 imgView.image = UIImage(named: "default-logo")
             }
-            imgView.alpha = 0.2
+//            imgView.alpha = 0.2
+        } else {
+//            imgView.alpha = 1
         }
         
     }
@@ -194,7 +198,7 @@ class JobEditController: MJPController {
         ]
     }
     
-    @IBAction func addImageAction(_ sender: Any) {
+    @IBAction func addLogoAction(_ sender: Any) {
         
         let actionSheetContoller = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
         
@@ -233,9 +237,9 @@ class JobEditController: MJPController {
         } else {
             imgView.image = UIImage(named: "default-logo")
         }
-        imgView.alpha = 0.2
-        addImageButton.isHidden = false
+//        imgView.alpha = 0.2
         removeImageButton.isHidden = true
+        addLogoButton.setTitle("Add Logo", for: .normal)
         
     }
     
@@ -326,19 +330,30 @@ class JobEditController: MJPController {
     func saveFinished() {
         AppHelper.hideLoading()
         
-        if addJobMode {
+        if BusinessDetailController.firstCreate {
+            BusinessDetailController.firstCreate = false
+            UserDefaults.standard.set(false, forKey: "first_craete_wp")
+            
             var controllers = navigationController?.viewControllers
-            while true {
-                if controllers?[(controllers?.count)!-2] is SelectJobController {
-                    break
-                }
-                if controllers?.count == 2 {
-                    _ = navigationController?.popViewController(animated: true)
-                    return
-                }
-                controllers?.remove(at: (controllers?.count)!-2)
-            }
+            let controller = AppHelper.mainStoryboard.instantiateViewController(withIdentifier: "JobList") as! LocationDetailController
+            controller.location = location
+            controllers?.insert(controller, at: (controllers?.count)!-1)
             navigationController?.viewControllers = controllers!
+        } else {
+            if addJobMode {
+                var controllers = navigationController?.viewControllers
+                while true {
+                    if controllers?[(controllers?.count)!-2] is SelectJobController {
+                        break
+                    }
+                    if controllers?.count == 2 {
+                        _ = navigationController?.popViewController(animated: true)
+                        return
+                    }
+                    controllers?.remove(at: (controllers?.count)!-2)
+                }
+                navigationController?.viewControllers = controllers!
+            }
         }
         
         _ = navigationController?.popViewController(animated: true)
@@ -361,9 +376,9 @@ extension JobEditController: UIImagePickerControllerDelegate {
         logoImage = info[UIImagePickerControllerOriginalImage] as? UIImage
         
         imgView.image = logoImage
-        imgView.alpha = 1
+//        imgView.alpha = 1
         removeImageButton.isHidden = false
-        addImageButton.isHidden = true
+        addLogoButton.setTitle("Change Logo", for: .normal)
         
         dismiss(animated: true, completion: nil)
         
@@ -387,9 +402,9 @@ extension JobEditController: DropboxBrowserDelegate {
                 //PopupController.showGray(fileName + "is not a image file", ok: "OK")
             } else {
                 imgView.image = logoImage
-                imgView.alpha = 1
+//                imgView.alpha = 1
                 removeImageButton.isHidden = false
-                addImageButton.isHidden = true
+                addLogoButton.setTitle("Change Logo", for: .normal)
             }
             
         } catch {

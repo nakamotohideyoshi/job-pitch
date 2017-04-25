@@ -297,7 +297,7 @@ public class JobProfileFragment extends FormFragment {
                         @Override
                         public void onClick(View view) {
                             if (!AppData.existProfile) {
-                                getApp().reloadMenu();
+                                getApp().reloadMenu(true);
                                 if (jobSeeker.getPitch() == null) {
                                     getApp().setRootFragement(AppData.PAGE_ADD_RECORD);
                                 } else {

@@ -13,7 +13,7 @@ class BusinessEditController: MJPController {
     @IBOutlet weak var nameField: UITextField!
     @IBOutlet weak var nameErrorLabel: UILabel!
     @IBOutlet weak var imgView: UIImageView!
-    @IBOutlet weak var addImageButton: UIButton!
+    @IBOutlet weak var addLogoButton: UIButton!
     @IBOutlet weak var removeImageButton: UIButton!
     @IBOutlet weak var creditsLabel: UILabel!
     
@@ -21,6 +21,8 @@ class BusinessEditController: MJPController {
     
     var imagePicker: UIImagePickerController!    
     var logoImage: UIImage!
+    
+    var businessCount = 0
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -30,8 +32,13 @@ class BusinessEditController: MJPController {
         imagePicker = UIImagePickerController()
         imagePicker.delegate = self
         
+        businessCount = AppData.user.businesses.count
+        
+        //imgView.addDotBorder(dotWidth: 4, color: UIColor.black)
+        
         if business == nil {
             navigationItem.title = "Add Business"
+            creditsLabel.text = AppData.initialTokens.tokens.stringValue
         } else {
             navigationItem.title = "Edit Business"
             
@@ -50,8 +57,9 @@ class BusinessEditController: MJPController {
         creditsLabel.text = String(format: "%@", business.tokens)
         if let image = business.getImage() {
             AppHelper.loadImageURL(imageUrl: (image.thumbnail)!, imageView: imgView, completion: nil)
-            addImageButton.isHidden = true
+//            imgView.alpha = 1
             removeImageButton.isHidden = false
+            addLogoButton.setTitle("Change Logo", for: .normal)
         }
     }
     
@@ -61,7 +69,7 @@ class BusinessEditController: MJPController {
         ]
     }
     
-    @IBAction func addImageAction(_ sender: Any) {
+    @IBAction func addLogoAction(_ sender: Any) {
         
         let actionSheetContoller = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
         
@@ -96,9 +104,9 @@ class BusinessEditController: MJPController {
         
         logoImage = nil
         imgView.image = UIImage(named: "default-logo")
-        imgView.alpha = 0.2
-        addImageButton.isHidden = false
+//        imgView.alpha = 0.2
         removeImageButton.isHidden = true
+        addLogoButton.setTitle("Add Logo", for: .normal)
     }
     
     @IBAction func saveAction(_ sender: Any) {
@@ -151,6 +159,12 @@ class BusinessEditController: MJPController {
     }
     
     func saveFinished() {
+        
+        if businessCount == 0 {
+            BusinessListController.firstCreate = true
+            UserDefaults.standard.set(true, forKey: "first_craete_wp")
+        }
+        
         AppHelper.hideLoading()
         _ = navigationController?.popViewController(animated: true)
     }
@@ -170,9 +184,9 @@ extension BusinessEditController: UIImagePickerControllerDelegate {
         logoImage = info[UIImagePickerControllerOriginalImage] as? UIImage
         
         imgView.image = logoImage
-        imgView.alpha = 1
+//        imgView.alpha = 1
         removeImageButton.isHidden = false
-        addImageButton.isHidden = true
+        addLogoButton.setTitle("Change Logo", for: .normal)
         
         dismiss(animated: true, completion: nil)
         
@@ -196,9 +210,9 @@ extension BusinessEditController: DropboxBrowserDelegate {
                 //PopupController.showGray(fileName + "is not a image file", ok: "OK")
             } else {
                 imgView.image = logoImage
-                imgView.alpha = 1
+//                imgView.alpha = 1
                 removeImageButton.isHidden = false
-                addImageButton.isHidden = true
+                addLogoButton.setTitle("Change Logo", for: .normal)
             }
             
         } catch {

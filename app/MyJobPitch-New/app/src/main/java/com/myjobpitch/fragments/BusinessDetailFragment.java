@@ -31,6 +31,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+import static android.content.Context.MODE_PRIVATE;
+
 public class BusinessDetailFragment extends BaseFragment {
 
     @BindView(R.id.business_info)
@@ -54,17 +56,25 @@ public class BusinessDetailFragment extends BaseFragment {
     @BindView(R.id.empty_view)
     View emptyView;
 
+    @BindView(R.id.first_create_text)
+    View firstCreateMessage;
+
     private Business business;
     private LocationAdapter adapter;
 
     public boolean addJobMode = false;
     public Integer businessId;
 
+    public static boolean firstCrate = false;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_business_detail, container, false);
         ButterKnife.bind(this, view);
+
+        firstCrate = getApp().getSharedPreferences("firstCreate", MODE_PRIVATE)
+                .getBoolean("workplace", false);
 
         // header view
 
@@ -88,8 +98,8 @@ public class BusinessDetailFragment extends BaseFragment {
 
         // empty view
 
-        AppHelper.setEmptyViewText(emptyView, "You have not added any\nlocations yet.");
-        AppHelper.setEmptyButtonText(emptyView, "Create location");
+        AppHelper.setEmptyViewText(emptyView, "You have not added any\nwork places yet.");
+        AppHelper.setEmptyButtonText(emptyView, "Create work place");
 
         // pull to refresh
 
@@ -114,6 +124,12 @@ public class BusinessDetailFragment extends BaseFragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Location location = adapter.getItem(position);
+                if (firstCrate) {
+                    JobEditFragment fragment = new JobEditFragment();
+                    fragment.location = location;
+                    getApp().pushFragment(fragment);
+                    return;
+                }
                 if (addJobMode) {
                     JobEditFragment fragment = new JobEditFragment();
                     fragment.addJobMode = addJobMode;
@@ -194,10 +210,18 @@ public class BusinessDetailFragment extends BaseFragment {
 
     private void updatedLocationList() {
         adapter.closeAllItems();
+
+        firstCreateMessage.setVisibility(View.GONE);
+
         emptyView.setVisibility(adapter.getCount()==0 ? View.VISIBLE : View.GONE);
         if (!addJobMode) {
             int locationCount = adapter.getCount();
             AppHelper.getItemSubTitleView(infoView).setText("Includes " + locationCount + (locationCount > 1 ? " work places" : " work place"));
+        }
+
+        if (firstCrate) {
+            emptyView.setVisibility(View.GONE);
+            firstCreateMessage.setVisibility(View.VISIBLE);
         }
     }
 
@@ -230,6 +254,13 @@ public class BusinessDetailFragment extends BaseFragment {
     @OnClick(R.id.empty_button)
     void onClickEmptyButton() {
         onAddLocation();
+    }
+
+    @OnClick(R.id.first_create_text)
+    void onClickFirstCreateView() {
+        JobEditFragment fragment = new JobEditFragment();
+        fragment.location = adapter.getItem(0);
+        getApp().pushFragment(fragment);
     }
 
     // location adapter ========================================

@@ -18,12 +18,15 @@ class BusinessListController: MJPController {
     @IBOutlet weak var emptyView: UIView!
     @IBOutlet weak var emptyMessage: UILabel!
     @IBOutlet weak var emptyButton: UIButton!
+    @IBOutlet weak var firstCreateMessage: UIButton!
     
     var addJobMode = false
     
     var data: NSMutableArray! = NSMutableArray()
     
     var addButton: UIBarButtonItem!
+    
+    static var firstCreate = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -60,6 +63,16 @@ class BusinessListController: MJPController {
     }
     
     func updateBusinessList() {
+        if BusinessListController.firstCreate {
+            emptyView.isHidden = true
+            firstCreateMessage.isHidden = false
+            navigationItem.rightBarButtonItem = nil
+            self.tableView.reloadData()
+            return
+        }
+        
+        firstCreateMessage.isHidden = true
+        
         navigationItem.rightBarButtonItem = addButton
         headerAddButtonDisable?.isHidden = true
         if data.count == 0 {
@@ -92,6 +105,10 @@ class BusinessListController: MJPController {
             let url = URL(string: "mailto:sales@myjobpitch.com")!
             UIApplication.shared.openURL(url)
         }
+    }
+    
+    @IBAction func clickFirstCreateMessage(_ sender: Any) {
+        LocationEditController.pushController(business: data[0] as! Business, location: nil)
     }
     
 }
@@ -169,6 +186,11 @@ extension BusinessListController: UITableViewDataSource {
 extension BusinessListController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        
+        if BusinessListController.firstCreate {
+            LocationEditController.pushController(business: data[0] as! Business, location: nil)
+            return
+        }
         
         let controller = AppHelper.mainStoryboard.instantiateViewController(withIdentifier: "LocationList") as! BusinessDetailController
         controller.addJobMode = addJobMode

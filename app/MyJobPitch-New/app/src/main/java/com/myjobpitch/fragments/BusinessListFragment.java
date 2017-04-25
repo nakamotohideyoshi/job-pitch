@@ -53,11 +53,16 @@ public class BusinessListFragment extends BaseFragment {
     @BindView(R.id.empty_view)
     View emptyView;
 
+    @BindView(R.id.first_create_text)
+    View firstCreateMessage;
+
     private boolean canCreateBusinesses;
     private MenuItem addMenuItem;
     private BusinessesAdapter adapter;
 
     public boolean addJobMode = false;
+
+    public static boolean firstCreate = false;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -103,10 +108,16 @@ public class BusinessListFragment extends BaseFragment {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                BusinessDetailFragment fragment = new BusinessDetailFragment();
-                fragment.addJobMode = addJobMode;
-                fragment.businessId = adapter.getItem(position).getId();
-                getApp().pushFragment(fragment);
+                if (firstCreate) {
+                    LocationEditFragment fragment = new LocationEditFragment();
+                    fragment.business = adapter.getItem(0);
+                    getApp().pushFragment(fragment);
+                } else {
+                    BusinessDetailFragment fragment = new BusinessDetailFragment();
+                    fragment.addJobMode = addJobMode;
+                    fragment.businessId = adapter.getItem(position).getId();
+                    getApp().pushFragment(fragment);
+                }
             }
         });
 
@@ -137,6 +148,15 @@ public class BusinessListFragment extends BaseFragment {
 
     private void updatedBusinessList() {
         adapter.closeAllItems();
+
+        if (firstCreate) {
+            emptyView.setVisibility(View.GONE);
+            firstCreateMessage.setVisibility(View.VISIBLE);
+            addMenuItem.setVisible(false);
+            return;
+        }
+
+        firstCreateMessage.setVisibility(View.GONE);
 
         if (addJobMode) {
             addButton.setVisibility(View.VISIBLE);
@@ -198,6 +218,13 @@ public class BusinessListFragment extends BaseFragment {
             intent.setData(data);
             startActivity(intent);
         }
+    }
+
+    @OnClick(R.id.first_create_text)
+    void onClickFirstCreateView() {
+        LocationEditFragment fragment = new LocationEditFragment();
+        fragment.business = adapter.getItem(0);
+        getApp().pushFragment(fragment);
     }
 
     @Override

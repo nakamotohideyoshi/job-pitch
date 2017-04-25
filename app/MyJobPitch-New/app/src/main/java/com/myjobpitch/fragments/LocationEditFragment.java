@@ -21,6 +21,7 @@ import com.myjobpitch.tasks.APITaskListener;
 import com.myjobpitch.tasks.DeleteAPITaskListener;
 import com.myjobpitch.tasks.UploadImageTask;
 import com.myjobpitch.tasks.recruiter.DeleteLocationImageTask;
+import com.myjobpitch.utils.AppData;
 import com.myjobpitch.utils.ImageSelector;
 import com.myjobpitch.utils.Loading;
 import com.myjobpitch.utils.Popup;
@@ -31,6 +32,8 @@ import java.util.HashMap;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+
+import static android.content.Context.MODE_PRIVATE;
 
 public class LocationEditFragment extends FormFragment {
 
@@ -72,12 +75,13 @@ public class LocationEditFragment extends FormFragment {
         final View view = inflater.inflate(R.layout.fragment_location_edit, container, false);
         ButterKnife.bind(this, view);
 
-        imageSelector = new ImageSelector(logoView, R.drawable.default_logo);
+
 
         // title and location info
 
         if (location == null) {
             title = "Add Work Place";
+            imageSelector = new ImageSelector(logoView, R.drawable.default_logo);
             emailView.setText(getApp().getEmail());
         } else {
             title = "Edit Work Place";
@@ -115,13 +119,17 @@ public class LocationEditFragment extends FormFragment {
         latitude = location.getLatitude();
         longitude = location.getLongitude();
 
+        Business business = location.getBusiness_data();
+        if (business.getImages().size() > 0) {
+            imageSelector = new ImageSelector(logoView, business.getImages().get(0).getImage());
+        } else {
+            imageSelector = new ImageSelector(logoView, R.drawable.default_logo);
+        }
+
         if (location.getImages().size() > 0) {
             imageSelector.loadImage(location.getImages().get(0).getImage());
         } else {
-            Business business = location.getBusiness_data();
-            if (business.getImages().size() > 0) {
-                imageSelector.setDefaultImage(business.getImages().get(0).getImage());
-            }
+            imageSelector.loadImage(null);
         }
     }
 
@@ -258,7 +266,20 @@ public class LocationEditFragment extends FormFragment {
 
     private void compltedSave() {
         Loading.hide();
+
+        if (BusinessListFragment.firstCreate) {
+
+            BusinessListFragment.firstCreate = false;
+
+            getApp().getSupportFragmentManager().popBackStackImmediate();
+            BusinessDetailFragment fragment = new BusinessDetailFragment();
+            fragment.businessId = business.getId();
+            getApp().pushFragment(fragment);
+            return;
+        }
+
         getApp().popFragment();
+
     }
 
 }

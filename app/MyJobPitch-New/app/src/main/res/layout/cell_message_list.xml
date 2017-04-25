@@ -27,54 +27,63 @@
                 layout="@layout/view_image_loader"
                 android:layout_width="90dp"
                 android:layout_height="90dp"
-                android:layout_marginRight="10dp"/>
+                android:layout_marginRight="10dp"
+                android:layout_marginEnd="10dp"/>
 
             <TextView
                 android:id="@+id/item_title"
-                android:text="Title"
+                android:text="Title Title Title Title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_toEndOf="@+id/item_img"
                 android:layout_toRightOf="@+id/item_img"
+                android:layout_toLeftOf="@+id/item_attributes"
+                android:layout_toStartOf="@+id/item_attributes"
                 android:textColor="@color/blackText"
                 android:textStyle="bold"
-                android:textSize="20sp"/>
+                android:textSize="20sp"
+                android:lines="1"
+                android:ellipsize="end"/>
 
             <TextView
                 android:id="@+id/item_subtitle"
-                android:text="subtitle "
+                android:text="subtitle subtitle subtitle subtitle subtitle subtitle "
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/item_title"
                 android:layout_toEndOf="@+id/item_img"
                 android:layout_toRightOf="@+id/item_img"
                 android:textColor="@color/blackText"
-                android:textSize="14sp"/>
+                android:textSize="14sp"
+                android:lines="1"
+                android:ellipsize="end"/>
 
             <TextView
                 android:id="@+id/item_desc"
-                android:text="description"
+                android:text="description description description description description description description description "
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/item_subtitle"
                 android:layout_toRightOf="@+id/item_img"
+                android:layout_toEndOf="@+id/item_img"
                 android:layout_alignParentRight="true"
                 android:layout_alignParentEnd="true"
                 android:layout_marginTop="8dp"
                 android:lines="2"
+                android:ellipsize="end"
                 android:textColor="@color/blackText"
                 android:textSize="14sp"/>
 
             <TextView
                 android:id="@+id/item_attributes"
-                android:text="attribute"
-                android:layout_width="wrap_content"
+                android:text="Apr 30, 12:33 AM"
+                android:layout_width="100dp"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentTop="true"
                 android:layout_alignBottom="@+id/item_title"
-                android:gravity="center_vertical"
+                android:gravity="end|center_vertical"
                 android:textSize="12sp" />
 
         </RelativeLayout>
@@ -83,6 +92,7 @@
             android:layout_width="8dp"
             android:layout_height="wrap_content"
             android:layout_marginRight="10dp"
+            android:layout_marginEnd="10dp"
             android:src="@drawable/icon_right_arrow"
             android:scaleType="centerInside"/>
     </LinearLayout>

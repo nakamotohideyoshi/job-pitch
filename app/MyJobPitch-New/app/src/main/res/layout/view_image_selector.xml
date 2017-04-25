@@ -8,37 +8,29 @@
         layout="@layout/view_image_loader"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_margin="15dp"
-        android:scaleType="centerCrop"/>
-
-    <LinearLayout
-        android:id="@+id/image_add"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:orientation="horizontal">
-        <ImageView
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_gravity="center"
-            android:src="@drawable/icon_photo"/>
-        <TextView
-            android:text="Add Logo"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:textColor="#aaaaaa"
-            android:textStyle="bold"
-            android:textSize="24sp"/>
-    </LinearLayout>
+        android:scaleType="centerCrop"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginTop="15dp"
+        android:layout_above="@+id/image_add_button" />
 
     <Button
-        android:id="@+id/image_remove"
+        android:id="@+id/image_remove_button"
         android:layout_width="30dp"
         android:layout_height="30dp"
         android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
         android:background="@drawable/icon_remove"
         android:visibility="gone"/>
+
+    <Button
+        android:id="@+id/image_add_button"
+        android:text="Add Logo"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/button_height"
+        android:layout_marginTop="15dp"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/button_green"
+        android:theme="@style/Button"/>
 
 </RelativeLayout>

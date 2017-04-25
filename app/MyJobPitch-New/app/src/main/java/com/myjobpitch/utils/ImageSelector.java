@@ -3,6 +3,7 @@ package com.myjobpitch.utils;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.util.DisplayMetrics;
@@ -28,20 +29,31 @@ public class ImageSelector {
 
     public static final int IMAGE_PICK = 11000;
 
-    @BindView(R.id.image_add)
-    View addButton;
+    @BindView(R.id.image_add_button)
+    Button addButton;
 
-    @BindView(R.id.image_remove)
+    @BindView(R.id.image_remove_button)
     Button removeButton;
 
     ImageView imageView;
 
+    String defaultImagePath;
     Bitmap defaultBitmap;
     Bitmap bitmap;
 
     Uri imageUri;
 
     public ImageSelector(View view, int defaultImageRes) {
+        init(view);
+        defaultBitmap = BitmapFactory.decodeResource(MainActivity.instance.getResources(), defaultImageRes);
+    }
+
+    public ImageSelector(View view, String defaultImagePath) {
+        init(view);
+        this.defaultImagePath = defaultImagePath;
+    }
+
+    void init(View view) {
         ButterKnife.bind(this, view);
 
         Display display = MainActivity.instance.getWindowManager().getDefaultDisplay();
@@ -52,41 +64,52 @@ public class ImageSelector {
         view.setLayoutParams(params);
 
         imageView = AppHelper.getImageView(view);
+    }
 
-        if (defaultImageRes != -1) {
-            defaultBitmap = BitmapFactory.decodeResource(MainActivity.instance.getResources(), defaultImageRes);
-            setImage(null);
+    public void loadImage(final String path) {
+
+        String imagePath;
+        if (path == null) {
+            if (defaultBitmap != null) {
+                bitmap = null;
+                imageView.setImageBitmap(defaultBitmap);
+                removeButton.setVisibility(View.GONE);
+                addButton.setText("Add Logo");
+                imageUri = null;
+                return;
+            }
+            imagePath = defaultImagePath;
+            if (imagePath == null) {
+                return;
+            }
+        } else {
+            imagePath = path;
         }
-    }
-
-    public void setDefaultImage(String path) {
-//        new ImageLoader(path, null, new ImageLoader.Listener() {
-//            @Override
-//            public void success(Bitmap bitmap) {
-//                defaultBitmap = bitmap;
-//                if (imageView.getAlpha() == 0.2f) {
-//                    setImage(null);
-//                }
-//            }
-//        });
-    }
-
-    public void loadImage(String path) {
-        removeButton.setVisibility(View.GONE);
-        addButton.setVisibility(View.GONE);
 
         final ProgressBar progressBar = AppHelper.getProgressBar(imageView);
         if (progressBar != null) {
             progressBar.setVisibility(View.VISIBLE);
         }
 
-        Picasso.with(MainActivity.instance).load(path).into(imageView, new Callback() {
+        Picasso.with(MainActivity.instance).load(imagePath).into(imageView, new Callback() {
             @Override
             public void onSuccess() {
                 if (progressBar != null) {
                     progressBar.setVisibility(View.GONE);
                 }
-                setImage(bitmap);
+
+                if (path == null) {
+                    bitmap = null;
+                    removeButton.setVisibility(View.GONE);
+                    addButton.setText("Add Logo");
+                    imageUri = null;
+                } else {
+                    BitmapDrawable drawable = (BitmapDrawable) imageView.getDrawable();
+                    bitmap = drawable.getBitmap();
+                    removeButton.setVisibility(View.VISIBLE);
+                    addButton.setText("Change Logo");
+                }
+
             }
 
             @Override
@@ -98,29 +121,16 @@ public class ImageSelector {
         });
     }
 
-    void setImage(Bitmap bitmap) {
-        this.bitmap = bitmap;
-        if (bitmap == null) {
-            imageView.setImageBitmap(defaultBitmap);
-            imageView.setAlpha(0.2f);
-            addButton.setVisibility(View.VISIBLE);
-            removeButton.setVisibility(View.GONE);
-        } else {
-            imageView.setImageBitmap(bitmap);
-            imageView.setAlpha(1.0f);
-            addButton.setVisibility(View.GONE);
-            removeButton.setVisibility(View.VISIBLE);
-        }
-    }
-
     public Bitmap getImage() {
         return bitmap;
     }
 
     public void setImageUri(Uri uri) {
         try {
-            Bitmap bitmap = MediaStore.Images.Media.getBitmap(MainActivity.instance.getContentResolver(), uri);
-            setImage(bitmap);
+            bitmap = MediaStore.Images.Media.getBitmap(MainActivity.instance.getContentResolver(), uri);
+            imageView.setImageBitmap(bitmap);
+            removeButton.setVisibility(View.VISIBLE);
+            addButton.setText("Change Logo");
             imageUri = uri;
         } catch (IOException e) {
             e.printStackTrace();
@@ -131,17 +141,16 @@ public class ImageSelector {
         return imageUri;
     }
 
-    @OnClick(R.id.image_add)
+    @OnClick(R.id.image_add_button)
     void onClickAdd() {
         Intent intent = new Intent(Intent.ACTION_PICK);
         intent.setType("image/*");
         MainActivity.instance.startActivityForResult(intent, IMAGE_PICK);
     }
 
-    @OnClick(R.id.image_remove)
+    @OnClick(R.id.image_remove_button)
     void onClickRemove() {
-        setImage(null);
-        imageUri = null;
+        loadImage(null);
     }
 
 }

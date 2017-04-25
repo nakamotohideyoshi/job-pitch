@@ -16,6 +16,7 @@
 		D72AE41D1E106D77004C3F02 /* ApplicationCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D72AE41C1E106D77004C3F02 /* ApplicationCell.swift */; };
 		D72AE4241E1156C3004C3F02 /* CustomView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D72AE4231E1156C3004C3F02 /* CustomView.swift */; };
 		D72AE42E1E11AD50004C3F02 /* ChangePasswordController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D72AE42D1E11AD50004C3F02 /* ChangePasswordController.swift */; };
+		D730C3F61EAE95C100332C6C /* InitialTokens.swift in Sources */ = {isa = PBXBuildFile; fileRef = D730C3F51EAE95C100332C6C /* InitialTokens.swift */; };
 		D749E34F1E09B479000FD0B1 /* ResetPasswordController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D749E34E1E09B479000FD0B1 /* ResetPasswordController.swift */; };
 		D749E3511E09C09E000FD0B1 /* AppHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = D749E3501E09C09E000FD0B1 /* AppHelper.swift */; };
 		D749E3531E0A36CD000FD0B1 /* APIConfigure.swift in Sources */ = {isa = PBXBuildFile; fileRef = D749E3521E0A36CD000FD0B1 /* APIConfigure.swift */; };
@@ -105,6 +106,7 @@
 		D72AE41C1E106D77004C3F02 /* ApplicationCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ApplicationCell.swift; path = Views/ApplicationCell.swift; sourceTree = "<group>"; };
 		D72AE4231E1156C3004C3F02 /* CustomView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CustomView.swift; path = Views/CustomView.swift; sourceTree = "<group>"; };
 		D72AE42D1E11AD50004C3F02 /* ChangePasswordController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ChangePasswordController.swift; path = Controllers/ChangePasswordController.swift; sourceTree = "<group>"; };
+		D730C3F51EAE95C100332C6C /* InitialTokens.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = InitialTokens.swift; path = Models/InitialTokens.swift; sourceTree = "<group>"; };
 		D749E34E1E09B479000FD0B1 /* ResetPasswordController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ResetPasswordController.swift; path = Controllers/ResetPasswordController.swift; sourceTree = "<group>"; };
 		D749E3501E09C09E000FD0B1 /* AppHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AppHelper.swift; path = Utils/AppHelper.swift; sourceTree = "<group>"; };
 		D749E3521E0A36CD000FD0B1 /* APIConfigure.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = APIConfigure.swift; path = Utils/APIConfigure.swift; sourceTree = "<group>"; };
@@ -400,6 +402,7 @@
 				D7F770081E08E3D100ECB684 /* Sector.swift */,
 				D7F770091E08E3D100ECB684 /* Sex.swift */,
 				D7F7700A1E08E3D100ECB684 /* User.swift */,
+				D730C3F51EAE95C100332C6C /* InitialTokens.swift */,
 			);
 			name = Models;
 			sourceTree = "<group>";
@@ -579,6 +582,7 @@
 				D7F770121E08E3D100ECB684 /* JobStatus.swift in Sources */,
 				D787F6331E2879F900C47A88 /* BusinessListController.swift in Sources */,
 				D7F7701C1E08E3D100ECB684 /* Nationality.swift in Sources */,
+				D730C3F61EAE95C100332C6C /* InitialTokens.swift in Sources */,
 				D7F770231E08E3D100ECB684 /* Sector.swift in Sources */,
 				D7F770271E0918FF00ECB684 /* LoginController.swift in Sources */,
 				D7F7701F1E08E3D100ECB684 /* Pitch.swift in Sources */,

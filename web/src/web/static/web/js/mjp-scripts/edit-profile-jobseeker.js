@@ -51,9 +51,7 @@ $(function() {
 				csrftoken: getCookie('csrftoken')
 			}).done(function(data) {
 				if (data.cv !== '') {
-					$('#CVcurrent').attr('href', data.cv);
-				} else {
-					$('#CVcurrent').hide();
+					$('#CVcurrent').attr('href', data.cv).show();
 				}
 				if (!data.active) {
 					$('#active_account').bootstrapSwitch('toggleState');

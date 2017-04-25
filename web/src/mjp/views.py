@@ -2,13 +2,11 @@ from django.db import transaction
 from django.db.models import F, Q, Max
 from django.contrib.gis.measure import D
 from django.contrib.gis.db.models.functions import Distance
-from django.http import HttpResponse
 
 from rest_framework import viewsets, permissions, serializers, status
 from rest_framework.response import Response
 from rest_framework.routers import DefaultRouter
 from rest_framework.views import APIView
-from rest_framework.renderers import JSONRenderer
 
 from mjp.models import (
     Sector,
@@ -50,6 +48,7 @@ from mjp.serializers import (
     MessageUpdateSerializer,
     PitchSerializer,
     AndroidPurchaseSerializer,
+    InitialTokensSerializer,
 )
 
 # For google APIs
@@ -664,3 +663,10 @@ class AndroidPurchaseView(APIView):
         })
         return Response(output_serializer.data)
 
+
+class InitialTokensView(APIView):
+    permission_classes = (permissions.IsAuthenticated,)
+
+    def get(self, request):
+        serializer = InitialTokensSerializer(instance=InitialTokens.objects.get())
+        return Response(serializer.data)

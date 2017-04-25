@@ -70,7 +70,7 @@ $(document).ready(function () {
 		$uploadBtn.attr('disabled', true);
 		videoElement.controls = false;
 
-		if (rawMediaRecorded != undefined && rawMediaRecorded) {
+		if (rawMediaRecorded !== undefined && rawMediaRecorded) {
 			getNewPitchMetaData(function (pitch) {
 				putIntoS3Bucket(pitch, rawMediaRecorded);
 				closeMediaDevices();

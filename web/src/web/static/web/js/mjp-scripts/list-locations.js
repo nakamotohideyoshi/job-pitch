@@ -24,7 +24,7 @@ $(function () {
 
 			for (var key in data) {
 				obj = data[key];
-				imageThumb = '/static/web/images/no_image_available.png';
+				imageThumb = CONST.PATH.NOIMAGE;
 
 				console.log(obj);
 

@@ -1,5 +1,5 @@
 function videoIsReadyForPlay(video) {
-	return (video != undefined) && (
+	return (video !== undefined) && (
 		video.readyState === 4 || (isBrowser('Firefox') && video.readyState === 3)
 	);
 }
@@ -9,14 +9,13 @@ function checkIfThereIsApitch(argument) {
 
   var poolingPromise = new Promise(function (resolve, reject) {
       poolingTranscodeProcess(resolve);
-    })
-    .then(function (pitches) {
+    }).then(function (pitches) {
       var html = getHtmlForVideoOrThumbnail(pitches);
 
       $('#pitchVideoCheck').html(html);
 
-      if (pitches == undefined || pitches.length == 0) {
-        log('danger', 'There is not a pitch.');
+      if (pitches === undefined || pitches.length === 0) {
+        log('info', 'There is not a pitch.');
         return;
       }
 
@@ -36,7 +35,7 @@ function checkIfThereIsApitch(argument) {
 
 
 function getHtmlThumbnailForApitch(argument) {
-  var content = '<img src="/static/web/images/no_image_available.png" styles="width:160px;">';
+  var content = '<img src="'+CONST.PATH.NOIMAGE+'" styles="width:160px;">';
 
   return new Promise(function (resolve, reject) {
     poolingTranscodeProcess(resolve);
@@ -80,14 +79,14 @@ function poolingTranscodeProcess(resolve) {
 			type: 'GET',
 			cache: false
 		}).done(function (pitches) {
-			if (pitches == undefined || pitches.length == 0) {
+			if (pitches === undefined || pitches.length === 0) {
 				resolve([]); // There is not pitches
 			}
 
 			var thereIsANullPitch = false;
 
 			pitches.forEach(function (pitch) {
-				if (pitch.video == undefined || pitch.video == null || !pitch.video) {
+				if (pitch.video === undefined || pitch.video === null || !pitch.video) {
 					thereIsANullPitch = true;
 					return false; // There is one
 				}

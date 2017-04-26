@@ -568,7 +568,7 @@ function viewPitch2(url, job_id, job_seeker, application_id) {
 function getHtmlForVideoOrThumbnail(pitches) {
 	var link = '';
 
-	var content = '<img src="/static/web/images/no_image_available.png" styles="width:160px;">';
+	var content = '<img src="'+CONST.PATH.NOIMAGE+'" styles="width:160px;">';
 
 	$.each(pitches, function(index, pitch) {
 		if (_.hasIn(pitch, 'video') && !_.isEmpty(pitch.video)) {
@@ -871,7 +871,7 @@ function home(localContext){
 				email: email,
 				password: password1,
 				csrfmiddlewaretoken: csrfmiddlewaretoken
-			}).then(function() {
+			}).then(function(response) {
 				log('success', 'User registered!');
 
 				setCookie('email', email, 28);

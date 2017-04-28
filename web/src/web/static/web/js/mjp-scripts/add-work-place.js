@@ -94,11 +94,13 @@ $(function() {
 							csrftoken: getCookie('csrftoken')
 						}).done(function (data) {
 							var src;
-							if (data.images.length)
+							if (data.images.length){
 								src = data.images[0].thumbnail;
-							else
-								src = "/static/web/images/no_image_available.png";
-	                        $('#currentLogo').attr('src', src).show();
+							} else {
+								src = CONST.PATH.NOIMAGE;
+							}
+              $('#currentLogo').attr('src', src).show();
+
 							var xhr = new XMLHttpRequest();
 							xhr.onreadystatechange = function () {
 								if (this.readyState == 4 && this.status == 200) {

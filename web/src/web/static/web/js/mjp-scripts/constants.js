@@ -22,7 +22,8 @@ var CONST = {
 	},
 
 	PATH: {
-		PARTIALS: "/static/web/partials/"
+		PARTIALS: "/static/web/partials/",
+		NOIMAGE: "/static/web/design/images/no_image_available.png"
 	},
 
 	SITEMAP: {
@@ -44,6 +45,7 @@ var CONST = {
 			'profile/notification-settings',
 			'profile/job-preferences/edit',
 			'profile/job-seeker/edit',
+			'profile/viewpitch',
 			'password-change'
 		],
 		BUSINESS: [

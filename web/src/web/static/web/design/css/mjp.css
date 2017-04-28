@@ -1104,6 +1104,16 @@ div.howitworks-page div.thumbnail{
   color: #777;
 }
 
+.pitch-replay-label{
+  display: none;
+  cursor: pointer;
+}
+
+.pitch-replay-label a {
+  text-decoration: none;
+  font: inherit;
+  color: rgb(0, 0, 0);
+}
 
 /*
  * Change Passowrd Page
@@ -1417,6 +1427,16 @@ div.howitworks-page div.thumbnail{
 #work_place_location {
   margin-bottom: -5px;
 }
+
+
+/*
+ *  Add Work Place Page
+ *
+ */
+.view-pitch.content {
+  margin-bottom: 80px;
+}
+
 
 /* Navigation Sytles */
 

@@ -13,7 +13,7 @@ $(function() {
 				console.log(data);
 				for (var key in data) {
 					var company = data[key];
-					company.imageThumb = '/static/web/images/no_image_available.png';
+					company.imageThumb = CONST.PATH.NOIMAGE;
 
 					if(company.images.length !== 0){
 						company.imageThumb = company.images[0].thumbnail;

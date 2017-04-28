@@ -1,5 +1,7 @@
 $(document).ready(function() {
 
-	checkIfThereIsApitch();
+ 	app(context).then(function() {
+		checkIfThereIsApitch();
+	});
 
 });

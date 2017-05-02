@@ -108,7 +108,7 @@
 
         <TextView
             android:id="@+id/first_create_text"
-            android:text="Okay, last step, now tap to create your first job."
+            android:text="Great, you've created your business! Now tap to create your work places."
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"

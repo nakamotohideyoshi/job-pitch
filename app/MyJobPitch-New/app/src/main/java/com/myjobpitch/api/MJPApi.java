@@ -315,7 +315,8 @@ public class MJPApi {
     }
 
     public List<Location> getUserLocations(Integer business_id) throws MJPApiException {
-        return Arrays.asList(rest.exchange(getTypeUrl("user-locations", String.format("business=%s", business_id)), HttpMethod.GET, createAuthenticatedRequest(), Location[].class).getBody());
+        URI uri = getTypeUrl("user-locations", business_id != null ? String.format("business=%s", business_id) : null);
+        return Arrays.asList(rest.exchange(uri, HttpMethod.GET, createAuthenticatedRequest(), Location[].class).getBody());
     }
 
     public Location getUserLocation(Integer id) throws MJPApiException {

@@ -18,28 +18,29 @@ class BusinessListController: MJPController {
     @IBOutlet weak var emptyView: UIView!
     @IBOutlet weak var emptyMessage: UILabel!
     @IBOutlet weak var emptyButton: UIButton!
-    @IBOutlet weak var firstCreateMessage: UIButton!
-    
-    var addJobMode = false
-    
-    var data: NSMutableArray! = NSMutableArray()
     
     var addButton: UIBarButtonItem!
-    
-    static var firstCreate = false
+    var data: NSMutableArray! = NSMutableArray()
+    var canCreateBusinesses = false
+    var isAddMode = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        if addJobMode {
+        canCreateBusinesses = AppData.user.canCreateBusinesses
+        isAddMode = SideMenuController.currentID != "businesses"
+        
+        addButton = navigationItem.rightBarButtonItem
+        navigationItem.rightBarButtonItem = nil
+        
+        if isAddMode {
             title = "Add job"
             headerImgView.image = UIImage(named: "menu-business-plus")?.withRenderingMode(.alwaysTemplate)
+            emptyView.isHidden = true
         } else {
+            title = "Businesses"
             headerView.removeFromSuperview()
-            addButton = navigationItem.rightBarButtonItem
         }
-        
-        navigationItem.rightBarButtonItem = nil
         
     }
     
@@ -63,38 +64,24 @@ class BusinessListController: MJPController {
     }
     
     func updateBusinessList() {
-        if BusinessListController.firstCreate {
-            emptyView.isHidden = true
-            firstCreateMessage.isHidden = false
-            navigationItem.rightBarButtonItem = nil
-            self.tableView.reloadData()
+        
+        self.tableView.reloadData()
+        
+        if isAddMode {
+            headerAddButtonDisable?.isHidden = !canCreateBusinesses
             return
         }
         
-        firstCreateMessage.isHidden = true
-        
-        navigationItem.rightBarButtonItem = addButton
-        headerAddButtonDisable?.isHidden = true
+        navigationItem.rightBarButtonItem = (data.count == 0 || canCreateBusinesses) ? addButton : nil
+        emptyView.isHidden = !(data.count == 0 || !canCreateBusinesses)
+        tableView.isScrollEnabled = !emptyView.isHidden
         if data.count == 0 {
-            tableView.isScrollEnabled = false
-            emptyView.isHidden = false
             emptyMessage.text = "You have not added any\n businesses yet."
             emptyButton.setTitle("Create business", for: .normal)
         } else if !AppData.user.canCreateBusinesses {
-            navigationItem.rightBarButtonItem = nil
-            headerAddButtonDisable?.isHidden = false
-            if addJobMode {
-                emptyView.isHidden = true 
-            } else {
-                emptyView.isHidden = false
-                emptyMessage.text = "Have more than one company?\n Get in touch!"
-                emptyButton.setTitle("sales@myjobpitch.com", for: .normal)
-            }
-            tableView.isScrollEnabled = false
-        } else {
-            emptyView.isHidden = true
+            emptyMessage.text = "Have more than one company?\n Get in touch!"
+            emptyButton.setTitle("sales@myjobpitch.com", for: .normal)
         }
-        self.tableView.reloadData()
     }
     
     @IBAction func addAction(_ sender: Any) {
@@ -105,10 +92,6 @@ class BusinessListController: MJPController {
             let url = URL(string: "mailto:sales@myjobpitch.com")!
             UIApplication.shared.openURL(url)
         }
-    }
-    
-    @IBAction func clickFirstCreateMessage(_ sender: Any) {
-        LocationEditController.pushController(business: data[0] as! Business, location: nil)
     }
     
 }
@@ -126,7 +109,7 @@ extension BusinessListController: UITableViewDataSource {
         
         cell.setData(business)
         
-        if !addJobMode {
+        if !isAddMode {
             
             var buttons = [
                 MGSwipeButton(title: "",
@@ -154,9 +137,12 @@ extension BusinessListController: UITableViewDataSource {
                                         AppHelper.showLoading("Deleting...")
                                         
                                         API.shared().deleteBusiness(id: business.id, success: {
-                                            AppHelper.hideLoading()
                                             self.data.remove(business)
-                                            self.updateBusinessList()
+                                            API.shared().getUser(success: { (data) in
+                                                AppHelper.hideLoading()
+                                                AppData.user = data as! User
+                                                self.updateBusinessList()
+                                            }, failure: self.handleErrors)
                                         }, failure: self.handleErrors)
                                         
                                         cell.hideSwipe(animated: true)
@@ -186,17 +172,9 @@ extension BusinessListController: UITableViewDataSource {
 extension BusinessListController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        
-        if BusinessListController.firstCreate {
-            LocationEditController.pushController(business: data[0] as! Business, location: nil)
-            return
-        }
-        
         let controller = AppHelper.mainStoryboard.instantiateViewController(withIdentifier: "LocationList") as! BusinessDetailController
-        controller.addJobMode = addJobMode
         controller.businessId = (data[indexPath.row] as! Business).id
         navigationController?.pushViewController(controller, animated: true)
-        
     }
     
 }

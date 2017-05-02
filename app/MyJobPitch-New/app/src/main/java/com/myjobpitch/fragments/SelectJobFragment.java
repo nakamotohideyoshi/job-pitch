@@ -156,11 +156,9 @@ public class SelectJobFragment extends BaseFragment {
     void onAddJob() {
         if (AppData.user.getCan_create_businesses() || AppData.user.getBusinesses().size()==0) {
             BusinessListFragment fragment = new BusinessListFragment();
-            fragment.addJobMode = true;
             getApp().pushFragment(fragment);
         } else {
             BusinessDetailFragment fragment = new BusinessDetailFragment();
-            fragment.addJobMode = true;
             fragment.businessId = AppData.user.getBusinesses().get(0);
             getApp().pushFragment(fragment);
         }

@@ -39,6 +39,10 @@ class LocationEditController: MJPController {
     
     var origImage: Image!
     
+    var isFirstCreate = false
+    var isNew = false
+    var isAddMode = false
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -56,11 +60,26 @@ class LocationEditController: MJPController {
         
         //imgView.addDotBorder(dotWidth: 4, color: UIColor.black)
         
+        isFirstCreate = UserDefaults.standard.bool(forKey: "first_craete_wp")
+        isAddMode = SideMenuController.currentID != "businesses"
+        
         if location == nil {
             navigationItem.title = "Add Work Place"
-            load()
+            isNew = true
+            
+            AppHelper.showLoading("Loading...")
+            API.shared().loadLocationsForBusiness(businessId: nil, success: { (data) in
+                AppHelper.hideLoading()
+                self.isFirstCreate = data.count == 0
+                if !self.isFirstCreate {
+                    UserDefaults.standard.set(false, forKey: "first_craete_wp")
+                    UserDefaults.standard.synchronize()
+                }
+                self.load()
+            }, failure: self.handleErrors)
         } else {
             navigationItem.title = "Edit Work Place"
+            business = location.businessData
             
             AppHelper.showLoading("Loading...")
             API.shared().loadLocation(id: location.id, success: { (data) in
@@ -75,8 +94,6 @@ class LocationEditController: MJPController {
     func load() {
         
         if location != nil {
-            
-            business = location.businessData
             
             nameField.text = location.name
             descTextView.text = location.desc
@@ -109,9 +126,6 @@ class LocationEditController: MJPController {
             } else {
                 imgView.image = UIImage(named: "default-logo")
             }
-//            imgView.alpha = 0.2
-        } else {
-//            imgView.alpha = 1
         }
         
     }
@@ -164,7 +178,6 @@ class LocationEditController: MJPController {
         } else {
             imgView.image = UIImage(named: "default-logo")
         }
-//        imgView.alpha = 0.2
         addLogoButton.setTitle("Add Logo", for: .normal)
         removeImageButton.isHidden = true
         
@@ -246,16 +259,27 @@ class LocationEditController: MJPController {
     func saveFinished() {
         AppHelper.hideLoading()
         
-        if BusinessListController.firstCreate {
-            BusinessListController.firstCreate = false
-            
-            var controllers = navigationController?.viewControllers
-            let controller = AppHelper.mainStoryboard.instantiateViewController(withIdentifier: "LocationList") as! BusinessDetailController
-            controller.businessId = business.id
-            controllers?.insert(controller, at: (controllers?.count)!-1)
-            navigationController?.viewControllers = controllers!
+        if !isNew {
+            _ = navigationController?.popViewController(animated: true)
+            return
         }
         
+        if isFirstCreate {
+            UserDefaults.standard.set(false, forKey: "first_craete_wp")
+            UserDefaults.standard.synchronize()
+        }
+        
+        var controllers = navigationController?.viewControllers
+        if isAddMode {
+            let controller = AppHelper.mainStoryboard.instantiateViewController(withIdentifier: "JobEdit") as! JobEditController
+            controller.location = location
+            controllers?.insert(controller, at: (controllers?.count)!-1)
+        } else {
+            let controller = AppHelper.mainStoryboard.instantiateViewController(withIdentifier: "JobList") as! LocationDetailController
+            controller.location = location
+            controllers?.insert(controller, at: (controllers?.count)!-1)
+        }
+        navigationController?.viewControllers = controllers!
         _ = navigationController?.popViewController(animated: true)
     }
     
@@ -310,7 +334,6 @@ extension LocationEditController: DropboxBrowserDelegate {
                 //PopupController.showGray(fileName + "is not a image file", ok: "OK")
             } else {
                 imgView.image = logoImage
-//                imgView.alpha = 1
                 removeImageButton.isHidden = false
                 addLogoButton.setTitle("Change Logo", for: .normal)
             }

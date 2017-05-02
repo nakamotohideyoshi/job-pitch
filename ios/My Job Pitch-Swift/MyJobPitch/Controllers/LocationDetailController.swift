@@ -16,13 +16,13 @@ class LocationDetailController: MJPController {
     @IBOutlet weak var imgView: UIImageView!
     @IBOutlet weak var nameLabel: UILabel!
     @IBOutlet weak var subTitle: UILabel!
-    @IBOutlet weak var controlHeightConstraint: NSLayoutConstraint!
-    
-    var location: Location!
+    @IBOutlet weak var firstCreateMessage: UIButton!
     
     var data: NSMutableArray! = NSMutableArray()
-    
     var jobActive: NSNumber!
+
+    var isFirstCreate = false
+    var location: Location!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -32,7 +32,6 @@ class LocationDetailController: MJPController {
         tableView.addPullToRefresh {
             self.loadJobs()
         }
-        
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -67,7 +66,8 @@ class LocationDetailController: MJPController {
     
     func updateJobList() {
         subTitle.text = String(format: "Includes %lu %@", data.count, data.count > 1 ? "jobs" : "job")
-        emptyView.isHidden = self.data.count > 0
+        firstCreateMessage.isHidden = !isFirstCreate
+        emptyView.isHidden = isFirstCreate || self.data.count > 0
         tableView.reloadData()
     }
     
@@ -89,6 +89,7 @@ class LocationDetailController: MJPController {
     }
     
     @IBAction func addJobAction(_ sender: Any) {
+        isFirstCreate = false
         JobEditController.pushController(location: location, job: nil)
     }
     

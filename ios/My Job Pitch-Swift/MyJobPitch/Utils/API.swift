@@ -463,7 +463,7 @@ class API: NSObject {
         if businessId != nil {
             path = String(format: "%@?business=%@", path, businessId)
         }
-        getObjects(String(format: path, businessId),
+        getObjects(path,
                    success: success,
                    failure: failure)
     }

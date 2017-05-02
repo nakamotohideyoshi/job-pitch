@@ -223,7 +223,7 @@ public class BusinessEditFragment extends FormFragment {
 
         getApp().getSupportFragmentManager().popBackStackImmediate();
         BusinessDetailFragment fragment = new BusinessDetailFragment();
-        fragment.isFirstCreate = true;
+        fragment.isFirstCreate = isFirstCreate;
         fragment.businessId = business.getId();
         getApp().pushFragment(fragment);
 

@@ -306,7 +306,7 @@ public class LocationEditFragment extends FormFragment {
             getApp().pushFragment(fragment);
         } else {
             LocationDetailFragment fragment = new LocationDetailFragment();
-
+            fragment.isFirstCreate = isFirstCreate;
             fragment.location = location;
             getApp().pushFragment(fragment);
         }

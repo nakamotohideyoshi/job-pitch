@@ -1,252 +1,252 @@
-function populateCompanies(companyid){
-	$.get( "/api/user-businesses/", { token: getCookie('key') ,csrftoken: getCookie('csrftoken') }).done(function( data ) {
-		console.log(data);
+function populateCompanies(companyid) {
+	$.get("/api/user-businesses/", {
+		token: getCookie('key'),
+		csrftoken: getCookie('csrftoken')
+	}).done(function (data) {
 		var selected = '';
-		for (var key in data) {
-			var obj = data[key];
+		var options = '';
 
+		data.forEach(function (obj) {
 			selected = '';
-			if(companyid && obj.id == companyid){
+			if (companyid && obj.id == companyid) {
 				selected = 'selected=""';
 			}
 
-			$('#company').append('<option value="'+obj.id+'" '+selected+'>'+obj.name+'</options>');
-		}
+			options += '<option value="' + obj.id + '" ' + selected + '>' + obj.name + '</options>';
+		});
 
-		if(companyid){
+		$('#company').append(options);
+
+		if (companyid) {
 			$('#company').trigger('change');
-			$('#company').attr('disabled',true)
+			$('#company').attr('disabled', true)
 		}
 	});
 }
 
+$(function () {
+	app(context).then(function() {
+		//grab company id from url
+		var company_id = QueryString.companyid;
 
-$(function() {
-	// Run login check funtion with auto-redirect
-	checkLogin(true);
+		//grab location id from url
+		var location_id = QueryString.id;
 
-	//grab company id from url
-	var company_id = QueryString.companyid;
+		//variables defined
+		var open_job_status;
 
-	//grab location id from url
-	var location_id = QueryString.id;
+		var query = {
+			token: getCookie('key'),
+			csrftoken: getCookie('csrftoken')
+		};
 
-	//variables defined
-	var open_job_status;
+		$("#company").change(function () {
+			if ($(this).val() != '') {
+				$.get("/api/user-locations/", _.assign({
+						business: $(this).val()
+					},
+					query
+				)).done(function (data) {
+					var selected = '';
+					var options = '';
 
-	$( "#company" ).change(function() {
-		if($(this).val() != ''){
-			$.get( "/api/user-locations/", { business:$(this).val() ,csrftoken: getCookie('csrftoken') }).done(function( data ) {
-				for (var key in data) {
-					var obj = data[key];
+					data.forEach(function (obj, key) {
+						selected = '';
 
-					selected = '';
-					if(location_id && obj.id == location_id){
-						selected = 'selected=""';
+						if (location_id && obj.id == location_id) {
+							selected = 'selected=""';
+						}
+
+						options += '<option value="' + obj.id + '" ' + selected + ' >' + obj.name + '</options>';
+					})
+
+					$('#location').append(options);
+					//$('#locationSelect').show();
+
+					if (location_id) {
+						$('#location').trigger('change');
+						$('#location').attr('disabled', true)
 					}
+				});
+			} else {
+				$('#locationSelect').hide();
+				$("#location").val('');
+			}
+		});
 
-					$('#location').append('<option value="'+obj.id+'" '+selected+' >'+obj.name+'</options>');
-				}
+		$("#location").change(function () {
+			if ($(this).val() != '') {
+				//$('#mainFormAreaCreateJob').show();
 
-				$('#locationSelect').show();
+				location_id = $(this).val();
 
-				if(location_id){
-					$('#location').trigger('change');
-					$('#location').attr('disabled',true)
-				}
-			})
-			.fail(function( data ) {
-				console.log( data );
-			});
-		}else{
-			$('#locationSelect').hide();
-			$( "#location" ).val('');
-		}
-	});
+				$.get("/api/user-locations/" + location_id, query).done(function (data) {
+					$('#currentLogo').attr('src', data.images[0].thumbnail).show();
+				});
 
-	$( "#location" ).change(function() {
-		if($(this).val() != ''){
-			$('#mainFormAreaCreateJob').show();
-			location_id = $(this).val();
-			$.get( "/api/user-locations/"+location_id, { token: getCookie('key') ,csrftoken: getCookie('csrftoken') }).done(function( data ) {
+			} else {
+				$('#locationSelect').hide();
+				$('#mainFormAreaCreateJob').hide();
+				$("#location").val('');
+			}
+		});
+
+	  $('#locationSelect').show();
+	  $('#mainFormAreaCreateJob').show();
+
+		//Populate Companies and Locations selects
+		populateCompanies(company_id);
+
+		//if location id is set then go ahead with populating the fields and do other functions
+		if (typeof location_id !== "undefined") {
+
+			$.get("/api/user-locations/" + location_id, query).done(function (data) {
 				$('#currentLogo').attr('src', data.images[0].thumbnail).show();
 			});
-		}else{
-			$('#locationSelect').hide();
-			$('#mainFormAreaCreateJob').hide();
-			$( "#location" ).val('');
-		}
-	});
 
-	//Populate Companies and Locations selects
-	populateCompanies(company_id);
+			$.get("/api/user-locations/" + location_id, query).done(function (data) {
 
-	//if location id is set then go ahead with populating the fields and do other functions
-	if(typeof location_id !== "undefined"){
+				$('#company').val(data.business_data.id);
 
-		$.get( "/api/user-locations/"+location_id, { token: getCookie('key') ,csrftoken: getCookie('csrftoken') }).done(function( data ) {
-			$('#currentLogo').attr('src', data.images[0].thumbnail).show();
-		});
+				$.get("/api/user-locations/", _.assign({
+						business: $('#company').val()
+					},
+					query
+				)).done(function (data) {
+					populateSelect($('#location'), data);
 
-		$.get( "/api/user-locations/"+location_id, { token: getCookie('key') ,csrftoken: getCookie('csrftoken') }).done(function( data ) {
+					$('#location').val(location_id);
+					$('#locationSelect').show();
 
-			$('#company').val(data.business_data.id);
+				});
 
-			$.get( "/api/user-locations/", { business:$('#company').val() ,csrftoken: getCookie('csrftoken') }).done(function( data ) {
-				for (var key in data) {
-					var obj = data[key];
-					$('#location').append('<option value="'+obj.id+'">'+obj.name+'</options>');
-				}
-				$('#location').val(location_id);
-				$('#locationSelect').show();
-
-				})
-			.fail(function( data ) {
-				console.log( data );
-
+				$('#mainFormAreaCreateJob').show();
 			});
 
-			$('#mainFormAreaCreateJob').show();
+		}
+
+		//Populate selects
+		$.get("/api/hours/", query).done(function (data) {
+			populateSelect($('#hours'), data);
 		});
 
-	}
+		$.get("/api/contracts/", query).done(function (data) {
+			populateSelect($('#contract'), data);
+		});
 
-	//Populate selects
-	$.get( "/api/hours/", { csrftoken: getCookie('csrftoken') }).done(function( data ) {
-		for (var key in data) {
-			var obj = data[key];
-			$('#hours').append('<option value="'+obj.id+'">'+obj.name+'</options>');
-		}
-	})
-	.fail(function( data ) {
-		console.log( data );
+		$.get("/api/sectors/", query).done(function (data) {
+			populateSelect($('#job_sector'), data);
+		});
 
-	});
-	$.get( "/api/contracts/", { csrftoken: getCookie('csrftoken') }).done(function( data ) {
-		for (var key in data) {
-			var obj = data[key];
-			$('#contract').append('<option value="'+obj.id+'">'+obj.name+'</options>');
-		}
-	})
-	.fail(function( data ) {
-		console.log( data );
-	});
-	$.get( "/api/sectors/", { csrftoken: getCookie('csrftoken') }).done(function( data ) {
-		for (var key in data) {
-			var obj = data[key];
-			$('#job_sector').append('<option value="'+obj.id+'">'+obj.name+'</options>');
-		}
-	})
-	.fail(function( data ) {
-		console.log( data );
-	});
+		//Get other data
 
-	//Get other data
-
-	$.get( "/api/job-statuses/", { csrftoken: getCookie('csrftoken') }).done(function( data ) {
-		for (var key in data) {
-			var obj = data[key];
-			if(obj.name == "OPEN"){
-				open_job_status = obj.id;
-			}
-		}
-	})
-	.fail(function( data ) {
-		console.log( data );
-	});
-
-	//Form submit code
-	$('#create-job').submit(function( event ) {
-		$('.btn-primary').attr( "disabled", true );
-		event.preventDefault();
-		var title = $('#title').val();
-		var description = $('#description').val();
-		var job_sector = $('#job_sector').val();
-		var contract = $('#contract').val();
-		var hours = $('#hours').val();
-
-		$.post( "/api/user-jobs/", { title: title, description: description, sector: job_sector, contract: contract, hours: hours, location:location_id, status:open_job_status, csrftoken: getCookie('csrftoken') }).done(function( data ) {
-			$('#job_id').val(data.id);
-			if($('#job_image').val() != ''){
-				var formData = new FormData($('#create-job')[0]);
-				$.ajax({
-					url: '/api/user-job-images/',
-					type: 'POST',
-					data: formData,
-					async: false,
-					cache: false,
-					contentType: false,
-					processData: false,
-					success: function (data) {
-						window.location.href = "/profile/list-jobs/?id="+location_id;
-					}
-			  });
-			}else{
-				//window.location.href = "/profile/list-jobs/?id="+location_id;
-				$.get( "/api/user-locations/"+location_id, { token: getCookie('key') ,csrftoken: getCookie('csrftoken') }).done(function( data ) {
-					console.log( data );
-					$('#currentLogo').attr('src', data.images[0].thumbnail).show();
-					var xhr = new XMLHttpRequest();
-
-					xhr.onreadystatechange = function(){
-						if (this.readyState == 4 && this.status == 200){
-							//this.response is what you're looking for
-							//console.log(this.response, typeof this.response);
-							//console.log(data.images[0].image.split('.').pop());
-							$('#job_image').remove();
-							var formData = new FormData($('#create-job')[0]);
-
-							formData.append('image',this.response, 'location-'+location_id+'.'+data.images[0].image.split('.').pop());
-
-						  $.ajax({
-								url: '/api/user-job-images/',
-								type: 'POST',
-								data: formData,
-								async: false,
-								cache: false,
-								contentType: false,
-								processData: false,
-								success: function (data) {
-									console.log(data);
-									window.location.href = "/profile/list-jobs/?id="+location_id;
-								}
-						  });
-						}
-					}
-					xhr.open('GET', data.images[0].image);
-					xhr.responseType = 'blob';
-					xhr.send();
-				});
-			}
-
+		$.get("/api/job-statuses/", query).done(function (data) {
+			data.forEach(function (obj) {
+				if (obj.name == "OPEN") {
+					open_job_status = obj.id;
+				}
 			})
-			.fail(function( data ) {
-				for (var key in data.responseJSON) {
-					var obj = data.responseJSON[key];
+		});
 
-					if(key == 'non_field_errors'){
-						messageError = messageError+obj+'<br>';
+		//Form submit code
+		$('#create-job').submit(function (event) {
+			$('.btn-primary').prop("disabled", true);
+
+			event.preventDefault();
+
+			var job = {
+				title: $('#title').val(),
+				description: $('#description').val(),
+				sector: $('#job_sector').val(),
+				contract: $('#contract').val(),
+				hours: $('#hours').val(),
+				location: location_id,
+				status: open_job_status,
+				csrftoken: getCookie('csrftoken')
+			};
+
+			$.post("/api/user-jobs/", job)
+				.done(function (data) {
+					$('#job_id').val(data.id);
+
+					if ($('#job_image').val() != '') {
+						var formData = new FormData($('#create-job')[0]);
+
+						$.ajax({
+							url: '/api/user-job-images/',
+							type: 'POST',
+							data: formData,
+							cache: false,
+							contentType: false,
+							processData: false,
+							success: function (data) {
+								window.location.href = "/find-posts/?id=" + location_id;
+							}
+						});
+
+					} else {
+						//window.location.href = "/find-posts/?id="+location_id;
+						$.get("/api/user-locations/" + location_id, query).done(function (data) {
+							$('#currentLogo').attr('src', data.images[0].thumbnail).show();
+							var xhr = new XMLHttpRequest();
+
+							xhr.onreadystatechange = function () {
+								if (this.readyState == 4 && this.status == 200) {
+									//this.response is what you're looking for
+									$('#job_image').remove();
+									var formData = new FormData($('#create-job')[0]);
+
+									formData.append('image', this.response, 'location-' + location_id + '.' + data.images[0].image.split('.').pop());
+
+									$.ajax({
+										url: '/api/user-job-images/',
+										type: 'POST',
+										data: formData,
+										cache: false,
+										contentType: false,
+										processData: false,
+										success: function (data) {
+											window.location.href = "/find-posts/?id=" + location_id;
+										}
+									});
+								}
+							}
+							xhr.open('GET', data.images[0].image);
+							xhr.responseType = 'blob';
+							xhr.send();
+						});
 					}
 
-					fieldError(obj,key);
-				}
+				})
+				.fail(function (data) {
+					var messageError;
+					var obj;
 
-				if(messageError != ''){
-					formAlert('danger', messageError);
-				}
+					/*			data.responseJSON.forEach(function (obj, key) {
+					if (key == 'non_field_errors') {
+						messageError = messageError + obj + '<br>';
+					}
 
-				$('.btn-primary').attr( "disabled", false );
-		  });
-	});
+					fieldError(obj, key);
+				});*/
 
-	var text_max = 500;
+					//if (messageError) {
+					formAlert('danger', data.statusText);
+					//}
 
-	$('#textarea_feedback').html(text_max + ' characters remaining');
+					$('.btn-primary').prop("disabled", false);
+				});
+		});
 
-	$('#description').keyup(function() {
-		var text_length = $('#description').val().length;
-		var text_remaining = text_max - text_length;
+		var text_max = 500;
 
-		$('#textarea_feedback').html(text_remaining + ' characters remaining');
+		$('#textarea_feedback').html(text_max + ' characters remaining');
+
+		$('#description').keyup(function () {
+			var text_length = $('#description').val().length;
+			var text_remaining = text_max - text_length;
+
+			$('#textarea_feedback').html(text_remaining + ' characters remaining');
+		});
 	});
 });

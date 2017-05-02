@@ -1,0 +1,94 @@
+{% extends "mjp_jobseeker_dashboard.html" %}
+
+
+{% block extra_head %}
+  <link href="/static/web/design/css/pure-css-speech-bubbles.css" rel="stylesheet">
+{% endblock %}
+
+
+{% block page-title %}{% endblock %}
+
+
+{% block content %}
+  <div class="inbox contatainer-fluid">
+    <div class="inbox-header row">
+      <div class="bubble-i icon-group"></div>
+      <div class="notebook-i icon"></div>
+      <div class="col-sm-9 pull-right">
+        <h3 id="user-name"><strong>Mike Smith</strong> <small id="current-time">12:30pm</small> <small id="timezone">EDT</small></h3>
+        <h5 id="company-name">Company Name - <span>Sales Representative</span></h5>
+      </div>
+    </div>
+    <div class="inbox-body row">
+      <div class="inbox-contacts col-sm-3" >
+        <div class="row">
+          <div class="col-sm-12">
+            <form id="search-form">
+              <div class="input-group">
+                <span class="input-group-addon"><span class="glyphicon glyphicon-search"></span></span>
+                <input type="text" class="form-control" placeholder="Search"  name="querystring">
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <div class="row subtitle">
+          <div class="col-sm-12"><h3>RECENT</h3></div>
+        </div>
+
+        <div class="row inbox-contacts-list">
+          <div role="tabpanel">
+            <ul class="nav nav-pills brand-pills nav-stacked" role="tablist">
+              <li role="presentation" class="brand-nav active"><a href="#"><img src="/static/web/design/images/chat.png"><span class="h6">Mike Smith<small>Company Name</small></span></a></li>
+              <li role="presentation" class="brand-nav"><a href="#"><img src="/static/web/design/images/chat.png"><span class="h6">John<small>Company Name</small></span></a></li>
+              <li role="presentation" class="brand-nav"><a href="#"><img src="/static/web/design/images/chat.png"><span class="h6">Mike<small>Company Name</small></span></a></li>
+              <li role="presentation" class="brand-nav"><a href="#"><img src="/static/web/design/images/chat.png"><span class="h6">Yana<small>Company Name</small></span></a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="inbox-messages col-sm-9">
+        <div class="message-history row">
+          <div class="col-sm-12">
+            <div class="row">
+              <div class="col-sm-10 col-sm-offset-2"><p class="arrow-box right message">Hello!</p></div>
+            </div>
+            <div class="row">
+              <div class="col-sm-10"><p class="arrow-box left message">Hi!</p></div>
+            </div>
+            <div class="row">
+              <div class="col-sm-10 col-sm-offset-2"><p class="arrow-box right message">When could we meet up?</p></div>
+            </div>
+            <div class="row">
+              <div class="col-sm-10"><p class="arrow-box left message">Maybe Tomorrow.</p></div>
+            </div>
+            <div class="row">
+              <div class="col-sm-10"><p class="arrow-box left message">Better on Monday!</p></div>
+            </div>
+          </div>
+        </div>
+        <div class="new-message-box row">
+          <form id="message-form" class="form-horizontal">
+            <div class="row">
+              <div class="col-sm-9">
+                <textarea class="form-control col-sm-9" placeholder="Enter a new messsage here" name="new-message"></textarea>
+              </div>
+              <div class="col-sm-3">
+                <button class="btn btn-primary sclabs-theme col-sm-12">Send</button>
+                <!-- input class="form-control col-sm-3" type="submit" value="Send" -->
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}
+
+{% block sidebar %}
+{% endblock %}
+
+{% block pagescripts %}
+  <script src="/static/web/js/lodash.min.js"></script>
+  <script src="/static/web/js/mjp-scripts/inbox.js"></script>
+{% endblock %}

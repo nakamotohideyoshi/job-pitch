@@ -26,10 +26,14 @@ TEMPLATE_DEBUG = False
 
 ALLOWED_HOSTS = []
 
-# AUTH_USER_MODEL = 'mjp.User'
+AUTH_USER_MODEL = 'mjp.User'
 
 # allauth
 ALL_AUTH_SETTINGS = {
+    "ACCOUNT_USER_MODEL_USERNAME_FIELD": 'email',
+    "ACCOUNT_EMAIL_REQUIRED": True,
+    "ACCOUNT_AUTHENTICATION_METHOD": 'email',
+    "ACCOUNT_CONFIRM_EMAIL_ON_GET": True,
 #     'ACCOUNT_FORMS': {
 #         'signup': 'mjp.RegistrationForm'
 #     },
@@ -38,21 +42,21 @@ ALLAUTH_SETTING_GETTER = ALL_AUTH_SETTINGS.get
 # Application definition
 
 INSTALLED_APPS = (
-    'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.sites',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'mjp',
+    'web',
     'allauth',
     'allauth.account',
     'rest_framework',
     'rest_framework.authtoken',
     'rest_auth',
     'rest_auth.registration',
-    'mjp',
-    'web',
+    'django.contrib.admin',
 )
 
 # Database
@@ -86,12 +90,33 @@ REST_FRAMEWORK = {
 }
 
 REST_AUTH_SERIALIZERS = {
+    'LOGIN_SERIALIZER': 'mjp.serializers.LoginSerializer',
     'USER_DETAILS_SERIALIZER': 'mjp.serializers.UserDetailsSerializer',
 }
+
+REST_AUTH_REGISTER_SERIALIZERS = {
+    'REGISTER_SERIALIZER': 'mjp.serializers.RegisterSerializer',
+}
+
+LOGIN_URL = '/login/'
+LOGIN_REDIRECT_URL = '/'
 
 ROOT_URLCONF = 'urls'
 
 WSGI_APPLICATION = 'wsgi.application'
+
+TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'APP_DIRS': True,
+        'OPTIONS': {
+            'context_processors': [
+                "django.contrib.auth.context_processors.auth",
+                "django.contrib.messages.context_processors.messages",
+            ]
+        }
+    },
+]
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.7/topics/i18n/
@@ -108,3 +133,11 @@ USE_TZ = True
 
 MEDIA_URL = '/media/'
 STATIC_URL = '/static/'
+
+SITE_ID = 1
+
+EMAIL_HOST = '127.0.0.1'
+EMAIL_HOST_USER = ''
+EMAIL_HOST_PASSWORD = ''
+EMAIL_PORT = 1025
+EMAIL_USE_TLS = False

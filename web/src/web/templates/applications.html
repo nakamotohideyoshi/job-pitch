@@ -1,50 +1,63 @@
-{% extends "mjp_base.html" %}
+{% extends "mjp_recruiter_dashboard.html" %}
+
+{% block page-title %}
+  <div class="row page-title">
+    <h2>My Proposals</h2>
+  </div>
+{% endblock %}
+
+{% block sidebar %}{% endblock %}
 
 {% block content %}
-	<div class="container-fluid">
+  <div class="col-sm-12 applications content">
+    <h3><strong>ACTIVE</strong></h3>
+    <div class="row">
+      <div class="col-sm-12" id="job-connections">
+        <h3 class="counter-box"><span>0</span> My Job Connections</h3>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-12" id="job-applieds">
+        <h3 class="counter-box"><span>0</span> Job Applieds</h3>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-12" id="job-interviews">
+        <h3 class="counter-box"><span>0</span> Invitations to Interview</h3>
+      </div>
+    </div>
+  </div>
 
-                <!-- Page Heading -->
-                <div class="row">
-                    <div class="col-lg-12">
-                        <h1 class="page-header">
-							My Job Applications & Messages
-                        </h1>
-						<div class="row">
-                        <div class="col-lg-12" id="no-items-create" style="display:none;">
-									<div class="col-md-6 col-md-offset-3 text-center">
-										<p>You have no job applications yet.</p>
-									</div>
-								</div>
-										<div class="table-responsive">
-											<table class="table table-hover" id="list-table" style="display:none;">
-												<thead>
-													<tr>
-														<th class="col-sm-3">Job Applied For</th>
-                                                        <th class="business-link col-sm-2" style="display:none;">Applicant</th>
-                                                        <th class="business-link col-sm-3" style="display:none;">Description</th>
-														<th class="col-sm-3">Message</th>
-                                                        <th class="business-link col-sm-1" style="display:none;">Delete</th>
-													</tr>
-												</thead>
-												<tbody>
-													
-												</tbody>
-											</table>
-										</div>
-									</div>
-						
-                        
-                    </div>
-                </div>
-                <!-- /.row -->
-               
+  <div class="col-sm-12 hide">
+    <div class="row">
+      <div class="col-sm-12" id="no-items-create" style="display:none;">
+        <div class="col-md-6 col-md-offset-3 text-center">
+          <p>You have no job applications yet.</p>
+        </div>
+      </div>
+      <div class="table-responsive">
+        <table class="table table-hover" id="list-table" style="display:none;">
+          <thead>
+            <tr>
+              <th class="col-sm-3">Job Applied For</th>
+              <th class="business-link col-sm-2" style="display:none;">Applicant</th>
+              <th class="business-link col-sm-3" style="display:none;">Description</th>
+              <th class="col-sm-3">Message</th>
+              <th class="business-link col-sm-1" style="display:none;">Delete</th>
+            </tr>
+          </thead>
+          <tbody>
 
-            </div>
-            <!-- /.container-fluid -->
-
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
 {% endblock %}
-{% block pagescripts %}
 
+
+{% block pagescripts %}
+	<script src="/static/web/js/lodash.min.js"></script>
+	<script src="/static/web/js/mjp-scripts/applications-common.js"></script>
 	<script src="/static/web/js/mjp-scripts/applications.js"></script>
-	
 {% endblock %}

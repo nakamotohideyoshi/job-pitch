@@ -1,10 +1,25 @@
 from django.contrib.auth import get_user_model
 from django.contrib.gis.geos import Point
+from django.db import transaction
 from rest_framework import serializers
 
-from models import Business, Location, JobProfile, LocationImage, \
-    BusinessImage, Job, JobSeeker, Application, Message, \
-    Pitch
+from models import (
+    Business,
+    Location,
+    JobProfile,
+    Job,
+    JobSeeker,
+    Message,
+    Application,
+    Pitch,
+    ApplicationStatus,
+    Role,
+    TokenStore,
+    InitialTokens,
+)
+
+from rest_auth.serializers import LoginSerializer as BaseLoginSerializer
+from rest_auth.registration.serializers import RegisterSerializer as BaseRegisterSerializer
 
 
 def SimpleSerializer(m, overrides={}):
@@ -27,23 +42,44 @@ class RelatedImageURLField(serializers.RelatedField):
                 'image': request.build_absolute_uri(url),
                 'thumbnail': request.build_absolute_uri(thumbnail_url),
                 }
-    
-    
+
+
+class RegisterSerializer(BaseRegisterSerializer):
+    def __init__(self, *args, **kwargs):
+        super(RegisterSerializer, self).__init__(*args, **kwargs)
+        del self.fields['username']
+
+    def get_cleaned_data(self):
+        return {
+            'username': self.validated_data.get('email', ''),
+            'password1': self.validated_data.get('password1', ''),
+            'email': self.validated_data.get('email', '')
+        }
+
+
+class LoginSerializer(BaseLoginSerializer):
+    def __init__(self, *args, **kwargs):
+        super(LoginSerializer, self).__init__(*args, **kwargs)
+        del self.fields['username']
+
+
 class UserDetailsSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = get_user_model()
-        fields = ('id', 'username', 'businesses', 'job_seeker')
-        read_only_fields = ('id', 'username', 'job_seeker', 'businesses')
+        fields = ('id', 'email', 'businesses', 'job_seeker', 'can_create_businesses')
+        read_only_fields = ('id', 'email', 'businesses', 'job_seeker', 'can_create_businesses')
 
 
 class BusinessSerializer(serializers.ModelSerializer):
     users = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
     locations = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
     images = RelatedImageURLField(many=True, read_only=True)
+    tokens = serializers.IntegerField(source='token_store.tokens', read_only=True)
     
     class Meta:
         model = Business
+        fields = ('id', 'users', 'locations', 'images', 'name', 'created', 'updated', 'tokens',)
 
 
 class LocationSerializer(serializers.ModelSerializer):
@@ -96,6 +132,7 @@ class JobSeekerSerializer(serializers.ModelSerializer):
     user = serializers.PrimaryKeyRelatedField(read_only=True)
     profile = serializers.PrimaryKeyRelatedField(read_only=True)
     pitches = PitchSerializer(many=True, read_only=True)
+    email = serializers.EmailField(read_only=True, source='user.email')
     
     class Meta:
         model = JobSeeker
@@ -108,19 +145,44 @@ class ApplicationSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = Application
-        read_only_fields = ('status', 'created_by', 'deleted_by')
+        read_only_fields = ('status', 'created_by', 'deleted_by', 'job', 'shortlisted',)
 
 
 class ApplicationCreateSerializer(serializers.ModelSerializer):
+    def create(self, validated_data):
+        with transaction.atomic():
+            if validated_data['created_by'] == Role.objects.get(name='RECRUITER'):
+                try:
+                    validated_data['job'].location.business.token_store.decrement()
+                except TokenStore.NoTokens:
+                    raise serializers.ValidationError('NO_TOKENS')
+            return super(ApplicationCreateSerializer, self).create(validated_data)
+
     class Meta:
         model = Application
         read_only_fields = ('status', 'created_by', 'deleted_by')
 
 
-class ApplicationStatusUpdateSerializer(serializers.ModelSerializer):
+class ApplicationConnectSerializer(serializers.ModelSerializer):
+    def validate(self, attrs):
+        if self.instance.status.name == ApplicationStatus.DELETED:
+            raise serializers.ValidationError('Application deleted')
+        if self.instance.status.name == ApplicationStatus.ESTABLISHED:
+            raise serializers.ValidationError('Application already established')
+        return super(ApplicationConnectSerializer, self).validate(attrs)
+
+    def update(self, instance, validated_data):
+        with transaction.atomic():
+            try:
+                self.instance.job.location.business.token_store.decrement()
+            except TokenStore.NoTokens:
+                raise serializers.ValidationError('NO_TOKENS')
+            validated_data['status'] = ApplicationStatus.objects.get(name=ApplicationStatus.ESTABLISHED)
+            return super(ApplicationConnectSerializer, self).update(instance, validated_data)
+
     class Meta:
         model = Application
-        fields = ('id', 'status',)
+        fields = ()
         read_only_fields = ('id',)
 
 
@@ -147,3 +209,15 @@ class PitchSerializer(serializers.ModelSerializer):
     class Meta:
         model = Pitch
         read_only_fields = ('token', 'job_seeker',)
+
+
+class AndroidPurchaseSerializer(serializers.Serializer):
+    business_id = serializers.IntegerField()
+    product_code = serializers.CharField()
+    purchase_token = serializers.CharField()
+
+
+class InitialTokensSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = InitialTokens
+        fields = ('tokens',)

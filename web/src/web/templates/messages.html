@@ -1,91 +1,94 @@
-{% extends "mjp_base.html" %}
+{% extends "mjp_jobseeker_dashboard.html" %}
+
+
+{% block extra_head %}
+  <link href="/static/web/design/css/pure-css-speech-bubbles.css" rel="stylesheet">
+{% endblock %}
+
+
+{% block page-title %}{% endblock %}
+
 
 {% block content %}
-	<div class="container-fluid">
+  <div class="inbox contatainer-fluid">
+    <div class="inbox-header row">
+      <div class="bubble-i icon-group"></div>
+      <div class="notebook-i icon"></div>
+      <div class="col-sm-9 pull-right">
+        <h3 id="user-name"><strong>Mike Smith</strong> <small id="current-time">12:30pm</small> <small id="timezone">EDT</small></h3>
+        <h5 id="company-name">Company Name - <span>Sales Representative</span></h5>
+      </div>
+    </div>
+    <div class="inbox-body row">
+      <div class="inbox-contacts col-sm-3" >
+        <div class="row">
+          <div class="col-sm-12">
+            <form id="search-form">
+              <div class="input-group">
+                <span class="input-group-addon"><span class="glyphicon glyphicon-search"></span></span>
+                <input type="text" class="form-control" placeholder="Search"  name="querystring">
+              </div>
+            </form>
+          </div>
+        </div>
 
-                <!-- Page Heading -->
-                <div class="row">
-                    <div class="col-lg-12">
-                        
-                        <div class="col-lg-4">
-                        	<div class="job-details-messages" style="display:none;">
-                                <h3 class="page-header">
-                                    Job Details:
-                                </h3>
-                                <img src="/static/web/images/no_image_available.png" class="job-image-messages" />
-                                <p><strong>Title:</strong> <span id="job-title-single" class="message-job-details">&nbsp;</span><br />
-                                <strong>Contract:</strong> <span id="contract-type-single" class="message-job-details">&nbsp;</span><br />
-                                <strong>Hours:</strong> <span id="job-hours-single" class="message-job-details">&nbsp;</span><br />
-                                <strong>Sector:</strong> <span id="job-sector-single" class="message-job-details">&nbsp;</span></p>
-                                <h3 class="page-header">
-                                    Work Place Details:
-                                </h3>
-                                <p><strong>Name:</strong> <span id="location-name-single" class="message-job-details">&nbsp;</span><br />
-                                <strong>Description:</strong> <span id="location-description-single" class="message-job-details">&nbsp;</span><br />
-                                <strong>Address:</strong> <br />
-                                <span id="location-address-single" class="message-job-details">&nbsp;</span><br />
-                                <span id="location-place-name-single" class="message-job-details">&nbsp;</span><br />
-                                <div id="map"></div>
-                                </p>
-                            </div>
-                            <div class="job-seeker-details-messages" style="display:none;">
-                            	<h3 class="page-header">
-                                    Job Seeker Details:
-                                </h3>
-                                <span id="job-seeker-pitch"></span>
-                                <br />
-                                <p><strong>Name:</strong> <span id="job-seeker-name"></span></p>
-                                <p><strong>Description:</strong> <span id="job-seeker-description"></span></p>
-                            </div>
-                        </div>
-                        <div class="col-lg-8">
-                            <h1 class="page-header">
-                                Messages
-                            </h1>
-                            <div class="row">
-                                
-                                <div class="table-responsive">
-                                    <table class="table table-hover" id="list-table">
-                                        <thead>
-    
-                                        </thead>
-                                        <tbody>
-                                                    
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="new-message">
-                                    <form id="send-messages" action="/api/messages">
-                                        <textarea class="form-control" rows="3" name="content" id="content-form" style="resize: none;"></textarea>
-                                        <br />
-                                        <div class="form-group">
-                                             <button type="submit" class="btn btn-default">Send</button>
-                                        </div>
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
-                        
-                    </div>
-                </div>
-                <!-- /.row -->
-               
+        <div class="row subtitle">
+          <div class="col-sm-12"><h3>RECENT</h3></div>
+        </div>
 
+        <div class="row inbox-contacts-list">
+          <div role="tabpanel">
+            <ul class="nav nav-pills brand-pills nav-stacked" role="tablist">
+              <li role="presentation" class="brand-nav active"><a href="#"><img src="/static/web/design/images/chat.png"><span class="h6">Mike Smith<small>Company Name</small></span></a></li>
+              <li role="presentation" class="brand-nav"><a href="#"><img src="/static/web/design/images/chat.png"><span class="h6">John<small>Company Name</small></span></a></li>
+              <li role="presentation" class="brand-nav"><a href="#"><img src="/static/web/design/images/chat.png"><span class="h6">Mike<small>Company Name</small></span></a></li>
+              <li role="presentation" class="brand-nav"><a href="#"><img src="/static/web/design/images/chat.png"><span class="h6">Yana<small>Company Name</small></span></a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="inbox-messages col-sm-9">
+        <div class="message-history row">
+          <div class="col-sm-12">
+            <div class="row">
+              <div class="col-sm-10 col-sm-offset-2"><p class="arrow-box right message">Hello!</p></div>
             </div>
-            <!-- /.container-fluid -->
-
+            <div class="row">
+              <div class="col-sm-10"><p class="arrow-box left message">Hi!</p></div>
+            </div>
+            <div class="row">
+              <div class="col-sm-10 col-sm-offset-2"><p class="arrow-box right message">When could we meet up?</p></div>
+            </div>
+            <div class="row">
+              <div class="col-sm-10"><p class="arrow-box left message">Maybe Tomorrow.</p></div>
+            </div>
+            <div class="row">
+              <div class="col-sm-10"><p class="arrow-box left message">Better on Monday!</p></div>
+            </div>
+          </div>
+        </div>
+        <div class="new-message-box row">
+          <form id="message-form" class="form-horizontal">
+            <div class="row">
+              <div class="col-sm-9">
+                <textarea class="form-control col-sm-9" placeholder="Enter a new messsage here" name="new-message"></textarea>
+              </div>
+              <div class="col-sm-3">
+                <button class="btn btn-primary sclabs-theme col-sm-12">Send</button>
+                <!-- input class="form-control col-sm-3" type="submit" value="Send" -->
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
 {% endblock %}
+
+{% block sidebar %}
+{% endblock %}
+
 {% block pagescripts %}
-	
-    <!-- Google Maps -->
-    
-    <script  src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA9R1zxiZdbrE8tcoOVFAw1pCjd-tb11vE">
-    </script>
-    
-	<script src="/static/web/js/mjp-scripts/messages.js"></script>
-	
-    
-    
+  <script src="/static/web/js/lodash.min.js"></script>
+  <script src="/static/web/js/mjp-scripts/inbox.js"></script>
 {% endblock %}

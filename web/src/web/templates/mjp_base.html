@@ -2,134 +2,149 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	{% block head %}
-		<title>{% block title %}My Job Pitch{% endblock %}</title>
-		<meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <meta name="description" content="">
-        <meta name="author" content="">
-        <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
-		<meta http-equiv="Pragma" content="no-cache" />
-		<meta http-equiv="Expires" content="0" />
+{% block head %}
+  <title>{% block title %}My Job Pitch{% endblock %}</title>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="">
+  <meta name="author" content="">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <meta http-equiv="Expires" content="0" />
 
-        <!-- Bootstrap Core CSS -->
-        <link href="/static/web/design/css/bootstrap.min.css" rel="stylesheet">
+  <!-- loadCSS -->
+  <script src="/static/web/design/js/loadCSS.js"></script>
 
-        <!-- Bootstrap Extras CSS -->
-        <link href="/static/web/design/css/bootstrap-switch.min.css" rel="stylesheet">
+  <!-- Bootstrap Core CSS -->
+  <link href="/static/web/design/css/bootstrap.min.css" rel="stylesheet">
 
-        <!-- Custom CSS -->
-        <link href="/static/web/design/css/mjp.css" rel="stylesheet">
+  <!-- Bootstrap Extras CSS -->
+  <!-- link href="/static/web/design/css/bootstrap-switch.min.css" rel="stylesheet" -->
+  <!-- link href="/static/web/design/css/bootstrap-toggle.min.css" rel="stylesheet" -->
+  <link href="/static/web/design/css/titatoggle-dist-min.css" rel="stylesheet">
 
-        <!-- Custom Fonts -->
-        <link href="/static/web/design/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+  <!-- Custom CSS -->
+  <link href="/static/web/design/css/mjp.css" rel="stylesheet">
 
-        <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-        <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-        <!--[if lt IE 9]>
-            <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-            <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-        <![endif]-->
-		{% block extra_head %}{% endblock %}
-	{% endblock %}
+  <!-- loading some no-critical CSS asyncronously -->
+  <script type="text/javascript">
+    // Load Messenger CSS (Notification Systems)
+    var stylesheet = loadCSS( "/static/web/design/css/messenger.css" );
+    onloadCSS( stylesheet, function () {
+      loadCSS( "/static/web/design/css/messenger-theme-future.css" );
+    });
+
+    // Custom Fonts
+    loadCSS( "/static/web/design/font-awesome/css/font-awesome.min.css" );
+  </script>
+
+  <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+  <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+  <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+  <![endif]-->
+  {% block extra_head %}{% endblock %}
+{% endblock %}
 </head>
+
 <body>
-	{% block body %}
-	<div id="wrapper">
-		{% block wrapper %}
-        <!-- Navigation -->
-        <nav class="navbar navbar-inverse navbar-fixed-top">
-            <div class="container">
-                <div class="navbar-header row">
-                  <a class="navbar-brand col-md-3" href="/"><img src="/static/web/design/images/logo.png"></a>
-                  <!--<div class="center-section-header col-md-6">Do you want to make a pitch?<a class="btn btn-custom">Create my Pitch</a></div>-->
-
-                  <div class="col-md-3 menu-container">
-                      <div class="login-username business-link job-seeker-link">
-                        <h4 id="header_username"></h4>
-                      </div>
-                      <a class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                      </a>
-                  </div>
-                </div>
-
-                <div class="navbar-collapse collapse always-collapse">
-                  <ul class="nav navbar-nav">
-                    <!--<li><a href="#">Create profile</a></li>
-                    <li><a href="#">Record my pitch</a></li>
-                    <li><a href="#">Company</a></li>
-                    <li><a href="#">Individuals</a></li>
-                    <li><a href="#">Vacancies</a></li>
-                    <li><a href="#">Location</a></li>-->
-                    <li class="business-link job-seeker-link"><a href="/dashboard">Dashboard</a></li>
-                    <li class="job-seeker-link"><a href="/jobs">Find a Job</a></li>
-                    <li class="job-seeker-link"><a href="/profile/edit-job-seeker/">Edit Profile</a></li>
-                    <li class="job-seeker-link"><a href="/profile/edit-pitch/">Edit Pitch</a></li>
-                    <li class="job-seeker-link"><a href="/profile/edit-job-preferences/">Edit Job Preferences</a></li>
-					<li class="business-link"><a href="/profile/list-businesses/">Companies</a></li>
-                    <li class="business-link job-seeker-link"><a href="/applications/">Applications and Messages</a></li>
-                    <li class="not_logged_in_menu"><a href="/login">Log in</a></li>
-                    <li class="business-link job-seeker-link"><a href="javascript:logoutUser();">Log Out</a></li>
-					<li class="not_logged_in_menu"><a href="/registration">Register</a></li>
-                    <li><a href="/mobile-app/">How it Works</a></li>
-                    <li><a href="/about/">About</a></li>
-                    <li><a href="/terms-conditions/">Terms and Conditions</a></li>
-                    <li><a href="/privacy-policy/">Privacy Policy</a></li>
-                  </ul>
-                </div>
-            </div>
-        </nav><!--End Nav Area-->
-
-
-        {% block headerslider %}{% endblock %}
-
-        <!-- Page Content -->
-    	<div class="container page-container">
-			{% block content %}{% endblock %}
+<div id="hacked-top"></div>
+{% block body %}
+  <div id="wrapper">
+    {% block wrapper %}
+      <!-- Navigation -->
+      <nav class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container">
+          <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand col-md-3" href="/"><img src="/static/web/design/images/logo.png"></a>
+          </div>
+          <div class="collapse navbar-collapse" id="myNavbar">
+            {% block navigation-menu %}{% endblock %}
+          </div>
         </div>
-        <!-- /Page Content -->
-	{% endblock %}
-    <div class="push"></div>
-    </div>
-    <!-- /#wrapper -->
+      </nav>
 
-   <!-- Footer -->
-        <footer class="mjp-footer">
+
+      {% block headerslider %}{% endblock %}
+
+      <!-- Page Content -->
+      <div class="container">
+        <div class="row">
+          <div class="col-xs-12 col-lg-10 col-lg-offset-1">
+            {% block page-title %}{% endblock %}
+
             <div class="row">
-            	<div class="container">
-                    <div class="col-md-2">
-                        <img src="/static/web/design/images/logo-footer.png">
-                    </div>
-                    <div class="col-md-offset-2 col-md-4">
-                        <div class="center-contact-details-footer">
-                        	<p>
-                            <a href="tel:123456789" class="footer-link-center">tel: 123 456 789</a><br>
-                            <span class="email"><a href="mailto:email@mjp.com" class="footer-link-center">e-mail: email@mjp.com</a></span>
-                            </p>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                    	<div class="social-icons-footer">
-                        	<a href="#"><img src="/static/web/design/images/fb-icon.png"></a>
-                            <a href="#"><img src="/static/web/design/images/twitter-icon.png"></a>
-                            <a href="#"><img src="/static/web/design/images/yt-icon.png"></a>
-                            <a href="#"><img src="/static/web/design/images/linkedin-icon.png"></a>
-                            <a href="#"><img src="/static/web/design/images/gplus-icon.png"></a>
-                        </div>
-                    </div>
-                </div>
+            {% block sidebar %}{% endblock %}
+            {% block content %}{% endblock %}
             </div>
-        </footer>
+          </div>
+        </div>
+      </div>
+      <!-- /Page Content -->
+    {% endblock %} <!-- /block wrapper -->
+    <div class="push"></div>
+  </div>
+  <!-- /#wrapper -->
 
+  <!-- Footer -->
+  {% block footer %}
+  <footer class="mjp-footer">
+    <div class="row">
+      <div class="col-xs-2 col-md-4">
+        <img src="/static/web/design/images/logo-footer.png">
+      </div>
+      <div class="col-xs-5 col-md-4">
+        <div class="center-contact-details-footer">
+          <p>
+          <a href="tel:123456789" class="footer-link-center">tel: 123 456 789</a><br>
+          <span class="email"><a href="mailto:email@mjp.com" class="footer-link-center">e-mail: email@mjp.com</a></span>
+          </p>
+        </div>
+      </div>
+      <div class="col-xs-5 col-md-4">
+        <div class="social-icons-footer">
+          <a href="#"><img src="/static/web/design/images/fb-icon.png"></a>
+          <a href="#"><img src="/static/web/design/images/twitter-icon.png"></a>
+          <a href="#"><img src="/static/web/design/images/yt-icon.png"></a>
+          <a href="#"><img src="/static/web/design/images/linkedin-icon.png"></a>
+          <a href="#"><img src="/static/web/design/images/gplus-icon.png"></a>
+        </div>
+      </div>
     </div>
-    <!-- /.container -->
+  </footer>
+  {% endblock footer %}
+  <!-- /.container -->
 
-	<!-- Modals -->
+  <!-- Modals -->
+  <div class="modal fade" id="viewPitchModal">
+    <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      </div>
+      <div class="modal-body">
+        <div class="col-md-12" id="pitchViewer"></div>
 
+        <div class="col-md-12">
+          <a class="btn btn-custom pull-left" id="applyButtonModal" style="display:none; margin-left: 60px;margin-top: 20px;">Connect</a>
+          <a class="btn btn-custom pull-right" id="shortListButtonModal" style="display:none;margin-right: 60px;margin-top: 20px;">Short List</a>
+        </div>
+        <!--<div class=" col-md-4">
+          <a class="btn btn-custom-red" id="deleteButtonModal" style="display:none; margin-left: 18px;margin-top: 20px;">Delete</a>
+        </div>-->
+      </div>
+    </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+  </div><!-- /.modal -->
+
+  {% block extra_content %}
     <div class="modal fade" id="loginModal">
       <div class="modal-dialog">
         <div class="modal-content">
@@ -138,98 +153,146 @@
             <h4 class="modal-title">Login</h4>
           </div>
           <div class="modal-body">
-          	<div class="row">
-                <div class="col-md-8 col-md-offset-2">
-                    <form role="form"  action="/api-rest-auth/login/" method="post" id="login">
-                        <div class="alert" role="alert"></div>
-                        <input type="text" class="form-control" id="username" name="username" placeholder="Username">
-                        <input type="password" class="form-control" id="password" name="password" placeholder="Password">
-                        <button type="submit" class="btn btn-custom-modal">Login</button>
-                    </form>
-                </div>
+            <div class="row">
+              <div class="col-md-8 col-md-offset-2">
+                <form role="form"  action="/api-rest-auth/login/" method="post" id="login">
+                  <div class="alert" role="alert"></div>
+                  <input type="text" class="form-control" id="email" name="email" placeholder="Email address">
+                  <input type="password" class="form-control" id="password" name="password" placeholder="Password">
+                  <button type="submit" class="col-xs-12 btn btn-primary sclabs-theme">Login</button>
+                </form>
+              </div>
             </div>
-          </div>
+            <div class="row">
+              <div class="col-md-8 col-md-offset-2">
+                <a class="pull-right" href="/password-reset/">I want to reset my password</a>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-8 col-md-offset-2">
+                <div class="text-center"><small>new user? register here</small></div>
+                <button class="col-xs-5 btn btn-default btn-xs sclabs-theme" data-dismiss="modal" aria-label="Close" data-toggle="modal" data-target="#regJobSeekerModal">Job Seeker</button>
+                <button class="col-xs-5 col-xs-12 col-xs-offset-2 btn btn-default btn-xs sclabs-theme" data-dismiss="modal" aria-label="Close" data-toggle="modal" data-target="#regRecruiterModal">Recruiter</button>
+              </div>
+            </div>
+          </div><!-- /.modal-body -->
         </div><!-- /.modal-content -->
       </div><!-- /.modal-dialog -->
     </div><!-- /.modal -->
 
 
-    <div class="modal fade" id="regModal">
+    <div class="modal fade" id="regJobSeekerModal">
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-            <h4 class="modal-title">Registration</h4>
+            <h3 class="modal-title"><strong>Registration</strong></h3>
           </div>
           <div class="modal-body">
-          	<div class="row">
-                <div class="col-md-8 col-md-offset-2">
-                    <form role="form"  action="/api-auth/login/" method="post" id="register">
-                        <div class="alert" role="alert"></div>
-                        <input type="text" class="form-control" id="reg_username" name="reg_username" placeholder="Username">
-                        <input type="password" class="form-control" id="password1" name="password1" placeholder="Password">
-                        <input type="password" class="form-control" id="password2" name="password2" placeholder="Confirm Password">
-                        <button type="submit" class="btn btn-custom-modal-2">Register</button>
-                        </div>
-                    </form>
-                </div>
+            <div class="row">
+              <div class="col-md-8 col-md-offset-2">
+                <form role="form"  action="" method="post" class="register">
+                  <div class="form-group">
+                    <input type="text" class="form-control" id="reg_email" name="reg_email" placeholder="Email address">
+                  </div>
+                  <div class="form-group">
+                    <input type="password" class="form-control" id="password1" name="password1" placeholder="Password">
+                  </div>
+                  <div class="form-group">
+                    <input type="password" class="form-control" id="password2" name="password2" placeholder="Confirm Password">
+                  </div>
+                  {% csrf_token %}
+                  <div class="form-group">
+                    <button type="submit" class="col-xs-12 btn btn-primary sclabs-theme">Register</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-8 col-md-offset-2">
+                <div class="text-center"><small>Existing user?</small></div>
+                <button class="col-xs-4 col-xs-offset-4 btn btn-default btn-xs sclabs-theme" data-dismiss="modal" aria-label="Close" data-toggle="modal" data-target="#loginModal">Login here</button>
+              </div>
             </div>
           </div>
         </div><!-- /.modal-content -->
       </div><!-- /.modal-dialog -->
     </div><!-- /.modal -->
 
-    <div class="modal fade" id="viewPitchModal">
+
+    <div class="modal fade" id="regRecruiterModal">
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h3 class="modal-title"><strong>Registration</strong></h3>
           </div>
           <div class="modal-body">
-          	<div class="col-md-12" id="pitchViewer">
-
+            <div class="row">
+              <div class="col-md-8 col-md-offset-2">
+                <form role="form"  action="" method="post" class="register">
+                  <div class="form-group">
+                    <input type="text" class="form-control" id="reg_email" name="reg_email" placeholder="Email address">
+                  </div>
+                  <div class="form-group">
+                    <input type="text" class="form-control" id="reg_name" name="reg_name" placeholder="Company Name">
+                  </div>
+                  <div class="form-group">
+                    <input type="password" class="form-control" id="password1" name="password1" placeholder="Password">
+                  </div>
+                  <div class="form-group">
+                    <input type="password" class="form-control" id="password2" name="password2" placeholder="Confirm Password">
+                  </div>
+                  {% csrf_token %}
+                  <div class="form-group">
+                    <button type="submit" class="col-xs-12 btn btn-primary sclabs-theme">Register</button>
+                  </div>
+                </form>
+              </div>
             </div>
-            <div class="col-md-offset-4 col-md-4">
-            	<a class="btn btn-custom" id="applyButtonModal" style="display:none; margin-left: 18px;margin-top: 20px;">Connect</a>
+            <div class="row">
+              <div class="col-md-8 col-md-offset-2">
+                <div class="text-center"><small>Existing user?</small></div>
+                <button class="col-xs-4 col-xs-offset-4 btn btn-default btn-xs sclabs-theme" data-dismiss="modal" aria-label="Close" data-toggle="modal" data-target="#loginModal">Login here</button>
+              </div>
             </div>
-            <!--<div class=" col-md-4">
-            	<a class="btn btn-custom-red" id="deleteButtonModal" style="display:none; margin-left: 18px;margin-top: 20px;">Delete</a>
-            </div>-->
           </div>
         </div><!-- /.modal-content -->
       </div><!-- /.modal-dialog -->
     </div><!-- /.modal -->
+  {% endblock extra_content %}
 
-    <!-- End Modals -->
+  <!-- End Modals -->
 
-    <!-- jQuery -->
-    <script src="/static/web/design/js/jquery.js"></script>
+  <!-- jQuery -->
+  <script src="/static/web/design/js/jquery.js"></script>
+
+  <!-- Bootstrap Core JavaScript -->
+  <script src="/static/web/design/js/bootstrap.min.js"></script>
+
+  <!-- Bootstrap Extras JavaScript -->
+  <script src="/static/web/js/bootbox.min.js"></script>
+
+  <!-- Messenger Core JavaScript -->
+  <script src="/static/web/design/js/messenger.min.js"></script>
+  <script src="/static/web/design/js/messenger-theme-future.js"></script>
+
+  <!-- Common MJP Scripts -->
+  <script src="/static/web/js/mjp-scripts/constants.js"></script>
+  <script src="/static/web/js/mjp-scripts/store/api-rest-auth-store.js"></script>
+  <script src="/static/web/js/mjp-scripts/common.js"></script>
+
+  <!-- Script to Activate the Carousel -->
+  <script>
+  $('.carousel').carousel({
+    interval: 5000 //changes the speed
+  });
+  </script>
+
+  {% block pagescripts %}{% endblock %}
 
 
-
-    <!-- Bootstrap Core JavaScript -->
-    <script src="/static/web/design/js/bootstrap.min.js"></script>
-
-    <!-- Bootstrap Extras JavaScript -->
-	<script src="/static/web/js/bootstrap-switch.min.js"></script>
-	<script src="/static/web/js/bootbox.min.js"></script>
-
-	<!-- Common MJP Scripts-->
-	<script src="/static/web/js/mjp-scripts/common.js"></script>
-
-    <!-- Script to Activate the Carousel -->
-    <script>
-    $('.carousel').carousel({
-        interval: 5000 //changes the speed
-    })
-    </script>
-
-	{% block pagescripts %}
-	{% endblock %}
-
-    {% endblock %}
-
-
+{% endblock body %}
 </body>
 
 </html>

@@ -276,6 +276,7 @@ class LocationEditController: MJPController {
             controllers?.insert(controller, at: (controllers?.count)!-1)
         } else {
             let controller = AppHelper.mainStoryboard.instantiateViewController(withIdentifier: "JobList") as! LocationDetailController
+            controller.isFirstCreate = isFirstCreate
             controller.location = location
             controllers?.insert(controller, at: (controllers?.count)!-1)
         }

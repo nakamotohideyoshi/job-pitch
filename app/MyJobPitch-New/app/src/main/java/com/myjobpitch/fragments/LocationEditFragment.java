@@ -66,6 +66,10 @@ public class LocationEditFragment extends FormFragment {
     private String placeID = "";
     private String placeName;
 
+    private boolean isFirstCreate;
+    private boolean isNew = false;
+    private boolean isAddMode = false;
+
     public Business business;
     public Location location;
 
@@ -75,60 +79,76 @@ public class LocationEditFragment extends FormFragment {
         final View view = inflater.inflate(R.layout.fragment_location_edit, container, false);
         ButterKnife.bind(this, view);
 
-
+        isFirstCreate = getApp().getSharedPreferences("firstCreate", MODE_PRIVATE)
+                .getBoolean("workplace", true);
+        isAddMode = getApp().getCurrentPageID() != AppData.PAGE_ADD_JOB;
 
         // title and location info
 
         if (location == null) {
             title = "Add Work Place";
-            imageSelector = new ImageSelector(logoView, R.drawable.default_logo);
-            emailView.setText(getApp().getEmail());
+            isNew = true;
         } else {
             title = "Edit Work Place";
-
-            view.setVisibility(View.INVISIBLE);
-            new APITask("Loading...", this) {
-                @Override
-                protected void runAPI() throws MJPApiException {
-                    location = MJPApi.shared().getUserLocation(location.getId());
-                }
-                @Override
-                protected void onSuccess() {
-                    view.setVisibility(View.VISIBLE);
-                    load();
-                }
-            };
+            business = location.getBusiness_data();
         }
+
+        view.setVisibility(View.INVISIBLE);
+        new APITask("Loading...", this) {
+            @Override
+            protected void runAPI() throws MJPApiException {
+                if (location != null) {
+                    location = MJPApi.shared().getUserLocation(location.getId());
+                } else if (isFirstCreate) {
+                    isFirstCreate = MJPApi.shared().getUserLocations(null).size() == 0;
+                    if (!isFirstCreate) {
+                        getApp().getSharedPreferences("firstCreate", MODE_PRIVATE).edit()
+                                .putBoolean("workplace", false)
+                                .commit();
+                    }
+                }
+            }
+            @Override
+            protected void onSuccess() {
+                view.setVisibility(View.VISIBLE);
+                load();
+            }
+        };
 
         // save button
         addMenuItem("Save", -1);
 
-        return  view;
+        return view;
     }
 
     private void load() {
-        nameView.setText(location.getName());
-        descView.setText(location.getDescription());
-        emailView.setText(location.getEmail());
-        emailPublicView.setChecked(location.getEmail_public());
-        phoneView.setText(location.getMobile());
-        phonePublicView.setChecked(location.getMobile_public());
-        addressView.setText(location.getPlace_name());
-        placeID = location.getPlace_id();
-        placeName = location.getPlace_name();
-        latitude = location.getLatitude();
-        longitude = location.getLongitude();
 
-        Business business = location.getBusiness_data();
         if (business.getImages().size() > 0) {
             imageSelector = new ImageSelector(logoView, business.getImages().get(0).getImage());
         } else {
             imageSelector = new ImageSelector(logoView, R.drawable.default_logo);
         }
 
-        if (location.getImages().size() > 0) {
-            imageSelector.loadImage(location.getImages().get(0).getImage());
+        if (location != null) {
+            nameView.setText(location.getName());
+            descView.setText(location.getDescription());
+            emailView.setText(location.getEmail());
+            emailPublicView.setChecked(location.getEmail_public());
+            phoneView.setText(location.getMobile());
+            phonePublicView.setChecked(location.getMobile_public());
+            addressView.setText(location.getPlace_name());
+            placeID = location.getPlace_id();
+            placeName = location.getPlace_name();
+            latitude = location.getLatitude();
+            longitude = location.getLongitude();
+
+            if (location.getImages().size() > 0) {
+                imageSelector.loadImage(location.getImages().get(0).getImage());
+            } else {
+                imageSelector.loadImage(null);
+            }
         } else {
+            emailView.setText(getApp().getEmail());
             imageSelector.loadImage(null);
         }
     }
@@ -267,18 +287,29 @@ public class LocationEditFragment extends FormFragment {
     private void compltedSave() {
         Loading.hide();
 
-        if (BusinessListFragment.firstCreate) {
-
-            BusinessListFragment.firstCreate = false;
-
-            getApp().getSupportFragmentManager().popBackStackImmediate();
-            BusinessDetailFragment fragment = new BusinessDetailFragment();
-            fragment.businessId = business.getId();
-            getApp().pushFragment(fragment);
+        if (!isNew) {
+            getApp().popFragment();
             return;
         }
 
-        getApp().popFragment();
+        if (isFirstCreate) {
+            getApp().getSharedPreferences("firstCreate", MODE_PRIVATE).edit()
+                    .putBoolean("workplace", false)
+                    .commit();
+        }
+
+        getApp().getSupportFragmentManager().popBackStackImmediate();
+
+        if (isAddMode) {
+            JobEditFragment fragment = new JobEditFragment();
+            fragment.location = location;
+            getApp().pushFragment(fragment);
+        } else {
+            LocationDetailFragment fragment = new LocationDetailFragment();
+
+            fragment.location = location;
+            getApp().pushFragment(fragment);
+        }
 
     }
 

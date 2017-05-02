@@ -25,7 +25,8 @@ class JobEditController: MJPController {
     @IBOutlet weak var addLogoButton: UIButton!
     @IBOutlet weak var removeImageButton: UIButton!
     
-    var addJobMode = false
+    var isAddMode = false
+    var isNew = false
     
     var location: Location!
     var job: Job!
@@ -46,6 +47,8 @@ class JobEditController: MJPController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        isAddMode = SideMenuController.currentID != "businesses"
 
         // Do any additional setup after loading the view.
         
@@ -106,7 +109,7 @@ class JobEditController: MJPController {
         
         if job == nil {
             navigationItem.title = "Add Job"
-            
+            isNew = true
             load()
         } else {
             navigationItem.title = "Edit Job"
@@ -330,30 +333,29 @@ class JobEditController: MJPController {
     func saveFinished() {
         AppHelper.hideLoading()
         
-        if BusinessDetailController.firstCreate {
-            BusinessDetailController.firstCreate = false
-            UserDefaults.standard.set(false, forKey: "first_craete_wp")
-            
-            var controllers = navigationController?.viewControllers
-            let controller = AppHelper.mainStoryboard.instantiateViewController(withIdentifier: "JobList") as! LocationDetailController
-            controller.location = location
-            controllers?.insert(controller, at: (controllers?.count)!-1)
+        if !isNew {
+            _ = navigationController?.popViewController(animated: true)
+            return
+        }
+        
+        var controllers = navigationController?.viewControllers
+        if isAddMode {
+            while true {
+                if controllers?[(controllers?.count)!-2] is SelectJobController {
+                    break
+                }
+                if controllers?.count == 2 {
+                    _ = navigationController?.popViewController(animated: true)
+                    return
+                }
+                controllers?.remove(at: (controllers?.count)!-2)
+            }
             navigationController?.viewControllers = controllers!
         } else {
-            if addJobMode {
-                var controllers = navigationController?.viewControllers
-                while true {
-                    if controllers?[(controllers?.count)!-2] is SelectJobController {
-                        break
-                    }
-                    if controllers?.count == 2 {
-                        _ = navigationController?.popViewController(animated: true)
-                        return
-                    }
-                    controllers?.remove(at: (controllers?.count)!-2)
-                }
-                navigationController?.viewControllers = controllers!
-            }
+            let controller = AppHelper.mainStoryboard.instantiateViewController(withIdentifier: "JobDetail") as! JobDetailController
+            controller.job = job
+            controllers?.insert(controller, at: (controllers?.count)!-1)
+            navigationController?.viewControllers = controllers!
         }
         
         _ = navigationController?.popViewController(animated: true)

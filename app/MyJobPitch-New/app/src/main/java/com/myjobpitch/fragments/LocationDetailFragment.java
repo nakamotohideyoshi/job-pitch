@@ -43,8 +43,12 @@ public class LocationDetailFragment extends BaseFragment {
     @BindView(R.id.empty_view)
     View emptyView;
 
+    @BindView(R.id.first_create_text)
+    View firstCreateMessage;
+
     private JobAdapter adapter;
 
+    public boolean isFirstCreate = false;
     public Location location;
 
     @Override
@@ -157,9 +161,11 @@ public class LocationDetailFragment extends BaseFragment {
 
     private void updatedJobList() {
         adapter.closeAllItems();
-        emptyView.setVisibility(adapter.getCount()==0 ? View.VISIBLE : View.GONE);
+
         int jobCount = adapter.getCount();
         AppHelper.getItemSubTitleView(infoView).setText("Includes " + jobCount + (jobCount > 1 ? " jobs" : " job"));
+        firstCreateMessage.setVisibility(isFirstCreate ? View.VISIBLE : View.GONE);
+        emptyView.setVisibility(isFirstCreate || jobCount>0 ? View.GONE : View.VISIBLE);
     }
 
     private void deleteJob(final Job job) {
@@ -183,6 +189,7 @@ public class LocationDetailFragment extends BaseFragment {
 
     @OnClick(R.id.nav_right_button)
     void onAddJob() {
+        isFirstCreate = false;
         JobEditFragment fragment = new JobEditFragment();
         fragment.location = location;
         getApp().pushFragment(fragment);
@@ -190,6 +197,11 @@ public class LocationDetailFragment extends BaseFragment {
 
     @OnClick(R.id.empty_button)
     void onClickEmptyButton() {
+        onAddJob();
+    }
+
+    @OnClick(R.id.first_create_text)
+    void onClickFirstCreateView() {
         onAddJob();
     }
 

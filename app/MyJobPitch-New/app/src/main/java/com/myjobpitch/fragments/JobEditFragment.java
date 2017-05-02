@@ -41,8 +41,6 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-import static android.content.Context.MODE_PRIVATE;
-
 public class JobEditFragment extends FormFragment {
 
     @BindView(R.id.job_active)
@@ -72,7 +70,9 @@ public class JobEditFragment extends FormFragment {
     private List<String> contractNames = new ArrayList<>();
     private List<String> hoursNames = new ArrayList<>();
 
-    public boolean addJobMode = false;
+    private boolean isAddMode = false;
+    private boolean isNew = false;
+
     public Location location;
     public Job job;
 
@@ -82,14 +82,17 @@ public class JobEditFragment extends FormFragment {
         final View view = inflater.inflate(R.layout.fragment_job_edit, container, false);
         ButterKnife.bind(this, view);
 
+        isAddMode = getApp().getCurrentPageID() != AppData.PAGE_ADD_JOB;
+
         // title and job info
 
         if (job == null) {
             title = "Add Job";
+            isNew = true;
             load();
         } else {
             title = "Edit Job";
-
+            location = job.getLocation_data();
             view.setVisibility(View.INVISIBLE);
             new APITask("Loading...", this) {
                 @Override
@@ -112,6 +115,21 @@ public class JobEditFragment extends FormFragment {
 
     private void load() {
 
+        String defaultPath = null;
+        if (location.getImages().size() > 0) {
+            defaultPath = location.getImages().get(0).getImage();
+        } else {
+            Business business = location.getBusiness_data();
+            if (business.getImages().size() > 0) {
+                defaultPath = business.getImages().get(0).getImage();
+            }
+        }
+        if (defaultPath == null) {
+            imageSelector = new ImageSelector(logoView, R.drawable.default_logo);
+        } else {
+            imageSelector = new ImageSelector(logoView, defaultPath);
+        }
+
         Integer jobSector = -1;
         Integer jobContract = -1;
         Integer jobHours = -1;
@@ -123,22 +141,6 @@ public class JobEditFragment extends FormFragment {
             jobContract = job.getContract();
             jobHours = job.getHours();
 
-            String defaultPath = null;
-            Location location = job.getLocation_data();
-            if (location.getImages().size() > 0) {
-                defaultPath = location.getImages().get(0).getImage();
-            } else {
-                Business business = location.getBusiness_data();
-                if (business.getImages().size() > 0) {
-                    defaultPath = business.getImages().get(0).getImage();
-                }
-            }
-
-            if (defaultPath == null) {
-                imageSelector = new ImageSelector(logoView, R.drawable.default_logo);
-            } else {
-                imageSelector = new ImageSelector(logoView, defaultPath);
-            }
             if (job.getImages().size() > 0) {
                 imageSelector.loadImage(job.getImages().get(0).getImage());
             } else {
@@ -146,7 +148,7 @@ public class JobEditFragment extends FormFragment {
             }
 
         } else {
-            imageSelector = new ImageSelector(logoView, R.drawable.default_logo);
+            imageSelector.loadImage(null);
         }
 
         for (Sector sector : AppData.get(Sector.class)) {
@@ -294,25 +296,23 @@ public class JobEditFragment extends FormFragment {
     private void compltedSave() {
         Loading.hide();
 
-        if (BusinessDetailFragment.firstCrate) {
-            getApp().getSharedPreferences("firstCreate", MODE_PRIVATE).edit()
-                    .putBoolean("workplace", false)
-                    .commit();
-
-            getApp().getSupportFragmentManager().popBackStackImmediate();
-            LocationDetailFragment fragment = new LocationDetailFragment();
-            fragment.location = location;
-            getApp().pushFragment(fragment);
+        if (!isNew) {
+            getApp().popFragment();
             return;
         }
 
-        if (addJobMode) {
-            FragmentManager fragmentManager = getApp().getSupportFragmentManager();
+        FragmentManager fragmentManager = getApp().getSupportFragmentManager();
+        if (isAddMode) {
             while (fragmentManager.getBackStackEntryCount() > 1) {
                 fragmentManager.popBackStackImmediate(fragmentManager.getBackStackEntryCount()-1, FragmentManager.POP_BACK_STACK_INCLUSIVE);
             }
+            getApp().popFragment();
+        } else {
+            fragmentManager.popBackStackImmediate();
+            JobDetailFragment fragment = new JobDetailFragment();
+            fragment.job = job;
+            getApp().pushFragment(fragment);
         }
-        getApp().popFragment();
     }
 
 }

@@ -23,13 +23,12 @@ class BusinessDetailController: MJPController {
     @IBOutlet weak var emptyView: UIView!
     @IBOutlet weak var firstCreateMessage: UIButton!
     
-    var addJobMode = false
-    var businessId: NSNumber!
-    
     var business: Business!
     var data: NSMutableArray! = NSMutableArray()
+    var isAddMode = false
     
-    static var firstCreate = false
+    var isFirstCreate = false
+    var businessId: NSNumber!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -38,9 +37,9 @@ class BusinessDetailController: MJPController {
         headerSubTitle.text = ""
         headerCreditCount.setTitle("", for: .normal)
         
-        BusinessDetailController.firstCreate = UserDefaults.standard.bool(forKey: "first_craete_wp")
+        isAddMode = SideMenuController.currentID != "businesses"
         
-        if addJobMode {
+        if isAddMode {
             title = "Add job"
             headerImgView.image = UIImage(named: "menu-business-plus")?.withRenderingMode(.alwaysTemplate)
             headerCreditCount.isHidden = true
@@ -49,6 +48,7 @@ class BusinessDetailController: MJPController {
             headerNavTitle.text = "Select work place"
         } else {
             headerComment.isHidden = true
+            headerNavTitle.text = "Work Places"
             removeButtonDisable.isHidden = AppData.user.canCreateBusinesses && AppData.user.businesses.count > 1
         }
         
@@ -63,7 +63,7 @@ class BusinessDetailController: MJPController {
         AppHelper.showLoading("Loading...")
         API.shared().loadBusiness(id: businessId, success: { (data) in
             self.business = data as! Business
-            if !self.addJobMode {
+            if !self.isAddMode {
                 self.updateBusinessInfo()
             }
             self.loadLocations()
@@ -91,16 +91,13 @@ class BusinessDetailController: MJPController {
     }
     
     func updateLocationList() {
-        headerSubTitle.text = String(format: "Includes %lu %@", data.count, data.count > 1 ? "work places" : "work place")
-        emptyView.isHidden = self.data.count > 0
-        tableView.reloadData()
-        
-        if (BusinessDetailController.firstCreate) {
-            emptyView.isHidden = true
-            firstCreateMessage.isHidden = false
-        } else {
-            firstCreateMessage.isHidden = true
+        if !isAddMode {
+            headerSubTitle.text = String(format: "Includes %lu %@", data.count, data.count > 1 ? "work places" : "work place")
         }
+        
+        firstCreateMessage.isHidden = !isFirstCreate
+        emptyView.isHidden = isFirstCreate || self.data.count > 0
+        tableView.reloadData()
     }
     
     @IBAction func editBusinessAction(_ sender: Any) {
@@ -123,13 +120,10 @@ class BusinessDetailController: MJPController {
     }
     
     @IBAction func addLocationAction(_ sender: Any) {
+        isFirstCreate = false
         LocationEditController.pushController(business: business, location: nil)
     }
     
-    @IBAction func clickFirstCreateMessage(_ sender: Any) {
-        JobEditController.pushController(location: data[0] as! Location, job: nil)
-    }
-        
 }
 
 extension BusinessDetailController: UITableViewDataSource {
@@ -146,7 +140,7 @@ extension BusinessDetailController: UITableViewDataSource {
         
         cell.setData(location)
         
-        if !addJobMode {
+        if !isAddMode {
             
             cell.rightButtons = [
                 MGSwipeButton(title: "",
@@ -200,18 +194,12 @@ extension BusinessDetailController: UITableViewDelegate {
         
         let location = data[indexPath.row] as! Location
         
-        if BusinessDetailController.firstCreate {
-            JobEditController.pushController(location: location, job: nil)
-            return
-        }
-        
-        if !addJobMode {
-            let controller = AppHelper.mainStoryboard.instantiateViewController(withIdentifier: "JobList") as! LocationDetailController
+        if isAddMode {
+            let controller = AppHelper.mainStoryboard.instantiateViewController(withIdentifier: "JobEdit") as! JobEditController
             controller.location = location
             navigationController?.pushViewController(controller, animated: true)
         } else {
-            let controller = AppHelper.mainStoryboard.instantiateViewController(withIdentifier: "JobEdit") as! JobEditController
-            controller.addJobMode = true
+            let controller = AppHelper.mainStoryboard.instantiateViewController(withIdentifier: "JobList") as! LocationDetailController
             controller.location = location
             navigationController?.pushViewController(controller, animated: true)
         }

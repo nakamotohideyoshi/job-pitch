@@ -49,8 +49,8 @@ public class BusinessEditFragment extends FormFragment {
     View logoView;
 
     private ImageSelector imageSelector;
-
-    private int businessCount;
+    private boolean isFirstCreate;
+    private boolean isNew;
 
     public Business business;
 
@@ -61,18 +61,17 @@ public class BusinessEditFragment extends FormFragment {
         ButterKnife.bind(this, view);
 
         imageSelector = new ImageSelector(logoView, R.drawable.default_logo);
-
-        businessCount = AppData.user.getBusinesses().size();
+        isFirstCreate = AppData.user.getBusinesses().size() == 0;
 
         // title and business info
 
         if (business == null) {
             title = "Add Business";
-            creditsView.setText(AppData.initialTokens.getTokens().toString());
+            isNew = true;
+            creditsView.setText(AppData.initialTokens.getTokens().toString() + " free credits");
             addCreditsButton.setVisibility(View.GONE);
         } else {
             title = "Edit Business";
-
             view.setVisibility(View.INVISIBLE);
             new APITask("Loading...", this) {
                 @Override
@@ -208,16 +207,26 @@ public class BusinessEditFragment extends FormFragment {
     }
 
     private void compltedSave() {
-        if (businessCount == 0) {
-            getApp().reloadMenu(false);
+        Loading.hide();
 
-            BusinessListFragment.firstCreate = true;
+        if(!isNew) {
+            getApp().popFragment();
+            return;
+        }
+
+        if (isFirstCreate) {
+            getApp().reloadMenu(false);
             getApp().getSharedPreferences("firstCreate", MODE_PRIVATE).edit()
                     .putBoolean("workplace", true)
                     .commit();
         }
-        Loading.hide();
-        getApp().popFragment();
+
+        getApp().getSupportFragmentManager().popBackStackImmediate();
+        BusinessDetailFragment fragment = new BusinessDetailFragment();
+        fragment.isFirstCreate = true;
+        fragment.businessId = business.getId();
+        getApp().pushFragment(fragment);
+
     }
 
 }

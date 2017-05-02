@@ -31,8 +31,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-import static android.content.Context.MODE_PRIVATE;
-
 public class BusinessDetailFragment extends BaseFragment {
 
     @BindView(R.id.business_info)
@@ -61,11 +59,10 @@ public class BusinessDetailFragment extends BaseFragment {
 
     private Business business;
     private LocationAdapter adapter;
+    private boolean isAddMode = false;
 
-    public boolean addJobMode = false;
+    public boolean isFirstCreate = false;
     public Integer businessId;
-
-    public static boolean firstCrate = false;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -73,12 +70,11 @@ public class BusinessDetailFragment extends BaseFragment {
         final View view = inflater.inflate(R.layout.fragment_business_detail, container, false);
         ButterKnife.bind(this, view);
 
-        firstCrate = getApp().getSharedPreferences("firstCreate", MODE_PRIVATE)
-                .getBoolean("workplace", false);
+        isAddMode = getApp().getCurrentPageID() != AppData.PAGE_ADD_JOB;
 
         // header view
 
-        if (addJobMode) {
+        if (isAddMode) {
             title = "Add job";
             AppHelper.getImageView(infoView).setColorFilter(ContextCompat.getColor(getApp(), R.color.colorGreen));
             AppHelper.getImageView(infoView).setImageResource(R.drawable.menu_business_plus);
@@ -87,9 +83,8 @@ public class BusinessDetailFragment extends BaseFragment {
         } else {
             title = "Business Detail";
             headerCommentView.setVisibility(View.GONE);
-            navTitleView.setText("Locations");
-
-            if (!AppData.user.getCan_create_businesses()) {
+            navTitleView.setText("Work Places");
+            if (AppData.user.getBusinesses().size() <= 1) {
                 removeButton.setBackgroundColor(Color.parseColor("#7f4900"));
                 removeButton.setColorFilter(Color.parseColor("#7d7d7d"));
                 removeButton.setEnabled(false);
@@ -124,15 +119,8 @@ public class BusinessDetailFragment extends BaseFragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Location location = adapter.getItem(position);
-                if (firstCrate) {
+                if (isAddMode) {
                     JobEditFragment fragment = new JobEditFragment();
-                    fragment.location = location;
-                    getApp().pushFragment(fragment);
-                    return;
-                }
-                if (addJobMode) {
-                    JobEditFragment fragment = new JobEditFragment();
-                    fragment.addJobMode = addJobMode;
                     fragment.location = location;
                     getApp().pushFragment(fragment);
                 } else {
@@ -154,7 +142,7 @@ public class BusinessDetailFragment extends BaseFragment {
             @Override
             protected void onSuccess() {
                 view.setVisibility(View.VISIBLE);
-                if (!addJobMode) {
+                if (!isAddMode) {
                     AppHelper.showBusinessInfo(business, infoView);
                 }
                 swipeRefreshLayout.setRefreshing(true);
@@ -211,18 +199,12 @@ public class BusinessDetailFragment extends BaseFragment {
     private void updatedLocationList() {
         adapter.closeAllItems();
 
-        firstCreateMessage.setVisibility(View.GONE);
-
-        emptyView.setVisibility(adapter.getCount()==0 ? View.VISIBLE : View.GONE);
-        if (!addJobMode) {
-            int locationCount = adapter.getCount();
+        int locationCount = adapter.getCount();
+        if (!isAddMode) {
             AppHelper.getItemSubTitleView(infoView).setText("Includes " + locationCount + (locationCount > 1 ? " work places" : " work place"));
         }
-
-        if (firstCrate) {
-            emptyView.setVisibility(View.GONE);
-            firstCreateMessage.setVisibility(View.VISIBLE);
-        }
+        firstCreateMessage.setVisibility(isFirstCreate ? View.VISIBLE : View.GONE);
+        emptyView.setVisibility(isFirstCreate || locationCount>0 ? View.GONE : View.VISIBLE);
     }
 
     private void deleteLocation(final Location location) {
@@ -246,6 +228,7 @@ public class BusinessDetailFragment extends BaseFragment {
 
     @OnClick(R.id.nav_right_button)
     void onAddLocation() {
+        isFirstCreate = false;
         LocationEditFragment fragment = new LocationEditFragment();
         fragment.business = business;
         getApp().pushFragment(fragment);
@@ -258,9 +241,7 @@ public class BusinessDetailFragment extends BaseFragment {
 
     @OnClick(R.id.first_create_text)
     void onClickFirstCreateView() {
-        JobEditFragment fragment = new JobEditFragment();
-        fragment.location = adapter.getItem(0);
-        getApp().pushFragment(fragment);
+        onAddLocation();
     }
 
     // location adapter ========================================
@@ -285,8 +266,7 @@ public class BusinessDetailFragment extends BaseFragment {
         public void fillValues(final int position, View convertView) {
             AppHelper.showLocationInfo(adapter.getItem(position), convertView);
 
-
-            if (addJobMode) {
+            if (isAddMode) {
                 AppHelper.getEditButton(convertView).setVisibility(View.GONE);
                 AppHelper.getRemoveButton(convertView).setVisibility(View.GONE);
             } else {
@@ -294,7 +274,6 @@ public class BusinessDetailFragment extends BaseFragment {
                     @Override
                     public void onClick(View view) {
                         closeItem(position);
-
                         LocationEditFragment fragment = new LocationEditFragment();
                         fragment.location = getItem(position);
                         getApp().pushFragment(fragment);

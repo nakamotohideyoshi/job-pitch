@@ -1452,10 +1452,23 @@ jobs yet.</string>
                                 <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="wordWrap" translatesAutoresizingMaskIntoConstraints="NO" id="jfG-tZ-3em">
+                                <rect key="frame" x="81" y="415.5" width="213" height="55"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="18"/>
+                                <state key="normal">
+                                    <string key="title">Okay, last step, now tap to
+      create your first job.</string>
+                                    <color key="titleColor" red="1" green="0.57254901960000004" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                </state>
+                                <connections>
+                                    <action selector="addJobAction:" destination="anX-Md-QOT" eventType="touchUpInside" id="u3V-0I-zaD"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstAttribute="trailing" secondItem="y8o-gq-ByF" secondAttribute="trailing" id="06Z-TE-zuf"/>
+                            <constraint firstItem="jfG-tZ-3em" firstAttribute="centerX" secondItem="StH-ew-LPy" secondAttribute="centerX" id="1no-ok-OS6"/>
                             <constraint firstItem="StH-ew-LPy" firstAttribute="top" secondItem="GtN-Lj-SJ9" secondAttribute="bottom" id="45C-Jd-mjH"/>
                             <constraint firstItem="wEZ-CT-7I6" firstAttribute="leading" secondItem="9SC-jV-3la" secondAttribute="leading" id="5XU-3s-QGj"/>
                             <constraint firstItem="U1L-0c-bwO" firstAttribute="width" secondItem="9SC-jV-3la" secondAttribute="width" multiplier="0.5" id="BVf-IA-TWF"/>
@@ -1470,6 +1483,7 @@ jobs yet.</string>
                             <constraint firstItem="9jU-si-Fyy" firstAttribute="bottom" secondItem="U1L-0c-bwO" secondAttribute="bottom" id="Yg9-GQ-a8x"/>
                             <constraint firstItem="lV3-JZ-zKa" firstAttribute="top" secondItem="hb4-jm-TWg" secondAttribute="bottom" constant="5" id="ahK-Z5-vdV"/>
                             <constraint firstItem="StH-ew-LPy" firstAttribute="leading" secondItem="9SC-jV-3la" secondAttribute="leading" id="b4e-Uh-f4g"/>
+                            <constraint firstItem="jfG-tZ-3em" firstAttribute="centerY" secondItem="StH-ew-LPy" secondAttribute="centerY" id="cg5-kG-Ik6"/>
                             <constraint firstItem="hb4-jm-TWg" firstAttribute="top" secondItem="StH-ew-LPy" secondAttribute="bottom" constant="5" id="fpU-Uq-Uds"/>
                             <constraint firstItem="y8o-gq-ByF" firstAttribute="centerY" secondItem="StH-ew-LPy" secondAttribute="centerY" id="khv-qJ-Kfg"/>
                             <constraint firstItem="9jU-si-Fyy" firstAttribute="top" secondItem="U1L-0c-bwO" secondAttribute="top" id="qxp-p1-QaD"/>
@@ -1486,6 +1500,7 @@ jobs yet.</string>
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
                     <connections>
                         <outlet property="emptyView" destination="y8o-gq-ByF" id="tbc-rQ-nyz"/>
+                        <outlet property="firstCreateMessage" destination="jfG-tZ-3em" id="5Rq-yA-eAa"/>
                         <outlet property="imgView" destination="LiP-Fp-38y" id="pof-wl-MfU"/>
                         <outlet property="nameLabel" destination="AxS-i1-DZY" id="bS5-ce-35W"/>
                         <outlet property="scrollView" destination="StH-ew-LPy" id="enU-Te-LEP"/>
@@ -3206,25 +3221,11 @@ businesses yet.</string>
                                     <constraint firstItem="YTu-g5-5T8" firstAttribute="top" secondItem="Tx0-PO-vMN" secondAttribute="bottom" constant="10" id="oxp-bd-WZS"/>
                                 </constraints>
                             </view>
-                            <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="wordWrap" translatesAutoresizingMaskIntoConstraints="NO" id="icq-AU-7hA">
-                                <rect key="frame" x="38" y="400.5" width="299" height="55"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="18"/>
-                                <state key="normal">
-                                    <string key="title">Great, you've created your business! 
- Now tap to create your work places.</string>
-                                    <color key="titleColor" red="1" green="0.57254901960000004" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                </state>
-                                <connections>
-                                    <action selector="clickFirstCreateMessage:" destination="aBM-nf-JuZ" eventType="touchUpInside" id="jbz-SO-QT6"/>
-                                </connections>
-                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="eet-zo-FvN" firstAttribute="top" secondItem="Ly7-Ty-4cj" secondAttribute="bottom" id="9vU-4Q-Jr8"/>
-                            <constraint firstItem="icq-AU-7hA" firstAttribute="centerY" secondItem="4kX-Iw-ajp" secondAttribute="centerY" id="Ijx-hR-y7v"/>
                             <constraint firstItem="4kX-Iw-ajp" firstAttribute="top" secondItem="eet-zo-FvN" secondAttribute="bottom" id="Irw-7s-P48"/>
-                            <constraint firstItem="icq-AU-7hA" firstAttribute="centerX" secondItem="4kX-Iw-ajp" secondAttribute="centerX" id="MAH-c1-vbh"/>
                             <constraint firstItem="4kX-Iw-ajp" firstAttribute="leading" secondItem="eGu-2e-9us" secondAttribute="leading" id="Omc-1x-klF"/>
                             <constraint firstItem="HUX-vu-9Ck" firstAttribute="centerY" secondItem="4kX-Iw-ajp" secondAttribute="centerY" id="eJu-ni-eOn"/>
                             <constraint firstItem="eet-zo-FvN" firstAttribute="leading" secondItem="eGu-2e-9us" secondAttribute="leading" id="exx-Ef-gan"/>
@@ -3248,7 +3249,6 @@ businesses yet.</string>
                         <outlet property="emptyButton" destination="YTu-g5-5T8" id="ffp-Ub-uZ0"/>
                         <outlet property="emptyMessage" destination="Tx0-PO-vMN" id="PlG-mi-2cy"/>
                         <outlet property="emptyView" destination="HUX-vu-9Ck" id="0jI-QP-z28"/>
-                        <outlet property="firstCreateMessage" destination="icq-AU-7hA" id="S88-NT-1YM"/>
                         <outlet property="headerAddButtonDisable" destination="yDV-59-9vj" id="gVF-xb-OeL"/>
                         <outlet property="headerImgView" destination="t8I-TF-gFE" id="jsk-t3-zJm"/>
                         <outlet property="headerView" destination="eet-zo-FvN" id="G91-Bo-cya"/>
@@ -3499,15 +3499,15 @@ work places yet.</string>
                                 </constraints>
                             </view>
                             <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="wordWrap" translatesAutoresizingMaskIntoConstraints="NO" id="6Dm-ds-uDM">
-                                <rect key="frame" x="81" y="420.5" width="213" height="55"/>
+                                <rect key="frame" x="38" y="420.5" width="299" height="55"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="18"/>
                                 <state key="normal">
-                                    <string key="title">Okay, last step, now tap to
-      create your first job.</string>
+                                    <string key="title">Great, you've created your business! 
+Now tap to create your work places.</string>
                                     <color key="titleColor" red="1" green="0.57254901960000004" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 </state>
                                 <connections>
-                                    <action selector="clickFirstCreateMessage:" destination="nIr-Go-dUu" eventType="touchUpInside" id="RvF-6y-6ZO"/>
+                                    <action selector="addLocationAction:" destination="nIr-Go-dUu" eventType="touchUpInside" id="TJt-fq-v9w"/>
                                 </connections>
                             </button>
                         </subviews>

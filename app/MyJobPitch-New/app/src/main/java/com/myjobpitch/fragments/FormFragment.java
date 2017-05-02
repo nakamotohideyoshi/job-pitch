@@ -26,7 +26,7 @@ public class FormFragment extends BaseFragment {
                 view.setError(getString(R.string.error_field_required));
                 if (errorView == null) {
                     errorView = view;
-                    errorView.requestFocus();
+                    errorView.getParent().requestChildFocus(errorView,errorView);
                 }
             } else {
                 view.setError(null);

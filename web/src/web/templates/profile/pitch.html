@@ -1,128 +1,104 @@
 {% extends "mjp_base.html" %}
 
+{% block extra_head %}
+	<link href="/static/web/design/css/mediarecorderapi.css" rel="stylesheet">
+
+	<!-- TODO: Test the getUserMedia Polyfill for IE -->
+	<!-- script src="/static/web/js/getUserMedia.min.js"></script -->
+	<script src="/static/web/js/setimmediate.js"></script>
+	<script src="/static/web/js/promise.js"></script>
+{% endblock %}
+
+
 {% block content %}
 	<style>
-			#webcam {
-				float:left;
-			}
-			#volumeMeter {
-				background-image:url('ledsbg.png');
-				width:19px;
-				height:133px;
-				padding-top:5px;
-			}
-			#volumeMeter img {
-				padding-left:4px;
-				padding-top:1px;
-				display:block;
-			}
-			.ui-slider {
-				background:none;
-				background-image:url('trackslider.png');
-				border:0;
-				height:107px;
-				margin-top:16px;
-			}
-			.ui-slider .ui-slider-handle {
-				width:14px;
-				height:32px;
-				margin-left:7px;
-				margin-bottom:-16px;
-				background:url(volumeslider.png) no-repeat; 
-			}
-			#volumePanel {
-				-moz-border-radius: 0px 5px 5px 0px;
-				border-radius: 0px 5px 5px 0px;
-				background-color:#4B4B4B;
-				width:55px;
-				height:160px;
-				-moz-box-shadow: 0px 3px 3px #333333;
-				-webkit-box-shadow: 0px 3px 3px  #333333;
-				shadow: 0px 3px 3px #333333;
-			}
-			#setupPanel {
-				width:400px;
-				height:30px;
-				margin:5px;
-			}
-		</style>
+		a#downloadLink {
+			display: block;
+			margin: 0 0 1em 0;
+			min-height: 1.2em;
+		}
+
+		p#data {
+			min-height: 6em;
+		}
+	</style>
+
 	<div class="container-fluid">
+		<!-- Page Heading -->
+		<br />
 
-                <!-- Page Heading -->
-                <div class="row">
-                    <div class="col-lg-12">
-                        <h1 class="page-header">
-                            Your Pitch
-                        </h1>
-						
+		<div class="row">
+			<h1 class="page-header">Your Pitch</h1>
+			<div class="col-lg-12">
+				<div class="row">
+					<div class="col-lg-6 videoCheckEdit">
 						<div class="row">
-                                <div class="col-lg-6">
-                                    
-                                    <div id="message"></div>
-                                    <div id="recorder">
-                                        <span style="padding-left:5px;padding-right:5px;text-align:center;" id="recorderTimer">
-                                        Time left: <span class="timeLeft">00:30</span>
-                                        </span>
-                                        <br/>
-                                        <div id="webcam">
-                                        </div>
-                                        <br clear="both"/>
-                                        <br/>
-                                        <button id="recordStartButton" class="btn btn-small" onclick="startRecording()">Start Recording</button>
-                                        
-    
-                                        <button id="recordStopButton" class="btn btn-small" onclick="closeCamera()" disabled>Stop Recording</button>
-                                    </div>
-                                    <div id="fallback-upload">
-                                        
-    
-                                    </div>
-                                    
-                                </div>
-                                <div class="col-lg-6">
-                                
-                                    <p>Setting up your job pitch here are some tips from one of our recruiting pros:
-    <br />
-    <ul>
-        <li>Dress smartly. You want to be taken seriously</li>
-        <li>Be careful what is in the background. Nothing should distract from your pitch</li>
-        <li>Record your pitch in a quiet location to avoid background noise</li>
-    </ul>
-    </p>
-    <p>Recording your job pitch:
-    <br />
-    <ul>
-        <li>Practise makes perfect – Record your pitch, play it back and perfect it. If in doubt, ask a friend</li>
-        <li>Be positive, confident and look straight into the camera to make eye contact</li>
-        <li>Be yourself, but don’t fidget such as waving your hands about in the air</li>
-        <li>Stand or sit up straight which helps you breath more easily</li>
-        <li>Don’t rush it and speak clearly</li>
-        <li>Remember to smile!</li>
-    </ul></p>
-    <p>Remember you only have 30 seconds, so what to say?
-    <br />
-    <ul>
-        <li>Your name and location</li>
-        <li>Your personality</li>
-        <li>Type of work you are looking for</li>
-        <li>Relevant experience</li>
-    </ul>
-    Finish your pitch confidently by saying something like, “Thank you and I look forward to hearing from you”. </p>
-                                </div>
-                            </div>
-                        
-                    </div>
-                </div>
-                <!-- /.row -->
-               
-
-            </div>
-            <!-- /.container-fluid -->
+							<h3><strong>Your Current Pitch:</strong></h3>
+							<div id="pitchVideoCheck"><!-- span style="font-size: 48px; padding: 120px;" class="glyphicon glyphicon-refresh glyphicon-refresh-animate"></span --></div>
+						</div>
+						<div class="row js-only-if-html5-browser">
+							<button class="btn btn-small btn-primary btn-js-start-pitch">Record a new Pitch</button>
+							<button class="btn btn-small btn-danger btn-js-stop-pitch" disabled>Stop</button>
+							<button class="btn btn-small btn-success btn-js-upload-pitch" disabled>Upload</button>
+						</div>
+					  <div class="row js-only-if-not-html5-browser">
+							<label>Upload Pitch:</label>
+						<div class="input-group">
+					  <input type="file" class="form-control" name="pitch_upload" id="pitch_upload">
+						  <span class="input-group-btn">
+							<button class="btn btn-small btn-success btn-js-upload-pitch-ie" type="button">Upload</button>
+						  </span>
+						</div><!-- /input-group -->
+					  </div>
+						<div class="row">
+							<a id="downloadLink" download="mediarecorder.webm" name="mediarecorder.webm" href></a>
+						</div>
+						<!-- div class="row">
+							<div class="alert alert-info show"><span class="glyphicon glyphicon-refresh glyphicon-refresh-animate"></span> <span id="data" >Looking for a pitch...</span></div>
+						</div -->
+					</div>
+					<div class="col-lg-6">
+						<br />
+						<p>Setting up your job pitch here are some tips from one of our recruiting pros:</p>
+						<ul>
+							<li>Dress smartly. You want to be taken seriously</li>
+							<li>Be careful what is in the background. Nothing should distract from your pitch</li>
+							<li>Record your pitch in a quiet location to avoid background noise</li>
+						</ul>
+						<p>Recording your job pitch:</p>
+						<ul>
+							<li>Practise makes perfect – Record your pitch, play it back and perfect it. If in doubt, ask a friend</li>
+							<li>Be positive, confident and look straight into the camera to make eye contact</li>
+							<li>Be yourself, but don’t fidget such as waving your hands about in the air</li>
+							<li>Stand or sit up straight which helps you breath more easily</li>
+							<li>Don’t rush it and speak clearly</li>
+							<li>Remember to smile!</li>
+						</ul>
+						<p>Remember you only have 30 seconds, so what to say?</p>
+						<ul>
+							<li>Your name and location</li>
+							<li>Your personality</li>
+							<li>Type of work you are looking for</li>
+							<li>Relevant experience</li>
+						</ul>
+						<p>Finish your pitch confidently by saying something like, “Thank you and I look forward to hearing from you”.</p>
+					</div>
+				</div>
+			</div>
+		</div><!-- /.row -->
+	</div><!-- /.container-fluid -->
 
 {% endblock %}
-{% block pagescripts %}
-	<script language="JavaScript" src="//ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js"></script>
 
+
+{% block pagescripts %}
+	<!-- script language="JavaScript" src="//ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js"></script> -->
+
+	<script src="/static/web/js/lodash.min.js"></script>
+
+	<script src="/static/web/js/aws-sdk-2.3.6.min.js"></script>
+
+	<script src="/static/web/js/mjp-scripts/pitch-common.js"></script>
 	<script src="/static/web/js/mjp-scripts/pitch.js"></script>
-	<script src="/static/web/js/ScriptCam/scriptcam.js"></script>
+	<script src="/static/web/js/mediarecorderapi.js"></script>
 {% endblock %}

@@ -1,19 +1,62 @@
+from django.db import transaction
 from django.db.models import F, Q, Max
 from django.contrib.gis.measure import D
 from django.contrib.gis.db.models.functions import Distance
 
-from rest_framework import viewsets, permissions, serializers
+from rest_framework import viewsets, permissions, serializers, status
+from rest_framework.response import Response
 from rest_framework.routers import DefaultRouter
+from rest_framework.views import APIView
 
-from mjp.models import Sector, Hours, Contract, Business, Location,\
-    JobStatus, Job, Sex, Nationality, JobSeeker, JobProfile,\
-    ApplicationStatus, Application, Role, LocationImage, BusinessImage, \
-    JobImage, Message, Pitch
+from mjp.models import (
+    Sector,
+    Hours,
+    Contract,
+    Business,
+    Location,
+    JobStatus,
+    Job,
+    Sex,
+    Nationality,
+    JobSeeker,
+    JobProfile,
+    ApplicationStatus,
+    Application,
+    Role,
+    LocationImage,
+    BusinessImage,
+    JobImage,
+    Message,
+    Pitch,
+    TokenStore,
+    InitialTokens,
+    AndroidPurchase,
+    ProductTokens,
+)
 
-from mjp.serializers import SimpleSerializer, BusinessSerializer,\
-    LocationSerializer, JobProfileSerializer, JobSerializer, JobSeekerSerializer,\
-    ApplicationSerializer, ApplicationCreateSerializer, ApplicationStatusUpdateSerializer, \
-    ApplicationShortlistUpdateSerializer, MessageCreateSerializer, MessageUpdateSerializer, PitchSerializer
+from mjp.serializers import (
+    SimpleSerializer,
+    BusinessSerializer,
+    LocationSerializer,
+    JobProfileSerializer,
+    JobSerializer,
+    JobSeekerSerializer,
+    ApplicationSerializer,
+    ApplicationCreateSerializer,
+    ApplicationConnectSerializer,
+    ApplicationShortlistUpdateSerializer,
+    MessageCreateSerializer,
+    MessageUpdateSerializer,
+    PitchSerializer,
+    AndroidPurchaseSerializer,
+    InitialTokensSerializer,
+)
+
+# For google APIs
+from oauth2client.service_account import ServiceAccountCredentials
+from httplib2 import Http
+from apiclient.discovery import build
+from apiclient.errors import HttpError
 
 
 router = DefaultRouter()
@@ -42,6 +85,7 @@ SexViewSet = SimpleReadOnlyViewSet(Sex)
 NationalityViewSet = SimpleReadOnlyViewSet(Nationality)
 ApplicationStatusViewSet = SimpleReadOnlyViewSet(ApplicationStatus)
 RoleViewSet = SimpleReadOnlyViewSet(Role)
+ProductTokensViewSet = SimpleReadOnlyViewSet(ProductTokens)
 
 
 class UserBusinessImageViewSet(viewsets.ModelViewSet):
@@ -80,15 +124,28 @@ router.register('businesses', BusinessViewSet, base_name='business')
 
 class UserBusinessViewSet(viewsets.ModelViewSet):
     class BusinessPermission(permissions.BasePermission):
+        def has_permission(self, request, view):
+            if request.method in permissions.SAFE_METHODS:
+                return True
+            if request.method in ('POST', 'DELETE'):
+                return request.user.can_create_businesses or not request.user.businesses.exists()
+            return True
+
         def has_object_permission(self, request, view, obj):
             if request.method in permissions.SAFE_METHODS:
                 return True
+            if request.method == 'DELETE':
+                return request.user.can_create_businesses and obj.users.filter(pk=int(request.user.pk)).exists()
             return obj.users.filter(pk=int(request.user.pk)).exists()
     permission_classes = (permissions.IsAuthenticated, BusinessPermission)
     serializer_class = BusinessSerializer
 
     def perform_create(self, serializer):
-        serializer.save().users.add(self.request.user)
+        token_store = TokenStore.objects.create(
+            tokens=InitialTokens.objects.get().tokens,
+            user=self.request.user,
+        )
+        serializer.save(token_store=token_store).users.add(self.request.user)
         
     def get_queryset(self):
         return Business.objects.filter(users=self.request.user)
@@ -130,6 +187,7 @@ class UserLocationViewSet(viewsets.ModelViewSet):
             pk = request.data.get('business')
             print "business pk: %s" % pk
             if pk:
+                pk = int(pk)
                 return Business.objects.filter(pk=pk, users__pk=int(request.user.pk)).exists()
             return True
         
@@ -371,8 +429,8 @@ router.register('jobs', JobViewSet, base_name='jobs')
 
 class ApplicationViewSet(viewsets.ModelViewSet):
     try:
-        RECRUITER = Role.objects.get(name='RECRUITER')
-        JOB_SEEKER = Role.objects.get(name='JOB_SEEKER')
+        RECRUITER = Role.objects.get(name=Role.RECRUITER)
+        JOB_SEEKER = Role.objects.get(name=Role.JOB_SEEKER)
     except:
         pass
     
@@ -408,7 +466,7 @@ class ApplicationViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.IsAuthenticated, ApplicationPermission)
     serializer_class = ApplicationSerializer
     create_serializer_class = ApplicationCreateSerializer
-    update_status_serializer_class = ApplicationStatusUpdateSerializer
+    update_status_serializer_class = ApplicationConnectSerializer
     update_shortlist_serializer_class = ApplicationShortlistUpdateSerializer
     
     def get_role(self):
@@ -450,11 +508,6 @@ class ApplicationViewSet(viewsets.ModelViewSet):
                     }
         message.save()
 
-    def perform_update(self, serializer):
-        serializer.save()
-        # if self.request.
-        # e = role
-
     def perform_destroy(self, application):
         application.status = ApplicationStatus.objects.get(name='DELETED')
         role = self.get_role()
@@ -476,7 +529,7 @@ class ApplicationViewSet(viewsets.ModelViewSet):
         if self.request.method == 'PUT':
             if self.request.data.get('shortlisted') is not None:
                 return self.update_shortlist_serializer_class
-            if self.request.data.get('status') is not None:
+            if self.request.data.get('connect') is not None:
                 return self.update_status_serializer_class
         return self.serializer_class
     
@@ -534,10 +587,10 @@ class MessageViewSet(viewsets.ModelViewSet):
         def has_object_permission(self, request, view, message):
             if request.method == 'PUT':
                 is_recruiter = request.user.businesses.filter(locations__jobs__applications__messages=message).exists()
-                if is_recruiter and message.from_role.name == "JOB_SEEKER":
+                if is_recruiter and message.from_role.name == Role.JOB_SEEKER:
                     return True
                 is_job_seeker = message.application.job_seeker.user == request.user
-                if is_job_seeker and message.from_role.name == "RECRUITER":
+                if is_job_seeker and message.from_role.name == Role.RECRUITER:
                     return True
             return False
         
@@ -555,12 +608,67 @@ class MessageViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         application = Application.objects.get(pk=int(self.request.data.get('application')))
         if self.request.user.businesses.filter(locations__jobs__applications=application).exists():
-            role = Role.objects.get(name='RECRUITER')
+            role = Role.objects.get(name=Role.RECRUITER)
         else:
-            role = Role.objects.get(name='JOB_SEEKER')
+            role = Role.objects.get(name=Role.JOB_SEEKER)
         serializer.save(from_role=role)
         
     permission_classes = (permissions.IsAuthenticated, MessagePermission)
     update_serializer_class = MessageUpdateSerializer
     serializer_class = MessageCreateSerializer
 router.register('messages', MessageViewSet, base_name='message')
+
+
+class AndroidPurchaseView(APIView):
+    permission_classes = (permissions.IsAuthenticated,)
+
+    def post(self, request):
+        serializer = AndroidPurchaseSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        credentials = ServiceAccountCredentials.from_json_keyfile_name(
+            '/web/mjp/keys/google-api.json', 
+            ['https://www.googleapis.com/auth/androidpublisher']
+        )
+        http_auth = credentials.authorize(Http())
+        service = build('androidpublisher', 'v2', http=http_auth)
+        request = service.purchases().products().get(
+            packageName='com.myjobpitch',
+            productId=serializer.data['product_code'],
+            token=serializer.data['purchase_token'],
+        )
+
+        try:
+            response = request.execute()
+        except HttpError as e:
+            return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+        with transaction.atomic():
+            if not AndroidPurchase.objects.filter(purchase_token=serializer.data['purchase_token']).exists():
+                token_store = TokenStore.objects.select_for_update().get(
+                    businesses__pk=serializer.data['business_id'],
+                )
+                AndroidPurchase.objects.create(
+                    product_code=serializer.data['product_code'],
+                    purchase_token=serializer.data['purchase_token'],
+                    token_store=token_store,
+                )
+                TokenStore.objects.filter(pk=token_store.pk).update(
+                    tokens=F('tokens') + 20,
+                )
+
+        business = Business.objects.get(pk=serializer.data['business_id'])
+        output_serializer = BusinessSerializer(business, context={
+            'request': self.request,
+            'format': self.format_kwarg,
+            'view': self
+        })
+        return Response(output_serializer.data)
+
+
+class InitialTokensView(APIView):
+    permission_classes = (permissions.IsAuthenticated,)
+
+    def get(self, request):
+        serializer = InitialTokensSerializer(instance=InitialTokens.objects.get())
+        return Response(serializer.data)

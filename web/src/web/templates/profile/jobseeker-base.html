@@ -1,0 +1,275 @@
+{% extends "mjp_jobseeker_dashboard.html" %}
+
+{% block page-title %}
+<div class="row page-title">
+  <div class="col-xs-12">
+    <h2><strong>Profile Settings</strong></h2>
+    <a href="/profile/job-seeker" class="sclabs-theme"><h5>View my profile</h5></a>
+  </div>
+</div>
+{% endblock %}
+
+{% block content %}
+  <div class="col-xs-9 profile content">
+    <!-- Page Heading -->
+    <div class="row">
+      <div class="col-xs-10">
+        <h3><strong>My Account Summary</strong></h3>
+      </div>
+      <div class="col-xs-2 text-right">
+        <h6><strong>Public</strong></h6>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-xs-12">
+        <form class="form-horizontal" role="form"  method="put" id="profile" enctype="multipart/form-data">
+          <div class="alert hide" role="alert"></div>
+
+          <div class="separator"></div>
+
+          <div class="form-group row">
+            <label for="email" class="col-xs-4 control-label">Personal Email</label>
+            <div class="col-xs-5">
+              <input type="text" class="form-control"  data-error-field="email" placeholder="Email (optional)" name="email" id="email">
+            </div>
+            <div class="col-xs-3">
+              <div class="checkbox checkbox-slider--b checkbox-slider-md sclabs-theme pull-right">
+                <label>
+                  <input type="checkbox" id="email_public" name="email_public" value="true" checked><span></span>
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <div class="separator"></div>
+
+          <div class="row">
+            <label class="col-xs-4">Profile Completeness</label>
+            <div class="col-xs-5">
+              <div class="progress">
+                <div class="progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 60%;">
+                  <span class="sr-only">60% Complete</span>
+                </div>
+              </div>
+            </div>
+            <label class="col-xs-1">60%</label>
+          </div>
+
+          <div class="separator"></div>
+
+          <div class="row">
+            <div class="col-xs-12">
+              <h3><strong>My Profile</strong></h3>
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label class="col-xs-9 control-label">Visibility</label>
+            <div class="col-xs-3">
+              <div class="checkbox checkbox-slider--b checkbox-slider-md sclabs-theme pull-right">
+                <label>
+                  <input type="checkbox" name="active" id="active_account" value="" checked><span></span>
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <div id="account_details_not_active">
+            <p>Your account is currently inactive, and will not be visible to employers.</p>
+          </div>
+          <div id="account_details_active_only">
+            <div class="separator"></div>
+            <div class="form-group row">
+              <label for="first_name" class="col-xs-4 control-label">First Name</label>
+              <div class="col-xs-6">
+                <input type="text" class="form-control" required placeholder="First Name" name="first_name" id="first_name" data-error-field="first_name">
+              </div>
+            </div>
+
+            <div class="form-group row">
+              <label for="last_name" class="col-xs-4 control-label">Last Name</label>
+              <div class="col-xs-6">
+                <input type="text" class="form-control" required placeholder="Last Name" name="last_name" id="last_name" data-error-field="last_name">
+              </div>
+            </div>
+
+            <div class="separator"></div>
+
+            <div class="form-group row">
+              <label for="age" class="col-xs-4 control-label">Age (optional)</label>
+              <div class="col-xs-5">
+                <input type="text" data-error-field="age" class="form-control" placeholder="Age (optional)" name="age" id="age">
+              </div>
+              <div class="col-xs-3">
+                <div class="checkbox checkbox-slider--b checkbox-slider-md sclabs-theme pull-right">
+                  <label>
+                    <input type="checkbox" id="age_public" name="age_public" value="true" checked><span></span>
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group row">
+              <label for="age" class="col-xs-4 control-label">Sex (optional)</label>
+              <div class="col-xs-5">
+                <select class="form-control" data-error-field="sex" name="sex" id="sex">
+                  <option value="" selected="">Sex (optional)</option>
+                </select>
+              </div>
+              <div class="col-xs-3">
+                <div class="checkbox checkbox-slider--b checkbox-slider-md sclabs-theme pull-right">
+                  <label>
+                    <input type="checkbox" id="sex_public" name="sex_public" value="true" checked><span></span>
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group row">
+              <label for="telephone" class="col-xs-4 control-label">Telephone (optional)</label>
+              <div class="col-xs-5">
+                <input type="text" class="form-control" placeholder="Telephone (optional)" data-error-field="telephone" name="telephone" id="telephone">
+              </div>
+              <div class="col-xs-3">
+                <div class="checkbox checkbox-slider--b checkbox-slider-md sclabs-theme pull-right">
+                  <label>
+                    <input type="checkbox" id="telephone_public" name="telephone_public" value="true" checked><span></span>
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group row">
+              <label for="mobile" class="col-xs-4 control-label">Mobile (optional)</label>
+              <div class="col-xs-5">
+                <input type="text" data-error-field="mobile" class="form-control" placeholder="Mobile (optional)" name="mobile" id="mobile">
+              </div>
+              <div class="col-xs-3">
+                <div class="checkbox checkbox-slider--b checkbox-slider-md sclabs-theme pull-right">
+                  <label>
+                    <input type="checkbox" id="mobile_public" name="mobile_public" value="true" checked><span></span>
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            <div class="separator"></div>
+
+            <div class="form-group row">
+              <div class="col-xs-12">
+                <label><strong>CV Summary</strong></label>
+                <textarea class="form-control" placeholder="Description (Required) - Tell us a little about you in less than 50 words. For example, work experience and personality." name="description" id="description" data-error-field="description" maxlength="250" rows="4"></textarea>
+                <div id="textarea_feedback"></div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-xs-12">
+                <h3><strong>Upload CV</strong> <small><a id="CVcurrent" href="#">View Current CV</a></small></h3>
+              </div>
+            </div>
+
+            <!-- div class="form-group row">
+              <div class="col-xs-12">
+                <a href="#" target="_blank" id="CVcurrent">View Current CV</a>
+                <input type="file" data-error-field="cv"  class="form-control" name="cv" id="cv_upload">
+                <input type="hidden" name="order" value="0">
+              </div>
+            </div -->
+
+            <div class="form-group">
+              <div class="col-xs-12">
+                <p class="bordered padded">
+                  <label for="file-upload" class="control-label file-upload"> Choose file</label>
+                  <input id="file-upload" type="file" name="file_upload" accept="image/*,.doc, .docx,.ppt, .pptx,.txt,.pdf"/><span id="choosen-file"></span>
+                  <input type="hidden" name="order" value="0">
+                </p>
+              </div>
+            </div>
+
+            {% comment "Hidden for using when it be required" %}
+            <div class="form-group">
+              <div class="col-xs-12">
+                <div class="bordered padded" style="height: 58px;">
+                  <div class="dropbox-icon" style="float: left; margin-top: -7px;"></div>
+                  <label for="file-upload" class="col-xs-5 control-label file-upload"> Choose file</label>
+                  <input id="file-upload" type="file" name="image" accept="image/x-png, image/jpeg, image/png">
+                </div>
+              </div>
+            </div>
+            {% endcomment %}
+
+
+            <div class="form-group row">
+              <div class="col-xs-12">
+                <div class="checkbox checkbox-slider--b checkbox-slider-md sclabs-theme">
+                  <label>
+                    <input type="checkbox" id="has_references" name="has_references" value="true" checked><span><label class="control-label">References Available</label></span>
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="separator"></div>
+
+          <div class="row">
+            <div class="col-xs-12">
+              <h3><strong>Pitch </strong><small class="as-block">Record your video pitch below.</small></h3>
+            </div>
+          </div>
+          <div class="form-group row">
+            <div class="col-xs-3">
+              <div id="pitchVideoCheck" style="width: 90%;"><span style="font-size: 2em; padding: 35px;" class="glyphicon glyphicon-refresh glyphicon-refresh-animate"></span></div>
+            </div>
+            <div class="col-xs-6">
+              <label class="col-xs-12 control-label">
+                <span class="pitch-record icon">&nbsp</span><span>Record new pitch</span>
+              </label>
+              <label class="col-xs-12 pitch-replay-label control-label">
+                <a href="/profile/viewpitch"><span class="pitch-replay icon">&nbsp</span><span>View current pitch</span></a>
+              </label>
+            </div>
+              <!-- a href="/profile/edit-pitch/" class="row">
+                <img class="col-xs-1 pitch-record icon">Record new pitch</a>
+              <a href="/profile/viewpitch/" class="row">
+                <img class="col-xs-1 pitch-replay icon">Retake pitch</a -->
+
+            <div class="col-xs-3">
+              <div class="checkbox checkbox-slider--b checkbox-slider-md sclabs-theme pull-right">
+                <label>
+                  <input type="checkbox" id="pitch_public" name="pitch_public" value="true" checked><span></span>
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <div class="col-xs-12 text-right sclabs-theme">
+              <div class="checkbox checkbox-slider--b checkbox-slider-md sclabs-theme">
+                <label>
+                  <input type="checkbox" id="truthful_info" name="truthful_info" value="true" checked><span><label class="control-label">All the information provided is truthful to the best of the my knowledge</label></span>
+                </label>
+              </div>
+            </div>
+          </div>
+
+          {% csrf_token %}
+
+          <br >
+
+          <div class="row">
+            <div class="col-xs-4">
+              <button type="submit" class="btn btn-primary sclabs-theme" name="_method" value="PUT">&nbsp;&nbsp;&nbsp;&nbsp;Save&nbsp;&nbsp;&nbsp;&nbsp;</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div><!-- /.row -->
+  </div>
+{% endblock %}
+
+
+{% block pagescripts %}
+{% endblock %}

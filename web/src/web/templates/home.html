@@ -1,66 +1,49 @@
-{% extends "mjp_base.html" %}
+{% extends "mjp_home_base.html" %}
 
 {% block headerslider %}
 
-	<div class="message-get-app"><p class="get-app-text">Download the app: <a href="#">Android</a> / <a href="#">Apple</a></p></div>
+	<!-- div class="message-get-app"><p class="get-app-text">Download the app: <a href="#">Android</a> / <a href="#">Apple</a></p></div -->
 
 <!-- Header Carousel -->
     <header id="myCarousel" class="carousel slide">
-        <!-- Indicators -->
-        <ol class="carousel-indicators">
-            <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
-            <li data-target="#myCarousel" data-slide-to="1"></li>
-        </ol>
+      <!-- Indicators -->
+      <ol class="carousel-indicators">
+          <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+          <li data-target="#myCarousel" data-slide-to="1"></li>
+      </ol>
 
-		<div class="above-slide-detail">
-        	<img src="/static/web/design/images/logo-slide.png" class="main-logo-home">
-            <img src="/static/web/design/images/logo-footer.png" class="mobile-logo-home">
-            <div class="buttons-slide not_logged_in_element">
-            	<a href="#" class="btn btn-home-login" data-toggle="modal" data-target="#loginModal">Login</a>
-            	<a href="#" class="btn btn-home-reg" data-toggle="modal" data-target="#regModal">Registration</a>
-            </div>
+      <div class="above-slide-detail">
+        <div class="buttons-slide">
+          <img src="/static/web/design/images/logo-slide.png" class="main-logo-home">
+          <div class="home-buttons">
+          	<a href="#" class="btn btn-home-login" data-toggle="modal" data-target="#regJobSeekerModal"><div>I'm a</div><div>Job Seeker</div></a>
+          	<a href="#" class="btn btn-home-reg" data-toggle="modal" data-target="#regRecruiterModal"><div>I'm a</div><div>Recruiter</div></a>
+          </div>
+          <div class="download-app">Download app on</div>
+          <p class="text-center"><img src="/static/web/design/images/androidappstore.png"></p>
+          <p class="text-center"><img src="/static/web/design/images/appleappstore.png"></p>
         </div>
+      </div>
 
-        <!-- Wrapper for slides -->
-        <div class="carousel-inner">
-            <div class="item active">
-                <div class="fill" style="background-image:url('/static/web/design/images/video-placeholder_2.jpg');"></div>
-            </div>
-            <div class="item">
-                <div class="fill" style="background-image:url('/static/web/design/images/video-placeholder_1.jpg');"></div>
-            </div>
-            <div class="item">
-                <div class="fill" style="background-image:url('/static/web/design/images/slide-1.jpg');"></div>
-            </div>
+      <!-- Wrapper for slides -->
+      <div class="carousel-inner">
+        <div class="item active">
+          <div class="fill" style="background-image:url('/static/web/design/images/video-placeholder_2.jpg');"></div>
         </div>
+        <div class="item">
+          <div class="fill" style="background-image:url('/static/web/design/images/video-placeholder_1.jpg');"></div>
+        </div>
+        <div class="item">
+          <div class="fill" style="background-image:url('/static/web/design/images/slide-1.jpg');"></div>
+        </div>
+      </div>
 
-        <!-- Controls -->
-        <a class="left carousel-control" href="#myCarousel" data-slide="prev">
-            <span class="icon-prev"><img src="/static/web/design/images/prev-arrow.png"></span>
-        </a>
-        <a class="right carousel-control" href="#myCarousel" data-slide="next">
-            <span class="icon-next"><img src="/static/web/design/images/next-arrow.png"></span>
-        </a>
+      <!-- Controls -->
+      <a class="left carousel-control" href="#myCarousel" data-slide="prev">
+        <span class="icon-prev"><img src="/static/web/design/images/prev-arrow.png"></span>
+      </a>
+      <a class="right carousel-control" href="#myCarousel" data-slide="next">
+        <span class="icon-next"><img src="/static/web/design/images/next-arrow.png"></span>
+      </a>
     </header>
-{% endblock %}
-
-{% block content %}
-	 </div>
-        <!-- Portfolio Section -->
-    <!-- div class="container-full-width full-width-mjp">
-        <div class="row video-background-row">
-        	<div class="container">
-                <div class="col-md-6">
-                    <a href="portfolio-item.html">
-                        <img class="img-responsive img-hover" src="/static/web/design/images/video-placeholder_1.jpg" width="540" height="372" alt="">
-                    </a>
-                </div>
-                <div class="col-md-6">
-                    <a href="portfolio-item.html">
-                        <img class="img-responsive img-hover" src="/static/web/design/images/video-placeholder_2.jpg" width="540" height="372" alt="">
-                    </a>
-                </div>
-            </div>
-        </div>
-        	  </div -->
 {% endblock %}

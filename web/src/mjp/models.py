@@ -3,10 +3,17 @@ import os
 
 from cStringIO import StringIO
 from PIL import Image
+from django.db import transaction
+from django.utils.translation import gettext as _
 
 from django.conf import settings
+from django.contrib.auth.base_user import AbstractBaseUser, BaseUserManager
+from django.contrib.auth.models import PermissionsMixin
 from django.contrib.gis.db import models
 from django.core.files.uploadedfile import SimpleUploadedFile
+from django.core.mail import send_mail
+from django.utils import timezone
+from django.utils.http import urlquote
 
 
 def create_thumbnail(image, thumbnail, name=None, content_type=None):
@@ -60,6 +67,81 @@ def create_thumbnail(image, thumbnail, name=None, content_type=None):
         suf,
         save=False
     )
+
+
+class UserManager(BaseUserManager):
+
+    def _create_user(self, email, password,
+                     is_staff, is_superuser, **extra_fields):
+        """
+        Creates and saves a User with the given email and password.
+        """
+        now = timezone.now()
+        if not email:
+            raise ValueError('The given email must be set')
+        email = self.normalize_email(email)
+        user = self.model(email=email,
+                          is_staff=is_staff, is_active=True,
+                          is_superuser=is_superuser, last_login=now,
+                          date_joined=now, **extra_fields)
+        user.set_password(password)
+        user.save(using=self._db)
+        return user
+
+    def create_user(self, email, password=None, **extra_fields):
+        return self._create_user(email, password, False, False,
+                                 **extra_fields)
+
+    def create_superuser(self, email, password, **extra_fields):
+        return self._create_user(email, password, True, True,
+                                 **extra_fields)
+
+
+class User(AbstractBaseUser, PermissionsMixin):
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = []
+
+    email = models.EmailField(_('email address'), max_length=254, unique=True)
+    first_name = models.CharField(_('first name'), max_length=30, blank=True)
+    last_name = models.CharField(_('last name'), max_length=30, blank=True)
+    is_staff = models.BooleanField(_('staff status'), default=False,
+                                   help_text=_('Designates whether the user can log into this admin '
+                                               'site.'))
+    is_active = models.BooleanField(_('active'), default=True,
+                                    help_text=_('Designates whether this user should be treated as '
+                                                'active. Unselect this instead of deleting accounts.'))
+    date_joined = models.DateTimeField(_('date joined'), default=timezone.now)
+    can_create_businesses = models.BooleanField(default=False)
+
+    objects = UserManager()
+
+    class Meta:
+        verbose_name = _('user')
+        verbose_name_plural = _('users')
+
+
+    def get_absolute_url(self):
+        return "/users/%s/" % urlquote(self.email)
+
+
+    def get_full_name(self):
+        """
+        Returns the first_name plus the last_name, with a space in between.
+        """
+        full_name = '%s %s' % (self.first_name, self.last_name)
+        return full_name.strip()
+
+
+    def get_short_name(self):
+        "Returns the short name for the user."
+        return self.first_name
+
+
+    def email_user(self, subject, message, from_email=None):
+        """
+        Sends an email to this User.
+        """
+        send_mail(subject, message, from_email, [self.email])
 
 
 class Sector(models.Model):
@@ -126,6 +208,10 @@ class Nationality(models.Model):
 
 
 class ApplicationStatus(models.Model):
+    CREATED = 'CREATED'
+    ESTABLISHED = 'ESTABLISHED'
+    DELETED = 'DELETED'
+
     name = models.CharField(max_length=20)
     friendly_name = models.CharField(max_length=255)
     description = models.TextField()
@@ -138,6 +224,9 @@ class ApplicationStatus(models.Model):
 
 
 class Role(models.Model):
+    RECRUITER = "RECRUITER"
+    JOB_SEEKER = "JOB_SEEKER"
+
     name = models.CharField(max_length=20)
 
     def __str__(self):
@@ -147,6 +236,7 @@ class Role(models.Model):
 class Business(models.Model):
     users = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='businesses')
     name = models.CharField(max_length=255)
+    token_store = models.ForeignKey('TokenStore', related_name='businesses', on_delete=models.DO_NOTHING)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
 
@@ -156,7 +246,6 @@ class Business(models.Model):
     class Meta:
         verbose_name_plural = "businesses"
         ordering = ('name',)
-
 
 
 class BusinessImage(models.Model):
@@ -248,7 +337,6 @@ class JobSeeker(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, related_name='job_seeker')
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
-    email = models.EmailField(blank=True)
     email_public = models.BooleanField(default=None)
     telephone = models.CharField(max_length=100, blank=True)
     telephone_public = models.BooleanField(default=None)
@@ -264,6 +352,7 @@ class JobSeeker(models.Model):
     active = models.BooleanField(default=True)
     cv = models.FileField(upload_to='cv/%Y/%m/%d', max_length=255, null=True)
     has_references = models.BooleanField(default=False)
+    truth_confirmation = models.BooleanField(default=False)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
 
@@ -325,3 +414,62 @@ class Message(models.Model):
 
     class Meta:
         ordering = ('created',)
+
+
+class EmailTemplate(models.Model):
+    MESSAGE = 'MESSAGE'
+
+    NAME_CHOICES = (
+        (MESSAGE, 'Message'),
+    )
+
+    name = models.CharField(max_length=256, choices=NAME_CHOICES, unique=True)
+    from_address = models.EmailField()
+    subject = models.CharField(max_length=1000)
+    body = models.TextField()
+    context_help = models.TextField()
+
+    def __str__(self):
+        return self.name
+
+
+class TokenStore(models.Model):
+    class NoTokens(Exception):
+        pass
+
+    tokens = models.IntegerField()
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.DO_NOTHING, related_name='token_stores')
+
+    def decrement(self):
+        with transaction.atomic():
+            token_store = TokenStore.objects.select_for_update().get(pk=self.pk)
+            if token_store.tokens > 0:
+                token_store.tokens -= 1
+                token_store.save()
+                self.tokens = token_store.tokens
+                return self.tokens
+            raise TokenStore.NoTokens("No more tokens")
+
+    def business_list(self):
+        return ", ".join(b.name for b in self.businesses.all())
+
+    def __str__(self):
+        return "{} token(s) for {}: {}".format(self.tokens, self.user.email, self.business_list())
+
+
+class InitialTokens(models.Model):
+    tokens = models.IntegerField()
+
+
+class AndroidPurchase(models.Model):
+    purchase_token = models.TextField(unique=True)
+    product_code = models.CharField(max_length=255)
+    token_store = models.ForeignKey(TokenStore, null=True, on_delete=models.SET_NULL)
+
+
+class ProductTokens(models.Model):
+    sku = models.CharField(max_length=255)
+    tokens = models.IntegerField()
+
+    class Meta:
+        verbose_name_plural = 'product tokens'

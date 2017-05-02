@@ -1,55 +1,46 @@
-{% extends "mjp_base.html" %}
+{% extends "mjp_base.html" %} {% block content %}
+<div class="container-fluid">
 
-{% block content %}
-	<div class="container-fluid">
+	<!-- Page Heading -->
+	<h1 class="page-header">My Companies</h1>
 
-                <!-- Page Heading -->
-                <div class="row">
-                    <div class="col-lg-12">
-                        <h1 class="page-header">
-                            My Companies
-                        </h1>
-						
-						<div class="col-lg-12">
-							<div class="row">
-								<div class="col-lg-12">
-									<div class="row">
-										<a href="/profile/create-business/" class="link-create-job btn btn-primary">Add Company</a>
-									</div>
-                                    <div class="row">
-                                    	<p class="listDetails">To add another company, please click on Add Company. Click on your company to add jobs and locations for your business. If you have multiple companies you can add them on this page</p>
-                                    </div>
-									<div class="row">
-										<div class="table-responsive">
-											<table class="table table-hover" id="list-table">
-												<thead>
-													<tr>
-                                                    	<th>Name</th>
-														<th>Logo</th>
-														<th># of Locations</th>
-														<th>Actions</th>
-													</tr>
-												</thead>
-												<tbody>
-													
-												</tbody>
-											</table>
-										</div>
-									</div>
-								</div>
-						</div>
-                        
-                    </div>
-                </div>
-                <!-- /.row -->
-               
+	<div class="row">
+		<div class="col-lg-12">
+			<div class="row">
+				<a href="/profile/create-business/" class="link-create-job btn btn-primary">Add Company</a>
+			</div>
+			<div class="row">
+				<p class="listDetails">To add another company, please click on Add Company. Click on your company to add jobs and locations for your business. If you have multiple companies you can add them on this page</p>
+			</div>
+			<div class="row">
+				<div class="table-responsive">
+					<table class="table table-hover" id="list-table">
+						<thead>
+							<tr>
+								<th>Name</th>
+								<th>Logo</th>
+								<th>Tokens</th>
+								<th># of Locations</th>
+								<th>Actions</th>
+							</tr>
+						</thead>
+						<tbody>
 
-            </div>
-            <!-- /.container-fluid -->
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- /.row -->
 
-{% endblock %}
-{% block pagescripts %}
+</div>
+	<!-- /.container-fluid -->
 
+	{% endblock %} {% block pagescripts %}
+
+	<script src="/static/web/js/lodash.min.js"></script>
 	<script src="/static/web/js/mjp-scripts/list-businesses.js"></script>
-	
-{% endblock %}
+
+	{% endblock %}
+

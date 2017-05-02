@@ -22,6 +22,7 @@ from .models import (
     EmailTemplate,
     TokenStore,
     InitialTokens,
+    ProductTokens,
 )
 
 
@@ -173,3 +174,8 @@ class TokenStoreAdmin(admin.ModelAdmin):
 
     def has_delete_permission(self, request, obj=None):
         return False
+
+
+@admin.register(ProductTokens)
+class ProductTokensAdmin(admin.ModelAdmin):
+    list_display = ('sku', 'tokens',)

@@ -31,6 +31,7 @@ from mjp.models import (
     TokenStore,
     InitialTokens,
     AndroidPurchase,
+    ProductTokens,
 )
 
 from mjp.serializers import (
@@ -84,6 +85,7 @@ SexViewSet = SimpleReadOnlyViewSet(Sex)
 NationalityViewSet = SimpleReadOnlyViewSet(Nationality)
 ApplicationStatusViewSet = SimpleReadOnlyViewSet(ApplicationStatus)
 RoleViewSet = SimpleReadOnlyViewSet(Role)
+ProductTokensViewSet = SimpleReadOnlyViewSet(ProductTokens)
 
 
 class UserBusinessImageViewSet(viewsets.ModelViewSet):

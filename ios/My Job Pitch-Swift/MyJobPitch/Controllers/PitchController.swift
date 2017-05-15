@@ -80,15 +80,6 @@ class PitchController: MJPController {
             self.noRecording.isHidden = true
             
             // get image
-//            let asset = AVURLAsset(url: videoUrl!)
-//            let imgGenerator = AVAssetImageGenerator(asset: asset)
-//            do {
-//                let cgImage = try imgGenerator.copyCGImage(at: CMTimeMake(0, 1), actualTime: nil)
-//                self.imgView.image = UIImage(cgImage: cgImage)
-//                if let indicator = self.imgView.viewWithTag(1000) {
-//                    indicator.isHidden = true
-//                }
-//            } catch {}
             
             let asset = AVAsset(url: videoUrl!)
             let assetImageGenerator = AVAssetImageGenerator(asset: asset)

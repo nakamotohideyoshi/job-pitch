@@ -1,7 +1,7 @@
 package com.myjobpitch.api.data;
 
 public class InitialTokens {
-    protected Integer tokens;
+    private Integer tokens;
     public Integer getTokens() {
         return tokens;
     }

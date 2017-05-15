@@ -119,7 +119,7 @@ public class BusinessEditFragment extends FormFragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == Activity.RESULT_OK) {
-            if (requestCode == ImageSelector.IMAGE_PICK) {
+            if (requestCode == AppData.IMAGE_PICK) {
                 imageSelector.setImageUri(data.getData());
             }
         }

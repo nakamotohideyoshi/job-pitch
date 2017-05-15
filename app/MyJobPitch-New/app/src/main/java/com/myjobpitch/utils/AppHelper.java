@@ -1,5 +1,6 @@
 package com.myjobpitch.utils;
 
+import android.graphics.Bitmap;
 import android.location.Location;
 import android.util.TypedValue;
 import android.view.View;
@@ -14,8 +15,10 @@ import com.myjobpitch.api.data.Business;
 import com.myjobpitch.api.data.Job;
 import com.myjobpitch.api.data.JobSeeker;
 import com.myjobpitch.api.data.Pitch;
-import com.squareup.picasso.Callback;
-import com.squareup.picasso.Picasso;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.assist.FailReason;
+import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 
 public class AppHelper {
 
@@ -166,25 +169,36 @@ public class AppHelper {
         if (imageView == null) return;
 
         final ProgressBar progressBar = getProgressBar(imageView);
-        if (progressBar != null) {
-            progressBar.setVisibility(View.VISIBLE);
-        }
 
-        Picasso.with(MainActivity.instance).load(url).into(imageView, new Callback() {
+        DisplayImageOptions displayImageOptions = new DisplayImageOptions.Builder()
+                .considerExifParams(true)
+                .cacheOnDisk(true)
+                .build();
+
+        ImageLoader.getInstance().displayImage(url, imageView, displayImageOptions, new ImageLoadingListener() {
             @Override
-            public void onSuccess() {
+            public void onLoadingStarted(String imageUri, View view) {
+                if (progressBar != null) {
+                    progressBar.setVisibility(View.VISIBLE);
+                }
+            }
+            @Override
+            public void onLoadingFailed(String uri, View view, FailReason failReason) {
                 if (progressBar != null) {
                     progressBar.setVisibility(View.GONE);
                 }
             }
-
             @Override
-            public void onError() {
+            public void onLoadingComplete(String uri, View view, Bitmap loadedImage) {
                 if (progressBar != null) {
                     progressBar.setVisibility(View.GONE);
                 }
+            }
+            @Override
+            public void onLoadingCancelled(String uri, View view) {
             }
         });
+
     }
 
     public static void loadJobLogo(Job job, View container) {

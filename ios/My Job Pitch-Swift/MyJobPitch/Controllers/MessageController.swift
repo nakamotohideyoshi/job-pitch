@@ -8,6 +8,7 @@
 
 import UIKit
 import JSQMessagesViewController
+import Nuke
 
 class MessageController: JSQMessagesViewController {
     
@@ -102,17 +103,16 @@ class MessageController: JSQMessagesViewController {
         }
         
         if let pitch = jobSeeker.getPitch() {
-            NSURLConnection.sendAsynchronousRequest(URLRequest(url: (URL(string:pitch.thumbnail))!),
-                                                    queue: OperationQueue.main) { (response, data, error) in
-                                                        if data != nil {
-                                                            let avatarImage = JSQMessagesAvatarImageFactory.avatarImage(with: UIImage(data: data!), diameter: 10)
-                                                            if AppData.user.isJobSeeker() {
-                                                                self.senderAvatar = avatarImage
-                                                            } else {
-                                                                self.receiverAvatar = avatarImage
-                                                            }
-                                                            self.collectionView.reloadData()
-                                                        }
+            Nuke.loadImage(with: (URL(string:pitch.thumbnail))!, into: UIView()) { (result, _) in
+                if result.error == nil {
+                    let avatarImage = JSQMessagesAvatarImageFactory.avatarImage(with: result.value, diameter: 10)
+                    if AppData.user.isJobSeeker() {
+                        self.senderAvatar = avatarImage
+                    } else {
+                        self.receiverAvatar = avatarImage
+                    }
+                    self.collectionView.reloadData()
+                }
             }
         } else {
             let avatarImage = JSQMessagesAvatarImageFactory.avatarImage(with: UIImage(named: "no-img"), diameter: 10)
@@ -129,22 +129,21 @@ class MessageController: JSQMessagesViewController {
     func setAavatar(sender: Bool, path: String!, local: String!) {
         
         if path != nil {
-            NSURLConnection.sendAsynchronousRequest(URLRequest(url: (URL(string:path))!),
-                                                    queue: OperationQueue.main) { (response, data, error) in
-                                                        var avatarImage: JSQMessagesAvatarImage!
-                                                        if data != nil {
-                                                            avatarImage = JSQMessagesAvatarImageFactory.avatarImage(with: UIImage(data: data!), diameter: 15)
-                                                        } else {
-                                                            avatarImage = JSQMessagesAvatarImageFactory.avatarImage(with: UIImage(named: local), diameter: 15)
-                                                        }
-                                                        
-                                                        if sender {
-                                                            self.senderAvatar = avatarImage
-                                                        } else {
-                                                            self.receiverAvatar = avatarImage
-                                                        }
-                                                        
-                                                        self.collectionView.reloadData()
+            Nuke.loadImage(with: (URL(string:path))!, into: UIView()) { (result, _) in
+                var avatarImage: JSQMessagesAvatarImage!
+                if result.error == nil {
+                    avatarImage = JSQMessagesAvatarImageFactory.avatarImage(with: result.value, diameter: 15)
+                } else {
+                    avatarImage = JSQMessagesAvatarImageFactory.avatarImage(with: UIImage(named: local), diameter: 15)
+                }
+                
+                if sender {
+                    self.senderAvatar = avatarImage
+                } else {
+                    self.receiverAvatar = avatarImage
+                }
+                
+                self.collectionView.reloadData()
             }
         } else {
             let avatarImage = JSQMessagesAvatarImageFactory.avatarImage(with: UIImage(named: local), diameter: 15)

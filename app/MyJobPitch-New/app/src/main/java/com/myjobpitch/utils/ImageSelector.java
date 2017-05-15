@@ -1,9 +1,10 @@
 package com.myjobpitch.utils;
 
-import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
+import android.graphics.Matrix;
+import android.media.ExifInterface;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.util.DisplayMetrics;
@@ -13,11 +14,12 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
-
 import com.myjobpitch.MainActivity;
 import com.myjobpitch.R;
-import com.squareup.picasso.Callback;
-import com.squareup.picasso.Picasso;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.assist.FailReason;
+import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 
 import java.io.IOException;
 
@@ -25,9 +27,11 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class ImageSelector {
+import static android.media.ExifInterface.ORIENTATION_ROTATE_180;
+import static android.media.ExifInterface.ORIENTATION_ROTATE_270;
+import static android.media.ExifInterface.ORIENTATION_ROTATE_90;
 
-    public static final int IMAGE_PICK = 11000;
+public class ImageSelector {
 
     @BindView(R.id.image_add_button)
     Button addButton;
@@ -87,13 +91,27 @@ public class ImageSelector {
         }
 
         final ProgressBar progressBar = AppHelper.getProgressBar(imageView);
-        if (progressBar != null) {
-            progressBar.setVisibility(View.VISIBLE);
-        }
 
-        Picasso.with(MainActivity.instance).load(imagePath).into(imageView, new Callback() {
+        DisplayImageOptions displayImageOptions = new DisplayImageOptions.Builder()
+                .considerExifParams(true)
+                .cacheOnDisk(true)
+                .build();
+
+        ImageLoader.getInstance().displayImage(imagePath, imageView, displayImageOptions, new ImageLoadingListener() {
             @Override
-            public void onSuccess() {
+            public void onLoadingStarted(String imageUri, View view) {
+                if (progressBar != null) {
+                    progressBar.setVisibility(View.VISIBLE);
+                }
+            }
+            @Override
+            public void onLoadingFailed(String uri, View view, FailReason failReason) {
+                if (progressBar != null) {
+                    progressBar.setVisibility(View.GONE);
+                }
+            }
+            @Override
+            public void onLoadingComplete(String uri, View view, Bitmap loadedImage) {
                 if (progressBar != null) {
                     progressBar.setVisibility(View.GONE);
                 }
@@ -104,21 +122,16 @@ public class ImageSelector {
                     addButton.setText("Add Logo");
                     imageUri = null;
                 } else {
-                    BitmapDrawable drawable = (BitmapDrawable) imageView.getDrawable();
-                    bitmap = drawable.getBitmap();
+                    bitmap = loadedImage;
                     removeButton.setVisibility(View.VISIBLE);
                     addButton.setText("Change Logo");
                 }
-
             }
-
             @Override
-            public void onError() {
-                if (progressBar != null) {
-                    progressBar.setVisibility(View.GONE);
-                }
+            public void onLoadingCancelled(String uri, View view) {
             }
         });
+
     }
 
     public Bitmap getImage() {
@@ -127,11 +140,33 @@ public class ImageSelector {
 
     public void setImageUri(Uri uri) {
         try {
-            bitmap = MediaStore.Images.Media.getBitmap(MainActivity.instance.getContentResolver(), uri);
-            imageView.setImageBitmap(bitmap);
-            removeButton.setVisibility(View.VISIBLE);
-            addButton.setText("Change Logo");
-            imageUri = uri;
+            String[] projection = { MediaStore.Images.Media.DATA };
+            Cursor cursor = MainActivity.instance.getContentResolver().query(uri, projection, null, null, null);
+            if(cursor != null) {
+                int column_index = cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DATA);
+                cursor.moveToFirst();
+                String path = cursor.getString(column_index);
+                ExifInterface exif = new ExifInterface(path);
+                int orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, 1);
+                Matrix matrix = new Matrix();
+                switch (orientation) {
+                    case ORIENTATION_ROTATE_90:
+                        matrix.postRotate(90);
+                        break;
+                    case ORIENTATION_ROTATE_180:
+                        matrix.postRotate(180);
+                        break;
+                    case ORIENTATION_ROTATE_270:
+                        matrix.postRotate(270);
+                        break;
+                }
+                bitmap = BitmapFactory.decodeFile(path);
+                bitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
+                imageView.setImageBitmap(bitmap);
+                removeButton.setVisibility(View.VISIBLE);
+                addButton.setText("Change Logo");
+                imageUri = uri;
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -143,9 +178,7 @@ public class ImageSelector {
 
     @OnClick(R.id.image_add_button)
     void onClickAdd() {
-        Intent intent = new Intent(Intent.ACTION_PICK);
-        intent.setType("image/*");
-        MainActivity.instance.startActivityForResult(intent, IMAGE_PICK);
+        MainActivity.instance.showImagePicker();
     }
 
     @OnClick(R.id.image_remove_button)

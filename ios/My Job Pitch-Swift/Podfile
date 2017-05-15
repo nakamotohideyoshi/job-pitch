@@ -1,4 +1,4 @@
-platform :ios, '8.0'
+platform :ios, '10.0'
 use_frameworks!
 
 target 'MyJobPitch' do
@@ -16,5 +16,6 @@ target 'MyJobPitch' do
     pod 'LLSimpleCamera'
     pod 'JSQMessagesViewController'
     pod 'JTSImageViewController'
+    pod 'Nuke'
     
 end

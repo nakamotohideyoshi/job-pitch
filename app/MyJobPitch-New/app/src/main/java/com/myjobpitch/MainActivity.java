@@ -2,9 +2,11 @@ package com.myjobpitch;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
@@ -34,6 +36,8 @@ import com.myjobpitch.fragments.PitchFragment;
 import com.myjobpitch.fragments.SelectJobFragment;
 import com.myjobpitch.utils.AppData;
 import com.myjobpitch.utils.Popup;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -66,6 +70,8 @@ public class MainActivity extends AppCompatActivity
         ButterKnife.bind(this);
 
         Fresco.initialize(getApplicationContext());
+        ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(this).build();
+        ImageLoader.getInstance().init(config);
 
         mDrawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
         mNavigationView.setNavigationItemSelectedListener(this);
@@ -221,14 +227,31 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        getCurrentFragment().onActivityResult(requestCode, resultCode, data);
+    public void showImagePicker() {
+        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            String[] permissions = {android.Manifest.permission.WRITE_EXTERNAL_STORAGE};
+            ActivityCompat.requestPermissions(this, permissions, 11000);
+        } else {
+            Intent intent = new Intent(Intent.ACTION_PICK);
+            intent.setType("image/*");
+            startActivityForResult(intent, AppData.IMAGE_PICK);
+        }
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
-        getCurrentFragment().onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == 11000) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                showImagePicker();
+            }
+        } else {
+            getCurrentFragment().onRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        getCurrentFragment().onActivityResult(requestCode, resultCode, data);
     }
 
     @Override

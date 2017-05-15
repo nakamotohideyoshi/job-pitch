@@ -6,6 +6,7 @@ import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -130,6 +131,7 @@ public class LoginFragment extends FormFragment {
                 }
 
                 AppData.loadData();
+
                 if (AppData.user.isJobSeeker()) {
                     JobSeeker jobSeeker = MJPApi.shared().get(JobSeeker.class, AppData.user.getJob_seeker());
                     AppData.existProfile = jobSeeker.getProfile() != null;

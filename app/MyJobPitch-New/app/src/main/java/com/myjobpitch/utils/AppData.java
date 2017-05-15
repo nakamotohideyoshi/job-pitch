@@ -89,4 +89,7 @@ public class AppData {
     public static final int JOBSEEKER = 1;
     public static final int RECRUITER = 2;
 
+
+    public static final int IMAGE_PICK = 11000;
+
 }

@@ -41,6 +41,7 @@ class BusinessEditController: MJPController {
             navigationItem.title = "Add Business"
             isNew = true
             creditsLabel.text = AppData.initialTokens.tokens.stringValue + " free credits"
+            imgView.image = UIImage(named: "default-logo")
         } else {
             navigationItem.title = "Edit Business"
             
@@ -58,9 +59,11 @@ class BusinessEditController: MJPController {
         nameField.text = business.name
         creditsLabel.text = String(format: "%@", business.tokens)
         if let image = business.getImage() {
-            AppHelper.loadImageURL(imageUrl: (image.thumbnail)!, imageView: imgView, completion: nil)
+            AppHelper.loadImageURL(imageUrl: (image.image)!, imageView: imgView, completion: nil)
             removeImageButton.isHidden = false
             addLogoButton.setTitle("Change Logo", for: .normal)
+        } else {
+            imgView.image = UIImage(named: "default-logo")
         }
     }
     

@@ -180,7 +180,7 @@ public class SelectJobFragment extends BaseFragment {
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
 
-            if(convertView == null) {
+            if (convertView == null) {
                 convertView = LayoutInflater.from(getContext()).inflate(R.layout.cell_job_list, parent, false);
             }
 

@@ -263,7 +263,7 @@ class API: NSObject {
                                                    method: RKRequestMethod.POST,
                                                    path: String(format: "/api/%@/", endpoint),
                                                    parameters: nil) { (formData) in
-                                                    formData?.appendPart(withFileData: UIImagePNGRepresentation(image),
+                                                    formData?.appendPart(withFileData: UIImageJPEGRepresentation(image, 1),
                                                                          name: "image",
                                                                          fileName: "photo.png",
                                                                          mimeType: "image/png")

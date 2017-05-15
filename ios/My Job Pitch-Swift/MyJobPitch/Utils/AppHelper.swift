@@ -9,6 +9,7 @@
 import UIKit
 import CoreLocation
 import MBProgressHUD
+import Nuke
 
 class AppHelper: NSObject {
 
@@ -81,13 +82,12 @@ class AppHelper: NSObject {
         indicator.tag = 1000
         imageView.addSubview(indicator)
         imageView.image = nil
-        NSURLConnection.sendAsynchronousRequest(URLRequest(url: (URL(string:imageUrl))!),
-                                                queue: OperationQueue.main) { (response, data, error) in
-                                                    if imageView.image == nil && data != nil {
-                                                        imageView.image = UIImage(data: data!)
-                                                    }
-                                                    indicator.removeFromSuperview()
-                                                    completion?()
+        Nuke.loadImage(with: URL(string: imageUrl)!, into: imageView) { (result, _) in
+            if result.error == nil && imageView.image == nil {
+                imageView.image = result.value
+            }
+            indicator.removeFromSuperview()
+            completion?()
         }
         
     }

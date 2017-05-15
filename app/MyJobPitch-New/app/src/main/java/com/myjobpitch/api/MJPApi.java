@@ -29,6 +29,7 @@ import com.myjobpitch.api.data.MessageForCreation;
 import com.myjobpitch.api.data.MessageForUpdate;
 import com.myjobpitch.api.data.Nationality;
 import com.myjobpitch.api.data.Pitch;
+import com.myjobpitch.api.data.ProductToken;
 import com.myjobpitch.api.data.PurchaseInfo;
 import com.myjobpitch.api.data.Role;
 import com.myjobpitch.api.data.Sector;
@@ -91,6 +92,7 @@ public class MJPApi {
         classEndPoints.put(ApplicationStatusUpdate.class, "applications");
         classEndPoints.put(MessageForCreation.class, "messages");
         classEndPoints.put(MessageForUpdate.class, "messages");
+        classEndPoints.put(ProductToken.class, "product-tokens");
     }
 
     private String apiRoot;

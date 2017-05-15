@@ -224,7 +224,7 @@ sdafsdf</string>
             <objects>
                 <navigationController navigationBarHidden="YES" id="Tn3-dg-KpG" sceneMemberID="viewController">
                     <nil key="simulatedTopBarMetrics"/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" translucent="NO" id="pbS-fN-baU">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" translucent="NO" id="pbS-fN-baU">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -670,7 +670,7 @@ et dolore magna aliqua.</string>
                                                 <color key="textColor" red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="calibratedRGB"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
-                                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="default-logo" translatesAutoresizingMaskIntoConstraints="NO" id="hAN-9a-Y1V">
+                                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="hAN-9a-Y1V">
                                                 <rect key="frame" x="50" y="252" width="275" height="206"/>
                                                 <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                                                 <constraints>
@@ -4212,7 +4212,7 @@ Now tap to create your work places.</string>
                                                     <action selector="myLocationAction:" destination="8Ap-eK-You" eventType="touchUpInside" id="LyV-qQ-ctR"/>
                                                 </connections>
                                             </button>
-                                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="default-logo" translatesAutoresizingMaskIntoConstraints="NO" id="VMf-H8-r9h">
+                                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="VMf-H8-r9h">
                                                 <rect key="frame" x="50" y="416" width="275" height="206"/>
                                                 <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                                                 <constraints>
@@ -4438,7 +4438,7 @@ Now tap to create your work places.</string>
                                                 <color key="textColor" red="1" green="0.0" blue="0.031372549020000001" alpha="1" colorSpace="calibratedRGB"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
-                                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="default-logo" translatesAutoresizingMaskIntoConstraints="NO" id="qzN-V4-5oG">
+                                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="qzN-V4-5oG">
                                                 <rect key="frame" x="50" y="379" width="275" height="206"/>
                                                 <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                                                 <constraints>
@@ -5121,7 +5121,6 @@ jobs yet.</string>
         <image name="camera-switch-icon" width="33" height="33"/>
         <image name="check-icon" width="32" height="32"/>
         <image name="close-icon" width="22" height="22"/>
-        <image name="default-logo" width="760" height="631"/>
         <image name="default_marker" width="21" height="38"/>
         <image name="delete-big-icon" width="50" height="50"/>
         <image name="edit-big-icon" width="50" height="50"/>

@@ -169,24 +169,17 @@ class JobEditController: MJPController {
             hoursField.text = selectedHoursNames.joined(separator: ", ")
             
             if let image = job.getImage() {
-                AppHelper.loadImageURL(imageUrl: (image.thumbnail)!, imageView: imgView, completion: nil)
+                AppHelper.loadImageURL(imageUrl: (image.image)!, imageView: imgView, completion: nil)
                 if job.images != nil && job.images.count > 0 {
                     origImage = image
                     removeImageButton.isHidden = false
                     addLogoButton.setTitle("Change Logo", for: .normal)
                 }
-            }
-        }
-        
-        if removeImageButton.isHidden {
-            if let image = location?.getImage() {
-                AppHelper.loadImageURL(imageUrl: (image.thumbnail)!, imageView: imgView, completion: nil)
             } else {
                 imgView.image = UIImage(named: "default-logo")
             }
-//            imgView.alpha = 0.2
         } else {
-//            imgView.alpha = 1
+            imgView.image = UIImage(named: "default-logo")
         }
         
     }
@@ -240,7 +233,6 @@ class JobEditController: MJPController {
         } else {
             imgView.image = UIImage(named: "default-logo")
         }
-//        imgView.alpha = 0.2
         removeImageButton.isHidden = true
         addLogoButton.setTitle("Add Logo", for: .normal)
         
@@ -378,7 +370,6 @@ extension JobEditController: UIImagePickerControllerDelegate {
         logoImage = info[UIImagePickerControllerOriginalImage] as? UIImage
         
         imgView.image = logoImage
-//        imgView.alpha = 1
         removeImageButton.isHidden = false
         addLogoButton.setTitle("Change Logo", for: .normal)
         
@@ -404,7 +395,6 @@ extension JobEditController: DropboxBrowserDelegate {
                 //PopupController.showGray(fileName + "is not a image file", ok: "OK")
             } else {
                 imgView.image = logoImage
-//                imgView.alpha = 1
                 removeImageButton.isHidden = false
                 addLogoButton.setTitle("Change Logo", for: .normal)
             }

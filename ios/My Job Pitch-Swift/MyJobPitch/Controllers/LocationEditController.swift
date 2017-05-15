@@ -108,24 +108,19 @@ class LocationEditController: MJPController {
             longitude = location.longitude
             
             if let image = location.getImage() {
-                AppHelper.loadImageURL(imageUrl: (image.thumbnail)!, imageView: imgView, completion: nil)
+                AppHelper.loadImageURL(imageUrl: (image.image)!, imageView: imgView, completion: nil)
                 if location.images != nil && location.images.count > 0 {
                     origImage = image
                     removeImageButton.isHidden = false
                     addLogoButton.setTitle("Change Logo", for: .normal)
                 }
+            } else {
+                imgView.image = UIImage(named: "default-logo")
             }
             
         } else {
             emailField.text = AppData.email
-        }
-        
-        if removeImageButton.isHidden {
-            if let image = business?.getImage() {
-                AppHelper.loadImageURL(imageUrl: (image.thumbnail)!, imageView: imgView, completion: nil)
-            } else {
-                imgView.image = UIImage(named: "default-logo")
-            }
+            imgView.image = UIImage(named: "default-logo")
         }
         
     }

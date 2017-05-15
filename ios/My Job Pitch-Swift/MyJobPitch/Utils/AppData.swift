@@ -178,6 +178,9 @@ class AppData: NSObject {
         
         API.shared().loadInitialTokens(success: { (data) in
             initialTokens = data as! InitialTokens
+            if isDataLoaded() {
+                success()
+            }
         }) { (message, errors) in
             if !failed {
                 failed = true

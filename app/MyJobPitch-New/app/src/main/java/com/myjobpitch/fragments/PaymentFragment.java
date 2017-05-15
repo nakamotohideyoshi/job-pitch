@@ -1,5 +1,6 @@
 package com.myjobpitch.fragments;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.AsyncTask;
@@ -10,12 +11,14 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.myjobpitch.R;
 import com.myjobpitch.api.MJPApi;
 import com.myjobpitch.api.MJPApiException;
 import com.myjobpitch.api.data.Business;
+import com.myjobpitch.api.data.ProductToken;
 import com.myjobpitch.tasks.APITask;
 import com.myjobpitch.utils.IabBroadcastReceiver;
 import com.myjobpitch.utils.IabHelper;
@@ -35,7 +38,6 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 
 public class PaymentFragment extends FormFragment implements IabBroadcastReceiver.IabBroadcastListener {
 
@@ -45,27 +47,22 @@ public class PaymentFragment extends FormFragment implements IabBroadcastReceive
     @BindView(R.id.business_credits)
     TextView creditsView;
 
-    @BindView(R.id.sku_spinner)
-    MaterialBetterSpinner skuSpinner;
-
-    @BindView(R.id.subscribe_comment)
-    TextView sbuscribeView;
+    @BindView(R.id.product_list)
+    ListView productListView;
 
     public Business business;
 
     private List<Business> businesses;
+    private ArrayList<ProductModel> products;
+
+    private ProductAdapter productAdapter;
 
     private Purchase currentPurchase;
     private IabHelper mHelper;
     private IabBroadcastReceiver mBroadcastReceiver;
 
     private static final String PAYLOAD = "myjobpitch";
-    private static final String SKU_CREDITS = "tokens_1";
-    private static final String SKU_SUBSCRIBE = "subscrip";
-
     private static final int RC_REQUEST = 10001;
-    private static final int SUBSCRIBED_CREDITS = 50;
-    private static final int ADD_CREDITS = 30;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -84,20 +81,28 @@ public class PaymentFragment extends FormFragment implements IabBroadcastReceive
             }
         });
 
-        skuSpinner.setAdapter(new ArrayAdapter<>(getApp(),  android.R.layout.simple_dropdown_item_1line, new ArrayList<String>()));
+        productAdapter = new ProductAdapter(getApp(), new ArrayList<ProductModel>());
+        productListView.setAdapter(productAdapter);
 
+        view.setVisibility(View.INVISIBLE);
         Loading.show("Loading...");
-        loadBusinesses();
+        loadData();
 
         return view;
     }
 
-    void loadBusinesses() {
+    void loadData() {
 
-        new APITask(null, this) {
+        new APITask(this) {
             @Override
             protected void runAPI() throws MJPApiException {
                 businesses = MJPApi.shared().getUserBusinesses();
+                List<ProductToken> productTokens = MJPApi.shared().get(ProductToken.class);
+
+                products = new ArrayList<>();
+                for (ProductToken pt : productTokens) {
+                    products.add(new ProductModel(pt.getSku(), pt.getTokens()));
+                }
             }
             @Override
             protected void onSuccess() {
@@ -131,18 +136,17 @@ public class PaymentFragment extends FormFragment implements IabBroadcastReceive
                     return;
                 }
 
-                if (mHelper == null) return;
-
                 mBroadcastReceiver = new IabBroadcastReceiver(PaymentFragment.this);
                 IntentFilter broadcastFilter = new IntentFilter(IabBroadcastReceiver.ACTION);
                 getApp().registerReceiver(mBroadcastReceiver, broadcastFilter);
 
                 // IAB is fully set up. Now, let's get an inventory of stuff we own.
+                ArrayList skus = new ArrayList();
+                for (ProductModel p : products) {
+                    skus.add(p.sku);
+                }
                 try {
-                    ArrayList moreItemSkus = new ArrayList();
-                    moreItemSkus.add(SKU_CREDITS);
-                    moreItemSkus.add(SKU_CREDITS);
-                    mHelper.queryInventoryAsync(true, moreItemSkus, null, mGotInventoryListener);
+                    mHelper.queryInventoryAsync(true, skus, null, mGotInventoryListener);
                 } catch (IabHelper.IabAsyncInProgressException e) {
                     Popup.showError("Error querying inventory. Another async operation in progress.");
                 }
@@ -150,47 +154,6 @@ public class PaymentFragment extends FormFragment implements IabBroadcastReceive
             }
         });
 
-//        try {
-//            AndroidPublisher androidPublisher = AndroidPublisherHelper.init(ApplicationConfig.APPLICATION_NAME);
-//            InappproductsListResponse list = androidPublisher.inappproducts().list(ApplicationConfig.PACKAGE_NAME).execute();
-//            for (InAppProduct p : list.getInappproduct()) {
-//                int i = 0;
-//            }
-//
-//        } catch (Exception ex) {
-//            complain(ex.getLocalizedMessage());
-//        }
-
-//        try {
-//            NetHttpTransport httpTransport = GoogleNetHttpTransport.newTrustedTransport();
-//            FileDataStoreFactory dataStoreFactory = new FileDataStoreFactory(new java.io.File(System.getProperty("user.home"), ".store/plus_sample"));
-//            // authorization
-//
-//            GoogleClientSecrets clientSecrets = GoogleClientSecrets.load(JacksonFactory.getDefaultInstance(),
-//                    new InputStreamReader(PaymentActivity.class.getResourceAsStream("/client_secrets.json")));
-//            if (clientSecrets.getDetails().getClientId().startsWith("Enter")
-//                    || clientSecrets.getDetails().getClientSecret().startsWith("Enter ")) {
-//                System.out.println(
-//                        "Enter Client ID and Secret from https://code.google.com/apis/console/?api=plus "
-//                                + "into plus-cmdline-sample/src/main/resources/client_secrets.json");
-//                System.exit(1);
-//            }
-//            // set up authorization code flow
-//            GoogleAuthorizationCodeFlow flow = new GoogleAuthorizationCodeFlow.Builder(
-//                    httpTransport, JacksonFactory.getDefaultInstance(), clientSecrets,
-//                    Collections.singleton(PlusScopes.PLUS_ME)).setDataStoreFactory(
-//                    dataStoreFactory).build();
-//            // authorize
-//            Credential credential = new AuthorizationCodeInstalledApp(flow, new LocalServerReceiver()).authorize("user");
-//
-//            // set up global Plus instance
-//            Plus plus = new Plus.Builder(httpTransport, JacksonFactory.getDefaultInstance(), credential).setApplicationName(
-//                    "MJP-MyJobPitch/1.0").build();
-//
-//            // ...
-//        } catch (Exception ex) {
-//            complain(ex.getLocalizedMessage());
-//        }
     }
 
     @Override
@@ -198,38 +161,8 @@ public class PaymentFragment extends FormFragment implements IabBroadcastReceive
         return new HashMap<String, EditText>() {
             {
                 put("business", businessSpinner);
-                put("sku", skuSpinner);
             }
         };
-    }
-
-    @OnClick(R.id.purchase_button)
-    public void onClickPurchase() {
-        if (!valid()) return;
-
-        String sku = skuSpinner.getText().toString();
-
-        Loading.show(null);
-        try {
-            mHelper.launchPurchaseFlow(getApp(), sku, RC_REQUEST, mPurchaseFinishedListener, PAYLOAD);
-        } catch (IabHelper.IabAsyncInProgressException e) {
-            Popup.showError("Error launching purchase flow. Another async operation in progress.");
-        }
-    }
-
-    @OnClick(R.id.subscribe_button)
-    public void onClickSubscribe() {
-        if (!mHelper.subscriptionsSupported()) {
-            Popup.showError("Subscriptions not supported on your device yet. Sorry!");
-            return;
-        }
-
-//        Loading.show(null);
-//        try {
-//            mHelper.launchPurchaseFlow(getApp(), SKU_SUBSCRIBE, RC_REQUEST, mPurchaseFinishedListener, PAYLOAD);
-//        } catch (IabHelper.IabAsyncInProgressException e) {
-//            Popup.showError("Error launching purchase flow. Another async operation in progress.");
-//        }
     }
 
     @Override
@@ -252,8 +185,6 @@ public class PaymentFragment extends FormFragment implements IabBroadcastReceive
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         Loading.hide();
 
-        if (mHelper == null) return;
-
         if (!mHelper.handleActivityResult(requestCode, resultCode, data)) {
             super.onActivityResult(requestCode, resultCode, data);
         } else {
@@ -270,98 +201,78 @@ public class PaymentFragment extends FormFragment implements IabBroadcastReceive
         }
     }
 
-    protected  void sendPurchaseInfoToServer() {
+    void sendPurchaseInfoToServer() {
         Loading.show("Updating...");
-        String productId = currentPurchase.getSku();
-        String purchaseToken = currentPurchase.getToken();
-        (new SendPurchaseInfoTask(productId, purchaseToken)).execute();
-    }
 
-    private class SendPurchaseInfoTask extends AsyncTask<Void, Void, Business> {
-        final String productId;
-        final String purchaseToken;
+        final String productId = currentPurchase.getSku();
+        final String purchaseToken = currentPurchase.getToken();
 
-        public SendPurchaseInfoTask(String productId, String purchaseToken) {
-            this.productId = productId;
-            this.purchaseToken = purchaseToken;
-        }
+        new AsyncTask<Void, Void, Business>() {
 
-        @Override
-        protected Business doInBackground(Void... params) {
-            try {
+            @Override
+            protected Business doInBackground(Void... params) {
                 try {
-                    return MJPApi.shared().sendPurchaseInfo(business.getId(), productId, purchaseToken);
-                } catch (MJPApiException e) {
+                    try {
+                        return MJPApi.shared().sendPurchaseInfo(business.getId(), productId, purchaseToken);
+                    } catch (MJPApiException e) {
+                        e.printStackTrace();
+                    }
+                } catch (RestClientException e) {
                     e.printStackTrace();
                 }
-            } catch (RestClientException e) {
-                e.printStackTrace();
+                return null;
             }
-            return null;
-        }
 
-        @Override
-        protected void onPostExecute(final Business business) {
-            if (business == null ) {
-                Popup.showError("Connection Error: Please check your internet connection");
-            } else {
-                try {
-                    Loading.show("Processing...");
-                    mHelper.consumeAsync(currentPurchase, mConsumeFinishedListener);
-                } catch (IabHelper.IabAsyncInProgressException e) {
-                    e.printStackTrace();
+            @Override
+            protected void onPostExecute(final Business business) {
+                if (business == null ) {
+                    Popup.showError("Connection Error: Please check your internet connection");
+                } else {
+                    try {
+                        Loading.show("Processing...");
+                        mHelper.consumeAsync(currentPurchase, mConsumeFinishedListener);
+                    } catch (IabHelper.IabAsyncInProgressException e) {
+                        e.printStackTrace();
+                    }
+                    creditsView.setText("Credits: " + business.getTokens());
                 }
-                creditsView.setText("Credits: " + business.getTokens());
             }
-        }
 
-        @Override
-        protected void onCancelled() {
-            Loading.hide();
-        }
+            @Override
+            protected void onCancelled() {
+                Loading.hide();
+            }
+        }.execute();
     }
 
     IabHelper.QueryInventoryFinishedListener mGotInventoryListener = new IabHelper.QueryInventoryFinishedListener() {
         public void onQueryInventoryFinished(IabResult result, Inventory inventory) {
 
-            if (mHelper == null) {
-                return;
-            };
+            Loading.hide();
 
             if (result.isFailure()) {
                 Popup.showError("Failed to query inventory: " + result);
                 return;
             }
 
-            Loading.hide();
+            getView().setVisibility(View.VISIBLE);
 
-            SkuDetails subscribeDetails = inventory.getSkuDetails(SKU_SUBSCRIBE);
-            if (subscribeDetails != null) {
-//                Purchase subscribe = inventory.getPurchase(SKU_SUBSCRIBE);
-//                mSubscribedToInfiniteCredits = (subscribe != null && subscribe.getDeveloperPayload() == PAYLOAD);
-//                if (mSubscribedToInfiniteCredits) {
-//                    mCredits += SUBSCRIBED_CREDITS;
-//                    saveData();
-//                } else {
-//                    subscribeButton.setEnabled(true);
-//                    subscribeButton.setAlpha(1);
-//                }
-                sbuscribeView.setText("(50 Credits / " + subscribeDetails.getPrice() + ")");
+            for (ProductModel p : products) {
+                SkuDetails details = inventory.getSkuDetails(p.sku);
+                if (details != null) {
+                    p.price = details.getPrice();
+                }
             }
 
-            List<String> items = new ArrayList<>();
-            SkuDetails addDetails = inventory.getSkuDetails(SKU_CREDITS);
-            if (addDetails != null) {
-                items.add("30 Credits / " + addDetails.getPrice());
-            }
-            skuSpinner.setAdapter(new ArrayAdapter<>(getApp(),  android.R.layout.simple_dropdown_item_1line, items));
+            productAdapter.addAll(products);
 
-            Purchase creditPurchase = inventory.getPurchase(SKU_CREDITS);
-            if (creditPurchase != null && creditPurchase.getDeveloperPayload().equals(PAYLOAD)) {
-                businessSpinner.setText(SKU_CREDITS);
-                currentPurchase = creditPurchase;
-                sendPurchaseInfoToServer();
-                return;
+            for (ProductModel p : products) {
+                Purchase creditPurchase = inventory.getPurchase(p.sku);
+                if (creditPurchase != null && creditPurchase.getDeveloperPayload().equals(PAYLOAD)) {
+                    currentPurchase = creditPurchase;
+                    sendPurchaseInfoToServer();
+                    break;
+                }
             }
 
         }
@@ -369,8 +280,6 @@ public class PaymentFragment extends FormFragment implements IabBroadcastReceive
 
     IabHelper.OnIabPurchaseFinishedListener mPurchaseFinishedListener = new IabHelper.OnIabPurchaseFinishedListener() {
         public void onIabPurchaseFinished(IabResult result, Purchase purchase) {
-
-            if (mHelper == null) return;
 
             if (result.isFailure()) {
                 Popup.showError("Error purchasing: " + result);
@@ -383,22 +292,13 @@ public class PaymentFragment extends FormFragment implements IabBroadcastReceive
 
             Loading.hide();
 
-            if (purchase.getSku().equals(SKU_CREDITS)) {
-                currentPurchase = purchase;
-                sendPurchaseInfoToServer();
-            } else if (purchase.getSku().equals(SKU_SUBSCRIBE)) {
-//                mSubscribedToInfiniteCredits = true;
-//                mCredits += SUBSCRIBED_CREDITS;
-//                saveData();
-//                alert("Thank you for subscription!");
-            }
+            currentPurchase = purchase;
+            sendPurchaseInfoToServer();
         }
     };
 
     IabHelper.OnConsumeFinishedListener mConsumeFinishedListener = new IabHelper.OnConsumeFinishedListener() {
         public void onConsumeFinished(Purchase purchase, IabResult result) {
-
-            if (mHelper == null) return;
 
             if (result.isSuccess()) {
                 Loading.hide();
@@ -406,8 +306,54 @@ public class PaymentFragment extends FormFragment implements IabBroadcastReceive
             } else {
                 Popup.showError("Error while consuming: " + result);
             }
-
         }
     };
+
+
+    // product adapter
+
+    class ProductAdapter extends ArrayAdapter<ProductModel> {
+        public ProductAdapter(Context context, ArrayList<ProductModel> products) {
+            super(context, 0, products);
+        }
+
+        @Override
+        public View getView(final int position, View convertView, ViewGroup parent) {
+            if (convertView == null) {
+                convertView = LayoutInflater.from(getContext()).inflate(R.layout.cell_product_list, parent, false);
+            }
+
+            ((TextView)convertView.findViewById(R.id.product_credits)).setText(getItem(position).tokens + " Credits");
+            ((TextView)convertView.findViewById(R.id.product_price)).setText(getItem(position).price);
+
+            convertView.findViewById(R.id.product_buy).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    if (!valid())
+                        return;
+
+                    ProductModel product = getItem(position);
+                    try {
+                        mHelper.launchPurchaseFlow(getApp(), product.sku, RC_REQUEST, mPurchaseFinishedListener, PAYLOAD);
+                    } catch (IabHelper.IabAsyncInProgressException e) {
+                        Popup.showError("Error launching purchase flow. Another async operation in progress.");
+                    }
+                }
+            });
+
+            return convertView;
+        }
+    }
+
+    class ProductModel {
+        public String sku;
+        public Integer tokens;
+        public String price;
+        public ProductModel(String sku, Integer tokens) {
+            this.sku = sku;
+            this.tokens = tokens;
+        }
+    }
 
 }

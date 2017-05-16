@@ -15,7 +15,6 @@ target 'MyJobPitch' do
     pod 'LLSimpleCamera'
     pod 'JSQMessagesViewController'
     pod 'JTSImageViewController'
-    pod 'JVFloatLabeledTextField'
     pod 'Nuke'
         
 end

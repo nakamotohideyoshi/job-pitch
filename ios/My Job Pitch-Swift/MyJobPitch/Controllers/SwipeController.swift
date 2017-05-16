@@ -7,12 +7,9 @@
 //
 
 import UIKit
-import MDCSwipeToChoose
 
 class SwipeController: MJPController {
 
-    @IBOutlet weak var nameLabel: UILabel!
-    @IBOutlet weak var descriptionLabel: UILabel!
     @IBOutlet weak var cardsView: UIView!
     @IBOutlet weak var creditsButton: UIButton!
     
@@ -39,9 +36,6 @@ class SwipeController: MJPController {
         
         navigationItem.title = SideMenuController.getCurrentTitle(isFindJob ? "find_job" : "find_talent")
         
-        nameLabel.text = ""
-        descriptionLabel.text = ""
-        
         card_height = cardsView.frame.size.height - 40
         refresh()
         
@@ -61,7 +55,7 @@ class SwipeController: MJPController {
         if index < cards.count {
             let card = cards[index] as! SwipeCard
             let ds = 0.05 * CGFloat(index)
-            card.center = CGPoint(x: cardsView.frame.size.width*0.5, y: card_height*0.5+card_height*ds*1)
+            card.center = CGPoint(x: cardsView.frame.size.width*0.5, y: card_height*0.5+10+card_height*ds*1)
             card.transform = CGAffineTransform(scaleX: 1-ds, y: 1-ds)
         }
         
@@ -74,9 +68,12 @@ class SwipeController: MJPController {
         options.likedText = isFindJob ? "Apply" : "Connect"
         options.nopeText = "Remove"
         options.delegate = self
+        options.likedColor = AppData.greenColor
+        options.nopeColor = AppData.yellowColor
+        options.threshold = UIScreen.main.bounds.size.width * 0.3
         
         // create swipe card
-        let frame = CGRect(x: 0, y: 0, width: cardsView.frame.size.width, height: card_height)
+        let frame = CGRect(x: 10, y: 10, width: cardsView.frame.size.width-20, height: card_height)
         let card = SwipeCard(frame: frame, options: options)!
         card.isUserInteractionEnabled = false
         
@@ -87,11 +84,11 @@ class SwipeController: MJPController {
                                               longitude1: (profile.longitude)!,
                                               latitude2: (location.latitude)!,
                                               longitude2: (location.longitude)!)
-            card.setImage(imageUrl: job.getImage()?.image, text: distance)
+            card.setImage(imageUrl: job.getImage()?.image, distance: distance, name: job.title, desc: job.desc)
         } else {
             let jobSeeker = data[index] as! JobSeeker
             let pitch = jobSeeker.getPitch()
-            card.setImage(imageUrl: pitch?.thumbnail, text: "")
+            card.setImage(imageUrl: pitch?.thumbnail, distance: "", name: jobSeeker.getFullName(), desc: jobSeeker.desc)
         }
         
         return card
@@ -134,25 +131,10 @@ class SwipeController: MJPController {
     func showTopCardInfo() {
         
         if cards.count > 0 {
-            
             let card = cards.firstObject as! SwipeCard
             card.setTouchEvent(callback: {
                 self.clickCard()
             })
-            
-            if isFindJob {
-                let job = data[currentIndex - cards.count] as! Job
-                nameLabel.text = job.title
-                descriptionLabel.text = job.desc
-            } else {
-                let jobSeeker = data[currentIndex - cards.count] as! JobSeeker
-                nameLabel.text = jobSeeker.getFullName()
-                descriptionLabel.text = jobSeeker.desc
-            }
-            
-        } else {
-            nameLabel.text = ""
-            descriptionLabel.text = ""
         }
         
         emptyView.isHidden = cards.count > 0

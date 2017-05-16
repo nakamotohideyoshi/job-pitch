@@ -163,32 +163,14 @@ public class ApplicationDetailFragment extends BaseFragment {
             @Override
             public void onMapReady(GoogleMap map) {
                 googleMap = map;
-                setMapView();
+                googleMap.getUiSettings().setMyLocationButtonEnabled(false);
+                Location location = job.getLocation_data();
+                LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
+                googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15));
+                googleMap.addMarker(new MarkerOptions().position(latLng));
             }
         });
 
-    }
-
-    void setMapView() {
-        if (ActivityCompat.checkSelfPermission(getContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            String[] permissions = {android.Manifest.permission.ACCESS_FINE_LOCATION};
-            ActivityCompat.requestPermissions(getActivity(), permissions, 10000);
-            return;
-        }
-        googleMap.getUiSettings().setMyLocationButtonEnabled(false);
-        Location location = job.getLocation_data();
-        LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
-        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15));
-        googleMap.addMarker(new MarkerOptions().position(latLng));
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
-        if (requestCode == 10000) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                setMapView();
-            }
-        }
     }
 
     @OnClick(R.id.job_image_view)

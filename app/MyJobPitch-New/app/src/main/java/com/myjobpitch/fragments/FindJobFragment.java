@@ -4,13 +4,16 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
+import com.myjobpitch.R;
 import com.myjobpitch.api.MJPApi;
 import com.myjobpitch.api.MJPApiException;
 import com.myjobpitch.api.data.ApplicationForCreation;
 import com.myjobpitch.api.data.Job;
 import com.myjobpitch.api.data.JobProfile;
 import com.myjobpitch.api.data.JobSeeker;
+import com.myjobpitch.api.data.Location;
 import com.myjobpitch.tasks.APITask;
 import com.myjobpitch.utils.AppData;
 import com.myjobpitch.utils.AppHelper;
@@ -56,6 +59,10 @@ public class FindJobFragment extends SwipeFragment<Job> {
         AppHelper.loadJobLogo(job, getCardImageContainer(view));
         setCardTitle(view, job.getTitle());
         setCardDesc(view, job.getDescription());
+
+        Location location = job.getLocation_data();
+        String distance = AppHelper.distance(profile.getLatitude(), profile.getLongitude(), location.getLatitude(), location.getLongitude());
+        ((TextView)view.findViewById(R.id.distance)).setText(distance);
     }
 
     @Override

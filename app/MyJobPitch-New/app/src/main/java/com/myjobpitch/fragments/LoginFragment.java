@@ -6,7 +6,6 @@ import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -65,6 +64,10 @@ public class LoginFragment extends FormFragment {
     private boolean isAnimation = false;
     private static boolean isFirst = true;
 
+    private boolean isPause = false;
+    private boolean loggedin = false;
+
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -91,6 +94,7 @@ public class LoginFragment extends FormFragment {
         }
 
         isFirst = false;
+        loggedin = false;
 
         return  view;
     }
@@ -142,48 +146,56 @@ public class LoginFragment extends FormFragment {
             protected void onSuccess() {
                 getApp().saveLoginInfo(email, password, remember);
 
-                User user = AppData.user;
-
-                if (user.isRecruiter()) {
-                    getApp().loggedin(AppData.PAGE_FIND_TALENT);
-                    return;
-                }
-
-                if (user.isJobSeeker()) {
-                    if (AppData.existProfile) {
-                        getApp().loggedin(AppData.PAGE_FIND_JOB);
-                    } else {
-                        getApp().loggedin(AppData.PAGE_JOB_PROFILE);
-                    }
-                    return;
-                }
-
-                switch (getApp().getUserType()) {
-                    case AppData.JOBSEEKER:
-                        getApp().loggedin(AppData.PAGE_USER_PROFILE);
-                        break;
-                    case AppData.RECRUITER:
-                        getApp().loggedin(AppData.PAGE_ADD_JOB);
-                        break;
-                    default:
-                        Popup.showGreenYellow("Choose User Type", "Get a Job", new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                getApp().saveUserType(AppData.JOBSEEKER);
-                                getApp().loggedin(AppData.PAGE_USER_PROFILE);
-                            }
-                        }, "I Need Staff", new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                getApp().saveUserType(AppData.RECRUITER);
-                                getApp().loggedin(AppData.PAGE_ADD_JOB);
-                            }
-                        }, false);
-                        break;
+                if (!isPause) {
+                    goMain();
+                } else {
+                    loggedin = true;
                 }
             }
         };
 
+    }
+
+    void goMain() {
+        User user = AppData.user;
+
+        if (user.isRecruiter()) {
+            getApp().loggedin(AppData.PAGE_FIND_TALENT);
+            return;
+        }
+
+        if (user.isJobSeeker()) {
+            if (AppData.existProfile) {
+                getApp().loggedin(AppData.PAGE_FIND_JOB);
+            } else {
+                getApp().loggedin(AppData.PAGE_JOB_PROFILE);
+            }
+            return;
+        }
+
+        switch (getApp().getUserType()) {
+            case AppData.JOBSEEKER:
+                getApp().loggedin(AppData.PAGE_USER_PROFILE);
+                break;
+            case AppData.RECRUITER:
+                getApp().loggedin(AppData.PAGE_ADD_JOB);
+                break;
+            default:
+                Popup.showGreenYellow("Choose User Type", "Get a Job", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        getApp().saveUserType(AppData.JOBSEEKER);
+                        getApp().loggedin(AppData.PAGE_USER_PROFILE);
+                    }
+                }, "I Need Staff", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        getApp().saveUserType(AppData.RECRUITER);
+                        getApp().loggedin(AppData.PAGE_ADD_JOB);
+                    }
+                }, false);
+                break;
+        }
     }
 
     @OnClick(R.id.login_button)
@@ -301,6 +313,21 @@ public class LoginFragment extends FormFragment {
             public void onAnimationRepeat(Animator animation) {
             }
         });
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        isPause = false;
+        if (loggedin) {
+            goMain();
+        }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        isPause = true;
     }
 
 }

@@ -4,6 +4,7 @@
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
+        <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11757"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
@@ -145,20 +146,8 @@ sdafsdf</string>
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Labelasdfasdfasdf" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="oOl-FB-GRd">
-                                <rect key="frame" x="10" y="584" width="355" height="24"/>
-                                <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="20"/>
-                                <color key="textColor" red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="calibratedRGB"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Labelsdfasdfasdf" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dLd-ae-QFo">
-                                <rect key="frame" x="10" y="618" width="355" height="22"/>
-                                <fontDescription key="fontDescription" type="system" weight="medium" pointSize="18"/>
-                                <color key="textColor" red="0.74901960784313726" green="0.74901960784313726" blue="0.74901960784313726" alpha="1" colorSpace="calibratedRGB"/>
-                                <nil key="highlightedColor"/>
-                            </label>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="E23-SR-OY4">
-                                <rect key="frame" x="0.0" y="64" width="375" height="510"/>
+                                <rect key="frame" x="0.0" y="64" width="375" height="576"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             </view>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="right" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="XQS-aA-5j0">
@@ -181,22 +170,16 @@ sdafsdf</string>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstAttribute="trailingMargin" secondItem="oN5-3h-dvf" secondAttribute="trailing" constant="15" id="8zI-bb-cKu"/>
-                            <constraint firstItem="oOl-FB-GRd" firstAttribute="top" secondItem="E23-SR-OY4" secondAttribute="bottom" constant="10" id="9Ca-C8-PLi"/>
-                            <constraint firstItem="XQS-aA-5j0" firstAttribute="top" secondItem="dLd-ae-QFo" secondAttribute="bottom" id="C0n-Qc-mGx"/>
                             <constraint firstItem="oN5-3h-dvf" firstAttribute="leading" secondItem="k7z-YD-hbw" secondAttribute="leadingMargin" constant="15" id="F7E-Cc-T4Y"/>
                             <constraint firstItem="tuj-oZ-NWZ" firstAttribute="top" secondItem="XQS-aA-5j0" secondAttribute="bottom" id="GpZ-b0-Gff"/>
-                            <constraint firstItem="tuj-oZ-NWZ" firstAttribute="top" secondItem="dLd-ae-QFo" secondAttribute="bottom" priority="250" constant="10" id="HsU-IH-CNm"/>
-                            <constraint firstItem="dLd-ae-QFo" firstAttribute="leading" secondItem="k7z-YD-hbw" secondAttribute="leading" constant="10" id="M46-oG-LR7"/>
+                            <constraint firstItem="XQS-aA-5j0" firstAttribute="top" secondItem="E23-SR-OY4" secondAttribute="bottom" id="NHb-8H-U5i"/>
                             <constraint firstAttribute="trailing" secondItem="E23-SR-OY4" secondAttribute="trailing" id="Qrv-Rw-dFU"/>
-                            <constraint firstItem="dLd-ae-QFo" firstAttribute="top" secondItem="oOl-FB-GRd" secondAttribute="bottom" constant="10" id="TXn-G5-la3"/>
                             <constraint firstAttribute="trailing" secondItem="XQS-aA-5j0" secondAttribute="trailing" constant="8" id="VUh-Rq-dEb"/>
-                            <constraint firstItem="oOl-FB-GRd" firstAttribute="leading" secondItem="k7z-YD-hbw" secondAttribute="leading" constant="10" id="XMI-kb-bnr"/>
                             <constraint firstItem="oN5-3h-dvf" firstAttribute="centerY" secondItem="k7z-YD-hbw" secondAttribute="centerY" id="hV8-VA-hz8"/>
                             <constraint firstItem="oN5-3h-dvf" firstAttribute="centerX" secondItem="k7z-YD-hbw" secondAttribute="centerX" id="jEO-PF-1W0"/>
                             <constraint firstItem="E23-SR-OY4" firstAttribute="top" secondItem="1n2-yg-3ID" secondAttribute="bottom" id="jap-GE-qQM"/>
                             <constraint firstItem="E23-SR-OY4" firstAttribute="leading" secondItem="k7z-YD-hbw" secondAttribute="leading" id="qOo-2o-7vc"/>
-                            <constraint firstAttribute="trailing" secondItem="oOl-FB-GRd" secondAttribute="trailing" constant="10" id="u5J-l3-ZIm"/>
-                            <constraint firstAttribute="trailing" secondItem="dLd-ae-QFo" secondAttribute="trailing" constant="10" id="zoa-kL-Ddy"/>
+                            <constraint firstItem="tuj-oZ-NWZ" firstAttribute="top" secondItem="E23-SR-OY4" secondAttribute="bottom" priority="250" constant="10" id="tA3-BR-9T9"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="yIw-dg-dpG">
@@ -210,9 +193,7 @@ sdafsdf</string>
                     <connections>
                         <outlet property="cardsView" destination="E23-SR-OY4" id="MPd-9m-IKU"/>
                         <outlet property="creditsButton" destination="XQS-aA-5j0" id="hwn-2U-29M"/>
-                        <outlet property="descriptionLabel" destination="dLd-ae-QFo" id="Ogi-z5-Oq9"/>
                         <outlet property="emptyView" destination="oN5-3h-dvf" id="uJ5-6b-rKz"/>
-                        <outlet property="nameLabel" destination="oOl-FB-GRd" id="LaT-oO-ZPd"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="m8i-6Y-1s0" userLabel="First Responder" sceneMemberID="firstResponder"/>

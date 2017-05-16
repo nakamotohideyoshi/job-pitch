@@ -43,6 +43,16 @@
 		D787F63B1E287A8B00C47A88 /* JobEditController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D787F63A1E287A8B00C47A88 /* JobEditController.swift */; };
 		D787F63D1E287C8400C47A88 /* BusinessCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D787F63C1E287C8400C47A88 /* BusinessCell.swift */; };
 		D787F63F1E287D1400C47A88 /* LocationCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D787F63E1E287D1400C47A88 /* LocationCell.swift */; };
+		D788341C1ECAAF0600D99F4B /* MDCGeometry.m in Sources */ = {isa = PBXBuildFile; fileRef = D78834191ECAAF0600D99F4B /* MDCGeometry.m */; };
+		D788341D1ECAAF0600D99F4B /* UIColor+MDCRGB8Bit.m in Sources */ = {isa = PBXBuildFile; fileRef = D788341B1ECAAF0600D99F4B /* UIColor+MDCRGB8Bit.m */; };
+		D78834201ECAAF0F00D99F4B /* MDCViewState.m in Sources */ = {isa = PBXBuildFile; fileRef = D788341F1ECAAF0F00D99F4B /* MDCViewState.m */; };
+		D78834231ECAAF1B00D99F4B /* UIView+MDCBorderedLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = D78834221ECAAF1B00D99F4B /* UIView+MDCBorderedLabel.m */; };
+		D78834291ECAAF3400D99F4B /* MDCSwipeOptions.m in Sources */ = {isa = PBXBuildFile; fileRef = D78834261ECAAF3400D99F4B /* MDCSwipeOptions.m */; };
+		D788342A1ECAAF3400D99F4B /* MDCSwipeToChooseViewOptions.m in Sources */ = {isa = PBXBuildFile; fileRef = D78834281ECAAF3400D99F4B /* MDCSwipeToChooseViewOptions.m */; };
+		D78834301ECAAF3E00D99F4B /* MDCPanState.m in Sources */ = {isa = PBXBuildFile; fileRef = D788342C1ECAAF3E00D99F4B /* MDCPanState.m */; };
+		D78834311ECAAF3E00D99F4B /* MDCSwipeResult.m in Sources */ = {isa = PBXBuildFile; fileRef = D788342F1ECAAF3E00D99F4B /* MDCSwipeResult.m */; };
+		D78834371ECAAF4B00D99F4B /* MDCSwipeToChooseView.m in Sources */ = {isa = PBXBuildFile; fileRef = D78834341ECAAF4B00D99F4B /* MDCSwipeToChooseView.m */; };
+		D78834381ECAAF4B00D99F4B /* UIView+MDCSwipeToChoose.m in Sources */ = {isa = PBXBuildFile; fileRef = D78834361ECAAF4B00D99F4B /* UIView+MDCSwipeToChoose.m */; };
 		D7896AEB1E0C854600533884 /* LocationDetailController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7896AEA1E0C854600533884 /* LocationDetailController.swift */; };
 		D7896AED1E0C85BF00533884 /* JobCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7896AEC1E0C85BF00533884 /* JobCell.swift */; };
 		D7896AEF1E0CC51300533884 /* JobSeekerDetailController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7896AEE1E0CC51300533884 /* JobSeekerDetailController.swift */; };
@@ -136,6 +146,29 @@
 		D787F63A1E287A8B00C47A88 /* JobEditController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = JobEditController.swift; path = Controllers/JobEditController.swift; sourceTree = "<group>"; };
 		D787F63C1E287C8400C47A88 /* BusinessCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = BusinessCell.swift; path = Views/BusinessCell.swift; sourceTree = "<group>"; };
 		D787F63E1E287D1400C47A88 /* LocationCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = LocationCell.swift; path = Views/LocationCell.swift; sourceTree = "<group>"; };
+		D78834181ECAAF0600D99F4B /* MDCGeometry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MDCGeometry.h; path = Utils/MDCSwipeToChoose/Internal/MDCGeometry.h; sourceTree = "<group>"; };
+		D78834191ECAAF0600D99F4B /* MDCGeometry.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MDCGeometry.m; path = Utils/MDCSwipeToChoose/Internal/MDCGeometry.m; sourceTree = "<group>"; };
+		D788341A1ECAAF0600D99F4B /* UIColor+MDCRGB8Bit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIColor+MDCRGB8Bit.h"; path = "Utils/MDCSwipeToChoose/Internal/UIColor+MDCRGB8Bit.h"; sourceTree = "<group>"; };
+		D788341B1ECAAF0600D99F4B /* UIColor+MDCRGB8Bit.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIColor+MDCRGB8Bit.m"; path = "Utils/MDCSwipeToChoose/Internal/UIColor+MDCRGB8Bit.m"; sourceTree = "<group>"; };
+		D788341E1ECAAF0F00D99F4B /* MDCViewState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MDCViewState.h; path = Utils/MDCSwipeToChoose/Internal/State/MDCViewState.h; sourceTree = "<group>"; };
+		D788341F1ECAAF0F00D99F4B /* MDCViewState.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MDCViewState.m; path = Utils/MDCSwipeToChoose/Internal/State/MDCViewState.m; sourceTree = "<group>"; };
+		D78834211ECAAF1B00D99F4B /* UIView+MDCBorderedLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIView+MDCBorderedLabel.h"; path = "Utils/MDCSwipeToChoose/Internal/Views/UIView+MDCBorderedLabel.h"; sourceTree = "<group>"; };
+		D78834221ECAAF1B00D99F4B /* UIView+MDCBorderedLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIView+MDCBorderedLabel.m"; path = "Utils/MDCSwipeToChoose/Internal/Views/UIView+MDCBorderedLabel.m"; sourceTree = "<group>"; };
+		D78834241ECAAF2500D99F4B /* MDCSwipeToChoose.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MDCSwipeToChoose.h; path = Utils/MDCSwipeToChoose/Public/MDCSwipeToChoose.h; sourceTree = "<group>"; };
+		D78834251ECAAF3400D99F4B /* MDCSwipeOptions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MDCSwipeOptions.h; path = Utils/MDCSwipeToChoose/Public/Options/MDCSwipeOptions.h; sourceTree = "<group>"; };
+		D78834261ECAAF3400D99F4B /* MDCSwipeOptions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MDCSwipeOptions.m; path = Utils/MDCSwipeToChoose/Public/Options/MDCSwipeOptions.m; sourceTree = "<group>"; };
+		D78834271ECAAF3400D99F4B /* MDCSwipeToChooseViewOptions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MDCSwipeToChooseViewOptions.h; path = Utils/MDCSwipeToChoose/Public/Options/MDCSwipeToChooseViewOptions.h; sourceTree = "<group>"; };
+		D78834281ECAAF3400D99F4B /* MDCSwipeToChooseViewOptions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MDCSwipeToChooseViewOptions.m; path = Utils/MDCSwipeToChoose/Public/Options/MDCSwipeToChooseViewOptions.m; sourceTree = "<group>"; };
+		D788342B1ECAAF3E00D99F4B /* MDCPanState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MDCPanState.h; path = Utils/MDCSwipeToChoose/Public/State/MDCPanState.h; sourceTree = "<group>"; };
+		D788342C1ECAAF3E00D99F4B /* MDCPanState.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MDCPanState.m; path = Utils/MDCSwipeToChoose/Public/State/MDCPanState.m; sourceTree = "<group>"; };
+		D788342D1ECAAF3E00D99F4B /* MDCSwipeDirection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MDCSwipeDirection.h; path = Utils/MDCSwipeToChoose/Public/State/MDCSwipeDirection.h; sourceTree = "<group>"; };
+		D788342E1ECAAF3E00D99F4B /* MDCSwipeResult.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MDCSwipeResult.h; path = Utils/MDCSwipeToChoose/Public/State/MDCSwipeResult.h; sourceTree = "<group>"; };
+		D788342F1ECAAF3E00D99F4B /* MDCSwipeResult.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MDCSwipeResult.m; path = Utils/MDCSwipeToChoose/Public/State/MDCSwipeResult.m; sourceTree = "<group>"; };
+		D78834321ECAAF4B00D99F4B /* MDCSwipeToChooseDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MDCSwipeToChooseDelegate.h; path = Utils/MDCSwipeToChoose/Public/Views/MDCSwipeToChooseDelegate.h; sourceTree = "<group>"; };
+		D78834331ECAAF4B00D99F4B /* MDCSwipeToChooseView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MDCSwipeToChooseView.h; path = Utils/MDCSwipeToChoose/Public/Views/MDCSwipeToChooseView.h; sourceTree = "<group>"; };
+		D78834341ECAAF4B00D99F4B /* MDCSwipeToChooseView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MDCSwipeToChooseView.m; path = Utils/MDCSwipeToChoose/Public/Views/MDCSwipeToChooseView.m; sourceTree = "<group>"; };
+		D78834351ECAAF4B00D99F4B /* UIView+MDCSwipeToChoose.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIView+MDCSwipeToChoose.h"; path = "Utils/MDCSwipeToChoose/Public/Views/UIView+MDCSwipeToChoose.h"; sourceTree = "<group>"; };
+		D78834361ECAAF4B00D99F4B /* UIView+MDCSwipeToChoose.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIView+MDCSwipeToChoose.m"; path = "Utils/MDCSwipeToChoose/Public/Views/UIView+MDCSwipeToChoose.m"; sourceTree = "<group>"; };
 		D7896AEA1E0C854600533884 /* LocationDetailController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = LocationDetailController.swift; path = Controllers/LocationDetailController.swift; sourceTree = "<group>"; };
 		D7896AEC1E0C85BF00533884 /* JobCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = JobCell.swift; path = Views/JobCell.swift; sourceTree = "<group>"; };
 		D7896AEE1E0CC51300533884 /* JobSeekerDetailController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = JobSeekerDetailController.swift; path = Controllers/JobSeekerDetailController.swift; sourceTree = "<group>"; };
@@ -307,6 +340,36 @@
 			name = Resources;
 			sourceTree = "<group>";
 		};
+		D78834161ECAAEE900D99F4B /* MDCSwipeToChoose */ = {
+			isa = PBXGroup;
+			children = (
+				D78834321ECAAF4B00D99F4B /* MDCSwipeToChooseDelegate.h */,
+				D78834331ECAAF4B00D99F4B /* MDCSwipeToChooseView.h */,
+				D78834341ECAAF4B00D99F4B /* MDCSwipeToChooseView.m */,
+				D78834351ECAAF4B00D99F4B /* UIView+MDCSwipeToChoose.h */,
+				D78834361ECAAF4B00D99F4B /* UIView+MDCSwipeToChoose.m */,
+				D788342B1ECAAF3E00D99F4B /* MDCPanState.h */,
+				D788342C1ECAAF3E00D99F4B /* MDCPanState.m */,
+				D788342D1ECAAF3E00D99F4B /* MDCSwipeDirection.h */,
+				D788342E1ECAAF3E00D99F4B /* MDCSwipeResult.h */,
+				D788342F1ECAAF3E00D99F4B /* MDCSwipeResult.m */,
+				D78834251ECAAF3400D99F4B /* MDCSwipeOptions.h */,
+				D78834261ECAAF3400D99F4B /* MDCSwipeOptions.m */,
+				D78834271ECAAF3400D99F4B /* MDCSwipeToChooseViewOptions.h */,
+				D78834281ECAAF3400D99F4B /* MDCSwipeToChooseViewOptions.m */,
+				D78834241ECAAF2500D99F4B /* MDCSwipeToChoose.h */,
+				D78834211ECAAF1B00D99F4B /* UIView+MDCBorderedLabel.h */,
+				D78834221ECAAF1B00D99F4B /* UIView+MDCBorderedLabel.m */,
+				D788341E1ECAAF0F00D99F4B /* MDCViewState.h */,
+				D788341F1ECAAF0F00D99F4B /* MDCViewState.m */,
+				D78834181ECAAF0600D99F4B /* MDCGeometry.h */,
+				D78834191ECAAF0600D99F4B /* MDCGeometry.m */,
+				D788341A1ECAAF0600D99F4B /* UIColor+MDCRGB8Bit.h */,
+				D788341B1ECAAF0600D99F4B /* UIColor+MDCRGB8Bit.m */,
+			);
+			name = MDCSwipeToChoose;
+			sourceTree = "<group>";
+		};
 		D7B07B761E08DDE1005B9EBE = {
 			isa = PBXGroup;
 			children = (
@@ -414,6 +477,7 @@
 		D7F76FE91E08E02F00ECB684 /* Utils */ = {
 			isa = PBXGroup;
 			children = (
+				D78834161ECAAEE900D99F4B /* MDCSwipeToChoose */,
 				D76C903B1E238580009C35E4 /* SWRevealViewController */,
 				D758ECEE1E1FD8B400430010 /* DropboxBrowser */,
 				D7F76FEA1E08E05F00ECB684 /* API.swift */,
@@ -558,6 +622,7 @@
 				D7896AF11E0F0D6300533884 /* ApplicationDetailController.swift in Sources */,
 				D7AF8DC91E1C997200C57DDC /* PitchController.swift in Sources */,
 				D7B6F5381E6466E50026A7BD /* JobDetailController.swift in Sources */,
+				D78834291ECAAF3400D99F4B /* MDCSwipeOptions.m in Sources */,
 				D7B6F5361E640B2F0026A7BD /* MessageController0.swift in Sources */,
 				D7ECFBBB1E125F5E00E2E071 /* SelectionController.swift in Sources */,
 				D7F76FED1E08E08200ECB684 /* Application.swift in Sources */,
@@ -571,15 +636,18 @@
 				D7F770251E08E3D100ECB684 /* User.swift in Sources */,
 				D7F770201E08E3D100ECB684 /* Profile.swift in Sources */,
 				D7C828031E51AC1000CD9C08 /* SelectJobController.swift in Sources */,
+				D78834301ECAAF3E00D99F4B /* MDCPanState.m in Sources */,
 				D749E3571E0B2026000FD0B1 /* SwipeController.swift in Sources */,
 				D72AE42E1E11AD50004C3F02 /* ChangePasswordController.swift in Sources */,
 				D72AE4131E1049BE004C3F02 /* SearchController.swift in Sources */,
 				D72AE4161E1055AC004C3F02 /* MessageController.swift in Sources */,
+				D78834231ECAAF1B00D99F4B /* UIView+MDCBorderedLabel.m in Sources */,
 				D7F76FEF1E08E09900ECB684 /* ApplicationStatus.swift in Sources */,
 				D76C90461E238C90009C35E4 /* SideMenuController.swift in Sources */,
 				D7ECFBBF1E12FCEF00E2E071 /* JobSeekerProfileController.swift in Sources */,
 				D7F770171E08E3D100ECB684 /* MJPObjectWithDates.swift in Sources */,
 				D7ECFBBD1E12D9A100E2E071 /* MapController.swift in Sources */,
+				D788341D1ECAAF0600D99F4B /* UIColor+MDCRGB8Bit.m in Sources */,
 				D7896AEF1E0CC51300533884 /* JobSeekerDetailController.swift in Sources */,
 				D7F7700C1E08E3D100ECB684 /* Business.swift in Sources */,
 				D7F770141E08E3D100ECB684 /* LoginRequest.swift in Sources */,
@@ -594,6 +662,7 @@
 				D7F770131E08E3D100ECB684 /* Location.swift in Sources */,
 				D7896AEB1E0C854600533884 /* LocationDetailController.swift in Sources */,
 				D7F770161E08E3D100ECB684 /* MJPObject.swift in Sources */,
+				D78834201ECAAF0F00D99F4B /* MDCViewState.m in Sources */,
 				D7F7700B1E08E3D100ECB684 /* AuthToken.swift in Sources */,
 				D7F770221E08E3D100ECB684 /* Role.swift in Sources */,
 				D7F7701E1E08E3D100ECB684 /* PasswordResetRequest.swift in Sources */,
@@ -612,16 +681,20 @@
 				D7F770291E09196300ECB684 /* MJPController.swift in Sources */,
 				D7F7701A1E08E3D100ECB684 /* MJPObjectWithNameShortName.swift in Sources */,
 				D72AE4241E1156C3004C3F02 /* CustomView.swift in Sources */,
+				D78834381ECAAF4B00D99F4B /* UIView+MDCSwipeToChoose.m in Sources */,
 				D7F7701B1E08E3D100ECB684 /* MJPObjectWithNameShortNameDesc.swift in Sources */,
 				D72AE41B1E106D0A004C3F02 /* ApplicationListController.swift in Sources */,
 				D7B07B831E08DDE1005B9EBE /* AppDelegate.swift in Sources */,
 				D76C90401E238AAF009C35E4 /* SideMenuCell.swift in Sources */,
 				D76C90551E2540D1009C35E4 /* HelpController.swift in Sources */,
+				D78834371ECAAF4B00D99F4B /* MDCSwipeToChooseView.m in Sources */,
 				D787F63D1E287C8400C47A88 /* BusinessCell.swift in Sources */,
 				D7F770191E08E3D100ECB684 /* MJPObjectWithNameDesc.swift in Sources */,
 				D749E3511E09C09E000FD0B1 /* AppHelper.swift in Sources */,
 				D7F770151E08E3D100ECB684 /* Message.swift in Sources */,
 				D758ECF21E1FD8D200430010 /* DropboxBrowserViewController.m in Sources */,
+				D788342A1ECAAF3400D99F4B /* MDCSwipeToChooseViewOptions.m in Sources */,
+				D788341C1ECAAF0600D99F4B /* MDCGeometry.m in Sources */,
 				D72AE4191E1057B0004C3F02 /* MessageCell.swift in Sources */,
 				D76C90531E25405A009C35E4 /* WebViewController.swift in Sources */,
 				D7F7700E1E08E3D100ECB684 /* Hours.swift in Sources */,
@@ -629,6 +702,7 @@
 				D7F770101E08E3D100ECB684 /* Job.swift in Sources */,
 				D749E34F1E09B479000FD0B1 /* ResetPasswordController.swift in Sources */,
 				D749E3551E0A8724000FD0B1 /* AppData.swift in Sources */,
+				D78834311ECAAF3E00D99F4B /* MDCSwipeResult.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -753,8 +827,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer: Yoshi Saburo (AJ7493YP34)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Yoshi Saburo (AJ7493YP34)";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: SC LABS LIMITED (YY7DF42BJ9)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: SC LABS LIMITED (YY7DF42BJ9)";
 				DEVELOPMENT_TEAM = YY7DF42BJ9;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -766,8 +840,8 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.myjobpitch.pitch;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "6151d0a4-c03b-4709-bf7a-2b1ee4399625";
-				PROVISIONING_PROFILE_SPECIFIER = pitch_dev1;
+				PROVISIONING_PROFILE = "af103616-1268-43f1-926b-47b35fc78d79";
+				PROVISIONING_PROFILE_SPECIFIER = pitch_dist2;
 				SWIFT_OBJC_BRIDGING_HEADER = "MyJobPitch/MyJobPitch-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 3.0;
@@ -780,8 +854,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer: Yoshi Saburo (AJ7493YP34)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Yoshi Saburo (AJ7493YP34)";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: SC LABS LIMITED (YY7DF42BJ9)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: SC LABS LIMITED (YY7DF42BJ9)";
 				DEVELOPMENT_TEAM = YY7DF42BJ9;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -793,8 +867,8 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.myjobpitch.pitch;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "6151d0a4-c03b-4709-bf7a-2b1ee4399625";
-				PROVISIONING_PROFILE_SPECIFIER = pitch_dev1;
+				PROVISIONING_PROFILE = "af103616-1268-43f1-926b-47b35fc78d79";
+				PROVISIONING_PROFILE_SPECIFIER = pitch_dist2;
 				SWIFT_OBJC_BRIDGING_HEADER = "MyJobPitch/MyJobPitch-Bridging-Header.h";
 				SWIFT_VERSION = 3.0;
 			};

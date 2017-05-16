@@ -5,6 +5,7 @@ import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
+import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
@@ -12,7 +13,10 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.Status;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
 import com.google.android.gms.location.places.ui.PlaceSelectionListener;
@@ -21,12 +25,13 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.myjobpitch.utils.Loading;
 
 import java.io.IOException;
 import java.util.List;
 
 
-public class SelectPlaceActivity extends FragmentActivity implements GoogleMap.OnCameraIdleListener, PlaceSelectionListener {
+public class SelectPlaceActivity extends FragmentActivity implements GoogleMap.OnCameraIdleListener, PlaceSelectionListener, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
     public static final String LATITUDE = "latitude";
     public static final String LONGITUDE = "longitude";
@@ -34,7 +39,7 @@ public class SelectPlaceActivity extends FragmentActivity implements GoogleMap.O
 
     GoogleMap mMap;
     LatLng mCurrentPos;
-    boolean myLocation = false;
+    GoogleApiClient mGoogleApiClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +53,14 @@ public class SelectPlaceActivity extends FragmentActivity implements GoogleMap.O
             public void onMapReady(GoogleMap googleMap) {
                 mMap = googleMap;
                 settingMap();
+
+                if (ActivityCompat.checkSelfPermission(SelectPlaceActivity.this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+                        ActivityCompat.checkSelfPermission(SelectPlaceActivity.this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                    String[] permissions = {android.Manifest.permission.ACCESS_FINE_LOCATION};
+                    ActivityCompat.requestPermissions(SelectPlaceActivity.this, permissions, 10000);
+                } else {
+                    createGoogleApiClient();
+                }
             }
         });
 
@@ -58,15 +71,7 @@ public class SelectPlaceActivity extends FragmentActivity implements GoogleMap.O
     }
 
     void settingMap() {
-        if (ActivityCompat.checkSelfPermission(SelectPlaceActivity.this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
-                ActivityCompat.checkSelfPermission(SelectPlaceActivity.this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            String[] permissions = {android.Manifest.permission.ACCESS_FINE_LOCATION};
-            ActivityCompat.requestPermissions(SelectPlaceActivity.this, permissions, 10000);
-            return;
-        }
-        mMap.setMyLocationEnabled(true);
         mMap.setOnCameraIdleListener(this);
-        mMap.getUiSettings().setMyLocationButtonEnabled(true);
 
         final int d = (int) (50 * getResources().getDisplayMetrics().density);
         mMap.setPadding(0, d, 0, d);
@@ -82,23 +87,25 @@ public class SelectPlaceActivity extends FragmentActivity implements GoogleMap.O
         if (getIntent().hasExtra(LATITUDE)) {
             mCurrentPos = new LatLng(getIntent().getDoubleExtra(LATITUDE, 0), getIntent().getDoubleExtra(LONGITUDE, 0));
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(mCurrentPos, 14));
-            selectButton.setEnabled(true);
-            selectButton.setAlpha(1);
+        }
+    }
+
+    private void createGoogleApiClient() {
+
+        if (ActivityCompat.checkSelfPermission(SelectPlaceActivity.this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(SelectPlaceActivity.this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
         } else {
-            mMap.setOnMyLocationChangeListener(new GoogleMap.OnMyLocationChangeListener() {
-                @Override
-                public void onMyLocationChange(Location location) {
-                    if (!myLocation) {
-                        myLocation = true;
-                        mCurrentPos = new LatLng(location.getLatitude(), location.getLongitude());
-                        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(mCurrentPos, 14));
-                        selectButton.setEnabled(true);
-                        selectButton.setAlpha(1);
-                    }
-                }
-            });
+            mMap.setMyLocationEnabled(true);
+            mMap.getUiSettings().setMyLocationButtonEnabled(true);
         }
 
+        Loading.show(this, "Loading...");
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .addApi(LocationServices.API)
+                .build();
+        mGoogleApiClient.connect();
     }
 
     void selectLocation() {
@@ -122,10 +129,40 @@ public class SelectPlaceActivity extends FragmentActivity implements GoogleMap.O
     }
 
     @Override
+    public void onConnected(Bundle connectionHint) {
+        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        } else {
+            if (getIntent().hasExtra(LATITUDE)) {
+            } else {
+                Location location = LocationServices.FusedLocationApi.getLastLocation(
+                        mGoogleApiClient);
+                mCurrentPos = new LatLng(location.getLatitude(), location.getLongitude());
+                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(mCurrentPos, 14));
+            }
+        }
+
+        Loading.hide();
+        mGoogleApiClient.disconnect();
+        mGoogleApiClient = null;
+    }
+
+    @Override
+    public void onConnectionSuspended(int var1) {
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult var1) {
+        Loading.hide();
+        mGoogleApiClient.disconnect();
+        mGoogleApiClient = null;
+    }
+
+    @Override
     public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
         if (requestCode == 10000) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                settingMap();
+                createGoogleApiClient();
             }
         }
     }

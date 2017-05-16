@@ -10,7 +10,6 @@ import android.widget.TextView;
 import com.myjobpitch.R;
 
 import com.daprlabs.aaron.swipedeck.SwipeDeck;
-import com.myjobpitch.api.data.Job;
 import com.myjobpitch.utils.AppHelper;
 
 import java.util.ArrayList;
@@ -133,9 +132,6 @@ public class SwipeFragment<T> extends BaseFragment {
             }
 
             showDeckInfo(adapter.getItem(position), convertView);
-
-//            int index = (int) cardStack.getTopCardItemId();
-//            convertView.findViewById(R.id.touch_icon).setVisibility(position == index ? View.VISIBLE : View.GONE);
 
             return convertView;
         }

@@ -7,12 +7,13 @@
 //
 
 import UIKit
-import MDCSwipeToChoose
 
 class SwipeCard: MDCSwipeToChooseView {
 
     var button: UIButton!
-    var label: UILabel!
+    var distanceLabel: UILabel!
+    var nameLabel: UILabel!
+    var descLabel: UILabel!
     
     var touchCallback: (() -> Void)!
     
@@ -24,21 +25,23 @@ class SwipeCard: MDCSwipeToChooseView {
         
         super.init(frame: frame, options: options)
         
-        options.threshold = UIScreen.main.bounds.size.width * 0.3
-        options.likedColor = AppData.greenColor
-        options.nopeColor = AppData.yellowColor
-        
         button = UIButton(frame: CGRect(x: 0, y: 0, width: frame.size.width, height: frame.size.height))
         addSubview(button)
         
         imageView.backgroundColor = AppData.imageBGColor
         imageView.contentMode = .scaleAspectFill
-        likedView.center = CGPoint(x: likedView.center.x+20, y: likedView.center.y+20)
-        nopeView.center = CGPoint(x: nopeView.center.x-20, y: nopeView.center.y+20)
+        likedView.center = CGPoint(x: likedView.center.x, y: likedView.center.y+10)
+        nopeView.center = CGPoint(x: nopeView.center.x-20, y: nopeView.center.y+10)
+        
+        backgroundColor = UIColor.white
+        imageView.frame.origin.x += 10
+        imageView.frame.origin.y += 10
+        imageView.frame.size.width -= 20
+        imageView.frame.size.height -= 100
         
     }
     
-    func setImage(imageUrl: String!, text: String) {
+    func setImage(imageUrl: String!, distance: String, name: String, desc: String) {
         
         if imageUrl != nil {
             AppHelper.loadImageURL(imageUrl: imageUrl, imageView: imageView, completion: nil)
@@ -46,13 +49,26 @@ class SwipeCard: MDCSwipeToChooseView {
             imageView.image = UIImage(named: "default-logo")
         }
         
-        let width = button.frame.size.width
-        label = UILabel(frame: CGRect(x: width*0.45, y: button.frame.size.height-width*0.12, width: width*0.5, height: width*0.07))
-        label.textColor = UIColor.white
-        label.font = UIFont.boldSystemFont(ofSize: 26)
-        label.textAlignment = .right
-        label.text = text
-        addSubview(label)
+        let size = frame.size
+        
+        distanceLabel = UILabel(frame: CGRect(x: size.width - 120, y: size.height-130, width: 100, height: 25))
+        distanceLabel.textColor = UIColor.white
+        distanceLabel.font = UIFont.boldSystemFont(ofSize: 26)
+        distanceLabel.textAlignment = .right
+        distanceLabel.text = distance
+        addSubview(distanceLabel)
+        
+        nameLabel = UILabel(frame: CGRect(x: 15, y: size.height-75, width: size.width - 30, height: 25))
+        nameLabel.textColor = UIColor(red: 51/255.0, green: 51/255.0, blue: 51/255.0, alpha: 1)
+        nameLabel.font = UIFont.boldSystemFont(ofSize: 20)
+        nameLabel.text = name
+        addSubview(nameLabel)
+        
+        descLabel = UILabel(frame: CGRect(x: 15, y: size.height-45, width: size.width - 40, height: 25))
+        descLabel.textColor = UIColor(red: 191/255.0, green: 191/255.0, blue: 191/255.0, alpha: 1)
+        descLabel.font = UIFont.boldSystemFont(ofSize: 18)
+        descLabel.text = desc
+        addSubview(descLabel)
         
     }
     
@@ -62,8 +78,7 @@ class SwipeCard: MDCSwipeToChooseView {
         touchCallback = callback
         button.addTarget(self, action: #selector(clickCard), for: .touchUpInside)
         
-        let d = button.frame.size.width * 0.15
-        let iconView = UIImageView(frame: CGRect(x: d*0.3, y: button.frame.size.height-d*1.3, width: d, height: d))
+        let iconView = UIImageView(frame: CGRect(x: 25, y: button.frame.size.height-155, width: 50, height: 50))
         iconView.image = UIImage(named: "touch-icon")
         addSubview(iconView)
         

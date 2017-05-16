@@ -10,12 +10,12 @@ target 'MyJobPitch' do
     pod 'MBProgressHUD'
     pod 'UITextView+Placeholder'
     pod 'STPopup'
-    pod 'MDCSwipeToChoose'
     pod 'MGSwipeTableCell'
     pod 'SVPullToRefresh'
     pod 'LLSimpleCamera'
     pod 'JSQMessagesViewController'
     pod 'JTSImageViewController'
+    pod 'JVFloatLabeledTextField'
     pod 'Nuke'
-    
+        
 end

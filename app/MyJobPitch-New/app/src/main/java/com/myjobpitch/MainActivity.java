@@ -340,13 +340,13 @@ public class MainActivity extends AppCompatActivity
     }
 
     MenuItemInfo[] menuItemData = {
-            new MenuItemInfo(AppData.PAGE_FIND_JOB, "Find Job", R.drawable.menu_job_search, FindJobFragment.class, "P"),
+            new MenuItemInfo(AppData.PAGE_FIND_JOB, "Find Job", R.drawable.menu_search, FindJobFragment.class, "P"),
             new MenuItemInfo(AppData.PAGE_JS_APPLICATIONS, "Applications", R.drawable.menu_application, TalentApplicationsFragment.class, "P"),
             new MenuItemInfo(AppData.PAGE_MESSAGES, "Messages", R.drawable.menu_message, MessageListFragment.class, "PB"),
             new MenuItemInfo(AppData.PAGE_JOB_PROFILE, "Job Profile", R.drawable.menu_job_profile, JobProfileFragment.class, "J"),
             new MenuItemInfo(AppData.PAGE_ADD_RECORD, "Record Pitch", R.drawable.menu_add_record, PitchFragment.class, "J"),
             new MenuItemInfo(AppData.PAGE_JOB_PROFILE, "Profile", R.drawable.menu_user_profile, TalentProfileFragment.class, ""),
-            new MenuItemInfo(AppData.PAGE_FIND_TALENT, "Find Talent", R.drawable.menu_user_search, SelectJobFragment.class, "B"),
+            new MenuItemInfo(AppData.PAGE_FIND_TALENT, "Find Talent", R.drawable.menu_search, SelectJobFragment.class, "B"),
             new MenuItemInfo(AppData.PAGE_R_APPLICATIONS, "Applications", R.drawable.menu_application, SelectJobFragment.class, "B"),
             new MenuItemInfo(AppData.PAGE_CONNECTIONS, "Connections", R.drawable.menu_connect, SelectJobFragment.class, "B"),
             new MenuItemInfo(AppData.PAGE_MY_SHORTLIST, "My Shortlist", R.drawable.menu_shortlisted, SelectJobFragment.class, "B"),

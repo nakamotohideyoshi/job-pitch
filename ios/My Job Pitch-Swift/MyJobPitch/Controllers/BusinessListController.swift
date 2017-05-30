@@ -35,7 +35,7 @@ class BusinessListController: MJPController {
         
         if isAddMode {
             title = "Add job"
-            headerImgView.image = UIImage(named: "menu-business-plus")?.withRenderingMode(.alwaysTemplate)
+            headerImgView.image = UIImage(named: "menu-business")?.withRenderingMode(.alwaysTemplate)
             emptyView.isHidden = true
         } else {
             title = "Businesses"

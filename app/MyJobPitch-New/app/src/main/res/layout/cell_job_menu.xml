@@ -12,7 +12,7 @@
         android:layout_width="35dp"
         android:layout_height="35dp"
         android:layout_margin="10dp"
-        android:src="@drawable/menu_user_search"
+        android:src="@drawable/menu_search"
         android:tint="#000"
         android:scaleType="fitCenter"/>
     <TextView

@@ -1,0 +1,20 @@
+{
+  "terms": {
+    "js": "/assets/terms.1d96d080.chunk.js"
+  },
+  "recruiter": {
+    "js": "/assets/recruiter.3e8a517c.chunk.js"
+  },
+  "jobseeker": {
+    "js": "/assets/jobseeker.15089a2c.chunk.js"
+  },
+  "about": {
+    "js": "/assets/about.0c674602.chunk.js"
+  },
+  "client": {
+    "js": "/assets/client.d4b1bffa.js"
+  },
+  "vendor": {
+    "js": "/assets/vendor.905e724e.js"
+  }
+}

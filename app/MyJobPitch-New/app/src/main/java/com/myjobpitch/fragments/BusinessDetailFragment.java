@@ -77,7 +77,7 @@ public class BusinessDetailFragment extends BaseFragment {
         if (isAddMode) {
             title = "Add job";
             AppHelper.getImageView(infoView).setColorFilter(ContextCompat.getColor(getApp(), R.color.colorGreen));
-            AppHelper.getImageView(infoView).setImageResource(R.drawable.menu_business_plus);
+            AppHelper.getImageView(infoView).setImageResource(R.drawable.menu_business);
             editButtonsView.setVisibility(View.GONE);
             navTitleView.setText("Select work place");
         } else {

@@ -120,7 +120,7 @@ public class JobDetailFragment extends BaseFragment {
     // menu adapter ========================================
 
     private int[] images = {
-            R.drawable.menu_user_search, R.drawable.menu_application, R.drawable.menu_connect, R.drawable.menu_shortlisted, R.drawable.menu_message
+            R.drawable.menu_search, R.drawable.menu_application, R.drawable.menu_connect, R.drawable.menu_shortlisted, R.drawable.menu_message
     };
 
     private String[] titles = {

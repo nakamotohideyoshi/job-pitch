@@ -12,14 +12,14 @@ class SideMenuController: UIViewController {
     
     static var currentID = ""
     static let menuItems = [
-        "find_job":     ["icon": "menu-job-search",     "title": "Find Job",                "identifier": "Swipe",              "per": "P"],
+        "find_job":     ["icon": "menu-search",         "title": "Find Job",                "identifier": "Swipe",              "per": "P"],
         "applications": ["icon": "menu-application",    "title": "Applications",            "identifier": "ApplicationList",    "per": "PB"],
         "messages":     ["icon": "menu-message",        "title": "Messages",                "identifier": "MessageList",        "per": "PB"],
         "job_profile":  ["icon": "menu-job-profile",    "title": "Job Profile",             "identifier": "JobProfile",         "per": "J"],
         "add_record":   ["icon": "menu-add-record",     "title": "Record Pitch",            "identifier": "Pitch",              "per": "J"],
         "user_profile": ["icon": "menu-user-profile",   "title": "Profile",                 "identifier": "JobSeekerProfile",   "per": ""],
         
-        "find_talent":  ["icon": "menu-user-search",    "title": "Find Talent",             "identifier": "SelectJob",          "per": "B"],
+        "find_talent":  ["icon": "menu-search",         "title": "Find Talent",             "identifier": "SelectJob",          "per": "B"],
         "connections":  ["icon": "menu-connect",        "title": "Connections",             "identifier": "SelectJob",          "per": "B"],
         "shortlist":    ["icon": "menu-shortlist",      "title": "My Shortlist",            "identifier": "SelectJob",          "per": "B"],
         "businesses":   ["icon": "menu-business",       "title": "Add or Edit Jobs",        "identifier": "BusinessList",       "per": ""],

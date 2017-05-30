@@ -41,7 +41,7 @@ class BusinessDetailController: MJPController {
         
         if isAddMode {
             title = "Add job"
-            headerImgView.image = UIImage(named: "menu-business-plus")?.withRenderingMode(.alwaysTemplate)
+            headerImgView.image = UIImage(named: "menu-business")?.withRenderingMode(.alwaysTemplate)
             headerCreditCount.isHidden = true
             headerSubTitle.isHidden = true
             controlHeightConstraint.constant = 0

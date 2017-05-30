@@ -7,8 +7,8 @@ android {
         applicationId "com.myjobpitch"
         minSdkVersion 16
         targetSdkVersion 25
-        versionCode 45
-        versionName "1.1-beta.45"
+        versionCode 47
+        versionName "1.1-beta.47"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
     }

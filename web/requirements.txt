@@ -8,3 +8,5 @@ six
 requests
 Pillow
 psycopg2
+oauth2client==4.0.0
+google-api-python-client==1.5.5

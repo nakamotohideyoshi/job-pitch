@@ -9,6 +9,8 @@
 import UIKit
 import GoogleMaps
 import GooglePlaces
+import Google
+import GoogleSignIn
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -21,6 +23,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         GMSServices.provideAPIKey("AIzaSyCeseQMdrlh9E5d7DHHHm4GvW7yd8C_sZk")
         GMSPlacesClient.provideAPIKey("AIzaSyCeseQMdrlh9E5d7DHHHm4GvW7yd8C_sZk")
+        
+        // Initialize sign-in
+        var configureError: NSError?
+        GGLContext.sharedInstance().configureWithError(&configureError)
+        assert(configureError == nil, "Error configuring Google services: \(configureError)")
         
         let dbSession = DBSession(appKey: "gpwecvaun9wmvim", appSecret: "s8al7ztjvaqbbh1", root: kDBRootDropbox)
         DBSession.setShared(dbSession)
@@ -39,7 +46,20 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             }
             return true
         }
-        return false
+        
+        return GIDSignIn.sharedInstance().handle(url,
+                                                 sourceApplication: sourceApplication,
+                                                 annotation: annotation)
+    }
+    
+    @available(iOS 9.0, *)
+    func application(_ app: UIApplication, open url: URL,
+                     options: [UIApplicationOpenURLOptionsKey : Any]) -> Bool {
+        let sourceApplication = options[UIApplicationOpenURLOptionsKey.sourceApplication] as? String
+        let annotation = options[UIApplicationOpenURLOptionsKey.annotation]
+        return GIDSignIn.sharedInstance().handle(url,
+                                                 sourceApplication: sourceApplication,
+                                                 annotation: annotation)
     }
 
     func applicationWillResignActive(_ application: UIApplication) {

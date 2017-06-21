@@ -157,6 +157,7 @@ class JobSeekerProfileController: MJPController {
             email.text = AppData.email
             cvViewButtonHeightConstraint.constant = 0
         }
+        
     }
     
     func showImagePickerController(type: UIImagePickerControllerSourceType) {
@@ -181,6 +182,10 @@ class JobSeekerProfileController: MJPController {
         UIApplication.shared.openURL(URL(string: jobSeeker.cv)!)
     }
     
+    @IBAction func cvAddHelpAction(_ sender: Any) {
+        PopupController.showGray("Upload your CV using your favourite cloud service, or take a photo if you have it printed out.", ok: "Close")
+    }
+    
     @IBAction func cvAddAction(_ sender: Any) {
         
         let actionSheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
@@ -194,6 +199,16 @@ class JobSeekerProfileController: MJPController {
             self.showImagePickerController(type: .photoLibrary)
         }
         actionSheet.addAction(photoAction)
+        
+        let googledriveAction = UIAlertAction(title: "Google Drive", style: .default) { (_) in
+            let browser = AppHelper.mainStoryboard.instantiateViewController(withIdentifier: "GoogleDrive") as! GoogleDriveController
+            browser.downloadCallback = { (path, filename) in
+                self.setCV(path: path, filename: filename)
+            }
+            let navController = UINavigationController(rootViewController: browser)
+            AppHelper.getFrontController().present(navController, animated: true, completion: nil)
+        }
+        actionSheet.addAction(googledriveAction)
         
         let dropboxAction = UIAlertAction(title: "Dropbox", style: .default) { (_) in
             let browser = AppHelper.mainStoryboard.instantiateViewController(withIdentifier: "DropboxBrowser") as! DropboxBrowserViewController
@@ -216,8 +231,45 @@ class JobSeekerProfileController: MJPController {
         cvRemoveButton.isHidden = true
     }
     
+    func setCV(path: String, filename: String) {
+        let url = URL(fileURLWithPath: path)
+        do {
+            cvdata = try Data(contentsOf: url)
+            cvName = filename
+            cvFileName.text = "CV added, save to upload."
+            cvRemoveButton.isHidden = false
+        } catch {
+            print("error")
+        }
+    }
+    
     @IBAction func pitchHelpAction(_ sender: Any) {
+//        PopupController.showGray("Tips on how to record your pitch will be placed here.", ok: "Close")
         PopupController.showGray("Tips on how to record your pitch will be placed here.", ok: "Close")
+        
+//        Recording Pitch Tips
+//             
+//            - Dress smartly. You want to be taken seriously
+//                - Be careful what is in the background. Nothing should distract from your pitch
+//        - Record your pitch in a quiet location to avoid background noise
+//         
+//        Recording your job pitch:
+//         
+//        - Practise makes perfect – Record your pitch, play it back and perfect it. If in doubt, ask a friend
+//        - Be positive, confident and look straight into the camera to make eye contact
+//        - Be yourself, but don’t fidget such as waving your hands about in the air
+//        - Stand or sit up straight which helps you breath more easily
+//        - Don’t rush it and speak clearly
+//        - Remember to smile!
+//         
+//        Remember you only have 30 seconds, so what to say?
+//         
+//        - Your name and location
+//        - Your personality
+//        - Type of work you are looking for
+//            - Relevant experience
+//             
+//        Finish your pitch confidently by saying something like, “Thank you and I look forward to hearing from you”.
     }
     
     @IBAction func pitchRecordAction(_ sender: Any) {
@@ -380,18 +432,8 @@ extension JobSeekerProfileController: UINavigationControllerDelegate {
 
 extension JobSeekerProfileController: DropboxBrowserDelegate {
     
-    func dropboxBrowser(_ browser: DropboxBrowserViewController!, didDownloadFile fileName: String!, didOverwriteFile isLocalFileOverwritten: Bool) {
-        
-        let url = URL(fileURLWithPath: browser.downloadedFilePath)
-        do {
-            cvdata = try Data(contentsOf: url)
-            cvName = fileName
-            cvFileName.text = "CV added, save to upload."
-            cvRemoveButton.isHidden = false
-        } catch {
-            print("error")
-        }
-        
+    func dropboxBrowser(_ browser: DropboxBrowserViewController!, didDownloadFile fileName: String!, didOverwriteFile isLocalFileOverwritten: Bool) {        
+        setCV(path: browser.downloadedFilePath, filename: fileName)
         browser.removeDropboxBrowser()
     }
     

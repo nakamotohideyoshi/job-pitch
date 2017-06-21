@@ -210,6 +210,17 @@ class JobEditController: MJPController {
         }
         actionSheetContoller.addAction(photoGalleryAction)
         
+        let googledriveAction = UIAlertAction(title: "Google Drive", style: .default) { (_) in
+            let browser = AppHelper.mainStoryboard.instantiateViewController(withIdentifier: "GoogleDrive") as! GoogleDriveController
+            browser.mimeQuery = "mimeType = 'image/png' or mimeType = 'image/jpg'"
+            browser.downloadCallback = { (path, filename) in
+                self.downloadedLogo(path: path)
+            }
+            let navController = UINavigationController(rootViewController: browser)
+            AppHelper.getFrontController().present(navController, animated: true, completion: nil)
+        }
+        actionSheetContoller.addAction(googledriveAction)
+        
         let dropboxAction = UIAlertAction(title: "Dropbox", style: .default) { (_) in
             let browser = AppHelper.mainStoryboard.instantiateViewController(withIdentifier: "DropboxBrowser") as! DropboxBrowserViewController
             browser.rootViewDelegate = self
@@ -223,6 +234,25 @@ class JobEditController: MJPController {
         
         present(actionSheetContoller, animated: true, completion: nil)
         
+    }
+    
+    func downloadedLogo(path: String) {
+        let url = URL(fileURLWithPath: path)
+        do {
+            let data = try Data(contentsOf: url)
+            logoImage = UIImage(data: data)
+            
+            if logoImage == nil {
+                //PopupController.showGray(fileName + "is not a image file", ok: "OK")
+            } else {
+                imgView.image = logoImage
+                removeImageButton.isHidden = false
+                addLogoButton.setTitle("Change Logo", for: .normal)
+            }
+            
+        } catch {
+            print("error")
+        }
     }
     
     @IBAction func removeImageAction(_ sender: Any) {
@@ -385,24 +415,7 @@ extension JobEditController: UINavigationControllerDelegate {
 extension JobEditController: DropboxBrowserDelegate {
     
     func dropboxBrowser(_ browser: DropboxBrowserViewController!, didDownloadFile fileName: String!, didOverwriteFile isLocalFileOverwritten: Bool) {
-        
-        let url = URL(fileURLWithPath: browser.downloadedFilePath)
-        do {
-            let data = try Data(contentsOf: url)
-            logoImage = UIImage(data: data)
-            
-            if logoImage == nil {
-                //PopupController.showGray(fileName + "is not a image file", ok: "OK")
-            } else {
-                imgView.image = logoImage
-                removeImageButton.isHidden = false
-                addLogoButton.setTitle("Change Logo", for: .normal)
-            }
-            
-        } catch {
-            print("error")
-        }
-        
+        downloadedLogo(path: browser.downloadedFilePath)
         browser.removeDropboxBrowser()
     }
     

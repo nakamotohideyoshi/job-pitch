@@ -43,6 +43,8 @@
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>
+			<key>CFBundleURLName</key>
+			<string></string>
 			<key>CFBundleURLSchemes</key>
 			<array>
 				<string>db-gpwecvaun9wmvim</string>
@@ -53,18 +55,18 @@
 			<string>Editor</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>com.googleusercontent.apps.972915545143-ruj50seagfaairplc437b4c78g5d2j88</string>
+				<string>com.googleusercontent.apps.360489441884-ohf7be9pha9e5ko336chf37qmjvo2cqk</string>
 			</array>
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>20</string>
+	<string>21</string>
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
-		<string>dbapi-2</string>
 		<string>dbapi-8-emm</string>
+		<string>dbapi-2</string>
 	</array>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>

@@ -277,12 +277,21 @@
             android:background="@drawable/button_yellow"
             android:theme="@style/Button"/>
 
+        <ImageButton
+            android:id="@+id/job_seeker_cv_add_help"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="10dp"
+            android:layout_gravity="right"
+            android:background="@drawable/icon_help"/>
+
         <Button
             android:id="@+id/job_seeker_cv_upload"
             android:text="Upload CV"
             android:layout_width="match_parent"
             android:layout_height="@dimen/button_height"
-            android:layout_marginTop="15dp"
+            android:layout_marginTop="5dp"
             android:background="@drawable/button_blue"
             android:theme="@style/Button"/>
 

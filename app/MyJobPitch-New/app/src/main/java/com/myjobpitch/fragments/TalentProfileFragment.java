@@ -2,6 +2,7 @@ package com.myjobpitch.fragments;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -15,6 +16,7 @@ import android.widget.TextView;
 
 import com.kaopiz.kprogresshud.KProgressHUD;
 import com.myjobpitch.CameraActivity;
+import com.myjobpitch.MainActivity;
 import com.myjobpitch.MediaPlayerActivity;
 import com.myjobpitch.R;
 import com.myjobpitch.api.MJPApi;
@@ -28,6 +30,7 @@ import com.myjobpitch.uploader.AWSPitchUploader;
 import com.myjobpitch.uploader.PitchUpload;
 import com.myjobpitch.uploader.PitchUploadListener;
 import com.myjobpitch.utils.AppData;
+import com.myjobpitch.utils.AppHelper;
 import com.myjobpitch.utils.Loading;
 import com.myjobpitch.utils.Popup;
 import com.rengwuxian.materialedittext.MaterialEditText;
@@ -44,8 +47,7 @@ import butterknife.OnClick;
 
 public class TalentProfileFragment extends FormFragment {
 
-    static final int CVULOAD_CODE = 1;
-    static final int PITCH_CODE = 2;
+    static final int REQUEST_NEW_PITCH = 2;
 
     @BindView(R.id.job_seeker_active)
     CheckBox mActiveView;
@@ -226,12 +228,14 @@ public class TalentProfileFragment extends FormFragment {
         mCVUploadRemoveButton.setVisibility(View.GONE);
     }
 
+    @OnClick(R.id.job_seeker_cv_add_help)
+    void onCVAddHelp() {
+        Popup.showGreen("Upload your CV using your favourite cloud service, or take a photo if you have it printed out.", null, null, "Close", null, true);
+    }
+
     @OnClick(R.id.job_seeker_cv_upload)
     void onCVUpload() {
-        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-        intent.setType("*/*");
-        startActivityForResult(Intent.createChooser(intent, "Select File"), CVULOAD_CODE);
-        requestCode = CVULOAD_CODE;
+        getApp().showFilePicker(false);
     }
 
     @OnClick(R.id.job_seeker_pitch_help)
@@ -242,8 +246,8 @@ public class TalentProfileFragment extends FormFragment {
     @OnClick(R.id.job_seeker_record_new)
     void onRecordNew() {
         Intent intent = new Intent(getApp(), CameraActivity.class);
-        startActivityForResult(intent, PITCH_CODE);
-        requestCode = PITCH_CODE;
+        startActivityForResult(intent, REQUEST_NEW_PITCH);
+        requestCode = REQUEST_NEW_PITCH;
     }
 
     @OnClick(R.id.job_seeker_video_play)
@@ -264,17 +268,29 @@ public class TalentProfileFragment extends FormFragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == Activity.RESULT_OK) {
-            if (this.requestCode == CVULOAD_CODE) {
-                Uri uri = data.getData();
-                String src = uri.getPath();
-                String[] tempStr = src.split("/");
-                cvFileName = tempStr[tempStr.length-1];
-                mCVFilenameView.setText("CV added, save to upload.");
-                mCVFilenameView.setVisibility(View.VISIBLE);
-                mCVUploadRemoveButton.setVisibility(View.VISIBLE);
-            } else if (this.requestCode == PITCH_CODE) {
+            if (this.requestCode == REQUEST_NEW_PITCH) {
                 mVideoPath = data.getStringExtra(CameraActivity.OUTPUT_FILE);
                 mRecordVideoPlay.setVisibility(View.VISIBLE);
+            } else {
+                Uri uri = null;
+                if (requestCode == AppData.REQUEST_IMAGE_CAPTURE) {
+                    Bitmap photo = (Bitmap) data.getExtras().get("data");
+                    File file = AppHelper.saveBitmap(photo);
+                    uri = Uri.fromFile(file);
+                } else if (requestCode == AppData.REQUEST_IMAGE_PICK) {
+                    uri = data.getData();
+                } else if (requestCode == AppData.REQUEST_GOOGLE_DRIVE || requestCode == AppData.REQUEST_DROPBOX) {
+                    String path = (String) data.getExtras().get("path");
+                    uri = Uri.fromFile(new File(path));
+                }
+                if (uri != null) {
+                    String src = uri.getPath();
+                    String[] tempStr = src.split("/");
+                    cvFileName = tempStr[tempStr.length - 1];
+                    mCVFilenameView.setText("CV added, save to upload.");
+                    mCVFilenameView.setVisibility(View.VISIBLE);
+                    mCVUploadRemoveButton.setVisibility(View.VISIBLE);
+                }
             }
         }
     }

@@ -23,7 +23,6 @@
 		D749E3551E0A8724000FD0B1 /* AppData.swift in Sources */ = {isa = PBXBuildFile; fileRef = D749E3541E0A8724000FD0B1 /* AppData.swift */; };
 		D749E3571E0B2026000FD0B1 /* SwipeController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D749E3561E0B2026000FD0B1 /* SwipeController.swift */; };
 		D749E3591E0B21C0000FD0B1 /* SwipeCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = D749E3581E0B21C0000FD0B1 /* SwipeCard.swift */; };
-		D758ECF21E1FD8D200430010 /* DropboxBrowserViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D758ECF11E1FD8D200430010 /* DropboxBrowserViewController.m */; };
 		D75DBFC71E20DC8B009BAE7A /* DropboxSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D75DBFC61E20DC8B009BAE7A /* DropboxSDK.framework */; };
 		D76C903E1E23858C009C35E4 /* SWRevealViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D76C903D1E23858C009C35E4 /* SWRevealViewController.m */; };
 		D76C90401E238AAF009C35E4 /* SideMenuCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D76C903F1E238AAF009C35E4 /* SideMenuCell.swift */; };
@@ -65,6 +64,7 @@
 		D7B07B8D1E08DDE1005B9EBE /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D7B07B8B1E08DDE1005B9EBE /* LaunchScreen.storyboard */; };
 		D7B6F5361E640B2F0026A7BD /* MessageController0.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7B6F5351E640B2F0026A7BD /* MessageController0.swift */; };
 		D7B6F5381E6466E50026A7BD /* JobDetailController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7B6F5371E6466E50026A7BD /* JobDetailController.swift */; };
+		D7B7D8C71EFCFFE300649A5F /* DropboxController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7B7D8C61EFCFFE300649A5F /* DropboxController.swift */; };
 		D7C828031E51AC1000CD9C08 /* SelectJobController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7C828021E51AC1000CD9C08 /* SelectJobController.swift */; };
 		D7CFBBAC1EF7D294003FC132 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = D7CFBBAB1EF7D294003FC132 /* GoogleService-Info.plist */; };
 		D7CFBC691EF871A4003FC132 /* GoogleDriveController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7CFBC681EF871A4003FC132 /* GoogleDriveController.swift */; };
@@ -127,8 +127,6 @@
 		D749E3561E0B2026000FD0B1 /* SwipeController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SwipeController.swift; path = Controllers/SwipeController.swift; sourceTree = "<group>"; };
 		D749E3581E0B21C0000FD0B1 /* SwipeCard.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SwipeCard.swift; path = Views/SwipeCard.swift; sourceTree = "<group>"; };
 		D758ECEF1E1FD8D200430010 /* MyJobPitch-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "MyJobPitch-Bridging-Header.h"; sourceTree = "<group>"; };
-		D758ECF01E1FD8D200430010 /* DropboxBrowserViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DropboxBrowserViewController.h; path = Utils/DropboxBrowser/DropboxBrowserViewController.h; sourceTree = "<group>"; };
-		D758ECF11E1FD8D200430010 /* DropboxBrowserViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DropboxBrowserViewController.m; path = Utils/DropboxBrowser/DropboxBrowserViewController.m; sourceTree = "<group>"; };
 		D75DBFC61E20DC8B009BAE7A /* DropboxSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = DropboxSDK.framework; path = MyJobPitch/Utils/DropboxBrowser/DropboxSDK.framework; sourceTree = "<group>"; };
 		D76C903C1E23858C009C35E4 /* SWRevealViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SWRevealViewController.h; path = Utils/SWRevealViewController/SWRevealViewController.h; sourceTree = "<group>"; };
 		D76C903D1E23858C009C35E4 /* SWRevealViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SWRevealViewController.m; path = Utils/SWRevealViewController/SWRevealViewController.m; sourceTree = "<group>"; };
@@ -186,6 +184,7 @@
 		D7B07B8E1E08DDE1005B9EBE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D7B6F5351E640B2F0026A7BD /* MessageController0.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MessageController0.swift; path = Controllers/MessageController0.swift; sourceTree = "<group>"; };
 		D7B6F5371E6466E50026A7BD /* JobDetailController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = JobDetailController.swift; path = Controllers/JobDetailController.swift; sourceTree = "<group>"; };
+		D7B7D8C61EFCFFE300649A5F /* DropboxController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DropboxController.swift; path = Controllers/DropboxController.swift; sourceTree = "<group>"; };
 		D7BF01E51EC9960200F40B7B /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
 		D7BF01E71EC99AD700F40B7B /* ImageIO.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ImageIO.framework; path = System/Library/Frameworks/ImageIO.framework; sourceTree = SDKROOT; };
 		D7C828021E51AC1000CD9C08 /* SelectJobController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SelectJobController.swift; path = Controllers/SelectJobController.swift; sourceTree = "<group>"; };
@@ -317,15 +316,6 @@
 			name = Recruiter;
 			sourceTree = "<group>";
 		};
-		D758ECEE1E1FD8B400430010 /* DropboxBrowser */ = {
-			isa = PBXGroup;
-			children = (
-				D758ECF01E1FD8D200430010 /* DropboxBrowserViewController.h */,
-				D758ECF11E1FD8D200430010 /* DropboxBrowserViewController.m */,
-			);
-			name = DropboxBrowser;
-			sourceTree = "<group>";
-		};
 		D76C903B1E238580009C35E4 /* SWRevealViewController */ = {
 			isa = PBXGroup;
 			children = (
@@ -432,6 +422,7 @@
 				D76C90541E2540D1009C35E4 /* HelpController.swift */,
 				D76C90521E25405A009C35E4 /* WebViewController.swift */,
 				D7CFBC681EF871A4003FC132 /* GoogleDriveController.swift */,
+				D7B7D8C61EFCFFE300649A5F /* DropboxController.swift */,
 			);
 			name = Contollers;
 			sourceTree = "<group>";
@@ -488,7 +479,6 @@
 			children = (
 				D78834161ECAAEE900D99F4B /* MDCSwipeToChoose */,
 				D76C903B1E238580009C35E4 /* SWRevealViewController */,
-				D758ECEE1E1FD8B400430010 /* DropboxBrowser */,
 				D7F76FEA1E08E05F00ECB684 /* API.swift */,
 				D749E3521E0A36CD000FD0B1 /* APIConfigure.swift */,
 				D749E3501E09C09E000FD0B1 /* AppHelper.swift */,
@@ -661,6 +651,7 @@
 				D788341D1ECAAF0600D99F4B /* UIColor+MDCRGB8Bit.m in Sources */,
 				D7896AEF1E0CC51300533884 /* JobSeekerDetailController.swift in Sources */,
 				D7F7700C1E08E3D100ECB684 /* Business.swift in Sources */,
+				D7B7D8C71EFCFFE300649A5F /* DropboxController.swift in Sources */,
 				D7F770141E08E3D100ECB684 /* LoginRequest.swift in Sources */,
 				D7F770121E08E3D100ECB684 /* JobStatus.swift in Sources */,
 				D787F6331E2879F900C47A88 /* BusinessListController.swift in Sources */,
@@ -703,7 +694,6 @@
 				D7F770191E08E3D100ECB684 /* MJPObjectWithNameDesc.swift in Sources */,
 				D749E3511E09C09E000FD0B1 /* AppHelper.swift in Sources */,
 				D7F770151E08E3D100ECB684 /* Message.swift in Sources */,
-				D758ECF21E1FD8D200430010 /* DropboxBrowserViewController.m in Sources */,
 				D788342A1ECAAF3400D99F4B /* MDCSwipeToChooseViewOptions.m in Sources */,
 				D7CFBC691EF871A4003FC132 /* GoogleDriveController.swift in Sources */,
 				D788341C1ECAAF0600D99F4B /* MDCGeometry.m in Sources */,

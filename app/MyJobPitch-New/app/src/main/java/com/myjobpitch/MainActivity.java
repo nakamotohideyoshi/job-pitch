@@ -1,10 +1,13 @@
 package com.myjobpitch;
 
+import android.*;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentManager;
@@ -20,6 +23,8 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
+import com.github.rubensousa.bottomsheetbuilder.BottomSheetBuilder;
+import com.github.rubensousa.bottomsheetbuilder.adapter.BottomSheetItemClickListener;
 import com.myjobpitch.api.MJPApi;
 import com.myjobpitch.fragments.BaseFragment;
 import com.myjobpitch.fragments.BusinessListFragment;
@@ -38,6 +43,9 @@ import com.myjobpitch.utils.AppData;
 import com.myjobpitch.utils.Popup;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -60,6 +68,10 @@ public class MainActivity extends AppCompatActivity
     ViewGroup mContentView;
 
     FragmentManager mFragmentManager;
+
+    private static final int PERMISSION_IAMGE_CAPTURE = 11000;
+    private static final int PERMISSION_WRITE_EXTERNAL_STORAGE1 = 11001;
+    private static final int PERMISSION_WRITE_EXTERNAL_STORAGE2 = 11002;    // only image
 
     int mCurrentPageID = -1;
 
@@ -227,22 +239,78 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    public void showImagePicker() {
-        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            String[] permissions = {android.Manifest.permission.WRITE_EXTERNAL_STORAGE};
-            ActivityCompat.requestPermissions(this, permissions, 11000);
-        } else {
-            Intent intent = new Intent(Intent.ACTION_PICK);
-            intent.setType("image/*");
-            startActivityForResult(intent, AppData.IMAGE_PICK);
-        }
+    public void showFilePicker(final boolean onlyImage) {
+        new BottomSheetBuilder(this)
+                .setMode(BottomSheetBuilder.MODE_LIST)
+                .addTitleItem("Select")
+                .addItem(0, "Image Capture", R.drawable.ic_camera)
+                .addItem(1, "Local Storage", R.drawable.ic_loca_storage)
+                .addDividerItem()
+                .addItem(2, "Google Drive", R.drawable.ic_google_drive)
+                .addItem(3, "Dropbox", R.drawable.ic_dropbox)
+                .expandOnStart(true)
+                .setItemClickListener(new BottomSheetItemClickListener() {
+                    @Override
+                    public void onBottomSheetItemClick(MenuItem item) {
+                        switch (item.getItemId()) {
+                            case 0: {
+                                if (ActivityCompat.checkSelfPermission(MainActivity.this, android.Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                                    String[] permissions = {android.Manifest.permission.WRITE_EXTERNAL_STORAGE};
+                                    ActivityCompat.requestPermissions(MainActivity.this, permissions, PERMISSION_IAMGE_CAPTURE);
+                                } else {
+                                    actionImageCapture();
+                                }
+                                break;
+                            }
+                            case 1: {
+                                if (ActivityCompat.checkSelfPermission(MainActivity.this, android.Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                                    String[] permissions = {android.Manifest.permission.WRITE_EXTERNAL_STORAGE};
+                                    ActivityCompat.requestPermissions(MainActivity.this, permissions,
+                                            onlyImage ? PERMISSION_WRITE_EXTERNAL_STORAGE2 : PERMISSION_WRITE_EXTERNAL_STORAGE1);
+                                } else {
+                                    actionPick(onlyImage);
+                                }
+                                break;
+                            }
+                            case 2: {
+                                Intent intent = new Intent(MainActivity.this, GoogleDriveActivity.class);
+                                intent.putExtra("onlyImage", onlyImage);
+                                startActivityForResult(intent, AppData.REQUEST_GOOGLE_DRIVE);
+                                break;
+                            }
+                            case 3: {
+                                Intent intent = new Intent(MainActivity.this, DropboxActivity.class);
+                                intent.putExtra("onlyImage", onlyImage);
+                                startActivityForResult(intent, AppData.REQUEST_DROPBOX);
+                                break;
+                            }
+                        }
+                    }
+                })
+                .createDialog()
+                .show();
+    }
+
+    private void actionPick(boolean onlyImage) {
+        Intent intent = new Intent(Intent.ACTION_PICK);
+        intent.setType(onlyImage ? "image/*" : "image/*");
+        startActivityForResult(intent, AppData.REQUEST_IMAGE_PICK);
+    }
+
+    private void actionImageCapture() {
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        startActivityForResult(takePictureIntent, AppData.REQUEST_IMAGE_CAPTURE);
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
-        if (requestCode == 11000) {
+        if (requestCode == PERMISSION_IAMGE_CAPTURE) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                showImagePicker();
+                actionImageCapture();
+            }
+        } else if (requestCode == PERMISSION_WRITE_EXTERNAL_STORAGE1 || requestCode == PERMISSION_WRITE_EXTERNAL_STORAGE2) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                actionPick(requestCode == PERMISSION_WRITE_EXTERNAL_STORAGE2);
             }
         } else {
             getCurrentFragment().onRequestPermissionsResult(requestCode, permissions, grantResults);

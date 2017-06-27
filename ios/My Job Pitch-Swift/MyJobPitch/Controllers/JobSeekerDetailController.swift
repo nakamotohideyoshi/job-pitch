@@ -26,7 +26,10 @@ class JobSeekerDetailController: MJPController {
     @IBOutlet weak var pitchPlayButton: UIButton!
     @IBOutlet weak var buttonContainer: UIView!
     
+    @IBOutlet weak var connectHelpButton: UIButton!
+    
     var jobSeeker: JobSeeker!
+    var job: Job!
     var application: Application!
     var chooseDelegate: ChooseDelegate!
     var onlyView = false
@@ -109,11 +112,19 @@ class JobSeekerDetailController: MJPController {
                 buttonContainer.removeFromSuperview()
             }
             
+            connectHelpButton.removeFromSuperview()
+            
         } else {
             
             cvButton.removeFromSuperview()
             contactView.removeFromSuperview()
             applyButton.setTitle("Connect", for: .normal)
+            
+            let j = job != nil ? job : application.job
+            let creditCount = j?.locationData.businessData.tokens as! Int
+            let credits = creditCount > 1 ? "Credits" : "Credit"
+            applyButton.setTitle(String(format: "Connect  (%d %@)", creditCount, credits), for: .normal)
+            
         }
         
     }
@@ -146,6 +157,11 @@ class JobSeekerDetailController: MJPController {
         
     }
     
+    @IBAction func connectHelpAction(_ sender: Any) {
+        PopupController.showGray("Hit connect to view full talent detail and CV (if available). Talent will be added to your connection list where you can shortlist them, and start messaging.\n(1 credit/connection)", ok: "Close")
+    }
+    
+    
     @IBAction func applyAction(_ sender: Any) {
         if isConnected {
             MessageController0.showModal(application: application)
@@ -168,10 +184,12 @@ class JobSeekerDetailController: MJPController {
     }
     
     static func pushController(jobSeeker: JobSeeker!,
+                               job: Job!,
                                application: Application!,
                                chooseDelegate: ChooseDelegate!) {
         let controller = AppHelper.mainStoryboard.instantiateViewController(withIdentifier: "JobSeekerDetail") as! JobSeekerDetailController
         controller.jobSeeker = jobSeeker
+        controller.job = job
         controller.application = application
         controller.chooseDelegate = chooseDelegate
         AppHelper.getFrontController().navigationController?.pushViewController(controller, animated: true)

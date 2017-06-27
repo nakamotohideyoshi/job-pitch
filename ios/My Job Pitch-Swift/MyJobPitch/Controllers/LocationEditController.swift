@@ -162,8 +162,10 @@ class LocationEditController: MJPController {
         actionSheetContoller.addAction(googledriveAction)
         
         let dropboxAction = UIAlertAction(title: "Dropbox", style: .default) { (_) in
-            let browser = AppHelper.mainStoryboard.instantiateViewController(withIdentifier: "DropboxBrowser") as! DropboxBrowserViewController
-            browser.rootViewDelegate = self
+            let browser = AppHelper.mainStoryboard.instantiateViewController(withIdentifier: "Dropbox") as! DropboxController
+            browser.downloadCallback = { (path, filename) in
+                self.downloadedLogo(path: path)
+            }
             let navController = UINavigationController(rootViewController: browser)
             AppHelper.getFrontController().present(navController, animated: true, completion: nil)
         }
@@ -346,13 +348,3 @@ extension LocationEditController: UITextFieldDelegate {
         return false
     }
 }
-
-extension LocationEditController: DropboxBrowserDelegate {
-    
-    func dropboxBrowser(_ browser: DropboxBrowserViewController!, didDownloadFile fileName: String!, didOverwriteFile isLocalFileOverwritten: Bool) {
-        downloadedLogo(path: browser.downloadedFilePath)
-        browser.removeDropboxBrowser()
-    }
-    
-}
-

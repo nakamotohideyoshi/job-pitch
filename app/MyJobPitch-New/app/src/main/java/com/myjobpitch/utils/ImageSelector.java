@@ -99,19 +99,19 @@ public class ImageSelector {
 
         ImageLoader.getInstance().displayImage(imagePath, imageView, displayImageOptions, new ImageLoadingListener() {
             @Override
-            public void onLoadingStarted(String imageUri, View view) {
+            public void onLoadingStarted(String path, View view) {
                 if (progressBar != null) {
                     progressBar.setVisibility(View.VISIBLE);
                 }
             }
             @Override
-            public void onLoadingFailed(String uri, View view, FailReason failReason) {
+            public void onLoadingFailed(String path, View view, FailReason failReason) {
                 if (progressBar != null) {
                     progressBar.setVisibility(View.GONE);
                 }
             }
             @Override
-            public void onLoadingComplete(String uri, View view, Bitmap loadedImage) {
+            public void onLoadingComplete(String path, View view, Bitmap loadedImage) {
                 if (progressBar != null) {
                     progressBar.setVisibility(View.GONE);
                 }
@@ -138,37 +138,47 @@ public class ImageSelector {
         return bitmap;
     }
 
-    public void setImageUri(Uri uri) {
+    private boolean setImage(String path) {
         try {
-            String[] projection = { MediaStore.Images.Media.DATA };
-            Cursor cursor = MainActivity.instance.getContentResolver().query(uri, projection, null, null, null);
-            if(cursor != null) {
-                int column_index = cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DATA);
-                cursor.moveToFirst();
-                String path = cursor.getString(column_index);
-                ExifInterface exif = new ExifInterface(path);
-                int orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, 1);
-                Matrix matrix = new Matrix();
-                switch (orientation) {
-                    case ORIENTATION_ROTATE_90:
-                        matrix.postRotate(90);
-                        break;
-                    case ORIENTATION_ROTATE_180:
-                        matrix.postRotate(180);
-                        break;
-                    case ORIENTATION_ROTATE_270:
-                        matrix.postRotate(270);
-                        break;
-                }
-                bitmap = BitmapFactory.decodeFile(path);
-                bitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
-                imageView.setImageBitmap(bitmap);
-                removeButton.setVisibility(View.VISIBLE);
-                addButton.setText("Change Logo");
-                imageUri = uri;
+            ExifInterface exif = new ExifInterface(path);
+            int orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, 1);
+            Matrix matrix = new Matrix();
+            switch (orientation) {
+                case ORIENTATION_ROTATE_90:
+                    matrix.postRotate(90);
+                    break;
+                case ORIENTATION_ROTATE_180:
+                    matrix.postRotate(180);
+                    break;
+                case ORIENTATION_ROTATE_270:
+                    matrix.postRotate(270);
+                    break;
             }
+            bitmap = BitmapFactory.decodeFile(path);
+            bitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
+            imageView.setImageBitmap(bitmap);
+            removeButton.setVisibility(View.VISIBLE);
+            addButton.setText("Change Logo");
+            return true;
         } catch (IOException e) {
             e.printStackTrace();
+            return false;
+        }
+    }
+
+    public void setImageUri(Uri uri) {
+        String path;
+        String[] projection = { MediaStore.Images.Media.DATA };
+        Cursor cursor = MainActivity.instance.getContentResolver().query(uri, projection, null, null, null);
+        if(cursor != null) {
+            int column_index = cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DATA);
+            cursor.moveToFirst();
+            path = cursor.getString(column_index);
+        } else {
+            path = uri.getPath();
+        }
+        if (setImage(path)) {
+            imageUri = uri;
         }
     }
 
@@ -178,7 +188,7 @@ public class ImageSelector {
 
     @OnClick(R.id.image_add_button)
     void onClickAdd() {
-        MainActivity.instance.showImagePicker();
+        MainActivity.instance.showFilePicker(true);
     }
 
     @OnClick(R.id.image_remove_button)

@@ -206,6 +206,7 @@ extension ApplicationListController: UITableViewDelegate {
         if isRecruiter {
             
             JobSeekerDetailController.pushController(jobSeeker: nil,
+                                                     job: nil,
                                                      application: application,
                                                      chooseDelegate: self)
         } else {

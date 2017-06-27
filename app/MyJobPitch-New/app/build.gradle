@@ -5,10 +5,10 @@ android {
     buildToolsVersion "25.0.2"
     defaultConfig {
         applicationId "com.myjobpitch"
-        minSdkVersion 16
+        minSdkVersion 19
         targetSdkVersion 25
-        versionCode 47
-        versionName "1.1-beta.47"
+        versionCode 48
+        versionName "1.1-beta.48"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
     }
@@ -25,12 +25,24 @@ android {
     }
 }
 
+configurations.all {
+    resolutionStrategy.force 'com.google.code.findbugs:jsr305:3.0.1'
+}
+
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
     compile project(path: ':swipedeck')
+    //    compile 'com.google.android.gms:play-services:10.2.4'
+    compile('com.google.api-client:google-api-client-android:1.22.0') {
+        exclude group: 'org.apache.httpcomponents'
+    }
+    compile('com.google.apis:google-api-services-drive:v3-rev76-1.22.0') {
+        exclude group: 'org.apache.httpcomponents'
+    }
+
     compile 'com.android.support:appcompat-v7:25.3.1'
     compile 'com.android.support:support-v4:25.3.1'
     compile 'com.android.support:design:25.3.1'
@@ -39,7 +51,8 @@ dependencies {
     compile 'com.google.android.gms:play-services-maps:10.2.4'
     compile 'com.google.android.gms:play-services-places:10.2.4'
     compile 'com.google.android.gms:play-services:10.2.4'
-
+    compile 'com.google.android.gms:play-services-auth:10.2.4'
+    compile 'pub.devrel:easypermissions:0.2.1'
     compile 'org.apache.commons:commons-lang3:3.5'
     compile 'org.springframework.android:spring-android-rest-template:1.0.1.RELEASE'
     compile 'com.fasterxml.jackson.core:jackson-databind:2.9.0.pr1'
@@ -56,6 +69,10 @@ dependencies {
     compile 'com.github.stfalcon:chatkit:0.1.2'
     compile 'de.hdodenhof:circleimageview:2.1.0'
     compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.5'
+    compile 'com.github.rubensousa:bottomsheetbuilder:1.6.0'
+    compile 'com.dropbox.core:dropbox-core-sdk:3.0.3'
+    compile 'com.squareup.okhttp3:okhttp:3.5.0'
+    compile 'com.android.support.constraint:constraint-layout:1.0.2'
     testCompile 'junit:junit:4.12'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.5.1'
 }

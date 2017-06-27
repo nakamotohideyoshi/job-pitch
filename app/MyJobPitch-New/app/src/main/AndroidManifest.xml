@@ -22,30 +22,46 @@
     <uses-feature android:name="android.hardware.camera.autofocus" />
 
     <application
+        android:name="android.support.multidex.MultiDexApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
+        android:largeHeap="true"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:screenOrientation="portrait"
-        android:largeHeap="true"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme.NoActionBar"
-        android:name="android.support.multidex.MultiDexApplication">
-        <activity android:name=".MainActivity"
+        android:theme="@style/AppTheme.NoActionBar">
+        <activity
+            android:name=".MainActivity"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".MediaPlayerActivity"
-            android:theme="@style/AppTheme.NoActionBar.FullScreen"/>
-        <activity android:name=".SelectPlaceActivity"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".CameraActivity"
+        <activity
+            android:name=".MediaPlayerActivity"
+            android:theme="@style/AppTheme.NoActionBar.FullScreen" />
+        <activity
+            android:name=".SelectPlaceActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".CameraActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar.FullScreen"/>
+            android:theme="@style/AppTheme.NoActionBar.FullScreen" />
+        <activity android:name=".GoogleDriveActivity" />
+        <activity android:name=".DropboxActivity" />
+        <activity
+            android:name="com.dropbox.core.android.AuthActivity"
+            android:configChanges="orientation|keyboard"
+            android:launchMode="singleTask">
+            <intent-filter>
+                <data android:scheme="db-gpwecvaun9wmvim" />
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
 
         <meta-data
             android:name="com.google.android.gms.version"

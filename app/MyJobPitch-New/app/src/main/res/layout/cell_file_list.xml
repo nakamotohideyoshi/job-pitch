@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="60dp"
+    android:orientation="horizontal"
+    android:gravity="center_vertical">
+
+    <include
+        android:id="@+id/file_icon"
+        layout="@layout/view_image_loader"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginEnd="10dp"/>
+
+    <TextView
+        android:id="@+id/file_name"
+        android:text="Name Name Name Name Name Name"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:lines="1"
+        android:ellipsize="end"
+        android:textColor="@color/blackText"
+        android:textSize="20sp"/>
+
+    <TextView
+        android:id="@+id/file_attributes"
+        android:text="9999 Bytes"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginEnd="15dp"
+        android:textSize="14sp"/>
+
+</LinearLayout>

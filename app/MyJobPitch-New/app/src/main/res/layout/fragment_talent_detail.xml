@@ -136,6 +136,7 @@
             android:id="@+id/jobseeker_contact_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
             android:orientation="vertical">
             <TextView
                 android:text="Contact:"
@@ -173,12 +174,20 @@
             </LinearLayout>
         </LinearLayout>
 
+        <ImageButton
+            android:id="@+id/connect_help"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginLeft="8dp"
+            android:layout_gravity="right"
+            android:background="@drawable/icon_help"/>
+
         <Button
             android:id="@+id/apply_button"
             android:text="Message"
             android:layout_width="match_parent"
             android:layout_height="@dimen/button_height"
-            android:layout_marginTop="15dp"
+            android:layout_marginTop="5dp"
             android:background="@drawable/button_green"
             android:theme="@style/Button"/>
 

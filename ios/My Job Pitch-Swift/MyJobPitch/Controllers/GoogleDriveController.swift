@@ -17,7 +17,6 @@ class GoogleDriveController: UIViewController, GIDSignInDelegate, GIDSignInUIDel
 
     let service = GTLRDriveService()
     
-    var signoutButton: UIBarButtonItem!
     var folderIconLink: String!
     
     var files = [GTLRDrive_File]()
@@ -97,22 +96,22 @@ class GoogleDriveController: UIViewController, GIDSignInDelegate, GIDSignInUIDel
                 PopupController.showGreen("Error",
                                           ok: nil, okCallback: nil,
                                           cancel: "OK", cancelCallback: nil)
-                return
+            } else {
+                if self.arrPath.count > 1 && self.files.count == 0 {
+                    let file = GTLRDrive_File()
+                    file.name = ".."
+                    file.iconLink = self.folderIconLink
+                    file.mimeType = "application/vnd.google-apps.folder"
+                    self.files.append(file)
+                }
+                
+                let fileList = result as! GTLRDrive_FileList
+                self.nextPageToken = fileList.nextPageToken
+                for file in fileList.files! {
+                    self.files.append(file)
+                }
             }
             
-            if self.arrPath.count > 1 && self.files.count == 0 {
-                let file = GTLRDrive_File()
-                file.name = ".."
-                file.iconLink = self.folderIconLink
-                file.mimeType = "application/vnd.google-apps.folder"
-                self.files.append(file)
-            }
-            
-            let fileList = result as! GTLRDrive_FileList
-            self.nextPageToken = fileList.nextPageToken
-            for file in fileList.files! {
-                self.files.append(file)
-            }
             self.tableView.reloadData()
             self.tableView.pullToRefreshView.stopAnimating()
             self.tableView.infiniteScrollingView.stopAnimating()
@@ -186,7 +185,7 @@ extension GoogleDriveController: UITableViewDataSource {
         } else {
             cell.attributesLabel.text = ""
         }
-        AppHelper.loadImageURL(imageUrl: file.thumbnailLink != nil ? file.thumbnailLink! : file.iconLink!,
+        AppHelper.loadImageURL(imageUrl: file.iconLink!,
                                imageView: cell.imgView!,
                                completion: nil)
         

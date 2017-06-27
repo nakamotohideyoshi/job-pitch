@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -67,6 +68,8 @@ public class TalentDetailFragment extends BaseFragment {
     @BindView(R.id.shortlisted)
     CheckBox shortlistedView;
 
+    @BindView(R.id.connect_help)
+    ImageButton connectHelpButton;
     @BindView(R.id.apply_button)
     Button applyButton;
     @BindView(R.id.remove_button)
@@ -160,10 +163,17 @@ public class TalentDetailFragment extends BaseFragment {
                 }
             });
 
+            connectHelpButton.setVisibility(View.GONE);
+
         } else {
             cvButton.setVisibility(View.GONE);
             contactView.setVisibility(View.GONE);
-            applyButton.setText("Connect");
+
+            Job j = job
+                    != null ? job : application.getJob_data();
+            int creditCount = j.getLocation_data().getBusiness_data().getTokens();
+            String credits = creditCount > 1 ? " credits" : " credit";
+            applyButton.setText(String.format("Connect  (%d %s)", creditCount, credits));
         }
 
         if (viewMode) {
@@ -201,6 +211,11 @@ public class TalentDetailFragment extends BaseFragment {
         Intent intent = new Intent(Intent.ACTION_VIEW);
         intent.setData(Uri.parse(jobSeeker.getCV()));
         startActivity(intent);
+    }
+
+    @OnClick(R.id.connect_help)
+    void onConnectHelp() {
+        Popup.showGreen("Hit connect to view full talent detail and CV (if available). Talent will be added to your connection list where you can shortlist them, and start messaging.\n(1 credit/connection)", null, null, "Close", null, true);
     }
 
     @OnClick(R.id.apply_button)

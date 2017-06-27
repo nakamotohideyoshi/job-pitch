@@ -2,6 +2,7 @@ package com.myjobpitch.utils;
 
 import android.graphics.Bitmap;
 import android.location.Location;
+import android.os.Environment;
 import android.util.TypedValue;
 import android.view.View;
 import android.widget.ImageButton;
@@ -19,6 +20,12 @@ import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class AppHelper {
 
@@ -234,5 +241,24 @@ public class AppHelper {
         } else {
             imageView.setImageResource(R.drawable.icon_no_img);
         }
+    }
+
+    public static File saveBitmap(Bitmap bmp) {
+        File dir = new File (Environment.getExternalStorageDirectory(), "MyJobPitch");
+        if (!dir.exists()) {
+            dir.mkdirs();
+        }
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        File file = new File(dir, timeStamp + ".png");
+        try {
+            OutputStream outStream = new FileOutputStream(file);
+            bmp.compress(Bitmap.CompressFormat.PNG, 100, outStream);
+            outStream.flush();
+            outStream.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+        return file;
     }
 }

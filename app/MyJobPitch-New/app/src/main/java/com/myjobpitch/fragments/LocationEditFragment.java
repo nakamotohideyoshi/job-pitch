@@ -2,6 +2,8 @@ package com.myjobpitch.fragments;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,11 +24,13 @@ import com.myjobpitch.tasks.DeleteAPITaskListener;
 import com.myjobpitch.tasks.UploadImageTask;
 import com.myjobpitch.tasks.recruiter.DeleteLocationImageTask;
 import com.myjobpitch.utils.AppData;
+import com.myjobpitch.utils.AppHelper;
 import com.myjobpitch.utils.ImageSelector;
 import com.myjobpitch.utils.Loading;
 import com.myjobpitch.utils.Popup;
 import com.rengwuxian.materialedittext.MaterialEditText;
 
+import java.io.File;
 import java.util.HashMap;
 
 import butterknife.BindView;
@@ -179,8 +183,15 @@ public class LocationEditFragment extends FormFragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == Activity.RESULT_OK) {
-            if (requestCode == AppData.IMAGE_PICK) {
+            if (requestCode == AppData.REQUEST_IMAGE_CAPTURE) {
+                Bitmap photo = (Bitmap) data.getExtras().get("data");
+                File file = AppHelper.saveBitmap(photo);
+                imageSelector.setImageUri(Uri.fromFile(file));
+            } else if (requestCode == AppData.REQUEST_IMAGE_PICK) {
                 imageSelector.setImageUri(data.getData());
+            } else if (requestCode == AppData.REQUEST_GOOGLE_DRIVE || requestCode == AppData.REQUEST_DROPBOX) {
+                String path = (String) data.getExtras().get("path");
+                imageSelector.setImageUri(Uri.fromFile(new File(path)));
             } else {
                 latitude = data.getDoubleExtra(SelectPlaceActivity.LATITUDE, 0);
                 longitude = data.getDoubleExtra(SelectPlaceActivity.LONGITUDE, 0);

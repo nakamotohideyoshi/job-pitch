@@ -18,5 +18,6 @@ target 'MyJobPitch' do
     pod 'JSQMessagesViewController'
     pod 'JTSImageViewController'
     pod 'Nuke'
+    pod 'SwiftyDropbox'
     
 end

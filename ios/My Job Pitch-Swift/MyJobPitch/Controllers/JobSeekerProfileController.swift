@@ -211,8 +211,10 @@ class JobSeekerProfileController: MJPController {
         actionSheet.addAction(googledriveAction)
         
         let dropboxAction = UIAlertAction(title: "Dropbox", style: .default) { (_) in
-            let browser = AppHelper.mainStoryboard.instantiateViewController(withIdentifier: "DropboxBrowser") as! DropboxBrowserViewController
-            browser.rootViewDelegate = self
+            let browser = AppHelper.mainStoryboard.instantiateViewController(withIdentifier: "Dropbox") as! DropboxController
+            browser.downloadCallback = { (path, filename) in
+                self.setCV(path: path, filename: filename)
+            }
             let navController = UINavigationController(rootViewController: browser)
             AppHelper.getFrontController().present(navController, animated: true, completion: nil)
         }
@@ -430,11 +432,3 @@ extension JobSeekerProfileController: UIImagePickerControllerDelegate {
 extension JobSeekerProfileController: UINavigationControllerDelegate {
 }
 
-extension JobSeekerProfileController: DropboxBrowserDelegate {
-    
-    func dropboxBrowser(_ browser: DropboxBrowserViewController!, didDownloadFile fileName: String!, didOverwriteFile isLocalFileOverwritten: Bool) {        
-        setCV(path: browser.downloadedFilePath, filename: fileName)
-        browser.removeDropboxBrowser()
-    }
-    
-}

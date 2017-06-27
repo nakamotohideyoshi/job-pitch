@@ -11,6 +11,7 @@ import GoogleMaps
 import GooglePlaces
 import Google
 import GoogleSignIn
+import SwiftyDropbox
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -21,17 +22,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
         
-        GMSServices.provideAPIKey("AIzaSyCeseQMdrlh9E5d7DHHHm4GvW7yd8C_sZk")
-        GMSPlacesClient.provideAPIKey("AIzaSyCeseQMdrlh9E5d7DHHHm4GvW7yd8C_sZk")
+        // google service
+        GMSServices.provideAPIKey("AIzaSyA6ib_xnG15XZML0NwRusEEnRkZ4OoINDY")
+        GMSPlacesClient.provideAPIKey("AIzaSyA6ib_xnG15XZML0NwRusEEnRkZ4OoINDY")
         
-        // Initialize sign-in
+        // Initialize google sign-in
         var configureError: NSError?
         GGLContext.sharedInstance().configureWithError(&configureError)
         assert(configureError == nil, "Error configuring Google services: \(configureError)")
         
-        let dbSession = DBSession(appKey: "gpwecvaun9wmvim", appSecret: "s8al7ztjvaqbbh1", root: kDBRootDropbox)
-        DBSession.setShared(dbSession)
-        
+        // dropbox
+        DropboxClientsManager.setupWithAppKey("gpwecvaun9wmvim")
+                
         let navigationBarAppearace = UINavigationBar.appearance()
         navigationBarAppearace.tintColor = UIColor.white
         navigationBarAppearace.barTintColor = AppData.navColor
@@ -40,13 +42,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
     func application(_ application: UIApplication, open url: URL, sourceApplication: String?, annotation: Any) -> Bool {
-        if DBSession.shared().handleOpen(url) {
-            if DBSession.shared().isLinked() {
-                print("App linked successfully!")
-            }
-            return true
-        }
-        
         return GIDSignIn.sharedInstance().handle(url,
                                                  sourceApplication: sourceApplication,
                                                  annotation: annotation)
@@ -55,6 +50,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     @available(iOS 9.0, *)
     func application(_ app: UIApplication, open url: URL,
                      options: [UIApplicationOpenURLOptionsKey : Any]) -> Bool {
+        if let authResult = DropboxClientsManager.handleRedirectURL(url) {
+            switch authResult {
+            case .success(let token):
+                print("Success! User is logged into Dropbox with token: \(token)")
+            case .cancel:
+                print("User canceld OAuth flow.")
+            case .error(let error, let description):
+                print("Error \(error): \(description)")
+            }
+            return false
+        }
+        
         let sourceApplication = options[UIApplicationOpenURLOptionsKey.sourceApplication] as? String
         let annotation = options[UIApplicationOpenURLOptionsKey.annotation]
         return GIDSignIn.sharedInstance().handle(url,

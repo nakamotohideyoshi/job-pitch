@@ -34,12 +34,12 @@ class JobSeekerProfileController: MJPController {
     @IBOutlet weak var nationalityPublic: UISwitch!
     @IBOutlet weak var descView: UITextView!
     @IBOutlet weak var descError: UILabel!
-    @IBOutlet weak var cvFileName: UILabel!
-    @IBOutlet weak var cvRemoveButton: UIButton!
+    @IBOutlet weak var cvComment: UILabel!
     @IBOutlet weak var hasReferences: UISwitch!
     @IBOutlet weak var tickBox: UISwitch!
     @IBOutlet weak var playButtonView: UIView!
     @IBOutlet weak var cvViewButtonHeightConstraint: NSLayoutConstraint!
+    @IBOutlet weak var cvRemoveButtonWidthConstraint: NSLayoutConstraint!
     
     var ipc: UIImagePickerController!
     
@@ -52,11 +52,13 @@ class JobSeekerProfileController: MJPController {
     var cvName: String!
     var cvdata: Data!
     var videoUrl: URL!
-    
+        
     var jobSeeker: JobSeeker!
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        cvRemoveButtonWidthConstraint.constant = 0
 
         // load sex data
         
@@ -108,8 +110,8 @@ class JobSeekerProfileController: MJPController {
     
     override func getRequiredFields() -> [String: NSArray] {
         return [
-            "firstName": [firstName, firstNameError],
-            "lastName": [lastName, lastNameError],
+            "first_name": [firstName, firstNameError],
+            "last_name": [lastName, lastNameError],
             "description": [descView, descError]
         ]
     }
@@ -229,49 +231,24 @@ class JobSeekerProfileController: MJPController {
     @IBAction func cvRemoveAction(_ sender: Any) {
         cvdata = nil
         cvName = ""
-        cvFileName.text = ""
-        cvRemoveButton.isHidden = true
+        cvComment.text = ""
+        cvRemoveButtonWidthConstraint.constant = 0
     }
     
     func setCV(path: String, filename: String) {
         let url = URL(fileURLWithPath: path)
         do {
             cvdata = try Data(contentsOf: url)
-            cvName = filename
-            cvFileName.text = "CV added, save to upload."
-            cvRemoveButton.isHidden = false
+            cvName = "cv_file." + url.pathExtension
+            cvComment.text = "CV added: save to upload."
+            cvRemoveButtonWidthConstraint.constant = 25
         } catch {
             print("error")
         }
     }
     
     @IBAction func pitchHelpAction(_ sender: Any) {
-//        PopupController.showGray("Tips on how to record your pitch will be placed here.", ok: "Close")
         PopupController.showGray("Tips on how to record your pitch will be placed here.", ok: "Close")
-        
-//        Recording Pitch Tips
-//             
-//            - Dress smartly. You want to be taken seriously
-//                - Be careful what is in the background. Nothing should distract from your pitch
-//        - Record your pitch in a quiet location to avoid background noise
-//         
-//        Recording your job pitch:
-//         
-//        - Practise makes perfect – Record your pitch, play it back and perfect it. If in doubt, ask a friend
-//        - Be positive, confident and look straight into the camera to make eye contact
-//        - Be yourself, but don’t fidget such as waving your hands about in the air
-//        - Stand or sit up straight which helps you breath more easily
-//        - Don’t rush it and speak clearly
-//        - Remember to smile!
-//         
-//        Remember you only have 30 seconds, so what to say?
-//         
-//        - Your name and location
-//        - Your personality
-//        - Type of work you are looking for
-//            - Relevant experience
-//             
-//        Finish your pitch confidently by saying something like, “Thank you and I look forward to hearing from you”.
     }
     
     @IBAction func pitchRecordAction(_ sender: Any) {
@@ -401,6 +378,14 @@ class JobSeekerProfileController: MJPController {
     }
     
     func saveCompleted() {
+        if cvdata != nil {
+            cvdata = nil
+            cvComment.text = "CV added"
+            cvRemoveButtonWidthConstraint.constant = 0
+        } else {
+            cvComment.text = ""
+        }
+        
         PopupController.showGreen("Success!", ok: "OK", okCallback: {
             if !AppData.existProfile {
                 SideMenuController.pushController(id: "job_profile")
@@ -421,9 +406,9 @@ extension JobSeekerProfileController: UIImagePickerControllerDelegate {
         }
         
         cvdata = UIImagePNGRepresentation(image)
-        cvName = "cv.jpg"
-        cvFileName.text = "CV added, save to upload."
-        cvRemoveButton.isHidden = false
+        cvName = "cv_file.jpg"
+        cvComment.text = "CV added: save to upload."
+        cvRemoveButtonWidthConstraint.constant = 25
         
         ipc.dismiss(animated: true, completion: nil)
     }

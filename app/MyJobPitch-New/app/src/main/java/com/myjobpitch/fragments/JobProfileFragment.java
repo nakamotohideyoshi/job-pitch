@@ -4,34 +4,25 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
-import android.widget.Spinner;
-import android.widget.TextView;
 
 import com.myjobpitch.SelectPlaceActivity;
 import com.myjobpitch.R;
-import com.myjobpitch.api.MJPAPIObject;
 import com.myjobpitch.api.MJPApi;
 import com.myjobpitch.api.MJPApiException;
 import com.myjobpitch.api.data.Contract;
 import com.myjobpitch.api.data.Hours;
-import com.myjobpitch.api.data.Job;
 import com.myjobpitch.api.data.JobProfile;
 import com.myjobpitch.api.data.JobSeeker;
 import com.myjobpitch.api.data.Sector;
 import com.myjobpitch.api.data.Sex;
 import com.myjobpitch.tasks.APITask;
 import com.myjobpitch.utils.AppData;
-import com.myjobpitch.utils.AppHelper;
-import com.myjobpitch.utils.Loading;
 import com.myjobpitch.utils.Popup;
 import com.rengwuxian.materialedittext.MaterialEditText;
 import com.weiwangcn.betterspinner.library.material.MaterialBetterSpinner;
@@ -46,8 +37,6 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class JobProfileFragment extends FormFragment {
-
-    static final int MENU_SAVE = 10;
 
     @BindView(R.id.job_profile_sectors)
     MaterialEditText mSectorsView;
@@ -250,7 +239,7 @@ public class JobProfileFragment extends FormFragment {
 
     @Override
     public void onMenuSelected(int menuID) {
-        if (menuID == MENU_SAVE) {
+        if (menuID == 100) {
             if (!valid()) return;
 
             if (profile == null) {

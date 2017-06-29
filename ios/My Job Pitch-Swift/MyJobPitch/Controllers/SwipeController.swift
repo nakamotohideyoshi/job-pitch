@@ -21,7 +21,6 @@ class SwipeController: MJPController {
     var cards = NSMutableArray()
     var data: NSArray!
     
-    var card_height: CGFloat = 0
     var currentIndex: Int = 0
     
     var jobSeeker: JobSeeker!
@@ -36,7 +35,6 @@ class SwipeController: MJPController {
         
         navigationItem.title = SideMenuController.getCurrentTitle(isFindJob ? "find_job" : "find_talent")
         
-        card_height = cardsView.frame.size.height - 40
         refresh()
         
         if AppData.user.isRecruiter() {
@@ -54,9 +52,7 @@ class SwipeController: MJPController {
         
         if index < cards.count {
             let card = cards[index] as! SwipeCard
-            let ds = 0.05 * CGFloat(index)
-            card.center = CGPoint(x: cardsView.frame.size.width*0.5, y: card_height*0.5+10+card_height*ds*1)
-            card.transform = CGAffineTransform(scaleX: 1-ds, y: 1-ds)
+            card.center = CGPoint(x: cardsView.frame.size.width*0.5, y: card.frame.size.height*0.5+10+10*CGFloat(index))
         }
         
     }
@@ -73,7 +69,7 @@ class SwipeController: MJPController {
         options.threshold = UIScreen.main.bounds.size.width * 0.3
         
         // create swipe card
-        let frame = CGRect(x: 10, y: 10, width: cardsView.frame.size.width-20, height: card_height)
+        let frame = CGRect(x: 10, y: 10, width: cardsView.frame.size.width-20, height: cardsView.frame.size.height - 30)
         let card = SwipeCard(frame: frame, options: options)!
         card.isUserInteractionEnabled = false
         
@@ -263,8 +259,8 @@ extension SwipeController: ChooseDelegate {
             if AppData.user.isRecruiter() {
                 let application = data as! ApplicationForCreation
                 API.shared().loadApplicationWithId(id: application.id, success: { (data) in
-                    let application = data as! Application
-                    let credits = application.job.locationData.businessData.tokens as Int
+                    self.searchJob = (data as! Application).job
+                    let credits = self.searchJob.locationData.businessData.tokens as Int
                     self.creditsButton.setTitle(String(format: "%d %@", credits, credits > 1 ? "Credits" : "Credit"), for: .normal)
                 }, failure: { (message, errors) in
                 })

@@ -27,6 +27,7 @@ public class FindTalentFragment extends SwipeFragment<JobSeeker> {
                              Bundle savedInstanceState) {
         View view = initView(inflater, container, "There are no more new matches for this job. You can restore your removed matches by clicking refresh above.");
         title = "Find Talent";
+        showCredits();
         return  view;
     }
 
@@ -86,7 +87,8 @@ public class FindTalentFragment extends SwipeFragment<JobSeeker> {
             }
             @Override
             protected void onSuccess() {
-                int creditCount = application.getJob_data().getLocation_data().getBusiness_data().getTokens();
+                job = application.getJob_data();
+                int creditCount = job.getLocation_data().getBusiness_data().getTokens();
                 creditsView.setText(creditCount + (creditCount > 1 ? " credits" : " credit"));
             }
         };
@@ -100,7 +102,9 @@ public class FindTalentFragment extends SwipeFragment<JobSeeker> {
         fragment.job = job;
         fragment.action = new TalentDetailFragment.Action() {
             @Override
-            public void apply() {
+            public void apply(Job job) {
+                FindTalentFragment.this.job = job;
+                FindTalentFragment.this.showCredits();
                 topCardItemId++;
             }
             @Override

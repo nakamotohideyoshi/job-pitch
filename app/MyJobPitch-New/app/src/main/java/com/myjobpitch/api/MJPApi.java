@@ -2,8 +2,6 @@ package com.myjobpitch.api;
 
 import android.util.Log;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.myjobpitch.api.auth.AuthToken;
 import com.myjobpitch.api.auth.Login;
 import com.myjobpitch.api.auth.Registration;
@@ -35,12 +33,12 @@ import com.myjobpitch.api.data.Role;
 import com.myjobpitch.api.data.Sector;
 import com.myjobpitch.api.data.Sex;
 
+import org.springframework.core.io.Resource;
 import org.springframework.http.HttpAuthentication;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.http.converter.FormHttpMessageConverter;
 import org.springframework.http.converter.ResourceHttpMessageConverter;
@@ -51,10 +49,10 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import java.lang.reflect.Array;
+import java.lang.reflect.Field;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -136,7 +134,10 @@ public class MJPApi {
 
     private URI getObjectUrl(String path, Integer id) {
         try {
-            return new URI(apiRoot + "api/" + path + "/" + id + "/");
+            if (id != null) {
+                return new URI(apiRoot + "api/" + path + "/" + id + "/");
+            }
+            return new URI(apiRoot + "api/" + path + "/");
         } catch (URISyntaxException e) {
             e.printStackTrace();
             return null;
@@ -417,40 +418,34 @@ public class MJPApi {
         rest.exchange(getObjectUrl("user-job-images", id), HttpMethod.DELETE, createAuthenticatedRequest(), Void.class);
     }
 
-    public JobSeeker updateJobSeeker(JobSeeker jobSeeker) throws MJPApiException {
+    public JobSeeker updateJobSeeker(JobSeeker jobSeeker, Resource cvdata) throws MJPApiException {
 
-//        MultiValueMap<String, Object> parts = new LinkedMultiValueMap<>();
-//        parts.add("first_name", jobSeeker.getFirst_name());
-//        parts.add("last_name", jobSeeker.getLast_name());
-//        parts.add("email_public", jobSeeker.getEmail_public());
-//        parts.add("telephone", jobSeeker.getTelephone());
-//        parts.add("telephone_public", jobSeeker.getTelephone_public());
-//        parts.add("mobile", jobSeeker.getMobile());
-//        parts.add("mobile_public", jobSeeker.getMobile_public());
-//        parts.add("age", jobSeeker.getAge());
-//        parts.add("age_public", jobSeeker.getAge_public());
-//        parts.add("sex_public", jobSeeker.getSex_public());
-//        parts.add("nationality_public", jobSeeker.getNationality_public());
-//        parts.add("description", jobSeeker.getDescription());
-//        parts.add("active", jobSeeker.isActive());
-//        parts.add("has_references", jobSeeker.getHasReferences());
-//        parts.add("first_name", jobSeeker.getFirst_name());
-//
-//        try {
-//            HttpHeaders headers = new HttpHeaders();
-//            headers.setContentType(MediaType.MULTIPART_FORM_DATA);
-//            HttpEntity<MultiValueMap<String, Object>> request = createAuthenticatedRequest(parts, headers);
-//            return rest.exchange(getObjectUrl("job-seekers", jobSeeker.getId()), HttpMethod.PUT, request, JobSeeker.class).getBody();
-//        } catch (HttpClientErrorException e) {
-//            if (e.getStatusCode().value() == 400) {
-//                throw new MJPApiException(e);
-//            }
-//            throw e;
-//        }
+        MultiValueMap<String, Object> parts = new LinkedMultiValueMap<>();
+        for (Field field : jobSeeker.getClass().getDeclaredFields()) {
+            field.setAccessible(true);
+            try {
+                String name = field.getName();
+                Object value = field.get(jobSeeker);
+                if (!name.equals("pitches")) {
+                    parts.put(name, Arrays.asList(new Object[] {value != null ? value.toString() : ""}));
+                }
+            } catch (Exception e) {
+            }
+        }
+        parts.put("id", Arrays.asList(new Object[] {jobSeeker.getId().toString()}));
+        parts.put("created", Arrays.asList(new Object[] {jobSeeker.getCreated().toString()}));
+        parts.put("updated", Arrays.asList(new Object[] {jobSeeker.getUpdated().toString()}));
 
-        jobSeeker.setCV(null);
+        if (cvdata != null) {
+            parts.put("cv", Arrays.asList(new Object[] {cvdata}));
+        }
+
         try {
-            return rest.exchange(getObjectUrl("job-seekers", jobSeeker.getId()), HttpMethod.PUT, createAuthenticatedRequest(jobSeeker), JobSeeker.class).getBody();
+            HttpMethod method = jobSeeker.getId() == null ? HttpMethod.POST : HttpMethod.PUT;
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.MULTIPART_FORM_DATA);
+            HttpEntity<MultiValueMap<String, Object>> request = createAuthenticatedRequest(parts, headers);
+            return rest.exchange(getObjectUrl("job-seekers", jobSeeker.getId()), method, request, JobSeeker.class).getBody();
         } catch (HttpClientErrorException e) {
             if (e.getStatusCode().value() == 400) {
                 throw new MJPApiException(e);

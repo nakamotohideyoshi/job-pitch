@@ -380,7 +380,6 @@ class API: NSObject {
         })
         
         operation?.httpRequestOperation.setUploadProgressBlock(progress)
-        
         manager.enqueue(operation)
         
     }

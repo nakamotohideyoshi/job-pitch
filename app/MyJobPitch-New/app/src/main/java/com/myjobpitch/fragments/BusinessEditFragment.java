@@ -101,6 +101,8 @@ public class BusinessEditFragment extends FormFragment {
         creditsView.setText(business.getTokens().toString());
         if (business.getImages().size() > 0) {
             imageSelector.loadImage(business.getImages().get(0).getImage());
+        } else {
+            imageSelector.loadImage(null);
         }
     }
 

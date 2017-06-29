@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.MimeTypeMap;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -16,7 +17,6 @@ import android.widget.TextView;
 
 import com.kaopiz.kprogresshud.KProgressHUD;
 import com.myjobpitch.CameraActivity;
-import com.myjobpitch.MainActivity;
 import com.myjobpitch.MediaPlayerActivity;
 import com.myjobpitch.R;
 import com.myjobpitch.api.MJPApi;
@@ -36,7 +36,12 @@ import com.myjobpitch.utils.Popup;
 import com.rengwuxian.materialedittext.MaterialEditText;
 import com.weiwangcn.betterspinner.library.material.MaterialBetterSpinner;
 
+import org.springframework.core.io.FileSystemResource;
+
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -95,8 +100,8 @@ public class TalentProfileFragment extends FormFragment {
 
     @BindView(R.id.job_seeker_cv_remove)
     View mCVUploadRemoveButton;
-    @BindView(R.id.job_seeker_cv_filename)
-    TextView mCVFilenameView;
+    @BindView(R.id.job_seeker_cv_comment)
+    TextView mCVCommentView;
 
     @BindView(R.id.job_seeker_video_play)
     View mRecordVideoPlay;
@@ -115,7 +120,7 @@ public class TalentProfileFragment extends FormFragment {
     String mVideoPath;
     int requestCode;
 
-    String cvFileName;
+    Uri cvUri;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -165,8 +170,8 @@ public class TalentProfileFragment extends FormFragment {
     protected HashMap<String, EditText> getRequiredFields() {
         return new HashMap<String, EditText>() {
             {
-                put("firstName", mFirstNameView);
-                put("lastName", mLastNameView);
+                put("first_name", mFirstNameView);
+                put("last_name", mLastNameView);
                 put("description", mDescriptionView);
             }
         };
@@ -201,8 +206,8 @@ public class TalentProfileFragment extends FormFragment {
         mPitch = jobSeeker.getPitch();
         mRecordVideoPlay.setVisibility(mPitch != null && mPitch.getVideo() != null ? View.VISIBLE : View.INVISIBLE);
 
-        mHasReferencesView.setChecked(jobSeeker.getHasReferences());
-        mTickBox.setChecked(jobSeeker.getTruthConfirmation());
+        mHasReferencesView.setChecked(jobSeeker.getHas_references());
+        mTickBox.setChecked(jobSeeker.getTruth_confirmation());
 
         mCVViewButton.setVisibility(jobSeeker.getCV() == null ? View.GONE : View.VISIBLE);
 
@@ -216,16 +221,20 @@ public class TalentProfileFragment extends FormFragment {
     @OnClick(R.id.job_seeker_cv_view)
     void onCVView() {
         Intent intent = new Intent(Intent.ACTION_VIEW);
-        intent.setData(Uri.parse(jobSeeker.getCV()));
+        if (cvUri != null) {
+            intent.setData(cvUri);
+        } else {
+            intent.setData(Uri.parse(jobSeeker.getCV()));
+        }
         startActivity(intent);
     }
 
     @OnClick(R.id.job_seeker_cv_remove)
     void onCVRemove() {
-        cvFileName = "";
-        mCVFilenameView.setText("");
-        mCVFilenameView.setVisibility(View.GONE);
+        cvUri = null;
+        mCVCommentView.setText("");
         mCVUploadRemoveButton.setVisibility(View.GONE);
+        mCVViewButton.setVisibility(jobSeeker.getCV() == null ? View.GONE : View.VISIBLE);
     }
 
     @OnClick(R.id.job_seeker_cv_add_help)
@@ -272,24 +281,20 @@ public class TalentProfileFragment extends FormFragment {
                 mVideoPath = data.getStringExtra(CameraActivity.OUTPUT_FILE);
                 mRecordVideoPlay.setVisibility(View.VISIBLE);
             } else {
-                Uri uri = null;
                 if (requestCode == AppData.REQUEST_IMAGE_CAPTURE) {
                     Bitmap photo = (Bitmap) data.getExtras().get("data");
                     File file = AppHelper.saveBitmap(photo);
-                    uri = Uri.fromFile(file);
+                    cvUri = Uri.fromFile(file);
                 } else if (requestCode == AppData.REQUEST_IMAGE_PICK) {
-                    uri = data.getData();
+                    cvUri = data.getData();
                 } else if (requestCode == AppData.REQUEST_GOOGLE_DRIVE || requestCode == AppData.REQUEST_DROPBOX) {
                     String path = (String) data.getExtras().get("path");
-                    uri = Uri.fromFile(new File(path));
+                    cvUri = Uri.fromFile(new File(path));
                 }
-                if (uri != null) {
-                    String src = uri.getPath();
-                    String[] tempStr = src.split("/");
-                    cvFileName = tempStr[tempStr.length - 1];
-                    mCVFilenameView.setText("CV added, save to upload.");
-                    mCVFilenameView.setVisibility(View.VISIBLE);
+                if (cvUri != null) {
+                    mCVCommentView.setText("CV added: save to upload.");
                     mCVUploadRemoveButton.setVisibility(View.VISIBLE);
+                    mCVViewButton.setVisibility(View.VISIBLE);
                 }
             }
         }
@@ -318,6 +323,8 @@ public class TalentProfileFragment extends FormFragment {
         jobSeeker.setTelephone_public(mTelephonePublicView.isChecked());
         jobSeeker.setMobile(mMobileView.getText().toString().trim());
         jobSeeker.setMobile_public(mMobilePublicView.isChecked());
+        jobSeeker.setAge(Integer.parseInt(mAgeView.getText().toString()));
+        jobSeeker.setAge_public(mAgePublicView.isChecked());
         int sexIndex = mSexNames.indexOf(mSexView.getText().toString());
         if (sexIndex != -1) {
             jobSeeker.setSex(AppData.get(Sex.class).get(sexIndex).getId());
@@ -329,18 +336,57 @@ public class TalentProfileFragment extends FormFragment {
         }
         jobSeeker.setNationality_public(mNationalityPublicView.isChecked());
         jobSeeker.setDescription(mDescriptionView.getText().toString().trim());
-        jobSeeker.setHasReferences(mHasReferencesView.isChecked());
-        jobSeeker.setTruthConfirmation(mTickBox.isChecked());
+        jobSeeker.setHas_references(mHasReferencesView.isChecked());
+        jobSeeker.setTruth_confirmation(mTickBox.isChecked());
+        jobSeeker.setCV(null);
 
         new APITask(this) {
             @Override
             protected void runAPI() throws MJPApiException {
-                if (jobSeeker.getId() == null) {
-                    jobSeeker = MJPApi.shared().create(JobSeeker.class, jobSeeker);
-                    AppData.user.setJob_seeker(jobSeeker.getId());
+
+                if (cvUri != null) {
+
+                    MimeTypeMap mime = MimeTypeMap.getSingleton();
+                    String extension = mime.getExtensionFromMimeType(getApp().getContentResolver().getType(cvUri));
+                    try {
+                        File outputFile = File.createTempFile("cv_", "." + extension, getApp().getCacheDir());
+                        try {
+                            // Copy imageUri content to temp file
+                            InputStream in = getApp().getContentResolver().openInputStream(cvUri);
+                            try {
+                                FileOutputStream out = new FileOutputStream(outputFile);
+                                try {
+                                    byte[] buf = new byte[1024];
+                                    int len;
+                                    while ((len = in.read(buf)) > 0)
+                                        out.write(buf, 0, len);
+                                } finally {
+                                    out.close();
+                                }
+                            } finally {
+                                in.close();
+                            }
+
+                            // Upload image
+                            try {
+                                jobSeeker = MJPApi.shared().updateJobSeeker(jobSeeker, new FileSystemResource(outputFile));
+                            } catch (MJPApiException e) {
+                                e.printStackTrace();
+                                return;
+                            }
+                        } finally {
+                            outputFile.delete();
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                        return;
+                    }
+
                 } else {
-                    jobSeeker = MJPApi.shared().updateJobSeeker(jobSeeker);
+                    jobSeeker = MJPApi.shared().updateJobSeeker(jobSeeker, null);
                 }
+
+                AppData.user.setJob_seeker(jobSeeker.getId());
                 AppData.existProfile = jobSeeker.getProfile() != null;
             }
             @Override
@@ -413,6 +459,16 @@ public class TalentProfileFragment extends FormFragment {
 
     void saveCompleted() {
         Loading.hide();
+        if (cvUri != null) {
+            cvUri = null;
+            mCVCommentView.setText("CV added");
+            mCVUploadRemoveButton.setVisibility(View.GONE);
+        } else {
+            mCVCommentView.setText("");
+        }
+
+        mCVViewButton.setVisibility(jobSeeker.getCV() == null ? View.GONE : View.VISIBLE);
+
         Popup.showGreen("Success!", "OK", new View.OnClickListener() {
             @Override
             public void onClick(View view) {

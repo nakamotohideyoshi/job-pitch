@@ -104,7 +104,7 @@ sdafsdf</string>
                                 </connections>
                             </tableView>
                             <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="OW2-wO-B54">
-                                <rect key="frame" x="35" y="353" width="344" height="95.666666666666686"/>
+                                <rect key="frame" x="35" y="352.33333333333326" width="344" height="95.666666666666686"/>
                                 <string key="text">You have no messages!  Once you have connected through the main interface with someone, you'll be able to communicate with them here.</string>
                                 <fontDescription key="fontDescription" type="system" pointSize="20"/>
                                 <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
@@ -205,7 +205,7 @@ sdafsdf</string>
             <objects>
                 <navigationController navigationBarHidden="YES" id="Tn3-dg-KpG" sceneMemberID="viewController">
                     <nil key="simulatedTopBarMetrics"/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" translucent="NO" id="pbS-fN-baU">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" translucent="NO" id="pbS-fN-baU">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -555,11 +555,11 @@ et dolore magna aliqua.</string>
                                 <rect key="frame" x="0.0" y="28" width="375" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="D41-np-WX3" id="602-dk-sG1">
-                                    <rect key="frame" x="0.0" y="0.0" width="375" height="43.666666666666664"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="375" height="43"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="nwh-hS-JIR">
-                                            <rect key="frame" x="15" y="0.0" width="345" height="43.666666666666664"/>
+                                            <rect key="frame" x="15" y="0.0" width="345" height="43"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                             <nil key="textColor"/>
@@ -610,7 +610,7 @@ et dolore magna aliqua.</string>
                                 <rect key="frame" x="0.0" y="64" width="414" height="672"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="AAU-wq-3AV" userLabel="Content View">
-                                        <rect key="frame" x="0.0" y="0.0" width="414" height="572.33333333333337"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="414" height="552"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Company" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bmH-uC-nVc">
                                                 <rect key="frame" x="20" y="25" width="81" height="22"/>
@@ -646,20 +646,20 @@ et dolore magna aliqua.</string>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Logo" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="YVE-72-lHt">
-                                                <rect key="frame" x="20" y="214.66666666666669" width="42" height="22"/>
+                                                <rect key="frame" x="20" y="194.66666666666669" width="42" height="22"/>
                                                 <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="18"/>
                                                 <color key="textColor" red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="calibratedRGB"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="hAN-9a-Y1V">
-                                                <rect key="frame" x="50" y="251.66666666666666" width="314" height="235.66666666666671"/>
+                                                <rect key="frame" x="50" y="231.66666666666671" width="314" height="235.33333333333329"/>
                                                 <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                                                 <constraints>
                                                     <constraint firstAttribute="width" secondItem="hAN-9a-Y1V" secondAttribute="height" multiplier="4:3" id="Maz-f2-zXe"/>
                                                 </constraints>
                                             </imageView>
                                             <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="7q9-NZ-gUH">
-                                                <rect key="frame" x="344" y="231.66666666666669" width="40" height="40"/>
+                                                <rect key="frame" x="344" y="211.66666666666669" width="40" height="40"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="40" id="POs-eB-CyX"/>
                                                     <constraint firstAttribute="width" constant="40" id="kFW-xC-bzm"/>
@@ -670,13 +670,13 @@ et dolore magna aliqua.</string>
                                                 </connections>
                                             </button>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Credits cannot be added through the app, please go to our web page." textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="yTG-8I-qFL">
-                                                <rect key="frame" x="20" y="154" width="374" height="40.666666666666686"/>
+                                                <rect key="frame" x="20" y="154" width="374" height="20.666666666666657"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                 <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="h9f-w4-egr" customClass="GreenButton" customModule="MyJobPitch" customModuleProvider="target">
-                                                <rect key="frame" x="20" y="502.33333333333337" width="374" height="40"/>
+                                                <rect key="frame" x="20" y="482" width="374" height="40"/>
                                                 <color key="backgroundColor" red="0.0" green="0.73333333329999995" blue="0.6588235294" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="40" id="t8a-jE-cCZ"/>
@@ -786,7 +786,7 @@ et dolore magna aliqua.</string>
                                 </constraints>
                             </imageView>
                             <imageView hidden="YES" clipsSubviews="YES" userInteractionEnabled="NO" alpha="0.5" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="play" translatesAutoresizingMaskIntoConstraints="NO" id="g8p-7R-xmk">
-                                <rect key="frame" x="176" y="252.33333333333337" width="63" height="62.666666666666629"/>
+                                <rect key="frame" x="176" y="252.33333333333331" width="63" height="62.999999999999943"/>
                                 <constraints>
                                     <constraint firstAttribute="width" secondItem="g8p-7R-xmk" secondAttribute="height" multiplier="1:1" id="yJN-qk-4cK"/>
                                 </constraints>
@@ -906,13 +906,13 @@ et dolore magna aliqua.</string>
                                 </connections>
                             </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="sCO-Xq-8OG">
-                                <rect key="frame" x="207" y="613.33333333333337" width="0.0" height="0.0"/>
+                                <rect key="frame" x="207" y="613.66666666666663" width="0.0" height="0.0"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="24"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="6al-ve-zRO">
-                                <rect key="frame" x="165.66666666666666" y="633.33333333333348" width="82.666666666666686" height="82.666666666666629"/>
+                                <rect key="frame" x="165.66666666666666" y="633.66666666666652" width="82.666666666666686" height="82.333333333333371"/>
                                 <color key="backgroundColor" red="0.0" green="0.73333333329999995" blue="0.6588235294" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="width" secondItem="6al-ve-zRO" secondAttribute="height" multiplier="1:1" id="Ulj-OH-wZu"/>
@@ -1188,7 +1188,7 @@ et dolore magna aliqua.</string>
                                 </connections>
                             </tableView>
                             <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="No candidates have applied for this job yet. Once that happens, their applications will appear here." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="faJ-FA-sbE">
-                                <rect key="frame" x="35" y="365" width="344" height="71.666666666666686"/>
+                                <rect key="frame" x="35" y="364.33333333333326" width="344" height="71.666666666666686"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="20"/>
                                 <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                                 <nil key="highlightedColor"/>
@@ -2226,7 +2226,7 @@ et dolore magna aliqua.</string>
                                                 </constraints>
                                             </imageView>
                                             <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Email Address" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="vSp-OV-dlH">
-                                                <rect key="frame" x="62" y="312.66666666666669" width="289.33333333333331" height="40"/>
+                                                <rect key="frame" x="62" y="312.66666666666669" width="289" height="40"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="40" id="DQ1-jq-ZHI"/>
                                                 </constraints>
@@ -2235,19 +2235,19 @@ et dolore magna aliqua.</string>
                                                 <textInputTraits key="textInputTraits" keyboardType="emailAddress"/>
                                             </textField>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Vk4-hP-xfS">
-                                                <rect key="frame" x="62" y="354.66666666666669" width="289.33333333333331" height="0.0"/>
+                                                <rect key="frame" x="62" y="354.66666666666669" width="289" height="0.0"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                 <color key="textColor" red="1" green="0.0" blue="0.031372549020000001" alpha="1" colorSpace="calibratedRGB"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Password" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="oRJ-OX-CyF">
-                                                <rect key="frame" x="62" y="367.66666666666669" width="289.33333333333331" height="40"/>
+                                                <rect key="frame" x="62" y="367.66666666666669" width="289" height="40"/>
                                                 <nil key="textColor"/>
                                                 <fontDescription key="fontDescription" type="system" weight="medium" pointSize="18"/>
                                                 <textInputTraits key="textInputTraits" secureTextEntry="YES"/>
                                             </textField>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="VJE-h2-Ocj">
-                                                <rect key="frame" x="62" y="409.66666666666669" width="289.33333333333331" height="0.0"/>
+                                                <rect key="frame" x="62" y="409.66666666666669" width="289" height="0.0"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                 <color key="textColor" red="1" green="0.0" blue="0.031372549020000001" alpha="1" colorSpace="calibratedRGB"/>
                                                 <nil key="highlightedColor"/>
@@ -2263,7 +2263,7 @@ et dolore magna aliqua.</string>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" adjustsImageWhenHighlighted="NO" adjustsImageWhenDisabled="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Gw0-Rn-TFY" customClass="GreenButton" customModule="MyJobPitch" customModuleProvider="target">
-                                                <rect key="frame" x="62" y="483.66666666666663" width="289.33333333333331" height="39.999999999999886"/>
+                                                <rect key="frame" x="62" y="483.66666666666663" width="289" height="39.999999999999886"/>
                                                 <color key="backgroundColor" red="0.0" green="0.73333333329999995" blue="0.6588235294" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                 <fontDescription key="fontDescription" type="system" weight="medium" pointSize="18"/>
                                                 <state key="normal" title="Login">
@@ -2391,7 +2391,7 @@ et dolore magna aliqua.</string>
                                                 </constraints>
                                             </imageView>
                                             <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Email Address" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="lbD-kd-ugr">
-                                                <rect key="frame" x="62" y="312.66666666666669" width="289.33333333333331" height="40"/>
+                                                <rect key="frame" x="62" y="312.66666666666669" width="289" height="40"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="40" id="yKX-n7-Qmo"/>
                                                 </constraints>
@@ -2400,19 +2400,19 @@ et dolore magna aliqua.</string>
                                                 <textInputTraits key="textInputTraits" keyboardType="emailAddress"/>
                                             </textField>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Atf-TD-LNz">
-                                                <rect key="frame" x="62" y="354.66666666666669" width="289.33333333333331" height="0.0"/>
+                                                <rect key="frame" x="62" y="354.66666666666669" width="289" height="0.0"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                 <color key="textColor" red="1" green="0.0" blue="0.031372549020000001" alpha="1" colorSpace="calibratedRGB"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Password" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="yT9-i6-o48">
-                                                <rect key="frame" x="62" y="367.66666666666669" width="289.33333333333331" height="40"/>
+                                                <rect key="frame" x="62" y="367.66666666666669" width="289" height="40"/>
                                                 <nil key="textColor"/>
                                                 <fontDescription key="fontDescription" type="system" weight="medium" pointSize="18"/>
                                                 <textInputTraits key="textInputTraits" secureTextEntry="YES"/>
                                             </textField>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Aff-KS-pDf">
-                                                <rect key="frame" x="62" y="409.66666666666669" width="289.33333333333331" height="0.0"/>
+                                                <rect key="frame" x="62" y="409.66666666666669" width="289" height="0.0"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                 <color key="textColor" red="1" green="0.0" blue="0.031372549020000001" alpha="1" colorSpace="calibratedRGB"/>
                                                 <nil key="highlightedColor"/>
@@ -2428,7 +2428,7 @@ et dolore magna aliqua.</string>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <button opaque="NO" tag="1" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dDG-kZ-3cP" customClass="YellowButton" customModule="MyJobPitch" customModuleProvider="target">
-                                                <rect key="frame" x="62" y="483.66666666666663" width="289.33333333333331" height="39.999999999999886"/>
+                                                <rect key="frame" x="62" y="483.66666666666663" width="289" height="39.999999999999886"/>
                                                 <color key="backgroundColor" red="1" green="0.57254901960000004" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                 <fontDescription key="fontDescription" type="system" weight="medium" pointSize="18"/>
                                                 <state key="normal" title="Register as Job Seeker">
@@ -2439,7 +2439,7 @@ et dolore magna aliqua.</string>
                                                 </connections>
                                             </button>
                                             <button opaque="NO" tag="2" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="atM-51-Gec" customClass="GreenButton" customModule="MyJobPitch" customModuleProvider="target">
-                                                <rect key="frame" x="62" y="538.66666666666663" width="289.33333333333331" height="40"/>
+                                                <rect key="frame" x="62" y="538.66666666666663" width="289" height="40"/>
                                                 <color key="backgroundColor" red="0.0" green="0.73333333329999995" blue="0.6588235294" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                 <fontDescription key="fontDescription" type="system" weight="medium" pointSize="18"/>
                                                 <state key="normal" title="Register as a Recruiter">
@@ -2553,13 +2553,13 @@ et dolore magna aliqua.</string>
                                         <rect key="frame" x="0.0" y="0.0" width="414" height="716"/>
                                         <subviews>
                                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="logo" translatesAutoresizingMaskIntoConstraints="NO" id="SRK-lk-e3I">
-                                                <rect key="frame" x="99.666666666666686" y="53.666666666666686" width="214.66666666666663" height="215"/>
+                                                <rect key="frame" x="99.666666666666686" y="54" width="214.66666666666663" height="214.66666666666669"/>
                                                 <constraints>
                                                     <constraint firstAttribute="width" secondItem="SRK-lk-e3I" secondAttribute="height" multiplier="1:1" id="IOp-WL-iJx"/>
                                                 </constraints>
                                             </imageView>
                                             <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Email Address" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="hVz-dU-Rg6">
-                                                <rect key="frame" x="62" y="383.66666666666669" width="289.33333333333331" height="40"/>
+                                                <rect key="frame" x="62" y="383.66666666666669" width="289" height="40"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="40" id="sLw-Hp-avn"/>
                                                 </constraints>
@@ -2568,7 +2568,7 @@ et dolore magna aliqua.</string>
                                                 <textInputTraits key="textInputTraits" keyboardType="emailAddress"/>
                                             </textField>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="PMB-pz-8Ip">
-                                                <rect key="frame" x="62" y="425.66666666666669" width="289.33333333333331" height="0.0"/>
+                                                <rect key="frame" x="62" y="425.66666666666669" width="289" height="0.0"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                 <color key="textColor" red="1" green="0.0" blue="0.031372549020000001" alpha="1" colorSpace="calibratedRGB"/>
                                                 <nil key="highlightedColor"/>
@@ -2581,7 +2581,7 @@ et dolore magna aliqua.</string>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <button opaque="NO" tag="1" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="p3E-Ib-pWJ" customClass="GreenButton" customModule="MyJobPitch" customModuleProvider="target">
-                                                <rect key="frame" x="62" y="463.66666666666663" width="289.33333333333331" height="39.999999999999943"/>
+                                                <rect key="frame" x="62" y="463.66666666666663" width="289" height="39.999999999999943"/>
                                                 <color key="backgroundColor" red="0.0" green="0.73333333329999995" blue="0.6588235294" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                 <fontDescription key="fontDescription" type="system" weight="medium" pointSize="18"/>
                                                 <state key="normal" title="Reset my password">
@@ -2592,7 +2592,7 @@ et dolore magna aliqua.</string>
                                                 </connections>
                                             </button>
                                             <button opaque="NO" tag="2" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fbu-Ca-A57" customClass="GreyButton" customModule="MyJobPitch" customModuleProvider="target">
-                                                <rect key="frame" x="62" y="518.66666666666663" width="289.33333333333331" height="40"/>
+                                                <rect key="frame" x="62" y="518.66666666666663" width="289" height="40"/>
                                                 <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                                                 <fontDescription key="fontDescription" type="system" weight="medium" pointSize="18"/>
                                                 <state key="normal" title="Cancel">
@@ -3068,7 +3068,7 @@ et dolore magna aliqua.</string>
                                         </constraints>
                                     </imageView>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Select which business to add job to" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="sjr-0K-Otx">
-                                        <rect key="frame" x="95" y="31.666666666666671" width="304" height="21.666666666666657"/>
+                                        <rect key="frame" x="95" y="31.666666666666671" width="304" height="22"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="18"/>
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
@@ -3301,7 +3301,7 @@ businesses yet.</string>
                                         </connections>
                                     </button>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Select which work place to add job to" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3SA-xP-prl">
-                                        <rect key="frame" x="95" y="31.666666666666671" width="304" height="21.666666666666657"/>
+                                        <rect key="frame" x="95" y="31.666666666666671" width="304" height="22"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="18"/>
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
@@ -3565,14 +3565,14 @@ Now tap to create your work places.</string>
                         <viewControllerLayoutGuide type="bottom" id="Dge-87-k3F"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="YEd-Do-hNZ">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="1130"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="1200"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="CZd-lh-Qba">
-                                <rect key="frame" x="0.0" y="64" width="375" height="1066"/>
+                                <rect key="frame" x="0.0" y="64" width="375" height="1136"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="qbS-Xd-C1l" userLabel="Content View">
-                                        <rect key="frame" x="0.0" y="0.0" width="375" height="1139.6666666666667"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="375" height="1117.6666666666667"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Active" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="eyE-JJ-WPP">
                                                 <rect key="frame" x="20" y="24" width="53" height="22"/>
@@ -3763,20 +3763,31 @@ Now tap to create your work places.</string>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="UpM-6p-HPu">
-                                                <rect key="frame" x="60" y="683" width="265" height="0.0"/>
+                                                <rect key="frame" x="60" y="683" width="232" height="0.0"/>
                                                 <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="16"/>
                                                 <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
-                                            <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="BUL-oj-D9B">
-                                                <rect key="frame" x="330" y="670" width="25" height="25"/>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="BUL-oj-D9B">
+                                                <rect key="frame" x="297" y="670" width="25" height="25"/>
                                                 <constraints>
-                                                    <constraint firstAttribute="width" secondItem="BUL-oj-D9B" secondAttribute="height" multiplier="1:1" id="q8h-T3-q5Q"/>
+                                                    <constraint firstAttribute="width" constant="25" id="B7L-sL-ufk"/>
                                                     <constraint firstAttribute="height" constant="25" id="wa8-M9-QvC"/>
                                                 </constraints>
                                                 <state key="normal" image="remove-icon"/>
                                                 <connections>
                                                     <action selector="cvRemoveAction:" destination="sqq-9x-4UL" eventType="touchUpInside" id="hGZ-pC-vGT"/>
+                                                </connections>
+                                            </button>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="lmi-WU-hmL">
+                                                <rect key="frame" x="330" y="670.66666666666663" width="25" height="25"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="height" constant="25" id="8iL-sE-ZeT"/>
+                                                    <constraint firstAttribute="width" constant="25" id="NS2-ZL-foh"/>
+                                                </constraints>
+                                                <state key="normal" image="help"/>
+                                                <connections>
+                                                    <action selector="cvAddHelpAction:" destination="sqq-9x-4UL" eventType="touchUpInside" id="f1d-H2-cZ2"/>
                                                 </connections>
                                             </button>
                                             <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="HYs-PI-oD8">
@@ -3803,18 +3814,8 @@ Now tap to create your work places.</string>
                                                     <constraint firstAttribute="height" constant="50" id="4Y6-89-vBU"/>
                                                 </constraints>
                                             </view>
-                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="lmi-WU-hmL">
-                                                <rect key="frame" x="330" y="754" width="25" height="25"/>
-                                                <constraints>
-                                                    <constraint firstAttribute="height" constant="25" id="Byr-fj-zxD"/>
-                                                </constraints>
-                                                <state key="normal" image="help"/>
-                                                <connections>
-                                                    <action selector="cvAddHelpAction:" destination="sqq-9x-4UL" eventType="touchUpInside" id="f1d-H2-cZ2"/>
-                                                </connections>
-                                            </button>
                                             <button opaque="NO" tag="1" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="CTk-0S-P8h" customClass="RoundButton" customModule="MyJobPitch" customModuleProvider="target">
-                                                <rect key="frame" x="20" y="784" width="335" height="40"/>
+                                                <rect key="frame" x="20" y="762" width="335" height="40"/>
                                                 <color key="backgroundColor" red="0.0" green="0.3803921569" blue="0.61176470589999998" alpha="1" colorSpace="calibratedRGB"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="40" id="2h9-fJ-6Aj"/>
@@ -3828,13 +3829,13 @@ Now tap to create your work places.</string>
                                                 </connections>
                                             </button>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Video Pitch:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ke4-cf-hgA">
-                                                <rect key="frame" x="20" y="854" width="102" height="22"/>
+                                                <rect key="frame" x="20" y="832" width="102" height="22"/>
                                                 <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="18"/>
                                                 <color key="textColor" red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="calibratedRGB"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="S8o-tx-RV6">
-                                                <rect key="frame" x="330" y="853" width="25" height="25"/>
+                                                <rect key="frame" x="330" y="831" width="25" height="25"/>
                                                 <constraints>
                                                     <constraint firstAttribute="width" secondItem="S8o-tx-RV6" secondAttribute="height" multiplier="1:1" id="sGS-IX-Jyv"/>
                                                     <constraint firstAttribute="height" constant="25" id="uXt-jc-3Yp"/>
@@ -3845,7 +3846,7 @@ Now tap to create your work places.</string>
                                                 </connections>
                                             </button>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="7rR-jW-jUU">
-                                                <rect key="frame" x="20" y="886" width="98" height="98"/>
+                                                <rect key="frame" x="20" y="864" width="98" height="98"/>
                                                 <subviews>
                                                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="record" translatesAutoresizingMaskIntoConstraints="NO" id="tUj-Fo-Hll">
                                                         <rect key="frame" x="29" y="20" width="39" height="39"/>
@@ -3884,7 +3885,7 @@ Now tap to create your work places.</string>
                                                 </constraints>
                                             </view>
                                             <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="c1d-Qq-q1j">
-                                                <rect key="frame" x="138" y="886" width="98" height="98"/>
+                                                <rect key="frame" x="138" y="864" width="98" height="98"/>
                                                 <subviews>
                                                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="play" translatesAutoresizingMaskIntoConstraints="NO" id="0fe-VB-VFO">
                                                         <rect key="frame" x="29" y="20" width="39" height="39"/>
@@ -3922,21 +3923,21 @@ Now tap to create your work places.</string>
                                                 </constraints>
                                             </view>
                                             <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="7H5-Lv-bid">
-                                                <rect key="frame" x="20" y="1004" width="51" height="31"/>
+                                                <rect key="frame" x="20" y="982" width="51" height="31"/>
                                                 <color key="onTintColor" red="0.0" green="0.73333333329999995" blue="0.6588235294" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                             </switch>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="References Available" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="70o-pC-65u">
-                                                <rect key="frame" x="89" y="1008" width="266" height="22"/>
+                                                <rect key="frame" x="89" y="986" width="266" height="22"/>
                                                 <fontDescription key="fontDescription" type="system" weight="medium" pointSize="18"/>
                                                 <color key="textColor" red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="calibratedRGB"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="M7W-ed-Wqt">
-                                                <rect key="frame" x="20" y="1055" width="51" height="31"/>
+                                                <rect key="frame" x="20" y="1033" width="51" height="31"/>
                                                 <color key="onTintColor" red="0.0" green="0.73333333329999995" blue="0.6588235294" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                             </switch>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="All of the information provided is truthful to the best of my knowledge." textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="YyG-SL-uo2">
-                                                <rect key="frame" x="89" y="1055" width="266" height="64.666666666666742"/>
+                                                <rect key="frame" x="89" y="1033" width="266" height="64.666666666666742"/>
                                                 <fontDescription key="fontDescription" type="system" weight="medium" pointSize="18"/>
                                                 <color key="textColor" red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="calibratedRGB"/>
                                                 <nil key="highlightedColor"/>
@@ -3958,8 +3959,8 @@ Now tap to create your work places.</string>
                                             <constraint firstItem="YyG-SL-uo2" firstAttribute="leading" secondItem="70o-pC-65u" secondAttribute="leading" id="B9X-Ke-yhv"/>
                                             <constraint firstItem="gpt-Bh-3KR" firstAttribute="centerY" secondItem="JjY-jZ-19N" secondAttribute="centerY" id="BCv-b6-RFw"/>
                                             <constraint firstItem="PTX-QH-j9Z" firstAttribute="trailing" secondItem="31b-MW-CYd" secondAttribute="trailing" id="BWv-yu-HjF"/>
-                                            <constraint firstItem="lmi-WU-hmL" firstAttribute="trailing" secondItem="CTk-0S-P8h" secondAttribute="trailing" id="Brh-0a-9HJ"/>
                                             <constraint firstItem="EHX-8q-wCw" firstAttribute="top" secondItem="JTI-ni-j06" secondAttribute="bottom" constant="5" id="CPb-9l-d2D"/>
+                                            <constraint firstItem="CTk-0S-P8h" firstAttribute="trailing" secondItem="lmi-WU-hmL" secondAttribute="trailing" id="Cc3-CD-pOX"/>
                                             <constraint firstAttribute="trailing" secondItem="cvK-8q-pDi" secondAttribute="trailing" constant="20" id="Ceu-Os-ppQ"/>
                                             <constraint firstItem="BUL-oj-D9B" firstAttribute="leading" secondItem="UpM-6p-HPu" secondAttribute="trailing" constant="5" id="Dn1-FT-c2o"/>
                                             <constraint firstItem="oso-DK-Saf" firstAttribute="top" secondItem="Dvo-Qs-R5Z" secondAttribute="bottom" constant="20" id="Dvo-g6-Vqp"/>
@@ -3980,7 +3981,7 @@ Now tap to create your work places.</string>
                                             <constraint firstAttribute="trailing" secondItem="HYs-PI-oD8" secondAttribute="trailing" id="PIE-q1-JHm"/>
                                             <constraint firstItem="M7W-ed-Wqt" firstAttribute="leading" secondItem="7H5-Lv-bid" secondAttribute="leading" id="PQi-Ng-xI3"/>
                                             <constraint firstItem="UpM-6p-HPu" firstAttribute="centerY" secondItem="GPy-tp-XSo" secondAttribute="centerY" id="PRS-eH-SZH"/>
-                                            <constraint firstItem="CTk-0S-P8h" firstAttribute="top" secondItem="lmi-WU-hmL" secondAttribute="bottom" constant="5" id="PeG-Nl-Nek"/>
+                                            <constraint firstItem="lmi-WU-hmL" firstAttribute="leading" secondItem="BUL-oj-D9B" secondAttribute="trailing" constant="8" id="RSP-ss-ScE"/>
                                             <constraint firstItem="n7N-BW-FeX" firstAttribute="leading" secondItem="ecB-l4-JOM" secondAttribute="trailing" constant="20" id="RdT-o4-i7y"/>
                                             <constraint firstItem="ke4-cf-hgA" firstAttribute="leading" secondItem="CTk-0S-P8h" secondAttribute="leading" id="RiK-8p-zJv"/>
                                             <constraint firstItem="JjY-jZ-19N" firstAttribute="top" secondItem="ecB-l4-JOM" secondAttribute="bottom" constant="20" id="SBK-85-pc0"/>
@@ -3998,16 +3999,14 @@ Now tap to create your work places.</string>
                                             <constraint firstItem="YyG-SL-uo2" firstAttribute="trailing" secondItem="70o-pC-65u" secondAttribute="trailing" id="WyD-Jm-j6Y"/>
                                             <constraint firstItem="TZX-6A-KKN" firstAttribute="centerY" secondItem="7he-KV-swI" secondAttribute="centerY" id="X3q-uZ-lJv"/>
                                             <constraint firstItem="gpt-Bh-3KR" firstAttribute="leading" secondItem="JjY-jZ-19N" secondAttribute="trailing" constant="20" id="X7R-ZW-lA4"/>
-                                            <constraint firstItem="lmi-WU-hmL" firstAttribute="width" secondItem="lmi-WU-hmL" secondAttribute="height" multiplier="1:1" id="XlA-cl-an0"/>
                                             <constraint firstItem="VYs-v2-auk" firstAttribute="leading" secondItem="AWa-Ay-cYP" secondAttribute="trailing" constant="20" id="ZDR-IK-NF9"/>
                                             <constraint firstItem="bjt-y7-j7E" firstAttribute="leading" secondItem="TFu-K3-KAn" secondAttribute="leading" id="a7B-LJ-DkM"/>
-                                            <constraint firstItem="AUj-lC-4Xu" firstAttribute="trailing" secondItem="BUL-oj-D9B" secondAttribute="trailing" id="aGi-WP-5qb"/>
-                                            <constraint firstItem="BUL-oj-D9B" firstAttribute="trailing" secondItem="CTk-0S-P8h" secondAttribute="trailing" id="aHC-53-TA1"/>
                                             <constraint firstItem="AWa-Ay-cYP" firstAttribute="leading" secondItem="JjY-jZ-19N" secondAttribute="leading" id="aXR-vB-XS0"/>
                                             <constraint firstItem="7rR-jW-jUU" firstAttribute="top" secondItem="ke4-cf-hgA" secondAttribute="bottom" constant="10" id="abt-8K-A5S"/>
                                             <constraint firstItem="Dvo-Qs-R5Z" firstAttribute="top" secondItem="HI3-XN-Cn2" secondAttribute="bottom" constant="20" id="ahd-oI-tEN"/>
                                             <constraint firstItem="HAm-aR-5Pa" firstAttribute="trailing" secondItem="twv-zg-9jl" secondAttribute="trailing" id="bLF-Ry-lTA"/>
                                             <constraint firstItem="JTI-ni-j06" firstAttribute="top" secondItem="bjt-y7-j7E" secondAttribute="bottom" constant="15" id="bZz-aQ-YFU"/>
+                                            <constraint firstItem="lmi-WU-hmL" firstAttribute="centerY" secondItem="GPy-tp-XSo" secondAttribute="centerY" id="c1F-Bq-gW1"/>
                                             <constraint firstItem="ecB-l4-JOM" firstAttribute="top" secondItem="7he-KV-swI" secondAttribute="bottom" constant="20" id="c93-Na-9wq"/>
                                             <constraint firstItem="c1d-Qq-q1j" firstAttribute="height" secondItem="7rR-jW-jUU" secondAttribute="height" id="cQf-c2-IXq"/>
                                             <constraint firstItem="TFu-K3-KAn" firstAttribute="leading" secondItem="qbS-Xd-C1l" secondAttribute="leading" constant="20" id="dL6-9P-vJ5"/>
@@ -4021,10 +4020,11 @@ Now tap to create your work places.</string>
                                             <constraint firstItem="70o-pC-65u" firstAttribute="leading" secondItem="7H5-Lv-bid" secondAttribute="trailing" constant="20" id="hED-x8-NYW"/>
                                             <constraint firstItem="GPy-tp-XSo" firstAttribute="leading" secondItem="YGs-9S-BDm" secondAttribute="leading" id="hmj-9j-3dT"/>
                                             <constraint firstItem="TFu-K3-KAn" firstAttribute="top" secondItem="cvK-8q-pDi" secondAttribute="bottom" constant="15" id="hok-9K-Vf6"/>
+                                            <constraint firstItem="lmi-WU-hmL" firstAttribute="trailing" secondItem="AUj-lC-4Xu" secondAttribute="trailing" id="hwN-NC-rGv"/>
                                             <constraint firstItem="TZX-6A-KKN" firstAttribute="top" secondItem="EL6-bH-eYB" secondAttribute="bottom" constant="15" id="iUa-hq-xak"/>
                                             <constraint firstItem="c1d-Qq-q1j" firstAttribute="top" secondItem="7rR-jW-jUU" secondAttribute="top" id="jAF-7J-beU"/>
                                             <constraint firstItem="S8o-tx-RV6" firstAttribute="width" secondItem="S8o-tx-RV6" secondAttribute="height" multiplier="1:1" id="jx9-8l-aVI"/>
-                                            <constraint firstItem="CTk-0S-P8h" firstAttribute="top" secondItem="HYs-PI-oD8" secondAttribute="bottom" constant="30" id="k61-lv-wlk"/>
+                                            <constraint firstItem="CTk-0S-P8h" firstAttribute="top" secondItem="HYs-PI-oD8" secondAttribute="bottom" constant="8" id="k61-lv-wlk"/>
                                             <constraint firstItem="VYs-v2-auk" firstAttribute="centerY" secondItem="AWa-Ay-cYP" secondAttribute="centerY" id="kKr-Sb-YLQ"/>
                                             <constraint firstItem="EL6-bH-eYB" firstAttribute="trailing" secondItem="TZX-6A-KKN" secondAttribute="trailing" id="kWG-tA-oHw"/>
                                             <constraint firstItem="31b-MW-CYd" firstAttribute="leading" secondItem="HI3-XN-Cn2" secondAttribute="trailing" constant="20" id="kfJ-n2-7AS"/>
@@ -4072,13 +4072,13 @@ Now tap to create your work places.</string>
                     </navigationItem>
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
                     <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
-                    <size key="freeformSize" width="375" height="1130"/>
+                    <size key="freeformSize" width="375" height="1200"/>
                     <connections>
                         <outlet property="active" destination="cvK-8q-pDi" id="xAa-7Q-mt4"/>
                         <outlet property="age" destination="AWa-Ay-cYP" id="uzc-AV-wpD"/>
                         <outlet property="agePublic" destination="VYs-v2-auk" id="Rlh-qw-Ell"/>
-                        <outlet property="cvFileName" destination="UpM-6p-HPu" id="uii-cI-TsA"/>
-                        <outlet property="cvRemoveButton" destination="BUL-oj-D9B" id="5pa-V2-xwi"/>
+                        <outlet property="cvComment" destination="UpM-6p-HPu" id="Poc-Lc-LPx"/>
+                        <outlet property="cvRemoveButtonWidthConstraint" destination="B7L-sL-ufk" id="GRi-RQ-FGZ"/>
                         <outlet property="cvViewButtonHeightConstraint" destination="4Y6-89-vBU" id="oo0-qE-0G8"/>
                         <outlet property="descError" destination="YGs-9S-BDm" id="vcW-BE-uot"/>
                         <outlet property="descView" destination="HAm-aR-5Pa" id="UCp-dJ-ETS"/>
@@ -4104,7 +4104,7 @@ Now tap to create your work places.</string>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="cWI-sO-gvM" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-7303.1999999999998" y="-2273.1634182908547"/>
+            <point key="canvasLocation" x="-7303.6231884057979" y="-2273.6413043478265"/>
         </scene>
         <!--Add Work place-->
         <scene sceneID="dbN-B6-d59">

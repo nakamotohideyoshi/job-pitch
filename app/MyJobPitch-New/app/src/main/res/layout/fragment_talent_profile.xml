@@ -251,13 +251,12 @@
                 android:layout_height="wrap_content"
                 android:theme="@style/BoldLabel" />
             <TextView
-                android:id="@+id/job_seeker_cv_filename"
+                android:id="@+id/job_seeker_cv_comment"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="right"
                 android:singleLine="true"
-                android:visibility="gone"
                 android:textSize="14sp" />
             <ImageButton
                 android:id="@+id/job_seeker_cv_remove"
@@ -266,6 +265,12 @@
                 android:layout_marginLeft="8dp"
                 android:visibility="gone"
                 android:background="@drawable/icon_remove"/>
+            <ImageButton
+                android:id="@+id/job_seeker_cv_add_help"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginLeft="8dp"
+                android:background="@drawable/icon_help"/>
         </LinearLayout>
 
         <Button
@@ -273,25 +278,16 @@
             android:text="View CV"
             android:layout_width="match_parent"
             android:layout_height="@dimen/button_height"
-            android:layout_marginTop="5dp"
+            android:layout_marginTop="10dp"
             android:background="@drawable/button_yellow"
             android:theme="@style/Button"/>
-
-        <ImageButton
-            android:id="@+id/job_seeker_cv_add_help"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginTop="10dp"
-            android:layout_gravity="right"
-            android:background="@drawable/icon_help"/>
 
         <Button
             android:id="@+id/job_seeker_cv_upload"
             android:text="Upload CV"
             android:layout_width="match_parent"
             android:layout_height="@dimen/button_height"
-            android:layout_marginTop="5dp"
+            android:layout_marginTop="10dp"
             android:background="@drawable/button_blue"
             android:theme="@style/Button"/>
 

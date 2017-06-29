@@ -99,19 +99,19 @@ public class ImageSelector {
 
         ImageLoader.getInstance().displayImage(imagePath, imageView, displayImageOptions, new ImageLoadingListener() {
             @Override
-            public void onLoadingStarted(String path, View view) {
+            public void onLoadingStarted(String path1, View view) {
                 if (progressBar != null) {
                     progressBar.setVisibility(View.VISIBLE);
                 }
             }
             @Override
-            public void onLoadingFailed(String path, View view, FailReason failReason) {
+            public void onLoadingFailed(String path1, View view, FailReason failReason) {
                 if (progressBar != null) {
                     progressBar.setVisibility(View.GONE);
                 }
             }
             @Override
-            public void onLoadingComplete(String path, View view, Bitmap loadedImage) {
+            public void onLoadingComplete(String path1, View view, Bitmap loadedImage) {
                 if (progressBar != null) {
                     progressBar.setVisibility(View.GONE);
                 }

@@ -7,7 +7,6 @@ import com.kaopiz.kprogresshud.KProgressHUD;
 import com.myjobpitch.MainActivity;
 import com.myjobpitch.R;
 
-
 public class Loading {
 
     private static KProgressHUD loadingBar;

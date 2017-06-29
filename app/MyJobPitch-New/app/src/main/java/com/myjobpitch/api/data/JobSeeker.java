@@ -1,13 +1,12 @@
 package com.myjobpitch.api.data;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.myjobpitch.api.MJPObjectWithDates;
 
 import java.util.List;
 
-@JsonIgnoreProperties({"user", "jobSeeker", "pitch", "uploadingPitch"})
-public class JobSeeker extends MJPObjectWithDates implements JobSeekerContainer {
+@JsonIgnoreProperties({"user"})
+public class JobSeeker extends MJPObjectWithDates {
     private boolean active;
     private String first_name;
     private String last_name;
@@ -28,11 +27,9 @@ public class JobSeeker extends MJPObjectWithDates implements JobSeekerContainer 
     private String description;
     private String cv;
 
-    @JsonProperty("has_references")
-    private boolean hasReferences;
+    private boolean has_references;
 
-    @JsonProperty("truth_confirmation")
-    private boolean truthConfirmation;
+    private boolean truth_confirmation;
 
     public boolean getEmail_public() {
         return email_public;
@@ -150,11 +147,6 @@ public class JobSeeker extends MJPObjectWithDates implements JobSeekerContainer 
         return profile;
     }
 
-    @Override
-    public JobSeeker getJobSeeker() {
-        return this;
-    }
-
     public List<Pitch> getPitches() {
         return pitches;
     }
@@ -207,20 +199,20 @@ public class JobSeeker extends MJPObjectWithDates implements JobSeekerContainer 
         this.cv = cv;
     }
 
-    public boolean getHasReferences() {
-        return hasReferences;
+    public boolean getHas_references() {
+        return has_references;
     }
 
-    public void setHasReferences(boolean hasReferences) {
-        this.hasReferences = hasReferences;
+    public void setHas_references(boolean has_references) {
+        this.has_references = has_references;
     }
 
-    public boolean getTruthConfirmation() {
-        return truthConfirmation;
+    public boolean getTruth_confirmation() {
+        return truth_confirmation;
     }
 
-    public void setTruthConfirmation(boolean truthConfirmation) {
-        this.truthConfirmation = truthConfirmation;
+    public void setTruth_confirmation(boolean truth_confirmation) {
+        this.truth_confirmation = truth_confirmation;
     }
 
 }

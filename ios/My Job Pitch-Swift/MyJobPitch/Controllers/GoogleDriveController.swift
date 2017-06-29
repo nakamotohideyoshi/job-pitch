@@ -17,8 +17,6 @@ class GoogleDriveController: UIViewController, GIDSignInDelegate, GIDSignInUIDel
 
     let service = GTLRDriveService()
     
-    var folderIconLink: String!
-    
     var files = [GTLRDrive_File]()
     var arrPath = ["root"]
     
@@ -26,6 +24,13 @@ class GoogleDriveController: UIViewController, GIDSignInDelegate, GIDSignInUIDel
     
     var mimeQuery: String!
     var downloadCallback: ((String, String) -> Void)!
+    
+    let ICONS = [
+        "application/vnd.google-apps.folder": "g_folder",
+        "image/jpeg": "g_image",
+        "image/png": "g_image",
+        "application/pdf": "g_pdf",
+    ]
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -50,16 +55,15 @@ class GoogleDriveController: UIViewController, GIDSignInDelegate, GIDSignInUIDel
         GIDSignIn.sharedInstance().uiDelegate = self
         GIDSignIn.sharedInstance().scopes = [kGTLRAuthScopeDriveReadonly]
         if GIDSignIn.sharedInstance().hasAuthInKeychain() {
+            AppHelper.showLoading("Sign in...")
             GIDSignIn.sharedInstance().signInSilently()
+            
         }
-    }
-    
-    override func viewDidAppear(_ animated: Bool) {
-
     }
     
     func sign(_ signIn: GIDSignIn!, didSignInFor user: GIDGoogleUser!,
               withError error: Error!) {
+        AppHelper.hideLoading()
         if error != nil {
             PopupController.showGreen("Authentication Error",
                                       ok: nil, okCallback: nil,
@@ -89,7 +93,7 @@ class GoogleDriveController: UIViewController, GIDSignInDelegate, GIDSignInUIDel
         }
         query.q = q
         query.orderBy = "folder,name"
-        query.fields = "nextPageToken,files(mimeType,id,name,iconLink,size)"
+        query.fields = "nextPageToken,files(mimeType,id,name,size)"
         query.pageToken = nextPageToken
         service.executeQuery(query) { (ticket, result, error) in
             if error != nil {
@@ -100,7 +104,6 @@ class GoogleDriveController: UIViewController, GIDSignInDelegate, GIDSignInUIDel
                 if self.arrPath.count > 1 && self.files.count == 0 {
                     let file = GTLRDrive_File()
                     file.name = ".."
-                    file.iconLink = self.folderIconLink
                     file.mimeType = "application/vnd.google-apps.folder"
                     self.files.append(file)
                 }
@@ -170,24 +173,38 @@ extension GoogleDriveController: UITableViewDataSource {
         
         let cell = tableView.dequeueReusableCell(withIdentifier: "FileCell", for: indexPath) as! FileCell
         
-        let file = files[indexPath.row]
-        cell.nameLabel?.text = file.name
-        if let size = file.size?.int64Value {
-            if size < 1024 {
-                cell.attributesLabel.text = "\(size) Bytes"
-            } else if size < 1024*1024 {
-                cell.attributesLabel.text = "\(size/1024) KB"
-            } else if size < 1024*1024*1024 {
-                cell.attributesLabel.text = "\(size/1024/1024) MB"
+        if (files.count > indexPath.row) {
+            
+            let file = files[indexPath.row]
+            
+            // get icon
+            if let iconName = ICONS[file.mimeType!] {
+                cell.imgView.image = UIImage(named: iconName)
             } else {
-                cell.attributesLabel.text = "\(size/1024/1024/1024) GB"
+                cell.imgView.image = UIImage(named: "g_file")
             }
-        } else {
-            cell.attributesLabel.text = ""
+            
+            // get folder/file name
+            
+            cell.nameLabel?.text = file.name
+            
+            // get file size
+            
+            if let size = file.size?.int64Value {
+                if size < 1024 {
+                    cell.attributesLabel.text = "\(size) Bytes"
+                } else if size < 1024*1024 {
+                    cell.attributesLabel.text = "\(size/1024) KB"
+                } else if size < 1024*1024*1024 {
+                    cell.attributesLabel.text = "\(size/1024/1024) MB"
+                } else {
+                    cell.attributesLabel.text = "\(size/1024/1024/1024) GB"
+                }
+            } else {
+                cell.attributesLabel.text = ""
+            }
+            
         }
-        AppHelper.loadImageURL(imageUrl: file.iconLink!,
-                               imageView: cell.imgView!,
-                               completion: nil)
         
         return cell
         
@@ -204,9 +221,6 @@ extension GoogleDriveController: UITableViewDelegate {
                 _ = arrPath.popLast()
             } else {
                 arrPath.append(file.identifier!)
-                if folderIconLink == nil {
-                    folderIconLink = file.iconLink
-                }
             }
             getFiles(false)
             tableView.reloadData()

@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.util.List;
 
 @JsonIgnoreProperties({"jobSeeker"})
-public class Application extends BaseApplication implements JobSeekerContainer {
+public class Application extends BaseApplication {
     private JobSeeker job_seeker;
     private Job job_data;
     private Integer created_by;
@@ -24,7 +24,6 @@ public class Application extends BaseApplication implements JobSeekerContainer {
         return deleted_by;
     }
 
-    @Override
     public JobSeeker getJobSeeker() {
         return job_seeker;
     }

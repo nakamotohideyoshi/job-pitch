@@ -16,7 +16,6 @@ import com.google.api.services.drive.DriveScopes;
 
 import com.google.api.services.drive.model.*;
 import com.google.api.services.drive.model.File;
-import com.myjobpitch.utils.AppHelper;
 import com.myjobpitch.utils.Loading;
 import com.myjobpitch.utils.Popup;
 
@@ -332,7 +331,7 @@ public class GoogleDriveActivity extends AppCompatActivity implements EasyPermis
                         .setPageSize(1000)
                         .setQ(q)
                         .setOrderBy("folder,name")
-                        .setFields("nextPageToken,files(mimeType,id,name,iconLink,size)")
+                        .setFields("nextPageToken,files(mimeType,id,name,size)")
                         .execute();
                 List<File> files = result.getFiles();
                 return files;
@@ -441,9 +440,20 @@ public class GoogleDriveActivity extends AppCompatActivity implements EasyPermis
 
             File file = getItem(position);
 
+            int icon = R.drawable.g_file;
+            String mimeType = file.getMimeType();
+            if (mimeType.equals("application/vnd.google-apps.folder")) {
+                icon = R.drawable.g_folder;
+            } else {
+                if (mimeType.equals("image/jpeg") || mimeType.equals("image/png")) {
+                    icon = R.drawable.g_image;
+                } else if(mimeType.equals("application/pdf")) {
+                    icon = R.drawable.g_pdf;
+                }
+            }
             ImageView iconView = (ImageView)convertView.findViewById(R.id.image_view);
             iconView.setBackgroundColor(Color.TRANSPARENT);
-            AppHelper.loadImage(file.getIconLink(), iconView);
+            iconView.setImageResource(icon);
 
             TextView nameView = (TextView) convertView.findViewById(R.id.file_name);
             nameView.setText(file.getName());

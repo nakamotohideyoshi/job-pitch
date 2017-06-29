@@ -85,7 +85,7 @@ public class TalentDetailFragment extends BaseFragment {
     public Action action;
 
     public interface Action {
-        void apply();
+        void apply(Job job);
         void remove();
     }
 
@@ -129,11 +129,11 @@ public class TalentDetailFragment extends BaseFragment {
             playButton.setVisibility(View.GONE);
         }
 
-        if (!jobSeeker.getHasReferences()) {
+        if (!jobSeeker.getHas_references()) {
             availableView.setVisibility(View.GONE);
         }
 
-        if (!jobSeeker.getTruthConfirmation()) {
+        if (!jobSeeker.getTruth_confirmation()) {
             truthfulView.setVisibility(View.GONE);
         }
 
@@ -251,7 +251,7 @@ public class TalentDetailFragment extends BaseFragment {
                             }
                             @Override
                             protected void onSuccess() {
-                                action.apply();
+                                action.apply(application.getJob_data());
                                 getApp().popFragment();
                             }
                         };

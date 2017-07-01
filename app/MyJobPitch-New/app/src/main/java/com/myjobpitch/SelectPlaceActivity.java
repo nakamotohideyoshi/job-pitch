@@ -56,7 +56,7 @@ public class SelectPlaceActivity extends FragmentActivity implements GoogleMap.O
 
                 if (ActivityCompat.checkSelfPermission(SelectPlaceActivity.this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
                         ActivityCompat.checkSelfPermission(SelectPlaceActivity.this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                    String[] permissions = {android.Manifest.permission.ACCESS_FINE_LOCATION};
+                    String[] permissions = {android.Manifest.permission.ACCESS_FINE_LOCATION, android.Manifest.permission.ACCESS_COARSE_LOCATION};
                     ActivityCompat.requestPermissions(SelectPlaceActivity.this, permissions, 10000);
                 } else {
                     createGoogleApiClient();
@@ -160,10 +160,13 @@ public class SelectPlaceActivity extends FragmentActivity implements GoogleMap.O
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
-        if (requestCode == 10000) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                createGoogleApiClient();
+        for (int permission : grantResults) {
+            if (permission != PackageManager.PERMISSION_GRANTED) {
+                return;
             }
+        }
+        if (requestCode == 10000) {
+            createGoogleApiClient();
         }
     }
 

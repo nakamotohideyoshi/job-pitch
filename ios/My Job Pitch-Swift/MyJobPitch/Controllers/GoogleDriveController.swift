@@ -23,7 +23,7 @@ class GoogleDriveController: UIViewController, GIDSignInDelegate, GIDSignInUIDel
     var nextPageToken: String!
     
     var mimeQuery: String!
-    var downloadCallback: ((String, String) -> Void)!
+    var downloadCallback: ((String) -> Void)!
     
     let ICONS = [
         "application/vnd.google-apps.folder": "g_folder",
@@ -129,11 +129,11 @@ class GoogleDriveController: UIViewController, GIDSignInDelegate, GIDSignInUIDel
             AppHelper.hideLoading()
             if error == nil {
                 let object = result as! GTLRDataObject
-                let path = NSHomeDirectory().appendingFormat("/Documents/%@", file.name!)
+                let path = NSHomeDirectory().appendingFormat("/Documents/%@", file.name!.replacingOccurrences(of: " ", with: ""))
                 do {
                     try object.data.write(to: URL(fileURLWithPath: path))
                     self.dismiss(animated: true, completion: {
-                        self.downloadCallback?(path, file.name!)
+                        self.downloadCallback?(path)
                     })
                     return
                 } catch {

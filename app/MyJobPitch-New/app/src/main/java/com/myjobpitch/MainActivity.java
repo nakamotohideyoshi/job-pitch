@@ -1,9 +1,12 @@
 package com.myjobpitch;
 
+import android.*;
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.design.widget.NavigationView;
@@ -41,6 +44,9 @@ import com.myjobpitch.utils.AppData;
 import com.myjobpitch.utils.Popup;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -249,9 +255,17 @@ public class MainActivity extends AppCompatActivity
                     public void onBottomSheetItemClick(MenuItem item) {
                         switch (item.getItemId()) {
                             case 0: {
-                                if (ActivityCompat.checkSelfPermission(MainActivity.this, android.Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                                    String[] permissions = {android.Manifest.permission.WRITE_EXTERNAL_STORAGE};
-                                    ActivityCompat.requestPermissions(MainActivity.this, permissions, PERMISSION_IAMGE_CAPTURE);
+                                final String[] permissions = {
+                                        android.Manifest.permission.CAMERA,
+                                        android.Manifest.permission.WRITE_EXTERNAL_STORAGE};
+                                final List<String> permissionsToRequest = new ArrayList<>();
+                                for (String permission : permissions) {
+                                    if (ActivityCompat.checkSelfPermission(MainActivity.this, permission) != PackageManager.PERMISSION_GRANTED) {
+                                        permissionsToRequest.add(permission);
+                                    }
+                                }
+                                if (!permissionsToRequest.isEmpty()) {
+                                    ActivityCompat.requestPermissions(MainActivity.this, permissionsToRequest.toArray(new String[permissionsToRequest.size()]), PERMISSION_IAMGE_CAPTURE);
                                 } else {
                                     actionImageCapture();
                                 }
@@ -299,14 +313,15 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        for (int permission : grantResults) {
+            if (permission != PackageManager.PERMISSION_GRANTED) {
+                return;
+            }
+        }
         if (requestCode == PERMISSION_IAMGE_CAPTURE) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                actionImageCapture();
-            }
+            actionImageCapture();
         } else if (requestCode == PERMISSION_WRITE_EXTERNAL_STORAGE1 || requestCode == PERMISSION_WRITE_EXTERNAL_STORAGE2) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                actionPick(requestCode == PERMISSION_WRITE_EXTERNAL_STORAGE2);
-            }
+            actionPick(requestCode == PERMISSION_WRITE_EXTERNAL_STORAGE2);
         } else {
             getCurrentFragment().onRequestPermissionsResult(requestCode, permissions, grantResults);
         }

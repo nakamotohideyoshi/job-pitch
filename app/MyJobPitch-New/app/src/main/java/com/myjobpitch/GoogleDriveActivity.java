@@ -265,9 +265,12 @@ public class GoogleDriveActivity extends AppCompatActivity implements EasyPermis
                                            @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
         if (requestCode == PERMISSION_WRITE_EXTERNAL_STORAGE) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                new DownloadTask().execute();
+            for (int permission : grantResults) {
+                if (permission != PackageManager.PERMISSION_GRANTED) {
+                    return;
+                }
             }
+            new DownloadTask().execute();
         } else {
             EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this);
         }
@@ -394,7 +397,7 @@ public class GoogleDriveActivity extends AppCompatActivity implements EasyPermis
             if (!dir.exists()) {
                 dir.mkdirs();
             }
-            java.io.File file = new java.io.File(dir, selectedFile.getName());
+            java.io.File file = new java.io.File(dir, selectedFile.getName().replace(" ", ""));
             try {
                 OutputStream outStream = new FileOutputStream(file);
                 mService.files().get(selectedFile.getId())

@@ -2,9 +2,12 @@ package com.myjobpitch.fragments;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +20,7 @@ import android.widget.TextView;
 
 import com.kaopiz.kprogresshud.KProgressHUD;
 import com.myjobpitch.CameraActivity;
+import com.myjobpitch.MainActivity;
 import com.myjobpitch.MediaPlayerActivity;
 import com.myjobpitch.R;
 import com.myjobpitch.api.MJPApi;
@@ -221,11 +225,7 @@ public class TalentProfileFragment extends FormFragment {
     @OnClick(R.id.job_seeker_cv_view)
     void onCVView() {
         Intent intent = new Intent(Intent.ACTION_VIEW);
-        if (cvUri != null) {
-            intent.setData(cvUri);
-        } else {
-            intent.setData(Uri.parse(jobSeeker.getCV()));
-        }
+        intent.setData(Uri.parse(jobSeeker.getCV()));
         startActivity(intent);
     }
 
@@ -234,7 +234,6 @@ public class TalentProfileFragment extends FormFragment {
         cvUri = null;
         mCVCommentView.setText("");
         mCVUploadRemoveButton.setVisibility(View.GONE);
-        mCVViewButton.setVisibility(jobSeeker.getCV() == null ? View.GONE : View.VISIBLE);
     }
 
     @OnClick(R.id.job_seeker_cv_add_help)
@@ -286,7 +285,14 @@ public class TalentProfileFragment extends FormFragment {
                     File file = AppHelper.saveBitmap(photo);
                     cvUri = Uri.fromFile(file);
                 } else if (requestCode == AppData.REQUEST_IMAGE_PICK) {
-                    cvUri = data.getData();
+                    String[] projection = { MediaStore.Images.Media.DATA };
+                    Cursor cursor = getApp().getContentResolver().query(data.getData(), projection, null, null, null);
+                    if(cursor != null) {
+                        int column_index = cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DATA);
+                        cursor.moveToFirst();
+                        String path = cursor.getString(column_index);
+                        cvUri = Uri.fromFile(new File(path));
+                    }
                 } else if (requestCode == AppData.REQUEST_GOOGLE_DRIVE || requestCode == AppData.REQUEST_DROPBOX) {
                     String path = (String) data.getExtras().get("path");
                     cvUri = Uri.fromFile(new File(path));
@@ -294,7 +300,6 @@ public class TalentProfileFragment extends FormFragment {
                 if (cvUri != null) {
                     mCVCommentView.setText("CV added: save to upload.");
                     mCVUploadRemoveButton.setVisibility(View.VISIBLE);
-                    mCVViewButton.setVisibility(View.VISIBLE);
                 }
             }
         }
@@ -345,11 +350,14 @@ public class TalentProfileFragment extends FormFragment {
             protected void runAPI() throws MJPApiException {
 
                 if (cvUri != null) {
-
-                    MimeTypeMap mime = MimeTypeMap.getSingleton();
-                    String extension = mime.getExtensionFromMimeType(getApp().getContentResolver().getType(cvUri));
                     try {
-                        File outputFile = File.createTempFile("cv_", "." + extension, getApp().getCacheDir());
+                        File dir = new File(Environment.getExternalStorageDirectory(), "MyJobPitch");
+                        if (!dir.exists()) {
+                            dir.mkdirs();
+                        }
+                        String filename = "cv_" + cvUri.getLastPathSegment();
+                        File outputFile = new File(dir, filename);
+
                         try {
                             // Copy imageUri content to temp file
                             InputStream in = getApp().getContentResolver().openInputStream(cvUri);

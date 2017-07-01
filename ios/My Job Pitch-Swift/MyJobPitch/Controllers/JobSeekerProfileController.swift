@@ -204,8 +204,8 @@ class JobSeekerProfileController: MJPController {
         
         let googledriveAction = UIAlertAction(title: "Google Drive", style: .default) { (_) in
             let browser = AppHelper.mainStoryboard.instantiateViewController(withIdentifier: "GoogleDrive") as! GoogleDriveController
-            browser.downloadCallback = { (path, filename) in
-                self.setCV(path: path, filename: filename)
+            browser.downloadCallback = { (path) in
+                self.setCV(path: path)
             }
             let navController = UINavigationController(rootViewController: browser)
             AppHelper.getFrontController().present(navController, animated: true, completion: nil)
@@ -214,8 +214,8 @@ class JobSeekerProfileController: MJPController {
         
         let dropboxAction = UIAlertAction(title: "Dropbox", style: .default) { (_) in
             let browser = AppHelper.mainStoryboard.instantiateViewController(withIdentifier: "Dropbox") as! DropboxController
-            browser.downloadCallback = { (path, filename) in
-                self.setCV(path: path, filename: filename)
+            browser.downloadCallback = { (path) in
+                self.setCV(path: path)
             }
             let navController = UINavigationController(rootViewController: browser)
             AppHelper.getFrontController().present(navController, animated: true, completion: nil)
@@ -235,7 +235,7 @@ class JobSeekerProfileController: MJPController {
         cvRemoveButtonWidthConstraint.constant = 0
     }
     
-    func setCV(path: String, filename: String) {
+    func setCV(path: String) {
         let url = URL(fileURLWithPath: path)
         do {
             cvdata = try Data(contentsOf: url)

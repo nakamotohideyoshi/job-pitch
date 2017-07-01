@@ -84,24 +84,22 @@ public class CameraActivity extends AppCompatActivity {
         mPreview.setSurfaceTextureListener(new TextureView.SurfaceTextureListener() {
             @Override
             public void onSurfaceTextureAvailable(SurfaceTexture surface, int width, int height) {
-                if (Build.VERSION.SDK_INT > 15) {
-                    final String[] permissions = {
-                            Manifest.permission.CAMERA,
-                            Manifest.permission.RECORD_AUDIO,
-                            Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                            Manifest.permission.READ_EXTERNAL_STORAGE };
-                    final List<String> permissionsToRequest = new ArrayList<>();
-                    for (String permission : permissions) {
-                        if (ActivityCompat.checkSelfPermission(CameraActivity.this, permission) != PackageManager.PERMISSION_GRANTED) {
-                            permissionsToRequest.add(permission);
-                        }
-                    }
-                    if (!permissionsToRequest.isEmpty()) {
-                        ActivityCompat.requestPermissions(CameraActivity.this, permissionsToRequest.toArray(new String[permissionsToRequest.size()]), REQUEST_CAMERA_PERMISSIONS);
-                        return;
+                final String[] permissions = {
+                        Manifest.permission.CAMERA,
+                        Manifest.permission.RECORD_AUDIO,
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                        Manifest.permission.READ_EXTERNAL_STORAGE };
+                final List<String> permissionsToRequest = new ArrayList<>();
+                for (String permission : permissions) {
+                    if (ActivityCompat.checkSelfPermission(CameraActivity.this, permission) != PackageManager.PERMISSION_GRANTED) {
+                        permissionsToRequest.add(permission);
                     }
                 }
-                initCamera();
+                if (!permissionsToRequest.isEmpty()) {
+                    ActivityCompat.requestPermissions(CameraActivity.this, permissionsToRequest.toArray(new String[permissionsToRequest.size()]), REQUEST_CAMERA_PERMISSIONS);
+                } else {
+                    initCamera();
+                }
             }
             @Override
             public void onSurfaceTextureSizeChanged(SurfaceTexture surface, int width, int height) {
@@ -129,7 +127,6 @@ public class CameraActivity extends AppCompatActivity {
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         for (int permission : grantResults) {
             if (permission != PackageManager.PERMISSION_GRANTED) {
                 return;

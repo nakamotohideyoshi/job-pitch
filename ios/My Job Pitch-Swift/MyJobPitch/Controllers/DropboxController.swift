@@ -16,7 +16,7 @@ class DropboxController: UIViewController {
     
     var files = Array<Files.Metadata>()
     var arrPath: [String]!
-    var downloadCallback: ((String, String) -> Void)!
+    var downloadCallback: ((String) -> Void)!
     
     override func viewDidLoad() {
 
@@ -86,9 +86,8 @@ class DropboxController: UIViewController {
         AppHelper.showLoading("Downloading...")
         
         let path = "/" + arrPath.joined(separator: "/") + file.name
-        let fileManager = FileManager.default
-        let directoryURL = fileManager.urls(for: .documentDirectory, in: .userDomainMask)[0]
-        let destURL = directoryURL.appendingPathComponent(file.name)
+        let destPath = NSHomeDirectory().appendingFormat("/Documents/%@", file.name.replacingOccurrences(of: " ", with: ""))
+        let destURL = URL(fileURLWithPath: destPath)
         let destination: (URL, HTTPURLResponse) -> URL = { temporaryURL, response in
             return destURL
         }
@@ -101,10 +100,26 @@ class DropboxController: UIViewController {
                 if let _ = response {
                     self.dismiss(animated: true, completion: {
                         let path = destURL.absoluteString.replacingOccurrences(of: "file://", with: "")
-                        self.downloadCallback?(path, file.name)
+                        self.downloadCallback?(path)
                     })
                 } else if let error = error {
                     print(error)
+                    switch error as CallError {
+                    case .routeError (let boxed):
+                        switch boxed.0.unboxed as Files.DownloadError {
+                        case .path (let lookupError):
+                            switch lookupError {
+                            case .restrictedContent:
+                                PopupController.showGreen("The file cannot be downloaded because the content is restricted...",
+                                                          ok: nil, okCallback: nil,
+                                                          cancel: "OK", cancelCallback: nil)
+                            default: break
+                            }
+                        case .other:
+                            print("Unknown")
+                        }
+                    default: break
+                    }
                 }
             }
 

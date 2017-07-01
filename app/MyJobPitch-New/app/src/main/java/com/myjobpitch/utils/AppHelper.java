@@ -249,10 +249,10 @@ public class AppHelper {
             dir.mkdirs();
         }
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        File file = new File(dir, timeStamp + ".png");
+        File file = new File(dir, timeStamp + ".jpg");
         try {
             OutputStream outStream = new FileOutputStream(file);
-            bmp.compress(Bitmap.CompressFormat.PNG, 100, outStream);
+            bmp.compress(Bitmap.CompressFormat.JPEG, 100, outStream);
             outStream.flush();
             outStream.close();
         } catch (Exception e) {

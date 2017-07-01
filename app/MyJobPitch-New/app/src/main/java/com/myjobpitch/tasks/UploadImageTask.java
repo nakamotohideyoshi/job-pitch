@@ -2,6 +2,7 @@ package com.myjobpitch.tasks;
 
 import android.content.Context;
 import android.net.Uri;
+import android.os.Environment;
 import android.webkit.MimeTypeMap;
 
 import com.myjobpitch.api.MJPAPIObject;
@@ -36,10 +37,13 @@ public class UploadImageTask extends APITask0<Boolean> {
 
     @Override
     protected Boolean doInBackground(Void... params) {
-        MimeTypeMap mime = MimeTypeMap.getSingleton();
-        String extension = mime.getExtensionFromMimeType(context.getContentResolver().getType(imageUri));
         try {
-            File outputFile = File.createTempFile("photo", "." + extension, context.getCacheDir());
+            File dir = new File(Environment.getExternalStorageDirectory(), "MyJobPitch");
+            if (!dir.exists()) {
+                dir.mkdirs();
+            }
+            String filename = "photo_" + imageUri.getLastPathSegment();
+            File outputFile = new File(dir, filename);
             try {
                 // Copy imageUri content to temp file
                 InputStream in = context.getContentResolver().openInputStream(imageUri);

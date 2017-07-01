@@ -198,10 +198,13 @@ public class DropboxActivity extends AppCompatActivity {
     public void onRequestPermissionsResult(int requestCode,
                                            @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
-        if (requestCode == PERMISSION_WRITE_EXTERNAL_STORAGE) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                new DownloadTask().execute();
+        for (int permission : grantResults) {
+            if (permission != PackageManager.PERMISSION_GRANTED) {
+                return;
             }
+        }
+        if (requestCode == PERMISSION_WRITE_EXTERNAL_STORAGE) {
+            new DownloadTask().execute();
         }
     }
 
@@ -266,18 +269,11 @@ public class DropboxActivity extends AppCompatActivity {
         @Override
         protected String doInBackground(Void... params) {
             try {
-                File path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
-                File file = new File(path, selectedFile.getName());
-
-                // Make sure the Downloads directory exists.
-                if (!path.exists()) {
-                    if (!path.mkdirs()) {
-                        mException = new RuntimeException("Unable to create directory: " + path);
-                    }
-                } else if (!path.isDirectory()) {
-                    mException = new IllegalStateException("Download path is not a directory: " + path);
-                    return null;
+                File dir = new File(Environment.getExternalStorageDirectory(), "MyJobPitch");
+                if (!dir.exists()) {
+                    dir.mkdirs();
                 }
+                File file = new File(dir, selectedFile.getName().replace(" ", ""));
 
                 // Download the file.
                 try (OutputStream outputStream = new FileOutputStream(file)) {

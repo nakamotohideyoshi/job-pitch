@@ -22,9 +22,11 @@ from rest_auth.serializers import LoginSerializer as BaseLoginSerializer
 from rest_auth.registration.serializers import RegisterSerializer as BaseRegisterSerializer
 
 
-def SimpleSerializer(m, overrides={}):
-    class Meta:
+def SimpleSerializer(m, overrides={}, meta_overrides={}):
+    class Meta(object):
         model = m
+    for k, v in meta_overrides.items():
+        setattr(Meta, k, v)
     fields = {'Meta': Meta}
     fields.update(overrides)
     return type(str("%sSerializer" % m._meta.object_name),

@@ -654,7 +654,7 @@ class AndroidPurchaseView(APIView):
                     token_store=token_store,
                 )
                 TokenStore.objects.filter(pk=token_store.pk).update(
-                    tokens=F('tokens') + 20,
+                    tokens=F('tokens') + ProductTokens.objects.get(sku=serializer.data['product_code']).tokens,
                 )
 
         business = Business.objects.get(pk=serializer.data['business_id'])

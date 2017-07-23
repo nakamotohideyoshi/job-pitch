@@ -147,9 +147,13 @@ class User(AbstractBaseUser, PermissionsMixin):
 class Sector(models.Model):
     name = models.CharField(max_length=255)
     description = models.TextField()
+    priority = models.IntegerField(default=10, help_text="Lower first")
 
     def __str__(self):
         return "%s: %s" % (type(self).__name__, self.name)
+
+    class Meta(object):
+        ordering = ('priority', 'name')
 
 
 class Contract(models.Model):

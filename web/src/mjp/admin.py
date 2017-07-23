@@ -26,7 +26,7 @@ from .models import (
 )
 
 
-@admin.register(Sex, Nationality, Contract, Hours, Sector, Business, JobSeeker, Message)
+@admin.register(Sex, Nationality, Contract, Hours, Business, JobSeeker, Message)
 class Admin(admin.ModelAdmin):
     pass
 
@@ -179,3 +179,8 @@ class TokenStoreAdmin(admin.ModelAdmin):
 @admin.register(ProductTokens)
 class ProductTokensAdmin(admin.ModelAdmin):
     list_display = ('sku', 'tokens',)
+
+
+@admin.register(Sector)
+class SectorAdmin(admin.ModelAdmin):
+    list_display = ('name', 'priority',)

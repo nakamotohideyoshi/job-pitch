@@ -62,9 +62,10 @@ from apiclient.errors import HttpError
 router = DefaultRouter()
 
 
-def SimpleViewSet(model, base, permissions=(permissions.IsAuthenticated,), overrides={}, serializer_overrides={}):
+def SimpleViewSet(model, base, permissions=(permissions.IsAuthenticated,), overrides={},
+                  serializer_overrides={}, serializer_meta_overrides={}):
     fields = {'queryset': model.objects.all(),
-              'serializer_class':  SimpleSerializer(model, serializer_overrides),
+              'serializer_class':  SimpleSerializer(model, serializer_overrides, serializer_meta_overrides),
               'permission_classes': permissions,
               }
     fields.update(overrides)
@@ -77,7 +78,7 @@ def SimpleReadOnlyViewSet(model, **kwargs):
     return SimpleViewSet(model, viewsets.ReadOnlyModelViewSet, **kwargs)
 
 
-SectorViewSet = SimpleReadOnlyViewSet(Sector)
+SectorViewSet = SimpleReadOnlyViewSet(Sector, serializer_meta_overrides={'exclude': ('priority',)})
 ContractViewSet = SimpleReadOnlyViewSet(Contract)
 HoursViewSet = SimpleReadOnlyViewSet(Hours)
 JobStatusViewSet = SimpleReadOnlyViewSet(JobStatus)
@@ -654,7 +655,7 @@ class AndroidPurchaseView(APIView):
                     token_store=token_store,
                 )
                 TokenStore.objects.filter(pk=token_store.pk).update(
-                    tokens=F('tokens') + 20,
+                    tokens=F('tokens') + ProductTokens.objects.get(sku=serializer.data['product_code']).tokens,
                 )
 
         business = Business.objects.get(pk=serializer.data['business_id'])

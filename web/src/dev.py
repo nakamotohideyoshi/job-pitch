@@ -1,4 +1,4 @@
-import settings
+from settings import *
 import sys
 
 import os
@@ -20,4 +20,3 @@ try:
     from local import *
 except ImportError:
     pass
-

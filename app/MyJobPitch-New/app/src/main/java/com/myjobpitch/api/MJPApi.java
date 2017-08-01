@@ -59,7 +59,9 @@ import java.util.Map;
 
 public class MJPApi {
 
-    private static MJPApi instance;
+    public static MJPApi instance;
+    public static String apiUrl = "https://www.myjobpitch.com/";
+
     public static MJPApi shared() {
         if (instance == null) {
             instance = new MJPApi();
@@ -114,7 +116,7 @@ public class MJPApi {
 	}
 
 	public MJPApi() {
-		this("https://www.sclabs.co.uk/");
+		this(apiUrl);
 	}
 
     private URI getTypeUrl(String path) {

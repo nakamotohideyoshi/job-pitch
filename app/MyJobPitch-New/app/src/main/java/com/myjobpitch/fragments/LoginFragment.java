@@ -7,12 +7,16 @@ import android.animation.ValueAnimator;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 
+import com.github.rubensousa.bottomsheetbuilder.BottomSheetBuilder;
+import com.github.rubensousa.bottomsheetbuilder.adapter.BottomSheetItemClickListener;
 import com.myjobpitch.R;
 import com.myjobpitch.api.MJPApi;
 import com.myjobpitch.api.MJPApiException;
@@ -56,6 +60,11 @@ public class LoginFragment extends FormFragment {
     @BindView(R.id.reset_email)
     EditText mResetEmailView;
 
+    @BindView(R.id.select_server1)
+    Button mSelectServer1;
+    @BindView(R.id.select_server2)
+    Button mSelectServer2;
+
     private enum Status {
         LOGIN, REGISTER, RESET
     };
@@ -82,6 +91,21 @@ public class LoginFragment extends FormFragment {
         bodyView.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, (int)(h*0.6)));
         registerPanel.setX(displayMetrics.widthPixels);
         resetContainer.setX(displayMetrics.widthPixels);
+
+        String apiUrl = getApp().getSharedPreferences("LoginPreferences", getApp().MODE_PRIVATE)
+                .getString("api", null);
+        if (apiUrl != null) {
+            if (MJPApi.instance == null) {
+                MJPApi.apiUrl = apiUrl;
+            }
+            mSelectServer1.setText(apiUrl);
+            mSelectServer2.setText(apiUrl);
+        }
+
+        if (AppData.PRODUCT_VERSION) {
+            ((ViewGroup)mSelectServer1.getParent()).removeView(mSelectServer1);
+            ((ViewGroup)mSelectServer2.getParent()).removeView(mSelectServer2);
+        }
 
         mUserEmailView.setText(getApp().getEmail());
         if (getApp().getRemember()) {
@@ -264,6 +288,36 @@ public class LoginFragment extends FormFragment {
     void onResetCancel() {
         status = Status.LOGIN;
         movingView(resetContainer, loginContainer, 1);
+    }
+
+    @OnClick(R.id.select_server1)
+    void onSelectServer1() {
+        onSelectServer2();
+    }
+
+    @OnClick(R.id.select_server2)
+    void onSelectServer2() {
+        new BottomSheetBuilder(getApp())
+                .setMode(BottomSheetBuilder.MODE_LIST)
+                .addTitleItem("Select")
+                .addItem(0, "https://www.myjobpitch.com/", R.drawable.ic_send)
+                .addItem(1, "https://www.sclabs.co.uk/", R.drawable.ic_send)
+                .addItem(2, "https://test.sclabs.co.uk/", R.drawable.ic_send)
+                .expandOnStart(true)
+                .setItemClickListener(new BottomSheetItemClickListener() {
+                    @Override
+                    public void onBottomSheetItemClick(MenuItem item) {
+                        MJPApi.apiUrl = item.getTitle().toString();
+                        MJPApi.instance = null;
+                        mSelectServer1.setText(MJPApi.apiUrl);
+                        mSelectServer2.setText(MJPApi.apiUrl);
+                        getApp().getSharedPreferences("LoginPreferences", getApp().MODE_PRIVATE).edit()
+                                .putString("api", MJPApi.apiUrl)
+                                .apply();
+                    }
+                })
+                .createDialog()
+                .show();
     }
 
     private void movingView(final View outView, final View inView, final int dir) {

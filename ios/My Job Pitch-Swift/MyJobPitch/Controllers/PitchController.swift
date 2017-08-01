@@ -182,7 +182,8 @@ class PitchController: MJPController {
             }
         }
         
-        let keyname = String(format: "%@/%@.%@.%@", "https:www.sclabs.co.uk", pitch.token, pitch.id, url.lastPathComponent)
+        let urlKey = API.apiRoot.absoluteString.replacingOccurrences(of: "/", with: "")
+        let keyname = String(format: "%@/%@.%@.%@", urlKey, pitch.token, pitch.id, url.lastPathComponent)
         let transferUtility = AWSS3TransferUtility.default()
         (transferUtility.uploadFile(url,
                                     bucket: "mjp-android-uploads",

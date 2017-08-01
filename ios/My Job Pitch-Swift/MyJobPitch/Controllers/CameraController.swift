@@ -46,7 +46,7 @@ class CameraController: UIViewController {
 
         // Do any additional setup after loading the view.
         
-        recordButton.layer.cornerRadius = recordButton.frame.size.width / 2
+        recordButton.layer.cornerRadius = 35
         recordButton.layer.borderColor = UIColor.white.cgColor
         recordButton.layer.borderWidth = 1
         recordButton.backgroundColor = AppData.greenColor

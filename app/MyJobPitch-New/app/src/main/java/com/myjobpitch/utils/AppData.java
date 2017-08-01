@@ -20,6 +20,8 @@ import java.util.List;
 
 public class AppData {
 
+    public static final boolean PRODUCT_VERSION = false;
+
     public static User user;
     public static boolean existProfile = false;
 

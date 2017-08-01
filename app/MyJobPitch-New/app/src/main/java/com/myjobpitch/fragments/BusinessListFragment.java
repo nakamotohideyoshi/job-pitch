@@ -146,7 +146,7 @@ public class BusinessListFragment extends BaseFragment {
         addMenuItem.setVisible(count == 0 || canCreateBusinesses);
         emptyView.setVisibility(count == 0 || !canCreateBusinesses ? View.VISIBLE : View.GONE);
         if (count == 0) {
-            AppHelper.setEmptyViewText(emptyView, "You have not added any\nbusinesses yet.");
+            AppHelper.setEmptyViewText(emptyView, "Hi, Welcome to MyJobPitch\nLets start with easy adding your Business");
             AppHelper.setEmptyButtonText(emptyView, "Create business");
         } else if (!canCreateBusinesses) {
             AppHelper.setEmptyViewText(emptyView, "Have more than one company?\nGet in touch!");

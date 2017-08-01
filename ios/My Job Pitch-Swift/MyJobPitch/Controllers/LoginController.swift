@@ -18,6 +18,7 @@ class LoginController: MJPController {
     
     @IBOutlet weak var loginButton: GreenButton!
     
+    @IBOutlet weak var apiButton: UIButton!
     
     static var userType: Int {
         get {
@@ -45,6 +46,17 @@ class LoginController: MJPController {
         // Do any additional setup after loading the view.
         
         navigationController?.navigationBar.isHidden = true
+        
+        if let url = UserDefaults.standard.string(forKey: "api") {
+            if API.instance == nil {
+                API.apiRoot = URL(string: url)!
+            }
+            apiButton.setTitle(url, for: .normal)
+        }
+        
+        if (AppData.productVersion) {
+            apiButton.removeFromSuperview()
+        }
         
         emailField.text = AppData.email
         if loginButton != nil && remember {
@@ -169,6 +181,38 @@ class LoginController: MJPController {
     @IBAction func goSigninAction(_ sender: Any) {
         view.endEditing(true)
         _ = navigationController?.popViewController(animated: true)
+    }
+   
+    @IBAction func selectAPIAction(_ sender: Any) {
+        let actionSheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+        
+        let api1Action = UIAlertAction(title: "https://www.myjobpitch.com", style: .default) { (_) in
+            self.setApiUrl("https://www.myjobpitch.com")
+        }
+        actionSheet.addAction(api1Action)
+        
+        let api2Action = UIAlertAction(title: "https://www.sclabs.co.uk", style: .default) { (_) in
+            self.setApiUrl("https://www.sclabs.co.uk")
+        }
+        actionSheet.addAction(api2Action)
+        
+        let api3Action = UIAlertAction(title: "https://test.sclabs.co.uk", style: .default) { (_) in
+            self.setApiUrl("https://test.sclabs.co.uk")
+        }
+        actionSheet.addAction(api3Action)
+        
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+        actionSheet.addAction(cancelAction)
+        
+        present(actionSheet, animated: true, completion: nil)
+    }
+    
+    func setApiUrl(_ url: String) {
+        API.instance = nil
+        API.apiRoot = URL(string: url)!
+        apiButton.setTitle(url, for: .normal)
+        UserDefaults.standard.set(url, forKey: "api")
+        UserDefaults.standard.synchronize()        
     }
     
 }

@@ -62,6 +62,7 @@ class JobProfileController: MJPController {
                                           items: self.sectorNames,
                                           selectedItems: self.selectedSectorNames,
                                           multiSelection: true,
+                                          search: true,
                                           doneCallback: { (items) in
                                             self.selectedSectorNames = items
                                             self.sectorsField.text = items.joined(separator: ", ")
@@ -79,6 +80,7 @@ class JobProfileController: MJPController {
                                           items: self.contractNames,
                                           selectedItems: self.selectedContractNames,
                                           multiSelection: false,
+                                          search: false,
                                           doneCallback: { (items) in
                                             self.selectedContractNames = items
                                             self.contractField.text = items.joined(separator: ", ")
@@ -96,6 +98,7 @@ class JobProfileController: MJPController {
                                           items: self.hoursNames,
                                           selectedItems: self.selectedHoursNames,
                                           multiSelection: false,
+                                          search: false,
                                           doneCallback: { (items) in
                                             self.selectedHoursNames = items
                                             self.hoursField.text = items.joined(separator: ", ")
@@ -112,6 +115,7 @@ class JobProfileController: MJPController {
                                           items: self.radiusNames,
                                           selectedItems: self.selectedRadiusNames,
                                           multiSelection: false,
+                                          search: false,
                                           doneCallback: { (items) in
                                             self.selectedRadiusNames = items
                                             self.radiusField.text = items.joined(separator: ", ")

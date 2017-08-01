@@ -34,6 +34,8 @@ import com.myjobpitch.utils.AppHelper;
 import com.myjobpitch.utils.ImageSelector;
 import com.myjobpitch.utils.Loading;
 import com.myjobpitch.utils.Popup;
+import com.myjobpitch.views.SelectDialog;
+import com.myjobpitch.views.SelectDialog.SelectItem;
 import com.rengwuxian.materialedittext.MaterialEditText;
 import com.weiwangcn.betterspinner.library.material.MaterialBetterSpinner;
 
@@ -44,6 +46,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class JobEditFragment extends FormFragment {
 
@@ -57,7 +60,7 @@ public class JobEditFragment extends FormFragment {
     MaterialEditText descView;
 
     @BindView(R.id.job_sector)
-    MaterialBetterSpinner sectorView;
+    MaterialEditText sectorView;
 
     @BindView(R.id.job_contract)
     MaterialBetterSpinner contractView;
@@ -70,7 +73,6 @@ public class JobEditFragment extends FormFragment {
 
     private ImageSelector imageSelector;
 
-    private List<String> sectorNames = new ArrayList<>();
     private List<String> contractNames = new ArrayList<>();
     private List<String> hoursNames = new ArrayList<>();
 
@@ -155,11 +157,8 @@ public class JobEditFragment extends FormFragment {
             imageSelector.loadImage(null);
         }
 
-        for (Sector sector : AppData.get(Sector.class)) {
-            sectorNames.add(sector.getName());
-            if (sector.getId() == jobSector) {
-                sectorView.setText(sector.getName());
-            }
+        if (jobSector != -1) {
+            sectorView.setText(AppData.get(Sector.class, jobSector).getName());
         }
 
         for (Contract contract : AppData.get(Contract.class)) {
@@ -176,10 +175,25 @@ public class JobEditFragment extends FormFragment {
             }
         }
 
-        sectorView.setAdapter(new ArrayAdapter<>(getApp(),  android.R.layout.simple_dropdown_item_1line, sectorNames));
         contractView.setAdapter(new ArrayAdapter<>(getApp(),  android.R.layout.simple_dropdown_item_1line, contractNames));
         hoursView.setAdapter(new ArrayAdapter<>(getApp(),  android.R.layout.simple_dropdown_item_1line, hoursNames));
 
+    }
+
+    @OnClick(R.id.job_sector_button)
+    void onSector() {
+        final List<Sector> sectors = AppData.get(Sector.class);
+        ArrayList<SelectItem> items = new ArrayList<>();
+        for (Sector sector : sectors) {
+            items.add(new SelectItem(sector.getName(), false));
+        }
+
+        new SelectDialog(getApp(), "Select Sector", items, false, new SelectDialog.Action() {
+            @Override
+            public void apply(int selectedIndex) {
+                sectorView.setText(sectors.get(selectedIndex).getName());
+            }
+        });
     }
 
     @Override
@@ -233,8 +247,12 @@ public class JobEditFragment extends FormFragment {
         job.setTitle(titleView.getText().toString().trim());
         job.setDescription(descView.getText().toString().trim());
 
-        int sectorIndex = sectorNames.indexOf(sectorView.getText().toString());
-        job.setSector(AppData.get(Sector.class).get(sectorIndex).getId());
+        for (Sector sector : AppData.get(Sector.class)) {
+            if (sector.getName().equals(sectorView.getText().toString())) {
+                job.setSector(sector.getId());
+                break;
+            }
+        }
 
         int contractIndex = contractNames.indexOf(contractView.getText().toString());
         job.setContract(AppData.get(Contract.class).get(contractIndex).getId());

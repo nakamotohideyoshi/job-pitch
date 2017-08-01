@@ -1,9 +1,11 @@
 package com.myjobpitch;
 
+import com.google.android.gms.auth.GoogleAuthException;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
+import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAuthIOException;
 import com.google.api.client.googleapis.extensions.android.gms.auth.GooglePlayServicesAvailabilityIOException;
 import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecoverableAuthIOException;
 
@@ -371,6 +373,8 @@ public class GoogleDriveActivity extends AppCompatActivity implements EasyPermis
                     startActivityForResult(
                             ((UserRecoverableAuthIOException) mLastError).getIntent(),
                             GoogleDriveActivity.REQUEST_AUTHORIZATION);
+                } else {
+                    new Popup(GoogleDriveActivity.this, "Connection Error", null, null, "Ok", null, true);
                 }
             }
         }

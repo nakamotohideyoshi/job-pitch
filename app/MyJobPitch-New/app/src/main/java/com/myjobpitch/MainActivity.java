@@ -1,12 +1,9 @@
 package com.myjobpitch;
 
-import android.*;
-import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.design.widget.NavigationView;
@@ -469,13 +466,13 @@ public class MainActivity extends AppCompatActivity
                 .putString("email", email)
                 .putString("password", password)
                 .putBoolean("remember", remember)
-                .commit();
+                .apply();
     }
 
     public void saveUserType(int usertype) {
         getSharedPreferences("LoginPreferences", MODE_PRIVATE).edit()
                 .putInt("usermode", usertype)
-                .commit();
+                .apply();
     }
 
 }

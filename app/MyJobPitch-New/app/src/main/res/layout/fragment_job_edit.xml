@@ -45,6 +45,9 @@
             app:met_floatingLabel="normal"
             app:met_primaryColor="@color/colorGreen"/>
 
+
+
+
         <com.rengwuxian.materialedittext.MaterialEditText
             android:id="@+id/job_desc"
             android:layout_width="match_parent"
@@ -58,14 +61,24 @@
             app:met_floatingLabel="normal"
             app:met_primaryColor="@color/colorGreen"/>
 
-        <com.weiwangcn.betterspinner.library.material.MaterialBetterSpinner
-            android:id="@+id/job_sector"
+        <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
-            android:hint="Select Sector"
-            app:met_floatingLabel="normal"
-            app:met_primaryColor="@color/colorGreen"/>
+            android:layout_marginTop="15dp">
+            <com.rengwuxian.materialedittext.MaterialEditText
+                android:id="@+id/job_sector"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:imeOptions="actionDone"
+                android:hint="Select Sector"
+                app:met_floatingLabel="normal"
+                app:met_primaryColor="@color/colorGreen"/>
+            <Button
+                android:id="@+id/job_sector_button"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@android:color/transparent"/>
+        </FrameLayout>
 
         <com.weiwangcn.betterspinner.library.material.MaterialBetterSpinner
             android:id="@+id/job_contract"

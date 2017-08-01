@@ -9,12 +9,17 @@
 import UIKit
 import STPopup
 
-class SelectionController: UITableViewController {
+class SelectionController: UIViewController {
     
-    var items: [String]!
+    @IBOutlet weak var searchBar: UISearchBar!
+    @IBOutlet weak var tableView: UITableView!
+    
+    var items0: [String]!
+    var items = [String]()
     var selectedItems = [String]()
     var multiSelection = false
     var doneCallback: (([String]) -> Void)!
+    var searchEnable = true
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -27,40 +32,25 @@ class SelectionController: UITableViewController {
         popupController?.navigationBar.tintColor = UIColor.white
         popupController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName: UIColor.white]
         
-    }
-    
-    // MARK: - Table view data source
-    
-    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return items.count
-    }
-    
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "SelectionCell", for: indexPath)
-        
-        let item = items[indexPath.row]
-        cell.textLabel?.text = item
-        cell.accessoryType = selectedItems.contains(item) ? .checkmark : .none
-        
-        return cell
-    }
-    
-    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        
-        if !multiSelection {
-            selectedItems.removeAll()
-        }
-        
-        let item = items[indexPath.row]
-        if selectedItems.contains(item) {
-            selectedItems.remove(at: selectedItems.index(of: item)!)
+        if !searchEnable {
+            searchBar.removeFromSuperview()
         } else {
-            selectedItems.append(item)
+            searchBar.delegate = self
         }
         
+        filterItems("")
+    }
+    
+    func filterItems(_ key: String!) {
+        items.removeAll()
+        for item in items0 {
+            if key.isEmpty || item.lowercased().range(of:key.lowercased()) != nil {
+                items.append(item)
+            }
+        }
         tableView.reloadData()
     }
-    
+   
     func close() {
         dismiss(animated: true, completion: nil)
     }
@@ -74,15 +64,17 @@ class SelectionController: UITableViewController {
                           items: [String],
                           selectedItems: [String],
                           multiSelection: Bool,
+                          search: Bool,
                           doneCallback: (([String]) -> Void)!) {
         
         let frontController = AppHelper.getFrontController()
         frontController?.view.endEditing(true)
         
         let selectionController = AppHelper.mainStoryboard.instantiateViewController(withIdentifier: "Selection") as! SelectionController
-        selectionController.items = items
+        selectionController.items0 = items
         selectionController.selectedItems.append(contentsOf: selectedItems)
         selectionController.multiSelection = multiSelection
+        selectionController.searchEnable = search
         selectionController.doneCallback = doneCallback
         selectionController.navigationItem.title = title
 
@@ -90,6 +82,52 @@ class SelectionController: UITableViewController {
         popupController.style = STPopupStyle.bottomSheet
         popupController.present(in: frontController!)
         
+    }
+    
+}
+
+extension SelectionController: UISearchBarDelegate {
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        filterItems(searchText)
+    }
+}
+
+extension SelectionController: UITableViewDataSource {
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return items.count
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        
+        let cell = tableView.dequeueReusableCell(withIdentifier: "SelectionCell", for: indexPath)
+        
+        let item = items[indexPath.row]
+        cell.textLabel?.text = item
+        cell.accessoryType = selectedItems.contains(item) ? .checkmark : .none
+        
+        return cell
+        
+    }
+    
+}
+
+extension SelectionController: UITableViewDelegate {
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        
+        if !multiSelection {
+            selectedItems.removeAll()
+        }
+        
+        let item = items[indexPath.row]
+        if selectedItems.contains(item) {
+            selectedItems.remove(at: selectedItems.index(of: item)!)
+        } else {
+            selectedItems.append(item)
+        }
+        
+        tableView.reloadData()
     }
     
 }

@@ -231,7 +231,7 @@ public class BusinessEditFragment extends FormFragment {
             getApp().reloadMenu(false);
             getApp().getSharedPreferences("firstCreate", MODE_PRIVATE).edit()
                     .putBoolean("workplace", true)
-                    .commit();
+                    .apply();
         }
 
         getApp().getSupportFragmentManager().popBackStackImmediate();

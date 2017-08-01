@@ -101,7 +101,6 @@
                             android:text="Forgot password?"
                             android:textColor="#0095ff"
                             android:theme="@style/Button" />
-
                         <Button
                             android:id="@+id/go_register"
                             android:layout_width="match_parent"
@@ -109,6 +108,14 @@
                             android:background="@android:color/transparent"
                             android:text="Don't have an account? Sign up"
                             android:textColor="#0095ff"
+                            android:theme="@style/Button"/>
+                        <Button
+                            android:id="@+id/select_server1"
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/button_height"
+                            android:background="@android:color/transparent"
+                            android:text="https://www.myjobpitch.com/"
+                            android:textColor="@color/colorYellow"
                             android:theme="@style/Button"/>
                     </LinearLayout>
 
@@ -126,7 +133,6 @@
                             android:layout_height="@dimen/button_height"
                             android:background="@drawable/button_yellow"
                             android:theme="@style/Button" />
-
                         <Button
                             android:id="@+id/register_button2"
                             android:text="Register as Recruiter"
@@ -135,7 +141,6 @@
                             android:layout_marginTop="15dp"
                             android:background="@drawable/button_green"
                             android:theme="@style/Button" />
-
                         <Button
                             android:id="@+id/go_login"
                             android:text="Have an account? Sign in"
@@ -144,6 +149,14 @@
                             android:background="@android:color/transparent"
                             android:textColor="#0095ff"
                             android:theme="@style/Button" />
+                        <Button
+                            android:id="@+id/select_server2"
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/button_height"
+                            android:background="@android:color/transparent"
+                            android:text="https://www.myjobpitch.com/"
+                            android:textColor="@color/colorYellow"
+                            android:theme="@style/Button"/>
                     </LinearLayout>
                 </FrameLayout>
 

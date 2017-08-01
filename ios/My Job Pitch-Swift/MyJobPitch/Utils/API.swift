@@ -10,12 +10,13 @@ import Foundation
 import RestKit
 
 class API: NSObject {
-
-    private static var instance: API!
+    
+    static var apiRoot = URL(string: "https://www.myjobpitch.com")!
+    
+    static var instance: API!
     static func shared() -> API {
         if instance == nil {
             instance = API()
-            _ = APIConfigure()
         }
         return instance
     }
@@ -31,7 +32,7 @@ class API: NSObject {
 
     private func clearCookies() {
         let cookieStorage = HTTPCookieStorage.shared
-        let cookies = cookieStorage.cookies(for: AppData.apiRoot)!
+        let cookies = cookieStorage.cookies(for: API.apiRoot)!
         for cookie in cookies {
             cookieStorage.deleteCookie(cookie)
         }
@@ -53,6 +54,10 @@ class API: NSObject {
         if let array = nsError.userInfo[RKObjectMapperErrorObjectsKey] as? NSArray {
             let errorMessage = array.firstObject as! RKErrorMessage
             userInfo = errorMessage.userInfo as NSDictionary?
+        }
+        
+        if message == nil && userInfo == nil {
+            message = "Connection Error"
         }
 
         failure(message, userInfo)

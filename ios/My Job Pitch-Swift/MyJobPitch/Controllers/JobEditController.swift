@@ -67,6 +67,7 @@ class JobEditController: MJPController {
                                           items: self.sectorNames,
                                           selectedItems: self.selectedSectorNames,
                                           multiSelection: false,
+                                          search: true,
                                           doneCallback: { (items) in
                                             self.selectedSectorNames = items
                                             self.sectorField.text = items.joined(separator: ", ")
@@ -83,6 +84,7 @@ class JobEditController: MJPController {
                                           items: self.contractNames,
                                           selectedItems: self.selectedContractNames,
                                           multiSelection: false,
+                                          search: false,
                                           doneCallback: { (items) in
                                             self.selectedContractNames = items
                                             self.contractField.text = items.joined(separator: ", ")
@@ -99,6 +101,7 @@ class JobEditController: MJPController {
                                           items: self.hoursNames,
                                           selectedItems: self.selectedHoursNames,
                                           multiSelection: false,
+                                          search: false,
                                           doneCallback: { (items) in
                                             self.selectedHoursNames = items
                                             self.hoursField.text = items.joined(separator: ", ")

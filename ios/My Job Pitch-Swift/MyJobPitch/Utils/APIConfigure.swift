@@ -17,8 +17,9 @@ class APIConfigure: NSObject {
 
         super.init()
 
-        let client = AFRKHTTPClient(baseURL: AppData.apiRoot)
-
+        let client = AFRKHTTPClient(baseURL: API.apiRoot)
+ 
+        RKObjectManager.setShared(nil)
         manager = RKObjectManager.init(httpClient: client)!
         manager.requestSerializationMIMEType = RKMIMETypeJSON
 

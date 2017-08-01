@@ -241,7 +241,7 @@ class LocationEditController: MJPController {
         location.email = emailField.text?.trimmingCharacters(in: .whitespacesAndNewlines)
         location.emailPublic = emailPublic.isOn
         location.telephone = ""
-        location.telephonePublic = true
+        location.telephonePublic = false
         location.mobile = phoneField.text;
         location.mobilePublic = phonePublic.isOn
         location.placeID = placeID

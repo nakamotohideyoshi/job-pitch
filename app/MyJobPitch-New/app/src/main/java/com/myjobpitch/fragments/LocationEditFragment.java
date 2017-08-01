@@ -108,7 +108,7 @@ public class LocationEditFragment extends FormFragment {
                     if (!isFirstCreate) {
                         getApp().getSharedPreferences("firstCreate", MODE_PRIVATE).edit()
                                 .putBoolean("workplace", false)
-                                .commit();
+                                .apply();
                     }
                 }
             }
@@ -222,7 +222,7 @@ public class LocationEditFragment extends FormFragment {
         location.setEmail(emailView.getText().toString().trim());
         location.setEmail_public(emailPublicView.isChecked());
         location.setTelephone("");
-        location.setTelephone_public(true);
+        location.setTelephone_public(false);
         location.setMobile(phoneView.getText().toString().trim());
         location.setMobile_public(phonePublicView.isChecked());
         location.setPlace_id(placeID);
@@ -306,7 +306,7 @@ public class LocationEditFragment extends FormFragment {
         if (isFirstCreate) {
             getApp().getSharedPreferences("firstCreate", MODE_PRIVATE).edit()
                     .putBoolean("workplace", false)
-                    .commit();
+                    .apply();
         }
 
         getApp().getSupportFragmentManager().popBackStackImmediate();

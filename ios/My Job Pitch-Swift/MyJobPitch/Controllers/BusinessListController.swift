@@ -76,7 +76,7 @@ class BusinessListController: MJPController {
         emptyView.isHidden = !(data.count == 0 || !canCreateBusinesses)
         tableView.isScrollEnabled = !emptyView.isHidden
         if data.count == 0 {
-            emptyMessage.text = "You have not added any\n businesses yet."
+            emptyMessage.text = "Hi, Welcome to MyJobPitch\nLets start with easy adding your Business"
             emptyButton.setTitle("Create business", for: .normal)
         } else if !AppData.user.canCreateBusinesses {
             emptyMessage.text = "Have more than one company?\n Get in touch!"

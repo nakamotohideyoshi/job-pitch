@@ -1,8 +1,6 @@
 package com.myjobpitch.fragments;
 
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -24,6 +22,8 @@ import com.myjobpitch.api.data.Sex;
 import com.myjobpitch.tasks.APITask;
 import com.myjobpitch.utils.AppData;
 import com.myjobpitch.utils.Popup;
+import com.myjobpitch.views.SelectDialog;
+import com.myjobpitch.views.SelectDialog.SelectItem;
 import com.rengwuxian.materialedittext.MaterialEditText;
 import com.weiwangcn.betterspinner.library.material.MaterialBetterSpinner;
 
@@ -186,35 +186,28 @@ public class JobProfileFragment extends FormFragment {
 
     @OnClick(R.id.job_profile_sectors_button)
     void onSectors() {
+
         final List<Sector> selectedSectors = new ArrayList<>(mSelectedSectors);
-        String[] sectorNames = new String[mSectors.size()];
-        boolean[] checkedSectors = new boolean[mSectors.size()];
-        for (int i = 0; i < mSectors.size(); i++) {
-            Sector sector = mSectors.get(i);
-            sectorNames[i] = sector.getName();
-            checkedSectors[i] = selectedSectors.contains(sector);
+        final ArrayList<SelectItem> items = new ArrayList<>();
+        for (Sector sector : mSectors) {
+            items.add(new SelectItem(
+                    sector.getName(),
+                    selectedSectors.contains(sector)
+            ));
         }
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setTitle("Select job sectors")
-                .setMultiChoiceItems(sectorNames, checkedSectors,
-                        new DialogInterface.OnMultiChoiceClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int i, boolean isChecked) {
-                                Sector sector = mSectors.get(i);
-                                if (isChecked)
-                                    selectedSectors.add(sector);
-                                else if (selectedSectors.contains(sector))
-                                    selectedSectors.remove(sector);
-                            }
-                        })
-                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int id) {
-                        updateSelectedSectors(selectedSectors);
+
+        new SelectDialog(getApp(), "Select job sectors", items, true, new SelectDialog.Action() {
+            @Override
+            public void apply(int selectedIndex) {
+                selectedSectors.clear();
+                for (int i = 0; i < items.size(); i++) {
+                    if (items.get(i).checked) {
+                        selectedSectors.add(mSectors.get(i));
                     }
-                })
-                .setNegativeButton("CANCEL", null)
-                .show();
+                }
+                updateSelectedSectors(selectedSectors);
+            }
+        });
     }
 
     @OnClick(R.id.job_profile_address_button)

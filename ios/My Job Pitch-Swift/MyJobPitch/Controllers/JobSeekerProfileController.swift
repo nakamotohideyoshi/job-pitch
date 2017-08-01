@@ -70,6 +70,7 @@ class JobSeekerProfileController: MJPController {
                                           items: self.sexNames,
                                           selectedItems: self.selectedSexNames,
                                           multiSelection: false,
+                                          search: false,
                                           doneCallback: { (items) in
                                             self.selectedSexNames = items
                                             self.sex.text = items.joined(separator: ", ")
@@ -86,6 +87,7 @@ class JobSeekerProfileController: MJPController {
                                           items: self.nationalityNames,
                                           selectedItems: self.selectedNationalityNames,
                                           multiSelection: false,
+                                          search: true,
                                           doneCallback: { (items) in
                                             self.selectedNationalityNames = items
                                             self.nationality.text = items.joined(separator: ", ")

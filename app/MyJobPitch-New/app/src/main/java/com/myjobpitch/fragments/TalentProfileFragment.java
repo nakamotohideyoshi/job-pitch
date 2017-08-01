@@ -11,7 +11,6 @@ import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.MimeTypeMap;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -20,7 +19,6 @@ import android.widget.TextView;
 
 import com.kaopiz.kprogresshud.KProgressHUD;
 import com.myjobpitch.CameraActivity;
-import com.myjobpitch.MainActivity;
 import com.myjobpitch.MediaPlayerActivity;
 import com.myjobpitch.R;
 import com.myjobpitch.api.MJPApi;
@@ -37,6 +35,8 @@ import com.myjobpitch.utils.AppData;
 import com.myjobpitch.utils.AppHelper;
 import com.myjobpitch.utils.Loading;
 import com.myjobpitch.utils.Popup;
+import com.myjobpitch.views.SelectDialog;
+import com.myjobpitch.views.SelectDialog.SelectItem;
 import com.rengwuxian.materialedittext.MaterialEditText;
 import com.weiwangcn.betterspinner.library.material.MaterialBetterSpinner;
 
@@ -92,7 +92,7 @@ public class TalentProfileFragment extends FormFragment {
     CheckBox mSexPublicView;
 
     @BindView(R.id.job_seeker_nationality)
-    MaterialBetterSpinner mNationalityView;
+    MaterialEditText mNationalityView;
     @BindView(R.id.job_seeker_nationality_public)
     CheckBox mNationalityPublicView;
 
@@ -116,8 +116,6 @@ public class TalentProfileFragment extends FormFragment {
     CheckBox mTickBox;
 
     List<String> mSexNames = new ArrayList<>();
-    List<String> mNationalityNames = new ArrayList<>();
-
     JobSeeker jobSeeker;
 
     Pitch mPitch;
@@ -140,11 +138,6 @@ public class TalentProfileFragment extends FormFragment {
             mSexNames.add(sex.getName());
         }
         mSexView.setAdapter(new ArrayAdapter<>(getApp(),  android.R.layout.simple_dropdown_item_1line, mSexNames));
-
-        for (Nationality nationality : AppData.get(Nationality.class)) {
-            mNationalityNames.add(nationality.getName());
-        }
-        mNationalityView.setAdapter(new ArrayAdapter<>(getApp(),  android.R.layout.simple_dropdown_item_1line, mNationalityNames));
 
         // loading
         if (AppData.user.getJob_seeker() != null) {
@@ -215,6 +208,22 @@ public class TalentProfileFragment extends FormFragment {
 
         mCVViewButton.setVisibility(jobSeeker.getCV() == null ? View.GONE : View.VISIBLE);
 
+    }
+
+    @OnClick(R.id.job_seeker_nationality_button)
+    void onNationality() {
+        final List<Nationality> nationalities = AppData.get(Nationality.class);
+        ArrayList<SelectItem> items = new ArrayList<>();
+        for (Nationality nationality : nationalities) {
+            items.add(new SelectItem(nationality.getName(), false));
+        }
+
+        new SelectDialog(getApp(), "Select Nationality", items, false, new SelectDialog.Action() {
+            @Override
+            public void apply(int selectedIndex) {
+                mNationalityView.setText(nationalities.get(selectedIndex).getName());
+            }
+        });
     }
 
     @OnClick(R.id.job_seeker_cv_help)
@@ -335,9 +344,11 @@ public class TalentProfileFragment extends FormFragment {
             jobSeeker.setSex(AppData.get(Sex.class).get(sexIndex).getId());
         }
         jobSeeker.setSex_public(mSexPublicView.isChecked());
-        int nationalityIndex = mNationalityNames.indexOf(mNationalityView.getText().toString());
-        if (nationalityIndex != -1) {
-            jobSeeker.setNationality(AppData.get(Nationality.class).get(nationalityIndex).getId());
+        for (Nationality nationality : AppData.get(Nationality.class)) {
+            if (nationality.getName().equals(mNationalityView.getText().toString())) {
+                jobSeeker.setNationality(nationality.getId());
+                break;
+            }
         }
         jobSeeker.setNationality_public(mNationalityPublicView.isChecked());
         jobSeeker.setDescription(mDescriptionView.getText().toString().trim());

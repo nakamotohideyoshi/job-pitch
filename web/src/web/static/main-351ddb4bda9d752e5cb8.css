@@ -11442,31 +11442,44 @@ body {
   padding: 0;
 }
 
-._90PAnctF4DW13evZc0LKU ul li > a {
-  padding: 10px 0;
+._90PAnctF4DW13evZc0LKU ul li {
   display: block;
+}
+
+._90PAnctF4DW13evZc0LKU ul li a {
+  padding: 10px 0;
+  display: flex;
+  align-items: center;
   color: #9d9d9d;
   text-decoration: none;
   transition: color 0.7s ease 0s;
   cursor: pointer;
 }
 
-._90PAnctF4DW13evZc0LKU ul li > a i {
+._90PAnctF4DW13evZc0LKU ul li a i {
   width: 50px;
   text-align: center;
 }
 
-._90PAnctF4DW13evZc0LKU ul li > a:hover {
+._90PAnctF4DW13evZc0LKU ul li a span {
+  flex: 1;
+}
+
+._90PAnctF4DW13evZc0LKU ul li ul a {
+  padding-left: 50px;
+}
+
+._90PAnctF4DW13evZc0LKU ul li a:hover {
   background-color: #272727;
   color: white;
 }
 
-._90PAnctF4DW13evZc0LKU ul li > a._3-CX282AVpBmga0WFXTU3z {
+._90PAnctF4DW13evZc0LKU ul li a._3-CX282AVpBmga0WFXTU3z {
   background-color: #272727;
   color: #00b6a4;
 }
 
-._90PAnctF4DW13evZc0LKU ul li > a._1wNILOdSjT_V3J_uOrTmGI {
+._90PAnctF4DW13evZc0LKU ul li a._1wNILOdSjT_V3J_uOrTmGI {
   background-color: transparent;
   color: #555;
   cursor: default;
@@ -12060,8 +12073,7 @@ body {
 }
 
 ._5resYelOBUxZaccX8_4TV {
-  white-space: pre;
-  line-height: 0.7em;
+  white-space: pre-line;
 }
 ._1uOavHKOb3_7Pz-gbcnggh {
   display: block;
@@ -12151,24 +12163,17 @@ body {
   background-position: center;
   background-repeat: no-repeat;
 }
-._3l0n6nA2tMGFU6_hFv-Zls {
+
+.xwMf3x0U5OWJ3Q3-eQan- {
+  height: 278px;
   display: flex;
-  flex-direction: column;
   align-items: center;
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-}
-
-._3l0n6nA2tMGFU6_hFv-Zls h1 {
-  margin-top: 50px;
-  margin-bottom: 30px;
-}
-
-._3l0n6nA2tMGFU6_hFv-Zls ._15k6wxuZECyuDyeBFEZ8th {
-  width: 300px;
+  justify-content: center;
+  text-align: center;
+  color: #959595;
+  line-height: 0.8em;
+  font-size: 16px;
+  white-space: pre-line;
 }
 ._2KZBIDOcWmeHpQaW-Mc1jM {
   display: block;
@@ -12431,5 +12436,24 @@ a.c5klW_PefQ6L66eX98YSd ._3WFV3AvF-ZaDbjbDce6RQg {
 ._1xk7MaWJ02R_xD_JSDPP9H div {
   margin-top: 10px;
 }
+._3l0n6nA2tMGFU6_hFv-Zls {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
 
-/*# sourceMappingURL=main-b1d8bc35aacff5820665.css.map*/
+._3l0n6nA2tMGFU6_hFv-Zls h1 {
+  margin-top: 50px;
+  margin-bottom: 30px;
+}
+
+._3l0n6nA2tMGFU6_hFv-Zls ._15k6wxuZECyuDyeBFEZ8th {
+  width: 300px;
+}
+
+/*# sourceMappingURL=main-351ddb4bda9d752e5cb8.css.map*/

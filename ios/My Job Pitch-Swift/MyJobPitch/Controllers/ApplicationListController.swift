@@ -41,9 +41,9 @@ class ApplicationListController: SearchController {
         if isShortlisted {
             emptyView.text = "You have not shortlisted any applications for this job, turn off shortlist view to see the non-shortlisted applications."
         } else if isConnectBtn {
-            emptyView.text = "You have not chosen anyone to connect with for this job. Once that happens, you will be able to sort through them from here. You can switch to search mode to look for potential applicants."
-        } else if isRecruiter {
             emptyView.text = "No applications at the moment. Once thet happens you cant go trough them here and shortlist\nif needed, you can easy switch to Find Talent mode and \"head hunt\" as well."
+        } else if isRecruiter {
+            emptyView.text = "No candidates have applied for this job yet. Once that happens, their applications will appear here."
         } else {
             emptyView.text = "You have no applications."
         }

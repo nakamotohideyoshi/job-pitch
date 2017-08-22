@@ -1,8 +1,8 @@
 from settings import *
 
-DEBUG = True
+DEBUG = False
 
-TEMPLATE_DEUG = True
+TEMPLATE_DEUG = False
 
 EMAIL_PORT = 25
 

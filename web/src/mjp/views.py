@@ -98,6 +98,7 @@ NationalityViewSet = SimpleReadOnlyViewSet(Nationality)
 ApplicationStatusViewSet = SimpleReadOnlyViewSet(ApplicationStatus)
 RoleViewSet = SimpleReadOnlyViewSet(Role)
 ProductTokensViewSet = SimpleReadOnlyViewSet(ProductTokens)
+PayPalProductViewSet = SimpleReadOnlyViewSet(PayPalProduct)
 
 
 class UserBusinessImageViewSet(viewsets.ModelViewSet):

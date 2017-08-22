@@ -219,6 +219,11 @@ class AndroidPurchaseSerializer(serializers.Serializer):
     purchase_token = serializers.CharField()
 
 
+class PayPalPurchaseSerializer(serializers.Serializer):
+    business = serializers.IntegerField()
+    product_code = serializers.CharField()
+
+
 class InitialTokensSerializer(serializers.ModelSerializer):
     class Meta:
         model = InitialTokens

@@ -1,10 +1,18 @@
+import json
+import logging
+
+import paypalrestsdk
 from django.db import transaction
 from django.db.models import F, Q, Max
+from django.conf import settings
 from django.contrib.gis.measure import D
 from django.contrib.gis.db.models.functions import Distance
+from django.http import HttpResponseRedirect
+from django.views.generic import View
 
 from rest_framework import viewsets, permissions, serializers, status
 from rest_framework.response import Response
+from rest_framework.reverse import reverse
 from rest_framework.routers import DefaultRouter
 from rest_framework.views import APIView
 
@@ -31,6 +39,7 @@ from mjp.models import (
     TokenStore,
     InitialTokens,
     AndroidPurchase,
+    PayPalProduct,
     ProductTokens,
 )
 
@@ -49,6 +58,7 @@ from mjp.serializers import (
     MessageUpdateSerializer,
     PitchSerializer,
     AndroidPurchaseSerializer,
+    PayPalPurchaseSerializer,
     InitialTokensSerializer,
 )
 
@@ -58,6 +68,7 @@ from httplib2 import Http
 from apiclient.discovery import build
 from apiclient.errors import HttpError
 
+from paypalrestsdk import Payment, WebProfile
 
 router = DefaultRouter()
 
@@ -665,6 +676,102 @@ class AndroidPurchaseView(APIView):
             'view': self
         })
         return Response(output_serializer.data)
+
+
+class PayPalPurchaseView(APIView):
+    permission_classes = (permissions.IsAuthenticated,)
+
+    def post(self, request):
+        serializer = PayPalPurchaseSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        errors = {}
+
+        try:
+            product = PayPalProduct.objects.get(product_code=serializer.data['product_code'])
+        except PayPalProduct.DoesNotExist:
+            errors['product_code'] = "Not found"
+
+        try:
+            business = request.user.businesses.get(pk=serializer.data['business'])
+        except Business.DoesNotExist:
+            errors['business'] = "Not found"
+
+        if errors:
+            raise serializers.ValidationError(errors)
+
+        paypalrestsdk.configure(settings.PAYPAL_CONFIG)
+
+        # Create Payment and return status
+        payment = self.create_payment(request, business, product)
+        if payment.create():
+            print payment
+            for link in payment.links:
+                if link.rel == "approval_url":
+                    return Response({'approval_url': str(link.href)})
+            raise serializers.ValidationError({"error": "couldn't get approval url"})
+        else:
+            raise serializers.ValidationError({"error": payment.error})
+
+    def create_payment(self, request, business, product):
+        for profile in WebProfile.all():
+            if profile.name == 'no_shipping':
+                break
+        else:
+            profile = WebProfile({
+                "name": "no_shipping",
+                "input_fields": {
+                    "no_shipping": 1,
+                }
+            })
+            if not profile.create():
+                profile = None
+
+        return Payment({
+            "intent": "sale",
+
+            "experience_profile_id": profile.id if profile else None,
+
+            # Payer
+            # A resource representing a Payer that funds a payment
+            # Payment Method as 'paypal'
+            "payer": {
+                "payment_method": "paypal"
+            },
+            # Redirect URLs
+            "redirect_urls": {
+                "return_url": reverse("paypal-confirm", request=request),
+                "cancel_url": request.build_absolute_uri('/recruiter/credits/purchase-cancel'),
+            },
+            "transactions": [{
+                "custom": json.dumps({"tokens": product.tokens, "business": business.id}),
+                "description": "{} tokens".format(product.tokens),
+                "amount": {"total": str(product.price), "currency": "GBP"},
+            }],
+        })
+
+
+class PayPalPurchaseConfirmView(View):
+    def get(self, request):
+        try:
+            paypalrestsdk.configure(settings.PAYPAL_CONFIG)
+
+            payment = Payment.find(request.GET['paymentId'])
+
+            # Execute payment using payer_id obtained when creating the payment (following redirect)
+            if payment.execute({"payer_id": request.GET['PayerID']}):
+                for trans in payment.transactions:
+                    data = json.loads(trans.custom)
+                    business = Business.objects.get(pk=data['business'])
+                    TokenStore.objects.filter(pk=business.token_store_id).update(
+                        tokens=F('tokens') + data['tokens'],
+                    )
+                    return HttpResponseRedirect('/recruiter/credits/purchase-success')
+            else:
+                return HttpResponseRedirect('/recruiter/credits/purchase-error?error={}'.format(payment.error))
+        except Exception:
+            logging.exception("Error processing paypal payment")
+            return HttpResponseRedirect('/recruiter/credits/purchase-error?error={}'.format("Unknown error"))
 
 
 class InitialTokensView(APIView):

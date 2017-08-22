@@ -471,6 +471,15 @@ class AndroidPurchase(models.Model):
     token_store = models.ForeignKey(TokenStore, null=True, on_delete=models.SET_NULL)
 
 
+class PayPalProduct(models.Model):
+    product_code = models.CharField(max_length=255, unique=True)
+    price = models.DecimalField(max_digits=10, decimal_places=2)
+    tokens = models.IntegerField()
+
+    class Meta:
+        verbose_name_plural = 'paypal products'
+
+
 class ProductTokens(models.Model):
     sku = models.CharField(max_length=255)
     tokens = models.IntegerField()

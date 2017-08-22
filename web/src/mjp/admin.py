@@ -23,6 +23,7 @@ from .models import (
     TokenStore,
     InitialTokens,
     ProductTokens,
+    PayPalProduct,
 )
 
 
@@ -179,6 +180,11 @@ class TokenStoreAdmin(admin.ModelAdmin):
 @admin.register(ProductTokens)
 class ProductTokensAdmin(admin.ModelAdmin):
     list_display = ('sku', 'tokens',)
+
+
+@admin.register(PayPalProduct)
+class ProductTokensAdmin(admin.ModelAdmin):
+    list_display = ('product_code', 'tokens',)
 
 
 @admin.register(Sector)

@@ -748,6 +748,16 @@ class PayPalPurchaseView(APIView):
                 "custom": json.dumps({"tokens": product.tokens, "business": business.id}),
                 "description": "{} tokens".format(product.tokens),
                 "amount": {"total": str(product.price), "currency": "GBP"},
+                "item_list": {
+                    "items": [
+                        {
+                            "description": "{} tokens for {}".format(product.tokens, business.name),
+                            "quantity": 1,
+                            "price": str(product.price),
+                            "currency": "GBP",
+                        },
+                    ],
+                }
             }],
         })
 

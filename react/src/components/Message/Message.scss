@@ -1,0 +1,128 @@
+.header {
+  display: block;
+  padding-right: 25px;
+  
+  img {
+    float: left;
+    width: 60px;
+    height: 60px;
+    margin-right: 10px;
+    // border-radius: 30px;
+  }
+
+  h4, .comment {
+    display: block;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+  }
+
+  h4 {
+    margin: 0;
+    padding: 8px 0;
+  }
+
+  .comment {
+    color: #959595;
+  }
+}
+
+.container {
+  padding: 0;
+  max-height: 600px;
+  overflow-y: auto;
+}
+
+.content {
+  padding: 25px 15px;
+
+  img {
+    width: 40px !important;
+    height: 40px !important;
+    border-radius: 20px;
+  }
+
+  .bubble{
+    display: inline-block;
+    border-radius: 5px;
+    box-shadow: 0 0 6px #B2B2B2;
+    padding: 10px 18px;
+    position: relative;
+    white-space: pre-line;
+    color: #fff;
+    text-align: left;
+  }
+
+  .bubble::before {
+    content: "\00a0";
+    height: 16px;
+    position: absolute;
+    top: 11px;
+    transform:             rotate( 29deg ) skew( -35deg );
+        -moz-transform:    rotate( 29deg ) skew( -35deg );
+        -ms-transform:     rotate( 29deg ) skew( -35deg );
+        -o-transform:      rotate( 29deg ) skew( -35deg );
+        -webkit-transform: rotate( 29deg ) skew( -35deg );
+    width:  20px;      
+  }
+
+  .time {
+    font-size: 12px;
+    color: #959595;
+    margin-top: 5px;
+  }
+  
+  .you {
+    display: flex;
+    margin-bottom: 10px;
+    margin-right: 90px;
+    >div {
+      margin-left: 25px;
+    }
+    .bubble {
+      background-color: #ff9300;
+    }
+    .bubble::before {
+      box-shadow: -2px 2px 2px 0 rgba( 178, 178, 178, .4 );
+      left: -9px;
+      background-color: #ff9300;         
+    }
+  }
+
+  .me {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 10px;
+    margin-left: 90px;
+    text-align: right;
+    >div {
+      margin-right: 25px;
+    }
+    .bubble {
+      background-color: #00b6a4;
+    }
+    .bubble::before {
+      box-shadow: 2px -2px 2px 0 rgba( 178, 178, 178, .4 );
+      right: -9px;
+      background-color: #00b6a4;         
+    }
+  }
+
+}
+
+.input {
+  display: flex;
+  textarea, div {
+    flex: 1;
+    height: 30px;
+    max-height: 100px;
+    resize: none;
+    outline: none;
+    border: none;
+  }
+  div {
+    align-items: center;
+    color: #959595;
+  }
+}
+

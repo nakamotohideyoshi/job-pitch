@@ -1,0 +1,39 @@
+:global {
+  .logo-selector {
+    > div {
+      float: left;
+      margin-right: 20px;
+      margin-bottom: 10px;
+    }
+
+    button {
+      width: 100px;
+      margin-bottom: 10px;
+    }
+
+    .logo {
+      height: 100%;
+      margin: 0;
+      background-size: contain;
+      background-position: center;
+      background-repeat: no-repeat;
+    }
+  }
+}
+
+.emptyContainer {
+  height: 278px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: #959595;
+  line-height: 0.8em;
+  font-size: 16px;
+  white-space: pre-line;
+  
+  > button {
+    margin-top: 30px;
+  }
+}

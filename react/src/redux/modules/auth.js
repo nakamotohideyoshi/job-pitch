@@ -49,6 +49,7 @@ export default function reducer(state = initialState, action = {}) {
           jobStatuses: action.result[6],
           sexes: action.result[7],
           roles: action.result[8],
+          products: action.result[9],
         }
       };
     case GETUSER_SUCCESS:

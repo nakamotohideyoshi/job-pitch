@@ -49,8 +49,8 @@ export function setData(key, value) {
 
 // alert
 
-export function alertShow(title, message, cancelButton, cancelCallback, okButton, okCallback, cancel = true) {
-  return { type: ALERT_SHOW, alert: { title, message, cancelButton, cancelCallback, okButton, okCallback, cancel } };
+export function alertShow(title, message, buttons, cancel = true) {
+  return { type: ALERT_SHOW, alert: { title, message, buttons, cancel } };
 }
 
 export function alertHide() {
@@ -133,6 +133,13 @@ export function createPitch() {
   return {
     types: [CALL_START, CALL_END, CALL_END],
     promise: client => client.createPitch()
+  };
+}
+
+export function purchase(data) {
+  return {
+    types: [CALL_START, CALL_END, CALL_END],
+    promise: client => client.purchase(data)
   };
 }
 

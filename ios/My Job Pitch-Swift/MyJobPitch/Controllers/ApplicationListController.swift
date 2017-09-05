@@ -65,7 +65,7 @@ class ApplicationListController: SearchController {
         super.viewDidAppear(animated)
         if ApplicationListController.refreshRequest {
             ApplicationListController.refreshRequest = false
-            AppHelper.showLoading("Loading...")
+            showLoading()
             loadData()
         }
     }
@@ -73,7 +73,7 @@ class ApplicationListController: SearchController {
     func loadData() {
         
         API.shared().loadApplicationsForJob(jobId: job?.id, status: status, shortlisted: isShortlisted, success: { (data) in
-            AppHelper.hideLoading()
+            self.hideLoading()
             self.allData = NSMutableArray()
             for application in data as! [Application] {
                 if (self.status == nil || self.status == application.status) && (!self.isShortlisted || application.shortlisted == self.isShortlisted) {
@@ -150,7 +150,7 @@ extension ApplicationListController: UITableViewDataSource {
                             if self.isConnectBtn {
                                 PopupController.showYellow("Are you sure you want to connect this application?", ok: "Connect", okCallback: {
                                     self.apply(callback: {
-                                        AppHelper.showLoading("")
+                                        self.showLoading()
                                         cell.hideSwipe(animated: true)
                                         self.loadData()
                                     })
@@ -228,9 +228,9 @@ extension ApplicationListController: ChooseDelegate {
         update.id = (self.selectedItem as! Application).id
         update.status = AppData.getApplicationStatusByName(ApplicationStatus.APPLICATION_ESTABLISHED).id
         
-        AppHelper.showLoading("")
+        showLoading()
         API.shared().updateApplicationStatus(update: update, success: { (data) in
-            AppHelper.hideLoading()
+            self.hideLoading()
             if callback != nil {
                 callback()
             }
@@ -245,12 +245,12 @@ extension ApplicationListController: ChooseDelegate {
     
     func remove() {
         
-        AppHelper.showLoading("Deleting...")
+        showLoading()
         
         let application = self.selectedItem as! Application
         
         API.shared().deleteApplication(id: application.id, success: {
-            AppHelper.hideLoading()
+            self.hideLoading()
             self.removeItem(self.selectedItem)
         }, failure: self.handleErrors)
         

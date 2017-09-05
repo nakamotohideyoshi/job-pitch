@@ -1,6 +1,10 @@
 .header {
   display: block;
   padding-right: 25px;
+
+  a {
+    cursor: pointer;
+  }
   
   img {
     float: left;
@@ -10,26 +14,32 @@
     // border-radius: 30px;
   }
 
-  h4, .comment {
-    display: block;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    overflow: hidden;
-  }
+  .headerContent {
+    padding-top: 6px;
+    a {
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      overflow: hidden;
+      text-decoration: none !important;
+    }
 
-  h4 {
-    margin: 0;
-    padding: 8px 0;
+    .name {
+      margin-top: 4px;
+      font-size: 18px;
+      font-weight: 500;
+      color: initial;
+    }
+  
+    .comment {
+      color: #959595;
+    }
   }
-
-  .comment {
-    color: #959595;
-  }
+  
 }
 
 .container {
   padding: 0;
-  max-height: 600px;
+  max-height: calc(100vh - 275px);
   overflow-y: auto;
 }
 
@@ -125,4 +135,3 @@
     color: #959595;
   }
 }
-

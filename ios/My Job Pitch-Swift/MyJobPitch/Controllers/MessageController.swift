@@ -214,6 +214,12 @@ class MessageController: JSQMessagesViewController {
         }
     }
     
+    func showLoading() -> LoadingView {
+        let loadingView = LoadingView.create(controller: self)
+        loadingView.backgroundColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.5)
+        return loadingView
+    }
+    
 }
 
 extension MessageController: ChooseDelegate {
@@ -224,11 +230,13 @@ extension MessageController: ChooseDelegate {
         update.id = application.id
         update.status = AppData.getApplicationStatusByName(ApplicationStatus.APPLICATION_ESTABLISHED).id
         
-        AppHelper.showLoading("")
+        let loadingView = showLoading()
+        
         API.shared().updateApplicationStatus(update: update, success: { (data) in
-            AppHelper.hideLoading()
+            loadingView.removeFromSuperview()
             self.inputToolbar.isUserInteractionEnabled = true
         }) { (message, errors) in
+            loadingView.removeFromSuperview()
             if errors?["NO_TOKENS"] != nil {
                 PopupController.showGray("You have no credits left so cannot compete this connection. Credits cannot be added through the app, please go to our web page.", ok: "Ok")
             } else {
@@ -239,11 +247,12 @@ extension MessageController: ChooseDelegate {
     
     func remove() {
         
-        AppHelper.showLoading("Deleting...")
+        let loadingView = showLoading()
         
         API.shared().deleteApplication(id: application.id, success: {
-            AppHelper.hideLoading()
+            loadingView.removeFromSuperview()
         }) { (message, errors) in
+            loadingView.removeFromSuperview()
             PopupController.showGray("error", ok: "Ok")
         }
         

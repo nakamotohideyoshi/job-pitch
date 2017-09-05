@@ -20,6 +20,8 @@ class MJPController: UIViewController {
     @IBOutlet weak var scrollView: UIScrollView!
     
     var showKeyboard = false
+    
+    var loadingView: LoadingView!
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -40,6 +42,19 @@ class MJPController: UIViewController {
         tap.delegate = self
         view.addGestureRecognizer(tap)
         
+    }
+    
+    func showLoading() {
+        if loadingView == nil {
+            loadingView = LoadingView.create(controller: self)
+        }
+    }
+    
+    func hideLoading() {
+        if loadingView != nil {
+            loadingView.removeFromSuperview()
+            loadingView = nil
+        }
     }
     
     // keyboard
@@ -71,7 +86,6 @@ class MJPController: UIViewController {
     func dismissKeyboard() {
         view.endEditing(true)
     }
-    
     
     // data input
     
@@ -110,7 +124,7 @@ class MJPController: UIViewController {
     
     func handleErrors(message: String?, errors: NSDictionary?) {
         
-        AppHelper.hideLoading()
+        hideLoading()
         
         let requiredFields = getRequiredFields()
         

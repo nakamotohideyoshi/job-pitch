@@ -83,7 +83,9 @@ class DropboxController: UIViewController {
     
     func downloadFile(file: Files.FileMetadata) {
         
-        AppHelper.showLoading("Downloading...")
+        let loadingView = LoadingView.create(controller: self)
+        loadingView.backgroundColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.5)
+        loadingView.showLoadingIcon("Downloading...")
         
         let path = "/" + arrPath.joined(separator: "/") + file.name
         let destPath = NSHomeDirectory().appendingFormat("/Documents/%@", file.name.replacingOccurrences(of: " ", with: ""))
@@ -96,7 +98,9 @@ class DropboxController: UIViewController {
                                                                overwrite: true,
                                                                destination: destination)
             .response { response, error in
-                AppHelper.hideLoading()
+                
+                loadingView.removeFromSuperview()
+                
                 if let _ = response {
                     self.dismiss(animated: true, completion: {
                         let path = destURL.absoluteString.replacingOccurrences(of: "file://", with: "")
@@ -138,7 +142,9 @@ class DropboxController: UIViewController {
 
             DropboxClientsManager.authorizeFromController(UIApplication.shared,
                                                           controller: self,
-                                                          openURL: { (url: URL) -> Void in UIApplication.shared.openURL(url) })
+                                                          openURL: { (url: URL) -> Void in
+                                                            UIApplication.shared.open(url, options: [:], completionHandler: nil)
+            })
         
         }
         

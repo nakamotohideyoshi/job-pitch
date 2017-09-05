@@ -149,6 +149,10 @@ class API: NSObject {
         self.token = token
         manager.httpClient.setDefaultHeader("Authorization", value: "Token " + token)
     }
+    
+    func getToken() -> String {
+        return self.token
+    }
 
     func clearToken() {
         self.token = nil

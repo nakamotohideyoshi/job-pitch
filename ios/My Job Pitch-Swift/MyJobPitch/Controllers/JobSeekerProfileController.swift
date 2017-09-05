@@ -97,9 +97,9 @@ class JobSeekerProfileController: MJPController {
         // load jobseeker data
         
         if (AppData.user.jobSeeker != nil) {
-            AppHelper.showLoading("Loading...")
+            showLoading()
             API.shared().loadJobSeekerWithId(id: AppData.user.jobSeeker, success: { (data) in
-                AppHelper.hideLoading()
+                self.hideLoading()
                 self.jobSeeker = data as! JobSeeker
                 self.load()
                 AppData.existProfile = self.jobSeeker.profile != nil
@@ -183,7 +183,7 @@ class JobSeekerProfileController: MJPController {
     }
     
     @IBAction func cvViewAction(_ sender: Any) {
-        UIApplication.shared.openURL(URL(string: jobSeeker.cv)!)
+        UIApplication.shared.open(URL(string: jobSeeker.cv)!, options: [:], completionHandler: nil)
     }
     
     @IBAction func cvAddHelpAction(_ sender: Any) {
@@ -293,7 +293,7 @@ class JobSeekerProfileController: MJPController {
     
     @IBAction func saveAction(_ sender: Any) {
         
-        if !valid() {
+        if loadingView != nil || !valid() {
             return
         }
         
@@ -347,15 +347,17 @@ class JobSeekerProfileController: MJPController {
         jobSeeker.truthConfirmation = tickBox.isOn
         jobSeeker.cv = cvName
         
-        let hud = AppHelper.createLoading()
-        if cvdata != nil {
-            hud.mode = .determinateHorizontalBar
-        }
-        hud.label.text = "Saving..."
+        showLoading()
         
         API.shared().saveJobSeeker(jobSeeker: jobSeeker, cvdata: cvdata,
                                    progress: { (bytesWriteen, totalBytesWritten, totalBytesExpectedToWrite) in
-                                        hud.progress = Float(totalBytesWritten) / Float(totalBytesExpectedToWrite)
+                                    let rate = Float(totalBytesWritten) / Float(totalBytesExpectedToWrite)
+                                    if rate < 1 {
+                                        if self.loadingView.progressView == nil {
+                                            self.loadingView.showProgressBar("Uploading CV...")
+                                        }
+                                        self.loadingView.progressView.progress = rate
+                                    }
                                    },
                                    success: { (data) in
                                     
@@ -365,12 +367,24 @@ class JobSeekerProfileController: MJPController {
             AppData.existProfile = self.jobSeeker.profile != nil
             
             if self.videoUrl != nil {
-                PitchController.uploadVideo(videoUrl: self.videoUrl, complete: { (pitch) in
-                    if pitch != nil {
-                        self.videoUrl = nil
-                        self.saveCompleted()
+                
+                self.loadingView.showLoadingIcon("")
+                
+                PitchUploader().uploadVideo(videoUrl: self.videoUrl, complete: { (pitch) in
+                    self.hideLoading()
+                    self.videoUrl = nil
+                    self.saveCompleted()
+                }) { (progress) in
+                    if progress < 1 {
+                        if self.loadingView.progressView == nil {
+                            self.loadingView.showProgressBar("Uploading Pitch...")
+                        }
+                        self.loadingView.progressView.progress = progress
+                    } else {
+                        self.loadingView.showLoadingIcon("")
                     }
-                })
+                }
+                
             } else {
                 self.saveCompleted()
             }
@@ -388,6 +402,7 @@ class JobSeekerProfileController: MJPController {
             cvComment.text = ""
         }
         
+        hideLoading()
         PopupController.showGreen("Success!", ok: "OK", okCallback: {
             if !AppData.existProfile {
                 SideMenuController.pushController(id: "job_profile")

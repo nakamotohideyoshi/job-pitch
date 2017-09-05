@@ -14,12 +14,12 @@ class AppData: NSObject {
     
     static let productVersion = false
 
-    static let greenColor = UIColor(red: 0/255.0, green: 187/255.0, blue: 168/255.0, alpha: 1)
-    static let yellowColor = UIColor(red: 255/255.0, green: 147/255.0, blue: 0/255.0, alpha: 1)
-    static let greyColor = UIColor(red: 214/255.0, green: 214/255.0, blue: 214/255.0, alpha: 1)
-    static let greyBorderColor = UIColor(red: 204/255.0, green: 204/255.0, blue: 204/255.0, alpha: 1)
-    static let imageBGColor = UIColor(red: 235/255.0, green: 235/255.0, blue: 235/255.0, alpha: 1)
-    static let navColor = UIColor(red: 35/255.0, green: 35/255.0, blue: 35/255.0, alpha: 1)
+    static let greenColor = UIColor(red: 0/256.0, green: 187/256.0, blue: 168/256.0, alpha: 1)
+    static let yellowColor = UIColor(red: 256/256.0, green: 147/256.0, blue: 0/256.0, alpha: 1)
+    static let greyColor = UIColor(red: 214/256.0, green: 214/256.0, blue: 214/256.0, alpha: 1)
+    static let greyBorderColor = UIColor(red: 204/256.0, green: 204/256.0, blue: 204/256.0, alpha: 1)
+    static let imageBGColor = UIColor(red: 235/256.0, green: 235/256.0, blue: 235/256.0, alpha: 1)
+    static let navColor = UIColor(red: 35/256.0, green: 35/256.0, blue: 35/256.0, alpha: 1)
 
     static let cornerRadius: CGFloat = 6
 
@@ -31,16 +31,6 @@ class AppData: NSObject {
         }
         set(newEmail) {
             UserDefaults.standard.set(newEmail, forKey: "email")
-            UserDefaults.standard.synchronize()
-        }
-    }
-    
-    static var password: String! {
-        get {
-            return UserDefaults.standard.string(forKey: "password")
-        }
-        set(newPassword) {
-            UserDefaults.standard.set(newPassword, forKey: "password")
             UserDefaults.standard.synchronize()
         }
     }

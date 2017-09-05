@@ -83,7 +83,7 @@ export default class JobSeekerDetail extends Component {
           <Modal.Title>Job Seeker Detail</Modal.Title>
         </Modal.Header>
 
-        <Modal.Body>
+        <Modal.Body className={styles.container}>
           <div className={styles.topContainer}>
             <img src={img} alt="" />
             <div className={styles.right} >

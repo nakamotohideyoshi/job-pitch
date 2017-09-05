@@ -139,7 +139,7 @@ class SwipeController: MJPController {
     
     func refresh() {
         
-        AppHelper.showLoading("Loading...")
+        showLoading()
         
         if isFindJob {
             
@@ -165,7 +165,7 @@ class SwipeController: MJPController {
     
     func refreshCompleted(data: NSArray) {
         
-        AppHelper.hideLoading()
+        hideLoading()
         self.data = data
         
         for card in cards {
@@ -253,9 +253,9 @@ extension SwipeController: ChooseDelegate {
             application.jobSeeker = (data[currentIndex - cards.count] as! JobSeeker).id
         }
         
-        AppHelper.showLoading("")
+        showLoading()
         API.shared().createApplication(application: application, success: { (data) in
-            AppHelper.hideLoading()
+            self.hideLoading()
             if AppData.user.isRecruiter() {
                 let application = data as! ApplicationForCreation
                 API.shared().loadApplicationWithId(id: application.id, success: { (data) in
@@ -270,6 +270,7 @@ extension SwipeController: ChooseDelegate {
                 callback()
             }
         }) { (message, errors) in
+            self.hideLoading()
             if errors?["NO_TOKENS"] != nil {
                 PopupController.showGray("You have no credits left so cannot compete this connection. Credits cannot be added through the app, please go to our web page.", ok: "Ok")
             } else {

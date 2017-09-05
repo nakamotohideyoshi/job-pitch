@@ -73,13 +73,18 @@ export default class WorkPlaces extends Component {
     alertShow(
       'Confirm',
       `Are you sure you want to delete ${selectedWorkPlace.name}`,
-      'Cancel', null,
-      'Delete',
-      () => deleteUserWorkPlace(selectedWorkPlace.id).then(() => {
-        utils.successNotif('Deleted!');
-        getUserBusinesses(selectedBusiness);
-        this.onRefresh();
-      }),
+      [
+        { label: 'Cancel' },
+        {
+          label: 'Delete',
+          style: 'success',
+          callback: () => deleteUserWorkPlace(selectedWorkPlace.id).then(() => {
+            utils.successNotif('Deleted!');
+            getUserBusinesses(selectedBusiness);
+            this.onRefresh();
+          })
+        }
+      ]
     );
   }
 

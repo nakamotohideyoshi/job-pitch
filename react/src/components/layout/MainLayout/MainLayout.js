@@ -21,7 +21,7 @@ const recruiterMenus = [
   { id: 3, label: 'Connections', icon: 'fa-handshake-o', to: '/recruiter/connections', permission: 1 },
   { id: 4, label: 'My Shortlist', icon: 'fa-tags', to: '/recruiter/shortlist', permission: 1 },
   { id: 5, label: 'Messages', icon: 'fa-comment-o', to: '/recruiter/messages', permission: 1 },
-  { id: 6, label: 'Add Credit', icon: 'fa-credit-card', to: '/recruiter/credits', permission: 1 },
+  { id: 6, label: 'Add Credit', icon: 'fa-credit-card', to: '/recruiter/credits/add', permission: 1 },
   { id: 7, label: 'Add or Edit Jobs', icon: 'fa-briefcase', to: '/recruiter/businesses', permission: 0 },
   { id: 8, label: 'Change Password', icon: 'fa-key', to: '/password', permission: 0 },
   { id: 9,
@@ -246,19 +246,24 @@ export default class MainLayout extends Component {
     this.props.alertShow(
       'Confirm',
       'Are you sure you want to log out?',
-      'cancel',
-      null,
-      'Log Out',
-      () => this.props.logout()
-        .then(() => {
-          if (__DEVELOPMENT__) {
-            cookie.remove('token');
-          } else {
-            cookie.remove('csrftoken');
-          }
-          cookie.remove('usertype');
-          browserHistory.push('/login');
-        }),
+      [
+        { label: 'Cancel' },
+        {
+          label: 'Log Out',
+          style: 'success',
+          callback: () => this.props.logout()
+            .then(() => {
+              if (__DEVELOPMENT__) {
+                cookie.remove('token');
+              } else {
+                cookie.remove('csrftoken');
+              }
+              cookie.remove('usertype');
+              localStorage.removeItem('first-time');
+              browserHistory.push('/login');
+            })
+        }
+      ]
     );
   };
 
@@ -402,20 +407,14 @@ export default class MainLayout extends Component {
               </Modal.Body>
               <Modal.Footer>
                 {
-                  alert.cancelButton && (
-                    <Button onClick={() => this.alertCallback(alert.cancelCallback)}>
-                      {alert.cancelButton}
-                    </Button>
-                  )
-                }
-                {
-                  alert.okButton && (
+                  alert.buttons.map(info => (
                     <Button
-                      onClick={() => this.alertCallback(alert.okCallback)}
-                      bsStyle="success">
-                      {alert.okButton}
+                      key={info.label}
+                      onClick={() => this.alertCallback(info.callback)}
+                      bsStyle={info.style}>
+                      {info.label}
                     </Button>
-                  )
+                  ))
                 }
               </Modal.Footer>
             </Modal>

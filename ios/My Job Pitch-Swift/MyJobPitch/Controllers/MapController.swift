@@ -69,10 +69,12 @@ class MapController: UIViewController {
     
     @IBAction func selectAction(_ sender: Any) {
     
-        AppHelper.showLoading("")
+        let loadingView = LoadingView.create(controller: self)
+        loadingView.backgroundColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.5)
         
         GMSGeocoder().reverseGeocodeCoordinate(currentPos) { (response, error) in
-            AppHelper.hideLoading()
+            
+            loadingView.removeFromSuperview()
             
             var address = "address unknown"
             if let firstAddress = response?.firstResult() {

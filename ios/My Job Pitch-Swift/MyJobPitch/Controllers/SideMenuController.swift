@@ -93,9 +93,7 @@ class SideMenuController: UIViewController {
     }
     
     static func pushController(id: String) {
-        
-        AppHelper.hideLoading()
-        
+                
         SideMenuController.currentID = id
         
         var identifier = SideMenuController.menuItems[SideMenuController.currentID]?["identifier"]
@@ -194,7 +192,7 @@ extension SideMenuController: UITableViewDelegate {
             popupController.okButton?.backgroundColor = AppData.greenColor
         } else if id == "contact_us" {
             let url = URL(string: "mailto:support@myjobpitch.com")!
-            UIApplication.shared.openURL(url)
+            UIApplication.shared.open(url, options: [:], completionHandler: nil)
             //revealViewController().revealToggle(animated: false)
         } else  {
             SideMenuController.pushController(id: id)

@@ -24,10 +24,10 @@ class MessageController0: MJPController {
         headerView.addUnderLine(paddingLeft: 0, paddingRight: 0, color: AppData.greyBorderColor)
         
         headerView.isHidden = true
-        AppHelper.showLoading("Loading...")
+        showLoading()
         API.shared().loadApplicationWithId(id: application.id, success: { (data) in
             self.headerView.isHidden = false
-            AppHelper.hideLoading()
+            self.hideLoading()
             
             self.application = data as! Application
             self.load()

@@ -16,7 +16,7 @@ import * as utils from 'helpers/utils';
 import * as authActions from 'redux/modules/auth';
 import styles from './HomeLayout.scss';
 
-const VERSION = 'v 0.9.7';
+const VERSION = 'v 0.9.71';
 
 const titleImage = require('assets/title.png');
 const logoImage = require('assets/logo.png');

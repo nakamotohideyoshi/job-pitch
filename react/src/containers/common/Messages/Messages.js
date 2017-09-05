@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
 import Helmet from 'react-helmet';
-import { Message } from 'components';
+import { Message, JobSeekerDetail, JobDetail } from 'components';
 import * as commonActions from 'redux/modules/common';
 import * as utils from 'helpers/utils';
 import styles from './Messages.scss';
@@ -38,6 +38,7 @@ export default class Messages extends Component {
 
   onMessage = (application, event) => {
     this.setState({
+      messageDialog: true,
       selectedApp: application || this.state.selectedApp,
     });
     if (event) {
@@ -53,7 +54,13 @@ export default class Messages extends Component {
       });
   }
 
-  dismissEdit = () => this.setState({
+  onDetail = () => {
+    this.setState({
+      messageDialog: false,
+    });
+  }
+
+  dismissDialog = () => this.setState({
     selectedApp: null,
   });
 
@@ -79,10 +86,13 @@ export default class Messages extends Component {
     const msg = `${userRole.name === 'JOB_SEEKER' ? 'You: ' : ''}${lastMessage.content}`;
     const strDate = utils.getTimeString(new Date(lastMessage.created));
 
+    const deletedStatus = utils.getItemByName(staticData.applicationStatuses, 'DELETED');
+    const isDeleted = application.status === deletedStatus.id;
+
     return (
       <Link
         key={`${job.id}_${jobSeeker.id}`}
-        className={styles.itemContainer}
+        className={[styles.itemContainer, (isDeleted ? styles.deleted : '')].join(' ')}
         onClick={() => this.onMessage(application)}
       >
         <img src={img} alt="" />
@@ -103,7 +113,8 @@ export default class Messages extends Component {
   };
 
   render() {
-    const { applications, selectedApp } = this.state;
+    const { applications, selectedApp, messageDialog } = this.state;
+    const isJobSeeker = this.props.user.job_seeker;
 
     return (
       <div>
@@ -126,12 +137,27 @@ export default class Messages extends Component {
           { applications.map(this.renderApplication) }
         </div>
         {
-          selectedApp && (
-            <Message
-              application={selectedApp}
-              onSend={this.onSend}
-              onClose={this.dismissEdit}
-            />
+          selectedApp && messageDialog &&
+          <Message
+            application={selectedApp}
+            onSend={this.onSend}
+            onClose={this.dismissDialog}
+            onDetail={this.onDetail}
+          />
+        }
+        {
+          selectedApp && !messageDialog &&
+          (
+            isJobSeeker ?
+              <JobDetail
+                job={selectedApp.job_data}
+                onClose={() => this.onMessage()}
+              /> :
+              <JobSeekerDetail
+                application={selectedApp}
+                jobSeeker={selectedApp.job_seeker}
+                onClose={() => this.onMessage()}
+              />
           )
         }
       </div>

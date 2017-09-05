@@ -117,9 +117,9 @@ class JobEditController: MJPController {
         } else {
             navigationItem.title = "Edit Job"
             
-            AppHelper.showLoading("Loading...")
+            showLoading()
             API.shared().loadJob(id: job.id, success: { (data) in
-                AppHelper.hideLoading()
+                self.hideLoading()
                 self.job = data as! Job
                 self.load()
             }, failure: self.handleErrors)
@@ -266,6 +266,7 @@ class JobEditController: MJPController {
         if let image = location?.getImage() {
             AppHelper.loadImageURL(imageUrl: (image.thumbnail)!, imageView: imgView, completion: nil)
         } else {
+            AppHelper.removeLoading(imageView: imgView)
             imgView.image = UIImage(named: "default-logo")
         }
         removeImageButton.isHidden = true
@@ -275,11 +276,11 @@ class JobEditController: MJPController {
     
     @IBAction func saveAction(_ sender: Any) {
         
-        if !valid() {
+        if loadingView != nil || !valid() {
             return
         }
         
-        AppHelper.showLoading("Saving...")
+        showLoading()
         
         if job == nil {
             job = Job()
@@ -328,9 +329,7 @@ class JobEditController: MJPController {
             
             if self.logoImage != nil {
                 
-                let hud = AppHelper.createLoading()
-                hud.mode = .determinateHorizontalBar
-                hud.label.text = "Uploading..."
+                self.loadingView.showProgressBar("Uploading...")
                 
                 API.shared().uploadImage(image: self.logoImage,
                                          endpoint: "user-job-images",
@@ -338,7 +337,7 @@ class JobEditController: MJPController {
                                          objectId: self.job.id,
                                          order: 0,
                                          progress: { (bytesWriteen, totalBytesWritten, totalBytesExpectedToWrite) in
-                                            hud.progress = Float(totalBytesWritten) / Float(totalBytesExpectedToWrite)
+                                            self.loadingView.progressView.progress = Float(totalBytesWritten) / Float(totalBytesExpectedToWrite)
                 }, success: { (data) in
                     self.saveFinished()
                 }, failure: self.handleErrors)
@@ -358,7 +357,6 @@ class JobEditController: MJPController {
     }
     
     func saveFinished() {
-        AppHelper.hideLoading()
         
         if !isNew {
             _ = navigationController?.popViewController(animated: true)

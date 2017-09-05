@@ -90,13 +90,18 @@ export default class Apps extends Component {
   onRefresh = () => {
     const { getApplications } = this.props;
     this.selectedJob = this.props.shared[this.pageData.pageId];
-    
+    if (utils.getJobStatus(this.selectedJob, this.props.staticData.jobStatuses) === 'CLOSED') {
+      this.setState({
+        applications: [],
+      });
+      return;
+    }
     getApplications(`?job=${this.selectedJob.id}&status=${this.appStatusId}${this.shortlistedQuery}`)
       .then(applications => this.setState({ applications }));
   }
 
   onDetail = (selectedApp) => this.setState({
-    selectedApp,
+    selectedApp: selectedApp || this.state.selectedApp,
     isDetail: true,
   });
 
@@ -108,17 +113,23 @@ export default class Apps extends Component {
       alertShow(
         'Confirm',
         'Yes, I want to make this connection (1 credit)',
-        'Cancel', null,
-        'Connect', () => {
-          saveApplication({
-            id: (application || selectedApp).id,
-            connect: utils.getItemByName(staticData.applicationStatuses, 'ESTABLISHED').id,
-          })
-          .then(() => {
-            utils.successNotif('Success!');
-            this.onRefresh();
-          });
-        },
+        [
+          { label: 'Cancel' },
+          {
+            label: 'Connect',
+            style: 'success',
+            callback: () => {
+              saveApplication({
+                id: (application || selectedApp).id,
+                connect: utils.getItemByName(staticData.applicationStatuses, 'ESTABLISHED').id,
+              })
+              .then(() => {
+                utils.successNotif('Success!');
+                this.onRefresh();
+              });
+            }
+          }
+        ]
       );
     } else {
       this.setState({
@@ -138,14 +149,20 @@ export default class Apps extends Component {
     alertShow(
       'Confirm',
       'Are you sure you want to delete this applicaton?',
-      'Cancel', null,
-      'Delete', () => {
-        deleteApplication((application || this.state.selectedApp).id)
-          .then(() => {
-            utils.successNotif('Deleted!');
-            this.onRefresh();
-          });
-      },
+      [
+        { label: 'Cancel' },
+        {
+          label: 'Delete',
+          style: 'success',
+          callback: () => {
+            deleteApplication((application || this.state.selectedApp).id)
+              .then(() => {
+                utils.successNotif('Deleted!');
+                this.onRefresh();
+              });
+          }
+        }
+      ]
     );
     if (event) {
       event.stopPropagation();
@@ -251,6 +268,7 @@ export default class Apps extends Component {
                 <Message
                   application={selectedApp}
                   onClose={this.dismissEdit}
+                  onDetail={this.onDetail}
                 />
             )
           }

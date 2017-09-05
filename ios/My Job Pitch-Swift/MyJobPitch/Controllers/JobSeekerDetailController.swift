@@ -28,6 +28,9 @@ class JobSeekerDetailController: MJPController {
     
     @IBOutlet weak var connectHelpButton: UIButton!
     
+    @IBOutlet weak var shortlistSwitch: UISwitch!
+    @IBOutlet weak var shortlistIndicator: UIActivityIndicatorView!
+    
     var jobSeeker: JobSeeker!
     var job: Job!
     var application: Application!
@@ -139,7 +142,7 @@ class JobSeekerDetailController: MJPController {
     }
     
     @IBAction func viewCVAction(_ sender: Any) {
-        UIApplication.shared.openURL(URL(string: jobSeeker.cv)!)
+        UIApplication.shared.open(URL(string: jobSeeker.cv)!, options: [:], completionHandler: nil)
     }
     
     @IBAction func shortlistedChanged(_ sender: Any) {
@@ -150,9 +153,11 @@ class JobSeekerDetailController: MJPController {
         update.id = application.id
         update.shortlisted = application.shortlisted
         
-        AppHelper.showLoading("Updating...")
+        shortlistSwitch.isHidden = true
+        shortlistIndicator.isHidden = false
         API.shared().updateApplicationShortlist(update: update, success: { (_) in
-            AppHelper.hideLoading()
+            self.shortlistSwitch.isHidden = false
+            self.shortlistIndicator.isHidden = true
         }, failure: self.handleErrors)
         
     }
@@ -168,6 +173,7 @@ class JobSeekerDetailController: MJPController {
         } else {
             let message = application == nil ? "Are you sure you want to connect this talent?" : "Are you sure you want to connect this application?"
             PopupController.showGreen(message, ok: "Connect", okCallback: {
+                self.showLoading()
                 self.chooseDelegate?.apply(callback: {
                     _ = self.navigationController?.popViewController(animated: true)
                 })

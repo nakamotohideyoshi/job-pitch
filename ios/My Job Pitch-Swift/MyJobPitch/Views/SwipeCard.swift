@@ -59,13 +59,13 @@ class SwipeCard: MDCSwipeToChooseView {
         addSubview(distanceLabel)
         
         nameLabel = UILabel(frame: CGRect(x: 15, y: size.height-75, width: size.width - 30, height: 25))
-        nameLabel.textColor = UIColor(red: 51/255.0, green: 51/255.0, blue: 51/255.0, alpha: 1)
+        nameLabel.textColor = UIColor(red: 51/256.0, green: 51/256.0, blue: 51/256.0, alpha: 1)
         nameLabel.font = UIFont.boldSystemFont(ofSize: 20)
         nameLabel.text = name
         addSubview(nameLabel)
         
         descLabel = UILabel(frame: CGRect(x: 15, y: size.height-45, width: size.width - 40, height: 25))
-        descLabel.textColor = UIColor(red: 191/255.0, green: 191/255.0, blue: 191/255.0, alpha: 1)
+        descLabel.textColor = UIColor(red: 191/256.0, green: 191/256.0, blue: 191/256.0, alpha: 1)
         descLabel.font = UIFont.boldSystemFont(ofSize: 18)
         descLabel.text = desc
         addSubview(descLabel)

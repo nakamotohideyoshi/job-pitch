@@ -111,6 +111,7 @@ export default class ApiClient {
       this.get('/api/job-statuses/'),
       this.get('/api/sexes/'),
       this.get('/api/roles/'),
+      this.get('/api/paypal-products/'),
     ])
     .catch(this.handleError)
     .then(axios.spread((...data) => Promise.resolve(data)));
@@ -194,5 +195,8 @@ export default class ApiClient {
   /* pitch */
   createPitch = () => this.post('/api/pitches/', {});
   getPitch = id => this.get(`/api/pitches/${id}/`);
+
+  /* paypal */
+  purchase = data => this.post('/api/paypal/purchase/', data);
 
 }

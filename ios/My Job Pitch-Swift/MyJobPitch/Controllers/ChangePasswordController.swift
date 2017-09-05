@@ -12,7 +12,6 @@ class ChangePasswordController: MJPController {
 
     
     @IBOutlet weak var emailLabel: UILabel!
-    @IBOutlet weak var currentPassword: UITextField!
     @IBOutlet weak var currentPassError: UILabel!
     @IBOutlet weak var password1: UITextField!
     @IBOutlet weak var pass1Error: UILabel!
@@ -30,7 +29,6 @@ class ChangePasswordController: MJPController {
 
     override func getRequiredFields() -> [String: NSArray] {
         return [
-            "old_password": [currentPassword, currentPassError],
             "password1":[password1, pass1Error],
             "password2":[password2, pass2Error]
         ]
@@ -40,18 +38,12 @@ class ChangePasswordController: MJPController {
         
         if valid() {
             
-            let password = AppData.password
-            if password != currentPassword.text {
-                currentPassError.text = "your old password was incorrect."
-                return
-            }
-        
-            AppHelper.showLoading("Updating...")
+            showLoading()
             
             API.shared().changePassword(password1: password1.text!,
                                         password2: password2.text!,
                                         success: { (_) in
-                                            AppData.password = self.password1.text
+                                            self.hideLoading()
                                             PopupController.showGreen("Success!", ok: "OK", okCallback: nil, cancel: nil, cancelCallback: nil)
             }, failure: self.handleErrors)
             

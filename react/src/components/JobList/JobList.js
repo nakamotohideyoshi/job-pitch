@@ -6,9 +6,11 @@ import JobEdit from 'components/JobEdit/JobEdit';
 import * as jobmanagerActions from 'redux/modules/jobmanager';
 import * as commonActions from 'redux/modules/common';
 import * as utils from 'helpers/utils';
+import _ from 'lodash';
 
 @connect(
   (state) => ({
+    staticData: state.auth.staticData,
     selectedWorkPlace: state.jobmanager.selectedWorkPlace,
     jobs: state.jobmanager.jobs,
     selectedJob: state.jobmanager.selectedJob,
@@ -17,9 +19,11 @@ import * as utils from 'helpers/utils';
 )
 export default class Jobs extends Component {
   static propTypes = {
+    staticData: PropTypes.object.isRequired,
     selectedWorkPlace: PropTypes.object,
     jobs: PropTypes.array.isRequired,
     selectedJob: PropTypes.object,
+    saveUserJob: PropTypes.func.isRequired,
     getUserWorkPlaces: PropTypes.func.isRequired,
     getUserJobsByWorkPlace: PropTypes.func.isRequired,
     deleteUserJob: PropTypes.func.isRequired,
@@ -71,19 +75,40 @@ export default class Jobs extends Component {
   onDelete = () => {
     const { selectedWorkPlace, getUserWorkPlaces, selectedJob, deleteUserJob, alertShow } = this.props;
     alertShow(
-      'Confirm',
-      `Are you sure you want to delete ${selectedJob.title}`,
-      'Cancel', null,
-      'Delete',
-      () => deleteUserJob(selectedJob.id).then(() => {
-        utils.successNotif('Deleted!');
-        getUserWorkPlaces(selectedWorkPlace.business_data.id, selectedWorkPlace);
-        this.onRefresh();
-      }),
+      'Delete/deactivate',
+      'Are you sure?',
+      [
+        { label: 'Cancel' },
+        {
+          label: 'Delete',
+          style: 'success',
+          callback: () => deleteUserJob(selectedJob.id).then(() => {
+            utils.successNotif('Deleted!');
+            getUserWorkPlaces(selectedWorkPlace.business_data.id, selectedWorkPlace);
+            this.onRefresh();
+          })
+        },
+        {
+          label: 'Deactivate',
+          style: 'success',
+          callback: () => this.deactiveJob().then(() => {
+            utils.successNotif('Deactived!');
+            this.onRefresh();
+          })
+        }
+      ]
     );
   }
 
-  dismissEdit = (job) => {
+  deactiveJob = () => {
+    const { staticData, selectedJob, saveUserJob } = this.props;
+    const data = Object.assign(selectedJob);
+    const i = _.findIndex(staticData.jobStatuses, { name: 'CLOSED' });
+    data.status = staticData.jobStatuses[i].id;
+    return saveUserJob(data);
+  }
+
+  dismissEdit = job => {
     if (job) {
       this.onRefresh(job);
       if (!this.state.editJob.id) {

@@ -124,18 +124,18 @@ class JobProfileController: MJPController {
         
         // load profile
         
-        AppHelper.showLoading("Loading...")
+        showLoading()
         API.shared().loadJobSeekerWithId(id: AppData.user.jobSeeker, success: { (data) in
             self.jobSeeker = data as! JobSeeker
             if self.jobSeeker.profile != nil {
                 AppData.existProfile = true
                 API.shared().loadJobProfileWithId(id: self.jobSeeker.profile, success: { (data) in
-                    AppHelper.hideLoading()
+                    self.hideLoading()
                     self.profile = data as! Profile
                     self.load()
                 }, failure: self.handleErrors)
             } else {
-                AppHelper.hideLoading()
+                self.hideLoading()
                 self.load()
             }
             
@@ -236,11 +236,11 @@ class JobProfileController: MJPController {
     
     @IBAction func saveAction(_ sender: Any) {
         
-        if !valid() {
+        if loadingView != nil || !valid() {
             return
         }
         
-        AppHelper.showLoading("Saving...")
+        showLoading()
         
         if profile == nil {
             profile = Profile()
@@ -294,6 +294,8 @@ class JobProfileController: MJPController {
         profile.postcodeLookup = ""
         
         API.shared().saveJobProfile(profile: profile, success: { (data) in
+            
+            self.hideLoading()
             
             self.profile = data as! Profile
             

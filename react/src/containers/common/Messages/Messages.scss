@@ -53,11 +53,19 @@
 }
 
 .itemContainer:hover {
-  background-color: #eee;
+  background-color: rgba(0, 182, 164, 0.2);
 }
 
 .itemContainer:last-child {
   border-bottom: none;
+}
+
+.deleted {
+  background-color: #f0f0f0;
+  font-style: italic;
+  span {
+    text-decoration: line-through;
+  }
 }
 
 .emptyContainer {

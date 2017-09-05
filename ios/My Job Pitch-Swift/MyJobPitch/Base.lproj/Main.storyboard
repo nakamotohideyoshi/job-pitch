@@ -226,11 +226,11 @@ sdafsdf</string>
                         <viewControllerLayoutGuide type="bottom" id="77Y-IX-ICT"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="C9Y-20-nAd">
-                        <rect key="frame" x="0.0" y="64" width="375" height="756"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="820"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="gp3-eA-lgW">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="756"/>
+                                <rect key="frame" x="0.0" y="64" width="375" height="756"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="w22-Hu-RDD" userLabel="Content View">
                                         <rect key="frame" x="0.0" y="0.0" width="375" height="747"/>
@@ -345,8 +345,8 @@ et dolore magna aliqua.</string>
                                                     <constraint firstItem="YkI-fb-bCQ" firstAttribute="top" secondItem="9dc-J1-Moi" secondAttribute="top" id="zpq-Ag-03h"/>
                                                 </constraints>
                                             </view>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Work Place Description:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1Zb-gP-07D">
-                                                <rect key="frame" x="20" y="420" width="202" height="22"/>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Workplace Description:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1Zb-gP-07D">
+                                                <rect key="frame" x="20" y="420" width="197" height="22"/>
                                                 <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="18"/>
                                                 <color key="textColor" red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="calibratedRGB"/>
                                                 <nil key="highlightedColor"/>
@@ -432,7 +432,6 @@ et dolore magna aliqua.</string>
                             <constraint firstItem="77Y-IX-ICT" firstAttribute="top" secondItem="gp3-eA-lgW" secondAttribute="bottom" id="IG2-EU-WZH"/>
                         </constraints>
                     </view>
-                    <extendedEdge key="edgesForExtendedLayout" bottom="YES"/>
                     <navigationItem key="navigationItem" title="Job Detail" id="8hj-8o-sA3"/>
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
                     <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
@@ -638,7 +637,7 @@ et dolore magna aliqua.</string>
                                 <rect key="frame" x="0.0" y="64" width="414" height="672"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="AAU-wq-3AV" userLabel="Content View">
-                                        <rect key="frame" x="0.0" y="0.0" width="414" height="571.66666666666663"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="414" height="572"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Company" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bmH-uC-nVc">
                                                 <rect key="frame" x="20" y="25" width="81" height="22"/>
@@ -680,7 +679,7 @@ et dolore magna aliqua.</string>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="hAN-9a-Y1V">
-                                                <rect key="frame" x="50" y="251.66666666666666" width="314" height="234.99999999999997"/>
+                                                <rect key="frame" x="50" y="251.66666666666671" width="314" height="235.33333333333329"/>
                                                 <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                                                 <constraints>
                                                     <constraint firstAttribute="width" secondItem="hAN-9a-Y1V" secondAttribute="height" multiplier="4:3" id="Maz-f2-zXe"/>
@@ -704,7 +703,7 @@ et dolore magna aliqua.</string>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="h9f-w4-egr" customClass="GreenButton" customModule="MyJobPitch" customModuleProvider="target">
-                                                <rect key="frame" x="20" y="501.66666666666663" width="374" height="40"/>
+                                                <rect key="frame" x="20" y="502" width="374" height="40"/>
                                                 <color key="backgroundColor" red="0.0" green="0.73333333329999995" blue="0.6588235294" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="40" id="t8a-jE-cCZ"/>
@@ -814,7 +813,7 @@ et dolore magna aliqua.</string>
                                 </constraints>
                             </imageView>
                             <imageView hidden="YES" clipsSubviews="YES" userInteractionEnabled="NO" alpha="0.5" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="play" translatesAutoresizingMaskIntoConstraints="NO" id="g8p-7R-xmk">
-                                <rect key="frame" x="176" y="252.66666666666669" width="63" height="63.000000000000057"/>
+                                <rect key="frame" x="176.33333333333334" y="252.99999999999997" width="62.333333333333314" height="62.333333333333286"/>
                                 <constraints>
                                     <constraint firstAttribute="width" secondItem="g8p-7R-xmk" secondAttribute="height" multiplier="1:1" id="yJN-qk-4cK"/>
                                 </constraints>
@@ -940,7 +939,7 @@ et dolore magna aliqua.</string>
                                 <nil key="highlightedColor"/>
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="6al-ve-zRO">
-                                <rect key="frame" x="172.33333333333334" y="646" width="70" height="70"/>
+                                <rect key="frame" x="172" y="646" width="70" height="70"/>
                                 <color key="backgroundColor" red="0.0" green="0.73333333329999995" blue="0.6588235294" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="70" id="5UU-EY-xX8"/>
@@ -994,10 +993,10 @@ et dolore magna aliqua.</string>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             </view>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="default_marker" translatesAutoresizingMaskIntoConstraints="NO" id="7cR-j0-61e">
-                                <rect key="frame" x="196" y="359" width="22" height="41"/>
+                                <rect key="frame" x="196.33333333333334" y="359.33333333333331" width="22" height="41"/>
                             </imageView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="83H-th-oR3" userLabel="center">
-                                <rect key="frame" x="207" y="400" width="0.0" height="0.0"/>
+                                <rect key="frame" x="207.33333333333334" y="400.33333333333331" width="0.0" height="0.0"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstAttribute="width" id="DIX-tX-feH"/>
@@ -1246,7 +1245,7 @@ et dolore magna aliqua.</string>
             </objects>
             <point key="canvasLocation" x="-6615" y="-1322"/>
         </scene>
-        <!--Work Place Detail-->
+        <!--Workplace Detail-->
         <scene sceneID="LWo-PO-Ggf">
             <objects>
                 <viewController storyboardIdentifier="JobList" automaticallyAdjustsScrollViewInsets="NO" id="anX-Md-QOT" customClass="LocationDetailController" customModule="MyJobPitch" customModuleProvider="target" sceneMemberID="viewController">
@@ -1298,7 +1297,7 @@ et dolore magna aliqua.</string>
                                 <rect key="frame" x="0.0" y="149" width="207" height="40"/>
                                 <subviews>
                                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="edit-big-icon" translatesAutoresizingMaskIntoConstraints="NO" id="kQ1-Z3-LxK">
-                                        <rect key="frame" x="89" y="5" width="30" height="30"/>
+                                        <rect key="frame" x="89.333333333333329" y="5" width="30" height="30"/>
                                         <constraints>
                                             <constraint firstAttribute="width" secondItem="kQ1-Z3-LxK" secondAttribute="height" multiplier="1:1" id="lj3-It-pPv"/>
                                         </constraints>
@@ -1326,7 +1325,7 @@ et dolore magna aliqua.</string>
                                 <rect key="frame" x="207" y="149" width="207" height="40"/>
                                 <subviews>
                                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="delete-big-icon" translatesAutoresizingMaskIntoConstraints="NO" id="Qfe-bt-2T9">
-                                        <rect key="frame" x="89" y="5" width="30" height="30"/>
+                                        <rect key="frame" x="89.333333333333314" y="5" width="30" height="30"/>
                                         <constraints>
                                             <constraint firstAttribute="width" secondItem="Qfe-bt-2T9" secondAttribute="height" multiplier="1:1" id="e4h-XD-bc2"/>
                                         </constraints>
@@ -1505,7 +1504,7 @@ jobs yet.</string>
                             <constraint firstItem="7hY-Wa-EBI" firstAttribute="centerY" secondItem="GtN-Lj-SJ9" secondAttribute="centerY" id="xj7-u0-YdW"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" title="Work Place Detail" id="Hkx-NA-BlU"/>
+                    <navigationItem key="navigationItem" title="Workplace Detail" id="Hkx-NA-BlU"/>
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
                     <connections>
                         <outlet property="emptyView" destination="y8o-gq-ByF" id="tbc-rQ-nyz"/>
@@ -1707,6 +1706,9 @@ et dolore magna aliqua.</string>
                                                             <action selector="shortlistedChanged:" destination="EIP-BZ-BaC" eventType="valueChanged" id="WTZ-3V-l4M"/>
                                                         </connections>
                                                     </switch>
+                                                    <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" animating="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="lyd-PK-dvt">
+                                                        <rect key="frame" x="300" y="124.99999999999994" width="20" height="20"/>
+                                                    </activityIndicatorView>
                                                 </subviews>
                                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                 <constraints>
@@ -1718,6 +1720,8 @@ et dolore magna aliqua.</string>
                                                     <constraint firstAttribute="trailing" secondItem="tTt-DN-nUC" secondAttribute="trailing" id="OPe-t4-1WP"/>
                                                     <constraint firstAttribute="bottom" secondItem="KUP-o9-WjK" secondAttribute="bottom" constant="15" id="UaG-j3-Z6w"/>
                                                     <constraint firstItem="3Ad-7Q-pFR" firstAttribute="centerY" secondItem="KUP-o9-WjK" secondAttribute="centerY" id="Z6A-CP-OpJ"/>
+                                                    <constraint firstItem="lyd-PK-dvt" firstAttribute="centerY" secondItem="KUP-o9-WjK" secondAttribute="centerY" id="ahU-XH-Drh"/>
+                                                    <constraint firstAttribute="trailing" secondItem="lyd-PK-dvt" secondAttribute="trailing" constant="15" id="igH-9x-wWO"/>
                                                     <constraint firstItem="tTt-DN-nUC" firstAttribute="top" secondItem="hi3-nS-ND0" secondAttribute="bottom" constant="10" id="s0A-il-plD"/>
                                                     <constraint firstItem="KUP-o9-WjK" firstAttribute="leading" secondItem="ecW-7L-PvT" secondAttribute="leading" id="zld-ZT-VtC"/>
                                                 </constraints>
@@ -1853,6 +1857,8 @@ et dolore magna aliqua.</string>
                         <outlet property="nameLabel" destination="I5e-ZA-hNg" id="laR-WP-liX"/>
                         <outlet property="pitchPlayButton" destination="0t4-Tp-zi9" id="USn-IC-UxE"/>
                         <outlet property="scrollView" destination="i8X-zR-NzG" id="NfU-jO-IjQ"/>
+                        <outlet property="shortlistIndicator" destination="lyd-PK-dvt" id="2gt-8s-HVB"/>
+                        <outlet property="shortlistSwitch" destination="3Ad-7Q-pFR" id="Cyp-KT-IRz"/>
                         <outlet property="shortlisted" destination="3Ad-7Q-pFR" id="cbc-zR-9Wv"/>
                         <outlet property="truthfulView" destination="NQr-gz-Tfg" id="cPa-2K-NOG"/>
                     </connections>
@@ -1877,7 +1883,7 @@ et dolore magna aliqua.</string>
                                 <rect key="frame" x="0.0" y="64" width="375" height="603"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="1LH-ot-lue" userLabel="Content View">
-                                        <rect key="frame" x="0.0" y="0.0" width="375" height="354"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="375" height="294"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Email:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kmt-7S-D3H">
                                                 <rect key="frame" x="20" y="20" width="60" height="22"/>
@@ -1894,23 +1900,15 @@ et dolore magna aliqua.</string>
                                                 <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
-                                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Old Password" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="aAs-GV-wFS">
-                                                <rect key="frame" x="20" y="112" width="335" height="40"/>
-                                                <constraints>
-                                                    <constraint firstAttribute="height" constant="40" id="mQu-iH-QTn"/>
-                                                </constraints>
-                                                <nil key="textColor"/>
-                                                <fontDescription key="fontDescription" type="system" weight="medium" pointSize="18"/>
-                                                <textInputTraits key="textInputTraits" secureTextEntry="YES"/>
-                                            </textField>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bwB-GW-Xiv">
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bwB-GW-Xiv">
                                                 <rect key="frame" x="20" y="154" width="335" height="0.0"/>
+                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                 <color key="textColor" red="1" green="0.0" blue="0.031372549020000001" alpha="1" colorSpace="calibratedRGB"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="New Password" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="MuA-Sa-6jq">
-                                                <rect key="frame" x="20" y="172" width="335" height="40"/>
+                                                <rect key="frame" x="20" y="112" width="335" height="40"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="40" id="EeQ-NA-1Xo"/>
                                                 </constraints>
@@ -1919,13 +1917,13 @@ et dolore magna aliqua.</string>
                                                 <textInputTraits key="textInputTraits" secureTextEntry="YES"/>
                                             </textField>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="meo-gO-mYi">
-                                                <rect key="frame" x="20" y="214" width="335" height="0.0"/>
+                                                <rect key="frame" x="20" y="154" width="335" height="0.0"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                 <color key="textColor" red="1" green="0.0" blue="0.031372549020000001" alpha="1" colorSpace="calibratedRGB"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Confirm Password" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="IAf-gl-p6L">
-                                                <rect key="frame" x="20" y="232" width="335" height="40"/>
+                                                <rect key="frame" x="20" y="172" width="335" height="40"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="40" id="IO2-X7-jNf"/>
                                                 </constraints>
@@ -1934,13 +1932,13 @@ et dolore magna aliqua.</string>
                                                 <textInputTraits key="textInputTraits" secureTextEntry="YES"/>
                                             </textField>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cIR-b0-I58">
-                                                <rect key="frame" x="20" y="274" width="335" height="0.0"/>
+                                                <rect key="frame" x="20" y="214" width="335" height="0.0"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                 <color key="textColor" red="1" green="0.0" blue="0.031372549020000001" alpha="1" colorSpace="calibratedRGB"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="v3t-ix-Ezu" customClass="YellowButton" customModule="MyJobPitch" customModuleProvider="target">
-                                                <rect key="frame" x="20" y="294" width="335" height="40"/>
+                                                <rect key="frame" x="20" y="234" width="335" height="40"/>
                                                 <color key="backgroundColor" red="1" green="0.57254901960000004" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="40" id="YH0-70-Wlx"/>
@@ -1956,33 +1954,27 @@ et dolore magna aliqua.</string>
                                         </subviews>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         <constraints>
-                                            <constraint firstItem="aAs-GV-wFS" firstAttribute="top" secondItem="f2D-ef-8tu" secondAttribute="bottom" constant="70" id="0Be-NR-bcg"/>
-                                            <constraint firstItem="bwB-GW-Xiv" firstAttribute="leading" secondItem="aAs-GV-wFS" secondAttribute="leading" id="0Wp-jz-F5q"/>
                                             <constraint firstItem="IAf-gl-p6L" firstAttribute="leading" secondItem="MuA-Sa-6jq" secondAttribute="leading" id="1NP-ip-2rR"/>
                                             <constraint firstItem="IAf-gl-p6L" firstAttribute="trailing" secondItem="MuA-Sa-6jq" secondAttribute="trailing" id="5Wo-fG-Stw"/>
                                             <constraint firstItem="meo-gO-mYi" firstAttribute="trailing" secondItem="MuA-Sa-6jq" secondAttribute="trailing" id="89h-p6-Z9j"/>
                                             <constraint firstItem="v3t-ix-Ezu" firstAttribute="leading" secondItem="IAf-gl-p6L" secondAttribute="leading" id="8lw-nr-odD"/>
                                             <constraint firstItem="f2D-ef-8tu" firstAttribute="leading" secondItem="kmt-7S-D3H" secondAttribute="trailing" constant="15" id="FT2-yj-5Xg"/>
                                             <constraint firstItem="kmt-7S-D3H" firstAttribute="top" secondItem="1LH-ot-lue" secondAttribute="top" constant="20" id="FwY-5F-NaN"/>
-                                            <constraint firstItem="bwB-GW-Xiv" firstAttribute="trailing" secondItem="aAs-GV-wFS" secondAttribute="trailing" id="G0j-gI-FGM"/>
                                             <constraint firstItem="v3t-ix-Ezu" firstAttribute="top" secondItem="cIR-b0-I58" secondAttribute="bottom" constant="20" id="GAA-d6-JLB"/>
                                             <constraint firstItem="cIR-b0-I58" firstAttribute="leading" secondItem="IAf-gl-p6L" secondAttribute="leading" id="Gzy-T1-6cU"/>
-                                            <constraint firstItem="MuA-Sa-6jq" firstAttribute="trailing" secondItem="aAs-GV-wFS" secondAttribute="trailing" id="IlI-WE-TIP"/>
                                             <constraint firstItem="cIR-b0-I58" firstAttribute="trailing" secondItem="IAf-gl-p6L" secondAttribute="trailing" id="IzF-Ch-Pa5"/>
-                                            <constraint firstItem="MuA-Sa-6jq" firstAttribute="leading" secondItem="aAs-GV-wFS" secondAttribute="leading" id="JAB-NN-djk"/>
                                             <constraint firstItem="cIR-b0-I58" firstAttribute="top" secondItem="IAf-gl-p6L" secondAttribute="bottom" constant="2" id="Kt8-tN-Z1a"/>
-                                            <constraint firstItem="aAs-GV-wFS" firstAttribute="trailing" secondItem="f2D-ef-8tu" secondAttribute="trailing" id="Qu0-kV-OgV"/>
                                             <constraint firstAttribute="bottom" secondItem="v3t-ix-Ezu" secondAttribute="bottom" constant="20" id="RVM-2y-Uke"/>
                                             <constraint firstAttribute="trailing" secondItem="f2D-ef-8tu" secondAttribute="trailing" constant="20" id="TzU-UG-Rpq"/>
                                             <constraint firstItem="kmt-7S-D3H" firstAttribute="leading" secondItem="1LH-ot-lue" secondAttribute="leading" constant="20" id="Was-GB-1tW"/>
-                                            <constraint firstItem="MuA-Sa-6jq" firstAttribute="top" secondItem="aAs-GV-wFS" secondAttribute="bottom" constant="20" id="Xla-o5-Cxi"/>
+                                            <constraint firstItem="MuA-Sa-6jq" firstAttribute="leading" secondItem="kmt-7S-D3H" secondAttribute="leading" id="XKQ-LI-8fy"/>
                                             <constraint firstItem="v3t-ix-Ezu" firstAttribute="trailing" secondItem="IAf-gl-p6L" secondAttribute="trailing" id="Z4V-xJ-VJ9"/>
                                             <constraint firstItem="f2D-ef-8tu" firstAttribute="top" secondItem="kmt-7S-D3H" secondAttribute="top" id="b3G-04-J1a"/>
+                                            <constraint firstItem="MuA-Sa-6jq" firstAttribute="top" secondItem="f2D-ef-8tu" secondAttribute="bottom" constant="70" id="bza-rU-GhB"/>
+                                            <constraint firstItem="MuA-Sa-6jq" firstAttribute="trailing" secondItem="f2D-ef-8tu" secondAttribute="trailing" id="gOm-G5-CnU"/>
                                             <constraint firstItem="IAf-gl-p6L" firstAttribute="top" secondItem="MuA-Sa-6jq" secondAttribute="bottom" constant="20" id="jt4-4j-6MQ"/>
                                             <constraint firstItem="meo-gO-mYi" firstAttribute="leading" secondItem="MuA-Sa-6jq" secondAttribute="leading" id="nRI-tu-bIt"/>
-                                            <constraint firstItem="aAs-GV-wFS" firstAttribute="leading" secondItem="kmt-7S-D3H" secondAttribute="leading" id="uGL-4T-Ett"/>
                                             <constraint firstItem="meo-gO-mYi" firstAttribute="top" secondItem="MuA-Sa-6jq" secondAttribute="bottom" constant="2" id="v9L-8v-PDs"/>
-                                            <constraint firstItem="bwB-GW-Xiv" firstAttribute="top" secondItem="aAs-GV-wFS" secondAttribute="bottom" constant="2" id="y6P-Tk-2Mt"/>
                                         </constraints>
                                     </view>
                                 </subviews>
@@ -2009,7 +2001,6 @@ et dolore magna aliqua.</string>
                     <size key="freeformSize" width="375" height="667"/>
                     <connections>
                         <outlet property="currentPassError" destination="bwB-GW-Xiv" id="eOC-aW-JCB"/>
-                        <outlet property="currentPassword" destination="aAs-GV-wFS" id="I0N-oz-Hee"/>
                         <outlet property="emailLabel" destination="f2D-ef-8tu" id="tjc-Sw-50R"/>
                         <outlet property="pass1Error" destination="meo-gO-mYi" id="h0q-RH-GPR"/>
                         <outlet property="pass2Error" destination="cIR-b0-I58" id="HwH-p6-DPv"/>
@@ -2241,20 +2232,21 @@ et dolore magna aliqua.</string>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="bE9-71-wi5">
                                 <rect key="frame" x="0.0" y="20" width="414" height="716"/>
                             </view>
-                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="55r-Rc-gpS">
+                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" tag="10000" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="55r-Rc-gpS">
                                 <rect key="frame" x="0.0" y="20" width="414" height="716"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="pbn-eH-oxK">
                                         <rect key="frame" x="0.0" y="0.0" width="414" height="716"/>
                                         <subviews>
                                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="logo" translatesAutoresizingMaskIntoConstraints="NO" id="kKQ-Mt-MiR">
-                                                <rect key="frame" x="100" y="54" width="215" height="215"/>
+                                                <rect key="frame" x="100" y="54.333333333333343" width="215" height="214.66666666666666"/>
                                                 <constraints>
                                                     <constraint firstAttribute="width" secondItem="kKQ-Mt-MiR" secondAttribute="height" multiplier="1:1" id="pdn-TV-lkr"/>
                                                 </constraints>
                                             </imageView>
                                             <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Email Address" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="vSp-OV-dlH">
                                                 <rect key="frame" x="62" y="313" width="289" height="40"/>
+                                                <color key="tintColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="40" id="DQ1-jq-ZHI"/>
                                                 </constraints>
@@ -2270,6 +2262,7 @@ et dolore magna aliqua.</string>
                                             </label>
                                             <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Password" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="oRJ-OX-CyF">
                                                 <rect key="frame" x="62" y="368" width="289" height="40"/>
+                                                <color key="tintColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                 <nil key="textColor"/>
                                                 <fontDescription key="fontDescription" type="system" weight="medium" pointSize="18"/>
                                                 <textInputTraits key="textInputTraits" secureTextEntry="YES"/>
@@ -2375,6 +2368,7 @@ et dolore magna aliqua.</string>
                             </scrollView>
                         </subviews>
                         <color key="backgroundColor" red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="calibratedRGB"/>
+                        <color key="tintColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="55r-Rc-gpS" firstAttribute="leading" secondItem="TMN-RV-7Ih" secondAttribute="leading" id="0Zg-yw-c61"/>
                             <constraint firstItem="pbn-eH-oxK" firstAttribute="width" secondItem="bE9-71-wi5" secondAttribute="width" id="8ov-BM-865"/>
@@ -2426,7 +2420,7 @@ et dolore magna aliqua.</string>
                                         <rect key="frame" x="0.0" y="0.0" width="414" height="716"/>
                                         <subviews>
                                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="logo" translatesAutoresizingMaskIntoConstraints="NO" id="qA6-BF-6xk">
-                                                <rect key="frame" x="100" y="54" width="215" height="215"/>
+                                                <rect key="frame" x="100" y="54.333333333333343" width="215" height="214.66666666666666"/>
                                                 <constraints>
                                                     <constraint firstAttribute="width" secondItem="qA6-BF-6xk" secondAttribute="height" multiplier="1:1" id="4UE-0k-Uxq"/>
                                                 </constraints>
@@ -2607,7 +2601,7 @@ et dolore magna aliqua.</string>
                                         <rect key="frame" x="0.0" y="0.0" width="414" height="716"/>
                                         <subviews>
                                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="logo" translatesAutoresizingMaskIntoConstraints="NO" id="SRK-lk-e3I">
-                                                <rect key="frame" x="100" y="54" width="215" height="215"/>
+                                                <rect key="frame" x="100" y="54.333333333333343" width="215" height="214.66666666666666"/>
                                                 <constraints>
                                                     <constraint firstAttribute="width" secondItem="SRK-lk-e3I" secondAttribute="height" multiplier="1:1" id="IOp-WL-iJx"/>
                                                 </constraints>
@@ -2724,7 +2718,7 @@ et dolore magna aliqua.</string>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" usesAttributedText="YES" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jUC-Xl-VsS">
-                                <rect key="frame" x="0.0" y="20" width="331" height="44"/>
+                                <rect key="frame" x="0.0" y="20" width="331.33333333333331" height="44"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="44" id="Wx1-Sk-rXg"/>
                                 </constraints>
@@ -2880,8 +2874,9 @@ et dolore magna aliqua.</string>
                                     <outlet property="delegate" destination="ij6-OE-rML" id="SB9-I2-aTo"/>
                                 </connections>
                             </webView>
-                            <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="5vg-FV-Xsd">
-                                <rect key="frame" x="197" y="358" width="20" height="20"/>
+                            <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="5vg-FV-Xsd">
+                                <rect key="frame" x="188.66666666666666" y="349.66666666666669" width="37" height="37"/>
+                                <color key="color" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                             </activityIndicatorView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -3354,7 +3349,7 @@ Lets start with easy adding your Business</string>
                                             <action selector="editBusinessAction:" destination="nIr-Go-dUu" eventType="touchUpInside" id="c7r-zR-hc5"/>
                                         </connections>
                                     </button>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Select which work place to add job to" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3SA-xP-prl">
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Select which workplace to add job to" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3SA-xP-prl">
                                         <rect key="frame" x="95" y="32" width="304" height="22"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="18"/>
                                         <nil key="textColor"/>
@@ -3383,7 +3378,7 @@ Lets start with easy adding your Business</string>
                                 <rect key="frame" x="0.0" y="149" width="207" height="40"/>
                                 <subviews>
                                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="edit-big-icon" translatesAutoresizingMaskIntoConstraints="NO" id="NKx-bm-Xpg">
-                                        <rect key="frame" x="89" y="5" width="30" height="30"/>
+                                        <rect key="frame" x="89.333333333333329" y="5" width="30" height="30"/>
                                         <constraints>
                                             <constraint firstAttribute="width" secondItem="NKx-bm-Xpg" secondAttribute="height" multiplier="1:1" id="hFf-UL-tY3"/>
                                         </constraints>
@@ -3411,7 +3406,7 @@ Lets start with easy adding your Business</string>
                                 <rect key="frame" x="207" y="149" width="207" height="40"/>
                                 <subviews>
                                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="delete-big-icon" translatesAutoresizingMaskIntoConstraints="NO" id="Emm-gu-Isn">
-                                        <rect key="frame" x="89" y="5" width="30" height="30"/>
+                                        <rect key="frame" x="89.333333333333314" y="5" width="30" height="30"/>
                                         <constraints>
                                             <constraint firstAttribute="width" secondItem="Emm-gu-Isn" secondAttribute="height" multiplier="1:1" id="JCv-wu-lhq"/>
                                         </constraints>
@@ -3458,8 +3453,8 @@ Lets start with easy adding your Business</string>
                                 </items>
                                 <color key="barTintColor" red="0.33333333333333331" green="0.33333333333333331" blue="0.33333333333333331" alpha="1" colorSpace="calibratedRGB"/>
                             </toolbar>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Work Places" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BaD-nA-2m2">
-                                <rect key="frame" x="10" y="198" width="103" height="22"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Workplaces" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BaD-nA-2m2">
+                                <rect key="frame" x="10" y="198" width="97.333333333333329" height="22"/>
                                 <fontDescription key="fontDescription" type="system" weight="medium" pointSize="18"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <nil key="highlightedColor"/>
@@ -3482,7 +3477,7 @@ Lets start with easy adding your Business</string>
                                                         <constraint firstAttribute="width" secondItem="g7Q-JM-1j3" secondAttribute="height" multiplier="1:1" id="9lE-j1-h4p"/>
                                                     </constraints>
                                                 </imageView>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Work Place Name" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="GAz-iA-hM9">
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Workplace Name" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="GAz-iA-hM9">
                                                     <rect key="frame" x="95" y="8" width="268" height="24"/>
                                                     <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="20"/>
                                                     <nil key="textColor"/>
@@ -3525,15 +3520,15 @@ Lets start with easy adding your Business</string>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7Ms-jX-1sb">
                                         <rect key="frame" x="0.0" y="0.0" width="414" height="48"/>
                                         <string key="text">You have not added any
-work places yet.</string>
+workplaces yet.</string>
                                         <fontDescription key="fontDescription" type="system" pointSize="20"/>
                                         <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9lK-iZ-mJN">
-                                        <rect key="frame" x="134" y="58" width="146" height="34"/>
+                                        <rect key="frame" x="136" y="58" width="142" height="34"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="18"/>
-                                        <state key="normal" title="Create work place"/>
+                                        <state key="normal" title="Create workplace"/>
                                         <connections>
                                             <action selector="addLocationAction:" destination="nIr-Go-dUu" eventType="touchUpInside" id="PI5-NJ-BwH"/>
                                         </connections>
@@ -3553,7 +3548,7 @@ work places yet.</string>
                                 <fontDescription key="fontDescription" type="system" pointSize="18"/>
                                 <state key="normal">
                                     <string key="title">Great, you've created your business! 
-Now tap to create your work places.</string>
+Now tap to create your workplaces.</string>
                                     <color key="titleColor" red="1" green="0.57254901960000004" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 </state>
                                 <connections>
@@ -4160,7 +4155,7 @@ Now tap to create your work places.</string>
             </objects>
             <point key="canvasLocation" x="-7303.6231884057979" y="-2273.6413043478265"/>
         </scene>
-        <!--Add Work place-->
+        <!--Add Workplace-->
         <scene sceneID="dbN-B6-d59">
             <objects>
                 <viewController storyboardIdentifier="LocationEdit" automaticallyAdjustsScrollViewInsets="NO" id="8Ap-eK-You" customClass="LocationEditController" customModule="MyJobPitch" customModuleProvider="target" sceneMemberID="viewController">
@@ -4214,7 +4209,7 @@ Now tap to create your work places.</string>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Email Address" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="5h0-N2-nkT">
-                                                <rect key="frame" x="20" y="166" width="276" height="40"/>
+                                                <rect key="frame" x="20" y="166" width="241" height="40"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="40" id="no9-9F-ZOk"/>
                                                 </constraints>
@@ -4306,9 +4301,22 @@ Now tap to create your work places.</string>
                                                     <action selector="addLogoAction:" destination="8Ap-eK-You" eventType="touchUpInside" id="7hL-4C-hwJ"/>
                                                 </connections>
                                             </button>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fxz-qS-Ihc">
+                                                <rect key="frame" x="271" y="174" width="25" height="25"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="width" secondItem="fxz-qS-Ihc" secondAttribute="height" multiplier="1:1" id="eWM-0W-kZB"/>
+                                                    <constraint firstAttribute="height" constant="25" id="ms0-MW-3jU"/>
+                                                </constraints>
+                                                <state key="normal" image="help"/>
+                                                <connections>
+                                                    <action selector="emailHelp:" destination="8Ap-eK-You" eventType="touchUpInside" id="v0P-9A-5jl"/>
+                                                </connections>
+                                            </button>
                                         </subviews>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         <constraints>
+                                            <constraint firstItem="fxz-qS-Ihc" firstAttribute="leading" secondItem="5h0-N2-nkT" secondAttribute="trailing" constant="10" id="1wh-mR-T8X"/>
+                                            <constraint firstItem="fxz-qS-Ihc" firstAttribute="width" secondItem="fxz-qS-Ihc" secondAttribute="height" multiplier="1:1" id="23k-dE-o5A"/>
                                             <constraint firstItem="mOm-LQ-8GB" firstAttribute="top" secondItem="ZSj-qk-Azc" secondAttribute="bottom" constant="15" id="2Zg-kt-FxN"/>
                                             <constraint firstItem="1RX-au-gpl" firstAttribute="top" secondItem="JQn-Vf-sR7" secondAttribute="bottom" constant="10" id="38s-fH-Y66"/>
                                             <constraint firstItem="1RX-au-gpl" firstAttribute="trailing" secondItem="I12-WJ-PXM" secondAttribute="trailing" id="4lv-X4-oHz"/>
@@ -4324,7 +4332,6 @@ Now tap to create your work places.</string>
                                             <constraint firstItem="bvX-7p-gol" firstAttribute="trailing" secondItem="p5Z-0T-bFm" secondAttribute="trailing" id="Is3-Q2-5PP"/>
                                             <constraint firstItem="7EJ-uP-ajk" firstAttribute="trailing" secondItem="I12-WJ-PXM" secondAttribute="trailing" id="J35-Jc-kxb"/>
                                             <constraint firstItem="VMf-H8-r9h" firstAttribute="top" secondItem="rzB-ME-NJv" secondAttribute="bottom" constant="30" id="JgU-zC-5zs"/>
-                                            <constraint firstItem="I12-WJ-PXM" firstAttribute="leading" secondItem="5h0-N2-nkT" secondAttribute="trailing" constant="10" id="Oco-3D-AaL"/>
                                             <constraint firstItem="p5Z-0T-bFm" firstAttribute="leading" secondItem="eFy-CV-zG3" secondAttribute="leading" constant="20" id="OyJ-J7-4eS"/>
                                             <constraint firstAttribute="trailing" secondItem="p5Z-0T-bFm" secondAttribute="trailing" constant="20" id="PuB-0T-JOB"/>
                                             <constraint firstItem="I12-WJ-PXM" firstAttribute="top" secondItem="1RX-au-gpl" secondAttribute="bottom" constant="15" id="ReL-d4-FdV"/>
@@ -4337,6 +4344,7 @@ Now tap to create your work places.</string>
                                             <constraint firstItem="Hx4-zn-4f8" firstAttribute="trailing" secondItem="fCk-k9-Lse" secondAttribute="trailing" id="XZe-Bo-d1l"/>
                                             <constraint firstItem="ZSj-qk-Azc" firstAttribute="trailing" secondItem="I12-WJ-PXM" secondAttribute="trailing" id="Y9N-QR-oGb"/>
                                             <constraint firstItem="57S-ra-O6l" firstAttribute="top" secondItem="p5Z-0T-bFm" secondAttribute="bottom" constant="5" id="Yhq-bX-Ia9"/>
+                                            <constraint firstItem="I12-WJ-PXM" firstAttribute="leading" secondItem="fxz-qS-Ihc" secondAttribute="trailing" constant="10" id="bmH-QJ-hnL"/>
                                             <constraint firstItem="57S-ra-O6l" firstAttribute="trailing" secondItem="p5Z-0T-bFm" secondAttribute="trailing" id="dBz-Kd-CLw"/>
                                             <constraint firstItem="bvX-7p-gol" firstAttribute="top" secondItem="57S-ra-O6l" secondAttribute="bottom" constant="15" id="dab-qY-YzW"/>
                                             <constraint firstItem="JQn-Vf-sR7" firstAttribute="leading" secondItem="bvX-7p-gol" secondAttribute="leading" id="fC2-tT-fDg"/>
@@ -4354,6 +4362,7 @@ Now tap to create your work places.</string>
                                             <constraint firstItem="Hx4-zn-4f8" firstAttribute="leading" secondItem="fCk-k9-Lse" secondAttribute="leading" id="uoJ-rT-b3Y"/>
                                             <constraint firstItem="I12-WJ-PXM" firstAttribute="trailing" secondItem="bvX-7p-gol" secondAttribute="trailing" id="ut5-ig-c9U"/>
                                             <constraint firstItem="fCk-k9-Lse" firstAttribute="leading" secondItem="mOm-LQ-8GB" secondAttribute="leading" id="wjj-uV-cw9"/>
+                                            <constraint firstItem="fxz-qS-Ihc" firstAttribute="centerY" secondItem="5h0-N2-nkT" secondAttribute="centerY" id="x9S-BL-RDt"/>
                                         </constraints>
                                     </view>
                                 </subviews>
@@ -4374,7 +4383,7 @@ Now tap to create your work places.</string>
                             <constraint firstAttribute="trailing" secondItem="nRu-Rb-BEU" secondAttribute="trailing" id="R6i-Lc-k7o"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" title="Add Work place" id="Lhh-T0-0zl">
+                    <navigationItem key="navigationItem" title="Add Workplace" id="Lhh-T0-0zl">
                         <barButtonItem key="rightBarButtonItem" title="Save" id="PcC-7h-F85">
                             <connections>
                                 <action selector="saveAction:" destination="8Ap-eK-You" id="r6a-Jl-02w"/>
@@ -4405,7 +4414,7 @@ Now tap to create your work places.</string>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="qk1-xM-oab" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-5166" y="-2422"/>
+            <point key="canvasLocation" x="-5168.840579710145" y="-2422.0108695652175"/>
         </scene>
         <!--Add Job-->
         <scene sceneID="dMV-Gq-Etz">
@@ -5080,7 +5089,7 @@ jobs yet.</string>
                                 <rect key="frame" x="0.0" y="149" width="207" height="40"/>
                                 <subviews>
                                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="edit-big-icon" translatesAutoresizingMaskIntoConstraints="NO" id="w6C-gN-nvc">
-                                        <rect key="frame" x="89" y="5" width="30" height="30"/>
+                                        <rect key="frame" x="89.333333333333329" y="5" width="30" height="30"/>
                                         <constraints>
                                             <constraint firstAttribute="width" secondItem="w6C-gN-nvc" secondAttribute="height" multiplier="1:1" id="lEr-cS-5La"/>
                                         </constraints>
@@ -5108,7 +5117,7 @@ jobs yet.</string>
                                 <rect key="frame" x="207" y="149" width="207" height="40"/>
                                 <subviews>
                                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="delete-big-icon" translatesAutoresizingMaskIntoConstraints="NO" id="Ep4-m4-a3X">
-                                        <rect key="frame" x="89" y="5" width="30" height="30"/>
+                                        <rect key="frame" x="89.333333333333314" y="5" width="30" height="30"/>
                                         <constraints>
                                             <constraint firstAttribute="width" secondItem="Ep4-m4-a3X" secondAttribute="height" multiplier="1:1" id="e9b-aZ-i0A"/>
                                         </constraints>

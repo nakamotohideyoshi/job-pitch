@@ -64,12 +64,12 @@ class LocationEditController: MJPController {
         isAddMode = SideMenuController.currentID != "businesses"
         
         if location == nil {
-            navigationItem.title = "Add Work Place"
+            navigationItem.title = "Add Workplace"
             isNew = true
             
-            AppHelper.showLoading("Loading...")
+            showLoading()
             API.shared().loadLocationsForBusiness(businessId: nil, success: { (data) in
-                AppHelper.hideLoading()
+                self.hideLoading()
                 self.isFirstCreate = data.count == 0
                 if !self.isFirstCreate {
                     UserDefaults.standard.set(false, forKey: "first_craete_wp")
@@ -78,12 +78,12 @@ class LocationEditController: MJPController {
                 self.load()
             }, failure: self.handleErrors)
         } else {
-            navigationItem.title = "Edit Work Place"
+            navigationItem.title = "Edit Workplace"
             business = location.businessData
             
-            AppHelper.showLoading("Loading...")
+            showLoading()
             API.shared().loadLocation(id: location.id, success: { (data) in
-                AppHelper.hideLoading()
+                self.hideLoading()
                 self.location = data as! Location
                 self.load()
             }, failure: self.handleErrors)
@@ -132,6 +132,10 @@ class LocationEditController: MJPController {
             "location_email":       [emailField,   emailError],
             "location_location":    [addressField, addressError]
         ]
+    }
+    
+    @IBAction func emailHelp(_ sender: Any) {
+        PopupController.showGray("The is the email that notifications will be sent to, it can be different to your login email address.", ok: "Close")
     }
     
     @IBAction func addLogoAction(_ sender: Any) {
@@ -203,6 +207,7 @@ class LocationEditController: MJPController {
         if let image = business?.getImage() {
             AppHelper.loadImageURL(imageUrl: (image.thumbnail)!, imageView: imgView, completion: nil)
         } else {
+            AppHelper.removeLoading(imageView: imgView)
             imgView.image = UIImage(named: "default-logo")
         }
         addLogoButton.setTitle("Add Logo", for: .normal)
@@ -225,11 +230,11 @@ class LocationEditController: MJPController {
     
     @IBAction func saveAction(_ sender: Any) {
         
-        if !valid() {
+        if loadingView != nil || !valid() {
             return
         }
         
-        AppHelper.showLoading("Saving...")
+        showLoading()
         
         if location == nil {
             location = Location()
@@ -254,9 +259,7 @@ class LocationEditController: MJPController {
             
             if self.logoImage != nil {
                 
-                let hud = AppHelper.createLoading()
-                hud.mode = .determinateHorizontalBar
-                hud.label.text = "Uploading..."
+                self.loadingView.showProgressBar("Uploading...")
                 
                 API.shared().uploadImage(image: self.logoImage,
                                          endpoint: "user-location-images",
@@ -264,7 +267,7 @@ class LocationEditController: MJPController {
                                          objectId: self.location.id,
                                          order: 0,
                                          progress: { (bytesWriteen, totalBytesWritten, totalBytesExpectedToWrite) in
-                                            hud.progress = Float(totalBytesWritten) / Float(totalBytesExpectedToWrite)
+                                            self.loadingView.progressView.progress = Float(totalBytesWritten) / Float(totalBytesExpectedToWrite)
                 }, success: { (data) in
                     self.saveFinished()
                 }, failure: self.handleErrors)
@@ -284,7 +287,6 @@ class LocationEditController: MJPController {
     }
     
     func saveFinished() {
-        AppHelper.hideLoading()
         
         if !isNew {
             _ = navigationController?.popViewController(animated: true)

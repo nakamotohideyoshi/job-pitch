@@ -24,6 +24,8 @@ class BusinessListController: MJPController {
     var canCreateBusinesses = false
     var isAddMode = false
     
+    var noRefresh = false
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -46,13 +48,18 @@ class BusinessListController: MJPController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        AppHelper.showLoading("Loading...")
-        self.loadBusinesses()
+        
+        if !noRefresh {
+            showLoading()
+            self.loadBusinesses()
+        } else {
+            noRefresh = false
+        }
     }
     
     func loadBusinesses() {
         API.shared().loadBusinesses(success: { (data) in
-            AppHelper.hideLoading()
+            self.hideLoading()
             self.data = data.mutableCopy() as! NSMutableArray
             self.updateBusinessList()
             let businesses = NSMutableArray()
@@ -90,7 +97,7 @@ class BusinessListController: MJPController {
             BusinessEditController.pushController(business: nil)
         } else {
             let url = URL(string: "mailto:sales@myjobpitch.com")!
-            UIApplication.shared.openURL(url)
+            UIApplication.shared.open(url, options: [:], completionHandler: nil)
         }
     }
     
@@ -131,15 +138,17 @@ extension BusinessListController: UITableViewDataSource {
                                   padding: 20,
                                   callback: { (cell) -> Bool in
                                     
+                                    self.noRefresh = true
+                                    
                                     let message = String(format: "Are you sure you want to delete %@", business.name)
                                     PopupController.showYellow(message, ok: "Delete", okCallback: {
                                         
-                                        AppHelper.showLoading("Deleting...")
+                                        self.showLoading()
                                         
                                         API.shared().deleteBusiness(id: business.id, success: {
                                             self.data.remove(business)
                                             API.shared().getUser(success: { (data) in
-                                                AppHelper.hideLoading()
+                                                self.hideLoading()
                                                 AppData.user = data as! User
                                                 self.updateBusinessList()
                                             }, failure: self.handleErrors)

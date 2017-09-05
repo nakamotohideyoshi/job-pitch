@@ -52,7 +52,7 @@ export default class JobDetail extends Component {
           <Modal.Title>Job Detail</Modal.Title>
         </Modal.Header>
 
-        <Modal.Body>
+        <Modal.Body className={styles.container}>
           <div className={styles.topContainer}>
             <img src={logo} alt="" />
             <div className={styles.right} >

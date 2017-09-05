@@ -8,7 +8,6 @@
 
 import UIKit
 import CoreLocation
-import MBProgressHUD
 import Nuke
 
 class AppHelper: NSObject {
@@ -47,33 +46,11 @@ class AppHelper: NSObject {
         }
     }
     
-    static func showLoading(_ message:String) {
-        let hud = createLoading()
-        hud.label.text = message
-    }
-    
-    static func createLoading() -> MBProgressHUD {
-        
-        hideLoading()
-        
-        let frontController = getFrontController1()
-        let hud = MBProgressHUD.showAdded(to: (frontController?.view)!, animated: true)
-        hud.backgroundView.color = UIColor(red: 0, green: 0, blue: 0, alpha: 0.65)
-        hud.bezelView.style = MBProgressHUDBackgroundStyle.solidColor
-        hud.bezelView.backgroundColor = UIColor(red: 35/255.0, green: 35/255.0, blue: 35/255.0, alpha: 0.95)
-        hud.contentColor = UIColor.white
-        
-        return hud
-    }
-    
-    static func hideLoading() {
-        let frontController = getFrontController1()
-        MBProgressHUD.hide(for: (frontController?.view)!, animated: true)
-    }
-    
     static func loadImageURL(imageUrl: String,
                              imageView: UIImageView,
                              completion: (() -> Void)!) {
+        
+        removeLoading(imageView: imageView)
         
         let indicator = UIActivityIndicatorView.init(activityIndicatorStyle: .gray)
         indicator.center = CGPoint(x: imageView.frame.size.width*0.5,
@@ -89,7 +66,12 @@ class AppHelper: NSObject {
             indicator.removeFromSuperview()
             completion?()
         }
-        
+    }
+    
+    static func removeLoading(imageView: UIImageView) {
+        if let indicator = imageView.viewWithTag(1000) {
+            indicator.removeFromSuperview()
+        }
     }
     
     static func distance(latitude1: NSNumber, longitude1: NSNumber, latitude2: NSNumber, longitude2: NSNumber) -> String {

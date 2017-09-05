@@ -24,6 +24,8 @@ class LocationDetailController: MJPController {
     var isFirstCreate = false
     var location: Location!
     
+    var noRefresh = false
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -37,17 +39,21 @@ class LocationDetailController: MJPController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        AppHelper.showLoading("Loading...")
-        API.shared().loadLocation(id: location.id, success: { (data) in
-            self.location = data as! Location
-            self.updateLocationInfo()
-            self.loadJobs()
-        }, failure: self.handleErrors)
+        if !noRefresh {
+            showLoading()
+            API.shared().loadLocation(id: location.id, success: { (data) in
+                self.location = data as! Location
+                self.updateLocationInfo()
+                self.loadJobs()
+            }, failure: self.handleErrors)
+        } else {
+            noRefresh = false
+        }
     }
     
     func loadJobs() {
         API.shared().loadJobsForLocation(locationId: location?.id, success: { (data) in
-            AppHelper.hideLoading()
+            self.hideLoading()
             self.data = data.mutableCopy() as! NSMutableArray
             self.updateJobList()
             self.tableView.pullToRefreshView.stopAnimating()
@@ -79,9 +85,9 @@ class LocationDetailController: MJPController {
         let message = String(format: "Are you sure you want to delete %@", location.name)
         PopupController.showYellow(message, ok: "Delete", okCallback: {
             
-            AppHelper.showLoading("Deleting...")
+            self.showLoading()
             API.shared().deleteLocation(id: self.location.id, success: {
-                AppHelper.hideLoading()
+                self.hideLoading()
                 _ = self.navigationController?.popViewController(animated: true)
             }, failure: self.handleErrors)
             
@@ -117,12 +123,15 @@ extension LocationDetailController: UITableViewDataSource {
                           padding: 20,
                           callback: { (cell) -> Bool in
                             
+                            self.noRefresh = true
+                            
                             let message = String(format: "Are you sure you want to delete %@", job.title)
                             PopupController.showYellow(message, ok: "Delete", okCallback: {
                                 
-                                AppHelper.showLoading("Deleting...")                                
+                                self.showLoading()
+                                
                                 API.shared().deleteJob(id: job.id, success: {
-                                    AppHelper.hideLoading()
+                                    self.hideLoading()
                                     self.data.remove(job)
                                     self.updateJobList()
                                 }, failure: self.handleErrors)

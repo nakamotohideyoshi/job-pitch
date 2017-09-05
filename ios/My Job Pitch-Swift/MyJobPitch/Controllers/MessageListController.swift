@@ -26,13 +26,13 @@ class MessageListController: SearchController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        AppHelper.showLoading("Loading...")
+        showLoading()
         loadData()
     }
     
     func loadData() {
         API.shared().loadApplicationsForJob(jobId: job?.id, status: nil, shortlisted: false, success: { (data) in
-            AppHelper.hideLoading()
+            self.hideLoading()
             self.allData = data.mutableCopy() as! NSMutableArray
             self.filter()
             self.emptyView.isHidden = self.allData.count > 0
@@ -81,9 +81,8 @@ extension MessageListController: UITableViewDataSource {
             } else {
                 cell.imgView.image = UIImage(named: "default-logo")
             }
-            
             cell.titleLabel.text = job.title
-            cell.subTitleLabel.text = job.getBusinessName();
+            cell.subTitleLabel.text = job.getBusinessName()
             
         } else {
             
@@ -93,7 +92,7 @@ extension MessageListController: UITableViewDataSource {
                 cell.imgView.image = UIImage(named: "no-img")
             }
             cell.titleLabel.text = application.jobSeeker.getFullName()
-            cell.subTitleLabel.text = String(format: "%@ (%@)", job.title, job.getBusinessName());
+            cell.subTitleLabel.text = String(format: "%@ (%@)", job.title, job.getBusinessName())
         }
         
         let dateFormatter = DateFormatter()
@@ -107,6 +106,34 @@ extension MessageListController: UITableViewDataSource {
         }
         
         cell.addUnderLine(paddingLeft: 15, paddingRight: 0, color: AppData.greyBorderColor)
+        
+        if application.status == AppData.getApplicationStatusByName(ApplicationStatus.APPLICATION_DELETED).id {
+            var str: NSMutableAttributedString =  NSMutableAttributedString(string: cell.titleLabel.text!)
+            str.addAttribute(NSStrikethroughStyleAttributeName, value: 1, range: NSMakeRange(0, str.length))
+            str.addAttribute(NSFontAttributeName, value: UIFont.italicSystemFont(ofSize: 20), range: NSMakeRange(0, str.length))
+            cell.titleLabel.attributedText = str
+            
+            str =  NSMutableAttributedString(string: cell.subTitleLabel.text!)
+            str.addAttribute(NSStrikethroughStyleAttributeName, value: 1, range: NSMakeRange(0, str.length))
+            str.addAttribute(NSFontAttributeName, value: UIFont.italicSystemFont(ofSize: 14), range: NSMakeRange(0, str.length))
+            cell.subTitleLabel.attributedText = str
+            
+            str =  NSMutableAttributedString(string: cell.messageLabel.text!)
+            str.addAttribute(NSStrikethroughStyleAttributeName, value: 1, range: NSMakeRange(0, str.length))
+            str.addAttribute(NSFontAttributeName, value: UIFont.italicSystemFont(ofSize: 14), range: NSMakeRange(0, str.length))
+            cell.messageLabel.attributedText = str
+            
+            str =  NSMutableAttributedString(string: cell.attributesLabel.text!)
+            str.addAttribute(NSStrikethroughStyleAttributeName, value: 1, range: NSMakeRange(0, str.length))
+            str.addAttribute(NSFontAttributeName, value: UIFont.italicSystemFont(ofSize: 12), range: NSMakeRange(0, str.length))
+            cell.attributesLabel.attributedText = str
+            
+            cell.setOpacity(0.5)
+            cell.backgroundColor = UIColor(red: 240/256.0, green: 240/256.0, blue: 240/256.0, alpha: 0.5)
+        } else {
+            cell.setOpacity(1)
+            cell.backgroundColor = UIColor.white
+        }
         
         return cell
         

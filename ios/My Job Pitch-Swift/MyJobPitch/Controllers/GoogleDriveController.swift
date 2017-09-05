@@ -32,6 +32,8 @@ class GoogleDriveController: UIViewController, GIDSignInDelegate, GIDSignInUIDel
         "application/pdf": "g_pdf",
     ]
     
+    var loadingView: LoadingView!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -55,15 +57,22 @@ class GoogleDriveController: UIViewController, GIDSignInDelegate, GIDSignInUIDel
         GIDSignIn.sharedInstance().uiDelegate = self
         GIDSignIn.sharedInstance().scopes = [kGTLRAuthScopeDriveReadonly]
         if GIDSignIn.sharedInstance().hasAuthInKeychain() {
-            AppHelper.showLoading("Sign in...")
+            showLoading("Sign in...")
             GIDSignIn.sharedInstance().signInSilently()
-            
         }
+    }
+    
+    func showLoading(_ label: String!) {
+        loadingView = LoadingView.create(controller: self)
+        loadingView.backgroundColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.5)
+        loadingView.showLoadingIcon(label)
     }
     
     func sign(_ signIn: GIDSignIn!, didSignInFor user: GIDGoogleUser!,
               withError error: Error!) {
-        AppHelper.hideLoading()
+        
+        loadingView.removeFromSuperview()
+        
         if error != nil {
             PopupController.showGreen("Authentication Error",
                                       ok: nil, okCallback: nil,
@@ -123,10 +132,10 @@ class GoogleDriveController: UIViewController, GIDSignInDelegate, GIDSignInUIDel
     }
     
     func downloadFile(file: GTLRDrive_File) {
-        AppHelper.showLoading("Downloading...")
+        showLoading("Downloading...")
         let query = GTLRDriveQuery_FilesGet.queryForMedia(withFileId: file.identifier!)
         service.executeQuery(query) { (ticket, result, error) in
-            AppHelper.hideLoading()
+            self.loadingView.removeFromSuperview()
             if error == nil {
                 let object = result as! GTLRDataObject
                 let path = NSHomeDirectory().appendingFormat("/Documents/%@", file.name!.replacingOccurrences(of: " ", with: ""))

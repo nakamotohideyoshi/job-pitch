@@ -41,7 +41,7 @@ export default class Apps extends Component {
     .then(applications => this.setState({ applications }));
 
   onDetail = (selectedApp) => this.setState({
-    selectedApp,
+    selectedApp: selectedApp || this.state.selectedApp,
     isDetail: true,
   });
 
@@ -130,6 +130,7 @@ export default class Apps extends Component {
                 <Message
                   application={selectedApp}
                   onClose={this.dismissEdit}
+                  onDetail={this.onDetail}
                 />
             )
           }

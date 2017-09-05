@@ -10,10 +10,17 @@ import UIKit
 
 class MessageCell: UITableViewCell {
 
-    @IBOutlet weak var imgView: UIImageView!;
-    @IBOutlet weak var titleLabel: UILabel!;
-    @IBOutlet weak var subTitleLabel: UILabel!;
-    @IBOutlet weak var attributesLabel: UILabel!;
-    @IBOutlet weak var messageLabel: UILabel!;
+    @IBOutlet weak var imgView: UIImageView!
+    @IBOutlet weak var titleLabel: UILabel!
+    @IBOutlet weak var subTitleLabel: UILabel!
+    @IBOutlet weak var attributesLabel: UILabel!
+    @IBOutlet weak var messageLabel: UILabel!
 
+    func setOpacity(_ alpha: CGFloat) {
+        imgView.alpha = alpha
+        titleLabel.alpha = alpha
+        subTitleLabel.alpha = alpha
+        attributesLabel.alpha = alpha
+        messageLabel.alpha = alpha
+    }
 }

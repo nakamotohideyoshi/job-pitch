@@ -36,6 +36,11 @@ class LoginController: MJPController {
         }
         set(newRemember) {
             UserDefaults.standard.set(newRemember, forKey: "remember")
+            if newRemember {
+                UserDefaults.standard.set(API.shared().getToken(), forKey: "token")
+            } else {
+                UserDefaults.standard.removeObject(forKey: "token")
+            }
             UserDefaults.standard.synchronize()
         }
     }
@@ -60,17 +65,25 @@ class LoginController: MJPController {
         
         emailField.text = AppData.email
         if loginButton != nil && remember {
-            passwordField.text = AppData.password
             rememberSwitch.isOn = true
             
             if !API.shared().isLogin() {
-                loginAction(UIButton())
+                let token = UserDefaults.standard.string(forKey: "token")
+                API.shared().setToken(token!)
+                loadData()
+                return
             }
         }
         
         API.shared().clearToken()
         AppData.clearData()
         
+    }
+    
+    override func showLoading() {
+        super.showLoading()
+        loadingView.backgroundColor = UIColor(red: 65.8/256.0, green:65.8/256.0, blue: 65.8/256.0, alpha: 1)
+        loadingView.indicatorView.color = UIColor.white
     }
     
     override func getRequiredFields() -> [String: NSArray] {
@@ -84,9 +97,8 @@ class LoginController: MJPController {
         
         remember = rememberSwitch.isOn
         AppData.email = emailField.text
-        AppData.password = passwordField.text
         
-        AppHelper.showLoading("Loading...")
+        showLoading()
         
         API.shared().getUser(success: { (data) in
             
@@ -143,7 +155,7 @@ class LoginController: MJPController {
         
         if valid() {
             
-            AppHelper.showLoading("Signing in...")
+            showLoading()
             
             API.shared().login(email: emailField.text!, password: passwordField.text!,
                                success: { (authToken) in
@@ -158,7 +170,7 @@ class LoginController: MJPController {
 
         if valid() {
             
-            AppHelper.showLoading("Signing up...")
+            showLoading()
             
             AppData.email = emailField.text
             LoginController.userType = (sender as! UIButton).tag

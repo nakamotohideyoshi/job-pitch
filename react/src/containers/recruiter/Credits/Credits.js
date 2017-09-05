@@ -1,23 +1,49 @@
 import React, { Component } from 'react';
 import Helmet from 'react-helmet';
-import PaypalExpressBtn from 'react-paypal-express-checkout';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import Button from 'react-bootstrap/lib/Button';
 import BusinessList from 'components/BusinessList/BusinessList';
 import { JobItem } from 'components';
+import * as commonActions from 'redux/modules/common';
 import * as utils from 'helpers/utils';
 import styles from './Credits.scss';
 
+@connect(
+  (state) => ({
+    staticData: state.auth.staticData,
+    selectedBusiness: state.jobmanager.selectedBusiness,
+  }),
+  { ...commonActions }
+)
 export default class Credits extends Component {
-
-  onSuccess = (payment, plan) => {
-    // Congratulation, it came here means everything's fine!
-    console.log('The payment was succeeded!', payment, plan);
-    utils.successNotif('The payment was succeeded!');
-    // payment.payerID, payment.paymentID, payment.paymentToken
+  static propTypes = {
+    staticData: PropTypes.object.isRequired,
+    purchase: PropTypes.func.isRequired,
+    selectedBusiness: PropTypes.object,
+    params: PropTypes.object.isRequired,
   }
 
-  onError = (err) => {
-    console.log('Error!', err);
-    utils.errorNotif('Payment Error!');
+  static defaultProps = {
+    selectedBusiness: null,
+  }
+
+  constructor(props) {
+    super(props);
+    console.log(this.props.params);
+  }
+
+  onPurchase = product => {
+    const { selectedBusiness, purchase } = this.props;
+    if (selectedBusiness) {
+      purchase({
+        product_code: product.product_code,
+        business: selectedBusiness.id
+      })
+      .then(data => {
+        window.location.href = data.approval_url;
+      });
+    }
   }
 
   renderBusiness = business => {
@@ -34,14 +60,8 @@ export default class Credits extends Component {
   };
 
   render() {
-    const client = {
-      sandbox: 'AcFQJfacbVGOsuGNqLjU7mFAzPKfMf3ZHC403WF4jVuxlNxxGCJiu3ZLl_Z0tKnO6YGUNcjdUJYSkrCy',
-      // production: 'YOUR-PRODUCTION-APP-ID',
-    };
-    const plans = [
-      { credits: 20, price: 20 },
-      { credits: 40, price: 40 }
-    ];
+    const products = this.props.staticData.products;
+
     return (
       <div>
         <Helmet title="Add Credit" />
@@ -55,18 +75,14 @@ export default class Credits extends Component {
           />
           <div className={styles.planContainer}>
             {
-              plans.map(plan => (
-                <div className={styles.planBox} key={plan.credits}>
-                  <div className={styles.credits}>{`${plan.credits} Credits`}</div>
-                  <div className={styles.price}>{`€ ${plan.price}`}</div>
-                  <PaypalExpressBtn
-                    env="sandbox"
-                    client={client}
-                    currency={'EUR'}
-                    total={plan.price}
-                    onSuccess={event => this.onSuccess(event, plan)}
-                    onError={this.onError}
-                  />
+              products.map(product => (
+                <div className={styles.planBox} key={product.product_code}>
+                  <div className={styles.credits}>{`${product.tokens} Credits`}</div>
+                  <div className={styles.price}>{`€ ${product.price}`}</div>
+                  <Button
+                    bsStyle="success"
+                    onClick={() => this.onPurchase(product)}
+                  >Purchase</Button>
                 </div>
               ))
             }

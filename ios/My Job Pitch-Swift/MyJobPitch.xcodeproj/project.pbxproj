@@ -69,6 +69,8 @@
 		D7CFBBAC1EF7D294003FC132 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = D7CFBBAB1EF7D294003FC132 /* GoogleService-Info.plist */; };
 		D7CFBC691EF871A4003FC132 /* GoogleDriveController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7CFBC681EF871A4003FC132 /* GoogleDriveController.swift */; };
 		D7CFBC6B1EF8E409003FC132 /* FileCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7CFBC6A1EF8E409003FC132 /* FileCell.swift */; };
+		D7E934791F4BD90600299762 /* LoadingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7E934781F4BD90600299762 /* LoadingView.swift */; };
+		D7E9347B1F4C153B00299762 /* PitchUploader.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7E9347A1F4C153B00299762 /* PitchUploader.swift */; };
 		D7ECFBBB1E125F5E00E2E071 /* SelectionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7ECFBBA1E125F5E00E2E071 /* SelectionController.swift */; };
 		D7ECFBBD1E12D9A100E2E071 /* MapController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7ECFBBC1E12D9A100E2E071 /* MapController.swift */; };
 		D7ECFBBF1E12FCEF00E2E071 /* JobSeekerProfileController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7ECFBBE1E12FCEF00E2E071 /* JobSeekerProfileController.swift */; };
@@ -191,6 +193,8 @@
 		D7CFBBAB1EF7D294003FC132 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		D7CFBC681EF871A4003FC132 /* GoogleDriveController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = GoogleDriveController.swift; path = Controllers/GoogleDriveController.swift; sourceTree = "<group>"; };
 		D7CFBC6A1EF8E409003FC132 /* FileCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FileCell.swift; path = Views/FileCell.swift; sourceTree = "<group>"; };
+		D7E934781F4BD90600299762 /* LoadingView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = LoadingView.swift; path = Views/LoadingView.swift; sourceTree = "<group>"; };
+		D7E9347A1F4C153B00299762 /* PitchUploader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PitchUploader.swift; path = Utils/PitchUploader.swift; sourceTree = "<group>"; };
 		D7ECFBBA1E125F5E00E2E071 /* SelectionController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SelectionController.swift; path = Controllers/SelectionController.swift; sourceTree = "<group>"; };
 		D7ECFBBC1E12D9A100E2E071 /* MapController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MapController.swift; path = Controllers/MapController.swift; sourceTree = "<group>"; };
 		D7ECFBBE1E12FCEF00E2E071 /* JobSeekerProfileController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = JobSeekerProfileController.swift; path = Controllers/JobSeekerProfileController.swift; sourceTree = "<group>"; };
@@ -433,6 +437,7 @@
 				D72AE4171E105783004C3F02 /* Cells */,
 				D72AE4231E1156C3004C3F02 /* CustomView.swift */,
 				D749E3581E0B21C0000FD0B1 /* SwipeCard.swift */,
+				D7E934781F4BD90600299762 /* LoadingView.swift */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -483,6 +488,7 @@
 				D749E3521E0A36CD000FD0B1 /* APIConfigure.swift */,
 				D749E3501E09C09E000FD0B1 /* AppHelper.swift */,
 				D749E3541E0A8724000FD0B1 /* AppData.swift */,
+				D7E9347A1F4C153B00299762 /* PitchUploader.swift */,
 			);
 			name = Utils;
 			sourceTree = "<group>";
@@ -578,7 +584,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
 			showEnvVarsInLog = 0;
 		};
 		ADC07262EA7CC844AA16E94E /* [CP] Embed Pods Frameworks */ = {
@@ -639,6 +645,7 @@
 				D78834301ECAAF3E00D99F4B /* MDCPanState.m in Sources */,
 				D749E3571E0B2026000FD0B1 /* SwipeController.swift in Sources */,
 				D72AE42E1E11AD50004C3F02 /* ChangePasswordController.swift in Sources */,
+				D7E9347B1F4C153B00299762 /* PitchUploader.swift in Sources */,
 				D72AE4131E1049BE004C3F02 /* SearchController.swift in Sources */,
 				D72AE4161E1055AC004C3F02 /* MessageController.swift in Sources */,
 				D78834231ECAAF1B00D99F4B /* UIView+MDCBorderedLabel.m in Sources */,
@@ -687,6 +694,7 @@
 				D7F7701B1E08E3D100ECB684 /* MJPObjectWithNameShortNameDesc.swift in Sources */,
 				D72AE41B1E106D0A004C3F02 /* ApplicationListController.swift in Sources */,
 				D7B07B831E08DDE1005B9EBE /* AppDelegate.swift in Sources */,
+				D7E934791F4BD90600299762 /* LoadingView.swift in Sources */,
 				D76C90401E238AAF009C35E4 /* SideMenuCell.swift in Sources */,
 				D76C90551E2540D1009C35E4 /* HelpController.swift in Sources */,
 				D78834371ECAAF4B00D99F4B /* MDCSwipeToChooseView.m in Sources */,

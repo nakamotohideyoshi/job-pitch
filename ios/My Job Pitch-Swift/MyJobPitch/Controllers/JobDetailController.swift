@@ -24,9 +24,9 @@ class JobDetailController: MJPController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        AppHelper.showLoading("Loading...")
+        showLoading()
         API.shared().loadJob(id: job.id, success: { (data) in
-            AppHelper.hideLoading()
+            self.hideLoading()
             self.job = data as! Job
             self.updateJobInfo()
         }, failure: self.handleErrors)
@@ -51,9 +51,9 @@ class JobDetailController: MJPController {
         let message = String(format: "Are you sure you want to delete %@", job.title)
         PopupController.showYellow(message, ok: "Delete", okCallback: {
             
-            AppHelper.showLoading("Deleting...")
+            self.showLoading()
             API.shared().deleteJob(id: self.job.id, success: {
-                AppHelper.hideLoading()
+                self.hideLoading()
                 _ = self.navigationController?.popViewController(animated: true)
             }, failure: self.handleErrors)
             

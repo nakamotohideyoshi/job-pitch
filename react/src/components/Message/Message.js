@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
+import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import { Link } from 'react-router';
 import Modal from 'react-bootstrap/lib/Modal';
 import Button from 'react-bootstrap/lib/Button';
 import { Loading } from 'components';
@@ -24,11 +26,13 @@ export default class Message extends Component {
     saveApplication: PropTypes.func.isRequired,
     getApplications: PropTypes.func.isRequired,
     onSend: PropTypes.func,
+    onDetail: PropTypes.func,
     onClose: PropTypes.func.isRequired,
   }
 
   static defaultProps = {
-    onSend: () => {}
+    onSend: () => {},
+    onDetail: () => {}
   }
 
   constructor(props) {
@@ -102,6 +106,13 @@ export default class Message extends Component {
     });
   }
 
+  scrollBottom = (ref) => {
+    setTimeout(() => {
+      const container = ReactDOM.findDOMNode(ref);
+      container.scrollTop = container.scrollHeight;
+    }, 100);
+  }
+
   You = ({ message }) => {
     const { content, created } = message;
     const strDate = utils.getTimeString(new Date(created));
@@ -132,6 +143,17 @@ export default class Message extends Component {
 
   InputComponent = () => {
     const { staticData, user, application, onClose } = this.props;
+
+    if (application.status === utils.getItemByName(staticData.applicationStatuses, 'DELETED').id) {
+      return (
+        <div className={styles.input}>
+          <div className={styles.input}>
+            This appliction has been deleted.
+          </div>
+        </div>
+      );
+    }
+
     if (application.status !== utils.getItemByName(staticData.applicationStatuses, 'CREATED').id) {
       return (
         <div className={styles.input}>
@@ -176,23 +198,29 @@ export default class Message extends Component {
   }
 
   render() {
-    const { staticData, user, onClose } = this.props;
+    const { staticData, user, onClose, onDetail } = this.props;
     return (
       <Modal show onHide={onClose} backdrop="static">
         <Modal.Header closeButton>
           <div className={styles.header}>
-            <img src={this.yourAvatar} alt="" />
-            <div>
-              <h4>{this.yourName}</h4>
-              <div className={styles.comment}>{this.yourComment}</div>
+            <Link onClick={() => onDetail()} >
+              <img src={this.yourAvatar} alt="" />
+            </Link>
+            <div className={styles.headerContent}>
+              <div><Link onClick={() => onDetail()} className={styles.name}>
+                {this.yourName}
+              </Link></div>
+              <div><Link onClick={() => onDetail()} className={styles.comment}>
+                {this.yourComment}
+              </Link></div>
             </div>
           </div>
         </Modal.Header>
 
-        <Modal.Body className={styles.container}>
+        <Modal.Body className={styles.container} ref={this.scrollBottom}>
           {
             this.state.messages ?
-              <div className={styles.content}>
+              <div className={styles.content} >
                 {
                   this.state.messages.map(item => {
                     const userRole = staticData.roles.filter(role => role.id === item.from_role)[0].name;

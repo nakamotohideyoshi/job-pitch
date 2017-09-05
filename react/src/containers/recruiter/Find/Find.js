@@ -11,12 +11,14 @@ import styles from './Find.scss';
 @connect(
   (state) => ({
     selectedJob: state.common.shared.find_job,
+    staticData: state.auth.staticData,
   }),
   { ...commonActions }
 )
 export default class Find extends Component {
   static propTypes = {
     selectedJob: PropTypes.object,
+    staticData: PropTypes.object.isRequired,
     getJobSeekers: PropTypes.func.isRequired,
     saveApplication: PropTypes.func.isRequired,
     alertShow: PropTypes.func.isRequired,
@@ -52,6 +54,13 @@ export default class Find extends Component {
 
   onRefresh = () => {
     const { selectedJob, getJobSeekers } = this.props;
+    if (utils.getJobStatus(selectedJob, this.props.staticData.jobStatuses) === 'CLOSED') {
+      this.setState({
+        jobSeekers: [],
+        rejectedJobSeekers: [],
+      });
+      return;
+    }
     getJobSeekers(`?job=${selectedJob.id}`)
       .then(jobSeekers => this.setState({
         jobSeekers,
@@ -68,18 +77,24 @@ export default class Find extends Component {
     alertShow(
       'Confirm',
       'Are you sure you want to connect this talent?',
-      'Cancel', null,
-      'Connect', () => {
-        saveApplication({
-          job: selectedJob.id,
-          job_seeker: (jobSeeker || selectedJobSeeker).id,
-          shortlisted: false,
-        })
-        .then(() => {
-          utils.successNotif('Connected!');
-          this.onRefresh();
-        });
-      },
+      [
+        { label: 'Cancel' },
+        {
+          label: 'Connect',
+          style: 'success',
+          callback: () => {
+            saveApplication({
+              job: selectedJob.id,
+              job_seeker: (jobSeeker || selectedJobSeeker).id,
+              shortlisted: false,
+            })
+            .then(() => {
+              utils.successNotif('Connected!');
+              this.onRefresh();
+            });
+          }
+        }
+      ]
     );
     if (event) {
       event.stopPropagation();
@@ -92,11 +107,17 @@ export default class Find extends Component {
     this.props.alertShow(
       'Confirm',
       'Are you sure you want to delete this talent?',
-      'Cancel', null,
-      'Delete', () => {
-        rejectedJobSeekers.push(jobSeeker || selectedJobSeeker);
-        this.setState({ rejectedJobSeekers });
-      },
+      [
+        { label: 'Cancel' },
+        {
+          label: 'Delete',
+          style: 'success',
+          callback: () => {
+            rejectedJobSeekers.push(jobSeeker || selectedJobSeeker);
+            this.setState({ rejectedJobSeekers });
+          }
+        }
+      ]
     );
     if (event) {
       event.stopPropagation();

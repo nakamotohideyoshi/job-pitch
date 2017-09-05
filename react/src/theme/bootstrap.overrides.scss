@@ -199,3 +199,9 @@ form {
     box-shadow: none;
   }
 }
+
+
+.modal-body {
+  max-height: calc(100vh - 275px);
+  overflow-y: auto;
+}

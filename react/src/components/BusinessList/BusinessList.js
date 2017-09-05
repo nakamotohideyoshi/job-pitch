@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { DropBox, JobItem } from 'components';
+import { DropBox } from 'components';
 import BusinessEdit from 'components/BusinessEdit/BusinessEdit';
 import * as jobmanagerActions from 'redux/modules/jobmanager';
 import * as commonActions from 'redux/modules/common';
@@ -58,9 +58,10 @@ export default class Businesses extends Component {
       alertShow(
         'Alert',
         'Have more than one company?',
-        'No', null,
-        'Yes', () => {
-        },
+        [
+          { label: 'No' },
+          { label: 'Yes', style: 'success' }
+        ]
       );
     } else {
       this.setState({ editBusiness: {} });
@@ -74,13 +75,18 @@ export default class Businesses extends Component {
     alertShow(
       'Confirm',
       `Are you sure you want to delete ${selectedBusiness.name}`,
-      'Cancel', null,
-      'Delete',
-      () => deleteUserBusiness(selectedBusiness.id)
-        .then(() => {
-          utils.successNotif('Deleted!');
-          this.onRefresh();
-        })
+      [
+        { label: 'Cancel' },
+        {
+          label: 'Delete',
+          style: 'success',
+          callback: () => deleteUserBusiness(selectedBusiness.id)
+            .then(() => {
+              utils.successNotif('Deleted!');
+              this.onRefresh();
+            })
+        }
+      ]
     );
   }
 

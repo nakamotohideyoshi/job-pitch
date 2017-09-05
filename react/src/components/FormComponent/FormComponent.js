@@ -94,6 +94,9 @@ export default class FormComponent extends Component {
       const callback = onChange || this.onChangedModel;
       callback(name, e.target.value);
     };
+    const onKeyUp = e => {
+      // e.target.style.height = e.target.scrollHeight + 'px';
+    };
     const error = this.getError(name);
     return (
       <div className={error && 'has-error'}>
@@ -101,6 +104,7 @@ export default class FormComponent extends Component {
           {...props}
           value={formModel[name] || ''}
           onChange={handleChange}
+          onKeyUp={onKeyUp}
         />
         <this.HelpField label={error} />
       </div>

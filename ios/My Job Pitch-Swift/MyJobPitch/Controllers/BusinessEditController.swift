@@ -45,9 +45,9 @@ class BusinessEditController: MJPController {
         } else {
             navigationItem.title = "Edit Business"
             
-            AppHelper.showLoading("Loading...")
+            showLoading()
             API.shared().loadBusiness(id: business.id, success: { (data) in
-                AppHelper.hideLoading()
+                self.hideLoading()
                 self.business = data as! Business
                 self.load()
             }, failure: self.handleErrors)
@@ -139,6 +139,7 @@ class BusinessEditController: MJPController {
     @IBAction func removeImageAction(_ sender: Any) {
         
         logoImage = nil
+        AppHelper.removeLoading(imageView: imgView)
         imgView.image = UIImage(named: "default-logo")
         removeImageButton.isHidden = true
         addLogoButton.setTitle("Add Logo", for: .normal)
@@ -146,11 +147,11 @@ class BusinessEditController: MJPController {
     
     @IBAction func saveAction(_ sender: Any) {
         
-        if !valid() {
+        if loadingView != nil || !valid() {
             return
         }
     
-        AppHelper.showLoading("Saving...")
+        showLoading()
         
         if business == nil {
             business = Business()
@@ -164,9 +165,7 @@ class BusinessEditController: MJPController {
             
             if self.logoImage != nil {
                 
-                let hud = AppHelper.createLoading()
-                hud.mode = .determinateHorizontalBar
-                hud.label.text = "Uploading..."
+                self.loadingView.showProgressBar("Uploading...")
                 
                 API.shared().uploadImage(image: self.logoImage,
                                          endpoint: "user-business-images",
@@ -174,7 +173,7 @@ class BusinessEditController: MJPController {
                                          objectId: self.business.id,
                                          order: 0,
                                          progress: { (bytesWriteen, totalBytesWritten, totalBytesExpectedToWrite) in
-                                            hud.progress = Float(totalBytesWritten) / Float(totalBytesExpectedToWrite)
+                                            self.loadingView.progressView.progress = Float(totalBytesWritten) / Float(totalBytesExpectedToWrite)
                 }, success: { (data) in
                     self.saveFinished()
                 }, failure: self.handleErrors)
@@ -194,8 +193,6 @@ class BusinessEditController: MJPController {
     }
     
     func saveFinished() {
-        
-        AppHelper.hideLoading()
         
         if !isNew {
             _ = navigationController?.popViewController(animated: true)

@@ -30,6 +30,8 @@ class BusinessDetailController: MJPController {
     var isFirstCreate = false
     var businessId: NSNumber!
     
+    var noRefresh = false
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -45,10 +47,10 @@ class BusinessDetailController: MJPController {
             headerCreditCount.isHidden = true
             headerSubTitle.isHidden = true
             controlHeightConstraint.constant = 0
-            headerNavTitle.text = "Select work place"
+            headerNavTitle.text = "Select workplace"
         } else {
             headerComment.isHidden = true
-            headerNavTitle.text = "Work Places"
+            headerNavTitle.text = "Workplaces"
             removeButtonDisable.isHidden = AppData.user.canCreateBusinesses && AppData.user.businesses.count > 1
         }
         
@@ -60,14 +62,18 @@ class BusinessDetailController: MJPController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        AppHelper.showLoading("Loading...")
-        API.shared().loadBusiness(id: businessId, success: { (data) in
-            self.business = data as! Business
-            if !self.isAddMode {
-                self.updateBusinessInfo()
-            }
-            self.loadLocations()
-        }, failure: self.handleErrors)
+        if !noRefresh {
+            showLoading()
+            API.shared().loadBusiness(id: businessId, success: { (data) in
+                self.business = data as! Business
+                if !self.isAddMode {
+                    self.updateBusinessInfo()
+                }
+                self.loadLocations()
+            }, failure: self.handleErrors)
+        } else {
+            noRefresh = false
+        }
     }
     
     func updateBusinessInfo() {
@@ -83,7 +89,7 @@ class BusinessDetailController: MJPController {
     
     func loadLocations() {
         API.shared().loadLocationsForBusiness(businessId: businessId, success: { (data) in
-            AppHelper.hideLoading()
+            self.hideLoading()
             self.data = data.mutableCopy() as! NSMutableArray
             self.updateLocationList()
             self.tableView.pullToRefreshView.stopAnimating()
@@ -92,7 +98,7 @@ class BusinessDetailController: MJPController {
     
     func updateLocationList() {
         if !isAddMode {
-            headerSubTitle.text = String(format: "Includes %lu %@", data.count, data.count > 1 ? "work places" : "work place")
+            headerSubTitle.text = String(format: "Includes %lu %@", data.count, data.count > 1 ? "workplaces" : "workplace")
         }
         
         firstCreateMessage.isHidden = !isFirstCreate
@@ -109,9 +115,9 @@ class BusinessDetailController: MJPController {
         let message = String(format: "Are you sure you want to delete %@", headerName.text!)
         PopupController.showYellow(message, ok: "Delete", okCallback: {
             
-            AppHelper.showLoading("Deleting...")
+            self.showLoading()
             API.shared().deleteBusiness(id: self.businessId, success: {
-                AppHelper.hideLoading()
+                self.hideLoading()
                 _ = self.navigationController?.popViewController(animated: true)
             }, failure: self.handleErrors)
             
@@ -149,13 +155,15 @@ extension BusinessDetailController: UITableViewDataSource {
                               padding: 20,
                               callback: { (cell) -> Bool in
                                 
+                                self.noRefresh = true
+                                
                                 let message = String(format: "Are you sure you want to delete %@", location.name)
                                 PopupController.showYellow(message, ok: "Delete", okCallback: {
                                     
-                                    AppHelper.showLoading("Deleting...")
+                                    self.showLoading()
                                     
                                     API.shared().deleteLocation(id: location.id, success: {
-                                        AppHelper.hideLoading()
+                                        self.hideLoading()
                                         self.data.remove(location)
                                         self.updateLocationList()
                                     }, failure: self.handleErrors)

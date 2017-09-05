@@ -56,26 +56,38 @@ export default class Find extends Component {
       alertShow(
         'Alert',
         'You need to record your pitch video to apply.',
-        'Cancel', null,
-        'Record my pitch', () => {
-          browserHistory.push('/jobseeker/record');
-        },
+        [
+          { label: 'Cancel' },
+          {
+            label: 'Record my pitch',
+            style: 'success',
+            callback: () => {
+              browserHistory.push('/jobseeker/record');
+            }
+          }
+        ]
       );
     } else {
       alertShow(
         'Confirm',
         'Yes, I want to apply to this job',
-        'Cancel', null,
-        'Apply', () => {
-          saveApplication({
-            job: (job || selectedJob).id,
-            job_seeker: jobSeeker.id,
-          })
-          .then(() => {
-            utils.successNotif('Success!');
-            this.onRefresh();
-          });
-        },
+        [
+          { label: 'Cancel' },
+          {
+            label: 'Apply',
+            style: 'success',
+            callback: () => {
+              saveApplication({
+                job: (job || selectedJob).id,
+                job_seeker: jobSeeker.id,
+              })
+              .then(() => {
+                utils.successNotif('Success!');
+                this.onRefresh();
+              });
+            }
+          }
+        ]
       );
     }
     if (event) {
@@ -89,11 +101,17 @@ export default class Find extends Component {
     this.props.alertShow(
       'Confirm',
       'Are you sure you are not interested in this job?',
-      'Cancel', null,
-      'I\'m Sure', () => {
-        rejectedJobs.push(job || selectedJob);
-        this.setState({ rejectedJobs });
-      },
+      [
+        { label: 'Cancel' },
+        {
+          label: 'I\'m Sure',
+          style: 'success',
+          callback: () => {
+            rejectedJobs.push(job || selectedJob);
+            this.setState({ rejectedJobs });
+          }
+        }
+      ]
     );
     if (event) {
       event.stopPropagation();

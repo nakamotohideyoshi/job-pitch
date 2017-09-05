@@ -34,17 +34,17 @@ class ApplicationDetailController: MJPController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        AppHelper.showLoading("Loading...")
         scrollView.isHidden = true
         
         if application != nil {
             job = application.job
         }
         
+        showLoading()
         API.shared().loadJobSeekerWithId(id: AppData.user.jobSeeker, success: { (data) in
             self.jobSeeker = data as! JobSeeker
             API.shared().loadJobProfileWithId(id: self.jobSeeker.profile, success: { (data) in
-                AppHelper.hideLoading()
+                self.hideLoading()
                 self.scrollView.isHidden = false
                 
                 self.profile = data as! Profile
@@ -118,6 +118,7 @@ class ApplicationDetailController: MJPController {
     
     @IBAction func applyAction(_ sender: Any) {
         PopupController.showGreen("Are you sure you want to apply to this job?", ok: "Apply", okCallback: {
+            self.showLoading()
             self.chooseDelegate?.apply(callback: {
                 _ = self.navigationController?.popViewController(animated: true)
             })

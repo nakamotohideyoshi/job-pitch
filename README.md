@@ -51,7 +51,7 @@ cd ~/sources/my-job-pitch/web/
 vagrant up
 ```
 
-### Run the deveopment server
+### Run the development server
 
 To run the development server, we ssh to the new VM.
 

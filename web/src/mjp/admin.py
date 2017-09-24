@@ -90,7 +90,7 @@ class JobSeekerAdmin(admin.ModelAdmin):
         profile = job_seeker.profile
         search_area = "{} (@{} miles)".format(
             profile.place_name or profile.postcode_lookup or profile.latlng,
-            profile.radius,
+            profile.search_radius,
             )
         return search_area
     get_search_area.short_description = 'Search Area'

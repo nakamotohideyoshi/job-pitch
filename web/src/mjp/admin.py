@@ -80,6 +80,7 @@ class JobSeekerAdmin(admin.ModelAdmin):
     def get_full_name(self, job_seeker):
         return " ".join((job_seeker.first_name, job_seeker.last_name))
     get_full_name.short_description = 'Name'
+    get_full_name.admin_order_field = 'last_name'
 
     def get_email(self, job_seeker):
         return job_seeker.user.email
@@ -88,7 +89,7 @@ class JobSeekerAdmin(admin.ModelAdmin):
 
     def get_search_area(self, job_seeker):
         profile = job_seeker.profile
-        search_area = u"{} (@{} miles)".format(
+        search_area = u"{} ({} miles)".format(
             profile.place_name or profile.postcode_lookup or profile.latlng,
             profile.search_radius,
             )
@@ -98,10 +99,12 @@ class JobSeekerAdmin(admin.ModelAdmin):
     def get_date_joined(self, jobseeker):
         return jobseeker.user.date_joined
     get_date_joined.short_description = 'Joined'
+    get_date_joined.admin_order_field = 'user__date_joined'
 
     def get_last_login(self, jobseeker):
         return jobseeker.user.last_login
     get_last_login.short_description = 'Last Login'
+    get_last_login.admin_order_field = 'user__last_login'
 
     def has_pitch(self, job_seeker):
         return bool(job_seeker.pitches.count())
@@ -109,15 +112,6 @@ class JobSeekerAdmin(admin.ModelAdmin):
 
     def latest_application(self, job_seeker):
         return job_seeker.applications.latest('created').created
-
-    def get_pitch_thumbnail(self, job_seeker):
-        return job_seeker.pitches.get(thumbnail__isnull=False).thumbnail
-
-    get_pitch_thumbnail.short_description = 'Pitch Thumbnail'
-
-    def get_pitch(self, job_seeker):
-        return job_seeker.pitches.get(video__isnull=False).video
-    get_pitch.short_description = 'Pitch Video'
 
 
 class CommaSeparatedEmailField(forms.Field):

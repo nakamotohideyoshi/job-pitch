@@ -24,12 +24,100 @@ from .models import (
     InitialTokens,
     ProductTokens,
     PayPalProduct,
-)
+    Pitch)
 
 
-@admin.register(Sex, Nationality, Contract, Hours, Business, JobSeeker, Message)
+@admin.register(Sex, Nationality, Contract, Hours, Business, Message)
 class Admin(admin.ModelAdmin):
     pass
+
+
+class PitchInline(admin.StackedInline):
+    model = Pitch
+    max_num = 0
+
+
+@admin.register(JobSeeker)
+class JobSeekerAdmin(admin.ModelAdmin):
+    fields = (
+        'active',
+        'first_name',
+        'last_name',
+        ('get_email', 'email_public'),
+        ('age', 'age_public'),
+        ('sex', 'sex_public'),
+        ('nationality', 'nationality_public'),
+        ('telephone', 'telephone_public'),
+        ('mobile', 'mobile_public'),
+        'description',
+        'cv',
+        'has_references',
+        'truth_confirmation',
+    )
+    readonly_fields = ('get_email',)
+    list_display = (
+        'get_email',
+        'get_full_name',
+        'age',
+        'sex',
+        'get_search_area',
+        'has_pitch',
+        'get_last_login',
+        'latest_application',
+        'get_date_joined',
+        'active',
+    )
+    inlines = (
+        PitchInline,
+    )
+
+    def get_queryset(self, request):
+        queryset = super(JobSeekerAdmin, self).get_queryset(request)
+        queryset = queryset.select_related('user', 'profile')
+        queryset = queryset.prefetch_related('pitches', 'applications')
+        return queryset
+
+    def get_full_name(self, job_seeker):
+        return " ".join((job_seeker.first_name, job_seeker.last_name))
+    get_full_name.short_description = 'Name'
+
+    def get_email(self, job_seeker):
+        return job_seeker.user.email
+    get_email.short_description = 'Email'
+    get_email.admin_order_field = 'user__email'
+
+    def get_search_area(self, job_seeker):
+        profile = job_seeker.profile
+        search_area = "{} (@{} miles)".format(
+            profile.place_name or profile.postcode_lookup or profile.latlng,
+            profile.radius,
+            )
+        return search_area
+    get_search_area.short_description = 'Search Area'
+
+    def get_date_joined(self, jobseeker):
+        return jobseeker.user.date_joined
+    get_date_joined.short_description = 'Joined'
+
+    def get_last_login(self, jobseeker):
+        return jobseeker.user.last_login
+    get_last_login.short_description = 'Last Login'
+
+    def has_pitch(self, job_seeker):
+        return bool(job_seeker.pitches.count())
+    has_pitch.boolean = True
+
+    def latest_application(self, job_seeker):
+        return job_seeker.applications.latest('created').created
+
+    def get_pitch_thumbnail(self, job_seeker):
+        return job_seeker.pitches.get(thumbnail__isnull=False).thumbnail
+
+    get_pitch_thumbnail.short_description = 'Pitch Thumbnail'
+
+    def get_pitch(self, job_seeker):
+        return job_seeker.pitches.get(video__isnull=False).video
+    get_pitch.short_description = 'Pitch Video'
 
 
 class CommaSeparatedEmailField(forms.Field):
@@ -76,6 +164,21 @@ class PreRegistrationPasswordResetForm(PasswordResetForm):
 
 @admin.register(User)
 class UserAdmin(admin.ModelAdmin):
+    fields = (
+        'email',
+        'first_name',
+        'last_name',
+        'date_joined',
+        'last_login',
+        'is_active',
+        'is_staff',
+        'is_superuser',
+        'groups',
+        'user_permissions',
+    )
+    readonly_fields = ('last_login', 'date_joined')
+    list_display = ('email', 'last_login', 'date_joined', 'is_active', 'is_staff')
+
     def get_urls(self):
         return [
             url(r'bulk-register/$', self.admin_site.admin_view(self.bulk_register)),

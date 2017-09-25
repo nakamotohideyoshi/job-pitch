@@ -223,9 +223,9 @@ class JobSeekerAdmin(admin.ModelAdmin):
     get_last_login.admin_order_field = 'user__last_login'
 
     def has_pitch(self, job_seeker):
-        return job_seeker.pitch_count
+        return job_seeker.has_pitch
     has_pitch.boolean = True
-    has_pitch.admin_order_field = 'pitch_count'
+    has_pitch.admin_order_field = 'has_pitch'
 
     def latest_application(self, job_seeker):
         return job_seeker.latest_application

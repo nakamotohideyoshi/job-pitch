@@ -4,6 +4,13 @@ from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import PasswordResetForm
 from django.core.validators import EMPTY_VALUES, EmailValidator
+from django.db.models import Case
+from django.db.models import Count, Max
+from django.db.models import F
+from django.db.models import Value
+from django.db.models import When
+from django.db.models.functions import Concat
+from django.db.models.aggregates import Aggregate
 from django.forms import forms
 from django.http import HttpResponseRedirect
 from django.shortcuts import render_to_response
@@ -24,7 +31,10 @@ from .models import (
     InitialTokens,
     ProductTokens,
     PayPalProduct,
-    Pitch)
+    Pitch,
+    Role,
+    JobProfile,
+)
 
 
 @admin.register(Sex, Nationality, Contract, Hours, Business, Message)
@@ -34,7 +44,72 @@ class Admin(admin.ModelAdmin):
 
 class PitchInline(admin.StackedInline):
     model = Pitch
+    verbose_name_plural = 'Pitch'
     max_num = 0
+
+
+class JobProfileInline(admin.StackedInline):
+    model = JobProfile
+    verbose_name_plural = 'Profile'
+    max_num = 0
+    readonly_fields = ('place_id', 'place_name', 'postcode_lookup')
+
+
+class ProfileFilter(admin.SimpleListFilter):
+
+    model = None
+    filter_kwarg = None
+
+    def queryset(self, request, queryset):
+        pk = self.value()
+        if pk:
+            return queryset.filter(**{self.filter_kwarg: pk})
+
+    def lookups(self, request, model_admin):
+        return [(obj.id, obj.name) for obj in self.model.objects.all()]
+
+
+class ProfileShortNameFilter(ProfileFilter):
+    def lookups(self, request, model_admin):
+        return [(obj.id, "{} ({})".format(obj.name, obj.short_name)) for obj in self.model.objects.all()]
+
+
+class StringAggregate(Aggregate):
+    function = 'string_agg'
+    name = 'String Aggregate'
+    template = '%(function)s(%(distinct)s%(expressions)s)'
+
+    def __init__(self, *expressions, **extra):
+        distinct = 'DISTINCT ' if extra.pop('distinct', False) else ''
+        super(StringAggregate, self).__init__(*expressions, distinct=distinct, **extra)
+
+
+class SectorFilter(ProfileFilter):
+    model = Sector
+    filter_kwarg = 'profile__sectors__pk'
+    title = 'Sector'
+    parameter_name = 'sector'
+
+
+class HoursFilter(ProfileShortNameFilter):
+    model = Hours
+    filter_kwarg = 'profile__hours__pk'
+    title = 'Hours'
+    parameter_name = 'hours'
+
+
+class ContractFilter(ProfileShortNameFilter):
+    model = Contract
+    filter_kwarg = 'profile__contracts__pk'
+    title = 'Contracts'
+    parameter_name = 'contracts'
+
+
+class SexFilter(ProfileShortNameFilter):
+    model = Sex
+    filter_kwarg = 'sex__pk'
+    title = 'Sex'
+    parameter_name = 'sex'
 
 
 @admin.register(JobSeeker)
@@ -49,6 +124,10 @@ class JobSeekerAdmin(admin.ModelAdmin):
         ('nationality', 'nationality_public'),
         ('telephone', 'telephone_public'),
         ('mobile', 'mobile_public'),
+        'get_sector_list',
+        'get_hours_list',
+        'get_contract_list',
+        'get_sex',
         'description',
         'cv',
         'has_references',
@@ -59,7 +138,10 @@ class JobSeekerAdmin(admin.ModelAdmin):
         'get_email',
         'get_full_name',
         'age',
-        'sex',
+        'get_sex',
+        'get_sector_list',
+        'get_hours_list',
+        'get_contract_list',
         'get_search_area',
         'has_pitch',
         'get_last_login',
@@ -67,33 +149,63 @@ class JobSeekerAdmin(admin.ModelAdmin):
         'get_date_joined',
         'active',
     )
+    list_filter = (SectorFilter, ContractFilter, HoursFilter, SexFilter)
+    search_fields = ('user__email', 'first_name', 'last_name')
+
+    def get_fields(self, request, obj=None):
+        fields = super(JobSeekerAdmin, self).get_fields(request, obj)
+        return tuple(field for field in fields if field not in (
+            'get_sector_list',
+            'get_hours_list',
+            'get_contract_list',
+            'get_sex',
+        ))
+
     inlines = (
         PitchInline,
+        JobProfileInline,
     )
 
     def get_queryset(self, request):
         queryset = super(JobSeekerAdmin, self).get_queryset(request)
-        queryset = queryset.select_related('user', 'profile')
+        queryset = queryset.distinct()
+        queryset = queryset.select_related('profile')
         queryset = queryset.prefetch_related('pitches', 'applications')
+        queryset = queryset.annotate(
+            email=F('user__email'),
+            sector_list=StringAggregate('profile__sectors__name', Value(', '), distinct=True),
+            contract_list=StringAggregate('profile__contract__short_name', Value(', '), distinct=True),
+            hours_list=StringAggregate('profile__hours__short_name', Value(', '), distinct=True),
+            full_name=Concat('first_name', Value(' '), 'last_name'),
+            latest_application=Max(
+                Case(When(applications__created_by__name=Role.JOB_SEEKER, then=F('applications__created'))),
+            ),
+            pitch_count=Count('pitches'),
+            sex_short_name=F('sex__short_name'),
+        )
         return queryset
 
     def get_full_name(self, job_seeker):
-        return " ".join((job_seeker.first_name, job_seeker.last_name))
+        return job_seeker.full_name
     get_full_name.short_description = 'Name'
-    get_full_name.admin_order_field = 'last_name'
+    get_full_name.admin_order_field = 'full_name'
 
     def get_email(self, job_seeker):
-        return job_seeker.user.email
+        return job_seeker.email
     get_email.short_description = 'Email'
-    get_email.admin_order_field = 'user__email'
+    get_email.admin_order_field = 'email'
+
+    def get_sex(self, job_seeker):
+        return job_seeker.sex_short_name
+    get_sex.short_description = 'Sex'
+    get_sex.admin_order_field = 'sex_short_name'
 
     def get_search_area(self, job_seeker):
         profile = job_seeker.profile
-        search_area = u"{} ({} miles)".format(
+        return u"{} ({} miles)".format(
             profile.place_name or profile.postcode_lookup or profile.latlng,
             profile.search_radius,
-            )
-        return search_area
+        )
     get_search_area.short_description = 'Search Area'
 
     def get_date_joined(self, jobseeker):
@@ -107,11 +219,28 @@ class JobSeekerAdmin(admin.ModelAdmin):
     get_last_login.admin_order_field = 'user__last_login'
 
     def has_pitch(self, job_seeker):
-        return bool(job_seeker.pitches.count())
+        return job_seeker.pitch_count
     has_pitch.boolean = True
+    has_pitch.admin_order_field = 'pitch_count'
 
     def latest_application(self, job_seeker):
-        return job_seeker.applications.latest('created').created
+        return job_seeker.latest_application
+    latest_application.admin_order_field = 'latest_application'
+
+    def get_sector_list(self, job_seeker):
+        return job_seeker.sector_list
+    get_sector_list.short_description = 'Sectors'
+    get_sector_list.admin_order_field = 'sector_list'
+
+    def get_hours_list(self, job_seeker):
+        return job_seeker.hours_list
+    get_hours_list.short_description = 'Hours'
+    get_hours_list.admin_order_field = 'hours_list'
+
+    def get_contract_list(self, job_seeker):
+        return job_seeker.contract_list
+    get_contract_list.short_description = 'Contracts'
+    get_contract_list.admin_order_field = 'contract_list'
 
 
 class CommaSeparatedEmailField(forms.Field):

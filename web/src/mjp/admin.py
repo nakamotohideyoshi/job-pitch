@@ -6,9 +6,8 @@ from django.contrib.auth.forms import PasswordResetForm
 from django.core.validators import EMPTY_VALUES, EmailValidator
 from django.db.models import Case, BooleanField
 from django.db.models import Count, Max
-from django.db.models import Expression
-from django.db.models import ExpressionWrapper
 from django.db.models import F
+from django.db.models import Q
 from django.db.models import Value
 from django.db.models import When
 from django.db.models.functions import Concat
@@ -182,8 +181,11 @@ class JobSeekerAdmin(admin.ModelAdmin):
             latest_application=Max(
                 Case(When(applications__created_by__name=Role.JOB_SEEKER, then=F('applications__created'))),
             ),
-            pitch_count=ExpressionWrapper(Count('pitches'), output_field=BooleanField()),
+            pitch_count=Count('pitches'),
             sex_short_name=F('sex__short_name'),
+        )
+        queryset = queryset.annotate(
+            has_pitch=Case(When(pitch_count__gt=0, then=True), default=False, output_field=BooleanField()),
         )
         return queryset
 

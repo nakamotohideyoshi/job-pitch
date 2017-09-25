@@ -94,16 +94,16 @@ class SectorFilter(ProfileFilter):
 
 class HoursFilter(ProfileShortNameFilter):
     model = Hours
-    filter_kwarg = 'profile__hours__pk'
-    title = 'Hours'
-    parameter_name = 'hours'
+    filter_kwarg = 'profile__hour__pk'
+    title = 'Hour'
+    parameter_name = 'hour'
 
 
 class ContractFilter(ProfileShortNameFilter):
     model = Contract
-    filter_kwarg = 'profile__contracts__pk'
-    title = 'Contracts'
-    parameter_name = 'contracts'
+    filter_kwarg = 'profile__contract__pk'
+    title = 'Contract'
+    parameter_name = 'contract'
 
 
 class SexFilter(ProfileShortNameFilter):

@@ -57,6 +57,7 @@ INSTALLED_APPS = (
     'rest_auth',
     'rest_auth.registration',
     'django.contrib.admin',
+    'django.contrib.gis',
 )
 
 # Database

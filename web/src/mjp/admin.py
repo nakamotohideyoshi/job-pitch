@@ -175,7 +175,7 @@ class JobSeekerAdmin(admin.ModelAdmin):
         'get_date_joined',
         'active',
     )
-    list_filter = (SectorFilter, ContractFilter, HoursFilter, SexFilter, HasPitchFilter, 'active')
+    list_filter = (ContractFilter, HoursFilter, SexFilter, HasPitchFilter, 'active', SectorFilter)
     search_fields = ('user__email', 'first_name', 'last_name')
 
     def get_fields(self, request, obj=None):

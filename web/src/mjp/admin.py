@@ -56,8 +56,17 @@ class JobProfileInline(admin.StackedInline):
     readonly_fields = ('place_id', 'place_name', 'postcode_lookup')
 
 
-class ProfileFilter(admin.SimpleListFilter):
+class StringAggregate(Aggregate):
+    function = 'string_agg'
+    name = 'String Aggregate'
+    template = '%(function)s(%(distinct)s%(expressions)s)'
 
+    def __init__(self, *expressions, **extra):
+        distinct = 'DISTINCT ' if extra.pop('distinct', False) else ''
+        super(StringAggregate, self).__init__(*expressions, distinct=distinct, **extra)
+
+
+class ProfileFilter(admin.SimpleListFilter):
     model = None
     filter_kwarg = None
 
@@ -73,16 +82,6 @@ class ProfileFilter(admin.SimpleListFilter):
 class ProfileShortNameFilter(ProfileFilter):
     def lookups(self, request, model_admin):
         return [(obj.id, "{} ({})".format(obj.name, obj.short_name)) for obj in self.model.objects.all()]
-
-
-class StringAggregate(Aggregate):
-    function = 'string_agg'
-    name = 'String Aggregate'
-    template = '%(function)s(%(distinct)s%(expressions)s)'
-
-    def __init__(self, *expressions, **extra):
-        distinct = 'DISTINCT ' if extra.pop('distinct', False) else ''
-        super(StringAggregate, self).__init__(*expressions, distinct=distinct, **extra)
 
 
 class SectorFilter(ProfileFilter):
@@ -111,6 +110,32 @@ class SexFilter(ProfileShortNameFilter):
     filter_kwarg = 'sex__pk'
     title = 'Sex'
     parameter_name = 'sex'
+
+
+class BooleanFilter(admin.SimpleListFilter):
+    def queryset(self, request, queryset):
+        value = self.value()
+        if value == '1':
+            return self._true_filter(queryset)
+        if value == '0':
+            return self._false_filter(queryset)
+
+    def lookups(self, request, model_admin):
+        return [
+            ('1', "Yes"),
+            ('0', "No"),
+        ]
+
+
+class HasPitchFilter(BooleanFilter):
+    title = 'Has Pitch'
+    parameter_name = 'has_pitch'
+
+    def _false_filter(self, queryset):
+        return queryset.filter(pitch_count=0)
+
+    def _true_filter(self, queryset):
+        return queryset.filter(pitch_count__gt=0)
 
 
 @admin.register(JobSeeker)
@@ -150,7 +175,7 @@ class JobSeekerAdmin(admin.ModelAdmin):
         'get_date_joined',
         'active',
     )
-    list_filter = (SectorFilter, ContractFilter, HoursFilter, SexFilter)
+    list_filter = (SectorFilter, ContractFilter, HoursFilter, SexFilter, HasPitchFilter, 'active')
     search_fields = ('user__email', 'first_name', 'last_name')
 
     def get_fields(self, request, obj=None):

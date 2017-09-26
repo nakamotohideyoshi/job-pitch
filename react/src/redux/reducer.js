@@ -1,8 +1,9 @@
 import { routerReducer } from 'react-router-redux';
 import { reducer as reduxAsyncConnect } from 'redux-connect';
-import auth from './modules/auth';
-import jobmanager from './modules/jobmanager';
 import common from './modules/common';
+import auth from './modules/auth';
+import api from './modules/api';
+import jobmanager from './modules/jobmanager';
 
 export default function createReducers(asyncReducers) {
   return {
@@ -11,6 +12,7 @@ export default function createReducers(asyncReducers) {
     online: (v = true) => v,
     common,
     auth,
+    api,
     jobmanager,
     ...asyncReducers
   };

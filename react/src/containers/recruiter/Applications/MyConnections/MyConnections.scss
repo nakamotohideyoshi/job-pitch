@@ -1,0 +1,105 @@
+.application {
+  display: block;
+  text-decoration: none !important;
+  padding: 0 30px;
+  margin: -1px 0;
+
+  > div {
+    display: flex;
+    padding: 20px 0;
+    margin: -1px 0;
+    border-top: 1px solid #e0e0e0;
+    border-bottom: 1px solid #e0e0e0;
+    position: relative;
+
+    img {
+      width: 80px;
+      height: 80px;
+      border-radius: 40px;
+      margin-right: 20px;        
+    }
+
+    .star {
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      width: 30px;
+      height: 30px;
+      border-radius: 15px;
+      position: absolute;
+      background-color: #fff;
+      left: -8px;
+      top: 12px;
+      font-size: 16px;
+
+      i {
+        color: #ff9300;
+      }
+    }
+
+    .content {
+      flex: 1;
+      display: grid;
+
+      .name {
+        margin-top: 10px;
+        font-size: 16px;
+        font-weight: 500;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
+      }
+      
+      .desc {
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
+      }
+    }
+
+    .control {
+      display: none;      
+    }
+  }
+}
+
+.application:hover {
+  background-color: #f0f0f0;
+  border-top: 1px solid #e0e0e0;
+  border-bottom: 1px solid #e0e0e0;
+  
+  .star {
+    background-color: #f0f0f0;
+  }
+
+  .title {
+    color: #00b6a4;
+  }
+  
+  .control {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin-left: 5px;
+
+    button {
+      padding: 4px 12px;
+      margin-top: 8px;
+    }
+
+    button:first-child {
+      margin-top: 0;
+    }
+  }
+}
+
+div.application {
+  cursor: initial;
+
+  > div {
+    position: relative;
+    height: 122px;
+    padding: 0;
+  }
+}
+

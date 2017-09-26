@@ -1,0 +1,80 @@
+.job {
+  display: block;
+  text-decoration: none !important;
+  padding: 0 30px;
+  margin: -1px 0;
+
+  > div {
+    display: flex;
+    padding: 20px 0;
+    margin: -1px 0;
+    border-top: 1px solid #e0e0e0;
+
+    img {
+      width: 80px;
+      height: 80px;
+      border-radius: 40px;
+      margin-right: 20px;        
+    }
+
+    .content {
+      flex: 1;
+      display: grid;
+
+      .title {
+        font-size: 16px;
+        font-weight: 500;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
+      }
+      
+      .info {
+        display: grid;
+        
+        div {
+          grid-row: 1;
+          margin-right: 10px;
+          white-space: nowrap;
+          text-overflow: ellipsis;
+          overflow: hidden;
+        }
+
+        span {
+          grid-row: 1;
+          text-align: right;
+          white-space: nowrap;
+        }
+      }
+
+      .desc {
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
+      }
+    }
+  }
+}
+
+.job:hover {
+  background-color: #f0f0f0;
+  border-top: 1px solid #e0e0e0;
+  border-bottom: 1px solid #e0e0e0;
+  
+  .title {
+    color: #00b6a4;
+  }
+}
+
+.job.closed {
+  text-decoration-line: line-through;
+  cursor: initial;
+
+  > div {
+    opacity: 0.5;
+
+    .title {
+      color: #000;
+    }
+  }
+}

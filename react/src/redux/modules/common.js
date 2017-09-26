@@ -1,31 +1,16 @@
-const CALL_START = 'mjp/common/CALL_START';
-const CALL_END = 'mjp/common/CALL_END';
-const SET_VALUE = 'mjp/common/SET_VALUE';
 const ALERT_SHOW = 'mjp/common/ALERT_SHOW';
 const ALERT_HIDE = 'mjp/common/ALERT_HIDE';
+const SHOW_LOADING = 'mjp/common/SHOW_LOADING';
+const SET_PERMISSION = 'mjp/common/SET_PERMISSION';
+const SET_VALUE = 'mjp/common/SET_VALUE';
 
 const initialState = {
   shared: {},
+  permission: 0,
 };
 
 export default function reducer(state = initialState, action = {}) {
   switch (action.type) {
-    case CALL_START:
-      return {
-        ...state,
-        loading: true,
-      };
-    case CALL_END:
-      return {
-        ...state,
-        loading: false,
-      };
-    case SET_VALUE:
-      const { key, value } = action;
-      return {
-        ...state,
-        shared: { ...state.shared, [key]: value },
-      };
     case ALERT_SHOW:
       return {
         ...state,
@@ -36,15 +21,25 @@ export default function reducer(state = initialState, action = {}) {
         ...state,
         alert: null,
       };
+    case SHOW_LOADING:
+      return {
+        ...state,
+        loading: action.loading,
+      };
+    case SET_PERMISSION:
+      return {
+        ...state,
+        permission: action.permission,
+      };
+    case SET_VALUE:
+      const { key, value } = action;
+      return {
+        ...state,
+        shared: { ...state.shared, [key]: value },
+      };
     default:
       return state;
   }
-}
-
-// shared data
-
-export function setData(key, value) {
-  return { type: SET_VALUE, key, value };
 }
 
 // alert
@@ -57,89 +52,20 @@ export function alertHide() {
   return { type: ALERT_HIDE };
 }
 
-// api
+// show loading
 
-export function getJobProfile(profileId) {
-  return {
-    types: [CALL_START, CALL_END, CALL_END],
-    promise: client => client.getJobProfile(profileId)
-  };
-}
-export function saveJobProfile(profile) {
-  return {
-    types: [CALL_START, CALL_END, CALL_END],
-    promise: client => client.saveJobProfile(profile)
-  };
+export function showLoading(loading) {
+  return { type: SHOW_LOADING, loading };
 }
 
+// set permission
 
-export function getUserJobs(query) {
-  return {
-    types: [CALL_START, CALL_END, CALL_END],
-    promise: client => client.getUserJobs(query)
-  };
+export function setPermission(permission) {
+  return { type: SET_PERMISSION, permission };
 }
 
-export function getJobs(query) {
-  return {
-    types: [CALL_START, CALL_END, CALL_END],
-    promise: client => client.getJobs(query)
-  };
-}
+// shared data
 
-export function getJobSeekers(query) {
-  return {
-    types: [CALL_START, CALL_END, CALL_END],
-    promise: client => client.getJobSeekers(query)
-  };
+export function setData(key, value) {
+  return { type: SET_VALUE, key, value };
 }
-
-export function saveApplication(application) {
-  return {
-    types: [CALL_START, CALL_END, CALL_END],
-    promise: client => client.saveApplication(application)
-  };
-}
-
-export function getApplications(query) {
-  return {
-    types: [CALL_START, CALL_END, CALL_END],
-    promise: client => client.getApplications(query)
-  };
-}
-
-export function deleteApplication(appId) {
-  return {
-    types: [CALL_START, CALL_END, CALL_END],
-    promise: client => client.deleteApplication(appId)
-  };
-}
-
-export function sendMessage(message) {
-  return {
-    types: [CALL_START, CALL_END, CALL_END],
-    promise: client => client.sendMessage(message)
-  };
-}
-
-export function getPitch(id) {
-  return {
-    types: [CALL_START, CALL_END, CALL_END],
-    promise: client => client.getPitch(id)
-  };
-}
-
-export function createPitch() {
-  return {
-    types: [CALL_START, CALL_END, CALL_END],
-    promise: client => client.createPitch()
-  };
-}
-
-export function purchase(data) {
-  return {
-    types: [CALL_START, CALL_END, CALL_END],
-    promise: client => client.purchase(data)
-  };
-}
-

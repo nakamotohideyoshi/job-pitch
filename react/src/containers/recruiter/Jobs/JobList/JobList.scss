@@ -1,0 +1,94 @@
+.job {
+  display: block;
+  text-decoration: none !important;
+  padding: 0 30px;
+  margin: -1px;
+  border: 1px solid transparent;
+
+  > div {
+    display: flex;
+    padding: 20px 0;
+    margin-bottom: -1px;
+    border-bottom: 1px solid #e0e0e0;
+
+    img {
+      width: 80px;
+      height: 80px;
+      border-radius: 40px;
+      margin-right: 20px;        
+    }
+
+    .content {
+      flex: 1;
+      display: grid;
+
+      > div {
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
+      }
+
+      .title {
+        margin-top: 10px;
+        font-size: 16px;
+        font-weight: 500;
+      }
+    }
+
+    .controls {
+      display: none;      
+    }
+  }
+}
+
+a.job:hover {
+  background-color: #f0f0f0;
+  border: 1px solid #e0e0e0;
+
+  > div {
+    border-bottom: 1px solid transparent;
+
+    .title {
+      color: #00b6a4;
+    }
+  
+    .controls {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      margin-left: 5px;
+  
+      button {
+        padding: 4px 12px;
+        margin-top: 8px;
+      }
+  
+      button:first-child {
+        margin-top: 0;
+      }
+    }
+  }
+}
+
+.job.selected, .job.selected:hover {
+  cursor: initial;
+  background-color: rgba(0,182,164,0.4);
+
+  > div {
+    border-bottom: 1px solid transparent;
+
+    .title {
+      color: #333;
+    }
+  }
+}
+
+div.job {
+  cursor: initial;
+
+  > div {
+    position: relative;
+    height: 122px;
+    padding: 0;
+  }
+}

@@ -1,0 +1,20 @@
+.tab {
+  border-bottom: 1px solid #e0e0e0;
+  margin-bottom: 40px;
+  text-align: center;
+
+  a {
+    // padding: 0 30px;
+    padding-bottom: 10px;
+    margin: 0 30px;
+    display: inline-block;
+    border-bottom: 4px solid transparent;
+    text-decoration: none;
+    text-transform: uppercase;
+  }
+  
+  .active {
+    border-bottom-color: #00b6a4;
+    color: #00b6a4;
+  }
+}

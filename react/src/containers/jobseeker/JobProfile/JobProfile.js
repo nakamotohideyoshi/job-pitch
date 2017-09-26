@@ -4,11 +4,14 @@ import Helmet from 'react-helmet';
 import { connect } from 'react-redux';
 import Form from 'react-bootstrap/lib/Form';
 import FormGroup from 'react-bootstrap/lib/FormGroup';
-import Col from 'react-bootstrap/lib/Col';
+import ControlLabel from 'react-bootstrap/lib/ControlLabel';
+import HelpBlock from 'react-bootstrap/lib/HelpBlock';
 import { Loading, FormComponent, Map } from 'components';
 import * as commonActions from 'redux/modules/common';
-import * as authActions from 'redux/modules/auth';
+import * as apiActions from 'redux/modules/api';
 import * as utils from 'helpers/utils';
+import ApiClient from 'helpers/ApiClient';
+import styles from './JobProfile.scss';
 
 const SEARCH_RADIUS = [
   { id: 1, name: '1 mile' },
@@ -19,30 +22,22 @@ const SEARCH_RADIUS = [
 ];
 
 @connect(
-  state => ({
-    jobSeeker: state.auth.jobSeeker,
-    staticData: state.auth.staticData,
-    loading: state.auth.loading,
+  () => ({
   }),
-  { ...commonActions, ...authActions })
+  { ...commonActions, ...apiActions })
 export default class JobProfile extends FormComponent {
   static propTypes = {
-    jobSeeker: PropTypes.object.isRequired,
-    staticData: PropTypes.object.isRequired,
-    loading: PropTypes.bool.isRequired,
-    getJobProfile: PropTypes.func.isRequired,
-    saveJobProfile: PropTypes.func.isRequired,
+    getJobProfileAction: PropTypes.func.isRequired,
+    saveJobProfileAction: PropTypes.func.isRequired,
     setPermission: PropTypes.func.isRequired,
   }
 
   componentDidMount() {
-    const { staticData } = this.props;
-    this.contracts = [{ id: -1, name: 'Any' }].concat(staticData.contracts);
-    this.hours = [{ id: -1, name: 'Any' }].concat(staticData.hours);
-    this.getJobProfile()
-    .then(profile => {
+    this.contracts = [{ id: -1, name: 'Any' }].concat(ApiClient.contracts);
+    this.hours = [{ id: -1, name: 'Any' }].concat(ApiClient.hours);
+    this.getJobProfile().then(profile => {
       const formModel = Object.assign({}, profile);
-      formModel.sectors = staticData.sectors.filter(item => profile.sectors.includes(item.id));
+      formModel.sectors = ApiClient.sectors.filter(item => profile.sectors.includes(item.id));
       formModel.contract = this.contracts.filter(item => item.id === (profile.contract || -1))[0];
       formModel.hours = this.hours.filter(item => item.id === (profile.hours || -1))[0];
       formModel.search_radius = SEARCH_RADIUS.filter(item => item.id === profile.search_radius)[0];
@@ -63,12 +58,12 @@ export default class JobProfile extends FormComponent {
   }
 
   getJobProfile = () => {
-    const { jobSeeker, getJobProfile } = this.props;
-    if (jobSeeker.profile) {
-      return getJobProfile(jobSeeker.profile);
+    const { getJobProfileAction } = this.props;
+    if (ApiClient.jobSeeker.profile) {
+      return getJobProfileAction(ApiClient.jobSeeker.profile);
     }
     return Promise.resolve({
-      job_seeker: jobSeeker.id,
+      job_seeker: ApiClient.jobSeeker.id,
       sectors: [],
       contract: this.contracts[0].id,
       hours: this.hours[0].id,
@@ -79,7 +74,7 @@ export default class JobProfile extends FormComponent {
   onSave = () => {
     if (!this.isValid(['sectors', 'place_name'])) return;
 
-    const { saveJobProfile, setPermission } = this.props;
+    const { saveJobProfileAction, setPermission } = this.props;
     const { formModel, markerPos } = this.state;
     const data = Object.assign(this.state.profile, formModel);
     data.sectors = formModel.sectors.map(item => item.id);
@@ -89,8 +84,9 @@ export default class JobProfile extends FormComponent {
     data.latitude = markerPos.lat;
     data.longitude = markerPos.lng;
 
-    saveJobProfile(data).then(profile => {
-      this.setState({ profile });
+    this.setState({ saving: true });
+    saveJobProfileAction(data).then(profile => {
+      this.setState({ profile, saving: false });
       setPermission(2);
       utils.successNotif('Success!');
     })
@@ -98,70 +94,84 @@ export default class JobProfile extends FormComponent {
   }
 
   render() {
-    const { staticData, loading } = this.props;
-    const { profile, markerPos } = this.state;
+    const { profile, markerPos, saving } = this.state;
+
+    if (!profile) {
+      return <Loading />;
+    }
+
     return (
-      <div>
+      <div className={styles.root}>
         <Helmet title="Job Profile" />
-        {
-          !profile ?
-            <Loading /> :
-            <div>
-              <div className="pageHeader">
-                <h1>Job Profile</h1>
-              </div>
-              <div className="board">
-                <Form horizontal>
-                  <this.SelectFieldGroup
-                    label="Sectors"
-                    name="sectors"
-                    dataSource={staticData.sectors}
-                    placeholder="Select Sectors"
-                    multiple
-                    searchable
-                    searchPlaceholder="Search"
+
+        <div className="container">
+          <div className="pageHeader">
+            <h3>Job Profile</h3>
+          </div>
+
+          <div className="shadow-board padding-45">
+            <Form>
+              <FormGroup>
+                <ControlLabel>Sectors</ControlLabel>
+                <this.SelectField
+                  name="sectors"
+                  dataSource={ApiClient.sectors}
+                  placeholder="Select Sectors"
+                  multiple
+                  searchable
+                  searchPlaceholder="Search"
+                />
+              </FormGroup>
+              <FormGroup>
+                <ControlLabel>Contract</ControlLabel>
+                <this.SelectField
+                  name="contract"
+                  dataSource={this.contracts}
+                />
+              </FormGroup>
+              <FormGroup>
+                <ControlLabel>Hours</ControlLabel>
+                <this.SelectField
+                  name="hours"
+                  dataSource={this.hours}
+                />
+              </FormGroup>
+              <FormGroup>
+                <ControlLabel>Match area</ControlLabel>
+                <HelpBlock>
+                  In order to match you with jobs in your area, you must tell us your location, 
+                  and specify the maximum distance to search.
+                </HelpBlock>
+                <this.TextField
+                  type="text"
+                  name="place_name"
+                  disabled
+                />
+                <div style={{ height: '300px' }}>
+                  <Map
+                    defaultCenter={markerPos}
+                    marker={markerPos}
+                    onClick={this.onClickMap}
                   />
-                  <this.SelectFieldGroup
-                    label="Contract"
-                    name="contract"
-                    dataSource={this.contracts}
-                  />
-                  <this.SelectFieldGroup
-                    label="Hours"
-                    name="hours"
-                    dataSource={this.hours}
-                  />
-                  <this.TextFieldGroup
-                    type="text"
-                    label="Match area"
-                    help={`In order to match you with jobs in your area, you must tell us your location, 
-                      and specify the maximum distance to search.`}
-                    name="place_name"
-                    disabled
-                  />
-                  <FormGroup>
-                    <Col smOffset={2} sm={10} style={{ height: '300px' }}>
-                      <Map
-                        defaultCenter={markerPos}
-                        marker={markerPos}
-                        onClick={this.onClickMap}
-                      />
-                    </Col>
-                  </FormGroup>
-                  <this.SelectFieldGroup
-                    label="Radius"
-                    name="search_radius"
-                    dataSource={SEARCH_RADIUS}
-                  />
-                  <this.SubmitButtonGroup
-                    submtting={loading}
-                    labels={['Save', 'Saving...']}
-                    onClick={this.onSave}
-                  />
-                </Form>
-              </div>
+                </div>
+              </FormGroup>
+              <FormGroup>
+                <ControlLabel>Radius</ControlLabel>
+                <this.SelectField
+                  name="search_radius"
+                  dataSource={SEARCH_RADIUS}
+                />
+              </FormGroup>
+            </Form>
+            <div className={styles.footer}>
+              <this.SubmitButton
+                submtting={saving}
+                labels={['Save', 'Saving...']}
+                onClick={this.onSave}
+              />
             </div>
-        }
+          </div>
+        </div>
       </div>
     );
   }

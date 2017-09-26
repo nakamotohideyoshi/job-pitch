@@ -12,39 +12,29 @@ import ProgressBar from 'react-bootstrap/lib/ProgressBar';
 import AWS from 'aws-sdk';
 import { Loading, FormComponent } from 'components';
 import VideoRecorder from 'components/VideoRecorder/VideoRecorder';
-import * as authActions from 'redux/modules/auth';
 import * as commonActions from 'redux/modules/common';
+import * as apiActions from 'redux/modules/api';
 import * as utils from 'helpers/utils';
+import ApiClient from 'helpers/ApiClient';
 import styles from './Profile.scss';
 
 @connect(
-  state => ({
-    jobSeeker: state.auth.jobSeeker,
-    staticData: state.auth.staticData,
-    loading: state.auth.loading,
+  () => ({
   }),
-  { ...authActions, ...commonActions })
+  { ...commonActions, ...apiActions })
 export default class Profile extends FormComponent {
   static propTypes = {
-    jobSeeker: PropTypes.object,
-    staticData: PropTypes.object.isRequired,
-    loading: PropTypes.bool.isRequired,
-    saveJobSeeker: PropTypes.func.isRequired,
+    saveJobSeekerAction: PropTypes.func.isRequired,
+    getPitchAction: PropTypes.func.isRequired,
+    createPitchAction: PropTypes.func.isRequired,
     setPermission: PropTypes.func.isRequired,
-    createPitch: PropTypes.func.isRequired,
-  }
-
-  static defaultProps = {
-    jobSeeker: null,
   }
 
   componentDidMount() {
-    this.getJobSeeker()
-    .then(jobSeeker => {
-      const { staticData } = this.props;
+    this.getJobSeeker().then(jobSeeker => {
       const formModel = Object.assign({}, jobSeeker);
-      formModel.sex = staticData.sexes.filter(item => item.id === jobSeeker.sex)[0];
-      formModel.nationality = staticData.nationalities.filter(item => item.id === jobSeeker.nationality)[0];
+      formModel.sex = ApiClient.sexes.filter(item => item.id === jobSeeker.sex)[0];
+      formModel.nationality = ApiClient.nationalities.filter(item => item.id === jobSeeker.nationality)[0];
       this.setState({ jobSeeker, formModel });
     });
   }
@@ -96,8 +86,8 @@ export default class Profile extends FormComponent {
   }
 
   getJobSeeker = () => {
-    if (this.props.jobSeeker) {
-      return Promise.resolve(this.props.jobSeeker);
+    if (ApiClient.jobSeeker) {
+      return Promise.resolve(ApiClient.jobSeeker);
     }
     return Promise.resolve({
       active: true,
@@ -124,13 +114,13 @@ export default class Profile extends FormComponent {
       return;
     }
 
-    const { saveJobSeeker, setPermission } = this.props;
+    const { saveJobSeekerAction, setPermission } = this.props;
     const data = Object.assign(this.state.jobSeeker, formModel);
     data.sex = formModel.sex && formModel.sex.id;
     data.nationality = formModel.nationality && formModel.nationality.id;
     data.cv = this.cv;
 
-    saveJobSeeker(data).then(jobSeeker => {
+    saveJobSeekerAction(data).then(jobSeeker => {
       const cvComment = this.cv ? 'CV added.' : '';
       this.cv = null;
       this.setState({ jobSeeker, cvComment });
@@ -149,7 +139,7 @@ export default class Profile extends FormComponent {
       uploading: true,
     });
 
-    this.props.createPitch().then(pitch => {
+    this.props.createPitchAction().then(pitch => {
       const s3 = new AWS.S3({
         apiVersion: '2006-03-01',
         credentials: new AWS.CognitoIdentityCredentials({
@@ -183,7 +173,7 @@ export default class Profile extends FormComponent {
   }
 
   checkPitch = (pitchId) => {
-    this.props.getPitch(pitchId).then(pitch => {
+    this.props.getPitchAction(pitchId).then(pitch => {
       if (!pitch.video) {
         this.timer = setTimeout(() => this.checkPitch(pitchId), 2000);
       } else {
@@ -202,173 +192,178 @@ export default class Profile extends FormComponent {
   }
 
   render() {
-    const { staticData, loading } = this.props;
-    const { jobSeeker, cvComment, isRecorder, isPlayer, progress, uploading } = this.state;
+    const { jobSeeker, cvComment, isRecorder, isPlayer, saving, progress, uploading } = this.state;
     const pitch = jobSeeker && jobSeeker.pitches ? jobSeeker.pitches[0] : null;
     const videoUrl = pitch ? pitch.video : null;
+
+    if (!jobSeeker) {
+      return <Loading />;
+    }
+
     return (
-      <div>
+      <div className={styles.root}>
         <Helmet title="Profile" />
-        {
-          !jobSeeker ?
-            <Loading /> :
-            <div>
-              <div className="pageHeader">
-                <h1>Profile</h1>
-              </div>
-              <div className="board">
-                <Form horizontal>
-                  <this.CheckBoxGroup
-                    label="Active"
-                    name="active"
-                  />
-                  <this.TextFieldGroup
-                    type="text"
-                    label="First Name"
-                    name="first_name"
-                  />
-                  <this.TextFieldGroup
-                    type="text"
-                    label="Last Name"
-                    name="last_name"
-                  />
-                  <this.TextFieldCheckGroup
-                    type="email"
-                    label="Email"
-                    name="email"
-                    disabled
-                    checkLabel="Public"
-                    checkName="email_public"
-                  />
-                  <this.TextFieldCheckGroup
-                    type="text"
-                    label="Telephone"
-                    name="telephone"
-                    checkLabel="Public"
-                    checkName="telephone_public"
-                  />
-                  <this.TextFieldCheckGroup
-                    type="text"
-                    label="Mobile"
-                    name="mobile"
-                    checkLabel="Public"
-                    checkName="mobile_public"
-                  />
-                  <this.TextFieldCheckGroup
-                    type="number"
-                    label="Age"
-                    name="age"
-                    checkLabel="Public"
-                    checkName="age_public"
-                  />
-                  <this.SelectFieldCheckGroup
-                    label="Gender"
-                    placeholder="Select Gender"
-                    name="sex"
-                    dataSource={staticData.sexes}
-                    checkLabel="Public"
-                    checkName="sex_public"
-                  />
-                  <this.SelectFieldCheckGroup
-                    label="Nationality"
-                    placeholder="Select Nationality"
-                    name="nationality"
-                    dataSource={staticData.nationalities}
-                    checkLabel="Public"
-                    checkName="nationality_public"
-                    searchable
-                    searchPlaceholder="Search"
-                  />
-                  <FormGroup>
-                    <Col componentClass={ControlLabel} sm={2}>CV</Col>
-                    <Col sm={10}>
-                      <this.TextField
-                        componentClass="textarea"
-                        name="description"
-                      />
-                      <div className={styles.cvContainer}>
-                        {
-                          jobSeeker.cv && <Button onClick={this.onViewCV}>View CV</Button>
-                        }
-                        <Button onClick={this.onOpenBrowser}>Upload CV</Button>
-                        <div>{cvComment}</div>
-                        {
-                          this.cv && (<button
-                            type="button"
-                            className="fa fa-times btn-icon"
-                            onClick={this.onRemovedCV}
-                          />)
-                        }
-                        <Dropzone
-                          ref={node => { this.dropzoneRef = node; }}
-                          multiple={false}
-                          onDrop={this.onChangedCV}
-                          className="h"
-                        >
-                        </Dropzone>
-                      </div>
-                    </Col>
-                  </FormGroup>
-                  <FormGroup>
-                    <Col componentClass={ControlLabel} sm={2}>Video Pitch</Col>
-                    <Col sm={10}>
-                      <Button
-                        style={{ marginBottom: '10px', marginRight: '10px' }}
-                        onClick={this.onShowRecorder}
-                      >Record New</Button>
-                      {
-                        videoUrl &&
-                        <Button
-                          style={{ marginBottom: '10px', marginRight: '10px' }}
-                          onClick={this.onShowPlayer}
-                        >Play Current</Button>
-                      }
-                    </Col>
-                  </FormGroup>
-                  <this.CheckBoxGroup
-                    checkLabel="References Available"
-                    name="has_references"
-                  />
-                  <this.CheckBoxGroup
-                    checkLabel="All of the information provided is truthful to the best of my knowledge."
-                    name="truth_confirmation"
-                  />
+
+        <div className="container">
+          <div className="pageHeader">
+            <h3>Profile</h3>
+          </div>
+
+          <div className="shadow-board padding-45">
+            <Form>
+              <FormGroup className={styles.active}>
+                <ControlLabel>Active</ControlLabel>
+                <this.CheckBoxField label="" name="active" />
+              </FormGroup>
+              <FormGroup>
+                <ControlLabel>First Name</ControlLabel>
+                <this.TextField type="text" name="first_name" />
+              </FormGroup>
+              <FormGroup>
+                <ControlLabel>Last Name</ControlLabel>
+                <this.TextField type="text" name="last_name" />
+              </FormGroup>
+              <FormGroup>
+                <div className={styles.checkLabel}>
+                  <ControlLabel>Email</ControlLabel>
+                  <this.CheckBoxField label="Public" name="email_public" />
+                </div>
+                <this.TextField type="email" name="email" disabled />
+              </FormGroup>
+              <FormGroup>
+                <div className={styles.checkLabel}>
+                  <ControlLabel>Telephone</ControlLabel>
+                  <this.CheckBoxField label="Public" name="telephone_public" />
+                </div>
+                <this.TextField type="text" name="telephone" />
+              </FormGroup>
+              <FormGroup>
+                <div className={styles.checkLabel}>
+                  <ControlLabel>Mobile</ControlLabel>
+                  <this.CheckBoxField label="Public" name="mobile_public" />
+                </div>
+                <this.TextField type="text" name="mobile" />
+              </FormGroup>
+              <FormGroup>
+                <div className={styles.checkLabel}>
+                  <ControlLabel>Age</ControlLabel>
+                  <this.CheckBoxField label="Public" name="age_public" />
+                </div>
+                <this.TextField type="number" name="age" />
+              </FormGroup>
+              <FormGroup>
+                <div className={styles.checkLabel}>
+                  <ControlLabel>Gender</ControlLabel>
+                  <this.CheckBoxField label="Public" name="sex_public" />
+                </div>
+                <this.SelectField
+                  placeholder="Select Gender"
+                  name="sex"
+                  dataSource={ApiClient.sexes}
+                />
+              </FormGroup>
+              <FormGroup>
+                <div className={styles.checkLabel}>
+                  <ControlLabel>Nationality</ControlLabel>
+                  <this.CheckBoxField label="Public" name="nationality_public" />
+                </div>
+                <this.SelectField
+                  placeholder="Select Nationality"
+                  name="nationality"
+                  dataSource={ApiClient.nationalities}
+                  searchable
+                  searchPlaceholder="Search"
+                />
+              </FormGroup>
+              <FormGroup>
+                <ControlLabel>CV</ControlLabel>
+                <this.TextField componentClass="textarea" name="description" />
+                <div className={styles.cvContainer}>
                   {
-                    progress &&
-                    <FormGroup>
-                      <Col smOffset={2} sm={10}>
-                        <ProgressBar
-                          style={{ marginBottom: '0' }}
-                          striped
-                          bsStyle="danger"
-                          now={progress}
-                          label={`${progress}%`}
-                        />
-                      </Col>
-                    </FormGroup>
+                    jobSeeker.cv && <Button onClick={this.onViewCV}>View CV</Button>
                   }
-                  <this.SubmitButtonGroup
-                    submtting={loading || uploading}
-                    labels={['Save', 'Saving...']}
-                    onClick={this.onSave}
-                  />
-                </Form>
-              </div>
-              {
-                isRecorder &&
-                <VideoRecorder
-                  onClose={this.onHideDialog}
+                  <Button onClick={this.onOpenBrowser}>Upload CV</Button>
+                  <div>{cvComment}</div>
+                  {
+                    this.cv && (<button
+                      type="button"
+                      className="fa fa-times btn-icon"
+                      onClick={this.onRemovedCV}
+                    />)
+                  }
+                  <Dropzone
+                    ref={node => { this.dropzoneRef = node; }}
+                    multiple={false}
+                    onDrop={this.onChangedCV}
+                    className="h"
+                  >
+                  </Dropzone>
+                </div>
+              </FormGroup>
+              <FormGroup>
+                <ControlLabel>Video Pitch</ControlLabel>
+                <div>
+                  <Button
+                    style={{ marginBottom: '10px', marginRight: '10px' }}
+                    onClick={this.onShowRecorder}
+                  >Record New</Button>
+                  {
+                    videoUrl &&
+                    <Button
+                      style={{ marginBottom: '10px', marginRight: '10px' }}
+                      onClick={this.onShowPlayer}
+                    >Play Current</Button>
+                  }
+                </div>
+              </FormGroup>
+              <FormGroup>
+                <this.CheckBoxField
+                  label="References Available"
+                  name="has_references"
                 />
-              }
-              {
-                isPlayer &&
-                <VideoRecorder
-                  videoUrl={videoUrl}
-                  onClose={this.onHideDialog}
+                <br /><br />
+                <this.CheckBoxField
+                  label="All of the information provided is truthful to the best of my knowledge."
+                  name="truth_confirmation"
                 />
+              </FormGroup>
+              {
+                progress &&
+                <FormGroup>
+                  <Col smOffset={2} sm={10}>
+                    <ProgressBar
+                      style={{ marginBottom: '0' }}
+                      striped
+                      bsStyle="danger"
+                      now={progress}
+                      label={`${progress}%`}
+                    />
+                  </Col>
+                </FormGroup>
               }
+            </Form>
+            <div className={styles.footer}>
+              <this.SubmitButton
+                submtting={saving || uploading}
+                labels={['Save', 'Saving...']}
+                onClick={this.onSave}
+              />
             </div>
-        }
+          </div>
+          {
+            isRecorder &&
+            <VideoRecorder
+              onClose={this.onHideDialog}
+            />
+          }
+          {
+            isPlayer &&
+            <VideoRecorder
+              videoUrl={videoUrl}
+              onClose={this.onHideDialog}
+            />
+          }
+        </div>
       </div>
     );
   }

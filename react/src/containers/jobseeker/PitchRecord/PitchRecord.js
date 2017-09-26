@@ -6,27 +6,26 @@ import AWS from 'aws-sdk';
 import VideoRecorder from 'components/VideoRecorder/VideoRecorder';
 import Button from 'react-bootstrap/lib/Button';
 import ProgressBar from 'react-bootstrap/lib/ProgressBar';
-import * as commonActions from 'redux/modules/common';
+import * as apiActions from 'redux/modules/api';
 import * as utils from 'helpers/utils';
+import ApiClient from 'helpers/ApiClient';
 import styles from './PitchRecord.scss';
 
 @connect(
-  (state) => ({
-    jobSeeker: state.auth.jobSeeker,
+  () => ({
   }),
-  { ...commonActions }
+  { ...apiActions }
 )
 export default class PitchRecord extends Component {
   static propTypes = {
-    jobSeeker: PropTypes.object.isRequired,
-    getPitch: PropTypes.func.isRequired,
-    createPitch: PropTypes.func.isRequired,
+    getPitchAction: PropTypes.func.isRequired,
+    createPitchAction: PropTypes.func.isRequired,
   }
 
   constructor(props) {
     super(props);
 
-    const pitch = this.props.jobSeeker.pitches[0];
+    const pitch = ApiClient.jobSeeker.pitches[0];
     this.state = {
       videoUrl: pitch ? pitch.video : '',
     };
@@ -61,7 +60,7 @@ export default class PitchRecord extends Component {
       uploading: true,
     });
 
-    this.props.createPitch().then(pitch => {
+    this.props.createPitchAction().then(pitch => {
       const s3 = new AWS.S3({
         apiVersion: '2006-03-01',
         credentials: new AWS.CognitoIdentityCredentials({
@@ -102,7 +101,7 @@ export default class PitchRecord extends Component {
   }
 
   checkPitch = (pitchId) => {
-    this.props.getPitch(pitchId).then(pitch => {
+    this.props.getPitchAction(pitchId).then(pitch => {
       if (!pitch.video) {
         this.timer = setTimeout(() => this.checkPitch(pitchId), 2000);
       } else {
@@ -123,13 +122,15 @@ export default class PitchRecord extends Component {
   render() {
     const { videoUrl, recoreded, isRecording, uploading, progress } = this.state;
     return (
-      <div>
+      <div className={styles.root}>
         <Helmet title="Record Pitch" />
-        <div>
+
+        <div className="container">
           <div className="pageHeader">
-            <h1>Record Pitch</h1>
+            <h3>Record Pitch</h3>
           </div>
-          <div className="board">
+
+          <div className="shadow-board padding-45">
             <div className={styles.container}>
               <div className={styles.help}>
                 {`Here you can record your 30 second pitch. The 30 sec.\n

@@ -1,15 +1,12 @@
 import React, { Component } from 'react';
 import Dropzone from 'react-dropzone';
 import ReactSuperSelect from 'react-super-select';
-import FormGroup from 'react-bootstrap/lib/FormGroup';
 import FormControl from 'react-bootstrap/lib/FormControl';
-import ControlLabel from 'react-bootstrap/lib/ControlLabel';
 import HelpBlock from 'react-bootstrap/lib/HelpBlock';
-import Col from 'react-bootstrap/lib/Col';
 import Collapse from 'react-bootstrap/lib/Collapse';
-import Checkbox from 'react-bootstrap/lib/Checkbox';
 import Button from 'react-bootstrap/lib/Button';
 import EXIF from 'exif-js';
+import { CheckBox } from 'components';
 
 export default class FormComponent extends Component {
 
@@ -58,44 +55,49 @@ export default class FormComponent extends Component {
     return !errors;
   }
 
+  loadImage = (image, name) => {
+    if (image && image.url) {
+      const req = new XMLHttpRequest();
+      req.open('GET', image.url, true);
+      req.responseType = 'blob';
+      req.onload = e => {
+        if (e.target.status === 200) {
+          EXIF.getData(req.response, () => {
+            image.orientation = EXIF.getTag(req.response, 'Orientation') || 1;
+            this.setState({ [name]: image });
+          });
+        }
+      };
+      req.send();
+    }
+  }
+
   HelpField = ({ label }) => (
     <Collapse in={!!label}>
       <HelpBlock>{label}</HelpBlock>
     </Collapse>
   );
 
-  CheckBox = ({ name, onChange, checkLabel, ...props }) => {
+  CheckBoxField = ({ name, onChange, label, ...props }) => {
     const { formModel } = this.state;
     const handleChange = e => {
       const callback = onChange || this.onChangedModel;
       callback(name, e.target.checked);
     };
     return (
-      <Checkbox
+      <CheckBox
         {...props}
         onChange={handleChange}
         checked={!!formModel[name]}
-      >{checkLabel}</Checkbox>
+      >{label}</CheckBox>
     );
   }
-
-  CheckBoxGroup = ({ label, ...props }) => (
-    <FormGroup>
-      <Col componentClass={ControlLabel} sm={2}>{label}</Col>
-      <Col sm={10}>
-        <this.CheckBox {...props} />
-      </Col>
-    </FormGroup>
-  );
 
   TextField = ({ name, onChange, ...props }) => {
     const { formModel } = this.state;
     const handleChange = e => {
       const callback = onChange || this.onChangedModel;
       callback(name, e.target.value);
-    };
-    const onKeyUp = e => {
-      // e.target.style.height = e.target.scrollHeight + 'px';
     };
     const error = this.getError(name);
     return (
@@ -104,38 +106,11 @@ export default class FormComponent extends Component {
           {...props}
           value={formModel[name] || ''}
           onChange={handleChange}
-          onKeyUp={onKeyUp}
         />
         <this.HelpField label={error} />
       </div>
     );
   }
-
-  TextFieldGroup = ({ label, help, ...props }) => (
-    <FormGroup>
-      <Col componentClass={ControlLabel} sm={2}>{label}</Col>
-      <Col sm={10}>
-        { help && <HelpBlock>{help}</HelpBlock> }
-        <this.TextField {...props} />
-      </Col>
-    </FormGroup>
-  );
-
-  TextFieldCheckGroup = ({ label, checkName, checkLabel, onCheckChange, ...props }) => (
-    <FormGroup>
-      <Col componentClass={ControlLabel} sm={2}>{label}</Col>
-      <Col sm={8}>
-        <this.TextField {...props} />
-      </Col>
-      <Col sm={2}>
-        <this.CheckBox
-          name={checkName}
-          checkLabel={checkLabel}
-          onChange={onCheckChange}
-        />
-      </Col>
-    </FormGroup>
-  );
 
   SelectField = ({ name, dataSource, multiple, onChange, ...props }) => {
     const { formModel } = this.state;
@@ -160,27 +135,7 @@ export default class FormComponent extends Component {
     );
   }
 
-  SelectFieldGroup = ({ label, ...props }) => (
-    <FormGroup>
-      <Col componentClass={ControlLabel} sm={2}>{label}</Col>
-      <Col sm={10}>
-        <this.SelectField {...props} />
-      </Col>
-    </FormGroup>
-  );
-
-  SelectFieldCheckGroup = ({ label, ...props }) => (
-    <FormGroup>
-      <Col componentClass={ControlLabel} sm={2}>{label}</Col>
-      <Col sm={10}>
-        <this.SelectField {...props} />
-      </Col>
-    </FormGroup>
-  );
-
-  ImageFieldGroup = ({ label, name }) => {
-    let dropzoneRef;
-    const onOpen = () => dropzoneRef.open();
+  ImageField = ({ name }) => {
     const onChange = files => {
       const image = this.state[name] || {};
       image.file = files && files[0];
@@ -201,44 +156,22 @@ export default class FormComponent extends Component {
     const onRemove = () => onChange();
 
     const image = this.state[name] || {};
-    if (image && image.url && image.orientation === undefined) {
-      image.orientation = 1;
-      this.setState({ [name]: image });
-
-      const req = new XMLHttpRequest();
-      req.open('GET', image.url, true);
-      req.responseType = 'blob';
-      req.onload = e => {
-        if (e.target.status === 200) {
-          EXIF.getData(req.response, () => {
-            image.orientation = EXIF.getTag(req.response, 'Orientation') || 1;
-            this.setState({ [name]: image });
-          });
-        }
-      };
-      req.send();
-    }
     return (
-      <FormGroup>
-        <Col componentClass={ControlLabel} sm={2}>{label}</Col>
-        <Col sm={10} className="logo-selector">
-          <Dropzone
-            ref={node => { dropzoneRef = node; }}
-            accept="image/jpeg, image/png"
-            multiple={false}
-            onDrop={onChange}
-          >
-            <div
-              className={`logo exif_${image.orientation}`}
-              style={{ backgroundImage: `url(${image.url})` }}
-            />
-          </Dropzone>
-          <Button onClick={onOpen}>{image.exist ? 'Change' : 'Add'}</Button><br />
-          {
-            image.exist && (<Button onClick={onRemove}>Remove</Button>)
-          }
-        </Col>
-      </FormGroup>
+      <div className="image-uploader">
+        <Dropzone
+          accept="image/jpeg, image/png"
+          multiple={false}
+          onDrop={onChange}
+        >
+          <div
+            className={`logo exif_${image.orientation || 1}`}
+            style={{ backgroundImage: `url(${image.url})` }}
+          />
+        </Dropzone>
+        {
+          image.exist && <button className="btn-icon" onClick={onRemove}>Remove Logo</button>
+        }
+      </div>
     );
   }
 
@@ -257,31 +190,4 @@ export default class FormComponent extends Component {
     );
   }
 
-  SubmitButtonGroup = ({ ...props }) => (
-    <FormGroup>
-      <Col smOffset={2} sm={10}>
-        <this.SubmitButton {...props} />
-      </Col>
-    </FormGroup>
-  );
-
-  SubmitCancelButtons = ({ cancelLabel, onCancel, submtting, labels, ...props }) => {
-    const error = this.getError();
-    return (
-      <div className={error ? 'has-error' : null}>
-        <this.HelpField label={error} />
-        <Button
-          type="button"
-          onClick={onCancel}
-          disabled={submtting}
-        >{cancelLabel}</Button>
-        <Button
-          type="button"
-          bsStyle="success"
-          disabled={submtting}
-          {...props}
-        >{submtting ? labels[1] : labels[0]}</Button>
-      </div>
-    );
-  }
 }

@@ -1,78 +1,12 @@
-.itemContainer {
-  display: block;
-  padding: 10px;
-  border-bottom: 1px solid #eee;
-  text-decoration: none !important;
-  cursor: pointer;
+.root {
+  position: absolute;
+  top: 15px;
+  left: 15px;
+  right: 15px;
+  bottom: 15px;
 
-  >img {
-    float: left;
-    width: 80px;
-    height: 80px;
-  }
-  
-  .content {
+  > div {
     display: flex;
-    flex-direction: column;
-    height: 80px;
-    padding-left: 20px;
-    color: #959595;
-
-    > div {
-      display: flex;
-      align-items: center;
-      >span {
-        flex: 1;
-        display: block;
-        white-space: nowrap;
-        text-overflow: ellipsis;
-        overflow: hidden;
-      }
-    }
-
-    .title {
-      margin: 2px 0;
-      >span {
-        margin-right: 5px;
-        font-size: 20px;
-        color: #333;
-      }
-    }
-
-    .address {
-      i {
-        margin-right: 5px;
-        font-size: 16px;
-      }
-    }
-
-    .description {
-      margin-top: 6px;
-    }
+    height: 100%;
   }
-}
-
-.itemContainer:hover {
-  background-color: rgba(0, 182, 164, 0.2);
-}
-
-.itemContainer:last-child {
-  border-bottom: none;
-}
-
-.deleted {
-  background-color: #f0f0f0;
-  font-style: italic;
-  span {
-    text-decoration: line-through;
-  }
-}
-
-.emptyContainer {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 100px;
-  color: #959595;
-  text-align: center;
 }

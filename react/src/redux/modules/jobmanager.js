@@ -80,21 +80,21 @@ export default function reducer(state = initialState, action = {}) {
     case GET_WORKPLACES:
       return {
         ...state,
-        loadingWorkPlaces: true,
+        loadingWorkplaces: true,
       };
     case GET_WORKPLACES_SUCCESS:
       return {
         ...state,
-        loadingWorkPlaces: false,
+        loadingWorkplaces: false,
         workplaces: action.result.items,
-        selectedWorkPlace: getSelectedItem(action, state),
+        selectedWorkplace: getSelectedItem(action, state),
       };
     case GET_WORKPLACES_FAIL:
       return {
         ...state,
-        loadingWorkPlaces: false,
+        loadingWorkplaces: false,
         workplaces: [],
-        selectedWorkPlace: null,
+        selectedWorkplace: null,
       };
     case SAVE_WORKPLACE:
       return {
@@ -109,7 +109,7 @@ export default function reducer(state = initialState, action = {}) {
     case SELECT_WORKPLACE:
       return {
         ...state,
-        selectedWorkPlace: action.workplace,
+        selectedWorkplace: action.workplace,
       };
 
     /* job */
@@ -156,42 +156,6 @@ export default function reducer(state = initialState, action = {}) {
 
 /* business */
 
-export function getUserBusinesses(selectItem) {
-  return {
-    types: [GET_BUSINESSES, GET_BUSINESSES_SUCCESS, GET_BUSINESSES_FAIL],
-    promise: client => client.getUserBusinesses('')
-      .then(items => ({ items, selectItem }))
-  };
-}
-
-export function saveUserBusiness(business) {
-  return {
-    types: [SAVE_BUSINESS, SAVE_BUSINESS_RESPONSE, SAVE_BUSINESS_RESPONSE],
-    promise: client => client.saveUserBusiness(business)
-  };
-}
-
-export function deleteUserBusiness(busienssId) {
-  return {
-    types: [SAVE_BUSINESS, SAVE_BUSINESS_RESPONSE, SAVE_BUSINESS_RESPONSE],
-    promise: client => client.deleteUserBusiness(busienssId)
-  };
-}
-
-export function uploadBusinessLogo(info, onUploadProgress) {
-  return {
-    types: [SAVE_BUSINESS, SAVE_BUSINESS_RESPONSE, SAVE_BUSINESS_RESPONSE],
-    promise: client => client.uploadBusinessLogo(info, onUploadProgress)
-  };
-}
-
-export function deleteBusinessLogo(logoId) {
-  return {
-    types: [SAVE_BUSINESS, SAVE_BUSINESS_RESPONSE, SAVE_BUSINESS_RESPONSE],
-    promise: client => client.deleteBusinessLogo(logoId)
-  };
-}
-
 export function selectBusiness(business) {
   return dispatch => {
     dispatch({ type: SELECT_BUSINESS, business });
@@ -200,85 +164,13 @@ export function selectBusiness(business) {
 
 /* workplaces */
 
-export function getUserWorkPlaces(businessId, selectItem) {
-  return {
-    types: [GET_WORKPLACES, GET_WORKPLACES_SUCCESS, GET_WORKPLACES_FAIL],
-    promise: client => client.getUserWorkPlaces(`?business=${businessId}`)
-      .then(items => ({ items, selectItem }))
-  };
-}
-
-export function saveUserWorkPlace(workplace) {
-  return {
-    types: [SAVE_WORKPLACE, SAVE_WORKPLACE_RESPONSE, SAVE_WORKPLACE_RESPONSE],
-    promise: client => client.saveUserWorkPlace(workplace)
-  };
-}
-
-export function deleteUserWorkPlace(workplaceId) {
-  return {
-    types: [SAVE_WORKPLACE, SAVE_WORKPLACE_RESPONSE, SAVE_WORKPLACE_RESPONSE],
-    promise: client => client.deleteUserWorkPlace(workplaceId)
-  };
-}
-
-export function uploadWorkPlaceLogo(info, onUploadProgress) {
-  return {
-    types: [SAVE_WORKPLACE, SAVE_WORKPLACE_RESPONSE, SAVE_WORKPLACE_RESPONSE],
-    promise: client => client.uploadWorkPlaceLogo(info, onUploadProgress)
-  };
-}
-
-export function deleteWorkPlaceLogo(logoId) {
-  return {
-    types: [SAVE_WORKPLACE, SAVE_WORKPLACE_RESPONSE, SAVE_WORKPLACE_RESPONSE],
-    promise: client => client.deleteWorkPlaceLogo(logoId)
-  };
-}
-
-export function selectWorkPlace(workplace) {
+export function selectWorkplace(workplace) {
   return dispatch => {
     dispatch({ type: SELECT_WORKPLACE, workplace });
   };
 }
 
 /* jobs */
-
-export function getUserJobsByWorkPlace(workplaceId, selectItem) {
-  return {
-    types: [GET_JOBS, GET_JOBS_SUCCESS, GET_JOBS_FAIL],
-    promise: client => client.getUserJobs(`?location=${workplaceId}`)
-      .then(items => ({ items, selectItem }))
-  };
-}
-
-export function saveUserJob(job) {
-  return {
-    types: [SAVE_JOB, SAVE_JOB_RESPONSE, SAVE_JOB_RESPONSE],
-    promise: client => client.saveUserJob(job)
-  };
-}
-
-export function deleteUserJob(jobId) {
-  return {
-    types: [SAVE_JOB, SAVE_JOB_RESPONSE, SAVE_JOB_RESPONSE],
-    promise: client => client.deleteUserJob(jobId)
-  };
-}
-
-export function uploadJobLogo(info, onUploadProgress) {
-  return {
-    types: [SAVE_JOB, SAVE_JOB_RESPONSE, SAVE_JOB_RESPONSE],
-    promise: client => client.uploadJobLogo(info, onUploadProgress)
-  };
-}
-
-export function deleteJobLogo(logoId) {
-  return {
-    types: [SAVE_JOB, SAVE_JOB_RESPONSE, SAVE_JOB_RESPONSE],
-    promise: client => client.deleteJobLogo(logoId)
-  };
-}
 
 export function selectJob(job) {
   return dispatch => {

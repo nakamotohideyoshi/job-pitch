@@ -2,14 +2,18 @@ import React, { Component } from 'react';
 import Helmet from 'react-helmet';
 
 export default class Terms extends Component {
+
   render() {
     return (
-      <div>
+      <div className="container">
+
         <Helmet title="Terms & Conditions" />
+
         <div className="pageHeader">
-          <h1>Terms & Conditions</h1>
+          <h3>Terms & Conditions</h3>
         </div>
-        <div className="board">
+
+        <div className="board padding-45 markdown">
           <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean consequat
           tortor fermentum mi fermentum dignissim. Nullam vel ipsum ut ligula elementum
           lobortis. Maecenas aliquam, massa laoreet lacinia pretium, nisi urna venenatis
@@ -30,13 +34,14 @@ export default class Terms extends Component {
           faucibus orci luctus et ultrices posuere cubilia Curae; Vestibulum ante ipsum
           primis in faucibus orci luctus et ultrices posuere cubilia Curae; Ut at mauris
           nibh. Suspendisse maximus ac eros at vestibulum.</p>
-          <p>Interdum et malesuada fames ac ante ipsum primis in faucibus. Quisque egestas
+          <div>Interdum et malesuada fames ac ante ipsum primis in faucibus. Quisque egestas
           tortor et dui consequat faucibus. Nunc vitae odio ornare, venenatis ligula a,
           vulputate nisl. Aenean congue varius ex, sit amet bibendum odio posuere at.
           Nulla facilisi. In finibus, nulla vitae tincidunt ornare, sapien nulla
           fermentum mauris, sed consectetur tortor arcu eget arcu. Vestibulum vel quam
-          enim.</p>
+          enim.</div>
         </div>
+
       </div>
     );
   }

@@ -1,0 +1,45 @@
+.root {
+  display: flex;
+  flex-direction: column;
+
+  .header {
+    display: flex;
+    border-bottom: 1px solid #e0e0e0;
+    padding: 30px;
+  
+    .searchbar {
+      flex: 1;
+    }
+    
+    button {
+      margin-left: 15px;
+    }
+  }
+  
+  .loading {
+    flex: 1;
+    position: relative;
+    height: 241px;  
+  }
+  
+  .empty {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    height: 241px;
+    font-size: 16px;
+    
+    span {
+      color: #959595;
+      margin-bottom: 20px;
+      white-space: pre-line;
+    }
+  
+    button {
+      margin-top: 10px;
+    }
+  }
+}

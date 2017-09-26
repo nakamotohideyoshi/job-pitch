@@ -1,0 +1,22 @@
+.container {
+  position: relative;
+
+  input {
+    padding-left: 30px;
+    padding-right: 30px;
+  }
+
+  i {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    color: #656565;
+  }
+
+  button {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    color: inherit !important;
+  }
+}

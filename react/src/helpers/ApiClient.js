@@ -2,13 +2,31 @@ import axios from 'axios';
 import * as utils from 'helpers/utils';
 import cookie from 'js-cookie';
 
-axios.defaults.baseURL = __LOCAL__ ? 'http://localhost:8080' : 'https://www.sclabs.co.uk';
+if (__LOCAL__ && __DEVELOPMENT__) {
+  axios.defaults.baseURL = 'http://localhost:8080';
+}
 axios.defaults.headers.common.Accept = 'application/json';
 axios.defaults.headers.post['Content-Type'] = 'application/json';
 
 export default class ApiClient {
 
+  static user;
+  static jobSeeker;
+
+  static initialTokens;
+  static sectors;
+  static contracts;
+  static hours;
+  static nationalities;
+  static applicationStatuses;
+  static jobStatuses;
+  static sexes;
+  static roles;
+  static products;
+
   /* utils */
+
+  static isLoggedIn = () => !!cookie.get(__DEVELOPMENT__ ? 'token' : 'csrftoken')
 
   setToken = () => {
     if (__DEVELOPMENT__) {
@@ -93,46 +111,47 @@ export default class ApiClient {
   // auth api
   register = info => this.post('/api-rest-auth/registration/', info);
   login = info => this.post('/api-rest-auth/login/', info);
+  logout = () => this.post('/api-rest-auth/logout/');
   reset = info => this.post('/api-rest-auth/password/reset/', info);
   changePassword = info => this.post('/api-rest-auth/password/change/', info);
-  logout = () => this.post('/api-rest-auth/logout/');
+
+  // api data
+
   getUser = () => this.get('/api-rest-auth/user/');
 
-  // static data
-  getStaticData = () => {
-    this.setToken();
-    return axios.all([
-      this.get('/api/initial-tokens/'),
-      this.get('/api/sectors/'),
-      this.get('/api/contracts/'),
-      this.get('/api/hours/'),
-      this.get('/api/nationalities/'),
-      this.get('/api/application-statuses/'),
-      this.get('/api/job-statuses/'),
-      this.get('/api/sexes/'),
-      this.get('/api/roles/'),
-      this.get('/api/paypal-products/'),
-    ])
-    .catch(this.handleError)
-    .then(axios.spread((...data) => Promise.resolve(data)));
-  }
-
+  loadData = () => axios.all([
+    this.get('/api/initial-tokens/'),
+    this.get('/api/sectors/'),
+    this.get('/api/contracts/'),
+    this.get('/api/hours/'),
+    this.get('/api/nationalities/'),
+    this.get('/api/application-statuses/'),
+    this.get('/api/job-statuses/'),
+    this.get('/api/sexes/'),
+    this.get('/api/roles/'),
+    this.get('/api/paypal-products/'),
+  ]).then(
+    axios.spread((...data) => Promise.resolve(data)),
+    this.handleError
+  );
 
   /* job seeker */
+
   getJobSeekers = query => this.get(`/api/job-seekers/${query}`);
   saveJobSeeker = jobSeeker => {
     const data = this.getFormData(jobSeeker);
     if (jobSeeker.id) {
-      return this.put(`api/job-seekers/${jobSeeker.id}/`, data);
+      return this.put(`/api/job-seekers/${jobSeeker.id}/`, data);
     }
     return this.post('/api/job-seekers/', data);
   }
 
   /* job profile */
+
   getJobProfile = profileId => this.get(`/api/job-profiles/${profileId}/`);
   saveJobProfile = profile => {
     if (profile.id) {
-      return this.put(`api/job-profiles/${profile.id}/`, profile);
+      return this.put(`/api/job-profiles/${profile.id}/`, profile);
     }
     return this.post('/api/job-profiles/', profile);
   }
@@ -152,16 +171,16 @@ export default class ApiClient {
 
 
   /* user workplace */
-  getUserWorkPlaces = query => this.get(`/api/user-locations/${query}`);
-  saveUserWorkPlace = workplace => {
+  getUserWorkplaces = query => this.get(`/api/user-locations/${query}`);
+  saveUserWorkplace = workplace => {
     if (workplace.id) {
       return this.put(`/api/user-locations/${workplace.id}/`, workplace);
     }
     return this.post('/api/user-locations/', workplace);
   }
-  deleteUserWorkPlace = workplaceId => this.delete(`/api/user-locations/${workplaceId}/`);
-  uploadWorkPlaceLogo = (info, onUploadProgress) => this.uploadImage('user-location-images', info, onUploadProgress);
-  deleteWorkPlaceLogo = logoId => this.deleteImage('user-location-images', logoId);
+  deleteUserWorkplace = workplaceId => this.delete(`/api/user-locations/${workplaceId}/`);
+  uploadWorkplaceLogo = (info, onUploadProgress) => this.uploadImage('user-location-images', info, onUploadProgress);
+  deleteWorkplaceLogo = logoId => this.deleteImage('user-location-images', logoId);
 
 
   /* user user job */
@@ -199,4 +218,15 @@ export default class ApiClient {
   /* paypal */
   purchase = data => this.post('/api/paypal/purchase/', data);
 
+
+  testSuccess() {
+    return new Promise((resolve) => {
+      setTimeout(() => { resolve(); }, 2000);
+    });
+  }
+  testFailed() {
+    return new Promise((resolve) => {
+      setTimeout(() => { resolve(); }, 2000);
+    });
+  }
 }

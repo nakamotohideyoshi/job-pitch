@@ -4,19 +4,45 @@ import styles from './Loading.scss';
 
 export default class Loading extends Component {
   static propTypes = {
-    style: PropTypes.object,
+    size: PropTypes.string,
+    color: PropTypes.string,
+    backgroundColor: PropTypes.string,
   }
 
   static defaultProps = {
-    style: {}
+    size: '40px',
+    color: '#00b6a4',
+    backgroundColor: null,
   }
 
   render() {
+    const { color, backgroundColor, size } = this.props;
+    const colorStyle = { backgroundColor: color };
     return (
-      <div className={styles.container} style={this.props.style}>
-        <div className={styles.spinner}>
-          <div className={styles.dot1}></div>
-          <div className={styles.dot2}></div>
+      <div className={styles.container}>
+        {
+          backgroundColor &&
+          <div
+            className={styles.background}
+            style={{ backgroundColor }}
+          ></div>
+        }
+        <div
+          className={styles.content}
+          style={{ width: size, height: size }}
+        >
+          <div><div style={colorStyle}></div></div>
+          <div><div style={colorStyle}></div></div>
+          <div><div style={colorStyle}></div></div>
+          <div><div style={colorStyle}></div></div>
+          <div><div style={colorStyle}></div></div>
+          <div><div style={colorStyle}></div></div>
+          <div><div style={colorStyle}></div></div>
+          <div><div style={colorStyle}></div></div>
+          <div><div style={colorStyle}></div></div>
+          <div><div style={colorStyle}></div></div>
+          <div><div style={colorStyle}></div></div>
+          <div><div style={colorStyle}></div></div>
         </div>
       </div>
     );

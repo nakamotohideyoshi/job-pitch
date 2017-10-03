@@ -7,6 +7,7 @@ import Nav from 'react-bootstrap/lib/Nav';
 import NavItem from 'react-bootstrap/lib/NavItem';
 import NavDropdown from 'react-bootstrap/lib/NavDropdown';
 import MenuItem from 'react-bootstrap/lib/MenuItem';
+import './Header.scss';
 
 const titleImage = require('assets/title.png');
 
@@ -23,46 +24,50 @@ export default class Header extends Component {
     permission: 0,
   }
 
+  renderSubMenus = item => {
+    const active = item.menuData.filter(subitem => subitem.to === this.props.pathname).length > 0;
+    return (
+      <NavDropdown
+        key={item.id}
+        id={item.id}
+        title={item.label}
+        className={active ? 'active' : ''}
+      >
+        {
+          item.menuData.map(subitem => {
+            const permission = subitem.permission || 0;
+
+            if (subitem.func) {
+              return (
+                <MenuItem
+                  key={subitem.id}
+                  disabled={this.props.permission < permission}
+                  onClick={() => subitem.func()}>
+                  {subitem.label}
+                </MenuItem>
+              );
+            }
+
+            return (
+              this.props.permission < permission ?
+                <MenuItem key={subitem.id} disabled>{subitem.label}</MenuItem> :
+                <LinkContainer key={subitem.id} to={subitem.to}>
+                  <MenuItem>{subitem.label}</MenuItem>
+                </LinkContainer>
+            );
+          })
+        }
+      </NavDropdown>
+    );
+  }
+
   renderMenus = (menuData, kind) => menuData.map(item => {
     if ((item.kind || 'left') !== kind) {
       return '';
     }
 
     if (item.menuData) {
-      const active = item.menuData.filter(subitem => subitem.to === this.props.pathname).length > 0;
-      return (
-        <NavDropdown
-          key={item.id}
-          id={item.id}
-          title={item.label}
-          className={active ? 'active' : ''}
-        >
-          {
-            item.menuData.map(subitem => {
-              const permission = subitem.permission || 0;
-
-              if (subitem.func) {
-                return (
-                  <MenuItem
-                    key={subitem.id}
-                    disabled={this.props.permission < permission}
-                    onClick={() => subitem.func()}>
-                    {subitem.label}
-                  </MenuItem>
-                );
-              }
-
-              return (
-                this.props.permission < permission ?
-                  <MenuItem key={subitem.id} disabled>{subitem.label}</MenuItem> :
-                  <LinkContainer key={subitem.id} to={subitem.to}>
-                    <MenuItem>{subitem.label}</MenuItem>
-                  </LinkContainer>
-              );
-            })
-          }
-        </NavDropdown>
-      );
+      return this.renderSubMenus(item);
     }
 
     const permission = item.permission || 0;

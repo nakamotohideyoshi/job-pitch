@@ -1,3 +1,5 @@
+@import '../../../../theme/variables.scss';
+
 .root {
   padding: 45px;
 
@@ -13,7 +15,7 @@
     a {
       font-size: 14px;
       font-weight: 500;
-      color: #00b6a4;
+      color: $primary-color;
     }
   }
 
@@ -25,10 +27,10 @@
         margin-bottom: 10px;
       }
     }
-  
+
     .container1 {
       display: flex;
-      margin-bottom: 30px;
+      margin-bottom: 20px;
       
       .content {
         flex: 1;
@@ -38,22 +40,36 @@
   
         :global(.form-group) {
           display: flex;
-          align-items: center;
+          margin-bottom: 30px;
 
           > label {
             width: 50px;
             text-align: right;
-            margin-right: 20px;
-            margin-bottom: 0;
+            margin: 7px 20px 0 0;
           }
-          > label + div {
+          > label + * {
             flex: 1;            
           }
-          > label + div + div {
-            margin-left: 20px;
+          i, .public1, .public2 {
+            margin-left: 10px;
+            margin-top: 7px;
+          }
+          .public1, .public2 {
+            display: flex;
+            > div {
+              margin-left: 5px;
+            }
+          }
+          .public2 {
+            margin-left: 40px;
           }
         }
       }
+    }
+
+    .placeName[disabled] {
+      margin-bottom: 8px;
+      background-color: transparent;
     }
   }
 
@@ -61,8 +77,6 @@
     margin-top: 40px;
     
     > div {
-      text-align: center;
-
       button {
         width: 145px;
         height: 40px;

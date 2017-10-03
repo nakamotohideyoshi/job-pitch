@@ -1,3 +1,5 @@
+@import '../../../../theme/variables.scss';
+
 .root {
   padding: 45px;
 
@@ -13,7 +15,7 @@
     a {
       font-size: 14px;
       font-weight: 500;
-      color: #00b6a4;
+      color: $primary-color;
     }
   }
 
@@ -38,18 +40,23 @@
 
         :global(.form-group) {
           display: flex;
-          align-items: center;
+          margin-bottom: 30px;
 
           > label {
             width: 50px;
             text-align: right;
-            margin-right: 20px;
-            margin-bottom: 0;
+            margin: 7px 20px 0 0;
           }
-          > label + div {
+          > label + * {
             flex: 1;            
           }
-        }        
+        }
+
+        :global(.form-group:first-child) {
+          label {
+            margin-top: 0;
+          }
+        }
       }
     }
   }

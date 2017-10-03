@@ -1,30 +1,24 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { browserHistory } from 'react-router';
 import { Link } from 'react-router';
 import { connect } from 'react-redux';
+import { browserHistory } from 'react-router';
 import Form from 'react-bootstrap/lib/Form';
 import FormGroup from 'react-bootstrap/lib/FormGroup';
 import ControlLabel from 'react-bootstrap/lib/ControlLabel';
 import Button from 'react-bootstrap/lib/Button';
 import { FormComponent } from 'components';
-import * as apiActions from 'redux/modules/api';
-import * as utils from 'helpers/utils';
 import ApiClient from 'helpers/ApiClient';
+import * as utils from 'helpers/utils';
+import * as commonActions from 'redux/modules/common';
 import styles from './BusinessEdit.scss';
 
 @connect(
-  (state) => ({
-    saving: state.api.loading
-  }),
-  { ...apiActions }
-)
+  () => ({}),
+  { ...commonActions })
 export default class BusinessEdit extends FormComponent {
   static propTypes = {
-    saving: PropTypes.bool.isRequired,
-    saveUserBusinessAction: PropTypes.func.isRequired,
-    uploadBusinessLogoAction: PropTypes.func.isRequired,
-    deleteBusinessLogoAction: PropTypes.func.isRequired,
+    setPermission: PropTypes.func.isRequired,
     business: PropTypes.object,
     parent: PropTypes.object.isRequired,
   }
@@ -42,61 +36,64 @@ export default class BusinessEdit extends FormComponent {
       exist: business.images && business.images.length > 0,
     };
     super(props, { formModel, logo });
+    this.api = ApiClient.shared();
     this.loadImage(logo, 'logo');
   }
 
-  onBack = () => {
-    this.props.parent.onEdit();
-  }
-
   onAddCredit = () => {
-    browserHistory.push(`/recruiter/credits/${this.props.business.id}`);
+    utils.setShared('credits_business_id', this.props.business.id);
+    browserHistory.push('/recruiter/credits');
   }
 
   onSave = () => {
     if (!this.isValid(['name'])) return;
 
-    const { saveUserBusinessAction, uploadBusinessLogoAction, deleteBusinessLogoAction } = this.props;
     const { formModel, logo } = this.state;
 
-    saveUserBusinessAction(formModel).then(business => {
-      if (logo.file) {
-        return uploadBusinessLogoAction(
-          {
-            business: business.id,
-            image: logo.file,
-          },
-          event => {
-            console.log(event);
-          }
-        ).then(() => this.saveSuccess);
-      }
-      if (business.images.length > 0 && !logo.exist) {
-        return deleteBusinessLogoAction(business.images[0].id)
-          .then(() => this.saveSuccess);
-      }
-      this.saveSuccess();
-    });
-  }
+    this.setState({ saving: true });
 
-  saveSuccess = () => {
-    this.onBack();
-    this.props.parent.onRefresh();
-    utils.successNotif('Saved!');
+    this.api.saveUserBusiness(formModel).then(
+      business => {
+        if (logo.file) {
+          return this.api.uploadBusinessLogo(
+            {
+              business: business.id,
+              image: logo.file,
+            },
+            event => {
+              console.log(event);
+            }
+          );
+        }
+        if (business.images.length > 0 && !logo.exist) {
+          return this.api.deleteBusinessLogo(business.images[0].id);
+        }
+      }
+    ).then(
+      () => {
+        if (this.api.user.businesses.length === 0) {
+          this.props.setPermission(1);
+        }
+        this.props.parent.onRefresh();
+        this.props.parent.onEdit();
+        utils.successNotif('Saved!');
+      },
+      () => this.setState({ saving: false })
+    );
   }
 
   render() {
-    const { saving, business } = this.props;
+    const { business } = this.props;
     const creditsLabel = business.id ?
       `${business.tokens} Credit${business.tokens !== 1 ? 's' : ''}` :
-      `${ApiClient.initialTokens.tokens} free credits`;
+      `${this.api.initialTokens.tokens} free credits`;
 
     return (
       <div className={styles.root}>
 
         <div className={styles.header}>
           <h4>{business.id ? 'Edit' : 'Add'} Business</h4>
-          <Link className="link" onClick={this.onBack}>{'<< Business List'}</Link>
+          <Link onClick={() => this.props.parent.onEdit()}>{'<< Back'}</Link>
         </div>
 
         <Form>
@@ -123,10 +120,12 @@ export default class BusinessEdit extends FormComponent {
         </Form>
 
         <div className={styles.footer}>
-          <this.SubmitButton
-            submtting={saving}
+          <this.SubmitButtonWithCancel
+            submtting={this.state.saving}
             labels={['Save', 'Saving...']}
             onClick={this.onSave}
+            cancelLabel="Cancel"
+            onCancel={() => this.props.parent.onEdit()}
           />
         </div>
 

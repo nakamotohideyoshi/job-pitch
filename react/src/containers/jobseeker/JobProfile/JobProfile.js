@@ -2,15 +2,14 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Helmet from 'react-helmet';
 import { connect } from 'react-redux';
+import { browserHistory } from 'react-router';
 import Form from 'react-bootstrap/lib/Form';
 import FormGroup from 'react-bootstrap/lib/FormGroup';
 import ControlLabel from 'react-bootstrap/lib/ControlLabel';
-import HelpBlock from 'react-bootstrap/lib/HelpBlock';
-import { Loading, FormComponent, Map } from 'components';
-import * as commonActions from 'redux/modules/common';
-import * as apiActions from 'redux/modules/api';
-import * as utils from 'helpers/utils';
+import { Loading, HelpIcon, FormComponent, Map } from 'components';
 import ApiClient from 'helpers/ApiClient';
+import * as utils from 'helpers/utils';
+import * as commonActions from 'redux/modules/common';
 import styles from './JobProfile.scss';
 
 const SEARCH_RADIUS = [
@@ -22,22 +21,24 @@ const SEARCH_RADIUS = [
 ];
 
 @connect(
-  () => ({
-  }),
-  { ...commonActions, ...apiActions })
+  () => ({ }),
+  { ...commonActions })
 export default class JobProfile extends FormComponent {
   static propTypes = {
-    getJobProfileAction: PropTypes.func.isRequired,
-    saveJobProfileAction: PropTypes.func.isRequired,
     setPermission: PropTypes.func.isRequired,
   }
 
+  constructor(props) {
+    super(props);
+    this.api = ApiClient.shared();
+  }
+
   componentDidMount() {
-    this.contracts = [{ id: -1, name: 'Any' }].concat(ApiClient.contracts);
-    this.hours = [{ id: -1, name: 'Any' }].concat(ApiClient.hours);
+    this.contracts = [{ id: -1, name: 'Any' }].concat(this.api.contracts);
+    this.hours = [{ id: -1, name: 'Any' }].concat(this.api.hours);
     this.getJobProfile().then(profile => {
       const formModel = Object.assign({}, profile);
-      formModel.sectors = ApiClient.sectors.filter(item => profile.sectors.includes(item.id));
+      formModel.sectors = this.api.sectors.filter(item => profile.sectors.includes(item.id));
       formModel.contract = this.contracts.filter(item => item.id === (profile.contract || -1))[0];
       formModel.hours = this.hours.filter(item => item.id === (profile.hours || -1))[0];
       formModel.search_radius = SEARCH_RADIUS.filter(item => item.id === profile.search_radius)[0];
@@ -46,7 +47,20 @@ export default class JobProfile extends FormComponent {
     });
   }
 
-  onClickMap = (pos, address) => {
+  getJobProfile = () => {
+    if (this.api.jobSeeker.profile) {
+      return this.api.getJobProfile(this.api.jobSeeker.profile);
+    }
+    return Promise.resolve({
+      job_seeker: this.api.jobSeeker.id,
+      sectors: [],
+      contract: this.contracts[0].id,
+      hours: this.hours[0].id,
+      search_radius: SEARCH_RADIUS[2].id,
+    });
+  }
+
+  onSelectedLocation = (pos, address) => {
     const { formModel, errors } = this.state;
     formModel.place_name = address;
     errors.place_name = null;
@@ -57,24 +71,9 @@ export default class JobProfile extends FormComponent {
     });
   }
 
-  getJobProfile = () => {
-    const { getJobProfileAction } = this.props;
-    if (ApiClient.jobSeeker.profile) {
-      return getJobProfileAction(ApiClient.jobSeeker.profile);
-    }
-    return Promise.resolve({
-      job_seeker: ApiClient.jobSeeker.id,
-      sectors: [],
-      contract: this.contracts[0].id,
-      hours: this.hours[0].id,
-      search_radius: SEARCH_RADIUS[2].id,
-    });
-  }
-
   onSave = () => {
     if (!this.isValid(['sectors', 'place_name'])) return;
 
-    const { saveJobProfileAction, setPermission } = this.props;
     const { formModel, markerPos } = this.state;
     const data = Object.assign(this.state.profile, formModel);
     data.sectors = formModel.sectors.map(item => item.id);
@@ -85,12 +84,20 @@ export default class JobProfile extends FormComponent {
     data.longitude = markerPos.lng;
 
     this.setState({ saving: true });
-    saveJobProfileAction(data).then(profile => {
-      this.setState({ profile, saving: false });
-      setPermission(2);
+
+    this.api.saveJobProfile(data).then(profile => {
       utils.successNotif('Success!');
+      this.props.setPermission(2);
+      if (this.state.profile.id) {
+        this.setState({ profile, saving: false });
+      } else {
+        browserHistory.push('/jobseeker/find');
+      }
     })
-    .catch(errors => this.setState({ errors }));
+    .catch(errors => this.setState({
+      saving: false,
+      errors
+    }));
   }
 
   render() {
@@ -109,19 +116,20 @@ export default class JobProfile extends FormComponent {
             <h3>Job Profile</h3>
           </div>
 
-          <div className="shadow-board padding-45">
+          <div className="board-shadow padding-45">
             <Form>
               <FormGroup>
                 <ControlLabel>Sectors</ControlLabel>
                 <this.SelectField
                   name="sectors"
-                  dataSource={ApiClient.sectors}
+                  dataSource={this.api.sectors}
                   placeholder="Select Sectors"
                   multiple
                   searchable
                   searchPlaceholder="Search"
                 />
               </FormGroup>
+
               <FormGroup>
                 <ControlLabel>Contract</ControlLabel>
                 <this.SelectField
@@ -129,6 +137,7 @@ export default class JobProfile extends FormComponent {
                   dataSource={this.contracts}
                 />
               </FormGroup>
+
               <FormGroup>
                 <ControlLabel>Hours</ControlLabel>
                 <this.SelectField
@@ -136,25 +145,31 @@ export default class JobProfile extends FormComponent {
                   dataSource={this.hours}
                 />
               </FormGroup>
+
               <FormGroup>
-                <ControlLabel>Match area</ControlLabel>
-                <HelpBlock>
-                  In order to match you with jobs in your area, you must tell us your location, 
-                  and specify the maximum distance to search.
-                </HelpBlock>
+                <div className={styles.withHelp}>
+                  <ControlLabel>Match area</ControlLabel>
+                  <HelpIcon
+                    label={`In order to match you with jobs in your area, you must tell us your location,
+                      and specify the maximum distance to search.`}
+                  />
+                </div>
                 <this.TextField
                   type="text"
                   name="place_name"
+                  className={styles.placeName}
+                  placeholder="Select your location in the map"
                   disabled
                 />
                 <div style={{ height: '300px' }}>
                   <Map
                     defaultCenter={markerPos}
                     marker={markerPos}
-                    onClick={this.onClickMap}
+                    onSelected={this.onSelectedLocation}
                   />
                 </div>
               </FormGroup>
+
               <FormGroup>
                 <ControlLabel>Radius</ControlLabel>
                 <this.SelectField
@@ -163,6 +178,7 @@ export default class JobProfile extends FormComponent {
                 />
               </FormGroup>
             </Form>
+
             <div className={styles.footer}>
               <this.SubmitButton
                 submtting={saving}

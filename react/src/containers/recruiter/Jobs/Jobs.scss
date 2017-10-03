@@ -1,3 +1,5 @@
+@import '../../../theme/variables.scss';
+
 .root {
 
   .jobPostTabs {
@@ -42,7 +44,7 @@
         content: '';
         display: block;
         height: 50%;
-        border: 1px solid #e0e0e0;
+        border: 1px solid $border-color;
         background-color: #fff;      
       }
       li::before {
@@ -58,7 +60,7 @@
         z-index: 2;
       }
       li:hover::before, li:hover::after {
-        border: 1px solid #00b6a4;
+        border: 1px solid $primary-color;
       }
     }
 
@@ -70,11 +72,11 @@
         }
       }
       li.active::before, li.active::after {
-        background-color: #00b6a4;
-        border: 1px solid #00b6a4;
+        background-color: $primary-color;
+        border: 1px solid $primary-color;
       }
       li.disabled:hover::before, li.disabled:hover::after {
-        border: 1px solid #e0e0e0;
+        border: 1px solid $border-color;
       }
       .tab-content {
         padding-top: 90px;

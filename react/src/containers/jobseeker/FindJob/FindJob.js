@@ -4,35 +4,30 @@ import { connect } from 'react-redux';
 import Button from 'react-bootstrap/lib/Button';
 import { Link, browserHistory } from 'react-router';
 import Helmet from 'react-helmet';
-import { ItemList, Loading } from 'components';
-import * as commonActions from 'redux/modules/common';
-import * as apiActions from 'redux/modules/api';
-import * as utils from 'helpers/utils';
+import { Loading, ItemList, JobDetail } from 'components';
 import ApiClient from 'helpers/ApiClient';
+import * as utils from 'helpers/utils';
+import * as commonActions from 'redux/modules/common';
 import _ from 'lodash';
-import JobDetail from '../JobDetail/JobDetail';
 import styles from './FindJob.scss';
 
 @connect(
-  () => ({
-  }),
-  { ...commonActions, ...apiActions }
+  () => ({ }),
+  { ...commonActions }
 )
 export default class FindJob extends Component {
   static propTypes = {
-    getJobProfileAction: PropTypes.func.isRequired,
-    getJobsAction: PropTypes.func.isRequired,
-    saveApplicationAction: PropTypes.func.isRequired,
     alertShow: PropTypes.func.isRequired,
   }
 
   constructor(props) {
     super(props);
     this.state = { };
+    this.api = ApiClient.shared();
   }
 
   componentDidMount() {
-    this.props.getJobProfileAction(ApiClient.jobSeeker.profile).then(profile => {
+    this.api.getJobProfile(this.api.jobSeeker.profile).then(profile => {
       this.setState({ profile });
       this.onRefresh();
     });
@@ -40,7 +35,7 @@ export default class FindJob extends Component {
 
   onRefresh = () => {
     this.setState({ jobs: null });
-    this.props.getJobsAction('')
+    this.api.getJobs('')
       .then(jobs => this.setState({ jobs }));
     // setTimeout(() => {
     //   this.setState({ jobs: utils.getTempJobs() });
@@ -54,7 +49,7 @@ export default class FindJob extends Component {
     const { jobs } = this.state;
     job = job || this.state.selectedJob;
 
-    if (ApiClient.jobSeeker.pitches.length === 0) {
+    if (this.api.jobSeeker.pitches.length === 0) {
       alertShow(
         'Alert',
         'You need to record your pitch video to apply.',
@@ -81,9 +76,9 @@ export default class FindJob extends Component {
               job.loading = true;
               this.setState({ jobs });
 
-              this.props.saveApplicationAction({
+              this.api.saveApplication({
                 job: job.id,
-                job_seeker: ApiClient.jobSeeker.id,
+                job_seeker: this.api.jobSeeker.id,
               })
                 .then(() => {
                   _.remove(jobs, item => item.id === job.id);
@@ -201,7 +196,7 @@ export default class FindJob extends Component {
             <h3>Find Me Jobs</h3>
           </div>
 
-          <div className="shadow-board">
+          <div className="board-shadow">
             <ItemList
               items={this.state.jobs}
               onFilter={this.onFilter}

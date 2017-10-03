@@ -13,14 +13,14 @@ export default class JobSeekerDetail extends Component {
     button1: PropTypes.object,
     button2: PropTypes.object,
     application: PropTypes.object,
-    onChangeShortlist: PropTypes.func,
+    onChangedShortlist: PropTypes.func,
   }
 
   static defaultProps = {
     button1: null,
     button2: null,
     application: null,
-    onChangeShortlist: null,
+    onChangedShortlist: null,
   }
 
   constructor(props) {
@@ -37,18 +37,19 @@ export default class JobSeekerDetail extends Component {
   onCVView = () => window.open(this.props.jobSeeker.cv);
 
   onChangeShortlist = event => {
-    const { onChangeShortlist } = this.props;
-    if (onChangeShortlist) {
+    const { onChangedShortlist } = this.props;
+    if (onChangedShortlist) {
       const shortlisted = event.target.checked;
       this.setState({ loading: true });
 
-      onChangeShortlist(shortlisted)
-        .then(() => {
+      onChangedShortlist(shortlisted).then(
+        () => {
           this.setState({
             loading: false,
             shortlisted
           });
-        });
+        }
+      );
     }
   };
 
@@ -122,7 +123,7 @@ export default class JobSeekerDetail extends Component {
                   jobSeeker.pitches.length > 0 &&
                   <div>
                     <button
-                      className="btn-icon"
+                      className="link-btn"
                       onClick={this.onPlayPitch}
                     >
                       <i className="fa fa-play-circle-o" />Video Pitch

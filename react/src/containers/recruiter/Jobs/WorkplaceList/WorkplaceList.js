@@ -4,9 +4,9 @@ import { Link } from 'react-router';
 import { connect } from 'react-redux';
 import Button from 'react-bootstrap/lib/Button';
 import { ItemList, Loading } from 'components';
-import * as commonActions from 'redux/modules/common';
-import * as apiActions from 'redux/modules/api';
+import ApiClient from 'helpers/ApiClient';
 import * as utils from 'helpers/utils';
+import * as commonActions from 'redux/modules/common';
 import _ from 'lodash';
 import WorkplaceEdit from './WorkplaceEdit';
 import styles from './WorkplaceList.scss';
@@ -14,12 +14,10 @@ import styles from './WorkplaceList.scss';
 @connect(
   () => ({
   }),
-  { ...commonActions, ...apiActions }
+  { ...commonActions }
 )
 export default class WorkplaceList extends Component {
   static propTypes = {
-    getUserWorkplacesAction: PropTypes.func.isRequired,
-    deleteUserWorkplaceAction: PropTypes.func.isRequired,
     alertShow: PropTypes.func.isRequired,
     businessId: PropTypes.number,
     selectedId: PropTypes.number,
@@ -34,6 +32,8 @@ export default class WorkplaceList extends Component {
   constructor(props) {
     super(props);
     this.state = { };
+    this.api = ApiClient.shared();
+    this.props.parent.workplaceList = this;
   }
 
   componentWillReceiveProps(nextProps) {
@@ -44,9 +44,9 @@ export default class WorkplaceList extends Component {
   }
 
   onRefresh = () => {
-    this.setState({ workplaces: null });
+    this.setState({ workplaces: null, editingWorkplace: null });
     if (this.businessId) {
-      this.props.getUserWorkplacesAction(this.businessId)
+      this.api.getUserWorkplaces(`?business=${this.businessId}`)
         .then(workplaces => this.setState({ workplaces }));
     }
   }
@@ -54,7 +54,11 @@ export default class WorkplaceList extends Component {
   onFilter = (workplace, filterText) => workplace.name.toLowerCase().indexOf(filterText) > -1;
 
   onAdd = () => {
-    this.setState({ editingWorkplace: {} });
+    if (this.businessId) {
+      this.setState({
+        editingWorkplace: { business: this.businessId }
+      });
+    }
   }
 
   onEdit = (event, workplace) => {
@@ -77,8 +81,8 @@ export default class WorkplaceList extends Component {
             workplace.loading = true;
             this.setState({ workplaces: this.state.workplaces });
 
-            this.props.deleteUserWorkplaceAction(workplace.id)
-              .then(() => {
+            this.api.deleteUserWorkplace(workplace.id).then(
+              () => {
                 _.remove(this.state.workplaces, item => item.id === workplace.id);
                 this.setState({ workplaces: this.state.workplaces });
 
@@ -87,11 +91,12 @@ export default class WorkplaceList extends Component {
                 }
 
                 utils.successNotif('Deleted!');
-              })
-              .catch(() => {
+              },
+              () => {
                 workplace.loading = false;
                 this.setState({ workplaces: this.state.workplaces });
-              });
+              }
+            );
           }
         },
         { label: 'Cancel' },
@@ -154,25 +159,24 @@ export default class WorkplaceList extends Component {
         }
       </span>
       <br />
-      <button className="btn-icon" onClick={this.onAdd}>Create workplace</button>
+      <button className="link-btn" onClick={this.onAdd}>Create workplace</button>
     </div>
   );
 
   render() {
-    if (!this.props.businessId) {
+    if (!this.businessId) {
       return (
-        <div className="shadow-board">
+        <div className="board-shadow">
         </div>
       );
     }
 
     const { editingWorkplace } = this.state;
     return (
-      <div className="shadow-board">
+      <div className="board-shadow">
         {
           editingWorkplace ?
             <WorkplaceEdit
-              businessId={this.props.businessId}
               workplace={editingWorkplace}
               parent={this}
             /> :

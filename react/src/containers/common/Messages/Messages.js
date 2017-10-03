@@ -1,30 +1,48 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
-import { Link } from 'react-router';
 import Helmet from 'react-helmet';
-// import { Message, JobSeekerDetail, JobDetail } from 'components';
-import { ItemList } from 'components';
-import * as commonActions from 'redux/modules/common';
-import * as utils from 'helpers/utils';
+import { Loading } from 'components';
 import ApiClient from 'helpers/ApiClient';
+import * as utils from 'helpers/utils';
 import ApplicationList from './ApplicationList';
 import Thread from './Thread';
 import styles from './Messages.scss';
 
-@connect(
-  () => ({
-  }),
-  { ...commonActions }
-)
 export default class Messages extends Component {
+  static propTypes = {
+    params: PropTypes.object.isRequired,
+  }
 
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = { };
+    this.api = ApiClient.shared();
   }
 
-  onSelectedApplication = application => this.setState({ application })
+  componentDidMount() {
+    this.api.getApplications('')
+      .then(applications => {
+        applications.sort((a, b) => {
+          const date1 = new Date(a.messages[a.messages.length - 1].created);
+          const date2 = new Date(b.messages[b.messages.length - 1].created);
+          return date1.getTime() < date2.getTime();
+        });
+        this.setState({ applications });
+
+        const appid = parseInt(utils.getShared('messages_selected_id'), 10);
+        if (appid !== 0 && !appid) {
+          this.onSelectedApplication(applications[0]);
+        } else {
+          const application = applications.filter(item => item.id === appid)[0];
+          this.onSelectedApplication(application);
+        }
+      });
+  }
+
+  onSelectedApplication = selectedApp => {
+    utils.setShared('messages_selected_id', (selectedApp || {}).id);
+    this.setState({ selectedApp });
+  }
 
   // onSend = () => {
   //   this.props.getApplications(`${this.state.selectedApp.id}/`)
@@ -44,25 +62,28 @@ export default class Messages extends Component {
   //   selectedApp: null,
   // });
 
-
-
-
   render() {
-    const { application } = this.state;
+    const { applications, selectedApp } = this.state;
 
     return (
       <div className={styles.root}>
         <Helmet title="My Messages" />
-        <div className="shadow-board">
-          <ApplicationList
-            parent={this}
-            selectedApplication={application}
-          />
-          <Thread
-            parent={this}
-            application={application}
-          />
-        </div>
+
+        {
+          applications ?
+            <div className="board-shadow">
+              <ApplicationList
+                parent={this}
+                applications={applications}
+                selectedApp={selectedApp}
+              />
+              <Thread
+                parent={this}
+                application={selectedApp}
+              />
+            </div> :
+            <Loading />
+        }
       </div>
     );
   }

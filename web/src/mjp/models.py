@@ -477,6 +477,7 @@ class PayPalProduct(models.Model):
     tokens = models.IntegerField()
 
     class Meta:
+        ordering = ('tokens',)
         verbose_name_plural = 'paypal products'
 
 

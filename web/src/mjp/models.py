@@ -245,7 +245,7 @@ class Business(models.Model):
     updated = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return "%s: %s" % (type(self).__name__, self.name)
+        return self.name
 
     class Meta:
         verbose_name_plural = "businesses"
@@ -286,9 +286,11 @@ class Location(models.Model):
 
     class Meta:
         ordering = ('name',)
+        verbose_name_plural = 'Work Places'
+        verbose_name = 'Work Place'
 
     def __str__(self):
-        return "%s: %s" % (type(self).__name__, self.name)
+        return self.name
 
 
 class LocationImage(models.Model):
@@ -317,7 +319,7 @@ class Job(models.Model):
     updated = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return "%s: %s (%s)" % (type(self).__name__, self.title, self.location.name)
+        return "%s (%s)" % (self.title, self.location.name)
 
     class Meta:
         ordering = ('status', '-created',)

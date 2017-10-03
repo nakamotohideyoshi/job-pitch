@@ -1,0 +1,7 @@
+#jobs-group .dynamic-jobs .original p {
+    display: none;
+}
+
+#jobs-group .dynamic-jobs td {
+    padding-top: 8px;
+}

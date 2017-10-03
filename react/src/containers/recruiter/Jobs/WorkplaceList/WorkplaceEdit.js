@@ -1,28 +1,16 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router';
-import { connect } from 'react-redux';
 import Form from 'react-bootstrap/lib/Form';
 import FormGroup from 'react-bootstrap/lib/FormGroup';
 import ControlLabel from 'react-bootstrap/lib/ControlLabel';
-import { FormComponent, Map } from 'components';
-import * as apiActions from 'redux/modules/api';
+import { FormComponent, Map, HelpIcon } from 'components';
+import ApiClient from 'helpers/ApiClient';
 import * as utils from 'helpers/utils';
 import styles from './WorkplaceEdit.scss';
 
-@connect(
-  (state) => ({
-    saving: state.api.loading
-  }),
-  { ...apiActions }
-)
 export default class WorkplaceEdit extends FormComponent {
   static propTypes = {
-    saving: PropTypes.bool.isRequired,
-    saveUserWorkplaceAction: PropTypes.func.isRequired,
-    uploadWorkplaceLogoAction: PropTypes.func.isRequired,
-    deleteWorkplaceLogoAction: PropTypes.func.isRequired,
-    businessId: PropTypes.number.isRequired,
     workplace: PropTypes.object,
     parent: PropTypes.object.isRequired,
   }
@@ -35,7 +23,7 @@ export default class WorkplaceEdit extends FormComponent {
     const { workplace } = props;
     const formModel = Object.assign({}, workplace);
     if (!formModel.id) {
-      formModel.email = localStorage.getItem('email');
+      formModel.email = utils.getCookie('email');
       formModel.email_public = true;
       formModel.mobile_public = true;
     }
@@ -46,20 +34,26 @@ export default class WorkplaceEdit extends FormComponent {
     };
     const markerPos = workplace.latitude && { lat: workplace.latitude, lng: workplace.longitude };
     super(props, { formModel, logo, markerPos });
+    this.api = ApiClient.shared();
     this.loadImage(logo, 'logo');
   }
 
-  onBack = () => {
-    this.props.parent.onEdit();
+  onSelectedLocation = (pos, address) => {
+    const { formModel, errors } = this.state;
+    formModel.place_name = address;
+    errors.place_name = null;
+    this.setState({
+      formModel,
+      errors,
+      markerPos: pos,
+    });
   }
 
   onSave = () => {
     if (!this.isValid(['name', 'place_name', 'description', 'email'])) return;
 
-    const { busineesId, saveUserWorkplaceAction, uploadWorkplaceLogoAction, deleteWorkplaceLogoAction } = this.props;
     const { formModel, logo, markerPos } = this.state;
     const data = Object.assign(this.props.workplace, formModel);
-    data.business = busineesId;
     data.telephone = '';
     data.telephone_public = false;
     data.address = '';
@@ -68,34 +62,37 @@ export default class WorkplaceEdit extends FormComponent {
     data.latitude = markerPos.lat;
     data.longitude = markerPos.lng;
 
-    saveUserWorkplaceAction(data).then(workplace => {
-      if (logo.file) {
-        return uploadWorkplaceLogoAction(
-          {
-            location: workplace.id,
-            image: logo.file,
-          },
-          event => {
-            console.log(event);
-          }
-        ).then(() => this.saveSuccess);
-      }
-      if (workplace.images.length > 0 && !logo.exist) {
-        return deleteWorkplaceLogoAction(workplace.images[0].id)
-          .then(() => this.saveSuccess);
-      }
-      this.saveSuccess();
-    });
-  }
+    this.setState({ saving: true });
 
-  saveSuccess = () => {
-    this.onBack();
-    this.props.parent.onRefresh();
-    utils.successNotif('Saved!');
+    this.api.saveUserWorkplace(data).then(
+      workplace => {
+        if (logo.file) {
+          return this.api.uploadWorkplaceLogo(
+            {
+              location: workplace.id,
+              image: logo.file,
+            },
+            event => {
+              console.log(event);
+            }
+          );
+        }
+        if (workplace.images.length > 0 && !logo.exist) {
+          return this.api.deleteWorkplaceLogo(workplace.images[0].id);
+        }
+      }
+    ).then(
+      () => {
+        this.props.parent.onRefresh();
+        this.props.parent.onEdit();
+        utils.successNotif('Saved!');
+      },
+      () => this.setState({ saving: false })
+    );
   }
 
   render() {
-    const { saving, workplace } = this.props;
+    const { workplace } = this.props;
     const { markerPos } = this.state;
 
     return (
@@ -103,7 +100,7 @@ export default class WorkplaceEdit extends FormComponent {
 
         <div className={styles.header}>
           <h4>{workplace.id ? 'Edit' : 'Add'} Workplace</h4>
-          <Link className="link" onClick={this.onBack}>{'<< Workplace List'}</Link>
+          <Link onClick={() => this.props.parent.onEdit()}>{'<< Back'}</Link>
         </div>
 
         <Form>
@@ -117,45 +114,60 @@ export default class WorkplaceEdit extends FormComponent {
               <FormGroup>
                 <ControlLabel>Email</ControlLabel>
                 <this.TextField type="text" name="email" />
-                <this.CheckBoxField label="Public" name="email_public" />
+                <HelpIcon
+                  label={`This is the email that notifications will be sent to,
+                  it can be different to your login email address.`}
+                />
+                <div className={styles.public1}>
+                  Public <this.CheckBoxField name="email_public" />
+                </div>
               </FormGroup>
               <FormGroup>
                 <ControlLabel>Mobile</ControlLabel>
                 <this.TextField type="text" name="mobile" />
-                <this.CheckBoxField label="Public" name="mobile_public" />
+                <div className={styles.public2}>
+                  Public <this.CheckBoxField name="mobile_public" />
+                </div>
               </FormGroup>
             </div>
           </div>
+
           <FormGroup>
             <ControlLabel>Description</ControlLabel>
-            <this.TextField
-              componentClass="textarea"
+            <this.TextAreaField
               name="description"
+              maxLength="1000"
+              minRows={3}
+              maxRows={20}
             />
           </FormGroup>
+
           <FormGroup>
             <ControlLabel>Location</ControlLabel>
             <this.TextField
               type="text"
               name="place_name"
+              className={styles.placeName}
+              placeholder="Select location in the map"
               disabled
             />
             <div style={{ height: '300px' }}>
               <Map
                 defaultCenter={markerPos}
                 marker={markerPos}
-                onClick={this.onClickMap}
+                onSelected={this.onSelectedLocation}
               />
             </div>
-            
           </FormGroup>
         </Form>
 
         <div className={styles.footer}>
-          <this.SubmitButton
-            submtting={saving}
+          <this.SubmitButtonWithCancel
+            submtting={this.state.saving}
             labels={['Save', 'Saving...']}
             onClick={this.onSave}
+            cancelLabel="Cancel"
+            onCancel={() => this.props.parent.onEdit()}
           />
         </div>
 

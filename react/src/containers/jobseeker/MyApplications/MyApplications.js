@@ -1,35 +1,22 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
 import Button from 'react-bootstrap/lib/Button';
 import { Link, browserHistory } from 'react-router';
 import Helmet from 'react-helmet';
-import { ItemList, Loading } from 'components';
-import * as apiActions from 'redux/modules/api';
-import * as utils from 'helpers/utils';
+import { ItemList, JobDetail } from 'components';
 import ApiClient from 'helpers/ApiClient';
-import _ from 'lodash';
-import JobDetail from '../JobDetail/JobDetail';
-import styles from './Applications.scss';
+import * as utils from 'helpers/utils';
+import styles from './MyApplications.scss';
 
-@connect(
-  () => ({
-  }),
-  { ...apiActions }
-)
-export default class Applications extends Component {
-  static propTypes = {
-    getJobProfileAction: PropTypes.func.isRequired,
-    getApplicationsAction: PropTypes.func.isRequired,
-  }
+export default class MyApplications extends Component {
 
   constructor(props) {
     super(props);
     this.state = { };
+    this.api = ApiClient.shared();
   }
 
   componentDidMount() {
-    this.props.getJobProfileAction(ApiClient.jobSeeker.profile).then(profile => {
+    this.api.getJobProfile(this.api.jobSeeker.profile).then(profile => {
       this.setState({ profile });
       this.onRefresh();
     });
@@ -37,18 +24,17 @@ export default class Applications extends Component {
 
   onRefresh = () => {
     this.setState({ applications: null });
-    this.props.getApplicationsAction('')
+    this.api.getApplications('')
       .then(applications => this.setState({ applications }));
-    // setTimeout(() => {
-    //   this.setState({ applications: utils.getTempApplications() });
-    // }, 1000);
   };
 
   onFilter = (application, filterText) =>
     utils.getJobSeekerFullName(application.job_seeker).toLowerCase().indexOf(filterText) !== -1;
 
   onMessage = (event, application) => {
-    browserHistory.push(`/jobseeker/messages/${application.id}`);
+    application = application || this.state.selectedApplication;
+    utils.setShared('messages_selected_id', application.id);
+    browserHistory.push('/messages');
     if (event) {
       event.stopPropagation();
     }
@@ -105,14 +91,14 @@ export default class Applications extends Component {
 
     return (
       <div className={styles.root}>
-        <Helmet title="Applications" />
+        <Helmet title="My Applications" />
 
         <div className="container">
           <div className="pageHeader">
-            <h3>Applications</h3>
+            <h3>My Applications</h3>
           </div>
 
-          <div className="shadow-board">
+          <div className="board-shadow">
             <ItemList
               items={this.state.applications}
               onFilter={this.onFilter}

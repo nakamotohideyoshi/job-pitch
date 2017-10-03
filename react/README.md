@@ -17,8 +17,3 @@ After finish building, please do followings:
 1. Copy index.html from [frontend_src]/static/static/ to [backend_src]/web/templates/
 2. Copy rest files from [frontend_src]/static/static/ to [backend_src]/web/static/
 3. Copy favicon.ico from [frontend_src]/static/ to [backend_src]/web/static/
-
-You can change backend server url in src/helpers/ApiClient.js file
-```javascript
-axios.defaults.baseURL = __LOCAL__ ? 'http://localhost:8080' : 'https://www.sclabs.co.uk';
-```

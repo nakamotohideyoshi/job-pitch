@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { browserHistory } from 'react-router';
 import { connect } from 'react-redux';
-import cookie from 'js-cookie';
 import Modal from 'react-bootstrap/lib/Modal';
 import Button from 'react-bootstrap/lib/Button';
 import NotificationSystem from 'react-notification-system';
@@ -10,8 +9,6 @@ import { Loading, Header, Footer } from 'components';
 import ApiClient from 'helpers/ApiClient';
 import * as utils from 'helpers/utils';
 import * as commonActions from 'redux/modules/common';
-import * as apiActions from 'redux/modules/api';
-import * as authActions from 'redux/modules/auth';
 import styles from './MainLayout.scss';
 
 const homeMenus = [
@@ -35,7 +32,7 @@ const jobseekerMenus = [
     permission: 2,
     menuData: [
       { id: 10, label: 'Find Job', to: '/jobseeker/find', permission: 2 },
-      { id: 11, label: 'My Applications', to: '/jobseeker/applications', permission: 2 },
+      { id: 11, label: 'My Applications', to: '/jobseeker/myapplications', permission: 2 },
     ],
   },
   {
@@ -60,17 +57,13 @@ const AuthPaths = [
     permission: state.common.permission,
     alert: state.common.alert,
   }),
-  { ...apiActions, ...commonActions, ...authActions }
+  { ...commonActions }
 )
 export default class MainLayout extends Component {
   static propTypes = {
     location: PropTypes.object.isRequired,
-    loadDataAction: PropTypes.func.isRequired,
-    getUserAction: PropTypes.func.isRequired,
-    getJobSeekerAction: PropTypes.func.isRequired,
     permission: PropTypes.number.isRequired,
     setPermission: PropTypes.func.isRequired,
-    logoutAction: PropTypes.func.isRequired,
     popupLoading: PropTypes.object,
     alert: PropTypes.object,
     alertShow: PropTypes.func.isRequired,
@@ -89,6 +82,7 @@ export default class MainLayout extends Component {
     this.state = {
       globalLoading: true,
     };
+    this.api = ApiClient.shared();
   }
 
   componentDidMount() {
@@ -116,7 +110,7 @@ export default class MainLayout extends Component {
 
     // non auth
 
-    if (!ApiClient.isLoggedIn()) {
+    if (!this.api.isLoggedIn()) {
       if (this.rootPath !== 'resources' && AuthPaths.indexOf(this.rootPath) !== -1) {
         return this.redirect('/login');
       }
@@ -131,18 +125,19 @@ export default class MainLayout extends Component {
       return this.redirect('/select');
     }
 
-    if (ApiClient.initialTokens) {
+    if (this.api.initialTokens) {
       return this.checkUser();
     }
-    return this.props.loadDataAction()
-      .then(this.checkUser);
+    return this.api.loadData().then(
+      () => this.checkUser()
+    );
   }
 
-  checkUser = () => this.props.getUserAction()
+  checkUser = () => this.api.getUser()
     .then(user => {
       this.menuData = [{
         id: 10,
-        label: localStorage.getItem('email'),
+        label: utils.getCookie('email'),
         kind: 'right',
         menuData: [
           { id: 11, label: 'Change Password', to: '/password' },
@@ -154,11 +149,15 @@ export default class MainLayout extends Component {
       }
 
       if (user.job_seeker) {
-        return this.props.getJobSeekerAction(user.job_seeker)
-          .then(this.checkJobSeeker);
+        return this.api.getJobSeekers(`${user.job_seeker}/`).then(
+          jobSeeker => {
+            this.api.jobSeeker = jobSeeker;
+            return this.checkJobSeeker();
+          }
+        );
       }
 
-      const userType = cookie.get('usertype');
+      const userType = utils.getShared('usertype');
       if (userType === 'recruiter') {
         return this.checkRcruiter();
       }
@@ -175,7 +174,7 @@ export default class MainLayout extends Component {
     });
 
   checkRcruiter = () => {
-    const { user } = ApiClient;
+    const { user } = this.api;
 
     this.menuData = this.menuData.concat(recruiterMenus);
     const permission = user.businesses.length > 0 ? 1 : 0;
@@ -193,7 +192,7 @@ export default class MainLayout extends Component {
   }
 
   checkJobSeeker = () => {
-    const { jobSeeker } = ApiClient;
+    const { jobSeeker } = this.api;
 
     this.menuData = this.menuData.concat(jobseekerMenus);
     let permission = 0;
@@ -248,15 +247,15 @@ export default class MainLayout extends Component {
         {
           label: 'Log Out',
           style: 'success',
-          callback: () => this.props.logoutAction()
+          callback: () => this.api.logout()
             .then(() => {
               if (__DEVELOPMENT__) {
-                cookie.remove('token');
+                utils.setCookie('token');
               } else {
-                cookie.remove('csrftoken');
+                utils.setCookie('csrftoken');
               }
-              cookie.remove('usertype');
-              localStorage.removeItem('first-time');
+              utils.setShared('usertype');
+              utils.setShared('first-time');
               browserHistory.push('/login');
             })
         }

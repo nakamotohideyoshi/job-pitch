@@ -1,31 +1,19 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
 import Helmet from 'react-helmet';
 import AWS from 'aws-sdk';
 import VideoRecorder from 'components/VideoRecorder/VideoRecorder';
 import Button from 'react-bootstrap/lib/Button';
 import ProgressBar from 'react-bootstrap/lib/ProgressBar';
-import * as apiActions from 'redux/modules/api';
-import * as utils from 'helpers/utils';
 import ApiClient from 'helpers/ApiClient';
+import * as utils from 'helpers/utils';
 import styles from './PitchRecord.scss';
 
-@connect(
-  () => ({
-  }),
-  { ...apiActions }
-)
 export default class PitchRecord extends Component {
-  static propTypes = {
-    getPitchAction: PropTypes.func.isRequired,
-    createPitchAction: PropTypes.func.isRequired,
-  }
 
   constructor(props) {
     super(props);
-
-    const pitch = ApiClient.jobSeeker.pitches[0];
+    this.api = ApiClient.shared();
+    const pitch = this.api.jobSeeker.pitches[0];
     this.state = {
       videoUrl: pitch ? pitch.video : '',
     };
@@ -60,7 +48,7 @@ export default class PitchRecord extends Component {
       uploading: true,
     });
 
-    this.props.createPitchAction().then(pitch => {
+    this.api.createPitch().then(pitch => {
       const s3 = new AWS.S3({
         apiVersion: '2006-03-01',
         credentials: new AWS.CognitoIdentityCredentials({
@@ -101,7 +89,7 @@ export default class PitchRecord extends Component {
   }
 
   checkPitch = (pitchId) => {
-    this.props.getPitchAction(pitchId).then(pitch => {
+    this.api.getPitch(pitchId).then(pitch => {
       if (!pitch.video) {
         this.timer = setTimeout(() => this.checkPitch(pitchId), 2000);
       } else {
@@ -130,7 +118,7 @@ export default class PitchRecord extends Component {
             <h3>Record Pitch</h3>
           </div>
 
-          <div className="shadow-board padding-45">
+          <div className="board-shadow padding-45">
             <div className={styles.container}>
               <div className={styles.help}>
                 {`Here you can record your 30 second pitch. The 30 sec.\n

@@ -1,3 +1,5 @@
+@import '../../theme/variables.scss';
+
 .container {
   position: relative;
 
@@ -10,7 +12,7 @@
     position: absolute;
     top: 10px;
     left: 10px;
-    color: #656565;
+    color: $text-color1;
   }
 
   button {

@@ -1,6 +1,8 @@
+@import '../../../theme/variables.scss';
+
 .root {
   width: 300px;
-  border-right: 1px solid #e0e0e0;
+  border-right: 1px solid $border-color;
 
   > div:first-child {
     align-items: center;
@@ -24,7 +26,7 @@
       display: flex;
       padding: 8px 0;
       margin: -1px 0;
-      border-bottom: 1px solid #f0f0f0;
+      border-bottom: 1px solid $list-item-hover-color;
   
       img {
         width: 60px;
@@ -56,19 +58,19 @@
             font-size: 12px;
             text-align: right;
             white-space: nowrap;
-            color: #959595;
+            color: $text-color2;
           }
         }
   
         .subTitle {
-          color: #656565;
+          color: $text-color1;
           white-space: nowrap;
           text-overflow: ellipsis;
           overflow: hidden;
         }
 
         .message {
-          color: #959595;
+          color: $text-color2;
           white-space: nowrap;
           text-overflow: ellipsis;
           overflow: hidden;
@@ -78,12 +80,10 @@
   }
   
   .application:hover {
-    background-color: #f0f0f0;
-    // border-top: 1px solid #e0e0e0;
-    // border-bottom: 1px solid #e0e0e0;
+    background-color: $list-item-hover-color;
     
     .name > div {
-      color: #00b6a4;
+      color: $primary-color;
     }
   }
 
@@ -93,7 +93,7 @@
   
     > div {
       .name > div {
-        color: #333;
+        color: $text-color;
       }
     }
   }
@@ -105,7 +105,7 @@
       opacity: 0.5;
   
       .name > div {
-        color: #333;
+        color: $text-color;
       }
     }
   }

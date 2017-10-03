@@ -1,6 +1,5 @@
 import axios from 'axios';
 import * as utils from 'helpers/utils';
-import cookie from 'js-cookie';
 
 if (__LOCAL__ && __DEVELOPMENT__) {
   axios.defaults.baseURL = 'http://localhost:8080';
@@ -10,32 +9,25 @@ axios.defaults.headers.post['Content-Type'] = 'application/json';
 
 export default class ApiClient {
 
-  static user;
-  static jobSeeker;
+  static instance;
+  static shared() {
+    return ApiClient.instance;
+  }
 
-  static initialTokens;
-  static sectors;
-  static contracts;
-  static hours;
-  static nationalities;
-  static applicationStatuses;
-  static jobStatuses;
-  static sexes;
-  static roles;
-  static products;
+  constructor() {
+    ApiClient.instance = this;
+  }
 
-  /* utils */
-
-  static isLoggedIn = () => !!cookie.get(__DEVELOPMENT__ ? 'token' : 'csrftoken')
+  isLoggedIn = () => !!utils.getCookie(__DEVELOPMENT__ ? 'token' : 'csrftoken')
 
   setToken = () => {
     if (__DEVELOPMENT__) {
-      const token = cookie.get('token');
+      const token = utils.getCookie('token');
       if (token) {
         axios.defaults.headers.common.Authorization = `Token ${token}`;
       }
     } else {
-      const token = cookie.get('csrftoken');
+      const token = utils.getCookie('csrftoken');
       if (token) {
         axios.defaults.headers.common['X-CSRFToken'] = token;
       }
@@ -44,6 +36,10 @@ export default class ApiClient {
 
   responseData = response => Promise.resolve(response.data);
   handleError = error => {
+    if (!error.response) {
+      return Promise.reject({ detail: 'Network Error' });
+    }
+
     const errors = error.response.status === 500 ? { detail: error.response.statusText } : error.response.data;
     if (typeof errors === 'string') {
       utils.errorNotif(errors);
@@ -56,26 +52,22 @@ export default class ApiClient {
   get = url => {
     this.setToken();
     return axios.get(url)
-    .catch(this.handleError)
-    .then(this.responseData);
+    .then(this.responseData, this.handleError);
   }
   post = (url, info) => {
     this.setToken();
     return axios.post(url, info)
-    .catch(this.handleError)
-    .then(this.responseData);
+    .then(this.responseData, this.handleError);
   }
   put = (url, info) => {
     this.setToken();
     return axios.put(url, info)
-    .catch(this.handleError)
-    .then(this.responseData);
+    .then(this.responseData, this.handleError);
   }
   delete = (url, info) => {
     this.setToken();
     return axios.delete(url, info)
-    .catch(this.handleError)
-    .then(this.responseData);
+    .then(this.responseData, this.handleError);
   }
 
   uploadImage = (endpoint, info, onUploadProgress) => {
@@ -110,14 +102,24 @@ export default class ApiClient {
 
   // auth api
   register = info => this.post('/api-rest-auth/registration/', info);
-  login = info => this.post('/api-rest-auth/login/', info);
+  login = info => this.post('/api-rest-auth/login/', info)
+    .then(data => {
+      if (__DEVELOPMENT__) {
+        utils.setCookie('token', data.key);
+      }
+    });
   logout = () => this.post('/api-rest-auth/logout/');
   reset = info => this.post('/api-rest-auth/password/reset/', info);
   changePassword = info => this.post('/api-rest-auth/password/change/', info);
 
   // api data
 
-  getUser = () => this.get('/api-rest-auth/user/');
+  getUser = () => this.get('/api-rest-auth/user/').then(
+    data => {
+      this.user = data;
+      return Promise.resolve(data);
+    }
+  );
 
   loadData = () => axios.all([
     this.get('/api/initial-tokens/'),
@@ -131,7 +133,19 @@ export default class ApiClient {
     this.get('/api/roles/'),
     this.get('/api/paypal-products/'),
   ]).then(
-    axios.spread((...data) => Promise.resolve(data)),
+    axios.spread((...data) => {
+      this.initialTokens = data[0];
+      this.sectors = data[1];
+      this.contracts = data[2];
+      this.hours = data[3];
+      this.nationalities = data[4];
+      this.applicationStatuses = data[5];
+      this.jobStatuses = data[6];
+      this.sexes = data[7];
+      this.roles = data[8];
+      this.products = data[9];
+      // this.products = utils.getTempProducts();
+    }),
     this.handleError
   );
 
@@ -158,7 +172,7 @@ export default class ApiClient {
 
 
   /* user business */
-  getUserBusinesses = (query) => this.get(`/api/user-businesses/${query}`);
+  getUserBusinesses = query => this.get(`/api/user-businesses/${query}`);
   saveUserBusiness = business => {
     if (business.id) {
       return this.put(`/api/user-businesses/${business.id}/`, business);

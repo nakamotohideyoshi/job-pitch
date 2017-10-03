@@ -3,23 +3,20 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router';
 import { connect } from 'react-redux';
 import Button from 'react-bootstrap/lib/Button';
-import { ItemList, Loading } from 'components';
-import * as commonActions from 'redux/modules/common';
-import * as apiActions from 'redux/modules/api';
+import { Loading, ItemList, JobSeekerDetail } from 'components';
+import ApiClient from 'helpers/ApiClient';
 import * as utils from 'helpers/utils';
+import * as commonActions from 'redux/modules/common';
 import _ from 'lodash';
-import JobSeekerDetail from '../JobSeekerDetail/JobSeekerDetail';
 import styles from './FindTalent.scss';
 
 @connect(
   () => ({
   }),
-  { ...commonActions, ...apiActions }
+  { ...commonActions }
 )
 export default class FindTalent extends Component {
   static propTypes = {
-    getJobSeekersAction: PropTypes.func.isRequired,
-    saveApplicationAction: PropTypes.func.isRequired,
     alertShow: PropTypes.func.isRequired,
     parent: PropTypes.object.isRequired,
     job: PropTypes.object.isRequired,
@@ -28,6 +25,7 @@ export default class FindTalent extends Component {
   constructor(props) {
     super(props);
     this.state = { };
+    this.api = ApiClient.shared();
   }
 
   componentDidMount() {
@@ -36,13 +34,9 @@ export default class FindTalent extends Component {
 
   onRefresh = () => {
     this.setState({ jobSeekers: null });
-    this.props.getJobSeekersAction(`?job=${this.props.job.id}`)
-      .then(jobSeekers => {
-        this.setState({ jobSeekers });
-      });
-    // setTimeout(() => {
-    //   this.setState({ jobSeekers: utils.getTempJobSeekers() });
-    // }, 1000);
+    this.api.getJobSeekers(`?job=${this.props.job.id}`).then(
+      jobSeekers => this.setState({ jobSeekers })
+    );
   }
 
   onFilter = (jobSeeker, filterText) =>
@@ -63,20 +57,22 @@ export default class FindTalent extends Component {
             jobSeeker.loading = true;
             this.setState({ jobSeekers });
 
-            this.props.saveApplicationAction({
+            this.api.saveApplication({
               job: this.props.job.id,
               job_seeker: jobSeeker.id,
               shortlisted: false,
-            })
-              .then(() => {
+            }).then(
+              () => {
                 _.remove(jobSeekers, item => item.id === jobSeeker.id);
                 this.setState({ jobSeekers });
                 this.props.parent.onRefreshAll();
                 utils.successNotif('Connected!');
-              }, () => {
+              },
+              () => {
                 jobSeeker.loading = false;
                 this.setState({ jobSeekers });
-              });
+              }
+            );
           }
         },
         { label: 'Cancel' },

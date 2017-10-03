@@ -1,35 +1,31 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
 import Helmet from 'react-helmet';
 import Form from 'react-bootstrap/lib/Form';
 import FormGroup from 'react-bootstrap/lib/FormGroup';
 import ControlLabel from 'react-bootstrap/lib/ControlLabel';
 import { FormComponent } from 'components';
-import { changePasswordAction } from 'redux/modules/api';
 import * as utils from 'helpers/utils';
+import ApiClient from 'helpers/ApiClient';
+import styles from './Password.scss';
 
-@connect(
-  state => ({
-    loading: state.api.loading,
-  }),
-  { changePasswordAction }
-)
 export default class Password extends FormComponent {
-  static propTypes = {
-    loading: PropTypes.bool.isRequired,
-    changePasswordAction: PropTypes.func.isRequired,
-  }
 
   onChangePassword = () => {
     if (this.isValid(['new_password1', 'new_password2'])) {
-      this.props.changePasswordAction(this.state.formModel)
-        .then(() => utils.successNotif('Changed password!'))
-        .catch(errors => this.setState({ errors }));
+      this.setState({ loading: true });
+      ApiClient.shared().changePassword(this.state.formModel)
+        .then(() => {
+          this.setState({ loading: false });
+          utils.successNotif('Changed password!');
+        })
+        .catch(errors => this.setState({
+          loading: false,
+          errors
+        }));
     }
   }
 
-  onKeyUp = (event) => {
+  onKeyUp = event => {
     if (event.keyCode === 13) {
       this.onChangePassword();
     }
@@ -37,11 +33,12 @@ export default class Password extends FormComponent {
 
   render() {
     return (
-      <div className="home-container">
+      <div className={styles.root}>
         <Helmet title="Change Password" />
 
         <div className="board padding-45">
           <h3>Change Password</h3>
+
           <Form>
             <FormGroup>
               <ControlLabel>New Password</ControlLabel>
@@ -60,7 +57,7 @@ export default class Password extends FormComponent {
             </FormGroup>
             <FormGroup>
               <this.SubmitButton
-                submtting={this.props.loading}
+                submtting={this.state.loading}
                 labels={['Change', 'Changing...']}
                 onClick={this.onChangePassword}
               />

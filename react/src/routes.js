@@ -7,7 +7,7 @@ import {
   SelectType, Messages,
   NotFound,
   Jobs, Applications1, Credits,
-  Applications2, FindJob, JobProfile, PitchRecord, Profile
+  MyApplications2, FindJob, JobProfile, PitchRecord, Profile
 } from './containers';
 
 export default () => (
@@ -44,7 +44,7 @@ export default () => (
 
       <Route path="jobseeker">
         <Route path="find" component={FindJob} />
-        <Route path="applications" component={Applications2} />
+        <Route path="myapplications" component={MyApplications2} />
         <Route path="messages" component={Messages} />
         <Route path="jobprofile" component={JobProfile} />
         <Route path="record" component={PitchRecord} />

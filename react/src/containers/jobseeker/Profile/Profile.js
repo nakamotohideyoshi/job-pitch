@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Helmet from 'react-helmet';
 import { connect } from 'react-redux';
+import { browserHistory } from 'react-router';
 import Dropzone from 'react-dropzone';
 import Form from 'react-bootstrap/lib/Form';
 import FormGroup from 'react-bootstrap/lib/FormGroup';
@@ -10,33 +11,40 @@ import ControlLabel from 'react-bootstrap/lib/ControlLabel';
 import Button from 'react-bootstrap/lib/Button';
 import ProgressBar from 'react-bootstrap/lib/ProgressBar';
 import AWS from 'aws-sdk';
-import { Loading, FormComponent } from 'components';
+import { Loading, HelpIcon, FormComponent } from 'components';
 import VideoRecorder from 'components/VideoRecorder/VideoRecorder';
-import * as commonActions from 'redux/modules/common';
-import * as apiActions from 'redux/modules/api';
-import * as utils from 'helpers/utils';
 import ApiClient from 'helpers/ApiClient';
+import * as utils from 'helpers/utils';
+import * as commonActions from 'redux/modules/common';
 import styles from './Profile.scss';
 
 @connect(
-  () => ({
-  }),
-  { ...commonActions, ...apiActions })
+  () => ({}),
+  { ...commonActions })
 export default class Profile extends FormComponent {
   static propTypes = {
-    saveJobSeekerAction: PropTypes.func.isRequired,
-    getPitchAction: PropTypes.func.isRequired,
-    createPitchAction: PropTypes.func.isRequired,
     setPermission: PropTypes.func.isRequired,
   }
 
-  componentDidMount() {
-    this.getJobSeeker().then(jobSeeker => {
-      const formModel = Object.assign({}, jobSeeker);
-      formModel.sex = ApiClient.sexes.filter(item => item.id === jobSeeker.sex)[0];
-      formModel.nationality = ApiClient.nationalities.filter(item => item.id === jobSeeker.nationality)[0];
-      this.setState({ jobSeeker, formModel });
-    });
+  constructor(props) {
+    const api = ApiClient.shared();
+    const jobSeeker = api.jobSeeker ? api.jobSeeker :
+    {
+      active: true,
+      email_public: true,
+      telephone_public: true,
+      mobile_public: true,
+      age_public: true,
+      sex_public: true,
+      nationality_public: true,
+      email: utils.getCookie('email')
+    };
+    const formModel = Object.assign({}, jobSeeker);
+    formModel.sex = api.sexes.filter(item => item.id === jobSeeker.sex)[0];
+    formModel.nationality = api.nationalities.filter(item => item.id === jobSeeker.nationality)[0];
+
+    super(props, { jobSeeker, formModel });
+    this.api = ApiClient.shared();
   }
 
   componentWillUnmount() {
@@ -45,9 +53,7 @@ export default class Profile extends FormComponent {
     }
   }
 
-  onViewCV = () => {
-    window.open(this.state.jobSeeker.cv);
-  }
+  onViewCV = () => window.open(this.state.jobSeeker.cv);
 
   onOpenBrowser = () => this.dropzoneRef.open();
 
@@ -65,39 +71,19 @@ export default class Profile extends FormComponent {
     });
   }
 
-  onShowRecorder = () => {
-    this.setState({
-      isRecorder: true
-    });
-  }
+  onShowRecorder = () => this.setState({
+    isRecorder: true
+  });
 
-  onShowPlayer = () => {
-    this.setState({
-      isPlayer: true,
-    });
-  }
+  onShowPlayer = () => this.setState({
+    isPlayer: true,
+  });
 
   onHideDialog = (url, videoData) => {
     this.videoData = videoData;
     this.setState({
       isRecorder: false,
       isPlayer: false,
-    });
-  }
-
-  getJobSeeker = () => {
-    if (ApiClient.jobSeeker) {
-      return Promise.resolve(ApiClient.jobSeeker);
-    }
-    return Promise.resolve({
-      active: true,
-      email_public: true,
-      telephone_public: true,
-      mobile_public: true,
-      age_public: true,
-      sex_public: true,
-      nationality_public: true,
-      email: localStorage.getItem('email')
     });
   }
 
@@ -114,32 +100,38 @@ export default class Profile extends FormComponent {
       return;
     }
 
-    const { saveJobSeekerAction, setPermission } = this.props;
     const data = Object.assign(this.state.jobSeeker, formModel);
     data.sex = formModel.sex && formModel.sex.id;
     data.nationality = formModel.nationality && formModel.nationality.id;
     data.cv = this.cv;
 
-    saveJobSeekerAction(data).then(jobSeeker => {
+    this.setState({ saving: true });
+
+    this.api.saveJobSeeker(data).then(jobSeeker => {
       const cvComment = this.cv ? 'CV added.' : '';
       this.cv = null;
       this.setState({ jobSeeker, cvComment });
-      setPermission(jobSeeker.profile ? 2 : 1);
+      this.props.setPermission(jobSeeker.profile ? 2 : 1);
+
       if (this.videoData) {
         this.uploadFile();
       } else {
         utils.successNotif('Success!');
+        if (jobSeeker.profile) {
+          this.setState({ saving: false });
+        } else {
+          browserHistory.push('/jobseeker/jobprofile');
+        }
       }
     })
-    .catch(errors => this.setState({ errors }));
+    .catch(errors => this.setState({
+      saving: false,
+      errors
+    }));
   }
 
   uploadFile = () => {
-    this.setState({
-      uploading: true,
-    });
-
-    this.props.createPitchAction().then(pitch => {
+    this.api.createPitch().then(pitch => {
       const s3 = new AWS.S3({
         apiVersion: '2006-03-01',
         credentials: new AWS.CognitoIdentityCredentials({
@@ -154,15 +146,15 @@ export default class Profile extends FormComponent {
         Body: this.videoData,
         ContentType: 'video/webm',
       }, (err, data) => {
-        if (err) {
-          this.setState({
-            progress: null,
-            uploading: false,
-          });
-          utils.errorNotif('Upload Failed!');
-        } if (data) {
+        if (!err) {
           console.log(data);
           this.checkPitch(pitch.id);
+        } else {
+          this.setState({
+            progress: null,
+            saving: false,
+          });
+          utils.errorNotif('Upload Failed!');
         }
       }).on('httpUploadProgress', progress => {
         this.setState({
@@ -173,7 +165,7 @@ export default class Profile extends FormComponent {
   }
 
   checkPitch = (pitchId) => {
-    this.props.getPitchAction(pitchId).then(pitch => {
+    this.api.getPitch(pitchId).then(pitch => {
       if (!pitch.video) {
         this.timer = setTimeout(() => this.checkPitch(pitchId), 2000);
       } else {
@@ -183,8 +175,11 @@ export default class Profile extends FormComponent {
         this.setState({
           recoreded: false,
           progress: null,
-          uploading: false,
+          saving: false,
         });
+        if (!this.state.jobSeeker.profile) {
+          browserHistory.push('/jobseeker/jobprofile');
+        }
       }
     }).catch(() => {
       this.timer = setTimeout(() => this.checkPitch(pitchId), 2000);
@@ -192,7 +187,7 @@ export default class Profile extends FormComponent {
   }
 
   render() {
-    const { jobSeeker, cvComment, isRecorder, isPlayer, saving, progress, uploading } = this.state;
+    const { jobSeeker, cvComment, isRecorder, isPlayer, saving, progress } = this.state;
     const pitch = jobSeeker && jobSeeker.pitches ? jobSeeker.pitches[0] : null;
     const videoUrl = pitch ? pitch.video : null;
 
@@ -209,88 +204,104 @@ export default class Profile extends FormComponent {
             <h3>Profile</h3>
           </div>
 
-          <div className="shadow-board padding-45">
+          <div className="board-shadow padding-45">
             <Form>
               <FormGroup className={styles.active}>
                 <ControlLabel>Active</ControlLabel>
                 <this.CheckBoxField label="" name="active" />
               </FormGroup>
+
+              <div className={styles.name}>
+                <FormGroup>
+                  <ControlLabel>First Name</ControlLabel>
+                  <this.TextField type="text" name="first_name" />
+                </FormGroup>
+                <FormGroup>
+                  <ControlLabel>Last Name</ControlLabel>
+                  <this.TextField type="text" name="last_name" />
+                </FormGroup>
+              </div>
+
               <FormGroup>
-                <ControlLabel>First Name</ControlLabel>
-                <this.TextField type="text" name="first_name" />
-              </FormGroup>
-              <FormGroup>
-                <ControlLabel>Last Name</ControlLabel>
-                <this.TextField type="text" name="last_name" />
-              </FormGroup>
-              <FormGroup>
-                <div className={styles.checkLabel}>
+                <div className={styles.withHelp}>
                   <ControlLabel>Email</ControlLabel>
-                  <this.CheckBoxField label="Public" name="email_public" />
+                  <ControlLabel>Public</ControlLabel>
                 </div>
-                <this.TextField type="email" name="email" disabled />
+                <div className={styles.withCheckbox}>
+                  <this.TextField type="email" name="email" disabled />
+                  <this.CheckBoxField name="email_public" />
+                </div>
               </FormGroup>
+
               <FormGroup>
-                <div className={styles.checkLabel}>
-                  <ControlLabel>Telephone</ControlLabel>
-                  <this.CheckBoxField label="Public" name="telephone_public" />
+                <ControlLabel>Telephone</ControlLabel>
+                <div className={styles.withCheckbox}>
+                  <this.TextField type="text" name="telephone" />
+                  <this.CheckBoxField name="telephone_public" />
                 </div>
-                <this.TextField type="text" name="telephone" />
               </FormGroup>
+
               <FormGroup>
-                <div className={styles.checkLabel}>
-                  <ControlLabel>Mobile</ControlLabel>
-                  <this.CheckBoxField label="Public" name="mobile_public" />
+                <ControlLabel>Mobile</ControlLabel>
+                <div className={styles.withCheckbox}>
+                  <this.TextField type="text" name="mobile" />
+                  <this.CheckBoxField name="mobile_public" />
                 </div>
-                <this.TextField type="text" name="mobile" />
               </FormGroup>
+
               <FormGroup>
-                <div className={styles.checkLabel}>
-                  <ControlLabel>Age</ControlLabel>
-                  <this.CheckBoxField label="Public" name="age_public" />
+                <ControlLabel>Age</ControlLabel>
+                <div className={styles.withCheckbox}>
+                  <this.TextField type="number" name="age" />
+                  <this.CheckBoxField name="age_public" />
                 </div>
-                <this.TextField type="number" name="age" />
               </FormGroup>
+
               <FormGroup>
-                <div className={styles.checkLabel}>
-                  <ControlLabel>Gender</ControlLabel>
-                  <this.CheckBoxField label="Public" name="sex_public" />
+                <ControlLabel>Gender</ControlLabel>
+                <div className={styles.withCheckbox}>
+                  <this.SelectField
+                    placeholder="Select Gender"
+                    name="sex"
+                    dataSource={this.api.sexes}
+                  />
+                  <this.CheckBoxField name="sex_public" />
                 </div>
-                <this.SelectField
-                  placeholder="Select Gender"
-                  name="sex"
-                  dataSource={ApiClient.sexes}
+              </FormGroup>
+
+              <FormGroup>
+                <ControlLabel>Nationality</ControlLabel>
+                <div className={styles.withCheckbox}>
+                  <this.SelectField
+                    placeholder="Select Nationality"
+                    name="nationality"
+                    dataSource={this.api.nationalities}
+                    searchable
+                    searchPlaceholder="Search"
+                  />
+                  <this.CheckBoxField name="nationality_public" />
+                </div>
+              </FormGroup>
+
+              <FormGroup>
+                <div className={styles.withHelp}>
+                  <ControlLabel>CV summary</ControlLabel>
+                  <HelpIcon
+                    label={`CV summary is what the recruiter first see,
+                      write if you have previous relevant experience where and for how long.`}
+                  />
+                </div>
+                <this.TextAreaField
+                  name="description"
+                  maxLength="1000"
+                  minRows={3}
+                  maxRows={20}
                 />
-              </FormGroup>
-              <FormGroup>
-                <div className={styles.checkLabel}>
-                  <ControlLabel>Nationality</ControlLabel>
-                  <this.CheckBoxField label="Public" name="nationality_public" />
-                </div>
-                <this.SelectField
-                  placeholder="Select Nationality"
-                  name="nationality"
-                  dataSource={ApiClient.nationalities}
-                  searchable
-                  searchPlaceholder="Search"
-                />
-              </FormGroup>
-              <FormGroup>
-                <ControlLabel>CV</ControlLabel>
-                <this.TextField componentClass="textarea" name="description" />
-                <div className={styles.cvContainer}>
+                <div className={styles.cvButtons}>
                   {
                     jobSeeker.cv && <Button onClick={this.onViewCV}>View CV</Button>
                   }
                   <Button onClick={this.onOpenBrowser}>Upload CV</Button>
-                  <div>{cvComment}</div>
-                  {
-                    this.cv && (<button
-                      type="button"
-                      className="fa fa-times btn-icon"
-                      onClick={this.onRemovedCV}
-                    />)
-                  }
                   <Dropzone
                     ref={node => { this.dropzoneRef = node; }}
                     multiple={false}
@@ -298,10 +309,30 @@ export default class Profile extends FormComponent {
                     className="h"
                   >
                   </Dropzone>
+                  <HelpIcon
+                    label={`Upload your CV using your favourite cloud service,
+                     or take a photo if you have it printed out.`}
+                  />
+                </div>
+
+                <div className={styles.cvComment}>
+                  {cvComment}
+                  {
+                    this.cv &&
+                    <button
+                      type="button"
+                      className="fa fa-times link-btn"
+                      onClick={this.onRemovedCV}
+                    />
+                  }
                 </div>
               </FormGroup>
+
               <FormGroup>
-                <ControlLabel>Video Pitch</ControlLabel>
+                <div className={styles.withHelp}>
+                  <ControlLabel>Video Pitch</ControlLabel>
+                  <HelpIcon label="Tips on how to record your pitch will be placed here." />
+                </div>
                 <div>
                   <Button
                     style={{ marginBottom: '10px', marginRight: '10px' }}
@@ -316,6 +347,7 @@ export default class Profile extends FormComponent {
                   }
                 </div>
               </FormGroup>
+
               <FormGroup>
                 <this.CheckBoxField
                   label="References Available"
@@ -342,9 +374,10 @@ export default class Profile extends FormComponent {
                 </FormGroup>
               }
             </Form>
+
             <div className={styles.footer}>
               <this.SubmitButton
-                submtting={saving || uploading}
+                submtting={saving}
                 labels={['Save', 'Saving...']}
                 onClick={this.onSave}
               />

@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router';
 import { VERSION } from 'const';
-
 import styles from './Footer.scss';
 
 const logoImage = require('assets/logo.png');

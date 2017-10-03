@@ -7,25 +7,26 @@
 
 import Provider from './Provider/Provider';
 
-/* layout */
-
 import MainLayout from './layout/MainLayout/MainLayout';
 import Header from './layout/Header/Header';
 import Footer from './layout/Footer/Footer';
 
-import Loading from './Loading/Loading';
 import FormComponent from './FormComponent/FormComponent';
-import Map from './Map/Map';
-import DropBox from './DropBox/DropBox';
 
+import Loading from './Loading/Loading';
+import HelpIcon from './HelpIcon/HelpIcon';
 import CheckBox from './CheckBox/CheckBox';
 import SearchBar from './SearchBar/SearchBar';
 import ItemList from './ItemList/ItemList';
+import Map from './Map/Map';
+
+import JobDetail from './JobDetail/JobDetail';
+import JobSeekerDetail from './JobSeekerDetail/JobSeekerDetail';
 
 export {
   Provider,
   MainLayout, Header, Footer,
-  Loading, FormComponent, Map, DropBox,
-
-  CheckBox, SearchBar, ItemList
+  FormComponent,
+  Loading, HelpIcon, CheckBox, SearchBar, ItemList, Map,
+  JobDetail, JobSeekerDetail
 };

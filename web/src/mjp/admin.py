@@ -3,19 +3,20 @@ from django.contrib import admin
 from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import PasswordResetForm
+from django.core.urlresolvers import reverse
 from django.core.validators import EMPTY_VALUES, EmailValidator
-from django.db.models import Case, BooleanField
+from django.db.models import Case, BooleanField, Func, CharField
 from django.db.models import Count, Max
 from django.db.models import F
-from django.db.models import Q
 from django.db.models import Value
 from django.db.models import When
-from django.db.models.functions import Concat
+from django.db.models.functions import Concat, Coalesce
 from django.db.models.aggregates import Aggregate
 from django.forms import forms
 from django.http import HttpResponseRedirect
 from django.shortcuts import render_to_response
 from django.template import RequestContext
+from django.utils.html import format_html
 
 from .models import (
     Sex,
@@ -35,12 +36,246 @@ from .models import (
     Pitch,
     Role,
     JobProfile,
+    Location,
+    Job,
+    LocationImage,
+    BusinessImage,
+    JobImage,
 )
 
 
-@admin.register(Sex, Nationality, Contract, Hours, Business, Message)
+@admin.register(Sex, Nationality, Contract, Hours, Message)
 class Admin(admin.ModelAdmin):
     pass
+
+
+class ImageInline(admin.TabularInline):
+    pass
+
+
+class BusinessImageInline(ImageInline):
+    model = BusinessImage
+
+
+class LocationImageInline(ImageInline):
+    model = LocationImage
+
+
+class JobImageInline(ImageInline):
+    model = JobImage
+
+
+class UserInline(admin.TabularInline):
+    model = Business.users.through
+    extra = 0
+    verbose_name_plural = 'Users'
+    show_change_link = False
+    readonly_fields = ('user',)
+
+    def has_add_permission(self, request):
+        return False
+
+
+class UserAddInline(admin.TabularInline):
+    model = Business.users.through
+    extra = 0
+    verbose_name_plural = 'Add User'
+    verbose_name = 'user association'
+
+    def get_queryset(self, request):
+        return super(UserAddInline, self).get_queryset(request).none()
+
+    def has_delete_permission(self, request, obj=None):
+        return False
+
+
+class LocationInline(admin.TabularInline):
+    model = Location
+    fields = ('get_name_link', 'get_location', 'email', 'telephone', 'mobile', 'created')
+    readonly_fields = ('get_name_link', 'get_location', 'email', 'telephone', 'mobile', 'created')
+    extra = 0
+
+    def get_name_link(self, obj):
+        return format_html("<a href={}>{}</a>".format(
+            reverse('admin:mjp_location_change', args=(obj.id,)),
+            obj.name,
+        ))
+    get_name_link.short_description = 'Name'
+
+    def get_location(self, obj):
+        return obj.place_name or obj.postcode_lookup or obj.latlng
+    get_location.short_description = 'Location'
+
+    def has_add_permission(self, request):
+        return False
+
+
+@admin.register(Business)
+class BusinessAdmin(admin.ModelAdmin):
+    fields = ('name', 'get_tokens')
+    readonly_fields = ('get_tokens',)
+    list_display = ('name', 'get_tokens', 'get_location_count', 'created')
+    search_fields = ('name',)
+    inlines = (BusinessImageInline, UserInline, UserAddInline, LocationInline)
+
+    def get_queryset(self, request):
+        queryset = super(BusinessAdmin, self).get_queryset(request)
+        queryset = queryset.annotate(
+            location_count=Count('locations'),
+        )
+        queryset = queryset.select_related('token_store')
+        return queryset
+
+    def get_tokens(self, obj):
+        return format_html("<a href={}>{}</a>".format(
+            reverse('admin:mjp_tokenstore_change', args=(obj.token_store.pk,)),
+            obj.token_store.tokens,
+        ))
+    get_tokens.short_description = 'Tokens'
+    get_tokens.admin_order_field = 'token_store.tokens'
+
+    def get_location_count(self, obj):
+        return obj.location_count
+    get_location_count.short_description = 'No. of Work Places'
+    get_location_count.admin_order_field = 'location_count'
+
+    class Media:
+        css = {"all": ("css/business_admin_overrides.css",)}
+
+
+class JobInline(admin.TabularInline):
+    model = Job
+    fields = (
+        'get_name_link',
+        'get_sector_name',
+        'get_contract_name',
+        'get_hours_name',
+        'get_status_name',
+        # 'created',
+    )
+    readonly_fields = (
+        'get_name_link',
+        'get_sector_name',
+        'get_contract_name',
+        'get_hours_name',
+        'get_status_name',
+        # 'created',
+    )
+    extra = 0
+
+    def get_queryset(self, request):
+        queryset = super(JobInline, self).get_queryset(request)
+        queryset = queryset.annotate(
+            sector_name=F('sector__name'),
+            contract_name=F('contract__short_name'),
+            hours_name=F('hours__short_name'),
+            status_name=F('status__name'),
+        )
+        return queryset
+
+    def has_add_permission(self, request):
+        return False
+
+    def get_name_link(self, obj):
+        return format_html("<a href={}>{}</a>".format(
+            reverse('admin:mjp_job_change', args=(obj.id,)),
+            obj.title,
+        ))
+    get_name_link.short_description = 'Name'
+
+    def get_sector_name(self, obj):
+        return obj.sector_name
+    get_sector_name.short_description = 'Sector'
+
+    def get_contract_name(self, obj):
+        return obj.contract_name
+    get_contract_name.short_description = 'Contract'
+
+    def get_hours_name(self, obj):
+        return obj.hours_name
+    get_hours_name.short_description = 'Hours'
+
+    def get_status_name(self, obj):
+        return obj.status_name
+    get_status_name.short_description = 'Status'
+
+
+@admin.register(Location)
+class LocationAdmin(admin.ModelAdmin):
+    fields = (
+        'get_business',
+        'name',
+        'description',
+        ('email', 'email_public'),
+        ('telephone', 'telephone_public'),
+        ('mobile', 'mobile_public'),
+        'address',
+        'latlng',
+        'get_location',
+    )
+    readonly_fields = ('get_business', 'get_location')
+    list_display = ('name', 'get_location', 'email', 'telephone', 'mobile', 'created')
+    search_fields = ('name', 'email', 'location')
+    inlines = (LocationImageInline, JobInline)
+
+    def get_queryset(self, request):
+        queryset = super(LocationAdmin, self).get_queryset(request)
+        queryset = queryset.annotate(
+            location=F('place_name'),
+        )
+        return queryset
+
+    def get_location(self, obj):
+        return obj.location
+    get_location.short_description = 'Location'
+
+    def get_business(self, obj):
+        return format_html("<a href={}>{}</a>".format(
+            reverse('admin:mjp_business_change', args=(obj.business.pk,)),
+            obj.business.name,
+        ))
+    get_business.short_description = 'Business'
+
+    class Media:
+        css = {"all": ("css/location_admin_overrides.css",)}
+
+
+@admin.register(Job)
+class JobAdmin(admin.ModelAdmin):
+    fields = (
+        'get_business',
+        'get_location',
+        'status',
+        'title',
+        'sector',
+        'contract',
+        'hours',
+        'description',
+    )
+    readonly_fields = (
+        'get_business',
+        'get_location',
+    )
+    inlines = (JobImageInline,)
+
+    def get_queryset(self, request):
+        queryset = super(JobAdmin, self).get_queryset(request)
+        queryset = queryset.select_related('location__business')
+        return queryset
+
+    def get_business(self, obj):
+        return format_html("<a href={}>{}</a>".format(
+            reverse('admin:mjp_business_change', args=(obj.location.business.pk,)),
+            obj.location.business.name,
+        ))
+    get_business.short_description = 'Business'
+
+    def get_location(self, obj):
+        return format_html("<a href={}>{}</a>".format(
+            reverse('admin:mjp_location_change', args=(obj.location.pk,)),
+            obj.location.name,
+        ))
+    get_location.short_description = 'Location'
 
 
 class PitchInline(admin.StackedInline):
@@ -208,6 +443,18 @@ class JobSeekerAdmin(admin.ModelAdmin):
             ),
             pitch_count=Count('pitches'),
             sex_short_name=F('sex__short_name'),
+            location=Coalesce(
+                Value(None),
+                Func(F('profile__place_name'), Value(''), function='NULLIF'),
+                Func(F('profile__postcode_lookup'), Value(''), function='NULLIF'),
+                Func(
+                    Value("%s, %s"),
+                    Func(F('profile__latlng'), function='ST_X'),
+                    Func(F('profile__latlng'), function='ST_Y'),
+                    function='format'
+                ),
+                output_field=CharField(),
+            ),
         )
         queryset = queryset.annotate(
             has_pitch=Case(When(pitch_count__gt=0, then=True), default=False, output_field=BooleanField()),
@@ -230,10 +477,9 @@ class JobSeekerAdmin(admin.ModelAdmin):
     get_sex.admin_order_field = 'sex_short_name'
 
     def get_search_area(self, job_seeker):
-        profile = job_seeker.profile
         return u"{} ({} miles)".format(
-            profile.place_name or profile.postcode_lookup or profile.latlng,
-            profile.search_radius,
+            job_seeker.location,
+            job_seeker.profile.search_radius,
         )
     get_search_area.short_description = 'Search Area'
 

@@ -1,0 +1,15 @@
+#Business_users-group .dynamic-Business_users .original p {
+    display: none;
+}
+
+#Business_users-group .dynamic-Business_users td {
+    padding-top: 8px;
+}
+
+#locations-group .dynamic-locations .original p {
+    display: none;
+}
+
+#locations-group .dynamic-locations td {
+    padding-top: 8px;
+}

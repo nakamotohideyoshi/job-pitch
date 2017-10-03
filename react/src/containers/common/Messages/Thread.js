@@ -1,100 +1,113 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
 import { Link } from 'react-router';
 import Button from 'react-bootstrap/lib/Button';
 import Textarea from 'react-textarea-autosize';
-import { Loading } from 'components';
-import * as apiActions from 'redux/modules/api';
-import * as utils from 'helpers/utils';
+import { JobSeekerDetail, JobDetail } from 'components';
 import ApiClient from 'helpers/ApiClient';
+import * as utils from 'helpers/utils';
 import styles from './Thread.scss';
 
-@connect(
-  () => ({
-  }),
-  { ...apiActions }
-)
 export default class Thread extends Component {
   static propTypes = {
     application: PropTypes.object,
-    sendMessageAction: PropTypes.func.isRequired,
-    saveApplicationAction: PropTypes.func.isRequired,
     onSend: PropTypes.func,
+    parent: PropTypes.object.isRequired,
   }
 
   static defaultProps = {
-    onSend: () => {},
     application: null,
+    onSend: () => {},
   }
 
   constructor(props) {
     super(props);
-
     this.state = {
       message: '',
       messages: null,
     };
+    this.api = ApiClient.shared();
+  }
+
+  componentDidMount() {
+    this.setApplication(this.props.application);
   }
 
   componentWillReceiveProps(nextProps) {
-    if (!this.application || this.application.id !== nextProps.application) {
-      this.application = nextProps.application;
-      const jobSeeker = this.application.job_seeker;
-      const job = this.application.job_data;
-      const jobSeekerImg = utils.getJobSeekerImg(jobSeeker);
-      const jobLogo = utils.getJobLogo(job, true);
-      if (ApiClient.user.job_seeker) {
-        this.myAvatar = jobSeekerImg;
-        this.yourAvatar = jobLogo;
-        this.yourName = job.title;
-        this.yourComment = utils.getJobFullName(job);
-      } else {
-        this.myAvatar = jobLogo;
-        this.yourAvatar = jobSeekerImg;
-        this.yourName = utils.getJobSeekerFullName(jobSeeker);
-        this.yourComment = '';
-      }
-      this.scrollBottom(this.scrollObject);
-    }
+    this.setApplication(nextProps.application);
   }
 
-  onChnage = e => {
+  onDetail = showDetail => this.setState({ showDetail });
+
+  onChnageInput = e => {
     this.setState({
       message: e.target.value
     });
   }
 
   onSend = () => {
-    const { sendMessageAction, application, onSend } = this.props;
+    const { application, onSend } = this.props;
     const message = this.state.message.trim();
-    if (message !== '') {
-      sendMessageAction({
-        application: application.id,
-        content: message,
-      }).then(() => {
-        this.setState({ message: '' });
-        this.getMessages();
-        onSend();
-      });
-    }
-  }
 
-  onConnect = () => {
-    const { saveApplicationAction, application, onSend } = this.props;
-    saveApplicationAction({
-      id: application.id,
-      connect: utils.getItemByName(ApiClient.applicationStatuses, 'ESTABLISHED').id,
-    })
-    .then(() => {
-      utils.successNotif('Success!');
+    this.setState({ message: '' });
+
+    this.api.sendMessage({
+      application: application.id,
+      content: message,
+    }).then(() => {
       this.getMessages();
       onSend();
     });
   }
 
+  onConnect = () => {
+    const { application, onSend } = this.props;
+    this.api.saveApplication({
+      id: application.id,
+      connect: utils.getApplicationStatusByName('ESTABLISHED').id,
+    })
+    .then(() => {
+      utils.successNotif('Success!');
+      // this.getMessages();
+      // onSend();
+    });
+  }
+
+  setApplication = application => {
+    if (this.state.application && this.state.application.id === application.id) {
+      return;
+    }
+
+    this.setState({ application });
+
+    if (application) {
+      const jobSeeker = application.job_seeker;
+      const job = application.job_data;
+      const jobSeekerImg = utils.getJobSeekerImg(jobSeeker);
+      const jobLogo = utils.getJobLogo(job, true);
+
+      if (this.api.user.job_seeker) {
+        this.headerTitle = job.title;
+        this.headerComment = utils.getJobFullName(job);
+        this.myAvatar = jobSeekerImg;
+        this.yourAvatar = jobLogo;
+        this.yourName = job.title;
+        this.yourComment = utils.getJobFullName(job);
+      } else {
+        this.headerTitle = utils.getJobSeekerFullName(application.job_seeker);
+        this.headerComment = '';
+        this.myAvatar = jobLogo;
+        this.yourAvatar = jobSeekerImg;
+        this.yourName = utils.getJobSeekerFullName(jobSeeker);
+        this.yourComment = '';
+      }
+
+      this.scrollBottom(this.scrollContainer);
+    }
+  }
+
   // getMessages = () => {
-  //   this.props.getApplicationsAction(`${this.props.application.id}/`)
+  //   this.api.getApplications(`${this.props.application.id}/`)
   //   .then(application => {
   //     this.setState({ messages: application.messages });
   //   });
@@ -103,8 +116,8 @@ export default class Thread extends Component {
   scrollBottom = ref => {
     if (ref) {
       setTimeout(() => {
-        this.scrollObject = ref;
-        this.scrollObject.scrollTop = this.scrollObject.scrollHeight;
+        this.scrollContainer = ref;
+        this.scrollContainer.scrollTop = this.scrollContainer.scrollHeight;
       }, 100);
     }
   }
@@ -138,50 +151,53 @@ export default class Thread extends Component {
   };
 
   InputComponent = () => {
-    if (this.application.status === utils.getApplicationStatusByName('DELETED').id) {
+    const { application, message } = this.state;
+
+    if (application.status === utils.getApplicationStatusByName('DELETED').id) {
       return (
         <div className={styles.input}>
-          <div className={styles.input}>
-            This appliction has been deleted.
-          </div>
+          <Textarea
+            placeholder="This appliction has been deleted"
+            disabled
+          />
         </div>
       );
     }
 
-    if (this.application.status !== utils.getApplicationStatusByName('CREATED').id) {
+    if (application.status !== utils.getApplicationStatusByName('CREATED').id) {
       return (
         <div className={styles.input}>
           <Textarea
             maxRows={15}
             placeholder="Type a message here"
-            value={this.state.message}
-            onChange={this.onChnage}
+            value={message}
+            onChange={this.onChnageInput}
           />
           <Button
+            disabled={message.trim() === ''}
             onClick={this.onSend}
           >Send</Button>
         </div>
       );
     }
 
-    if (ApiClient.user.job_seeker) {
+    if (this.api.user.job_seeker) {
       return (
         <div className={styles.input}>
-          <div className={styles.input}>
-            You cannot send messages until your application is accepted
-          </div>
-          <Button
-            bsStyle="success"
-          >Ok</Button>
+          <Textarea
+            placeholder="You cannot send messages until your application is accepted"
+            disabled
+          />
         </div>
       );
     }
 
     return (
       <div className={styles.input}>
-        <div className={styles.input}>
-          You cannot send messages until you have connected
-        </div>
+        <Textarea
+          placeholder="You cannot send messages until you have connected"
+          disabled
+        />
         <Button
           bsStyle="success"
           onClick={this.onConnect}
@@ -191,38 +207,25 @@ export default class Thread extends Component {
   }
 
   render() {
-    if (!this.application) {
+    const { application } = this.state;
+
+    if (!application) {
       return <div></div>;
-    }
-
-    const { application } = this.props;
-
-    if (application) {
-      if (ApiClient.user.job_seeker) {
-        const job = application.job_data;
-        this.headerTitle = job.title;
-        this.headerComment = utils.getJobFullName(job);
-      } else {
-        this.headerTitle = utils.getJobSeekerFullName(application.job_seeker);
-        this.headerComment = '';
-      }
-    } else {
-      this.headerTitle = '';
-      this.headerComment = '';
     }
 
     return (
       <div className={styles.root}>
         <div className={styles.header}>
-          <h4>{this.headerTitle}</h4>
-          <div>{this.headerComment}</div>
+          <h4><Link onClick={() => this.onDetail(true)}>{this.headerTitle}</Link></h4>
+          <div><Link onClick={() => this.onDetail(true)}>{this.headerComment}</Link></div>
         </div>
+
         <div className={styles.content} ref={this.scrollBottom}>
           {
-            this.application.messages.map(item => {
-              const userRole = ApiClient.roles.filter(role => role.id === item.from_role)[0].name;
-              if ((ApiClient.user.job_seeker && userRole === 'JOB_SEEKER') ||
-                (!ApiClient.user.job_seeker && userRole === 'RECRUITER')) {
+            application.messages.map(item => {
+              const userRole = this.api.roles.filter(role => role.id === item.from_role)[0].name;
+              if ((this.api.user.job_seeker && userRole === 'JOB_SEEKER') ||
+                (!this.api.user.job_seeker && userRole === 'RECRUITER')) {
                 return <this.Me key={item.id} message={item} />;
               }
               return <this.You key={item.id} message={item} />;
@@ -230,6 +233,22 @@ export default class Thread extends Component {
           }
         </div>
         <this.InputComponent />
+
+        {
+          this.state.showDetail &&
+          (
+            this.api.user.job_seeker ?
+              <JobDetail
+                job={application.job_data}
+                onClose={() => this.onDetail(false)}
+              /> :
+              <JobSeekerDetail
+                jobSeeker={application.job_seeker}
+                application={application}
+                onClose={() => this.onDetail()}
+              />
+          )
+        }
       </div>
     );
   }

@@ -1,19 +1,19 @@
+/* global google */
+
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { withGoogleMap, GoogleMap, Marker } from 'react-google-maps';
-// import SearchBox from 'react-google-maps/lib/places/SearchBox';
+import SearchBox from 'react-google-maps/lib/places/SearchBox';
 import withScriptjs from 'react-google-maps/lib/async/withScriptjs';
 
-// const SearchBoxStyle = {
-//   border: 'none',
-//   width: '240px',
-//   margin: '9px',
-//   padding: '7px 12px',
-//   boxShadow: '0 1px 1px rgba(0, 0, 0, 0.2)',
-//   fontSize: '14px',
-//   outline: 'none',
-//   textOverflow: 'ellipses',
-// };
+const SearchBoxStyle = {
+  border: 'none',
+  width: '240px',
+  margin: '10px',
+  padding: '7px 12px',
+  boxShadow: '0 1px 1px rgba(0, 0, 0, 0.2)',
+  fontSize: '14px',
+};
 
 const AsyncGettingStartedExampleGoogleMap = withScriptjs(
   withGoogleMap(
@@ -24,14 +24,18 @@ const AsyncGettingStartedExampleGoogleMap = withScriptjs(
         center={props.center}
         onClick={props.onClick}
         onBoundsChanged={props.onBoundsChanged}
+        options={props.options}
       >
-        {/* <SearchBox
-          ref={props.onSearchBoxMounted}
-          controlPosition={google.maps.ControlPosition.TOP_RIGHT}
-          onPlacesChanged={props.onPlacesChanged}
-          inputPlaceholder="Search"
-          inputStyle={SearchBoxStyle}
-        /> */}
+        {
+          props.search &&
+          <SearchBox
+            ref={props.onSearchBoxMounted}
+            controlPosition={google.maps.ControlPosition.TOP_RIGHT}
+            onPlacesChanged={props.onPlacesChanged}
+            inputPlaceholder="Search"
+            inputStyle={SearchBoxStyle}
+          />
+        }
         {
           props.marker && (<Marker position={props.marker} key="" />)
         }
@@ -44,28 +48,32 @@ export default class Map extends Component {
   static propTypes = {
     defaultCenter: PropTypes.object,
     marker: PropTypes.object,
-    onClick: PropTypes.func,
+    options: PropTypes.object,
+    onSelected: PropTypes.func,
   }
 
   static defaultProps = {
     defaultCenter: null,
     marker: null,
-    onClick: null,
+    options: {},
+    onSelected: null,
   }
 
   constructor(props) {
     super(props);
     this.state = {
-      center: this.props.defaultCenter || { lat: 51.5074664, lng: -0.1281131 },
+      center: this.props.defaultCenter || { lat: 0, lng: 0 },
     };
-    //   navigator.geolocation.getCurrentPosition(pos => {
-    //     this.setState({
-    //       center: {
-    //         lat: pos.coords.latitude,
-    //         lng: pos.coords.longitude
-    //       }
-    //     });
-    //   });
+    if (!this.props.defaultCenter) {
+      navigator.geolocation.getCurrentPosition(pos => {
+        this.setState({
+          center: {
+            lat: pos.coords.latitude,
+            lng: pos.coords.longitude
+          }
+        });
+      });
+    }
   }
 
   onMapMounted = map => {
@@ -80,7 +88,7 @@ export default class Map extends Component {
   }
 
   onClick = event => {
-    if (this.props.onClick) {
+    if (this.props.onSelected) {
       const { latLng } = event;
       const location = { lat: latLng.lat(), lng: latLng.lng() };
       const geocoder = new google.maps.Geocoder();
@@ -91,7 +99,7 @@ export default class Map extends Component {
             address = results[0].formatted_address;
           }
         }
-        this.props.onClick(location, address);
+        this.props.onSelected(location, address);
       });
     }
   }
@@ -101,14 +109,20 @@ export default class Map extends Component {
   }
 
   onPlacesChanged = () => {
-    // const places = this._searchBox.getPlaces();
-    // this.setState({
-    //   center: mapCenter,
-    // });
+    const places = this._searchBox.getPlaces();
+    if (places.length > 0) {
+      const latLng = places[0].geometry.location;
+      const location = { lat: latLng.lat(), lng: latLng.lng() };
+
+      this.setState({
+        center: location,
+      });
+      this.props.onSelected(location, places[0].formatted_address);
+    }
   }
 
   render() {
-    const { marker } = this.props;
+    const { marker, options } = this.props;
     const { center, bounds } = this.state;
     return (
       <AsyncGettingStartedExampleGoogleMap
@@ -119,6 +133,8 @@ export default class Map extends Component {
         center={center}
         bounds={bounds}
         marker={marker}
+        options={options}
+        search={!!this.props.onSelected}
         onMapMounted={this.onMapMounted}
         onClick={this.onClick}
         onBoundsChanged={this.onBoundsChanged}

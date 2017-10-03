@@ -4,9 +4,9 @@ import { Link } from 'react-router';
 import { connect } from 'react-redux';
 import Button from 'react-bootstrap/lib/Button';
 import { ItemList, Loading } from 'components';
-import * as commonActions from 'redux/modules/common';
-import * as apiActions from 'redux/modules/api';
+import ApiClient from 'helpers/ApiClient';
 import * as utils from 'helpers/utils';
+import * as commonActions from 'redux/modules/common';
 import _ from 'lodash';
 import BusinessEdit from './BusinessEdit';
 import styles from './BusinessList.scss';
@@ -14,12 +14,10 @@ import styles from './BusinessList.scss';
 @connect(
   () => ({
   }),
-  { ...commonActions, ...apiActions }
+  { ...commonActions }
 )
 export default class BusinessList extends Component {
   static propTypes = {
-    getUserBusinessesAction: PropTypes.func.isRequired,
-    deleteUserBusinessAction: PropTypes.func.isRequired,
     alertShow: PropTypes.func.isRequired,
     selectedId: PropTypes.number,
     parent: PropTypes.object.isRequired,
@@ -32,8 +30,10 @@ export default class BusinessList extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      firstTime: localStorage.getItem('first-time')
+      firstTime: utils.getShared('first-time')
     };
+    this.api = ApiClient.shared();
+    this.props.parent.businessList = this;
   }
 
   componentDidMount() {
@@ -41,14 +41,14 @@ export default class BusinessList extends Component {
   }
 
   onGetStart = () => {
-    localStorage.removeItem('first-time');
+    utils.setShared('first-time');
     this.setState({ firstTime: false });
     this.onAdd();
   }
 
   onRefresh = () => {
     this.setState({ businesses: null });
-    this.props.getUserBusinessesAction('')
+    this.api.getUserBusinesses('')
       .then(businesses => this.setState({ businesses }));
   }
 
@@ -78,8 +78,8 @@ export default class BusinessList extends Component {
             business.loading = true;
             this.setState({ businesses: this.state.businesses });
 
-            this.props.deleteUserBusinessAction(business.id)
-              .then(() => {
+            this.api.deleteUserBusiness(business.id).then(
+              () => {
                 _.remove(this.state.businesses, item => item.id === business.id);
                 this.setState({ businesses: this.state.businesses });
 
@@ -88,11 +88,12 @@ export default class BusinessList extends Component {
                 }
 
                 utils.successNotif('Deleted!');
-              })
-              .catch(() => {
+              },
+              () => {
                 business.loading = false;
                 this.setState({ businesses: this.state.businesses });
-              });
+              }
+            );
           }
         },
         { label: 'Cancel' },
@@ -152,11 +153,11 @@ export default class BusinessList extends Component {
       return (
         <div>
           <span>
-            Hi, Welcome to MyJobPitch <br />
-            Lets start with easy adding your Business.
+            Hi, Welcome to My Job Pitch <br />
+            Let's start by easily adding your business!
           </span>
           <br />
-          <button className="btn-icon" onClick={this.onGetStart}>Create business</button>
+          <button className="link-btn" onClick={this.onGetStart}>Get started!</button>
         </div>
       );
     }
@@ -166,11 +167,11 @@ export default class BusinessList extends Component {
         <span>
           {
             `You have not added any
-            businesses yet.`
+             businesses yet.`
           }
         </span>
         <br />
-        <button className="btn-icon" onClick={this.onAdd}>Create business</button>
+        <button className="link-btn" onClick={this.onAdd}>Create business</button>
       </div>
     );
   };
@@ -178,7 +179,7 @@ export default class BusinessList extends Component {
   render() {
     const { editingBusiness } = this.state;
     return (
-      <div className="shadow-board">
+      <div className="board-shadow">
         {
           editingBusiness ?
             <BusinessEdit

@@ -1,3 +1,5 @@
+@import '../../../../theme/variables.scss';
+
 .workplace {
   display: block;
   text-decoration: none !important;
@@ -9,7 +11,7 @@
     display: flex;
     padding: 20px 0;
     margin-bottom: -1px;
-    border-bottom: 1px solid #e0e0e0;
+    border-bottom: 1px solid $border-color;
 
     img {
       width: 80px;
@@ -42,20 +44,20 @@
 }
 
 a.workplace:hover {
-  background-color: #f0f0f0;
-  border: 1px solid #e0e0e0;
+  background-color: $list-item-hover-color;
+  border: 1px solid $border-color;
 
   > div {
     border-bottom: 1px solid transparent;
 
     .name {
-      color: #00b6a4;
+      color: $primary-color;
     }
   
     .controls {
       display: flex;
       flex-direction: column;
-      justify-content: center;
+      // justify-content: center;
       margin-left: 5px;
   
       button {
@@ -72,13 +74,13 @@ a.workplace:hover {
 
 .workplace.selected, .workplace.selected:hover {
   cursor: initial;
-  background-color: rgba(0,182,164,0.4);
+  background-color: $list-item-selected-color;
 
   > div {
     border-bottom: 1px solid transparent;
 
     .name {
-      color: #333;
+      color: $text-color;
     }
   }
 }

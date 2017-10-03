@@ -1,7 +1,9 @@
+@import '../../../theme/variables.scss';
+
 .root {
   padding-bottom: 45px;
 
-  :global(.shadow-board) {
+  :global(.board-shadow) {
     padding: 0;
   }
   
@@ -57,7 +59,7 @@
   
   .job:hover {
     .title {
-      color: #00b6a4;
+      color: $primary-color;
     }
   }
 
@@ -81,13 +83,13 @@
         }
   
         > li > a:hover {
-          color: #00b6a4;
+          color: $primary-color;
         }
   
         > li.active > a {
-          color: #00b6a4;
+          color: $primary-color;
           border: none;
-          border-bottom: 4px solid #00b6a4;
+          border-bottom: 4px solid $primary-color;
         }
       }
   

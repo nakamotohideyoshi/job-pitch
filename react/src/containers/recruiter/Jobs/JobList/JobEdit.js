@@ -1,30 +1,17 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router';
-import { connect } from 'react-redux';
 import Form from 'react-bootstrap/lib/Form';
 import FormGroup from 'react-bootstrap/lib/FormGroup';
 import ControlLabel from 'react-bootstrap/lib/ControlLabel';
 import { FormComponent } from 'components';
-import * as apiActions from 'redux/modules/api';
-import * as utils from 'helpers/utils';
 import ApiClient from 'helpers/ApiClient';
+import * as utils from 'helpers/utils';
 import _ from 'lodash';
 import styles from './JobEdit.scss';
 
-@connect(
-  (state) => ({
-    saving: state.api.loading
-  }),
-  { ...apiActions }
-)
 export default class JobEdit extends FormComponent {
   static propTypes = {
-    saving: PropTypes.bool.isRequired,
-    saveUserJobAction: PropTypes.func.isRequired,
-    uploadJobLogoAction: PropTypes.func.isRequired,
-    deleteJobLogoAction: PropTypes.func.isRequired,
-    workplaceId: PropTypes.number.isRequired,
     job: PropTypes.object,
     parent: PropTypes.object.isRequired,
   }
@@ -34,77 +21,75 @@ export default class JobEdit extends FormComponent {
   }
 
   constructor(props) {
+    const api = ApiClient.shared();
     const { job } = props;
     const formModel = Object.assign({}, job);
     if (!formModel.id) {
       formModel.active = true;
     } else {
-      formModel.active = utils.getJobStatus(job, ApiClient.jobStatuses) === 'OPEN';
-      formModel.sector = ApiClient.sectors.filter(item => item.id === job.sector)[0];
-      formModel.contract = ApiClient.contracts.filter(item => item.id === job.contract)[0];
-      formModel.hours = ApiClient.hours.filter(item => item.id === job.hours)[0];
+      formModel.active = utils.getJobStatus(job, api.jobStatuses) === 'OPEN';
+      formModel.sector = api.sectors.filter(item => item.id === job.sector)[0];
+      formModel.contract = api.contracts.filter(item => item.id === job.contract)[0];
+      formModel.hours = api.hours.filter(item => item.id === job.hours)[0];
     }
     const logo = {
       default: utils.getWorkplaceLogo(job.location_data),
       url: utils.getJobLogo(job),
       exist: job.images && job.images.length > 0,
     };
-    super(props, { formModel, logo });
-    this.loadImage(logo, 'logo');
-  }
 
-  onBack = () => {
-    this.props.parent.onEdit();
+    super(props, { formModel, logo });
+    this.api = ApiClient.shared();
+    this.loadImage(logo, 'logo');
   }
 
   onSave = () => {
     if (!this.isValid(['title', 'description', 'sector', 'contract', 'hours'])) return;
 
-    const { workplaceId, saveUserJobAction, uploadJobLogoAction, deleteJobLogoAction } = this.props;
     const { formModel, logo } = this.state;
     const data = Object.assign(this.props.job, formModel);
-    const i = _.findIndex(ApiClient.jobStatuses, { name: formModel.active ? 'OPEN' : 'CLOSED' });
-    data.status = ApiClient.jobStatuses[i].id;
-    data.location = workplaceId;
+    const i = _.findIndex(this.api.jobStatuses, { name: formModel.active ? 'OPEN' : 'CLOSED' });
+    data.status = this.api.jobStatuses[i].id;
     data.sector = formModel.sector && formModel.sector.id;
     data.contract = formModel.contract && formModel.contract.id;
     data.hours = formModel.hours && formModel.hours.id;
 
-    saveUserJobAction(data).then(job => {
-      if (logo.file) {
-        return uploadJobLogoAction(
-          {
-            location: job.id,
-            image: logo.file,
-          },
-          event => {
-            console.log(event);
-          }
-        ).then(() => this.saveSuccess);
-      }
-      if (job.images.length > 0 && !logo.exist) {
-        return deleteJobLogoAction(job.images[0].id)
-          .then(() => this.saveSuccess);
-      }
-      this.saveSuccess();
-    });
-  }
+    this.setState({ saving: true });
 
-  saveSuccess = () => {
-    this.onBack();
-    this.props.parent.onRefresh();
-    utils.successNotif('Saved!');
+    this.api.saveUserJob(data).then(
+      job => {
+        if (logo.file) {
+          return this.api.uploadJobLogo(
+            {
+              location: job.id,
+              image: logo.file,
+            },
+            event => {
+              console.log(event);
+            }
+          );
+        }
+        if (job.images.length > 0 && !logo.exist) {
+          return this.api.deleteJobLogo(job.images[0].id);
+        }
+      }
+    ).then(
+      () => {
+        this.props.parent.onRefresh();
+        this.props.parent.onEdit();
+        utils.successNotif('Saved!');
+      },
+      () => this.setState({ saving: false })
+    );
   }
 
   render() {
-    const { saving, job } = this.props;
-
     return (
       <div className={styles.root}>
 
         <div className={styles.header}>
-          <h4>{job.id ? 'Edit' : 'Add'} Job</h4>
-          <Link className="link" onClick={this.onBack}>{'<< Job List'}</Link>
+          <h4>{this.props.job.id ? 'Edit' : 'Add'} Job</h4>
+          <Link onClick={() => this.props.parent.onEdit()}>{'<< Back'}</Link>
         </div>
 
         <Form>
@@ -126,7 +111,7 @@ export default class JobEdit extends FormComponent {
             <this.SelectField
               placeholder="Select Sector"
               name="sector"
-              dataSource={ApiClient.sectors}
+              dataSource={this.api.sectors}
               searchable
               searchPlaceholder="Search"
             />
@@ -136,7 +121,7 @@ export default class JobEdit extends FormComponent {
             <this.SelectField
               placeholder="Select Contract"
               name="contract"
-              dataSource={ApiClient.contracts}
+              dataSource={this.api.contracts}
             />
           </FormGroup>
           <FormGroup>
@@ -144,26 +129,29 @@ export default class JobEdit extends FormComponent {
             <this.SelectField
               placeholder="Select Hours"
               name="hours"
-              dataSource={ApiClient.hours}
+              dataSource={this.api.hours}
             />
           </FormGroup>
           <FormGroup>
             <ControlLabel>Description</ControlLabel>
-            <this.TextField
-              componentClass="textarea"
+            <this.TextAreaField
               name="description"
+              maxLength="1000"
+              minRows={3}
+              maxRows={20}
             />
           </FormGroup>
         </Form>
 
         <div className={styles.footer}>
-          <this.SubmitButton
-            submtting={saving}
+          <this.SubmitButtonWithCancel
+            submtting={this.state.saving}
             labels={['Save', 'Saving...']}
             onClick={this.onSave}
+            cancelLabel="Cancel"
+            onCancel={() => this.props.parent.onEdit()}
           />
         </div>
-
       </div>
     );
   }

@@ -1,3 +1,5 @@
+@import '../../../theme/variables.scss';
+
 .root {
   
     form {
@@ -7,36 +9,72 @@
         label {
           margin-bottom: 10px;
         }
+      }
 
-        .checkLabel {
-          display: flex;
+      .withHelp {
+        display: flex;
 
-          label {
-            flex: 1;
-          }
+        > label:first-child {
+          flex: 1;
         }
       }
-    }
 
-    .active {
-      display: flex;
-      align-items: center;
+      .withCheckbox {
+        display: flex;
 
-      label {
-        margin-bottom: 0 !important;
-        margin-right: 10px;
+        > div:nth-child(1) {
+          flex: 1;
+        }
+        > div:nth-child(2) {
+          margin-top: 6px;
+          margin-left: 30px;
+        }
       }
-    }
 
-    .cvContainer {
-      display: flex;
-      align-items: center;
-      button {
-        margin-top: 10px;
-        margin-right: 10px;
+      .active {
+        display: flex;
+        align-items: center;
+  
+        > label {
+          margin-bottom: 0 !important;
+          margin-right: 10px;
+        }
       }
-      div {
+
+      .name {
+        display: flex;
+
+        > div:nth-child(1) {
+          flex: 1;
+          margin-right: 10px;
+        }
+        > div:nth-child(2) {
+          flex: 1;
+          margin-left: 10px;
+        }
+      }
+
+      .cvButtons {
+        display: flex;
         margin-top: 10px;
+        align-items: center;
+
+        div {
+          flex: 1;
+        }
+  
+        button {
+          margin-right: 10px;
+        }      
+      }
+
+      .cvComment {
+        margin-top: 8px;
+        margin-left: 3px;
+
+        button {
+          color: $text-color1;
+        }
       }
     }
   
@@ -53,4 +91,4 @@
     }
   
   }
-  
+ 

@@ -47,7 +47,7 @@ export default class SearchBar extends Component {
         {
           text &&
           <button
-            className="fa fa-times btn-icon"
+            className="fa fa-times link-btn"
             onClick={this.onClear}
           />
         }

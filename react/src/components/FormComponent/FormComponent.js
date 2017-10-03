@@ -5,8 +5,10 @@ import FormControl from 'react-bootstrap/lib/FormControl';
 import HelpBlock from 'react-bootstrap/lib/HelpBlock';
 import Collapse from 'react-bootstrap/lib/Collapse';
 import Button from 'react-bootstrap/lib/Button';
+import Textarea from 'react-textarea-autosize';
 import EXIF from 'exif-js';
 import { CheckBox } from 'components';
+import styles from './FormComponent.scss';
 
 export default class FormComponent extends Component {
 
@@ -25,14 +27,14 @@ export default class FormComponent extends Component {
     this.setState({ formModel, errors });
   };
 
-  getError = (name) => {
+  getError = name => {
     const { errors } = this.state;
     if (!errors) return null;
     if (!name) {
       if (errors.non_field_errors) {
         return errors.non_field_errors.join(', ');
       }
-      return null;
+      return errors.detail;
     }
     const error = errors[name];
     if (typeof error === 'string') return error;
@@ -72,10 +74,13 @@ export default class FormComponent extends Component {
     }
   }
 
-  HelpField = ({ label }) => (
-    <Collapse in={!!label}>
-      <HelpBlock>{label}</HelpBlock>
-    </Collapse>
+  ErrorContainer = ({ error, children }) => (
+    <div className={error && 'has-error'}>
+      {children}
+      <Collapse in={!!error}>
+        <HelpBlock>{error}</HelpBlock>
+      </Collapse>
+    </div>
   );
 
   CheckBoxField = ({ name, onChange, label, ...props }) => {
@@ -101,14 +106,38 @@ export default class FormComponent extends Component {
     };
     const error = this.getError(name);
     return (
-      <div className={error && 'has-error'}>
+      <this.ErrorContainer error={error}>
         <FormControl
           {...props}
           value={formModel[name] || ''}
           onChange={handleChange}
         />
-        <this.HelpField label={error} />
-      </div>
+      </this.ErrorContainer>
+    );
+  }
+
+  TextAreaField = ({ name, onChange, maxLength, ...props }) => {
+    const { formModel } = this.state;
+    const handleChange = e => {
+      const callback = onChange || this.onChangedModel;
+      callback(name, e.target.value);
+    };
+    const error = this.getError(name);
+    return (
+      <this.ErrorContainer error={error}>
+        <Textarea
+          {...props}
+          maxLength={maxLength}
+          value={formModel[name] || ''}
+          onChange={handleChange}
+        />
+        {
+          maxLength &&
+          <div className={styles.textareaLength}>
+            {parseInt(maxLength, 10) - (this.state.formModel.description || '').length} characters left
+          </div>
+        }
+      </this.ErrorContainer>
     );
   }
 
@@ -120,7 +149,7 @@ export default class FormComponent extends Component {
     };
     const error = this.getError(name);
     return (
-      <div className={`sm-select ${error ? 'has-error' : ''}`}>
+      <this.ErrorContainer error={error}>
         <ReactSuperSelect
           {...props}
           dataSource={dataSource || []}
@@ -130,8 +159,7 @@ export default class FormComponent extends Component {
           onChange={options => { handleChange(options); }}
           noResultsString=""
         />
-        <this.HelpField label={error} />
-      </div>
+      </this.ErrorContainer>
     );
   }
 
@@ -157,7 +185,7 @@ export default class FormComponent extends Component {
 
     const image = this.state[name] || {};
     return (
-      <div className="image-uploader">
+      <div className={styles.imageUploader}>
         <Dropzone
           accept="image/jpeg, image/png"
           multiple={false}
@@ -169,7 +197,7 @@ export default class FormComponent extends Component {
           />
         </Dropzone>
         {
-          image.exist && <button className="btn-icon" onClick={onRemove}>Remove Logo</button>
+          image.exist && <button className="link-btn" onClick={onRemove}>Remove Logo</button>
         }
       </div>
     );
@@ -178,15 +206,32 @@ export default class FormComponent extends Component {
   SubmitButton = ({ submtting, labels, ...props }) => {
     const error = this.getError();
     return (
-      <div className={error ? 'has-error' : null}>
-        <this.HelpField label={error} />
+      <this.ErrorContainer error={error}>
         <Button
           type="button"
           bsStyle="success"
           disabled={submtting}
           {...props}
         >{submtting ? labels[1] : labels[0]}</Button>
-      </div>
+      </this.ErrorContainer>
+    );
+  }
+
+  SubmitButtonWithCancel = ({ submtting, labels, cancelLabel, onCancel, ...props }) => {
+    const error = this.getError();
+    return (
+      <this.ErrorContainer error={error}>
+        <Button
+          type="button"
+          bsStyle="success"
+          disabled={submtting}
+          {...props}
+        >{submtting ? labels[1] : labels[0]}</Button>
+        <Button
+          onClick={onCancel}
+          disabled={submtting}
+        >{cancelLabel}</Button>
+      </this.ErrorContainer>
     );
   }
 

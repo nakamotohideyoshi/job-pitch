@@ -1,12 +1,10 @@
 
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import Helmet from 'react-helmet';
 import { Link } from 'react-router';
-import { connect } from 'react-redux';
 import Tabs from 'react-bootstrap/lib/Tabs';
 import Tab from 'react-bootstrap/lib/Tab';
-import * as apiActions from 'redux/modules/api';
+import ApiClient from 'helpers/ApiClient';
 import * as utils from 'helpers/utils';
 import SelectJob from './SelectJob/SelectJob';
 import FindTalent from './FindTalent/FindTalent';
@@ -14,19 +12,12 @@ import MyApplications from './MyApplications/MyApplications';
 import MyConnections from './MyConnections/MyConnections';
 import styles from './Applications.scss';
 
-@connect(
-  () => ({ }),
-  { ...apiActions }
-)
 export default class Applications extends Component {
-  static propTypes = {
-    getUserJobsAction: PropTypes.func.isRequired,
-    getApplicationsAction: PropTypes.func.isRequired,
-  }
 
   constructor(props) {
     super(props);
     this.state = { };
+    this.api = ApiClient.shared();
   }
 
   onSelectedJob = job => {
@@ -37,29 +28,21 @@ export default class Applications extends Component {
 
   onRefreshJob = () => {
     if (this.state.job) {
-      this.props.getUserJobsAction(this.state.job.id + '/')
-        .then(job => {
-          this.setState({ job });
-          // setTimeout(() => {
-          //   this.setState({ job });
-          //   console.log('onRefreshJob');
-          // }, 1000);
-        });
+      this.api.getUserJobs(this.state.job.id + '/').then(
+        job => this.setState({ job })
+      );
     }
   }
 
   onRefreshApplications = () => {
     this.setState({ applications: null });
-
     if (this.state.job) {
-      this.props.getApplicationsAction(`?job=${this.state.job.id}`)
-        .then(applications => {
+      this.api.getApplications(`?job=${this.state.job.id}`).then(
+        applications => {
+          applications.sort((a, b) => !a.shortlisted && b.shortlisted);
           this.setState({ applications });
-        });
-      // setTimeout(() => {
-      //   this.setState({ applications: utils.getTempApplications() });
-      //   console.log('onRefreshApplications');
-      // }, 2000);
+        }
+      );
     }
   }
 
@@ -68,12 +51,14 @@ export default class Applications extends Component {
     this.onRefreshApplications();
   }
 
-  onUpdatedApplications = () => this.setState({
-    applications: this.state.applications.slice(0)
-  })
+  onUpdatedApplications = () => {
+    const applications = this.state.applications.slice(0);
+    applications.sort((a, b) => !a.shortlisted && b.shortlisted);
+    this.setState({ applications });
+  }
 
   onClickJob = () => {
-    
+
   }
 
   renderJob = () => {
@@ -85,7 +70,7 @@ export default class Applications extends Component {
 
     return (
       <Link
-        className={[styles.job, 'shadow-board'].join(' ')}
+        className={[styles.job, 'board-shadow'].join(' ')}
         onClick={() => this.onClickJob(job)}>
         <div>
           <img src={image} alt="" />
@@ -124,7 +109,7 @@ export default class Applications extends Component {
               <div>
                 { this.renderJob() }
 
-                <div className={[styles.applications, 'shadow-board'].join(' ')}>
+                <div className={[styles.applications, 'board-shadow'].join(' ')}>
                   <Tabs defaultActiveKey={1} id="application-mode">
                     <Tab eventKey={1} title="Find Talent">
                       <FindTalent

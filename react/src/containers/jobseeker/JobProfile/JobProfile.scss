@@ -1,3 +1,5 @@
+@import '../../../theme/variables.scss';
+
 .root {
 
   form {
@@ -7,6 +9,19 @@
       label {
         margin-bottom: 10px;
       }
+    }
+
+    .withHelp {
+      display: flex;
+
+      > label:first-child {
+        flex: 1;
+      }
+    }
+
+    .placeName[disabled] {
+      margin-bottom: 8px;
+      background-color: transparent;
     }
   }
 

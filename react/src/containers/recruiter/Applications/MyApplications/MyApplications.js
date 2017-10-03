@@ -4,22 +4,18 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router';
 import { connect } from 'react-redux';
 import Button from 'react-bootstrap/lib/Button';
-import { ItemList, Loading } from 'components';
-import * as commonActions from 'redux/modules/common';
-import * as apiActions from 'redux/modules/api';
+import { Loading, ItemList, JobSeekerDetail } from 'components';
+import ApiClient from 'helpers/ApiClient';
 import * as utils from 'helpers/utils';
-import JobSeekerDetail from '../JobSeekerDetail/JobSeekerDetail';
+import * as commonActions from 'redux/modules/common';
 import styles from './MyApplications.scss';
 
 @connect(
-  () => ({
-  }),
-  { ...commonActions, ...apiActions }
+  () => ({ }),
+  { ...commonActions }
 )
 export default class MyApplications extends Component {
   static propTypes = {
-    saveApplicationAction: PropTypes.func.isRequired,
-    deleteApplicationAction: PropTypes.func.isRequired,
     alertShow: PropTypes.func.isRequired,
     parent: PropTypes.object.isRequired,
     applications: PropTypes.array,
@@ -33,6 +29,7 @@ export default class MyApplications extends Component {
   constructor(props) {
     super(props);
     this.state = { };
+    this.api = ApiClient.shared();
   }
 
   componentWillReceiveProps(nextProps) {
@@ -66,7 +63,7 @@ export default class MyApplications extends Component {
             application.loading = true;
             onUpdatedApplications();
 
-            this.props.saveApplicationAction({
+            this.api.saveApplication({
               id: application.id,
               connect: utils.getApplicationStatusByName('ESTABLISHED').id,
             })
@@ -107,7 +104,7 @@ export default class MyApplications extends Component {
             application.loading = true;
             onUpdatedApplications();
 
-            this.props.deleteApplicationAction(application)
+            this.api.deleteApplication(application)
               .then(() => {
                 application.loading = false;
                 application.status = utils.getApplicationStatusByName('DELETED').id;

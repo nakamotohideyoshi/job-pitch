@@ -12,36 +12,36 @@ const position = {
 export default class ContactUs extends Component {
   render() {
     return (
-      <div className="container">
-
+      <div className={styles.root}>
         <Helmet title="Contact Us" />
 
-        <div className="pageHeader">
-          <h3>Contact Us</h3>
-        </div>
-
-        <div className="board padding-45 markdown">
-
-          <div className={styles.map}>
-            <Map
-              defaultCenter={position}
-              marker={position}
-            />
+        <div className="container">
+          <div className="pageHeader">
+            <h3>Contact Us</h3>
           </div>
 
-          <div className={styles.content}>
-            <h5>{'Email: '}</h5>
-            <p>
-              <Link href="mailto:support@myjobpitch.com">support@myjobpitch.com</Link>
-            </p>
-            <h5>Mail Address:</h5>
-            <p>
-              71-75 Shelton Street Covent Garden London WC2H 9JQ
-            </p>
+          <div className="board">
+            <div className={styles.map}>
+              <Map
+                defaultCenter={position}
+                marker={position}
+              />
+            </div>
+
+            <div>
+              <h5>{'Email: '}</h5>
+              <p>
+                <Link href="mailto:support@myjobpitch.com">support@myjobpitch.com</Link>
+              </p>
+              <h5>Mail Address:</h5>
+              <p>
+                71-75 Shelton Street Covent Garden London WC2H 9JQ
+              </p>
+            </div>
+
           </div>
 
         </div>
-
       </div>
     );
   }

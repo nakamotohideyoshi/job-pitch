@@ -1,3 +1,5 @@
+@import '../../../theme/variables.scss';
+
 .root {
   padding-bottom: 45px;
   
@@ -41,37 +43,47 @@
   
   .business:hover {
     .name {
-      color: #00b6a4;
+      color: $primary-color;
     }
   }
 }
 
 .products {
-  :global(.shadow-board) {
+  :global(.board-shadow) {
     text-align: center;
   }
 
   .product {
-    display: inline-block;
+    position: relative;
+    display: inline-flex;
+    flex-direction: column;
+    justify-content: center;
     border: 2px solid #ddd;
-    margin: 20px 50px;
-    padding: 50px 0;
-    width: 200px;
+    margin: 30px 40px;
     font-weight: 700;
     border-radius: 5px;
+    width: 200px;
+    height: 250px;
   
     .credits {
-      color: #333;
       font-size: 23px;
     }
     .price {
-      color: #00b6a4;
+      color: $primary-color;
       font-size: 38px;
       margin-bottom: 30px;
+    }
+
+    button {
+      margin: 0 30px;
     }
   }
   
   .product:hover {
-    border: 2px solid #00b6a4;
+    border: 2px solid $primary-color;
+  }
+
+  .loading:hover {
+    border: 2px solid #ddd;
   }
 }

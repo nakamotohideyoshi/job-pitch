@@ -1,33 +1,31 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import Helmet from 'react-helmet';
-import { connect } from 'react-redux';
 import Form from 'react-bootstrap/lib/Form';
 import FormGroup from 'react-bootstrap/lib/FormGroup';
 import ControlLabel from 'react-bootstrap/lib/ControlLabel';
 import { FormComponent } from 'components';
-import { resetAction } from 'redux/modules/api';
 import * as utils from 'helpers/utils';
+import ApiClient from 'helpers/ApiClient';
+import styles from './Reset.scss';
 
-@connect(
-  state => ({
-    loading: state.api.loading,
-  }),
-  { resetAction })
 export default class Reset extends FormComponent {
-  static propTypes = {
-    loading: PropTypes.bool.isRequired,
-    resetAction: PropTypes.func.isRequired,
-  }
 
   onReset = () => {
     if (this.isValid(['email'])) {
-      this.props.resetAction(this.state.formModel)
-        .then(() => utils.successNotif('Success!'));
+      this.setState({ loading: true });
+      ApiClient.shared().reset(this.state.formModel)
+        .then(() => {
+          this.setState({ loading: false });
+          utils.successNotif('Success!');
+        })
+        .catch(errors => this.setState({
+          loading: false,
+          errors
+        }));
     }
   }
 
-  onKeyUp = (event) => {
+  onKeyUp = event => {
     if (event.keyCode === 13) {
       this.onReset();
     }
@@ -35,11 +33,12 @@ export default class Reset extends FormComponent {
 
   render() {
     return (
-      <div className="home-container">
+      <div className={styles.root}>
         <Helmet title="Reset Password" />
 
         <div className="board padding-45">
           <h3>Reset Password</h3>
+
           <Form>
             <FormGroup>
               <ControlLabel>Email Address</ControlLabel>
@@ -51,7 +50,7 @@ export default class Reset extends FormComponent {
             </FormGroup>
             <FormGroup>
               <this.SubmitButton
-                submtting={this.props.loading}
+                submtting={this.state.loading}
                 labels={['Reset', 'Resetting...']}
                 onClick={this.onReset}
               />

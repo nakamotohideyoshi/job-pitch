@@ -1,3 +1,5 @@
+@import '../../../theme/variables.scss';
+
 .root {
   display: flex;
   flex-direction: column;
@@ -8,7 +10,6 @@
   flex: 1;
   position: relative;
   margin-top: 50px;
-  // min-height: 500px;
   padding: 45px 0;
   background-color: #f9f9f9;
 
@@ -23,3 +24,4 @@
   height: 100%;
   z-index: 2000;
 }
+

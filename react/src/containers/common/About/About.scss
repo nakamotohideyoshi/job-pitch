@@ -1,0 +1,9 @@
+@import '../../../theme/variables.scss';
+
+.root {
+  :global(.board) {
+    h5 {
+      margin-top: 20px;
+    }
+  }
+}

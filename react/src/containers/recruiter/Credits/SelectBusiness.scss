@@ -1,3 +1,5 @@
+@import '../../../theme/variables.scss';
+
 .body {
   background-color: #f9f9f9;
   padding: 30px;
@@ -12,8 +14,8 @@
       display: flex;
       padding: 20px 0;
       margin: -1px 0;
-      border-top: 1px solid #e0e0e0;
-      border-bottom: 1px solid #e0e0e0;
+      border-top: 1px solid $border-color;
+      border-bottom: 1px solid $border-color;
   
       img {
         width: 50px;
@@ -44,25 +46,25 @@
   }
   
   .business:hover {
-    background-color: #f0f0f0;
-    border-top: 1px solid #e0e0e0;
-    border-bottom: 1px solid #e0e0e0;
+    background-color: $list-item-hover-color;
+    border-top: 1px solid $border-color;
+    border-bottom: 1px solid $border-color;
     .name {
-      color: #00b6a4;
+      color: $primary-color;
     }
   }
 
   .selected {
-    background-color: #00b6a4;
+    background-color: $primary-color;
     border-top: 1px solid #fff;
     border-bottom: 1px solid #fff;
     .name {
-      color: #333;
+      color: $text-color;
     }
   }
 
   .selected:hover {
-    background-color: #00b6a4;
+    background-color: $list-item-selected-color;
     .name {
       color: #fff;
     }

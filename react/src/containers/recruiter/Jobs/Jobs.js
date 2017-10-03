@@ -1,23 +1,14 @@
 import React, { Component } from 'react';
 import Helmet from 'react-helmet';
-import { connect } from 'react-redux';
 import Tabs from 'react-bootstrap/lib/Tabs';
 import Tab from 'react-bootstrap/lib/Tab';
-import * as apiActions from 'redux/modules/api';
+
 import BusinessList from './BusinessList/BusinessList';
 import WorkplaceList from './WorkplaceList/WorkplaceList';
 import JobList from './JobList/JobList';
 import styles from './Jobs.scss';
 
-@connect(
-  () => ({
-  }),
-  { ...apiActions }
-)
 export default class Jobs extends Component {
-  static propTypes = {
-  }
-
   constructor(props) {
     super(props);
     this.state = {
@@ -41,6 +32,9 @@ export default class Jobs extends Component {
   }
 
   onSelectTab = tabKey => {
+    this.businessList.onEdit();
+    this.workplaceList.onEdit();
+    this.jobList.onEdit();
     this.setState({ tabKey });
   }
 
@@ -76,6 +70,7 @@ export default class Jobs extends Component {
             <Tab eventKey={3} title="Job" disabled={!this.state.workplaceId}>
               <JobList
                 workplaceId={this.state.workplaceId}
+                parent={this}
               />
             </Tab>
           </Tabs>

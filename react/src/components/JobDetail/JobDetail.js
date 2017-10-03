@@ -23,6 +23,7 @@ export default class JobDetail extends Component {
   constructor(props) {
     super(props);
     this.state = { };
+    this.api = ApiClient.shared();
   }
 
   onClose = callback => {
@@ -37,9 +38,9 @@ export default class JobDetail extends Component {
     const jobFullName = utils.getJobFullName(job);
     const markerPos = { lat: workplace.latitude, lng: workplace.longitude };
 
-    const hours = ApiClient.hours.filter(item => item.id === job.hours)[0];
-    const contract = ApiClient.contracts.filter(item => item.id === job.contract)[0];
-    const isPermanent = ApiClient.contracts.filter(item => item.id === contract.id && item.name === 'Permanent')[0];
+    const hours = this.api.hours.filter(item => item.id === job.hours)[0];
+    const contract = this.api.contracts.filter(item => item.id === job.contract)[0];
+    const isPermanent = this.api.contracts.filter(item => item.id === contract.id && item.name === 'Permanent')[0];
     let attributes = hours.name;
     if (isPermanent) {
       attributes = `${attributes} (${contract.name})`;
@@ -84,6 +85,7 @@ export default class JobDetail extends Component {
               <Map
                 defaultCenter={markerPos}
                 marker={markerPos}
+                options={{ scrollwheel: false }}
               />
             </div>
           </div>

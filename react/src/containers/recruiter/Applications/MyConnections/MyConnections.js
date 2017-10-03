@@ -3,22 +3,18 @@ import PropTypes from 'prop-types';
 import { Link, browserHistory } from 'react-router';
 import { connect } from 'react-redux';
 import Button from 'react-bootstrap/lib/Button';
-import { ItemList, Loading } from 'components';
-import * as commonActions from 'redux/modules/common';
-import * as apiActions from 'redux/modules/api';
+import { Loading, ItemList, JobSeekerDetail } from 'components';
+import ApiClient from 'helpers/ApiClient';
 import * as utils from 'helpers/utils';
-import JobSeekerDetail from '../JobSeekerDetail/JobSeekerDetail';
+import * as commonActions from 'redux/modules/common';
 import styles from './MyConnections.scss';
 
 @connect(
-  () => ({
-  }),
-  { ...commonActions, ...apiActions }
+  () => ({ }),
+  { ...commonActions }
 )
 export default class MyConnections extends Component {
   static propTypes = {
-    saveApplicationAction: PropTypes.func.isRequired,
-    deleteApplicationAction: PropTypes.func.isRequired,
     alertShow: PropTypes.func.isRequired,
     parent: PropTypes.object.isRequired,
     applications: PropTypes.array,
@@ -33,6 +29,7 @@ export default class MyConnections extends Component {
   constructor(props) {
     super(props);
     this.state = { };
+    this.api = ApiClient.shared();
   }
 
   componentWillReceiveProps(nextProps) {
@@ -54,7 +51,9 @@ export default class MyConnections extends Component {
     utils.getJobSeekerFullName(application.job_seeker).toLowerCase().indexOf(filterText) !== -1;
 
   onMessage = (event, application) => {
-    browserHistory.push(`/recruiter/messages/${application.id}`);
+    application = application || this.state.selectedApplication;
+    utils.setShared('messages_selected_id', application.id);
+    browserHistory.push('/messages');
     if (event) {
       event.stopPropagation();
     }
@@ -75,7 +74,7 @@ export default class MyConnections extends Component {
             application.loading = true;
             onUpdatedApplications();
 
-            this.props.deleteApplicationAction(application.id)
+            this.api.deleteApplication(application.id)
               .then(() => {
                 application.loading = false;
                 application.status = utils.getApplicationStatusByName('DELETED').id;
@@ -101,10 +100,10 @@ export default class MyConnections extends Component {
     selectedApplication
   });
 
-  onChangeShortlist = shortlisted => {
+  onChangedShortlist = shortlisted => {
     const { selectedApplication } = this.state;
 
-    return this.props.saveApplicationAction({
+    return this.api.saveApplication({
       id: selectedApplication.id,
       shortlisted,
     }).then(() => {
@@ -207,7 +206,7 @@ export default class MyConnections extends Component {
               callback: () => this.onRemove()
             }}
             onClose={() => this.onDetail()}
-            onChangeShortlist={this.onChangeShortlist}
+            onChangedShortlist={this.onChangedShortlist}
           />
         }
       </div>

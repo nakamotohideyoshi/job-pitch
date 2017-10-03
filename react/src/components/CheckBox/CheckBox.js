@@ -7,12 +7,13 @@ export default class CheckBox extends Component {
     checked: PropTypes.bool,
     className: PropTypes.string,
     onChange: PropTypes.func,
-    children: PropTypes.any.isRequired,
+    children: PropTypes.any,
   }
 
   static defaultProps = {
     checked: false,
     className: '',
+    children: null,
     onChange: () => {}
   }
 
@@ -35,7 +36,9 @@ export default class CheckBox extends Component {
         />
         <label htmlFor={this.id}>
           <span />
-          {children}
+          {
+            children && <div>{children}</div>
+          }
         </label>
       </div>
     );

@@ -36,9 +36,11 @@ export default class Home extends Component {
 
   render() {
     const currentIndex = this.state.currentIndex;
+
     return (
-      <div>
+      <div className={styles.root}>
         <Helmet title="Home" />
+
         {
           SPLASH_IMAGES.map((image, index) => (<div
             key={image}
@@ -61,7 +63,7 @@ export default class Home extends Component {
             </Link>
             <Link to="/register/jobseeker" className={styles.register}>
               <span>{"I'm a"}</span><br />
-              <span>JobSeeker</span>
+              <span>Job Seeker</span>
             </Link>
           </div>
           <Link href="" className={styles.appButton}>

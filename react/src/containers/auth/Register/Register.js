@@ -1,36 +1,43 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Helmet from 'react-helmet';
-import { connect } from 'react-redux';
-import { browserHistory, Link } from 'react-router';
+import { Link, browserHistory } from 'react-router';
 import Form from 'react-bootstrap/lib/Form';
 import FormGroup from 'react-bootstrap/lib/FormGroup';
 import ControlLabel from 'react-bootstrap/lib/ControlLabel';
 import { FormComponent } from 'components';
-import { registerAction } from 'redux/modules/auth';
+import ApiClient from 'helpers/ApiClient';
+import * as utils from 'helpers/utils';
+import styles from './Register.scss';
 
-@connect(
-  state => ({
-    loading: state.auth.loading,
-  }),
-  { registerAction }
-)
 export default class Register extends FormComponent {
   static propTypes = {
-    loading: PropTypes.bool.isRequired,
-    registerAction: PropTypes.func.isRequired,
     params: PropTypes.object.isRequired,
   }
 
-  onRegister = type => {
+  onRegister = () => {
     if (this.isValid(['email', 'password1', 'password2'])) {
-      this.props.registerAction(this.state.formModel, type || this.props.params.type)
-        .then(() => browserHistory.push('/select'))
-        .catch(errors => this.setState({ errors }));
+      const { formModel } = this.state;
+      this.setState({ loading: true });
+
+      ApiClient.shared().register(formModel)
+        .then(() => ApiClient.shared().login({
+          email: formModel.email,
+          password: formModel.password1
+        }))
+        .then(() => {
+          utils.setCookie('email', this.state.formModel.email);
+          utils.setShared('usertype', this.props.params.type);
+          browserHistory.push('/select');
+        })
+        .catch(errors => this.setState({
+          loading: false,
+          errors
+        }));
     }
   }
 
-  onKeyUp = (event) => {
+  onKeyUp = event => {
     if (event.keyCode === 13) {
       this.onRegister();
     }
@@ -38,13 +45,18 @@ export default class Register extends FormComponent {
 
   render() {
     const { type } = this.props.params;
+    let buttonText = 'Register';
+    if (type) {
+      buttonText = type === 'jobseeker' ? "I'm a Job Seeker" : "I'm a Recruiter";
+    }
 
     return (
-      <div className="home-container">
+      <div className={styles.root}>
         <Helmet title="Register" />
 
         <div className="board padding-45">
           <h3>Register</h3>
+
           <Form>
             <FormGroup>
               <ControlLabel>Email Address</ControlLabel>
@@ -68,31 +80,20 @@ export default class Register extends FormComponent {
                 onKeyUp={this.onKeyUp}
               />
             </FormGroup>
+
             <FormGroup>
-              {
-                (!type || type === 'recruiter') &&
-                <this.SubmitButton
-                  bsStyle="success"
-                  submtting={this.props.loading}
-                  labels={["I'm a Recruiter", 'Registering...']}
-                  onClick={() => this.onRegister('recruiter')}
-                />
-              }
-              {
-                (!type || type === 'jobseeker') &&
-                <this.SubmitButton
-                  bsStyle="warning"
-                  submtting={this.props.loading}
-                  labels={["I'm a JobSeeker", 'Registering...']}
-                  onClick={() => this.onRegister2('jobseeker')}
-                />
-              }
+              <this.SubmitButton
+                bsStyle={type === 'jobseeker' ? 'warning' : 'success'}
+                submtting={this.state.loading}
+                labels={[buttonText, 'Registering...']}
+                onClick={() => this.onRegister()}
+              />
             </FormGroup>
           </Form>
         </div>
 
         <br />
-        <div className="board1">
+        <div className="board">
           { 'Already registered? ' }
           <Link className="link" to="/login" tabIndex="-1">Login</Link>
         </div>

@@ -18,7 +18,7 @@ import Applications1 from './recruiter/Applications/Applications';
 import Credits from './recruiter/Credits/Credits';
 
 import FindJob from './jobseeker/FindJob/FindJob';
-import Applications2 from './jobseeker/Applications/Applications';
+import MyApplications2 from './jobseeker/MyApplications/MyApplications';
 import JobProfile from './jobseeker/JobProfile/JobProfile';
 import PitchRecord from './jobseeker/PitchRecord/PitchRecord';
 import Profile from './jobseeker/Profile/Profile';
@@ -29,5 +29,5 @@ export {
   SelectType, Messages,
   NotFound,
   Jobs, Applications1, Credits,
-  Applications2, FindJob, JobProfile, PitchRecord, Profile
+  MyApplications2, FindJob, JobProfile, PitchRecord, Profile
 };

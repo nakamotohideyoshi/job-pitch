@@ -11,16 +11,17 @@ export default class SelectBusiness extends Component {
   static propTypes = {
     businesses: PropTypes.array.isRequired,
     selectedBusiness: PropTypes.object.isRequired,
-    onSelected: PropTypes.func.isRequired,
-    onClose: PropTypes.func.isRequired,
+    parent: PropTypes.object.isRequired
   }
 
   onFilter = (business, filterText) => business.name.toLowerCase().indexOf(filterText) > -1;
 
   onSelect = business => {
-    this.props.onSelected(business);
-    this.props.onClose();
+    this.props.parent.onSelectedBusiness(business);
+    this.onClose();
   };
+
+  onClose = () => this.props.parent.onShowBusinesses(false);
 
   renderItem = business => {
     const image = utils.getBusinessLogo(business, true);
@@ -46,10 +47,8 @@ export default class SelectBusiness extends Component {
   };
 
   render() {
-    const { onClose } = this.props;
-
     return (
-      <Modal show onHide={onClose} bsStyle="lg">
+      <Modal show onHide={this.onClose} bsStyle="lg">
         <Modal.Header closeButton>
           <Modal.Title>Select Businesses</Modal.Title>
         </Modal.Header>
@@ -68,7 +67,7 @@ export default class SelectBusiness extends Component {
         <Modal.Footer className={styles.footer}>
           <Button
             type="button"
-            onClick={onClose}
+            onClick={this.onClose}
           >Close</Button>
         </Modal.Footer>
       </Modal>

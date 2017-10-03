@@ -58,7 +58,7 @@ export default class JobList extends Component {
   onAdd = () => {
     if (this.workplaceId) {
       this.setState({
-        editingJob: { workplace: this.workplaceId }
+        editingJob: { location: this.workplaceId }
       });
     }
   }

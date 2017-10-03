@@ -119,6 +119,10 @@ export default class MainLayout extends Component {
       return Promise.resolve();
     }
 
+    if (!utils.getCookie('email')) {
+      return this.logout().then(Promise.reject());
+    }
+
     // auth
 
     if (this.rootPath !== 'resources' && AuthPaths.indexOf(this.rootPath) === -1) {
@@ -141,7 +145,7 @@ export default class MainLayout extends Component {
         kind: 'right',
         menuData: [
           { id: 11, label: 'Change Password', to: '/password' },
-          { id: 12, label: 'Logout', func: this.logout },
+          { id: 12, label: 'Logout', func: this.confirmLogout },
         ],
       }];
       if (user.businesses.length > 0) {
@@ -238,7 +242,7 @@ export default class MainLayout extends Component {
 
   /* logout */
 
-  logout = () => {
+  confirmLogout = () => {
     this.props.alertShow(
       'Confirm',
       'Are you sure you want to log out?',
@@ -247,21 +251,24 @@ export default class MainLayout extends Component {
         {
           label: 'Log Out',
           style: 'success',
-          callback: () => this.api.logout()
-            .then(() => {
-              if (__DEVELOPMENT__) {
-                utils.setCookie('token');
-              } else {
-                utils.setCookie('csrftoken');
-              }
-              utils.setShared('usertype');
-              utils.setShared('first-time');
-              browserHistory.push('/login');
-            })
+          callback: () => this.logout()
         }
       ]
     );
   };
+
+  logout = () => this.api.logout().then(
+    () => {
+      if (__DEVELOPMENT__) {
+        utils.setCookie('token');
+      } else {
+        utils.setCookie('csrftoken');
+      }
+      utils.setShared('usertype');
+      utils.setShared('first-time');
+      browserHistory.push('/login');
+    }
+  );
 
   /* alert */
 

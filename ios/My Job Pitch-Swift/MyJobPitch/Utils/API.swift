@@ -11,7 +11,7 @@ import RestKit
 
 class API: NSObject {
     
-    static var apiRoot = URL(string: "https://www.myjobpitch.com")!
+    static var apiRoot = URL(string: "https://app.myjobpitch.com")!
     
     static var instance: API!
     static func shared() -> API {
@@ -182,7 +182,7 @@ class API: NSObject {
         let request = LoginRequest()
         request.email = email
         request.password = password
-
+                
         postObject("/api-rest-auth/login/", request: request, success: success, failure: failure)
     }
 

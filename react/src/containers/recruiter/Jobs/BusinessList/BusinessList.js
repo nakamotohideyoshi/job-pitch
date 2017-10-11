@@ -41,8 +41,8 @@ export default class BusinessList extends Component {
   }
 
   onGetStart = () => {
-    utils.setShared('first-time');
-    this.setState({ firstTime: false });
+    utils.setShared('first-time', '2');
+    this.setState({ firstTime: '2' });
     this.onAdd();
   }
 
@@ -58,7 +58,7 @@ export default class BusinessList extends Component {
     this.setState({ editingBusiness: {} });
   }
 
-  onEdit = (event, business) => {
+  onEdit = (business, event) => {
     this.setState({ editingBusiness: business });
 
     if (event) {
@@ -66,7 +66,7 @@ export default class BusinessList extends Component {
     }
   }
 
-  onRemove = (event, business) => {
+  onRemove = (business, event) => {
     this.props.alertShow(
       'Confirm',
       `Are you sure you want to delete ${business.name}`,
@@ -136,11 +136,11 @@ export default class BusinessList extends Component {
           <div className={styles.controls}>
             <Button
               bsStyle="success"
-              onClick={e => this.onEdit(e, business)}
+              onClick={e => this.onEdit(business, e)}
             >Edit</Button>
             <Button
               disabled={this.state.businesses.length === 1}
-              onClick={e => this.onRemove(e, business)}
+              onClick={e => this.onRemove(business, e)}
             >Remove</Button>
           </div>
         </div>
@@ -149,7 +149,7 @@ export default class BusinessList extends Component {
   };
 
   renderEmpty = () => {
-    if (this.state.firstTime) {
+    if (this.state.firstTime === '1') {
       return (
         <div>
           <span>

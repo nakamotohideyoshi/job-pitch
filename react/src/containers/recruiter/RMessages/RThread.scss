@@ -1,0 +1,123 @@
+@import '../../../theme/variables.scss';
+
+.root {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+
+  .header {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 70px;
+    padding-left: 25px;
+    border-bottom: 1px solid $border-color;
+
+    a {
+      text-decoration: none;
+    }
+
+    h4 {
+      a, a:hover {
+        color: $secondary-color;
+      }
+    }
+  }
+
+  .content {
+    flex: 1;
+    padding: 25px 15px;
+    overflow-y: auto;
+  
+    img {
+      min-width: 40px;
+      min-height: 40px;
+      max-width: 40px;
+      max-height: 40px;
+      border-radius: 20px;
+    }
+  
+    .bubble{
+      display: inline-block;
+      border-radius: 5px;
+      box-shadow: 0 0 6px #B2B2B2;
+      padding: 10px 18px;
+      position: relative;
+      white-space: pre-line;
+      color: #fff;
+      text-align: left;
+    }
+  
+    .bubble::before {
+      content: "\00a0";
+      height: 16px;
+      position: absolute;
+      top: 11px;
+      transform:             rotate( 29deg ) skew( -35deg );
+          -moz-transform:    rotate( 29deg ) skew( -35deg );
+          -ms-transform:     rotate( 29deg ) skew( -35deg );
+          -o-transform:      rotate( 29deg ) skew( -35deg );
+          -webkit-transform: rotate( 29deg ) skew( -35deg );
+      width:  20px;      
+    }
+  
+    .time {
+      font-size: 12px;
+      color: $text-color2;
+      margin-top: 5px;
+    }
+    
+    .you {
+      display: flex;
+      margin-bottom: 10px;
+      margin-right: 90px;
+      >div {
+        margin-left: 25px;
+      }
+      .bubble {
+        background-color: $secondary-color;
+      }
+      .bubble::before {
+        box-shadow: -2px 2px 2px 0 rgba( 178, 178, 178, .4 );
+        left: -9px;
+        background-color: $secondary-color;         
+      }
+    }
+  
+    .me {
+      display: flex;
+      justify-content: flex-end;
+      margin-bottom: 10px;
+      margin-left: 90px;
+      text-align: right;
+      >div {
+        margin-right: 25px;
+      }
+      .bubble {
+        background-color: $primary-color;
+      }
+      .bubble::before {
+        box-shadow: 2px -2px 2px 0 rgba( 178, 178, 178, .4 );
+        right: -9px;
+        background-color: $primary-color;         
+      }
+    }
+  
+  }
+  
+  .input {
+    display: flex;
+    align-items: flex-end;
+    padding: 15px;
+    border-top: 1px solid $border-color;
+
+    textarea {
+      flex: 1;
+    }
+
+    button {
+      margin-left: 15px;
+    }
+  }
+  
+}

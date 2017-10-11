@@ -29,7 +29,7 @@ export default class JobProfile extends FormComponent {
   }
 
   constructor(props) {
-    super(props);
+    super(props, { needToSave: true });
     this.api = ApiClient.shared();
   }
 
@@ -69,6 +69,7 @@ export default class JobProfile extends FormComponent {
       errors,
       markerPos: pos,
     });
+    FormComponent.needToSave = true;
   }
 
   onSave = () => {
@@ -86,6 +87,7 @@ export default class JobProfile extends FormComponent {
     this.setState({ saving: true });
 
     this.api.saveJobProfile(data).then(profile => {
+      FormComponent.needToSave = false;
       utils.successNotif('Success!');
       this.props.setPermission(2);
       if (this.state.profile.id) {
@@ -122,11 +124,8 @@ export default class JobProfile extends FormComponent {
                 <ControlLabel>Sectors</ControlLabel>
                 <this.SelectField
                   name="sectors"
-                  dataSource={this.api.sectors}
-                  placeholder="Select Sectors"
-                  multiple
-                  searchable
-                  searchPlaceholder="Search"
+                  options={this.api.sectors}
+                  multi
                 />
               </FormGroup>
 
@@ -134,7 +133,9 @@ export default class JobProfile extends FormComponent {
                 <ControlLabel>Contract</ControlLabel>
                 <this.SelectField
                   name="contract"
-                  dataSource={this.contracts}
+                  options={this.contracts}
+                  clearable={false}
+                  searchable={false}
                 />
               </FormGroup>
 
@@ -142,7 +143,9 @@ export default class JobProfile extends FormComponent {
                 <ControlLabel>Hours</ControlLabel>
                 <this.SelectField
                   name="hours"
-                  dataSource={this.hours}
+                  options={this.hours}
+                  clearable={false}
+                  searchable={false}
                 />
               </FormGroup>
 
@@ -150,8 +153,7 @@ export default class JobProfile extends FormComponent {
                 <div className={styles.withHelp}>
                   <ControlLabel>Match area</ControlLabel>
                   <HelpIcon
-                    label={`In order to match you with jobs in your area, you must tell us your location,
-                      and specify the maximum distance to search.`}
+                    label="Search for a place name, street, postcode, etc. or click the map to select location."
                   />
                 </div>
                 <this.TextField
@@ -174,7 +176,9 @@ export default class JobProfile extends FormComponent {
                 <ControlLabel>Radius</ControlLabel>
                 <this.SelectField
                   name="search_radius"
-                  dataSource={SEARCH_RADIUS}
+                  options={SEARCH_RADIUS}
+                  clearable={false}
+                  searchable={false}
                 />
               </FormGroup>
             </Form>

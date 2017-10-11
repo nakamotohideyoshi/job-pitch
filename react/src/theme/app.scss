@@ -1,6 +1,6 @@
 @import "~font-awesome/scss/font-awesome.scss";
+@import '~react-select/scss/default.scss';
 @import 'variables.scss';
-@import 'react-super-select.scss';
 
 body {
   letter-spacing: 0.04em;
@@ -59,7 +59,7 @@ h5 {
 }
 
 .has-error {
-  textarea, .r-ss-trigger {
+  textarea, .Select-control {
     border-color: #a94442;
   }
   
@@ -159,30 +159,6 @@ h5 {
 .exif_8 {
   -webkit-transform: rotate(270deg);
   transform: rotate(270deg);
-}
-
-
-/* selector */
-
-.r-ss-trigger {
-  padding: 1px 8px !important;
-  border-radius: 4px !important;
-
-  .carat {
-    border-width: 5px;
-  }
-  .carat.up {
-    margin-top: -1px;
-  }
-}
-.r-ss-dropdown {
-  .r-ss-dropdown-option {
-    // background-color: #fff;
-    padding: 6px 8px;
-  }
-  .r-ss-dropdown-option.r-ss-selected {
-    // background-color: #ddd !important;
-  }
 }
 
 

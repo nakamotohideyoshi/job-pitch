@@ -27,7 +27,10 @@ export default class Register extends FormComponent {
         }))
         .then(() => {
           utils.setCookie('email', this.state.formModel.email);
-          utils.setShared('usertype', this.props.params.type);
+          if (this.props.params.type) {
+            utils.setShared('usertype', this.props.params.type);
+            utils.setShared('first-time', '1');
+          }
           browserHistory.push('/select');
         })
         .catch(errors => this.setState({

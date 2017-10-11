@@ -48,9 +48,8 @@ export default class MyApplications extends Component {
   onFilter = (application, filterText) =>
     utils.getJobSeekerFullName(application.job_seeker).toLowerCase().indexOf(filterText) !== -1;
 
-  onConnect = (event, application) => {
+  onConnect = (application, event) => {
     const { onUpdatedApplications } = this.props.parent;
-    application = application || this.state.selectedApplication;
 
     this.props.alertShow(
       'Confirm',
@@ -89,9 +88,8 @@ export default class MyApplications extends Component {
     }
   };
 
-  onRemove = (event, application) => {
+  onRemove = (application, event) => {
     const { onUpdatedApplications } = this.props.parent;
-    application = application || this.state.selectedApplication;
 
     this.props.alertShow(
       'Confirm',
@@ -163,10 +161,10 @@ export default class MyApplications extends Component {
             <Button
               bsStyle="success"
               disabled={this.props.job.location_data.business_data.tokens === 0}
-              onClick={event => this.onConnect(event, application)}
+              onClick={e => this.onConnect(application, e)}
             >Connect</Button>
             <Button
-              onClick={event => this.onRemove(event, application)}
+              onClick={e => this.onRemove(application, e)}
             >Remove</Button>
           </div>
         </div>
@@ -177,7 +175,7 @@ export default class MyApplications extends Component {
   renderEmpty = () => (
     <span>
       {
-        `No candidates have applied for this job yet.\n
+        `No candidates have applied for this job yet.
          Once that happens, their applications will appear here.`
       }
     </span>
@@ -204,11 +202,11 @@ export default class MyApplications extends Component {
             jobSeeker={selectedApplication.job_seeker}
             button1={{
               label: 'Connect',
-              callback: () => this.onConnect()
+              callback: () => this.onConnect(selectedApplication)
             }}
             button2={{
               label: 'Remove',
-              callback: () => this.onRemove()
+              callback: () => this.onRemove(selectedApplication)
             }}
             onClose={() => this.onDetail()}
           />

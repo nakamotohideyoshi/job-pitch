@@ -33,7 +33,7 @@ export default class WorkplaceEdit extends FormComponent {
       exist: workplace.images && workplace.images.length > 0,
     };
     const markerPos = workplace.latitude && { lat: workplace.latitude, lng: workplace.longitude };
-    super(props, { formModel, logo, markerPos });
+    super(props, { formModel, logo, markerPos, needToSave: true });
     this.api = ApiClient.shared();
     this.loadImage(logo, 'logo');
   }
@@ -47,6 +47,7 @@ export default class WorkplaceEdit extends FormComponent {
       errors,
       markerPos: pos,
     });
+    FormComponent.needToSave = true;
   }
 
   onSave = () => {
@@ -86,6 +87,7 @@ export default class WorkplaceEdit extends FormComponent {
         this.props.parent.onRefresh();
         this.props.parent.onEdit();
         utils.successNotif('Saved!');
+        FormComponent.needToSave = false;
       },
       () => this.setState({ saving: false })
     );
@@ -136,14 +138,19 @@ export default class WorkplaceEdit extends FormComponent {
             <ControlLabel>Description</ControlLabel>
             <this.TextAreaField
               name="description"
-              maxLength="1000"
+              maxLength="10000"
               minRows={3}
               maxRows={20}
             />
           </FormGroup>
 
           <FormGroup>
-            <ControlLabel>Location</ControlLabel>
+            <div className={styles.withHelp}>
+              <ControlLabel>Location</ControlLabel>
+              <HelpIcon
+                label="Search for a place name, street, postcode, etc. or click the map to select location."
+              />
+            </div>
             <this.TextField
               type="text"
               name="place_name"

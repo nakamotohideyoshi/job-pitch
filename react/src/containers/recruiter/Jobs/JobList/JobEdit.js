@@ -38,7 +38,7 @@ export default class JobEdit extends FormComponent {
       exist: job.images && job.images.length > 0,
     };
 
-    super(props, { formModel, logo });
+    super(props, { formModel, logo, needToSave: true });
     this.api = ApiClient.shared();
     this.loadImage(logo, 'logo');
   }
@@ -78,6 +78,7 @@ export default class JobEdit extends FormComponent {
         this.props.parent.onRefresh();
         this.props.parent.onEdit();
         utils.successNotif('Saved!');
+        FormComponent.needToSave = false;
       },
       () => this.setState({ saving: false })
     );
@@ -111,9 +112,7 @@ export default class JobEdit extends FormComponent {
             <this.SelectField
               placeholder="Select Sector"
               name="sector"
-              dataSource={this.api.sectors}
-              searchable
-              searchPlaceholder="Search"
+              options={this.api.sectors}
             />
           </FormGroup>
           <FormGroup>
@@ -121,7 +120,8 @@ export default class JobEdit extends FormComponent {
             <this.SelectField
               placeholder="Select Contract"
               name="contract"
-              dataSource={this.api.contracts}
+              options={this.api.contracts}
+              searchable={false}
             />
           </FormGroup>
           <FormGroup>
@@ -129,14 +129,15 @@ export default class JobEdit extends FormComponent {
             <this.SelectField
               placeholder="Select Hours"
               name="hours"
-              dataSource={this.api.hours}
+              options={this.api.hours}
+              searchable={false}
             />
           </FormGroup>
           <FormGroup>
             <ControlLabel>Description</ControlLabel>
             <this.TextAreaField
               name="description"
-              maxLength="1000"
+              maxLength="10000"
               minRows={3}
               maxRows={20}
             />

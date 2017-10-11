@@ -9,6 +9,7 @@ import * as utils from 'helpers/utils';
 import * as commonActions from 'redux/modules/common';
 import _ from 'lodash';
 import JobEdit from './JobEdit';
+import JobInterface from './JobInterface';
 import styles from './JobList.scss';
 
 @connect(
@@ -29,13 +30,22 @@ export default class JobList extends Component {
 
   constructor(props) {
     super(props);
-    this.state = { };
+    this.state = {
+      firstTime: utils.getShared('first-time')
+    };
     this.api = ApiClient.shared();
 
     const i = _.findIndex(this.api.jobStatuses, { name: 'CLOSED' });
     this.closedStatus = this.api.jobStatuses[i].id;
 
     this.props.parent.jobList = this;
+  }
+
+  componentDidMount() {
+    if (this.props.workplaceId) {
+      this.workplaceId = this.props.workplaceId;
+      this.onRefresh();
+    }
   }
 
   componentWillReceiveProps(nextProps) {
@@ -56,6 +66,10 @@ export default class JobList extends Component {
   onFilter = (job, filterText) => job.title.toLowerCase().indexOf(filterText) > -1;
 
   onAdd = () => {
+    if (this.state.firstTime === '3') {
+      utils.setShared('first-time');
+      this.setState({ firstTime: null });
+    }
     if (this.workplaceId) {
       this.setState({
         editingJob: { location: this.workplaceId }
@@ -63,7 +77,7 @@ export default class JobList extends Component {
     }
   }
 
-  onEdit = (event, job) => {
+  onEdit = (job, event) => {
     this.setState({ editingJob: job });
 
     if (event) {
@@ -71,7 +85,9 @@ export default class JobList extends Component {
     }
   }
 
-  onRemove = (event, job) => {
+  onInterface = selectedJob => this.setState({ selectedJob });
+
+  onRemove = (job, event) => {
     const buttons = [
       {
         label: 'Delete',
@@ -83,7 +99,10 @@ export default class JobList extends Component {
           this.api.deleteUserJob(job.id).then(
             () => {
               _.remove(this.state.jobs, item => item.id === job.id);
-              this.setState({ jobs: this.state.jobs });
+              this.setState({
+                jobs: this.state.jobs,
+                selectedJob: null,
+              });
               utils.successNotif('Deleted!');
             },
             () => {
@@ -152,7 +171,7 @@ export default class JobList extends Component {
       <Link
         key={job.id}
         className={[styles.job, closedClass].join(' ')}
-        onClick={e => this.onEdit(e, job)}>
+        onClick={() => this.onInterface(job)}>
         <div>
           <img src={image} alt="" />
           <div className={styles.content} >
@@ -162,10 +181,10 @@ export default class JobList extends Component {
           <div className={styles.controls}>
             <Button
               bsStyle="success"
-              onClick={e => this.onEdit(e, job)}
+              onClick={e => this.onEdit(job, e)}
             >Edit</Button>
             <Button
-              onClick={e => this.onRemove(e, job)}
+              onClick={e => this.onRemove(job, e)}
             >Remove</Button>
           </div>
         </div>
@@ -177,8 +196,10 @@ export default class JobList extends Component {
     <div>
       <span>
         {
-          `You have not added any
-           jobs yet.`
+          this.state.firstTime === '3' ?
+          'Okay, last step, now create your first job'
+          :
+          'This workplace doesn\'t seem to have any jobs yet!'
         }
       </span>
       <br />
@@ -194,25 +215,41 @@ export default class JobList extends Component {
       );
     }
 
-    const { editingJob } = this.state;
+    const { editingJob, selectedJob } = this.state;
+
+    if (editingJob) {
+      return (
+        <div className="board-shadow">
+          <JobEdit
+            job={editingJob}
+            parent={this}
+          />
+        </div>
+      );
+    }
+
+    if (selectedJob) {
+      return (
+        <div className="board-shadow">
+          <JobInterface
+            job={selectedJob}
+            parent={this}
+          />
+        </div>
+      );
+    }
+
     return (
       <div className="board-shadow">
-        {
-          editingJob ?
-            <JobEdit
-              job={editingJob}
-              parent={this}
-            /> :
-            <ItemList
-              items={this.state.jobs}
-              onFilter={this.onFilter}
-              buttons={[
-                { label: 'New Job', bsStyle: 'success', onClick: this.onAdd }
-              ]}
-              renderItem={this.renderItem}
-              renderEmpty={this.renderEmpty}
-            />
-        }
+        <ItemList
+          items={this.state.jobs}
+          onFilter={this.onFilter}
+          buttons={[
+            { label: 'New Job', bsStyle: 'success', onClick: this.onAdd }
+          ]}
+          renderItem={this.renderItem}
+          renderEmpty={this.renderEmpty}
+        />
       </div>
     );
   }

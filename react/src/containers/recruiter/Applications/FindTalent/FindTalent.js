@@ -42,9 +42,8 @@ export default class FindTalent extends Component {
   onFilter = (jobSeeker, filterText) =>
     utils.getJobSeekerFullName(jobSeeker).toLowerCase().indexOf(filterText) !== -1;
 
-  onConnect = (event, jobSeeker) => {
+  onConnect = (jobSeeker, event) => {
     const { jobSeekers } = this.state;
-    jobSeeker = jobSeeker || this.state.selectedJobSeeker;
 
     this.props.alertShow(
       'Confirm',
@@ -84,9 +83,8 @@ export default class FindTalent extends Component {
     }
   };
 
-  onRemove = (event, jobSeeker) => {
+  onRemove = (jobSeeker, event) => {
     const { jobSeekers } = this.state;
-    jobSeeker = jobSeeker || this.state.selectedJobSeeker;
 
     this.props.alertShow(
       'Confirm',
@@ -143,10 +141,10 @@ export default class FindTalent extends Component {
             <Button
               bsStyle="success"
               disabled={tokens === 0}
-              onClick={e => this.onConnect(e, jobSeeker)}
+              onClick={e => this.onConnect(jobSeeker, e)}
             >Connect</Button>
             <Button
-              onClick={e => this.onRemove(e, jobSeeker)}
+              onClick={e => this.onRemove(jobSeeker, e)}
             >Remove</Button>
           </div>
         </div>
@@ -157,7 +155,7 @@ export default class FindTalent extends Component {
   renderEmpty = () => (
     <span>
       {
-        `There are no more new matches for this job.\n
+        `There are no more new matches for this job.
          You can restore your removed matches by clicking refresh above.`
       }
     </span>
@@ -184,11 +182,11 @@ export default class FindTalent extends Component {
             jobSeeker={selectedJobSeeker}
             button1={{
               label: 'Connect',
-              callback: () => this.onConnect()
+              callback: () => this.onConnect(selectedJobSeeker)
             }}
             button2={{
               label: 'Remove',
-              callback: () => this.onRemove()
+              callback: () => this.onRemove(selectedJobSeeker)
             }}
             onClose={() => this.onDetail()}
           />

@@ -10,7 +10,7 @@ export default class SelectType extends Component {
 
   selectUserType = (type) => {
     if (type === 'recruiter') {
-      utils.setShared('first-time', true);
+      utils.setShared('first-time', '1');
     }
     utils.setShared('usertype', type);
     browserHistory.push('/');

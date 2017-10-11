@@ -35,7 +35,7 @@ export default class BusinessEdit extends FormComponent {
       url: utils.getBusinessLogo(business),
       exist: business.images && business.images.length > 0,
     };
-    super(props, { formModel, logo });
+    super(props, { formModel, logo, needToSave: true });
     this.api = ApiClient.shared();
     this.loadImage(logo, 'logo');
   }
@@ -77,6 +77,7 @@ export default class BusinessEdit extends FormComponent {
         this.props.parent.onRefresh();
         this.props.parent.onEdit();
         utils.successNotif('Saved!');
+        FormComponent.needToSave = false;
       },
       () => this.setState({ saving: false })
     );

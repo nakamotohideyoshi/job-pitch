@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import Dropzone from 'react-dropzone';
-import ReactSuperSelect from 'react-super-select';
+import Select from 'react-select';
 import FormControl from 'react-bootstrap/lib/FormControl';
 import HelpBlock from 'react-bootstrap/lib/HelpBlock';
 import Collapse from 'react-bootstrap/lib/Collapse';
@@ -25,6 +25,7 @@ export default class FormComponent extends Component {
     formModel[name] = value;
     errors[name] = null;
     this.setState({ formModel, errors });
+    FormComponent.needToSave = this.state.needToSave;
   };
 
   getError = name => {
@@ -141,23 +142,21 @@ export default class FormComponent extends Component {
     );
   }
 
-  SelectField = ({ name, dataSource, multiple, onChange, ...props }) => {
+  SelectField = ({ name, onChange, ...props }) => {
     const { formModel } = this.state;
-    const handleChange = options => {
+    const handleChange = item => {
       const callback = onChange || this.onChangedModel;
-      callback(name, options);
+      callback(name, item);
     };
     const error = this.getError(name);
     return (
       <this.ErrorContainer error={error}>
-        <ReactSuperSelect
+        <Select
           {...props}
-          dataSource={dataSource || []}
-          initialValue={formModel[name]}
-          multiple={multiple}
-          keepOpenOnSelection={multiple}
-          onChange={options => { handleChange(options); }}
-          noResultsString=""
+          valueKey="id"
+          labelKey="name"
+          value={formModel[name]}
+          onChange={item => { handleChange(item); }}
         />
       </this.ErrorContainer>
     );

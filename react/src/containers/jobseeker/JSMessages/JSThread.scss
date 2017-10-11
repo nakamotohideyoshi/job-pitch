@@ -17,8 +17,11 @@
     a {
       text-decoration: none;
     }
-    a:hover {
-      color: $primary-color;
+
+    h4 {
+      a, a:hover {
+        color: $secondary-color;
+      }
     }
   }
 

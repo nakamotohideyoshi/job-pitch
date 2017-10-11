@@ -3,16 +3,15 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router';
 import Button from 'react-bootstrap/lib/Button';
 import Textarea from 'react-textarea-autosize';
-import { JobSeekerDetail, JobDetail } from 'components';
+import { JobDetail } from 'components';
 import ApiClient from 'helpers/ApiClient';
 import * as utils from 'helpers/utils';
-import styles from './Thread.scss';
+import styles from './JSThread.scss';
 
-export default class Thread extends Component {
+export default class JSThread extends Component {
   static propTypes = {
     application: PropTypes.object,
     onSend: PropTypes.func,
-    parent: PropTypes.object.isRequired,
   }
 
   static defaultProps = {
@@ -37,13 +36,13 @@ export default class Thread extends Component {
     this.setApplication(nextProps.application);
   }
 
-  onDetail = showDetail => this.setState({ showDetail });
+  onShowJobDetail = showJobDetail => this.setState({
+    showJobDetail
+  });
 
-  onChnageInput = e => {
-    this.setState({
-      message: e.target.value
-    });
-  }
+  onChnageInput = e => this.setState({
+    message: e.target.value
+  });
 
   onSend = () => {
     const { application, onSend } = this.props;
@@ -81,26 +80,12 @@ export default class Thread extends Component {
     this.setState({ application });
 
     if (application) {
-      const jobSeeker = application.job_seeker;
       const job = application.job_data;
-      const jobSeekerImg = utils.getJobSeekerImg(jobSeeker);
-      const jobLogo = utils.getJobLogo(job, true);
 
-      if (this.api.user.job_seeker) {
-        this.headerTitle = job.title;
-        this.headerComment = utils.getJobFullName(job);
-        this.myAvatar = jobSeekerImg;
-        this.yourAvatar = jobLogo;
-        this.yourName = job.title;
-        this.yourComment = utils.getJobFullName(job);
-      } else {
-        this.headerTitle = utils.getJobSeekerFullName(application.job_seeker);
-        this.headerComment = '';
-        this.myAvatar = jobLogo;
-        this.yourAvatar = jobSeekerImg;
-        this.yourName = utils.getJobSeekerFullName(jobSeeker);
-        this.yourComment = '';
-      }
+      this.headerTitle = job.title;
+      this.headerComment = utils.getJobFullName(job);
+      this.yourAvatar = utils.getJobLogo(job, true);
+      this.myAvatar = utils.getJobSeekerImg(application.job_seeker);
 
       this.scrollBottom(this.scrollContainer);
     }
@@ -181,27 +166,12 @@ export default class Thread extends Component {
       );
     }
 
-    if (this.api.user.job_seeker) {
-      return (
-        <div className={styles.input}>
-          <Textarea
-            placeholder="You cannot send messages until your application is accepted"
-            disabled
-          />
-        </div>
-      );
-    }
-
     return (
       <div className={styles.input}>
         <Textarea
-          placeholder="You cannot send messages until you have connected"
+          placeholder="You cannot send messages until your application is accepted"
           disabled
         />
-        <Button
-          bsStyle="success"
-          onClick={this.onConnect}
-        >Connect</Button>
       </div>
     );
   }
@@ -216,16 +186,15 @@ export default class Thread extends Component {
     return (
       <div className={styles.root}>
         <div className={styles.header}>
-          <h4><Link onClick={() => this.onDetail(true)}>{this.headerTitle}</Link></h4>
-          <div><Link onClick={() => this.onDetail(true)}>{this.headerComment}</Link></div>
+          <h4><Link onClick={() => this.onShowJobDetail(true)}>{this.headerTitle}</Link></h4>
+          <div><Link onClick={() => this.onShowJobDetail(true)}>{this.headerComment}</Link></div>
         </div>
 
         <div className={styles.content} ref={this.scrollBottom}>
           {
             application.messages.map(item => {
               const userRole = this.api.roles.filter(role => role.id === item.from_role)[0].name;
-              if ((this.api.user.job_seeker && userRole === 'JOB_SEEKER') ||
-                (!this.api.user.job_seeker && userRole === 'RECRUITER')) {
+              if (userRole === 'JOB_SEEKER') {
                 return <this.Me key={item.id} message={item} />;
               }
               return <this.You key={item.id} message={item} />;
@@ -235,19 +204,11 @@ export default class Thread extends Component {
         <this.InputComponent />
 
         {
-          this.state.showDetail &&
-          (
-            this.api.user.job_seeker ?
-              <JobDetail
-                job={application.job_data}
-                onClose={() => this.onDetail(false)}
-              /> :
-              <JobSeekerDetail
-                jobSeeker={application.job_seeker}
-                application={application}
-                onClose={() => this.onDetail()}
-              />
-          )
+          this.state.showJobDetail &&
+          <JobDetail
+            job={application.job_data}
+            onClose={() => this.onShowJobDetail()}
+          />
         }
       </div>
     );

@@ -50,8 +50,7 @@ export default class MyConnections extends Component {
   onFilter = (application, filterText) =>
     utils.getJobSeekerFullName(application.job_seeker).toLowerCase().indexOf(filterText) !== -1;
 
-  onMessage = (event, application) => {
-    application = application || this.state.selectedApplication;
+  onMessage = (application, event) => {
     utils.setShared('messages_selected_id', application.id);
     browserHistory.push('/messages');
     if (event) {
@@ -59,9 +58,8 @@ export default class MyConnections extends Component {
     }
   };
 
-  onRemove = (event, application) => {
+  onRemove = (application, event) => {
     const { onUpdatedApplications } = this.props.parent;
-    application = application || this.state.selectedApplication;
 
     this.props.alertShow(
       'Confirm',
@@ -153,10 +151,10 @@ export default class MyConnections extends Component {
           <div className={styles.control}>
             <Button
               bsStyle="success"
-              onClick={event => this.onMessage(event, application)}
+              onClick={e => this.onMessage(application, e)}
             >Message</Button>
             <Button
-              onClick={event => this.onRemove(event, application)}
+              onClick={e => this.onRemove(application, e)}
             >Remove</Button>
           </div>
         </div>
@@ -168,10 +166,10 @@ export default class MyConnections extends Component {
     <span>
       {
         this.props.shortlisted ?
-          `You have not shortlisted any applications for this job,\n
+          `You have not shortlisted any applications for this job,
            turn off shortlist view to see the non-shortlisted applications.` :
-          `You have not chosen anyone to connect with for this job.\n
-           Once that happens, you will be able to sort through them from here.\n
+          `You have not chosen anyone to connect with for this job.
+           Once that happens, you will be able to sort through them from here.
            You can switch to search mode to look for potential applicants.`
       }
     </span>
@@ -199,11 +197,11 @@ export default class MyConnections extends Component {
             application={selectedApplication}
             button1={{
               label: 'Message',
-              callback: () => this.onMessage()
+              callback: () => this.onMessage(selectedApplication)
             }}
             button2={{
               label: 'Remove',
-              callback: () => this.onRemove()
+              callback: () => this.onRemove(selectedApplication)
             }}
             onClose={() => this.onDetail()}
             onChangedShortlist={this.onChangedShortlist}

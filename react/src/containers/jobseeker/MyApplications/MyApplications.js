@@ -31,8 +31,7 @@ export default class MyApplications extends Component {
   onFilter = (application, filterText) =>
     utils.getJobSeekerFullName(application.job_seeker).toLowerCase().indexOf(filterText) !== -1;
 
-  onMessage = (event, application) => {
-    application = application || this.state.selectedApplication;
+  onMessage = (application, event) => {
     utils.setShared('messages_selected_id', application.id);
     browserHistory.push('/messages');
     if (event) {
@@ -70,7 +69,7 @@ export default class MyApplications extends Component {
           <div className={styles.controls}>
             <Button
               bsStyle="success"
-              onClick={e => this.onMessage(e, application)}
+              onClick={e => this.onMessage(application, e)}
             >Message</Button>
           </div>
         </div>
@@ -115,7 +114,7 @@ export default class MyApplications extends Component {
                 job={selectedApplication.job_data}
                 button1={{
                   label: 'Message',
-                  callback: () => this.onMessage()
+                  callback: () => this.onMessage(selectedApplication)
                 }}
                 onClose={() => this.onDetail()}
               />

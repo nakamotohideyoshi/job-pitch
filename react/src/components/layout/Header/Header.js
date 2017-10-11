@@ -1,19 +1,26 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Link } from 'react-router';
-import { LinkContainer } from 'react-router-bootstrap';
+import { connect } from 'react-redux';
+import { Link, browserHistory } from 'react-router';
 import Navbar from 'react-bootstrap/lib/Navbar';
 import Nav from 'react-bootstrap/lib/Nav';
 import NavItem from 'react-bootstrap/lib/NavItem';
 import NavDropdown from 'react-bootstrap/lib/NavDropdown';
 import MenuItem from 'react-bootstrap/lib/MenuItem';
+import { FormComponent } from 'components';
+import * as commonActions from 'redux/modules/common';
 import './Header.scss';
 
 const titleImage = require('assets/title.png');
 
+@connect(
+  () => ({
+  }),
+  { ...commonActions }
+)
 export default class Header extends Component {
-
   static propTypes = {
+    alertShow: PropTypes.func.isRequired,
     pathname: PropTypes.string.isRequired,
     menuData: PropTypes.array,
     permission: PropTypes.number,
@@ -23,6 +30,35 @@ export default class Header extends Component {
     menuData: [],
     permission: 0,
   }
+
+  onClickItem = item => {
+    if (FormComponent.needToSave) {
+      this.props.alertShow(
+        'Confirm',
+        'You did not save your changes.',
+        [
+          {
+            label: 'Ok',
+            style: 'success',
+            callback: () => {
+              FormComponent.needToSave = false;
+              if (item.func) {
+                item.func();
+              } else {
+                browserHistory.push(item.to);
+              }
+            }
+          },
+          { label: 'Cancel' },
+        ]
+      );
+    } else if (item.func) {
+      item.func();
+    } else {
+      browserHistory.push(item.to);
+    }
+  }
+
 
   renderSubMenus = item => {
     const active = item.menuData.filter(subitem => subitem.to === this.props.pathname).length > 0;
@@ -35,25 +71,16 @@ export default class Header extends Component {
       >
         {
           item.menuData.map(subitem => {
-            const permission = subitem.permission || 0;
-
-            if (subitem.func) {
-              return (
-                <MenuItem
-                  key={subitem.id}
-                  disabled={this.props.permission < permission}
-                  onClick={() => subitem.func()}>
-                  {subitem.label}
-                </MenuItem>
-              );
-            }
-
+            const disabled = this.props.permission < (subitem.permission || 0);
             return (
-              this.props.permission < permission ?
-                <MenuItem key={subitem.id} disabled>{subitem.label}</MenuItem> :
-                <LinkContainer key={subitem.id} to={subitem.to}>
-                  <MenuItem>{subitem.label}</MenuItem>
-                </LinkContainer>
+              <MenuItem
+                key={subitem.id}
+                active={this.props.pathname.indexOf(subitem.to) !== -1}
+                disabled={disabled}
+                onClick={disabled ? () => {} : () => this.onClickItem(subitem)}
+              >
+                {subitem.label}
+              </MenuItem>
             );
           })
         }
@@ -70,24 +97,13 @@ export default class Header extends Component {
       return this.renderSubMenus(item);
     }
 
-    const permission = item.permission || 0;
-    if (item.func) {
-      return (
-        <NavItem
-          key={item.id}
-          disabled={this.props.permission < permission}
-          onClick={() => item.func()}
-        >
-          {item.label}
-        </NavItem>
-      );
-    }
     return (
-      <LinkContainer key={item.id} to={item.to}>
-        <NavItem
-          disabled={this.props.permission < permission}
-        >{item.label}</NavItem>
-      </LinkContainer>
+      <NavItem
+        key={item.id}
+        active={this.props.pathname.indexOf(item.to) !== -1}
+        disabled={this.props.permission < (item.permission || 0)}
+        onClick={() => this.onClickItem(item)}
+      >{item.label}</NavItem>
     );
   });
 

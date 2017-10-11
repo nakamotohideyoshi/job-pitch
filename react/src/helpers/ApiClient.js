@@ -2,6 +2,7 @@ import axios from 'axios';
 import * as utils from 'helpers/utils';
 
 if (__LOCAL__ && __DEVELOPMENT__) {
+  // axios.defaults.baseURL = 'http://192.168.1.49:8080';
   axios.defaults.baseURL = 'http://localhost:8080';
 }
 axios.defaults.headers.common.Accept = 'application/json';
@@ -102,13 +103,34 @@ export default class ApiClient {
 
   // auth api
   register = info => this.post('/api-rest-auth/registration/', info);
-  login = info => this.post('/api-rest-auth/login/', info)
-    .then(data => {
+  login = info => this.post('/api-rest-auth/login/', info).then(
+    data => {
       if (__DEVELOPMENT__) {
         utils.setCookie('token', data.key);
       }
-    });
-  logout = () => this.post('/api-rest-auth/logout/');
+    }
+  );
+  logout = () => this.post('/api-rest-auth/logout/').then(
+    () => {
+      if (__DEVELOPMENT__) {
+        utils.setCookie('token');
+      } else {
+        utils.setCookie('csrftoken');
+      }
+      this.user = null;
+      this.jobSeeker = null;
+      this.initialTokens = null;
+      this.sectors = null;
+      this.contracts = null;
+      this.hours = null;
+      this.nationalities = null;
+      this.applicationStatuses = null;
+      this.jobStatuses = null;
+      this.sexes = null;
+      this.roles = null;
+      this.products = null;
+    }
+  );
   reset = info => this.post('/api-rest-auth/password/reset/', info);
   changePassword = info => this.post('/api-rest-auth/password/change/', info);
 

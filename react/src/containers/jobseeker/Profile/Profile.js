@@ -43,7 +43,7 @@ export default class Profile extends FormComponent {
     formModel.sex = api.sexes.filter(item => item.id === jobSeeker.sex)[0];
     formModel.nationality = api.nationalities.filter(item => item.id === jobSeeker.nationality)[0];
 
-    super(props, { jobSeeker, formModel });
+    super(props, { jobSeeker, formModel, needToSave: true });
     this.api = ApiClient.shared();
   }
 
@@ -62,6 +62,7 @@ export default class Profile extends FormComponent {
     this.setState({
       cvComment: 'CV added: save to upload.'
     });
+    FormComponent.needToSave = true;
   }
 
   onRemovedCV = () => {
@@ -116,6 +117,7 @@ export default class Profile extends FormComponent {
       if (this.videoData) {
         this.uploadFile();
       } else {
+        FormComponent.needToSave = false;
         utils.successNotif('Success!');
         if (jobSeeker.profile) {
           this.setState({ saving: false });
@@ -169,6 +171,7 @@ export default class Profile extends FormComponent {
       if (!pitch.video) {
         this.timer = setTimeout(() => this.checkPitch(pitchId), 2000);
       } else {
+        FormComponent.needToSave = false;
         utils.successNotif('Success!');
         this.timer = null;
         this.videoData = null;
@@ -263,7 +266,8 @@ export default class Profile extends FormComponent {
                   <this.SelectField
                     placeholder="Select Gender"
                     name="sex"
-                    dataSource={this.api.sexes}
+                    options={this.api.sexes}
+                    searchable={false}
                   />
                   <this.CheckBoxField name="sex_public" />
                 </div>
@@ -275,9 +279,7 @@ export default class Profile extends FormComponent {
                   <this.SelectField
                     placeholder="Select Nationality"
                     name="nationality"
-                    dataSource={this.api.nationalities}
-                    searchable
-                    searchPlaceholder="Search"
+                    options={this.api.nationalities}
                   />
                   <this.CheckBoxField name="nationality_public" />
                 </div>

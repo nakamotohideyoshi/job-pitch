@@ -1,0 +1,33 @@
+@import '../../../../theme/variables.scss';
+
+.root {
+  padding: 45px;
+
+  .header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 40px;
+
+    h4 {
+      flex: 1;
+    }
+
+    a {
+      font-size: 14px;
+      font-weight: 500;
+      color: $primary-color;
+    }
+  }
+
+  .buttons {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    
+    button {
+      width: 50%;
+      min-width: 300px;
+      margin: 10px 0;
+    }
+  }
+}

@@ -31,9 +31,18 @@ export default class WorkplaceList extends Component {
 
   constructor(props) {
     super(props);
-    this.state = { };
+    this.state = {
+      firstTime: utils.getShared('first-time')
+    };
     this.api = ApiClient.shared();
     this.props.parent.workplaceList = this;
+  }
+
+  componentDidMount() {
+    if (this.props.businessId) {
+      this.businessId = this.props.businessId;
+      this.onRefresh();
+    }
   }
 
   componentWillReceiveProps(nextProps) {
@@ -54,6 +63,10 @@ export default class WorkplaceList extends Component {
   onFilter = (workplace, filterText) => workplace.name.toLowerCase().indexOf(filterText) > -1;
 
   onAdd = () => {
+    if (this.state.firstTime === '2') {
+      utils.setShared('first-time', '3');
+      this.setState({ firstTime: '3' });
+    }
     if (this.businessId) {
       this.setState({
         editingWorkplace: { business: this.businessId }
@@ -61,7 +74,7 @@ export default class WorkplaceList extends Component {
     }
   }
 
-  onEdit = (event, workplace) => {
+  onEdit = (workplace, event) => {
     this.setState({ editingWorkplace: workplace });
 
     if (event) {
@@ -69,7 +82,7 @@ export default class WorkplaceList extends Component {
     }
   }
 
-  onRemove = (event, workplace) => {
+  onRemove = (workplace, event) => {
     this.props.alertShow(
       'Confirm',
       `Are you sure you want to delete ${workplace.name}`,
@@ -139,10 +152,10 @@ export default class WorkplaceList extends Component {
           <div className={styles.controls}>
             <Button
               bsStyle="success"
-              onClick={e => this.onEdit(e, workplace)}
+              onClick={e => this.onEdit(workplace, e)}
             >Edit</Button>
             <Button
-              onClick={e => this.onRemove(e, workplace)}
+              onClick={e => this.onRemove(workplace, e)}
             >Remove</Button>
           </div>
         </div>
@@ -154,8 +167,10 @@ export default class WorkplaceList extends Component {
     <div>
       <span>
         {
-          `You have not added any
-           workplaces yet.`
+          this.state.firstTime === '2' ?
+          `Great, you've created your business!
+           Now let's create your work place` :
+          'This business doesn\'t seem to have a workplace for your staff'
         }
       </span>
       <br />

@@ -22,7 +22,7 @@ const recruiterMenus = [
   { id: 1, label: 'Applications', to: '/recruiter/applications', permission: 1 },
   { id: 2, label: 'Jobs', to: '/recruiter/jobs', permission: 0 },
   { id: 3, label: 'Credit', to: '/recruiter/credits', permission: 1 },
-  { id: 4, label: 'Messages', to: '/messages', permission: 1 },
+  { id: 4, label: 'Messages', to: '/recruiter/messages', permission: 1 },
 ];
 
 const jobseekerMenus = [
@@ -44,16 +44,15 @@ const jobseekerMenus = [
       { id: 22, label: 'Job Profile', to: '/jobseeker/jobprofile', permission: 1 },
     ],
   },
-  { id: 4, label: 'Messages', to: '/messages', permission: 2 },
+  { id: 4, label: 'Messages', to: '/jobseeker/messages', permission: 2 },
 ];
 
 const AuthPaths = [
-  'select', 'password', 'messages', 'recruiter', 'jobseeker'
+  'select', 'password', 'recruiter', 'jobseeker'
 ];
 
 @connect(
   state => ({
-    popupLoading: state.common.loading,
     permission: state.common.permission,
     alert: state.common.alert,
   }),
@@ -64,7 +63,6 @@ export default class MainLayout extends Component {
     location: PropTypes.object.isRequired,
     permission: PropTypes.number.isRequired,
     setPermission: PropTypes.func.isRequired,
-    popupLoading: PropTypes.object,
     alert: PropTypes.object,
     alertShow: PropTypes.func.isRequired,
     alertHide: PropTypes.func.isRequired,
@@ -72,7 +70,6 @@ export default class MainLayout extends Component {
   };
 
   static defaultProps = {
-    popupLoading: null,
     alert: null,
     pageInfo: null,
   }
@@ -259,11 +256,6 @@ export default class MainLayout extends Component {
 
   logout = () => this.api.logout().then(
     () => {
-      if (__DEVELOPMENT__) {
-        utils.setCookie('token');
-      } else {
-        utils.setCookie('csrftoken');
-      }
       utils.setShared('usertype');
       utils.setShared('first-time');
       browserHistory.push('/login');
@@ -286,13 +278,14 @@ export default class MainLayout extends Component {
       return <Loading />;
     }
 
-    const { children, alert, popupLoading, location, permission } = this.props;
+    const { children, alert, location, permission } = this.props;
+    const { pathname } = location;
 
     return (
       <div className={styles.root}>
 
         <Header
-          pathname={location.pathname}
+          pathname={pathname}
           menuData={this.menuData}
           permission={permission}
         />
@@ -302,7 +295,7 @@ export default class MainLayout extends Component {
         </div>
 
         {
-          this.rootPath !== 'messages' && <Footer />
+          (pathname !== '/recruiter/messages' && pathname !== '/jobseeker/messages') && <Footer />
         }
 
         {
@@ -334,17 +327,6 @@ export default class MainLayout extends Component {
                 }
               </Modal.Footer>
             </Modal>
-          )
-        }
-
-        {
-          popupLoading && (
-            <div className={styles.popupLoading}>
-              <Loading
-                backgroundColor="rgba(0,0,0,0.5)"
-                color="#fff"
-              />
-            </div>
           )
         }
 

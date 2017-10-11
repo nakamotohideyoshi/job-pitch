@@ -1,6 +1,5 @@
 const ALERT_SHOW = 'mjp/common/ALERT_SHOW';
 const ALERT_HIDE = 'mjp/common/ALERT_HIDE';
-const SHOW_LOADING = 'mjp/common/SHOW_LOADING';
 const SET_PERMISSION = 'mjp/common/SET_PERMISSION';
 const SET_VALUE = 'mjp/common/SET_VALUE';
 
@@ -20,11 +19,6 @@ export default function reducer(state = initialState, action = {}) {
       return {
         ...state,
         alert: null,
-      };
-    case SHOW_LOADING:
-      return {
-        ...state,
-        loading: action.loading,
       };
     case SET_PERMISSION:
       return {
@@ -50,12 +44,6 @@ export function alertShow(title, message, buttons, cancel = true) {
 
 export function alertHide() {
   return { type: ALERT_HIDE };
-}
-
-// show loading
-
-export function showLoading(loading) {
-  return { type: SHOW_LOADING, loading };
 }
 
 // set permission

@@ -1,44 +1,102 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import Helmet from 'react-helmet';
+import { connect } from 'react-redux';
 import Tabs from 'react-bootstrap/lib/Tabs';
 import Tab from 'react-bootstrap/lib/Tab';
-
+import { FormComponent, Loading } from 'components';
+import ApiClient from 'helpers/ApiClient';
+import * as utils from 'helpers/utils';
+import * as commonActions from 'redux/modules/common';
 import BusinessList from './BusinessList/BusinessList';
 import WorkplaceList from './WorkplaceList/WorkplaceList';
 import JobList from './JobList/JobList';
 import styles from './Jobs.scss';
 
+@connect(
+  () => ({
+  }),
+  { ...commonActions }
+)
 export default class Jobs extends Component {
+  static propTypes = {
+    alertShow: PropTypes.func.isRequired,
+  }
+
   constructor(props) {
     super(props);
     this.state = {
       tabKey: 1,
+      jobid: parseInt(utils.getShared('jobs_selected_job'), 10)
     };
+    this.api = ApiClient.shared();
   }
 
-  onSelectedBusiness = businessId => {
-    this.setState({ businessId });
-    if (businessId) {
-      this.onSelectTab(2);
+  componentDidMount() {
+    if (this.state.jobid) {
+      utils.setShared('jobs_selected_job');
+
+      this.api.getUserJobs(this.state.jobid + '/').then(
+        job => {
+          this.setState({
+            jobid: null,
+            businessId: job.location_data.business_data.id,
+            workplaceId: job.location_data.id,
+            tabKey: 3
+          });
+          this.jobList.onInterface(job);
+        },
+        () => this.setState({
+          jobid: null
+        })
+      );
     }
-    this.onSelectedWorkplace();
   }
 
-  onSelectedWorkplace = workplaceId => {
-    this.setState({ workplaceId });
-    if (workplaceId) {
-      this.onSelectTab(3);
-    }
-  }
+  onSelectedBusiness = businessId => this.setState({
+    tabKey: 2,
+    businessId,
+    workplaceId: null
+  });
+
+  onSelectedWorkplace = workplaceId => this.setState({
+    tabKey: 3,
+    workplaceId
+  });
 
   onSelectTab = tabKey => {
-    this.businessList.onEdit();
-    this.workplaceList.onEdit();
-    this.jobList.onEdit();
-    this.setState({ tabKey });
+    if (FormComponent.needToSave) {
+      this.props.alertShow(
+        'Confirm',
+        'You did not save your changes.',
+        [
+          {
+            label: 'Ok',
+            style: 'success',
+            callback: () => {
+              FormComponent.needToSave = false;
+              this.businessList.onEdit();
+              this.workplaceList.onEdit();
+              this.jobList.onEdit();
+              this.setState({ tabKey });
+            }
+          },
+          { label: 'Cancel' },
+        ]
+      );
+    } else {
+      this.businessList.onEdit();
+      this.workplaceList.onEdit();
+      this.jobList.onEdit();
+      this.setState({ tabKey });
+    }
   }
 
   render() {
+    if (this.state.jobid) {
+      return <Loading />;
+    }
+
     return (
       <div className={styles.root}>
         <Helmet title="My Workplace & Jobs" />

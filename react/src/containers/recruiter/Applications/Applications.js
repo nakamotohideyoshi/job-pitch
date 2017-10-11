@@ -1,30 +1,41 @@
-
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import Helmet from 'react-helmet';
-import { Link } from 'react-router';
+import { Link, browserHistory } from 'react-router';
 import Tabs from 'react-bootstrap/lib/Tabs';
 import Tab from 'react-bootstrap/lib/Tab';
+import { Loading } from 'components';
 import ApiClient from 'helpers/ApiClient';
 import * as utils from 'helpers/utils';
-import SelectJob from './SelectJob/SelectJob';
 import FindTalent from './FindTalent/FindTalent';
 import MyApplications from './MyApplications/MyApplications';
 import MyConnections from './MyConnections/MyConnections';
 import styles from './Applications.scss';
 
 export default class Applications extends Component {
+  static propTypes = {
+    params: PropTypes.object.isRequired,
+  }
 
   constructor(props) {
     super(props);
-    this.state = { };
+    this.state = {
+      tabKey: parseInt(utils.getShared('applications_selected_tab'), 10) || 1
+    };
     this.api = ApiClient.shared();
+    this.jobid = this.props.params.jobid;
   }
 
-  onSelectedJob = job => {
-    this.setState({ job }, () => {
-      this.onRefreshApplications();
-    });
-  };
+  componentDidMount() {
+    this.api.getUserJobs(this.jobid + '/').then(
+      job => {
+        this.setState({ job }, () => {
+          this.onRefreshApplications();
+        });
+      },
+      () => browserHistory.push('/recruiter/applications')
+    );
+  }
 
   onRefreshJob = () => {
     if (this.state.job) {
@@ -58,7 +69,13 @@ export default class Applications extends Component {
   }
 
   onClickJob = () => {
+    utils.setShared('jobs_selected_job', this.state.job.id);
+    browserHistory.push('/recruiter/jobs');
+  }
 
+  onSelectTab = tabKey => {
+    this.setState({ tabKey });
+    utils.setShared('applications_selected_tab', tabKey);
   }
 
   renderJob = () => {
@@ -89,6 +106,10 @@ export default class Applications extends Component {
   render() {
     const { job, applications } = this.state;
 
+    if (!job) {
+      return <Loading />;
+    }
+
     return (
       <div className={styles.root}>
         <Helmet title="Applications" />
@@ -96,53 +117,48 @@ export default class Applications extends Component {
         <div className="container">
           <div className="pageHeader">
             <h3>{job ? 'Applications' : 'Select Job'}</h3>
-            {
-              job &&
-              <Link className="link"
-                onClick={() => this.onSelectedJob()}
-              >{'<< Select Job'}</Link>
-            }
+            <Link className="link" to="/recruiter/applications">{'<< Job List'}</Link>
           </div>
-          {
-            !job ?
-              <SelectJob parent={this} /> :
-              <div>
-                { this.renderJob() }
 
-                <div className={[styles.applications, 'board-shadow'].join(' ')}>
-                  <Tabs defaultActiveKey={1} id="application-mode">
-                    <Tab eventKey={1} title="Find Talent">
-                      <FindTalent
-                        parent={this}
-                        job={job}
-                      />
-                    </Tab>
-                    <Tab eventKey={2} title="My Applications">
-                      <MyApplications
-                        parent={this}
-                        applications={applications}
-                        job={job}
-                      />
-                    </Tab>
-                    <Tab eventKey={3} title="My Connections">
-                      <MyConnections
-                        parent={this}
-                        applications={applications}
-                      />
-                    </Tab>
-                    <Tab eventKey={4} title="My Shortlist">
-                      <MyConnections
-                        parent={this}
-                        applications={applications}
-                        shortlisted
-                      />
-                    </Tab>
-                  </Tabs>
-                </div>
-              </div>
-          }
+          <div>
+            { this.renderJob() }
+
+            <div className={[styles.applications, 'board-shadow'].join(' ')}>
+              <Tabs
+                id="application-mode"
+                activeKey={this.state.tabKey}
+                onSelect={this.onSelectTab}
+              >
+                <Tab eventKey={1} title="Find Talent">
+                  <FindTalent
+                    parent={this}
+                    job={job}
+                  />
+                </Tab>
+                <Tab eventKey={2} title="My Applications">
+                  <MyApplications
+                    parent={this}
+                    applications={applications}
+                    job={job}
+                  />
+                </Tab>
+                <Tab eventKey={3} title="My Connections">
+                  <MyConnections
+                    parent={this}
+                    applications={applications}
+                  />
+                </Tab>
+                <Tab eventKey={4} title="My Shortlist">
+                  <MyConnections
+                    parent={this}
+                    applications={applications}
+                    shortlisted
+                  />
+                </Tab>
+              </Tabs>
+            </div>
+          </div>
         </div>
-
       </div>
     );
   }

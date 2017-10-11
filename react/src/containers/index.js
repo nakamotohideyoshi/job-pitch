@@ -1,33 +1,34 @@
-import Register from './auth/Register/Register';
-import Login from './auth/Login/Login';
-import Reset from './auth/Reset/Reset';
-import Password from './auth/Password/Password';
-
 import Home from './common/Home/Home';
 import About from './common/About/About';
 import Help from './common/Help/Help';
 import Terms from './common/Terms/Terms';
 import Privacy from './common/Privacy/Privacy';
 import ContactUs from './common/ContactUs/ContactUs';
-import SelectType from './common/SelectType/SelectType';
-import Messages from './common/Messages/Messages';
 import NotFound from './common/NotFound/NotFound';
 
+import Register from './auth/Register/Register';
+import Login from './auth/Login/Login';
+import Reset from './auth/Reset/Reset';
+import SelectType from './auth/SelectType/SelectType';
+import Password from './auth/Password/Password';
+
 import Jobs from './recruiter/Jobs/Jobs';
-import Applications1 from './recruiter/Applications/Applications';
+import SelectJob from './recruiter/SelectJob/SelectJob';
+import Applications from './recruiter/Applications/Applications';
 import Credits from './recruiter/Credits/Credits';
+import RMessages from './recruiter/RMessages/RMessages';
 
 import FindJob from './jobseeker/FindJob/FindJob';
-import MyApplications2 from './jobseeker/MyApplications/MyApplications';
+import MyApplications from './jobseeker/MyApplications/MyApplications';
 import JobProfile from './jobseeker/JobProfile/JobProfile';
 import PitchRecord from './jobseeker/PitchRecord/PitchRecord';
 import Profile from './jobseeker/Profile/Profile';
+import JSMessages from './jobseeker/JSMessages/JSMessages';
 
 export {
-  Register, Login, Reset, Password,
   Home, About, Help, Terms, Privacy, ContactUs,
-  SelectType, Messages,
-  NotFound,
-  Jobs, Applications1, Credits,
-  MyApplications2, FindJob, JobProfile, PitchRecord, Profile
+  Register, Login, Reset, SelectType, Password,
+  Jobs, SelectJob, Applications, Credits, RMessages,
+  MyApplications, FindJob, JobProfile, PitchRecord, Profile, JSMessages,
+  NotFound
 };

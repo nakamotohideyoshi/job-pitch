@@ -67,6 +67,14 @@
       }
     }
 
+    .withHelp {
+      display: flex;
+
+      > label:first-child {
+        flex: 1;
+      }
+    }
+
     .placeName[disabled] {
       margin-bottom: 8px;
       background-color: transparent;

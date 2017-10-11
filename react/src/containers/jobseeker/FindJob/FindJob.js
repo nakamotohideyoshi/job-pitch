@@ -44,11 +44,10 @@ export default class FindJob extends Component {
 
   onFilter = (job, filterText) => job.title.toLowerCase().indexOf(filterText) > -1;
 
-  onApply = (event, job) => {
+  onApply = (job, event) => {
     const { alertShow } = this.props;
     const { jobs } = this.state;
-    job = job || this.state.selectedJob;
-
+    
     if (this.api.jobSeeker.pitches.length === 0) {
       alertShow(
         'Alert',
@@ -100,9 +99,8 @@ export default class FindJob extends Component {
     }
   }
 
-  onRemove = (event, job) => {
+  onRemove = (job, event) => {
     const { jobs } = this.state;
-    job = job || this.state.selectedJob;
 
     this.props.alertShow(
       'Confirm',
@@ -164,10 +162,10 @@ export default class FindJob extends Component {
           <div className={styles.controls}>
             <Button
               bsStyle="success"
-              onClick={e => this.onApply(e, job)}
+              onClick={e => this.onApply(job, e)}
             >Apply</Button>
             <Button
-              onClick={e => this.onRemove(e, job)}
+              onClick={e => this.onRemove(job, e)}
             >Remove</Button>
           </div>
         </div>
@@ -213,11 +211,11 @@ export default class FindJob extends Component {
                 job={selectedJob}
                 button1={{
                   label: 'Apply',
-                  callback: () => this.onApply()
+                  callback: () => this.onApply(selectedJob)
                 }}
                 button2={{
                   label: 'Remove',
-                  callback: () => this.onRemove()
+                  callback: () => this.onRemove(selectedJob)
                 }}
                 onClose={() => this.onDetail()}
               />

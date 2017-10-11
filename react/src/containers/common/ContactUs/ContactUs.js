@@ -20,7 +20,7 @@ export default class ContactUs extends Component {
             <h3>Contact Us</h3>
           </div>
 
-          <div className="board">
+          <div className="board padding-45">
             <div className={styles.map}>
               <Map
                 defaultCenter={position}

@@ -1,6 +1,6 @@
 
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
+import Helmet from 'react-helmet';
 import { Link, browserHistory } from 'react-router';
 import Button from 'react-bootstrap/lib/Button';
 import { ItemList } from 'components';
@@ -9,9 +9,6 @@ import * as utils from 'helpers/utils';
 import styles from './SelectJob.scss';
 
 export default class SelectJob extends Component {
-  static propTypes = {
-    parent: PropTypes.object.isRequired,
-  }
 
   constructor(props) {
     super(props);
@@ -35,7 +32,7 @@ export default class SelectJob extends Component {
     job.location_data.name.toLowerCase().indexOf(filterText) > -1 ||
     job.location_data.business_data.name.toLowerCase().indexOf(filterText) > -1;
 
-  onSelect = job => this.props.parent.onSelectedJob(job);
+  onSelect = job => browserHistory.push(`/recruiter/applications/${job.id}`);
 
   onCreateJob = () => browserHistory.push('/recruiter/jobs');
 
@@ -80,16 +77,27 @@ export default class SelectJob extends Component {
 
   render() {
     return (
-      <div className="board-shadow">
-        <ItemList
-          items={this.state.jobs}
-          onFilter={this.onFilter}
-          buttons={[
-            { label: 'Refresh', bsStyle: 'success', onClick: this.onRefresh }
-          ]}
-          renderItem={this.renderItem}
-          renderEmpty={this.renderEmpty}
-        />
+      <div className={styles.root}>
+        <Helmet title="Select Job" />
+
+        <div className="container">
+          <div className="pageHeader">
+            <h3>Select Job</h3>
+          </div>
+
+          <div className="board-shadow">
+            <ItemList
+              items={this.state.jobs}
+              onFilter={this.onFilter}
+              buttons={[
+                { label: 'Refresh', bsStyle: 'success', onClick: this.onRefresh }
+              ]}
+              renderItem={this.renderItem}
+              renderEmpty={this.renderEmpty}
+            />
+          </div>
+        </div>
+
       </div>
     );
   }

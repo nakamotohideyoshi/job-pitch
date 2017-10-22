@@ -12,3 +12,7 @@ try:
     from local_live import *
 except ImportError:
     pass
+
+STATIC_ROOT = '/web/mjp/static/'
+MEDIA_ROOT = '/web/mjp/media/'
+DEFAULT_FROM_EMAIL = 'webmaster@sclabs.co.uk'

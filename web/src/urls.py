@@ -1,4 +1,6 @@
+from django.conf import settings
 from django.conf.urls import include, url
+from django.conf.urls.static import static
 from django.contrib import admin
 
 from mjp import views as mjp_views
@@ -13,5 +15,6 @@ urlpatterns = [
     url(r'^api-rest-auth/', include('rest_auth.urls')),
     url(r'^api-rest-auth/registration/', include('rest_auth.registration.urls')),
     url(r'^admin/', include(admin.site.urls)),
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) + [
     url(r'^', include('web.urls')),
 ]

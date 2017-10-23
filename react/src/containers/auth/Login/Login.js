@@ -48,7 +48,7 @@ export default class Login extends FormComponent {
             <FormGroup>
               <ControlLabel>Email Address</ControlLabel>
               <this.TextField
-                type="text"
+                type="email"
                 name="email"
               />
             </FormGroup>

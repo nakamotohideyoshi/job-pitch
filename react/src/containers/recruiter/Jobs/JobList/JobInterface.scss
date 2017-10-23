@@ -3,20 +3,8 @@
 .root {
   padding: 45px;
 
-  .header {
-    display: flex;
-    align-items: center;
+  > .h4 {
     margin-bottom: 40px;
-
-    h4 {
-      flex: 1;
-    }
-
-    a {
-      font-size: 14px;
-      font-weight: 500;
-      color: $primary-color;
-    }
   }
 
   .buttons {
@@ -29,5 +17,9 @@
       min-width: 300px;
       margin: 10px 0;
     }
+  }
+
+  > span {
+    color: $text-color2;
   }
 }

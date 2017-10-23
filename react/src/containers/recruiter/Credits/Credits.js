@@ -73,13 +73,12 @@ export default class Credits extends Component {
     return (
       <Link
         className={[styles.business, 'board-shadow'].join(' ')}
-        onClick={() => this.onShowBusinesses(true)}>
-        <div>
-          <img src={image} alt="" />
-          <div className={styles.content} >
-            <div className={styles.name}>{selectedBusiness.name}</div>
-            <div className={styles.tokens}>{strTokens}</div>
-          </div>
+        onClick={() => this.onShowBusinesses(true)}
+      >
+        <img src={image} alt="" />
+        <div className={styles.content} >
+          <div className={styles.name}>{selectedBusiness.name}</div>
+          <div className={styles.tokens}>{strTokens}</div>
         </div>
       </Link>
     );

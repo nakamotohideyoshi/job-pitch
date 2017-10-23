@@ -52,7 +52,7 @@ export default class MyConnections extends Component {
 
   onMessage = (application, event) => {
     utils.setShared('messages_selected_id', application.id);
-    browserHistory.push('/messages');
+    browserHistory.push('/recruiter/messages');
     if (event) {
       event.stopPropagation();
     }
@@ -65,6 +65,7 @@ export default class MyConnections extends Component {
       'Confirm',
       'Are you sure you want to delete this applicaton?',
       [
+        { label: 'Cancel' },
         {
           label: 'Delete',
           style: 'success',
@@ -85,7 +86,6 @@ export default class MyConnections extends Component {
               });
           }
         },
-        { label: 'Cancel' },
       ]
     );
 
@@ -136,27 +136,25 @@ export default class MyConnections extends Component {
         className={styles.application}
         onClick={() => this.onDetail(application)}
       >
-        <div>
-          <img src={image} alt="" />
-          {
-            !shortlisted && application.shortlisted &&
-            <div className={styles.star}>
-              <i className="fa fa-star" />
-            </div>
-          }
-          <div className={styles.content}>
-            <div className={styles.name}>{fullName}</div>
-            <div className={styles.desc}>{jobSeeker.description}</div>
+        <img src={image} alt="" />
+        {
+          !shortlisted && application.shortlisted &&
+          <div className={styles.star}>
+            <i className="fa fa-star" />
           </div>
-          <div className={styles.control}>
-            <Button
-              bsStyle="success"
-              onClick={e => this.onMessage(application, e)}
-            >Message</Button>
-            <Button
-              onClick={e => this.onRemove(application, e)}
-            >Remove</Button>
-          </div>
+        }
+        <div className={styles.content}>
+          <div className={styles.name}>{fullName}</div>
+          <div className={styles.desc}>{jobSeeker.description}</div>
+        </div>
+        <div className={styles.controls}>
+          <Button
+            bsStyle="success"
+            onClick={e => this.onMessage(application, e)}
+          >Message</Button>
+          <Button
+            onClick={e => this.onRemove(application, e)}
+          >Remove</Button>
         </div>
       </Link>
     );

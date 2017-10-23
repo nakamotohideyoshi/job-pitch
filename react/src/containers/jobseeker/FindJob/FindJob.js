@@ -53,6 +53,7 @@ export default class FindJob extends Component {
         'Alert',
         'You need to record your pitch video to apply.',
         [
+          { label: 'Cancel' },
           {
             label: 'Record my pitch',
             style: 'success',
@@ -60,7 +61,6 @@ export default class FindJob extends Component {
               browserHistory.push('/jobseeker/record');
             }
           },
-          { label: 'Cancel' },
         ]
       );
     } else {
@@ -68,6 +68,7 @@ export default class FindJob extends Component {
         'Confirm',
         'Yes, I want to apply to this job',
         [
+          { label: 'Cancel' },
           {
             label: 'Apply',
             style: 'success',
@@ -89,7 +90,6 @@ export default class FindJob extends Component {
                 });
             }
           },
-          { label: 'Cancel' },
         ]
       );
     }
@@ -106,6 +106,7 @@ export default class FindJob extends Component {
       'Confirm',
       'Are you sure you are not interested in this job?',
       [
+        { label: 'Cancel' },
         {
           label: 'I\'m Sure',
           style: 'success',
@@ -114,7 +115,6 @@ export default class FindJob extends Component {
             this.setState({ jobs });
           }
         },
-        { label: 'Cancel' },
       ]
     );
 
@@ -152,22 +152,22 @@ export default class FindJob extends Component {
         className={styles.job}
         onClick={() => this.onDetail(job)}
       >
-        <div>
-          <img src={image} alt="" />
-          <div className={styles.content} >
+        <img src={image} alt="" />
+        <div className={styles.content} >
+          <div className={styles.info}>
             <div className={styles.title}>{job.title}</div>
-            <div className={styles.distance}>{job.distance}</div>
-            <div className={styles.desc}>{job.description}</div>
+            <span className={styles.distance}>{job.distance}</span>
           </div>
-          <div className={styles.controls}>
-            <Button
-              bsStyle="success"
-              onClick={e => this.onApply(job, e)}
-            >Apply</Button>
-            <Button
-              onClick={e => this.onRemove(job, e)}
-            >Remove</Button>
-          </div>
+          <div className={styles.desc}>{job.description}</div>
+        </div>
+        <div className={styles.controls}>
+          <Button
+            bsStyle="success"
+            onClick={e => this.onApply(job, e)}
+          >Apply</Button>
+          <Button
+            onClick={e => this.onRemove(job, e)}
+          >Remove</Button>
         </div>
       </Link>
     );

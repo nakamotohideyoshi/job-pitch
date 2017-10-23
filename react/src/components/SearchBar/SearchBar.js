@@ -36,7 +36,7 @@ export default class SearchBar extends Component {
     const { placeholder, className } = this.props;
     const { text } = this.state;
     return (
-      <div className={[styles.container, className].join(' ')}>
+      <div className={[styles.searchBar, className].join(' ')}>
         <FormControl
           type="text"
           value={text || ''}

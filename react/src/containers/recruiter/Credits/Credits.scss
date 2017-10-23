@@ -5,45 +5,35 @@
   
   .business {
     display: block;
-    text-decoration: none !important;
-    padding: 0 20px;
     margin-bottom: 30px;
+    text-decoration: none !important;
   
-    > div {
-      display: flex;
-      padding: 15px 0;
-  
-      img {
-        width: 50px;
-        height: 50px;
-        border-radius: 25px;
-        margin-right: 20px;        
-      }
-    
-      .content {
-        flex: 1;
-        display: grid;
-    
-        .name {
-          font-size: 16px;
-          font-weight: 500;
-          white-space: nowrap;
-          text-overflow: ellipsis;
-          overflow: hidden;
-        }
-
-        .tokens {
-          white-space: nowrap;
-          text-overflow: ellipsis;
-          overflow: hidden;
-        }
-      }
+    img {
+      float: left;
+      width: 50px;
+      height: 50px;
+      border-radius: 25px;
+      margin: 15px 0 15px 20px;  
     }
-  }
   
-  .business:hover {
-    .name {
-      color: $primary-color;
+    .content {
+      display: inline-flex;
+      flex-direction: column;
+      justify-content: space-evenly;
+      width: calc(100% - 105px);
+      height: 50px;
+      margin: 15px 20px 15px 15px;
+  
+      > div {
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
+      }
+  
+      .name {
+        font-size: 16px;
+        font-weight: 500;
+      }
     }
   }
 }

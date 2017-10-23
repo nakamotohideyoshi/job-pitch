@@ -161,17 +161,28 @@ export function getItemByName(array, name) {
   return array.filter(item => item.name === name)[0];
 }
 
-export function getApplicationStatusByName(name) {
-  return ApiClient.shared().applicationStatuses.filter(item => item.name === name)[0];
-}
-
 export function getSexById(id) {
   return ApiClient.shared().sexes.filter(item => item.id === id)[0];
 }
 
-export function getJobStatus(job) {
-  const i = _.findIndex(ApiClient.shared().jobStatuses, { id: job.status });
-  return ApiClient.shared().jobStatuses[i].name;
+export function getApplicationStatusByName(name) {
+  return ApiClient.shared().applicationStatuses.filter(item => item.name === name)[0];
+}
+
+export function getJobStatusByName(name) {
+  return ApiClient.shared().jobStatuses.filter(item => item.name === name)[0];
+}
+
+export function getSectorById(id) {
+  return ApiClient.shared().sectors.filter(item => item.id === id)[0];
+}
+
+export function getContractById(id) {
+  return ApiClient.shared().contracts.filter(item => item.id === id)[0];
+}
+
+export function getHoursById(id) {
+  return ApiClient.shared().hours.filter(item => item.id === id)[0];
 }
 
 // export function getTempJobSeekers() {
@@ -627,14 +638,14 @@ export function getJobStatus(job) {
 //   return JSON.parse(data);
 // }
 
-// export function getTempProducts() {
-//   const data = `[
-//     { "product_code": "product1", "tokens": 10, "price": 20 },
-//     { "product_code": "product2", "tokens": 20, "price": 30 },
-//     { "product_code": "product3", "tokens": 30, "price": 40 }
-//   ]`;
-//   return JSON.parse(data);
-// }
+export function getTempProducts() {
+  const data = `[
+    { "product_code": "product1", "tokens": 10, "price": 20 },
+    { "product_code": "product2", "tokens": 20, "price": 30 },
+    { "product_code": "product3", "tokens": 30, "price": 40 }
+  ]`;
+  return JSON.parse(data);
+}
 
 // export function getTempJobs() {
 //   const data = `[

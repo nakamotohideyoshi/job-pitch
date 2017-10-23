@@ -69,6 +69,7 @@
         z-index: 3;
         a {
           color: #fff !important;
+          cursor: pointer;
         }
       }
       li.active::before, li.active::after {

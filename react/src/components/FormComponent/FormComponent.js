@@ -163,6 +163,8 @@ export default class FormComponent extends Component {
   }
 
   ImageField = ({ name }) => {
+    let dropzoneRef;
+
     const onChange = files => {
       const image = this.state[name] || {};
       image.file = files && files[0];
@@ -179,15 +181,27 @@ export default class FormComponent extends Component {
         image.orientation = undefined;
       }
       this.setState({ [name]: image });
+      FormComponent.needToSave = this.state.needToSave;
     };
-    const onRemove = () => onChange();
+
+    const onRemove = event => {
+      onChange();
+      event.preventDefault();
+    };
+
+    const onOpen = event => {
+      dropzoneRef.open();
+      event.preventDefault();
+    };
 
     const image = this.state[name] || {};
+
     return (
       <div className={styles.imageUploader}>
         <Dropzone
           accept="image/jpeg, image/png"
           multiple={false}
+          ref={node => { dropzoneRef = node; }}
           onDrop={onChange}
         >
           <div
@@ -196,7 +210,10 @@ export default class FormComponent extends Component {
           />
         </Dropzone>
         {
-          image.exist && <button className="link-btn" onClick={onRemove}>Remove Logo</button>
+          image.exist ?
+            <button className="link-btn" onClick={onRemove}>Remove Logo</button>
+          :
+            <button className="link-btn" onClick={onOpen}>Add Logo</button>
         }
       </div>
     );

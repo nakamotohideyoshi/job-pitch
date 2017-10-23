@@ -31,12 +31,8 @@
     .content {
       padding: 45px;
 
-      h5 {
+      h5 + h5 {
         margin-top: 20px;
-      }
-
-      h5:first-child {
-        margin-top: 0;
       }
     }
   }

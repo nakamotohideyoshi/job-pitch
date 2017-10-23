@@ -43,7 +43,7 @@ export default class Reset extends FormComponent {
             <FormGroup>
               <ControlLabel>Email Address</ControlLabel>
               <this.TextField
-                type="text"
+                type="email"
                 name="email"
                 onKeyUp={this.onKeyUp}
               />

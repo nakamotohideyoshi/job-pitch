@@ -77,7 +77,7 @@ export default class ItemList extends Component {
         {
           this.props.items.length === 0 ?
             renderEmpty() :
-            <span>No search results.</span>
+            <span>No search results</span>
         }
       </div>
     );
@@ -86,7 +86,7 @@ export default class ItemList extends Component {
   render() {
     const { items, onFilter, buttons, className } = this.props;
     return (
-      <div className={[styles.root, className].join(' ')}>
+      <div className={[styles.itemList, className].join(' ')}>
         {
           (onFilter || buttons.length) &&
           <div className={styles.header}>

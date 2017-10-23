@@ -33,7 +33,7 @@ export default class MyApplications extends Component {
 
   onMessage = (application, event) => {
     utils.setShared('messages_selected_id', application.id);
-    browserHistory.push('/messages');
+    browserHistory.push('/jobseeker/messages');
     if (event) {
       event.stopPropagation();
     }
@@ -59,19 +59,17 @@ export default class MyApplications extends Component {
         className={styles.application}
         onClick={() => this.onDetail(application)}
       >
-        <div>
-          <img src={image} alt="" />
-          <div className={styles.content} >
-            <div className={styles.title}>{job.title}</div>
-            <div className={styles.subTitle}>{jobFullName}</div>
-            <div className={styles.desc}>{job.description}</div>
-          </div>
-          <div className={styles.controls}>
-            <Button
-              bsStyle="success"
-              onClick={e => this.onMessage(application, e)}
-            >Message</Button>
-          </div>
+        <img src={image} alt="" />
+        <div className={styles.content} >
+          <div className={styles.title}>{job.title}</div>
+          <div className={styles.subTitle}>{jobFullName}</div>
+          <div className={styles.desc}>{job.description}</div>
+        </div>
+        <div className={styles.controls}>
+          <Button
+            bsStyle="success"
+            onClick={e => this.onMessage(application, e)}
+          >Message</Button>
         </div>
       </Link>
     );

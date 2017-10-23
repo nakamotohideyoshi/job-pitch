@@ -1,11 +1,10 @@
 @import '../../theme/variables.scss';
 
-.container {
+.searchBar {
   position: relative;
 
   input {
-    padding-left: 30px;
-    padding-right: 30px;
+    padding: 6px 30px;
   }
 
   i {
@@ -17,9 +16,9 @@
 
   button {
     position: absolute;
-    top: 7px;
-    right: 7px;
-    padding: 3px;
-    color: inherit !important;
+    top: 5px;
+    right: 5px;
+    padding: 5px;
+    color: $text-color1;
   }
 }

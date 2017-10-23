@@ -1,19 +1,18 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Link } from 'react-router';
 import Form from 'react-bootstrap/lib/Form';
 import FormGroup from 'react-bootstrap/lib/FormGroup';
 import ControlLabel from 'react-bootstrap/lib/ControlLabel';
 import { FormComponent } from 'components';
 import ApiClient from 'helpers/ApiClient';
 import * as utils from 'helpers/utils';
-import _ from 'lodash';
 import styles from './JobEdit.scss';
 
 export default class JobEdit extends FormComponent {
+
   static propTypes = {
-    job: PropTypes.object,
     parent: PropTypes.object.isRequired,
+    job: PropTypes.object,
   }
 
   static defaultProps = {
@@ -21,16 +20,13 @@ export default class JobEdit extends FormComponent {
   }
 
   constructor(props) {
-    const api = ApiClient.shared();
     const { job } = props;
     const formModel = Object.assign({}, job);
-    if (!formModel.id) {
-      formModel.active = true;
-    } else {
-      formModel.active = utils.getJobStatus(job, api.jobStatuses) === 'OPEN';
-      formModel.sector = api.sectors.filter(item => item.id === job.sector)[0];
-      formModel.contract = api.contracts.filter(item => item.id === job.contract)[0];
-      formModel.hours = api.hours.filter(item => item.id === job.hours)[0];
+    if (formModel.id) {
+      formModel.active = job.status === utils.getJobStatusByName('OPEN').id;
+      formModel.sector = utils.getSectorById(job.sector);
+      formModel.contract = utils.getContractById(job.contract);
+      formModel.hours = utils.getHoursById(job.hours);
     }
     const logo = {
       default: utils.getWorkplaceLogo(job.location_data),
@@ -39,6 +35,7 @@ export default class JobEdit extends FormComponent {
     };
 
     super(props, { formModel, logo, needToSave: true });
+    this.manager = this.props.parent.manager;
     this.api = ApiClient.shared();
     this.loadImage(logo, 'logo');
   }
@@ -48,8 +45,7 @@ export default class JobEdit extends FormComponent {
 
     const { formModel, logo } = this.state;
     const data = Object.assign(this.props.job, formModel);
-    const i = _.findIndex(this.api.jobStatuses, { name: formModel.active ? 'OPEN' : 'CLOSED' });
-    data.status = this.api.jobStatuses[i].id;
+    data.status = utils.getJobStatusByName(formModel.active ? 'OPEN' : 'CLOSED').id;
     data.sector = formModel.sector && formModel.sector.id;
     data.contract = formModel.contract && formModel.contract.id;
     data.hours = formModel.hours && formModel.hours.id;
@@ -58,6 +54,8 @@ export default class JobEdit extends FormComponent {
 
     this.api.saveUserJob(data).then(
       job => {
+        formModel.id = job.id;
+
         if (logo.file) {
           return this.api.uploadJobLogo(
             {
@@ -75,14 +73,16 @@ export default class JobEdit extends FormComponent {
       }
     ).then(
       () => {
-        this.props.parent.onRefresh();
-        this.props.parent.onEdit();
-        utils.successNotif('Saved!');
         FormComponent.needToSave = false;
+        utils.successNotif('Saved!');
+        this.manager.loadJobs();
+        this.onClose();
       },
       () => this.setState({ saving: false })
     );
   }
+
+  onClose = () => this.manager.closeEdit(this.props.parent);
 
   render() {
     return (
@@ -90,7 +90,6 @@ export default class JobEdit extends FormComponent {
 
         <div className={styles.header}>
           <h4>{this.props.job.id ? 'Edit' : 'Add'} Job</h4>
-          <Link onClick={() => this.props.parent.onEdit()}>{'<< Back'}</Link>
         </div>
 
         <Form>
@@ -150,7 +149,7 @@ export default class JobEdit extends FormComponent {
             labels={['Save', 'Saving...']}
             onClick={this.onSave}
             cancelLabel="Cancel"
-            onCancel={() => this.props.parent.onEdit()}
+            onCancel={this.onClose}
           />
         </div>
       </div>

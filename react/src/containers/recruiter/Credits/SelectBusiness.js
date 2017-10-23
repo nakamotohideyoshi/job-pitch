@@ -35,12 +35,10 @@ export default class SelectBusiness extends Component {
         key={business.id}
         className={[styles.business, selectedStyle].join(' ')}
         onClick={() => this.onSelect(business)}>
-        <div>
-          <img src={image} alt="" />
-          <div className={styles.content} >
-            <div className={styles.name}>{business.name}</div>
-            <div className={styles.tokens}>{strTokens}</div>
-          </div>
+        <img src={image} alt="" />
+        <div className={styles.content} >
+          <div className={styles.name}>{business.name}</div>
+          <div className={styles.tokens}>{strTokens}</div>
         </div>
       </Link>
     );

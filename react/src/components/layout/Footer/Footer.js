@@ -25,6 +25,7 @@ export default class Footer extends Component {
         'Confirm',
         'You did not save your changes.',
         [
+          { label: 'Cancel' },
           {
             label: 'Ok',
             style: 'success',
@@ -33,7 +34,6 @@ export default class Footer extends Component {
               browserHistory.push(to);
             }
           },
-          { label: 'Cancel' },
         ]
       );
     } else {

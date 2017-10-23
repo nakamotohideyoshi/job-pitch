@@ -55,6 +55,7 @@ export default class MyApplications extends Component {
       'Confirm',
       'Yes, I want to make this connection (1 credit)',
       [
+        { label: 'Cancel' },
         {
           label: 'Connect',
           style: 'success',
@@ -79,7 +80,6 @@ export default class MyApplications extends Component {
               });
           }
         },
-        { label: 'Cancel' },
       ]
     );
 
@@ -95,6 +95,7 @@ export default class MyApplications extends Component {
       'Confirm',
       'Are you sure you want to delete this applicaton?',
       [
+        { label: 'Cancel' },
         {
           label: 'Delete',
           style: 'success',
@@ -115,7 +116,6 @@ export default class MyApplications extends Component {
               });
           }
         },
-        { label: 'Cancel' },
       ]
     );
 
@@ -151,22 +151,20 @@ export default class MyApplications extends Component {
         className={styles.application}
         onClick={() => this.onDetail(application)}
       >
-        <div>
-          <img src={image} alt="" />
-          <div className={styles.content} >
-            <div className={styles.name}>{fullName}</div>
-            <div className={styles.desc}>{jobSeeker.description}</div>
-          </div>
-          <div className={styles.controls}>
-            <Button
-              bsStyle="success"
-              disabled={this.props.job.location_data.business_data.tokens === 0}
-              onClick={e => this.onConnect(application, e)}
-            >Connect</Button>
-            <Button
-              onClick={e => this.onRemove(application, e)}
-            >Remove</Button>
-          </div>
+        <img src={image} alt="" />
+        <div className={styles.content} >
+          <div className={styles.name}>{fullName}</div>
+          <div className={styles.desc}>{jobSeeker.description}</div>
+        </div>
+        <div className={styles.controls}>
+          <Button
+            bsStyle="success"
+            disabled={this.props.job.location_data.business_data.tokens === 0}
+            onClick={e => this.onConnect(application, e)}
+          >Connect</Button>
+          <Button
+            onClick={e => this.onRemove(application, e)}
+          >Remove</Button>
         </div>
       </Link>
     );

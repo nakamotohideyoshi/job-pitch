@@ -151,7 +151,7 @@ class JobSeekerSerializer(serializers.ModelSerializer):
 
     def validate_national_insurance_number(self, value):
         value = value.replace(' ', '').upper()
-        if not self.ni_regex.match(value):
+        if value and not self.ni_regex.match(value):
             raise serializers.ValidationError("Invalid National Insurance number")
         value = " ".join(self.pair_regex.findall(value))
         return value

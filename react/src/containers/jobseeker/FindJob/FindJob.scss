@@ -1,82 +1,96 @@
 @import '../../../theme/variables.scss';
 
 .job {
+  position: relative;
   display: block;
   text-decoration: none !important;
-  padding: 0 30px;
-  margin: -1px 0;
+  // overflow: hidden;
 
-  > div {
-    display: flex;
-    padding: 20px 0;
-    margin: -1px 0;
-    border-top: 1px solid $border-color;
-    border-bottom: 1px solid $border-color;
+  img {
+    float: left;
+    width: 80px;
+    height: 80px;
+    border-radius: 40px;
+    margin: 20px 0 20px 30px;        
+  }
 
-    img {
-      width: 80px;
-      height: 80px;
-      border-radius: 40px;
-      margin-right: 20px;        
+  .content {
+    display: inline-flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    width: calc(100% - 160px);
+    height: 80px;
+    margin: 20px 30px 20px 20px;
+
+    > div, .title {
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      overflow: hidden;
     }
 
-    .content {
-      flex: 1;
-      display: grid;
+    .info {
+      display: flex;
+      justify-content: space-between;
 
       .title {
         font-size: 16px;
         font-weight: 500;
-        white-space: nowrap;
-        text-overflow: ellipsis;
-        overflow: hidden;
       }
-
+  
       .distance {
         color: $text-color2;
-      }
-      
-      .desc {
-        white-space: nowrap;
-        text-overflow: ellipsis;
-        overflow: hidden;
+        margin-left: 15px;
       }
     }
+  }
 
-    .controls {
-      display: none;      
+  .controls {
+    position: absolute;
+    display: none;//display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: 150px;
+    top: 0;
+    bottom: 0;
+    right: 0;//-150px;
+    padding: 0 30px;
+    background-color: rgba(255,255,255,0.75);
+    // transition: right 0.3s ease;
+    
+    button {
+      padding: 4px 12px;
+      margin: 5px 0;
     }
+  }
+
+  + .job {
+    .controls {
+      border-top: 1px solid $border-color;
+    }
+  }
+
+  + .job::before {
+    content: '';
+    display: block;
+    border-top: 1px solid $border-color;
+    margin: 0 30px;
   }
 }
 
 a.job:hover {
   background-color: $list-item-hover-color;
-  border-top: 1px solid $border-color;
-  border-bottom: 1px solid $border-color;
-  
-  .title {
-    color: $primary-color;
-  }
 
   .controls {
-    display: flex;
-    flex-direction: column;
-    // justify-content: center;
-    margin-left: 5px;
-
-    button {
-      padding: 4px 12px;
-      margin-bottom: 8px;
-    }
+    display: flex;// right: 0;    
   }
 }
 
-div.job {
-  cursor: initial;
+a.job:hover::before,
+a.job:hover + .job::before {
+  margin: 0;
+}
 
-  > div {
-    position: relative;
-    height: 122px;
-    padding: 0;
-  }
+div.job > div {
+  position: relative;
+  height: 120px;
 }

@@ -357,7 +357,7 @@ export default class Profile extends FormComponent {
                 />
                 <br /><br />
                 <this.CheckBoxField
-                  label="All of the information provided is truthful to the best of my knowledge."
+                  label="I confirm that all information provided is truthful and confirm I have the right to work in the UK"
                   name="truth_confirmation"
                 />
               </FormGroup>

@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import Modal from 'react-bootstrap/lib/Modal';
 import Button from 'react-bootstrap/lib/Button';
 import { CheckBox, Loading } from 'components';
+import ApiClient from 'helpers/ApiClient';
 import * as utils from 'helpers/utils';
 import styles from './JobSeekerDetail.scss';
 
@@ -30,6 +31,7 @@ export default class JobSeekerDetail extends Component {
     this.state = {
       shortlisted: application && application.shortlisted
     };
+    this.api = ApiClient.shared();
   }
 
   onPlayPitch = () => window.open(this.props.jobSeeker.pitches[0].video);
@@ -89,6 +91,7 @@ export default class JobSeekerDetail extends Component {
     const established = application && application.status === utils.getApplicationStatusByName('ESTABLISHED').id;
 
     let contact;
+    // let nationality;
     if (established) {
       contact = jobSeeker.email_public ? jobSeeker.email : '';
       if (jobSeeker.mobile_public && jobSeeker.mobile) {
@@ -97,6 +100,9 @@ export default class JobSeekerDetail extends Component {
       if (contact === '') {
         contact = 'No contact details supplied';
       }
+      // if (jobSeeker.nationality_public && jobSeeker.nationality) {
+      //   nationality = this.api.nationalities.filter(item => item.id === jobSeeker.nationality)[0];
+      // }
     }
 
     return (
@@ -149,6 +155,13 @@ export default class JobSeekerDetail extends Component {
             </div>
 
             {
+              // nationality &&
+              // <div className={styles.nationality}>
+              //   <i className="fa fa-check-square-o" aria-hidden="true" />
+              //   {nationality.name}
+              // </div>
+            }
+            {
               jobSeeker.has_references &&
               <div className={styles.available}>
                 <i className="fa fa-check-square-o" aria-hidden="true" />
@@ -159,7 +172,7 @@ export default class JobSeekerDetail extends Component {
               jobSeeker.truth_confirmation &&
               <div className={styles.truthful}>
                 <i className="fa fa-check-square-o" aria-hidden="true" />
-                I confirm that all information provided is truthful to the best of my knowledge
+                I confirm that all information provided is truthful and confirm I have the right to work in the UK
               </div>
             }
           </div>

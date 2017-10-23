@@ -1,93 +1,77 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { browserHistory, Link } from 'react-router';
+import { browserHistory } from 'react-router';
 import Button from 'react-bootstrap/lib/Button';
-import ApiClient from 'helpers/ApiClient';
 import * as utils from 'helpers/utils';
-import _ from 'lodash';
 import styles from './JobInterface.scss';
 
 export default class JobInterface extends Component {
+
   static propTypes = {
-    job: PropTypes.object.isRequired,
     parent: PropTypes.object.isRequired,
+    job: PropTypes.object.isRequired,
   }
 
-  constructor(props) {
-    super(props);
-
-    this.api = ApiClient.shared();
-    const i = _.findIndex(this.api.jobStatuses, { name: 'CLOSED' });
-    this.closedStatus = this.api.jobStatuses[i].id;
-  }
-
-  onEdit = () => {
-    this.props.parent.onEdit(this.props.job);
-  }
-
-  onRemove = () => {
-    this.props.parent.onRemove(this.props.job);
-  }
-
-  onFindTalent = () => {
-    utils.setShared('applications_selected_tab', 1);
-    browserHistory.push(`/recruiter/applications/${this.props.job.id}`);
-  }
-
-  onApplications = () => {
-    utils.setShared('applications_selected_tab', 2);
-    browserHistory.push(`/recruiter/applications/${this.props.job.id}`);
-  }
-
-  onConnections = () => {
-    utils.setShared('applications_selected_tab', 3);
-    browserHistory.push(`/recruiter/applications/${this.props.job.id}`);
-  }
-
-  onShortlist= () => {
-    utils.setShared('applications_selected_tab', 4);
+  onGoApplications = tabKey => {
+    utils.setShared('applications_selected_tab', tabKey);
     browserHistory.push(`/recruiter/applications/${this.props.job.id}`);
   }
 
   render() {
-    const closed = this.props.job.status === this.closedStatus;
+    const { parent, job } = this.props;
+    const closed = job.status === utils.getJobStatusByName('CLOSED').id;
+    const loading = job.deleting || job.updating;
     return (
       <div className={styles.root}>
-        <div className={styles.header}>
-          <h4>{this.props.job.title}{closed ? ' (closed)' : ''}</h4>
-          <Link onClick={() => this.props.parent.onInterface()}>{'<< Back'}</Link>
-        </div>
+        <h4>{job.title}</h4>
 
         <div className={styles.buttons}>
           <Button
             bsStyle="success"
-            onClick={this.onEdit}
+            disabled={loading}
+            onClick={() => parent.onEdit(job)}
           >Edit</Button>
+
           <Button
             bsStyle="success"
-            onClick={this.onRemove}
-          >Remove</Button>
+            disabled={loading}
+            onClick={() => parent.onRemove(job)}
+          >{job.deleting ? 'Deleting...' : 'Delete'}</Button>
+
+          {
+            closed &&
+            <Button
+              bsStyle="success"
+              disabled={loading}
+              onClick={() => parent.reactivateJob(job)}
+            >{job.updating ? 'Reactivating...' : 'Reactivate'}</Button>
+          }
+
           <Button
             bsStyle="success"
-            disabled={closed}
-            onClick={this.onFindTalent}
+            disabled={loading || closed}
+            onClick={() => this.onGoApplications(1)}
           >Find talent</Button>
+
           <Button
             bsStyle="success"
-            disabled={closed}
-            onClick={this.onApplications}
+            disabled={loading || closed}
+            onClick={() => this.onGoApplications(2)}
           >Applications</Button>
+
           <Button
             bsStyle="success"
-            disabled={closed}
-            onClick={this.onConnections}
+            disabled={loading || closed}
+            onClick={() => this.onGoApplications(3)}
           >Connections</Button>
+
           <Button
             bsStyle="success"
-            disabled={closed}
-            onClick={this.onShortlist}
+            disabled={loading || closed}
+            onClick={() => this.onGoApplications(4)}
           >Shortlist</Button>
         </div>
+        <span>{closed ? 'CLOSED' : ''}</span>
       </div>
     );
   }

@@ -17,3 +17,15 @@
     width: 300px;
   }
 }
+
+.popup {
+  :global {
+    .modal-body p {
+      white-space: pre-line;
+    }
+    .modal-footer button {
+      min-width: 100px;
+      margin-left: 15px !important;
+    }
+  }
+}

@@ -1,69 +1,66 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Link } from 'react-router';
 import { connect } from 'react-redux';
+import { Link, browserHistory } from 'react-router';
 import Button from 'react-bootstrap/lib/Button';
 import { ItemList, Loading } from 'components';
 import ApiClient from 'helpers/ApiClient';
 import * as utils from 'helpers/utils';
 import * as commonActions from 'redux/modules/common';
-import _ from 'lodash';
 import BusinessEdit from './BusinessEdit';
 import styles from './BusinessList.scss';
 
 @connect(
-  () => ({
-  }),
+  () => ({ }),
   { ...commonActions }
 )
 export default class BusinessList extends Component {
+
   static propTypes = {
     alertShow: PropTypes.func.isRequired,
-    selectedId: PropTypes.number,
     parent: PropTypes.object.isRequired,
+    businesses: PropTypes.array,
+    selectedId: PropTypes.number,
   }
 
   static defaultProps = {
+    businesses: null,
     selectedId: null,
   }
 
   constructor(props) {
     super(props);
-    this.state = {
-      firstTime: utils.getShared('first-time')
-    };
+    this.state = { };
+    this.manager = this.props.parent;
+    this.manager.businessList = this;
     this.api = ApiClient.shared();
-    this.props.parent.businessList = this;
   }
 
-  componentDidMount() {
-    this.onRefresh();
-  }
-
-  onGetStart = () => {
-    utils.setShared('first-time', '2');
-    this.setState({ firstTime: '2' });
-    this.onAdd();
-  }
-
-  onRefresh = () => {
-    this.setState({ businesses: null });
-    this.api.getUserBusinesses('')
-      .then(businesses => this.setState({ businesses }));
-  }
-
-  onFilter = (business, filterText) => business.name.toLowerCase().indexOf(filterText) > -1;
+  onFilter = (business, filterText) =>
+    business.name.toLowerCase().indexOf(filterText) > -1;
 
   onAdd = () => {
-    this.setState({ editingBusiness: {} });
-  }
+    if (this.api.user.can_create_businesses || this.props.businesses.length === 0) {
+      if (utils.getShared('first-time') === '1') {
+        utils.setShared('first-time', '2');
+      }
 
-  onEdit = (business, event) => {
-    this.setState({ editingBusiness: business });
-
-    if (event) {
-      event.stopPropagation();
+      this.setState({ editingData: {} });
+      return;
     }
+
+    this.props.alertShow(
+      'More than one company?',
+      'More than one company?\nGet in touch!',
+      [
+        { label: 'No' },
+        {
+          label: 'Contact Us',
+          style: 'success',
+          callback: () => browserHistory.push('/resources/contactus')
+        },
+      ]
+    );
   }
 
   onRemove = (business, event) => {
@@ -71,32 +68,12 @@ export default class BusinessList extends Component {
       'Confirm',
       `Are you sure you want to delete ${business.name}`,
       [
+        { label: 'Cancel' },
         {
           label: 'Delete',
           style: 'success',
-          callback: () => {
-            business.loading = true;
-            this.setState({ businesses: this.state.businesses });
-
-            this.api.deleteUserBusiness(business.id).then(
-              () => {
-                _.remove(this.state.businesses, item => item.id === business.id);
-                this.setState({ businesses: this.state.businesses });
-
-                if (this.props.selectedId === business.id) {
-                  this.props.parent.onSelectedBusiness();
-                }
-
-                utils.successNotif('Deleted!');
-              },
-              () => {
-                business.loading = false;
-                this.setState({ businesses: this.state.businesses });
-              }
-            );
-          }
+          callback: () => this.manager.deleteBusiness(business)
         },
-        { label: 'Cancel' },
       ]
     );
 
@@ -105,89 +82,89 @@ export default class BusinessList extends Component {
     }
   }
 
+  onEdit = (business, event) => {
+    this.setState({ editingData: business });
+
+    if (event) {
+      event.stopPropagation();
+    }
+  }
+
   renderItem = business => {
     // check loading
-    if (business.loading) {
+    if (business.deleting) {
       return (
-        <div
-          key={business.id}
-          className={styles.business}
-        >
+        <div key={business.id} className={styles.business}>
           <div><Loading size="25px" /></div>
         </div>
       );
     }
 
     const image = utils.getBusinessLogo(business, true);
-    const count = business.locations.length;
-    const strCount = ` Includes ${count} workplace${count !== 1 ? 's' : ''}`;
+    const workplaceCount = business.locations.length;
+    const info = ` Includes ${workplaceCount} workplace${workplaceCount !== 1 ? 's' : ''}`;
     const selected = this.props.selectedId === business.id ? styles.selected : '';
     return (
       <Link
         key={business.id}
         className={[styles.business, selected].join(' ')}
-        onClick={() => this.props.parent.onSelectedBusiness(business.id)}>
-        <div>
-          <img src={image} alt="" />
-          <div className={styles.content} >
-            <div className={styles.name}>{business.name}</div>
-            <div className={styles.comment}>{strCount}</div>
-          </div>
-          <div className={styles.controls}>
-            <Button
-              bsStyle="success"
-              onClick={e => this.onEdit(business, e)}
-            >Edit</Button>
-            <Button
-              disabled={this.state.businesses.length === 1}
-              onClick={e => this.onRemove(business, e)}
-            >Remove</Button>
-          </div>
+        onClick={() => this.manager.selectBusiness(business.id)}
+      >
+        <img src={image} alt="" />
+        <div className={styles.content} >
+          <div className={styles.name}>{business.name}</div>
+          <div className={styles.info}>{info}</div>
+        </div>
+        <div className={styles.controls}>
+          <Button
+            bsStyle="success"
+            onClick={e => this.onEdit(business, e)}
+          >Edit</Button>
+          <Button
+            disabled={this.props.businesses.length === 1}
+            onClick={e => this.onRemove(business, e)}
+          >Remove</Button>
         </div>
       </Link>
     );
   };
 
   renderEmpty = () => {
-    if (this.state.firstTime === '1') {
-      return (
-        <div>
-          <span>
-            Hi, Welcome to My Job Pitch <br />
-            Let's start by easily adding your business!
-          </span>
-          <br />
-          <button className="link-btn" onClick={this.onGetStart}>Get started!</button>
-        </div>
-      );
-    }
-
+    const firstTime = utils.getShared('first-time') === '1';
     return (
       <div>
         <span>
           {
-            `You have not added any
-             businesses yet.`
+            firstTime ?
+              `Hi, Welcome to My Job Pitch
+                Let's start by easily adding your business!`
+            :
+              `You have not added any
+                businesses yet.`
           }
         </span>
-        <br />
-        <button className="link-btn" onClick={this.onAdd}>Create business</button>
+        <button className="link-btn" onClick={this.onAdd}>
+          {
+            firstTime ? 'Get started!' : 'Create business'
+          }
+        </button>
       </div>
     );
-  };
+  }
 
   render() {
-    const { editingBusiness } = this.state;
+    const { editingData } = this.state;
     return (
       <div className="board-shadow">
         {
-          editingBusiness ?
+          editingData ?
             <BusinessEdit
-              business={editingBusiness}
               parent={this}
-            /> :
+              business={editingData}
+            />
+          :
             <ItemList
-              items={this.state.businesses}
+              items={this.props.businesses}
               onFilter={this.onFilter}
               buttons={[
                 { label: 'New Business', bsStyle: 'success', onClick: this.onAdd }

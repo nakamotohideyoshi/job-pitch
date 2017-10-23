@@ -1,85 +1,57 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Link } from 'react-router';
 import { connect } from 'react-redux';
+import { Link } from 'react-router';
 import Button from 'react-bootstrap/lib/Button';
 import { ItemList, Loading } from 'components';
 import ApiClient from 'helpers/ApiClient';
 import * as utils from 'helpers/utils';
 import * as commonActions from 'redux/modules/common';
-import _ from 'lodash';
 import WorkplaceEdit from './WorkplaceEdit';
 import styles from './WorkplaceList.scss';
 
 @connect(
-  () => ({
-  }),
+  () => ({ }),
   { ...commonActions }
 )
 export default class WorkplaceList extends Component {
+
   static propTypes = {
     alertShow: PropTypes.func.isRequired,
-    businessId: PropTypes.number,
-    selectedId: PropTypes.number,
     parent: PropTypes.object.isRequired,
+    workplaces: PropTypes.array,
+    selectedId: PropTypes.number,
   }
 
   static defaultProps = {
-    businessId: null,
+    workplaces: null,
     selectedId: null,
   }
 
   constructor(props) {
     super(props);
-    this.state = {
-      firstTime: utils.getShared('first-time')
-    };
+    this.state = { };
+    this.manager = this.props.parent;
+    this.manager.workplaceList = this;
     this.api = ApiClient.shared();
-    this.props.parent.workplaceList = this;
   }
 
-  componentDidMount() {
-    if (this.props.businessId) {
-      this.businessId = this.props.businessId;
-      this.onRefresh();
-    }
-  }
-
-  componentWillReceiveProps(nextProps) {
-    if (this.businessId !== nextProps.businessId) {
-      this.businessId = nextProps.businessId;
-      this.onRefresh();
-    }
-  }
-
-  onRefresh = () => {
-    this.setState({ workplaces: null, editingWorkplace: null });
-    if (this.businessId) {
-      this.api.getUserWorkplaces(`?business=${this.businessId}`)
-        .then(workplaces => this.setState({ workplaces }));
-    }
-  }
-
-  onFilter = (workplace, filterText) => workplace.name.toLowerCase().indexOf(filterText) > -1;
+  onFilter = (workplace, filterText) =>
+    workplace.name.toLowerCase().indexOf(filterText) > -1;
 
   onAdd = () => {
-    if (this.state.firstTime === '2') {
+    if (utils.getShared('first-time') === '2') {
       utils.setShared('first-time', '3');
-      this.setState({ firstTime: '3' });
     }
-    if (this.businessId) {
-      this.setState({
-        editingWorkplace: { business: this.businessId }
-      });
-    }
-  }
 
-  onEdit = (workplace, event) => {
-    this.setState({ editingWorkplace: workplace });
-
-    if (event) {
-      event.stopPropagation();
-    }
+    this.setState({
+      editingData: {
+        business: this.manager.getBusinessId(),
+        email: utils.getCookie('email'),
+        email_public: true,
+        mobile_public: true,
+      }
+    });
   }
 
   onRemove = (workplace, event) => {
@@ -87,32 +59,12 @@ export default class WorkplaceList extends Component {
       'Confirm',
       `Are you sure you want to delete ${workplace.name}`,
       [
+        { label: 'Cancel' },
         {
           label: 'Delete',
           style: 'success',
-          callback: () => {
-            workplace.loading = true;
-            this.setState({ workplaces: this.state.workplaces });
-
-            this.api.deleteUserWorkplace(workplace.id).then(
-              () => {
-                _.remove(this.state.workplaces, item => item.id === workplace.id);
-                this.setState({ workplaces: this.state.workplaces });
-
-                if (this.props.selectedId === workplace.id) {
-                  this.props.parent.onSelectedWorkplace();
-                }
-
-                utils.successNotif('Deleted!');
-              },
-              () => {
-                workplace.loading = false;
-                this.setState({ workplaces: this.state.workplaces });
-              }
-            );
-          }
+          callback: () => this.manager.deleteWorkplace(workplace)
         },
-        { label: 'Cancel' },
       ]
     );
 
@@ -121,43 +73,47 @@ export default class WorkplaceList extends Component {
     }
   }
 
+  onEdit = (workplace, event) => {
+    this.setState({ editingData: workplace });
+
+    if (event) {
+      event.stopPropagation();
+    }
+  }
+
   renderItem = workplace => {
     // check loading
-    if (workplace.loading) {
+    if (workplace.deleting) {
       return (
-        <div
-          key={workplace.id}
-          className={styles.workplace}
-        >
+        <div key={workplace.id} className={styles.workplace}>
           <div><Loading size="25px" /></div>
         </div>
       );
     }
 
     const image = utils.getWorkplaceLogo(workplace, true);
-    const count = workplace.jobs.length;
-    const strCount = ` Includes ${count} job${count !== 1 ? 's' : ''}`;
+    const jobCount = workplace.jobs.length;
+    const info = ` Includes ${jobCount} job${jobCount !== 1 ? 's' : ''}`;
     const selected = this.props.selectedId === workplace.id ? styles.selected : '';
     return (
       <Link
         key={workplace.id}
         className={[styles.workplace, selected].join(' ')}
-        onClick={() => this.props.parent.onSelectedWorkplace(workplace.id)}>
-        <div>
-          <img src={image} alt="" />
-          <div className={styles.content} >
-            <div className={styles.name}>{workplace.name}</div>
-            <div className={styles.comment}>{strCount}</div>
-          </div>
-          <div className={styles.controls}>
-            <Button
-              bsStyle="success"
-              onClick={e => this.onEdit(workplace, e)}
-            >Edit</Button>
-            <Button
-              onClick={e => this.onRemove(workplace, e)}
-            >Remove</Button>
-          </div>
+        onClick={() => this.manager.selectWorkplace(workplace.id)}
+      >
+        <img src={image} alt="" />
+        <div className={styles.content} >
+          <div className={styles.name}>{workplace.name}</div>
+          <div className={styles.info}>{info}</div>
+        </div>
+        <div className={styles.controls}>
+          <Button
+            bsStyle="success"
+            onClick={e => this.onEdit(workplace, e)}
+          >Edit</Button>
+          <Button
+            onClick={e => this.onRemove(workplace, e)}
+          >Remove</Button>
         </div>
       </Link>
     );
@@ -167,36 +123,30 @@ export default class WorkplaceList extends Component {
     <div>
       <span>
         {
-          this.state.firstTime === '2' ?
-          `Great, you've created your business!
-           Now let's create your work place` :
-          'This business doesn\'t seem to have a workplace for your staff'
+          utils.getShared('first-time') === '2' ?
+            `Great, you've created your business!
+            Now let's create your work place`
+          :
+            'This business doesn\'t seem to have a workplace for your staff'
         }
       </span>
-      <br />
       <button className="link-btn" onClick={this.onAdd}>Create workplace</button>
     </div>
   );
 
   render() {
-    if (!this.businessId) {
-      return (
-        <div className="board-shadow">
-        </div>
-      );
-    }
-
-    const { editingWorkplace } = this.state;
+    const { editingData } = this.state;
     return (
       <div className="board-shadow">
         {
-          editingWorkplace ?
+          editingData ?
             <WorkplaceEdit
-              workplace={editingWorkplace}
               parent={this}
-            /> :
+              workplace={editingData}
+            />
+          :
             <ItemList
-              items={this.state.workplaces}
+              items={this.props.workplaces}
               onFilter={this.onFilter}
               buttons={[
                 { label: 'New Workplace', bsStyle: 'success', onClick: this.onAdd }

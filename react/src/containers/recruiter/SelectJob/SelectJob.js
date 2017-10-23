@@ -41,24 +41,26 @@ export default class SelectJob extends Component {
     const jobFullName = utils.getJobFullName(job);
     const tokens = job.location_data.business_data.tokens;
     const strTokens = `${tokens} Credit${tokens !== 1 ? 's' : ''}`;
-    const closed = utils.getJobStatus(job) === 'CLOSED';
+    const closed = job.status === utils.getJobStatusByName('CLOSED').id;
+
+    if (closed) {
+      return '';
+    }
 
     return (
       <Link
         key={job.id}
         className={`${styles.job} ${closed ? styles.closed : ''}`}
-        onClick={closed ? () => {} : () => this.onSelect(job)}
+        onClick={() => this.onSelect(job)}
       >
-        <div>
-          <img src={image} alt="" />
-          <div className={styles.content} >
-            <div className={styles.title}>{job.title}</div>
-            <div className={styles.info}>
-              <div>{jobFullName}</div>
-              <span>{strTokens}</span>
-            </div>
-            <div className={styles.desc}>{job.description}</div>
+        <img src={image} alt="" />
+        <div className={styles.content} >
+          <div className={styles.title}>{job.title}</div>
+          <div className={styles.info}>
+            <div>{jobFullName}</div>
+            <span>{strTokens}</span>
           </div>
+          <div className={styles.desc}>{job.description}</div>
         </div>
       </Link>
     );

@@ -85,16 +85,14 @@ export default class JSMessages extends Component {
         className={[styles.application, deleted, selected].join(' ')}
         onClick={() => this.onSelectedApplication(application)}
       >
-        <div>
-          <img src={image} alt="" />
-          <div className={styles.content} >
-            <div className={styles.name}>
-              <div>{name}</div>
-              <span>{strDate}</span>
-            </div>
-            <div className={styles.subTitle}>{subTitle}</div>
-            <div className={styles.message}>{comment}</div>
+        <img src={image} alt="" />
+        <div className={styles.content} >
+          <div className={styles.info}>
+            <div>{name}</div>
+            <span>{strDate}</span>
           </div>
+          <div className={styles.subTitle}>{subTitle}</div>
+          <div className={styles.message}>{comment}</div>
         </div>
       </Link>
     );

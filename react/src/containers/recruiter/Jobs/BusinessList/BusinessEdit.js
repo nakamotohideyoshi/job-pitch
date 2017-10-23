@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Link } from 'react-router';
 import { connect } from 'react-redux';
 import { browserHistory } from 'react-router';
 import Form from 'react-bootstrap/lib/Form';
@@ -15,9 +14,12 @@ import styles from './BusinessEdit.scss';
 
 @connect(
   () => ({}),
-  { ...commonActions })
+  { ...commonActions }
+)
 export default class BusinessEdit extends FormComponent {
+
   static propTypes = {
+    alertShow: PropTypes.func.isRequired,
     setPermission: PropTypes.func.isRequired,
     business: PropTypes.object,
     parent: PropTypes.object.isRequired,
@@ -35,14 +37,38 @@ export default class BusinessEdit extends FormComponent {
       url: utils.getBusinessLogo(business),
       exist: business.images && business.images.length > 0,
     };
+
     super(props, { formModel, logo, needToSave: true });
+    this.manager = this.props.parent.manager;
     this.api = ApiClient.shared();
     this.loadImage(logo, 'logo');
   }
 
   onAddCredit = () => {
-    utils.setShared('credits_business_id', this.props.business.id);
-    browserHistory.push('/recruiter/credits');
+    const { business, alertShow } = this.props;
+
+    if (!FormComponent.needToSave) {
+      utils.setShared('credits_business_id', business.id);
+      browserHistory.push('/recruiter/credits');
+      return;
+    }
+
+    alertShow(
+      'Confirm',
+      'Are you sure you want to discard your changes?',
+      [
+        { label: 'No' },
+        {
+          label: 'Yes',
+          style: 'success',
+          callback: () => {
+            FormComponent.needToSave = false;
+            utils.setShared('credits_business_id', business.id);
+            browserHistory.push('/recruiter/credits');
+          }
+        },
+      ]
+    );
   }
 
   onSave = () => {
@@ -54,6 +80,8 @@ export default class BusinessEdit extends FormComponent {
 
     this.api.saveUserBusiness(formModel).then(
       business => {
+        formModel.id = business.id;
+
         if (logo.file) {
           return this.api.uploadBusinessLogo(
             {
@@ -65,6 +93,7 @@ export default class BusinessEdit extends FormComponent {
             }
           );
         }
+
         if (business.images.length > 0 && !logo.exist) {
           return this.api.deleteBusinessLogo(business.images[0].id);
         }
@@ -74,14 +103,21 @@ export default class BusinessEdit extends FormComponent {
         if (this.api.user.businesses.length === 0) {
           this.props.setPermission(1);
         }
-        this.props.parent.onRefresh();
-        this.props.parent.onEdit();
-        utils.successNotif('Saved!');
+
         FormComponent.needToSave = false;
+        utils.successNotif('Saved!');
+        if (utils.getShared('first-time') === '2') {
+          this.manager.selectBusiness(formModel.id);
+        } else {
+          this.manager.loadBusinesses();
+          this.onClose();
+        }
       },
       () => this.setState({ saving: false })
     );
   }
+
+  onClose = () => this.manager.closeEdit(this.props.parent);
 
   render() {
     const { business } = this.props;
@@ -94,7 +130,6 @@ export default class BusinessEdit extends FormComponent {
 
         <div className={styles.header}>
           <h4>{business.id ? 'Edit' : 'Add'} Business</h4>
-          <Link onClick={() => this.props.parent.onEdit()}>{'<< Back'}</Link>
         </div>
 
         <Form>
@@ -126,7 +161,7 @@ export default class BusinessEdit extends FormComponent {
             labels={['Save', 'Saving...']}
             onClick={this.onSave}
             cancelLabel="Cancel"
-            onCancel={() => this.props.parent.onEdit()}
+            onCancel={this.onClose}
           />
         </div>
 

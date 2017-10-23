@@ -49,6 +49,7 @@ export default class FindTalent extends Component {
       'Confirm',
       'Are you sure you want to connect this talent?',
       [
+        { label: 'Cancel' },
         {
           label: 'Connect',
           style: 'success',
@@ -74,7 +75,6 @@ export default class FindTalent extends Component {
             );
           }
         },
-        { label: 'Cancel' },
       ]
     );
 
@@ -90,6 +90,7 @@ export default class FindTalent extends Component {
       'Confirm',
       'Are you sure you want to delete this talent?',
       [
+        { label: 'Cancel' },
         {
           label: 'Delete',
           style: 'success',
@@ -98,7 +99,6 @@ export default class FindTalent extends Component {
             this.setState({ jobSeekers });
           }
         },
-        { label: 'Cancel' },
       ]
     );
 
@@ -130,23 +130,22 @@ export default class FindTalent extends Component {
       <Link
         key={jobSeeker.id}
         className={styles.jobSeeker}
-        onClick={() => this.onDetail(jobSeeker)}>
-        <div>
-          <img src={image} alt="" />
-          <div className={styles.content} >
-            <div className={styles.name}>{fullName}</div>
-            <div className={styles.desc}>{jobSeeker.description}</div>
-          </div>
-          <div className={styles.controls}>
-            <Button
-              bsStyle="success"
-              disabled={tokens === 0}
-              onClick={e => this.onConnect(jobSeeker, e)}
-            >Connect</Button>
-            <Button
-              onClick={e => this.onRemove(jobSeeker, e)}
-            >Remove</Button>
-          </div>
+        onClick={() => this.onDetail(jobSeeker)}
+      >
+        <img src={image} alt="" />
+        <div className={styles.content} >
+          <div className={styles.name}>{fullName}</div>
+          <div className={styles.desc}>{jobSeeker.description}</div>
+        </div>
+        <div className={styles.controls}>
+          <Button
+            bsStyle="success"
+            disabled={tokens === 0}
+            onClick={e => this.onConnect(jobSeeker, e)}
+          >Connect</Button>
+          <Button
+            onClick={e => this.onRemove(jobSeeker, e)}
+          >Remove</Button>
         </div>
       </Link>
     );

@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Link } from 'react-router';
 import Form from 'react-bootstrap/lib/Form';
 import FormGroup from 'react-bootstrap/lib/FormGroup';
 import ControlLabel from 'react-bootstrap/lib/ControlLabel';
@@ -10,9 +9,10 @@ import * as utils from 'helpers/utils';
 import styles from './WorkplaceEdit.scss';
 
 export default class WorkplaceEdit extends FormComponent {
+
   static propTypes = {
-    workplace: PropTypes.object,
     parent: PropTypes.object.isRequired,
+    workplace: PropTypes.object,
   }
 
   static defaultProps = {
@@ -22,31 +22,24 @@ export default class WorkplaceEdit extends FormComponent {
   constructor(props) {
     const { workplace } = props;
     const formModel = Object.assign({}, workplace);
-    if (!formModel.id) {
-      formModel.email = utils.getCookie('email');
-      formModel.email_public = true;
-      formModel.mobile_public = true;
-    }
     const logo = {
       default: utils.getBusinessLogo(workplace.business_data),
       url: utils.getWorkplaceLogo(workplace),
       exist: workplace.images && workplace.images.length > 0,
     };
     const markerPos = workplace.latitude && { lat: workplace.latitude, lng: workplace.longitude };
+
     super(props, { formModel, logo, markerPos, needToSave: true });
+    this.manager = this.props.parent.manager;
     this.api = ApiClient.shared();
     this.loadImage(logo, 'logo');
   }
 
-  onSelectedLocation = (pos, address) => {
+  onSelectedLocation = (markerPos, address) => {
     const { formModel, errors } = this.state;
     formModel.place_name = address;
     errors.place_name = null;
-    this.setState({
-      formModel,
-      errors,
-      markerPos: pos,
-    });
+    this.setState({ formModel, errors, markerPos });
     FormComponent.needToSave = true;
   }
 
@@ -67,6 +60,8 @@ export default class WorkplaceEdit extends FormComponent {
 
     this.api.saveUserWorkplace(data).then(
       workplace => {
+        formModel.id = workplace.id;
+
         if (logo.file) {
           return this.api.uploadWorkplaceLogo(
             {
@@ -78,20 +73,27 @@ export default class WorkplaceEdit extends FormComponent {
             }
           );
         }
+
         if (workplace.images.length > 0 && !logo.exist) {
           return this.api.deleteWorkplaceLogo(workplace.images[0].id);
         }
       }
     ).then(
       () => {
-        this.props.parent.onRefresh();
-        this.props.parent.onEdit();
-        utils.successNotif('Saved!');
         FormComponent.needToSave = false;
+        utils.successNotif('Saved!');
+        if (utils.getShared('first-time') === '3') {
+          this.manager.selectWorkplace(formModel.id);
+        } else {
+          this.manager.loadWorkplaces();
+          this.onClose();
+        }
       },
       () => this.setState({ saving: false })
     );
   }
+
+  onClose = () => this.manager.closeEdit(this.props.parent);
 
   render() {
     const { workplace } = this.props;
@@ -102,7 +104,6 @@ export default class WorkplaceEdit extends FormComponent {
 
         <div className={styles.header}>
           <h4>{workplace.id ? 'Edit' : 'Add'} Workplace</h4>
-          <Link onClick={() => this.props.parent.onEdit()}>{'<< Back'}</Link>
         </div>
 
         <Form>
@@ -115,7 +116,7 @@ export default class WorkplaceEdit extends FormComponent {
               </FormGroup>
               <FormGroup>
                 <ControlLabel>Email</ControlLabel>
-                <this.TextField type="text" name="email" />
+                <this.TextField type="email" name="email" />
                 <HelpIcon
                   label={`This is the email that notifications will be sent to,
                   it can be different to your login email address.`}
@@ -174,7 +175,7 @@ export default class WorkplaceEdit extends FormComponent {
             labels={['Save', 'Saving...']}
             onClick={this.onSave}
             cancelLabel="Cancel"
-            onCancel={() => this.props.parent.onEdit()}
+            onCancel={this.onClose}
           />
         </div>
 

@@ -88,15 +88,14 @@ export default class Applications extends Component {
     return (
       <Link
         className={[styles.job, 'board-shadow'].join(' ')}
-        onClick={() => this.onClickJob(job)}>
-        <div>
-          <img src={image} alt="" />
-          <div className={styles.content} >
-            <div className={styles.title}>{job.title}</div>
-            <div className={styles.info}>
-              <div>{jobFullName}</div>
-              <span>{strTokens}</span>
-            </div>
+        onClick={() => this.onClickJob(job)}
+      >
+        <img src={image} alt="" />
+        <div className={styles.content} >
+          <div className={styles.title}>{job.title}</div>
+          <div className={styles.info}>
+            <div>{jobFullName}</div>
+            <span>{strTokens}</span>
           </div>
         </div>
       </Link>

@@ -302,6 +302,7 @@ export default class MainLayout extends Component {
           alert && (
             <Modal
               show
+              className={styles.popup}
               onHide={alert.cancel ? (() => this.alertCallback(alert.cancelCallback)) : (() => {})}>
               <Modal.Header closeButton={alert.cancel}>
                 {

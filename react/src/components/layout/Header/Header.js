@@ -37,6 +37,7 @@ export default class Header extends Component {
         'Confirm',
         'You did not save your changes.',
         [
+          { label: 'Cancel' },
           {
             label: 'Ok',
             style: 'success',
@@ -49,7 +50,6 @@ export default class Header extends Component {
               }
             }
           },
-          { label: 'Cancel' },
         ]
       );
     } else if (item.func) {

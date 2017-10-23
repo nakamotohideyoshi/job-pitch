@@ -1,3 +1,4 @@
+import re
 from django.contrib.auth import get_user_model
 from django.contrib.gis.geos import Point
 from django.db import transaction
@@ -135,7 +136,26 @@ class JobSeekerSerializer(serializers.ModelSerializer):
     profile = serializers.PrimaryKeyRelatedField(read_only=True)
     pitches = PitchSerializer(many=True, read_only=True)
     email = serializers.EmailField(read_only=True, source='user.email')
-    
+    ni_regex = re.compile(
+        pattern=r"""
+                ^                      # Beginning of string
+                [A-CEGHJ-PR-TW-Z]{1}   # Match first letter, cannot be D, F, I, Q, U or V
+                [A-CEGHJ-NPR-TW-Z]{1}  # Match second letter, cannot be D, F, I, O, Q, U or V
+                [0-9]{6}               # Six digits
+                [A-D]{1}               # Match last letter can only be A, B, C or D
+                $                      # End of string
+                """,
+        flags=re.VERBOSE,
+    )
+    pair_regex = re.compile(r"..?")
+
+    def validate_national_insurance_number(self, value):
+        value = value.replace(' ', '').upper()
+        if not self.ni_regex.match(value):
+            raise serializers.ValidationError("Invalid National Insurance number")
+        value = " ".join(self.pair_regex.findall(value))
+        return value
+
     class Meta:
         model = JobSeeker
 

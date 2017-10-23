@@ -359,6 +359,7 @@ class JobSeeker(models.Model):
     cv = models.FileField(upload_to='cv/%Y/%m/%d', max_length=255, null=True)
     has_references = models.BooleanField(default=False)
     truth_confirmation = models.BooleanField(default=False)
+    national_insurance_number = models.CharField(max_length=13, blank=True)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
 

@@ -2,7 +2,7 @@ import uuid
 import os
 
 from cStringIO import StringIO
-from PIL import Image
+from PIL import Image, ExifTags
 from django.db import transaction
 from django.utils.translation import gettext as _
 
@@ -14,6 +14,43 @@ from django.core.files.uploadedfile import SimpleUploadedFile
 from django.core.mail import send_mail
 from django.utils import timezone
 from django.utils.http import urlquote
+
+
+def _fix_image_rotation(image):
+ orientation_to_rotation_map = {
+     3: Image.ROTATE_180,
+     6: Image.ROTATE_270,
+     8: Image.ROTATE_90,
+ }
+ try:
+     exif = _get_exif_from_image(image)
+     orientation = _get_orientation_from_exif(exif)
+     rotation = orientation_to_rotation_map.get(orientation)
+     if rotation:
+         image = image.transpose(rotation)
+ finally:
+     return image
+
+
+def _get_exif_from_image(image):
+ exif = {}
+
+ if hasattr(image, '_getexif'):  # only jpegs have _getexif
+     exif_or_none = image._getexif()
+     if exif_or_none is not None:
+         exif = exif_or_none
+
+ return exif
+
+
+def _get_orientation_from_exif(exif):
+ ORIENTATION_TAG = 'Orientation'
+ orientation_iterator = (
+     exif.get(tag_key) for tag_key, tag_value in ExifTags.TAGS.items()
+     if tag_value == ORIENTATION_TAG
+ )
+ orientation = next(orientation_iterator, None)
+ return orientation
 
 
 def create_thumbnail(image, thumbnail, name=None, content_type=None):
@@ -45,6 +82,8 @@ def create_thumbnail(image, thumbnail, name=None, content_type=None):
 
     # Open original photo which we want to thumbnail using PIL's Image
     img = Image.open(StringIO(image.read()))
+
+    img = _fix_image_rotation(img)
 
     # We use our PIL Image object to create the thumbnail, which already
     # has a thumbnail() convenience method that contrains proportions.

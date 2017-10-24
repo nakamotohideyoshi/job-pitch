@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Modal from 'react-bootstrap/lib/Modal';
 import Button from 'react-bootstrap/lib/Button';
-import { Map } from 'components';
+import { Map, LogoImage } from 'components';
 import * as utils from 'helpers/utils';
 import ApiClient from 'helpers/ApiClient';
 import styles from './JobDetail.scss';
@@ -33,7 +33,7 @@ export default class JobDetail extends Component {
 
   render() {
     const { job, button1, button2, onClose } = this.props;
-    const image = utils.getJobLogo(job, true);
+    const image = utils.getJobLogo(job);
     const workplace = job.location_data;
     const jobFullName = utils.getJobFullName(job);
     const markerPos = { lat: workplace.latitude, lng: workplace.longitude };
@@ -56,7 +56,7 @@ export default class JobDetail extends Component {
 
           <div className="board padding-30">
             <div className={styles.info}>
-              <img src={image} alt="" />
+              <LogoImage image={image} size={100} />
               <div className={styles.content}>
                 <div className={styles.title}>
                   <h4>{job.title}</h4>

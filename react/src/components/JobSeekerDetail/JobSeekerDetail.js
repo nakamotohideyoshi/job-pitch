@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Modal from 'react-bootstrap/lib/Modal';
 import Button from 'react-bootstrap/lib/Button';
-import { CheckBox, Loading } from 'components';
+import { CheckBox, Loading, LogoImage } from 'components';
 import ApiClient from 'helpers/ApiClient';
 import * as utils from 'helpers/utils';
 import styles from './JobSeekerDetail.scss';
@@ -115,7 +115,7 @@ export default class JobSeekerDetail extends Component {
 
           <div className="board padding-30">
             <div className={styles.info}>
-              <img src={image} alt="" />
+              <LogoImage image={image} size={100} />
               <div className={styles.content}>
                 <div className={styles.name}>
                   <h4>{fullName}</h4>

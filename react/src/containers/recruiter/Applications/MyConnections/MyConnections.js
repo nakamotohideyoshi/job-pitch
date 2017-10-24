@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Link, browserHistory } from 'react-router';
 import { connect } from 'react-redux';
 import Button from 'react-bootstrap/lib/Button';
-import { Loading, ItemList, JobSeekerDetail } from 'components';
+import { Loading, ItemList, JobSeekerDetail, LogoImage } from 'components';
 import ApiClient from 'helpers/ApiClient';
 import * as utils from 'helpers/utils';
 import * as commonActions from 'redux/modules/common';
@@ -133,21 +133,21 @@ export default class MyConnections extends Component {
     return (
       <Link
         key={application.id}
-        className={styles.application}
+        className={[styles.application, 'list-item'].join(' ')}
         onClick={() => this.onDetail(application)}
       >
-        <img src={image} alt="" />
+        <LogoImage image={image} />
         {
           !shortlisted && application.shortlisted &&
           <div className={styles.star}>
             <i className="fa fa-star" />
           </div>
         }
-        <div className={styles.content}>
-          <div className={styles.name}>{fullName}</div>
-          <div className={styles.desc}>{jobSeeker.description}</div>
+        <div className="content">
+          <h5>{fullName}</h5>
+          <span>{jobSeeker.description}</span>
         </div>
-        <div className={styles.controls}>
+        <div className="controls">
           <Button
             bsStyle="success"
             onClick={e => this.onMessage(application, e)}
@@ -165,10 +165,10 @@ export default class MyConnections extends Component {
       {
         this.props.shortlisted ?
           `You have not shortlisted any applications for this job,
-           turn off shortlist view to see the non-shortlisted applications.` :
-          `You have not chosen anyone to connect with for this job.
-           Once that happens, you will be able to sort through them from here.
-           You can switch to search mode to look for potential applicants.`
+           turn off shortlist view to see the non-shortlisted applications.`
+        :
+          `No candidates have applied for this job yet.
+           Once that happens, their applications will appear here.`
       }
     </span>
   );

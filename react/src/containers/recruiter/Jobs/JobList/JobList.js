@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
 import Button from 'react-bootstrap/lib/Button';
-import { ItemList, Loading } from 'components';
+import { ItemList, Loading, LogoImage } from 'components';
 import ApiClient from 'helpers/ApiClient';
 import * as utils from 'helpers/utils';
 import * as commonActions from 'redux/modules/common';
@@ -106,20 +106,19 @@ export default class JobList extends Component {
       );
     }
 
-    const image = utils.getJobLogo(job, true);
-    const closedClass = job.status === this.closedStatus ? styles.closed : '';
+    const image = utils.getJobLogo(job);
+    const closed = job.status === this.closedStatus ? 'disabled' : '';
     return (
       <Link
         key={job.id}
-        className={[styles.job, closedClass].join(' ')}
+        className={[styles.job, closed, 'list-item'].join(' ')}
         onClick={() => this.manager.selectJob(job)}
       >
-        <img src={image} alt="" />
-        <div className={styles.content} >
-          <div className={styles.title}>{job.title}</div>
-          <div className={styles.info}></div>
+        <LogoImage image={image} />
+        <div className="content">
+          <h5>{job.title}</h5>
         </div>
-        <div className={styles.controls}>
+        <div className="controls">
           <Button
             bsStyle="success"
             onClick={e => this.onEdit(job, e)}
@@ -152,7 +151,7 @@ export default class JobList extends Component {
 
     if (editingData) {
       return (
-        <div className="board-shadow">
+        <div className="board shadow">
           <JobEdit
             parent={this}
             job={editingData}
@@ -163,7 +162,7 @@ export default class JobList extends Component {
 
     if (selectedJob) {
       return (
-        <div className="board-shadow">
+        <div className="board shadow">
           <JobInterface
             parent={this}
             job={selectedJob}
@@ -173,7 +172,7 @@ export default class JobList extends Component {
     }
 
     return (
-      <div className="board-shadow">
+      <div className="board shadow">
         <ItemList
           items={this.props.jobs}
           onFilter={this.onFilter}

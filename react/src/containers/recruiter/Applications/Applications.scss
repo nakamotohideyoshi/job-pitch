@@ -1,56 +1,35 @@
 @import '../../../theme/variables.scss';
 
 .root {
-  padding-bottom: 45px;
 
-  :global(.board-shadow) {
+  :global(.board) {
     padding: 0;
   }
   
   .job {
-    display: block;
     margin-bottom: 30px;
-    text-decoration: none !important;
-  
-    img {
-      float: left;
-      width: 50px;
-      height: 50px;
-      border-radius: 25px;
-      margin: 15px 0 15px 20px;  
+
+    :global(.logo-image) {
+      margin: 15px 15px 15px 20px;
     }
   
-    .content {
-      display: inline-flex;
-      flex-direction: column;
-      justify-content: space-evenly;
+    :global(.content) {
       width: calc(100% - 105px);
       height: 50px;
-      margin: 15px 20px 15px 15px;
+      margin: 15px 20px 15px 0;
+    }
   
-      > div, > div > div {
-        white-space: nowrap;
-        text-overflow: ellipsis;
-        overflow: hidden;
-      }
-  
-      .info {
-        display: flex;
-        justify-content: space-between;
-  
-        div, span {
-          color: $text-color2;
-        }
-        
-        span {
-          margin-left: 15px;
-        }
-      }
-  
-      .title {
-        font-size: 16px;
-        font-weight: 500;
-      }
+    span {
+      color: $text-color2;
+    }
+    
+    .fullName {
+      width: calc(100% - 100px);
+    }
+    
+    .tokens {
+      width: 100px;
+      text-align: right;
     }
   }
   

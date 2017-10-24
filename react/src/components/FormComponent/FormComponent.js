@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Dropzone from 'react-dropzone';
 import Select from 'react-select';
+import { scroller } from 'react-scroll';
 import FormControl from 'react-bootstrap/lib/FormControl';
 import HelpBlock from 'react-bootstrap/lib/HelpBlock';
 import Collapse from 'react-bootstrap/lib/Collapse';
@@ -48,6 +49,9 @@ export default class FormComponent extends Component {
     names.forEach(item => {
       const value = formModel[item];
       if (!value || (typeof value === 'object' && value.length === 0)) {
+        if (!errors) {
+          scroller.scrollTo(item, { smooth: true, duration: 100 });
+        }
         errors = Object.assign(errors || {}, { [item]: 'Required' });
       }
     });
@@ -134,7 +138,7 @@ export default class FormComponent extends Component {
         />
         {
           maxLength &&
-          <div className={styles.textareaLength}>
+          <div className="textareaLength">
             {parseInt(maxLength, 10) - (this.state.formModel.description || '').length} characters left
           </div>
         }

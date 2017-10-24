@@ -5,12 +5,8 @@
   padding: 30px;
 
   :global {
-    .board {
-      margin-bottom: 30px;
-    }
-  
-    .board:last-child {
-      margin-bottom: 0;
+    .board + .board {
+      margin-top: 30px;
     }
   }
 
@@ -21,15 +17,9 @@
   .info {
     display: flex;
   
-    img {
-      width: 100px;
-      height: 100px;
-      border-radius: 50px;
-      margin-right: 30px;
-    }
-  
     .content {
       flex: 1;
+      margin-left: 30px;
 
       .name {
         display: flex;

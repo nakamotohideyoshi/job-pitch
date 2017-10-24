@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router';
 import Modal from 'react-bootstrap/lib/Modal';
 import Button from 'react-bootstrap/lib/Button';
-import { ItemList } from 'components';
+import { ItemList, LogoImage } from 'components';
 import * as utils from 'helpers/utils';
 import styles from './SelectBusiness.scss';
 
@@ -24,7 +24,7 @@ export default class SelectBusiness extends Component {
   onClose = () => this.props.parent.onShowBusinesses(false);
 
   renderItem = business => {
-    const image = utils.getBusinessLogo(business, true);
+    const image = utils.getBusinessLogo(business);
     const tokens = business.tokens;
     const strTokens = `${tokens} Credit${tokens !== 1 ? 's' : ''}`;
 
@@ -33,12 +33,13 @@ export default class SelectBusiness extends Component {
     return (
       <Link
         key={business.id}
-        className={[styles.business, selectedStyle].join(' ')}
-        onClick={() => this.onSelect(business)}>
-        <img src={image} alt="" />
-        <div className={styles.content} >
-          <div className={styles.name}>{business.name}</div>
-          <div className={styles.tokens}>{strTokens}</div>
+        className={[styles.business, selectedStyle, 'list-item'].join(' ')}
+        onClick={() => this.onSelect(business)}
+      >
+        <LogoImage image={image} />
+        <div className="content" >
+          <h5>{business.name}</h5>
+          <span>{strTokens}</span>
         </div>
       </Link>
     );

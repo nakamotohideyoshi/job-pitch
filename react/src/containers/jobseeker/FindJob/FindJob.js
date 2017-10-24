@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
+import Helmet from 'react-helmet';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import Button from 'react-bootstrap/lib/Button';
 import { Link, browserHistory } from 'react-router';
-import Helmet from 'react-helmet';
-import { Loading, ItemList, JobDetail } from 'components';
+import { COUNT_PER_PAGE } from 'const';
+import { Loading, ItemList, JobDetail, Pagination, LogoImage } from 'components';
 import ApiClient from 'helpers/ApiClient';
 import * as utils from 'helpers/utils';
 import * as commonActions from 'redux/modules/common';
@@ -35,19 +36,17 @@ export default class FindJob extends Component {
 
   onRefresh = () => {
     this.setState({ jobs: null });
-    this.api.getJobs('')
-      .then(jobs => this.setState({ jobs }));
-    // setTimeout(() => {
-    //   this.setState({ jobs: utils.getTempJobs() });
-    // }, 1000);
+    this.api.getJobs('').then(
+      jobs => this.setState({ jobs, page: 0 })
+    );
   };
 
-  onFilter = (job, filterText) => job.title.toLowerCase().indexOf(filterText) > -1;
+  onSelectPage = page => this.setState({ page });
 
   onApply = (job, event) => {
     const { alertShow } = this.props;
     const { jobs } = this.state;
-    
+
     if (this.api.jobSeeker.pitches.length === 0) {
       alertShow(
         'Alert',
@@ -79,12 +78,13 @@ export default class FindJob extends Component {
               this.api.saveApplication({
                 job: job.id,
                 job_seeker: this.api.jobSeeker.id,
-              })
-                .then(() => {
+              }).then(
+                () => {
                   _.remove(jobs, item => item.id === job.id);
                   this.setState({ jobs });
                   utils.successNotif('Success!');
-                }, () => {
+                },
+                () => {
                   job.loading = false;
                   this.setState({ jobs });
                 });
@@ -138,7 +138,7 @@ export default class FindJob extends Component {
       );
     }
 
-    const image = utils.getJobLogo(job, true);
+    const image = utils.getJobLogo(job);
     job.distance = utils.getDistanceFromLatLonEx(
       job.location_data.latitude,
       job.location_data.longitude,
@@ -149,18 +149,19 @@ export default class FindJob extends Component {
     return (
       <Link
         key={job.id}
-        className={styles.job}
+        className={[styles.job, 'list-item'].join(' ')}
         onClick={() => this.onDetail(job)}
       >
-        <img src={image} alt="" />
-        <div className={styles.content} >
-          <div className={styles.info}>
-            <div className={styles.title}>{job.title}</div>
+        <LogoImage image={image} />
+        <div className="content">
+          <div>
+            <h5>{job.title}</h5>
             <span className={styles.distance}>{job.distance}</span>
           </div>
-          <div className={styles.desc}>{job.description}</div>
+          <span>{job.description}</span>
         </div>
-        <div className={styles.controls}>
+
+        <div className="controls">
           <Button
             bsStyle="success"
             onClick={e => this.onApply(job, e)}
@@ -174,16 +175,32 @@ export default class FindJob extends Component {
   };
 
   renderEmpty = () => (
-    <span>
-      {
-        `There are no more jobs that match your profile.
-         You can restore your removed matches by clicking refresh above.`
-      }
-    </span>
+    <div>
+      <span>
+        {
+          `There are no more jobs that match your profile.
+          You can restore your removed matches by clicking refresh.`
+        }
+      </span>
+      <button className="link-btn" onClick={this.onRefresh}>
+        Refresh
+      </button>
+    </div>
   );
 
   render() {
-    const { selectedJob } = this.state;
+    const { selectedJob, jobs } = this.state;
+    let total = 0;
+    let page;
+    let pageJobs;
+
+    if (jobs) {
+      total = jobs.length;
+      const nPage = Math.ceil(total / COUNT_PER_PAGE);
+      page = Math.max(0, Math.min(this.state.page, nPage - 1));
+      const offset = page * COUNT_PER_PAGE;
+      pageJobs = jobs.slice(offset, Math.min(offset + COUNT_PER_PAGE, total));
+    }
 
     return (
       <div className={styles.root}>
@@ -194,17 +211,12 @@ export default class FindJob extends Component {
             <h3>Find Me Jobs</h3>
           </div>
 
-          <div className="board-shadow">
+          <div className="board shadow">
             <ItemList
-              items={this.state.jobs}
-              onFilter={this.onFilter}
-              buttons={[
-                { label: 'Refresh', bsStyle: 'success', onClick: this.onRefresh }
-              ]}
+              items={pageJobs}
               renderItem={this.renderItem}
               renderEmpty={this.renderEmpty}
             />
-
             {
               selectedJob &&
               <JobDetail
@@ -221,6 +233,16 @@ export default class FindJob extends Component {
               />
             }
           </div>
+          {
+            total > COUNT_PER_PAGE &&
+            <div className={styles.paginationController}>
+              <Pagination
+                total={total}
+                index={page}
+                onSelect={this.onSelectPage}
+              />
+            </div>
+          }
         </div>
       </div>
     );

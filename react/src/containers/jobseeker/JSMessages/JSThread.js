@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router';
 import Button from 'react-bootstrap/lib/Button';
 import Textarea from 'react-textarea-autosize';
-import { JobDetail } from 'components';
+import { JobDetail, LogoImage } from 'components';
 import ApiClient from 'helpers/ApiClient';
 import * as utils from 'helpers/utils';
 import styles from './JSThread.scss';
@@ -84,7 +84,7 @@ export default class JSThread extends Component {
 
       this.headerTitle = job.title;
       this.headerComment = utils.getJobFullName(job);
-      this.yourAvatar = utils.getJobLogo(job, true);
+      this.yourAvatar = utils.getJobLogo(job);
       this.myAvatar = utils.getJobSeekerImg(application.job_seeker);
 
       this.scrollBottom(this.scrollContainer);
@@ -112,8 +112,8 @@ export default class JSThread extends Component {
     const strDate = utils.getTimeString(new Date(created));
     return (
       <div className={styles.you}>
-        <img src={this.yourAvatar} alt="" />
-        <div>
+        <LogoImage image={this.yourAvatar} size={40} />
+        <div className={styles.message}>
           <div className={styles.bubble}>{content}</div>
           <div className={styles.time}>{strDate}</div>
         </div>
@@ -126,11 +126,11 @@ export default class JSThread extends Component {
     const strDate = utils.getTimeString(new Date(created));
     return (
       <div className={styles.me}>
-        <div>
+        <div className={styles.message}>
           <div className={styles.bubble}>{content}</div>
           <div className={styles.time}>{strDate}</div>
         </div>
-        <img src={this.myAvatar} alt="" />
+        <LogoImage image={this.myAvatar} size={40} />
       </div>
     );
   };

@@ -1,96 +1,11 @@
 @import '../../../../theme/variables.scss';
 
 .workplace {
-  position: relative;
-  display: block;
-  text-decoration: none !important;
-  // overflow: hidden;
-
-  img {
-    float: left;
-    width: 80px;
-    height: 80px;
-    border-radius: 40px;
-    margin: 20px 0 20px 30px;
+  .jobCount {
+    width: 180px;
   }
-
-  .content {
-    display: inline-flex;
-    flex-direction: column;
-    justify-content: space-evenly;
-    width: calc(100% - 160px);
-    height: 80px;
-    margin: 20px 30px 20px 20px;
-
-    > div {
-      white-space: nowrap;
-      text-overflow: ellipsis;
-      overflow: hidden;
-    }
-
-    .name {
-      font-size: 16px;
-      font-weight: 500;
-    }
+  
+  .closedCount {
+    color: $text-color2;
   }
-
-  .controls {
-    position: absolute;
-    display: none;// display: flex;
-    flex-direction: column;
-    justify-content: center;
-    width: 150px;
-    top: 0;
-    bottom: 0;
-    right: 0;//-150px;
-    padding: 0 30px;
-    background-color: rgba(255,255,255,0.75);
-    // transition: right 0.3s ease;
-
-    button {
-      padding: 4px 12px;
-      margin: 5px 0;
-    }
-  }
-
-  + .workplace {
-    .controls {
-      border-top: 1px solid $border-color;
-    }
-  }
-
-  + .workplace::before {
-    content: '';
-    display: block;
-    border-top: 1px solid $border-color;
-    margin: 0 30px;
-  }
-}
-
-a.workplace:hover {
-  background-color: $list-item-hover-color;
-
-  .controls {
-    display: flex;//right: 0;
-  }
-}
-
-a.workplace:hover::before,
-a.workplace:hover + .workplace::before {
-  margin: 0;
-}
-
-.workplace.selected,
-.workplace.selected:hover {
-  background-color: $list-item-selected-color;
-}
-
-.workplace.selected::before,
-.workplace.selected + .workplace::before {
-  margin: 0;
-}
-
-div.workplace > div {
-  position: relative;
-  height: 120px;
 }

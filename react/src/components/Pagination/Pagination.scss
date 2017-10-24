@@ -1,0 +1,19 @@
+@import '../../theme/variables.scss';
+
+.pagination {
+  display: inline-block;
+
+  a, span {
+    font-weight: 500;
+    margin: 0 10px;
+    padding: 3px;
+  }
+
+  a:hover, span {
+    color: $primary-color;
+  }
+
+  span {
+    border-bottom: 2px solid $primary-color;
+  }
+}

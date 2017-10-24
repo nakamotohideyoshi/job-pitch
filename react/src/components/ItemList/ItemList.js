@@ -1,4 +1,3 @@
-
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Button from 'react-bootstrap/lib/Button';
@@ -52,10 +51,11 @@ export default class ItemList extends Component {
       this.filterText = text;
     }
 
-    const { items, onFilter } = this.props;
+    const { items } = this.props;
     if (items) {
+      const filterFunc = this.props.onFilter || (() => true);
       this.setState({
-        items: items.filter(item => onFilter(item, this.filterText))
+        items: items.filter(item => filterFunc(item, this.filterText))
       });
     }
   }
@@ -88,7 +88,7 @@ export default class ItemList extends Component {
     return (
       <div className={[styles.itemList, className].join(' ')}>
         {
-          (onFilter || buttons.length) &&
+          (onFilter || buttons.length > 0) &&
           <div className={styles.header}>
             {
               onFilter &&

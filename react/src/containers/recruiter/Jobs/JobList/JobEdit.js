@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import Scroll from 'react-scroll';
 import Form from 'react-bootstrap/lib/Form';
 import FormGroup from 'react-bootstrap/lib/FormGroup';
 import ControlLabel from 'react-bootstrap/lib/ControlLabel';
@@ -41,7 +42,7 @@ export default class JobEdit extends FormComponent {
   }
 
   onSave = () => {
-    if (!this.isValid(['title', 'description', 'sector', 'contract', 'hours'])) return;
+    if (!this.isValid(['title', 'sector', 'contract', 'hours', 'description'])) return;
 
     const { formModel, logo } = this.state;
     const data = Object.assign(this.props.job, formModel);
@@ -59,7 +60,7 @@ export default class JobEdit extends FormComponent {
         if (logo.file) {
           return this.api.uploadJobLogo(
             {
-              location: job.id,
+              job: job.id,
               image: logo.file,
             },
             event => {
@@ -102,12 +103,16 @@ export default class JobEdit extends FormComponent {
               </FormGroup>
               <FormGroup>
                 <ControlLabel>Title</ControlLabel>
-                <this.TextField type="text" name="title" />
+                <Scroll.Element name="title">
+                  <this.TextField type="text" name="title" />
+                </Scroll.Element>
               </FormGroup>
             </div>
           </div>
           <FormGroup>
-            <ControlLabel>Sector</ControlLabel>
+            <Scroll.Element name="sector">
+              <ControlLabel>Sector</ControlLabel>
+            </Scroll.Element>
             <this.SelectField
               placeholder="Select Sector"
               name="sector"
@@ -115,7 +120,9 @@ export default class JobEdit extends FormComponent {
             />
           </FormGroup>
           <FormGroup>
-            <ControlLabel>Contract</ControlLabel>
+            <Scroll.Element name="contract">
+              <ControlLabel>Contract</ControlLabel>
+            </Scroll.Element>
             <this.SelectField
               placeholder="Select Contract"
               name="contract"
@@ -124,7 +131,9 @@ export default class JobEdit extends FormComponent {
             />
           </FormGroup>
           <FormGroup>
-            <ControlLabel>Hours</ControlLabel>
+            <Scroll.Element name="hours">
+              <ControlLabel>Hours</ControlLabel>
+            </Scroll.Element>
             <this.SelectField
               placeholder="Select Hours"
               name="hours"
@@ -133,7 +142,9 @@ export default class JobEdit extends FormComponent {
             />
           </FormGroup>
           <FormGroup>
-            <ControlLabel>Description</ControlLabel>
+            <Scroll.Element name="description">
+              <ControlLabel>Description</ControlLabel>
+            </Scroll.Element>
             <this.TextAreaField
               name="description"
               maxLength="10000"

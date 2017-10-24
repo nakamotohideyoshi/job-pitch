@@ -29,101 +29,42 @@
     }
   
     .application {
-      display: block;
-      text-decoration: none !important;
-    
-      img {
-        float: left;
-        width: 60px;
-        height: 60px;
-        border-radius: 30px;
-        margin: 8px 0 8px 10px;       
+      :global(.logo-image) {
+        margin: 8px 8px 8px 10px;
       }
-  
-      .content {
-        display: inline-flex;
-        flex-direction: column;
-        justify-content: space-evenly;
-        width: calc(100% - 88px);
-        height: 60px;
-        margin: 8px 10px 8px 8px;
-  
-        > div, > div > div {
-          white-space: nowrap;
-          text-overflow: ellipsis;
-          overflow: hidden;
-        }
+    
+      :global(.content) {
+        width: calc(100% - 78px);
+        height: 50px;
+        margin: 8px 10px 8px 0;
+      }
 
-        .info {
-          display: flex;
-          justify-content: space-between;
-          
-          div {
-            margin-right: 10px;
-            font-weight: 500;
-          }
-  
-          span {
-            margin-top: 2px;
-            font-size: 12px;
-            text-align: right;
-            color: $text-color2;
-          }
-        }
-  
-        .subTitle {
-          color: $text-color1;
-          font-size: 12px;
-        }
+      span {
+        font-size: 12px;
+      }
 
-        .message {
-          color: $text-color2;
-          font-size: 12px;
-        }
+      h5 {
+        width: calc(100% - 70px);
+      }
+      
+      .date {
+        width: 70px;
+        color: $text-color2;
+        text-align: right;
+      }
+
+      .subTitle {
+        color: $text-color1;
+      }
+
+      .message {
+        color: $text-color2;
       }
 
       + .application::before {
-        content: '';
-        display: block;
-        border-top: 1px solid $list-item-hover-color;
         margin: 0 10px;
+        border-top-color: $list-item-hover-color;
       }
     }
-    
-    a.application:hover {
-      background-color: $list-item-hover-color;
-    }
-    
-    a.application:hover::before,
-    a.application:hover + .application::before {
-      margin: 0;
-    }
-    
-    .application.deleted {
-      background-color: $list-item-disabled-color;
-    
-      > * {
-        opacity: 0.5;
-      }
-    
-      .info > div, .subTitle, .message {
-        text-decoration-line: line-through;
-      }
-    }
-    
-    .application.deleted::before,
-    .application.deleted + .application::before {
-      margin: 0;
-    }
-
-    .application.selected,
-    .application.selected:hover {
-      background-color: $list-item-selected-color;
-    }
-    
-    .application.selected::before,
-    .application.selected + .application::before {
-      margin: 0;
-    }  
   }
 }

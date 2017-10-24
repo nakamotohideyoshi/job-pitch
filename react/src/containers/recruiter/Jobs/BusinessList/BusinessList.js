@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Link, browserHistory } from 'react-router';
 import Button from 'react-bootstrap/lib/Button';
-import { ItemList, Loading } from 'components';
+import { ItemList, Loading, LogoImage } from 'components';
 import ApiClient from 'helpers/ApiClient';
 import * as utils from 'helpers/utils';
 import * as commonActions from 'redux/modules/common';
@@ -100,22 +100,22 @@ export default class BusinessList extends Component {
       );
     }
 
-    const image = utils.getBusinessLogo(business, true);
+    const image = utils.getBusinessLogo(business);
     const workplaceCount = business.locations.length;
     const info = ` Includes ${workplaceCount} workplace${workplaceCount !== 1 ? 's' : ''}`;
-    const selected = this.props.selectedId === business.id ? styles.selected : '';
+    const selected = this.props.selectedId === business.id ? 'selected' : '';
     return (
       <Link
         key={business.id}
-        className={[styles.business, selected].join(' ')}
+        className={[styles.business, selected, 'list-item'].join(' ')}
         onClick={() => this.manager.selectBusiness(business.id)}
       >
-        <img src={image} alt="" />
-        <div className={styles.content} >
-          <div className={styles.name}>{business.name}</div>
-          <div className={styles.info}>{info}</div>
+        <LogoImage image={image} />
+        <div className="content">
+          <h5>{business.name}</h5>
+          <span>{info}</span>
         </div>
-        <div className={styles.controls}>
+        <div className="controls">
           <Button
             bsStyle="success"
             onClick={e => this.onEdit(business, e)}
@@ -155,7 +155,7 @@ export default class BusinessList extends Component {
   render() {
     const { editingData } = this.state;
     return (
-      <div className="board-shadow">
+      <div className="board shadow">
         {
           editingData ?
             <BusinessEdit

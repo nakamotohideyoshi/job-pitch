@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import Helmet from 'react-helmet';
 import { connect } from 'react-redux';
 import { browserHistory } from 'react-router';
+import Scroll from 'react-scroll';
 import Form from 'react-bootstrap/lib/Form';
 import FormGroup from 'react-bootstrap/lib/FormGroup';
 import ControlLabel from 'react-bootstrap/lib/ControlLabel';
@@ -118,10 +119,12 @@ export default class JobProfile extends FormComponent {
             <h3>Job Profile</h3>
           </div>
 
-          <div className="board-shadow padding-45">
+          <div className="board shadow padding-45">
             <Form>
               <FormGroup>
-                <ControlLabel>Sectors</ControlLabel>
+                <Scroll.Element name="sectors">
+                  <ControlLabel>Sectors</ControlLabel>
+                </Scroll.Element>
                 <this.SelectField
                   name="sectors"
                   options={this.api.sectors}
@@ -150,12 +153,14 @@ export default class JobProfile extends FormComponent {
               </FormGroup>
 
               <FormGroup>
-                <div className={styles.withHelp}>
-                  <ControlLabel>Match area</ControlLabel>
-                  <HelpIcon
-                    label="Search for a place name, street, postcode, etc. or click the map to select location."
-                  />
-                </div>
+                <Scroll.Element name="place_name">
+                  <div className={styles.withHelp}>
+                    <ControlLabel>Match area</ControlLabel>
+                    <HelpIcon
+                      label="Search for a place name, street, postcode, etc. or click the map to select location."
+                    />
+                  </div>
+                </Scroll.Element>
                 <this.TextField
                   type="text"
                   name="place_name"

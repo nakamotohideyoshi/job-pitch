@@ -3,7 +3,7 @@ import Helmet from 'react-helmet';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router';
 import Button from 'react-bootstrap/lib/Button';
-import { Loading } from 'components';
+import { Loading, LogoImage } from 'components';
 import ApiClient from 'helpers/ApiClient';
 import * as utils from 'helpers/utils';
 import SelectBusiness from './SelectBusiness';
@@ -66,19 +66,19 @@ export default class Credits extends Component {
 
   renderBusiness = () => {
     const { selectedBusiness } = this.state;
-    const image = utils.getBusinessLogo(selectedBusiness, true);
+    const image = utils.getBusinessLogo(selectedBusiness);
     const tokens = selectedBusiness.tokens;
     const strTokens = `${tokens} Credit${tokens !== 1 ? 's' : ''}`;
 
     return (
       <Link
-        className={[styles.business, 'board-shadow'].join(' ')}
+        className={[styles.business, 'list-item board shadow'].join(' ')}
         onClick={() => this.onShowBusinesses(true)}
       >
-        <img src={image} alt="" />
-        <div className={styles.content} >
-          <div className={styles.name}>{selectedBusiness.name}</div>
-          <div className={styles.tokens}>{strTokens}</div>
+        <LogoImage image={image} size={50} />
+        <div className="content">
+          <h5>{selectedBusiness.name}</h5>
+          <span>{strTokens}</span>
         </div>
       </Link>
     );
@@ -115,7 +115,7 @@ export default class Credits extends Component {
     }
 
     return (
-      <div className={styles.root}>
+      <div>
         <Helmet title="Add Credit" />
 
         <div className="container">
@@ -126,7 +126,7 @@ export default class Credits extends Component {
           { this.renderBusiness() }
 
           <div className={styles.products}>
-            <div className="board-shadow">
+            <div className="board shadow">
               {
                 this.api.products.map(this.renderPuchaseButton)
               }

@@ -4,6 +4,7 @@ import Helmet from 'react-helmet';
 import { connect } from 'react-redux';
 import { browserHistory } from 'react-router';
 import Dropzone from 'react-dropzone';
+import Scroll from 'react-scroll';
 import Form from 'react-bootstrap/lib/Form';
 import FormGroup from 'react-bootstrap/lib/FormGroup';
 import Col from 'react-bootstrap/lib/Col';
@@ -207,7 +208,7 @@ export default class Profile extends FormComponent {
             <h3>Profile</h3>
           </div>
 
-          <div className="board-shadow padding-45">
+          <div className="board shadow padding-45">
             <Form>
               <FormGroup className={styles.active}>
                 <ControlLabel>Active</ControlLabel>
@@ -216,11 +217,15 @@ export default class Profile extends FormComponent {
 
               <div className={styles.name}>
                 <FormGroup>
-                  <ControlLabel>First Name</ControlLabel>
+                  <Scroll.Element name="first_name">
+                    <ControlLabel>First Name</ControlLabel>
+                  </Scroll.Element>
                   <this.TextField type="text" name="first_name" />
                 </FormGroup>
                 <FormGroup>
-                  <ControlLabel>Last Name</ControlLabel>
+                  <Scroll.Element name="last_name">
+                    <ControlLabel>Last Name</ControlLabel>
+                  </Scroll.Element>
                   <this.TextField type="text" name="last_name" />
                 </FormGroup>
               </div>
@@ -286,13 +291,15 @@ export default class Profile extends FormComponent {
               </FormGroup>
 
               <FormGroup>
-                <div className={styles.withHelp}>
-                  <ControlLabel>CV summary</ControlLabel>
-                  <HelpIcon
-                    label={`CV summary is what the recruiter first see,
-                      write if you have previous relevant experience where and for how long.`}
-                  />
-                </div>
+                <Scroll.Element name="description">
+                  <div className={styles.withHelp}>
+                    <ControlLabel>CV summary</ControlLabel>
+                    <HelpIcon
+                      label={`CV summary is what the recruiter first see,
+                        write if you have previous relevant experience where and for how long.`}
+                    />
+                  </div>
+                </Scroll.Element>
                 <this.TextAreaField
                   name="description"
                   maxLength="1000"

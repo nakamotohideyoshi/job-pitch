@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Helmet from 'react-helmet';
+import Scroll from 'react-scroll';
 import { Link, browserHistory } from 'react-router';
 import Form from 'react-bootstrap/lib/Form';
 import FormGroup from 'react-bootstrap/lib/FormGroup';
@@ -62,21 +63,27 @@ export default class Register extends FormComponent {
 
           <Form>
             <FormGroup>
-              <ControlLabel>Email Address</ControlLabel>
+              <Scroll.Element name="email">
+                <ControlLabel>Email Address</ControlLabel>
+              </Scroll.Element>
               <this.TextField
                 type="email"
                 name="email"
               />
             </FormGroup>
             <FormGroup>
-              <ControlLabel>Password</ControlLabel>
+              <Scroll.Element name="password1">
+                <ControlLabel>Password</ControlLabel>
+              </Scroll.Element>
               <this.TextField
                 type="password"
                 name="password1"
               />
             </FormGroup>
             <FormGroup>
-              <ControlLabel>Confirm Password</ControlLabel>
+              <Scroll.Element name="password2">
+                <ControlLabel>Confirm Password</ControlLabel>
+              </Scroll.Element>
               <this.TextField
                 type="password"
                 name="password2"

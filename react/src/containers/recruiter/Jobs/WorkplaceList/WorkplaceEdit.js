@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import Scroll from 'react-scroll';
 import Form from 'react-bootstrap/lib/Form';
 import FormGroup from 'react-bootstrap/lib/FormGroup';
 import ControlLabel from 'react-bootstrap/lib/ControlLabel';
@@ -44,7 +45,7 @@ export default class WorkplaceEdit extends FormComponent {
   }
 
   onSave = () => {
-    if (!this.isValid(['name', 'place_name', 'description', 'email'])) return;
+    if (!this.isValid(['name', 'email', 'description', 'place_name'])) return;
 
     const { formModel, logo, markerPos } = this.state;
     const data = Object.assign(this.props.workplace, formModel);
@@ -112,11 +113,15 @@ export default class WorkplaceEdit extends FormComponent {
             <div className={styles.content}>
               <FormGroup>
                 <ControlLabel>Name</ControlLabel>
-                <this.TextField type="text" name="name" />
+                <Scroll.Element name="name">
+                  <this.TextField type="text" name="name" />
+                </Scroll.Element>
               </FormGroup>
               <FormGroup>
                 <ControlLabel>Email</ControlLabel>
-                <this.TextField type="email" name="email" />
+                <Scroll.Element name="email">
+                  <this.TextField type="email" name="email" />
+                </Scroll.Element>
                 <HelpIcon
                   label={`This is the email that notifications will be sent to,
                   it can be different to your login email address.`}
@@ -136,7 +141,9 @@ export default class WorkplaceEdit extends FormComponent {
           </div>
 
           <FormGroup>
-            <ControlLabel>Description</ControlLabel>
+            <Scroll.Element name="description">
+              <ControlLabel>Description</ControlLabel>
+            </Scroll.Element>
             <this.TextAreaField
               name="description"
               maxLength="10000"
@@ -146,12 +153,14 @@ export default class WorkplaceEdit extends FormComponent {
           </FormGroup>
 
           <FormGroup>
-            <div className={styles.withHelp}>
-              <ControlLabel>Location</ControlLabel>
-              <HelpIcon
-                label="Search for a place name, street, postcode, etc. or click the map to select location."
-              />
-            </div>
+            <Scroll.Element name="place_name">
+              <div className={styles.withHelp}>
+                <ControlLabel>Location</ControlLabel>
+                <HelpIcon
+                  label="Search for a place name, street, postcode, etc. or click the map to select location."
+                />
+              </div>
+            </Scroll.Element>
             <this.TextField
               type="text"
               name="place_name"

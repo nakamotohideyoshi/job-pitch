@@ -1,5 +1,6 @@
 import React from 'react';
 import Helmet from 'react-helmet';
+import Scroll from 'react-scroll';
 import Form from 'react-bootstrap/lib/Form';
 import FormGroup from 'react-bootstrap/lib/FormGroup';
 import ControlLabel from 'react-bootstrap/lib/ControlLabel';
@@ -41,7 +42,9 @@ export default class Reset extends FormComponent {
 
           <Form>
             <FormGroup>
-              <ControlLabel>Email Address</ControlLabel>
+              <Scroll.Element name="email">
+                <ControlLabel>Email Address</ControlLabel>
+              </Scroll.Element>
               <this.TextField
                 type="email"
                 name="email"

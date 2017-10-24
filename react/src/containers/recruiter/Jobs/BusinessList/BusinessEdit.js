@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { browserHistory } from 'react-router';
+import Scroll from 'react-scroll';
 import Form from 'react-bootstrap/lib/Form';
 import FormGroup from 'react-bootstrap/lib/FormGroup';
 import ControlLabel from 'react-bootstrap/lib/ControlLabel';
@@ -138,7 +139,9 @@ export default class BusinessEdit extends FormComponent {
             <div className={styles.content}>
               <FormGroup>
                 <ControlLabel>Name</ControlLabel>
-                <this.TextField type="text" name="name" />
+                <Scroll.Element name="name">
+                  <this.TextField type="text" name="name" />
+                </Scroll.Element>
               </FormGroup>
               <FormGroup>
                 <ControlLabel>Credits</ControlLabel>

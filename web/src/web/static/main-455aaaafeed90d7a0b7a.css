@@ -12692,9 +12692,8 @@ footer ._99lbIeAeIW0OGDXZe3j05 span {
  */
 .logo-image {
   background-color: #fff;
-  background-repeat: no-repeat;
   background-position: center;
-  background-size: contain;
+  background-size: cover;
   border-radius: 50%;
 }
 /**
@@ -13658,6 +13657,10 @@ footer ._99lbIeAeIW0OGDXZe3j05 span {
  *  http://getbootstrap.com/customize/
  *
  */
+.jaR_0NqAxiJcq-Xwizd88 {
+  text-align: right;
+  padding: 30px 0 10px 0;
+}
 /**
  *  Define scss variables here.
  *
@@ -14061,6 +14064,11 @@ footer ._99lbIeAeIW0OGDXZe3j05 span {
   color: #959595;
   width: 80px;
   text-align: right;
+}
+
+._3wlrns2KcUHN5SaWnSydDe {
+  text-align: right;
+  padding: 30px 0 10px 0;
 }
 /**
  *  Define scss variables here.
@@ -14513,4 +14521,4 @@ a.c5klW_PefQ6L66eX98YSd ._3WFV3AvF-ZaDbjbDce6RQg {
   border-top-color: #f4f4f4;
 }
 
-/*# sourceMappingURL=main-a377aa74776753e12aa4.css.map*/
+/*# sourceMappingURL=main-455aaaafeed90d7a0b7a.css.map*/

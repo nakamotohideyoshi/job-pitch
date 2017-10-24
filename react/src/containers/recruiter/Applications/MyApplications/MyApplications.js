@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router';
 import { connect } from 'react-redux';
 import Button from 'react-bootstrap/lib/Button';
-import { Loading, ItemList, JobSeekerDetail } from 'components';
+import { Loading, ItemList, JobSeekerDetail, LogoImage } from 'components';
 import ApiClient from 'helpers/ApiClient';
 import * as utils from 'helpers/utils';
 import * as commonActions from 'redux/modules/common';
@@ -103,7 +103,7 @@ export default class MyApplications extends Component {
             application.loading = true;
             onUpdatedApplications();
 
-            this.api.deleteApplication(application)
+            this.api.deleteApplication(application.id)
               .then(() => {
                 application.loading = false;
                 application.status = utils.getApplicationStatusByName('DELETED').id;
@@ -148,15 +148,15 @@ export default class MyApplications extends Component {
     return (
       <Link
         key={application.id}
-        className={styles.application}
+        className={[styles.application, 'list-item'].join(' ')}
         onClick={() => this.onDetail(application)}
       >
-        <img src={image} alt="" />
-        <div className={styles.content} >
-          <div className={styles.name}>{fullName}</div>
-          <div className={styles.desc}>{jobSeeker.description}</div>
+        <LogoImage image={image} />
+        <div className="content">
+          <h5>{fullName}</h5>
+          <span>{jobSeeker.description}</span>
         </div>
-        <div className={styles.controls}>
+        <div className="controls">
           <Button
             bsStyle="success"
             disabled={this.props.job.location_data.business_data.tokens === 0}
@@ -173,8 +173,8 @@ export default class MyApplications extends Component {
   renderEmpty = () => (
     <span>
       {
-        `No candidates have applied for this job yet.
-         Once that happens, their applications will appear here.`
+        `No applications at the moment. Once thet happens you cant go trough them here and shortlist
+         if needed, you can easy switch to Find Talent mode and "head hunt" as well.`
       }
     </span>
   );

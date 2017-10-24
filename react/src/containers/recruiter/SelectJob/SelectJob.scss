@@ -1,83 +1,16 @@
 @import '../../../theme/variables.scss';
 
 .job {
-  display: block;
-  text-decoration: none !important;
-
-  img {
-    float: left;
-    width: 80px;
-    height: 80px;
-    border-radius: 40px;
-    margin: 20px 0 20px 30px;
+  span {
+    color: $text-color2;
   }
 
-  .content {
-    display: inline-flex;
-    flex-direction: column;
-    justify-content: space-evenly;
-    width: calc(100% - 160px);
-    height: 80px;
-    margin: 20px 30px 20px 20px;
-
-    > div, > div > div {
-      white-space: nowrap;
-      text-overflow: ellipsis;
-      overflow: hidden;
-    }
-
-    .info {
-      display: flex;
-      justify-content: space-between;
-
-      div, span {
-        color: $text-color2;
-      }
-      
-      span {
-        margin-left: 15px;
-      }
-    }
-
-    .title {
-      font-size: 16px;
-      font-weight: 500;
-    }
+  .fullName {
+    width: calc(100% - 100px);
   }
-
-  + .job::before {
-    content: '';
-    display: block;
-    border-top: 1px solid $border-color;
-    margin: 0 30px;
+  
+  .tokens {
+    width: 100px;
+    text-align: right;
   }
 }
-
-a.job:hover {
-  background-color: $list-item-hover-color;
-}
-
-a.job:hover::before,
-a.job:hover + .job::before {
-  margin: 0;
-}
-
-// .job.closed,
-// .job.closed:hover {
-//   cursor: initial;
-//   pointer-events: none;
-//   background-color: $list-item-disabled-color;
-
-//   img, .content {
-//     opacity: 0.5;
-//   }
-
-//   .title {
-//     text-decoration-line: line-through;
-//   }
-// }
-
-// .job.closed::before,
-// .job.closed + .job::before {
-//   margin: 0;
-// }

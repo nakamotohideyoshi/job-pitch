@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import Helmet from 'react-helmet';
 import { Link } from 'react-router';
-import { Loading, ItemList } from 'components';
+import { Loading, ItemList, LogoImage } from 'components';
 import ApiClient from 'helpers/ApiClient';
 import * as utils from 'helpers/utils';
 import Thread from './JSThread';
@@ -66,7 +66,7 @@ export default class JSMessages extends Component {
 
   renderItem = application => {
     const job = application.job_data;
-    const image = utils.getJobLogo(job, true);
+    const image = utils.getJobLogo(job);
     const name = job.title;
     const subTitle = utils.getJobFullName(job);
     const lastMessage = application.messages[application.messages.length - 1];
@@ -76,23 +76,23 @@ export default class JSMessages extends Component {
     const strDate = `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`;
 
     const deletedStatus = utils.getItemByName(this.api.applicationStatuses, 'DELETED');
-    const deleted = application.status === deletedStatus.id ? styles.deleted : '';
-    const selected = application.id === this.state.selectedApp.id ? styles.selected : '';
+    const deleted = application.status === deletedStatus.id ? 'disabled' : '';
+    const selected = application.id === this.state.selectedApp.id ? 'selected' : '';
 
     return (
       <Link
         key={application.id}
-        className={[styles.application, deleted, selected].join(' ')}
+        className={[styles.application, selected, deleted, 'list-item'].join(' ')}
         onClick={() => this.onSelectedApplication(application)}
       >
-        <img src={image} alt="" />
-        <div className={styles.content} >
-          <div className={styles.info}>
-            <div>{name}</div>
-            <span>{strDate}</span>
+        <LogoImage image={image} size={50} />
+        <div className="content">
+          <div>
+            <h5>{name}</h5>
+            <span className={styles.date}>{strDate}</span>
           </div>
-          <div className={styles.subTitle}>{subTitle}</div>
-          <div className={styles.message}>{comment}</div>
+          <span className={styles.subTitle}>{subTitle}</span>
+          <span className={styles.message}>{comment}</span>
         </div>
       </Link>
     );
@@ -113,7 +113,7 @@ export default class JSMessages extends Component {
 
         {
           applications ?
-            <div className="board-shadow">
+            <div className="board shadow">
               <ItemList
                 className={styles.appList}
                 items={applications}

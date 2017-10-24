@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import Helmet from 'react-helmet';
 import { Link, browserHistory } from 'react-router';
 import Button from 'react-bootstrap/lib/Button';
-import { ItemList } from 'components';
+import { ItemList, LogoImage } from 'components';
 import ApiClient from 'helpers/ApiClient';
 import * as utils from 'helpers/utils';
 import styles from './SelectJob.scss';
@@ -37,30 +37,29 @@ export default class SelectJob extends Component {
   onCreateJob = () => browserHistory.push('/recruiter/jobs');
 
   renderItem = job => {
-    const image = utils.getJobLogo(job, true);
+    const image = utils.getJobLogo(job);
     const jobFullName = utils.getJobFullName(job);
     const tokens = job.location_data.business_data.tokens;
     const strTokens = `${tokens} Credit${tokens !== 1 ? 's' : ''}`;
-    const closed = job.status === utils.getJobStatusByName('CLOSED').id;
 
-    if (closed) {
+    if (job.status === utils.getJobStatusByName('CLOSED').id) {
       return '';
     }
 
     return (
       <Link
         key={job.id}
-        className={`${styles.job} ${closed ? styles.closed : ''}`}
+        className={[styles.job, 'list-item'].join(' ')}
         onClick={() => this.onSelect(job)}
       >
-        <img src={image} alt="" />
-        <div className={styles.content} >
-          <div className={styles.title}>{job.title}</div>
-          <div className={styles.info}>
-            <div>{jobFullName}</div>
-            <span>{strTokens}</span>
+        <LogoImage image={image} />
+        <div className="content">
+          <h5>{job.title}</h5>
+          <div>
+            <span className={styles.fullName}>{jobFullName}</span>
+            <span className={styles.tokens}>{strTokens}</span>
           </div>
-          <div className={styles.desc}>{job.description}</div>
+          <span>{job.description}</span>
         </div>
       </Link>
     );
@@ -87,7 +86,7 @@ export default class SelectJob extends Component {
             <h3>Select Job</h3>
           </div>
 
-          <div className="board-shadow">
+          <div className="board shadow">
             <ItemList
               items={this.state.jobs}
               onFilter={this.onFilter}

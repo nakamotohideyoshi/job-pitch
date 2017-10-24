@@ -1,6 +1,7 @@
 import React from 'react';
 import Helmet from 'react-helmet';
 import { Link, browserHistory } from 'react-router';
+import Scroll from 'react-scroll';
 import Form from 'react-bootstrap/lib/Form';
 import FormGroup from 'react-bootstrap/lib/FormGroup';
 import ControlLabel from 'react-bootstrap/lib/ControlLabel';
@@ -46,17 +47,21 @@ export default class Login extends FormComponent {
 
           <Form>
             <FormGroup>
-              <ControlLabel>Email Address</ControlLabel>
+              <Scroll.Element name="email">
+                <ControlLabel>Email Address</ControlLabel>
+              </Scroll.Element>
               <this.TextField
                 type="email"
                 name="email"
               />
             </FormGroup>
             <FormGroup>
-              <div>
-                <ControlLabel>Password</ControlLabel>
-                <Link to="/reset" tabIndex="-1">Forgot Password?</Link>
-              </div>
+              <Scroll.Element name="password">
+                <div>
+                  <ControlLabel>Password</ControlLabel>
+                  <Link to="/reset" tabIndex="-1">Forgot Password?</Link>
+                </div>
+              </Scroll.Element>
               <this.TextField
                 type="password"
                 name="password"

@@ -1,5 +1,6 @@
 import React from 'react';
 import Helmet from 'react-helmet';
+import Scroll from 'react-scroll';
 import Form from 'react-bootstrap/lib/Form';
 import FormGroup from 'react-bootstrap/lib/FormGroup';
 import ControlLabel from 'react-bootstrap/lib/ControlLabel';
@@ -41,14 +42,18 @@ export default class Password extends FormComponent {
 
           <Form>
             <FormGroup>
-              <ControlLabel>New Password</ControlLabel>
+              <Scroll.Element name="new_password1">
+                <ControlLabel>New Password</ControlLabel>
+              </Scroll.Element>
               <this.TextField
                 type="password"
                 name="new_password1"
               />
             </FormGroup>
             <FormGroup>
-              <ControlLabel>Confirm Password</ControlLabel>
+              <Scroll.Element name="new_password2">
+                <ControlLabel>Confirm Password</ControlLabel>
+              </Scroll.Element>
               <this.TextField
                 type="password"
                 name="new_password2"

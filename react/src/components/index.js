@@ -18,6 +18,8 @@ import HelpIcon from './HelpIcon/HelpIcon';
 import CheckBox from './CheckBox/CheckBox';
 import SearchBar from './SearchBar/SearchBar';
 import ItemList from './ItemList/ItemList';
+import Pagination from './Pagination/Pagination';
+import LogoImage from './LogoImage/LogoImage';
 import Map from './Map/Map';
 
 import JobDetail from './JobDetail/JobDetail';
@@ -27,6 +29,7 @@ export {
   Provider,
   MainLayout, Header, Footer,
   FormComponent,
-  Loading, HelpIcon, CheckBox, SearchBar, ItemList, Map,
+  LogoImage,
+  Loading, HelpIcon, CheckBox, SearchBar, ItemList, Pagination, Map,
   JobDetail, JobSeekerDetail
 };

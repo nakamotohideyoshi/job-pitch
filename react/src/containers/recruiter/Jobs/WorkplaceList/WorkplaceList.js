@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
 import Button from 'react-bootstrap/lib/Button';
-import { ItemList, Loading } from 'components';
+import { ItemList, Loading, LogoImage } from 'components';
 import ApiClient from 'helpers/ApiClient';
 import * as utils from 'helpers/utils';
 import * as commonActions from 'redux/modules/common';
@@ -91,22 +91,27 @@ export default class WorkplaceList extends Component {
       );
     }
 
-    const image = utils.getWorkplaceLogo(workplace, true);
+    const image = utils.getWorkplaceLogo(workplace);
     const jobCount = workplace.jobs.length;
-    const info = ` Includes ${jobCount} job${jobCount !== 1 ? 's' : ''}`;
-    const selected = this.props.selectedId === workplace.id ? styles.selected : '';
+    const strJobCount = ` Includes ${jobCount} job${jobCount !== 1 ? 's' : ''}`;
+    const closedConut = jobCount - workplace.active_job_count;
+    const strClosedCount = `${closedConut} inactive`;
+    const selected = this.props.selectedId === workplace.id ? 'selected' : '';
     return (
       <Link
         key={workplace.id}
-        className={[styles.workplace, selected].join(' ')}
+        className={[styles.workplace, selected, 'list-item'].join(' ')}
         onClick={() => this.manager.selectWorkplace(workplace.id)}
       >
-        <img src={image} alt="" />
-        <div className={styles.content} >
-          <div className={styles.name}>{workplace.name}</div>
-          <div className={styles.info}>{info}</div>
+        <LogoImage image={image} />
+        <div className="content">
+          <h5>{workplace.name}</h5>
+          <div>
+            <span className={styles.jobCount}>{strJobCount}</span>
+            <span className={styles.closedCount}>{strClosedCount}</span>
+          </div>
         </div>
-        <div className={styles.controls}>
+        <div className="controls">
           <Button
             bsStyle="success"
             onClick={e => this.onEdit(workplace, e)}
@@ -137,7 +142,7 @@ export default class WorkplaceList extends Component {
   render() {
     const { editingData } = this.state;
     return (
-      <div className="board-shadow">
+      <div className="board shadow">
         {
           editingData ?
             <WorkplaceEdit

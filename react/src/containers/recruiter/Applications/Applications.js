@@ -4,7 +4,7 @@ import Helmet from 'react-helmet';
 import { Link, browserHistory } from 'react-router';
 import Tabs from 'react-bootstrap/lib/Tabs';
 import Tab from 'react-bootstrap/lib/Tab';
-import { Loading } from 'components';
+import { Loading, LogoImage } from 'components';
 import ApiClient from 'helpers/ApiClient';
 import * as utils from 'helpers/utils';
 import FindTalent from './FindTalent/FindTalent';
@@ -80,22 +80,22 @@ export default class Applications extends Component {
 
   renderJob = () => {
     const { job } = this.state;
-    const image = utils.getJobLogo(job, true);
+    const image = utils.getJobLogo(job);
     const jobFullName = utils.getJobFullName(job);
     const tokens = job.location_data.business_data.tokens;
     const strTokens = `${tokens} Credit${tokens !== 1 ? 's' : ''}`;
 
     return (
       <Link
-        className={[styles.job, 'board-shadow'].join(' ')}
+        className={[styles.job, 'list-item board shadow'].join(' ')}
         onClick={() => this.onClickJob(job)}
       >
-        <img src={image} alt="" />
-        <div className={styles.content} >
-          <div className={styles.title}>{job.title}</div>
-          <div className={styles.info}>
-            <div>{jobFullName}</div>
-            <span>{strTokens}</span>
+        <LogoImage image={image} size={50} />
+        <div className="content">
+          <h5>{job.title}</h5>
+          <div>
+            <span className={styles.fullName}>{jobFullName}</span>
+            <span className={styles.tokens}>{strTokens}</span>
           </div>
         </div>
       </Link>
@@ -122,7 +122,7 @@ export default class Applications extends Component {
           <div>
             { this.renderJob() }
 
-            <div className={[styles.applications, 'board-shadow'].join(' ')}>
+            <div className={[styles.applications, 'board shadow'].join(' ')}>
               <Tabs
                 id="application-mode"
                 activeKey={this.state.tabKey}

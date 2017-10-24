@@ -1,45 +1,21 @@
 @import '../../../theme/variables.scss';
 
-.root {
-  padding-bottom: 45px;
-  
-  .business {
-    display: block;
-    margin-bottom: 30px;
-    text-decoration: none !important;
-  
-    img {
-      float: left;
-      width: 50px;
-      height: 50px;
-      border-radius: 25px;
-      margin: 15px 0 15px 20px;  
-    }
-  
-    .content {
-      display: inline-flex;
-      flex-direction: column;
-      justify-content: space-evenly;
-      width: calc(100% - 105px);
-      height: 50px;
-      margin: 15px 20px 15px 15px;
-  
-      > div {
-        white-space: nowrap;
-        text-overflow: ellipsis;
-        overflow: hidden;
-      }
-  
-      .name {
-        font-size: 16px;
-        font-weight: 500;
-      }
-    }
+.business {
+  margin-bottom: 30px;
+
+  :global(.logo-image) {
+    margin: 15px 15px 15px 20px;
+  }
+
+  :global(.content) {
+    width: calc(100% - 105px);
+    height: 50px;
+    margin: 15px 20px 15px 0;    
   }
 }
 
 .products {
-  :global(.board-shadow) {
+  :global(.board) {
     text-align: center;
   }
 

@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import Button from 'react-bootstrap/lib/Button';
 import { Link, browserHistory } from 'react-router';
 import Helmet from 'react-helmet';
-import { ItemList, JobDetail } from 'components';
+import { ItemList, JobDetail, LogoImage } from 'components';
 import ApiClient from 'helpers/ApiClient';
 import * as utils from 'helpers/utils';
 import styles from './MyApplications.scss';
@@ -45,7 +45,7 @@ export default class MyApplications extends Component {
     const job = application.job_data;
     // const workplace = job.location_data;
     const jobFullName = utils.getJobFullName(job);
-    const image = utils.getJobLogo(job, true);
+    const image = utils.getJobLogo(job);
     job.distance = utils.getDistanceFromLatLonEx(
       job.location_data.latitude,
       job.location_data.longitude,
@@ -56,16 +56,16 @@ export default class MyApplications extends Component {
     return (
       <Link
         key={application.id}
-        className={styles.application}
+        className={[styles.application, 'list-item'].join(' ')}
         onClick={() => this.onDetail(application)}
       >
-        <img src={image} alt="" />
-        <div className={styles.content} >
-          <div className={styles.title}>{job.title}</div>
-          <div className={styles.subTitle}>{jobFullName}</div>
-          <div className={styles.desc}>{job.description}</div>
+        <LogoImage image={image} />
+        <div className="content">
+          <h5>{job.title}</h5>
+          <span className={styles.subTitle}>{jobFullName}</span>
+          <span>{job.description}</span>
         </div>
-        <div className={styles.controls}>
+        <div className="controls">
           <Button
             bsStyle="success"
             onClick={e => this.onMessage(application, e)}
@@ -95,7 +95,7 @@ export default class MyApplications extends Component {
             <h3>My Applications</h3>
           </div>
 
-          <div className="board-shadow">
+          <div className="board shadow">
             <ItemList
               items={this.state.applications}
               onFilter={this.onFilter}

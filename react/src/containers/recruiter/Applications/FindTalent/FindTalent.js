@@ -3,7 +3,8 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router';
 import { connect } from 'react-redux';
 import Button from 'react-bootstrap/lib/Button';
-import { Loading, ItemList, JobSeekerDetail } from 'components';
+import { COUNT_PER_PAGE } from 'const';
+import { Loading, ItemList, JobSeekerDetail, Pagination, LogoImage } from 'components';
 import ApiClient from 'helpers/ApiClient';
 import * as utils from 'helpers/utils';
 import * as commonActions from 'redux/modules/common';
@@ -35,12 +36,11 @@ export default class FindTalent extends Component {
   onRefresh = () => {
     this.setState({ jobSeekers: null });
     this.api.getJobSeekers(`?job=${this.props.job.id}`).then(
-      jobSeekers => this.setState({ jobSeekers })
+      jobSeekers => this.setState({ jobSeekers, page: 0 })
     );
   }
 
-  onFilter = (jobSeeker, filterText) =>
-    utils.getJobSeekerFullName(jobSeeker).toLowerCase().indexOf(filterText) !== -1;
+  onSelectPage = page => this.setState({ page });
 
   onConnect = (jobSeeker, event) => {
     const { jobSeekers } = this.state;
@@ -129,15 +129,15 @@ export default class FindTalent extends Component {
     return (
       <Link
         key={jobSeeker.id}
-        className={styles.jobSeeker}
+        className={[styles.jobSeeker, 'list-item'].join(' ')}
         onClick={() => this.onDetail(jobSeeker)}
       >
-        <img src={image} alt="" />
-        <div className={styles.content} >
-          <div className={styles.name}>{fullName}</div>
-          <div className={styles.desc}>{jobSeeker.description}</div>
+        <LogoImage image={image} />
+        <div className="content">
+          <h5>{fullName}</h5>
+          <span>{jobSeeker.description}</span>
         </div>
-        <div className={styles.controls}>
+        <div className="controls">
           <Button
             bsStyle="success"
             disabled={tokens === 0}
@@ -152,29 +152,40 @@ export default class FindTalent extends Component {
   };
 
   renderEmpty = () => (
-    <span>
-      {
-        `There are no more new matches for this job.
-         You can restore your removed matches by clicking refresh above.`
-      }
-    </span>
+    <div>
+      <span>
+        {
+          `There are no more new matches for this job.
+          You can restore your removed matches by clicking refresh above.`
+        }
+      </span>
+      <button className="link-btn" onClick={this.onRefresh}>
+        Refresh
+      </button>
+    </div>
   );
 
   render() {
-    const { selectedJobSeeker } = this.state;
+    const { selectedJobSeeker, jobSeekers } = this.state;
+    let total = 0;
+    let page;
+    let pageJobSeekers;
+
+    if (jobSeekers) {
+      total = jobSeekers.length;
+      const nPage = Math.ceil(total / COUNT_PER_PAGE);
+      page = Math.max(0, Math.min(this.state.page, nPage - 1));
+      const offset = page * COUNT_PER_PAGE;
+      pageJobSeekers = jobSeekers.slice(offset, Math.min(offset + COUNT_PER_PAGE, total));
+    }
 
     return (
       <div>
         <ItemList
-          items={this.state.jobSeekers}
-          onFilter={this.onFilter}
-          buttons={[
-            { label: 'Refresh', bsStyle: 'success', onClick: this.onRefresh }
-          ]}
+          items={pageJobSeekers}
           renderItem={this.renderItem}
           renderEmpty={this.renderEmpty}
         />
-
         {
           selectedJobSeeker &&
           <JobSeekerDetail
@@ -189,6 +200,16 @@ export default class FindTalent extends Component {
             }}
             onClose={() => this.onDetail()}
           />
+        }
+        {
+          total > COUNT_PER_PAGE &&
+          <div className={styles.paginationController}>
+            <Pagination
+              total={total}
+              index={page}
+              onSelect={this.onSelectPage}
+            />
+          </div>
         }
       </div>
     );

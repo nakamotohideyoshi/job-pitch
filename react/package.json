@@ -107,6 +107,7 @@
     "react-router-bootstrap": "^0.23.1",
     "react-router-redux": "^4.0.8",
     "react-router-scroll": "^0.4.1",
+    "react-scroll": "^1.6.1",
     "react-select": "^1.0.0-rc.10",
     "react-textarea-autosize": "^5.1.0",
     "recordrtc": "^5.4.2",

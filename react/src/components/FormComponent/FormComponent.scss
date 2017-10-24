@@ -22,14 +22,28 @@
   }
 }
 
-.textareaLength {
-  text-align: right;
-  color: $text-color2;
-  font-size: 12px;
-}
-
-:global(.has-error) {
+:global {
   .textareaLength {
-    display: none;
+    text-align: right;
+    color: $text-color2;
+    font-size: 12px;
   }
+
+  .has-error {
+    .textareaLength {
+      display: none;
+    }
+
+    .help-block {
+      margin-bottom: 0;
+    }
+  
+    textarea + div + .help-block {
+      margin-top: 0;
+    }
+  
+    textarea, .Select-control {
+      border-color: #a94442;
+    }
+  }  
 }

@@ -118,7 +118,7 @@ export default class PitchRecord extends Component {
             <h3>Record Pitch</h3>
           </div>
 
-          <div className="board-shadow padding-45">
+          <div className="board shadow padding-45">
             <div className={styles.container}>
               <div className={styles.help}>
                 {`Here you can record your 30 second pitch. The 30 sec.\n

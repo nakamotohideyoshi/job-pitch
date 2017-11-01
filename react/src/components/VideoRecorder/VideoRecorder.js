@@ -10,30 +10,29 @@ const READY = 'READY';
 const RECORDING = 'RECORDING';
 
 export default class VideoRecorder extends Component {
-  static propTypes = {
-    videoUrl: PropTypes.string,
-    onClose: PropTypes.func.isRequired,
-  }
 
-  static defaultProps = {
-    videoUrl: null,
+  static propTypes = {
+    onClose: PropTypes.func.isRequired,
   }
 
   constructor(props) {
     super(props);
-
-    this.state = {
-      status: NONE,
-    };
+    this.state = { status: NONE };
   }
 
   componentDidMount() {
-    if (!this.props.videoUrl) {
-      this.setupVideo();
-    }
+    this.setupVideo();
   }
 
   componentWillUnmount() {
+    if (this.stream) {
+      this.stream.stop();
+    }
+
+    if (this.videoRecorder) {
+      this.videoRecorder.destroy();
+    }
+
     if (this.timer) {
       clearInterval(this.timer);
     }
@@ -41,35 +40,49 @@ export default class VideoRecorder extends Component {
 
   onClose = () => {
     if (this.state.status === RECORDING) {
-      this.stopRecording();
+      this.videoRecorder.stopRecording();
     }
     this.props.onClose();
   }
 
   setupVideo = () => {
-    navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia ||
-      navigator.mozGetUserMedia || navigator.msGetUserMedia;
+    if (navigator.mediaDevices === undefined) {
+      navigator.mediaDevices = {};
+    }
 
-    navigator.getUserMedia({
-      audio: true,
-      video: { frameRate: { ideal: 20, max: 30 } },
-      height: '360px',
-      width: '480px'
-    },
-    stream => {
-      this.stream = stream;
-      this.setState({
-        cameraUrl: window.URL.createObjectURL(stream)
-      });
-    },
-    err => {
-      console.log(err.name);
-    });
+    if (navigator.mediaDevices.getUserMedia === undefined) {
+      navigator.mediaDevices.getUserMedia = constraints => {
+        const getUserMedia = navigator.getUserMedia ||
+                             navigator.webkitGetUserMedia ||
+                             navigator.mozGetUserMedia ||
+                             navigator.msGetUserMedia;
+
+        if (!getUserMedia) {
+          return Promise.reject(new Error('getUserMedia is not implemented in this browser'));
+        }
+
+        return new Promise((resolve, reject) => {
+          getUserMedia.call(navigator, constraints, resolve, reject);
+        });
+      };
+    }
+
+    navigator.mediaDevices.getUserMedia({ audio: true, video: true }).then(
+      stream => {
+        this.stream = stream;
+        this.setState({
+          videoUrl: window.URL.createObjectURL(stream)
+        });
+      },
+      error => {
+        this.setState({ error: error.name });
+      }
+    );
   }
 
-  clearTimer = () => {
+  cancelRecording = () => {
+    this.setState({ status: NONE });
     clearInterval(this.timer);
-    this.timer = null;
   }
 
   readyRecording = () => {
@@ -78,37 +91,21 @@ export default class VideoRecorder extends Component {
       time: __DEVELOPMENT__ ? 1 : 10,
     });
 
-    this.timer = setInterval(() => {
-      const { time } = this.state;
-      if (time > 0) {
-        this.setState({ time: time - 1 });
-      } else {
-        this.clearTimer();
-        this.startRecording();
-      }
-    }, 1000);
-  }
-
-  cancelRecording = () => {
-    this.clearTimer();
-    this.setState({ status: NONE });
+    this.timer = setInterval(
+      () => {
+        const { time } = this.state;
+        if (time > 0) {
+          this.setState({ time: time - 1 });
+        } else {
+          this.startRecording();
+        }
+      },
+      1000
+    );
   }
 
   startRecording = () => {
-    this.videoRecorder = RecordRTC(
-      this.stream,
-      {
-        type: 'video',
-        video: {
-          width: 640,
-          height: 480
-        },
-        canvas: {
-          width: 640,
-          height: 480
-        }
-      }
-    );
+    this.videoRecorder = RecordRTC(this.stream, { type: 'video' });
     this.videoRecorder.startRecording();
 
     this.setState({
@@ -116,52 +113,83 @@ export default class VideoRecorder extends Component {
       time: 0,
     });
 
-    this.timer = setInterval(() => {
-      const { time } = this.state;
-      if (time < 30) {
-        this.setState({ time: time + 1 });
-      } else {
-        this.clearTimer();
-        this.stopRecording(true);
-      }
-    }, 1000);
+    clearInterval(this.timer);
+    this.timer = setInterval(
+      () => {
+        const { time } = this.state;
+        if (time < 30) {
+          this.setState({ time: time + 1 });
+        } else {
+          this.stopRecording();
+        }
+      },
+      1000
+    );
   }
 
-  stopRecording = (save) => {
+  stopRecording = () => {
     this.cancelRecording();
-    window.dispatchEvent(new CustomEvent('stopRecording'));
-    this.videoRecorder.stopRecording(url => {
-      if (save) {
-        this.videoRecorder.getDataURL(data => {
-          this.props.onClose(url, data);
-        });
-      }
-    });
+
+    this.videoRecorder.stopRecording(url =>
+      this.videoRecorder.getDataURL(data => {
+        this.props.onClose(url, data);
+      })
+    );
   }
 
   renderRecTime = () => {
     const { status, time } = this.state;
+
     if (status === READY) {
       return time;
     }
+
     return time < 10 ? `0 : 0${time}` : `0 : ${time}`;
   }
 
+  renderButtons = () => {
+    switch (this.state.status) {
+      case NONE:
+        return (
+          <Button
+            bsStyle="success"
+            onClick={this.readyRecording}
+          >Record</Button>
+        );
+      case READY:
+        return (
+          <Button
+            bsStyle="warning"
+            onClick={this.cancelRecording}
+          >Ready</Button>
+        );
+      case RECORDING:
+        return (
+          <Button
+            bsStyle="danger"
+            onClick={() => this.stopRecording()}
+          >Stop</Button>
+        );
+      default:
+    }
+  }
+
   render() {
-    const { videoUrl } = this.props;
-    const { status, cameraUrl } = this.state;
+    const { status, videoUrl, error } = this.state;
+
     return (
       <Modal show onHide={this.onClose} backdrop="static">
+
         <Modal.Header closeButton>
-          <Modal.Title>{videoUrl ? 'Pitch' : 'Record Pitch'}</Modal.Title>
+          <Modal.Title>Video Recorder</Modal.Title>
         </Modal.Header>
+
         <Modal.Body>
           <div className={styles.videoContainer}>
             <video
               preload="auto"
-              controls={!!videoUrl}
               autoPlay
-              src={videoUrl || cameraUrl}
+              src={videoUrl}
             >
               <track kind="captions" />
             </video>
@@ -172,32 +200,17 @@ export default class VideoRecorder extends Component {
               </div>
             }
           </div>
-          {
-            cameraUrl &&
-            <div className={styles.buttons}>
-              {
-                status === NONE &&
-                <Button
-                  bsStyle="success"
-                  onClick={this.readyRecording}
-                >Record</Button>
-              }
-              {
-                status === READY &&
-                <Button
-                  bsStyle="warning"
-                  onClick={this.cancelRecording}
-                >Ready</Button>
-              }
-              {
-                status === RECORDING &&
-                <Button
-                  bsStyle="danger"
-                  onClick={() => this.stopRecording(true)}
-                >Stop</Button>
-              }
-            </div>
-          }
+
+          <div className={styles.footerContainer}>
+            {
+              videoUrl &&
+              this.renderButtons()
+            }
+            {
+              error &&
+              <div className={styles.error}>{ error }</div>
+            }
+          </div>
         </Modal.Body>
       </Modal>
     );

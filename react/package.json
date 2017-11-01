@@ -110,7 +110,7 @@
     "react-scroll": "^1.6.1",
     "react-select": "^1.0.0-rc.10",
     "react-textarea-autosize": "^5.1.0",
-    "recordrtc": "^5.4.2",
+    "recordrtc": "^5.4.5",
     "redux": "^3.6.0",
     "redux-connect": "^5.0.0",
     "redux-persist": "^4.4.0",

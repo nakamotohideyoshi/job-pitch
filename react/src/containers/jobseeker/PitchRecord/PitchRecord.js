@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import Helmet from 'react-helmet';
 import AWS from 'aws-sdk';
-import VideoRecorder from 'components/VideoRecorder/VideoRecorder';
 import Button from 'react-bootstrap/lib/Button';
 import ProgressBar from 'react-bootstrap/lib/ProgressBar';
+import VideoRecorder from 'components/VideoRecorder/VideoRecorder';
 import ApiClient from 'helpers/ApiClient';
 import * as utils from 'helpers/utils';
 import styles from './PitchRecord.scss';
@@ -23,30 +23,27 @@ export default class PitchRecord extends Component {
     if (this.timer) {
       clearTimeout(this.timer);
     }
+
     if (this.upload) {
       this.upload.abort.bind(this.upload);
     }
   }
 
-  showCamera = () => {
-    this.setState({
-      isRecording: true
-    });
-  }
+  showCamera = () => this.setState({ showCamera: true });
 
-  hideCamera = (url, videoData) => {
-    this.videoData = videoData;
-    this.setState({
-      recoreded: !!url,
-      videoUrl: url || this.state.videoUrl,
-      isRecording: false,
-    });
+  hideCamera = (videoUrl, recordedData) => {
+    const newState = { showCamera: false };
+
+    if (videoUrl) {
+      newState.recordedData = recordedData;
+      newState.videoUrl = videoUrl;
+    }
+
+    this.setState(newState);
   }
 
   uploadFile = () => {
-    this.setState({
-      uploading: true,
-    });
+    this.setState({ uploading: true });
 
     this.api.createPitch().then(pitch => {
       const s3 = new AWS.S3({
@@ -59,8 +56,9 @@ export default class PitchRecord extends Component {
       });
       this.upload = s3.upload({
         Bucket: 'mjp-android-uploads',
-        Key: `https:www.sclabs.co.uk/${pitch.token}.${pitch.id}.${new Date().getTime()}`,
-        Body: this.videoData
+        // Key: `https:www.sclabs.co.uk/${pitch.token}.${pitch.id}.${new Date().getTime()}`,
+        Key: `http:localhost:8080/${pitch.token}.${pitch.id}.${new Date().getTime()}`,
+        Body: this.state.recordedData
       });
       this.upload.on('httpUploadProgress', progress => {
         if (this.upload) {
@@ -95,9 +93,8 @@ export default class PitchRecord extends Component {
       } else {
         utils.successNotif('Uploaded!');
         this.timer = null;
-        this.videoData = null;
         this.setState({
-          recoreded: false,
+          recordedData: null,
           progress: null,
           uploading: false,
         });
@@ -108,7 +105,8 @@ export default class PitchRecord extends Component {
   }
 
   render() {
-    const { videoUrl, recoreded, isRecording, uploading, progress } = this.state;
+    const { videoUrl, recordedData, showCamera, uploading, progress } = this.state;
+
     return (
       <div className={styles.root}>
         <Helmet title="Record Pitch" />
@@ -119,48 +117,49 @@ export default class PitchRecord extends Component {
           </div>
 
           <div className="board shadow padding-45">
-            <div className={styles.container}>
-              <div className={styles.help}>
-                {`Here you can record your 30 second pitch. The 30 sec.\n
-                  video will be viewed by prospective employers.`}
-              </div>
-              <video
-                className={styles.player}
-                preload="auto"
-                controls={!!videoUrl}
-                src={videoUrl}
-              >
-                <track kind="captions" />
-              </video>
+            <div className={styles.help}>
+              {`Here you can record your 30 second pitch. The 30 sec.\n
+                video will be viewed by prospective employers.`}
+            </div>
+
+            <video
+              className={styles.player}
+              preload="auto"
+              controls={!!videoUrl}
+              src={videoUrl}
+            >
+              <track kind="captions" />
+            </video>
+            {
+              progress &&
+              <ProgressBar
+                className={styles.progress}
+                striped
+                bsStyle="danger"
+                now={progress}
+                label={`${progress}%`}
+              />
+            }
+            <div className={styles.buttons}>
+              <Button
+                bsStyle="success"
+                disabled={uploading}
+                onClick={this.showCamera}
+              >Record New Pitch</Button>
               {
-                progress &&
-                <ProgressBar
-                  className={styles.progress}
-                  striped
-                  bsStyle="danger"
-                  now={progress}
-                  label={`${progress}%`}
-                />
-              }
-              <div className={styles.buttons}>
+                recordedData &&
                 <Button
-                  bsStyle="success"
+                  bsStyle="warning"
                   disabled={uploading}
-                  onClick={this.showCamera}
-                >Record New Pitch</Button>
-                {
-                  recoreded &&
-                  <Button
-                    bsStyle="warning"
-                    disabled={uploading}
-                    onClick={this.uploadFile}
-                  ><i className="fa fa-upload" />{uploading ? 'Uploading...' : 'Upload'}</Button>
-                }
-              </div>
+                  onClick={this.uploadFile}
+                >
+                  <i className="fa fa-upload" />{uploading ? 'Uploading...' : 'Upload'}
+                </Button>
+              }
             </div>
           </div>
           {
-            isRecording &&
+            showCamera &&
             <VideoRecorder onClose={this.hideCamera} />
           }
         </div>

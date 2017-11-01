@@ -1,4 +1,3 @@
-import _ from 'lodash';
 import cookie from 'js-cookie';
 import ApiClient from 'helpers/ApiClient';
 

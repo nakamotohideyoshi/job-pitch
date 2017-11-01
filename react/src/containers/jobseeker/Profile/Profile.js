@@ -13,6 +13,7 @@ import Button from 'react-bootstrap/lib/Button';
 import ProgressBar from 'react-bootstrap/lib/ProgressBar';
 import AWS from 'aws-sdk';
 import { Loading, HelpIcon, FormComponent } from 'components';
+import VideoPlayer from 'components/VideoPlayer/VideoPlayer';
 import VideoRecorder from 'components/VideoRecorder/VideoRecorder';
 import ApiClient from 'helpers/ApiClient';
 import * as utils from 'helpers/utils';
@@ -21,8 +22,10 @@ import styles from './Profile.scss';
 
 @connect(
   () => ({}),
-  { ...commonActions })
+  { ...commonActions }
+)
 export default class Profile extends FormComponent {
+
   static propTypes = {
     setPermission: PropTypes.func.isRequired,
   }
@@ -81,8 +84,11 @@ export default class Profile extends FormComponent {
     isPlayer: true,
   });
 
-  onHideDialog = (url, videoData) => {
-    this.videoData = videoData;
+  onHideDialog = (url, recoredData) => {
+    if (recoredData) {
+      this.recoredData = recoredData;
+    }
+
     this.setState({
       isRecorder: false,
       isPlayer: false,
@@ -115,7 +121,7 @@ export default class Profile extends FormComponent {
       this.setState({ jobSeeker, cvComment });
       this.props.setPermission(jobSeeker.profile ? 2 : 1);
 
-      if (this.videoData) {
+      if (this.recoredData) {
         this.uploadFile();
       } else {
         FormComponent.needToSave = false;
@@ -146,7 +152,7 @@ export default class Profile extends FormComponent {
       s3.upload({
         Bucket: 'mjp-android-uploads',
         Key: `https:www.sclabs.co.uk/${pitch.token}.${pitch.id}.${new Date().getTime()}`,
-        Body: this.videoData,
+        Body: this.recoredData,
         ContentType: 'video/webm',
       }, (err, data) => {
         if (!err) {
@@ -175,7 +181,7 @@ export default class Profile extends FormComponent {
         FormComponent.needToSave = false;
         utils.successNotif('Success!');
         this.timer = null;
-        this.videoData = null;
+        this.recoredData = null;
         this.setState({
           recoreded: false,
           progress: null,
@@ -191,7 +197,7 @@ export default class Profile extends FormComponent {
   }
 
   render() {
-    const { jobSeeker, cvComment, isRecorder, isPlayer, saving, progress } = this.state;
+    const { jobSeeker, cvComment, isRecorder, isPlayer, pitchComment, saving, progress } = this.state;
     const pitch = jobSeeker && jobSeeker.pitches ? jobSeeker.pitches[0] : null;
     const videoUrl = pitch ? pitch.video : null;
 
@@ -355,6 +361,17 @@ export default class Profile extends FormComponent {
                     >Play Current</Button>
                   }
                 </div>
+                <div className={styles.pitchComment}>
+                  {pitchComment}
+                  {
+                    this.cv &&
+                    <button
+                      type="button"
+                      className="fa fa-times link-btn"
+                      onClick={this.onRemovedCV}
+                    />
+                  }
+                </div>
               </FormGroup>
 
               <FormGroup>
@@ -400,7 +417,7 @@ export default class Profile extends FormComponent {
           }
           {
             isPlayer &&
-            <VideoRecorder
+            <VideoPlayer
               videoUrl={videoUrl}
               onClose={this.onHideDialog}
             />

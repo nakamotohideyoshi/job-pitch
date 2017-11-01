@@ -173,8 +173,8 @@ export default class MyApplications extends Component {
   renderEmpty = () => (
     <span>
       {
-        `No applications at the moment. Once thet happens you cant go trough them here and shortlist
-         if needed, you can easy switch to Find Talent mode and "head hunt" as well.`
+        `No applications at the moment. Once that happens you can go trough them here,
+         shortlist and easy switch to Find Talent mode and "head hunt" as well.`
       }
     </span>
   );

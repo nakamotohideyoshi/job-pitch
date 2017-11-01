@@ -3,6 +3,7 @@ import * as utils from 'helpers/utils';
 
 if (__LOCAL__ && __DEVELOPMENT__) {
   axios.defaults.baseURL = 'http://192.168.1.49:8080';
+  // axios.defaults.baseURL = 'http://localhost:8080';
 }
 axios.defaults.headers.common.Accept = 'application/json';
 axios.defaults.headers.post['Content-Type'] = 'application/json';
@@ -164,8 +165,11 @@ export default class ApiClient {
       this.jobStatuses = data[6];
       this.sexes = data[7];
       this.roles = data[8];
-      this.products = data[9];
-      // this.products = utils.getTempProducts();
+      if (__DEVELOPMENT__) {
+        this.products = utils.getTempProducts();
+      } else {
+        this.products = data[9];
+      }
     }),
     this.handleError
   );

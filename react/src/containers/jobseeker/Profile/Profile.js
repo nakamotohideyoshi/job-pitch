@@ -361,7 +361,7 @@ export default class Profile extends FormComponent {
                     >Play Current</Button>
                   }
                 </div>
-                <div className={styles.pitchComment}>
+                {/* <div className={styles.pitchComment}>
                   {pitchComment}
                   {
                     this.cv &&
@@ -371,7 +371,7 @@ export default class Profile extends FormComponent {
                       onClick={this.onRemovedCV}
                     />
                   }
-                </div>
+                </div> */}
               </FormGroup>
 
               <FormGroup>

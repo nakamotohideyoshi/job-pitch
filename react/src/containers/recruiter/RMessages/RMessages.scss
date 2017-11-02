@@ -30,6 +30,7 @@
     }
   
     .appList {
+      overflow: auto;
       flex: 1;
 
       > div:first-child {

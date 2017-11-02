@@ -3,7 +3,6 @@ import * as utils from 'helpers/utils';
 
 if (__LOCAL__ && __DEVELOPMENT__) {
   axios.defaults.baseURL = 'http://192.168.1.49:8080';
-  // axios.defaults.baseURL = 'http://localhost:8080';
 }
 axios.defaults.headers.common.Accept = 'application/json';
 axios.defaults.headers.post['Content-Type'] = 'application/json';

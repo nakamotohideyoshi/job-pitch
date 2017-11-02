@@ -685,7 +685,7 @@ class ProductTokensAdmin(admin.ModelAdmin):
 
 @admin.register(PayPalProduct)
 class ProductTokensAdmin(admin.ModelAdmin):
-    list_display = ('product_code', 'tokens',)
+    list_display = ('product_code', 'price', 'tokens',)
 
 
 @admin.register(Sector)

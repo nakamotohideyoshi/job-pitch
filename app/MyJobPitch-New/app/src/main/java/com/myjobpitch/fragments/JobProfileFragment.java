@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.myjobpitch.SelectPlaceActivity;
 import com.myjobpitch.R;
 import com.myjobpitch.api.MJPApi;
@@ -19,9 +20,11 @@ import com.myjobpitch.api.data.JobProfile;
 import com.myjobpitch.api.data.JobSeeker;
 import com.myjobpitch.api.data.Sector;
 import com.myjobpitch.api.data.Sex;
+import com.myjobpitch.tasks.APIAction;
 import com.myjobpitch.tasks.APITask;
+import com.myjobpitch.tasks.APITaskListener;
 import com.myjobpitch.utils.AppData;
-import com.myjobpitch.utils.Popup;
+import com.myjobpitch.views.Popup;
 import com.myjobpitch.views.SelectDialog;
 import com.myjobpitch.views.SelectDialog.SelectItem;
 import com.rengwuxian.materialedittext.MaterialEditText;
@@ -79,7 +82,7 @@ public class JobProfileFragment extends FormFragment {
         ButterKnife.bind(this, view);
 
         // menu
-        addMenuItem("Save", -1);
+        addMenuItem(MENUGROUP2, 100, "Save", -1);
 
         // data
         mSectors = AppData.get(Sector.class);
@@ -102,24 +105,30 @@ public class JobProfileFragment extends FormFragment {
         mRadiusView.setText(mRadiusNames.get(2));
 
         // load
-        view.setVisibility(View.INVISIBLE);
-        new APITask("Loading...", this) {
+        showLoading(view);
+
+        new APITask(new APIAction() {
             @Override
-            protected void runAPI() throws MJPApiException {
+            public void run() throws MJPApiException {
                 jobSeeker = MJPApi.shared().get(JobSeeker.class, AppData.user.getJob_seeker());
                 if (jobSeeker.getProfile() != null) {
                     profile = MJPApi.shared().get(JobProfile.class, jobSeeker.getProfile());
                     AppData.existProfile = true;
                 }
             }
+        }).addListener(new APITaskListener() {
             @Override
-            protected void onSuccess() {
-                view.setVisibility(View.VISIBLE);
+            public void onSuccess() {
+                hideLoading();
                 if (profile != null) {
                     load();
                 }
             }
-        };
+            @Override
+            public void onError(JsonNode errors) {
+                errorHandler(errors);
+            }
+        }).execute();
 
         return  view;
     }
@@ -264,22 +273,26 @@ public class JobProfileFragment extends FormFragment {
             profile.setLatitude(mLatitude);
             profile.setPostcode_lookup("");
 
-            new APITask("Saving...", this) {
+            showLoading();
+            new APITask(new APIAction() {
                 @Override
-                protected void runAPI() throws MJPApiException {
+                public void run() throws MJPApiException {
                     if (profile.getId() == null) {
                         profile = MJPApi.shared().create(JobProfile.class, profile);
                     } else {
                         profile = MJPApi.shared().update(JobProfile.class, profile);
                     }
                 }
+            }).addListener(new APITaskListener() {
                 @Override
-                protected void onSuccess() {
-                    Popup.showGreen("Success!", "OK", new View.OnClickListener() {
+                public void onSuccess() {
+                    hideLoading();
+                    Popup popup = new Popup(getContext(), "Success!", true);
+                    popup.addGreenButton("Ok", new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
                             if (!AppData.existProfile) {
-                                getApp().reloadMenu(true);
+                                getApp().reloadMenu();
                                 if (jobSeeker.getPitch() == null) {
                                     getApp().setRootFragement(AppData.PAGE_ADD_RECORD);
                                 } else {
@@ -288,9 +301,14 @@ public class JobProfileFragment extends FormFragment {
                                 AppData.existProfile = true;
                             }
                         }
-                    }, null, null, true);
+                    });
+                    popup.show();
                 }
-            };
+                @Override
+                public void onError(JsonNode errors) {
+                    errorHandler(errors);
+                }
+            }).execute();
 
         }
     }

@@ -12,10 +12,13 @@ import com.myjobpitch.api.data.Application;
 import com.myjobpitch.api.data.ApplicationForCreation;
 import com.myjobpitch.api.data.Job;
 import com.myjobpitch.api.data.JobSeeker;
+import com.myjobpitch.tasks.APIAction;
 import com.myjobpitch.tasks.APITask;
+import com.myjobpitch.tasks.APITaskListener;
 import com.myjobpitch.utils.AppHelper;
-import com.myjobpitch.utils.Popup;
+import com.myjobpitch.views.Popup;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class FindTalentFragment extends SwipeFragment<JobSeeker> {
@@ -40,19 +43,27 @@ public class FindTalentFragment extends SwipeFragment<JobSeeker> {
 
     @Override
     protected void loadData() {
-        new APITask("Loading...", this) {
-            List<JobSeeker> data;
+        final List<JobSeeker> data = new ArrayList<>();
+
+        showLoading();
+        new APITask(new APIAction() {
             @Override
-            protected void runAPI() throws MJPApiException {
+            public void run() throws MJPApiException {
                 job = MJPApi.shared().getUserJob(job.getId());
-                data = MJPApi.shared().get(JobSeeker.class, "job=" + job.getId());
+                data.addAll(MJPApi.shared().get(JobSeeker.class, "job=" + job.getId()));
             }
+        }).addListener(new APITaskListener() {
             @Override
-            protected void onSuccess() {
+            public void onSuccess() {
+                hideLoading();
                 showCredits();
                 setData(data);
             }
-        };
+            @Override
+            public void onError(JsonNode errors) {
+                errorHandler(errors);
+            }
+        }).execute();
     }
 
     @Override
@@ -64,34 +75,33 @@ public class FindTalentFragment extends SwipeFragment<JobSeeker> {
 
     @Override
     protected void swipedRight(final JobSeeker jobSeeker) {
-
-        new APITask(new APITask.ErrorListener() {
+        new APITask(new APIAction() {
             @Override
-            public void onError(MJPApiException e) {
-                JsonNode errors = e.getErrors();
-                if (errors.has(0) && errors.get(0).asText().equals("NO_TOKENS")) {
-                    cardStack.unSwipeCard();
-                    Popup.showError("You have no credits left so cannot compete this connection. Credits cannot be added through the app, please go to our web page.");
-                }
-            }
-        }) {
-            Application application;
-            @Override
-            protected void runAPI() throws MJPApiException {
+            public void run() throws MJPApiException {
                 ApplicationForCreation applicationForCreation = new ApplicationForCreation();
                 applicationForCreation.setJob(job.getId());
                 applicationForCreation.setJob_seeker(jobSeeker.getId());
                 applicationForCreation.setShortlisted(false);
                 applicationForCreation = MJPApi.shared().create(ApplicationForCreation.class, applicationForCreation);
-                application = MJPApi.shared().get(Application.class, applicationForCreation.getId());
-            }
-            @Override
-            protected void onSuccess() {
+                Application application = MJPApi.shared().get(Application.class, applicationForCreation.getId());
                 job = application.getJob_data();
+            }
+        }).addListener(new APITaskListener() {
+            @Override
+            public void onSuccess() {
                 int creditCount = job.getLocation_data().getBusiness_data().getTokens();
                 creditsView.setText(creditCount + (creditCount > 1 ? " credits" : " credit"));
             }
-        };
+            @Override
+            public void onError(JsonNode errors) {
+                if (errors.has(0) && errors.get(0).asText().equals("NO_TOKENS")) {
+                    cardStack.unSwipeCard();
+                    Popup popup = new Popup(getContext(), "You have no credits left so cannot compete this connection. Credits cannot be added through the app, please go to our web page.", true);
+                    popup.addGreyButton("Ok", null);
+                    popup.show();
+                }
+            }
+        }).execute();
 
     }
 

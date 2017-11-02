@@ -1,6 +1,7 @@
 package com.myjobpitch.fragments;
 
 import android.content.Context;
+import android.graphics.Paint;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
@@ -10,15 +11,20 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.myjobpitch.R;
 import com.myjobpitch.api.MJPApi;
 import com.myjobpitch.api.MJPApiException;
 import com.myjobpitch.api.data.Job;
+import com.myjobpitch.api.data.JobStatus;
 import com.myjobpitch.api.data.Location;
+import com.myjobpitch.tasks.APIAction;
 import com.myjobpitch.tasks.APITask;
+import com.myjobpitch.tasks.APITaskListener;
+import com.myjobpitch.utils.AppData;
 import com.myjobpitch.utils.AppHelper;
 import com.myjobpitch.utils.MJPArraySwipeAdapter;
-import com.myjobpitch.utils.Popup;
+import com.myjobpitch.views.Popup;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,6 +41,8 @@ public class LocationDetailFragment extends BaseFragment {
     @BindView(R.id.nav_title)
     TextView navTitleView;
 
+    @BindView(R.id.list_container)
+    View listContainer;
     @BindView(R.id.swipe_container)
     SwipeRefreshLayout swipeRefreshLayout;
     @BindView(R.id.job_list)
@@ -73,7 +81,9 @@ public class LocationDetailFragment extends BaseFragment {
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                loadJobs();
+                if (loading == null) {
+                    loadJobs();
+                }
             }
         });
 
@@ -94,24 +104,50 @@ public class LocationDetailFragment extends BaseFragment {
             }
         });
 
-        // loaidng data
-
-        view.setVisibility(View.INVISIBLE);
-        new APITask("Loading...", this) {
+        showLoading(view);
+        new APITask(new APIAction() {
             @Override
-            protected void runAPI() throws MJPApiException {
+            public void run() throws MJPApiException {
                 location = MJPApi.shared().getUserLocation(location.getId());
             }
+        }).addListener(new APITaskListener() {
             @Override
-            protected void onSuccess() {
-                view.setVisibility(View.VISIBLE);
+            public void onSuccess() {
+                hideLoading();
                 AppHelper.showLocationInfo(location, infoView);
                 swipeRefreshLayout.setRefreshing(true);
                 loadJobs();
             }
-        };
+            @Override
+            public void onError(JsonNode errors) {
+                errorHandler(errors);
+            }
+        }).execute();
 
         return  view;
+    }
+
+    void loadJobs() {
+        final List<Job> jobs = new ArrayList<>();
+        new APITask(new APIAction() {
+            @Override
+            public void run() throws MJPApiException {
+                jobs.addAll(MJPApi.shared().getUserJobs(location.getId()));
+            }
+        }).addListener(new APITaskListener() {
+            @Override
+            public void onSuccess() {
+                adapter.clear();
+                adapter.addAll(jobs);
+                updatedJobList();
+                swipeRefreshLayout.setRefreshing(false);
+            }
+            @Override
+            public void onError(JsonNode errors) {
+                errorHandler(errors);
+            }
+        }).execute();
+
     }
 
     @OnClick(R.id.edit_button)
@@ -123,40 +159,32 @@ public class LocationDetailFragment extends BaseFragment {
 
     @OnClick(R.id.remove_button)
     void onRemoveLocation() {
-        Popup.showYellow("Are you sure you want to delete " + location.getName(), "Delete", new View.OnClickListener() {
+        Popup popup = new Popup(getContext(), "Are you sure you want to delete " + location.getName(), true);
+        popup.addYellowButton("Delete", new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                new APITask("Deleting...", LocationDetailFragment.this) {
+                showLoading();
+                new APITask(new APIAction() {
                     @Override
-                    protected void runAPI() throws MJPApiException {
+                    public void run() throws MJPApiException {
                         MJPApi.shared().deleteLocation(location.getId());
                     }
+                }).addListener(new APITaskListener() {
                     @Override
-                    protected void onSuccess() {
+                    public void onSuccess() {
                         getApp().popFragment();
                     }
-                };
-            }
-        }, "Cancel", null, true);
-    }
 
-    private void loadJobs() {
+                    @Override
+                    public void onError(JsonNode errors) {
+                        errorHandler(errors);
+                    }
+                }).execute();
 
-        new APITask(null, this) {
-            private List<Job> jobs = new ArrayList<>();
-            @Override
-            protected void runAPI() throws MJPApiException {
-                jobs = MJPApi.shared().getUserJobs(location.getId());
             }
-            @Override
-            protected void onSuccess() {
-                adapter.clear();
-                adapter.addAll(jobs);
-                updatedJobList();
-                swipeRefreshLayout.setRefreshing(false);
-            }
-        };
-
+        });
+        popup.addGreyButton("Cancel", null);
+        popup.show();
     }
 
     private void updatedJobList() {
@@ -169,22 +197,33 @@ public class LocationDetailFragment extends BaseFragment {
     }
 
     private void deleteJob(final Job job) {
-        Popup.showYellow("Are you sure you want to delete " + job.getTitle(), "Delete", new View.OnClickListener() {
+        Popup popup = new Popup(getContext(), "Are you sure you want to delete " + job.getTitle(), true);
+        popup.addYellowButton("Delete", new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                new APITask("Deleting...", LocationDetailFragment.this) {
+                showLoading(listContainer);
+                new APITask(new APIAction() {
                     @Override
-                    protected void runAPI() throws MJPApiException {
+                    public void run() throws MJPApiException {
                         MJPApi.shared().deleteJob(job.getId());
                     }
+                }).addListener(new APITaskListener() {
                     @Override
-                    protected void onSuccess() {
+                    public void onSuccess() {
+                        hideLoading();
                         adapter.remove(job);
                         updatedJobList();
                     }
-                };
+                    @Override
+                    public void onError(JsonNode errors) {
+                        errorHandler(errors);
+                    }
+                }).execute();
+
             }
-        }, "Cancel", null, true);
+        });
+        popup.addGreyButton("Cancel", null);
+        popup.show();
     }
 
     @OnClick(R.id.nav_right_button)
@@ -225,7 +264,24 @@ public class LocationDetailFragment extends BaseFragment {
 
         @Override
         public void fillValues(final int position, View convertView) {
+            Job job = getItem(position);
             AppHelper.showJobInfo(adapter.getItem(position), convertView);
+
+            if (job.getStatus() == AppData.get(JobStatus.class, "OPEN").getId()) {
+                convertView.setAlpha(1);
+                convertView.setBackgroundColor(0xFFFFFFFF);
+                TextView textView = AppHelper.getItemTitleView(convertView);
+                textView.setPaintFlags(textView.getPaintFlags() & (-1 ^ Paint.STRIKE_THRU_TEXT_FLAG));
+                textView = AppHelper.getItemSubTitleView(convertView);
+                textView.setPaintFlags(textView.getPaintFlags() & (-1 ^ Paint.STRIKE_THRU_TEXT_FLAG));
+            } else {
+                convertView.setAlpha(0.5f);
+                convertView.setBackgroundColor(0xFFE1E1E1);
+                TextView textView = AppHelper.getItemTitleView(convertView);
+                textView.setPaintFlags(textView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+                textView = AppHelper.getItemSubTitleView(convertView);
+                textView.setPaintFlags(textView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+            }
 
             AppHelper.getEditButton(convertView).setOnClickListener(new View.OnClickListener() {
                 @Override

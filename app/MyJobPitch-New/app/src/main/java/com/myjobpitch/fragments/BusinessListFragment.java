@@ -16,15 +16,18 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.myjobpitch.R;
 import com.myjobpitch.api.MJPApi;
 import com.myjobpitch.api.MJPApiException;
 import com.myjobpitch.api.data.Business;
+import com.myjobpitch.tasks.APIAction;
 import com.myjobpitch.tasks.APITask;
+import com.myjobpitch.tasks.APITaskListener;
 import com.myjobpitch.utils.AppData;
 import com.myjobpitch.utils.AppHelper;
 import com.myjobpitch.utils.MJPArraySwipeAdapter;
-import com.myjobpitch.utils.Popup;
+import com.myjobpitch.views.Popup;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,6 +48,8 @@ public class BusinessListFragment extends BaseFragment {
     @BindView(R.id.nav_right_button)
     ImageButton addButton;
 
+    @BindView(R.id.list_container)
+    View listContainer;
     @BindView(R.id.swipe_container)
     SwipeRefreshLayout swipeRefreshLayout;
     @BindView(R.id.business_list)
@@ -64,8 +69,8 @@ public class BusinessListFragment extends BaseFragment {
         View view = inflater.inflate(R.layout.fragment_business_list, container, false);
         ButterKnife.bind(this, view);
 
-        canCreateBusinesses = AppData.user.getCan_create_businesses();
         isAddMode = getApp().getCurrentPageID() != AppData.PAGE_ADD_JOB;
+        canCreateBusinesses = AppData.user.getCan_create_businesses();
 
         // header view
 
@@ -77,7 +82,7 @@ public class BusinessListFragment extends BaseFragment {
         } else {
             title = "Businesses";
             headerView.setVisibility(View.GONE);
-            addMenuItem = addMenuItem("Add", R.drawable.ic_add);
+            addMenuItem = addMenuItem(MENUGROUP1, 100, "Add", R.drawable.ic_add);
             addMenuItem.setVisible(false);
         }
 
@@ -87,7 +92,10 @@ public class BusinessListFragment extends BaseFragment {
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                loadBusinesses();
+                swipeRefreshLayout.setRefreshing(false);
+                if (loading == null) {
+                    loadBusinesses();
+                }
             }
         });
 
@@ -117,21 +125,27 @@ public class BusinessListFragment extends BaseFragment {
         return view;
     }
 
-    private void loadBusinesses() {
-        new APITask(this) {
-            private List<Business> businesses;
+    void loadBusinesses() {
+        final List<Business> businesses = new ArrayList<>();
+        new APITask(new APIAction() {
             @Override
-            protected void runAPI() throws MJPApiException {
-                businesses = MJPApi.shared().getUserBusinesses();
+            public void run() throws MJPApiException {
+                businesses.addAll(MJPApi.shared().getUserBusinesses());
             }
+        }).addListener(new APITaskListener() {
             @Override
-            protected void onSuccess() {
+            public void onSuccess() {
                 adapter.clear();
                 adapter.addAll(businesses);
                 updatedBusinessList();
                 swipeRefreshLayout.setRefreshing(false);
             }
-        };
+            @Override
+            public void onError(JsonNode errors) {
+                errorHandler(errors);
+            }
+        }).execute();
+
     }
 
     private void updatedBusinessList() {
@@ -146,32 +160,44 @@ public class BusinessListFragment extends BaseFragment {
         addMenuItem.setVisible(count == 0 || canCreateBusinesses);
         emptyView.setVisibility(count == 0 || !canCreateBusinesses ? View.VISIBLE : View.GONE);
         if (count == 0) {
-            AppHelper.setEmptyViewText(emptyView, "Hi, Welcome to MyJobPitch\nLets start with easy adding your Business");
+            AppHelper.setEmptyViewText(emptyView, "Hi, Welcome to My Job Pitch\nLet's start by easily adding your business!");
             AppHelper.setEmptyButtonText(emptyView, "Create business");
         } else if (!canCreateBusinesses) {
-            AppHelper.setEmptyViewText(emptyView, "Have more than one company?\nGet in touch!");
-            AppHelper.setEmptyButtonText(emptyView, "sales@myjobpitch.com");
+            AppHelper.setEmptyViewText(emptyView, "More than one company?\nGet in touch!");
+            AppHelper.setEmptyButtonText(emptyView, "support@myjobpitch.com");
         }
     }
 
     private void deleteBusiness(final Business business) {
-        Popup.showYellow("Are you sure you want to delete " + business.getName(), "Delete", new View.OnClickListener() {
+        Popup popup = new Popup(getContext(), "Are you sure you want to delete " + business.getName(), true);
+        popup.addYellowButton("Delete", new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                new APITask("Deleting...", BusinessListFragment.this) {
+                showLoading(listContainer);
+                new APITask(new APIAction() {
                     @Override
-                    protected void runAPI() throws MJPApiException {
+                    public void run() throws MJPApiException {
                         MJPApi.shared().deleteBusiness(business.getId());
                         AppData.user = MJPApi.shared().getUser();
                     }
+                }).addListener(new APITaskListener() {
                     @Override
-                    protected void onSuccess() {
+                    public void onSuccess() {
+                        hideLoading();
                         adapter.remove(business);
                         updatedBusinessList();
                     }
-                };
+
+                    @Override
+                    public void onError(JsonNode errors) {
+                        errorHandler(errors);
+                    }
+                }).execute();
+
             }
-        }, "Cancel", null, true);
+        });
+        popup.addGreyButton("Cancel", null);
+        popup.show();
     }
 
     @OnClick(R.id.nav_right_button)
@@ -186,7 +212,7 @@ public class BusinessListFragment extends BaseFragment {
             onClickAddButton();
         } else {
             Intent intent = new Intent(Intent.ACTION_VIEW);
-            intent.setData(Uri.parse("mailto:sales@myjobpitch.com"));
+            intent.setData(Uri.parse("mailto:support@myjobpitch.com"));
             startActivity(intent);
         }
     }
@@ -247,7 +273,6 @@ public class BusinessListFragment extends BaseFragment {
                     removeButton.setVisibility(View.GONE);
                 }
             }
-
         }
 
     }

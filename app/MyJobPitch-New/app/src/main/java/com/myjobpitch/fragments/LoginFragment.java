@@ -15,17 +15,20 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.github.rubensousa.bottomsheetbuilder.BottomSheetBuilder;
 import com.github.rubensousa.bottomsheetbuilder.adapter.BottomSheetItemClickListener;
 import com.myjobpitch.R;
 import com.myjobpitch.api.MJPApi;
 import com.myjobpitch.api.MJPApiException;
+import com.myjobpitch.api.auth.AuthToken;
 import com.myjobpitch.api.auth.User;
-import com.myjobpitch.api.data.JobSeeker;
+import com.myjobpitch.tasks.APIAction;
 import com.myjobpitch.tasks.APITask;
+import com.myjobpitch.tasks.APITaskListener;
 import com.myjobpitch.utils.AppData;
 import com.myjobpitch.utils.AppHelper;
-import com.myjobpitch.utils.Popup;
+import com.myjobpitch.views.Popup;
 
 import java.util.HashMap;
 
@@ -60,28 +63,24 @@ public class LoginFragment extends FormFragment {
     @BindView(R.id.reset_email)
     EditText mResetEmailView;
 
-    @BindView(R.id.select_server1)
-    Button mSelectServer1;
-    @BindView(R.id.select_server2)
-    Button mSelectServer2;
+    @BindView(R.id.select_server)
+    Button mSelectServer;
 
     private enum Status {
         LOGIN, REGISTER, RESET
     };
     private Status status = Status.LOGIN;
 
-    private boolean isAnimation = false;
-    private static boolean isFirst = true;
-
-    private boolean isPause = false;
-    private boolean loggedin = false;
-
+    private boolean isLoggedin = false;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
         View view = inflater.inflate(R.layout.fragment_login, container, false);
         ButterKnife.bind(this, view);
+
+        // setting ui
 
         DisplayMetrics displayMetrics = new DisplayMetrics();
         getApp().getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
@@ -92,91 +91,119 @@ public class LoginFragment extends FormFragment {
         registerPanel.setX(displayMetrics.widthPixels);
         resetContainer.setX(displayMetrics.widthPixels);
 
-        String apiUrl = getApp().getSharedPreferences("LoginPreferences", getApp().MODE_PRIVATE)
-                .getString("api", null);
-        if (apiUrl != null) {
-            if (MJPApi.instance == null) {
-                MJPApi.apiUrl = apiUrl;
-            }
-            mSelectServer1.setText(apiUrl);
-            mSelectServer2.setText(apiUrl);
-        }
+        mUserEmailView.setText(AppData.getEmail());
+        mRememberView.setChecked(AppData.getRemember());
+
+        // get server url
 
         if (AppData.PRODUCT_VERSION) {
-            ((ViewGroup)mSelectServer1.getParent()).removeView(mSelectServer1);
-            ((ViewGroup)mSelectServer2.getParent()).removeView(mSelectServer2);
-        }
-
-        mUserEmailView.setText(getApp().getEmail());
-        if (getApp().getRemember()) {
-            mUserPassView.setText(getApp().getPassword());
-            mRememberView.setChecked(true);
-
-            if (isFirst) {
-                onLogin();
+            ((ViewGroup)mSelectServer.getParent()).removeView(mSelectServer);
+        } else {
+            String apiUrl = AppData.getServerUrl();
+            if (apiUrl != null) {
+                if (MJPApi.instance == null) {
+                    MJPApi.apiUrl = apiUrl;
+                }
+                mSelectServer.setText(apiUrl);
             }
         }
 
-        isFirst = false;
-        loggedin = false;
+        // check auto login
+        if (MJPApi.instance == null && mRememberView.isChecked()) {
+            String token = AppData.getToken();
+            MJPApi.shared().setToken(token);
 
-        return  view;
+            showLoading(view);
+            loading.setBackground(R.color.colorPrimary);
+            new APITask(new APIAction() {
+                @Override
+                public void run() throws MJPApiException {
+                    AppData.loadData();
+                }
+            }).addListener(new APITaskListener() {
+                @Override
+                public void onSuccess() {
+                    if (LoginFragment.this.isResumed()) {
+                        goMain();
+                    } else {
+                        isLoggedin = true;
+                    }
+                }
+                @Override
+                public void onError(JsonNode errors) {
+                    errorHandler(errors);
+                }
+            }).execute();
+        }
+
+
+        isLoggedin = false;
+
+        return view;
+    }
+
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        if (isLoggedin) {
+            goMain();
+        }
     }
 
     @Override
     protected HashMap<String, EditText> getRequiredFields() {
-        if (status != Status.RESET) {
-            return new HashMap<String, EditText>() {
-                {
-                    put("email", mUserEmailView);
-                    put("password", mUserPassView);
-                }
-            };
-        }
-
-        return new HashMap<String, EditText>() {
-            {
-                put("email", mResetEmailView);
-            }
-        };
+        return status != Status.RESET ?
+                (new HashMap<String, EditText>() {
+                    {
+                        put("email", mUserEmailView);
+                        put("password", mUserPassView);
+                    }
+                }) :
+                (new HashMap<String, EditText>() {
+                    {
+                        put("email", mResetEmailView);
+                    }
+                });
     }
 
     private void login() {
+        showLoading();
+        loading.setBackground(R.color.colorPrimary);
 
-        final String email = mUserEmailView.getText().toString();
-        final String password = mUserPassView.getText().toString();
-        final Boolean remember = mRememberView.isChecked();
-
-        String message = status == Status.LOGIN ? "Signing in..." : "Signing up...";
-
-        new APITask(message, this) {
+        new APITask(new APIAction() {
             @Override
-            protected void runAPI() throws MJPApiException {
+            public void run() throws MJPApiException {
+                String email = mUserEmailView.getText().toString().trim();
+                String password = mUserPassView.getText().toString();
+                Boolean remember = mRememberView.isChecked();
+
+                AuthToken token;
                 if (status == LoginFragment.Status.LOGIN) {
-                    MJPApi.shared().login(email, password);
+                    token = MJPApi.shared().login(email, password);
                 } else {
-                    MJPApi.shared().register(email, password, password);
+                    token = MJPApi.shared().register(email, password, password);
                 }
 
                 AppData.loadData();
-
-                if (AppData.user.isJobSeeker()) {
-                    JobSeeker jobSeeker = MJPApi.shared().get(JobSeeker.class, AppData.user.getJob_seeker());
-                    AppData.existProfile = jobSeeker.getProfile() != null;
-                }
+                AppData.saveToken(remember ? token.getKey() : "");
+                AppData.saveLoginInfo(email, remember);
             }
-
+        }).addListener(new APITaskListener() {
             @Override
-            protected void onSuccess() {
-                getApp().saveLoginInfo(email, password, remember);
-
-                if (!isPause) {
+            public void onSuccess() {
+                if (LoginFragment.this.isResumed()) {
                     goMain();
                 } else {
-                    loggedin = true;
+                    isLoggedin = true;
                 }
             }
-        };
+            @Override
+            public void onError(JsonNode errors) {
+                errorHandler(errors);
+            }
+        }).execute();
 
     }
 
@@ -184,42 +211,51 @@ public class LoginFragment extends FormFragment {
         User user = AppData.user;
 
         if (user.isRecruiter()) {
-            getApp().loggedin(AppData.PAGE_FIND_TALENT);
+            showMainPage(AppData.PAGE_FIND_TALENT);
             return;
         }
 
         if (user.isJobSeeker()) {
             if (AppData.existProfile) {
-                getApp().loggedin(AppData.PAGE_FIND_JOB);
+                showMainPage(AppData.PAGE_FIND_JOB);
             } else {
-                getApp().loggedin(AppData.PAGE_JOB_PROFILE);
+                showMainPage(AppData.PAGE_JOB_PROFILE);
             }
             return;
         }
 
-        switch (getApp().getUserType()) {
+        switch (AppData.getUserType()) {
             case AppData.JOBSEEKER:
-                getApp().loggedin(AppData.PAGE_USER_PROFILE);
+                showMainPage(AppData.PAGE_USER_PROFILE);
                 break;
             case AppData.RECRUITER:
-                getApp().loggedin(AppData.PAGE_ADD_JOB);
+                showMainPage(AppData.PAGE_ADD_JOB);
                 break;
             default:
-                Popup.showGreenYellow("Choose User Type", "Get a Job", new View.OnClickListener() {
+                Popup popup = new Popup(getContext(), "Choose User Type", false);
+                popup.addYellowButton("Get a Job", new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        getApp().saveUserType(AppData.JOBSEEKER);
-                        getApp().loggedin(AppData.PAGE_USER_PROFILE);
+                        AppData.saveUserType(AppData.JOBSEEKER);
+                        showMainPage(AppData.PAGE_USER_PROFILE);
                     }
-                }, "I Need Staff", new View.OnClickListener() {
+                });
+                popup.addGreenButton("I Need Staff", new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        getApp().saveUserType(AppData.RECRUITER);
-                        getApp().loggedin(AppData.PAGE_ADD_JOB);
+                        AppData.saveUserType(AppData.RECRUITER);
+                        showMainPage(AppData.PAGE_ADD_JOB);
                     }
-                }, false);
+                });
+                popup.show();
                 break;
         }
+
+    }
+
+    void showMainPage(int pageID) {
+        getApp().reloadMenu();
+        getApp().setRootFragement(pageID);
     }
 
     @OnClick(R.id.login_button)
@@ -232,7 +268,7 @@ public class LoginFragment extends FormFragment {
     @OnClick(R.id.register_button1)
     void onRegister1() {
         if (valid()) {
-            getApp().saveUserType(AppData.JOBSEEKER);
+            AppData.saveUserType(AppData.JOBSEEKER);
             login();
         }
     }
@@ -240,7 +276,7 @@ public class LoginFragment extends FormFragment {
     @OnClick(R.id.register_button2)
     void onRegister2() {
         if (valid()) {
-            getApp().saveUserType(AppData.RECRUITER);
+            AppData.saveUserType(AppData.RECRUITER);
             login();
         }
     }
@@ -248,22 +284,30 @@ public class LoginFragment extends FormFragment {
     @OnClick(R.id.reset_button)
     void onResetPassword() {
         if (valid()) {
+            showLoading();
+            loading.setBackground(R.color.colorPrimary);
 
-            final String email = mResetEmailView.getText().toString().trim();
-
-            new APITask("", this) {
+            new APITask(new APIAction() {
                 @Override
-                protected void runAPI() throws MJPApiException {
+                public void run() throws MJPApiException {
+                    String email = mResetEmailView.getText().toString().trim();
                     MJPApi.shared().resetPassword(email);
                 }
+            }).addListener(new APITaskListener() {
                 @Override
-                protected void onSuccess() {
+                public void onSuccess() {
+                    hideLoading();
                     onResetCancel();
                 }
-            };
-
+                @Override
+                public void onError(JsonNode errors) {
+                    errorHandler(errors);
+                }
+            }).execute();
         }
     }
+
+    /* navigation */
 
     @OnClick(R.id.go_register)
     void onShowRegister() {
@@ -287,38 +331,11 @@ public class LoginFragment extends FormFragment {
     @OnClick(R.id.reset_cancel)
     void onResetCancel() {
         status = Status.LOGIN;
+        mUserEmailView.setText(mResetEmailView.getText());
         movingView(resetContainer, loginContainer, 1);
     }
 
-    @OnClick(R.id.select_server1)
-    void onSelectServer1() {
-        onSelectServer2();
-    }
-
-    @OnClick(R.id.select_server2)
-    void onSelectServer2() {
-        new BottomSheetBuilder(getApp())
-                .setMode(BottomSheetBuilder.MODE_LIST)
-                .addTitleItem("Select")
-                .addItem(0, "https://www.myjobpitch.com/", R.drawable.ic_send)
-                .addItem(1, "https://www.sclabs.co.uk/", R.drawable.ic_send)
-                .addItem(2, "https://test.sclabs.co.uk/", R.drawable.ic_send)
-                .expandOnStart(true)
-                .setItemClickListener(new BottomSheetItemClickListener() {
-                    @Override
-                    public void onBottomSheetItemClick(MenuItem item) {
-                        MJPApi.apiUrl = item.getTitle().toString();
-                        MJPApi.instance = null;
-                        mSelectServer1.setText(MJPApi.apiUrl);
-                        mSelectServer2.setText(MJPApi.apiUrl);
-                        getApp().getSharedPreferences("LoginPreferences", getApp().MODE_PRIVATE).edit()
-                                .putString("api", MJPApi.apiUrl)
-                                .apply();
-                    }
-                })
-                .createDialog()
-                .show();
-    }
+    private boolean isAnimation = false;
 
     private void movingView(final View outView, final View inView, final int dir) {
         if (isAnimation) return;
@@ -369,19 +386,30 @@ public class LoginFragment extends FormFragment {
         });
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        isPause = false;
-        if (loggedin) {
-            goMain();
-        }
-    }
+    /* loading icon */
 
-    @Override
-    public void onPause() {
-        super.onPause();
-        isPause = true;
+    /* select server */
+
+    @OnClick(R.id.select_server)
+    void onSelectServer() {
+        new BottomSheetBuilder(getApp())
+                .setMode(BottomSheetBuilder.MODE_LIST)
+                .addTitleItem("Select")
+                .addItem(0, "https://app.myjobpitch.com/", R.drawable.ic_send)
+                .addItem(1, "https://test.sclabs.co.uk/", R.drawable.ic_send)
+                .expandOnStart(true)
+                .setItemClickListener(new BottomSheetItemClickListener() {
+                    @Override
+                    public void onBottomSheetItemClick(MenuItem item) {
+                        String apiUrl = item.getTitle().toString();
+                        mSelectServer.setText(apiUrl);
+                        AppData.saveServerUrl(apiUrl);
+                        MJPApi.apiUrl = apiUrl;
+                        MJPApi.instance = null;
+                    }
+                })
+                .createDialog()
+                .show();
     }
 
 }

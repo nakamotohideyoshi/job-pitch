@@ -17,7 +17,7 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.kaopiz.kprogresshud.KProgressHUD;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.myjobpitch.CameraActivity;
 import com.myjobpitch.MediaPlayerActivity;
 import com.myjobpitch.R;
@@ -27,14 +27,16 @@ import com.myjobpitch.api.data.JobSeeker;
 import com.myjobpitch.api.data.Nationality;
 import com.myjobpitch.api.data.Pitch;
 import com.myjobpitch.api.data.Sex;
+import com.myjobpitch.tasks.APIAction;
 import com.myjobpitch.tasks.APITask;
+import com.myjobpitch.tasks.APITaskListener;
 import com.myjobpitch.uploader.AWSPitchUploader;
 import com.myjobpitch.uploader.PitchUpload;
 import com.myjobpitch.uploader.PitchUploadListener;
 import com.myjobpitch.utils.AppData;
 import com.myjobpitch.utils.AppHelper;
 import com.myjobpitch.utils.Loading;
-import com.myjobpitch.utils.Popup;
+import com.myjobpitch.views.Popup;
 import com.myjobpitch.views.SelectDialog;
 import com.myjobpitch.views.SelectDialog.SelectItem;
 import com.rengwuxian.materialedittext.MaterialEditText;
@@ -131,7 +133,7 @@ public class TalentProfileFragment extends FormFragment {
         ButterKnife.bind(this, view);
 
         // menu
-        addMenuItem("Save", -1);
+        addMenuItem(MENUGROUP2, 100, "Save", -1);
 
         // data
         for (Sex sex : AppData.get(Sex.class)) {
@@ -141,22 +143,26 @@ public class TalentProfileFragment extends FormFragment {
 
         // loading
         if (AppData.user.getJob_seeker() != null) {
-            view.setVisibility(View.INVISIBLE);
-            new APITask("Loading...", this) {
+            showLoading(view);
+            new APITask(new APIAction() {
                 @Override
-                protected void runAPI() throws MJPApiException {
+                public void run() throws MJPApiException {
                     jobSeeker = MJPApi.shared().get(JobSeeker.class, AppData.user.getJob_seeker());
                     AppData.existProfile = jobSeeker.getProfile() != null;
                 }
+            }).addListener(new APITaskListener() {
                 @Override
-                protected void onSuccess() {
-                    view.setVisibility(View.VISIBLE);
+                public void onSuccess() {
+                    hideLoading();
                     load();
                 }
-            };
-
+                @Override
+                public void onError(JsonNode errors) {
+                    errorHandler(errors);
+                }
+            }).execute();
         } else {
-            mEmailView.setText(getApp().getEmail());
+            mEmailView.setText(AppData.getEmail());
             mCVViewButton.setVisibility(View.GONE);
         }
 
@@ -228,7 +234,9 @@ public class TalentProfileFragment extends FormFragment {
 
     @OnClick(R.id.job_seeker_cv_help)
     void onCVHelp() {
-        Popup.showGreen("CV summary is what the recruiter first see, write if you have previous relevant experience where and for how long.", null, null, "Close", null, true);
+        Popup popup = new Popup(getContext(), "CV summary is what the recruiter first see, write if you have previous relevant experience where and for how long.", true);
+        popup.addGreyButton("Close", null);
+        popup.show();
     }
 
     @OnClick(R.id.job_seeker_cv_view)
@@ -247,7 +255,9 @@ public class TalentProfileFragment extends FormFragment {
 
     @OnClick(R.id.job_seeker_cv_add_help)
     void onCVAddHelp() {
-        Popup.showGreen("Upload your CV using your favourite cloud service, or take a photo if you have it printed out.", null, null, "Close", null, true);
+        Popup popup = new Popup(getContext(), "Upload your CV using your favourite cloud service, or take a photo if you have it printed out.", true);
+        popup.addGreyButton("Close", null);
+        popup.show();
     }
 
     @OnClick(R.id.job_seeker_cv_upload)
@@ -257,7 +267,9 @@ public class TalentProfileFragment extends FormFragment {
 
     @OnClick(R.id.job_seeker_pitch_help)
     void onPitchHelp() {
-        Popup.showGreen("Tips on how to record your pitch will be placed here.", null, null, "Close", null, true);
+        Popup popup = new Popup(getContext(), "Tips on how to record your pitch will be placed here.", true);
+        popup.addGreyButton("Close", null);
+        popup.show();
     }
 
     @OnClick(R.id.job_seeker_record_new)
@@ -316,112 +328,125 @@ public class TalentProfileFragment extends FormFragment {
 
     @Override
     public void onMenuSelected(int menuID) {
-        if (!valid()) return;
+        if (menuID == 100) {
+            if (!valid()) return;
 
-        if (!mTickBox.isChecked()) {
-            Popup.showError("You must check the box confirming the truth of the information you have provided.");
-            return;
-        }
-
-        Loading.show("Saving...");
-
-        if (jobSeeker == null) {
-            jobSeeker = new JobSeeker();
-        }
-        jobSeeker.setActive(mActiveView.isChecked());
-        jobSeeker.setFirst_name(mFirstNameView.getText().toString().trim());
-        jobSeeker.setLast_name(mLastNameView.getText().toString().trim());
-        jobSeeker.setEmail(mEmailView.getText().toString().trim());
-        jobSeeker.setEmail_public(mEmailPublicView.isChecked());
-        jobSeeker.setTelephone(mTelephoneView.getText().toString().trim());
-        jobSeeker.setTelephone_public(mTelephonePublicView.isChecked());
-        jobSeeker.setMobile(mMobileView.getText().toString().trim());
-        jobSeeker.setMobile_public(mMobilePublicView.isChecked());
-        jobSeeker.setAge(Integer.parseInt(mAgeView.getText().toString()));
-        jobSeeker.setAge_public(mAgePublicView.isChecked());
-        int sexIndex = mSexNames.indexOf(mSexView.getText().toString());
-        if (sexIndex != -1) {
-            jobSeeker.setSex(AppData.get(Sex.class).get(sexIndex).getId());
-        }
-        jobSeeker.setSex_public(mSexPublicView.isChecked());
-        for (Nationality nationality : AppData.get(Nationality.class)) {
-            if (nationality.getName().equals(mNationalityView.getText().toString())) {
-                jobSeeker.setNationality(nationality.getId());
-                break;
+            if (!mTickBox.isChecked()) {
+                Popup popup = new Popup(getContext(), "You must check the box confirming the truth of the information you have provided.", true);
+                popup.addGreyButton("Ok", null);
+                popup.show();
+                return;
             }
-        }
-        jobSeeker.setNationality_public(mNationalityPublicView.isChecked());
-        jobSeeker.setDescription(mDescriptionView.getText().toString().trim());
-        jobSeeker.setHas_references(mHasReferencesView.isChecked());
-        jobSeeker.setTruth_confirmation(mTickBox.isChecked());
-        jobSeeker.setCV(null);
 
-        new APITask(this) {
-            @Override
-            protected void runAPI() throws MJPApiException {
+            showLoading();
 
-                if (cvUri != null) {
-                    try {
-                        File dir = new File(Environment.getExternalStorageDirectory(), "MyJobPitch");
-                        if (!dir.exists()) {
-                            dir.mkdirs();
-                        }
-                        String filename = "cv_" + cvUri.getLastPathSegment();
-                        File outputFile = new File(dir, filename);
+            if (jobSeeker == null) {
+                jobSeeker = new JobSeeker();
+            }
+            jobSeeker.setActive(mActiveView.isChecked());
+            jobSeeker.setFirst_name(mFirstNameView.getText().toString().trim());
+            jobSeeker.setLast_name(mLastNameView.getText().toString().trim());
+            jobSeeker.setEmail(mEmailView.getText().toString().trim());
+            jobSeeker.setEmail_public(mEmailPublicView.isChecked());
+            jobSeeker.setTelephone(mTelephoneView.getText().toString().trim());
+            jobSeeker.setTelephone_public(mTelephonePublicView.isChecked());
+            jobSeeker.setMobile(mMobileView.getText().toString().trim());
+            jobSeeker.setMobile_public(mMobilePublicView.isChecked());
+            if (!mAgeView.getText().toString().isEmpty()) {
+                jobSeeker.setAge(Integer.parseInt(mAgeView.getText().toString()));
+            }
+            jobSeeker.setAge_public(mAgePublicView.isChecked());
+            int sexIndex = mSexNames.indexOf(mSexView.getText().toString());
+            if (sexIndex != -1) {
+                jobSeeker.setSex(AppData.get(Sex.class).get(sexIndex).getId());
+            }
+            jobSeeker.setSex_public(mSexPublicView.isChecked());
+            for (Nationality nationality : AppData.get(Nationality.class)) {
+                if (nationality.getName().equals(mNationalityView.getText().toString())) {
+                    jobSeeker.setNationality(nationality.getId());
+                    break;
+                }
+            }
+            jobSeeker.setNationality_public(mNationalityPublicView.isChecked());
+            jobSeeker.setDescription(mDescriptionView.getText().toString().trim());
+            jobSeeker.setHas_references(mHasReferencesView.isChecked());
+            jobSeeker.setTruth_confirmation(mTickBox.isChecked());
+            jobSeeker.setCV(null);
+            jobSeeker.setNational_insurance_number(81);
 
-                        try {
-                            // Copy imageUri content to temp file
-                            InputStream in = getApp().getContentResolver().openInputStream(cvUri);
-                            try {
-                                FileOutputStream out = new FileOutputStream(outputFile);
-                                try {
-                                    byte[] buf = new byte[1024];
-                                    int len;
-                                    while ((len = in.read(buf)) > 0)
-                                        out.write(buf, 0, len);
-                                } finally {
-                                    out.close();
-                                }
-                            } finally {
-                                in.close();
-                            }
-
-                            // Upload image
-                            try {
-                                jobSeeker = MJPApi.shared().updateJobSeeker(jobSeeker, new FileSystemResource(outputFile));
-                            } catch (MJPApiException e) {
-                                e.printStackTrace();
-                                return;
-                            }
-                        } finally {
-                            outputFile.delete();
-                        }
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                        return;
+            new APITask(new APIAction() {
+                @Override
+                public void run() throws MJPApiException {
+                    if (jobSeeker.getId() == null) {
+                        jobSeeker = MJPApi.shared().create(JobSeeker.class, jobSeeker);
+                        AppData.user.setJob_seeker(jobSeeker.getId());
+                    } else if (cvUri == null) {
+                        jobSeeker = MJPApi.shared().updateJobSeeker(jobSeeker, null);
                     }
 
-                } else {
-                    jobSeeker = MJPApi.shared().updateJobSeeker(jobSeeker, null);
-                }
+                    if (cvUri != null) {
+                        try {
+                            File dir = new File(Environment.getExternalStorageDirectory(), "MyJobPitch");
+                            if (!dir.exists()) {
+                                dir.mkdirs();
+                            }
+                            String filename = "cv_" + cvUri.getLastPathSegment();
+                            File outputFile = new File(dir, filename);
 
-                AppData.user.setJob_seeker(jobSeeker.getId());
-                AppData.existProfile = jobSeeker.getProfile() != null;
-            }
-            @Override
-            protected void onSuccess() {
-                if (mVideoPath == null) {
-                    saveCompleted();
-                } else {
-                    uploadPitch();
+                            try {
+                                // Copy imageUri content to temp file
+                                InputStream in = getApp().getContentResolver().openInputStream(cvUri);
+                                try {
+                                    FileOutputStream out = new FileOutputStream(outputFile);
+                                    try {
+                                        byte[] buf = new byte[1024];
+                                        int len;
+                                        while ((len = in.read(buf)) > 0)
+                                            out.write(buf, 0, len);
+                                    } finally {
+                                        out.close();
+                                    }
+                                } finally {
+                                    in.close();
+                                }
+
+                                // Upload image
+                                try {
+                                    jobSeeker = MJPApi.shared().updateJobSeeker(jobSeeker, new FileSystemResource(outputFile));
+                                } catch (MJPApiException e) {
+                                    e.printStackTrace();
+                                    return;
+                                }
+                            } finally {
+                                outputFile.delete();
+                            }
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                            return;
+                        }
+                    }
+
+                    AppData.existProfile = jobSeeker.getProfile() != null;
+
                 }
-            }
-        };
+            }).addListener(new APITaskListener() {
+                @Override
+                public void onSuccess() {
+                    if (mVideoPath == null) {
+                        saveCompleted();
+                    } else {
+                        uploadPitch();
+                    }
+                }
+                @Override
+                public void onError(JsonNode errors) {
+                    errorHandler(errors);
+                }
+            }).execute();
+        }
     }
 
     void uploadPitch() {
-
-        Loading.getLoadingBar().setMaxProgress(100);
 
         AWSPitchUploader pitchUploader = new AWSPitchUploader(getApp());
         PitchUpload upload = pitchUploader.upload(new File(mVideoPath));
@@ -430,29 +455,31 @@ public class TalentProfileFragment extends FormFragment {
             public void onStateChange(int state) {
                 switch (state) {
                     case PitchUpload.STARTING:
-                        Loading.getLoadingBar().setLabel("Starting upload...");
                         break;
                     case PitchUpload.UPLOADING:
-                        Loading.getLoadingBar().setStyle(KProgressHUD.Style.BAR_DETERMINATE);
-                        Loading.getLoadingBar().setLabel("0%");
+                        loading.setType(Loading.Type.PROGRESS);
                         break;
                     case PitchUpload.PROCESSING:
-                        Loading.getLoadingBar().setStyle(KProgressHUD.Style.SPIN_INDETERMINATE);
-                        Loading.getLoadingBar().setLabel("Processing...");
+                        loading.setType(Loading.Type.SPIN);
                         break;
                     case PitchUpload.COMPLETE:
-                        new APITask(TalentProfileFragment.this) {
+                        new APITask(new APIAction() {
                             @Override
-                            protected void runAPI() throws MJPApiException {
+                            public void run() throws MJPApiException {
                                 jobSeeker = MJPApi.shared().get(JobSeeker.class, AppData.user.getJob_seeker());
                             }
+                        }).addListener(new APITaskListener() {
                             @Override
-                            protected void onSuccess() {
+                            public void onSuccess() {
                                 mPitch = jobSeeker.getPitch();
                                 mVideoPath = null;
                                 saveCompleted();
                             }
-                        };
+                            @Override
+                            public void onError(JsonNode errors) {
+                                errorHandler(errors);
+                            }
+                        }).execute();
                         break;
                 }
             }
@@ -461,15 +488,17 @@ public class TalentProfileFragment extends FormFragment {
             public void onProgress(double current, long total) {
                 int complete = (int) (((float) current / total) * 100);
                 if (complete < 100) {
-                    Loading.getLoadingBar().setProgress(complete);
-                    Loading.getLoadingBar().setLabel(Integer.toString(complete) + "%");
+                    loading.setProgress(complete);
+                    loading.setLabel(Integer.toString(complete) + "%");
                 }
             }
 
             @Override
             public void onError(String message) {
-                Loading.hide();
-                Popup.showError("Error uploading video!");
+                hideLoading();
+                Popup popup = new Popup(getContext(), "Error uploading video!", true);
+                popup.addGreyButton("Ok", null);
+                popup.show();
             }
         });
         upload.start();
@@ -477,7 +506,7 @@ public class TalentProfileFragment extends FormFragment {
     }
 
     void saveCompleted() {
-        Loading.hide();
+        hideLoading();
         if (cvUri != null) {
             cvUri = null;
             mCVCommentView.setText("CV added");
@@ -488,15 +517,17 @@ public class TalentProfileFragment extends FormFragment {
 
         mCVViewButton.setVisibility(jobSeeker.getCV() == null ? View.GONE : View.VISIBLE);
 
-        Popup.showGreen("Success!", "OK", new View.OnClickListener() {
+        Popup popup = new Popup(getContext(), "Success!", true);
+        popup.addGreenButton("Ok", new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (!AppData.existProfile) {
-                    getApp().reloadMenu(true);
+                    getApp().reloadMenu();
                     getApp().setRootFragement(AppData.PAGE_JOB_PROFILE);
                 }
             }
-        }, null, null, true);
+        });
+        popup.show();
     }
 
 }

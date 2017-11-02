@@ -1,5 +1,8 @@
 package com.myjobpitch.utils;
 
+import android.support.v7.app.AppCompatActivity;
+
+import com.myjobpitch.MainActivity;
 import com.myjobpitch.api.MJPAPIObject;
 import com.myjobpitch.api.MJPApi;
 import com.myjobpitch.api.MJPApiException;
@@ -9,6 +12,7 @@ import com.myjobpitch.api.data.ApplicationStatus;
 import com.myjobpitch.api.data.Contract;
 import com.myjobpitch.api.data.Hours;
 import com.myjobpitch.api.data.InitialTokens;
+import com.myjobpitch.api.data.JobSeeker;
 import com.myjobpitch.api.data.JobStatus;
 import com.myjobpitch.api.data.Nationality;
 import com.myjobpitch.api.data.Role;
@@ -35,6 +39,11 @@ public class AppData {
 
     public static void loadData() throws MJPApiException {
         user = MJPApi.shared().getUser();
+        if (user.isJobSeeker()) {
+            JobSeeker jobSeeker = MJPApi.shared().get(JobSeeker.class, user.getJob_seeker());
+            existProfile = jobSeeker.getProfile() != null;
+        }
+
         initialTokens = MJPApi.shared().getInitialTokens();
         data.put(Sector.class, MJPApi.shared().get(Sector.class));
         data.put(Contract.class, MJPApi.shared().get(Contract.class));
@@ -96,5 +105,53 @@ public class AppData {
     public static final int REQUEST_IMAGE_PICK = 10001;
     public static final int REQUEST_GOOGLE_DRIVE = 10002;
     public static final int REQUEST_DROPBOX = 10003;
+
+
+    /************ Shared Preferences ***********/
+
+    public static String getEmail() {
+        return MainActivity.shared().getSharedPreferences("LoginPreferences", AppCompatActivity.MODE_PRIVATE).getString("email", "");
+    }
+
+    public static boolean getRemember() {
+        return MainActivity.shared().getSharedPreferences("LoginPreferences", AppCompatActivity.MODE_PRIVATE).getBoolean("remember", false);
+    }
+
+    public static int getUserType() {
+        return MainActivity.shared().getSharedPreferences("LoginPreferences", AppCompatActivity.MODE_PRIVATE).getInt("usermode", 0);
+    }
+
+    public static String getToken() {
+        return MainActivity.shared().getSharedPreferences("LoginPreferences", AppCompatActivity.MODE_PRIVATE).getString("token", "");
+    }
+
+    public static String getServerUrl() {
+        return MainActivity.shared().getSharedPreferences("LoginPreferences", AppCompatActivity.MODE_PRIVATE).getString("server", null);
+    }
+
+    public static void saveLoginInfo(String email, boolean remember) {
+        MainActivity.shared().getSharedPreferences("LoginPreferences", AppCompatActivity.MODE_PRIVATE).edit()
+                .putString("email", email)
+                .putBoolean("remember", remember)
+                .apply();
+    }
+
+    public static void saveUserType(int usertype) {
+        MainActivity.shared().getSharedPreferences("LoginPreferences", AppCompatActivity.MODE_PRIVATE).edit()
+                .putInt("usermode", usertype)
+                .apply();
+    }
+
+    public static void saveToken(String key) {
+        MainActivity.shared().getSharedPreferences("LoginPreferences", AppCompatActivity.MODE_PRIVATE).edit()
+                .putString("token", key)
+                .apply();
+    }
+
+    public static void saveServerUrl(String url) {
+        MainActivity.shared().getSharedPreferences("LoginPreferences", AppCompatActivity.MODE_PRIVATE).edit()
+                .putString("server", url)
+                .apply();
+    }
 
 }

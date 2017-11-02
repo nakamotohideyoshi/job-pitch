@@ -1,127 +1,133 @@
-<ScrollView
+<FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#fff"
     tools:context="com.myjobpitch.fragments.ApplicationDetailFragment">
 
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:padding="16dp"
-        android:orientation="vertical">
+        android:background="#fff">
 
-        <RelativeLayout
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-            <include
-                android:id="@+id/job_image_view"
-                layout="@layout/view_image_loader"
-                android:layout_width="80dp"
-                android:layout_height="80dp"
-                android:layout_marginRight="10dp"/>
+            android:layout_height="match_parent"
+            android:padding="16dp"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <include
+                    android:id="@+id/job_image_view"
+                    layout="@layout/view_image_loader"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:layout_marginRight="10dp"/>
+
+                <TextView
+                    android:id="@+id/job_title"
+                    android:text="Job Title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@+id/job_image_view"
+                    android:textSize="20sp"
+                    android:textColor="@color/colorPrimary"
+                    android:textStyle="bold"/>
+
+                <TextView
+                    android:id="@+id/job_subtitle"
+                    android:text="Business Work Place"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/job_title"
+                    android:layout_alignLeft="@+id/job_title"
+                    android:layout_marginTop="5dp"
+                    android:textSize="18sp"/>
+
+                <TextView
+                    android:id="@+id/job_attributes"
+                    android:text="Full-time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/job_subtitle"
+                    android:layout_alignLeft="@+id/job_subtitle"
+                    android:layout_marginTop="3dp"
+                    android:textColor="@color/colorGreen"
+                    android:textSize="16sp"/>
+
+                <TextView
+                    android:id="@+id/job_distance"
+                    android:text="0.04 Km"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:textSize="14sp"
+                    android:textColor="@color/colorPrimary"/>
+
+            </RelativeLayout>
 
             <TextView
-                android:id="@+id/job_title"
-                android:text="Job Title"
+                android:text="Job Description:"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_toRightOf="@+id/job_image_view"
-                android:textSize="20sp"
-                android:textColor="@color/colorPrimary"
-                android:textStyle="bold"/>
+                android:layout_marginTop="15dp"
+                android:theme="@style/BoldLabel" />
 
             <TextView
-                android:id="@+id/job_subtitle"
-                android:text="Business Work Place"
+                android:id="@+id/job_desc"
+                android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit sed do eiusmod tempor inididunt ut labore et dolere magena aliqua"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/job_title"
-                android:layout_alignLeft="@+id/job_title"
-                android:layout_marginTop="5dp"
-                android:textSize="18sp"/>
-
-            <TextView
-                android:id="@+id/job_attributes"
-                android:text="Full-time"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/job_subtitle"
-                android:layout_alignLeft="@+id/job_subtitle"
-                android:layout_marginTop="3dp"
-                android:textColor="@color/colorGreen"
-                android:textSize="16sp"/>
-
-            <TextView
-                android:id="@+id/job_distance"
-                android:text="0.04 Km"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:textSize="14sp"
+                android:layout_marginTop="10dp"
+                android:textSize="@dimen/default_fontsize"
                 android:textColor="@color/colorPrimary"/>
 
-        </RelativeLayout>
+            <Button
+                android:id="@+id/apply_button"
+                android:text="Apply"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/button_height"
+                android:layout_marginTop="15dp"
+                android:background="@drawable/button_green"
+                android:theme="@style/Button"/>
 
-        <TextView
-            android:text="Job Description:"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
-            android:theme="@style/BoldLabel" />
+            <Button
+                android:id="@+id/remove_button"
+                android:text="Not Interested"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/button_height"
+                android:layout_marginTop="15dp"
+                android:background="@drawable/button_grey"
+                android:theme="@style/Button"/>
 
-        <TextView
-            android:id="@+id/job_desc"
-            android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit sed do eiusmod tempor inididunt ut labore et dolere magena aliqua"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:textSize="@dimen/default_fontsize"
-            android:textColor="@color/colorPrimary"/>
+            <TextView
+                android:text="Work Place Description:"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginTop="15dp"
+                android:theme="@style/BoldLabel" />
 
-        <Button
-            android:id="@+id/apply_button"
-            android:text="Apply"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/button_height"
-            android:layout_marginTop="15dp"
-            android:background="@drawable/button_green"
-            android:theme="@style/Button"/>
+            <TextView
+                android:id="@+id/location_desc"
+                android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit sed do eiusmod tempor inididunt ut labore et dolere magena aliqua"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginTop="10dp"
+                android:textSize="@dimen/default_fontsize"
+                android:textColor="@color/colorPrimary"/>
 
-        <Button
-            android:id="@+id/remove_button"
-            android:text="Not Interested"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/button_height"
-            android:layout_marginTop="15dp"
-            android:background="@drawable/button_grey"
-            android:theme="@style/Button"/>
+            <com.google.android.gms.maps.MapView
+                android:id="@+id/map_view"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:layout_marginTop="15dp" />
 
-        <TextView
-            android:text="Work Place Description:"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginTop="15dp"
-            android:theme="@style/BoldLabel" />
+        </LinearLayout>
 
-        <TextView
-            android:id="@+id/location_desc"
-            android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit sed do eiusmod tempor inididunt ut labore et dolere magena aliqua"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginTop="10dp"
-            android:textSize="@dimen/default_fontsize"
-            android:textColor="@color/colorPrimary"/>
+    </ScrollView>
 
-        <com.google.android.gms.maps.MapView
-            android:id="@+id/map_view"
-            android:layout_width="match_parent"
-            android:layout_height="200dp"
-            android:layout_marginTop="15dp" />
-
-    </LinearLayout>
-
-</ScrollView>
+</FrameLayout>

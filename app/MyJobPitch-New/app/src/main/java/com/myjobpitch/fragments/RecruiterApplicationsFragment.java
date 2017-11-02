@@ -14,10 +14,12 @@ import com.myjobpitch.api.data.ApplicationStatus;
 import com.myjobpitch.api.data.ApplicationStatusUpdate;
 import com.myjobpitch.api.data.Job;
 import com.myjobpitch.api.data.JobSeeker;
+import com.myjobpitch.tasks.APIAction;
 import com.myjobpitch.tasks.APITask;
+import com.myjobpitch.tasks.APITaskListener;
 import com.myjobpitch.utils.AppData;
 import com.myjobpitch.utils.AppHelper;
-import com.myjobpitch.utils.Popup;
+import com.myjobpitch.views.Popup;
 
 import org.apache.commons.lang3.SerializationUtils;
 
@@ -83,38 +85,44 @@ public class RecruiterApplicationsFragment extends ApplicationsFragment {
     @Override
     protected void applyItem(final Application application) {
         if (listKind == APPLICATIONS) {
-            Popup.showYellow("Are you sure you want to connect this applicaton?", "Connect", new View.OnClickListener() {
+            Popup popup = new Popup(getContext(), "Are you sure you want to connect this applicaton?", true);
+            popup.addYellowButton("Connect", new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-
-                    Integer established = AppData.get(ApplicationStatus.class, ApplicationStatus.ESTABLISHED).getId();
-                    Application updatedApplication = SerializationUtils.clone(application);
-                    updatedApplication.setStatus(established);
-                    final ApplicationStatusUpdate update = new ApplicationStatusUpdate(application);
-
-                    new APITask("Connecting...", new APITask.ErrorListener() {
+                    showLoading();
+                    new APITask(new APIAction() {
                         @Override
-                        public void onError(MJPApiException e) {
-                            JsonNode errors = e.getErrors();
-                            if (errors.has(0) && errors.get(0).asText().equals("NO_TOKENS")) {
-                                Popup.showError("You have no credits left so cannot compete this connection. Credits cannot be added through the app, please go to our web page.");
-                            } else {
-                                onError(e);
-                            }
-                        }
-                    }) {
-                        @Override
-                        protected void runAPI() throws MJPApiException {
+                        public void run() throws MJPApiException {
+                            Integer established = AppData.get(ApplicationStatus.class, ApplicationStatus.ESTABLISHED).getId();
+                            Application updatedApplication = SerializationUtils.clone(application);
+                            updatedApplication.setStatus(established);
+                            final ApplicationStatusUpdate update = new ApplicationStatusUpdate(application);
                             MJPApi.shared().updateApplicationStatus(update);
                         }
+                    }).addListener(new APITaskListener() {
                         @Override
-                        protected void onSuccess() {
+                        public void onSuccess() {
+                            hideLoading();
                             onRefresh();
                         }
-                    };
+                        @Override
+                        public void onError(JsonNode errors) {
+                            if (errors.has(0) && errors.get(0).asText().equals("NO_TOKENS")) {
+                                hideLoading();
+                                Popup popup = new Popup(getContext(), "You have no credits left so cannot compete this connection. Credits cannot be added through the app, please go to our web page.", true);
+                                popup.addGreyButton("Ok", null);
+                                popup.show();
+                            } else {
+                                errorHandler(errors);
+                            }
+
+                        }
+                    }).execute();
 
                 }
-            }, "Cancel", null, true);
+            });
+            popup.addGreyButton("Cancel", null);
+            popup.show();
         } else {
             MessageFragment fragment = new MessageFragment();
             fragment.application = application;
@@ -124,21 +132,33 @@ public class RecruiterApplicationsFragment extends ApplicationsFragment {
 
     @Override
     protected void removeItem(final Application application) {
-        Popup.showYellow("Are you sure you want to delete this applicaton?", "Delete", new View.OnClickListener() {
+        Popup popup = new Popup(getContext(), "Are you sure you want to delete this applicaton?", true);
+        popup.addYellowButton("Delete", new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                new APITask("Deleting...", RecruiterApplicationsFragment.this) {
+                showLoading();
+                new APITask(new APIAction() {
                     @Override
-                    protected void runAPI() throws MJPApiException {
+                    public void run() throws MJPApiException {
                         MJPApi.shared().delete(Application.class, application.getId());
                     }
+                }).addListener(new APITaskListener() {
                     @Override
-                    protected void onSuccess() {
+                    public void onSuccess() {
+                        hideLoading();
                         onRefresh();
                     }
-                };
+                    @Override
+                    public void onError(JsonNode errors) {
+                        errorHandler(errors);
+                    }
+                }).execute();
+
+
             }
-        }, "Cancel", null, true);
+        });
+        popup.addGreyButton("Cancel", null);
+        popup.show();
     }
 
 }

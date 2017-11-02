@@ -4,9 +4,7 @@ import android.widget.EditText;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.myjobpitch.R;
-import com.myjobpitch.api.MJPApiException;
-import com.myjobpitch.utils.Loading;
-import com.myjobpitch.utils.Popup;
+import com.myjobpitch.views.Popup;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -37,15 +35,21 @@ public class FormFragment extends BaseFragment {
 
     }
 
-    public void onError(MJPApiException e) {
+    public void errorHandler(JsonNode errors) {
 
-        Loading.hide();
+        hideLoading();
+
+        if (errors == null) {
+            Popup popup = new Popup(getContext(), "Connection Error", true);
+            popup.addGreyButton("Ok", null);
+            popup.show();
+            return;
+        }
 
         HashMap<String, EditText> requiredFields = getRequiredFields();
         EditText errorView = null;
         String errorMessage = null;
 
-        JsonNode errors = e.getErrors();
         Iterator<String> fieldNames = errors.fieldNames();
         while (fieldNames.hasNext()) {
             String fieldName = fieldNames.next();
@@ -68,7 +72,9 @@ public class FormFragment extends BaseFragment {
         }
 
         if (errorView == null && errorMessage != null) {
-            Popup.showError(errorMessage);
+            Popup popup = new Popup(getContext(), errorMessage, true);
+            popup.addGreyButton("Ok", null);
+            popup.show();
         }
 
     }

@@ -176,6 +176,10 @@ public class MJPApi {
         return createAuthenticatedRequest((Void) null);
     }
 
+    public void setToken(String key) {
+        this.token = new AuthToken(key);
+    }
+
     public boolean isAuthenticated() {
         return this.token != null;
     }

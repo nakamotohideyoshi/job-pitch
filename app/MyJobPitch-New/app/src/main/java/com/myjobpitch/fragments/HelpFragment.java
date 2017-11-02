@@ -28,7 +28,7 @@ public class HelpFragment extends BaseFragment {
 
     @OnClick(R.id.help_how_it)
     void onHowIt() {
-        if (AppData.user.isJobSeeker() || (!AppData.user.isRecruiter() && getApp().getUserType() == AppData.JOBSEEKER)) {
+        if (AppData.user.isJobSeeker() || (!AppData.user.isRecruiter() && AppData.getUserType() == AppData.JOBSEEKER)) {
             goWebviewFragment("How it works", "help_jobseeker");
         } else {
             goWebviewFragment("How it works", "help_recruiter");

@@ -59,6 +59,8 @@ public class MessageListFragment extends ApplicationsFragment {
 
         AppHelper.getEditButton(view).setVisibility(View.GONE);
         AppHelper.getRemoveButton(view).setVisibility(View.GONE);
+
+
     }
 
     @Override

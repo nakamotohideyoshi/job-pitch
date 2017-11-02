@@ -19,8 +19,7 @@ class LocationDetailController: MJPController {
     @IBOutlet weak var firstCreateMessage: UIButton!
     
     var data: NSMutableArray! = NSMutableArray()
-    var jobActive: NSNumber!
-
+    
     var isFirstCreate = false
     var location: Location!
     
@@ -29,8 +28,6 @@ class LocationDetailController: MJPController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        jobActive = AppData.getJobStatusByName(JobStatus.JOB_STATUS_OPEN).id
-        
         tableView.addPullToRefresh {
             self.loadJobs()
         }
@@ -114,7 +111,6 @@ extension LocationDetailController: UITableViewDataSource {
         let cell = tableView.dequeueReusableCell(withIdentifier: "JobCell", for: indexPath) as! JobCell
         
         cell.setData(job)
-        cell.setOpacity(job.status==jobActive ? 1 : 0.5)
         
         cell.rightButtons = [
             MGSwipeButton(title: "",

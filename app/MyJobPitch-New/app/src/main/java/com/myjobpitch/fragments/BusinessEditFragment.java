@@ -17,16 +17,13 @@ import com.myjobpitch.R;
 import com.myjobpitch.api.MJPApi;
 import com.myjobpitch.api.MJPApiException;
 import com.myjobpitch.api.data.Business;
+import com.myjobpitch.tasks.APIAction;
 import com.myjobpitch.tasks.APITask;
 import com.myjobpitch.tasks.APITaskListener;
-import com.myjobpitch.tasks.DeleteAPITaskListener;
 import com.myjobpitch.tasks.UploadImageTask;
-import com.myjobpitch.tasks.recruiter.DeleteBusinessImageTask;
 import com.myjobpitch.utils.AppData;
 import com.myjobpitch.utils.AppHelper;
 import com.myjobpitch.utils.ImageSelector;
-import com.myjobpitch.utils.Loading;
-import com.myjobpitch.utils.Popup;
 import com.rengwuxian.materialedittext.MaterialEditText;
 
 import java.io.File;
@@ -61,44 +58,50 @@ public class BusinessEditFragment extends FormFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        final View view = inflater.inflate(R.layout.fragment_business_edit, container, false);
+        View view = inflater.inflate(R.layout.fragment_business_edit, container, false);
         ButterKnife.bind(this, view);
 
         imageSelector = new ImageSelector(logoView, R.drawable.default_logo);
         isFirstCreate = AppData.user.getBusinesses().size() == 0;
 
-        // title and business info
+        // save button
+        addMenuItem(MENUGROUP2, 100, "Save", -1);
 
         if (business == null) {
+
             title = "Add Business";
             isNew = true;
-            creditsView.setText(AppData.initialTokens.getTokens().toString() + " free credits");
+            creditsView.setText(String.format("%d free credits", AppData.initialTokens.getTokens()));
             addCreditsButton.setVisibility(View.GONE);
+
         } else {
+
             title = "Edit Business";
-            view.setVisibility(View.INVISIBLE);
-            new APITask("Loading...", this) {
+            showLoading(view);
+            new APITask(new APIAction() {
                 @Override
-                protected void runAPI() throws MJPApiException {
+                public void run() throws MJPApiException {
                     business = MJPApi.shared().getUserBusiness(business.getId());
                 }
+            }).addListener(new APITaskListener() {
                 @Override
-                protected void onSuccess() {
-                    view.setVisibility(View.VISIBLE);
+                public void onSuccess() {
+                    hideLoading();
                     load();
                 }
-            };
+                @Override
+                public void onError(JsonNode errors) {
+                    errorHandler(errors);
+                }
+            }).execute();
         }
 
-        // save button
-        addMenuItem("Save", -1);
-
-        return  view;
+        return view;
     }
 
     private void load() {
         nameView.setText(business.getName());
-        creditsView.setText(business.getTokens().toString());
+        creditsView.setText(String.format("%d", business.getTokens()));
         if (business.getImages().size() > 0) {
             imageSelector.loadImage(business.getImages().get(0).getImage());
         } else {
@@ -155,11 +158,11 @@ public class BusinessEditFragment extends FormFragment {
 
         business.setName(nameView.getText().toString().trim());
 
-        Loading.show("Saving...");
+        showLoading();
 
-        new APITask(this) {
+        new APITask(new APIAction() {
             @Override
-            protected void runAPI() throws MJPApiException {
+            public void run() throws MJPApiException {
                 if (business.getId() == null) {
                     business = MJPApi.shared().createBusiness(business);
                     AppData.user = MJPApi.shared().getUser();
@@ -167,68 +170,64 @@ public class BusinessEditFragment extends FormFragment {
                     business = MJPApi.shared().updateBusiness(business);
                 }
             }
+        }).addListener(new APITaskListener() {
             @Override
-            protected void onSuccess() {
+            public void onSuccess() {
                 saveLogo();
             }
-        };
-
+            @Override
+            public void onError(JsonNode errors) {
+                errorHandler(errors);
+            }
+        }).execute();
     }
 
     private void saveLogo() {
-
         if (imageSelector.getImageUri() != null) {
 
-            UploadImageTask uploadTask = new UploadImageTask(getApp(), "user-business-images", "business", imageSelector.getImageUri(), business);
-            uploadTask.addListener(new APITaskListener<Boolean>() {
-                @Override
-                public void onPostExecute(Boolean success) {
-                    compltedSave();
-                }
-                @Override
-                public void onCancelled() {
-                }
-            });
-            uploadTask.execute();
-
-        } else if (business.getImages().size() > 0 && imageSelector.getImage() == null){
-
-            DeleteBusinessImageTask deleteTask = new DeleteBusinessImageTask(business.getImages().get(0).getId());
-            deleteTask.addListener(new DeleteAPITaskListener() {
+            new UploadImageTask(getApp(), "user-business-images", "business", imageSelector.getImageUri(), business)
+            .addListener(new APITaskListener() {
                 @Override
                 public void onSuccess() {
                     compltedSave();
                 }
                 @Override
                 public void onError(JsonNode errors) {
-                    Popup.showError("Error deleting image");
+                    errorHandler(errors);
+                }
+            }).execute();
+
+        } else if (business.getImages().size() > 0 && imageSelector.getImage() == null){
+
+            new APITask(new APIAction() {
+                @Override
+                public void run() throws MJPApiException {
+                    MJPApi.shared().deleteBusinessImage(business.getImages().get(0).getId());
+                }
+            }).addListener(new APITaskListener() {
+                @Override
+                public void onSuccess() {
+                    compltedSave();
                 }
                 @Override
-                public void onConnectionError() {
-                    Popup.showError("Connection Error: Please check your internet connection");
+                public void onError(JsonNode errors) {
+                    errorHandler(errors);
                 }
-                @Override
-                public void onCancelled() {}
-            });
-            deleteTask.execute();
+            }).execute();
 
         } else {
-
             compltedSave();
-
         }
     }
 
     private void compltedSave() {
-        Loading.hide();
-
         if(!isNew) {
             getApp().popFragment();
             return;
         }
 
         if (isFirstCreate) {
-            getApp().reloadMenu(false);
+            getApp().reloadMenu();
             getApp().getSharedPreferences("firstCreate", MODE_PRIVATE).edit()
                     .putBoolean("workplace", true)
                     .apply();
@@ -239,7 +238,6 @@ public class BusinessEditFragment extends FormFragment {
         fragment.isFirstCreate = isFirstCreate;
         fragment.businessId = business.getId();
         getApp().pushFragment(fragment);
-
     }
 
 }

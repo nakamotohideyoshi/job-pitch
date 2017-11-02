@@ -3,7 +3,6 @@ package com.myjobpitch.tasks;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Environment;
-import android.webkit.MimeTypeMap;
 
 import com.myjobpitch.api.MJPAPIObject;
 import com.myjobpitch.api.MJPApi;
@@ -17,68 +16,57 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-/**
- * Created by jcockburn on 26/05/2015.
- */
-public class UploadImageTask extends APITask0<Boolean> {
-    private final Context context;
-    private final String endpoint;
-    private final String objectKey;
-    private final Uri imageUri;
-    private final MJPAPIObject object;
+public class UploadImageTask extends APITask {
 
-    public UploadImageTask(Context context, String endpoint, String objectKey, Uri imageUri, MJPAPIObject object) {
-        this.context = context;
-        this.endpoint = endpoint;
-        this.objectKey = objectKey;
-        this.imageUri = imageUri;
-        this.object = object;
-    }
+    public UploadImageTask(final Context context, final String endpoint, final String objectKey, final Uri imageUri, final MJPAPIObject object) {
 
-    @Override
-    protected Boolean doInBackground(Void... params) {
-        try {
-            File dir = new File(Environment.getExternalStorageDirectory(), "MyJobPitch");
-            if (!dir.exists()) {
-                dir.mkdirs();
-            }
-            String filename = "photo_" + imageUri.getLastPathSegment();
-            File outputFile = new File(dir, filename);
-            try {
-                // Copy imageUri content to temp file
-                InputStream in = context.getContentResolver().openInputStream(imageUri);
+        super(new APIAction() {
+
+            @Override
+            public void run() throws MJPApiException {
                 try {
-                    FileOutputStream out = new FileOutputStream(outputFile);
-                    try {
-                        byte[] buf = new byte[1024];
-                        int len;
-                        while ((len = in.read(buf)) > 0)
-                            out.write(buf, 0, len);
-                    } finally {
-                        out.close();
+                    File dir = new File(Environment.getExternalStorageDirectory(), "MyJobPitch");
+                    if (!dir.exists()) {
+                        dir.mkdirs();
                     }
-                } finally {
-                    in.close();
-                }
+                    String filename = "photo_" + imageUri.getLastPathSegment();
+                    File outputFile = new File(dir, filename);
+                    try {
+                        // Copy imageUri content to temp file
+                        InputStream in = context.getContentResolver().openInputStream(imageUri);
+                        try {
+                            FileOutputStream out = new FileOutputStream(outputFile);
+                            try {
+                                byte[] buf = new byte[1024];
+                                int len;
+                                while ((len = in.read(buf)) > 0)
+                                    out.write(buf, 0, len);
+                            } finally {
+                                out.close();
+                            }
+                        } finally {
+                            in.close();
+                        }
 
-                // Upload image
-                ImageUpload image = new ImageUpload();
-                image.setObject(object.getId());
-                image.setOrder(0);
-                image.setImage(new FileSystemResource(outputFile));
-                try {
-                    MJPApi.shared().uploadImage(endpoint, objectKey, image);
-                } catch (MJPApiException e) {
-                    e.printStackTrace();
-                    return Boolean.FALSE;
+                        // Upload image
+                        ImageUpload image = new ImageUpload();
+                        image.setObject(object.getId());
+                        image.setOrder(0);
+                        image.setImage(new FileSystemResource(outputFile));
+                        try {
+                            MJPApi.shared().uploadImage(endpoint, objectKey, image);
+                        } catch (MJPApiException e) {
+                            e.printStackTrace();
+                        }
+                    } finally {
+                        outputFile.delete();
+                    }
+                } catch (IOException e) {
                 }
-                return Boolean.TRUE;
-            } finally {
-                outputFile.delete();
             }
-        } catch (IOException e) {
-            e.printStackTrace();
-            return Boolean.FALSE;
-        }
+
+        });
+
     }
+
 }

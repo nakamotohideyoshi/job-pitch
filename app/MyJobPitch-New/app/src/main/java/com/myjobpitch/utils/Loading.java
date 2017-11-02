@@ -1,41 +1,72 @@
 package com.myjobpitch.utils;
 
 import android.content.Context;
-import android.support.v4.content.ContextCompat;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 
-import com.kaopiz.kprogresshud.KProgressHUD;
-import com.myjobpitch.MainActivity;
 import com.myjobpitch.R;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 public class Loading {
 
-    private static KProgressHUD loadingBar;
+    @BindView(R.id.loading_text)
+    TextView textLabel;
 
-    public static KProgressHUD getLoadingBar() {
-        return loadingBar;
+    @BindView(R.id.loading_indicator)
+    ProgressBar indicator;
+
+    @BindView(R.id.loading_progressbar)
+    ProgressBar progressBar;
+
+    View view;
+
+    public enum Type { SPIN, PROGRESS }
+
+    public Loading(Context context, View parent) {
+
+        view = LayoutInflater.from(context).inflate(R.layout.view_loading, (ViewGroup) parent, false);
+        ButterKnife.bind(this, view);
+        ((ViewGroup) parent).addView(view);
+
+        setType( Type.SPIN);
     }
 
-    public static void show(final String label) {
-        show(MainActivity.instance, label);
-    }
-
-    public static void show(final Context context, final String label) {
-        if (loadingBar == null) {
-            loadingBar = KProgressHUD.create(context)
-                    .setStyle(KProgressHUD.Style.SPIN_INDETERMINATE)
-                    .setCancellable(false)
-                    .setDimAmount(0.65f)
-                    .setWindowColor(ContextCompat.getColor(context, R.color.colorPopup))
-                    .show();
+    public void setType(Type type) {
+        if (type == Type.SPIN) {
+            indicator.setVisibility(View.VISIBLE);
+            progressBar.setVisibility(View.GONE);
+        } else {
+            indicator.setVisibility(View.GONE);
+            progressBar.setVisibility(View.VISIBLE);
+            progressBar.setProgress(0);
         }
-        loadingBar.setLabel(label.isEmpty() ? null : label);
+        setLabel("");
     }
 
-    public static void hide() {
-        if (loadingBar != null) {
-            loadingBar.dismiss();
-            loadingBar = null;
+    public void setBackground(int color) {
+        view.setBackgroundResource(color);
+    }
+
+    public void setProgress(int progress) {
+        progressBar.setProgress(progress);
+    }
+
+    public void setLabel(String label) {
+        if (label == null || label.trim().equals("")) {
+            textLabel.setVisibility(View.GONE);
+        } else {
+            textLabel.setVisibility(View.VISIBLE);
+            textLabel.setText(label);
         }
+    }
+
+    public void destroy() {
+        ((ViewGroup)view.getParent()).removeView(view);
     }
 
 }

@@ -99,7 +99,7 @@ public class SelectPlaceActivity extends FragmentActivity implements GoogleMap.O
             mMap.getUiSettings().setMyLocationButtonEnabled(true);
         }
 
-        Loading.show(this, "Loading...");
+//        Loading.show(this, "Loading...");
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
@@ -142,7 +142,7 @@ public class SelectPlaceActivity extends FragmentActivity implements GoogleMap.O
             }
         }
 
-        Loading.hide();
+//        Loading.hide();
         mGoogleApiClient.disconnect();
         mGoogleApiClient = null;
     }
@@ -153,7 +153,7 @@ public class SelectPlaceActivity extends FragmentActivity implements GoogleMap.O
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult var1) {
-        Loading.hide();
+//        Loading.hide();
         mGoogleApiClient.disconnect();
         mGoogleApiClient = null;
     }

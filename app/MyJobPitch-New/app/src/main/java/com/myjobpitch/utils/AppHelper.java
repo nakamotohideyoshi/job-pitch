@@ -31,7 +31,7 @@ public class AppHelper {
 
     public static int dp2px(int dp) {
         return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp,
-                MainActivity.instance.getResources().getDisplayMetrics());
+                MainActivity.shared().getResources().getDisplayMetrics());
     }
 
     public static String getJobSeekerName(JobSeeker jobSeeker) {

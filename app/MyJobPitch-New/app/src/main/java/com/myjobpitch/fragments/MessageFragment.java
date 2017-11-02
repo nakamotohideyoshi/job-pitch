@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.myjobpitch.R;
 import com.myjobpitch.api.MJPApi;
 import com.myjobpitch.api.MJPApiException;
@@ -16,7 +17,9 @@ import com.myjobpitch.api.data.JobSeeker;
 import com.myjobpitch.api.data.Location;
 import com.myjobpitch.api.data.Message;
 import com.myjobpitch.api.data.MessageForCreation;
+import com.myjobpitch.tasks.APIAction;
 import com.myjobpitch.tasks.APITask;
+import com.myjobpitch.tasks.APITaskListener;
 import com.myjobpitch.utils.AppData;
 import com.myjobpitch.utils.AppHelper;
 import com.stfalcon.chatkit.commons.ImageLoader;
@@ -175,15 +178,19 @@ public class MessageFragment extends BaseFragment {
         messageForCreation.setApplication(application.getId());
         messageForCreation.setContent(text);
 
-        new APITask() {
+        new APITask(new APIAction() {
             @Override
-            protected void runAPI() throws MJPApiException {
+            public void run() throws MJPApiException {
                 MJPApi.shared().create(MessageForCreation.class, messageForCreation);
             }
+        }).addListener(new APITaskListener() {
             @Override
-            protected void onSuccess() {
+            public void onSuccess() {
             }
-        };
+            @Override
+            public void onError(JsonNode errors) {
+            }
+        }).execute();
     }
 
     @OnClick(R.id.header_view)

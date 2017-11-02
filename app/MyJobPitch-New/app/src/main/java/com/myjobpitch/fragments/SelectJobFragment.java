@@ -1,6 +1,7 @@
 package com.myjobpitch.fragments;
 
 import android.content.Context;
+import android.graphics.Paint;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -13,15 +14,20 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.myjobpitch.MainActivity;
 import com.myjobpitch.R;
 import com.myjobpitch.api.MJPApi;
 import com.myjobpitch.api.MJPApiException;
 import com.myjobpitch.api.data.Job;
 import com.myjobpitch.api.data.JobStatus;
+import com.myjobpitch.tasks.APIAction;
 import com.myjobpitch.tasks.APITask;
+import com.myjobpitch.tasks.APITaskListener;
 import com.myjobpitch.utils.AppData;
 import com.myjobpitch.utils.AppHelper;
+
+import org.springframework.util.CollectionUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -112,17 +118,15 @@ public class SelectJobFragment extends BaseFragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Job job = adapter.getItem(position);
-                if (job.getStatus() == jobActiveStatus) {
-                    if (pageId == AppData.PAGE_FIND_TALENT) {
-                        FindTalentFragment fragment = new FindTalentFragment();
-                        fragment.job = job;
-                        getApp().pushFragment(fragment);
-                    } else {
-                        RecruiterApplicationsFragment fragment = new RecruiterApplicationsFragment();
-                        fragment.job = job;
-                        fragment.listKind = pageId - AppData.PAGE_R_APPLICATIONS;
-                        getApp().pushFragment(fragment);
-                    }
+                if (pageId == AppData.PAGE_FIND_TALENT) {
+                    FindTalentFragment fragment = new FindTalentFragment();
+                    fragment.job = job;
+                    getApp().pushFragment(fragment);
+                } else {
+                    RecruiterApplicationsFragment fragment = new RecruiterApplicationsFragment();
+                    fragment.job = job;
+                    fragment.listKind = pageId - AppData.PAGE_R_APPLICATIONS;
+                    getApp().pushFragment(fragment);
                 }
             }
         });
@@ -135,21 +139,34 @@ public class SelectJobFragment extends BaseFragment {
         return view;
     }
 
-    private void loadJobs() {
-        new APITask(this) {
-            private List<Job> jobs;
+    void loadJobs() {
+        final List<Job> jobs = new ArrayList<>();
+
+        new APITask(new APIAction() {
             @Override
-            protected void runAPI() throws MJPApiException {
-                jobs = MJPApi.shared().getUserJobs(null);
+            public void run() throws MJPApiException {
+                List<Job> data = MJPApi.shared().getUserJobs(null);
+                for(int i=0; i<data.size(); i++) {
+                    Job job = data.get(i);
+                    if (job.getStatus() == jobActiveStatus) {
+                        jobs.add(job);
+                    }
+                }
             }
+        }).addListener(new APITaskListener() {
             @Override
-            protected void onSuccess() {
+            public void onSuccess() {
                 adapter.clear();
                 adapter.addAll(jobs);
                 emptyView.setVisibility(jobs.size()==0 ? View.VISIBLE : View.GONE);
                 swipeRefreshLayout.setRefreshing(false);
             }
-        };
+            @Override
+            public void onError(JsonNode errors) {
+                errorHandler(errors);
+            }
+        }).execute();
+
     }
 
     @OnClick(R.id.nav_right_button)
@@ -186,8 +203,6 @@ public class SelectJobFragment extends BaseFragment {
 
             Job job = getItem(position);
             AppHelper.showJobInfo(job, convertView);
-            convertView.setAlpha(job.getStatus() == jobActiveStatus ? 1 : 0.5f);
-
             return convertView;
         }
 

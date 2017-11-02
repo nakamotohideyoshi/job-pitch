@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.myjobpitch.R;
 import com.myjobpitch.api.MJPApi;
 import com.myjobpitch.api.MJPApiException;
@@ -14,11 +15,14 @@ import com.myjobpitch.api.data.Job;
 import com.myjobpitch.api.data.JobProfile;
 import com.myjobpitch.api.data.JobSeeker;
 import com.myjobpitch.api.data.Location;
+import com.myjobpitch.tasks.APIAction;
 import com.myjobpitch.tasks.APITask;
+import com.myjobpitch.tasks.APITaskListener;
 import com.myjobpitch.utils.AppData;
 import com.myjobpitch.utils.AppHelper;
-import com.myjobpitch.utils.Popup;
+import com.myjobpitch.views.Popup;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class FindJobFragment extends SwipeFragment<Job> {
@@ -37,21 +41,27 @@ public class FindJobFragment extends SwipeFragment<Job> {
 
     @Override
     protected void loadData() {
+        final List<Job> data = new ArrayList<>();
 
-        new APITask("Loading...", this) {
-            private List<Job> data;
+        showLoading();
+        new APITask(new APIAction() {
             @Override
-            protected void runAPI() throws MJPApiException {
+            public void run() throws MJPApiException {
                 jobSeeker = MJPApi.shared().get(JobSeeker.class, AppData.user.getJob_seeker());
                 profile = MJPApi.shared().get(JobProfile.class, jobSeeker.getProfile());
-                data = MJPApi.shared().get(Job.class);
+                data.addAll(MJPApi.shared().get(Job.class));
             }
+        }).addListener(new APITaskListener() {
             @Override
-            protected void onSuccess() {
+            public void onSuccess() {
+                hideLoading();
                 setData(data);
             }
-        };
-
+            @Override
+            public void onError(JsonNode errors) {
+                errorHandler(errors);
+            }
+        }).execute();
     }
 
     @Override
@@ -68,36 +78,40 @@ public class FindJobFragment extends SwipeFragment<Job> {
     @Override
     protected void swipedRight(final Job job) {
         if (jobSeeker.getPitch() == null) {
-            Popup.showGreen("You need to record your pitch video to apply.", "Record my pitch", new View.OnClickListener() {
+            Popup popup = new Popup(getContext(), "You need to record your pitch video to apply.", true);
+            popup.addGreenButton("Record my pitch", new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     getApp().setRootFragement(AppData.PAGE_ADD_RECORD);
                 }
-            }, "Cancel", new View.OnClickListener() {
+            });
+            popup.addGreyButton("Cancel", new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     cardStack.unSwipeCard();
                 }
-            }, true);
+            });
+            popup.show();
         } else {
-            new APITask(new APITask.ErrorListener() {
+            new APITask(new APIAction() {
                 @Override
-                public void onError(MJPApiException e) {
-                    cardStack.unSwipeCard();
-                }
-            }) {
-                @Override
-                protected void runAPI() throws MJPApiException {
+                public void run() throws MJPApiException {
                     ApplicationForCreation applicationForCreation = new ApplicationForCreation();
                     applicationForCreation.setJob(job.getId());
                     applicationForCreation.setJob_seeker(jobSeeker.getId());
                     applicationForCreation.setShortlisted(false);
                     MJPApi.shared().create(ApplicationForCreation.class, applicationForCreation);
                 }
+            }).addListener(new APITaskListener() {
                 @Override
-                protected void onSuccess() {
+                public void onSuccess() {
+
                 }
-            };
+                @Override
+                public void onError(JsonNode errors) {
+                    cardStack.unSwipeCard();
+                }
+            }).execute();
         }
     }
 

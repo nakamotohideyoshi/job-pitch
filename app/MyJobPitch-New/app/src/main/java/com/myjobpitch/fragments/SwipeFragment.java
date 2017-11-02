@@ -1,6 +1,7 @@
 package com.myjobpitch.fragments;
 
 import android.content.Context;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -41,9 +42,18 @@ public class SwipeFragment<T> extends BaseFragment {
         ButterKnife.bind(this, view);
 
         // empty view
-
         AppHelper.setEmptyViewText(emptyView, emptyText);
         emptyButton.setVisibility(View.GONE);
+
+        // save button
+        addMenuItem(MENUGROUP1, 100, "Refresh", R.drawable.ic_refresh);
+
+        return  view;
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
 
         // card list
 
@@ -85,11 +95,6 @@ public class SwipeFragment<T> extends BaseFragment {
         if (adapter.getCount() != 0) {
             adapter.notifyDataSetChanged();
         }
-
-        // save button
-        addMenuItem("Refresh", R.drawable.ic_refresh);
-
-        return  view;
     }
 
     protected void setData(List<T> data) {

@@ -4,9 +4,11 @@ import com.amazonaws.mobileconnectors.s3.transferutility.TransferObserver;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferUtility;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.myjobpitch.api.MJPApi;
+import com.myjobpitch.api.MJPApiException;
 import com.myjobpitch.api.data.Pitch;
-import com.myjobpitch.tasks.CreatePitchTask;
-import com.myjobpitch.tasks.CreateReadUpdateAPITaskListener;
+import com.myjobpitch.tasks.APIAction;
+import com.myjobpitch.tasks.APITask;
+import com.myjobpitch.tasks.APITaskListener;
 
 import java.io.File;
 
@@ -18,6 +20,7 @@ public class AWSPitchUpload extends AWSPitchUploadBase {
     private final TransferUtility transferUtility;
     private TransferObserver mObserver;
     private boolean mCancelled = false;
+    private Pitch pitch;
 
     public AWSPitchUpload(TransferUtility transferUtility, File file) {
         super(null);
@@ -30,11 +33,14 @@ public class AWSPitchUpload extends AWSPitchUploadBase {
         synchronized (this) {
             listener.onStateChange(PitchUpload.STARTING);
         }
-        CreatePitchTask task = new CreatePitchTask(new Pitch());
-        task.addListener(new CreateReadUpdateAPITaskListener<Pitch>() {
+        new APITask(new APIAction() {
             @Override
-            public void onSuccess(Pitch newPitch) {
-                pitch = newPitch;
+            public void run() throws MJPApiException {
+                pitch = MJPApi.shared().create(Pitch.class, new Pitch());
+            }
+        }).addListener(new APITaskListener() {
+            @Override
+            public void onSuccess() {
                 synchronized (this) {
                     if (mCancelled)
                         return;
@@ -49,19 +55,10 @@ public class AWSPitchUpload extends AWSPitchUploadBase {
             }
 
             @Override
-            public synchronized void onError(JsonNode errors) {
+            public void onError(JsonNode errors) {
                 listener.onError(errors.asText());
             }
-
-            @Override
-            public synchronized void onConnectionError() {
-                listener.onError("Connection Error");
-            }
-
-            @Override
-            public void onCancelled() {}
-        });
-        task.execute();
+        }).execute();
     }
 
     @Override

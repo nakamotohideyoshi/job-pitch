@@ -9,8 +9,7 @@ import com.dropbox.core.v2.files.FileMetadata;
 import com.dropbox.core.v2.files.FolderMetadata;
 import com.dropbox.core.v2.files.ListFolderResult;
 import com.dropbox.core.v2.files.Metadata;
-import com.myjobpitch.utils.Loading;
-import com.myjobpitch.utils.Popup;
+import com.myjobpitch.views.Popup;
 
 import android.content.Context;
 import android.content.Intent;
@@ -118,13 +117,16 @@ public class DropboxActivity extends AppCompatActivity {
                     new GetFilesTask().execute();
                 } else {
                     String title = String.format("Do you want to download %s?", metadata.getName());
-                    new Popup(DropboxActivity.this, title, "Download", new View.OnClickListener() {
+                    Popup popup = new Popup(DropboxActivity.this, title, true);
+                    popup.addGreenButton("Download", new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             selectedFile = (FileMetadata)metadata;
                             download();
                         }
-                    }, "Cancel", null, true);
+                    });
+                    popup.addGreyButton("Cancel", null);
+                    popup.show();
                 }
             }
         });
@@ -291,12 +293,12 @@ public class DropboxActivity extends AppCompatActivity {
 
         @Override
         protected void onPreExecute() {
-            Loading.show(DropboxActivity.this, "Downloading...");
+//            Loading.show(DropboxActivity.this, "Downloading...");
         }
 
         @Override
         protected void onPostExecute(String path) {
-            Loading.hide();
+//            Loading.hide();
             if (path != null) {
                 Intent intent = new Intent();
                 intent.putExtra("path", path);

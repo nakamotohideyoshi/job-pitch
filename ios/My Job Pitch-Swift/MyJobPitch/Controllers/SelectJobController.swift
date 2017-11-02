@@ -53,7 +53,12 @@ class SelectJobController: MJPController {
     func refresh() {
         API.shared().loadJobsForLocation(locationId: nil, success: { (data) in
             self.hideLoading()
-            self.data = data.mutableCopy() as! NSMutableArray
+            self.data.removeAllObjects()
+            for job in data as! [Job] {
+                if job.status == self.jobActive {
+                    self.data.add(job)
+                }
+            }
             self.emptyView.isHidden = self.data.count > 0
             self.tableView.reloadData()
             self.tableView.pullToRefreshView.stopAnimating()
@@ -91,24 +96,7 @@ extension SelectJobController: UITableViewDataSource {
         let cell = tableView.dequeueReusableCell(withIdentifier: "JobCell", for: indexPath) as! JobCell
         
         cell.setData(job)
-        cell.isUserInteractionEnabled = job.status==jobActive
         cell.addUnderLine(paddingLeft: 15, paddingRight: 0, color: AppData.greyBorderColor)
-        
-        if job.status == jobActive {
-            cell.setOpacity(1)
-            cell.backgroundColor = UIColor.white
-        } else {
-            var str: NSMutableAttributedString =  NSMutableAttributedString(string: cell.nameLabel.text!)
-            str.addAttribute(NSFontAttributeName, value: UIFont.italicSystemFont(ofSize: 20), range: NSMakeRange(0, str.length))
-            cell.nameLabel.attributedText = str
-            
-            str =  NSMutableAttributedString(string: cell.subTitle.text!)
-            str.addAttribute(NSFontAttributeName, value: UIFont.italicSystemFont(ofSize: 16), range: NSMakeRange(0, str.length))
-            cell.subTitle.attributedText = str
-            
-            cell.setOpacity(0.5)
-            cell.backgroundColor = UIColor(red: 240/256.0, green: 240/256.0, blue: 240/256.0, alpha: 0.5)
-        }
         return cell
     }
     

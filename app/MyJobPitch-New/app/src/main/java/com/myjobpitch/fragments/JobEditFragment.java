@@ -24,16 +24,13 @@ import com.myjobpitch.api.data.Job;
 import com.myjobpitch.api.data.JobStatus;
 import com.myjobpitch.api.data.Location;
 import com.myjobpitch.api.data.Sector;
+import com.myjobpitch.tasks.APIAction;
 import com.myjobpitch.tasks.APITask;
 import com.myjobpitch.tasks.APITaskListener;
-import com.myjobpitch.tasks.DeleteAPITaskListener;
 import com.myjobpitch.tasks.UploadImageTask;
-import com.myjobpitch.tasks.recruiter.DeleteJobImageTask;
 import com.myjobpitch.utils.AppData;
 import com.myjobpitch.utils.AppHelper;
 import com.myjobpitch.utils.ImageSelector;
-import com.myjobpitch.utils.Loading;
-import com.myjobpitch.utils.Popup;
 import com.myjobpitch.views.SelectDialog;
 import com.myjobpitch.views.SelectDialog.SelectItem;
 import com.rengwuxian.materialedittext.MaterialEditText;
@@ -90,31 +87,40 @@ public class JobEditFragment extends FormFragment {
 
         isAddMode = getApp().getCurrentPageID() != AppData.PAGE_ADD_JOB;
 
+        // save button
+        addMenuItem(MENUGROUP2, 100, "Save", -1);
+
         // title and job info
 
         if (job == null) {
+
             title = "Add Job";
             isNew = true;
             load();
+
         } else {
+
             title = "Edit Job";
             location = job.getLocation_data();
-            view.setVisibility(View.INVISIBLE);
-            new APITask("Loading...", this) {
+
+            showLoading(view);
+            new APITask(new APIAction() {
                 @Override
-                protected void runAPI() throws MJPApiException {
+                public void run() throws MJPApiException {
                     job = MJPApi.shared().getUserJob(job.getId());
                 }
+            }).addListener(new APITaskListener() {
                 @Override
-                protected void onSuccess() {
-                    view.setVisibility(View.VISIBLE);
+                public void onSuccess() {
+                    hideLoading();
                     load();
                 }
-            };
+                @Override
+                public void onError(JsonNode errors) {
+                    errorHandler(errors);
+                }
+            }).execute();
         }
-
-        // save button
-        addMenuItem("Save", -1);
 
         return  view;
     }
@@ -141,6 +147,9 @@ public class JobEditFragment extends FormFragment {
         Integer jobHours = -1;
 
         if (job != null) {
+
+            activeView.setChecked(AppData.get(JobStatus.class, job.getStatus()).getName().equals("OPEN"));
+
             titleView.setText(job.getTitle());
             descView.setText(job.getDescription());
             jobSector = job.getSector();
@@ -260,71 +269,69 @@ public class JobEditFragment extends FormFragment {
         int hoursIndex = hoursNames.indexOf(hoursView.getText().toString());
         job.setHours(AppData.get(Hours.class).get(hoursIndex).getId());
 
-        Loading.show("Saving...");
+        showLoading();
 
-        new APITask(this) {
+        new APITask(new APIAction() {
             @Override
-            protected void runAPI() throws MJPApiException {
+            public void run() throws MJPApiException {
                 if (job.getId() == null) {
                     job = MJPApi.shared().createJob(job);
                 } else {
                     job = MJPApi.shared().updateJob(job);
                 }
             }
+        }).addListener(new APITaskListener() {
             @Override
-            protected void onSuccess() {
+            public void onSuccess() {
                 saveLogo();
             }
-        };
-
+            @Override
+            public void onError(JsonNode errors) {
+                errorHandler(errors);
+            }
+        }).execute();
     }
 
     private void saveLogo() {
 
         if (imageSelector.getImageUri() != null) {
-            UploadImageTask uploadTask = new UploadImageTask(getApp(), "user-job-images", "job", imageSelector.getImageUri(), job);
-            uploadTask.addListener(new APITaskListener<Boolean>() {
-                @Override
-                public void onPostExecute(Boolean success) {
-                    compltedSave();
-                }
-                @Override
-                public void onCancelled() {
-                }
-            });
-            uploadTask.execute();
 
-        } else if (job.getImages().size() > 0 && imageSelector.getImage() == null) {
-
-            DeleteJobImageTask deleteTask = new DeleteJobImageTask(job.getImages().get(0).getId());
-            deleteTask.addListener(new DeleteAPITaskListener() {
+            new UploadImageTask(getApp(), "user-job-images", "job", imageSelector.getImageUri(), job)
+            .addListener(new APITaskListener() {
                 @Override
                 public void onSuccess() {
                     compltedSave();
                 }
                 @Override
                 public void onError(JsonNode errors) {
-                    Popup.showError("Error deleting image");
+                    errorHandler(errors);
+                }
+            }).execute();
+
+        } else if (job.getImages().size() > 0 && imageSelector.getImage() == null) {
+
+            new APITask(new APIAction() {
+                @Override
+                public void run() throws MJPApiException {
+                    MJPApi.shared().deleteJobImage(job.getImages().get(0).getId());
+                }
+            }).addListener(new APITaskListener() {
+                @Override
+                public void onSuccess() {
+                    compltedSave();
                 }
                 @Override
-                public void onConnectionError() {
-                    Popup.showError("Connection Error: Please check your internet connection");
+                public void onError(JsonNode errors) {
+                    errorHandler(errors);
                 }
-                @Override
-                public void onCancelled() {}
-            });
-            deleteTask.execute();
+            }).execute();
 
         } else {
-
             compltedSave();
-
         }
     }
 
     private void compltedSave() {
-        Loading.hide();
-
         if (!isNew) {
             getApp().popFragment();
             return;

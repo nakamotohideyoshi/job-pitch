@@ -7,7 +7,8 @@
     android:paddingLeft="12dp"
     android:paddingRight="12dp"
     android:paddingTop="20dp"
-    android:paddingBottom="20dp">
+    android:paddingBottom="20dp"
+    android:id="@+id/board">
 
     <TextView
         android:text="title"
@@ -24,8 +25,8 @@
         android:layout_height="@dimen/button_height"
         android:id="@+id/button1"
         android:layout_marginTop="20dp"
-        android:background="@drawable/button_green"
-        android:theme="@style/Button" />
+        android:theme="@style/Button"
+        android:visibility="gone"/>
 
     <Button
         android:text="Button"
@@ -33,7 +34,16 @@
         android:layout_height="@dimen/button_height"
         android:id="@+id/button2"
         android:layout_marginTop="20dp"
-        android:background="@drawable/button_grey"
-        android:theme="@style/Button" />
+        android:theme="@style/Button"
+        android:visibility="gone"/>
+
+    <Button
+        android:text="Button"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/button_height"
+        android:id="@+id/button3"
+        android:layout_marginTop="20dp"
+        android:theme="@style/Button"
+        android:visibility="gone"/>
 
 </LinearLayout>

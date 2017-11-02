@@ -13,7 +13,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 
-import com.kaopiz.kprogresshud.KProgressHUD;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.myjobpitch.CameraActivity;
 import com.myjobpitch.MediaPlayerActivity;
 import com.myjobpitch.R;
@@ -21,14 +21,16 @@ import com.myjobpitch.api.MJPApi;
 import com.myjobpitch.api.MJPApiException;
 import com.myjobpitch.api.data.JobSeeker;
 import com.myjobpitch.api.data.Pitch;
+import com.myjobpitch.tasks.APIAction;
 import com.myjobpitch.tasks.APITask;
+import com.myjobpitch.tasks.APITaskListener;
 import com.myjobpitch.uploader.AWSPitchUploader;
 import com.myjobpitch.uploader.PitchUpload;
 import com.myjobpitch.uploader.PitchUploadListener;
 import com.myjobpitch.utils.AppData;
 import com.myjobpitch.utils.AppHelper;
 import com.myjobpitch.utils.Loading;
-import com.myjobpitch.utils.Popup;
+import com.myjobpitch.views.Popup;
 
 import java.io.File;
 
@@ -57,18 +59,25 @@ public class PitchFragment extends BaseFragment {
         View view = inflater.inflate(R.layout.fragment_pitch, container, false);
         ButterKnife.bind(this, view);
 
-        new APITask("Loading...", this) {
+        showLoading(view);
+        new APITask(new APIAction() {
             @Override
-            protected void runAPI() throws MJPApiException {
+            public void run() throws MJPApiException {
                 jobSeeker = MJPApi.shared().get(JobSeeker.class, AppData.user.getJob_seeker());
                 AppData.existProfile = jobSeeker.getProfile() != null;
                 mPitch = jobSeeker.getPitch();
             }
+        }).addListener(new APITaskListener() {
             @Override
-            protected void onSuccess() {
+            public void onSuccess() {
+                hideLoading();
                 updateInterface();
             }
-        };
+            @Override
+            public void onError(JsonNode errors) {
+                errorHandler(errors);
+            }
+        }).execute();
 
         return view;
     }
@@ -114,7 +123,7 @@ public class PitchFragment extends BaseFragment {
     @OnClick(R.id.upload_button)
     void onUpload() {
 
-        Loading.show("Starting upload...");
+        showLoading();
 
         AWSPitchUploader pitchUploader = new AWSPitchUploader(getApp());
         PitchUpload upload = pitchUploader.upload(new File(mVideoPath));
@@ -125,30 +134,32 @@ public class PitchFragment extends BaseFragment {
                     case PitchUpload.STARTING:
                         break;
                     case PitchUpload.UPLOADING:
-                        Loading.getLoadingBar().setStyle(KProgressHUD.Style.BAR_DETERMINATE);
-                        Loading.getLoadingBar().setMaxProgress(100);
-                        Loading.getLoadingBar().setLabel("0%");
+                        loading.setType(Loading.Type.PROGRESS);
                         break;
                     case PitchUpload.PROCESSING:
-                        Loading.getLoadingBar().setStyle(KProgressHUD.Style.SPIN_INDETERMINATE);
-                        Loading.getLoadingBar().setLabel("Processing...");
+                        loading.setType(Loading.Type.SPIN);
                         Log.d("upload", "Processing...");
                         break;
                     case PitchUpload.COMPLETE:
                         Log.d("upload", "COMPLETE");
-                        new APITask(null, PitchFragment.this) {
+                        new APITask(new APIAction() {
                             @Override
-                            protected void runAPI() throws MJPApiException {
+                            public void run() throws MJPApiException {
                                 jobSeeker = MJPApi.shared().get(JobSeeker.class, AppData.user.getJob_seeker());
                                 mPitch = jobSeeker.getPitch();
                                 mVideoPath = null;
                             }
+                        }).addListener(new APITaskListener() {
                             @Override
-                            protected void onSuccess() {
-                                Loading.hide();
+                            public void onSuccess() {
+                                hideLoading();
                                 updateInterface();
                             }
-                        };
+                            @Override
+                            public void onError(JsonNode errors) {
+                                errorHandler(errors);
+                            }
+                        }).execute();
                         break;
                 }
             }
@@ -158,25 +169,17 @@ public class PitchFragment extends BaseFragment {
                 final int complete = (int) (((float) current / total) * 100);
                 Log.d("upload", "" + current + ", " + complete);
                 if (complete < 100) {
-//                    Handler mainHandler = new Handler(getApp().getMainLooper());
-//                    Runnable myRunnable = new Runnable() {
-//                        @Override
-//                        public void run() {
-//                            Loading.getLoadingBar().setProgress(complete);
-//                            Loading.getLoadingBar().setLabel(Integer.toString(complete) + "%");
-//                        }
-//                    };
-//                    mainHandler.post(myRunnable);
-
-                    Loading.getLoadingBar().setProgress(complete);
-                    Loading.getLoadingBar().setLabel(Integer.toString(complete) + "%");
+                    loading.setProgress(complete);
+                    loading.setLabel(Integer.toString(complete) + "%");
                 }
             }
 
             @Override
             public void onError(String message) {
-                Loading.hide();
-                Popup.showError("Error uploading video!");
+                hideLoading();
+                Popup popup = new Popup(getContext(), "Error uploading video!", true);
+                popup.addGreyButton("Ok", null);
+                popup.show();
             }
         });
         upload.start();

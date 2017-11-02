@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
@@ -26,10 +27,12 @@ import com.myjobpitch.api.data.Job;
 import com.myjobpitch.api.data.JobProfile;
 import com.myjobpitch.api.data.JobSeeker;
 import com.myjobpitch.api.data.Location;
+import com.myjobpitch.tasks.APIAction;
 import com.myjobpitch.tasks.APITask;
+import com.myjobpitch.tasks.APITaskListener;
 import com.myjobpitch.utils.AppData;
 import com.myjobpitch.utils.AppHelper;
-import com.myjobpitch.utils.Popup;
+import com.myjobpitch.views.Popup;
 import com.myjobpitch.views.PhotoView;
 
 import butterknife.BindView;
@@ -109,19 +112,24 @@ public class ApplicationDetailFragment extends BaseFragment {
             job = application.getJob_data();
         }
 
-        view.setVisibility(View.INVISIBLE);
-        new APITask("Loading...", this) {
+        showLoading(view);
+        new APITask(new APIAction() {
             @Override
-            protected void runAPI() throws MJPApiException {
+            public void run() throws MJPApiException {
                 jobSeeker = MJPApi.shared().get(JobSeeker.class, AppData.user.getJob_seeker());
                 profile = MJPApi.shared().get(JobProfile.class, jobSeeker.getProfile());
             }
+        }).addListener(new APITaskListener() {
             @Override
-            protected void onSuccess() {
-                view.setVisibility(View.VISIBLE);
+            public void onSuccess() {
+                hideLoading();
                 load();
             }
-        };
+            @Override
+            public void onError(JsonNode errors) {
+                errorHandler(errors);
+            }
+        }).execute();
 
         return view;
 
@@ -201,46 +209,61 @@ public class ApplicationDetailFragment extends BaseFragment {
             getApp().pushFragment(fragment);
         } else {
             if (jobSeeker.getPitch() == null) {
-                Popup.showGreen("You need to record your pitch video to apply.", "Record my pitch", new View.OnClickListener() {
+                Popup popup = new Popup(getContext(), "You need to record your pitch video to apply.", true);
+                popup.addGreenButton("Record my pitch", new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         getApp().setRootFragement(AppData.PAGE_ADD_RECORD);
                     }
-                }, "Cancel", null, true);
+                });
+                popup.addGreyButton("Cancel", null);
+                popup.show();
             } else {
-                Popup.showYellow("Are you sure you want to apply to this job?", "Apply", new View.OnClickListener() {
+                Popup popup = new Popup(getContext(), "Are you sure you want to apply to this job?", true);
+                popup.addYellowButton("Apply", new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        new APITask("") {
+                        showLoading();
+                        new APITask(new APIAction() {
                             @Override
-                            protected void runAPI() throws MJPApiException {
+                            public void run() throws MJPApiException {
                                 ApplicationForCreation applicationForCreation = new ApplicationForCreation();
                                 applicationForCreation.setJob(job.getId());
                                 applicationForCreation.setJob_seeker(jobSeeker.getId());
                                 applicationForCreation.setShortlisted(false);
                                 MJPApi.shared().create(ApplicationForCreation.class, applicationForCreation);
                             }
+                        }).addListener(new APITaskListener() {
                             @Override
-                            protected void onSuccess() {
+                            public void onSuccess() {
                                 action.apply();
                                 getApp().popFragment();
                             }
-                        };
+                            @Override
+                            public void onError(JsonNode errors) {
+                                errorHandler(errors);
+                            }
+                        }).execute();
                     }
-                }, "Cancel", null, true);
+                });
+                popup.addGreyButton("Cancel", null);
+                popup.show();
             }
         }
     }
 
     @OnClick(R.id.remove_button)
     void onRemove() {
-        Popup.showYellow("Are you sure you are not interested in this job?", "I'm Sure", new View.OnClickListener() {
+        Popup popup = new Popup(getContext(), "Are you sure you are not interested in this job?", true);
+        popup.addYellowButton("I'm Sure", new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 action.remove();
                 getApp().popFragment();
             }
-        }, "Cancel", null, true);
+        });
+        popup.addGreyButton("Cancel", null);
+        popup.show();
     }
 
 }

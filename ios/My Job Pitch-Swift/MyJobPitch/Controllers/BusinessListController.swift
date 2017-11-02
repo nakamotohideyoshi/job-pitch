@@ -87,7 +87,7 @@ class BusinessListController: MJPController {
             emptyButton.setTitle("Create business", for: .normal)
         } else if !AppData.user.canCreateBusinesses {
             emptyMessage.text = "Have more than one company?\n Get in touch!"
-            emptyButton.setTitle("sales@myjobpitch.com", for: .normal)
+            emptyButton.setTitle("support@myjobpitch.com", for: .normal)
         }
     }
     
@@ -96,7 +96,7 @@ class BusinessListController: MJPController {
         if AppData.user.canCreateBusinesses || data.count == 0 {
             BusinessEditController.pushController(business: nil)
         } else {
-            let url = URL(string: "mailto:sales@myjobpitch.com")!
+            let url = URL(string: "mailto:support@myjobpitch.com")!
             UIApplication.shared.open(url, options: [:], completionHandler: nil)
         }
     }

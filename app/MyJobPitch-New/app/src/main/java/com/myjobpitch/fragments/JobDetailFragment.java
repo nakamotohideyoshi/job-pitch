@@ -12,13 +12,16 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.myjobpitch.R;
 import com.myjobpitch.api.MJPApi;
 import com.myjobpitch.api.MJPApiException;
 import com.myjobpitch.api.data.Job;
+import com.myjobpitch.tasks.APIAction;
 import com.myjobpitch.tasks.APITask;
+import com.myjobpitch.tasks.APITaskListener;
 import com.myjobpitch.utils.AppHelper;
-import com.myjobpitch.utils.Popup;
+import com.myjobpitch.views.Popup;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -75,18 +78,23 @@ public class JobDetailFragment extends BaseFragment {
         navTitleView.setVisibility(View.GONE);
         navRightButton.setVisibility(View.GONE);
 
-        view.setVisibility(View.INVISIBLE);
-        new APITask("Loading...", this) {
+        showLoading(view);
+        new APITask(new APIAction() {
             @Override
-            protected void runAPI() throws MJPApiException {
+            public void run() throws MJPApiException {
                 job = MJPApi.shared().getUserJob(job.getId());
             }
+        }).addListener(new APITaskListener() {
             @Override
-            protected void onSuccess() {
-                view.setVisibility(View.VISIBLE);
+            public void onSuccess() {
+                hideLoading();
                 AppHelper.showJobInfo(job, infoView);
             }
-        };
+            @Override
+            public void onError(JsonNode errors) {
+                errorHandler(errors);
+            }
+        }).execute();
 
         return view;
     }
@@ -100,21 +108,30 @@ public class JobDetailFragment extends BaseFragment {
 
     @OnClick(R.id.remove_button)
     void onRemoveJob() {
-        Popup.showYellow("Are you sure you want to delete " + job.getTitle(), "Delete", new View.OnClickListener() {
+        Popup popup = new Popup(getContext(), "Are you sure you want to delete " + job.getTitle(), true);
+        popup.addYellowButton("Delete", new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                new APITask("Deleting...", JobDetailFragment.this) {
+                showLoading();
+                new APITask(new APIAction() {
                     @Override
-                    protected void runAPI() throws MJPApiException {
+                    public void run() throws MJPApiException {
                         MJPApi.shared().deleteJob(job.getId());
                     }
+                }).addListener(new APITaskListener() {
                     @Override
-                    protected void onSuccess() {
+                    public void onSuccess() {
                         getApp().popFragment();
                     }
-                };
+                    @Override
+                    public void onError(JsonNode errors) {
+                        errorHandler(errors);
+                    }
+                }).execute();
             }
-        }, "Cancel", null, true);
+        });
+        popup.addGreyButton("Cancel", null);
+        popup.show();
     }
 
     // menu adapter ========================================

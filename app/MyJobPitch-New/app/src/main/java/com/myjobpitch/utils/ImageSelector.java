@@ -49,7 +49,7 @@ public class ImageSelector {
 
     public ImageSelector(View view, int defaultImageRes) {
         init(view);
-        defaultBitmap = BitmapFactory.decodeResource(MainActivity.instance.getResources(), defaultImageRes);
+        defaultBitmap = BitmapFactory.decodeResource(MainActivity.shared().getResources(), defaultImageRes);
     }
 
     public ImageSelector(View view, String defaultImagePath) {
@@ -60,7 +60,7 @@ public class ImageSelector {
     void init(View view) {
         ButterKnife.bind(this, view);
 
-        Display display = MainActivity.instance.getWindowManager().getDefaultDisplay();
+        Display display = MainActivity.shared().getWindowManager().getDefaultDisplay();
         DisplayMetrics displayMetrics = new DisplayMetrics();
         display.getMetrics(displayMetrics);
         ViewGroup.LayoutParams params = view.getLayoutParams();
@@ -169,7 +169,7 @@ public class ImageSelector {
     public void setImageUri(Uri uri) {
         String path;
         String[] projection = { MediaStore.Images.Media.DATA };
-        Cursor cursor = MainActivity.instance.getContentResolver().query(uri, projection, null, null, null);
+        Cursor cursor = MainActivity.shared().getContentResolver().query(uri, projection, null, null, null);
         if(cursor != null) {
             int column_index = cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DATA);
             cursor.moveToFirst();
@@ -188,7 +188,7 @@ public class ImageSelector {
 
     @OnClick(R.id.image_add_button)
     void onClickAdd() {
-        MainActivity.instance.showFilePicker(true);
+        MainActivity.shared().showFilePicker(true);
     }
 
     @OnClick(R.id.image_remove_button)

@@ -1,206 +1,206 @@
-<ScrollView
+<FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.myjobpitch.fragments.LoginFragment">
 
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:background="@color/colorPrimary">
+        android:layout_height="match_parent">
 
         <LinearLayout
-            android:id="@+id/login_header"
             android:layout_width="match_parent"
-            android:layout_height="230dp"
-            android:orientation="horizontal">
-            <View
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"/>
-            <ImageView
-                android:id="@+id/logo"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1.5"
-                android:src="@drawable/logo" />
-            <View
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"/>
-        </LinearLayout>
-
-        <FrameLayout
-            android:id="@+id/login_body"
-            android:layout_width="match_parent"
-            android:layout_height="340dp">
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@color/colorPrimary">
 
             <LinearLayout
-                android:id="@+id/login_container"
+                android:id="@+id/login_header"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical">
+                android:layout_height="230dp"
+                android:orientation="horizontal">
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"/>
+                <ImageView
+                    android:id="@+id/logo"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1.5"
+                    android:src="@drawable/logo" />
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"/>
+            </LinearLayout>
 
-                <EditText
-                    android:id="@+id/user_email"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/input_height"
-                    android:layout_marginLeft="50dp"
-                    android:layout_marginRight="50dp"
-                    android:background="@drawable/edit_text"
-                    android:hint="Email Address"
-                    android:inputType="textEmailAddress"
-                    android:theme="@style/EditText"/>
-                <EditText
-                    android:id="@+id/user_password"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/input_height"
-                    android:layout_marginLeft="50dp"
-                    android:layout_marginRight="50dp"
-                    android:layout_marginTop="15dp"
-                    android:background="@drawable/edit_text"
-                    android:hint="Password"
-                    android:inputType="textPassword"
-                    android:theme="@style/EditText" />
-                <CheckBox
-                    android:id="@+id/login_remember"
-                    android:layout_width="wrap_content"
-                    android:layout_height="@dimen/input_height"
-                    android:layout_marginLeft="50dp"
-                    android:text="Remember password"
-                    android:textColor="@android:color/white"
-                    android:theme="@style/CheckBox" />
+            <FrameLayout
+                android:id="@+id/login_body"
+                android:layout_width="match_parent"
+                android:layout_height="340dp">
 
-                <FrameLayout
+                <LinearLayout
+                    android:id="@+id/login_container"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_marginTop="15dp">
+                    android:orientation="vertical">
 
-                    <LinearLayout
-                        android:id="@+id/login_panel"
+                    <EditText
+                        android:id="@+id/user_email"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/input_height"
+                        android:layout_marginLeft="50dp"
+                        android:layout_marginRight="50dp"
+                        android:background="@drawable/edit_text"
+                        android:hint="Email Address"
+                        android:inputType="textEmailAddress"
+                        android:theme="@style/EditText"/>
+                    <EditText
+                        android:id="@+id/user_password"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/input_height"
+                        android:layout_marginLeft="50dp"
+                        android:layout_marginRight="50dp"
+                        android:layout_marginTop="15dp"
+                        android:background="@drawable/edit_text"
+                        android:hint="Password"
+                        android:inputType="textPassword"
+                        android:theme="@style/EditText" />
+                    <CheckBox
+                        android:id="@+id/login_remember"
+                        android:layout_width="wrap_content"
+                        android:layout_height="@dimen/input_height"
+                        android:layout_marginLeft="50dp"
+                        android:text="Remember password"
+                        android:textColor="@android:color/white"
+                        android:theme="@style/CheckBox" />
+
+                    <FrameLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:paddingLeft="50dp"
-                        android:paddingRight="50dp"
-                        android:orientation="vertical">
-                        <Button
-                            android:id="@+id/login_button"
-                            android:layout_width="match_parent"
-                            android:layout_height="@dimen/button_height"
-                            android:background="@drawable/button_green"
-                            android:text="Login"
-                            android:theme="@style/Button"/>
-                        <Button
-                            android:id="@+id/forgot_password"
-                            android:layout_width="match_parent"
-                            android:layout_height="@dimen/button_height"
-                            android:layout_marginTop="15dp"
-                            android:background="@android:color/transparent"
-                            android:text="Forgot password?"
-                            android:textColor="#0095ff"
-                            android:theme="@style/Button" />
-                        <Button
-                            android:id="@+id/go_register"
-                            android:layout_width="match_parent"
-                            android:layout_height="@dimen/button_height"
-                            android:background="@android:color/transparent"
-                            android:text="Don't have an account? Sign up"
-                            android:textColor="#0095ff"
-                            android:theme="@style/Button"/>
-                        <Button
-                            android:id="@+id/select_server1"
-                            android:layout_width="match_parent"
-                            android:layout_height="@dimen/button_height"
-                            android:background="@android:color/transparent"
-                            android:text="https://www.myjobpitch.com/"
-                            android:textColor="@color/colorYellow"
-                            android:theme="@style/Button"/>
-                    </LinearLayout>
+                        android:layout_marginTop="15dp">
 
-                    <LinearLayout
-                        android:id="@+id/register_panel"
+                        <LinearLayout
+                            android:id="@+id/login_panel"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:paddingLeft="50dp"
+                            android:paddingRight="50dp"
+                            android:orientation="vertical">
+                            <Button
+                                android:id="@+id/login_button"
+                                android:layout_width="match_parent"
+                                android:layout_height="@dimen/button_height"
+                                android:background="@drawable/button_green"
+                                android:text="Login"
+                                android:theme="@style/Button"/>
+                            <Button
+                                android:id="@+id/forgot_password"
+                                android:layout_width="match_parent"
+                                android:layout_height="@dimen/button_height"
+                                android:layout_marginTop="15dp"
+                                android:background="@android:color/transparent"
+                                android:text="Forgot password?"
+                                android:textColor="#0095ff"
+                                android:theme="@style/Button" />
+                            <Button
+                                android:id="@+id/go_register"
+                                android:layout_width="match_parent"
+                                android:layout_height="@dimen/button_height"
+                                android:background="@android:color/transparent"
+                                android:text="Don't have an account? Sign up"
+                                android:textColor="#0095ff"
+                                android:theme="@style/Button"/>
+                            <Button
+                                android:id="@+id/select_server"
+                                android:layout_width="match_parent"
+                                android:layout_height="@dimen/button_height"
+                                android:background="@android:color/transparent"
+                                android:text="https://www.myjobpitch.com/"
+                                android:textColor="@color/colorYellow"
+                                android:theme="@style/Button"/>
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/register_panel"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:paddingLeft="50dp"
+                            android:paddingRight="50dp"
+                            android:orientation="vertical">
+                            <Button
+                                android:id="@+id/register_button1"
+                                android:text="Register as Job Seeker"
+                                android:layout_width="match_parent"
+                                android:layout_height="@dimen/button_height"
+                                android:background="@drawable/button_yellow"
+                                android:theme="@style/Button" />
+                            <Button
+                                android:id="@+id/register_button2"
+                                android:text="Register as Recruiter"
+                                android:layout_width="match_parent"
+                                android:layout_height="@dimen/button_height"
+                                android:layout_marginTop="15dp"
+                                android:background="@drawable/button_green"
+                                android:theme="@style/Button" />
+                            <Button
+                                android:id="@+id/go_login"
+                                android:text="Have an account? Sign in"
+                                android:layout_width="match_parent"
+                                android:layout_height="@dimen/button_height"
+                                android:background="@android:color/transparent"
+                                android:textColor="#0095ff"
+                                android:theme="@style/Button" />
+                        </LinearLayout>
+                    </FrameLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/reset_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:paddingLeft="50dp"
+                    android:paddingRight="50dp"
+                    android:orientation="vertical">
+                    <EditText
+                        android:id="@+id/reset_email"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:paddingLeft="50dp"
-                        android:paddingRight="50dp"
-                        android:orientation="vertical">
-                        <Button
-                            android:id="@+id/register_button1"
-                            android:text="Register as Job Seeker"
-                            android:layout_width="match_parent"
-                            android:layout_height="@dimen/button_height"
-                            android:background="@drawable/button_yellow"
-                            android:theme="@style/Button" />
-                        <Button
-                            android:id="@+id/register_button2"
-                            android:text="Register as Recruiter"
-                            android:layout_width="match_parent"
-                            android:layout_height="@dimen/button_height"
-                            android:layout_marginTop="15dp"
-                            android:background="@drawable/button_green"
-                            android:theme="@style/Button" />
-                        <Button
-                            android:id="@+id/go_login"
-                            android:text="Have an account? Sign in"
-                            android:layout_width="match_parent"
-                            android:layout_height="@dimen/button_height"
-                            android:background="@android:color/transparent"
-                            android:textColor="#0095ff"
-                            android:theme="@style/Button" />
-                        <Button
-                            android:id="@+id/select_server2"
-                            android:layout_width="match_parent"
-                            android:layout_height="@dimen/button_height"
-                            android:background="@android:color/transparent"
-                            android:text="https://www.myjobpitch.com/"
-                            android:textColor="@color/colorYellow"
-                            android:theme="@style/Button"/>
-                    </LinearLayout>
-                </FrameLayout>
+                        android:layout_height="@dimen/input_height"
+                        android:layout_marginTop="55dp"
+                        android:background="@drawable/edit_text"
+                        android:hint="Email Address"
+                        android:inputType="textEmailAddress"
+                        android:theme="@style/EditText"/>
 
-            </LinearLayout>
+                    <Button
+                        android:id="@+id/reset_button"
+                        android:text="Reset my password"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/button_height"
+                        android:layout_marginTop="55dp"
+                        android:background="@drawable/button_green"
+                        android:theme="@style/Button"/>
 
-            <LinearLayout
-                android:id="@+id/reset_container"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:paddingLeft="50dp"
-                android:paddingRight="50dp"
-                android:orientation="vertical">
-                <EditText
-                    android:id="@+id/reset_email"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/input_height"
-                    android:layout_marginTop="55dp"
-                    android:background="@drawable/edit_text"
-                    android:hint="Email Address"
-                    android:inputType="textEmailAddress"
-                    android:theme="@style/EditText"/>
+                    <Button
+                        android:id="@+id/reset_cancel"
+                        android:text="Cancel"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/button_height"
+                        android:layout_marginTop="15dp"
+                        android:background="@drawable/button_grey"
+                        android:theme="@style/Button"/>
 
-                <Button
-                    android:id="@+id/reset_button"
-                    android:text="Reset my password"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/button_height"
-                    android:layout_marginTop="55dp"
-                    android:background="@drawable/button_green"
-                    android:theme="@style/Button"/>
+                </LinearLayout>
 
-                <Button
-                    android:id="@+id/reset_cancel"
-                    android:text="Cancel"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/button_height"
-                    android:layout_marginTop="15dp"
-                    android:background="@drawable/button_grey"
-                    android:theme="@style/Button"/>
+            </FrameLayout>
 
-            </LinearLayout>
+        </LinearLayout>
 
-        </FrameLayout>
+    </ScrollView>
 
-    </LinearLayout>
 
-</ScrollView>
+
+</FrameLayout>

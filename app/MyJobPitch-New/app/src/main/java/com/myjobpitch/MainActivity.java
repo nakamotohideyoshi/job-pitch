@@ -38,7 +38,7 @@ import com.myjobpitch.fragments.PaymentFragment;
 import com.myjobpitch.fragments.PitchFragment;
 import com.myjobpitch.fragments.SelectJobFragment;
 import com.myjobpitch.utils.AppData;
-import com.myjobpitch.utils.Popup;
+import com.myjobpitch.views.Popup;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 
@@ -50,8 +50,6 @@ import butterknife.ButterKnife;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
-
-    public static MainActivity instance;
 
     @BindView(R.id.drawer_layout)
     DrawerLayout mDrawer;
@@ -67,21 +65,24 @@ public class MainActivity extends AppCompatActivity
 
     FragmentManager mFragmentManager;
 
+    int mCurrentPageID = -1;
+
     private static final int PERMISSION_IAMGE_CAPTURE = 11000;
     private static final int PERMISSION_WRITE_EXTERNAL_STORAGE1 = 11001;
     private static final int PERMISSION_WRITE_EXTERNAL_STORAGE2 = 11002;    // only image
 
-    int mCurrentPageID = -1;
+    private static MainActivity instance;
+
+    public static MainActivity shared() {
+        return instance;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-
-        Fresco.initialize(getApplicationContext());
-        ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(this).build();
-        ImageLoader.getInstance().init(config);
 
         mDrawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
         mNavigationView.setNavigationItemSelectedListener(this);
@@ -89,8 +90,13 @@ public class MainActivity extends AppCompatActivity
         setSupportActionBar(mToolbar);
 
         instance = this;
-        mFragmentManager = getSupportFragmentManager();
 
+        // image loaders
+        Fresco.initialize(getApplicationContext());
+        ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(this).build();
+        ImageLoader.getInstance().init(config);
+
+        mFragmentManager = getSupportFragmentManager();
         replaceFragment(new LoginFragment());
     }
 
@@ -100,6 +106,10 @@ public class MainActivity extends AppCompatActivity
 
     public void setRootFragement(int pageID) {
 
+        if (mCurrentPageID == -1) {
+            mContentView.setBackgroundColor(0xFFFFFF);
+        }
+
         // remove all fragments
 
         while (mFragmentManager.getBackStackEntryCount() > 0) {
@@ -107,28 +117,37 @@ public class MainActivity extends AppCompatActivity
         }
 
         // new fragment
+
         MenuItemInfo info = menuItemData[pageID];
+
         try {
             BaseFragment fragment = (BaseFragment) info.fragmentClass.newInstance();
             fragment.title = info.title;
             replaceFragment(fragment);
         } catch (Exception e) {
+
         }
 
-        // checked menu item
+        // update sidemenu item
 
         Menu menu = mNavigationView.getMenu();
+
         if (mCurrentPageID != -1) {
             menu.findItem(mCurrentPageID).setChecked(false);
         }
         mCurrentPageID = pageID;
+
         menu.findItem(mCurrentPageID).setChecked(true);
 
+        // update toolbar
+
         mToolbar.setNavigationIcon(R.drawable.ic_menu);
+
     }
 
     public void replaceFragment(BaseFragment fragment) {
         String tag = "" + (mFragmentManager.getBackStackEntryCount());
+
         mFragmentManager
                 .beginTransaction()
                 .replace(R.id.content_main, fragment, tag)
@@ -140,6 +159,7 @@ public class MainActivity extends AppCompatActivity
 
     public void pushFragment(BaseFragment fragment) {
         String tag = "" + (mFragmentManager.getBackStackEntryCount() + 1);
+
         mFragmentManager
                 .beginTransaction()
                 .setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right)
@@ -157,9 +177,11 @@ public class MainActivity extends AppCompatActivity
 
     public void popFragment() {
         mFragmentManager.popBackStack();
+
         if (mFragmentManager.getBackStackEntryCount() == 1) {
             mToolbar.setNavigationIcon(R.drawable.ic_menu);
         }
+
         mToolbar.getMenu().clear();
     }
 
@@ -172,11 +194,12 @@ public class MainActivity extends AppCompatActivity
         return mToolbar.getMenu();
     }
 
-    public void reloadMenu(boolean resetMenuId) {
+    public void reloadMenu() {
+
         Menu menu = mNavigationView.getMenu();
         menu.clear();
 
-        boolean isJobSeeker = AppData.user.isJobSeeker() || (!AppData.user.isRecruiter() && getUserType() == AppData.JOBSEEKER);
+        boolean isJobSeeker = AppData.user.isJobSeeker() || (!AppData.user.isRecruiter() && AppData.getUserType() == AppData.JOBSEEKER);
         int[] data = isJobSeeker ? jobSeekerMenu : recruiterMenu;
 
         for (int id : data) {
@@ -200,18 +223,11 @@ public class MainActivity extends AppCompatActivity
             }
         }
 
-        if (resetMenuId)
-            mCurrentPageID = -1;
-    }
-
-    public void loggedin(int pageID) {
-        mContentView.setBackgroundColor(0xFFFFFF);
-        reloadMenu(true);
-        setRootFragement(pageID);
     }
 
     public void logout() {
-        Popup.showGreen("Are you sure you want to log out?", "Log Out", new View.OnClickListener() {
+        Popup popup = new Popup(this, "Are you sure you want to log out?", true);
+        popup.addGreenButton("Log Out", new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 //MJPApi.shared().logout();
@@ -219,6 +235,7 @@ public class MainActivity extends AppCompatActivity
                 AppData.clearData();
 
                 mDrawer.closeDrawer(GravityCompat.START);
+
                 mContentView.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
 
                 mNavigationView.getMenu().clear();
@@ -226,14 +243,15 @@ public class MainActivity extends AppCompatActivity
 
                 replaceFragment(new LoginFragment());
             }
-        }, "Cancel", null, true);
+        });
+        popup.addGreyButton("Cancel", null);
+        popup.show();
     }
 
     public void hideKeyboard() {
-        View view = getCurrentFocus();
-        if (view != null) {
+        if (getCurrentFocus() != null) {
             InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
-            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+            imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
         }
     }
 
@@ -297,13 +315,13 @@ public class MainActivity extends AppCompatActivity
                 .show();
     }
 
-    private void actionPick(boolean onlyImage) {
+    void actionPick(boolean onlyImage) {
         Intent intent = new Intent(Intent.ACTION_PICK);
         intent.setType(onlyImage ? "image/*" : "image/*");
         startActivityForResult(intent, AppData.REQUEST_IMAGE_PICK);
     }
 
-    private void actionImageCapture() {
+    void actionImageCapture() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         startActivityForResult(takePictureIntent, AppData.REQUEST_IMAGE_CAPTURE);
     }
@@ -442,37 +460,5 @@ public class MainActivity extends AppCompatActivity
             AppData.PAGE_FIND_TALENT, AppData.PAGE_R_APPLICATIONS, AppData.PAGE_CONNECTIONS, AppData.PAGE_MY_SHORTLIST, AppData.PAGE_MESSAGES,
             AppData.PAGE_ADD_JOB, AppData.PAGE_PAYMENT, AppData.PAGE_CHANGE_PASS, AppData.PAGE_HELP, AppData.PAGE_CONTACT_UP, AppData.PAGE_LOGOUT
     };
-
-    /************ Shared Preferences ***********/
-
-    public String getEmail() {
-        return getSharedPreferences("LoginPreferences", MODE_PRIVATE).getString("email", "");
-    }
-
-    public String getPassword() {
-        return getSharedPreferences("LoginPreferences", MODE_PRIVATE).getString("password", "");
-    }
-
-    public boolean getRemember() {
-        return getSharedPreferences("LoginPreferences", MODE_PRIVATE).getBoolean("remember", false);
-    }
-
-    public int getUserType() {
-        return getSharedPreferences("LoginPreferences", MODE_PRIVATE).getInt("usermode", 0);
-    }
-
-    public void saveLoginInfo(String email, String password, boolean remember) {
-        getSharedPreferences("LoginPreferences", MODE_PRIVATE).edit()
-                .putString("email", email)
-                .putString("password", password)
-                .putBoolean("remember", remember)
-                .apply();
-    }
-
-    public void saveUserType(int usertype) {
-        getSharedPreferences("LoginPreferences", MODE_PRIVATE).edit()
-                .putInt("usermode", usertype)
-                .apply();
-    }
 
 }

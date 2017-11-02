@@ -9,10 +9,13 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.myjobpitch.R;
 import com.myjobpitch.api.MJPApiException;
 import com.myjobpitch.api.data.Application;
+import com.myjobpitch.tasks.APIAction;
 import com.myjobpitch.tasks.APITask;
+import com.myjobpitch.tasks.APITaskListener;
 import com.myjobpitch.utils.AppHelper;
 import com.myjobpitch.utils.MJPArraySwipeAdapter;
 
@@ -80,21 +83,26 @@ public class ApplicationsFragment extends BaseFragment {
     }
 
     private void loadApplications() {
-        new APITask(null, this) {
-            private List<Application> applications;
+        final List<Application> applications = new ArrayList();
+        new APITask(new APIAction() {
             @Override
-            protected void runAPI() throws MJPApiException {
-                applications = getApplications();
+            public void run() throws MJPApiException {
+                applications.addAll(getApplications());
             }
+        }).addListener(new APITaskListener() {
             @Override
-            protected void onSuccess() {
+            public void onSuccess() {
                 adapter.clear();
                 adapter.addAll(applications);
                 adapter.closeAllItems();
                 emptyView.setVisibility(applications.size()==0 ? View.VISIBLE : View.GONE);
                 swipeRefreshLayout.setRefreshing(false);
             }
-        };
+            @Override
+            public void onError(JsonNode errors) {
+                errorHandler(errors);
+            }
+        }).execute();
     }
 
     @OnClick(R.id.empty_button)

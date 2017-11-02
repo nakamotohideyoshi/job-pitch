@@ -13,16 +13,19 @@ import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.myjobpitch.R;
 import com.myjobpitch.api.MJPApi;
 import com.myjobpitch.api.MJPApiException;
 import com.myjobpitch.api.data.Business;
 import com.myjobpitch.api.data.Location;
+import com.myjobpitch.tasks.APIAction;
 import com.myjobpitch.tasks.APITask;
+import com.myjobpitch.tasks.APITaskListener;
 import com.myjobpitch.utils.AppData;
 import com.myjobpitch.utils.AppHelper;
 import com.myjobpitch.utils.MJPArraySwipeAdapter;
-import com.myjobpitch.utils.Popup;
+import com.myjobpitch.views.Popup;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,6 +49,8 @@ public class BusinessDetailFragment extends BaseFragment {
     @BindView(R.id.nav_title)
     TextView navTitleView;
 
+    @BindView(R.id.list_container)
+    View listContainer;
     @BindView(R.id.swipe_container)
     SwipeRefreshLayout swipeRefreshLayout;
     @BindView(R.id.location_list)
@@ -67,7 +72,7 @@ public class BusinessDetailFragment extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        final View view = inflater.inflate(R.layout.fragment_business_detail, container, false);
+        View view = inflater.inflate(R.layout.fragment_business_detail, container, false);
         ButterKnife.bind(this, view);
 
         isAddMode = getApp().getCurrentPageID() != AppData.PAGE_ADD_JOB;
@@ -84,7 +89,7 @@ public class BusinessDetailFragment extends BaseFragment {
             title = "Business Detail";
             headerCommentView.setVisibility(View.GONE);
             navTitleView.setText("Work Places");
-            if (AppData.user.getBusinesses().size() <= 1) {
+            if (AppData.user.getBusinesses().size() == 1) {
                 removeButton.setBackgroundColor(Color.parseColor("#7f4900"));
                 removeButton.setColorFilter(Color.parseColor("#7d7d7d"));
                 removeButton.setEnabled(false);
@@ -93,8 +98,8 @@ public class BusinessDetailFragment extends BaseFragment {
 
         // empty view
 
-        AppHelper.setEmptyViewText(emptyView, "You have not added any\nwork places yet.");
-        AppHelper.setEmptyButtonText(emptyView, "Create work place");
+        AppHelper.setEmptyViewText(emptyView, "You have not added any\nworkplaces yet.");
+        AppHelper.setEmptyButtonText(emptyView, "Create workplace");
 
         // pull to refresh
 
@@ -102,7 +107,9 @@ public class BusinessDetailFragment extends BaseFragment {
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                loadLocations();
+                if (loading == null) {
+                    loadWorkplaces();
+                }
             }
         });
 
@@ -131,26 +138,51 @@ public class BusinessDetailFragment extends BaseFragment {
             }
         });
 
-        // loading data
-
-        view.setVisibility(View.INVISIBLE);
-        new APITask("Loading...", this) {
+        showLoading(view);
+        new APITask(new APIAction() {
             @Override
-            protected void runAPI() throws MJPApiException {
+            public void run() throws MJPApiException {
                 business = MJPApi.shared().getUserBusiness(businessId);
             }
+        }).addListener(new APITaskListener() {
             @Override
-            protected void onSuccess() {
-                view.setVisibility(View.VISIBLE);
+            public void onSuccess() {
+                hideLoading();
                 if (!isAddMode) {
                     AppHelper.showBusinessInfo(business, infoView);
                 }
                 swipeRefreshLayout.setRefreshing(true);
-                loadLocations();
+                loadWorkplaces();
             }
-        };
+            @Override
+            public void onError(JsonNode errors) {
+                errorHandler(errors);
+            }
+        }).execute();
 
         return  view;
+    }
+
+    void loadWorkplaces() {
+        final List<Location> locations = new ArrayList<>();
+        new APITask(new APIAction() {
+            @Override
+            public void run() throws MJPApiException {
+                locations.addAll(MJPApi.shared().getUserLocations(businessId));
+            }
+        }).addListener(new APITaskListener() {
+            @Override
+            public void onSuccess() {
+                adapter.clear();
+                adapter.addAll(locations);
+                updatedLocationList();
+                swipeRefreshLayout.setRefreshing(false);
+            }
+            @Override
+            public void onError(JsonNode errors) {
+                errorHandler(errors);
+            }
+        }).execute();
     }
 
     @OnClick(R.id.edit_button)
@@ -162,38 +194,31 @@ public class BusinessDetailFragment extends BaseFragment {
 
     @OnClick(R.id.remove_button)
     void onRemoveBusiness() {
-        Popup.showYellow("Are you sure you want to delete " + business.getName(), "Delete", new View.OnClickListener() {
+        Popup popup = new Popup(getContext(), "Are you sure you want to delete " + business.getName(), true);
+        popup.addYellowButton("Delete", new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                new APITask("Deleting...", BusinessDetailFragment.this) {
+                showLoading();
+                new APITask(new APIAction() {
                     @Override
-                    protected void runAPI() throws MJPApiException {
+                    public void run() throws MJPApiException {
                         MJPApi.shared().deleteBusiness(business.getId());
                     }
+                }).addListener(new APITaskListener() {
                     @Override
-                    protected void onSuccess() {
+                    public void onSuccess() {
                         getApp().popFragment();
                     }
-                };
-            }
-        }, "Cancel", null, true);
-    }
+                    @Override
+                    public void onError(JsonNode errors) {
+                        errorHandler(errors);
+                    }
+                }).execute();
 
-    private void loadLocations() {
-        new APITask(null, this) {
-            private List<Location> locations;
-            @Override
-            protected void runAPI() throws MJPApiException {
-                locations = MJPApi.shared().getUserLocations(businessId);
             }
-            @Override
-            protected void onSuccess() {
-                adapter.clear();
-                adapter.addAll(locations);
-                updatedLocationList();
-                swipeRefreshLayout.setRefreshing(false);
-            }
-        };
+        });
+        popup.addGreyButton("Cancel", null);
+        popup.show();
     }
 
     private void updatedLocationList() {
@@ -208,22 +233,32 @@ public class BusinessDetailFragment extends BaseFragment {
     }
 
     private void deleteLocation(final Location location) {
-        Popup.showYellow("Are you sure you want to delete " + location.getName(), "Delete", new View.OnClickListener() {
+        Popup popup = new Popup(getContext(), "Are you sure you want to delete " + location.getName(), true);
+        popup.addYellowButton("Delete", new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                new APITask("Deleting...", BusinessDetailFragment.this) {
+                showLoading(listContainer);
+                new APITask(new APIAction() {
                     @Override
-                    protected void runAPI() throws MJPApiException {
+                    public void run() throws MJPApiException {
                         MJPApi.shared().deleteLocation(location.getId());
                     }
+                }).addListener(new APITaskListener() {
                     @Override
-                    protected void onSuccess() {
+                    public void onSuccess() {
+                        hideLoading();
                         adapter.remove(location);
                         updatedLocationList();
                     }
-                };
+                    @Override
+                    public void onError(JsonNode errors) {
+                        errorHandler(errors);
+                    }
+                }).execute();
             }
-        }, "Cancel", null, true);
+        });
+        popup.addGreyButton("Cancel", null);
+        popup.show();
     }
 
     @OnClick(R.id.nav_right_button)

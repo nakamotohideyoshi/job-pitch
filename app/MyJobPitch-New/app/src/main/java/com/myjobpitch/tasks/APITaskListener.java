@@ -1,9 +1,8 @@
 package com.myjobpitch.tasks;
 
-/**
-* Created by Jamie on 11/04/2015.
-*/
-public interface APITaskListener<T> {
-    void onPostExecute(T result);
-    void onCancelled();
+import com.fasterxml.jackson.databind.JsonNode;
+
+public interface APITaskListener {
+    void onSuccess();
+    void onError(JsonNode errors);
 }

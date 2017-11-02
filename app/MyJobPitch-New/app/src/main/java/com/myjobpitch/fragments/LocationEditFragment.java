@@ -18,16 +18,14 @@ import com.myjobpitch.api.MJPApi;
 import com.myjobpitch.api.MJPApiException;
 import com.myjobpitch.api.data.Business;
 import com.myjobpitch.api.data.Location;
+import com.myjobpitch.tasks.APIAction;
 import com.myjobpitch.tasks.APITask;
 import com.myjobpitch.tasks.APITaskListener;
-import com.myjobpitch.tasks.DeleteAPITaskListener;
 import com.myjobpitch.tasks.UploadImageTask;
-import com.myjobpitch.tasks.recruiter.DeleteLocationImageTask;
 import com.myjobpitch.utils.AppData;
 import com.myjobpitch.utils.AppHelper;
 import com.myjobpitch.utils.ImageSelector;
-import com.myjobpitch.utils.Loading;
-import com.myjobpitch.utils.Popup;
+import com.myjobpitch.views.Popup;
 import com.rengwuxian.materialedittext.MaterialEditText;
 
 import java.io.File;
@@ -72,7 +70,6 @@ public class LocationEditFragment extends FormFragment {
 
     private boolean isFirstCreate;
     private boolean isNew = false;
-    private boolean isAddMode = false;
 
     public Business business;
     public Location location;
@@ -80,12 +77,14 @@ public class LocationEditFragment extends FormFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        final View view = inflater.inflate(R.layout.fragment_location_edit, container, false);
+        View view = inflater.inflate(R.layout.fragment_location_edit, container, false);
         ButterKnife.bind(this, view);
 
         isFirstCreate = getApp().getSharedPreferences("firstCreate", MODE_PRIVATE)
                 .getBoolean("workplace", true);
-        isAddMode = getApp().getCurrentPageID() != AppData.PAGE_ADD_JOB;
+
+        // save button
+        addMenuItem(MENUGROUP2, 100, "Save", -1);
 
         // title and location info
 
@@ -97,10 +96,10 @@ public class LocationEditFragment extends FormFragment {
             business = location.getBusiness_data();
         }
 
-        view.setVisibility(View.INVISIBLE);
-        new APITask("Loading...", this) {
+        showLoading(view);
+        new APITask(new APIAction() {
             @Override
-            protected void runAPI() throws MJPApiException {
+            public void run() throws MJPApiException {
                 if (location != null) {
                     location = MJPApi.shared().getUserLocation(location.getId());
                 } else if (isFirstCreate) {
@@ -112,15 +111,17 @@ public class LocationEditFragment extends FormFragment {
                     }
                 }
             }
+        }).addListener(new APITaskListener() {
             @Override
-            protected void onSuccess() {
-                view.setVisibility(View.VISIBLE);
+            public void onSuccess() {
+                hideLoading();
                 load();
             }
-        };
-
-        // save button
-        addMenuItem("Save", -1);
+            @Override
+            public void onError(JsonNode errors) {
+                errorHandler(errors);
+            }
+        }).execute();
 
         return view;
     }
@@ -152,7 +153,7 @@ public class LocationEditFragment extends FormFragment {
                 imageSelector.loadImage(null);
             }
         } else {
-            emailView.setText(getApp().getEmail());
+            emailView.setText(AppData.getEmail());
             imageSelector.loadImage(null);
         }
     }
@@ -167,6 +168,13 @@ public class LocationEditFragment extends FormFragment {
                 put("location_location", addressView);
             }
         };
+    }
+
+    @OnClick(R.id.location_email_help)
+    void onEmailHelp() {
+        Popup popup = new Popup(getContext(), "The is the email that notifications will be sent to, it can be different to your login email address.", true);
+        popup.addGreyButton("Close", null);
+        popup.show();
     }
 
     @OnClick(R.id.location_address_button)
@@ -232,72 +240,69 @@ public class LocationEditFragment extends FormFragment {
         location.setAddress("");
         location.setPostcode_lookup("");
 
-        Loading.show("Saving...");
+        showLoading();
 
-        new APITask(this) {
+        new APITask(new APIAction() {
             @Override
-            protected void runAPI() throws MJPApiException {
+            public void run() throws MJPApiException {
                 if (location.getId() == null) {
                     location = MJPApi.shared().createLocation(location);
                 } else {
                     location = MJPApi.shared().updateLocation(location);
                 }
             }
+        }).addListener(new APITaskListener() {
             @Override
-            protected void onSuccess() {
+            public void onSuccess() {
                 saveLogo();
             }
-        };
-
+            @Override
+            public void onError(JsonNode errors) {
+                errorHandler(errors);
+            }
+        }).execute();
     }
 
     private void saveLogo() {
 
         if (imageSelector.getImageUri() != null) {
 
-            UploadImageTask uploadTask = new UploadImageTask(getApp(), "user-location-images", "location", imageSelector.getImageUri(), location);
-            uploadTask.addListener(new APITaskListener<Boolean>() {
-                @Override
-                public void onPostExecute(Boolean success) {
-                    compltedSave();
-                }
-                @Override
-                public void onCancelled() {
-                }
-            });
-            uploadTask.execute();
-
-        } else if (location.getImages().size() > 0 && imageSelector.getImage() == null) {
-
-            DeleteLocationImageTask deleteTask = new DeleteLocationImageTask(location.getImages().get(0).getId());
-            deleteTask.addListener(new DeleteAPITaskListener() {
+            new UploadImageTask(getApp(), "user-location-images", "location", imageSelector.getImageUri(), location)
+            .addListener(new APITaskListener() {
                 @Override
                 public void onSuccess() {
                     compltedSave();
                 }
                 @Override
                 public void onError(JsonNode errors) {
-                    Popup.showError("Error deleting image");
+                    errorHandler(errors);
+                }
+            }).execute();
+
+        } else if (location.getImages().size() > 0 && imageSelector.getImage() == null) {
+
+            new APITask(new APIAction() {
+                @Override
+                public void run() throws MJPApiException {
+                    MJPApi.shared().deleteLocationImage(location.getImages().get(0).getId());
+                }
+            }).addListener(new APITaskListener() {
+                @Override
+                public void onSuccess() {
+                    compltedSave();
                 }
                 @Override
-                public void onConnectionError() {
-                    Popup.showError("Connection Error: Please check your internet connection");
+                public void onError(JsonNode errors) {
+                    errorHandler(errors);
                 }
-                @Override
-                public void onCancelled() {}
-            });
-            deleteTask.execute();
+            }).execute();
 
         } else {
-
             compltedSave();
-
         }
     }
 
     private void compltedSave() {
-        Loading.hide();
-
         if (!isNew) {
             getApp().popFragment();
             return;
@@ -311,7 +316,7 @@ public class LocationEditFragment extends FormFragment {
 
         getApp().getSupportFragmentManager().popBackStackImmediate();
 
-        if (isAddMode) {
+        if (getApp().getCurrentPageID() != AppData.PAGE_ADD_JOB) {
             JobEditFragment fragment = new JobEditFragment();
             fragment.location = location;
             getApp().pushFragment(fragment);
@@ -321,7 +326,6 @@ public class LocationEditFragment extends FormFragment {
             fragment.location = location;
             getApp().pushFragment(fragment);
         }
-
     }
 
 }

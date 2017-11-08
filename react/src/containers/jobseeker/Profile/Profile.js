@@ -84,9 +84,9 @@ export default class Profile extends FormComponent {
     isPlayer: true,
   });
 
-  onHideDialog = (url, recoredData) => {
-    if (recoredData) {
-      this.recoredData = recoredData;
+  onHideDialog = (url, blobData) => {
+    if (blobData) {
+      this.blobData = blobData;
     }
 
     this.setState({
@@ -121,7 +121,7 @@ export default class Profile extends FormComponent {
       this.setState({ jobSeeker, cvComment });
       this.props.setPermission(jobSeeker.profile ? 2 : 1);
 
-      if (this.recoredData) {
+      if (this.blobData) {
         this.uploadFile();
       } else {
         FormComponent.needToSave = false;
@@ -153,7 +153,7 @@ export default class Profile extends FormComponent {
       s3.upload({
         Bucket: 'mjp-android-uploads',
         Key: `${folder}/${pitch.token}.${pitch.id}.${new Date().getTime()}`,
-        Body: this.recoredData,
+        Body: this.blobData,
         ContentType: 'video/webm',
       }, (err, data) => {
         if (!err) {
@@ -182,7 +182,7 @@ export default class Profile extends FormComponent {
         FormComponent.needToSave = false;
         utils.successNotif('Success!');
         this.timer = null;
-        this.recoredData = null;
+        this.blobData = null;
         this.setState({
           recoreded: false,
           progress: null,

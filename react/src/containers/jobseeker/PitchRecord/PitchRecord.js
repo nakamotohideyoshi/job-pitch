@@ -31,12 +31,12 @@ export default class PitchRecord extends Component {
 
   showCamera = () => this.setState({ showCamera: true });
 
-  hideCamera = (videoUrl, recordedData) => {
+  hideCamera = (videoUrl, blobData) => {
     const newState = { showCamera: false };
 
     if (videoUrl) {
-      newState.recordedData = recordedData;
       newState.videoUrl = videoUrl;
+      newState.blobData = blobData;
     }
 
     this.setState(newState);
@@ -58,7 +58,7 @@ export default class PitchRecord extends Component {
       this.upload = s3.upload({
         Bucket: 'mjp-android-uploads',
         Key: `${folder}/${pitch.token}.${pitch.id}.${new Date().getTime()}`,
-        Body: this.state.recordedData
+        Body: this.state.blobData
       });
       this.upload.on('httpUploadProgress', progress => {
         if (this.upload) {
@@ -94,7 +94,7 @@ export default class PitchRecord extends Component {
         utils.successNotif('Uploaded!');
         this.timer = null;
         this.setState({
-          recordedData: null,
+          blobData: null,
           progress: null,
           uploading: false,
         });
@@ -105,7 +105,7 @@ export default class PitchRecord extends Component {
   }
 
   render() {
-    const { videoUrl, recordedData, showCamera, uploading, progress } = this.state;
+    const { videoUrl, blobData, showCamera, uploading, progress } = this.state;
 
     return (
       <div className={styles.root}>
@@ -147,7 +147,7 @@ export default class PitchRecord extends Component {
                 onClick={this.showCamera}
               >Record New Pitch</Button>
               {
-                recordedData &&
+                blobData &&
                 <Button
                   bsStyle="warning"
                   disabled={uploading}

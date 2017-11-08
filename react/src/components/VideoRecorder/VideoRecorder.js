@@ -130,11 +130,9 @@ export default class VideoRecorder extends Component {
   stopRecording = () => {
     this.cancelRecording();
 
-    this.videoRecorder.stopRecording(url =>
-      this.videoRecorder.getDataURL(data => {
-        this.props.onClose(url, data);
-      })
-    );
+    this.videoRecorder.stopRecording(url => {
+      this.props.onClose(url, this.videoRecorder.blob);
+    });
   }
 
   renderRecTime = () => {

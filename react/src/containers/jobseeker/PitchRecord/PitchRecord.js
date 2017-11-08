@@ -46,6 +46,7 @@ export default class PitchRecord extends Component {
     this.setState({ uploading: true });
 
     this.api.createPitch().then(pitch => {
+      const folder = location.origin.replace('//', '');
       const s3 = new AWS.S3({
         apiVersion: '2006-03-01',
         credentials: new AWS.CognitoIdentityCredentials({
@@ -56,7 +57,7 @@ export default class PitchRecord extends Component {
       });
       this.upload = s3.upload({
         Bucket: 'mjp-android-uploads',
-        Key: `https:www.sclabs.co.uk/${pitch.token}.${pitch.id}.${new Date().getTime()}`,
+        Key: `${folder}/${pitch.token}.${pitch.id}.${new Date().getTime()}`,
         Body: this.state.recordedData
       });
       this.upload.on('httpUploadProgress', progress => {

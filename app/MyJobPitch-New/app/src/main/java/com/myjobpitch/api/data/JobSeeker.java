@@ -26,7 +26,7 @@ public class JobSeeker extends MJPObjectWithDates {
     private List<Pitch> pitches;
     private String description;
     private String cv;
-    private Integer national_insurance_number;
+    private String national_insurance_number;
 
     private boolean has_references;
 
@@ -216,11 +216,11 @@ public class JobSeeker extends MJPObjectWithDates {
         this.truth_confirmation = truth_confirmation;
     }
 
-    public Integer getNational_insurance_number() {
+    public String getNational_insurance_number() {
         return national_insurance_number;
     }
 
-    public void setNational_insurance_number(int number) {
+    public void setNational_insurance_number(String number) {
         this.national_insurance_number = number;
     }
 

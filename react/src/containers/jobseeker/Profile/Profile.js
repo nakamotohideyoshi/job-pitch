@@ -141,6 +141,7 @@ export default class Profile extends FormComponent {
 
   uploadFile = () => {
     this.api.createPitch().then(pitch => {
+      const folder = location.origin.replace('//', '');
       const s3 = new AWS.S3({
         apiVersion: '2006-03-01',
         credentials: new AWS.CognitoIdentityCredentials({
@@ -151,7 +152,7 @@ export default class Profile extends FormComponent {
       });
       s3.upload({
         Bucket: 'mjp-android-uploads',
-        Key: `https:www.sclabs.co.uk/${pitch.token}.${pitch.id}.${new Date().getTime()}`,
+        Key: `${folder}/${pitch.token}.${pitch.id}.${new Date().getTime()}`,
         Body: this.recoredData,
         ContentType: 'video/webm',
       }, (err, data) => {
@@ -197,7 +198,7 @@ export default class Profile extends FormComponent {
   }
 
   render() {
-    const { jobSeeker, cvComment, isRecorder, isPlayer, pitchComment, saving, progress } = this.state;
+    const { jobSeeker, cvComment, isRecorder, isPlayer, saving, progress } = this.state;
     const pitch = jobSeeker && jobSeeker.pitches ? jobSeeker.pitches[0] : null;
     const videoUrl = pitch ? pitch.video : null;
 
@@ -294,6 +295,11 @@ export default class Profile extends FormComponent {
                   />
                   <this.CheckBoxField name="nationality_public" />
                 </div>
+              </FormGroup>
+
+              <FormGroup>
+                <ControlLabel>National insurance number</ControlLabel>
+                <this.TextField type="text" name="national_insurance_number" />
               </FormGroup>
 
               <FormGroup>

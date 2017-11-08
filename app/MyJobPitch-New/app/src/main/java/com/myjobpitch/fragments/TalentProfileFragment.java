@@ -98,6 +98,9 @@ public class TalentProfileFragment extends FormFragment {
     @BindView(R.id.job_seeker_nationality_public)
     CheckBox mNationalityPublicView;
 
+    @BindView(R.id.job_seeker_national_number)
+    MaterialEditText mNationalNumberView;
+
     @BindView(R.id.job_seeker_description)
     MaterialEditText mDescriptionView;
 
@@ -205,6 +208,7 @@ public class TalentProfileFragment extends FormFragment {
         }
         mNationalityPublicView.setChecked(jobSeeker.getNationality_public());
         mDescriptionView.setText(jobSeeker.getDescription());
+        mNationalNumberView.setText(jobSeeker.getNational_insurance_number());
 
         mPitch = jobSeeker.getPitch();
         mRecordVideoPlay.setVisibility(mPitch != null && mPitch.getVideo() != null ? View.VISIBLE : View.INVISIBLE);
@@ -372,7 +376,11 @@ public class TalentProfileFragment extends FormFragment {
             jobSeeker.setHas_references(mHasReferencesView.isChecked());
             jobSeeker.setTruth_confirmation(mTickBox.isChecked());
             jobSeeker.setCV(null);
-            jobSeeker.setNational_insurance_number(81);
+            if (!mNationalNumberView.getText().toString().isEmpty()) {
+                jobSeeker.setNational_insurance_number(mNationalNumberView.getText().toString());
+            } else {
+                jobSeeker.setNational_insurance_number(null);
+            }
 
             new APITask(new APIAction() {
                 @Override

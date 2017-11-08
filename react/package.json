@@ -22,7 +22,7 @@
     "boilerplate",
     "babel"
   ],
-  "main": "bin/server.js",
+  "main": "run/server.js",
   "scripts": {
     "dev": "concurrently --kill-others \"npm run watch-client\" \"npm run start-dev\"",
     "start-dev": "better-npm-run start-dev",
@@ -34,7 +34,7 @@
   },
   "betterScripts": {
     "start-dev": {
-      "command": "node ./bin/server.js",
+      "command": "node ./run/server.js",
       "env": {
         "NODE_PATH": "./src",
         "NODE_ENV": "development",

@@ -97,6 +97,26 @@
                 android:theme="@style/Button"/>
 
             <LinearLayout
+                android:id="@+id/jobseeker_national_number"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:orientation="horizontal">
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:src="@drawable/icon_check"
+                    android:scaleType="fitCenter"/>
+                <TextView
+                    android:text="National Insurance number supplied"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:textColor="@color/blackText"
+                    android:textSize="18sp"/>
+            </LinearLayout>
+
+            <LinearLayout
                 android:id="@+id/jobseeker_available"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

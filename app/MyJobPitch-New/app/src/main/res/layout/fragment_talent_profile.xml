@@ -222,6 +222,17 @@
                     android:theme="@style/CheckBox" />
             </LinearLayout>
 
+            <com.rengwuxian.materialedittext.MaterialEditText
+                android:id="@+id/job_seeker_national_number"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:inputType="text"
+                android:imeOptions="actionDone"
+                android:hint="National insurance number (optional)"
+                app:met_floatingLabel="normal"
+                app:met_primaryColor="@color/colorGreen"/>
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

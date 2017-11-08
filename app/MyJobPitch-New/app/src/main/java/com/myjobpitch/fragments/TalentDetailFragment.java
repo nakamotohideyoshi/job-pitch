@@ -58,6 +58,8 @@ public class TalentDetailFragment extends BaseFragment {
     @BindView(R.id.jobseeker_cv)
     Button cvButton;
 
+    @BindView(R.id.jobseeker_national_number)
+    View nationalNumberView;
     @BindView(R.id.jobseeker_available)
     View availableView;
     @BindView(R.id.jobseeker_truthful)
@@ -140,6 +142,11 @@ public class TalentDetailFragment extends BaseFragment {
         }
 
         if (connected) {
+
+            if (jobSeeker.getNational_insurance_number().isEmpty()) {
+                nationalNumberView.setVisibility(View.GONE);
+            }
+
             if (jobSeeker.getCV() == null) {
                 cvButton.setVisibility(View.GONE);
             }
@@ -186,6 +193,8 @@ public class TalentDetailFragment extends BaseFragment {
             connectHelpButton.setVisibility(View.GONE);
 
         } else {
+            nationalNumberView.setVisibility(View.GONE);
+
             cvButton.setVisibility(View.GONE);
             contactView.setVisibility(View.GONE);
 

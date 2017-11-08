@@ -77,6 +77,7 @@ class PitchUploader: NSObject {
                                         if error == nil {
                                             self.getPitch()
                                         } else {
+                                            print(error?.localizedDescription)
                                             self.uploadFailed()
                                         }
                                         

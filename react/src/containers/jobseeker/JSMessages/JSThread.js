@@ -60,7 +60,7 @@ export default class JSThread extends Component {
   }
 
   onConnect = () => {
-    const { application, onSend } = this.props;
+    const { application } = this.props;
     this.api.saveApplication({
       id: application.id,
       connect: utils.getApplicationStatusByName('ESTABLISHED').id,

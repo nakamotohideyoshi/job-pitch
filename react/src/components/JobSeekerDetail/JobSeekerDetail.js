@@ -162,6 +162,13 @@ export default class JobSeekerDetail extends Component {
               // </div>
             }
             {
+              established && jobSeeker.national_insurance_number &&
+              <div className={styles.available}>
+                <i className="fa fa-check-square-o" aria-hidden="true" />
+                National Insurance number supplied
+              </div>
+            }
+            {
               jobSeeker.has_references &&
               <div className={styles.available}>
                 <i className="fa fa-check-square-o" aria-hidden="true" />

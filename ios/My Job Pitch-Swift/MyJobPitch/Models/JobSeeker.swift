@@ -27,6 +27,7 @@ class JobSeeker: MJPObjectWithDates {
     var nationalityPublic = true
     var hasReferences = false
     var truthConfirmation = false
+    var national_insurance_number: String!
     var profile: NSNumber!
     var pitches: NSArray!
     var desc: String!

@@ -21,6 +21,7 @@ class JobSeekerDetailController: MJPController {
     @IBOutlet weak var contactDetailLabel: UILabel!
     @IBOutlet weak var applyButton: RoundButton!
     @IBOutlet weak var shortlisted: UISwitch!
+    @IBOutlet weak var nationalNumberView: UIView!
     @IBOutlet weak var availableView: UIView!
     @IBOutlet weak var truthfulView: UIView!
     @IBOutlet weak var pitchPlayButton: UIButton!
@@ -87,10 +88,15 @@ class JobSeekerDetailController: MJPController {
         if !jobSeeker.truthConfirmation {
             truthfulView.removeFromSuperview()
         }
+
         
         // contact info
         
         if isConnected {
+            
+            if jobSeeker.national_insurance_number.isEmpty {
+                nationalNumberView.removeFromSuperview()
+            }
             
             if jobSeeker.cv == nil {
                 cvButton.removeFromSuperview()
@@ -118,6 +124,8 @@ class JobSeekerDetailController: MJPController {
             connectHelpButton.removeFromSuperview()
             
         } else {
+            
+            nationalNumberView.removeFromSuperview()
             
             cvButton.removeFromSuperview()
             contactView.removeFromSuperview()

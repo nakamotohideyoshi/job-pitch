@@ -32,6 +32,7 @@ class JobSeekerProfileController: MJPController {
     @IBOutlet weak var sexPublic: UISwitch!
     @IBOutlet weak var nationality: ButtonTextField!
     @IBOutlet weak var nationalityPublic: UISwitch!
+    @IBOutlet weak var nationalNumber: UITextField!
     @IBOutlet weak var descView: UITextView!
     @IBOutlet weak var descError: UILabel!
     @IBOutlet weak var cvComment: UILabel!
@@ -148,6 +149,8 @@ class JobSeekerProfileController: MJPController {
             }
             nationality.text = selectedNationalityNames.joined(separator: ", ")
             nationalityPublic.isOn = jobSeeker.nationalityPublic
+            
+            nationalNumber.text = jobSeeker.national_insurance_number
             
             descView.text = jobSeeker.desc
             
@@ -334,6 +337,12 @@ class JobSeekerProfileController: MJPController {
                     break
                 }
             }
+        }
+        
+        if (nationalNumber.text?.isEmpty == false) {
+            jobSeeker.national_insurance_number = nationalNumber.text
+        } else {
+            jobSeeker.national_insurance_number = nil
         }
         
         jobSeeker.emailPublic = emailPublic.isOn

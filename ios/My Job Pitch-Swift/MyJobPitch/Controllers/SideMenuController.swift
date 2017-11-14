@@ -13,13 +13,15 @@ class SideMenuController: UIViewController {
     static var currentID = ""
     static let menuItems = [
         "find_job":     ["icon": "menu-search",         "title": "Find Job",                "identifier": "Swipe",              "per": "P"],
-        "applications": ["icon": "menu-application",    "title": "Applications",            "identifier": "ApplicationList",    "per": "PB"],
+        "applications1":["icon": "menu-application1",   "title": "Applications",            "identifier": "ApplicationList",    "per": "P"],
         "messages":     ["icon": "menu-message",        "title": "Messages",                "identifier": "MessageList",        "per": "PB"],
         "job_profile":  ["icon": "menu-job-profile",    "title": "Job Profile",             "identifier": "JobProfile",         "per": "J"],
         "add_record":   ["icon": "menu-add-record",     "title": "Record Pitch",            "identifier": "Pitch",              "per": "J"],
+        "view_profile": ["icon": "menu-user-profile",   "title": "Profile",                 "identifier": "JobSeekerDetail",   "per": ""],
         "user_profile": ["icon": "menu-user-profile",   "title": "Profile",                 "identifier": "JobSeekerProfile",   "per": ""],
         
         "find_talent":  ["icon": "menu-search",         "title": "Find Talent",             "identifier": "SelectJob",          "per": "B"],
+        "applications": ["icon": "menu-application",    "title": "Applications",            "identifier": "ApplicationList",    "per": "B"],
         "connections":  ["icon": "menu-connect",        "title": "Connections",             "identifier": "SelectJob",          "per": "B"],
         "shortlist":    ["icon": "menu-shortlist",      "title": "My Shortlist",            "identifier": "SelectJob",          "per": "B"],
         "businesses":   ["icon": "menu-business",       "title": "Add or Edit Jobs",        "identifier": "BusinessList",       "per": ""],
@@ -32,7 +34,7 @@ class SideMenuController: UIViewController {
     ]
     
     static let jobSeekerMenu = [
-        "find_job", "applications", "messages", "job_profile", "add_record", "user_profile", "change_pass", "help", "contact_us", "log_out"
+        "find_job", "applications1", "messages", "job_profile", "add_record", "view_profile", "change_pass", "help", "contact_us", "log_out"
     ]
     
     static let recruiterMenu = [
@@ -104,7 +106,7 @@ class SideMenuController: UIViewController {
         let revealController = UIApplication.shared.keyWindow?.rootViewController as! SWRevealViewController
         let controller = AppHelper.mainStoryboard.instantiateViewController(withIdentifier: identifier!)
         let navController = UINavigationController(rootViewController: controller)
-        controller.navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(named: "menu"),
+        controller.navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(named: "nav-menu"),
                                                                        style: .plain,
                                                                        target: revealController,
                                                                        action: #selector(SWRevealViewController.revealToggle(_:)))
@@ -161,7 +163,7 @@ extension SideMenuController: UITableViewDataSource {
         cell.addLine(frame: CGRect(x: 10, y: cell.frame.size.height - 1, width:  cell.frame.size.width - 60 - 20, height: 0.5),
                      color: UIColor(colorLiteralRed: 0, green: 0, blue: 0, alpha: 0.1))
         cell.addLine(frame: CGRect(x: 10, y: cell.frame.size.height - 0.5, width:  cell.frame.size.width - 60 - 20, height: 0.5),
-                     color: UIColor(colorLiteralRed: 1, green: 1, blue: 1, alpha: 0.1))
+                     color: UIColor(colorLiteralRed: 1, green: 1, blue: 1, alpha: 0.06))
         
         return cell
     }
@@ -172,7 +174,7 @@ extension SideMenuController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
-        let id = data[indexPath.row]
+        var id = data[indexPath.row]
         
         if SideMenuController.menuItems[id]?["identifier"] == "" {
             return
@@ -195,6 +197,9 @@ extension SideMenuController: UITableViewDelegate {
             UIApplication.shared.open(url, options: [:], completionHandler: nil)
             //revealViewController().revealToggle(animated: false)
         } else  {
+            if id == "view_profile" && AppData.user.jobSeeker == nil {
+                id = "user_profile"
+            }
             SideMenuController.pushController(id: id)
         }
 

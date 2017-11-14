@@ -82,7 +82,7 @@ public class JobProfileFragment extends FormFragment {
         ButterKnife.bind(this, view);
 
         // menu
-        addMenuItem(MENUGROUP2, 100, "Save", -1);
+        addMenuItem(MENUGROUP2, 100, "Save", R.drawable.ic_save);
 
         // data
         mSectors = AppData.get(Sector.class);

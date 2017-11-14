@@ -50,6 +50,18 @@ export default class RMessages extends Component {
     filterJob
   });
 
+  onUpdateApplication = application => {
+    let applications = this.state.applications;
+    applications = applications.filter(app => app.id !== this.state.selectedApp.id);
+    applications.push(application);
+    applications.sort((app1, app2) => {
+      const date1 = new Date(app1.messages[app1.messages.length - 1].created);
+      const date2 = new Date(app2.messages[app2.messages.length - 1].created);
+      return date1.getTime() < date2.getTime();
+    });
+    this.setState({ applications });
+  }
+
   onFilter = (application, filterText) =>
     (!this.state.filterJob || this.state.filterJob.id === application.job_data.id) &&
     utils.getJobSeekerFullName(application.job_seeker).toLowerCase().indexOf(filterText) !== -1;
@@ -124,7 +136,10 @@ export default class RMessages extends Component {
                   renderEmpty={this.renderEmpty}
                 />
               </div>
-              <RThread application={this.state.selectedApp} />
+              <RThread
+                application={this.state.selectedApp}
+                onSend={this.onUpdateApplication}
+              />
             </div>
           :
             <Loading />

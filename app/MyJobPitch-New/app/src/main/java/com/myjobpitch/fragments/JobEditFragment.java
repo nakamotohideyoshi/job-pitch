@@ -88,7 +88,7 @@ public class JobEditFragment extends FormFragment {
         isAddMode = getApp().getCurrentPageID() != AppData.PAGE_ADD_JOB;
 
         // save button
-        addMenuItem(MENUGROUP2, 100, "Save", -1);
+        addMenuItem(MENUGROUP2, 100, "Save", R.drawable.ic_save);
 
         // title and job info
 

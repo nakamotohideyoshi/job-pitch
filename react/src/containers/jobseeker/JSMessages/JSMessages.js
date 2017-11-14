@@ -4,7 +4,7 @@ import { Link } from 'react-router';
 import { Loading, ItemList, LogoImage } from 'components';
 import ApiClient from 'helpers/ApiClient';
 import * as utils from 'helpers/utils';
-import Thread from './JSThread';
+import JSThread from './JSThread';
 import styles from './JSMessages.scss';
 
 export default class JSMessages extends Component {
@@ -42,23 +42,17 @@ export default class JSMessages extends Component {
     this.setState({ selectedApp });
   }
 
-  // onSend = () => {
-  //   this.props.getApplications(`${this.state.selectedApp.id}/`)
-  //     .then(selectedApp => {
-  //       this.setState({ selectedApp });
-  //       this.onRefresh();
-  //     });
-  // }
-
-  // onDetail = () => {
-  //   this.setState({
-  //     messageDialog: false,
-  //   });
-  // }
-
-  // dismissDialog = () => this.setState({
-  //   selectedApp: null,
-  // });
+  onUpdateApplication = application => {
+    let applications = this.state.applications;
+    applications = applications.filter(app => app.id !== this.state.selectedApp.id);
+    applications.push(application);
+    applications.sort((app1, app2) => {
+      const date1 = new Date(app1.messages[app1.messages.length - 1].created);
+      const date2 = new Date(app2.messages[app2.messages.length - 1].created);
+      return date1.getTime() < date2.getTime();
+    });
+    this.setState({ applications });
+  }
 
   onFilter = (application, filterText) =>
   application.job_data.title.toLowerCase().indexOf(filterText) !== -1 ||
@@ -121,8 +115,9 @@ export default class JSMessages extends Component {
                 renderItem={this.renderItem}
                 renderEmpty={this.renderEmpty}
               />
-              <Thread
+              <JSThread
                 application={selectedApp}
+                onSend={this.onUpdateApplication}
               />
             </div>
           :

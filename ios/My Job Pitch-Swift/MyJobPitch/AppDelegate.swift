@@ -38,6 +38,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         navigationBarAppearace.tintColor = UIColor.white
         navigationBarAppearace.barTintColor = AppData.navColor
         navigationBarAppearace.titleTextAttributes = [NSForegroundColorAttributeName:UIColor.white]
+        navigationBarAppearace.backIndicatorImage = UIImage(named: "nav-back")
+        navigationBarAppearace.backIndicatorTransitionMaskImage = UIImage(named: "nav-back")
         return true
     }
     

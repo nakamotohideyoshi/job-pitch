@@ -35,6 +35,7 @@
 		D76C905A1E255540009C35E4 /* privacy.html in Resources */ = {isa = PBXBuildFile; fileRef = D76C90571E255540009C35E4 /* privacy.html */; };
 		D76C905B1E255540009C35E4 /* terms.html in Resources */ = {isa = PBXBuildFile; fileRef = D76C90581E255540009C35E4 /* terms.html */; };
 		D76C905D1E261ABC009C35E4 /* JobProfileController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D76C905C1E261ABC009C35E4 /* JobProfileController.swift */; };
+		D786BAD11FBA7790000FCFC1 /* pitch.html in Resources */ = {isa = PBXBuildFile; fileRef = D786BAD01FBA7790000FCFC1 /* pitch.html */; };
 		D787F6331E2879F900C47A88 /* BusinessListController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D787F6321E2879F900C47A88 /* BusinessListController.swift */; };
 		D787F6351E287A1F00C47A88 /* BusinessDetailController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D787F6341E287A1F00C47A88 /* BusinessDetailController.swift */; };
 		D787F6371E287A5000C47A88 /* BusinessEditController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D787F6361E287A5000C47A88 /* BusinessEditController.swift */; };
@@ -142,6 +143,7 @@
 		D76C90571E255540009C35E4 /* privacy.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; name = privacy.html; path = Resources/privacy.html; sourceTree = "<group>"; };
 		D76C90581E255540009C35E4 /* terms.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; name = terms.html; path = Resources/terms.html; sourceTree = "<group>"; };
 		D76C905C1E261ABC009C35E4 /* JobProfileController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = JobProfileController.swift; path = Controllers/JobProfileController.swift; sourceTree = "<group>"; };
+		D786BAD01FBA7790000FCFC1 /* pitch.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; name = pitch.html; path = Resources/pitch.html; sourceTree = "<group>"; };
 		D787F6321E2879F900C47A88 /* BusinessListController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = BusinessListController.swift; path = Controllers/BusinessListController.swift; sourceTree = "<group>"; };
 		D787F6341E287A1F00C47A88 /* BusinessDetailController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = BusinessDetailController.swift; path = Controllers/BusinessDetailController.swift; sourceTree = "<group>"; };
 		D787F6361E287A5000C47A88 /* BusinessEditController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = BusinessEditController.swift; path = Controllers/BusinessEditController.swift; sourceTree = "<group>"; };
@@ -314,7 +316,6 @@
 				D787F6381E287A6700C47A88 /* LocationEditController.swift */,
 				D7B6F5371E6466E50026A7BD /* JobDetailController.swift */,
 				D787F63A1E287A8B00C47A88 /* JobEditController.swift */,
-				D7896AEE1E0CC51300533884 /* JobSeekerDetailController.swift */,
 				D7C828021E51AC1000CD9C08 /* SelectJobController.swift */,
 			);
 			name = Recruiter;
@@ -332,6 +333,7 @@
 		D76C904D1E25172A009C35E4 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				D786BAD01FBA7790000FCFC1 /* pitch.html */,
 				D76C90561E255540009C35E4 /* about.html */,
 				D76C904E1E25173D009C35E4 /* help-jobseeker.html */,
 				D76C904F1E25173D009C35E4 /* help-recruiter.html */,
@@ -415,6 +417,7 @@
 				D749E35D1E0B6ACA000FD0B1 /* Recruiter */,
 				D749E35C1E0B6AC0000FD0B1 /* JobSeeker */,
 				D7F770261E0918FF00ECB684 /* LoginController.swift */,
+				D7896AEE1E0CC51300533884 /* JobSeekerDetailController.swift */,
 				D749E34E1E09B479000FD0B1 /* ResetPasswordController.swift */,
 				D72AE42D1E11AD50004C3F02 /* ChangePasswordController.swift */,
 				D749E3561E0B2026000FD0B1 /* SwipeController.swift */,
@@ -566,6 +569,7 @@
 				D76C905A1E255540009C35E4 /* privacy.html in Resources */,
 				D76C90501E25173D009C35E4 /* help-jobseeker.html in Resources */,
 				D7B07B881E08DDE1005B9EBE /* Main.storyboard in Resources */,
+				D786BAD11FBA7790000FCFC1 /* pitch.html in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

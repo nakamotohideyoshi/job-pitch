@@ -8,12 +8,13 @@
 
 import UIKit
 
-class WebViewController: UIViewController {
+class WebViewController: MJPController {
 
     @IBOutlet weak var webView: UIWebView!
     @IBOutlet weak var indicator: UIActivityIndicatorView!
     
     var file: String!
+    var isModal: Bool = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -26,6 +27,15 @@ class WebViewController: UIViewController {
             webView.loadHTMLString(content, baseURL: nil)
         } catch {
         }
+        
+        if isModal == true {
+            navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(named: "nav-close"), style: .plain, target: self, action: #selector(closeModal))
+        }
+        
+    }
+    
+    @IBAction func closeModal() {
+        dismiss(animated: true, completion: nil)
     }
     
 }

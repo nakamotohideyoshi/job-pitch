@@ -298,7 +298,13 @@ export default class Profile extends FormComponent {
               </FormGroup>
 
               <FormGroup>
-                <ControlLabel>National insurance number</ControlLabel>
+                <div className={styles.withHelp}>
+                  <ControlLabel>National insurance number</ControlLabel>
+                  <HelpIcon
+                    label={`Supplying your national insurance number makes it easier for employers to recruit you.
+                     Your National Insurance number will not be shared with employers.`}
+                  />
+                </div>
                 <this.TextField type="text" name="national_insurance_number" />
               </FormGroup>
 

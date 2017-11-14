@@ -55,6 +55,7 @@ class JobSeekerProfileController: MJPController {
     var videoUrl: URL!
         
     var jobSeeker: JobSeeker!
+    var saveComplete: (() -> Void)!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -180,6 +181,10 @@ class JobSeekerProfileController: MJPController {
         }
     }
 
+    @IBAction func nationalNumberHelp(_ sender: Any) {
+        PopupController.showGray("Supplying your national insurance number makes it easier for employers to recruit you. Your National Insurance number will not be shared with employers.", ok: "Close")
+    }
+    
     
     @IBAction func cvHelpAction(_ sender: Any) {
         PopupController.showGray("CV summary is what the recruiter first see, write if you have previous relevant experience where and for how long.", ok: "Close")
@@ -382,7 +387,7 @@ class JobSeekerProfileController: MJPController {
                 PitchUploader().uploadVideo(videoUrl: self.videoUrl, complete: { (pitch) in
                     self.hideLoading()
                     self.videoUrl = nil
-                    self.saveCompleted()
+                    self.saveSuccess()
                 }) { (progress) in
                     if progress < 1 {
                         if self.loadingView.progressView == nil {
@@ -395,30 +400,26 @@ class JobSeekerProfileController: MJPController {
                 }
                 
             } else {
-                self.saveCompleted()
+                self.saveSuccess()
             }
             
         }, failure: self.handleErrors)
         
     }
     
-    func saveCompleted() {
-        if cvdata != nil {
-            cvdata = nil
-            cvComment.text = "CV added"
-            cvRemoveButtonWidthConstraint.constant = 0
+    func saveSuccess() {
+        if saveComplete != nil {
+            dismiss(animated: true, completion: nil)
+            saveComplete?()
         } else {
-            cvComment.text = ""
+            SideMenuController.pushController(id: "job_profile")
         }
-        
-        hideLoading()
-        PopupController.showGreen("Success!", ok: "OK", okCallback: {
-            if !AppData.existProfile {
-                SideMenuController.pushController(id: "job_profile")
-            }
-        }, cancel: nil, cancelCallback: nil)
     }
-        
+    
+    @IBAction func cancel(_ sender: Any) {
+        dismiss(animated: true, completion: nil)
+    }
+    
 }
 
 extension JobSeekerProfileController: UIImagePickerControllerDelegate {

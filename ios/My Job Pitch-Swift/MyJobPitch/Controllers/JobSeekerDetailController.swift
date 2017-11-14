@@ -50,8 +50,18 @@ class JobSeekerDetailController: MJPController {
             isConnected = application.status == AppData.getApplicationStatusByName(ApplicationStatus.APPLICATION_ESTABLISHED).id
         }
         
-        load()
-        
+        if jobSeeker == nil {
+            title = "Profile"
+            showLoading()
+            API.shared().loadJobSeekerWithId(id: AppData.user.jobSeeker, success: { (data) in
+                self.hideLoading()
+                self.jobSeeker = data as! JobSeeker
+                self.load()
+            }, failure: self.handleErrors)
+        } else {
+            navigationItem.rightBarButtonItem = nil
+            load()
+        }
     }
     
     func load() {
@@ -82,21 +92,19 @@ class JobSeekerDetailController: MJPController {
             pitchPlayButton.isHidden = true
         }
         
+        if jobSeeker.national_insurance_number.isEmpty {
+            nationalNumberView.removeFromSuperview()
+        }
         if !jobSeeker.hasReferences {
             availableView.removeFromSuperview()
         }
         if !jobSeeker.truthConfirmation {
             truthfulView.removeFromSuperview()
         }
-
         
         // contact info
         
         if isConnected {
-            
-            if jobSeeker.national_insurance_number.isEmpty {
-                nationalNumberView.removeFromSuperview()
-            }
             
             if jobSeeker.cv == nil {
                 cvButton.removeFromSuperview()
@@ -117,27 +125,40 @@ class JobSeekerDetailController: MJPController {
             
             shortlisted.isOn = application.shortlisted
             
+            connectHelpButton.removeFromSuperview()
+
             if onlyView {
                 buttonContainer.removeFromSuperview()
             }
-            
-            connectHelpButton.removeFromSuperview()
-            
+
         } else {
             
-            nationalNumberView.removeFromSuperview()
-            
-            cvButton.removeFromSuperview()
             contactView.removeFromSuperview()
-            applyButton.setTitle("Connect", for: .normal)
             
-            let j = job != nil ? job : application.job
-            let creditCount = j?.locationData.businessData.tokens as! Int
-            let credits = creditCount > 1 ? "Credits" : "Credit"
-            applyButton.setTitle(String(format: "Connect  (%d %@)", creditCount, credits), for: .normal)
-            
+            if AppData.user.jobSeeker != nil {
+                if jobSeeker.cv == nil {
+                    cvButton.removeFromSuperview()
+                }
+                buttonContainer.removeFromSuperview()
+            } else {
+                cvButton.removeFromSuperview()
+
+                let j = job != nil ? job : application.job
+                let creditCount = j?.locationData.businessData.tokens as! Int
+                let credits = creditCount > 1 ? "Credits" : "Credit"
+                applyButton.setTitle(String(format: "Connect  (%d %@)", creditCount, credits), for: .normal)
+            }
         }
         
+    }
+    
+    @IBAction func editProfile(_ sender: Any) {
+        let controller = storyboard?.instantiateViewController(withIdentifier: "JobSeekerProfile") as! JobSeekerProfileController
+        controller.saveComplete = { () in
+            SideMenuController.pushController(id: "view_profile")
+        }
+        let navController = UINavigationController(rootViewController: controller)
+        present(navController, animated: true, completion: nil)
     }
     
     @IBAction func videoPitchAction(_ sender: Any) {

@@ -25,8 +25,8 @@ export default class VideoRecorder extends Component {
   }
 
   componentWillUnmount() {
-    if (this.stream) {
-      this.stream.stop();
+    if (this.state.stream) {
+      this.state.stream.stop();
     }
 
     if (this.videoRecorder) {
@@ -69,14 +69,14 @@ export default class VideoRecorder extends Component {
 
     navigator.mediaDevices.getUserMedia({ audio: true, video: true }).then(
       stream => {
-        this.stream = stream;
-        this.setState({
-          videoUrl: window.URL.createObjectURL(stream)
-        });
+        this.video.srcObject = stream;
+        if (typeof MediaRecorder === 'undefined') {
+          this.setState({ error: 'Your browser does not supports Media Recorder API.' });
+        } else {
+          this.setState({ stream });
+        }
       },
-      error => {
-        this.setState({ error: error.name });
-      }
+      error => this.setState({ error: error.name })
     );
   }
 
@@ -105,7 +105,7 @@ export default class VideoRecorder extends Component {
   }
 
   startRecording = () => {
-    this.videoRecorder = RecordRTC(this.stream, { type: 'video' });
+    this.videoRecorder = RecordRTC(this.state.stream, { type: 'video' });
     this.videoRecorder.startRecording();
 
     this.setState({
@@ -173,7 +173,7 @@ export default class VideoRecorder extends Component {
   }
 
   render() {
-    const { status, videoUrl, error } = this.state;
+    const { status, stream, error } = this.state;
 
     return (
       <Modal show onHide={this.onClose} backdrop="static">
@@ -187,7 +187,7 @@ export default class VideoRecorder extends Component {
             <video
               preload="auto"
               autoPlay
-              src={videoUrl}
+              ref={ref => { this.video = ref; }}
             >
               <track kind="captions" />
             </video>
@@ -201,7 +201,7 @@ export default class VideoRecorder extends Component {
 
           <div className={styles.footerContainer}>
             {
-              videoUrl &&
+              stream &&
               this.renderButtons()
             }
             {

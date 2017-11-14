@@ -251,7 +251,7 @@ class APIConfigure: NSObject {
                                method: .any)
 
 
-        // ================= Job Seeker =====================
+        // ================= Jobseeker =====================
 
         let jobSeekerArray = [ "id", "email", "created", "updated", "telephone", "mobile",
                                "age", "sex", "nationality", "national_insurance_number", "profile", "cv", "active" ]

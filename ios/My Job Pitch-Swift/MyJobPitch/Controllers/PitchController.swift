@@ -132,4 +132,13 @@ class PitchController: MJPController {
         }
     }
     
+    @IBAction func helpAction(_ sender: Any) {
+        let controller = storyboard?.instantiateViewController(withIdentifier: "WebView") as! WebViewController
+        controller.navigationItem.title = "Recording Pitch"
+        controller.file = "pitch"
+        controller.isModal = true
+        let navController = UINavigationController(rootViewController: controller)
+        present(navController, animated: true, completion: nil)
+    }
+    
 }

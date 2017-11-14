@@ -99,14 +99,40 @@ public class TalentDetailFragment extends BaseFragment {
         View view = inflater.inflate(R.layout.fragment_talent_detail, container, false);
         ButterKnife.bind(this, view);
 
-        title = "Talent Detail";
-
         if (application != null) {
             jobSeeker = application.getJobSeeker();
             connected = application.getStatus() == AppData.get(ApplicationStatus.class, ApplicationStatus.ESTABLISHED).getId();
         }
 
-        load();
+        if (AppData.user.isJobSeeker()) {
+            title = "Profile";
+            viewMode = true;
+            addMenuItem(MENUGROUP2, 100, "Edit", R.drawable.ic_edit);
+        } else {
+            title = "Talent Detail";
+        }
+
+        if (jobSeeker == null) {
+            showLoading(view);
+            new APITask(new APIAction() {
+                @Override
+                public void run() throws MJPApiException {
+                    jobSeeker = MJPApi.shared().get(JobSeeker.class, AppData.user.getJob_seeker());
+                }
+            }).addListener(new APITaskListener() {
+                @Override
+                public void onSuccess() {
+                    hideLoading();
+                    load();
+                }
+                @Override
+                public void onError(JsonNode errors) {
+                    errorHandler(errors);
+                }
+            }).execute();
+        } else {
+            load();
+        }
 
         return view;
     }
@@ -129,17 +155,10 @@ public class TalentDetailFragment extends BaseFragment {
 
         descView.setText(jobSeeker.getDescription());
 
-        if (jobSeeker.getPitch() == null) {
-            playButton.setVisibility(View.GONE);
-        }
-
-        if (!jobSeeker.getHas_references()) {
-            availableView.setVisibility(View.GONE);
-        }
-
-        if (!jobSeeker.getTruth_confirmation()) {
-            truthfulView.setVisibility(View.GONE);
-        }
+        playButton.setVisibility(jobSeeker.getPitch() != null ? View.VISIBLE : View.GONE);
+        nationalNumberView.setVisibility(jobSeeker.getNational_insurance_number().isEmpty()? View.GONE : View.VISIBLE);
+        availableView.setVisibility(jobSeeker.getHas_references() ? View.VISIBLE : View.GONE);
+        truthfulView.setVisibility(jobSeeker.getTruth_confirmation() ? View.VISIBLE : View.GONE);
 
         if (connected) {
 
@@ -192,22 +211,29 @@ public class TalentDetailFragment extends BaseFragment {
 
             connectHelpButton.setVisibility(View.GONE);
 
-        } else {
-            nationalNumberView.setVisibility(View.GONE);
+            if (viewMode) {
+                applyButton.setVisibility(View.GONE);
+                removeButton.setVisibility(View.GONE);
+            }
 
-            cvButton.setVisibility(View.GONE);
+        } else {
+
             contactView.setVisibility(View.GONE);
 
-            Job j = job
-                    != null ? job : application.getJob_data();
-            int creditCount = j.getLocation_data().getBusiness_data().getTokens();
-            String credits = creditCount > 1 ? " credits" : " credit";
-            applyButton.setText(String.format("Connect  (%d %s)", creditCount, credits));
-        }
+            if (AppData.user.isJobSeeker()) {
+                cvButton.setVisibility(jobSeeker.getCV() != null ? View.VISIBLE : View.GONE);
+                applyButton.setVisibility(View.GONE);
+                removeButton.setVisibility(View.GONE);
+                connectHelpButton.setVisibility(View.GONE);
+            } else {
+                cvButton.setVisibility(View.GONE);
 
-        if (viewMode) {
-            applyButton.setVisibility(View.GONE);
-            removeButton.setVisibility(View.GONE);
+                Job j = job != null ? job : application.getJob_data();
+                int creditCount = j.getLocation_data().getBusiness_data().getTokens();
+                String credits = creditCount > 1 ? " credits" : " credit";
+                applyButton.setText(String.format("Connect  (%d %s)", creditCount, credits));
+            }
+
         }
 
     }
@@ -330,6 +356,15 @@ public class TalentDetailFragment extends BaseFragment {
         });
         popup.addGreyButton("Cancel", null);
         popup.show();
+    }
+
+    @Override
+    public void onMenuSelected(int menuID) {
+        if (menuID == 100) {
+            TalentProfileFragment fragment = new TalentProfileFragment();
+            fragment.viewFragment = this;
+            getApp().pushFragment(fragment);
+        }
     }
 
 }

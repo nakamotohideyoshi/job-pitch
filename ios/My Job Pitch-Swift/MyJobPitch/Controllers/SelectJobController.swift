@@ -23,9 +23,9 @@ class SelectJobController: MJPController {
     
     var titles = [
         "find_talent":  "Select job bellow to start finding talent for your business.",
-        "applications": "Select a job below to view job seekers who have expressed interest in a job.",
-        "connections":  "Select a job below to view job seekers you have connected with.",
-        "shortlist":    "Select a job below to view the job seekers you have shortlisted for that role.",
+        "applications": "Select a job below to view jobseekers who have expressed interest in a job.",
+        "connections":  "Select a job below to view jobseekers you have connected with.",
+        "shortlist":    "Select a job below to view the jobseekers you have shortlisted for that role.",
     ]
     
     override func viewDidLoad() {

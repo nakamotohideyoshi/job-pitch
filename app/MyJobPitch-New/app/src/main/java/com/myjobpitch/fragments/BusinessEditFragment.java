@@ -65,7 +65,7 @@ public class BusinessEditFragment extends FormFragment {
         isFirstCreate = AppData.user.getBusinesses().size() == 0;
 
         // save button
-        addMenuItem(MENUGROUP2, 100, "Save", -1);
+        addMenuItem(MENUGROUP2, 100, "Save", R.drawable.ic_save);
 
         if (business == null) {
 

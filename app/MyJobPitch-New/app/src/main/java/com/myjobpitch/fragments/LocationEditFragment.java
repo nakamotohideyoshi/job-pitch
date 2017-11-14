@@ -84,7 +84,7 @@ public class LocationEditFragment extends FormFragment {
                 .getBoolean("workplace", true);
 
         // save button
-        addMenuItem(MENUGROUP2, 100, "Save", -1);
+        addMenuItem(MENUGROUP2, 100, "Save", R.drawable.ic_save);
 
         // title and location info
 

@@ -59,25 +59,31 @@ public class PitchFragment extends BaseFragment {
         View view = inflater.inflate(R.layout.fragment_pitch, container, false);
         ButterKnife.bind(this, view);
 
-        showLoading(view);
-        new APITask(new APIAction() {
-            @Override
-            public void run() throws MJPApiException {
-                jobSeeker = MJPApi.shared().get(JobSeeker.class, AppData.user.getJob_seeker());
-                AppData.existProfile = jobSeeker.getProfile() != null;
-                mPitch = jobSeeker.getPitch();
-            }
-        }).addListener(new APITaskListener() {
-            @Override
-            public void onSuccess() {
-                hideLoading();
-                updateInterface();
-            }
-            @Override
-            public void onError(JsonNode errors) {
-                errorHandler(errors);
-            }
-        }).execute();
+        if (jobSeeker == null) {
+            showLoading(view);
+            new APITask(new APIAction() {
+                @Override
+                public void run() throws MJPApiException {
+                    jobSeeker = MJPApi.shared().get(JobSeeker.class, AppData.user.getJob_seeker());
+                    AppData.existProfile = jobSeeker.getProfile() != null;
+                    mPitch = jobSeeker.getPitch();
+                }
+            }).addListener(new APITaskListener() {
+                @Override
+                public void onSuccess() {
+                    hideLoading();
+                    updateInterface();
+                }
+                @Override
+                public void onError(JsonNode errors) {
+                    errorHandler(errors);
+                }
+            }).execute();
+        } else {
+            updateInterface();
+        }
+
+        addMenuItem(MENUGROUP1, 100, null, R.drawable.ic_help);
 
         return view;
     }
@@ -190,6 +196,16 @@ public class PitchFragment extends BaseFragment {
         if (resultCode == Activity.RESULT_OK) {
             mVideoPath = data.getStringExtra(CameraActivity.OUTPUT_FILE);
             updateInterface();
+        }
+    }
+
+    @Override
+    public void onMenuSelected(int menuID) {
+        if (menuID == 100) {
+            WebviewFragment fragment = new WebviewFragment();
+            fragment.title = "Record Pitch";
+            fragment.mFilename = "pitch";
+            getApp().pushFragment(fragment);
         }
     }
 

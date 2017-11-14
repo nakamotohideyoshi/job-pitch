@@ -49,7 +49,7 @@ export default class RThread extends Component {
   });
 
   onSend = () => {
-    const { application, onSend } = this.props;
+    const { application } = this.props;
     const message = this.state.message.trim();
 
     this.setState({ message: '' });
@@ -57,22 +57,22 @@ export default class RThread extends Component {
     this.api.sendMessage({
       application: application.id,
       content: message,
-    }).then(() => {
-      this.getMessages();
-      onSend();
-    });
+    }).then(
+      () => {
+        this.getMessages();
+      }
+    );
   }
 
   onConnect = () => {
-    const { application, onSend } = this.props;
+    const { application } = this.props;
     this.api.saveApplication({
       id: application.id,
       connect: utils.getApplicationStatusByName('ESTABLISHED').id,
     })
     .then(() => {
       utils.successNotif('Success!');
-      // this.getMessages();
-      // onSend();
+      this.getMessages();
     });
   }
 
@@ -97,12 +97,14 @@ export default class RThread extends Component {
     }
   }
 
-  // getMessages = () => {
-  //   this.api.getApplications(`${this.props.application.id}/`)
-  //   .then(application => {
-  //     this.setState({ messages: application.messages });
-  //   });
-  // }
+  getMessages = () => {
+    this.api.getApplications(`${this.props.application.id}/`)
+    .then(application => {
+      this.setState({ application });
+      this.scrollBottom(this.scrollContainer);
+      this.props.onSend(application);
+    });
+  }
 
   scrollBottom = ref => {
     if (ref) {

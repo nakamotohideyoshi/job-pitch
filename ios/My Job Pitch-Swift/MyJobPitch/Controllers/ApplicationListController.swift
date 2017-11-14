@@ -34,7 +34,7 @@ class ApplicationListController: SearchController {
         navigationItem.title = SideMenuController.getCurrentTitle(mode)
         
         isRecruiter = AppData.user.isRecruiter()
-        isApplication = mode == "" || mode == "applications"
+        isApplication = mode == "" || mode == "applications" || mode == "applications1"
         isConnectBtn = isRecruiter && isApplication
         isShortlisted = mode == "shortlist"
         

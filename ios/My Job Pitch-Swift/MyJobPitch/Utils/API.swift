@@ -354,7 +354,7 @@ class API: NSObject {
     }
 
 
-    // ================= Job Seeker =====================
+    // ================= Jobseeker =====================
 
     func saveJobSeeker(jobSeeker: JobSeeker, cvdata: Data!,
                        progress:((UInt, Int64, Int64) -> Void)!,

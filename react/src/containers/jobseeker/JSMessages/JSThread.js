@@ -45,7 +45,7 @@ export default class JSThread extends Component {
   });
 
   onSend = () => {
-    const { application, onSend } = this.props;
+    const { application } = this.props;
     const message = this.state.message.trim();
 
     this.setState({ message: '' });
@@ -53,10 +53,11 @@ export default class JSThread extends Component {
     this.api.sendMessage({
       application: application.id,
       content: message,
-    }).then(() => {
-      this.getMessages();
-      onSend();
-    });
+    }).then(
+      () => {
+        this.getMessages();
+      }
+    );
   }
 
   onConnect = () => {
@@ -67,8 +68,7 @@ export default class JSThread extends Component {
     })
     .then(() => {
       utils.successNotif('Success!');
-      // this.getMessages();
-      // onSend();
+      this.getMessages();
     });
   }
 
@@ -91,12 +91,14 @@ export default class JSThread extends Component {
     }
   }
 
-  // getMessages = () => {
-  //   this.api.getApplications(`${this.props.application.id}/`)
-  //   .then(application => {
-  //     this.setState({ messages: application.messages });
-  //   });
-  // }
+  getMessages = () => {
+    this.api.getApplications(`${this.props.application.id}/`)
+    .then(application => {
+      this.setState({ application });
+      this.scrollBottom(this.scrollContainer);
+      this.props.onSend(application);
+    });
+  }
 
   scrollBottom = ref => {
     if (ref) {

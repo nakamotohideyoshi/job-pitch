@@ -42,11 +42,15 @@ class MJPController: UIViewController {
         tap.delegate = self
         view.addGestureRecognizer(tap)
         
+        self.navigationController?.navigationBar.topItem?.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
+
     }
     
     func showLoading() {
         if loadingView == nil {
             loadingView = LoadingView.create(controller: self)
+            navigationItem.leftBarButtonItem?.isEnabled = false
+            navigationItem.rightBarButtonItem?.isEnabled = false
         }
     }
     
@@ -54,6 +58,8 @@ class MJPController: UIViewController {
         if loadingView != nil {
             loadingView.removeFromSuperview()
             loadingView = nil
+            navigationItem.leftBarButtonItem?.isEnabled = true
+            navigationItem.rightBarButtonItem?.isEnabled = true
         }
     }
     

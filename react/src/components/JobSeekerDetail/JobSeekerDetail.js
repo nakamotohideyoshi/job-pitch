@@ -155,14 +155,7 @@ export default class JobSeekerDetail extends Component {
             </div>
 
             {
-              // nationality &&
-              // <div className={styles.nationality}>
-              //   <i className="fa fa-check-square-o" aria-hidden="true" />
-              //   {nationality.name}
-              // </div>
-            }
-            {
-              established && jobSeeker.national_insurance_number &&
+              jobSeeker.national_insurance_number &&
               <div className={styles.available}>
                 <i className="fa fa-check-square-o" aria-hidden="true" />
                 National Insurance number supplied

@@ -129,14 +129,18 @@ public class TalentProfileFragment extends FormFragment {
 
     Uri cvUri;
 
+    TalentDetailFragment viewFragment;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_talent_profile, container, false);
         ButterKnife.bind(this, view);
 
+        title = "Edit Profile";
+
         // menu
-        addMenuItem(MENUGROUP2, 100, "Save", -1);
+        addMenuItem(MENUGROUP2, 100, "Save", R.drawable.ic_save);
 
         // data
         for (Sex sex : AppData.get(Sex.class)) {
@@ -234,6 +238,13 @@ public class TalentProfileFragment extends FormFragment {
                 mNationalityView.setText(nationalities.get(selectedIndex).getName());
             }
         });
+    }
+
+    @OnClick(R.id.job_seeker_national_number_help)
+    void onNationalNumberHelp() {
+        Popup popup = new Popup(getContext(), "Supplying your national insurance number makes it easier for employers to recruit you. Your National Insurance number will not be shared with employers.", true);
+        popup.addGreyButton("Close", null);
+        popup.show();
     }
 
     @OnClick(R.id.job_seeker_cv_help)
@@ -514,28 +525,13 @@ public class TalentProfileFragment extends FormFragment {
     }
 
     void saveCompleted() {
-        hideLoading();
-        if (cvUri != null) {
-            cvUri = null;
-            mCVCommentView.setText("CV added");
-            mCVUploadRemoveButton.setVisibility(View.GONE);
+        if (viewFragment != null) {
+            viewFragment.jobSeeker = null;
+            getApp().popFragment();
         } else {
-            mCVCommentView.setText("");
+            getApp().reloadMenu();
+            getApp().setRootFragement(AppData.PAGE_JOB_PROFILE);
         }
-
-        mCVViewButton.setVisibility(jobSeeker.getCV() == null ? View.GONE : View.VISIBLE);
-
-        Popup popup = new Popup(getContext(), "Success!", true);
-        popup.addGreenButton("Ok", new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (!AppData.existProfile) {
-                    getApp().reloadMenu();
-                    getApp().setRootFragement(AppData.PAGE_JOB_PROFILE);
-                }
-            }
-        });
-        popup.show();
     }
 
 }

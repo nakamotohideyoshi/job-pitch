@@ -222,14 +222,34 @@
                     android:theme="@style/CheckBox" />
             </LinearLayout>
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="25dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+                <TextView
+                    android:text="National insurance number"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:theme="@style/BoldLabel" />
+                <ImageButton
+                    android:id="@+id/job_seeker_national_number_help"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_marginLeft="8dp"
+                    android:background="@drawable/icon_help"/>
+            </LinearLayout>
+
             <com.rengwuxian.materialedittext.MaterialEditText
                 android:id="@+id/job_seeker_national_number"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
+                android:layout_marginTop="10dp"
                 android:inputType="text"
                 android:imeOptions="actionDone"
-                android:hint="National insurance number (optional)"
+                android:hint="(optional)"
                 app:met_floatingLabel="normal"
                 app:met_primaryColor="@color/colorGreen"/>
 

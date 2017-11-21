@@ -111,15 +111,22 @@ class BusinessDetailController: MJPController {
     }
     
     @IBAction func deleteBusinessAction(_ sender: Any) {
+        noRefresh = true
         
         let message = String(format: "Are you sure you want to delete %@", headerName.text!)
         PopupController.showYellow(message, ok: "Delete", okCallback: {
+            self.noRefresh = true
             
-            self.showLoading()
-            API.shared().deleteBusiness(id: self.businessId, success: {
-                self.hideLoading()
-                _ = self.navigationController?.popViewController(animated: true)
-            }, failure: self.handleErrors)
+            let locationCount = self.business.locations.count
+            if locationCount == 0 {
+                self.deleteBusiness()
+                return
+            }
+            
+            let message1 = String(format: "Deleting this business will also delete %d workplaces and all their jobs. If you want to hide the jobs instead you can deactive them.", locationCount)
+            PopupController.showYellow(message1, ok: "Delete", okCallback: {
+                self.deleteBusiness()
+            }, cancel: "Cancel", cancelCallback: nil)
             
         }, cancel: "Cancel", cancelCallback: nil)
         
@@ -128,6 +135,23 @@ class BusinessDetailController: MJPController {
     @IBAction func addLocationAction(_ sender: Any) {
         isFirstCreate = false
         LocationEditController.pushController(business: business, location: nil)
+    }
+    
+    func deleteBusiness() {
+        self.showLoading()
+        API.shared().deleteBusiness(id: businessId, success: {
+            self.hideLoading()
+            _ = self.navigationController?.popViewController(animated: true)
+        }, failure: self.handleErrors)
+    }
+    
+    func deleteWorkplace(_ location: Location) {
+        self.showLoading()
+        API.shared().deleteLocation(id: location.id, success: {
+            self.hideLoading()
+            self.data.remove(location)
+            self.updateLocationList()
+        }, failure: self.handleErrors)
     }
     
 }
@@ -160,15 +184,22 @@ extension BusinessDetailController: UITableViewDataSource {
                                 let message = String(format: "Are you sure you want to delete %@", location.name)
                                 PopupController.showYellow(message, ok: "Delete", okCallback: {
                                     
-                                    self.showLoading()
+                                     self.noRefresh = true
                                     
-                                    API.shared().deleteLocation(id: location.id, success: {
-                                        self.hideLoading()
-                                        self.data.remove(location)
-                                        self.updateLocationList()
-                                    }, failure: self.handleErrors)
+                                    let jobCount = location.jobs.count
+                                    if jobCount == 0 {
+                                        self.deleteWorkplace(location)
+                                        cell.hideSwipe(animated: true)
+                                        return
+                                    }
                                     
-                                    cell.hideSwipe(animated: true)
+                                    let message1 = String(format: "Deleting this workplace will also delete %d jobs. If you want to hide the jobs instead you can deactive them.", jobCount)
+                                    PopupController.showYellow(message1, ok: "Delete", okCallback: {
+                                        self.deleteWorkplace(location)
+                                        cell.hideSwipe(animated: true)
+                                    }, cancel: "Cancel", cancelCallback: {
+                                        cell.hideSwipe(animated: true)
+                                    })
                                     
                                 }, cancel: "Cancel", cancelCallback: {
                                     cell.hideSwipe(animated: true)

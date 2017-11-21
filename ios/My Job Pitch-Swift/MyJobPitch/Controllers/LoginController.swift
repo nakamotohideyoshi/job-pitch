@@ -198,15 +198,20 @@ class LoginController: MJPController {
     @IBAction func selectAPIAction(_ sender: Any) {
         let actionSheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
         
-        let api1Action = UIAlertAction(title: "https://app.myjobpitch.com", style: .default) { (_) in
+        let api1Action = UIAlertAction(title: "app.myjobpitch.com", style: .default) { (_) in
             self.setApiUrl("https://app.myjobpitch.com")
         }
         actionSheet.addAction(api1Action)
         
-        let api2Action = UIAlertAction(title: "https://test.sclabs.co.uk", style: .default) { (_) in
+        let api2Action = UIAlertAction(title: "test.sclabs.co.uk", style: .default) { (_) in
             self.setApiUrl("https://test.sclabs.co.uk")
         }
         actionSheet.addAction(api2Action)
+        
+        let api3Action = UIAlertAction(title: "demo.sclabs.co.uk", style: .default) { (_) in
+            self.setApiUrl("https://demo.sclabs.co.uk")
+        }
+        actionSheet.addAction(api3Action)
         
         let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
         actionSheet.addAction(cancelAction)

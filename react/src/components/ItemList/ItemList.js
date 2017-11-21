@@ -12,6 +12,7 @@ export default class ItemList extends Component {
     renderItem: PropTypes.func,
     renderEmpty: PropTypes.func,
     className: PropTypes.string,
+    style: PropTypes.object,
   }
 
   static defaultProps = {
@@ -21,6 +22,7 @@ export default class ItemList extends Component {
     renderItem: () => {},
     renderEmpty: () => {},
     className: '',
+    style: {}
   }
 
   constructor(props) {
@@ -84,9 +86,9 @@ export default class ItemList extends Component {
   }
 
   render() {
-    const { items, onFilter, buttons, className } = this.props;
+    const { items, onFilter, buttons, className, style } = this.props;
     return (
-      <div className={[styles.itemList, className].join(' ')}>
+      <div className={[styles.itemList, className].join(' ')} style={style}>
         {
           (onFilter || buttons.length > 0) &&
           <div className={styles.header}>

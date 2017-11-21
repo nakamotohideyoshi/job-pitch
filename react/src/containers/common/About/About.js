@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import Helmet from 'react-helmet';
 import styles from './About.scss';
 
+/* eslint-disable max-len */
 export default class About extends Component {
 
   render() {
@@ -10,11 +11,8 @@ export default class About extends Component {
         <Helmet title="About" />
 
         <div className="container">
-          <div className="pageHeader">
-            <h3>About</h3>
-          </div>
-
           <div className="board padding-45">
+            <h1>About</h1>
             <p>For too long hiring across the hospitality, retail and service industries has been beset with issues.
               Businesses become embroiled in time-consuming and often structure lacking recruitment processes – and
               must invest resources in interviews that, more often than not, lead to no job position offer whatsoever.</p>
@@ -26,7 +24,7 @@ export default class About extends Component {
               retail and the service industry. For discovering your next job role without the hassle and free from the
               need of registering with tens of differing websites and running around handing in CV every were.</p>
             <br />
-            <h5>This is the recruitment industry, revolutionised.</h5>
+            <h2>This is the recruitment industry, revolutionised.</h2>
             <ul>
               <li>Easy-to-use, intuitive interface – for desktop and mobile</li>
               <li>30 Second job video pitches</li>

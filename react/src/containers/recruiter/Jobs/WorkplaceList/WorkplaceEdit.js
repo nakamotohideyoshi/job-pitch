@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 import Scroll from 'react-scroll';
 import Form from 'react-bootstrap/lib/Form';
 import FormGroup from 'react-bootstrap/lib/FormGroup';
@@ -7,13 +8,20 @@ import ControlLabel from 'react-bootstrap/lib/ControlLabel';
 import { FormComponent, Map, HelpIcon } from 'components';
 import ApiClient from 'helpers/ApiClient';
 import * as utils from 'helpers/utils';
+import * as commonActions from 'redux/modules/common';
 import styles from './WorkplaceEdit.scss';
 
+@connect(
+  () => ({}),
+  { ...commonActions }
+)
 export default class WorkplaceEdit extends FormComponent {
 
   static propTypes = {
     parent: PropTypes.object.isRequired,
     workplace: PropTypes.object,
+    loadingShow: PropTypes.func.isRequired,
+    loadingHide: PropTypes.func.isRequired,
   }
 
   static defaultProps = {
@@ -57,7 +65,7 @@ export default class WorkplaceEdit extends FormComponent {
     data.latitude = markerPos.lat;
     data.longitude = markerPos.lng;
 
-    this.setState({ saving: true });
+    this.props.loadingShow('Saving...', true);
 
     this.api.saveUserWorkplace(data).then(
       workplace => {
@@ -83,6 +91,7 @@ export default class WorkplaceEdit extends FormComponent {
       () => {
         FormComponent.needToSave = false;
         utils.successNotif('Saved!');
+        this.props.loadingHide();
         if (utils.getShared('first-time') === '3') {
           this.manager.selectWorkplace(formModel.id);
         } else {
@@ -90,7 +99,7 @@ export default class WorkplaceEdit extends FormComponent {
           this.onClose();
         }
       },
-      () => this.setState({ saving: false })
+      () => this.props.loadingHide()
     );
   }
 

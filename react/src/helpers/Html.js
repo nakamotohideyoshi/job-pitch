@@ -39,7 +39,7 @@ export default class Html extends Component {
           {head.script.toComponent()}
 
           <link rel="shortcut icon" href="/static/favicon.ico" />
-          <meta name="viewport" content="width=device-width, initial-scale=1" />
+          <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
           <link rel="manifest" href="/manifest.json" />
           <meta name="mobile-web-app-capable" content="yes" />
           <meta name="apple-mobile-web-app-capable" content="yes" />

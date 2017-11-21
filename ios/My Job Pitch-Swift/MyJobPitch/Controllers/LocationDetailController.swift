@@ -79,14 +79,23 @@ class LocationDetailController: MJPController {
     }
     
     @IBAction func deleteLocationAction(_ sender: Any) {
+        noRefresh = true
+        
         let message = String(format: "Are you sure you want to delete %@", location.name)
         PopupController.showYellow(message, ok: "Delete", okCallback: {
+        
+            self.noRefresh = true
             
-            self.showLoading()
-            API.shared().deleteLocation(id: self.location.id, success: {
-                self.hideLoading()
-                _ = self.navigationController?.popViewController(animated: true)
-            }, failure: self.handleErrors)
+            let jobCount = self.location.jobs.count
+            if jobCount == 0 {
+                self.deleteWorkplace()
+                return
+            }
+            
+            let message1 = String(format: "Deleting this workplace will also delete %d jobs. If you want to hide the jobs instead you can deactive them.", jobCount)
+            PopupController.showYellow(message1, ok: "Delete", okCallback: {
+                self.deleteWorkplace()
+            }, cancel: "Cancel", cancelCallback: nil)
             
         }, cancel: "Cancel", cancelCallback: nil)
     }
@@ -94,6 +103,14 @@ class LocationDetailController: MJPController {
     @IBAction func addJobAction(_ sender: Any) {
         isFirstCreate = false
         JobEditController.pushController(location: location, job: nil)
+    }
+    
+    func deleteWorkplace() {
+        self.showLoading()
+        API.shared().deleteLocation(id: location.id, success: {
+            self.hideLoading()
+            _ = self.navigationController?.popViewController(animated: true)
+        }, failure: self.handleErrors)
     }
     
 }

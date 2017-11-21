@@ -38,7 +38,11 @@ export default class FormComponent extends Component {
       }
       return errors.detail;
     }
+
     const error = errors[name];
+    if (error) {
+      scroller.scrollTo(name, { smooth: true, duration: 100 });
+    }
     if (typeof error === 'string') return error;
     return error && error.join(', ');
   }

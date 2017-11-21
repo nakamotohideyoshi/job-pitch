@@ -63,7 +63,27 @@ export default class WorkplaceList extends Component {
         {
           label: 'Delete',
           style: 'success',
-          callback: () => this.manager.deleteWorkplace(workplace)
+          callback: () => {
+            const jobCount = workplace.jobs.length;
+            if (jobCount === 0) {
+              this.manager.deleteWorkplace(workplace);
+              return;
+            }
+
+            this.props.alertShow(
+              'Confirm',
+              `Deleting this workplace will also delete ${jobCount} jobs.
+               If you want to hide the jobs instead you can deactive them.`,
+              [
+                { label: 'Cancel' },
+                {
+                  label: 'Delete',
+                  style: 'success',
+                  callback: () => this.manager.deleteWorkplace(workplace)
+                },
+              ]
+            );
+          }
         },
       ]
     );

@@ -198,27 +198,44 @@ public class BusinessDetailFragment extends BaseFragment {
         popup.addYellowButton("Delete", new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                showLoading();
-                new APITask(new APIAction() {
-                    @Override
-                    public void run() throws MJPApiException {
-                        MJPApi.shared().deleteBusiness(business.getId());
-                    }
-                }).addListener(new APITaskListener() {
-                    @Override
-                    public void onSuccess() {
-                        getApp().popFragment();
-                    }
-                    @Override
-                    public void onError(JsonNode errors) {
-                        errorHandler(errors);
-                    }
-                }).execute();
+                int locationCount = business.getLocations().size();
+                if (locationCount == 0) {
+                    deleteBusinessAction();
+                    return;
+                }
 
+                Popup popup = new Popup(getContext(), "Deleting this business will also delete " + locationCount + " workplaces and all their jobs. If you want to hide the jobs instead you can deactive them.", true);
+                popup.addYellowButton("Delete", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        deleteBusinessAction();
+                    }
+                });
+                popup.addGreyButton("Cancel", null);
+                popup.show();
             }
         });
         popup.addGreyButton("Cancel", null);
         popup.show();
+    }
+
+    void deleteBusinessAction() {
+        showLoading();
+        new APITask(new APIAction() {
+            @Override
+            public void run() throws MJPApiException {
+                MJPApi.shared().deleteBusiness(business.getId());
+            }
+        }).addListener(new APITaskListener() {
+            @Override
+            public void onSuccess() {
+                getApp().popFragment();
+            }
+            @Override
+            public void onError(JsonNode errors) {
+                errorHandler(errors);
+            }
+        }).execute();
     }
 
     private void updatedLocationList() {
@@ -237,29 +254,48 @@ public class BusinessDetailFragment extends BaseFragment {
         popup.addYellowButton("Delete", new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                showLoading(listContainer);
-                new APITask(new APIAction() {
+                int jobCount = location.getJobs().size();
+                if (jobCount == 0) {
+                    deleteLocationAction(location);
+                    return;
+                }
+
+                Popup popup = new Popup(getContext(), "Deleting this workplace will also delete " + jobCount + " jobs. If you want to hide the jobs instead you can deactive them.", true);
+                popup.addYellowButton("Delete", new View.OnClickListener() {
                     @Override
-                    public void run() throws MJPApiException {
-                        MJPApi.shared().deleteLocation(location.getId());
+                    public void onClick(View view) {
+                        deleteLocationAction(location);
                     }
-                }).addListener(new APITaskListener() {
-                    @Override
-                    public void onSuccess() {
-                        hideLoading();
-                        adapter.remove(location);
-                        updatedLocationList();
-                    }
-                    @Override
-                    public void onError(JsonNode errors) {
-                        errorHandler(errors);
-                    }
-                }).execute();
+                });
+                popup.addGreyButton("Cancel", null);
+                popup.show();
             }
         });
         popup.addGreyButton("Cancel", null);
         popup.show();
     }
+
+    private void deleteLocationAction(final Location location) {
+        showLoading(listContainer);
+        new APITask(new APIAction() {
+            @Override
+            public void run() throws MJPApiException {
+                MJPApi.shared().deleteLocation(location.getId());
+            }
+        }).addListener(new APITaskListener() {
+            @Override
+            public void onSuccess() {
+                hideLoading();
+                adapter.remove(location);
+                updatedLocationList();
+            }
+            @Override
+            public void onError(JsonNode errors) {
+                errorHandler(errors);
+            }
+        }).execute();
+    }
+
 
     @OnClick(R.id.nav_right_button)
     void onAddLocation() {

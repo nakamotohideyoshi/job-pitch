@@ -163,28 +163,45 @@ public class LocationDetailFragment extends BaseFragment {
         popup.addYellowButton("Delete", new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                showLoading();
-                new APITask(new APIAction() {
-                    @Override
-                    public void run() throws MJPApiException {
-                        MJPApi.shared().deleteLocation(location.getId());
-                    }
-                }).addListener(new APITaskListener() {
-                    @Override
-                    public void onSuccess() {
-                        getApp().popFragment();
-                    }
+                int jobCount = location.getJobs().size();
+                if (jobCount == 0) {
+                    deleteLocationAction();
+                    return;
+                }
 
+                Popup popup = new Popup(getContext(), "Deleting this workplace will also delete " + jobCount + " jobs. If you want to hide the jobs instead you can deactive them.", true);
+                popup.addYellowButton("Delete", new View.OnClickListener() {
                     @Override
-                    public void onError(JsonNode errors) {
-                        errorHandler(errors);
+                    public void onClick(View view) {
+                        deleteLocationAction();
                     }
-                }).execute();
-
+                });
+                popup.addGreyButton("Cancel", null);
+                popup.show();
             }
         });
         popup.addGreyButton("Cancel", null);
         popup.show();
+    }
+
+    private void deleteLocationAction() {
+        showLoading();
+        new APITask(new APIAction() {
+            @Override
+            public void run() throws MJPApiException {
+                MJPApi.shared().deleteLocation(location.getId());
+            }
+        }).addListener(new APITaskListener() {
+            @Override
+            public void onSuccess() {
+                getApp().popFragment();
+            }
+
+            @Override
+            public void onError(JsonNode errors) {
+                errorHandler(errors);
+            }
+        }).execute();
     }
 
     private void updatedJobList() {

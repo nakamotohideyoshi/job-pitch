@@ -1,20 +1,21 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Link } from 'react-router';
 import Button from 'react-bootstrap/lib/Button';
 import Textarea from 'react-textarea-autosize';
-import { JobSeekerDetail, JobDetail, LogoImage } from 'components';
+import { LogoImage } from 'components';
 import ApiClient from 'helpers/ApiClient';
 import * as utils from 'helpers/utils';
 import styles from './RThread.scss';
 
 export default class RThread extends Component {
   static propTypes = {
+    className: PropTypes.string,
     application: PropTypes.object,
     onSend: PropTypes.func,
   }
 
   static defaultProps = {
+    className: '',
     application: null,
     onSend: () => {},
   }
@@ -35,14 +36,6 @@ export default class RThread extends Component {
   componentWillReceiveProps(nextProps) {
     this.setApplication(nextProps.application);
   }
-
-  onShowJobSeekerDetail = showJobSeekerDetail => this.setState({
-    showJobSeekerDetail
-  });
-
-  onShowJobDetail = showJobDetail => this.setState({
-    showJobDetail
-  });
 
   onChnageInput = e => this.setState({
     message: e.target.value
@@ -84,15 +77,8 @@ export default class RThread extends Component {
     this.setState({ application });
 
     if (application) {
-      const job = application.job_data;
-      const jobSeeker = application.job_seeker;
-      const jobSeekerName = utils.getJobSeekerFullName(jobSeeker);
-
-      this.headerTitle = jobSeekerName;
-      this.headerComment = `${job.title} (${utils.getJobFullName(job)})`;
-      this.yourAvatar = utils.getJobSeekerImg(jobSeeker);
-      this.myAvatar = utils.getJobLogo(job);
-
+      this.yourAvatar = utils.getJobSeekerImg(application.job_seeker);
+      this.myAvatar = utils.getJobLogo(application.job_data);
       this.scrollBottom(this.scrollContainer);
     }
   }
@@ -196,12 +182,7 @@ export default class RThread extends Component {
     }
 
     return (
-      <div className={styles.root}>
-        <div className={styles.header}>
-          <h4><Link onClick={() => this.onShowJobSeekerDetail(true)}>{this.headerTitle}</Link></h4>
-          <div><Link onClick={() => this.onShowJobDetail(true)}>{this.headerComment}</Link></div>
-        </div>
-
+      <div className={[this.props.className, styles.root].join(' ')}>
         <div className={styles.content} ref={this.scrollBottom}>
           {
             application.messages.map(item => {
@@ -214,22 +195,6 @@ export default class RThread extends Component {
           }
         </div>
         <this.InputComponent />
-
-        {
-          this.state.showJobSeekerDetail &&
-          <JobSeekerDetail
-            jobSeeker={application.job_seeker}
-            application={application}
-            onClose={() => this.onShowJobSeekerDetail()}
-          />
-        }
-        {
-          this.state.showJobDetail &&
-          <JobDetail
-            job={application.job_data}
-            onClose={() => this.onShowJobDetail()}
-          />
-        }
       </div>
     );
   }

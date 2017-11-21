@@ -397,6 +397,7 @@ public class LoginFragment extends FormFragment {
                 .addTitleItem("Select")
                 .addItem(0, "https://app.myjobpitch.com/", R.drawable.ic_send)
                 .addItem(1, "https://test.sclabs.co.uk/", R.drawable.ic_send)
+                .addItem(2, "https://demo.sclabs.co.uk/", R.drawable.ic_send)
                 .expandOnStart(true)
                 .setItemClickListener(new BottomSheetItemClickListener() {
                     @Override

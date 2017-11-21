@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import Helmet from 'react-helmet';
 import { Link } from 'react-router';
-import { Loading, ItemList, LogoImage } from 'components';
+import { Loading, ItemList, LogoImage, JobDetail } from 'components';
 import ApiClient from 'helpers/ApiClient';
 import * as utils from 'helpers/utils';
 import JSThread from './JSThread';
@@ -11,7 +11,7 @@ export default class JSMessages extends Component {
 
   constructor(props) {
     super(props);
-    this.state = { };
+    this.state = { sidebar: false };
     this.api = ApiClient.shared();
   }
 
@@ -37,9 +37,13 @@ export default class JSMessages extends Component {
     );
   }
 
+  onToggleSidebar = () => this.setState({ sidebar: !this.state.sidebar });
+
+  onShowJobDetail = showJobDetail => this.setState({ showJobDetail });
+
   onSelectedApplication = selectedApp => {
     utils.setShared('messages_selected_id', (selectedApp || {}).id);
-    this.setState({ selectedApp });
+    this.setState({ selectedApp, sidebar: false });
   }
 
   onUpdateApplication = application => {
@@ -98,8 +102,33 @@ export default class JSMessages extends Component {
     </div>
   );
 
+  renderThread = () => {
+    const { selectedApp } = this.state;
+    const job = selectedApp.job_data;
+
+    return (
+      <div className={styles.threadContainer}>
+        <div className={styles.threadHeader}>
+          <button
+            className="link-btn fa fa-angle-double-right"
+            onClick={this.onToggleSidebar}
+          />
+          <div>
+            <h4><Link onClick={() => this.onShowJobDetail(true)}>{job.title}</Link></h4>
+            <div><Link onClick={() => this.onShowJobDetail(true)}>{utils.getJobFullName(job)}</Link></div>
+          </div>
+        </div>
+        <JSThread
+          className={styles.threadContent}
+          application={selectedApp}
+          onSend={this.onUpdateApplication}
+        />
+      </div>
+    );
+  }
+
   render() {
-    const { applications, selectedApp } = this.state;
+    const { applications, selectedApp, showJobDetail, sidebar } = this.state;
 
     return (
       <div className={styles.root}>
@@ -108,17 +137,33 @@ export default class JSMessages extends Component {
         {
           applications ?
             <div className="board shadow">
-              <ItemList
-                className={styles.appList}
-                items={applications}
-                onFilter={this.onFilter}
-                renderItem={this.renderItem}
-                renderEmpty={this.renderEmpty}
-              />
-              <JSThread
-                application={selectedApp}
-                onSend={this.onUpdateApplication}
-              />
+              <div
+                className={styles.sidebarController}
+                style={{ display: sidebar ? 'block' : 'none' }}
+              >
+                <ItemList
+                  className={styles.appList}
+                  items={applications}
+                  onFilter={this.onFilter}
+                  renderItem={this.renderItem}
+                  renderEmpty={this.renderEmpty}
+                />
+                <Link
+                  className={styles.mask}
+                  onClick={() => this.setState({ sidebar: false })}
+                />
+              </div>
+
+              {
+                selectedApp && this.renderThread()
+              }
+              {
+                showJobDetail &&
+                <JobDetail
+                  job={selectedApp.job_data}
+                  onClose={() => this.onShowJobDetail()}
+                />
+              }
             </div>
           :
             <Loading />

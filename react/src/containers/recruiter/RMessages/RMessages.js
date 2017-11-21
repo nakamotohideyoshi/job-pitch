@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import Helmet from 'react-helmet';
 import { Link } from 'react-router';
 import Select from 'react-select';
-import { Loading, ItemList, LogoImage } from 'components';
+import { Loading, ItemList, LogoImage, JobSeekerDetail, JobDetail } from 'components';
 import ApiClient from 'helpers/ApiClient';
 import * as utils from 'helpers/utils';
 import RThread from './RThread';
@@ -13,7 +13,7 @@ export default class RMessages extends Component {
 
   constructor(props) {
     super(props);
-    this.state = { };
+    this.state = { sidebar: false };
     this.api = ApiClient.shared();
   }
 
@@ -41,9 +41,19 @@ export default class RMessages extends Component {
     );
   }
 
+  onToggleSidebar = () => this.setState({ sidebar: !this.state.sidebar });
+
+  onShowJobSeekerDetail = showJobSeekerDetail => this.setState({
+    showJobSeekerDetail
+  });
+
+  onShowJobDetail = showJobDetail => this.setState({
+    showJobDetail
+  });
+
   onSelectedApplication = selectedApp => {
     utils.setShared('messages_selected_id', (selectedApp || {}).id);
-    this.setState({ selectedApp });
+    this.setState({ selectedApp, sidebar: false });
   }
 
   onFilterByJob = filterJob => this.setState({
@@ -107,8 +117,35 @@ export default class RMessages extends Component {
     </div>
   );
 
+  renderThread = () => {
+    const { selectedApp } = this.state;
+    const job = selectedApp.job_data;
+    this.headerTitle = utils.getJobSeekerFullName(selectedApp.job_seeker);
+    this.headerComment = `${job.title} (${utils.getJobFullName(job)})`;
+
+    return (
+      <div className={styles.threadContainer}>
+        <div className={styles.threadHeader}>
+          <button
+            className="link-btn fa fa-angle-double-right"
+            onClick={this.onToggleSidebar}
+          />
+          <div>
+            <h4><Link onClick={() => this.onShowJobSeekerDetail(true)}>{this.headerTitle}</Link></h4>
+            <div><Link onClick={() => this.onShowJobDetail(true)}>{this.headerComment}</Link></div>
+          </div>
+        </div>
+        <RThread
+          className={styles.threadContent}
+          application={this.state.selectedApp}
+          onSend={this.onUpdateApplication}
+        />
+      </div>
+    );
+  }
+
   render() {
-    const { applications } = this.state;
+    const { applications, selectedApp, sidebar } = this.state;
 
     return (
       <div className={styles.root}>
@@ -117,29 +154,55 @@ export default class RMessages extends Component {
         {
           applications ?
             <div className="board shadow">
-              <div className={styles.leftSide}>
-                <div className={styles.jobFilter}>
-                  <Select
-                    valueKey="id"
-                    labelKey="title"
-                    placeholder="Filter by job"
-                    value={this.state.filterJob}
-                    options={this.state.jobs}
-                    onChange={this.onFilterByJob}
+              <div
+                className={styles.sidebarController}
+                style={{ display: sidebar ? 'block' : 'none' }}
+              >
+                <div
+                  className={styles.sidebar}
+                >
+                  <div className={styles.jobFilter}>
+                    <Select
+                      valueKey="id"
+                      labelKey="title"
+                      placeholder="Filter by job"
+                      value={this.state.filterJob}
+                      options={this.state.jobs}
+                      onChange={this.onFilterByJob}
+                    />
+                  </div>
+                  <ItemList
+                    className={styles.appList}
+                    items={applications}
+                    onFilter={this.onFilter}
+                    renderItem={this.renderItem}
+                    renderEmpty={this.renderEmpty}
                   />
                 </div>
-                <ItemList
-                  className={styles.appList}
-                  items={applications}
-                  onFilter={this.onFilter}
-                  renderItem={this.renderItem}
-                  renderEmpty={this.renderEmpty}
+                <Link
+                  className={styles.mask}
+                  onClick={() => this.setState({ sidebar: false })}
                 />
               </div>
-              <RThread
-                application={this.state.selectedApp}
-                onSend={this.onUpdateApplication}
-              />
+
+              {
+                selectedApp && this.renderThread()
+              }
+              {
+                this.state.showJobSeekerDetail &&
+                <JobSeekerDetail
+                  jobSeeker={selectedApp.job_seeker}
+                  application={selectedApp}
+                  onClose={() => this.onShowJobSeekerDetail()}
+                />
+              }
+              {
+                this.state.showJobDetail &&
+                <JobDetail
+                  job={selectedApp.job_data}
+                  onClose={() => this.onShowJobDetail()}
+                />
+              }
             </div>
           :
             <Loading />

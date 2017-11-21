@@ -72,7 +72,27 @@ export default class BusinessList extends Component {
         {
           label: 'Delete',
           style: 'success',
-          callback: () => this.manager.deleteBusiness(business)
+          callback: () => {
+            const workplaceCount = business.locations.length;
+            if (workplaceCount === 0) {
+              this.manager.deleteBusiness(business);
+              return;
+            }
+
+            this.props.alertShow(
+              'Confirm',
+              `Deleting this business will also delete ${workplaceCount} workplaces and all their jobs.
+              If you want to hide the jobs instead you can deactive them.`,
+              [
+                { label: 'Cancel' },
+                {
+                  label: 'Delete',
+                  style: 'success',
+                  callback: () => this.manager.deleteBusiness(business)
+                },
+              ]
+            );
+          }
         },
       ]
     );

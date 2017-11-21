@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 import Scroll from 'react-scroll';
 import Form from 'react-bootstrap/lib/Form';
 import FormGroup from 'react-bootstrap/lib/FormGroup';
@@ -7,13 +8,20 @@ import ControlLabel from 'react-bootstrap/lib/ControlLabel';
 import { FormComponent } from 'components';
 import ApiClient from 'helpers/ApiClient';
 import * as utils from 'helpers/utils';
+import * as commonActions from 'redux/modules/common';
 import styles from './JobEdit.scss';
 
+@connect(
+  () => ({}),
+  { ...commonActions }
+)
 export default class JobEdit extends FormComponent {
 
   static propTypes = {
     parent: PropTypes.object.isRequired,
     job: PropTypes.object,
+    loadingShow: PropTypes.func.isRequired,
+    loadingHide: PropTypes.func.isRequired,
   }
 
   static defaultProps = {
@@ -51,7 +59,7 @@ export default class JobEdit extends FormComponent {
     data.contract = formModel.contract && formModel.contract.id;
     data.hours = formModel.hours && formModel.hours.id;
 
-    this.setState({ saving: true });
+    this.props.loadingShow('Saving...', true);
 
     this.api.saveUserJob(data).then(
       job => {
@@ -76,10 +84,11 @@ export default class JobEdit extends FormComponent {
       () => {
         FormComponent.needToSave = false;
         utils.successNotif('Saved!');
+        this.props.loadingHide();
         this.manager.loadJobs();
         this.onClose();
       },
-      () => this.setState({ saving: false })
+      () => this.props.loadingHide()
     );
   }
 

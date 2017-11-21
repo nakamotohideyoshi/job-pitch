@@ -173,31 +173,48 @@ public class BusinessListFragment extends BaseFragment {
         popup.addYellowButton("Delete", new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                showLoading(listContainer);
-                new APITask(new APIAction() {
-                    @Override
-                    public void run() throws MJPApiException {
-                        MJPApi.shared().deleteBusiness(business.getId());
-                        AppData.user = MJPApi.shared().getUser();
-                    }
-                }).addListener(new APITaskListener() {
-                    @Override
-                    public void onSuccess() {
-                        hideLoading();
-                        adapter.remove(business);
-                        updatedBusinessList();
-                    }
+                int locationCount = business.getLocations().size();
+                if (locationCount == 0) {
+                    deleteBusinessAction(business);
+                    return;
+                }
 
+                Popup popup = new Popup(getContext(), "Deleting this business will also delete " + locationCount + " workplaces and all their jobs. If you want to hide the jobs instead you can deactive them.", true);
+                popup.addYellowButton("Delete", new View.OnClickListener() {
                     @Override
-                    public void onError(JsonNode errors) {
-                        errorHandler(errors);
+                    public void onClick(View view) {
+                        deleteBusinessAction(business);
                     }
-                }).execute();
-
+                });
+                popup.addGreyButton("Cancel", null);
+                popup.show();
             }
         });
         popup.addGreyButton("Cancel", null);
         popup.show();
+    }
+
+    private void deleteBusinessAction(final Business business) {
+        showLoading(listContainer);
+        new APITask(new APIAction() {
+            @Override
+            public void run() throws MJPApiException {
+                MJPApi.shared().deleteBusiness(business.getId());
+                AppData.user = MJPApi.shared().getUser();
+            }
+        }).addListener(new APITaskListener() {
+            @Override
+            public void onSuccess() {
+                hideLoading();
+                adapter.remove(business);
+                updatedBusinessList();
+            }
+
+            @Override
+            public void onError(JsonNode errors) {
+                errorHandler(errors);
+            }
+        }).execute();
     }
 
     @OnClick(R.id.nav_right_button)

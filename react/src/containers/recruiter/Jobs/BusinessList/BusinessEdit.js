@@ -21,6 +21,8 @@ export default class BusinessEdit extends FormComponent {
 
   static propTypes = {
     alertShow: PropTypes.func.isRequired,
+    loadingShow: PropTypes.func.isRequired,
+    loadingHide: PropTypes.func.isRequired,
     setPermission: PropTypes.func.isRequired,
     business: PropTypes.object,
     parent: PropTypes.object.isRequired,
@@ -77,7 +79,7 @@ export default class BusinessEdit extends FormComponent {
 
     const { formModel, logo } = this.state;
 
-    this.setState({ saving: true });
+    this.props.loadingShow('Saving...', true);
 
     this.api.saveUserBusiness(formModel).then(
       business => {
@@ -107,6 +109,7 @@ export default class BusinessEdit extends FormComponent {
 
         FormComponent.needToSave = false;
         utils.successNotif('Saved!');
+        this.props.loadingHide();
         if (utils.getShared('first-time') === '2') {
           this.manager.selectBusiness(formModel.id);
         } else {
@@ -114,7 +117,7 @@ export default class BusinessEdit extends FormComponent {
           this.onClose();
         }
       },
-      () => this.setState({ saving: false })
+      () => this.props.loadingHide()
     );
   }
 

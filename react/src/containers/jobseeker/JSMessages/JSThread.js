@@ -1,20 +1,21 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Link } from 'react-router';
 import Button from 'react-bootstrap/lib/Button';
 import Textarea from 'react-textarea-autosize';
-import { JobDetail, LogoImage } from 'components';
+import { LogoImage } from 'components';
 import ApiClient from 'helpers/ApiClient';
 import * as utils from 'helpers/utils';
 import styles from './JSThread.scss';
 
 export default class JSThread extends Component {
   static propTypes = {
+    className: PropTypes.string,
     application: PropTypes.object,
     onSend: PropTypes.func,
   }
 
   static defaultProps = {
+    className: '',
     application: null,
     onSend: () => {},
   }
@@ -35,10 +36,6 @@ export default class JSThread extends Component {
   componentWillReceiveProps(nextProps) {
     this.setApplication(nextProps.application);
   }
-
-  onShowJobDetail = showJobDetail => this.setState({
-    showJobDetail
-  });
 
   onChnageInput = e => this.setState({
     message: e.target.value
@@ -80,13 +77,8 @@ export default class JSThread extends Component {
     this.setState({ application });
 
     if (application) {
-      const job = application.job_data;
-
-      this.headerTitle = job.title;
-      this.headerComment = utils.getJobFullName(job);
-      this.yourAvatar = utils.getJobLogo(job);
+      this.yourAvatar = utils.getJobLogo(application.job_data);
       this.myAvatar = utils.getJobSeekerImg(application.job_seeker);
-
       this.scrollBottom(this.scrollContainer);
     }
   }
@@ -186,12 +178,7 @@ export default class JSThread extends Component {
     }
 
     return (
-      <div className={styles.root}>
-        <div className={styles.header}>
-          <h4><Link onClick={() => this.onShowJobDetail(true)}>{this.headerTitle}</Link></h4>
-          <div><Link onClick={() => this.onShowJobDetail(true)}>{this.headerComment}</Link></div>
-        </div>
-
+      <div className={[this.props.className, styles.root].join(' ')}>
         <div className={styles.content} ref={this.scrollBottom}>
           {
             application.messages.map(item => {
@@ -204,14 +191,6 @@ export default class JSThread extends Component {
           }
         </div>
         <this.InputComponent />
-
-        {
-          this.state.showJobDetail &&
-          <JobDetail
-            job={application.job_data}
-            onClose={() => this.onShowJobDetail()}
-          />
-        }
       </div>
     );
   }

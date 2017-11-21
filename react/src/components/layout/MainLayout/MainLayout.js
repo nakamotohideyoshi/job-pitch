@@ -4,6 +4,7 @@ import { browserHistory } from 'react-router';
 import { connect } from 'react-redux';
 import Modal from 'react-bootstrap/lib/Modal';
 import Button from 'react-bootstrap/lib/Button';
+import ProgressBar from 'react-bootstrap/lib/ProgressBar';
 import NotificationSystem from 'react-notification-system';
 import { Loading, Header, Footer } from 'components';
 import ApiClient from 'helpers/ApiClient';
@@ -55,6 +56,7 @@ const AuthPaths = [
   state => ({
     permission: state.common.permission,
     alert: state.common.alert,
+    loading: state.common.loading,
   }),
   { ...commonActions }
 )
@@ -66,11 +68,13 @@ export default class MainLayout extends Component {
     alert: PropTypes.object,
     alertShow: PropTypes.func.isRequired,
     alertHide: PropTypes.func.isRequired,
+    loading: PropTypes.object,
     children: PropTypes.any.isRequired,
   };
 
   static defaultProps = {
     alert: null,
+    loading: null,
     pageInfo: null,
   }
 
@@ -278,7 +282,7 @@ export default class MainLayout extends Component {
       return <Loading />;
     }
 
-    const { children, alert, location, permission } = this.props;
+    const { children, alert, location, permission, loading } = this.props;
     const { pathname } = location;
 
     return (
@@ -299,36 +303,62 @@ export default class MainLayout extends Component {
         }
 
         {
-          alert && (
-            <Modal
-              show
-              className={styles.popup}
-              onHide={alert.cancel ? (() => this.alertCallback(alert.cancelCallback)) : (() => {})}>
-              <Modal.Header closeButton={alert.cancel}>
-                {
-                  alert.title && (<Modal.Title>{alert.title}</Modal.Title>)
-                }
-              </Modal.Header>
-              <Modal.Body>
-                {
-                  alert.message && (<p>{alert.message}</p>)
-                }
-              </Modal.Body>
-              <Modal.Footer>
-                {
-                  alert.buttons.map(info => (
-                    <Button
-                      key={info.label}
-                      bsStyle={info.style}
-                      onClick={() => this.alertCallback(info.callback)}
-                    >
-                      {info.label}
-                    </Button>
-                  ))
-                }
-              </Modal.Footer>
-            </Modal>
-          )
+          alert &&
+          <Modal
+            show
+            className={styles.popup}
+            onHide={alert.cancel ? (() => this.alertCallback(alert.cancelCallback)) : (() => {})}>
+            <Modal.Header closeButton={alert.cancel}>
+              {
+                alert.title && (<Modal.Title>{alert.title}</Modal.Title>)
+              }
+            </Modal.Header>
+            <Modal.Body>
+              {
+                alert.message && (<p>{alert.message}</p>)
+              }
+            </Modal.Body>
+            <Modal.Footer>
+              {
+                alert.buttons.map(info => (
+                  <Button
+                    key={info.label}
+                    bsStyle={info.style}
+                    onClick={() => this.alertCallback(info.callback)}
+                  >
+                    {info.label}
+                  </Button>
+                ))
+              }
+            </Modal.Footer>
+          </Modal>
+        }
+
+        {
+          loading &&
+          <Modal
+            className={styles.globalLoading}
+            show
+            animation={false}
+          >
+            {
+              loading.spinner &&
+              <div className="spinner">
+                <Loading />
+              </div>
+            }
+            {
+              loading.progress &&
+              <ProgressBar
+                className={styles.progress}
+                striped
+                bsStyle="warning"
+                now={loading.progress}
+                label={`${loading.progress}%`}
+              />
+            }
+            <span>{loading.label}</span>
+          </Modal>
         }
 
         <NotificationSystem ref={node => utils.setNotifSystem(node)} />

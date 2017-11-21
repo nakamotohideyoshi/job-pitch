@@ -59,7 +59,7 @@ class PitchController: MJPController {
        
         if url != nil {
             let player = AVPlayer(url: url!)
-            let playerController = AVPlayerViewController();
+            let playerController = MJPPlayerController();
             playerController.player = player
             present(playerController, animated: true, completion: nil)
         }

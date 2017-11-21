@@ -64,7 +64,6 @@ export default class Footer extends Component {
             @ 2017 Sclabs Ltd
             <span>({ VERSION })</span>
           </div>
-
         </div>
       </footer>
     );

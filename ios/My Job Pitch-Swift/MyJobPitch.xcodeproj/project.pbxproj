@@ -17,6 +17,7 @@
 		D72AE4241E1156C3004C3F02 /* CustomView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D72AE4231E1156C3004C3F02 /* CustomView.swift */; };
 		D72AE42E1E11AD50004C3F02 /* ChangePasswordController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D72AE42D1E11AD50004C3F02 /* ChangePasswordController.swift */; };
 		D730C3F61EAE95C100332C6C /* InitialTokens.swift in Sources */ = {isa = PBXBuildFile; fileRef = D730C3F51EAE95C100332C6C /* InitialTokens.swift */; };
+		D7425B141FC43F5700A6831E /* MJPPlayerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7425B131FC43F5700A6831E /* MJPPlayerController.swift */; };
 		D749E34F1E09B479000FD0B1 /* ResetPasswordController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D749E34E1E09B479000FD0B1 /* ResetPasswordController.swift */; };
 		D749E3511E09C09E000FD0B1 /* AppHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = D749E3501E09C09E000FD0B1 /* AppHelper.swift */; };
 		D749E3531E0A36CD000FD0B1 /* APIConfigure.swift in Sources */ = {isa = PBXBuildFile; fileRef = D749E3521E0A36CD000FD0B1 /* APIConfigure.swift */; };
@@ -123,6 +124,7 @@
 		D72AE4231E1156C3004C3F02 /* CustomView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CustomView.swift; path = Views/CustomView.swift; sourceTree = "<group>"; };
 		D72AE42D1E11AD50004C3F02 /* ChangePasswordController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ChangePasswordController.swift; path = Controllers/ChangePasswordController.swift; sourceTree = "<group>"; };
 		D730C3F51EAE95C100332C6C /* InitialTokens.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = InitialTokens.swift; path = Models/InitialTokens.swift; sourceTree = "<group>"; };
+		D7425B131FC43F5700A6831E /* MJPPlayerController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MJPPlayerController.swift; path = Controllers/MJPPlayerController.swift; sourceTree = "<group>"; };
 		D749E34E1E09B479000FD0B1 /* ResetPasswordController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ResetPasswordController.swift; path = Controllers/ResetPasswordController.swift; sourceTree = "<group>"; };
 		D749E3501E09C09E000FD0B1 /* AppHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AppHelper.swift; path = Utils/AppHelper.swift; sourceTree = "<group>"; };
 		D749E3521E0A36CD000FD0B1 /* APIConfigure.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = APIConfigure.swift; path = Utils/APIConfigure.swift; sourceTree = "<group>"; };
@@ -430,6 +432,7 @@
 				D76C90521E25405A009C35E4 /* WebViewController.swift */,
 				D7CFBC681EF871A4003FC132 /* GoogleDriveController.swift */,
 				D7B7D8C61EFCFFE300649A5F /* DropboxController.swift */,
+				D7425B131FC43F5700A6831E /* MJPPlayerController.swift */,
 			);
 			name = Contollers;
 			sourceTree = "<group>";
@@ -739,6 +742,7 @@
 				D72AE4111E10470A004C3F02 /* MessageListController.swift in Sources */,
 				D72AE41D1E106D77004C3F02 /* ApplicationCell.swift in Sources */,
 				D787F6371E287A5000C47A88 /* BusinessEditController.swift in Sources */,
+				D7425B141FC43F5700A6831E /* MJPPlayerController.swift in Sources */,
 				D7F770241E08E3D100ECB684 /* Sex.swift in Sources */,
 				D787F63B1E287A8B00C47A88 /* JobEditController.swift in Sources */,
 				D7F7700D1E08E3D100ECB684 /* Contract.swift in Sources */,

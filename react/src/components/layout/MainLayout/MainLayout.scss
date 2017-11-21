@@ -29,3 +29,37 @@
     }
   }
 }
+
+
+.globalLoading {
+  display: flex !important;
+  justify-content: center;
+  align-items: center;
+
+  :global {
+    .modal-dialog {
+      width: auto;
+      margin: 0;
+
+      .modal-content {
+        background-color: transparent;
+        border: none;
+        box-shadow: none;
+        text-align: center;
+        color: #e0e0e0;
+
+        .spinner {
+          height: 50px;
+          margin-bottom: 70px;
+          margin-top: -70px;
+        }
+
+        .progress {
+          width: 300px;
+          background-color: rgba(0,0,0,0.1);
+        }
+      }      
+    }
+  }
+}
+

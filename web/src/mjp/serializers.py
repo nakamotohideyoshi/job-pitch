@@ -209,6 +209,7 @@ class JobSeekerReadSerializer(serializers.ModelSerializer):
     class Meta:
         model = JobSeeker
         fields = (
+            'id',
             'first_name',
             'last_name',
             'email',

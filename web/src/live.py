@@ -4,7 +4,7 @@ DEBUG = False
 TEMPLATE_DEUG = False
 
 EMAIL_PORT = 25
-DEFAULT_FROM_EMAIL = 'webmaster@sclabs.co.uk'
+DEFAULT_FROM_EMAIL = 'hello@myjobpitch.com'
 
 USE_X_FORWARDED_HOST = True
 

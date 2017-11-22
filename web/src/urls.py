@@ -2,6 +2,7 @@ from django.conf import settings
 from django.conf.urls import include, url
 from django.conf.urls.static import static
 from django.contrib import admin
+from django.contrib.auth.views import password_reset_confirm, password_reset_complete
 
 from mjp import views as mjp_views
 
@@ -14,6 +15,11 @@ urlpatterns = [
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     url(r'^api-rest-auth/', include('rest_auth.urls')),
     url(r'^api-rest-auth/registration/', include('rest_auth.registration.urls')),
+    url(r'^password-reset/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/$',
+        password_reset_confirm,
+        name='password_reset_confirm',
+    ),
+    url(r'^reset/done/$', password_reset_complete, name='password_reset_complete'),
     url(r'^admin/', include(admin.site.urls)),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) + [
     url(r'^', include('web.urls')),

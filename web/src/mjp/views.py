@@ -60,7 +60,7 @@ from mjp.serializers import (
     AndroidPurchaseSerializer,
     PayPalPurchaseSerializer,
     InitialTokensSerializer,
-)
+    JobSeekerReadSerializer)
 
 # For google APIs
 from oauth2client.service_account import ServiceAccountCredentials
@@ -302,7 +302,11 @@ class JobSeekerViewSet(viewsets.ModelViewSet):
             return obj.user == request.user
     
     permission_classes = (permissions.IsAuthenticated, JobSeekerPermission)
-    serializer_class = JobSeekerSerializer
+
+    def get_serializer_class(self):
+        if self.request.query_params.get('job'):
+            return JobSeekerReadSerializer
+        return JobSeekerSerializer
 
     def get_queryset(self):
         job = self.request.query_params.get('job')

@@ -126,16 +126,18 @@ class JobSerializer(serializers.ModelSerializer):
         model = Job
 
 
+class PitchSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Pitch
+        exclude = ('token', 'job_seeker')
+
+
 class JobSeekerSerializer(serializers.ModelSerializer):
-    class PitchSerializer(serializers.ModelSerializer):
-        class Meta:
-            model = Pitch
-            exclude = ('token', 'job_seeker')
-            
     user = serializers.PrimaryKeyRelatedField(read_only=True)
     profile = serializers.PrimaryKeyRelatedField(read_only=True)
     pitches = PitchSerializer(many=True, read_only=True)
     email = serializers.EmailField(read_only=True, source='user.email')
+
     ni_regex = re.compile(
         pattern=r"""
                 ^                      # Beginning of string
@@ -160,9 +162,81 @@ class JobSeekerSerializer(serializers.ModelSerializer):
         model = JobSeeker
 
 
+class JobSeekerReadSerializer(serializers.ModelSerializer):
+    pitches = PitchSerializer(many=True, read_only=True)
+
+    email = serializers.SerializerMethodField()
+    telephone = serializers.SerializerMethodField()
+    mobile = serializers.SerializerMethodField()
+    age = serializers.SerializerMethodField()
+    sex = serializers.SerializerMethodField()
+    nationality = serializers.SerializerMethodField()
+    has_national_insurance_number = serializers.SerializerMethodField()
+
+    def get_email(self, value):
+        if value.email_public:
+            return value.user.email
+        return ''
+
+    def get_telephone(self, value):
+        if value.telephone_public:
+            return value.telephone
+        return ''
+
+    def get_mobile(self, value):
+        if value.mobile_public:
+            return value.mobile
+        return ''
+
+    def get_age(self, value):
+        if value.age_public:
+            return value.age
+        return None
+
+    def get_sex(self, value):
+        if value.sex_public:
+            return value.sex_id
+        return None
+
+    def get_nationality(self, value):
+        if value.nationality_public:
+            return value.nationality_id
+        return None
+
+    def get_has_national_insurance_number(self, value):
+        return bool(value.national_insurance_number)
+
+    class Meta:
+        model = JobSeeker
+        fields = (
+            'first_name',
+            'last_name',
+            'email',
+            'email_public',
+            'telephone',
+            'telephone_public',
+            'mobile',
+            'mobile_public',
+            'age',
+            'age_public',
+            'sex',
+            'sex_public',
+            'nationality',
+            'nationality_public',
+            'description',
+            'cv',
+            'has_references',
+            'has_national_insurance_number',
+            'truth_confirmation',
+            'created',
+            'updated',
+            'pitches',
+        )
+
+
 class ApplicationSerializer(serializers.ModelSerializer):
     job_data = JobSerializer(source='job', read_only=True)
-    job_seeker = JobSeekerSerializer(read_only=True)
+    job_seeker = JobSeekerReadSerializer(read_only=True)
     messages = SimpleSerializer(Message)(many=True, read_only=True)
     
     class Meta:

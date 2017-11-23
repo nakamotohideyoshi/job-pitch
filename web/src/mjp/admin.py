@@ -28,7 +28,6 @@ from .models import (
     JobSeeker,
     User,
     Message,
-    EmailTemplate,
     TokenStore,
     InitialTokens,
     ProductTokens,
@@ -626,18 +625,6 @@ class UserAdmin(admin.ModelAdmin):
 
 @admin.register(InitialTokens)
 class InitialTokens(admin.ModelAdmin):
-    def has_add_permission(self, request):
-        return False
-
-    def has_delete_permission(self, request, obj=None):
-        return False
-
-
-@admin.register(EmailTemplate)
-class EmailTemplateAdmin(admin.ModelAdmin):
-    exclude = ('name',)
-    readonly_fields = ('context_help',)
-
     def has_add_permission(self, request):
         return False
 

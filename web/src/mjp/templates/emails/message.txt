@@ -1,0 +1,6 @@
+My Job Pitch
+============
+
+You have a new message from {{ from_name }}
+---------------------------------------------------------
+{{ message.content }}

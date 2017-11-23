@@ -462,23 +462,6 @@ class Message(models.Model):
         ordering = ('created',)
 
 
-class EmailTemplate(models.Model):
-    MESSAGE = 'MESSAGE'
-
-    NAME_CHOICES = (
-        (MESSAGE, 'Message'),
-    )
-
-    name = models.CharField(max_length=256, choices=NAME_CHOICES, unique=True)
-    from_address = models.EmailField()
-    subject = models.CharField(max_length=1000)
-    body = models.TextField()
-    context_help = models.TextField()
-
-    def __str__(self):
-        return self.name
-
-
 class TokenStore(models.Model):
     class NoTokens(Exception):
         pass

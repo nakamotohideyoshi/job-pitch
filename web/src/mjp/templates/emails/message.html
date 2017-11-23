@@ -1,0 +1,50 @@
+{% extends "emails/base.html" %}
+
+{% load static %}
+
+{% block content %}
+    <table width="600" align="center" cellpadding="0" cellspacing="0">
+        {% if message.from_role.name == message.from_role.RECRUITER %}
+            <tr>
+                <td style="font-size: 20px; font-weight: bold" valign="top">
+                    <span style="color: #00b6a4;">{{ message.application.job.title }}</span><br />
+                    <span style="font-size: 15px;">{{ message.application.job.location.name }}, {{ message.application.job.location.business.name }}</span>
+                </td>
+                <td align="right">
+                        {% if message.application.job.images.exists %}
+                            <img width="100" height="100" style="border-radius: 50%" src="{{ media_url }}{{ message.application.job.images.first.thumbnail }}">
+                        {% elif message.application.job.location.images.exists  %}
+                            <img width="100" height="100" style="border-radius: 50%" src="{{ media_url }}{{ message.application.job.location.images.first.thumbnail }}">
+                        {% elif message.application.job.location.business.images.exists %}
+                            <img width="100" height="100" style="border-radius: 50%" src="{{ media_url }}{{ message.application.job.location.business.images.first.thumbnail }}">
+                        {% else %}
+                            <img width="100" height="100" style="border-radius: 50%" src="{{ base_url }}{% static "email/placeholder.jpg" %} }}">
+                        {% endif %}
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td valign="top">
+                    <span style="font-weight: bold; font-size: 20px;color: #00b6a4;"><strong>{{ message.application.job_seeker.first_name}} {{ message.application.job_seeker.last_name}}</strong></span><br/>
+                    {% if message.application.job_seeker.age_public or message.application.job_seeker.sex_public %}
+                        {% if message.application.job_seeker.age_public and message.application.job_seeker.sex_public %}
+                            {{ message.application.job_seeker.sex.name }}, {{ message.application.job_seeker.age }} years old
+                        {% elif message.application.job_seeker.age_public %}
+                            {{ message.application.job_seeker.age }} years old
+                        {% else %}
+                            {{ message.application.job_seeker.sex.name }}
+                        {% endif %}
+                        <br />
+                    {% endif %}
+                    <span style="color: #444; font-style: italic"><em>{{ message.application.job_seeker.description|truncatewords:30 }}</em></span>
+                </td>
+                <td align="right">
+                    <img width="100" height="100" style="border-radius: 50%" src="{{ message.application.job_seeker.pitches.first.thumbnail }}">
+                </td>
+            </tr>
+        {% endif %}
+        <tr>
+            <td colspan="2"><br/><br/>{{ message.content|linebreaksbr }}<br/></td>
+        </tr>
+    </table>
+{% endblock %}

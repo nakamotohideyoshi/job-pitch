@@ -907,7 +907,7 @@
 					"$(PROJECT_DIR)/MyJobPitch/Utils/DropboxBrowser",
 				);
 				INFOPLIST_FILE = MyJobPitch/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.myjobpitch.pitch;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -934,7 +934,7 @@
 					"$(PROJECT_DIR)/MyJobPitch/Utils/DropboxBrowser",
 				);
 				INFOPLIST_FILE = MyJobPitch/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.myjobpitch.pitch;
 				PRODUCT_NAME = "$(TARGET_NAME)";

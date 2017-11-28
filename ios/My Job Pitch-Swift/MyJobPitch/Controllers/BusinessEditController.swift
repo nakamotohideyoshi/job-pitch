@@ -113,6 +113,13 @@ class BusinessEditController: MJPController {
         let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
         actionSheetContoller.addAction(cancelAction)
         
+        if let popoverController = actionSheetContoller.popoverPresentationController {
+            let sourceView = sender as! UIView
+            popoverController.sourceView = sourceView
+            popoverController.sourceRect = CGRect(x: sourceView.bounds.midX, y: 0, width: 0, height: 0)
+            popoverController.permittedArrowDirections = .down
+        }
+        
         present(actionSheetContoller, animated: true, completion: nil)
         
     }

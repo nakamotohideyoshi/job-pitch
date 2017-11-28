@@ -216,6 +216,13 @@ class LoginController: MJPController {
         let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
         actionSheet.addAction(cancelAction)
         
+        if let popoverController = actionSheet.popoverPresentationController {
+            let sourceView = sender as! UIView
+            popoverController.sourceView = sourceView
+            popoverController.sourceRect = CGRect(x: sourceView.bounds.midX, y: 0, width: 0, height: 0)
+            popoverController.permittedArrowDirections = .down
+        }
+        
         present(actionSheet, animated: true, completion: nil)
     }
     

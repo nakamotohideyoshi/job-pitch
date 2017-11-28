@@ -143,7 +143,11 @@ class DropboxController: UIViewController {
             DropboxClientsManager.authorizeFromController(UIApplication.shared,
                                                           controller: self,
                                                           openURL: { (url: URL) -> Void in
-                                                            UIApplication.shared.open(url, options: [:], completionHandler: nil)
+                                                            if #available(iOS 10.0, *) {
+                                                                UIApplication.shared.open(url, options: [:], completionHandler: nil)
+                                                            } else {
+                                                                UIApplication.shared.openURL(url)
+                                                            }
             })
         
         }

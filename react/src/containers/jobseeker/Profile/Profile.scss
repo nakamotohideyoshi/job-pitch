@@ -76,11 +76,13 @@
           color: $text-color1;
         }
       }
+
+      .checkBox {
+        height: auto;
+      }
     }
   
     .footer {
-      margin-top: 40px;
-      
       > div {
         button {
           width: 145px;

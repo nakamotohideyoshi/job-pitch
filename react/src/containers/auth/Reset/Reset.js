@@ -41,6 +41,7 @@ export default class Reset extends FormComponent {
           <h3>Reset Password</h3>
 
           <Form>
+            <input style={{ display: 'none' }} />
             <FormGroup>
               <Scroll.Element name="email">
                 <ControlLabel>Email Address</ControlLabel>

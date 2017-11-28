@@ -92,7 +92,7 @@ class JobSeekerDetailController: MJPController {
             pitchPlayButton.isHidden = true
         }
         
-        if jobSeeker.national_insurance_number.isEmpty {
+        if jobSeeker.national_insurance_number.isEmpty && !jobSeeker.has_national_insurance_number {
             nationalNumberView.removeFromSuperview()
         }
         if !jobSeeker.hasReferences {
@@ -171,7 +171,12 @@ class JobSeekerDetailController: MJPController {
     }
     
     @IBAction func viewCVAction(_ sender: Any) {
-        UIApplication.shared.open(URL(string: jobSeeker.cv)!, options: [:], completionHandler: nil)
+        let url = URL(string: jobSeeker.cv)!
+        if #available(iOS 10.0, *) {
+            UIApplication.shared.open(url, options: [:], completionHandler: nil)
+        } else {
+            UIApplication.shared.openURL(url)
+        }
     }
     
     @IBAction func shortlistedChanged(_ sender: Any) {

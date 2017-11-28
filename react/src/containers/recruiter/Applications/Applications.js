@@ -50,6 +50,7 @@ export default class Applications extends Component {
     if (this.state.job) {
       this.api.getApplications(`?job=${this.state.job.id}`).then(
         applications => {
+          console.log(applications);
           applications.sort((a, b) => !a.shortlisted && b.shortlisted);
           this.setState({ applications });
         }

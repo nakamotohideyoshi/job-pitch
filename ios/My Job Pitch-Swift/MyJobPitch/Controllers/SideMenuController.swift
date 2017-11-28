@@ -194,7 +194,11 @@ extension SideMenuController: UITableViewDelegate {
             popupController.okButton?.backgroundColor = AppData.greenColor
         } else if id == "contact_us" {
             let url = URL(string: "mailto:support@myjobpitch.com")!
-            UIApplication.shared.open(url, options: [:], completionHandler: nil)
+            if #available(iOS 10.0, *) {
+                UIApplication.shared.open(url, options: [:], completionHandler: nil)
+            } else {
+                UIApplication.shared.openURL(url)
+            }
             //revealViewController().revealToggle(animated: false)
         } else  {
             if id == "view_profile" && AppData.user.jobSeeker == nil {

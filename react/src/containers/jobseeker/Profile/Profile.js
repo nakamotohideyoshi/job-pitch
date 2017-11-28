@@ -298,15 +298,15 @@ export default class Profile extends FormComponent {
               </FormGroup>
 
               <FormGroup>
-                <div className={styles.withHelp}>
-                  <Scroll.Element name="national_insurance_number">
+                <Scroll.Element name="national_insurance_number">
+                  <div className={styles.withHelp}>
                     <ControlLabel>National insurance number</ControlLabel>
-                  </Scroll.Element>
-                  <HelpIcon
-                    label={`Supplying your national insurance number makes it easier for employers to recruit you.
-                     Your National Insurance number will not be shared with employers.`}
-                  />
-                </div>
+                    <HelpIcon
+                      label={`Supplying your national insurance number makes it easier for employers to recruit you.
+                      Your National Insurance number will not be shared with employers.`}
+                    />
+                  </div>
+                </Scroll.Element>
                 <this.TextField type="text" name="national_insurance_number" />
               </FormGroup>
 
@@ -390,12 +390,15 @@ export default class Profile extends FormComponent {
 
               <FormGroup>
                 <this.CheckBoxField
+                  className={styles.checkBox}
                   label="References Available"
                   name="has_references"
                 />
-                <br /><br />
+                <br />
                 <this.CheckBoxField
-                  label="I confirm that all information provided is truthful and confirm I have the right to work in the UK"
+                  className={styles.checkBox}
+                  label={`By ticking this box I confirm that all information given is true and I understand that any falsefication my lead to dismissal That I am entitled to work in UK & Nothen Irland.
+                          If required i will give full details if I have been convicted of any criminal offence.`}
                   name="truth_confirmation"
                 />
               </FormGroup>

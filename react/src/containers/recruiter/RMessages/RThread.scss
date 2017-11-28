@@ -79,13 +79,13 @@
   }
   
   .input {
-    display: flex;
     align-items: flex-end;
     padding: 15px;
     border-top: 1px solid $border-color;
 
     textarea {
-      flex: 1;
+      width: calc(100% - 80px);
+      float: left;
     }
 
     button {

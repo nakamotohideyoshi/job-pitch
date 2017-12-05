@@ -41,6 +41,7 @@ from mjp.models import (
     AndroidPurchase,
     PayPalProduct,
     ProductTokens,
+    AppDeprecation,
 )
 
 from mjp.serializers import (
@@ -60,7 +61,9 @@ from mjp.serializers import (
     AndroidPurchaseSerializer,
     PayPalPurchaseSerializer,
     InitialTokensSerializer,
-    JobSeekerReadSerializer)
+    JobSeekerReadSerializer,
+    AppDeprecationSerializer,
+)
 
 # For google APIs
 from oauth2client.service_account import ServiceAccountCredentials
@@ -795,3 +798,9 @@ class InitialTokensView(APIView):
     def get(self, request):
         serializer = InitialTokensSerializer(instance=InitialTokens.objects.get())
         return Response(serializer.data)
+
+
+class AppDeprecationViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = AppDeprecation.objects.all()
+    serializer_class = AppDeprecationSerializer
+router.register('deprecation', AppDeprecationViewSet, base_name='deprecation')

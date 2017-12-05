@@ -17,7 +17,7 @@ from models import (
     Role,
     TokenStore,
     InitialTokens,
-)
+    AppDeprecation)
 
 from rest_auth.serializers import LoginSerializer as BaseLoginSerializer
 from rest_auth.registration.serializers import RegisterSerializer as BaseRegisterSerializer
@@ -126,7 +126,7 @@ class JobSerializer(serializers.ModelSerializer):
         model = Job
 
 
-class PitchSerializer(serializers.ModelSerializer):
+class EmbeddedPitchSerializer(serializers.ModelSerializer):
     class Meta:
         model = Pitch
         exclude = ('token', 'job_seeker')
@@ -135,7 +135,7 @@ class PitchSerializer(serializers.ModelSerializer):
 class JobSeekerSerializer(serializers.ModelSerializer):
     user = serializers.PrimaryKeyRelatedField(read_only=True)
     profile = serializers.PrimaryKeyRelatedField(read_only=True)
-    pitches = PitchSerializer(many=True, read_only=True)
+    pitches = EmbeddedPitchSerializer(many=True, read_only=True)
     email = serializers.EmailField(read_only=True, source='user.email')
 
     ni_regex = re.compile(
@@ -163,7 +163,7 @@ class JobSeekerSerializer(serializers.ModelSerializer):
 
 
 class JobSeekerReadSerializer(serializers.ModelSerializer):
-    pitches = PitchSerializer(many=True, read_only=True)
+    pitches = EmbeddedPitchSerializer(many=True, read_only=True)
 
     email = serializers.SerializerMethodField()
     telephone = serializers.SerializerMethodField()
@@ -323,3 +323,9 @@ class InitialTokensSerializer(serializers.ModelSerializer):
     class Meta:
         model = InitialTokens
         fields = ('tokens',)
+
+
+class AppDeprecationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = AppDeprecation
+        fields = ('platform', 'warning', 'error',)

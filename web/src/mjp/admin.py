@@ -40,6 +40,7 @@ from .models import (
     LocationImage,
     BusinessImage,
     JobImage,
+    AppDeprecation,
 )
 
 
@@ -678,3 +679,8 @@ class ProductTokensAdmin(admin.ModelAdmin):
 @admin.register(Sector)
 class SectorAdmin(admin.ModelAdmin):
     list_display = ('name', 'priority',)
+
+
+@admin.register(AppDeprecation)
+class SectorAdmin(admin.ModelAdmin):
+    list_display = ('platform', 'warning', 'error',)

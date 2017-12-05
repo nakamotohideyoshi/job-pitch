@@ -514,3 +514,15 @@ class ProductTokens(models.Model):
     class Meta:
         verbose_name = 'Google play product'
         verbose_name_plural = 'Google play products'
+
+
+class AppDeprecation(models.Model):
+    ANDROID = 'ANDROID'
+    IOS = 'IOS'
+    PLATFORM_CHOICES = (
+        (ANDROID, 'Android'),
+        (IOS, 'iOS'),
+    )
+    platform = models.CharField(max_length=255, choices=PLATFORM_CHOICES, unique=True)
+    warning = models.CharField(max_length=255)
+    error = models.CharField(max_length=255)

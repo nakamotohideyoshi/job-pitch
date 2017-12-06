@@ -724,7 +724,7 @@ class PayPalPurchaseView(APIView):
     def create_payment(self, request, business, product):
         profile = None
         profiles = WebProfile.all()
-        if profiles:
+        if isinstance(profiles, list) and profiles:
             for candidate_profile in profiles:
                 if candidate_profile.name == 'no_shipping':
                     profile = candidate_profile

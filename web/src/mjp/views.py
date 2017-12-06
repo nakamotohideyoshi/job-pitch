@@ -722,10 +722,14 @@ class PayPalPurchaseView(APIView):
             raise serializers.ValidationError({"error": payment.error})
 
     def create_payment(self, request, business, product):
-        for profile in WebProfile.all():
-            if profile.name == 'no_shipping':
-                break
-        else:
+        profile = None
+        profiles = WebProfile.all()
+        if profiles:
+            for candidate_profile in profiles:
+                if candidate_profile.name == 'no_shipping':
+                    profile = candidate_profile
+                    break
+        if profile is None:
             profile = WebProfile({
                 "name": "no_shipping",
                 "input_fields": {

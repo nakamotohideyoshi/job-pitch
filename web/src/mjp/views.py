@@ -661,6 +661,7 @@ class AndroidPurchaseView(APIView):
         try:
             response = request.execute()
         except HttpError as e:
+            print "android purchase API error {}".format(e)
             return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
         with transaction.atomic():

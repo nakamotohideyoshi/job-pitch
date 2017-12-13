@@ -26,10 +26,10 @@
             <tr>
                 <td valign="top">
                     <span style="font-weight: bold; font-size: 20px;color: #00b6a4;"><strong>{{ message.application.job_seeker.first_name}} {{ message.application.job_seeker.last_name}}</strong></span><br/>
-                    {% if message.application.job_seeker.age_public or message.application.job_seeker.sex_public %}
-                        {% if message.application.job_seeker.age_public and message.application.job_seeker.sex_public %}
+                    {% if message.application.job_seeker.age_public and message.application.job_seeker.age or message.application.job_seeker.sex_public and message.application.job_seeker.sex %}
+                        {% if message.application.job_seeker.age_public and message.application.job_seeker.sex_public and message.application.job_seeker.age and message.application.job_seeker.sex %}
                             {{ message.application.job_seeker.sex.name }}, {{ message.application.job_seeker.age }} years old
-                        {% elif message.application.job_seeker.age_public %}
+                        {% elif message.application.job_seeker.age_public and message.application.job_seeker.age %}
                             {{ message.application.job_seeker.age }} years old
                         {% else %}
                             {{ message.application.job_seeker.sex.name }}

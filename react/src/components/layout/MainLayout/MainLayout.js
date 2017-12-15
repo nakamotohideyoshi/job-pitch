@@ -16,14 +16,14 @@ const homeMenus = [
   { id: 1, label: 'About', to: '/resources/about' },
   { id: 2, label: 'Help', to: '/resources/help' },
   { id: 3, label: 'Terms & Conditions', to: '/resources/terms' },
-  { id: 10, label: 'Login', to: '/login', kind: 'right' },
+  { id: 10, label: 'Login', to: '/login', kind: 'right' }
 ];
 
 const recruiterMenus = [
-  { id: 1, label: 'Applications', to: '/recruiter/applications', permission: 1 },
+  { id: 1, label: 'Find talent', to: '/recruiter/applications', permission: 1 },
   { id: 2, label: 'Jobs', to: '/recruiter/jobs', permission: 0 },
   { id: 3, label: 'Credit', to: '/recruiter/credits', permission: 1 },
-  { id: 4, label: 'Messages', to: '/recruiter/messages', permission: 1 },
+  { id: 4, label: 'Messages', to: '/recruiter/messages', permission: 1 }
 ];
 
 const jobseekerMenus = [
@@ -33,8 +33,13 @@ const jobseekerMenus = [
     permission: 2,
     menuData: [
       { id: 10, label: 'Find Job', to: '/jobseeker/find', permission: 2 },
-      { id: 11, label: 'My Applications', to: '/jobseeker/myapplications', permission: 2 },
-    ],
+      {
+        id: 11,
+        label: 'My Applications',
+        to: '/jobseeker/myapplications',
+        permission: 2
+      }
+    ]
   },
   {
     id: 2,
@@ -42,21 +47,24 @@ const jobseekerMenus = [
     menuData: [
       { id: 20, label: 'My Profile', to: '/jobseeker/profile', permission: 0 },
       { id: 21, label: 'Record Pitch', to: '/jobseeker/record', permission: 1 },
-      { id: 22, label: 'Job Profile', to: '/jobseeker/jobprofile', permission: 1 },
-    ],
+      {
+        id: 22,
+        label: 'Job Profile',
+        to: '/jobseeker/jobprofile',
+        permission: 1
+      }
+    ]
   },
-  { id: 4, label: 'Messages', to: '/jobseeker/messages', permission: 2 },
+  { id: 4, label: 'Messages', to: '/jobseeker/messages', permission: 2 }
 ];
 
-const AuthPaths = [
-  'select', 'password', 'recruiter', 'jobseeker'
-];
+const AuthPaths = ['select', 'password', 'recruiter', 'jobseeker'];
 
 @connect(
   state => ({
     permission: state.common.permission,
     alert: state.common.alert,
-    loading: state.common.loading,
+    loading: state.common.loading
   }),
   { ...commonActions }
 )
@@ -69,19 +77,19 @@ export default class MainLayout extends Component {
     alertShow: PropTypes.func.isRequired,
     alertHide: PropTypes.func.isRequired,
     loading: PropTypes.object,
-    children: PropTypes.any.isRequired,
+    children: PropTypes.any.isRequired
   };
 
   static defaultProps = {
     alert: null,
     loading: null,
-    pageInfo: null,
-  }
+    pageInfo: null
+  };
 
   constructor(props) {
     super(props);
     this.state = {
-      globalLoading: true,
+      globalLoading: true
     };
     this.api = ApiClient.shared();
   }
@@ -112,7 +120,10 @@ export default class MainLayout extends Component {
     // non auth
 
     if (!this.api.isLoggedIn()) {
-      if (this.rootPath !== 'resources' && AuthPaths.indexOf(this.rootPath) !== -1) {
+      if (
+        this.rootPath !== 'resources' &&
+        AuthPaths.indexOf(this.rootPath) !== -1
+      ) {
         return this.redirect('/login');
       }
 
@@ -126,40 +137,41 @@ export default class MainLayout extends Component {
 
     // auth
 
-    if (this.rootPath !== 'resources' && AuthPaths.indexOf(this.rootPath) === -1) {
+    if (
+      this.rootPath !== 'resources' &&
+      AuthPaths.indexOf(this.rootPath) === -1
+    ) {
       return this.redirect('/select');
     }
 
     if (this.api.initialTokens) {
       return this.checkUser();
     }
-    return this.api.loadData().then(
-      () => this.checkUser()
-    );
-  }
+    return this.api.loadData().then(() => this.checkUser());
+  };
 
-  checkUser = () => this.api.getUser()
-    .then(user => {
-      this.menuData = [{
-        id: 10,
-        label: utils.getCookie('email'),
-        kind: 'right',
-        menuData: [
-          { id: 11, label: 'Change Password', to: '/password' },
-          { id: 12, label: 'Logout', func: this.confirmLogout },
-        ],
-      }];
+  checkUser = () =>
+    this.api.getUser().then(user => {
+      this.menuData = [
+        {
+          id: 10,
+          label: utils.getCookie('email'),
+          kind: 'right',
+          menuData: [
+            { id: 11, label: 'Change Password', to: '/password' },
+            { id: 12, label: 'Logout', func: this.confirmLogout }
+          ]
+        }
+      ];
       if (user.businesses.length > 0) {
         return this.checkRcruiter();
       }
 
       if (user.job_seeker) {
-        return this.api.getJobSeekers(`${user.job_seeker}/`).then(
-          jobSeeker => {
-            this.api.jobSeeker = jobSeeker;
-            return this.checkJobSeeker();
-          }
-        );
+        return this.api.getJobSeekers(`${user.job_seeker}/`).then(jobSeeker => {
+          this.api.jobSeeker = jobSeeker;
+          return this.checkJobSeeker();
+        });
       }
 
       const userType = utils.getShared('usertype');
@@ -189,12 +201,14 @@ export default class MainLayout extends Component {
     }
 
     if (this.rootPath === 'select') {
-      return this.redirect(permission === 0 ? '/recruiter/jobs' : '/recruiter/applications');
+      return this.redirect(
+        permission === 0 ? '/recruiter/jobs' : '/recruiter/applications'
+      );
     }
 
     this.props.setPermission(permission);
     return Promise.resolve();
-  }
+  };
 
   checkJobSeeker = () => {
     const { jobSeeker } = this.api;
@@ -206,7 +220,9 @@ export default class MainLayout extends Component {
     }
     const currentItem = this.findMenuItem(this.menuData);
     if (currentItem && permission < currentItem.permission) {
-      return this.redirect(permission === 0 ? '/jobseeker/profile' : '/jobseeker/jobprofile');
+      return this.redirect(
+        permission === 0 ? '/jobseeker/profile' : '/jobseeker/jobprofile'
+      );
     }
 
     if (this.rootPath === 'select') {
@@ -223,12 +239,12 @@ export default class MainLayout extends Component {
     return Promise.resolve();
   };
 
-  redirect = (path) => {
+  redirect = path => {
     browserHistory.push(path);
     return Promise.reject();
-  }
+  };
 
-  findMenuItem = (menuItems) => {
+  findMenuItem = menuItems => {
     for (let i = 0; i < menuItems.length; i++) {
       const item = menuItems[i];
       if (item.submenu) {
@@ -239,32 +255,27 @@ export default class MainLayout extends Component {
       }
     }
     return null;
-  }
+  };
 
   /* logout */
 
   confirmLogout = () => {
-    this.props.alertShow(
-      'Confirm',
-      'Are you sure you want to log out?',
-      [
-        { label: 'Cancel' },
-        {
-          label: 'Log Out',
-          style: 'success',
-          callback: () => this.logout()
-        }
-      ]
-    );
+    this.props.alertShow('Confirm', 'Are you sure you want to log out?', [
+      { label: 'Cancel' },
+      {
+        label: 'Log Out',
+        style: 'success',
+        callback: () => this.logout()
+      }
+    ]);
   };
 
-  logout = () => this.api.logout().then(
-    () => {
+  logout = () =>
+    this.api.logout().then(() => {
       utils.setShared('usertype');
       utils.setShared('first-time');
       browserHistory.push('/login');
-    }
-  );
+    });
 
   /* alert */
 
@@ -273,7 +284,7 @@ export default class MainLayout extends Component {
     if (callback) {
       callback();
     }
-  }
+  };
 
   render() {
     const { globalLoading, contentLoading } = this.state;
@@ -287,7 +298,6 @@ export default class MainLayout extends Component {
 
     return (
       <div className={styles.root}>
-
         <Header
           pathname={pathname}
           menuData={this.menuData}
@@ -295,60 +305,48 @@ export default class MainLayout extends Component {
         />
 
         <div className={styles.content}>
-          { contentLoading ? <Loading /> : children }
+          {contentLoading ? <Loading /> : children}
         </div>
 
-        {
-          (pathname !== '/recruiter/messages' && pathname !== '/jobseeker/messages') && <Footer />
-        }
+        {pathname !== '/recruiter/messages' &&
+          pathname !== '/jobseeker/messages' && <Footer />}
 
-        {
-          alert &&
+        {alert && (
           <Modal
             show
             className={styles.popup}
-            onHide={alert.cancel ? (() => this.alertCallback(alert.cancelCallback)) : (() => {})}>
+            onHide={
+              alert.cancel
+                ? () => this.alertCallback(alert.cancelCallback)
+                : () => {}
+            }
+          >
             <Modal.Header closeButton={alert.cancel}>
-              {
-                alert.title && (<Modal.Title>{alert.title}</Modal.Title>)
-              }
+              {alert.title && <Modal.Title>{alert.title}</Modal.Title>}
             </Modal.Header>
-            <Modal.Body>
-              {
-                alert.message && (<p>{alert.message}</p>)
-              }
-            </Modal.Body>
+            <Modal.Body>{alert.message && <p>{alert.message}</p>}</Modal.Body>
             <Modal.Footer>
-              {
-                alert.buttons.map(info => (
-                  <Button
-                    key={info.label}
-                    bsStyle={info.style}
-                    onClick={() => this.alertCallback(info.callback)}
-                  >
-                    {info.label}
-                  </Button>
-                ))
-              }
+              {alert.buttons.map(info => (
+                <Button
+                  key={info.label}
+                  bsStyle={info.style}
+                  onClick={() => this.alertCallback(info.callback)}
+                >
+                  {info.label}
+                </Button>
+              ))}
             </Modal.Footer>
           </Modal>
-        }
+        )}
 
-        {
-          loading &&
-          <Modal
-            className={styles.globalLoading}
-            show
-            animation={false}
-          >
-            {
-              loading.spinner &&
+        {loading && (
+          <Modal className={styles.globalLoading} show animation={false}>
+            {loading.spinner && (
               <div className="spinner">
                 <Loading />
               </div>
-            }
-            {
-              loading.progress &&
+            )}
+            {loading.progress && (
               <ProgressBar
                 className={styles.progress}
                 striped
@@ -356,13 +354,12 @@ export default class MainLayout extends Component {
                 now={loading.progress}
                 label={`${loading.progress}%`}
               />
-            }
+            )}
             <span>{loading.label}</span>
           </Modal>
-        }
+        )}
 
         <NotificationSystem ref={node => utils.setNotifSystem(node)} />
-
       </div>
     );
   }

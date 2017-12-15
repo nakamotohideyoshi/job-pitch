@@ -22,11 +22,11 @@ export default class RMessages extends Component {
       data => {
         const jobs = data[0];
         const applications = data[1];
-        applications.sort((app1, app2) => {
-          const date1 = new Date(app1.messages[app1.messages.length - 1].created);
-          const date2 = new Date(app2.messages[app2.messages.length - 1].created);
-          return date1.getTime() < date2.getTime();
-        });
+        // applications.sort((app1, app2) => {
+        //   const date1 = new Date(app1.messages[app1.messages.length - 1].created);
+        //   const date2 = new Date(app2.messages[app2.messages.length - 1].created);
+        //   return date1.getTime() < date2.getTime();
+        // });
 
         const appid = parseInt(utils.getShared('messages_selected_id'), 10);
         if (appid !== 0 && !appid) {
@@ -64,11 +64,11 @@ export default class RMessages extends Component {
     let applications = this.state.applications;
     applications = applications.filter(app => app.id !== this.state.selectedApp.id);
     applications.push(application);
-    applications.sort((app1, app2) => {
-      const date1 = new Date(app1.messages[app1.messages.length - 1].created);
-      const date2 = new Date(app2.messages[app2.messages.length - 1].created);
-      return date1.getTime() < date2.getTime();
-    });
+    // applications.sort((app1, app2) => {
+    //   const date1 = new Date(app1.messages[app1.messages.length - 1].created);
+    //   const date2 = new Date(app2.messages[app2.messages.length - 1].created);
+    //   return date1.getTime() < date2.getTime();
+    // });
     this.setState({ applications });
   }
 

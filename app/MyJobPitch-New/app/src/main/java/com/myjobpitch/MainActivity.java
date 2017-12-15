@@ -356,7 +356,9 @@ public class MainActivity extends AppCompatActivity
         } else {
             if (mFragmentManager.getBackStackEntryCount() == 0) {
                 if (AppData.user != null) {
-                    if (mCurrentPageID != AppData.PAGE_ADD_RECORD && mCurrentPageID != AppData.PAGE_JOB_PROFILE && mCurrentPageID != AppData.PAGE_CHANGE_PASS) {
+                    if (mCurrentPageID == AppData.PAGE_ADD_RECORD || mCurrentPageID == AppData.PAGE_JOB_PROFILE || mCurrentPageID == AppData.PAGE_CHANGE_PASS) {
+                        setRootFragement(AppData.PAGE_FIND_JOB);
+                    } else {
                         logout();
                     }
                 } else {

@@ -61,7 +61,7 @@ export default class Footer extends Component {
 
           <div className={styles.company}>
             <img src={logoImage} alt="" />
-            @ 2017 Sclabs Ltd
+            © 2017 Myjobpitch Ltd
             <span>({ VERSION })</span>
           </div>
         </div>

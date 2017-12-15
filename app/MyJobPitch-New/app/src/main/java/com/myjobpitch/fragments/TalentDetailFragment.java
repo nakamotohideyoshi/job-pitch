@@ -156,15 +156,11 @@ public class TalentDetailFragment extends BaseFragment {
         descView.setText(jobSeeker.getDescription());
 
         playButton.setVisibility(jobSeeker.getPitch() != null ? View.VISIBLE : View.GONE);
-        nationalNumberView.setVisibility(jobSeeker.getNational_insurance_number().isEmpty() && !jobSeeker.getHas_national_insurance_number()? View.GONE : View.VISIBLE);
+        nationalNumberView.setVisibility(jobSeeker.getNational_insurance_number() == null && !jobSeeker.getHas_national_insurance_number()? View.GONE : View.VISIBLE);
         availableView.setVisibility(jobSeeker.getHas_references() ? View.VISIBLE : View.GONE);
         truthfulView.setVisibility(jobSeeker.getTruth_confirmation() ? View.VISIBLE : View.GONE);
 
         if (connected) {
-
-            if (jobSeeker.getNational_insurance_number().isEmpty()) {
-                nationalNumberView.setVisibility(View.GONE);
-            }
 
             if (jobSeeker.getCV() == null) {
                 cvButton.setVisibility(View.GONE);

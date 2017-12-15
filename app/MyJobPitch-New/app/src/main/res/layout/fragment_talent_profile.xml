@@ -416,8 +416,8 @@
 
             <CheckBox
                 android:id="@+id/job_seeker_tick_box"
-                android:text="By ticking this box I confirm that all information given is true and I understand that any falsefication my lead to dismissal That I am entitled to work in UK &amp; Nothen Irland.
-If required i will give full details if I have been convicted of any criminal offence."
+                android:text="By ticking this box I confirm that all information given is true, I understand that any falsification may lead to dismissal, and that I am entitled to work in UK &amp; Northern Ireland.
+If required I will give full details if I have been convicted of any criminal offence."
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"

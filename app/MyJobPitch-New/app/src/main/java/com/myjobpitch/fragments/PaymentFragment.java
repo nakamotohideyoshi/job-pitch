@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +16,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.myjobpitch.MainActivity;
 import com.myjobpitch.R;
 import com.myjobpitch.api.MJPApi;
 import com.myjobpitch.api.MJPApiException;
@@ -96,9 +98,7 @@ public class PaymentFragment extends FormFragment implements IabBroadcastReceive
         new APITask(new APIAction() {
             @Override
             public void run() throws MJPApiException {
-                businesses = MJPApi.shared().getUserBusinesses();
                 List<ProductToken> productTokens = MJPApi.shared().get(ProductToken.class);
-
                 products = new ArrayList<>();
                 for (ProductToken pt : productTokens) {
                     products.add(new ProductModel(pt.getSku(), pt.getTokens()));
@@ -107,18 +107,39 @@ public class PaymentFragment extends FormFragment implements IabBroadcastReceive
         }).addListener(new APITaskListener() {
             @Override
             public void onSuccess() {
+                loadBusinesses();
+            }
+            @Override
+            public void onError(JsonNode errors) {
+                errorHandler(errors);
+            }
+        }).execute();
+    }
+
+    void loadBusinesses() {
+        new APITask(new APIAction() {
+            @Override
+            public void run() throws MJPApiException {
+                businesses = MJPApi.shared().getUserBusinesses();
+            }
+        }).addListener(new APITaskListener() {
+            @Override
+            public void onSuccess() {
                 hideLoading();
+
                 List<String> businessNames = new ArrayList<>();
                 for (Business b : businesses) {
                     businessNames.add(b.getName());
                     if (business != null && business.getName().equals(b.getName())) {
-                        businessSpinner.setText(business.getName());
-                        creditsView.setText("Credits: " + business.getTokens());
+                        businessSpinner.setText(b.getName());
+                        creditsView.setText("Credits: " + b.getTokens());
                     }
                 }
                 businessSpinner.setAdapter(new ArrayAdapter<>(getApp(),  android.R.layout.simple_dropdown_item_1line, businessNames));
 
-                initPament();
+                if (mHelper == null) {
+                    initPament();
+                }
             }
             @Override
             public void onError(JsonNode errors) {
@@ -213,23 +234,20 @@ public class PaymentFragment extends FormFragment implements IabBroadcastReceive
     }
 
     void sendPurchaseInfoToServer() {
-//        Loading.show("Updating...");
+        showLoading();
         new SendPurchaseTask().execute();
     }
 
     IabHelper.QueryInventoryFinishedListener mGotInventoryListener = new IabHelper.QueryInventoryFinishedListener() {
         public void onQueryInventoryFinished(IabResult result, Inventory inventory) {
-
-//            Loading.hide();
-
             if (result.isFailure()) {
-                Popup popup = new Popup(getContext(), "Failed to query inventory: " + result, true);
+                Popup popup = new Popup(getContext(), "Failed to query inventory", true);
                 popup.addGreyButton("Ok", null);
                 popup.show();
                 return;
             }
 
-            getView().setVisibility(View.VISIBLE);
+            hideLoading();
 
             for (ProductModel p : products) {
                 SkuDetails details = inventory.getSkuDetails(p.sku);
@@ -256,9 +274,11 @@ public class PaymentFragment extends FormFragment implements IabBroadcastReceive
         public void onIabPurchaseFinished(IabResult result, Purchase purchase) {
 
             if (result.isFailure()) {
-                Popup popup = new Popup(getContext(), "Error purchasing: " + result, true);
-                popup.addGreyButton("Ok", null);
-                popup.show();
+                if (result.getResponse() != IabHelper.IABHELPER_USER_CANCELLED) {
+                    Popup popup = new Popup(getContext(), "purchasing Error", true);
+                    popup.addGreyButton("Ok", null);
+                    popup.show();
+                }
                 return;
             }
             if (!purchase.getDeveloperPayload().equals(PAYLOAD)) {
@@ -268,7 +288,9 @@ public class PaymentFragment extends FormFragment implements IabBroadcastReceive
                 return;
             }
 
-//            Loading.hide();
+            MainActivity.shared().getSharedPreferences("Purchase", AppCompatActivity.MODE_PRIVATE).edit()
+                    .putInt("businessId", business.getId())
+                    .apply();
 
             currentPurchase = purchase;
             sendPurchaseInfoToServer();
@@ -277,18 +299,19 @@ public class PaymentFragment extends FormFragment implements IabBroadcastReceive
 
     IabHelper.OnConsumeFinishedListener mConsumeFinishedListener = new IabHelper.OnConsumeFinishedListener() {
         public void onConsumeFinished(Purchase purchase, IabResult result) {
-
             if (result.isSuccess()) {
-//                Loading.hide();
+                MainActivity.shared().getSharedPreferences("Purchase", AppCompatActivity.MODE_PRIVATE).edit()
+                        .remove("businessId")
+                        .apply();
                 currentPurchase = null;
+                loadBusinesses();
             } else {
-                Popup popup = new Popup(getContext(), "Error while consuming: " + result, true);
+                Popup popup = new Popup(getContext(), "Error while consuming", true);
                 popup.addGreyButton("Ok", null);
                 popup.show();
             }
         }
     };
-
 
     // product adapter
 
@@ -346,9 +369,12 @@ public class PaymentFragment extends FormFragment implements IabBroadcastReceive
             String productId = currentPurchase.getSku();
             String purchaseToken = currentPurchase.getToken();
 
+            int businessId = MainActivity.shared().getSharedPreferences("Purchase", AppCompatActivity.MODE_PRIVATE)
+                    .getInt("businessId", businesses.get(0).getId());
+
             try {
                 try {
-                    return MJPApi.shared().sendPurchaseInfo(business.getId(), productId, purchaseToken);
+                    return MJPApi.shared().sendPurchaseInfo(businessId, productId, purchaseToken);
                 } catch (MJPApiException e) {
                     e.printStackTrace();
                 }
@@ -361,17 +387,16 @@ public class PaymentFragment extends FormFragment implements IabBroadcastReceive
         @Override
         protected void onPostExecute(Business business) {
             if (business == null ) {
+                hideLoading();
                 Popup popup = new Popup(getContext(), "Connection Error: Please check your internet connection", true);
                 popup.addGreyButton("Ok", null);
                 popup.show();
             } else {
                 try {
-//                        Loading.show("Processing...");
                     mHelper.consumeAsync(currentPurchase, mConsumeFinishedListener);
                 } catch (IabHelper.IabAsyncInProgressException e) {
                     e.printStackTrace();
                 }
-                creditsView.setText("Credits: " + business.getTokens());
             }
         }
 

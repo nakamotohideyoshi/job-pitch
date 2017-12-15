@@ -26,6 +26,12 @@ class ResetPasswordController: MJPController {
         ]
         
     }
+    
+    override func showLoading() {
+        super.showLoading()
+        loadingView.backgroundColor = UIColor(red: 65.8/256.0, green:65.8/256.0, blue: 65.8/256.0, alpha: 1)
+        loadingView.indicatorView.color = UIColor.white
+    }
 
     @IBAction func resetAction(_ sender: Any) {
         
@@ -35,7 +41,9 @@ class ResetPasswordController: MJPController {
             
             API.shared().resetPassword(email: emailField.text!, success: { (_) in
                 self.hideLoading()
-                self.dismiss(animated: true, completion: nil)
+                let _ = PopupController.show(AppHelper.getFrontController(), message: "Password reset requested, please check your email.", ok: nil, okCallback: nil, cancel: "OK", cancelCallback: {
+                    self.dismiss(animated: true, completion: nil)
+                })
             }, failure: self.handleErrors)
         }
         

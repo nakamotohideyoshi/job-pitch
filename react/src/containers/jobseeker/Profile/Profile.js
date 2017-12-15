@@ -397,8 +397,8 @@ export default class Profile extends FormComponent {
                 <br />
                 <this.CheckBoxField
                   className={styles.checkBox}
-                  label={`By ticking this box I confirm that all information given is true and I understand that any falsefication my lead to dismissal That I am entitled to work in UK & Nothen Irland.
-                          If required i will give full details if I have been convicted of any criminal offence.`}
+                  label={`By ticking this box I confirm that all information given is true, I understand that any falsification may lead to dismissal,
+                    and that I am entitled to work in UK & Northern Ireland. If required I will give full details if I have been convicted of any criminal offence.`}
                   name="truth_confirmation"
                 />
               </FormGroup>

@@ -11,22 +11,18 @@ import * as utils from 'helpers/utils';
 import * as commonActions from 'redux/modules/common';
 import styles from './WorkplaceEdit.scss';
 
-@connect(
-  () => ({}),
-  { ...commonActions }
-)
+@connect(() => ({}), { ...commonActions })
 export default class WorkplaceEdit extends FormComponent {
-
   static propTypes = {
     parent: PropTypes.object.isRequired,
     workplace: PropTypes.object,
     loadingShow: PropTypes.func.isRequired,
-    loadingHide: PropTypes.func.isRequired,
-  }
+    loadingHide: PropTypes.func.isRequired
+  };
 
   static defaultProps = {
-    workplace: {},
-  }
+    workplace: {}
+  };
 
   constructor(props) {
     const { workplace } = props;
@@ -34,9 +30,12 @@ export default class WorkplaceEdit extends FormComponent {
     const logo = {
       default: utils.getBusinessLogo(workplace.business_data),
       url: utils.getWorkplaceLogo(workplace),
-      exist: workplace.images && workplace.images.length > 0,
+      exist: workplace.images && workplace.images.length > 0
     };
-    const markerPos = workplace.latitude && { lat: workplace.latitude, lng: workplace.longitude };
+    const markerPos = workplace.latitude && {
+      lat: workplace.latitude,
+      lng: workplace.longitude
+    };
 
     super(props, { formModel, logo, markerPos, needToSave: true });
     this.manager = this.props.parent.manager;
@@ -50,7 +49,7 @@ export default class WorkplaceEdit extends FormComponent {
     errors.place_name = null;
     this.setState({ formModel, errors, markerPos });
     FormComponent.needToSave = true;
-  }
+  };
 
   onSave = () => {
     if (!this.isValid(['name', 'email', 'description', 'place_name'])) return;
@@ -67,15 +66,16 @@ export default class WorkplaceEdit extends FormComponent {
 
     this.props.loadingShow('Saving...', true);
 
-    this.api.saveUserWorkplace(data).then(
-      workplace => {
+    this.api
+      .saveUserWorkplace(data)
+      .then(workplace => {
         formModel.id = workplace.id;
 
         if (logo.file) {
           return this.api.uploadWorkplaceLogo(
             {
               location: workplace.id,
-              image: logo.file,
+              image: logo.file
             },
             event => {
               console.log(event);
@@ -86,22 +86,22 @@ export default class WorkplaceEdit extends FormComponent {
         if (workplace.images.length > 0 && !logo.exist) {
           return this.api.deleteWorkplaceLogo(workplace.images[0].id);
         }
-      }
-    ).then(
-      () => {
-        FormComponent.needToSave = false;
-        utils.successNotif('Saved!');
-        this.props.loadingHide();
-        if (utils.getShared('first-time') === '3') {
-          this.manager.selectWorkplace(formModel.id);
-        } else {
-          this.manager.loadWorkplaces();
-          this.onClose();
-        }
-      },
-      () => this.props.loadingHide()
-    );
-  }
+      })
+      .then(
+        () => {
+          FormComponent.needToSave = false;
+          utils.successNotif('Saved!');
+          this.props.loadingHide();
+          if (utils.getShared('first-time') === '3') {
+            this.manager.selectWorkplace(formModel.id);
+          } else {
+            this.manager.loadWorkplaces();
+            this.onClose();
+          }
+        },
+        () => this.props.loadingHide()
+      );
+  };
 
   onClose = () => this.manager.closeEdit(this.props.parent);
 
@@ -111,7 +111,6 @@ export default class WorkplaceEdit extends FormComponent {
 
     return (
       <div className={styles.root}>
-
         <div className={styles.header}>
           <h4>{workplace.id ? 'Edit' : 'Add'} Workplace</h4>
         </div>
@@ -151,7 +150,7 @@ export default class WorkplaceEdit extends FormComponent {
 
           <FormGroup>
             <Scroll.Element name="description">
-              <ControlLabel>Description</ControlLabel>
+              <ControlLabel>Describe your workplace</ControlLabel>
             </Scroll.Element>
             <this.TextAreaField
               name="description"
@@ -165,9 +164,7 @@ export default class WorkplaceEdit extends FormComponent {
             <Scroll.Element name="place_name">
               <div className={styles.withHelp}>
                 <ControlLabel>Location</ControlLabel>
-                <HelpIcon
-                  label="Search for a place name, street, postcode, etc. or click the map to select location."
-                />
+                <HelpIcon label="Search for a place name, street, postcode, etc. or click the map to select location." />
               </div>
             </Scroll.Element>
             <this.TextField
@@ -196,7 +193,6 @@ export default class WorkplaceEdit extends FormComponent {
             onCancel={this.onClose}
           />
         </div>
-
       </div>
     );
   }

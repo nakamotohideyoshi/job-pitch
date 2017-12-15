@@ -297,7 +297,14 @@ public class LoginFragment extends FormFragment {
                 @Override
                 public void onSuccess() {
                     hideLoading();
-                    onResetCancel();
+                    Popup popup = new Popup(getContext(), "Password reset requested, please check your email.", true);
+                    popup.addGreyButton("OK", new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            onResetCancel();
+                        }
+                    });
+                    popup.show();
                 }
                 @Override
                 public void onError(JsonNode errors) {

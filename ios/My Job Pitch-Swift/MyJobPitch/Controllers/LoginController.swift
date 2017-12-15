@@ -52,15 +52,15 @@ class LoginController: MJPController {
         
         navigationController?.navigationBar.isHidden = true
         
-        if let url = UserDefaults.standard.string(forKey: "api") {
-            if API.instance == nil {
-                API.apiRoot = URL(string: url)!
-            }
-            apiButton.setTitle(url, for: .normal)
-        }
-        
         if (AppData.productVersion) {
             apiButton.removeFromSuperview()
+        } else {
+            if let url = UserDefaults.standard.string(forKey: "api") {
+                if API.instance == nil {
+                    API.apiRoot = URL(string: url)!
+                }
+                apiButton.setTitle(url, for: .normal)
+            }
         }
         
         emailField.text = AppData.email

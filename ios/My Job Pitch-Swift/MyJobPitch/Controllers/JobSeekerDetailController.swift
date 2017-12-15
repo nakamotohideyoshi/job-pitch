@@ -92,7 +92,7 @@ class JobSeekerDetailController: MJPController {
             pitchPlayButton.isHidden = true
         }
         
-        if jobSeeker.national_insurance_number.isEmpty && !jobSeeker.has_national_insurance_number {
+        if jobSeeker.national_insurance_number == nil && !jobSeeker.has_national_insurance_number {
             nationalNumberView.removeFromSuperview()
         }
         if !jobSeeker.hasReferences {

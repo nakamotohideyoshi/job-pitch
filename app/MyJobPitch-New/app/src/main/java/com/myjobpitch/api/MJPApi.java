@@ -60,7 +60,7 @@ import java.util.Map;
 public class MJPApi {
 
     public static MJPApi instance;
-    public static String apiUrl = "https://www.myjobpitch.com/";
+    public static String apiUrl = "https://app.myjobpitch.com/";
 
     public static MJPApi shared() {
         if (instance == null) {
@@ -92,7 +92,7 @@ public class MJPApi {
         classEndPoints.put(ApplicationStatusUpdate.class, "applications");
         classEndPoints.put(MessageForCreation.class, "messages");
         classEndPoints.put(MessageForUpdate.class, "messages");
-        classEndPoints.put(ProductToken.class, "product-tokens");
+        classEndPoints.put(ProductToken.class, "google-play-products");
     }
 
     private String apiRoot;

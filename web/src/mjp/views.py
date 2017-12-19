@@ -709,7 +709,7 @@ class PayPalPurchaseView(APIView):
         if errors:
             raise serializers.ValidationError(errors)
 
-        paypalrestsdk.configure(settings.PAYPAL_CONFIG)
+        paypalrestsdk.configure(settings.PAYPAL_TOKEN)
 
         # Create Payment and return status
         payment = self.create_payment(request, business, product)
@@ -777,7 +777,7 @@ class PayPalPurchaseView(APIView):
 class PayPalPurchaseConfirmView(View):
     def get(self, request):
         try:
-            paypalrestsdk.configure(settings.PAYPAL_CONFIG)
+            paypalrestsdk.configure(settings.PAYPAL_TOKEN)
 
             payment = Payment.find(request.GET['paymentId'])
 

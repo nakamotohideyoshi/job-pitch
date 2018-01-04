@@ -104,7 +104,13 @@ extension SelectionController: UITableViewDataSource {
         
         let item = items[indexPath.row]
         cell.textLabel?.text = item
-        cell.accessoryType = selectedItems.contains(item) ? .checkmark : .none
+        if selectedItems.contains(item) {
+            cell.accessoryType = .checkmark
+            cell.backgroundColor = UIColor(red: 0.95, green: 0.95, blue: 0.95, alpha: 1)
+        } else {
+            cell.accessoryType = .none
+            cell.backgroundColor = UIColor.white
+        }
         
         return cell
         

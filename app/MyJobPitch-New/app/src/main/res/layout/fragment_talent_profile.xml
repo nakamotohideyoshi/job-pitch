@@ -79,6 +79,7 @@
                     android:inputType="textEmailAddress"
                     android:imeOptions="actionDone"
                     android:hint="Email Addresss"
+                    android:enabled="false"
                     app:met_floatingLabel="normal"
                     app:met_primaryColor="@color/colorGreen"/>
                 <CheckBox
@@ -424,6 +425,16 @@ If required I will give full details if I have been convicted of any criminal of
                 android:textColor="@color/colorAccent"
                 android:theme="@style/CheckBox"
                 android:gravity="top"/>
+
+            <Button
+                android:id="@+id/job_seeker_save"
+                android:text="Save"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/button_height"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="15dp"
+                android:background="@drawable/button_green"
+                android:theme="@style/Button"/>
 
         </LinearLayout>
 

@@ -126,7 +126,7 @@ class LoginController: MJPController {
                     
                     switch LoginController.userType {
                     case 1:
-                        SideMenuController.pushController(id: "user_profile")
+                        SideMenuController.pushController(id: "view_profile")
                         
                     case 2:
                         SideMenuController.pushController(id: "businesses")
@@ -134,7 +134,7 @@ class LoginController: MJPController {
                     default:
                         let popupController = PopupController.show(AppHelper.getFrontController(), message: "Choose User Type", ok: "Get a Job", okCallback: {
                             LoginController.userType = 1
-                            SideMenuController.pushController(id: "user_profile")
+                            SideMenuController.pushController(id: "view_profile")
                         }, cancel: "I Need Staff", cancelCallback: {
                             LoginController.userType = 2
                             SideMenuController.pushController(id: "businesses")

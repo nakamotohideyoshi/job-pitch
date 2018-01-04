@@ -237,13 +237,14 @@ public class JobEditFragment extends FormFragment {
     @Override
     public void onMenuSelected(int menuID) {
         if (menuID == 100) {
-            if (valid()) {
-                saveJob();
-            }
+            saveJob();
         }
     }
 
-    private void saveJob() {
+    @OnClick(R.id.job_save)
+    void saveJob() {
+
+        if (!valid()) return;
 
         if (job == null) {
             job = new Job();

@@ -109,6 +109,16 @@
                 android:layout_height="240dp"
                 android:layout_marginTop="15dp"/>
 
+            <Button
+                android:id="@+id/job_save"
+                android:text="Save"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/button_height"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="15dp"
+                android:background="@drawable/button_green"
+                android:theme="@style/Button"/>
+
         </LinearLayout>
     </ScrollView>
 

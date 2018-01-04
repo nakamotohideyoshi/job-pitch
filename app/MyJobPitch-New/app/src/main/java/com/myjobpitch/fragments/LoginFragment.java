@@ -226,7 +226,7 @@ public class LoginFragment extends FormFragment {
 
         switch (AppData.getUserType()) {
             case AppData.JOBSEEKER:
-                showMainPage(AppData.PAGE_USER_PROFILE);
+                showMainPage(AppData.PAGE_VIEW_PROFILE);
                 break;
             case AppData.RECRUITER:
                 showMainPage(AppData.PAGE_ADD_JOB);
@@ -237,7 +237,7 @@ public class LoginFragment extends FormFragment {
                     @Override
                     public void onClick(View view) {
                         AppData.saveUserType(AppData.JOBSEEKER);
-                        showMainPage(AppData.PAGE_USER_PROFILE);
+                        showMainPage(AppData.PAGE_VIEW_PROFILE);
                     }
                 });
                 popup.addGreenButton("I Need Staff", new View.OnClickListener() {

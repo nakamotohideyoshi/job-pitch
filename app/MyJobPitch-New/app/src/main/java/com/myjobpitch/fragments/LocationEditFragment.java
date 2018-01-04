@@ -212,13 +212,14 @@ public class LocationEditFragment extends FormFragment {
     @Override
     public void onMenuSelected(int menuID) {
         if (menuID == 100) {
-            if (valid()) {
-                saveLocation();
-            }
+            saveLocation();
         }
     }
 
-    private void saveLocation() {
+    @OnClick(R.id.location_save)
+    void saveLocation() {
+
+        if (!valid()) return;
 
         if (location == null) {
             location = new Location();

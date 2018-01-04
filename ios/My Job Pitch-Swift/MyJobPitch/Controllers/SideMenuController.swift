@@ -101,6 +101,8 @@ class SideMenuController: UIViewController {
         var identifier = SideMenuController.menuItems[SideMenuController.currentID]?["identifier"]
         if AppData.user.isRecruiter() && id == "applications" {
             identifier = "SelectJob"
+        } else if AppData.user.jobSeeker == nil && id == "view_profile" {
+            identifier = "JobSeekerProfile"
         }
         
         let revealController = UIApplication.shared.keyWindow?.rootViewController as! SWRevealViewController
@@ -201,9 +203,6 @@ extension SideMenuController: UITableViewDelegate {
             }
             //revealViewController().revealToggle(animated: false)
         } else  {
-            if id == "view_profile" && AppData.user.jobSeeker == nil {
-                id = "user_profile"
-            }
             SideMenuController.pushController(id: id)
         }
 

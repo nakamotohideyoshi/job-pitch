@@ -239,77 +239,81 @@ public class JobProfileFragment extends FormFragment {
         }
     }
 
+    @OnClick(R.id.job_profile_save)
+    void onSave() {
+        if (!valid()) return;
+
+        if (profile == null) {
+            profile = new JobProfile();
+            profile.setJob_seeker(jobSeeker.getId());
+        }
+
+        List<Integer> selectedSectors = new ArrayList<>();
+        for (Sector sector : mSelectedSectors)
+            selectedSectors.add(sector.getId());
+        profile.setSectors(selectedSectors);
+
+        int contractIndex = mContractNames.indexOf(mContractView.getText().toString()) - 1;
+        if (contractIndex != -1) {
+            profile.setContract(AppData.get(Sex.class).get(contractIndex).getId());
+        }
+
+        int hoursIndex = mHoursNames.indexOf(mHoursView.getText().toString()) - 1;
+        if (hoursIndex != -1) {
+            profile.setHours(AppData.get(Hours.class).get(hoursIndex).getId());
+        }
+
+        int radiusIndex = mRadiusNames.indexOf(mRadiusView.getText().toString());
+        profile.setSearch_radius(radiusValues.get(radiusIndex));
+
+        profile.setPlace_name(mPlaceName);
+        profile.setPlace_id(mPlaceId);
+        profile.setLongitude(mLongitude);
+        profile.setLatitude(mLatitude);
+        profile.setPostcode_lookup("");
+
+        showLoading();
+        new APITask(new APIAction() {
+            @Override
+            public void run() throws MJPApiException {
+                if (profile.getId() == null) {
+                    profile = MJPApi.shared().create(JobProfile.class, profile);
+                } else {
+                    profile = MJPApi.shared().update(JobProfile.class, profile);
+                }
+            }
+        }).addListener(new APITaskListener() {
+            @Override
+            public void onSuccess() {
+                hideLoading();
+                Popup popup = new Popup(getContext(), "Success!", true);
+                popup.addGreenButton("Ok", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        if (!AppData.existProfile) {
+                            getApp().reloadMenu();
+                            if (jobSeeker.getPitch() == null) {
+                                getApp().setRootFragement(AppData.PAGE_ADD_RECORD);
+                            } else {
+                                getApp().setRootFragement(AppData.PAGE_FIND_JOB);
+                            }
+                            AppData.existProfile = true;
+                        }
+                    }
+                });
+                popup.show();
+            }
+            @Override
+            public void onError(JsonNode errors) {
+                errorHandler(errors);
+            }
+        }).execute();
+    }
+
     @Override
     public void onMenuSelected(int menuID) {
         if (menuID == 100) {
-            if (!valid()) return;
-
-            if (profile == null) {
-                profile = new JobProfile();
-                profile.setJob_seeker(jobSeeker.getId());
-            }
-
-            List<Integer> selectedSectors = new ArrayList<>();
-            for (Sector sector : mSelectedSectors)
-                selectedSectors.add(sector.getId());
-            profile.setSectors(selectedSectors);
-
-            int contractIndex = mContractNames.indexOf(mContractView.getText().toString()) - 1;
-            if (contractIndex != -1) {
-                profile.setContract(AppData.get(Sex.class).get(contractIndex).getId());
-            }
-
-            int hoursIndex = mHoursNames.indexOf(mHoursView.getText().toString()) - 1;
-            if (hoursIndex != -1) {
-                profile.setHours(AppData.get(Hours.class).get(hoursIndex).getId());
-            }
-
-            int radiusIndex = mRadiusNames.indexOf(mRadiusView.getText().toString());
-            profile.setSearch_radius(radiusValues.get(radiusIndex));
-
-            profile.setPlace_name(mPlaceName);
-            profile.setPlace_id(mPlaceId);
-            profile.setLongitude(mLongitude);
-            profile.setLatitude(mLatitude);
-            profile.setPostcode_lookup("");
-
-            showLoading();
-            new APITask(new APIAction() {
-                @Override
-                public void run() throws MJPApiException {
-                    if (profile.getId() == null) {
-                        profile = MJPApi.shared().create(JobProfile.class, profile);
-                    } else {
-                        profile = MJPApi.shared().update(JobProfile.class, profile);
-                    }
-                }
-            }).addListener(new APITaskListener() {
-                @Override
-                public void onSuccess() {
-                    hideLoading();
-                    Popup popup = new Popup(getContext(), "Success!", true);
-                    popup.addGreenButton("Ok", new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            if (!AppData.existProfile) {
-                                getApp().reloadMenu();
-                                if (jobSeeker.getPitch() == null) {
-                                    getApp().setRootFragement(AppData.PAGE_ADD_RECORD);
-                                } else {
-                                    getApp().setRootFragement(AppData.PAGE_FIND_JOB);
-                                }
-                                AppData.existProfile = true;
-                            }
-                        }
-                    });
-                    popup.show();
-                }
-                @Override
-                public void onError(JsonNode errors) {
-                    errorHandler(errors);
-                }
-            }).execute();
-
+            onSave();
         }
     }
 

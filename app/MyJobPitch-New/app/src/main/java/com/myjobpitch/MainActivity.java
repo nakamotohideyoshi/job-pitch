@@ -119,7 +119,8 @@ public class MainActivity extends AppCompatActivity
 
         // new fragment
 
-        MenuItemInfo info = menuItemData[pageID];
+        int pid = pageID == AppData.PAGE_VIEW_PROFILE && AppData.user.getJob_seeker() == null ? AppData.PAGE_USER_PROFILE : pageID;
+        MenuItemInfo info = menuItemData[pid];
 
         try {
             BaseFragment fragment = (BaseFragment) info.fragmentClass.newInstance();
@@ -403,11 +404,6 @@ public class MainActivity extends AppCompatActivity
             if (id == AppData.PAGE_LOGOUT) {
                 logout();
                 return false;
-            }
-            if (id == AppData.PAGE_VIEW_PROFILE) {
-                if (AppData.user.getJob_seeker() == null) {
-                    id = AppData.PAGE_USER_PROFILE;
-                }
             }
             setRootFragement(id);
         }

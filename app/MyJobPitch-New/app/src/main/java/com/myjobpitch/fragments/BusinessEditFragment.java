@@ -144,13 +144,14 @@ public class BusinessEditFragment extends FormFragment {
     @Override
     public void onMenuSelected(int menuID) {
         if (menuID == 100) {
-            if (valid()) {
-                saveBusiness();
-            }
+            saveBusiness();
         }
     }
 
-    private void saveBusiness() {
+    @OnClick(R.id.business_save)
+    void saveBusiness() {
+
+        if (!valid()) return;
 
         if (business == null) {
             business = new Business();

@@ -20,7 +20,6 @@ public class AWSPitchUpload extends AWSPitchUploadBase {
     private final TransferUtility transferUtility;
     private TransferObserver mObserver;
     private boolean mCancelled = false;
-    private Pitch pitch;
 
     public AWSPitchUpload(TransferUtility transferUtility, File file) {
         super(null);

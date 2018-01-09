@@ -73,6 +73,8 @@ public class FindJobFragment extends SwipeFragment<Job> {
         Location location = job.getLocation_data();
         String distance = AppHelper.distance(profile.getLatitude(), profile.getLongitude(), location.getLatitude(), location.getLongitude());
         ((TextView)view.findViewById(R.id.distance)).setText(distance);
+
+        ((TextView)view.findViewById(R.id.right_mark_text)).setText("Apply");
     }
 
     @Override

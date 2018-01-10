@@ -1,3 +1,4 @@
+from allauth.account.views import ConfirmEmailView
 from django.conf import settings
 from django.conf.urls import include, url
 from django.conf.urls.static import static
@@ -14,6 +15,8 @@ urlpatterns = [
     url(r'^api/', include(mjp_views.router.urls)),
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     url(r'^api-rest-auth/', include('rest_auth.urls')),
+    url(r'^api-rest-auth/registration/account-confirm-email/(?P<key>\w+)/$', ConfirmEmailView.as_view(),
+        name='account_confirm_email'),
     url(r'^api-rest-auth/registration/', include('rest_auth.registration.urls')),
     url(r'^password-reset/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/$',
         password_reset_confirm,

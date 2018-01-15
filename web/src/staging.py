@@ -21,6 +21,16 @@ MIDDLEWARE_CLASSES += (
     'mjp.middleware.PlainExceptionsMiddleware',
 )
 
+INSTALLED_APPS = (
+    'corsheaders',
+) + INSTALLED_APPS
+
+MIDDLEWARE_CLASSES = (
+    'corsheaders.middleware.CorsMiddleware',
+) + MIDDLEWARE_CLASSES
+
+CORS_ORIGIN_ALLOW_ALL = True
+
 try:
     from local import *
 except ImportError:

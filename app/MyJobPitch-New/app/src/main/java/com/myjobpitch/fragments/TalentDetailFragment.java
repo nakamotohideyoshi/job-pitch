@@ -216,14 +216,12 @@ public class TalentDetailFragment extends BaseFragment {
 
             contactView.setVisibility(View.GONE);
 
+            cvButton.setVisibility(jobSeeker.getCV() != null ? View.VISIBLE : View.GONE);
             if (AppData.user.isJobSeeker()) {
-                cvButton.setVisibility(jobSeeker.getCV() != null ? View.VISIBLE : View.GONE);
                 applyButton.setVisibility(View.GONE);
                 removeButton.setVisibility(View.GONE);
                 connectHelpButton.setVisibility(View.GONE);
             } else {
-                cvButton.setVisibility(View.GONE);
-
                 Job j = job != null ? job : application.getJob_data();
                 int creditCount = j.getLocation_data().getBusiness_data().getTokens();
                 String credits = creditCount > 1 ? " credits" : " credit";

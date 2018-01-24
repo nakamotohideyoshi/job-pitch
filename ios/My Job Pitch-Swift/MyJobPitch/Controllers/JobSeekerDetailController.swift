@@ -134,15 +134,13 @@ class JobSeekerDetailController: MJPController {
         } else {
             
             contactView.removeFromSuperview()
+            if jobSeeker.cv == nil {
+                cvButton.removeFromSuperview()
+            }
             
             if AppData.user.jobSeeker != nil {
-                if jobSeeker.cv == nil {
-                    cvButton.removeFromSuperview()
-                }
                 buttonContainer.removeFromSuperview()
             } else {
-                cvButton.removeFromSuperview()
-
                 let j = job != nil ? job : application.job
                 let creditCount = j?.locationData.businessData.tokens as! Int
                 let credits = creditCount > 1 ? "Credits" : "Credit"

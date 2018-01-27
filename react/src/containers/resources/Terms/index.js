@@ -1,0 +1,615 @@
+import React from 'react';
+import Helmet from 'react-helmet';
+import { Container } from 'reactstrap';
+
+import { Board } from 'components';
+import Wrapper from './Wrapper';
+
+export default () => (
+  <Wrapper>
+    <Helmet title="Terms and Conditions" />
+
+    <Container>
+      <Board>
+        <h1>Terms and Conditions</h1>
+        <p>Last updated: November 05, 2017</p>
+        <p>
+          Please read these Terms and Conditions ("Terms", "Terms and Conditions") carefully before using the
+          www.myjobpitch.com website and the MyJobPitch mobile application (the "Service") operated by Myjobpitch
+          Limited ("us", "we", or "our").
+        </p>
+        <p>
+          Your access to and use of the Service is conditioned on your acceptance of and compliance with these Terms.
+          These Terms apply to all visitors, users and others who access or use the Service.
+        </p>
+        <p>
+          By accessing or using the Service you agree to be bound by these Terms. If you disagree with any part of the
+          terms then you may not access the Service.
+        </p>
+
+        <h2>Purchases</h2>
+        <p>
+          You are encouraged to familiarise yourself with your rights contained within the Sale of Goods Act 1979,
+          Unfair Contract Terms Act 1977 and the Unfair Terms in Consumer Contracts Regulations 1999.
+        </p>
+        <p>
+          If you wish to purchase any product or service made available through the Service ("Purchase"), you may be
+          asked to supply certain information relevant to your Purchase including, without limitation, your credit card
+          number, the expiration date of your credit card, your billing address, and your shipping information.
+        </p>
+        <p>
+          You represent and warrant that: (i) you have the legal right to use any credit card(s) or other payment
+          method(s) in connection with any Purchase; and that (ii) the information you supply to us is true, correct and
+          complete. You expressly agree that Myjobpitch Limited is not responsible for any loss or damage arising from
+          the submission of false or inaccurate information.
+        </p>
+        <p>
+          By submitting such information, you grant us the right to provide the information to third parties for
+          purposes of facilitating the completion of Purchases.
+        </p>
+        <p>
+          We reserve the right to refuse or cancel your order at any time for certain reasons including but not limited
+          to: product or service availability, errors in the description or price of the product or service, error in
+          your order or other reasons. You expressly agree that Myjobpitch Limited cannot accept any liability for loss
+          or damage arising out of such cancellation.
+        </p>
+        <p>
+          We reserve the right to refuse or cancel your order if fraud or an unauthorised or illegal transaction is
+          suspected.
+        </p>
+
+        <h2>Availability, Errors and Inaccuracies</h2>
+        <p>
+          We are constantly updating our offerings of products and services on the Service. The products or services
+          available on our Service may be mispriced, described inaccurately, or unavailable, and we may experience
+          delays in updating information on the Service and in our advertising on other web sites. You expressly agree
+          that any such offer of a product or service does not constitute a legal offer capable of attracting legal
+          consequences.
+        </p>
+        <p>
+          We cannot and do not guarantee the accuracy or completeness of any information, including prices, product
+          images, specifications, availability, and services. We reserve the right to change or update information and
+          to correct errors, inaccuracies, or omissions at any time without prior notice. Section "Availability, Errors
+          and Inaccuracies" is without prejudice to existing statutory rights.
+        </p>
+
+        <h2>Contests, Sweepstakes and Promotions</h2>
+        <p>
+          Any contests, sweepstakes or other promotions (collectively, "Promotions") made available through the Service
+          may be governed by rules that are separate from these Terms. If you participate in any Promotions, please
+          review the applicable rules as well as our Privacy Policy. If the rules for a Promotion conflict with these
+          Terms and Conditions, the Promotion rules will apply. The terms and conditions of any other "Promotions" are
+          independent of this agreement.
+        </p>
+
+        <h2>Subscriptions</h2>
+        <p>
+          Some parts of the Service are billed on a subscription basis ("Subscription(s)"). You will be billed in
+          advance on a recurring and periodic basis ("Billing Cycle"). Billing cycles are set either on a monthly or
+          annual basis, depending on the type of subscription plan you select when purchasing a Subscription.
+        </p>
+        <p>
+          At the end of each Billing Cycle, your Subscription will automatically renew under the exact same conditions
+          unless you cancel it or Myjobpitch Limited cancels it. You may cancel your Subscription renewal either through
+          your online account management page or by contacting Myjobpitch Limited customer support team.
+        </p>
+        <p>
+          A valid payment method, including credit card or PayPal, is required to process the payment for your
+          Subscription. You shall provide Myjobpitch Limited with accurate and complete billing information including
+          full name, address, state, zip code, telephone number, and a valid payment method information. By submitting
+          such payment information, you automatically authorize Myjobpitch Limited to charge all Subscription fees
+          incurred through your account to any such payment instruments.
+        </p>
+        <p>
+          Should automatic billing fail to occur for any reason, Myjobpitch Limited will issue an electronic invoice
+          indicating that you must proceed manually, within a certain deadline date, with the full payment corresponding
+          to the billing period as indicated on the invoice.
+        </p>
+
+        <h2>Free Trial</h2>
+        <p>
+          Myjobpitch Limited may, at its sole discretion, offer a Subscription with a free trial for a limited period of
+          time ("Free Trial").
+        </p>
+        <p>You may be required to enter your billing information in order to sign up for the Free Trial.</p>
+        <p>
+          If you do enter your billing information when signing up for the Free Trial, you will not be charged by
+          Myjobpitch Limited until the Free Trial has expired. On the last day of the Free Trial period, unless you
+          cancelled your Subscription, you will be automatically charged the applicable Subscription fees for the type
+          of Subscription you have selected.
+        </p>
+        <p>
+          At any time and without notice, Myjobpitch Limited reserves the right to (i) modify the terms and conditions
+          of the Free Trial offer, or (ii) cancel such Free Trial offer.
+        </p>
+
+        <h2>Fee Changes</h2>
+        <p>
+          Myjobpitch Limited, in its sole discretion and at any time, may modify the Subscription fees for the
+          Subscriptions. Any Subscription fee change will become effective at the end of the then-current Billing Cycle.
+        </p>
+        <p>
+          Myjobpitch Limited will provide you with a reasonable prior notice of any change in Subscription fees to give
+          you an opportunity to terminate your Subscription before such change becomes effective.
+        </p>
+        <p>
+          Your continued use of the Service after the Subscription fee change comes into effect constitutes your
+          agreement to pay the modified Subscription fee amount.
+        </p>
+
+        <h2>Refunds</h2>
+        <p>Except when required by law, paid Subscription fees are non-refundable.</p>
+
+        <h2>Content</h2>
+        <p>
+          Our Service allows you to post, link, store, share and otherwise make available certain information, text,
+          graphics, videos, or other material ("Content"). You are responsible for the Content that you post to the
+          Service, including its legality, reliability, and appropriateness.
+        </p>
+        <p>
+          By posting Content to the Service, you grant us the right and license to use, modify, publicly perform,
+          publicly display, reproduce, and distribute such Content on and through the Service. You retain any and all of
+          your rights to any Content you submit, post or display on or through the Service and you are responsible for
+          protecting those rights. You agree that this license includes the right for us to make your Content available
+          to other users of the Service, who may also use your Content subject to these Terms.
+        </p>
+        <p>
+          You represent and warrant that: (i) the Content is yours (you own it) or you have the right to use it and
+          grant us the rights and license as provided in these Terms, and (ii) the posting of your Content on or through
+          the Service does not violate the privacy rights, publicity rights, copyrights, contract rights or any other
+          rights of any person.
+        </p>
+
+        <h2>Accounts</h2>
+        <p>
+          When you create an account with us, you must provide us information that is accurate, complete, and current at
+          all times. Failure to do so constitutes a breach of the Terms, which may result in immediate termination of
+          your account on our Service.
+        </p>
+        <p>
+          You are responsible for safeguarding the password that you use to access the Service and for any activities or
+          actions under your password, whether your password is with our Service or a third-party service.
+        </p>
+        <p>
+          You agree not to disclose your password to any third party. You must notify us immediately upon becoming aware
+          of any breach of security or unauthorized use of your account.
+        </p>
+        <p>
+          You may not use as a username the name of another person or entity or that is not lawfully available for use,
+          a name or trade mark that is subject to any rights of another person or entity other than you without
+          appropriate authorization, or a name that is otherwise offensive, vulgar or obscene. You expressly agree that
+          we cannot be held liable for any loss or damage arising out of any misrepresentations you make in this regard.
+        </p>
+
+        <h2>Copyright Policy</h2>
+        <p>
+          We respect the intellectual property rights of others. It is our policy to respond to any claim that Content
+          posted on the Service infringes the copyright or other intellectual property infringement ("Infringement") of
+          any person.
+        </p>
+        <p>
+          If you are a copyright owner, or authorized on behalf of one, and you believe that the copyrighted work has
+          been copied in a way that constitutes copyright infringement that is taking place through the Service, you
+          must submit your notice in writing to the attention of "Copyright Infringement" of hello@myjobpitch.com and
+          include in your notice a detailed description of the alleged Infringement.
+        </p>
+        <p>
+          In cases where there are conflicting claims to the ownership of Copyright, it is our policy to air on the side
+          of removing materials from our Service.
+        </p>
+        <p>
+          <strong>
+            Complaints under the Copyrights, Designs and Patents Act 1988, and European Commerce Directive 2000
+          </strong>
+        </p>
+        <p>
+          If you wish to make a complaint/request that certain material be taken down, please send a request in writing
+          to our Notice and Takedown Officer.
+        </p>
+        <p>
+          We, Myjobpitch Limited, are committed to ensuring that the material displayed on our Service is lawful and in
+          accordance with our UK and EU Copyright Law. To help us deal with your complaint as quickly as possible,
+          please include the following information in your correspondence and mark it as "URGENT":
+        </p>
+        <ul>
+          <li>
+            <p>Your contact details - including your name, email address and daytime telephone number.</p>
+          </li>
+          <li>
+            <p>
+              Identify the material in question - please include sufficient detail to enable us to identify the material
+              complained of.
+            </p>
+          </li>
+          <li>
+            <p>The reasons for your objection.</p>
+          </li>
+        </ul>
+        <p>
+          We will review each objection on its merits and pending our inquiries, may remove or disable access to the
+          relevant material from our Service.
+        </p>
+        <p>
+          Where appropriate, you should include information relating to the status of the material in question (i.e.
+          Where you hold a Trademark, or own the Copyright to an image). This will enable us to deal with your request
+          promptly.
+        </p>
+        <p>You can contact our Notice and Takedown Officer via email at hello@myjobpitch.com</p>
+
+        <h2>Intellectual Property</h2>
+        <p>
+          The Service and its original content (excluding Content provided by users), features and functionality are and
+          will remain the exclusive property of Myjobpitch Limited and its licensors. The Service is protected by
+          copyright, trademark, and other laws of both the United Kingdom and foreign countries. Our trademarks and
+          trade dress may not be used in connection with any product or service without the prior written consent of
+          Myjobpitch Limited.
+        </p>
+        <p>
+          When you upload content, you give to Myjobpitch Limited a worldwide, non-exclusive, royalty-free, transferable
+          licence (with right to sub-licence) to use, reproduce, distribute, prepare derivative works of, display, and
+          perform that Content in connection with the provision of the Service and otherwise in connection with the
+          provision of the Service and Myjobpitch Limited business.
+        </p>
+
+        <h2>Links To Other Web Sites</h2>
+        <p>
+          Our Service may contain links to third-party web sites or services that are not owned or controlled by
+          Myjobpitch Limited.
+        </p>
+        <p>
+          Myjobpitch Limited has no control over, and assumes no responsibility for, the content, privacy policies, or
+          practices of any third party web sites or services. You further acknowledge and agree that Myjobpitch Limited
+          shall not be responsible or liable, directly or indirectly, for any damage or loss caused or alleged to be
+          caused by or in connection with use of or reliance on any such content, goods or services available on or
+          through any such web sites or services.
+        </p>
+        <p>
+          We strongly advise you to read the terms and conditions and privacy policies of any third-party web sites or
+          services that you visit.
+        </p>
+
+        <h2>Termination</h2>
+        <p>
+          We may terminate or suspend your account immediately, without prior notice or liability, for any reason
+          whatsoever, including without limitation if you breach the Terms.
+        </p>
+        <p>
+          Upon termination, your right to use the Service will immediately cease. If you wish to terminate your account,
+          you may simply discontinue using the Service.
+        </p>
+        <p>
+          All provisions of the Terms which by their nature should survive termination shall survive termination,
+          including, without limitation, ownership provisions, warranty disclaimers, indemnity and limitations of
+          liability.
+        </p>
+
+        <h2>Indemnification</h2>
+        <p>
+          You agree to defend, indemnify and hold harmless Myjobpitch Limited and its licensee and licensors, and their
+          employees, contractors, agents, officers and directors, from and against any and all claims, damages,
+          obligations, losses, liabilities, costs or debt, and expenses (including but not limited to attorney's fees),
+          resulting from or arising out of a) your use and access of the Service, by you or any person using your
+          account and password; b) a breach of these Terms, or c) Content posted on the Service.
+        </p>
+
+        <h2>Limitation Of Liability</h2>
+        <p>
+          In no event shall Myjobpitch Limited, nor its directors, employees, partners, agents, suppliers, or
+          affiliates, be liable for any indirect, incidental, special, consequential or punitive damages, including
+          without limitation, loss of profits, data, use, goodwill, or other intangible losses, resulting from (i) your
+          access to or use of or inability to access or use the Service; (ii) any conduct or content of any third party
+          on the Service; (iii) any content obtained from the Service; and (iv) unauthorized access, use or alteration
+          of your transmissions or content, whether based on warranty, contract, tort (including negligence) or any
+          other legal theory, whether or not we have been informed of the possibility of such damage, and even if a
+          remedy set forth herein is found to have failed of its essential purpose.
+        </p>
+
+        <h2>Disclaimer</h2>
+        <p>
+          Your use of the Service is at your sole risk. The Service is provided on an "AS IS" and "AS AVAILABLE" basis.
+          The Service is provided without warranties of any kind, whether express or implied, including, but not limited
+          to, implied warranties of merchantability, fitness for a particular purpose, non-infringement or course of
+          performance.
+        </p>
+        <p>
+          Myjobpitch Limited its subsidiaries, affiliates, and its licensors do not warrant that a) the Service will
+          function uninterrupted, secure or available at any particular time or location; b) any errors or defects will
+          be corrected; c) the Service is free of viruses or other harmful components; or d) the results of using the
+          Service will meet your requirements.
+        </p>
+
+        <h2>Exclusions</h2>
+        <p>
+          Without limiting the generality of the foregoing and notwithstanding any other provision of these terms, under
+          no circumstances will Myjobpitch Limited ever be liable to you or any other person for any indirect,
+          incidental, consequential, special, punitive or exemplary loss or damage arising from, connected with, or
+          relating to your use of the Service, these Terms, the subject matter of these Terms, the termination of these
+          Terms or otherwise, including but not limited to personal injury, loss of data, business, markets, savings,
+          income, profits, use, production, reputation or goodwill, anticipated or otherwise, or economic loss, under
+          any theory of liability (whether in contract, tort, strict liability or any other theory or law or equity),
+          regardless of any negligence or other fault or wrongdoing (including without limitation gross negligence and
+          fundamental breach) by Myjobpitch Limited or any person for whom Myjobpitch Limited is responsible, and even
+          if Myjobpitch Limited has been advised of the possibility of such loss or damage being incurred.
+        </p>
+
+        <h2>Governing Law</h2>
+        <p>
+          These Terms shall be governed and construed in accordance with the laws of England and Wales, without regard
+          to its conflict of law provisions.
+        </p>
+        <p>
+          Our failure to enforce any right or provision of these Terms will not be considered a waiver of those rights.
+          If any provision of these Terms is held to be invalid or unenforceable by a court, the remaining provisions of
+          these Terms will remain in effect. These Terms constitute the entire agreement between us regarding our
+          Service, and supersede and replace any prior agreements we might have between us regarding the Service.
+        </p>
+
+        <h2>Changes</h2>
+        <p>
+          We reserve the right, at our sole discretion, to modify or replace these Terms at any time. If a revision is
+          material we will try to provide at least 15 days notice prior to any new terms taking effect. What constitutes
+          a material change will be determined at our sole discretion.
+        </p>
+        <p>
+          By continuing to access or use our Service after those revisions become effective, you agree to be bound by
+          the revised terms. If you do not agree to the new terms, you must stop using the service.
+        </p>
+
+        <h2>Privacy Policy and Cookie Policy</h2>
+        <p>
+          Please refer to our Privacy Policy and Cookies Policy. You agree that they constitute part of these terms. You
+          must read our Privacy Policy and Cookies Policy before you use the Service.
+        </p>
+
+        <h2>Contact Us</h2>
+        <p>If you have any questions about these Terms, please contact us.</p>
+      </Board>
+
+      <Board>
+        <h1>End-User License Agreement ("Agreement")</h1>
+        <p>Last updated: November 03, 2017</p>
+        <p>
+          Please read this End-User License Agreement ("Agreement") carefully before clicking the "I Agree" button,
+          downloading or using MyJobPitch ("Application").
+        </p>
+        <p>
+          By clicking the "I Agree" button, downloading or using the Application, you are agreeing to be bound by the
+          terms and conditions of this Agreement.
+        </p>
+        <p>
+          This Agreement is a legal agreement between you (either an individual or a single entity) and Myjobpitch
+          Limited and it governs your use of the Application made available to you by Myjobpitch Limited.
+        </p>
+        <p>
+          If you do not agree to the terms of this Agreement, do not click on the "I Agree" button and do not download
+          or use the Application.
+        </p>
+        <p>
+          The Application is licensed, not sold, to you by Myjobpitch Limited for use strictly in accordance with the
+          terms of this Agreement.
+        </p>
+
+        <h2>License</h2>
+        <p>
+          Myjobpitch Limited grants you a revocable, non-exclusive, non-transferable, limited license to download,
+          install and use the Application solely for your personal, non-commercial purposes strictly in accordance with
+          the terms of this Agreement.
+        </p>
+
+        <h2>Restrictions</h2>
+        <p>You agree not to, and you will not permit others to:</p>
+        <ul>
+          <li>
+            <p>
+              license, sell, rent, lease, assign, distribute, transmit, host, outsource, disclose or otherwise
+              commercially exploit the Application or make the Application available to any third party.
+            </p>
+          </li>
+          <li>
+            <p>
+              copy or use the Application for any purpose other than as permitted under the above section 'License'.
+            </p>
+          </li>
+          <li>
+            <p>
+              modify, make derivative works of, disassemble, decrypt, reverse compile or reverse engineer any part of
+              the Application.
+            </p>
+          </li>
+          <li>
+            <p>
+              remove, alter or obscure any proprietary notice (including any notice of copyright or trademark) of
+              Myjobpitch Limited or its affiliates, partners, suppliers or the licensors of the Application.
+            </p>
+          </li>
+        </ul>
+
+        <h2>Intellectual Property</h2>
+        <p>
+          The Application, including without limitation all copyrights, patents, trademarks, trade secrets and other
+          intellectual property rights are, and shall remain, the sole and exclusive property of Myjobpitch Limited.
+        </p>
+
+        <h2>Your Suggestions</h2>
+        <p>
+          Any feedback, comments, ideas, improvements or suggestions (collectively, "Suggestions") provided by you to
+          Myjobpitch Limited with respect to the Application shall remain the sole and exclusive property of Myjobpitch
+          Limited.
+        </p>
+        <p>
+          Myjobpitch Limited shall be free to use, copy, modify, publish, or redistribute the Suggestions for any
+          purpose and in any way without any credit or any compensation to you.
+        </p>
+
+        <h2>Modifications to Application</h2>
+        <p>
+          Myjobpitch Limited reserves the right to modify, suspend or discontinue, temporarily or permanently, the
+          Application or any service to which it connects, with or without notice and without liability to you.
+        </p>
+
+        <h2>Updates to Application</h2>
+        <p>
+          Myjobpitch Limited may from time to time provide enhancements or improvements to the features/functionality of
+          the Application, which may include patches, bug fixes, updates, upgrades and other modifications ("Updates").
+        </p>
+        <p>
+          Updates may modify or delete certain features and/or functionalities of the Application. You agree that
+          Myjobpitch Limited has no obligation to (i) provide any Updates, or (ii) continue to provide or enable any
+          particular features and/or functionalities of the Application to you.
+        </p>
+        <p>
+          You further agree that all Updates will be (i) deemed to constitute an integral part of the Application, and
+          (ii) subject to the terms and conditions of this Agreement.
+        </p>
+
+        <h2>Third-Party Services</h2>
+        <p>
+          The Application may display, include or make available third-party content (including data, information,
+          applications and other products services) or provide links to third-party websites or services ("Third-Party
+          Services").
+        </p>
+        <p>
+          You acknowledge and agree that Myjobpitch Limited shall not be responsible for any Third-Party Services,
+          including their accuracy, completeness, timeliness, validity, copyright compliance, legality, decency, quality
+          or any other aspect thereof. Myjobpitch Limited does not assume and shall not have any liability or
+          responsibility to you or any other person or entity for any Third-Party Services.
+        </p>
+        <p>
+          Third-Party Services and links thereto are provided solely as a convenience to you and you access and use them
+          entirely at your own risk and subject to such third parties' terms and conditions.
+        </p>
+
+        <h2>Privacy Policy</h2>
+        <p>
+          Myjobpitch Limited collects, stores, maintains, and shares information about you in accordance with its
+          Privacy Policy, which is available at www.myjobpitch/privacy-policy. By accepting this Agreement, you
+          acknowledge that you hereby agree and consent to the terms and conditions of our Privacy Policy.
+        </p>
+
+        <h2>Term and Termination</h2>
+        <p>This Agreement shall remain in effect until terminated by you or Myjobpitch Limited.</p>
+        <p>
+          Myjobpitch Limited may, in its sole discretion, at any time and for any or no reason, suspend or terminate
+          this Agreement with or without prior notice.
+        </p>
+        <p>
+          This Agreement will terminate immediately, without prior notice from Myjobpitch Limited, in the event that you
+          fail to comply with any provision of this Agreement. You may also terminate this Agreement by deleting the
+          Application and all copies thereof from your mobile device or from your computer.
+        </p>
+        <p>
+          Upon termination of this Agreement, you shall cease all use of the Application and delete all copies of the
+          Application from your mobile device or from your computer.
+        </p>
+        <p>
+          Termination of this Agreement will not limit any of Myjobpitch Limited's rights or remedies at law or in
+          equity in case of breach by you (during the term of this Agreement) of any of your obligations under the
+          present Agreement.
+        </p>
+
+        <h2>Indemnification</h2>
+        <p>
+          You agree to indemnify and hold Myjobpitch Limited and its parents, subsidiaries, affiliates, officers,
+          employees, agents, partners and licensors (if any) harmless from any claim or demand, including reasonable
+          attorneys' fees, due to or arising out of your: (a) use of the Application; (b) violation of this Agreement or
+          any law or regulation; or (c) violation of any right of a third party.
+        </p>
+
+        <h2>No Warranties</h2>
+        <p>
+          The Application is provided to you "AS IS" and "AS AVAILABLE" and with all faults and defects without warranty
+          of any kind. To the maximum extent permitted under applicable law, Myjobpitch Limited, on its own behalf and
+          on behalf of its affiliates and its and their respective licensors and service providers, expressly disclaims
+          all warranties, whether express, implied, statutory or otherwise, with respect to the Application, including
+          all implied warranties of merchantability, fitness for a particular purpose, title and non-infringement, and
+          warranties that may arise out of course of dealing, course of performance, usage or trade practice. Without
+          limitation to the foregoing, Myjobpitch Limited provides no warranty or undertaking, and makes no
+          representation of any kind that the Application will meet your requirements, achieve any intended results, be
+          compatible or work with any other software, applications, systems or services, operate without interruption,
+          meet any performance or reliability standards or be error free or that any errors or defects can or will be
+          corrected.
+        </p>
+        <p>
+          Without limiting the foregoing, neither Myjobpitch Limited nor any Myjobpitch Limited's provider makes any
+          representation or warranty of any kind, express or implied: (i) as to the operation or availability of the
+          Application, or the information, content, and materials or products included thereon; (ii) that the
+          Application will be uninterrupted or error-free; (iii) as to the accuracy, reliability, or currency of any
+          information or content provided through the Application; or (iv) that the Application, its servers, the
+          content, or e-mails sent from or on behalf of Myjobpitch Limited are free of viruses, scripts, trojan horses,
+          worms, malware, timebombs or other harmful components.
+        </p>
+        <p>
+          Some jurisdictions do not allow the exclusion of or limitations on implied warranties or the limitations on
+          the applicable statutory rights of a consumer, so some or all of the above exclusions and limitations may not
+          apply to you.
+        </p>
+
+        <h2>Limitation of Liability</h2>
+        <p>
+          Notwithstanding any damages that you might incur, the entire liability of Myjobpitch Limited and any of its
+          suppliers under any provision of this Agreement and your exclusive remedy for all of the foregoing shall be
+          limited to the amount actually paid by you for the Application.
+        </p>
+        <p>
+          To the maximum extent permitted by applicable law, in no event shall Myjobpitch Limited or its suppliers be
+          liable for any special, incidental, indirect, or consequential damages whatsoever (including, but not limited
+          to, damages for loss of profits, for loss of data or other information, for business interruption, for
+          personal injury, for loss of privacy arising out of or in any way related to the use of or inability to use
+          the Application, third-party software and/or third-party hardware used with the Application, or otherwise in
+          connection with any provision of this Agreement), even if Myjobpitch Limited or any supplier has been advised
+          of the possibility of such damages and even if the remedy fails of its essential purpose.
+        </p>
+        <p>
+          Some states/jurisdictions do not allow the exclusion or limitation of incidental or consequential damages, so
+          the above limitation or exclusion may not apply to you.
+        </p>
+
+        <h2>Severability</h2>
+        <p>
+          If any provision of this Agreement is held to be unenforceable or invalid, such provision will be changed and
+          interpreted to accomplish the objectives of such provision to the greatest extent possible under applicable
+          law and the remaining provisions will continue in full force and effect.
+        </p>
+
+        <h2>Waiver</h2>
+        <p>
+          Except as provided herein, the failure to exercise a right or to require performance of an obligation under
+          this Agreement shall not effect a party's ability to exercise such right or require such performance at any
+          time thereafter nor shall be the waiver of a breach constitute waiver of any subsequent breach.
+        </p>
+
+        <h2>Amendments to this Agreement</h2>
+        <p>
+          Myjobpitch Limited reserves the right, at its sole discretion, to modify or replace this Agreement at any
+          time. If a revision is material we will provide at least 15 days' notice prior to any new terms taking effect.
+          What constitutes a material change will be determined at our sole discretion.
+        </p>
+        <p>
+          By continuing to access or use our Application after any revisions become effective, you agree to be bound by
+          the revised terms. If you do not agree to the new terms, you are no longer authorized to use the Application.
+        </p>
+
+        <h2>Governing Law</h2>
+        <p>
+          The laws of United Kingdom, excluding its conflicts of law rules, shall govern this Agreement and your use of
+          the Application. Your use of the Application may also be subject to other local, state, national, or
+          international laws.
+        </p>
+
+        <h2>Contact Information</h2>
+        <p>If you have any questions about this Agreement, please contact us.</p>
+
+        <h2>Entire Agreement</h2>
+        <p>
+          The Agreement constitutes the entire agreement between you and Myjobpitch Limited regarding your use of the
+          Application and supersedes all prior and contemporaneous written or oral agreements between you and Myjobpitch
+          Limited.
+        </p>
+        <p>
+          You may be subject to additional terms and conditions that apply when you use or purchase other Myjobpitch
+          Limited's services, which Myjobpitch Limited will provide to you at the time of such use or purchase.
+        </p>
+      </Board>
+    </Container>
+  </Wrapper>
+);

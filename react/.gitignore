@@ -1,15 +1,21 @@
-.idea/
-node_modules/
-yarn.lock
-static/dist/
-static/static/
-static_local/
-*.iml
-webpack-assets.json
-webpack-stats.json
-package-lock.json
-npm-debug.log
-.happypack
-webpack/dlls/*.json
-api/**/*.nedb
-*.report.html
+# See https://help.github.com/ignore-files/ for more about ignoring files.
+
+# dependencies
+/node_modules
+
+# testing
+/coverage
+
+# production
+/build
+
+# misc
+.DS_Store
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*

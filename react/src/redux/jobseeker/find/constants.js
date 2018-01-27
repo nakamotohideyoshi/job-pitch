@@ -1,0 +1,9 @@
+export const JS_GET_JOBS = 'JS_GET_JOBS';
+export const JS_GET_JOBS_SUCCESS = 'JS_GET_JOBS_SUCCESS';
+export const JS_GET_JOBS_ERROR = 'JS_GET_JOBS_ERROR';
+
+export const JS_APPLY_JOB = 'JS_APPLY_JOB';
+export const JS_APPLY_JOB_SUCCESS = 'JS_APPLY_JOB_SUCCESS';
+export const JS_APPLY_JOB_ERROR = 'JS_APPLY_JOBSEEKER_ERROR';
+
+export const JS_REMOVE_JOB = 'JS_REMOVE_JOB';

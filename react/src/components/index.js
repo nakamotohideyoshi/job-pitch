@@ -1,35 +1,50 @@
-/**
- *  Point of contact for component modules
- *
- *  ie: import CounterButton, InfoBar from 'components';
- *
- */
+import Board from './tags/Board';
+import FlexBox from './tags/FlexBox';
+import Loading from './tags/Loading';
+import Logo from './tags/Logo';
+import Main from './tags/Main';
+import PageHeader from './tags/PageHeader';
 
-import Provider from './Provider/Provider';
+import Alert from './elements/Alert';
+import Checkbox from './elements/Checkbox';
+import HelpIcon from './elements/HelpIcon';
+import PopupProgress from './elements/PopupProgress';
+import Required from './elements/Required';
+import SearchBar from './elements/SearchBar';
 
-import MainLayout from './layout/MainLayout/MainLayout';
-import Header from './layout/Header/Header';
-import Footer from './layout/Footer/Footer';
+import MJPCard from './MJPCard';
 
-import FormComponent from './FormComponent/FormComponent';
+import JobseekerDetail from './JobseekerDetail';
+import JobDetail from './JobDetail';
+import JobSelect from './JobSelect';
 
-import Loading from './Loading/Loading';
-import HelpIcon from './HelpIcon/HelpIcon';
-import CheckBox from './CheckBox/CheckBox';
-import SearchBar from './SearchBar/SearchBar';
-import ItemList from './ItemList/ItemList';
-import Pagination from './Pagination/Pagination';
-import LogoImage from './LogoImage/LogoImage';
-import Map from './Map/Map';
-
-import JobDetail from './JobDetail/JobDetail';
-import JobSeekerDetail from './JobSeekerDetail/JobSeekerDetail';
+import FormComponent, { SaveFormComponent } from './FormComponent';
+import GoogleMap from './GoogleMap';
+import VideoRecorder from './VideoRecorder';
+import VideoPlayer from './VideoPlayer';
+import MessageThread from './MessageThread';
 
 export {
-  Provider,
-  MainLayout, Header, Footer,
+  Main,
+  Board,
   FormComponent,
-  LogoImage,
-  Loading, HelpIcon, CheckBox, SearchBar, ItemList, Pagination, Map,
-  JobDetail, JobSeekerDetail
+  SaveFormComponent,
+  HelpIcon,
+  GoogleMap,
+  VideoRecorder,
+  VideoPlayer,
+  PopupProgress,
+  Loading,
+  Checkbox,
+  Logo,
+  Required,
+  Alert,
+  JobseekerDetail,
+  JobDetail,
+  JobSelect,
+  MessageThread,
+  MJPCard,
+  PageHeader,
+  FlexBox,
+  SearchBar
 };

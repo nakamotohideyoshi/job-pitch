@@ -46,5 +46,8 @@ ios/My Job Pitch-Swift/MyJobPitch.xcodeproj/project.xcworkspace/
 ios/My Job Pitch-Swift/MyJobPitch.xcodeproj/xcuserdata/
 ios/My Job Pitch-Swift/MyJobPitch.xcworkspace/
 
+
+
 web/src/local.py
 web/src/local_live.py
+web/media/

@@ -36,7 +36,8 @@ class Profile extends SaveFormComponent {
         newPitchData: null
       });
 
-      const pitch = jobseeker.pitches ? jobseeker.pitches[0] : null;
+      const { pitches } = jobseeker;
+      const pitch = (pitches || {}).length > 0 ? pitches[pitches.length - 1] : null;
       this.pitchUrl = pitch ? pitch.video : null;
     }
   }

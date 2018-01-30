@@ -120,7 +120,7 @@ export function getJobseekerImg(jobSeeker) {
   if (!jobSeeker || jobSeeker.pitches.length === 0) {
     return noImg;
   }
-  return jobSeeker.pitches[0].thumbnail || noImg;
+  return jobSeeker.pitches[jobSeeker.pitches.length - 1].thumbnail || noImg;
 }
 
 export function getFullJSName(jobSeeker) {

@@ -15,10 +15,11 @@ class PitchRecord extends Component {
   componentWillReceiveProps(nextProps) {
     const { jobseeker } = nextProps;
     if (jobseeker && jobseeker !== this.props.jobseeker) {
-      const pitch = jobseeker.pitches ? jobseeker.pitches[0] : null;
+      const { pitches } = jobseeker;
+      const pitch = (pitches || {}).length > 0 ? pitches[pitches.length - 1] : null;
       this.setState({
-        pitchUrl: null,
-        pitchData: pitch ? pitch.video : null
+        pitchUrl: pitch ? pitch.video : null,
+        pitchData: null,
       });
     }
   }
@@ -71,8 +72,8 @@ class PitchRecord extends Component {
                   <track kind="captions" />
                 </video>
               ) : (
-                <div />
-              )}
+                  <div />
+                )}
             </div>
 
             <div className="buttons">

@@ -6,7 +6,7 @@ import { Board, Logo, Loading, Checkbox } from 'components';
 import Wrapper from './Wrapper';
 
 export default class JobseekerDetail extends React.Component {
-  onPlayPitch = () => window.open(this.props.jobseeker.pitches[0].video);
+  onPlayPitch = () => window.open(this.props.jobseeker.pitches[this.props.jobseeker.pitches.length - 1].video);
 
   onViewCV = () => window.open(this.props.jobseeker.cv);
 
@@ -52,13 +52,13 @@ export default class JobseekerDetail extends React.Component {
                         <Loading size="15" />
                       </div>
                     ) : (
-                      <Checkbox
-                        className="shortlisted"
-                        checked={application.shortlisted}
-                        onChange={this.onChangeShortlist}
-                        label="Shortlisted"
-                      />
-                    ))}
+                        <Checkbox
+                          className="shortlisted"
+                          checked={application.shortlisted}
+                          onChange={this.onChangeShortlist}
+                          label="Shortlisted"
+                        />
+                      ))}
                 </div>
 
                 <div className="attributes">

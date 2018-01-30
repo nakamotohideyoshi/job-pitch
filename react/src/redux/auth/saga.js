@@ -157,18 +157,19 @@ function* _loadAuth() {
 
 function* _register(model, usertype) {
   try {
-    yield call(api.post, '/api-rest-auth/registration/', model);
+    const { key } = yield call(api.post, '/api-rest-auth/registration/', model);
+    
+    if (usertype === 'recruiter') {
+      yield call(helper.saveData, 'jobs-step', 1);
+    }
+
+    const { redirect } = yield call(getUserData, key, usertype);
+    yield put(push(redirect));
   } catch (errors) {
     yield put({ type: C.LOGIN_ERROR, errors });
-    return;
   }
-
-  if (usertype === 'recruiter') {
-    yield call(helper.saveData, 'jobs-step', 1);
-  }
-
-  const loginModel = { email: model.email, password: model.password1 };
-  yield call(_login, loginModel, usertype);
+  // const loginModel = { email: model.email, password: model.password1 };
+  // yield call(_login, loginModel, usertype);
 }
 
 /**
@@ -178,7 +179,6 @@ function* _register(model, usertype) {
 */
 
 function* _login(model, usertype) {
-  // sign in
   try {
     const { key } = yield call(api.post, '/api-rest-auth/login/', model);
     const { redirect } = yield call(getUserData, key, usertype);

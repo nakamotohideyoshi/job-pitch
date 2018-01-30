@@ -11,7 +11,8 @@ export default function reducer(state = initialState, action = {}) {
     case C.LOGIN:
       return {
         ...state,
-        loading: true
+        loading: true,
+        errors: null,
       };
     case C.LOGIN_SUCCESS:
       return {

@@ -19,7 +19,7 @@ class PitchRecord extends Component {
       const pitch = (pitches || {}).length > 0 ? pitches[pitches.length - 1] : null;
       this.setState({
         pitchUrl: pitch ? pitch.video : null,
-        pitchData: null,
+        pitchData: null
       });
     }
   }
@@ -72,8 +72,8 @@ class PitchRecord extends Component {
                   <track kind="captions" />
                 </video>
               ) : (
-                  <div />
-                )}
+                <div />
+              )}
             </div>
 
             <div className="buttons">

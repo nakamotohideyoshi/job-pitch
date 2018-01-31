@@ -67,18 +67,19 @@ function* _saveProfile({ model, pitchData, onUploadProgress }) {
   }
 
   // upload pitch
-  if (pitchData) {
+  if (!pitchData) {
+    yield put({ type: C.JS_PROFILE_SAVE_SUCCESS, jobseeker });
+  } else {
     try {
-      jobseeker = yield call(_uploadPitch, {
+      yield call(_uploadPitch, {
         jobseekerId: jobseeker.id,
         pitchData,
         onUploadProgress
       });
     } catch (errors) {
-      return;
+      helper.errorNotif('Pitch uploading error!!');
     }
   }
-  yield put({ type: C.JS_PROFILE_SAVE_SUCCESS, jobseeker });
 
   FormComponent.modified = false;
   helper.successNotif('Profile saved successfully!!');

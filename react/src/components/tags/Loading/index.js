@@ -19,8 +19,6 @@ const Loading = styled.span`
       `};
 
     border-right: 2px solid transparent;
-    /* border-bottom: 2px solid #ff9300; */
-    /* border-left: 2px solid transparent; */
 
     animation: spinner 0.8s linear infinite;
   }

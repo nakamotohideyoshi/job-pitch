@@ -18,8 +18,6 @@ export default class JobseekerDetail extends React.Component {
   };
 
   render() {
-    console.log(this.props);
-
     const { application, jobseeker, buttons, onClose } = this.props;
     const image = helper.getJobseekerImg(jobseeker);
     const fullName = helper.getFullJSName(jobseeker);
@@ -52,13 +50,13 @@ export default class JobseekerDetail extends React.Component {
                         <Loading size="15" />
                       </div>
                     ) : (
-                        <Checkbox
-                          className="shortlisted"
-                          checked={application.shortlisted}
-                          onChange={this.onChangeShortlist}
-                          label="Shortlisted"
-                        />
-                      ))}
+                      <Checkbox
+                        className="shortlisted"
+                        checked={application.shortlisted}
+                        onChange={this.onChangeShortlist}
+                        label="Shortlisted"
+                      />
+                    ))}
                 </div>
 
                 <div className="attributes">

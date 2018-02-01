@@ -148,29 +148,40 @@ public class TalentProfileFragment extends FormFragment {
         }
         mSexView.setAdapter(new ArrayAdapter<>(getApp(),  android.R.layout.simple_dropdown_item_1line, mSexNames));
 
-        // loading
-        if (AppData.user.getJob_seeker() != null) {
-            showLoading(view);
-            new APITask(new APIAction() {
-                @Override
-                public void run() throws MJPApiException {
-                    jobSeeker = MJPApi.shared().get(JobSeeker.class, AppData.user.getJob_seeker());
-                    AppData.existProfile = jobSeeker.getProfile() != null;
-                }
-            }).addListener(new APITaskListener() {
-                @Override
-                public void onSuccess() {
-                    hideLoading();
-                    load();
-                }
-                @Override
-                public void onError(JsonNode errors) {
-                    errorHandler(errors);
-                }
-            }).execute();
+        if (jobSeeker == null) {
+            // loading
+            if (AppData.user.getJob_seeker() != null) {
+                showLoading(view);
+                new APITask(new APIAction() {
+                    @Override
+                    public void run() throws MJPApiException {
+                        jobSeeker = MJPApi.shared().get(JobSeeker.class, AppData.user.getJob_seeker());
+                        AppData.existProfile = jobSeeker.getProfile() != null;
+                    }
+                }).addListener(new APITaskListener() {
+                    @Override
+                    public void onSuccess() {
+                        hideLoading();
+                        load();
+                    }
+                    @Override
+                    public void onError(JsonNode errors) {
+                        errorHandler(errors);
+                    }
+                }).execute();
+            } else {
+                mEmailView.setText(AppData.getEmail());
+                mCVViewButton.setVisibility(View.GONE);
+            }
         } else {
-            mEmailView.setText(AppData.getEmail());
-            mCVViewButton.setVisibility(View.GONE);
+            load();
+            if (cvUri != null) {
+                mCVCommentView.setText("CV added: save to upload.");
+                mCVUploadRemoveButton.setVisibility(View.VISIBLE);
+            }
+            if (mVideoPath != null) {
+                mRecordVideoPlay.setVisibility(View.VISIBLE);
+            }
         }
 
         return  view;
@@ -282,9 +293,11 @@ public class TalentProfileFragment extends FormFragment {
 
     @OnClick(R.id.job_seeker_pitch_help)
     void onPitchHelp() {
-        Popup popup = new Popup(getContext(), "Tips on how to record your pitch will be placed here.", true);
-        popup.addGreyButton("Close", null);
-        popup.show();
+        saveData();
+        WebviewFragment fragment = new WebviewFragment();
+        fragment.title = "Record Pitch";
+        fragment.mFilename = "pitch";
+        getApp().pushFragment(fragment);
     }
 
     @OnClick(R.id.job_seeker_record_new)
@@ -309,19 +322,7 @@ public class TalentProfileFragment extends FormFragment {
         }
     }
 
-    @OnClick(R.id.job_seeker_save)
-    void onSave() {
-        if (!valid()) return;
-
-        if (!mTickBox.isChecked()) {
-            Popup popup = new Popup(getContext(), "You must check the box confirming the truth of the information you have provided.", true);
-            popup.addGreyButton("Ok", null);
-            popup.show();
-            return;
-        }
-
-        showLoading();
-
+    void saveData() {
         if (jobSeeker == null) {
             jobSeeker = new JobSeeker();
         }
@@ -355,6 +356,22 @@ public class TalentProfileFragment extends FormFragment {
         jobSeeker.setTruth_confirmation(mTickBox.isChecked());
         jobSeeker.setCV(null);
         jobSeeker.setNational_insurance_number(mNationalNumberView.getText().toString());
+    }
+
+    @OnClick(R.id.job_seeker_save)
+    void onSave() {
+        if (!valid()) return;
+
+        if (!mTickBox.isChecked()) {
+            Popup popup = new Popup(getContext(), "You must check the box confirming the truth of the information you have provided.", true);
+            popup.addGreyButton("Ok", null);
+            popup.show();
+            return;
+        }
+
+        showLoading();
+
+        saveData();
 
         new APITask(new APIAction() {
             @Override

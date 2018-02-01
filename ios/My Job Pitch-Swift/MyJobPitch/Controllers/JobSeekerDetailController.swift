@@ -141,10 +141,7 @@ class JobSeekerDetailController: MJPController {
             if AppData.user.jobSeeker != nil {
                 buttonContainer.removeFromSuperview()
             } else {
-                let j = job != nil ? job : application.job
-                let creditCount = j?.locationData.businessData.tokens as! Int
-                let credits = creditCount > 1 ? "Credits" : "Credit"
-                applyButton.setTitle(String(format: "Connect  (%d %@)", creditCount, credits), for: .normal)
+                applyButton.setTitle("Connect", for: .normal)
             }
         }
         

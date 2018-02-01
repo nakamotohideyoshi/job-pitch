@@ -106,6 +106,7 @@ public class AppData {
     public static final int REQUEST_IMAGE_PICK = 10001;
     public static final int REQUEST_GOOGLE_DRIVE = 10002;
     public static final int REQUEST_DROPBOX = 10003;
+    public static final int REQUEST_INTRO = 10004;
 
 
     /************ Shared Preferences ***********/

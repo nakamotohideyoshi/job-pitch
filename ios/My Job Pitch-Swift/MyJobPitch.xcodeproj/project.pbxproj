@@ -76,6 +76,7 @@
 		D7ECFBBB1E125F5E00E2E071 /* SelectionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7ECFBBA1E125F5E00E2E071 /* SelectionController.swift */; };
 		D7ECFBBD1E12D9A100E2E071 /* MapController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7ECFBBC1E12D9A100E2E071 /* MapController.swift */; };
 		D7ECFBBF1E12FCEF00E2E071 /* JobSeekerProfileController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7ECFBBE1E12FCEF00E2E071 /* JobSeekerProfileController.swift */; };
+		D7F4DE30202383700018B3A9 /* IntroController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7F4DE2F202383700018B3A9 /* IntroController.swift */; };
 		D7F76FEB1E08E05F00ECB684 /* API.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7F76FEA1E08E05F00ECB684 /* API.swift */; };
 		D7F76FED1E08E08200ECB684 /* Application.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7F76FEC1E08E08200ECB684 /* Application.swift */; };
 		D7F76FEF1E08E09900ECB684 /* ApplicationStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7F76FEE1E08E09900ECB684 /* ApplicationStatus.swift */; };
@@ -202,6 +203,7 @@
 		D7ECFBBA1E125F5E00E2E071 /* SelectionController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SelectionController.swift; path = Controllers/SelectionController.swift; sourceTree = "<group>"; };
 		D7ECFBBC1E12D9A100E2E071 /* MapController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MapController.swift; path = Controllers/MapController.swift; sourceTree = "<group>"; };
 		D7ECFBBE1E12FCEF00E2E071 /* JobSeekerProfileController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = JobSeekerProfileController.swift; path = Controllers/JobSeekerProfileController.swift; sourceTree = "<group>"; };
+		D7F4DE2F202383700018B3A9 /* IntroController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = IntroController.swift; path = Controllers/IntroController.swift; sourceTree = "<group>"; };
 		D7F76FEA1E08E05F00ECB684 /* API.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = API.swift; path = Utils/API.swift; sourceTree = "<group>"; };
 		D7F76FEC1E08E08200ECB684 /* Application.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Application.swift; path = Models/Application.swift; sourceTree = "<group>"; };
 		D7F76FEE1E08E09900ECB684 /* ApplicationStatus.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ApplicationStatus.swift; path = Models/ApplicationStatus.swift; sourceTree = "<group>"; };
@@ -421,6 +423,7 @@
 				D7F770261E0918FF00ECB684 /* LoginController.swift */,
 				D7896AEE1E0CC51300533884 /* JobSeekerDetailController.swift */,
 				D749E34E1E09B479000FD0B1 /* ResetPasswordController.swift */,
+				D7F4DE2F202383700018B3A9 /* IntroController.swift */,
 				D72AE42D1E11AD50004C3F02 /* ChangePasswordController.swift */,
 				D749E3561E0B2026000FD0B1 /* SwipeController.swift */,
 				D72AE41A1E106D0A004C3F02 /* ApplicationListController.swift */,
@@ -720,6 +723,7 @@
 				D7F7700C1E08E3D100ECB684 /* Business.swift in Sources */,
 				D7B7D8C71EFCFFE300649A5F /* DropboxController.swift in Sources */,
 				D7F770141E08E3D100ECB684 /* LoginRequest.swift in Sources */,
+				D7F4DE30202383700018B3A9 /* IntroController.swift in Sources */,
 				D7F770121E08E3D100ECB684 /* JobStatus.swift in Sources */,
 				D787F6331E2879F900C47A88 /* BusinessListController.swift in Sources */,
 				D7F7701C1E08E3D100ECB684 /* Nationality.swift in Sources */,

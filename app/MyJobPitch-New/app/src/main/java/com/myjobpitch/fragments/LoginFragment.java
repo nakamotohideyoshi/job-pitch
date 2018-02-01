@@ -4,6 +4,8 @@ import android.animation.Animator;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
@@ -18,6 +20,7 @@ import android.widget.LinearLayout;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.github.rubensousa.bottomsheetbuilder.BottomSheetBuilder;
 import com.github.rubensousa.bottomsheetbuilder.adapter.BottomSheetItemClickListener;
+import com.myjobpitch.IntroActivity;
 import com.myjobpitch.R;
 import com.myjobpitch.api.MJPApi;
 import com.myjobpitch.api.MJPApiException;
@@ -204,7 +207,20 @@ public class LoginFragment extends FormFragment {
                 errorHandler(errors);
             }
         }).execute();
+    }
 
+    void showIntro() {
+        Intent intent = new Intent(getApp(), IntroActivity.class);
+        startActivityForResult(intent, AppData.REQUEST_INTRO);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == Activity.RESULT_OK) {
+            if (requestCode == AppData.REQUEST_INTRO) {
+                showMainPage(AppData.PAGE_VIEW_PROFILE);
+            }
+        }
     }
 
     void goMain() {
@@ -226,7 +242,7 @@ public class LoginFragment extends FormFragment {
 
         switch (AppData.getUserType()) {
             case AppData.JOBSEEKER:
-                showMainPage(AppData.PAGE_VIEW_PROFILE);
+                showIntro();
                 break;
             case AppData.RECRUITER:
                 showMainPage(AppData.PAGE_ADD_JOB);
@@ -237,7 +253,7 @@ public class LoginFragment extends FormFragment {
                     @Override
                     public void onClick(View view) {
                         AppData.saveUserType(AppData.JOBSEEKER);
-                        showMainPage(AppData.PAGE_VIEW_PROFILE);
+                        showIntro();
                     }
                 });
                 popup.addGreenButton("I Need Staff", new View.OnClickListener() {

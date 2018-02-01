@@ -126,7 +126,7 @@ class LoginController: MJPController {
                     
                     switch LoginController.userType {
                     case 1:
-                        SideMenuController.pushController(id: "view_profile")
+                        self.showIntro()
                         
                     case 2:
                         SideMenuController.pushController(id: "businesses")
@@ -134,7 +134,7 @@ class LoginController: MJPController {
                     default:
                         let popupController = PopupController.show(AppHelper.getFrontController(), message: "Choose User Type", ok: "Get a Job", okCallback: {
                             LoginController.userType = 1
-                            SideMenuController.pushController(id: "view_profile")
+                            self.showIntro()
                         }, cancel: "I Need Staff", cancelCallback: {
                             LoginController.userType = 2
                             SideMenuController.pushController(id: "businesses")
@@ -150,7 +150,12 @@ class LoginController: MJPController {
         }, failure: self.handleErrors)
         
     }
-
+    
+    func showIntro() {
+        let controller = AppHelper.mainStoryboard.instantiateViewController(withIdentifier: "Intro")
+        navigationController?.pushViewController(controller, animated: true)
+    }
+    
     @IBAction func loginAction(_ sender: Any) {
         
         if valid() {

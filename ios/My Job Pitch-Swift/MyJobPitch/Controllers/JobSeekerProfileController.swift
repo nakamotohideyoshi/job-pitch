@@ -269,7 +269,13 @@ class JobSeekerProfileController: MJPController {
     }
     
     @IBAction func pitchHelpAction(_ sender: Any) {
-        PopupController.showGray("Tips on how to record your pitch will be placed here.", ok: "Close")
+        let controller = storyboard?.instantiateViewController(withIdentifier: "WebView") as! WebViewController
+        controller.navigationItem.title = "Recording Pitch"
+        controller.file = "pitch"
+        controller.isModal = true
+        let navController = UINavigationController(rootViewController: controller)
+        present(navController, animated: true, completion: nil)
+
     }
     
     @IBAction func pitchRecordAction(_ sender: Any) {

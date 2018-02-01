@@ -222,10 +222,7 @@ public class TalentDetailFragment extends BaseFragment {
                 removeButton.setVisibility(View.GONE);
                 connectHelpButton.setVisibility(View.GONE);
             } else {
-                Job j = job != null ? job : application.getJob_data();
-                int creditCount = j.getLocation_data().getBusiness_data().getTokens();
-                String credits = creditCount > 1 ? " credits" : " credit";
-                applyButton.setText(String.format("Connect  (%d %s)", creditCount, credits));
+                applyButton.setText("Connect");
             }
 
         }

@@ -1,5 +1,4 @@
 import React from 'react';
-import RecordRTC from 'recordrtc';
 import { ModalHeader, ModalBody } from 'reactstrap';
 
 import { Alert } from 'components';
@@ -20,25 +19,31 @@ export default class VideoRecorder extends React.Component {
   }
 
   componentWillUnmount() {
-    if (this.state.stream) {
-      this.state.stream.stop();
-    }
-
-    if (this.videoRecorder) {
-      this.videoRecorder.destroy();
-    }
-
     if (this.timer) {
       clearInterval(this.timer);
+    }
+
+    if (this.mediaRecorder) {
+      this.mediaRecorder.stop();
+    }
+
+    if (this.state.stream) {
+      const tracks = this.state.stream.getTracks();
+      tracks.forEach(track => {
+        track.stop();
+      });
     }
   }
 
   setupVideo = () => {
-    if (navigator.mediaDevices === undefined) {
-      navigator.mediaDevices = {};
+    if (typeof MediaRecorder === 'undefined') {
+      this.setState({
+        error: 'Your browser does not supports Media Recorder API.'
+      });
+      return;
     }
 
-    if (navigator.mediaDevices.getUserMedia === undefined) {
+    if ((navigator.mediaDevices || {}).getUserMedia === undefined) {
       navigator.mediaDevices.getUserMedia = constraints => {
         const getUserMedia =
           navigator.getUserMedia ||
@@ -47,7 +52,7 @@ export default class VideoRecorder extends React.Component {
           navigator.msGetUserMedia;
 
         if (!getUserMedia) {
-          return Promise.reject(new Error('getUserMedia is not implemented in this browser'));
+          return Promise.reject(new Error('Your browser does not supports Media Recorder API.'));
         }
 
         return new Promise((resolve, reject) => {
@@ -59,23 +64,10 @@ export default class VideoRecorder extends React.Component {
     navigator.mediaDevices.getUserMedia({ audio: true, video: true }).then(
       stream => {
         this.video.srcObject = stream;
-        if (typeof MediaRecorder === 'undefined') {
-          this.setState({
-            error: 'Your browser does not supports Media Recorder API.'
-          });
-        } else {
-          this.setState({ stream });
-        }
+        this.setState({ stream });
       },
       error => this.setState({ error: error.name })
     );
-  };
-
-  onClose = () => {
-    if (this.state.status === RECORDING) {
-      this.videoRecorder.stopRecording();
-    }
-    this.props.onClose();
   };
 
   onClickButton = () => {
@@ -97,7 +89,7 @@ export default class VideoRecorder extends React.Component {
   readyRecording = () => {
     this.setState({
       status: READY,
-      time: 1000 //10000
+      time: 10000
     });
 
     this.timer = setInterval(() => {
@@ -111,8 +103,37 @@ export default class VideoRecorder extends React.Component {
   };
 
   startRecording = () => {
-    this.videoRecorder = RecordRTC(this.state.stream, { type: 'video' });
-    this.videoRecorder.startRecording();
+    clearInterval(this.timer);
+
+    this.recordedBlobs = [];
+    let options = { mimeType: 'video/webm;codecs=vp9' };
+    if (!MediaRecorder.isTypeSupported(options.mimeType)) {
+      console.log(options.mimeType + ' is not Supported');
+      options = { mimeType: 'video/webm;codecs=vp8' };
+      if (!MediaRecorder.isTypeSupported(options.mimeType)) {
+        console.log(options.mimeType + ' is not Supported');
+        options = { mimeType: 'video/webm' };
+        if (!MediaRecorder.isTypeSupported(options.mimeType)) {
+          console.log(options.mimeType + ' is not Supported');
+          options = { mimeType: '' };
+        }
+      }
+    }
+
+    try {
+      this.mediaRecorder = new MediaRecorder(this.state.stream, options);
+    } catch (e) {
+      console.error('Exception while creating MediaRecorder: ' + e);
+      return;
+    }
+
+    console.log('Created MediaRecorder', this.mediaRecorder, 'with options', options);
+    this.mediaRecorder.start(10); // collect 10ms of data
+    this.mediaRecorder.ondataavailable = event => {
+      if (event.data && event.data.size > 0) {
+        this.recordedBlobs.push(event.data);
+      }
+    };
 
     this.startTime = new Date().getTime();
     this.setState({
@@ -120,7 +141,6 @@ export default class VideoRecorder extends React.Component {
       time: 0
     });
 
-    clearInterval(this.timer);
     this.timer = setInterval(() => {
       const time = new Date().getTime() - this.startTime;
       if (time < 30000) {
@@ -134,9 +154,13 @@ export default class VideoRecorder extends React.Component {
   stopRecording = () => {
     this.cancelRecording();
 
-    this.videoRecorder.stopRecording(url => {
-      this.props.onClose(url, this.videoRecorder.blob);
-    });
+    this.mediaRecorder.stop();
+    this.mediaRecorder = null;
+    console.log('Recorded Blobs: ', this.recordedBlobs);
+
+    var superBuffer = new Blob(this.recordedBlobs, { type: 'video/webm' });
+    const url = window.URL.createObjectURL(superBuffer);
+    this.props.onClose(url, superBuffer);
   };
 
   cancelRecording = () => {
@@ -149,7 +173,7 @@ export default class VideoRecorder extends React.Component {
 
     return (
       <Wrapper isOpen size="lg">
-        <ModalHeader toggle={this.onClose}>Video Recorder</ModalHeader>
+        <ModalHeader toggle={() => this.props.onClose()}>Video Recorder</ModalHeader>
         <ModalBody>
           {error && <Alert type="danger">{error}</Alert>}
           <div className="videoContainer">
@@ -159,6 +183,7 @@ export default class VideoRecorder extends React.Component {
               ref={ref => {
                 this.video = ref;
               }}
+              muted
             >
               <track kind="captions" />
             </video>

@@ -13,17 +13,24 @@ class JSMessages extends Component {
   };
 
   componentWillMount() {
-    const appId = helper.str2int(this.props.match.params.appId);
-    this.props.getMsgApplications(appId);
+    this.appId = helper.str2int(this.props.match.params.appId);
+    this.props.getMsgApplications(this.appId);
+  }
+
+  componentWillReceiveProps(nextProps) {
+    const appId = helper.str2int(nextProps.match.params.appId);
+    if (appId && appId !== this.appId) {
+      this.appId = appId;
+      this.props.selectApplication(appId);
+      helper.saveData('messages_app', appId);
+    }
   }
 
   onSend = message => this.props.sendMessage(message);
 
-  onSelectApplication = application => {
+  onSelectApplication = appId => {
     this.setState({ open: false });
-    this.props.selectApplication(application);
-    this.props.history.push(`/jobseeker/messages/${application.id}/`);
-    helper.saveData('messages_app', application.id);
+    this.props.history.push(`/jobseeker/messages/${appId}/`);
   };
 
   onChangeFilterText = filterText => this.setState({ filterText });
@@ -78,7 +85,7 @@ class JSMessages extends Component {
             <a
               key={id}
               className={[selected, deleted, 'application'].join(' ')}
-              onClick={() => this.onSelectApplication(app)}
+              onClick={() => this.onSelectApplication(id)}
             >
               <Logo src={image} size="50" className="logo" circle />
               <div className="content">

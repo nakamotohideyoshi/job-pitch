@@ -31,26 +31,26 @@ class MyApplications extends Component {
 
   onRefresh = () => this.props.getApplications(this.jobId, 'CREATED');
 
-  onDetail = app => this.props.selectApplication(app);
+  onDetail = appId => this.props.selectApplication(appId);
 
-  onConnect = app => {
+  onConnect = appId => {
     this.props.confirm('Confirm', 'Yes, I want to make this connection (1 credit)', [
       { outline: true },
       {
         label: 'Connect',
         color: 'green',
-        onClick: () => this.props.connectApplication(app.id)
+        onClick: () => this.props.connectApplication(appId)
       }
     ]);
   };
 
-  onRemove = app => {
+  onRemove = appId => {
     this.props.confirm('Confirm', 'Are you sure you want to delete this applicaton?', [
       { outline: true },
       {
         label: 'Remove',
         color: 'yellow',
-        onClick: () => this.props.removeApplication(app.id)
+        onClick: () => this.props.removeApplication(appId)
       }
     ]);
   };
@@ -90,19 +90,19 @@ class MyApplications extends Component {
                   title={fullName}
                   icon={app.shortlisted ? 'fa-star' : ''}
                   description={jobseeker.description}
-                  onClick={() => this.onDetail(app)}
+                  onClick={() => this.onDetail(app.id)}
                   loading={app.loading}
                   menus={[
                     {
                       label: 'Connect',
                       color: 'green',
                       disabled: this.tokens === 0,
-                      onClick: () => this.onConnect(app)
+                      onClick: () => this.onConnect(app.id)
                     },
                     {
                       label: 'Remove',
                       color: 'yellow',
-                      onClick: () => this.onRemove(app)
+                      onClick: () => this.onRemove(app.id)
                     }
                   ]}
                 />
@@ -119,12 +119,12 @@ class MyApplications extends Component {
               {
                 label: 'Connect',
                 color: 'green',
-                onClick: () => this.onConnect(selectedApp)
+                onClick: () => this.onConnect(selectedApp.id)
               },
               {
                 label: 'Remove',
                 color: 'yellow',
-                onClick: () => this.onRemove(selectedApp)
+                onClick: () => this.onRemove(selectedApp.id)
               }
             ]}
           />

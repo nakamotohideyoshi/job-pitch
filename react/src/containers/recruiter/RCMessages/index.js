@@ -30,20 +30,28 @@ class RCMessages extends Component {
   };
 
   componentWillMount() {
-    const appId = helper.str2int(this.props.match.params.appId);
+    this.appId = helper.str2int(this.props.match.params.appId);
     this.props.getJobs();
-    this.props.getMsgApplications(appId);
+    this.props.getMsgApplications(this.appId);
+    console.log('mount', this.appId);
+  }
+
+  componentWillReceiveProps(nextProps) {
+    const appId = helper.str2int(nextProps.match.params.appId);
+    if (appId && appId !== this.appId) {
+      this.appId = appId;
+      this.props.selectApplication(appId);
+      helper.saveData('messages_app', appId);
+    }
   }
 
   onSend = message => this.props.sendMessage(message);
 
   onConnect = () => this.props.connectApplication(this.props.selectedApp.id);
 
-  onSelectApplication = application => {
+  onSelectApplication = appId => {
     this.setState({ open: false });
-    this.props.selectApplication(application);
-    this.props.history.push(`/recruiter/messages/${application.id}/`);
-    helper.saveData('messages_app', application.id);
+    this.props.history.push(`/recruiter/messages/${appId}/`);
   };
 
   onSelectJob = filterJob => this.setState({ filterJob });
@@ -125,7 +133,7 @@ class RCMessages extends Component {
             <a
               key={id}
               className={[selected, deleted, 'application'].join(' ')}
-              onClick={() => this.onSelectApplication(app)}
+              onClick={() => this.onSelectApplication(id)}
             >
               <Logo src={image} size="50" className="logo" circle />
               <div className="content">
@@ -166,6 +174,8 @@ class RCMessages extends Component {
   render() {
     const { jobs, applications, selectedApp } = this.props;
     const open = this.state.open ? 'open' : '';
+
+    console.log('render ----');
 
     return (
       <Wrapper>

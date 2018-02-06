@@ -87,7 +87,7 @@ export default function reducer(state = initialState, action = {}) {
     case C.SELECT_APPLICATION:
       return {
         ...state,
-        selectedApp: action.application
+        selectedApp: state.applications.filter(app => app.id === action.appId)[0]
       };
 
     /**

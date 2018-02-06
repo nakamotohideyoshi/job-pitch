@@ -27,17 +27,17 @@ class MyConnections extends React.Component {
 
   onRefresh = () => this.props.getApplications(this.jobId, 'ESTABLISHED');
 
-  onDetail = app => this.props.selectApplication(app);
+  onDetail = appId => this.props.selectApplication(appId);
 
-  onMessage = app => this.props.history.push(`/recruiter/messages/${app.id}/`);
+  onMessage = appId => this.props.history.push(`/recruiter/messages/${appId}/`);
 
-  onRemove = app => {
+  onRemove = appId => {
     this.props.confirm('Confirm', 'Are you sure you want to delete this applicaton?', [
       { outline: true },
       {
         label: 'Remove',
         color: 'yellow',
-        onClick: () => this.props.removeApplication(app.id)
+        onClick: () => this.props.removeApplication(appId)
       }
     ]);
   };
@@ -77,18 +77,18 @@ class MyConnections extends React.Component {
                   title={fullName}
                   icon={app.shortlisted ? 'fa-star' : ''}
                   description={jobseeker.description}
-                  onClick={() => this.onDetail(app)}
+                  onClick={() => this.onDetail(app.id)}
                   loading={app.loading}
                   menus={[
                     {
                       label: 'Message',
                       color: 'green',
-                      onClick: () => this.onMessage(app)
+                      onClick: () => this.onMessage(app.id)
                     },
                     {
                       label: 'Remove',
                       color: 'yellow',
-                      onClick: () => this.onRemove(app)
+                      onClick: () => this.onRemove(app.id)
                     }
                   ]}
                 />
@@ -107,12 +107,12 @@ class MyConnections extends React.Component {
               {
                 label: 'Message',
                 color: 'green',
-                onClick: () => this.onMessage(selectedApp)
+                onClick: () => this.onMessage(selectedApp.id)
               },
               {
                 label: 'Remove',
                 color: 'yellow',
-                onClick: () => this.onRemove(selectedApp)
+                onClick: () => this.onRemove(selectedApp.id)
               }
             ]}
           />

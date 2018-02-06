@@ -12,8 +12,8 @@ export function removeApplication(appId) {
   return { type: C.REMOVE_APPLICATION, appId };
 }
 
-export function selectApplication(application) {
-  return { type: C.SELECT_APPLICATION, application };
+export function selectApplication(appId) {
+  return { type: C.SELECT_APPLICATION, appId };
 }
 
 export function setShortlist(shortlisted) {

@@ -10,6 +10,8 @@ import { confirm } from 'redux/common';
 import { getJobs, applyJob, removeJob } from 'redux/jobseeker/find';
 import Wrapper from './Wrapper';
 
+import NoPitch from '../NoPitch';
+
 class FindJob extends Component {
   state = {};
 
@@ -142,31 +144,39 @@ class FindJob extends Component {
   };
 
   render() {
-    const { jobs, errors } = this.props;
+    const { jobs, errors, jobseeker } = this.props;
     const { selectedJob } = this.state;
+
+    if (jobseeker) {
+      if (!helper.getPitch(jobseeker)) {
+        return <NoPitch />;
+      }
+    }
 
     return (
       <Wrapper>
         <Helmet title="Find Me Jobs" />
 
-        <Container>
-          <PageHeader>
-            <span>Find Me Jobs</span>
-            <SearchBar size="sm" onChange={this.filterApp} />
-          </PageHeader>
-
-          {jobs ? (
-            this.renderJobs()
-          ) : !errors ? (
+        {jobs ? (
+          this.renderJobs()
+        ) : !errors ? (
+          <Container>
             <FlexBox center>
               <Loading />
             </FlexBox>
-          ) : (
+          </Container>
+        ) : (
+          <Container>
+            <PageHeader>
+              <span>Find Me Jobs</span>
+              <SearchBar size="sm" onChange={this.filterApp} />
+            </PageHeader>
+
             <FlexBox center>
               <div className="alert-msg">Server Error!</div>
             </FlexBox>
-          )}
-        </Container>
+          </Container>
+        )}
 
         {selectedJob && (
           <JobDetail

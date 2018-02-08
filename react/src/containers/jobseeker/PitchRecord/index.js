@@ -8,6 +8,8 @@ import { loadProfile, uploadPitch } from 'redux/jobseeker/profile';
 import Wrapper from './Wrapper';
 
 class PitchRecord extends Component {
+  state = {};
+
   componentWillMount() {
     this.props.loadProfile();
   }

@@ -34,8 +34,7 @@ class SearchController: MJPController {
         searchBar = UISearchBar()
         searchBar.delegate = self
         searchBar.showsCancelButton = true
-        searchBar.alpha = 0
-
+        searchBar.alpha = 0        
     }
     
     func filterItem(item: Any, text: String) -> Bool {

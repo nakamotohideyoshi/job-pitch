@@ -29,6 +29,7 @@ public class FindJobFragment extends SwipeFragment<Job> {
 
     JobSeeker jobSeeker;
     JobProfile profile;
+    View noPitchView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -36,6 +37,15 @@ public class FindJobFragment extends SwipeFragment<Job> {
         View view = initView(inflater, container, "There are no more jobs that match your profile. You can restore your removed matches by clicking refresh above.");
         title = "Find Job";
         creditsView.setVisibility(View.GONE);
+
+        noPitchView = view.findViewById(R.id.nopitch_view);
+        view.findViewById(R.id.go_record_now).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getApp().setRootFragement(AppData.PAGE_ADD_RECORD);
+            }
+        });
+
         return  view;
     }
 
@@ -55,7 +65,11 @@ public class FindJobFragment extends SwipeFragment<Job> {
             @Override
             public void onSuccess() {
                 hideLoading();
-                setData(data);
+                if (jobSeeker.getPitch() == null) {
+                    noPitchView.setVisibility(View.VISIBLE);
+                } else {
+                    setData(data);
+                }
             }
             @Override
             public void onError(JsonNode errors) {

@@ -1,6 +1,7 @@
 package com.myjobpitch.fragments;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,19 +17,45 @@ import com.myjobpitch.utils.AppData;
 import com.myjobpitch.utils.AppHelper;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.List;
 
 public class MessageListFragment extends ApplicationsFragment {
+
+    View noPitchView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = initView(inflater, container, R.drawable.swipe_icon_message, "You have no applications.", R.layout.cell_message_list);
+
+        noPitchView = view.findViewById(R.id.nopitch_view);
+        view.findViewById(R.id.go_record_now).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getApp().setRootFragement(AppData.PAGE_ADD_RECORD);
+            }
+        });
+
         return view;
     }
 
     @Override
     protected List<Application> getApplications() throws MJPApiException {
+        JobSeeker jobSeeker = MJPApi.shared().get(JobSeeker.class, AppData.user.getJob_seeker());
+        if (jobSeeker.getPitch() == null) {
+            Handler mainHandler = new Handler(MessageListFragment.this.getContext().getMainLooper());
+
+            Runnable myRunnable = new Runnable() {
+                @Override
+                public void run() {
+                    noPitchView.setVisibility(View.VISIBLE);
+                }
+            };
+            mainHandler.post(myRunnable);
+            return new ArrayList<>();
+        }
+
         return MJPApi.shared().get(Application.class);
     }
 

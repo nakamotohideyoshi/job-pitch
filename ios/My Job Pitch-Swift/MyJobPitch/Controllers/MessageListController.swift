@@ -12,6 +12,7 @@ import SVPullToRefresh
 class MessageListController: SearchController {
     
     @IBOutlet weak var emptyView: UILabel!
+    @IBOutlet weak var noPitchView: UIView!
     
     var job: Job!
     
@@ -27,7 +28,21 @@ class MessageListController: SearchController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         showLoading()
-        loadData()
+        
+        if !AppData.user.isRecruiter() {
+            API.shared().loadJobSeekerWithId(id: AppData.user.jobSeeker, success: { (data) in
+                let jobSeeker = data as! JobSeeker
+                if jobSeeker.getPitch() != nil {
+                    self.loadData()
+                } else {
+                    self.noPitchView.isHidden = false
+                    self.navigationItem.rightBarButtonItem = nil
+                    self.hideLoading()
+                }
+            }, failure: self.handleErrors)
+        } else {
+            loadData()
+        }
     }
     
     func loadData() {
@@ -51,6 +66,11 @@ class MessageListController: SearchController {
         return application.job.locationData.businessData.name.lowercased().contains(text)
         
     }
+    
+    @IBAction func noRecordNow(_ sender: Any) {
+        SideMenuController.pushController(id: "add_record")
+    }
+    
     
     static func pushController(job: Job!) {
         let controller = AppHelper.mainStoryboard.instantiateViewController(withIdentifier: "MessageList") as! MessageListController

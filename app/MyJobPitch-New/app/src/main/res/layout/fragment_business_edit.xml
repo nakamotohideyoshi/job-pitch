@@ -48,13 +48,13 @@
             </FrameLayout>
 
             <Button
-                android:id="@+id/add_credits_button"
-                android:text="Add Credits"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/button_height"
-                android:layout_marginTop="5dp"
-                android:background="@drawable/button_yellow"
-                android:theme="@style/Button"/>
+            android:id="@+id/add_credits_button"
+            android:text="Add Credits"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/button_height"
+            android:layout_marginTop="5dp"
+            android:background="@drawable/button_yellow"
+            android:theme="@style/Button"/>
 
             <include
                 android:id="@+id/business_logo"

@@ -1,6 +1,7 @@
 package com.myjobpitch.fragments;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,21 +11,49 @@ import com.myjobpitch.api.MJPApi;
 import com.myjobpitch.api.MJPApiException;
 import com.myjobpitch.api.data.Application;
 import com.myjobpitch.api.data.Job;
+import com.myjobpitch.api.data.JobSeeker;
+import com.myjobpitch.utils.AppData;
 import com.myjobpitch.utils.AppHelper;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class TalentApplicationsFragment extends ApplicationsFragment {
+
+    View noPitchView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = initView(inflater, container, R.drawable.swipe_icon_message, "You have no applications.", R.layout.cell_application_list);
+
+        noPitchView = view.findViewById(R.id.nopitch_view);
+        view.findViewById(R.id.go_record_now).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getApp().setRootFragement(AppData.PAGE_ADD_RECORD);
+            }
+        });
+
         return  view;
     }
 
     @Override
     protected List<Application> getApplications() throws MJPApiException {
+        JobSeeker jobSeeker = MJPApi.shared().get(JobSeeker.class, AppData.user.getJob_seeker());
+        if (jobSeeker.getPitch() == null) {
+            Handler mainHandler = new Handler(TalentApplicationsFragment.this.getContext().getMainLooper());
+
+            Runnable myRunnable = new Runnable() {
+                @Override
+                public void run() {
+                    noPitchView.setVisibility(View.VISIBLE);
+                }
+            };
+            mainHandler.post(myRunnable);
+            return new ArrayList<>();
+        }
+
         return MJPApi.shared().get(Application.class);
     }
 

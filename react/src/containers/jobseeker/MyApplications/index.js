@@ -6,13 +6,17 @@ import { PageHeader, SearchBar, Loading, MJPCard, FlexBox, JobDetail } from 'com
 
 import * as helper from 'utils/helper';
 import { confirm } from 'redux/common';
+import { loadProfile } from 'redux/jobseeker/profile';
 import { getApplications } from 'redux/applications';
 import Wrapper from './Wrapper';
+
+import NoPitch from '../NoPitch';
 
 class MyApplications extends Component {
   state = {};
 
   componentWillMount() {
+    this.props.loadProfile();
     this.props.getApplications();
   }
 
@@ -87,31 +91,39 @@ class MyApplications extends Component {
   };
 
   render() {
-    const { applications, errors } = this.props;
+    const { applications, errors, jobseeker } = this.props;
     const { selectedApp } = this.state;
+
+    if (jobseeker) {
+      if (!helper.getPitch(jobseeker)) {
+        return <NoPitch />;
+      }
+    }
 
     return (
       <Wrapper>
         <Helmet title="My Applications" />
 
-        <Container>
-          <PageHeader>
-            <span>My Applications</span>
-            <SearchBar size="sm" onChange={this.filterApp} />
-          </PageHeader>
-
-          {applications ? (
-            this.renderApplications()
-          ) : !errors ? (
+        {applications ? (
+          this.renderApplications()
+        ) : !errors ? (
+          <Container>
             <FlexBox center>
               <Loading />
             </FlexBox>
-          ) : (
+          </Container>
+        ) : (
+          <Container>
+            <PageHeader>
+              <span>My Applications</span>
+              <SearchBar size="sm" onChange={this.filterApp} />
+            </PageHeader>
+
             <FlexBox center>
               <div className="alert-msg">Server Error!</div>
             </FlexBox>
-          )}
-        </Container>
+          </Container>
+        )}
 
         {selectedApp && (
           <JobDetail
@@ -133,11 +145,13 @@ class MyApplications extends Component {
 
 export default connect(
   state => ({
+    jobseeker: state.js_profile.jobseeker,
     applications: state.applications.applications,
     errors: state.applications.errors
   }),
   {
     confirm,
+    loadProfile,
     getApplications
   }
 )(MyApplications);

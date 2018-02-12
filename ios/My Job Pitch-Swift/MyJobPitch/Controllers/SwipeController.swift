@@ -14,6 +14,7 @@ class SwipeController: MJPController {
     @IBOutlet weak var creditsButton: UIButton!
     
     @IBOutlet weak var emptyView: UILabel!
+    @IBOutlet weak var noRecordView: UIView!
     
     var isFindJob = false
     var searchJob: Job!
@@ -34,6 +35,7 @@ class SwipeController: MJPController {
         isFindJob = SideMenuController.currentID == "find_job"
         
         navigationItem.title = SideMenuController.getCurrentTitle(isFindJob ? "find_job" : "find_talent")
+        
         
         refresh()
         
@@ -145,12 +147,18 @@ class SwipeController: MJPController {
             
             API.shared().loadJobSeekerWithId(id: AppData.user.jobSeeker, success: { (data) in
                 self.jobSeeker = data as! JobSeeker
-                API.shared().loadJobProfileWithId(id: self.jobSeeker.profile, success: { (data) in
-                    self.profile = data as! Profile
-                    API.shared().searchJobsWithExclusions(exclusions: [],
-                                                          success: self.refreshCompleted,
-                                                          failure: self.handleErrors)
-                }, failure: self.handleErrors)
+                
+                if self.jobSeeker.getPitch() != nil {
+                    API.shared().loadJobProfileWithId(id: self.jobSeeker.profile, success: { (data) in
+                        self.profile = data as! Profile
+                        API.shared().searchJobsWithExclusions(exclusions: [],
+                                                              success: self.refreshCompleted,
+                                                              failure: self.handleErrors)
+                    }, failure: self.handleErrors)
+                } else {
+                    self.noRecordView.isHidden = false
+                    self.hideLoading()
+                }
             }, failure: self.handleErrors)
             
         } else {
@@ -205,6 +213,10 @@ class SwipeController: MJPController {
     
     @IBAction func refreshAction(_ sender: Any) {
         refresh()
+    }
+    
+    @IBAction func goRecordNow(_ sender: Any) {
+        SideMenuController.pushController(id: "add_record")
     }
     
     static func pushController(job: Job!) {

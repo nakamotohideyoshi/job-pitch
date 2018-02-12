@@ -214,3 +214,20 @@ export function str2int(str) {
   const val = parseInt(str, 10);
   return isNaN(val) ? undefined : val;
 }
+
+export function getPitch(jobseeker) {
+  return null;
+  if (!jobseeker) return null;
+
+  const { pitches } = jobseeker;
+  if (!pitches || !pitches.length) return null;
+
+  for (let i = 0; i < pitches.length; i++) {
+    const pitch = pitches[i];
+    if (pitch.video) {
+      return pitch;
+    }
+  }
+
+  return null;
+}

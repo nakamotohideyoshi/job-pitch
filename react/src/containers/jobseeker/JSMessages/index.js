@@ -4,8 +4,11 @@ import { connect } from 'react-redux';
 import { Board, Loading, SearchBar, Logo, MessageThread, FlexBox, JobDetail } from 'components';
 
 import * as helper from 'utils/helper';
+import { loadProfile } from 'redux/jobseeker/profile';
 import { getMsgApplications, selectApplication, sendMessage } from 'redux/applications';
 import Wrapper from './Wrapper';
+
+import NoPitch from '../NoPitch';
 
 class JSMessages extends Component {
   state = {
@@ -13,6 +16,7 @@ class JSMessages extends Component {
   };
 
   componentWillMount() {
+    this.props.loadProfile();
     this.appId = helper.str2int(this.props.match.params.appId);
     this.props.getMsgApplications(this.appId);
   }
@@ -124,8 +128,16 @@ class JSMessages extends Component {
   };
 
   render() {
-    const { applications, selectedApp } = this.props;
+    const { applications, selectedApp, jobseeker } = this.props;
     const open = this.state.open ? 'open' : '';
+
+    console.log(jobseeker)
+
+    if (jobseeker) {
+      if (!helper.getPitch(jobseeker)) {
+        return <NoPitch />;
+      }
+    }
 
     return (
       <Wrapper>
@@ -165,10 +177,12 @@ class JSMessages extends Component {
 
 export default connect(
   state => ({
+    jobseeker: state.js_profile.jobseeker,
     applications: state.applications.applications,
     selectedApp: state.applications.selectedApp
   }),
   {
+    loadProfile,
     getMsgApplications,
     selectApplication,
     sendMessage

@@ -13,6 +13,7 @@ import MGSwipeTableCell
 class ApplicationListController: SearchController {
     
     @IBOutlet weak var emptyView: UILabel!
+    @IBOutlet weak var noPitchView: UIView!
     
     var isRecruiter = false
     var isApplication = false
@@ -66,7 +67,21 @@ class ApplicationListController: SearchController {
         if ApplicationListController.refreshRequest {
             ApplicationListController.refreshRequest = false
             showLoading()
-            loadData()
+            
+            if !isRecruiter {
+                API.shared().loadJobSeekerWithId(id: AppData.user.jobSeeker, success: { (data) in
+                    let jobSeeker = data as! JobSeeker
+                    if jobSeeker.getPitch() != nil {
+                        self.loadData()
+                    } else {
+                        self.noPitchView.isHidden = false
+                        self.navigationItem.rightBarButtonItem = nil
+                        self.hideLoading()
+                    }
+                }, failure: self.handleErrors)
+            } else {
+                loadData()
+            }
         }
     }
     
@@ -105,6 +120,11 @@ class ApplicationListController: SearchController {
                 application.job.locationData.placeName.lowercased().contains(text)
         
     }
+    
+    @IBAction func goRecordNow(_ sender: Any) {
+        SideMenuController.pushController(id: "add_record")
+    }
+    
     
     static func pushController(job: Job!, mode: String!) {
         let controller = AppHelper.mainStoryboard.instantiateViewController(withIdentifier: "ApplicationList") as! ApplicationListController

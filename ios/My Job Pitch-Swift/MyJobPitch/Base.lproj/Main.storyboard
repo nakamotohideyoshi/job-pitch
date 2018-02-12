@@ -110,12 +110,74 @@ sdafsdf</string>
                                 <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="1Ud-oh-iSo">
+                                <rect key="frame" x="0.0" y="64" width="414" height="672"/>
+                                <subviews>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="jm8-4i-na1">
+                                        <rect key="frame" x="0.0" y="201.66666666666666" width="414" height="269.66666666666674"/>
+                                        <subviews>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Your pitch video is missing!" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FGg-hV-6GX">
+                                                <rect key="frame" x="41.333333333333343" y="10" width="331.33333333333337" height="24"/>
+                                                <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="20"/>
+                                                <nil key="textColor"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="L7E-Hg-VpA" customClass="YellowButton" customModule="MyJobPitch" customModuleProvider="target">
+                                                <rect key="frame" x="103.66666666666669" y="219.66666666666663" width="207" height="40.000000000000057"/>
+                                                <color key="backgroundColor" red="1" green="0.57254901960000004" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="height" constant="40" id="NyV-nU-sDZ"/>
+                                                </constraints>
+                                                <inset key="imageEdgeInsets" minX="-150" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                                <state key="normal" title="Record now!">
+                                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                </state>
+                                                <connections>
+                                                    <action selector="noRecordNow:" destination="fXk-1p-fNQ" eventType="touchUpInside" id="vKW-5z-ffp"/>
+                                                </connections>
+                                            </button>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xpv-wE-14w">
+                                                <rect key="frame" x="41.333333333333343" y="49" width="331.33333333333337" height="150.66666666666663"/>
+                                                <string key="text">Recruiters are looking for someone with your exact profile.
+You are the perfect candidate, let your personality shine and land you the job thet you really want!
+
+All you're missing is your video pitch!</string>
+                                                <fontDescription key="fontDescription" type="system" pointSize="18"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                        </subviews>
+                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        <constraints>
+                                            <constraint firstItem="xpv-wE-14w" firstAttribute="centerX" secondItem="jm8-4i-na1" secondAttribute="centerX" id="9pa-3c-Pge"/>
+                                            <constraint firstItem="xpv-wE-14w" firstAttribute="top" secondItem="FGg-hV-6GX" secondAttribute="bottom" constant="15" id="EC1-7K-xGa"/>
+                                            <constraint firstItem="FGg-hV-6GX" firstAttribute="width" secondItem="jm8-4i-na1" secondAttribute="width" multiplier="0.8" id="JGQ-9i-l2D"/>
+                                            <constraint firstItem="L7E-Hg-VpA" firstAttribute="centerX" secondItem="jm8-4i-na1" secondAttribute="centerX" id="KTw-NJ-r1Q"/>
+                                            <constraint firstItem="xpv-wE-14w" firstAttribute="width" secondItem="jm8-4i-na1" secondAttribute="width" multiplier="0.8" id="N72-MX-xPw"/>
+                                            <constraint firstItem="FGg-hV-6GX" firstAttribute="centerX" secondItem="jm8-4i-na1" secondAttribute="centerX" id="OVE-DN-Dgy"/>
+                                            <constraint firstItem="L7E-Hg-VpA" firstAttribute="top" secondItem="xpv-wE-14w" secondAttribute="bottom" constant="20" id="Vxp-eN-2X3"/>
+                                            <constraint firstAttribute="bottom" secondItem="L7E-Hg-VpA" secondAttribute="bottom" constant="10" id="dfG-li-z60"/>
+                                            <constraint firstItem="L7E-Hg-VpA" firstAttribute="width" secondItem="jm8-4i-na1" secondAttribute="width" multiplier="0.5" id="pKw-3w-UqN"/>
+                                            <constraint firstItem="FGg-hV-6GX" firstAttribute="top" secondItem="jm8-4i-na1" secondAttribute="top" constant="10" id="yE0-L7-kg0"/>
+                                        </constraints>
+                                    </view>
+                                </subviews>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstItem="jm8-4i-na1" firstAttribute="leading" secondItem="1Ud-oh-iSo" secondAttribute="leading" id="IuX-fD-rG1"/>
+                                    <constraint firstItem="jm8-4i-na1" firstAttribute="centerY" secondItem="1Ud-oh-iSo" secondAttribute="centerY" id="xPC-LT-3s9"/>
+                                    <constraint firstAttribute="trailing" secondItem="jm8-4i-na1" secondAttribute="trailing" id="ydO-Ng-bpr"/>
+                                </constraints>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
+                            <constraint firstItem="dwK-gi-WTZ" firstAttribute="top" secondItem="1Ud-oh-iSo" secondAttribute="bottom" id="4Zc-BB-PxH"/>
                             <constraint firstItem="OW2-wO-B54" firstAttribute="leading" secondItem="wBZ-83-Uco" secondAttribute="leadingMargin" constant="15" id="DVs-Z1-kpd"/>
+                            <constraint firstItem="1Ud-oh-iSo" firstAttribute="leading" secondItem="wBZ-83-Uco" secondAttribute="leading" id="Ihh-a5-Y7Z"/>
+                            <constraint firstItem="1Ud-oh-iSo" firstAttribute="top" secondItem="0rA-0R-uH5" secondAttribute="bottom" id="Rsd-Ix-b9T"/>
                             <constraint firstItem="WYp-fM-9Ji" firstAttribute="top" secondItem="0rA-0R-uH5" secondAttribute="bottom" id="aW8-iQ-lRK"/>
                             <constraint firstAttribute="trailing" secondItem="WYp-fM-9Ji" secondAttribute="trailing" id="fH4-Cd-Lqk"/>
+                            <constraint firstAttribute="trailing" secondItem="1Ud-oh-iSo" secondAttribute="trailing" id="ilg-qU-d2e"/>
                             <constraint firstItem="WYp-fM-9Ji" firstAttribute="leading" secondItem="wBZ-83-Uco" secondAttribute="leading" id="l4Z-dC-aes"/>
                             <constraint firstItem="OW2-wO-B54" firstAttribute="centerX" secondItem="WYp-fM-9Ji" secondAttribute="centerX" id="nC1-mS-iTK"/>
                             <constraint firstItem="dwK-gi-WTZ" firstAttribute="top" secondItem="WYp-fM-9Ji" secondAttribute="bottom" id="vgC-To-tht"/>
@@ -127,12 +189,13 @@ sdafsdf</string>
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
                     <connections>
                         <outlet property="emptyView" destination="OW2-wO-B54" id="dx1-oK-gJC"/>
+                        <outlet property="noPitchView" destination="1Ud-oh-iSo" id="XCe-Gb-5Kt"/>
                         <outlet property="tableView" destination="WYp-fM-9Ji" id="8TC-Aj-xJx"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dUn-bh-Bxh" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-5935.1999999999998" y="-1322.7886056971515"/>
+            <point key="canvasLocation" x="-5936.2318840579719" y="-1323.913043478261"/>
         </scene>
         <!--Swipe Controller-->
         <scene sceneID="Sfe-Ad-csf">
@@ -166,18 +229,80 @@ sdafsdf</string>
                                 <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="BXg-zT-5TX">
+                                <rect key="frame" x="0.0" y="64" width="414" height="672"/>
+                                <subviews>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="zLc-SZ-yfL">
+                                        <rect key="frame" x="0.0" y="201.66666666666666" width="414" height="269.66666666666674"/>
+                                        <subviews>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Your pitch video is missing!" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="XdY-mK-18B">
+                                                <rect key="frame" x="41.333333333333343" y="10" width="331.33333333333337" height="24"/>
+                                                <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="20"/>
+                                                <nil key="textColor"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="wHd-Wg-kjw" customClass="YellowButton" customModule="MyJobPitch" customModuleProvider="target">
+                                                <rect key="frame" x="103.66666666666669" y="219.66666666666663" width="207" height="40.000000000000057"/>
+                                                <color key="backgroundColor" red="1" green="0.57254901960000004" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="height" constant="40" id="aI8-uC-JSg"/>
+                                                </constraints>
+                                                <inset key="imageEdgeInsets" minX="-150" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                                <state key="normal" title="Record now!">
+                                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                </state>
+                                                <connections>
+                                                    <action selector="goRecordNow:" destination="5Me-uP-MvY" eventType="touchUpInside" id="JXP-nD-5y1"/>
+                                                </connections>
+                                            </button>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aer-1Y-vki">
+                                                <rect key="frame" x="41.333333333333343" y="49" width="331.33333333333337" height="150.66666666666663"/>
+                                                <string key="text">Recruiters are looking for someone with your exact profile.
+You are the perfect candidate, let your personality shine and land you the job thet you really want!
+
+All you're missing is your video pitch!</string>
+                                                <fontDescription key="fontDescription" type="system" pointSize="18"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                        </subviews>
+                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        <constraints>
+                                            <constraint firstItem="XdY-mK-18B" firstAttribute="centerX" secondItem="zLc-SZ-yfL" secondAttribute="centerX" id="43M-oo-zSu"/>
+                                            <constraint firstItem="wHd-Wg-kjw" firstAttribute="centerX" secondItem="zLc-SZ-yfL" secondAttribute="centerX" id="4AR-dL-nBC"/>
+                                            <constraint firstItem="XdY-mK-18B" firstAttribute="width" secondItem="zLc-SZ-yfL" secondAttribute="width" multiplier="0.8" id="6dM-uR-whT"/>
+                                            <constraint firstItem="aer-1Y-vki" firstAttribute="top" secondItem="XdY-mK-18B" secondAttribute="bottom" constant="15" id="9k2-dy-FcN"/>
+                                            <constraint firstAttribute="bottom" secondItem="wHd-Wg-kjw" secondAttribute="bottom" constant="10" id="M14-iU-oWx"/>
+                                            <constraint firstItem="wHd-Wg-kjw" firstAttribute="width" secondItem="zLc-SZ-yfL" secondAttribute="width" multiplier="0.5" id="dDa-aQ-G32"/>
+                                            <constraint firstItem="wHd-Wg-kjw" firstAttribute="top" secondItem="aer-1Y-vki" secondAttribute="bottom" constant="20" id="dzF-ff-Ul9"/>
+                                            <constraint firstItem="XdY-mK-18B" firstAttribute="top" secondItem="zLc-SZ-yfL" secondAttribute="top" constant="10" id="mK8-1j-ROo"/>
+                                            <constraint firstItem="aer-1Y-vki" firstAttribute="centerX" secondItem="zLc-SZ-yfL" secondAttribute="centerX" id="wyC-g0-gZq"/>
+                                            <constraint firstItem="aer-1Y-vki" firstAttribute="width" secondItem="zLc-SZ-yfL" secondAttribute="width" multiplier="0.8" id="yaB-jh-gtS"/>
+                                        </constraints>
+                                    </view>
+                                </subviews>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstItem="zLc-SZ-yfL" firstAttribute="leading" secondItem="BXg-zT-5TX" secondAttribute="leading" id="4p2-bL-20j"/>
+                                    <constraint firstItem="zLc-SZ-yfL" firstAttribute="centerY" secondItem="BXg-zT-5TX" secondAttribute="centerY" id="EAy-ML-umn"/>
+                                    <constraint firstAttribute="trailing" secondItem="zLc-SZ-yfL" secondAttribute="trailing" id="rN3-oY-PaP"/>
+                                </constraints>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstAttribute="trailingMargin" secondItem="oN5-3h-dvf" secondAttribute="trailing" constant="15" id="8zI-bb-cKu"/>
+                            <constraint firstItem="BXg-zT-5TX" firstAttribute="leading" secondItem="k7z-YD-hbw" secondAttribute="leading" id="905-ix-nEQ"/>
                             <constraint firstItem="oN5-3h-dvf" firstAttribute="leading" secondItem="k7z-YD-hbw" secondAttribute="leadingMargin" constant="15" id="F7E-Cc-T4Y"/>
+                            <constraint firstAttribute="trailing" secondItem="BXg-zT-5TX" secondAttribute="trailing" id="GF3-0I-Z69"/>
                             <constraint firstItem="tuj-oZ-NWZ" firstAttribute="top" secondItem="XQS-aA-5j0" secondAttribute="bottom" id="GpZ-b0-Gff"/>
+                            <constraint firstItem="tuj-oZ-NWZ" firstAttribute="top" secondItem="BXg-zT-5TX" secondAttribute="bottom" id="J7D-Fq-GSo"/>
                             <constraint firstItem="XQS-aA-5j0" firstAttribute="top" secondItem="E23-SR-OY4" secondAttribute="bottom" id="NHb-8H-U5i"/>
                             <constraint firstAttribute="trailing" secondItem="E23-SR-OY4" secondAttribute="trailing" id="Qrv-Rw-dFU"/>
                             <constraint firstAttribute="trailing" secondItem="XQS-aA-5j0" secondAttribute="trailing" constant="8" id="VUh-Rq-dEb"/>
                             <constraint firstItem="oN5-3h-dvf" firstAttribute="centerY" secondItem="k7z-YD-hbw" secondAttribute="centerY" id="hV8-VA-hz8"/>
                             <constraint firstItem="oN5-3h-dvf" firstAttribute="centerX" secondItem="k7z-YD-hbw" secondAttribute="centerX" id="jEO-PF-1W0"/>
                             <constraint firstItem="E23-SR-OY4" firstAttribute="top" secondItem="1n2-yg-3ID" secondAttribute="bottom" id="jap-GE-qQM"/>
+                            <constraint firstItem="BXg-zT-5TX" firstAttribute="top" secondItem="1n2-yg-3ID" secondAttribute="bottom" id="nQC-s9-weX"/>
                             <constraint firstItem="E23-SR-OY4" firstAttribute="leading" secondItem="k7z-YD-hbw" secondAttribute="leading" id="qOo-2o-7vc"/>
                             <constraint firstItem="tuj-oZ-NWZ" firstAttribute="top" secondItem="E23-SR-OY4" secondAttribute="bottom" priority="250" constant="10" id="tA3-BR-9T9"/>
                         </constraints>
@@ -194,11 +319,12 @@ sdafsdf</string>
                         <outlet property="cardsView" destination="E23-SR-OY4" id="MPd-9m-IKU"/>
                         <outlet property="creditsButton" destination="XQS-aA-5j0" id="hwn-2U-29M"/>
                         <outlet property="emptyView" destination="oN5-3h-dvf" id="uJ5-6b-rKz"/>
+                        <outlet property="noRecordView" destination="BXg-zT-5TX" id="wiQ-CL-sGY"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="m8i-6Y-1s0" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-10068" y="-469.1154422788606"/>
+            <point key="canvasLocation" x="-10068.115942028986" y="-469.56521739130437"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="joV-0S-ahh">
@@ -1238,19 +1364,81 @@ et dolore magna aliqua.</string>
                                 </connections>
                             </tableView>
                             <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="No candidates have applied for this job yet. Once that happens, their applications will appear here." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="faJ-FA-sbE">
-                                <rect key="frame" x="35" y="364.33333333333326" width="344" height="71.666666666666686"/>
+                                <rect key="frame" x="35" y="364" width="344" height="71.666666666666686"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="20"/>
                                 <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="e6X-vo-5lH">
+                                <rect key="frame" x="0.0" y="64" width="414" height="672"/>
+                                <subviews>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="NLY-zH-Y8U">
+                                        <rect key="frame" x="0.0" y="201.66666666666666" width="414" height="269.66666666666674"/>
+                                        <subviews>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Your pitch video is missing!" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xMK-4P-2Gq">
+                                                <rect key="frame" x="41.333333333333343" y="10" width="331.33333333333337" height="24"/>
+                                                <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="20"/>
+                                                <nil key="textColor"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mf6-EU-Sxt" customClass="YellowButton" customModule="MyJobPitch" customModuleProvider="target">
+                                                <rect key="frame" x="103.66666666666669" y="219.66666666666663" width="207" height="40.000000000000057"/>
+                                                <color key="backgroundColor" red="1" green="0.57254901960000004" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="height" constant="40" id="4tb-uX-cga"/>
+                                                </constraints>
+                                                <inset key="imageEdgeInsets" minX="-150" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                                <state key="normal" title="Record now!">
+                                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                </state>
+                                                <connections>
+                                                    <action selector="goRecordNow:" destination="BIn-WW-p4s" eventType="touchUpInside" id="fNG-h0-7Gg"/>
+                                                </connections>
+                                            </button>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Gct-Rb-ZfZ">
+                                                <rect key="frame" x="41.333333333333343" y="49" width="331.33333333333337" height="150.66666666666663"/>
+                                                <string key="text">Recruiters are looking for someone with your exact profile.
+You are the perfect candidate, let your personality shine and land you the job thet you really want!
+
+All you're missing is your video pitch!</string>
+                                                <fontDescription key="fontDescription" type="system" pointSize="18"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                        </subviews>
+                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        <constraints>
+                                            <constraint firstItem="mf6-EU-Sxt" firstAttribute="centerX" secondItem="NLY-zH-Y8U" secondAttribute="centerX" id="2SM-Zw-QlF"/>
+                                            <constraint firstItem="mf6-EU-Sxt" firstAttribute="width" secondItem="NLY-zH-Y8U" secondAttribute="width" multiplier="0.5" id="3ns-m3-Lmb"/>
+                                            <constraint firstAttribute="bottom" secondItem="mf6-EU-Sxt" secondAttribute="bottom" constant="10" id="A4K-GC-BNs"/>
+                                            <constraint firstItem="mf6-EU-Sxt" firstAttribute="top" secondItem="Gct-Rb-ZfZ" secondAttribute="bottom" constant="20" id="I4z-yU-ofo"/>
+                                            <constraint firstItem="xMK-4P-2Gq" firstAttribute="width" secondItem="NLY-zH-Y8U" secondAttribute="width" multiplier="0.8" id="Nk9-9S-ebp"/>
+                                            <constraint firstItem="xMK-4P-2Gq" firstAttribute="top" secondItem="NLY-zH-Y8U" secondAttribute="top" constant="10" id="dh5-CE-BcP"/>
+                                            <constraint firstItem="Gct-Rb-ZfZ" firstAttribute="centerX" secondItem="NLY-zH-Y8U" secondAttribute="centerX" id="hMe-Up-f9Z"/>
+                                            <constraint firstItem="xMK-4P-2Gq" firstAttribute="centerX" secondItem="NLY-zH-Y8U" secondAttribute="centerX" id="qJc-3P-wk7"/>
+                                            <constraint firstItem="Gct-Rb-ZfZ" firstAttribute="top" secondItem="xMK-4P-2Gq" secondAttribute="bottom" constant="15" id="sJR-jJ-cuE"/>
+                                            <constraint firstItem="Gct-Rb-ZfZ" firstAttribute="width" secondItem="NLY-zH-Y8U" secondAttribute="width" multiplier="0.8" id="vMm-xa-bB0"/>
+                                        </constraints>
+                                    </view>
+                                </subviews>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstItem="NLY-zH-Y8U" firstAttribute="leading" secondItem="e6X-vo-5lH" secondAttribute="leading" id="IgQ-sc-MRh"/>
+                                    <constraint firstAttribute="trailing" secondItem="NLY-zH-Y8U" secondAttribute="trailing" id="bpE-MI-xN0"/>
+                                    <constraint firstItem="NLY-zH-Y8U" firstAttribute="centerY" secondItem="e6X-vo-5lH" secondAttribute="centerY" id="quv-IB-n2P"/>
+                                </constraints>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="Vzu-ea-OLT" firstAttribute="top" secondItem="ycZ-AQ-6at" secondAttribute="bottom" id="1nR-XP-kfU"/>
+                            <constraint firstAttribute="trailing" secondItem="e6X-vo-5lH" secondAttribute="trailing" id="2zY-gY-KBf"/>
+                            <constraint firstItem="Vzu-ea-OLT" firstAttribute="top" secondItem="e6X-vo-5lH" secondAttribute="bottom" id="4z5-tA-Crr"/>
                             <constraint firstItem="faJ-FA-sbE" firstAttribute="leading" secondItem="8qO-fU-yaH" secondAttribute="leadingMargin" constant="15" id="7CS-5h-sch"/>
+                            <constraint firstItem="e6X-vo-5lH" firstAttribute="leading" secondItem="8qO-fU-yaH" secondAttribute="leading" id="8Ld-3i-T4g"/>
                             <constraint firstItem="ycZ-AQ-6at" firstAttribute="leading" secondItem="8qO-fU-yaH" secondAttribute="leading" id="9hi-VS-oce"/>
                             <constraint firstItem="faJ-FA-sbE" firstAttribute="centerX" secondItem="ycZ-AQ-6at" secondAttribute="centerX" id="IhF-nb-Mz0"/>
                             <constraint firstAttribute="trailingMargin" secondItem="faJ-FA-sbE" secondAttribute="trailing" constant="15" id="Nfk-oC-XQ0"/>
+                            <constraint firstItem="e6X-vo-5lH" firstAttribute="top" secondItem="XNb-i1-pym" secondAttribute="bottom" id="YlC-2o-Nks"/>
                             <constraint firstAttribute="trailing" secondItem="ycZ-AQ-6at" secondAttribute="trailing" id="cV0-rc-3tQ"/>
                             <constraint firstItem="faJ-FA-sbE" firstAttribute="centerY" secondItem="ycZ-AQ-6at" secondAttribute="centerY" id="nJq-ik-W9u"/>
                             <constraint firstItem="ycZ-AQ-6at" firstAttribute="top" secondItem="XNb-i1-pym" secondAttribute="bottom" id="udr-ND-Gzr"/>
@@ -1260,13 +1448,14 @@ et dolore magna aliqua.</string>
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
                     <connections>
                         <outlet property="emptyView" destination="faJ-FA-sbE" id="XKi-mK-uC7"/>
+                        <outlet property="noPitchView" destination="e6X-vo-5lH" id="fdd-py-TW0"/>
                         <outlet property="scrollView" destination="ycZ-AQ-6at" id="GTJ-Mt-Hu3"/>
                         <outlet property="tableView" destination="ycZ-AQ-6at" id="LcJ-JM-76u"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="jpj-qc-cGr" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-6615" y="-1322"/>
+            <point key="canvasLocation" x="-6615.9420289855079" y="-1322.2826086956522"/>
         </scene>
         <!--Workplace Detail-->
         <scene sceneID="LWo-PO-Ggf">

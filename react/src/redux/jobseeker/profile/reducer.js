@@ -4,6 +4,11 @@ import * as C from './constants';
 export default function reducer(state = {}, action = {}) {
   switch (action.type) {
     // load profile
+    case C.JS_PROFILE_LOAD:
+      return {
+        ...state,
+        jobseeker: null
+      };
     case C.JS_PROFILE_LOAD_SUCESS:
       return {
         ...state,
@@ -35,9 +40,6 @@ export default function reducer(state = {}, action = {}) {
         saving: false,
         errors: action.errors
       };
-
-    case LOCATION_CHANGE:
-      return {};
 
     default:
       return state;

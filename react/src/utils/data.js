@@ -1,7 +1,6 @@
-const HOME = { to: '/' };
-const ABOUT = { to: '/resources/about', label: 'About' };
-const HELP = { to: '/resources/help', label: 'Help' };
-const TERMS = { to: '/resources/terms', label: 'Terms & Conditions' };
+const ABOUT = { href: 'https://www.myjobpitch.com/about/', label: 'About' };
+const HELP = { href: 'https://www.myjobpitch.com/what-is-my-job-pitch/', label: 'Help' };
+const TERMS = { href: 'https://www.myjobpitch.com/about/terms/', label: 'Terms & Conditions' };
 const SIGNIN = { to: '/auth', label: 'Sign in' };
 
 const SELECT = { to: '/select' };
@@ -48,19 +47,18 @@ const JS_APPLICATIONS = {
 const JS_MSGS = { label: 'Messages', to: '/jobseeker/messages/', permission: 2 };
 
 const HOME_MENU = {
-  home: [HOME],
   left: [ABOUT, HELP, TERMS],
   right: [SIGNIN]
 };
 
 const SELECT_MENU = {
-  home: [SELECT],
+  redirect: [SELECT],
   left: [],
   right: [{ label: 'email', items: [PASSWORD, {}, SIGNOUT] }]
 };
 
 const RECRUITER_MENU = {
-  home: [RC_JOBS, RC_FIND],
+  redirect: [RC_JOBS, RC_FIND],
   left: [RC_FIND, RC_JOBS, RC_MSGS],
   right: [
     {
@@ -71,7 +69,7 @@ const RECRUITER_MENU = {
 };
 
 const JOBSEEKER_MENU = {
-  home: [JS_PROFILE, JS_JOBPROFILE, JS_FIND],
+  redirect: [JS_PROFILE, JS_JOBPROFILE, JS_FIND],
   left: [JS_FIND, JS_APPLICATIONS, JS_MSGS],
   right: [
     {

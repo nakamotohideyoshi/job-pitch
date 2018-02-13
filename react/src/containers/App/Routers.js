@@ -21,15 +21,9 @@ import PitchRecord from 'containers/jobseeker/PitchRecord';
 import JobProfile from 'containers/jobseeker/JobProfile';
 import JSMessages from 'containers/jobseeker/JSMessages';
 
-import About from 'containers/resources/About';
-import Help from 'containers/resources/Help';
-import Terms from 'containers/resources/Terms';
-import Privacy from 'containers/resources/Privacy';
-import ContactUs from 'containers/resources/ContactUs';
-
 export default () => (
   <Switch>
-    <Route exact path="/" component={Home} />
+    <Route exact path="/" component={Login} />
     <Route exact path="/auth" component={Login} />
     <Route exact path="/auth/register" component={Register} />
     <Route exact path="/auth/register/:type" component={Register} />
@@ -52,12 +46,6 @@ export default () => (
     <Route exact path="/jobseeker/jobprofile" component={JobProfile} />
     <Route exact path="/jobseeker/messages" component={JSMessages} />
     <Route exact path="/jobseeker/messages/:appId" component={JSMessages} />
-
-    <Route exact path="/resources/about" component={About} />
-    <Route exact path="/resources/help" component={Help} />
-    <Route exact path="/resources/terms" component={Terms} />
-    <Route exact path="/resources/privacy" component={Privacy} />
-    <Route exact path="/resources/contactus" component={ContactUs} />
 
     <Route component={NotFound} />
   </Switch>

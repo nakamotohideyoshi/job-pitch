@@ -1,11 +1,10 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router-dom';
+import { withRouter, Link } from 'react-router-dom';
 import {
   Collapse,
   Navbar,
   NavbarToggler,
-  NavbarBrand,
   Nav,
   NavItem,
   NavLink,
@@ -111,22 +110,22 @@ class Header extends React.Component {
 
     return (
       <NavItem key={info.label} active={this.checkActive(info)}>
-        <NavLink onClick={() => this.handleClickMenuItem(info.to)}>{info.label}</NavLink>
+        {info.to && <Link to={info.to}>{info.label}</Link>}
+        {info.href && <NavLink href={info.href}>{info.label}</NavLink>}
       </NavItem>
     );
   };
 
   render() {
-    const { home, left, right } = MENU_DATA[this.props.loginState];
-    const homePath = home[this.props.permission || 0].to;
+    const { left, right } = MENU_DATA[this.props.loginState];
 
     return (
       <Wrapper>
         <Navbar dark expand="md" fixed="top">
           <Container>
-            <NavbarBrand tag="a" onClick={() => this.handleClickMenuItem(homePath)}>
+            <NavLink href="https://www.myjobpitch.com/">
               <img src={titleImage} alt="" />
-            </NavbarBrand>
+            </NavLink>
 
             <NavbarToggler onClick={this.handleToggle} />
 

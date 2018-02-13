@@ -62,7 +62,7 @@ function* _saveJobProfile({ model }) {
     } else {
       SDATA.user.profile = profile.id;
       yield put({ type: AUTH.UPDATE_INFO, permission: 2 });
-      yield put(push(MENU_DATA.jobseeker.home[2].to));
+      yield put(push('/jobseeker/find'));
     }
 
     FormComponent.modified = false;

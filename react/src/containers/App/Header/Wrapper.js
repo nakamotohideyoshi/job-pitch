@@ -32,11 +32,12 @@ export default styled.header`
       }
     }
 
-    .active > .nav-item > a {
+    .active.nav-item > a {
       background-color: #272727;
+      color: #fff;
     }
 
-    .dropdown.show .nav-item > a {
+    .dropdown.show.nav-item > a {
       background-color: transparent;
     }
 
@@ -61,6 +62,7 @@ export default styled.header`
 
           &.active {
             background-color: #272727;
+            color: #fff;
           }
         }
 

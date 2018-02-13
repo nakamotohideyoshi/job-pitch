@@ -216,7 +216,6 @@ export function str2int(str) {
 }
 
 export function getPitch(jobseeker) {
-  return null;
   if (!jobseeker) return null;
 
   const { pitches } = jobseeker;

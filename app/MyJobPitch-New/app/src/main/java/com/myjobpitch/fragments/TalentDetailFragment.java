@@ -259,7 +259,7 @@ public class TalentDetailFragment extends BaseFragment {
         } else {
             String message = application == null ? "Are you sure you want to connect this talent?" : "Are you sure you want to connect this application?";
             Popup popup = new Popup(getContext(), message, true);
-            popup.addYellowButton("Connect", new View.OnClickListener() {
+            popup.addYellowButton("Connect (1 credit)", new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     new APITask(new APIAction() {

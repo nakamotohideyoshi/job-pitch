@@ -201,7 +201,7 @@ class JobSeekerDetailController: MJPController {
             MessageController0.showModal(application: application)
         } else {
             let message = application == nil ? "Are you sure you want to connect this talent?" : "Are you sure you want to connect this application?"
-            PopupController.showGreen(message, ok: "Connect", okCallback: {
+            PopupController.showGreen(message, ok: "Connect (1 credit)", okCallback: {
                 self.showLoading()
                 self.chooseDelegate?.apply(callback: {
                     _ = self.navigationController?.popViewController(animated: true)

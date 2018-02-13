@@ -86,7 +86,7 @@ public class RecruiterApplicationsFragment extends ApplicationsFragment {
     protected void applyItem(final Application application) {
         if (listKind == APPLICATIONS) {
             Popup popup = new Popup(getContext(), "Are you sure you want to connect this applicaton?", true);
-            popup.addYellowButton("Connect", new View.OnClickListener() {
+            popup.addYellowButton("Connect (1 credit)", new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     showLoading();

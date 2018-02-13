@@ -131,8 +131,6 @@ class JSMessages extends Component {
     const { applications, selectedApp, jobseeker } = this.props;
     const open = this.state.open ? 'open' : '';
 
-    console.log(jobseeker)
-
     if (jobseeker) {
       if (!helper.getPitch(jobseeker)) {
         return <NoPitch />;

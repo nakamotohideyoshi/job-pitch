@@ -5,31 +5,38 @@ import { Container } from 'reactstrap';
 
 import { confirm } from 'redux/common';
 import { VERSION } from 'const';
-import * as helper from 'utils/helper';
 import logoImage from 'assets/logo.png';
 import Wrapper from './Wrapper';
 
 const SocialLink = ({ url, icon }) => (
   <a href={url} target="_blank" rel="noopener noreferrer">
-    <i className={`fa ${icon} fa-lg`} />
+    {icon && <i className={`fa ${icon} fa-lg`} />}
+  </a>
+);
+
+const Link = ({ url, label }) => (
+  <a href={url} rel="noopener noreferrer">
+    {label}
   </a>
 );
 
 class Footer extends React.Component {
-  handleClickMenu = to => {
-    helper.routePush(to, this.props);
-  };
-
   render() {
+    const { loginState } = this.props;
+
     return (
       <Wrapper>
         <Container>
           <div className="menu">
-            <a onClick={() => this.handleClickMenu('/resources/about')}>About</a>
-            <a onClick={() => this.handleClickMenu('/resources/help')}>How it works</a>
-            <a onClick={() => this.handleClickMenu('/resources/terms')}>Terms & Conditions</a>
-            <a onClick={() => this.handleClickMenu('/resources/privacy')}>Privacy Policy</a>
-            <a onClick={() => this.handleClickMenu('/resources/contactus')}>Contact Us</a>
+            <Link url="https://www.myjobpitch.com/about/" label="About" />
+            {loginState === 'none' && (
+              <Link url="https://www.myjobpitch.com/what-is-my-job-pitch/" label="How it works" />
+            )}
+            {loginState === 'recruiter' && <Link url="https://www.myjobpitch.com/recruiters/" label="How it works" />}
+            {loginState === 'jobseeker' && <Link url="https://www.myjobpitch.com/jobseeker/" label="How it works" />}
+            <Link url="https://www.myjobpitch.com/about/terms/" label="Terms & Conditions" />
+            <Link url="https://www.myjobpitch.com/about/privacy-policy/" label="Privacy Policy" />
+            <Link url="https://www.myjobpitch.com/contact/" label="Contact Us" />
           </div>
 
           <div className="follow">
@@ -49,4 +56,11 @@ class Footer extends React.Component {
   }
 }
 
-export default withRouter(connect(() => ({}), { confirm })(Footer));
+export default withRouter(
+  connect(
+    state => ({
+      loginState: state.auth.loginState
+    }),
+    {}
+  )(Footer)
+);

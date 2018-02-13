@@ -18,24 +18,25 @@ export default styled.header`
       outline: none !important;
     }
 
-    .nav-link {
+    .nav-item > a {
       display: flex;
       align-items: center;
       height: 50px;
       padding: 0 15px;
       color: #999999;
       cursor: pointer;
+      text-decoration: none;
 
       &:hover {
         color: #fff;
       }
     }
 
-    .active > .nav-link {
+    .active > .nav-item > a {
       background-color: #272727;
     }
 
-    .dropdown.show .nav-link {
+    .dropdown.show .nav-item > a {
       background-color: transparent;
     }
 
@@ -74,7 +75,7 @@ export default styled.header`
       .navbar-collapse {
         margin: 0 -15px;
 
-        .nav-link {
+        .nav-item > a {
           height: 40px;
         }
 

@@ -88,7 +88,7 @@ function* _saveProfile({ model, pitchData, onUploadProgress }) {
   if (!model.id) {
     SDATA.user.job_seeker = jobseeker.id;
     yield put({ type: AUTH.UPDATE_INFO, permission: 1 });
-    yield put(push(MENU_DATA.jobseeker.home[1].to));
+    yield put(push('/jobseeker/jobprofile'));
   }
 }
 

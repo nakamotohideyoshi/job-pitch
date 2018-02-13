@@ -157,26 +157,16 @@ class FindJob extends Component {
       <Wrapper>
         <Helmet title="Find Me Jobs" />
 
-        {jobs ? (
-          this.renderJobs()
-        ) : !errors ? (
-          <Container>
-            <FlexBox center>
-              <Loading />
-            </FlexBox>
-          </Container>
-        ) : (
-          <Container>
+        <Container>
+          {jobs && (
             <PageHeader>
               <span>Find Me Jobs</span>
               <SearchBar size="sm" onChange={this.filterApp} />
             </PageHeader>
-
-            <FlexBox center>
-              <div className="alert-msg">Server Error!</div>
-            </FlexBox>
-          </Container>
-        )}
+          )}
+          {jobs && this.renderJobs()}
+          {!jobs && <FlexBox center>{!errors ? <Loading /> : <div className="alert-msg">Server Error!</div>}</FlexBox>}
+        </Container>
 
         {selectedJob && (
           <JobDetail

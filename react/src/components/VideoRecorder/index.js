@@ -2,6 +2,7 @@ import React from 'react';
 import { ModalHeader, ModalBody } from 'reactstrap';
 
 import { Alert } from 'components';
+import ReadyLabel from './ReadyLabel';
 import RecLabel from './RecLabel';
 import Wrapper from './Wrapper';
 
@@ -188,14 +189,14 @@ export default class VideoRecorder extends React.Component {
               <track kind="captions" />
             </video>
 
-            {status !== NONE && <RecLabel isRec={status === RECORDING} time={Math.floor(time / 1000)} />}
-
             {stream && (
               <div className="rec-button" onClick={this.onClickButton}>
                 <span style={{ borderRadius: status === NONE ? '50%' : '18%' }} />
               </div>
             )}
 
+            {status === READY && <ReadyLabel time={Math.floor(time / 1000)} />}
+            {status === RECORDING && <RecLabel time={Math.floor(time / 1000)} />}
             {status === RECORDING && (
               <div className="bar">
                 <div />

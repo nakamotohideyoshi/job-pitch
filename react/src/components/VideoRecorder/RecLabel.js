@@ -51,17 +51,12 @@ const RecIcon = styled.span`
 
 class RecLabel extends PureComponent {
   render() {
-    const { isRec, time } = this.props;
-    let label;
-    if (isRec) {
-      label = time < 10 ? `0:0${time}` : `0:${time}`;
-    } else {
-      label = `READY\n${time}`;
-    }
+    const { time } = this.props;
+    const label = time < 10 ? `0:0${time}` : `0:${time}`;
 
     return (
       <Wrapper>
-        {this.props.isRec && <RecIcon />}
+        <RecIcon />
         <label>{label}</label>
       </Wrapper>
     );

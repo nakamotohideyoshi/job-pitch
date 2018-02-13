@@ -138,7 +138,8 @@ function* _loadAuth() {
   const { router } = yield select();
   const { pathname } = router.location;
   const menuData = MENU_DATA[data.loginState];
-  const paths = menuData.left.concat(menuData.right, menuData.redirect);
+  const paths = menuData.left.concat(menuData.right, menuData.redirect || []);
+  console.log(menuData, paths);
   const pathInfo = getPathInfo(paths, pathname);
   if (!pathInfo || (pathInfo.permission || 0) > data.permission) {
     yield put(push(data.redirect));

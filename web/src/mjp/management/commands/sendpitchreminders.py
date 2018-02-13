@@ -24,11 +24,12 @@ class Command(BaseCommand):
             created__lte=pytz.utc.localize(datetime.utcnow()) - timedelta(days=1),
         )
         for job_seeker in job_seekers:
-            print job_seeker.user.email
             if not options['dry_run']:
                 self.send_email(job_seeker)
                 job_seeker.pitch_reminder_sent = pytz.utc.localize(datetime.utcnow())
                 job_seeker.save()
+            else:
+                print job_seeker.user.email
 
     def send_email(self, job_seeker):
         try:

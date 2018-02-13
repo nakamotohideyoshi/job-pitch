@@ -168,7 +168,7 @@ extension ApplicationListController: UITableViewDataSource {
                             self.selectedItem = application
                             
                             if self.isConnectBtn {
-                                PopupController.showYellow("Are you sure you want to connect this application?", ok: "Connect", okCallback: {
+                                PopupController.showYellow("Are you sure you want to connect this application?", ok: "Connect (1 credit)", okCallback: {
                                     self.apply(callback: {
                                         self.showLoading()
                                         cell.hideSwipe(animated: true)

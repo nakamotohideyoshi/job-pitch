@@ -1,0 +1,43 @@
+My Job Pitch
+============
+
+You're Hired? Just complete your profile!
+
+Recruiters are looking for someone with your exact profile. You are the perfect candidate, let your personality shine and land you the job that you really want!
+
+All you're missing is your video pitch!
+
+Record now! - {{ base_url }}/jobseeker/record
+
+So what are you waiting for?
+----------------------------
+
+Recording your pitch is easy, everyone is doing it. Here's what you can talk about:
+
+* Introduce yourself: your name and experience
+  "My name is Sarah and I've worked as a barista for over a year now"
+
+* What gets you excited to go to work?
+  Love creating new cocktail concepts? Passionate about single-blend espressos? Or simply like to make people smile by serving their morning bagel?
+
+* What makes you stand out from the crowd?
+  "I run up Arthur's seat once per week, demonstrating my energy and stamina!"
+
+Need more tips? Check out our quick explainer vid:
+https://vimeo.com/255467281
+
+Need Inspiration?
+=================
+
+Check out some example pitches and record one for yourself:
+
+Hannah Wilson - https://vimeo.com/255467562
+"Hi there, my name is Hannah Wilson. I am 21 years old and I am in my final year at the University of Edinburgh. I have done a little bit of everything with retail & barista experience. I have worked in bars and restaurants all across Europe. I am looking for a fun, fast paced working environment! Feel free to message me on the app and I look forward to hearing from you!"
+
+Oisin - https://vimeo.com/255467715
+"Hi my name is Oisin and I am a student of Dublin City University. I am doing year abroad in Chengdu, China! I am loving it here and have a lot of experience on the creative side of things! I am fascinated by China and have learned a lot being here which makes me a great match for your company! Let me know!"
+
+Record Your Pitch
+=================
+
+Record now! - {{ base_url }}/jobseeker/record

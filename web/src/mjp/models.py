@@ -399,6 +399,7 @@ class JobSeeker(models.Model):
     has_references = models.BooleanField(default=False)
     truth_confirmation = models.BooleanField(default=False)
     national_insurance_number = models.CharField(max_length=13, blank=True)
+    pitch_reminder_sent = models.DateTimeField(null=True)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
 

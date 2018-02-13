@@ -1,0 +1,87 @@
+{% extends "emails/base.html" %}
+
+{% load static %}
+
+{% block title %}You're hired?{% endblock %}
+
+{% block subtitle %}Just complete your profile!{% endblock %}
+
+{% block content %}
+    <table width="600" align="center" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+            <td valign="top">
+                <p>Recruiters are looking for someone with your exact profile. You are the perfect candidate, let your personality shine and land you the job that you really want!</p>
+                <p>All you're missing is your video pitch!</p>
+            </td>
+            <td width="160" align="right" valign="top">
+                <p><a href="{{ base_url }}/jobseeker/record"><img src="{{ base_url }}{% static "email/record_now.png" %}" alt="Record Now!" /></a></p>
+            </td>
+        </tr>
+    </table>
+
+    <table width="600" align="center" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+            <td>
+                <h2 style="margin: 1em 0 0.5em; color: #236156; font-size: 1.25em; font-weight: bold;">So what are you waiting for?</h2>
+
+                <p>Recording your pitch is easy, everyone is doing it. Here's what you can talk about:</p>
+
+                <ul>
+                    <li style="padding-bottom: 0.5em;">Introduce yourself: your name and experience<br/>
+                        <span style="font-style: italic; color: #333333;"><i><em>&quot;My name is Sarah and I've worked as a barista for over a year now&quot;</em></i></span>
+                    </li>
+                    <li style="padding-bottom: 0.5em;">What gets you excited to go to work?<br/>
+                        <span style="color: #333333;">Love creating new cocktail concepts? Passionate about single-blend espressos? Or simply like to make people smile by serving their morning bagel?</span>
+                    </li>
+                    <li style="padding-bottom: 0.5em;">What makes you stand out from the crowd?<br/>
+                        <span style="font-style: italic; color: #333333;"><i><em>&quot;I run up Arthur's seat once per week, demonstrating my energy and stamina!&quot;</em></i></span>
+                    </li>
+                </ul>
+
+                <p>Need more tips? Check out our <a href="https://vimeo.com/255467281">quick explainer vid</a>!</p>
+            </td>
+        </tr>
+        <tr>
+            <td align="center">
+                <a href="{{ base_url }}/jobseeker/record"><img src="{{ base_url }}{% static "email/record_now.png" %}" alt="Record Now!" /></a>
+            </td>
+        </tr>
+    </table>
+
+    <table width="600" align="center" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+            <td colspan="3">
+                <h2 style="margin: 1em 0 0.5em; color: #236156; font-size: 1.25em; font-weight: bold;">Need Inspiration?</h2>
+                <p>Check out some example pitches and record one for yourself:</p>
+            </td>
+        </tr>
+        <tr>
+            <td width="170"><a href="https://vimeo.com/255467562"><img src="{{ base_url }}{% static "email/hannah_pitch.png" %}" /></a></td>
+            <td colspan="2">
+                <p><em><i>
+                    &quot;Hi there, my name is Hannah Wilson. I am 21 years old and I am in my final
+                    year at the University of Edinburgh. I have done a little bit of everything with retail &amp; barista
+                    experience. I have worked in bars and restaurants all across Europe. I am looking for a fun, fast
+                    paced working environment! Feel free to message me on the app and I look forward to hearing from
+                    you!&quot;
+                </i></em></p>
+                <p>- Hannah Wilson</p>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2" valign="top">
+                <p><em><i>
+                    &quot;Hi my name is Oisin and I am a student of Dublin City University. I am doing year
+                    abroad in Chengdu, China! I am loving it here and have a lot of experience on the creative side of
+                    things! I am fascinated by China and have learned a lot being here which makes me a great match for
+                    your company! Let me know!&quot;
+                </i></em></p>
+                <p>- Oisin Hoy</p>
+            </td>
+            <td width="170" align="right"><a href="https://vimeo.com/255467715"><img src="{{ base_url }}{% static "email/oisin_pitch.png" %}" /></a></td>
+        </tr>
+        <tr>
+            <td colspan="3" align="center"><a href="{{ base_url }}/jobseeker/record"><img src="{{ base_url }}{% static "email/record_now.png" %}" alt="Record Now!" /></a></td>
+        </tr>
+    </table>
+{% endblock %}

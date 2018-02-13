@@ -5,7 +5,6 @@ from django.contrib.sites.models import Site
 from django.core.mail import send_mail
 from django.db.models.signals import post_save
 from django.dispatch import receiver
-from django.template import Context
 from django.template.loader import get_template
 
 from mjp.models import Message, Role
@@ -40,8 +39,8 @@ def send_message_notification_email(sender, instance, created, *args, **kwargs):
             html_template = get_template('emails/message.html')
             send_mail(
                 subject="My Job Pitch message from {}".format(from_name),
-                message=text_template.render(Context(context)),
-                html_message=html_template.render(Context(context)),
+                message=text_template.render(context),
+                html_message=html_template.render(context),
                 from_email=settings.DEFAULT_FROM_EMAIL,
                 recipient_list=[to_address],
             )

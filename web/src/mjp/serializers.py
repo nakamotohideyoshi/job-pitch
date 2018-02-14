@@ -160,6 +160,7 @@ class JobSeekerSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = JobSeeker
+        exclude = ("pitch_reminder_sent",)
 
 
 class JobSeekerReadSerializer(serializers.ModelSerializer):

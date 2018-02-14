@@ -104,26 +104,18 @@ class MyApplications extends Component {
       <Wrapper>
         <Helmet title="My Applications" />
 
-        {applications ? (
-          this.renderApplications()
-        ) : !errors ? (
-          <Container>
-            <FlexBox center>
-              <Loading />
-            </FlexBox>
-          </Container>
-        ) : (
-          <Container>
+        <Container>
+          {applications && (
             <PageHeader>
               <span>My Applications</span>
               <SearchBar size="sm" onChange={this.filterApp} />
             </PageHeader>
-
-            <FlexBox center>
-              <div className="alert-msg">Server Error!</div>
-            </FlexBox>
-          </Container>
-        )}
+          )}
+          {applications && this.renderApplications()}
+          {!applications && (
+            <FlexBox center>{!errors ? <Loading /> : <div className="alert-msg">Server Error!</div>}</FlexBox>
+          )}
+        </Container>
 
         {selectedApp && (
           <JobDetail

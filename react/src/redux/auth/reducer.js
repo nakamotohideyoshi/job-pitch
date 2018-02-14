@@ -12,7 +12,7 @@ export default function reducer(state = initialState, action = {}) {
       return {
         ...state,
         loading: true,
-        errors: null,
+        errors: null
       };
     case C.LOGIN_SUCCESS:
       return {

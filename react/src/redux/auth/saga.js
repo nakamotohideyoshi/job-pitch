@@ -84,7 +84,7 @@ function* getUserData(token, usertype) {
   });
 
   // get redirect path
-  let redirect = MENU_DATA[loginState].home[permission].to;
+  let redirect = MENU_DATA[loginState].redirect[permission].to;
 
   return { loginState, permission, redirect };
 }
@@ -137,13 +137,12 @@ function* _loadAuth() {
   // // check current path
   const { router } = yield select();
   const { pathname } = router.location;
-  if (pathname.indexOf('/resources/') !== 0) {
-    const menuData = MENU_DATA[data.loginState];
-    const paths = menuData.left.concat(menuData.right, menuData.home);
-    const pathInfo = getPathInfo(paths, pathname);
-    if (!pathInfo || (pathInfo.permission || 0) > data.permission) {
-      yield put(push(data.redirect));
-    }
+  const menuData = MENU_DATA[data.loginState];
+  const paths = menuData.left.concat(menuData.right, menuData.redirect || []);
+  console.log(menuData, paths);
+  const pathInfo = getPathInfo(paths, pathname);
+  if (!pathInfo || (pathInfo.permission || 0) > data.permission) {
+    yield put(push(data.redirect));
   }
 
   return data.loginState;

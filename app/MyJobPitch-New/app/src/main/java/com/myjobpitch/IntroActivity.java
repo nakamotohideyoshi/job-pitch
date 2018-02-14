@@ -1,5 +1,7 @@
 package com.myjobpitch;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 
 import android.support.v4.app.Fragment;
@@ -72,6 +74,9 @@ public class IntroActivity extends AppCompatActivity {
             mViewPager.setCurrentItem(mCurrentPage+1, true);
             return;
         }
+
+        Intent intent = new Intent();
+        setResult(Activity.RESULT_OK, intent);
         finish();
     }
 

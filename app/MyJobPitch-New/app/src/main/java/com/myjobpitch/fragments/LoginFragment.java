@@ -75,6 +75,7 @@ public class LoginFragment extends FormFragment {
     private Status status = Status.LOGIN;
 
     private boolean isLoggedin = false;
+    private boolean showIntro = true;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -210,17 +211,10 @@ public class LoginFragment extends FormFragment {
     }
 
     void showIntro() {
+        showIntro = false;
+        isLoggedin = true;
         Intent intent = new Intent(getApp(), IntroActivity.class);
-        startActivityForResult(intent, AppData.REQUEST_INTRO);
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (resultCode == Activity.RESULT_OK) {
-            if (requestCode == AppData.REQUEST_INTRO) {
-                showMainPage(AppData.PAGE_VIEW_PROFILE);
-            }
-        }
+        startActivity(intent);
     }
 
     void goMain() {
@@ -242,7 +236,11 @@ public class LoginFragment extends FormFragment {
 
         switch (AppData.getUserType()) {
             case AppData.JOBSEEKER:
-                showIntro();
+                if (showIntro) {
+                    showIntro();
+                } else {
+                    showMainPage(AppData.PAGE_VIEW_PROFILE);
+                }
                 break;
             case AppData.RECRUITER:
                 showMainPage(AppData.PAGE_ADD_JOB);
@@ -253,7 +251,11 @@ public class LoginFragment extends FormFragment {
                     @Override
                     public void onClick(View view) {
                         AppData.saveUserType(AppData.JOBSEEKER);
-                        showIntro();
+                        if (showIntro) {
+                            showIntro();
+                        } else {
+                            showMainPage(AppData.PAGE_VIEW_PROFILE);
+                        }
                     }
                 });
                 popup.addGreenButton("I Need Staff", new View.OnClickListener() {

@@ -56,7 +56,7 @@ injectGlobal`
     color: #00b6a4 !important;
     font-size: 16px;
 
-    i {
+    svg {
       margin-right: 10px;
     }
   }
@@ -107,28 +107,28 @@ injectGlobal`
 
   .alert-success {
     background-color: rgba(212, 237, 218, 0.5);
-    i {
+    svg {
       margin-right: 8px;
       color: rgba(21, 87, 36, 0.8);
     }
   }
   .alert-info {
     background-color: rgba(209, 236, 241, 0.5);
-    i {
+    svg {
       margin-right: 8px;
       color: rgba(12, 84, 96, 0.8);
     }
   }
   .alert-warning {
     background-color: rgba(255, 243, 205, 0.5);
-    i {
+    svg {
       margin-right: 8px;
       color: rgba(133, 100, 4, 0.8);
     }
   }
   .alert-danger {
     background-color: rgba(248, 215, 218, 0.5);
-    i {
+    svg {
       margin-right: 8px;
       color: rgba(114, 28, 36, 0.8);
     }
@@ -266,5 +266,4 @@ injectGlobal`
     }
   }
 }
-
 `;

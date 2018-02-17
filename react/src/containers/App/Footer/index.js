@@ -2,6 +2,10 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { Container } from 'reactstrap';
+import FontAwesomeIcon from '@fortawesome/react-fontawesome';
+import faFacebookF from '@fortawesome/fontawesome-free-brands/faFacebookF';
+import faTwitter from '@fortawesome/fontawesome-free-brands/faTwitter';
+import faLinkedinIn from '@fortawesome/fontawesome-free-brands/faLinkedinIn';
 
 import { confirm } from 'redux/common';
 import { VERSION } from 'const';
@@ -10,7 +14,7 @@ import Wrapper from './Wrapper';
 
 const SocialLink = ({ url, icon }) => (
   <a href={url} target="_blank" rel="noopener noreferrer">
-    {icon && <i className={`fa ${icon} fa-lg`} />}
+    {icon && <FontAwesomeIcon icon={icon} size="lg" />}
   </a>
 );
 
@@ -40,9 +44,9 @@ class Footer extends React.Component {
           </div>
 
           <div className="follow">
-            <SocialLink url="https://www.facebook.com/" icon="fa-facebook" />
-            <SocialLink url="https://www.twitter.com/" icon="fa-twitter" />
-            <SocialLink url="https://www.linkedin.com/" icon="fa-linkedin" />
+            <SocialLink url="https://www.facebook.com/" icon={faFacebookF} />
+            <SocialLink url="https://www.twitter.com/" icon={faTwitter} />
+            <SocialLink url="https://www.linkedin.com/" icon={faLinkedinIn} />
           </div>
 
           <div className="company">

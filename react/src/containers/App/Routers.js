@@ -1,7 +1,6 @@
 import React from 'react';
 import { Switch, Route } from 'react-router-dom';
 
-import Home from 'containers/common/Home';
 import Login from 'containers/common/Login';
 import Register from 'containers/common/Register';
 import Reset from 'containers/common/Reset';

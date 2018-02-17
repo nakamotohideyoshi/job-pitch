@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
 import Helmet from 'react-helmet';
 import { connect } from 'react-redux';
+import FontAwesomeIcon from '@fortawesome/react-fontawesome';
+import faSearch from '@fortawesome/fontawesome-free-solid/faSearch';
+import faBars from '@fortawesome/fontawesome-free-solid/faBars';
 import { Board, Loading, SearchBar, Logo, MessageThread, FlexBox, JobDetail } from 'components';
 
 import * as helper from 'utils/helper';
@@ -63,7 +66,7 @@ class JSMessages extends Component {
       return (
         <FlexBox center>
           <div className="alert-msg">
-            <i className="fa fa-search" />
+            <FontAwesomeIcon icon={faSearch} />
             No search results
           </div>
         </FlexBox>
@@ -153,7 +156,7 @@ class JSMessages extends Component {
             <div className="thread-container">
               <div className="thread-header">
                 <a className="toggle" onClick={this.onToggleSidebar}>
-                  <i className="fa fa-bars fa-lg" />
+                  <FontAwesomeIcon icon={faBars} size="lg" />
                 </a>
                 {selectedApp && this.renderThreadHeader()}
               </div>

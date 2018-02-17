@@ -40,7 +40,7 @@ export default Main.extend`
     button {
       width: 150px;
       margin: 6px 6px 0 6px;
-      i {
+      svg {
         margin-right: 10px;
       }
     }

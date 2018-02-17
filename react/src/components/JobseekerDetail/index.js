@@ -1,5 +1,8 @@
 import React from 'react';
 import { ModalHeader, ModalBody, ModalFooter, Button } from 'reactstrap';
+import FontAwesomeIcon from '@fortawesome/react-fontawesome';
+import faCheckSquare from '@fortawesome/fontawesome-free-regular/faCheckSquare';
+import faPlayCircle from '@fortawesome/fontawesome-free-regular/faPlayCircle';
 
 import * as helper from 'utils/helper';
 import { Board, Logo, Loading, Checkbox } from 'components';
@@ -75,7 +78,7 @@ export default class JobseekerDetail extends React.Component {
                 {jobseeker.pitches.length > 0 && (
                   <div>
                     <a onClick={this.onPlayPitch}>
-                      <i className="fa fa-play-circle-o" />Video Pitch
+                    <FontAwesomeIcon icon={faPlayCircle} />Video Pitch
                     </a>
                   </div>
                 )}
@@ -96,19 +99,19 @@ export default class JobseekerDetail extends React.Component {
 
             {jobseeker.has_national_insurance_number && (
               <div className="check-label">
-                <i className="fa fa-check-square-o" aria-hidden="true" />
+                <FontAwesomeIcon icon={faCheckSquare} />
                 National Insurance number supplied
               </div>
             )}
             {jobseeker.has_references && (
               <div className="check-label">
-                <i className="fa fa-check-square-o" aria-hidden="true" />
+                <FontAwesomeIcon icon={faCheckSquare} />
                 Reference available on request
               </div>
             )}
             {jobseeker.truth_confirmation && (
               <div className="check-label">
-                <i className="fa fa-check-square-o" aria-hidden="true" />
+                <FontAwesomeIcon icon={faCheckSquare} />
                 I confirm that all information provided is truthful and confirm I have the right to work in the UK
               </div>
             )}

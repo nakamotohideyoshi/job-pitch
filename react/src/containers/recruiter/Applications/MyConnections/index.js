@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Row, Col } from 'reactstrap';
+import faStar from '@fortawesome/fontawesome-free-regular/faStar';
 import { Loading, FlexBox, MJPCard, JobseekerDetail } from 'components';
 
 import * as helper from 'utils/helper';
@@ -75,7 +76,7 @@ class MyConnections extends React.Component {
                 <MJPCard
                   image={image}
                   title={fullName}
-                  icon={app.shortlisted ? 'fa-star' : ''}
+                  icon={app.shortlisted ? faStar : ''}
                   description={jobseeker.description}
                   onClick={() => this.onDetail(app.id)}
                   loading={app.loading}

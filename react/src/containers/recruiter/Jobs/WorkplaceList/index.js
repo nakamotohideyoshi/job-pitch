@@ -2,6 +2,8 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { Card, Row, Col, Breadcrumb, BreadcrumbItem } from 'reactstrap';
+import FontAwesomeIcon from '@fortawesome/react-fontawesome';
+import faMapMarkerAlt from '@fortawesome/fontawesome-free-solid/faMapMarkerAlt';
 import { Loading, FlexBox, MJPCard } from 'components';
 
 import * as helper from 'utils/helper';
@@ -119,7 +121,7 @@ class WorkplaceList extends React.Component {
                 title={workplace.name}
                 tProperty1={
                   <span>
-                    <i class="fa fa-map-marker" style={{ marginRight: '5px' }} />
+                    <FontAwesomeIcon icon={faMapMarkerAlt} style={{ marginRight: '5px' }} />
                     {workplace.place_name}
                   </span>
                 }

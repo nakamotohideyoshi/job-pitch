@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import Helmet from 'react-helmet';
 import { connect } from 'react-redux';
 import { Container, Button } from 'reactstrap';
+import FontAwesomeIcon from '@fortawesome/react-fontawesome';
+import faUpload from '@fortawesome/fontawesome-free-solid/faUpload';
 
 import { Board, Loading, PopupProgress, VideoRecorder } from 'components';
 import { loadProfile, uploadPitch } from 'redux/jobseeker/profile';
@@ -85,7 +87,7 @@ class PitchRecord extends Component {
 
               {pitchData && (
                 <Button color="yellow" disabled={saving} onClick={this.uploadFile}>
-                  <i className="fa fa-upload" />
+                  <FontAwesomeIcon icon={faUpload} />
                   {!saving ? 'Upload' : 'Uploading...'}
                 </Button>
               )}

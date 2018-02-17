@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import Helmet from 'react-helmet';
 import { connect } from 'react-redux';
 import { Container, Row, Col } from 'reactstrap';
+import FontAwesomeIcon from '@fortawesome/react-fontawesome';
+import faSearch from '@fortawesome/fontawesome-free-solid/faSearch';
 import { PageHeader, SearchBar, Loading, MJPCard, FlexBox, JobDetail } from 'components';
 
 import * as helper from 'utils/helper';
@@ -50,7 +52,7 @@ class MyApplications extends Component {
       return (
         <FlexBox center>
           <div className="alert-msg">
-            <i className="fa fa-search" />
+            <FontAwesomeIcon icon={faSearch} />
             No search results
           </div>
         </FlexBox>

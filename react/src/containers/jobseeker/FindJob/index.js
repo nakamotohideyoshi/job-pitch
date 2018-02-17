@@ -2,6 +2,9 @@ import React, { Component } from 'react';
 import Helmet from 'react-helmet';
 import { connect } from 'react-redux';
 import { Container, Row, Col } from 'reactstrap';
+import FontAwesomeIcon from '@fortawesome/react-fontawesome';
+import faSyncAlt from '@fortawesome/fontawesome-free-solid/faSyncAlt';
+import faSearch from '@fortawesome/fontawesome-free-solid/faSearch';
 import { PageHeader, SearchBar, Loading, FlexBox, MJPCard, JobDetail } from 'components';
 
 import * as helper from 'utils/helper';
@@ -73,7 +76,7 @@ class FindJob extends Component {
             You can restore your removed matches by clicking refresh.`}
           </div>
           <a className="btn-link" onClick={this.onRefresh}>
-            <i className="fa fa-refresh" />
+            <FontAwesomeIcon icon={faSyncAlt} />
             Refresh
           </a>
         </FlexBox>
@@ -93,7 +96,7 @@ class FindJob extends Component {
       return (
         <FlexBox center>
           <div className="alert-msg">
-            <i className="fa fa-search" />
+            <FontAwesomeIcon icon={faSearch} />
             No search results
           </div>
         </FlexBox>

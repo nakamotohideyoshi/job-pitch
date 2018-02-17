@@ -139,7 +139,7 @@ function* _loadAuth() {
   const { pathname } = router.location;
   const menuData = MENU_DATA[data.loginState];
   const paths = menuData.left.concat(menuData.right, menuData.redirect || []);
-  console.log(menuData, paths);
+
   const pathInfo = getPathInfo(paths, pathname);
   if (!pathInfo || (pathInfo.permission || 0) > data.permission) {
     yield put(push(data.redirect));
@@ -157,7 +157,7 @@ function* _loadAuth() {
 function* _register(model, usertype) {
   try {
     const { key } = yield call(api.post, '/api-rest-auth/registration/', model);
-    
+
     if (usertype === 'recruiter') {
       yield call(helper.saveData, 'jobs-step', 1);
     }

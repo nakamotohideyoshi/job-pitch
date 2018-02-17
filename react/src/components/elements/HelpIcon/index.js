@@ -1,6 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
 import { Popover, PopoverBody } from 'reactstrap';
+import FontAwesomeIcon from '@fortawesome/react-fontawesome';
+import faQuestionCircle from '@fortawesome/fontawesome-free-regular/faQuestionCircle';
 
 const Wrapper = styled.span`
   color: #ff9300;
@@ -24,7 +26,7 @@ class HelpIcon extends React.PureComponent {
 
     return (
       <Wrapper className={className} style={style}>
-        <i id={this.id} className="fa fa-question-circle-o fa-lg" onClick={this.toggle} />
+        <FontAwesomeIcon id={this.id} icon={faQuestionCircle} size="lg" onClick={this.toggle} />
         <Popover placement={placement || 'top-start'} isOpen={this.state.isOpen} target={this.id} toggle={this.toggle}>
           <PopoverBody>{label}</PopoverBody>
         </Popover>

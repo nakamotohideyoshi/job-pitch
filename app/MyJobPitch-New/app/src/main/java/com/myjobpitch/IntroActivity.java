@@ -115,7 +115,7 @@ public class IntroActivity extends AppCompatActivity {
         };
 
         static final int[] IMAGE_DATA = {
-                R.drawable.logo, R.drawable.intro1, R.drawable.intro2, R.drawable.intro3
+                R.drawable.logo1, R.drawable.intro1, R.drawable.intro2, R.drawable.intro3
         };
 
         static final String[] COMMENT_DATA = {

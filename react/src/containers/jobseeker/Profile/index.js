@@ -18,11 +18,14 @@ import {
 } from 'components';
 import { loadProfile, saveProfile } from 'redux/jobseeker/profile';
 import { SDATA } from 'utils/data';
+import Intro from '../Intro';
 import Wrapper, { WithPublic } from './Wrapper';
 
 class Profile extends SaveFormComponent {
   componentWillMount() {
     this.props.loadProfile();
+
+    this.setState({ dontShowIntro: Profile.dontShowIntro });
   }
 
   componentWillReceiveProps(nextProps) {
@@ -101,6 +104,11 @@ class Profile extends SaveFormComponent {
     });
   };
 
+  onCloseIntro = () => {
+    Profile.dontShowIntro = true;
+    this.setState({ dontShowIntro: true })
+  };
+
   render() {
     if (!this.props.jobseeker) {
       return (
@@ -111,7 +119,7 @@ class Profile extends SaveFormComponent {
     }
 
     const { jobseeker, saving } = this.props;
-    const { cv, newPitchData, showRecorder, playUrl, progress } = this.state;
+    const { cv, newPitchData, showRecorder, playUrl, progress, dontShowIntro } = this.state;
     const error = this.getError();
 
     return (
@@ -311,6 +319,8 @@ class Profile extends SaveFormComponent {
         {playUrl && <VideoPlayer videoUrl={playUrl} onClose={this.hideDialog} />}
 
         {progress && <PopupProgress label={progress.label} value={progress.value} />}
+
+        {!jobseeker.id && !dontShowIntro && <Intro onClose={this.onCloseIntro} />}
       </Wrapper>
     );
   }

@@ -13,9 +13,11 @@ class IntroController: UIViewController {
     @IBOutlet weak var scrollView: UIScrollView!
     @IBOutlet weak var pageControl: UIPageControl!
     @IBOutlet weak var readyButton: GreenButton!
+    @IBOutlet weak var logoContainer: UIView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        logoContainer.layer.cornerRadius = UIScreen.main.bounds.width / 4
     }
     
     @IBAction func readyAction(_ sender: Any) {

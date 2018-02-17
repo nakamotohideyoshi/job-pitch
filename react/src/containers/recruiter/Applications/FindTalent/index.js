@@ -1,6 +1,8 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Row, Col } from 'reactstrap';
+import FontAwesomeIcon from '@fortawesome/react-fontawesome';
+import faSyncAlt from '@fortawesome/fontawesome-free-solid/faSyncAlt';
 import { Loading, FlexBox, MJPCard, JobseekerDetail } from 'components';
 
 import * as helper from 'utils/helper';
@@ -69,7 +71,7 @@ class FindTalent extends React.Component {
               You can restore your removed matches by clicking refresh above.`}
           </div>
           <a className="btn-link" onClick={this.onRefresh}>
-            <i className="fa fa-refresh" />
+            <FontAwesomeIcon icon={faSyncAlt} />
             Refresh
           </a>
         </FlexBox>

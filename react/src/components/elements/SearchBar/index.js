@@ -2,6 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { Input } from 'reactstrap';
+import FontAwesomeIcon from '@fortawesome/react-fontawesome';
+import faSearch from '@fortawesome/fontawesome-free-solid/faSearch';
 
 const Wrapper = styled.div`
   position: relative;
@@ -10,7 +12,7 @@ const Wrapper = styled.div`
     padding-left: 30px;
   }
 
-  i,
+  svg,
   a {
     position: absolute;
     display: flex;
@@ -18,7 +20,7 @@ const Wrapper = styled.div`
     top: 0;
   }
 
-  i {
+  svg {
     left: 10px;
     bottom: 0;
     font-size: 14px;
@@ -59,7 +61,7 @@ class SearchBox extends React.PureComponent {
           value={filterText}
           onChange={e => this.setFilterText(e.target.value)}
         />
-        <i className="fa fa-search" />
+        <FontAwesomeIcon icon={faSearch} />
         {filterText && <a onClick={() => this.setFilterText('')}>×</a>}
       </Wrapper>
     );

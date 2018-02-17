@@ -11,6 +11,8 @@ import {
   DropdownItem
 } from 'reactstrap';
 import Truncate from 'react-truncate';
+import FontAwesomeIcon from '@fortawesome/react-fontawesome';
+import faEllipsisV from '@fortawesome/fontawesome-free-solid/faEllipsisV';
 
 import Logo from '../tags/Logo';
 import Loading from '../tags/Loading';
@@ -47,13 +49,13 @@ class MJPCard extends React.PureComponent {
       <Wrapper className={loading ? 'loading' : ''} style={{ cursor: onClick && 'pointer' }} onClick={onClick}>
         <Logo src={image} className="logo" />
 
-        {icon && <i className={`fa ${icon} fa-lg`} />}
+        {icon && <FontAwesomeIcon icon={icon} size="lg" />}
 
         <CardBody>
           {menus && (
             <Dropdown isOpen={this.state.dropdownOpen} toggle={this.toggle}>
               <DropdownToggle tag="a">
-                <i className="fa fa-ellipsis-v" />
+                <FontAwesomeIcon icon={faEllipsisV} />
               </DropdownToggle>
 
               <DropdownMenu right>

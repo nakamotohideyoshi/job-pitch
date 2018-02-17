@@ -63,7 +63,7 @@ export default styled(Modal)`
           font-size: 15px;
           cursor: pointer;
 
-          i {
+          svg {
             color: #00b6a4;
             font-size: 30px;
             margin-right: 5px;
@@ -104,7 +104,7 @@ export default styled(Modal)`
       display: flex;
       margin-top: 0.5rem;
 
-      i {
+      svg {
         margin-right: 0.5rem;
         font-size: 1.5rem;
         color: #ff9300;

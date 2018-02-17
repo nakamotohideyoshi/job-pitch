@@ -13,7 +13,7 @@ export default styled(Card)`
     border-top-right-radius: calc(0.25rem - 1px);
   }
 
-  > i {
+  > svg {
     position: absolute;
     top: 10px;
     left: 10px;
@@ -85,7 +85,7 @@ export default styled(Card)`
     a {
       display: inline-block;
       padding: 8px 15px;
-      i {
+      svg {
         font-size: 16px;
       }
     }

@@ -9,6 +9,7 @@ import rc_find from './recruiter/find/saga';
 import rc_businesses from './recruiter/businesses/saga';
 import rc_workplaces from './recruiter/workplaces/saga';
 import rc_jobs from './recruiter/jobs/saga';
+import rc_jobseeker from './recruiter/jobseeker/saga';
 
 import js_profile from './jobseeker/profile/saga';
 import js_jobprofile from './jobseeker/jobprofile/saga';
@@ -28,6 +29,7 @@ export default function* rootSaga() {
     ...rc_businesses,
     ...rc_workplaces,
     ...rc_jobs,
+    ...rc_jobseeker,
 
     ...js_profile,
     ...js_jobprofile,

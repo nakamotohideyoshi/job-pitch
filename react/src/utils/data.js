@@ -20,6 +20,7 @@ const RC_CREDIT = {
   icon: 'payment',
   permission: 1
 };
+const RC_APPS = { to: '/recruiter/apps', label: '' };
 
 const JS_PROFILE = {
   to: '/jobseeker/profile',
@@ -58,7 +59,7 @@ const SELECT_MENU = {
 };
 
 const RECRUITER_MENU = {
-  redirect: [RC_JOBS, RC_FIND],
+  redirect: [RC_JOBS, RC_FIND, RC_APPS],
   left: [RC_FIND, RC_JOBS, RC_MSGS],
   right: [
     {

@@ -12,6 +12,7 @@ import Applications from 'containers/recruiter/Applications';
 import Jobs from 'containers/recruiter/Jobs';
 import Credits from 'containers/recruiter/Credits';
 import RCMessages from 'containers/recruiter/RCMessages';
+import JobseekerDetail from 'containers/recruiter/JobseekerDetail';
 
 import FindJob from 'containers/jobseeker/FindJob';
 import MyApplications from 'containers/jobseeker/MyApplications';
@@ -37,6 +38,7 @@ export default () => (
     <Route exact path="/recruiter/credits/:businessId" component={Credits} />
     <Route exact path="/recruiter/messages" component={RCMessages} />
     <Route exact path="/recruiter/messages/:appId" component={RCMessages} />
+    <Route path="/recruiter/apps/:jobId/:jobseekerId" component={JobseekerDetail} />
 
     <Route exact path="/jobseeker/find" component={FindJob} />
     <Route exact path="/jobseeker/applications" component={MyApplications} />

@@ -22,7 +22,7 @@ class Command(BaseCommand):
             pitches__isnull=True,
             pitch_reminder_sent__isnull=True,
             created__lte=pytz.utc.localize(datetime.utcnow()) - timedelta(days=1),
-        )
+        )[:10]
         for job_seeker in job_seekers:
             if not options['dry_run']:
                 self.send_email(job_seeker)

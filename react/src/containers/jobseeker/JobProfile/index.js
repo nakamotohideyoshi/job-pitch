@@ -37,6 +37,7 @@ class JobProfile extends SaveFormComponent {
   onSave = () => {
     if (this.isValid(['sectors', 'place_name'])) {
       const data = Object.assign({}, this.state.model);
+      console.log(data);
       this.props.saveJobProfile(data);
     }
   };

@@ -44,7 +44,7 @@ class MJPCard extends React.PureComponent {
       icon,
       onClick
     } = this.props;
-console.log(icon)
+
     return (
       <Wrapper className={loading ? 'loading' : ''} style={{ cursor: onClick && 'pointer' }} onClick={onClick}>
         <Logo src={image} className="logo" />
@@ -105,11 +105,11 @@ console.log(icon)
 MJPCard.propTypes = {
   image: PropTypes.string,
   title: PropTypes.string,
-  tProperty1: PropTypes.string,
-  tProperty2: PropTypes.string,
+  // tProperty1: PropTypes.string,
+  // tProperty2: PropTypes.string,
   description: PropTypes.string,
-  bProperty1: PropTypes.string,
-  bProperty2: PropTypes.string,
+  // bProperty1: PropTypes.string,
+  // bProperty2: PropTypes.string,
   menus: PropTypes.array,
   loading: PropTypes.bool,
   // icon: PropTypes.object,

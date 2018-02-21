@@ -59,7 +59,7 @@ const handleError = error => {
 |--------------------------------------------------
 */
 
-const formData = data => {
+export const formData = data => {
   const formData = new FormData();
   Object.keys(data).map(key => {
     if (data[key] !== null && data[key] !== undefined) {
@@ -79,12 +79,10 @@ export const get = (url, config) => {
 };
 
 export const post = (url, info, config) => {
-  info = formData(info);
   return axios.post(url, info, config).then(responseData, handleError);
 };
 
 export const put = (url, info, config) => {
-  info = formData(info);
   return axios.put(url, info, config).then(responseData, handleError);
 };
 

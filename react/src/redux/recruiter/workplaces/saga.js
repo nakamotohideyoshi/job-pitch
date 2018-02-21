@@ -16,20 +16,16 @@ import * as C from './constants';
 function* uploadLogo(logo, key, object, onUploadProgress) {
   try {
     if (logo.file) {
-      const image = yield call(
-        api.post,
-        `/api/user-${key}-images/`,
-        {
-          order: 0,
-          [key]: object.id,
-          image: logo.file
-        },
-        {
-          onUploadProgress: progress => {
-            onUploadProgress('Uploading...', Math.floor(progress.loaded / progress.total * 100));
-          }
+      const data = yield call(api.formData, {
+        order: 0,
+        [key]: object.id,
+        image: logo.file
+      });
+      const image = yield call(api.post, `/api/user-${key}-images/`, data, {
+        onUploadProgress: progress => {
+          onUploadProgress('Uploading...', Math.floor(progress.loaded / progress.total * 100));
         }
-      );
+      });
       onUploadProgress();
       object.images = [image];
     } else if (object.images.length > 0 && !logo.exist) {

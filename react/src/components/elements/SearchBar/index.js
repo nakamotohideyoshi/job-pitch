@@ -22,7 +22,7 @@ const Wrapper = styled.div`
 
   svg {
     left: 10px;
-    bottom: 0;
+    top: 7px;
     font-size: 14px;
     color: #888;
   }

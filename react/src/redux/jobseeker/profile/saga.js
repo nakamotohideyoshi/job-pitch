@@ -56,10 +56,11 @@ function* _saveProfile({ model, pitchData, onUploadProgress }) {
 
   // save profile
   try {
+    const data = yield call(api.formData, model);
     if (model.id) {
-      jobseeker = yield call(api.put, `/api/job-seekers/${model.id}/`, model);
+      jobseeker = yield call(api.put, `/api/job-seekers/${model.id}/`, data);
     } else {
-      jobseeker = yield call(api.post, '/api/job-seekers/', model);
+      jobseeker = yield call(api.post, '/api/job-seekers/', data);
     }
   } catch (errors) {
     yield put({ type: C.JS_PROFILE_SAVE_ERROR, errors });

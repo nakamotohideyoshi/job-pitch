@@ -1,7 +1,7 @@
-import React, { Component } from 'react';
+import React, { Fragment } from 'react';
 import Helmet from 'react-helmet';
 import { connect } from 'react-redux';
-import { Container, Row, Col } from 'reactstrap';
+import { Row, Col } from 'reactstrap';
 import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 import faSyncAlt from '@fortawesome/fontawesome-free-solid/faSyncAlt';
 import faSearch from '@fortawesome/fontawesome-free-solid/faSearch';
@@ -11,15 +11,27 @@ import * as helper from 'utils/helper';
 import { SDATA } from 'utils/data';
 import { confirm } from 'redux/common';
 import { getJobs, applyJob, removeJob } from 'redux/jobseeker/find';
-import Wrapper from './Wrapper';
+import Container from './Wrapper';
 
 import NoPitch from '../NoPitch';
 
-class FindJob extends Component {
+class FindJob extends React.Component {
   state = {};
 
   componentWillMount() {
     this.onRefresh();
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (this.props.jobs === null && nextProps.jobs) {
+      helper.loadData('jobs_selectedid').then(id => {
+        if (id) {
+          helper.saveData('jobs_selectedid');
+          const job = helper.getItemByID(nextProps.jobs, id);
+          this.onDetail(job);
+        }
+      });
+    }
   }
 
   onRefresh = () => this.props.getJobs();
@@ -157,7 +169,7 @@ class FindJob extends Component {
     }
 
     return (
-      <Wrapper>
+      <Fragment>
         <Helmet title="Find Me Jobs" />
 
         <Container>
@@ -189,7 +201,7 @@ class FindJob extends Component {
             ]}
           />
         )}
-      </Wrapper>
+      </Fragment>
     );
   }
 }

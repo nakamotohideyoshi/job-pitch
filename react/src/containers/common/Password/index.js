@@ -1,11 +1,11 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import Helmet from 'react-helmet';
 import { connect } from 'react-redux';
-import { Button, Form, FormGroup, Label, Alert, Container } from 'reactstrap';
+import { Button, Form, FormGroup, Label, Alert } from 'reactstrap';
 
 import { FormComponent, Board } from 'components';
 import { changePassword } from 'redux/password';
-import Wrapper from './Wrapper';
+import Container from './Wrapper';
 
 class Password extends FormComponent {
   handleChangePassword = () => {
@@ -19,7 +19,7 @@ class Password extends FormComponent {
     const error = this.getError();
 
     return (
-      <Wrapper>
+      <Fragment>
         <Helmet title="Change Password" />
 
         <Container>
@@ -47,7 +47,7 @@ class Password extends FormComponent {
             </Form>
           </Board>
         </Container>
-      </Wrapper>
+      </Fragment>
     );
   }
 }

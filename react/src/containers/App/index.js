@@ -7,6 +7,7 @@ import NotificationSystem from 'react-notification-system';
 
 import { Loading } from 'components';
 import { confirm } from 'redux/common';
+import media from 'utils/mediaquery';
 import * as helper from 'utils/helper';
 
 import Routers from './Routers';
@@ -17,6 +18,21 @@ const RootWrapper = styled.div`
   display: flex;
   flex-direction: column;
   min-height: 100vh;
+
+  main {
+    position: relative;
+    flex: 1;
+    display: flex;
+    padding: 30px 0;
+    ${media.tablet`padding: 15px 0;`};
+    margin-top: 50px;
+    background-color: #f9f9f9;
+
+    > .container {
+      display: flex;
+      flex-direction: column;
+    }
+  }
 `;
 
 class ScrollToTop extends React.PureComponent {
@@ -37,8 +53,10 @@ class App extends React.Component {
     return (
       <RootWrapper>
         <Header />
-        <Route component={ScrollToTop} />
-        <Routers />
+        <main>
+          <Route component={ScrollToTop} />
+          <Routers />
+        </main>
         <Footer />
 
         {confirmInfo && (

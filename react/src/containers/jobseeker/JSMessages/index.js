@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Fragment } from 'react';
 import Helmet from 'react-helmet';
 import { connect } from 'react-redux';
 import FontAwesomeIcon from '@fortawesome/react-fontawesome';
@@ -9,11 +9,11 @@ import { Board, Loading, SearchBar, Logo, MessageThread, FlexBox, JobDetail } fr
 import * as helper from 'utils/helper';
 import { loadProfile } from 'redux/jobseeker/profile';
 import { getMsgApplications, selectApplication, sendMessage } from 'redux/applications';
-import Wrapper from './Wrapper';
+import Container from './Wrapper';
 
 import NoPitch from '../NoPitch';
 
-class JSMessages extends Component {
+class JSMessages extends React.Component {
   state = {
     open: true
   };
@@ -141,37 +141,39 @@ class JSMessages extends Component {
     }
 
     return (
-      <Wrapper>
+      <Fragment>
         <Helmet title="My Messages" />
 
-        {applications ? (
-          <Board block className={`board ${open}`}>
-            <div className="mask" onClick={() => this.setState({ open: false })} />
+        <Container>
+          {applications ? (
+            <Board block className={`board ${open}`}>
+              <div className="mask" onClick={() => this.setState({ open: false })} />
 
-            <div className="sidebar">
-              <SearchBar onChange={this.onChangeFilterText} />
-              {this.renderApplications()}
-            </div>
-
-            <div className="thread-container">
-              <div className="thread-header">
-                <a className="toggle" onClick={this.onToggleSidebar}>
-                  <FontAwesomeIcon icon={faBars} size="lg" />
-                </a>
-                {selectedApp && this.renderThreadHeader()}
+              <div className="sidebar">
+                <SearchBar onChange={this.onChangeFilterText} />
+                {this.renderApplications()}
               </div>
 
-              {selectedApp && <MessageThread userRole="JOB_SEEKER" application={selectedApp} onSend={this.onSend} />}
-            </div>
+              <div className="thread-container">
+                <div className="thread-header">
+                  <a className="toggle" onClick={this.onToggleSidebar}>
+                    <FontAwesomeIcon icon={faBars} size="lg" />
+                  </a>
+                  {selectedApp && this.renderThreadHeader()}
+                </div>
 
-            {this.state.showJobDetail && (
-              <JobDetail job={selectedApp.job_data} onClose={() => this.onShowJobDetail()} />
-            )}
-          </Board>
-        ) : (
-          <Loading />
-        )}
-      </Wrapper>
+                {selectedApp && <MessageThread userRole="JOB_SEEKER" application={selectedApp} onSend={this.onSend} />}
+              </div>
+
+              {this.state.showJobDetail && (
+                <JobDetail job={selectedApp.job_data} onClose={() => this.onShowJobDetail()} />
+              )}
+            </Board>
+          ) : (
+            <Loading />
+          )}
+        </Container>
+      </Fragment>
     );
   }
 }

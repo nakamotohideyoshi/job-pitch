@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Fragment } from 'react';
 import Helmet from 'react-helmet';
 import { connect } from 'react-redux';
 import FontAwesomeIcon from '@fortawesome/react-fontawesome';
@@ -25,9 +25,9 @@ import {
   setShortlist,
   sendMessage
 } from 'redux/applications';
-import Wrapper from './Wrapper';
+import Container from './Wrapper';
 
-class RCMessages extends Component {
+class RCMessages extends React.Component {
   state = {
     open: true
   };
@@ -36,7 +36,6 @@ class RCMessages extends Component {
     this.appId = helper.str2int(this.props.match.params.appId);
     this.props.getJobs();
     this.props.getMsgApplications(this.appId);
-    console.log('mount', this.appId);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -178,65 +177,65 @@ class RCMessages extends Component {
     const { jobs, applications, selectedApp } = this.props;
     const open = this.state.open ? 'open' : '';
 
-    console.log('render ----');
-
     return (
-      <Wrapper>
+      <Fragment>
         <Helmet title="My Messages" />
 
-        {jobs && applications ? (
-          <Board block className={`board ${open}`}>
-            <div className="mask" onClick={() => this.setState({ open: false })} />
+        <Container>
+          {jobs && applications ? (
+            <Board block className={`board ${open}`}>
+              <div className="mask" onClick={() => this.setState({ open: false })} />
 
-            <div className="sidebar">
-              <div className="job-list">
-                <JobSelect
-                  options={jobs}
-                  placeholder="Filter by job"
-                  value={(this.state.filterJob || {}).id}
-                  onChange={this.onSelectJob}
-                />
-              </div>
-              <SearchBar onChange={this.onChangeFilterText} />
-              {this.renderApplications()}
-            </div>
-
-            <div className="thread-container">
-              <div className="thread-header">
-                <a className="toggle" onClick={this.onToggleSidebar}>
-                  <FontAwesomeIcon icon={faBars} size="lg" />
-                </a>
-                {selectedApp && this.renderThreadHeader()}
+              <div className="sidebar">
+                <div className="job-list">
+                  <JobSelect
+                    options={jobs}
+                    placeholder="Filter by job"
+                    value={(this.state.filterJob || {}).id}
+                    onChange={this.onSelectJob}
+                  />
+                </div>
+                <SearchBar onChange={this.onChangeFilterText} />
+                {this.renderApplications()}
               </div>
 
-              {selectedApp && (
-                <MessageThread
-                  userRole="RECRUITER"
+              <div className="thread-container">
+                <div className="thread-header">
+                  <a className="toggle" onClick={this.onToggleSidebar}>
+                    <FontAwesomeIcon icon={faBars} size="lg" />
+                  </a>
+                  {selectedApp && this.renderThreadHeader()}
+                </div>
+
+                {selectedApp && (
+                  <MessageThread
+                    userRole="RECRUITER"
+                    application={selectedApp}
+                    onSend={this.onSend}
+                    onConnect={this.onConnect}
+                  />
+                )}
+              </div>
+
+              {this.state.showJobDetail && (
+                <JobDetail job={selectedApp.job_data} onClose={() => this.onShowJobDetail()} />
+              )}
+
+              {this.state.showJSDetail && (
+                <JobseekerDetail
                   application={selectedApp}
-                  onSend={this.onSend}
-                  onConnect={this.onConnect}
+                  onChangeShortlist={this.props.setShortlist}
+                  jobseeker={selectedApp.job_seeker}
+                  onClose={() => this.onShowJobseekerDetail()}
+                  buttons={this.buttons}
                 />
               )}
-            </div>
-
-            {this.state.showJobDetail && (
-              <JobDetail job={selectedApp.job_data} onClose={() => this.onShowJobDetail()} />
-            )}
-
-            {this.state.showJSDetail && (
-              <JobseekerDetail
-                application={selectedApp}
-                onChangeShortlist={this.props.setShortlist}
-                jobseeker={selectedApp.job_seeker}
-                onClose={() => this.onShowJobseekerDetail()}
-                buttons={this.buttons}
-              />
-            )}
-          </Board>
-        ) : (
-          <Loading />
-        )}
-      </Wrapper>
+            </Board>
+          ) : (
+            <Loading />
+          )}
+        </Container>
+      </Fragment>
     );
   }
 }

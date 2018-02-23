@@ -1,8 +1,8 @@
-import React, { Component } from 'react';
+import React, { Fragment } from 'react';
 import Helmet from 'react-helmet';
 import { connect } from 'react-redux';
 import { Switch, Route, Link } from 'react-router-dom';
-import { Container, Nav, NavItem } from 'reactstrap';
+import { Nav, NavItem } from 'reactstrap';
 import { PageHeader, FlexBox, JobSelect } from 'components';
 
 import * as helper from 'utils/helper';
@@ -11,9 +11,9 @@ import FindTalent from './FindTalent';
 import MyApplications from './MyApplications';
 import MyConnections from './MyConnections';
 import MyShortlist from './MyShortlist';
-import Wrapper from './Wrapper';
+import Container from './Wrapper';
 
-class Applications extends Component {
+class Applications extends React.Component {
   state = {};
 
   componentWillMount() {
@@ -69,7 +69,7 @@ class Applications extends Component {
     const jobId = pathinfo[4] || '';
 
     return (
-      <Wrapper>
+      <Fragment>
         <Helmet title="Applications" />
 
         <Container>
@@ -96,7 +96,7 @@ class Applications extends Component {
             <div className="tab-content">{jobs && this.routers(jobId)}</div>
           </div>
         </Container>
-      </Wrapper>
+      </Fragment>
     );
   }
 }

@@ -16,7 +16,6 @@ class FindTalent extends React.Component {
   componentWillMount() {
     this.jobId = helper.str2int(this.props.match.params.jobId);
     this.onRefresh();
-
     this.tokens = helper.getItemByID(this.props.jobs, this.jobId).location_data.business_data.tokens;
   }
 
@@ -27,6 +26,16 @@ class FindTalent extends React.Component {
       this.onRefresh();
 
       this.tokens = helper.getItemByID(nextProps.jobs, this.jobId).location_data.business_data.tokens;
+    }
+
+    if (this.props.jobseekers === null && nextProps.jobseekers) {
+      helper.loadData('apps_selectedid').then(id => {
+        if (id) {
+          helper.saveData('apps_selectedid');
+          const jobseeker = helper.getItemByID(nextProps.jobseekers, id);
+          this.props.selectJobseeker(jobseeker);
+        }
+      });
     }
   }
 

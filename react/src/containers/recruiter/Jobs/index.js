@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import Helmet from 'react-helmet';
 import { Switch, Route } from 'react-router-dom';
 import { Container } from 'reactstrap';
@@ -11,14 +11,13 @@ import WorkplaceEdit from './WorkplaceEdit';
 import JobList from './JobList';
 import JobEdit from './JobEdit';
 import JobInterface from './JobInterface';
-import Wrapper from './Wrapper';
 
 class Jobs extends React.Component {
   render() {
     const { match } = this.props;
 
     return (
-      <Wrapper>
+      <Fragment>
         <Helmet title="My Workplace & Jobs" />
 
         <Container>
@@ -37,7 +36,7 @@ class Jobs extends React.Component {
             <Route exact path={`${match.path}/:businessId/:workplaceId/:jobId`} component={JobInterface} />
           </Switch>
         </Container>
-      </Wrapper>
+      </Fragment>
     );
   }
 }

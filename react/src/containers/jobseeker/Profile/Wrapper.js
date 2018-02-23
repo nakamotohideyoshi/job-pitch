@@ -1,7 +1,7 @@
 import styled from 'styled-components';
-import { Main } from 'components';
+import { Container } from 'reactstrap';
 
-export default Main.extend`
+export default styled(Container)`
   h2 {
     margin-bottom: 25px;
   }

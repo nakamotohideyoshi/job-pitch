@@ -123,7 +123,7 @@ class Header extends React.Component {
       <Wrapper>
         <Navbar dark expand="md" fixed="top">
           <Container>
-            <NavLink href="https://www.myjobpitch.com/">
+            <NavLink href="https://www.myjobpitch.com/" className="navbar-brand">
               <img src={titleImage} alt="" />
             </NavLink>
 

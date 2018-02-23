@@ -3,6 +3,7 @@ import { Modal, Carousel } from 'antd';
 import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 import faAngleLeft from '@fortawesome/fontawesome-free-solid/faAngleLeft';
 import faAngleRight from '@fortawesome/fontawesome-free-solid/faAngleRight';
+import { LinkButton } from 'components'
 
 import imgLogo from 'assets/logo1.png';
 import imgIntro1 from 'assets/intro1.png';
@@ -73,6 +74,9 @@ class Intro extends React.Component {
             </div>
           ))}
         </Carousel>
+        <div className="skip-container">
+          <LinkButton onClick={this.props.onClose}>Skip</LinkButton>
+        </div>
       </Wrapper>
     );
   }

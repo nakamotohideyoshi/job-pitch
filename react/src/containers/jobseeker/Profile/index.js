@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import Helmet from 'react-helmet';
 import { connect } from 'react-redux';
 import Dropzone from 'react-dropzone';
-import { Container, Form, FormGroup, Label, Button, Row, Col } from 'reactstrap';
+import { Form, FormGroup, Label, Button, Row, Col } from 'reactstrap';
 
 import {
   FormComponent,
@@ -19,7 +19,7 @@ import {
 import { loadProfile, saveProfile } from 'redux/jobseeker/profile';
 import { SDATA } from 'utils/data';
 import Intro from '../Intro';
-import Wrapper, { WithPublic } from './Wrapper';
+import Container, { WithPublic } from './Wrapper';
 
 class Profile extends SaveFormComponent {
   componentWillMount() {
@@ -112,9 +112,9 @@ class Profile extends SaveFormComponent {
   render() {
     if (!this.props.jobseeker) {
       return (
-        <Wrapper>
+        <Container>
           <Loading />
-        </Wrapper>
+        </Container>
       );
     }
 
@@ -123,7 +123,7 @@ class Profile extends SaveFormComponent {
     const error = this.getError();
 
     return (
-      <Wrapper>
+      <Fragment>
         <Helmet title="Profile" />
 
         <Container>
@@ -321,7 +321,7 @@ class Profile extends SaveFormComponent {
         {progress && <PopupProgress label={progress.label} value={progress.value} />}
 
         {!jobseeker.id && !dontShowIntro && <Intro onClose={this.onCloseIntro} />}
-      </Wrapper>
+      </Fragment>
     );
   }
 }

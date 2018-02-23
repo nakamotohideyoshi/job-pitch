@@ -1,12 +1,12 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import Helmet from 'react-helmet';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { Button, Form, FormGroup, Label, Alert, Container } from 'reactstrap';
+import { Button, Form, FormGroup, Label, Alert } from 'reactstrap';
 
 import { FormComponent, Board } from 'components';
 import { login } from 'redux/auth';
-import Wrapper from './Wrapper';
+import Container from './Wrapper';
 
 class Login extends FormComponent {
   componentDidMount() {
@@ -30,7 +30,7 @@ class Login extends FormComponent {
     const error = this.getError();
 
     return (
-      <Wrapper>
+      <Fragment>
         <Helmet title="Login" />
 
         <Container>
@@ -76,7 +76,7 @@ class Login extends FormComponent {
             <Link to="/auth/register">Sign up</Link>
           </div>
         </Container>
-      </Wrapper>
+      </Fragment>
     );
   }
 }

@@ -28,6 +28,15 @@ class MyApplications extends Component {
 
       this.tokens = helper.getItemByID(nextProps.jobs, this.jobId).location_data.business_data.tokens;
     }
+
+    if (this.props.applications === null && nextProps.applications) {
+      helper.loadData('apps_selectedid').then(id => {
+        if (id) {
+          helper.saveData('apps_selectedid');
+          this.props.selectApplication(id);
+        }
+      });
+    }
   }
 
   onRefresh = () => this.props.getApplications(this.jobId, 'CREATED');

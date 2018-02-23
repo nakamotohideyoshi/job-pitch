@@ -15,6 +15,7 @@ import js_profile from './jobseeker/profile/saga';
 import js_jobprofile from './jobseeker/jobprofile/saga';
 import js_find from './jobseeker/find/saga';
 import js_myapps from './jobseeker/myapps/saga';
+import js_job from './jobseeker/job/saga';
 
 import applications from './applications/saga';
 
@@ -35,6 +36,7 @@ export default function* rootSaga() {
     ...js_jobprofile,
     ...js_find,
     ...js_myapps,
+    ...js_job,
 
     ...applications
   ]);

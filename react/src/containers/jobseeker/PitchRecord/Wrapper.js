@@ -1,16 +1,14 @@
-import { Main } from 'components';
+import styled from 'styled-components';
+import { Container } from 'reactstrap';
 
-export default Main.extend`
+export default styled(Container)`
   text-align: center;
+  width: 100% !important;
+  max-width: 720px !important;
 
   h2 {
     margin-bottom: 25px;
     text-align: left;
-  }
-
-  .container {
-    width: 100% !important;
-    max-width: 720px !important;
   }
 
   .help {

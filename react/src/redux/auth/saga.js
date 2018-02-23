@@ -1,7 +1,6 @@
 import { take, takeEvery, fork, put, call, cancel, select } from 'redux-saga/effects';
-import { LOCATION_CHANGE } from 'react-router-redux';
+import { LOCATION_CHANGE, push } from 'react-router-redux';
 
-import { push } from 'react-router-redux';
 import { MENU_DATA, SDATA } from 'utils/data';
 import * as helper from 'utils/helper';
 import * as api from 'utils/api';
@@ -129,17 +128,17 @@ function* _loadAuth() {
     }
   }
 
+  const { router } = yield select();
+  const { pathname, search } = router.location;
+
   if (!data) {
-    data = { loginState: 'none', permission: 0, redirect: '/auth' };
+    data = { loginState: 'none', permission: 0, redirect: `/auth?to=${pathname}` };
     yield put({ type: C.LOGOUT });
   }
 
   // // check current path
-  const { router } = yield select();
-  const { pathname } = router.location;
   const menuData = MENU_DATA[data.loginState];
   const paths = menuData.left.concat(menuData.right, menuData.redirect || []);
-
   const pathInfo = getPathInfo(paths, pathname);
   if (!pathInfo || (pathInfo.permission || 0) > data.permission) {
     yield put(push(data.redirect));
@@ -181,7 +180,16 @@ function* _login(model, usertype) {
   try {
     const { key } = yield call(api.post, '/api-rest-auth/login/', model);
     const { redirect } = yield call(getUserData, key, usertype);
-    yield put(push(redirect));
+
+    const { router } = yield select();
+    const { pathname, search } = router.location;
+    const params = new URLSearchParams(search);
+    const to = params.get('to');
+    if (to) {
+      yield put(push(to));
+    } else {
+      yield put(push(redirect));
+    }
   } catch (errors) {
     yield put({ type: C.LOGIN_ERROR, errors });
   }

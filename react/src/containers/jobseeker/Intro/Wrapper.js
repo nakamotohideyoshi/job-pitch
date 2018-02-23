@@ -52,5 +52,10 @@ export default styled(Modal)`
         }
       }
     }
+
+    .skip-container {
+      text-align: right;
+      padding: 8px 0;
+    }
   }
 `;

@@ -46,6 +46,7 @@ const JS_APPLICATIONS = {
   permission: 2
 };
 const JS_MSGS = { label: 'Messages', to: '/jobseeker/messages/', permission: 2 };
+const JS_JOBS = { to: '/jobseeker/jobs', label: '' };
 
 const HOME_MENU = {
   left: [ABOUT, HELP, TERMS],
@@ -70,7 +71,7 @@ const RECRUITER_MENU = {
 };
 
 const JOBSEEKER_MENU = {
-  redirect: [JS_PROFILE, JS_JOBPROFILE, JS_FIND],
+  redirect: [JS_PROFILE, JS_JOBPROFILE, JS_FIND, JS_JOBS],
   left: [JS_FIND, JS_APPLICATIONS, JS_MSGS],
   right: [
     {

@@ -1,15 +1,7 @@
 import styled from 'styled-components';
+import { Container } from 'reactstrap';
 
-export default styled.div`
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  margin-top: 50px;
-  padding: 15px;
-  background-color: #f9f9f9;
-
+export default styled(Container)`
   .board {
     position: relative;
     height: 100%;

@@ -1,10 +1,9 @@
-import { Main } from 'components';
+import styled from 'styled-components';
+import { Container } from 'reactstrap';
 
-export default Main.extend`
-  .container {
-    padding-top: 30px;
-    align-items: center;
-  }
+export default styled(Container)`
+  padding-top: 30px;
+  align-items: center;
 
   .board {
     width: 100%;

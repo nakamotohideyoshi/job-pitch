@@ -1,15 +1,15 @@
-import React, { Component } from 'react';
+import React, { Fragment } from 'react';
 import Helmet from 'react-helmet';
 import { connect } from 'react-redux';
-import { Container, Button } from 'reactstrap';
+import { Button } from 'reactstrap';
 import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 import faUpload from '@fortawesome/fontawesome-free-solid/faUpload';
 
 import { Board, Loading, PopupProgress, VideoRecorder } from 'components';
 import { loadProfile, uploadPitch } from 'redux/jobseeker/profile';
-import Wrapper from './Wrapper';
+import Container from './Wrapper';
 
-class PitchRecord extends Component {
+class PitchRecord extends React.Component {
   state = {};
 
   componentWillMount() {
@@ -48,9 +48,9 @@ class PitchRecord extends Component {
   render() {
     if (!this.props.jobseeker) {
       return (
-        <Wrapper>
+        <Container>
           <Loading />
-        </Wrapper>
+        </Container>
       );
     }
 
@@ -58,7 +58,7 @@ class PitchRecord extends Component {
     const { pitchUrl, pitchData, showRecorder, progress } = this.state;
 
     return (
-      <Wrapper>
+      <Fragment>
         <Helmet title="Record Pitch" />
 
         <Container>
@@ -98,7 +98,7 @@ class PitchRecord extends Component {
         {showRecorder && <VideoRecorder onClose={this.hideDialog} />}
 
         {progress && <PopupProgress label={progress.label} value={progress.value} />}
-      </Wrapper>
+      </Fragment>
     );
   }
 }

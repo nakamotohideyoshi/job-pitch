@@ -1,12 +1,12 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import Helmet from 'react-helmet';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { Button, Form, FormGroup, Label, Alert, Container } from 'reactstrap';
+import { Button, Form, FormGroup, Label, Alert } from 'reactstrap';
 
 import { FormComponent, Board } from 'components';
 import { register } from 'redux/auth';
-import Wrapper from './Wrapper';
+import Container from './Wrapper';
 
 const BUTTON_TEXT = {
   default: 'Register',
@@ -39,7 +39,7 @@ class Register extends FormComponent {
     let buttonText = BUTTON_TEXT[type];
 
     return (
-      <Wrapper>
+      <Fragment>
         <Helmet title="Register" />
 
         <Container>
@@ -97,7 +97,7 @@ class Register extends FormComponent {
             <Link to="/auth">Sign in</Link>
           </div>
         </Container>
-      </Wrapper>
+      </Fragment>
     );
   }
 }

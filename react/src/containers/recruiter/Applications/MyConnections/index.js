@@ -24,6 +24,15 @@ class MyConnections extends React.Component {
       this.jobId = jobId;
       this.onRefresh();
     }
+
+    if (this.props.applications === null && nextProps.applications) {
+      helper.loadData('apps_selectedid').then(id => {
+        if (id) {
+          helper.saveData('apps_selectedid');
+          this.props.selectApplication(id);
+        }
+      });
+    }
   }
 
   onRefresh = () => this.props.getApplications(this.jobId, 'ESTABLISHED');

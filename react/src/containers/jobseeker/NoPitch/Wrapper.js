@@ -1,14 +1,15 @@
-import { Main } from 'components';
+import styled from 'styled-components';
+import { Container } from 'reactstrap';
 
-export default Main.extend`
+export default styled(Container)`
   display: flex;
   flex-direction: column;
   align-items: center;
   padding-top: 60px;
+  text-align: center;
 
   > div {
     white-space: pre-line;
-    text-align: center;
     padding-top: 20px;
   }
 

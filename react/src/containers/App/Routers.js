@@ -20,6 +20,7 @@ import Profile from 'containers/jobseeker/Profile';
 import PitchRecord from 'containers/jobseeker/PitchRecord';
 import JobProfile from 'containers/jobseeker/JobProfile';
 import JSMessages from 'containers/jobseeker/JSMessages';
+import JobDetail from 'containers/jobseeker/JobDetail';
 
 export default () => (
   <Switch>
@@ -47,6 +48,7 @@ export default () => (
     <Route exact path="/jobseeker/jobprofile" component={JobProfile} />
     <Route exact path="/jobseeker/messages" component={JSMessages} />
     <Route exact path="/jobseeker/messages/:appId" component={JSMessages} />
+    <Route exact path="/jobseeker/jobs/:jobId" component={JobDetail} />
 
     <Route component={NotFound} />
   </Switch>

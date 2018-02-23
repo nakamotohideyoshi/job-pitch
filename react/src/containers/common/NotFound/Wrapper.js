@@ -1,16 +1,10 @@
-import { Main } from 'components';
+import styled from 'styled-components';
 
-export default Main.extend`
+export default styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  position: absolute;
-  top: 0;
   width: 100%;
-  height: 100vh;
-  margin: 0;
-  text-align: center;
-  z-index: 2;
 
   img {
     margin-top: 100px;

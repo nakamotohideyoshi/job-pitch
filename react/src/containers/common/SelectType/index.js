@@ -1,18 +1,18 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import Helmet from 'react-helmet';
 import { connect } from 'react-redux';
-import { Button, Container } from 'reactstrap';
+import { Button } from 'reactstrap';
 import { PageHeader } from 'components';
 
 import { selectUserType } from 'redux/auth';
-import Wrapper from './Wrapper';
+import Container from './Wrapper';
 
 class SelectType extends React.PureComponent {
   render() {
     const { selectUserType } = this.props;
 
     return (
-      <Wrapper>
+      <Fragment>
         <Helmet title="Select Type" />
 
         <Container>
@@ -27,7 +27,7 @@ class SelectType extends React.PureComponent {
             </Button>
           </div>
         </Container>
-      </Wrapper>
+      </Fragment>
     );
   }
 }

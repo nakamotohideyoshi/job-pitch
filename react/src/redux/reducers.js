@@ -13,6 +13,7 @@ import js_find from './jobseeker/find/reducer';
 import js_myapps from './jobseeker/myapps/reducer';
 import js_profile from './jobseeker/profile/reducer';
 import js_jobprofile from './jobseeker/jobprofile/reducer';
+import js_job from './jobseeker/job/reducer';
 
 import applications from './applications/reducer';
 
@@ -32,6 +33,7 @@ export default {
   js_myapps,
   js_profile,
   js_jobprofile,
+  js_job,
 
   applications
 };

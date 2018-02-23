@@ -1,6 +1,7 @@
-import { Main } from 'components';
+import styled from 'styled-components';
+import { Container } from 'reactstrap';
 
-export default Main.extend`
+export default styled(Container)`
   .row {
     > div {
       margin-top: 15px;

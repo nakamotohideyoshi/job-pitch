@@ -1,7 +1,7 @@
 import React from 'react';
 import { withRouter, Link } from 'react-router-dom';
-import Wrapper from './Wrapper';
 import logoImage from 'assets/logo.png';
+import Wrapper from './Wrapper';
 
 const NotFound = ({ history }) => (
   <Wrapper>

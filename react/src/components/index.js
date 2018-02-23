@@ -2,8 +2,8 @@ import Board from './tags/Board';
 import FlexBox from './tags/FlexBox';
 import Loading from './tags/Loading';
 import Logo from './tags/Logo';
-import Main from './tags/Main';
 import PageHeader from './tags/PageHeader';
+import LinkButton from './tags/LinkButton';
 
 import Alert from './elements/Alert';
 import Checkbox from './elements/Checkbox';
@@ -25,7 +25,6 @@ import VideoPlayer from './VideoPlayer';
 import MessageThread from './MessageThread';
 
 export {
-  Main,
   Board,
   FormComponent,
   SaveFormComponent,
@@ -46,5 +45,6 @@ export {
   MJPCard,
   PageHeader,
   FlexBox,
-  SearchBar
+  SearchBar,
+  LinkButton
 };

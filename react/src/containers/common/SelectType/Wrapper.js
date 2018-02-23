@@ -1,9 +1,8 @@
-import { Main } from 'components';
+import styled from 'styled-components';
+import { Container } from 'reactstrap';
 
-export default Main.extend`
-  .container {
-    align-items: center;
-  }
+export default styled(Container)`
+  align-items: center;
 
   .content {
     display: inline-block;

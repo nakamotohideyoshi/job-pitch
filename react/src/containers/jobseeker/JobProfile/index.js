@@ -1,12 +1,12 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import Helmet from 'react-helmet';
 import { connect } from 'react-redux';
-import { Container, Form, FormGroup, Label, Button, Row, Col, Alert } from 'reactstrap';
+import { Form, FormGroup, Label, Button, Row, Col, Alert } from 'reactstrap';
 
 import { FormComponent, SaveFormComponent, Board, HelpIcon, Required, Loading, GoogleMap } from 'components';
 import { loadJobProfile, saveJobProfile } from 'redux/jobseeker/jobprofile';
 import { SDATA } from 'utils/data';
-import Wrapper from './Wrapper';
+import Container from './Wrapper';
 
 class JobProfile extends SaveFormComponent {
   componentWillMount() {
@@ -37,7 +37,6 @@ class JobProfile extends SaveFormComponent {
   onSave = () => {
     if (this.isValid(['sectors', 'place_name'])) {
       const data = Object.assign({}, this.state.model);
-      console.log(data);
       this.props.saveJobProfile(data);
     }
   };
@@ -45,9 +44,9 @@ class JobProfile extends SaveFormComponent {
   render() {
     if (!this.props.profile) {
       return (
-        <Wrapper>
+        <Container>
           <Loading />
-        </Wrapper>
+        </Container>
       );
     }
 
@@ -57,7 +56,7 @@ class JobProfile extends SaveFormComponent {
     const error = this.getError();
 
     return (
-      <Wrapper>
+      <Fragment>
         <Helmet title="Job Profile" />
 
         <Container>
@@ -127,7 +126,7 @@ class JobProfile extends SaveFormComponent {
             </Form>
           </Board>
         </Container>
-      </Wrapper>
+      </Fragment>
     );
   }
 }

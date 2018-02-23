@@ -1,16 +1,16 @@
-import React, { Component } from 'react';
+import React, { Fragment } from 'react';
 import Helmet from 'react-helmet';
 import { connect } from 'react-redux';
-import { Container, Button } from 'reactstrap';
+import { Button } from 'reactstrap';
 import { Loading, Board, PageHeader } from 'components';
 
 import * as api from 'utils/api';
 import { SDATA } from 'utils/data';
 import { getBusinesses } from 'redux/recruiter/businesses';
 import BusinessSelect from './BusinessSelect';
-import Wrapper from './Wrapper';
+import Container from './Wrapper';
 
-class Credits extends Component {
+class Credits extends React.Component {
   state = {};
 
   componentWillMount() {
@@ -77,7 +77,7 @@ class Credits extends Component {
     const { selectedBusiness } = this.state;
 
     return (
-      <Wrapper>
+      <Fragment>
         <Helmet title="Add Credit" />
 
         {businesses ? (
@@ -100,7 +100,7 @@ class Credits extends Component {
         ) : (
           <Loading />
         )}
-      </Wrapper>
+      </Fragment>
     );
   }
 }

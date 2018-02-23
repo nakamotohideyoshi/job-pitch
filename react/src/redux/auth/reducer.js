@@ -2,7 +2,11 @@ import { LOCATION_CHANGE } from 'react-router-redux';
 import * as C from './constants';
 
 const initialState = {
-  permission: 0
+  permission: 0,
+  // loginState: 'none',
+
+  loading: false,
+  errors: null,
 };
 
 export default function reducer(state = initialState, action = {}) {

@@ -1,11 +1,11 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import Helmet from 'react-helmet';
 import { connect } from 'react-redux';
-import { Button, Form, FormGroup, Label, Alert, Container } from 'reactstrap';
+import { Button, Form, FormGroup, Label, Alert } from 'reactstrap';
 
 import { FormComponent, Board } from 'components';
 import { resetPassword } from 'redux/reset';
-import Wrapper from './Wrapper';
+import Container from './Wrapper';
 
 class Reset extends FormComponent {
   componentDidMount() {
@@ -33,7 +33,7 @@ class Reset extends FormComponent {
     const error = this.getError();
 
     return (
-      <Wrapper>
+      <Fragment>
         <Helmet title="Reset Password" />
 
         <Container>
@@ -70,7 +70,7 @@ class Reset extends FormComponent {
             </Form>
           </Board>
         </Container>
-      </Wrapper>
+      </Fragment>
     );
   }
 }

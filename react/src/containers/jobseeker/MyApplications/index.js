@@ -1,7 +1,7 @@
-import React, { Component } from 'react';
+import React, { Fragment } from 'react';
 import Helmet from 'react-helmet';
 import { connect } from 'react-redux';
-import { Container, Row, Col } from 'reactstrap';
+import { Row, Col } from 'reactstrap';
 import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 import faSearch from '@fortawesome/fontawesome-free-solid/faSearch';
 import { PageHeader, SearchBar, Loading, MJPCard, FlexBox, JobDetail } from 'components';
@@ -10,16 +10,28 @@ import * as helper from 'utils/helper';
 import { confirm } from 'redux/common';
 import { loadProfile } from 'redux/jobseeker/profile';
 import { getApplications } from 'redux/applications';
-import Wrapper from './Wrapper';
+import Container from './Wrapper';
 
 import NoPitch from '../NoPitch';
 
-class MyApplications extends Component {
+class MyApplications extends React.Component {
   state = {};
 
   componentWillMount() {
     this.props.loadProfile();
     this.props.getApplications();
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (this.props.applications === null && nextProps.applications) {
+      helper.loadData('jobs_selectedid').then(id => {
+        if (id) {
+          helper.saveData('jobs_selectedid');
+          const app = helper.getItemByID(nextProps.applications, id);
+          this.onDetail(app);
+        }
+      });
+    }
   }
 
   onDetail = selectedApp => this.setState({ selectedApp });
@@ -103,7 +115,7 @@ class MyApplications extends Component {
     }
 
     return (
-      <Wrapper>
+      <Fragment>
         <Helmet title="My Applications" />
 
         <Container>
@@ -132,7 +144,7 @@ class MyApplications extends Component {
             ]}
           />
         )}
-      </Wrapper>
+      </Fragment>
     );
   }
 }

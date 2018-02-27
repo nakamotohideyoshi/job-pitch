@@ -185,7 +185,7 @@ function* _login(model, usertype) {
     const { pathname, search } = router.location;
     const params = new URLSearchParams(search);
     const to = params.get('to');
-    if (to) {
+    if (to && to !== '/') {
       yield put(push(to));
     } else {
       yield put(push(redirect));

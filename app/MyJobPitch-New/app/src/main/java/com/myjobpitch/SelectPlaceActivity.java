@@ -137,8 +137,10 @@ public class SelectPlaceActivity extends FragmentActivity implements GoogleMap.O
             } else {
                 Location location = LocationServices.FusedLocationApi.getLastLocation(
                         mGoogleApiClient);
-                mCurrentPos = new LatLng(location.getLatitude(), location.getLongitude());
-                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(mCurrentPos, 14));
+                if (location != null) {
+                    mCurrentPos = new LatLng(location.getLatitude(), location.getLongitude());
+                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(mCurrentPos, 14));
+                }
             }
         }
 

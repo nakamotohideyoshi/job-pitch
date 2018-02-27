@@ -24,7 +24,6 @@ function* _getJob({ jobId }) {
       return;
     }
   } catch (errors) {}
-  yield put(push(`/jobseeker/find`));
 }
 
 function* getJob() {

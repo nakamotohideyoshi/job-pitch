@@ -30,7 +30,6 @@ function* _getJobseeker({ jobId, jobseekerId }) {
       return;
     }
   } catch (errors) {}
-  yield put(push(`/recruiter/applications/`));
 }
 
 function* getJobseeker() {

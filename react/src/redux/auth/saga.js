@@ -182,9 +182,9 @@ function* _login(model, usertype) {
     const { redirect } = yield call(getUserData, key, usertype);
 
     const { router } = yield select();
-    const { pathname, search } = router.location;
-    const params = new URLSearchParams(search);
-    const to = params.get('to');
+    const { search } = router.location;
+    const params = helper.parseUrlParams(search);
+    const { to } = params;
     if (to && to !== '/') {
       yield put(push(to));
     } else {

@@ -64,22 +64,27 @@ class App extends React.Component {
             <ModalHeader toggle={confirm}>{confirmInfo.title}</ModalHeader>
             <ModalBody>{confirmInfo.message}</ModalBody>
             <ModalFooter>
-              {confirmInfo.buttons.map((info, index) => (
-                <Button
-                  key={index}
-                  color={info.color || 'gray'}
-                  outline={info.outline}
-                  onClick={() => {
-                    confirm();
-                    if (info.onClick) {
-                      info.onClick();
-                    }
-                  }}
-                  style={{ minWidth: '100px' }}
-                >
-                  {info.label || 'Cancel'}
-                </Button>
-              ))}
+              {confirmInfo.buttons.map((info, index) => {
+                if (info.component) {
+                  return info.component;
+                }
+                return (
+                  <Button
+                    key={index}
+                    color={info.color || 'gray'}
+                    outline={info.outline}
+                    onClick={() => {
+                      confirm();
+                      if (info.onClick) {
+                        info.onClick();
+                      }
+                    }}
+                    style={{ minWidth: '100px' }}
+                  >
+                    {info.label || 'Cancel'}
+                  </Button>
+                );
+              })}
             </ModalFooter>
           </Modal>
         )}

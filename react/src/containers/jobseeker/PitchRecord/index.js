@@ -6,8 +6,11 @@ import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 import faUpload from '@fortawesome/fontawesome-free-solid/faUpload';
 
 import { Board, Loading, PopupProgress, VideoRecorder } from 'components';
+import { confirm } from 'redux/common';
 import { loadProfile, uploadPitch } from 'redux/jobseeker/profile';
 import Container from './Wrapper';
+
+import itunesImage from 'assets/itunes-button.svg';
 
 class PitchRecord extends React.Component {
   state = {};
@@ -28,7 +31,27 @@ class PitchRecord extends React.Component {
     }
   }
 
-  recordPitch = () => this.setState({ showRecorder: true });
+  recordPitch = () => {
+    if (navigator.userAgent.indexOf('iPhone') !== -1) {
+      this.props.confirm('Confirm', `To record your video, you need to download the app`, [
+        { outline: true },
+        {
+          component: (
+            <img
+              src={itunesImage}
+              onClick={() => {
+                window.open('https://itunes.apple.com/us/app/myjobpitch-job-matching/id1124296674?ls=1&mt=8', '_blank');
+              }}
+              alt=""
+              height="33"
+            />
+          )
+        }
+      ]);
+    } else {
+      this.setState({ showRecorder: true });
+    }
+  };
 
   hideDialog = (url, data) => {
     this.setState({
@@ -109,5 +132,5 @@ export default connect(
     errors: state.js_profile.errors,
     saving: state.js_profile.saving
   }),
-  { loadProfile, uploadPitch }
+  { loadProfile, uploadPitch, confirm }
 )(PitchRecord);

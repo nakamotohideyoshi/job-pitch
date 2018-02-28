@@ -230,3 +230,19 @@ export function getPitch(jobseeker) {
 
   return null;
 }
+
+export function parseUrlParams(str) {
+  if (str[0] === '?') {
+    str = str.slice(1);
+  }
+
+  const params = {};
+  if (str !== '') {
+    str.split('&').forEach(str => {
+      const arr = str.split('=');
+      params[arr[0]] = arr[1];
+    });
+  }
+
+  return params;
+}

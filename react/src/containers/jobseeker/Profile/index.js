@@ -16,10 +16,12 @@ import {
   VideoRecorder,
   VideoPlayer
 } from 'components';
+import { confirm } from 'redux/common';
 import { loadProfile, saveProfile } from 'redux/jobseeker/profile';
 import { SDATA } from 'utils/data';
 import Intro from '../Intro';
 import Container, { WithPublic } from './Wrapper';
+import itunesImage from 'assets/itunes-button.svg';
 
 class Profile extends SaveFormComponent {
   componentWillMount() {
@@ -60,7 +62,27 @@ class Profile extends SaveFormComponent {
 
   removeCV = () => this.setState({ cv: null });
 
-  recordPitch = () => this.setState({ showRecorder: true });
+  recordPitch = () => {
+    if (navigator.userAgent.indexOf('iPhone') !== -1) {
+      this.props.confirm('Confirm', `To record your video, you need to download the app`, [
+        { outline: true },
+        {
+          component: (
+            <img
+              src={itunesImage}
+              onClick={() => {
+                window.open('https://itunes.apple.com/us/app/myjobpitch-job-matching/id1124296674?ls=1&mt=8', '_blank');
+              }}
+              alt=""
+              height="33"
+            />
+          )
+        }
+      ]);
+    } else {
+      this.setState({ showRecorder: true });
+    }
+  };
 
   playPitch = () => this.setState({ playUrl: this.pitchUrl });
 
@@ -106,7 +128,7 @@ class Profile extends SaveFormComponent {
 
   onCloseIntro = () => {
     Profile.dontShowIntro = true;
-    this.setState({ dontShowIntro: true })
+    this.setState({ dontShowIntro: true });
   };
 
   render() {
@@ -332,5 +354,5 @@ export default connect(
     errors: state.js_profile.errors,
     saving: state.js_profile.saving
   }),
-  { loadProfile, saveProfile }
+  { loadProfile, saveProfile, confirm }
 )(Profile);

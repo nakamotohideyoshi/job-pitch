@@ -1,5 +1,7 @@
 package com.myjobpitch.fragments;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -43,6 +45,27 @@ public class HelpFragment extends BaseFragment {
     @OnClick(R.id.help_privacy)
     void onPrivacy() {
         goWebviewFragment("Privacy", "privacy");
+    }
+
+    @OnClick(R.id.help_shareapp)
+    void onShareApp() {
+        String link = AppData.user.isRecruiter() ? "https://www.myjobpitch.com/recruiters/" : "https://www.myjobpitch.com/candidates/";
+        Intent sharingIntent = new Intent(Intent.ACTION_SEND);
+        sharingIntent.setType("text/html");
+        sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, link);
+        startActivity(Intent.createChooser(sharingIntent,"Share using"));
+    }
+
+    @OnClick(R.id.help_twitter)
+    void onFollow() {
+        Intent intent;
+        try {
+            getActivity().getPackageManager().getPackageInfo("com.twitter.android", 0);
+            intent = new Intent(Intent.ACTION_VIEW, Uri.parse("twitter://user?screen_name=myjobpitch"));
+        } catch (Exception e) {
+            intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://twitter.com/myjobpitch"));
+        }
+        startActivity(intent);
     }
 
     void goWebviewFragment(String title, String filename) {

@@ -10,6 +10,8 @@ import UIKit
 
 class HelpController: UITableViewController {
     
+    var shareData: NSMutableDictionary = NSMutableDictionary()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -28,7 +30,6 @@ class HelpController: UITableViewController {
         label.attributedText = title
         navigationItem.titleView = label
         label.sizeToFit()
-        
     }
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -53,6 +54,36 @@ class HelpController: UITableViewController {
         } else {
             webView.file = segue.identifier
         }        
+    }
+    
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        if indexPath.row == 4 {
+            let itemProvider = MyCustomProvider(placeholderItem: "")
+            let controller = UIActivityViewController(activityItems: [itemProvider], applicationActivities: nil)
+            present(controller, animated: true, completion: nil)
+        } else if indexPath.row == 5 {
+            let url = URL(string: "https://twitter.com/myjobpitch")!
+            UIApplication.shared.openURL(url)
+        }
+    }
+    
+}
+
+class MyCustomProvider: UIActivityItemProvider {
+    
+    override func activityViewController(_ activityViewController: UIActivityViewController, itemForActivityType activityType: UIActivityType) -> Any? {
+        if activityType == UIActivityType.postToFacebook {
+            UIPasteboard.general.string = AppData.user.isRecruiter() ? "https://www.myjobpitch.com/recruiters/" : "https://www.myjobpitch.com/candidates/";
+            return ""
+        }
+        return AppData.user.isRecruiter() ? "https://www.myjobpitch.com/recruiters/" : "https://www.myjobpitch.com/candidates/";
+    }
+    
+    override func activityViewController(_ activityViewController: UIActivityViewController, subjectForActivityType activityType: UIActivityType?) -> String {
+        if activityType?.rawValue == "com.apple.UIKit.activity.Mail" {
+            return AppData.user.isRecruiter() ? "https://www.myjobpitch.com/recruiters/" : "https://www.myjobpitch.com/candidates/";
+        }
+        return ""
     }
     
 }

@@ -3,7 +3,7 @@ import { Modal, Carousel } from 'antd';
 import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 import faAngleLeft from '@fortawesome/fontawesome-free-solid/faAngleLeft';
 import faAngleRight from '@fortawesome/fontawesome-free-solid/faAngleRight';
-import { LinkButton } from 'components'
+import { LinkButton } from 'components';
 
 import imgLogo from 'assets/logo1.png';
 import imgIntro1 from 'assets/intro1.png';
@@ -54,13 +54,7 @@ class Intro extends React.Component {
     };
 
     return (
-      <Wrapper
-        visible
-        footer={null}
-        maskClosable={false}
-        onCancel={this.props.onClose}
-        zIndex={2000}
-      >
+      <Wrapper visible footer={null} maskClosable={false} onCancel={this.props.onClose} zIndex={2000}>
         <Carousel afterChange={this.onChange} {...settings}>
           {INTRO_DATA.map((data, i) => (
             <div key={i}>
@@ -75,7 +69,7 @@ class Intro extends React.Component {
           ))}
         </Carousel>
         <div className="skip-container">
-          <LinkButton onClick={this.props.onClose}>Skip</LinkButton>
+          <LinkButton onClick={this.props.onClose}>{index !== 3 ? 'Skip' : "I'm ready"}</LinkButton>
         </div>
       </Wrapper>
     );

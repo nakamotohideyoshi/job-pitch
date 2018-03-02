@@ -54,7 +54,7 @@ export default styled(Modal)`
     }
 
     .skip-container {
-      text-align: right;
+      text-align: center;
       padding: 8px 0;
     }
   }

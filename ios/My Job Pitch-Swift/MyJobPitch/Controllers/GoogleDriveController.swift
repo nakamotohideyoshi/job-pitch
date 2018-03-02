@@ -71,7 +71,7 @@ class GoogleDriveController: UIViewController, GIDSignInDelegate, GIDSignInUIDel
     func sign(_ signIn: GIDSignIn!, didSignInFor user: GIDGoogleUser!,
               withError error: Error!) {
         
-        loadingView.removeFromSuperview()
+        loadingView?.removeFromSuperview()
         
         if error != nil {
             PopupController.showGreen("Authentication Error",
@@ -135,7 +135,7 @@ class GoogleDriveController: UIViewController, GIDSignInDelegate, GIDSignInUIDel
         showLoading("Downloading...")
         let query = GTLRDriveQuery_FilesGet.queryForMedia(withFileId: file.identifier!)
         service.executeQuery(query) { (ticket, result, error) in
-            self.loadingView.removeFromSuperview()
+            self.loadingView?.removeFromSuperview()
             if error == nil {
                 let object = result as! GTLRDataObject
                 let path = NSHomeDirectory().appendingFormat("/Documents/%@", file.name!.replacingOccurrences(of: " ", with: ""))

@@ -13,6 +13,7 @@ class IntroController: UIViewController {
     @IBOutlet weak var scrollView: UIScrollView!
     @IBOutlet weak var pageControl: UIPageControl!
     @IBOutlet weak var readyButton: GreenButton!
+    @IBOutlet weak var skipButton: UIButton!
     @IBOutlet weak var logoContainer: UIView!
     
     override func viewDidLoad() {
@@ -47,7 +48,8 @@ extension IntroController: UIScrollViewDelegate {
         let currentPage = pageControl.currentPage
         pageControl.currentPage = Int(scrollView.contentOffset.x) / Int(UIScreen.main.bounds.size.width)
         if currentPage != pageControl.currentPage {
-            readyButton.setTitle(pageControl.currentPage == 3 ? "Start" : "Next", for: .normal)
+            readyButton.setTitle(pageControl.currentPage == 3 ? "I'm ready" : "Next", for: .normal)
+            skipButton.isHidden = pageControl.currentPage == 3
         }
     }
     

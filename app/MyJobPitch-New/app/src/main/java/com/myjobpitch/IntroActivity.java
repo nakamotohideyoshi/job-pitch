@@ -30,6 +30,9 @@ public class IntroActivity extends AppCompatActivity {
     @BindView(R.id.im_ready)
     Button mReadyButton;
 
+    @BindView(R.id.skip)
+    Button mSkipButton;
+
     int mCurrentPage = 0;
     static final int[] DOT_IDS = {R.id.dot0, R.id.dot1, R.id.dot2, R.id.dot3};
 
@@ -53,6 +56,7 @@ public class IntroActivity extends AppCompatActivity {
                 }
                 if (mCurrentPage != position) {
                     mReadyButton.setText(position == 3 ? "I'm ready" : "Next");
+                    mSkipButton.setVisibility(position == 3 ? View.INVISIBLE : View.VISIBLE);
                 }
                 mCurrentPage = position;
                 findViewById(DOT_IDS[mCurrentPage]).setBackgroundResource(R.drawable.circle_yellow);

@@ -42,11 +42,16 @@ class MJPCard extends React.PureComponent {
       menus,
       loading,
       icon,
-      onClick
+      onClick,
+      className
     } = this.props;
 
     return (
-      <Wrapper className={loading ? 'loading' : ''} style={{ cursor: onClick && 'pointer' }} onClick={onClick}>
+      <Wrapper
+        className={`${className} ${loading ? 'loading' : ''}`}
+        style={{ cursor: onClick && 'pointer' }}
+        onClick={onClick}
+      >
         <Logo src={image} className="logo" />
 
         {icon && <FontAwesomeIcon icon={icon} size="lg" />}

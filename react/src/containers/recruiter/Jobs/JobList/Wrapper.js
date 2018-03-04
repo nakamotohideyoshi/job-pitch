@@ -9,6 +9,14 @@ export default styled.div`
     > div {
       padding-bottom: 15px;
     }
+
+    .card.closed {
+      text-decoration: line-through;
+
+      > div:first-child {
+        opacity: 0.5;
+      }
+    }
   }
 
   .add {

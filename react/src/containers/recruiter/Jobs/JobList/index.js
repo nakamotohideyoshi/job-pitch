@@ -81,7 +81,7 @@ class JobList extends React.Component {
               this.onAdd();
             }}
           >
-            Create workplace
+            Create job
           </a>
         </FlexBox>
       );
@@ -106,6 +106,7 @@ class JobList extends React.Component {
                 bProperty1={sector}
                 onClick={() => this.onSelect(job)}
                 loading={job.updating || job.deleting}
+                className={closed}
                 menus={[
                   {
                     label: 'Edit',

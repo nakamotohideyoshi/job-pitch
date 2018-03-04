@@ -100,7 +100,7 @@ function* _getJob({ jobId }) {
     let job;
     if (isNaN(jobId)) {
       job = {
-        status: helper.getJobStatusByName('CLOSED')
+        status: helper.getJobStatusByName('OPEN')
       };
     } else {
       job = yield call(api.get, `/api/user-jobs/${jobId}/`);

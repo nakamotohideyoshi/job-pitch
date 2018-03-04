@@ -130,7 +130,7 @@ class WorkplaceEdit extends SaveFormComponent {
 
                 <FormGroup>
                   <WithPublic>
-                    <Label>Mobile</Label>
+                    <Label>Phone</Label>
                     <this.FormCheckbox name="mobile_public" label="Public" />
                   </WithPublic>
                   <this.FormInput name="mobile" className="with-public" />

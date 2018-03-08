@@ -33,6 +33,7 @@ ALL_AUTH_SETTINGS = {
     "ACCOUNT_USER_MODEL_USERNAME_FIELD": 'email',
     "ACCOUNT_EMAIL_REQUIRED": True,
     "ACCOUNT_AUTHENTICATION_METHOD": 'email',
+    "ACCOUNT_EMAIL_VERIFICATION": "none",
     "ACCOUNT_CONFIRM_EMAIL_ON_GET": True,
 #     'ACCOUNT_FORMS': {
 #         'signup': 'mjp.RegistrationForm'

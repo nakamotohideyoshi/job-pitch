@@ -3,6 +3,7 @@ from django.contrib.auth import get_user_model
 from django.contrib.gis.geos import Point
 from django.db import transaction
 from rest_framework import serializers
+from rest_framework.exceptions import PermissionDenied
 
 from models import (
     Business,
@@ -17,7 +18,12 @@ from models import (
     Role,
     TokenStore,
     InitialTokens,
-    AppDeprecation)
+    AppDeprecation,
+    BusinessImage,
+    LocationImage,
+    JobImage,
+    BusinessUser,
+)
 
 from rest_auth.serializers import LoginSerializer as BaseLoginSerializer
 from rest_auth.registration.serializers import RegisterSerializer as BaseRegisterSerializer
@@ -95,7 +101,17 @@ class LocationSerializer(serializers.ModelSerializer):
 
     def get_active_job_count(self, obj):
         return obj.jobs.filter(status__name="OPEN").count()
-    
+
+    def validate_business(self, value):
+        request = self.context['request']
+        try:
+            business_user = request.user.business_users.get(business=value)
+        except BusinessUser.DoesNotExist:
+            raise PermissionDenied()
+        if business_user.locations.exists():
+            raise PermissionDenied()
+        return value
+
     def save(self, **kwargs):
         self.validated_data['latlng'] = Point(**self.validated_data['latlng'])
         return super(LocationSerializer, self).save(**kwargs)
@@ -108,7 +124,7 @@ class LocationSerializer(serializers.ModelSerializer):
 class JobProfileSerializer(serializers.ModelSerializer):
     longitude = serializers.FloatField(source='latlng.x')
     latitude = serializers.FloatField(source='latlng.y')
-    
+
     def save(self, **kwargs):
         self.validated_data['latlng'] = Point(**self.validated_data['latlng'])
         return super(JobProfileSerializer, self).save(**kwargs)
@@ -121,7 +137,17 @@ class JobProfileSerializer(serializers.ModelSerializer):
 class JobSerializer(serializers.ModelSerializer):
     location_data = LocationSerializer(source='location', read_only=True)
     images = RelatedImageURLField(many=True, read_only=True)
-        
+
+    def validate_location(self, value):
+        request = self.context['request']
+        try:
+            business_user = request.user.business_users.get(business=value.business)
+        except BusinessUser.DoesNotExist:
+            raise PermissionDenied()
+        if business_user.locations.exists() and not business_user.locations.filter(pk=value.pk).exists():
+            raise PermissionDenied()
+        return value
+
     class Meta:
         model = Job
 
@@ -330,3 +356,54 @@ class AppDeprecationSerializer(serializers.ModelSerializer):
     class Meta:
         model = AppDeprecation
         fields = ('platform', 'warning', 'error',)
+
+
+class BusinessImageSerializer(serializers.ModelSerializer):
+    thumbnail = serializers.ImageField(read_only=True)
+
+    def validate_business(self, value):
+        request = self.context['request']
+        try:
+            business_user = request.user.business_users.get(business=value)
+        except BusinessUser.DoesNotExist:
+            raise PermissionDenied()
+        if business_user.locations.exists():
+            raise PermissionDenied()
+        return value
+
+    class Meta:
+        model = BusinessImage
+
+
+class LocationImageSerializer(serializers.ModelSerializer):
+    thumbnail = serializers.ImageField(read_only=True)
+
+    def validate_location(self, value):
+        request = self.context['request']
+        try:
+            business_user = request.user.business_users.get(business=value.business)
+        except BusinessUser.DoesNotExist:
+            raise PermissionDenied()
+        if business_user.locations.exists() and not business_user.locations.filter(pk=value.pk).exists():
+            raise PermissionDenied()
+        return value
+
+    class Meta:
+        model = LocationImage
+
+
+class JobImageSerializer(serializers.ModelSerializer):
+    thumbnail = serializers.ImageField(read_only=True)
+
+    def validate_job(self, value):
+        request = self.context['request']
+        try:
+            business_user = request.user.business_users.get(business=value.location.business)
+        except BusinessUser.DoesNotExist:
+            raise PermissionDenied()
+        if business_user.locations.exists() and not business_user.locations.filter(pk=value.location.pk).exists():
+            raise PermissionDenied()
+        return value
+
+    class Meta:
+        model = JobImage

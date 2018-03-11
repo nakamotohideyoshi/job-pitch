@@ -11,6 +11,7 @@ from django.http import HttpResponseRedirect
 from django.views.generic import View
 
 from rest_framework import viewsets, permissions, serializers, status
+from rest_framework.exceptions import PermissionDenied
 from rest_framework.response import Response
 from rest_framework.reverse import reverse
 from rest_framework.routers import DefaultRouter
@@ -63,6 +64,9 @@ from mjp.serializers import (
     InitialTokensSerializer,
     JobSeekerReadSerializer,
     AppDeprecationSerializer,
+    BusinessImageSerializer,
+    LocationImageSerializer,
+    JobImageSerializer,
 )
 
 # For google APIs
@@ -106,27 +110,22 @@ PayPalProductViewSet = SimpleReadOnlyViewSet(PayPalProduct)
 
 class UserBusinessImageViewSet(viewsets.ModelViewSet):
     class UserBusinessImagePermission(permissions.BasePermission):
-        def has_permission(self, request, view):
-            if request.method in permissions.SAFE_METHODS:
-                return True
-            pk = request.data.get('business')
-            print "business pk: %s" % pk
-            if pk:
-                return Business.objects.filter(pk=pk, users=request.user).exists()
+        def has_object_permission(self, request, view, obj):
+            business_user = obj.business.business_users.get(user=request.user)
+            if business_user.locations.exists():
+                return False
             return True
 
-        def has_object_permission(self, request, view, obj):
-            if request.method in permissions.SAFE_METHODS:
-                return True
-            return request.user.businesses.filter(pk=obj.business.pk).exists()
-    
+    def get_queryset(self):
+        return super(UserBusinessImageViewSet, self).get_queryset().filter(business__users=self.request.user)
+
     def perform_create(self, serializer):
         image = serializer.save()
         # for now, allow only one image
         image.business.images.exclude(pk=image.pk).delete()
-        
+
     permission_classes = (permissions.IsAuthenticated, UserBusinessImagePermission,)
-    serializer_class = SimpleSerializer(BusinessImage, {'thumbnail': serializers.ImageField(read_only=True)})
+    serializer_class = BusinessImageSerializer
     queryset = BusinessImage.objects.all()
 router.register('user-business-images', UserBusinessImageViewSet, base_name='user-business-image')
 
@@ -144,12 +143,15 @@ class UserBusinessViewSet(viewsets.ModelViewSet):
             if request.method in permissions.SAFE_METHODS:
                 return True
             if request.method in ('POST', 'DELETE'):
-                return request.user.can_create_businesses or not request.user.businesses.exists()
+                return request.user.can_create_businesses and request.user.is_recruiter
             return True
 
         def has_object_permission(self, request, view, obj):
             if request.method in permissions.SAFE_METHODS:
                 return True
+            business_user = obj.business_users.get(user=request.user)
+            if business_user.locations.exists():
+                return False
             if request.method == 'DELETE':
                 return request.user.can_create_businesses and obj.users.filter(pk=int(request.user.pk)).exists()
             return obj.users.filter(pk=int(request.user.pk)).exists()
@@ -170,27 +172,22 @@ router.register('user-businesses', UserBusinessViewSet, base_name='user-business
 
 class UserLocationImageViewSet(viewsets.ModelViewSet):
     class UserLocationImagePermission(permissions.BasePermission):
-        def has_permission(self, request, view):
-            if request.method in permissions.SAFE_METHODS:
-                return True
-            pk = request.data.get('location')
-            print "location pk: %s" % pk
-            if pk:
-                return Location.objects.filter(pk=pk, business__users=request.user).exists()
+        def has_object_permission(self, request, view, obj):
+            business_user = obj.location.business.business_users.get(user=request.user)
+            if business_user.locations.exists():
+                return business_user.locations.filter(pk=obj.location.pk).exists()
             return True
 
-        def has_object_permission(self, request, view, obj):
-            if request.method in permissions.SAFE_METHODS:
-                return True
-            return request.user.businesses.filter(locations=obj.location).exists()
-    
+    def get_queryset(self):
+        return super(UserLocationImageViewSet, self).get_queryset().filter(location__business__users=self.request.user)
+
     def perform_create(self, serializer):
         image = serializer.save()
         # for now, allow only one image
         image.location.images.exclude(pk=image.pk).delete()
     
     permission_classes = (permissions.IsAuthenticated, UserLocationImagePermission,)
-    serializer_class = SimpleSerializer(LocationImage, {'thumbnail': serializers.ImageField(read_only=True)})
+    serializer_class = LocationImageSerializer
     queryset = LocationImage.objects.all()
 router.register('user-location-images', UserLocationImageViewSet, base_name='user-location-image')
 
@@ -200,26 +197,18 @@ class UserLocationViewSet(viewsets.ModelViewSet):
         def has_permission(self, request, view):
             if request.method in permissions.SAFE_METHODS:
                 return True
-            pk = request.data.get('business')
-            print "business pk: %s" % pk
-            if pk:
-                pk = int(pk)
-                return Business.objects.filter(pk=pk, users__pk=int(request.user.pk)).exists()
-            return True
-        
+            return request.user.is_recruiter
+
         def has_object_permission(self, request, view, obj):
             if request.method in permissions.SAFE_METHODS:
                 return True
-            return request.user.businesses.filter(locations=obj).exists()
+            business_user = obj.business.business_users.get(user=request.user)
+            if business_user.locations.exists():
+                return business_user.locations.filter(pk=obj.pk).exists()
+            return True
     
     permission_classes = (permissions.IsAuthenticated, LocationPermission)
     serializer_class = LocationSerializer
-    
-    def retrieve(self, request, pk=None):
-        instance = self.get_object()
-        serializer = self.get_serializer(instance)
-        print serializer.data
-        return super(UserLocationViewSet, self).retrieve(request, pk)
 
     def get_queryset(self):
         business = self.request.query_params.get('business', None)
@@ -240,27 +229,22 @@ router.register('locations', LocationViewSet, base_name='location')
 
 class UserJobImageViewSet(viewsets.ModelViewSet):
     class UserJobImagePermission(permissions.BasePermission):
-        def has_permission(self, request, view):
-            if request.method in permissions.SAFE_METHODS:
-                return True
-            pk = request.data.get('job')
-            print "job pk: %s" % pk
-            if pk:
-                return Job.objects.filter(pk=pk, location__business__users=request.user).exists()
+        def has_object_permission(self, request, view, obj):
+            business_user = obj.job.location.business.business_users.get(user=request.user)
+            if business_user.locations.exists():
+                return business_user.locations.filter(jobs__pk=obj.location.pk).exists()
             return True
 
-        def has_object_permission(self, request, view, obj):
-            if request.method in permissions.SAFE_METHODS:
-                return True
-            return request.user.businesses.filter(locations__jobs=obj.job).exists()
-        
+    def get_queryset(self):
+        return super(UserJobImageViewSet, self).get_queryset().filter(job__location__business__users=self.request.user)
+
     def perform_create(self, serializer):
         image = serializer.save()
         # for now, allow only one image
         image.job.images.exclude(pk=image.pk).delete()
     
     permission_classes = (permissions.IsAuthenticated, UserJobImagePermission,)
-    serializer_class = SimpleSerializer(JobImage, {'thumbnail': serializers.ImageField(read_only=True)})
+    serializer_class = JobImageSerializer
     queryset = JobImage.objects.all()
 router.register('user-job-images', UserJobImageViewSet, base_name='user-job-image')
 
@@ -268,19 +252,21 @@ router.register('user-job-images', UserJobImageViewSet, base_name='user-job-imag
 class UserJobViewSet(viewsets.ModelViewSet):
     class UserJobPermission(permissions.BasePermission):
         def has_permission(self, request, view):
-            pk = request.query_params.get('location')
-            if pk:
-                return Location.objects.filter(pk=pk, business__users__pk=int(request.user.pk)).exists()
-            return True
+            if request.method in permissions.SAFE_METHODS:
+                return True
+            return request.user.is_recruiter
 
         def has_object_permission(self, request, view, obj):
             if request.method in permissions.SAFE_METHODS:
                 return True
-            return request.user.businesses.filter(locations__jobs=obj).exists()
+            business_user = obj.location.business.business_users.get(user=request.user)
+            if business_user.locations.exists():
+                return business_user.locations.filter(job__pk=obj.pk).exists()
+            return True
     
     permission_classes = (permissions.IsAuthenticated, UserJobPermission)
     serializer_class = JobSerializer
-    
+
     def get_queryset(self):
         location = self.request.query_params.get('location', None)
         query = Job.objects.filter(location__business__users=self.request.user)
@@ -448,12 +434,6 @@ router.register('jobs', JobViewSet, base_name='jobs')
 
 
 class ApplicationViewSet(viewsets.ModelViewSet):
-    try:
-        RECRUITER = Role.objects.get(name=Role.RECRUITER)
-        JOB_SEEKER = Role.objects.get(name=Role.JOB_SEEKER)
-    except:
-        pass
-    
     class ApplicationPermission(permissions.BasePermission):
         def has_permission(self, request, view):
             if request.method in permissions.SAFE_METHODS:
@@ -462,13 +442,7 @@ class ApplicationViewSet(viewsets.ModelViewSet):
             if pk:
                 job = Job.objects.get(pk=pk)
                 is_recruiter = request.user.businesses.filter(locations__jobs=job).exists()
-                try:
-                    request.user.job_seeker
-                except JobSeeker.DoesNotExist:
-                    is_job_seeker = False
-                else:
-                    is_job_seeker = True
-                if not is_recruiter and not is_job_seeker:
+                if not is_recruiter and not request.user.is_job_seeker:
                     return False
             return True
 
@@ -489,15 +463,10 @@ class ApplicationViewSet(viewsets.ModelViewSet):
     update_status_serializer_class = ApplicationConnectSerializer
     update_shortlist_serializer_class = ApplicationShortlistUpdateSerializer
     
-    def get_role(self):
-        if self.request.user.businesses.exists():
-            return self.RECRUITER
-        return self.JOB_SEEKER
-    
     def perform_create(self, serializer):
         job = Job.objects.get(pk=self.request.data['job'])
-        role = self.get_role()
-        if role is self.RECRUITER:
+        role = self.request.user.role
+        if role.name == Role.RECRUITER:
             status = ApplicationStatus.objects.get(name='ESTABLISHED')
         else:
             status = ApplicationStatus.objects.get(name='CREATED')
@@ -506,7 +475,7 @@ class ApplicationViewSet(viewsets.ModelViewSet):
         message.system = True
         message.application = application
         message.from_role = role
-        if role is self.RECRUITER:
+        if role.name == Role.RECRUITER:
             message.content = \
                 '%(business)s has expressed an interest in your profile for the following job:\n'\
                 'Job title: %(title)s\n'\
@@ -530,14 +499,14 @@ class ApplicationViewSet(viewsets.ModelViewSet):
 
     def perform_destroy(self, application):
         application.status = ApplicationStatus.objects.get(name='DELETED')
-        role = self.get_role()
-        application.deleted_by = role  
+        role = self.request.user.role
+        application.deleted_by = role
         application.save()
         message = Message()
         message.system = True
         message.application = application
         message.from_role = role
-        if role is self.RECRUITER:
+        if role.name == Role.RECRUITER:
             message.content = 'The recruiter has withdrawn their interest'
         else:
             message.content = 'The job seeker has withdrawn their interest in this job'
@@ -551,6 +520,7 @@ class ApplicationViewSet(viewsets.ModelViewSet):
                 return self.update_shortlist_serializer_class
             if self.request.data.get('connect') is not None:
                 return self.update_status_serializer_class
+            raise PermissionDenied()
         return self.serializer_class
     
     def get_queryset(self):
@@ -566,10 +536,11 @@ class ApplicationViewSet(viewsets.ModelViewSet):
                                        'job__location__business__locations', 
                                        'job__images',
                                        'job__location__images',
+                                       'job__location__users',
                                        'job__location__business__images',
                                        'job__location__business__users',
                                        )
-        if self.get_role() is self.RECRUITER:
+        if self.request.user.role.name == Role.RECRUITER:
             query = query.filter(job__location__business__users=self.request.user)
             job = self.request.query_params.get('job')
             if job:

@@ -7,7 +7,7 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.template.loader import get_template
 
-from mjp.models import Message, Role
+from mjp.models import Message, Role, JobSeeker
 
 
 @receiver(post_save, sender=Message)
@@ -52,3 +52,9 @@ def send_message_notification_email(sender, instance, created, *args, **kwargs):
                 from_email=settings.DEFAULT_FROM_EMAIL,
                 recipient_list=["jamie_cockburn@hotmail.co.uk"],
             )
+
+
+@receiver(post_save, sender=JobSeeker)
+def send_message_notification_email(sender, instance, created, *args, **kwargs):
+    if created:
+        instance.send_welcome_email()

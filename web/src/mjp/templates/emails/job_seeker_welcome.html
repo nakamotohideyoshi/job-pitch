@@ -1,0 +1,79 @@
+{% extends "emails/base.html" %}
+
+{% load static %}
+
+{% block title %}{% endblock %}
+
+{% block subtitle %}Welcome {{ job_seeker.first_name }}{% endblock %}
+
+{% block content %}
+    <table width="600" align="center" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+            <td colspan="2">
+                <h2 style="margin: 1em 0 0.5em; color: #236156; font-size: 1.25em; font-weight: bold;">Hi {{ job_seeker.first_name }}!</h2>
+                <p>I wanted to drop you a line to welcome you to My Job Pitch and see if you have any questions I can help with?</p>
+                <p>Once you have recorded your up to 30-sec selfie video you will be matched to jobs and can easily swipe through job opportunities and apply.</p>
+                <p>Below is a link to a few video pitches if you feel you need inspiration, however the key is to just be yourself. You can record on your phone pretty much anywhere, at home, on the bus or in a coffee shop it doesn’t matter, and you can re-record as many times as you want.</p>
+            </td>
+        </tr>
+
+        <tr>
+            <td>
+                <p>The platform saves recruiters massive amounts of time so we are also want to give back a bit to jobseekers!</p>
+                <p>Everyone that applies for at least 1 job will receive a £10 Amazon voucher*.</p>
+            </td>
+            <td align="right" width="200"><img src="{{ base_url }}{% static "email/js-amazon-voucher.png" %}" /></td>
+        </tr>
+
+        <tr>
+            <td>
+                <p>Happy to answer any questions you might have.</p>
+
+                <p>Thanks,<br />
+                    Mike</p>
+
+                <p>* <a style="color: #236156" href="https://www.myjobpitch.com/js-amazon-offer-terms/">Terms and conditions</a> apply</p>
+            </td>
+            <td align="right">
+                <a href="{{ base_url }}/jobseeker/record"><img src="{{ base_url }}{% static "email/record_now.png" %}" alt="Record Now!" /></a>
+            </td>
+        </tr>
+    </table>
+
+    <table width="600" align="center" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+            <td colspan="3">
+                <h2 style="margin: 1em 0 0.5em; color: #236156; font-size: 1.25em; font-weight: bold;">Need Inspiration?</h2>
+                <p>Check out some example pitches and record one for yourself:</p>
+            </td>
+        </tr>
+        <tr>
+            <td width="170"><a href="https://vimeo.com/255467562"><img src="{{ base_url }}{% static "email/hannah_pitch.png" %}" /></a></td>
+            <td colspan="2">
+                <p><em><i>
+                    &quot;Hi there, my name is Hannah Wilson. I am 21 years old and I am in my final
+                    year at the University of Edinburgh. I have done a little bit of everything with retail &amp; barista
+                    experience. I have worked in bars and restaurants all across Europe. I am looking for a fun, fast
+                    paced working environment! Feel free to message me on the app and I look forward to hearing from
+                    you!&quot;
+                </i></em></p>
+                <p>- Hannah Wilson</p>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2" valign="top">
+                <p><em><i>
+                    &quot;Hi my name is Oisin and I am a student of Dublin City University. I am doing year
+                    abroad in Chengdu, China! I am loving it here and have a lot of experience on the creative side of
+                    things! I am fascinated by China and have learned a lot being here which makes me a great match for
+                    your company! Let me know!&quot;
+                </i></em></p>
+                <p>- Oisin Hoy</p>
+            </td>
+            <td width="170" align="right"><a href="https://vimeo.com/255467715"><img src="{{ base_url }}{% static "email/oisin_pitch.png" %}" /></a></td>
+        </tr>
+        <tr>
+            <td colspan="3" align="center"><a href="{{ base_url }}/jobseeker/record"><img src="{{ base_url }}{% static "email/record_now.png" %}" alt="Record Now!" /></a></td>
+        </tr>
+    </table>
+{% endblock %}

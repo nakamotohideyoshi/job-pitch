@@ -1,19 +1,20 @@
-import uuid
 import os
-
+import uuid
 from cStringIO import StringIO
-from PIL import Image, ExifTags
-from django.db import transaction
-from django.utils.translation import gettext as _
 
+from PIL import Image, ExifTags
 from django.conf import settings
 from django.contrib.auth.base_user import AbstractBaseUser, BaseUserManager
 from django.contrib.auth.models import PermissionsMixin
 from django.contrib.gis.db import models
+from django.contrib.sites.models import Site
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.core.mail import send_mail
+from django.db import transaction
+from django.template.loader import get_template
 from django.utils import timezone
 from django.utils.http import urlquote
+from django.utils.translation import gettext as _
 
 
 def _fix_image_rotation(image):
@@ -405,6 +406,33 @@ class JobSeeker(models.Model):
 
     def get_full_name(self):
         return " ".join((self.first_name, self.last_name))
+
+    def send_welcome_email(self):
+        try:
+            site = Site.objects.get_current()
+            scheme = "http" if site.domain.startswith('localhost') and settings.DEBUG else "https"
+            base_url = "{}://{}".format(scheme, site.domain)
+            context = {
+                'base_url': base_url,
+                'job_seeker': self,
+            }
+            text_template = get_template("emails/job_seeker_welcome.txt")
+            html_template = get_template('emails/job_seeker_welcome.html')
+            send_mail(
+                subject="Hello from My Job Pitch!",
+                message=text_template.render(context),
+                html_message=html_template.render(context),
+                from_email="mike@myjobpitch.com",
+                recipient_list=[self.user.email],
+            )
+        except Exception:
+            import traceback
+            send_mail(
+                subject='Error sending job seeker welcome email to: {}'.format(self.user.email),
+                message=traceback.format_exc(),
+                from_email=settings.DEFAULT_FROM_EMAIL,
+                recipient_list=["jamie_cockburn@hotmail.co.uk"],
+            )
 
     def __str__(self):
         return "%s: %s" % (type(self).__name__, self.get_full_name())

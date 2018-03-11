@@ -2,14 +2,19 @@ import json
 import logging
 
 import paypalrestsdk
+from apiclient.discovery import build
+from apiclient.errors import HttpError
+from django.conf import settings
+from django.contrib.gis.db.models.functions import Distance
+from django.contrib.gis.measure import D
 from django.db import transaction
 from django.db.models import F, Q, Max
-from django.conf import settings
-from django.contrib.gis.measure import D
-from django.contrib.gis.db.models.functions import Distance
 from django.http import HttpResponseRedirect
 from django.views.generic import View
-
+from httplib2 import Http
+# For google APIs
+from oauth2client.service_account import ServiceAccountCredentials
+from paypalrestsdk import Payment, WebProfile
 from rest_framework import viewsets, permissions, serializers, status
 from rest_framework.exceptions import PermissionDenied
 from rest_framework.response import Response
@@ -43,8 +48,7 @@ from mjp.models import (
     PayPalProduct,
     ProductTokens,
     AppDeprecation,
-)
-
+    BusinessUser)
 from mjp.serializers import (
     SimpleSerializer,
     BusinessSerializer,
@@ -68,14 +72,6 @@ from mjp.serializers import (
     LocationImageSerializer,
     JobImageSerializer,
 )
-
-# For google APIs
-from oauth2client.service_account import ServiceAccountCredentials
-from httplib2 import Http
-from apiclient.discovery import build
-from apiclient.errors import HttpError
-
-from paypalrestsdk import Payment, WebProfile
 
 router = DefaultRouter()
 
@@ -111,7 +107,10 @@ PayPalProductViewSet = SimpleReadOnlyViewSet(PayPalProduct)
 class UserBusinessImageViewSet(viewsets.ModelViewSet):
     class UserBusinessImagePermission(permissions.BasePermission):
         def has_object_permission(self, request, view, obj):
-            business_user = obj.business.business_users.get(user=request.user)
+            try:
+                business_user = obj.business.business_users.get(user=request.user)
+            except BusinessUser.DoesNotExist:
+                return False
             if business_user.locations.exists():
                 return False
             return True
@@ -173,7 +172,10 @@ router.register('user-businesses', UserBusinessViewSet, base_name='user-business
 class UserLocationImageViewSet(viewsets.ModelViewSet):
     class UserLocationImagePermission(permissions.BasePermission):
         def has_object_permission(self, request, view, obj):
-            business_user = obj.location.business.business_users.get(user=request.user)
+            try:
+                business_user = obj.location.business.business_users.get(user=request.user)
+            except BusinessUser.DoesNotExist:
+                return False
             if business_user.locations.exists():
                 return business_user.locations.filter(pk=obj.location.pk).exists()
             return True
@@ -202,8 +204,13 @@ class UserLocationViewSet(viewsets.ModelViewSet):
         def has_object_permission(self, request, view, obj):
             if request.method in permissions.SAFE_METHODS:
                 return True
-            business_user = obj.business.business_users.get(user=request.user)
+            try:
+                business_user = obj.business.business_users.get(user=request.user)
+            except BusinessUser.DoesNotExist:
+                return False
             if business_user.locations.exists():
+                if request.method == 'DELETE':
+                    return False
                 return business_user.locations.filter(pk=obj.pk).exists()
             return True
     
@@ -212,7 +219,12 @@ class UserLocationViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         business = self.request.query_params.get('business', None)
-        query = Location.objects.filter(business__users=self.request.user)
+        query = Location.objects.filter(
+            (
+                    Q(business__business_users__user=self.request.user) &
+                    Q(business__business_users__locations__isnull=True)
+            ) | Q(business_users__user=self.request.user)
+        )
         if business:
             return query.filter(business__id=business)
         return query
@@ -230,7 +242,10 @@ router.register('locations', LocationViewSet, base_name='location')
 class UserJobImageViewSet(viewsets.ModelViewSet):
     class UserJobImagePermission(permissions.BasePermission):
         def has_object_permission(self, request, view, obj):
-            business_user = obj.job.location.business.business_users.get(user=request.user)
+            try:
+                business_user = obj.job.location.business.business_users.get(user=request.user)
+            except BusinessUser.DoesNotExist:
+                return False
             if business_user.locations.exists():
                 return business_user.locations.filter(jobs__pk=obj.location.pk).exists()
             return True
@@ -259,17 +274,25 @@ class UserJobViewSet(viewsets.ModelViewSet):
         def has_object_permission(self, request, view, obj):
             if request.method in permissions.SAFE_METHODS:
                 return True
-            business_user = obj.location.business.business_users.get(user=request.user)
+            try:
+                business_user = obj.location.business.business_users.get(user=request.user)
+            except BusinessUser.DoesNotExist:
+                return False
             if business_user.locations.exists():
                 return business_user.locations.filter(job__pk=obj.pk).exists()
             return True
-    
+
     permission_classes = (permissions.IsAuthenticated, UserJobPermission)
     serializer_class = JobSerializer
 
     def get_queryset(self):
         location = self.request.query_params.get('location', None)
-        query = Job.objects.filter(location__business__users=self.request.user)
+        query = Location.objects.filter(
+            (
+                Q(location__business__business_users__user=self.request.user) &
+                Q(location__business__business_users__locations__isnull=True)
+            ) | Q(location__business_users__user=self.request.user)
+        )
         if location:
             return query.filter(location__id=location)
         return query

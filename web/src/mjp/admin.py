@@ -41,7 +41,7 @@ from .models import (
     BusinessImage,
     JobImage,
     AppDeprecation,
-)
+    BusinessUser)
 
 
 @admin.register(Sex, Nationality, Contract, Hours, Message)
@@ -66,18 +66,28 @@ class JobImageInline(ImageInline):
 
 
 class UserInline(admin.TabularInline):
-    model = Business.users.through
+    model = BusinessUser
     extra = 0
     verbose_name_plural = 'Users'
     show_change_link = False
+    fields = ('user', 'locations')
     readonly_fields = ('user',)
 
     def has_add_permission(self, request):
         return False
 
+    def get_formset(self, request, obj=None, **kwargs):
+        self._business = obj
+        return super(UserInline, self).get_formset(request, obj, **kwargs)
+
+    def formfield_for_manytomany(self, db_field, request=None, **kwargs):
+        if db_field.name == "locations":
+            kwargs["queryset"] = Location.objects.filter(business=self._business)
+        return super(UserInline, self).formfield_for_manytomany(db_field, request, **kwargs)
+
 
 class UserAddInline(admin.TabularInline):
-    model = Business.users.through
+    model = BusinessUser
     extra = 0
     verbose_name_plural = 'Add User'
     verbose_name = 'user association'
@@ -87,6 +97,15 @@ class UserAddInline(admin.TabularInline):
 
     def has_delete_permission(self, request, obj=None):
         return False
+
+    def get_formset(self, request, obj=None, **kwargs):
+        self._business = obj
+        return super(UserAddInline, self).get_formset(request, obj, **kwargs)
+
+    def formfield_for_manytomany(self, db_field, request=None, **kwargs):
+        if db_field.name == "locations":
+            kwargs["queryset"] = Location.objects.filter(business=self._business)
+        return super(UserAddInline, self).formfield_for_manytomany(db_field, request, **kwargs)
 
 
 class LocationInline(admin.TabularInline):

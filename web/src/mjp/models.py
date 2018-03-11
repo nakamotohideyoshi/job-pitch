@@ -183,6 +183,27 @@ class User(AbstractBaseUser, PermissionsMixin):
         """
         send_mail(subject, message, from_email, [self.email])
 
+    @property
+    def role(self):
+        if self.is_recruiter:
+            return Role.objects.get(name=Role.RECRUITER)
+        if self.is_job_seeker:
+            return Role.objects.get(name=Role.JOB_SEEKER)
+
+    @property
+    def is_recruiter(self):
+        return self.businesses.exists()
+
+    @property
+    def is_job_seeker(self):
+        if self.is_recruiter():
+            return False
+        try:
+            self.job_seeker
+        except JobSeeker.DoesNotExist:
+            return False
+        return True
+
 
 class Sector(models.Model):
     name = models.CharField(max_length=255)
@@ -278,7 +299,7 @@ class Role(models.Model):
 
 
 class Business(models.Model):
-    users = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='businesses')
+    users = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='businesses', through='BusinessUser')
     name = models.CharField(max_length=255)
     token_store = models.ForeignKey('TokenStore', related_name='businesses', on_delete=models.DO_NOTHING)
     created = models.DateTimeField(auto_now_add=True)
@@ -290,6 +311,15 @@ class Business(models.Model):
     class Meta:
         verbose_name_plural = "businesses"
         ordering = ('name',)
+
+
+class BusinessUser(models.Model):
+    user = models.ForeignKey(User, related_name='business_users', on_delete=models.CASCADE)
+    business = models.ForeignKey(Business, related_name='business_users', on_delete=models.CASCADE)
+    locations = models.ManyToManyField('Location', related_name='business_users', blank=True)
+
+    class Meta:
+        unique_together = ('user', 'business')
 
 
 class BusinessImage(models.Model):
@@ -316,11 +346,11 @@ class Location(models.Model):
     place_name = models.CharField(max_length=1024)
     postcode_lookup = models.CharField(max_length=10, blank=True)
     email = models.EmailField(blank=True)
-    email_public = models.BooleanField(default=None)
+    email_public = models.BooleanField(default=False)
     telephone = models.CharField(max_length=100, blank=True)
-    telephone_public = models.BooleanField(default=None)
+    telephone_public = models.BooleanField(default=False)
     mobile = models.CharField(max_length=100, blank=True)
-    mobile_public = models.BooleanField(default=None)
+    mobile_public = models.BooleanField(default=False)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
 

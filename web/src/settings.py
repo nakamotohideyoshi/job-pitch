@@ -93,12 +93,12 @@ REST_FRAMEWORK = {
 }
 
 REST_AUTH_SERIALIZERS = {
-    'LOGIN_SERIALIZER': 'mjp.serializers.LoginSerializer',
-    'USER_DETAILS_SERIALIZER': 'mjp.serializers.UserDetailsSerializer',
+    'LOGIN_SERIALIZER': 'mjp.serializers.auth.LoginSerializer',
+    'USER_DETAILS_SERIALIZER': 'mjp.serializers.auth.UserDetailsSerializer',
 }
 
 REST_AUTH_REGISTER_SERIALIZERS = {
-    'REGISTER_SERIALIZER': 'mjp.serializers.RegisterSerializer',
+    'REGISTER_SERIALIZER': 'mjp.serializers.auth.RegisterSerializer',
 }
 
 LOGIN_URL = '/login/'

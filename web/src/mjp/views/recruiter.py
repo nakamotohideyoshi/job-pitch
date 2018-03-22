@@ -46,7 +46,8 @@ class UserBusinessViewSet(viewsets.ModelViewSet):
             tokens=InitialTokens.objects.get().tokens,
             user=self.request.user,
         )
-        serializer.save(token_store=token_store).users.add(self.request.user)
+        business = serializer.save(token_store=token_store)
+        BusinessUser.objects.create(business=business, user=self.request.user)
 
     def get_queryset(self):
         return Business.objects.filter(users=self.request.user)

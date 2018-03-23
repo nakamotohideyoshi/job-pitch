@@ -1,25 +1,37 @@
 from model_mommy import mommy
 from rest_framework.reverse import reverse
-from rest_framework.test import APITestCase
 
-from mjp.models import Business, BusinessUser, User, TokenStore, Location, Job, Sector, Contract, Hours, JobStatus
+from mjp.models import Business, BusinessUser, TokenStore, Location, Job, Sector, Contract, Hours, JobStatus
+from mjp.views.tests import AuthenticatedAPITestCase
 
 
-class AuthenticatedRecruiterAPITestCase(APITestCase):
-    maxDiff = None
+class AuthenticatedNewRecruiterAPITestCase(AuthenticatedAPITestCase):
+    def test_create_first_business(self):
+        response = self.client.post(reverse('user-business-list'), {"name": "A business"})
+        self.assertEqual(response.status_code, 201)
+        data = response.json()
+        business = Business.objects.get(pk=data['id'])
+        self.assertDictEqual(data, {
+            u"id": business.pk,
+            u"name": u"A business",
+            u"images": [],
+            u"locations": [],
+            u"tokens": 100,
+            u"users": [self.user.pk],
+            u"created": business.created.isoformat().split('+')[0] + u'Z',
+            u"updated": business.updated.isoformat().split('+')[0] + u'Z',
+        })
 
+
+class AuthenticatedRecruiterAPITestCase(AuthenticatedAPITestCase):
     def setUp(self):
         super(AuthenticatedRecruiterAPITestCase, self).setUp()
-        self.user = mommy.make(User, email='test@example.com')
-        self.user.set_password('test')
-        self.user.save()
         self.token_store = mommy.make(TokenStore, tokens=20)
         self.business = mommy.make(Business, token_store=self.token_store)
         self.business_user = mommy.make(BusinessUser, business=self.business, user=self.user)
-        self.client.login(email='test@example.com', password="test")
 
     def process_businesses(self, businesses):
-        return sorted([self.process_business(b) for b in businesses], key=lambda b: b['id'])
+        return sorted([self.process_business(business) for business in businesses], key=lambda b: b['id'])
 
     def process_business(self, business):
         business['locations'].sort()
@@ -38,7 +50,7 @@ class AuthenticatedRecruiterAPITestCase(APITestCase):
         })
 
     def process_locations(self, locations):
-        return sorted([self.process_location(b) for b in locations], key=lambda b: b['id'])
+        return sorted([self.process_location(location) for location in locations], key=lambda l: l['id'])
 
     def process_location(self, location):
         location['jobs'].sort()
@@ -72,7 +84,7 @@ class AuthenticatedRecruiterAPITestCase(APITestCase):
         })
 
     def process_jobs(self, jobs):
-        return sorted([self.process_job(b) for b in jobs], key=lambda b: b['id'])
+        return sorted([self.process_job(job) for job in jobs], key=lambda b: b['id'])
 
     def process_job(self, job):
         job['location_data'] = self.process_location(job['location_data'])
@@ -93,6 +105,7 @@ class AuthenticatedRecruiterAPITestCase(APITestCase):
             u"created": job.created.isoformat().split(u'+')[0] + u'Z',
             u"updated": (job.updated if updated is None else updated).isoformat().split(u'+')[0] + u'Z',
         })
+
 
 class TestUserBusinessViewSet(AuthenticatedRecruiterAPITestCase):
     maxDiff = None
@@ -317,7 +330,6 @@ class TestUserLocationViewSet(AuthenticatedRecruiterAPITestCase):
         self.location.business_users.add(self.business_user)
         response = self.client.delete(reverse('user-location-detail', kwargs={'pk': self.location_2.pk}))
         self.assertEqual(response.status_code, 404)
-
 
 
 class TestUserJobViewSet(AuthenticatedRecruiterAPITestCase):

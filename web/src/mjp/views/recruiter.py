@@ -10,6 +10,7 @@ from mjp.models import (
     LocationImage,
     Location,
     JobImage,
+    Job,
 )
 from mjp.serializers import (
     BusinessSerializer,
@@ -152,7 +153,7 @@ class UserJobViewSet(viewsets.ModelViewSet):
             except BusinessUser.DoesNotExist:
                 return False
             if business_user.locations.exists():
-                return business_user.locations.filter(job__pk=obj.pk).exists()
+                return business_user.locations.filter(jobs__pk=obj.pk).exists()
             return True
 
     permission_classes = (permissions.IsAuthenticated, UserJobPermission)
@@ -160,7 +161,7 @@ class UserJobViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         location = self.request.query_params.get('location', None)
-        query = Location.objects.filter(
+        query = Job.objects.filter(
             (
                     Q(location__business__business_users__user=self.request.user) &
                     Q(location__business__business_users__locations__isnull=True)

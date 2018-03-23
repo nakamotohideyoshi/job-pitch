@@ -72,7 +72,8 @@ class LocationSerializer(serializers.ModelSerializer):
         return value
 
     def save(self, **kwargs):
-        self.validated_data['latlng'] = Point(**self.validated_data['latlng'])
+        if 'latlng' in self.validated_data:
+            self.validated_data['latlng'] = Point(**self.validated_data['latlng'])
         return super(LocationSerializer, self).save(**kwargs)
     
     class Meta:

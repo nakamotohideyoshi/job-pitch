@@ -26,7 +26,7 @@ class UserBusinessViewSet(viewsets.ModelViewSet):
             if request.method in permissions.SAFE_METHODS:
                 return True
             if request.method in ('POST', 'DELETE'):
-                return request.user.can_create_businesses and request.user.is_recruiter
+                return request.user.can_create_businesses or not request.user.businesses.exists()
             return True
 
         def has_object_permission(self, request, view, obj):

@@ -110,7 +110,7 @@ class ApplicationViewSet(viewsets.ModelViewSet):
                                        'job__location__business__locations',
                                        'job__images',
                                        'job__location__images',
-                                       'job__location__users',
+                                       'job__location__business_users',
                                        'job__location__business__images',
                                        'job__location__business__users',
                                        )

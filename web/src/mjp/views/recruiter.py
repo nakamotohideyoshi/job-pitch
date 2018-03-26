@@ -103,7 +103,7 @@ class UserLocationViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         business = self.request.query_params.get('business', None)
-        query = Location.objects.filter(
+        query = Location.objects.distinct().filter(
             (
                     Q(business__business_users__user=self.request.user) &
                     Q(business__business_users__locations__isnull=True)
@@ -161,7 +161,7 @@ class UserJobViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         location = self.request.query_params.get('location', None)
-        query = Job.objects.filter(
+        query = Job.objects.distinct().filter(
             (
                     Q(location__business__business_users__user=self.request.user) &
                     Q(location__business__business_users__locations__isnull=True)

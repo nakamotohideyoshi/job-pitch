@@ -12,6 +12,7 @@ from mjp.models import (
     Pitch,
     AppDeprecation,
     BusinessUser,
+    JobVideo,
 )
 
 
@@ -81,9 +82,16 @@ class LocationSerializer(serializers.ModelSerializer):
         exclude = ('latlng',)
 
 
+class EmbeddedVideoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = JobVideo
+        exclude = ('token', 'job')
+
+
 class JobSerializer(serializers.ModelSerializer):
     location_data = LocationSerializer(source='location', read_only=True)
     images = RelatedImageURLField(many=True, read_only=True)
+    videos = EmbeddedVideoSerializer(many=True, read_only=True)
 
     def validate_location(self, value):
         request = self.context['request']

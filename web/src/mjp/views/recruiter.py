@@ -1,5 +1,5 @@
 from django.db.models import Q
-from rest_framework import viewsets, permissions
+from rest_framework import viewsets, permissions, serializers
 
 from mjp.models import (
     BusinessUser,
@@ -11,13 +11,19 @@ from mjp.models import (
     Location,
     JobImage,
     Job,
+    JobVideo,
 )
 from mjp.serializers import (
     BusinessSerializer,
     LocationSerializer,
     JobSerializer,
 )
-from mjp.serializers.recruiter import BusinessImageSerializer, LocationImageSerializer, JobImageSerializer
+from mjp.serializers.recruiter import (
+    BusinessImageSerializer,
+    LocationImageSerializer,
+    JobImageSerializer,
+    JobVideoSerializer,
+)
 
 
 class UserBusinessViewSet(viewsets.ModelViewSet):
@@ -194,3 +200,55 @@ class UserJobImageViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.IsAuthenticated, UserJobImagePermission,)
     serializer_class = JobImageSerializer
     queryset = JobImage.objects.all()
+
+
+class JobVideoViewSet(viewsets.ModelViewSet):
+    class JobVideoPermission(permissions.BasePermission):
+        def has_permission(self, request, view):
+            if request.user and request.user.is_authenticated():
+                if request.method in permissions.SAFE_METHODS:
+                    return True
+                return request.user.businesses.exists()
+            if request.user.is_anonymous() and request.method in ('GET', 'PUT'):
+                return True
+            return False
+
+        def has_object_permission(self, request, view, obj):
+            if request.user and request.user.is_authenticated():
+                return request.user.businesses.filter(pk=obj.job.location.business_id).exists()
+            if request.user.is_anonymous() and request.method in ('GET', 'PUT'):
+                return request.GET.get('token') == obj.token
+            return False
+
+    def get_queryset(self):
+        query = super(JobVideoViewSet, self).get_queryset()
+        if self.request.user.is_authenticated():
+            return query.filter(job__location__business__users=self.request.user)
+        if self.request.user.is_anonymous() and self.request.method in ('GET', 'PUT'):
+            return query.filter(token=self.request.GET.get('token'))
+
+    def perform_create(self, serializer):
+        job = serializer.validated_data['job']
+        if not self.request.user.businesses.filter(pk=job.location.business.pk).exists():
+            raise serializers.ValidationError({'job': 'does not exist'})
+        video = serializer.save()
+        if video.video is None:
+            # delete any other uploads
+            JobVideo.objects.filter(job=job, video=None).exclude(pk=video.pk).delete()
+        else:
+            # delete any pitch except this one
+            JobVideo.objects.filter(job=job).exclude(pk=video.pk).delete()
+
+    def perform_update(self, serializer):
+        video = serializer.save()
+        job = video.job
+        if video.video is None:
+            # delete any other uploads
+            JobVideo.objects.filter(job=job, video=None).exclude(pk=video.pk).delete()
+        else:
+            # delete any pitch except this one
+            JobVideo.objects.filter(job=job).exclude(pk=video.pk).delete()
+
+    permission_classes = (JobVideoPermission,)
+    serializer_class = JobVideoSerializer
+    queryset = JobVideo.objects.all()

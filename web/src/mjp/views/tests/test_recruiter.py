@@ -1,7 +1,18 @@
 from model_mommy import mommy
 from rest_framework.reverse import reverse
 
-from mjp.models import Business, BusinessUser, TokenStore, Location, Job, Sector, Contract, Hours, JobStatus
+from mjp.models import (
+    Business,
+    BusinessUser,
+    TokenStore,
+    Location,
+    Job,
+    Sector,
+    Contract,
+    Hours,
+    JobStatus,
+    Application,
+)
 from mjp.views.tests import AuthenticatedAPITestCase
 
 
@@ -104,6 +115,58 @@ class AuthenticatedRecruiterAPITestCase(AuthenticatedAPITestCase):
             u'location_data': self.get_location_data(job.location, locations=locations, jobs=jobs),
             u"created": job.created.isoformat().split(u'+')[0] + u'Z',
             u"updated": (job.updated if updated is None else updated).isoformat().split(u'+')[0] + u'Z',
+        })
+
+    def process_applications(self, applications):
+        return sorted([self.process_application(application) for application in applications], key=lambda b: b['id'])
+
+    def process_application(self, application):
+        application['job_data'] = self.process_job(application['job_data'])
+        return application
+
+    def get_application_data(self, application, locations=None, jobs=None, updated=None):
+        return self.process_application({
+            u'id': application.pk,
+            u'job': application.job_id,
+            u'job_data': self.get_job_data(application.job, locations=locations, jobs=jobs),
+            u'job_seeker': self.get_job_seeker_data(application.job_seeker),
+            u'messages': [],
+            u'shortlisted': False,
+            u'status': application.status_id,
+            u"created": application.created.isoformat().split(u'+')[0] + u'Z',
+            u"updated": (application.updated if updated is None else updated).isoformat().split(u'+')[0] + u'Z',
+            u'created_by': application.created_by_id,
+            u'deleted_by': application.deleted_by_id,
+        })
+
+    def process_job_seeker(self, job_seeker):
+        return job_seeker
+
+    def get_job_seeker_data(self, job_seeker, updated=None):
+        return self.process_job_seeker({
+            u'id': job_seeker.pk,
+            u'first_name': job_seeker.first_name,
+            u'last_name': job_seeker.last_name,
+            u'email': job_seeker.user.email if job_seeker.email_public else u'',
+            u'email_public': job_seeker.email_public,
+            u'age': job_seeker.age,
+            u'age_public': job_seeker.age_public,
+            u'mobile': job_seeker.mobile,
+            u'mobile_public': job_seeker.mobile_public,
+            u'telephone': job_seeker.telephone,
+            u'telephone_public': job_seeker.telephone_public,
+            u'sex': job_seeker.age,
+            u'sex_public': job_seeker.sex_public,
+            u'nationality': job_seeker.nationality,
+            u'nationality_public': job_seeker.nationality_public,
+            u'cv': job_seeker.cv if job_seeker.cv.name else None,
+            u'description': job_seeker.description,
+            u'has_national_insurance_number': False,
+            u'has_references': False,
+            u'truth_confirmation': False,
+            u'pitches': [],
+            u"created": job_seeker.created.isoformat().split(u'+')[0] + u'Z',
+            u"updated": (job_seeker.updated if updated is None else updated).isoformat().split(u'+')[0] + u'Z',
         })
 
 
@@ -239,6 +302,15 @@ class TestUserLocationViewSet(AuthenticatedRecruiterAPITestCase):
             ]),
         )
 
+    def test_list_as_location_user(self):
+        self.location.business_users.add(self.business_user)
+        self.assertListEqual(
+            self.process_locations(self.client.get(reverse('user-location-list')).json()),
+            self.process_locations([
+                self.get_location_data(self.location, locations=[self.location.pk, self.location_2.pk]),
+            ]),
+        )
+
     def test_retrieve(self):
         self.assertDictEqual(
             self.process_location(
@@ -250,6 +322,22 @@ class TestUserLocationViewSet(AuthenticatedRecruiterAPITestCase):
     def test_retrieve_wrong_owner(self):
         self.assertEqual(
             self.client.get(reverse('user-location-detail', kwargs={'pk': self.other_locations[0].pk})).status_code,
+            404,
+        )
+
+    def test_retrieve_as_location_user(self):
+        self.location.business_users.add(self.business_user)
+        self.assertDictEqual(
+            self.process_location(
+                self.client.get(reverse('user-location-detail', kwargs={'pk': self.location.pk})).json(),
+            ),
+            self.get_location_data(self.location, locations=[self.location.pk, self.location_2.pk]),
+        )
+
+    def test_retrieve_wrong_location_user(self):
+        self.location.business_users.add(self.business_user)
+        self.assertEqual(
+            self.client.get(reverse('user-location-detail', kwargs={'pk': self.location_2.pk})).status_code,
             404,
         )
 
@@ -394,6 +482,24 @@ class TestUserJobViewSet(AuthenticatedRecruiterAPITestCase):
             ]),
         )
 
+    def test_list_as_location_user(self):
+        self.location.business_users.add(self.business_user)
+        self.assertListEqual(
+            self.process_jobs(self.client.get(reverse('user-job-list')).json()),
+            self.process_jobs([
+                self.get_job_data(
+                    self.job,
+                    jobs=[self.job.pk, self.job_2.pk],
+                    locations=[self.location.pk, self.location_2.pk],
+                ),
+                self.get_job_data(
+                    self.job_2,
+                    jobs=[self.job.pk, self.job_2.pk],
+                    locations=[self.location.pk, self.location_2.pk],
+                ),
+            ]),
+        )
+
     def test_retrieve(self):
         self.assertDictEqual(
             self.process_job(
@@ -405,10 +511,40 @@ class TestUserJobViewSet(AuthenticatedRecruiterAPITestCase):
                 locations=[self.location.pk, self.location_2.pk],
             ),
         )
+        self.assertDictEqual(
+            self.process_job(
+                self.client.get(reverse('user-job-detail', kwargs={'pk': self.other_job.pk})).json(),
+            ),
+            self.get_job_data(
+                self.other_job,
+                jobs=[self.other_job.pk],
+                locations=[self.location.pk, self.location_2.pk],
+            ),
+        )
 
     def test_retrieve_wrong_owner(self):
         self.assertEqual(
             self.client.get(reverse('user-job-detail', kwargs={'pk': self.other_jobs[0].pk})).status_code,
+            404,
+        )
+
+    def test_retrieve_as_location_user(self):
+        self.location.business_users.add(self.business_user)
+        self.assertDictEqual(
+            self.process_job(
+                self.client.get(reverse('user-job-detail', kwargs={'pk': self.job.pk})).json(),
+            ),
+            self.get_job_data(
+                self.job,
+                jobs=[self.job.pk, self.job_2.pk],
+                locations=[self.location.pk, self.location_2.pk],
+            ),
+        )
+
+    def test_retrieve_as_wrong_location_user(self):
+        self.location.business_users.add(self.business_user)
+        self.assertEqual(
+            self.client.get(reverse('user-job-detail', kwargs={'pk': self.other_job})).status_code,
             404,
         )
 
@@ -511,3 +647,106 @@ class TestUserJobViewSet(AuthenticatedRecruiterAPITestCase):
         self.location.business_users.add(self.business_user)
         response = self.client.delete(reverse('user-job-detail', kwargs={'pk': self.other_job.pk}))
         self.assertEqual(response.status_code, 404)
+
+
+class TestApplicationViewSet(AuthenticatedRecruiterAPITestCase):
+    def setUp(self):
+        super(TestApplicationViewSet, self).setUp()
+        self.location, self.location_2 = mommy.make(Location, _quantity=2, business=self.business)
+        self.sector = mommy.make(Sector)
+        self.contract = mommy.make(Contract)
+        self.hours = mommy.make(Hours)
+        self.status = mommy.make(JobStatus)
+        self.job, self.job_2 = mommy.make(
+            Job,
+            _quantity=2,
+            location=self.location,
+            sector=self.sector,
+            contract=self.contract,
+            hours=self.hours,
+        )
+        self.other_job = mommy.make(
+            Job,
+            location=self.location_2,
+            sector=self.sector,
+            contract=self.contract,
+            hours=self.hours,
+        )
+        self.application, self.application_2 = mommy.make(Application, _quantity=2, job=self.job)
+        self.other_application = mommy.make(Application, job=self.other_job)
+        self.other_business = mommy.make(Business)
+        self.other_locations = mommy.make(Location, _quantity=3, business=self.other_business)
+        self.other_jobs = mommy.make(Job, _quantity=3, location=self.other_locations[0])
+        self.other_applications = mommy.make(Application, _quantity=3, job=self.other_jobs[0])
+
+    def test_list(self):
+        job_pks = [self.job.pk, self.job_2.pk]
+        location_ids = [self.location.pk, self.location_2.pk]
+        self.assertListEqual(
+            self.process_applications(self.client.get(reverse('application-list')).json()),
+            self.process_applications([
+                self.get_application_data(self.application, jobs=job_pks, locations=location_ids),
+                self.get_application_data(self.application_2, jobs=job_pks, locations=location_ids),
+                self.get_application_data(self.other_application, jobs=[self.other_job.pk], locations=location_ids),
+            ]),
+        )
+
+    def test_list_as_location_user(self):
+        self.location.business_users.add(self.business_user)
+        job_pks = [self.job.pk, self.job_2.pk]
+        location_ids = [self.location.pk, self.location_2.pk]
+        self.assertListEqual(
+            self.process_applications(self.client.get(reverse('application-list')).json()),
+            self.process_applications([
+                self.get_application_data(self.application, jobs=job_pks, locations=location_ids),
+                self.get_application_data(self.application_2, jobs=job_pks, locations=location_ids),
+            ]),
+        )
+
+    def test_retrieve(self):
+        response = self.client.get(reverse('application-detail', kwargs={'pk': self.application.pk}))
+        self.assertEqual(response.status_code, 200)
+        self.assertDictEqual(
+            self.process_application(response.json()),
+            self.get_application_data(
+                self.application,
+                jobs=[self.job.pk, self.job_2.pk],
+                locations=[self.location.pk, self.location_2.pk],
+            ),
+        )
+        self.assertDictEqual(
+            self.process_application(
+                self.client.get(reverse('application-detail', kwargs={'pk': self.other_application.pk})).json(),
+            ),
+            self.get_application_data(
+                self.other_application,
+                jobs=[self.other_job.pk],
+                locations=[self.location.pk, self.location_2.pk],
+            ),
+        )
+
+    def test_retrieve_wrong_owner(self):
+        self.assertEqual(
+            self.client.get(reverse('application-detail', kwargs={'pk': self.other_applications[0].pk})).status_code,
+            404,
+        )
+
+    def test_retrieve_as_location_user(self):
+        self.location.business_users.add(self.business_user)
+        self.assertDictEqual(
+            self.process_application(
+                self.client.get(reverse('application-detail', kwargs={'pk': self.application.pk})).json(),
+            ),
+            self.get_application_data(
+                self.application,
+                jobs=[self.job.pk, self.job_2.pk],
+                locations=[self.location.pk, self.location_2.pk],
+            ),
+        )
+
+    def test_retrieve_as_wrong_location_user(self):
+        self.location.business_users.add(self.business_user)
+        self.assertEqual(
+            self.client.get(reverse('application-detail', kwargs={'pk': self.other_application.pk})).status_code,
+            404,
+        )

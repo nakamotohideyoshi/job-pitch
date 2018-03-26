@@ -2,7 +2,7 @@ import { takeEvery, put } from 'redux-saga/effects';
 import { push } from 'react-router-redux';
 
 import * as C from './constants';
-import { Button } from 'reactstrap';
+import { Button } from 'antd';
 
 // function* fetchData(action) {}
 

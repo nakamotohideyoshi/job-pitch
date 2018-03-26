@@ -1,163 +1,255 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { Card, Row, Col, Breadcrumb, BreadcrumbItem } from 'reactstrap';
-import { Loading, FlexBox, MJPCard } from 'components';
+import { Link } from 'react-router-dom';
+import { Breadcrumb, List, Button, Modal, Icon } from 'antd';
 
-import * as helper from 'utils/helper';
-import { SDATA } from 'utils/data';
-import { confirm } from 'redux/common';
-import { getJobs, saveJob, updateJob, removeJob } from 'redux/recruiter/jobs';
+import { PageSubHeader, AlertMsg, Loading, Logo } from 'components';
 import Wrapper from './Wrapper';
 
+import { getWorkplace } from 'redux/recruiter/workplaces';
+import { getJobs, saveJob, removeJob } from 'redux/recruiter/jobs';
+import DATA from 'utils/data';
+import * as helper from 'utils/helper';
+
 class JobList extends React.Component {
+  state = {
+    selectedJob: null
+  };
+
   componentWillMount() {
-    this.closedStatus = helper.getJobStatusByName('CLOSED');
-    const workplaceId = helper.str2int(this.props.match.params.workplaceId);
-    if (workplaceId) {
-      this.props.getJobs(workplaceId);
+    const { history, match, getWorkplace, getJobs, refreshList } = this.props;
+    const workplaceId = parseInt(match.params.workplaceId, 10);
+    getWorkplace({
+      id: workplaceId,
+      fail: () => history.replace('/recruiter/jobs/business')
+    });
+
+    if (refreshList) {
+      getJobs({ id: workplaceId });
     }
   }
 
-  onSelect = job => {
-    const { businessId, workplaceId } = this.props.match.params;
-    this.props.history.push(`/recruiter/jobs/${businessId}/${workplaceId}/${job.id}`);
+  selectJob = ({ id }) => {
+    const { history } = this.props;
+    history.push(`/recruiter/jobs/job/view/${id}`);
   };
 
-  onAdd = () => {
-    const { businessId, workplaceId } = this.props.match.params;
-    this.props.history.push(`/recruiter/jobs/${businessId}/${workplaceId}/add`);
-    // if (utils.getShared('first-time') === '3') {
-    //   utils.setShared('first-time');
-    //   this.setState({ firstTime: null });
-    // }
+  addJob = () => {
+    const { history, workplace } = this.props;
+    history.push(`/recruiter/jobs/job/add/${workplace.id}`);
   };
 
-  onEdit = job => {
-    const { businessId, workplaceId } = this.props.match.params;
-    this.props.history.push(`/recruiter/jobs/${businessId}/${workplaceId}/${job.id}/edit`);
+  editJob = ({ id }, e) => {
+    e && e.stopPropagation();
+
+    const { history } = this.props;
+    history.push(`/recruiter/jobs/job/edit/${id}`);
   };
 
-  onRemove = job => {
-    const buttons = [
-      { outline: true },
-      {
-        label: 'Remove',
-        color: 'yellow',
-        onClick: () => this.props.removeJob(job.id)
-      }
-    ];
+  showRemoveDialog = (selectedJob, e) => {
+    e && e.stopPropagation();
+    this.setState({ selectedJob });
+  };
 
-    if (job.status !== this.closedStatus) {
-      buttons.push({
-        label: 'Deactivate',
-        color: 'yellow',
-        onClick: () => {
-          const model = Object.assign({}, job, { status: this.closedStatus });
-          this.props.updateJob(model);
-        }
-      });
-    }
+  removeJob = () => {
+    const { removeJob } = this.props;
+    removeJob({
+      id: this.state.selectedJob.id
+    });
+    this.showRemoveDialog();
+  };
 
-    this.props.confirm('Confirm', `Are you sure you want to delete ${job.title}`, buttons);
+  deactivateJob = () => {
+    const { getJobs, saveJob, workplace } = this.props;
+    saveJob({
+      data: {
+        ...this.state.selectedJob,
+        status: DATA.jobClosed
+      },
+      onSuccess: () => getJobs({ id: workplace.id })
+    });
+    this.showRemoveDialog();
+  };
+
+  renderJob = job => {
+    const logo = helper.getJobLogo(job);
+    const sector = helper.getItemByID(DATA.sectors, job.sector).name;
+    const contract = helper.getItemByID(DATA.contracts, job.contract).short_name;
+    const hours = helper.getItemByID(DATA.hours, job.hours).short_name;
+    const closed = job.status === DATA.jobClosed ? 'closed' : '';
+
+    return (
+      <List.Item
+        key={job.id}
+        actions={[
+          <span onClick={e => this.editJob(job, e)}>Edit</span>,
+          <span onClick={e => this.showRemoveDialog(job, e)}>Remove</span>
+        ]}
+        onClick={() => this.selectJob(job)}
+      >
+        <List.Item.Meta
+          avatar={<Logo src={logo} size="80px" />}
+          title={<span className={closed}>{`${job.title}`}</span>}
+          description={
+            <div className={closed}>
+              <div className="properties">
+                <span className="contract">{contract}</span>
+                <span className="hours">{hours}</span>
+                <span className="sector">{sector}</span>
+              </div>
+              <div className={closed}>{job.description}</div>
+            </div>
+          }
+        />
+      </List.Item>
+    );
   };
 
   renderJobs = () => {
-    const { jobs } = this.props;
+    const { jobs, loading } = this.props;
 
     if (jobs.length === 0) {
+      if (loading) {
+        return <Loading size="large" />;
+      }
+
       return (
-        <FlexBox center>
-          <div className="alert-msg">
-            {SDATA.jobsStep === 3
-              ? 'Okay, last step, now create your first job'
-              : "This workplace doesn't seem to have any jobs yet!"}
-          </div>
-          <a
-            className="btn-link"
-            onClick={() => {
-              delete SDATA.jobsStep;
-              helper.saveData('jobs-step');
-              this.onAdd();
-            }}
-          >
-            Create job
-          </a>
-        </FlexBox>
+        <AlertMsg>
+          <span>{`Empty`}</span>
+          {/* <a onClick={this.props.getJobs}>
+        <FontAwesomeIcon icon={faSyncAlt} />
+        Refresh
+      </a> */}
+        </AlertMsg>
       );
     }
 
-    return (
-      <Row>
-        {jobs.map(job => {
-          const logo = helper.getJobLogo(job);
-          const sector = helper.getNameByID('sectors', job.sector);
-          const contract = helper.getNameByID('contracts', job.contract);
-          const hours = helper.getNameByID('hours', job.hours);
-          const closed = job.status === this.closedStatus ? 'closed' : '';
+    return <List itemLayout="horizontal" dataSource={jobs} loading={loading} renderItem={this.renderJob} />;
 
-          return (
-            <Col xs="12" sm="6" md="4" lg="3" key={job.id}>
-              <MJPCard
-                image={logo}
-                title={job.title}
-                tProperty1={contract}
-                tProperty2={hours}
-                bProperty1={sector}
-                onClick={() => this.onSelect(job)}
-                loading={job.updating || job.deleting}
-                className={closed}
-                menus={[
-                  {
-                    label: 'Edit',
-                    onClick: () => this.onEdit(job)
-                  },
-                  {
-                    label: 'Remove',
-                    onClick: () => this.onRemove(job)
-                  }
-                ]}
-              />
-            </Col>
-          );
-        })}
-        <Col xs="12" sm="6" md="4" lg="3">
-          <Card body onClick={() => this.onAdd()} className="add">
-            Add New Job
-          </Card>
-        </Col>
-      </Row>
-    );
+    // if (jobs.length === 0) {
+    //   return (
+    //     <FlexBox center>
+    //       <div className="alert-msg">
+    //         {DATA.jobsStep === 3
+    //           ? 'Okay, last step, now create your first job'
+    //           : "This workplace doesn't seem to have any jobs yet!"}
+    //       </div>
+    //       <a
+    //         className="btn-link"
+    //         onClick={() => {
+    //           delete DATA.jobsStep;
+    //           helper.saveData('jobs-step');
+    //           this.onAdd();
+    //         }}
+    //       >
+    //         Create job
+    //       </a>
+    //     </FlexBox>
+    //   );
+    // }
+
+    //   return (
+    //     <Row>
+    //       {jobs.map(job => {
+    //         const logo = helper.getJobLogo(job);
+    //         const sector = helper.getNameByID('sectors', job.sector);
+    //         const contract = helper.getNameByID('contracts', job.contract);
+    //         const hours = helper.getNameByID('hours', job.hours);
+    //         const closed = job.status === this.closedStatus ? 'closed' : '';
+
+    //         return (
+    //           <Col xs="12" sm="6" md="4" lg="3" key={job.id}>
+    //             <MJPCard
+    //               image={logo}
+    //               title={job.title}
+    //               tProperty1={contract}
+    //               tProperty2={hours}
+    //               bProperty1={sector}
+    //               onClick={() => this.onSelect(job)}
+    //               loading={job.updating || job.deleting}
+    //               className={closed}
+    //               menus={[
+    //                 {
+    //                   label: 'Edit',
+    //                   onClick: () => this.onEdit(job)
+    //                 },
+    //                 {
+    //                   label: 'Remove',
+    //                   onClick: () => this.onRemove(job)
+    //                 }
+    //               ]}
+    //             />
+    //           </Col>
+    //         );
+    //       })}
+    //       <Col xs="12" sm="6" md="4" lg="3">
+    //         <Card body onClick={() => this.onAdd()} className="add">
+    //           Add New Job
+    //         </Card>
+    //       </Col>
+    //     </Row>
+    //   );
   };
+
   render() {
-    const { jobs, match, errors } = this.props;
-    const { businessId } = match.params;
+    const { workplace, error } = this.props;
+    const { id: workplaceId, business_data } = workplace || {};
+    const { id: businessId } = business_data || {};
+    const { selectedJob } = this.state;
 
     return (
       <Wrapper>
-        <Breadcrumb>
-          <BreadcrumbItem>
-            <Link to="/recruiter/jobs">Businesses</Link>
-          </BreadcrumbItem>
-          <BreadcrumbItem>
-            <Link to={`/recruiter/jobs/${businessId}`}>Workplaces</Link>
-          </BreadcrumbItem>
-          <BreadcrumbItem active tag="span">
-            Jobs
-          </BreadcrumbItem>
-        </Breadcrumb>
+        <PageSubHeader>
+          <Breadcrumb>
+            <Breadcrumb.Item>
+              <Link to="/recruiter/jobs/business">Businesses</Link>
+            </Breadcrumb.Item>
+            <Breadcrumb.Item>
+              <Link to={`/recruiter/jobs/workplace/${businessId}`}>Workplaces</Link>
+            </Breadcrumb.Item>
+            <Breadcrumb.Item>Jobs</Breadcrumb.Item>
+          </Breadcrumb>
+          <Link to={`/recruiter/jobs/job/add/${workplaceId}`}>Add Job</Link>
+        </PageSubHeader>
 
-        {jobs ? (
-          this.renderJobs()
-        ) : !errors ? (
-          <FlexBox center>
-            <Loading />
-          </FlexBox>
+        {error ? (
+          <AlertMsg>
+            <span>Server Error!</span>
+          </AlertMsg>
         ) : (
-          <FlexBox center>
-            <div className="alert-msg">Server Error!</div>
-          </FlexBox>
+          this.renderJobs()
         )}
+
+        <Modal
+          className="ant-confirm ant-confirm-confirm"
+          style={{ width: '300px' }}
+          closable={false}
+          maskClosable={true}
+          title={null}
+          visible={!!selectedJob}
+          footer={null}
+          onCancel={() => this.showRemoveDialog()}
+        >
+          <div className="ant-confirm-body-wrapper">
+            <div className="ant-confirm-body">
+              <Icon type="question-circle" />
+              <span className="ant-confirm-title">{`Are you sure you want to delete ${
+                (selectedJob || {}).title
+              }`}</span>
+            </div>
+            <div className="ant-confirm-btns">
+              <Button onClick={() => this.showRemoveDialog()}>Cancel</Button>
+              <Button type="danger" onClick={this.removeJob}>
+                Remove
+              </Button>
+              {(selectedJob || {}).status === DATA.JOB.OPEN && (
+                <Button type="danger" onClick={this.deactivateJob}>
+                  Deactivate
+                </Button>
+              )}
+            </div>
+          </div>
+        </Modal>
       </Wrapper>
     );
   }
@@ -165,14 +257,16 @@ class JobList extends React.Component {
 
 export default connect(
   state => ({
+    workplace: state.rc_workplaces.workplace,
     jobs: state.rc_jobs.jobs,
-    errors: state.rc_jobs.errors
+    loading: state.rc_jobs.loading,
+    refreshList: state.rc_jobs.refreshList,
+    error: state.rc_jobs.error
   }),
   {
-    confirm,
+    getWorkplace,
     getJobs,
     saveJob,
-    updateJob,
     removeJob
   }
 )(JobList);

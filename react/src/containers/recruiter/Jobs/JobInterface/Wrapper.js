@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 export default styled.div`
-  position: relative;
+  /* position: relative;
   min-height: 346px;
 
   h4 {
@@ -22,5 +22,5 @@ export default styled.div`
 
   span {
     color: #959595;
-  }
+  } */
 `;

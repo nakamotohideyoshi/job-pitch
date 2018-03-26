@@ -1,16 +1,12 @@
 import React from 'react';
-import { ModalHeader, ModalBody } from 'reactstrap';
-import Wrapper from './Wrapper';
+import { Wrapper, VideoContainer } from './Wrapper';
 
 export default ({ videoUrl, onClose }) => (
-  <Wrapper isOpen size="lg">
-    <ModalHeader toggle={() => onClose()}>Video Player</ModalHeader>
-    <ModalBody>
-      <div className="videoContainer">
-        <video preload="auto" controls autoPlay src={videoUrl}>
-          <track kind="captions" />
-        </video>
-      </div>
-    </ModalBody>
+  <Wrapper title="Video Player" visible maskClosable={false} footer={null} onCancel={() => onClose()}>
+    <VideoContainer>
+      <video preload="auto" controls autoPlay src={videoUrl}>
+        <track kind="captions" />
+      </video>
+    </VideoContainer>
   </Wrapper>
 );

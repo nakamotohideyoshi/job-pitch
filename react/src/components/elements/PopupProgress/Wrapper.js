@@ -1,27 +1,29 @@
 import styled from 'styled-components';
-import { Modal } from 'reactstrap';
+import { Modal } from 'antd';
 
-export default styled(Modal)`
-  &.modal-dialog {
-    max-width: inherit;
-    height: 100%;
-    margin: 0;
+export const Wrapper = styled(Modal)`
+  &.ant-modal {
+    width: 75% !important;
+    max-width: 400px;
+  }
 
-    .modal-content {
-      justify-content: center;
-      align-items: center;
-      width: 100%;
-      height: 100%;
-      background-color: transparent;
-      border: none;
+  .ant-modal-content {
+    background-color: transparent;
+    box-shadow: none;
+    text-align: center;
 
-      .progress {
-        max-width: 300px;
-        width: 80%;
-        background-color: rgba(0, 0, 0, 0.2);
+    label {
+      color: #fff;
+    }
+
+    .ant-progress-inner {
+      background-color: rgba(0, 0, 0, 0.5);
+
+      .ant-progress-bg {
+        background-color: #ff9300;
       }
 
-      label {
+      .ant-progress-text {
         color: #fff;
       }
     }

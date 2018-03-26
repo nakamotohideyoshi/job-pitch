@@ -1,0 +1,78 @@
+@import '../../node_modules/antd/dist/antd.less';
+
+@primary-color : #00b6a4;
+
+@layout-body-background : #fff;
+@layout-header-height : 50px;
+@layout-header-background : #333;
+@layout-header-padding : 0;
+@layout-footer-background : #333;
+@layout-footer-padding : 50px 0;
+
+@menu-item-active-bg : transparent;
+@menu-dark-item-selected-bg : #272727;
+
+@popover-distance : @popover-arrow-width;
+
+@font-family : -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+
+@heading-color : #262626;
+@text-color : #595959;
+@text-color-secondary : #8c8c8c;
+@heading-color-dark : #fff;
+@text-color-dark : #e0e0e0;
+@text-color-secondary-dark: #b7b7b7;
+
+@disabled-color : #bfbfbf;
+@disabled-color-dark : #7a7a7a;
+
+@shadow-color : rgba(0, 0, 0, .25);
+@shadow-2 : 0 2px 12px @shadow-color;
+
+.ant-menu-submenu.ant-menu-dark {
+  top: 50px !important;
+  > .ant-menu {
+    border-radius: 0;
+  }
+}
+
+.ant-menu-item {
+  svg {
+    margin-right: 8px;
+  }
+}
+
+.ant-btn-secondary {
+  color: #fff;
+  background-color: #ff9300;
+  border-color: #ff9300;
+
+  &:hover,
+  &:focus {
+    color: #fff;
+    background-color: #ffad29;
+    border-color: #ffad29;
+  }
+
+  &:active,
+  &.active {
+    color: #fff;
+    background-color: #d97700;
+    border-color: #d97700;
+  }
+}
+
+.ant-center-modal {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  .ant-modal {
+    position: initial;
+    padding: 0;
+  }
+}
+
+.ant-spin-nested-loading > div > .ant-spin {
+  max-height: initial;
+}

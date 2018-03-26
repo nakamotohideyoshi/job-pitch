@@ -1,45 +1,12 @@
-import { takeEvery, put, call, select } from 'redux-saga/effects';
-import { SDATA } from 'utils/data';
-import * as helper from 'utils/helper';
-import * as api from 'utils/api';
-import * as C from './constants';
+import { takeLatest } from 'redux-saga/effects';
 
-// get jobs
+import * as C from 'redux/constants';
+import { getRequest, postRequest } from 'utils/request';
 
-function* _getJobs() {
-  try {
-    const jobseeker = yield call(api.get, `/api/job-seekers/${SDATA.user.job_seeker}/`);
-    const profile = yield call(api.get, `/api/job-profiles/${jobseeker.profile}/`);
-    let jobs = yield call(api.get, '/api/jobs/');
+const getJobs = getRequest({ type: C.JS_GET_JOBS, url: `/api/jobs/` });
+const applyJob = postRequest({ type: C.JS_APPLY_JOB, url: `/api/applications/` });
 
-    yield put({ type: C.JS_GET_JOBS_SUCCESS, jobseeker, profile, jobs });
-  } catch (errors) {
-    yield put({ type: C.JS_GET_JOBS_ERROR, errors });
-  }
+export default function* sagas() {
+  yield takeLatest(C.JS_GET_JOBS, getJobs);
+  yield takeLatest(C.JS_APPLY_JOB, applyJob);
 }
-
-function* getJobs() {
-  yield takeEvery(C.JS_GET_JOBS, _getJobs);
-}
-
-// apply job
-
-function* _applyJob({ jobId }) {
-  try {
-    yield call(api.post, '/api/applications/', {
-      job: jobId,
-      job_seeker: SDATA.user.job_seeker
-    });
-
-    yield put({ type: C.JS_APPLY_JOB_SUCCESS, jobId });
-  } catch (errors) {
-    yield put({ type: C.JS_APPLY_JOB_ERROR, jobId });
-    helper.errorNotif('Server Error!');
-  }
-}
-
-function* applyJob() {
-  yield takeEvery(C.JS_APPLY_JOB, _applyJob);
-}
-
-export default [getJobs(), applyJob()];

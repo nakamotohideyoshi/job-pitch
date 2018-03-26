@@ -1,16 +1,17 @@
 import styled from 'styled-components';
-import { Card } from 'reactstrap';
+import { Card } from 'antd';
 
 export default styled(Card)`
-  display: block;
+  /* display: block;
   max-width: 250px;
   height: 100%;
-  margin: auto;
+  margin: auto; */
+  margin: 0 15px;
 
   .logo {
     padding-top: 75%;
-    border-top-left-radius: calc(0.25rem - 1px);
-    border-top-right-radius: calc(0.25rem - 1px);
+    border-top-left-radius: 1px;
+    border-top-right-radius: 1px;
   }
 
   > svg {

@@ -1,27 +1,42 @@
 import styled from 'styled-components';
 
 export default styled.div`
-  flex: 1;
-  display: flex;
-  flex-direction: column;
+  margin-bottom: 30px;
 
-  .row {
-    > div {
-      padding-bottom: 15px;
-    }
+  .sub-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 15px;
   }
 
-  .add {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    max-width: 250px;
-    min-height: 260px;
-    height: 100%;
-    margin: auto;
-    color: #888;
-    border-style: dashed;
-    cursor: pointer;
-    text-align: center;
+  .ant-list-item {
+    .ant-list-item-meta-title {
+      font-size: 16px;
+    }
+
+    .properties {
+      font-size: 12px;
+      span {
+        display: inline-block;
+      }
+      span + span {
+        margin-left: 50px;
+      }
+    }
+
+    .ant-list-item-action {
+      span:hover {
+        color: #00b6a4;
+      }
+    }
+
+    &:hover {
+      cursor: pointer;
+
+      .ant-list-item-meta-title {
+        color: #00b6a4;
+      }
+    }
   }
 `;

@@ -1,261 +1,123 @@
-import { take, takeEvery, fork, put, call, cancel, select } from 'redux-saga/effects';
-import { LOCATION_CHANGE, push } from 'react-router-redux';
+import { replace } from 'react-router-redux';
+import { takeLatest, all, call, put } from 'redux-saga/effects';
 
-import { MENU_DATA, SDATA } from 'utils/data';
+import { getRequest, postRequest, putRequest } from 'utils/request';
+import * as C from 'redux/constants';
 import * as helper from 'utils/helper';
-import * as api from 'utils/api';
-import * as C from './constants';
+import DATA from 'utils/data';
 
-/**
-|--------------------------------------------------
-| getUserData
-|--------------------------------------------------
-*/
+function* register(action) {
+  yield call(_auth, action, '/api-rest-auth/registration/');
+}
 
-function* getUserData(token, usertype) {
-  yield call(api.setToken, token);
-  // load server data
-  let user;
-  try {
-    user = yield call(api.get, '/api-rest-auth/user/');
-    SDATA.user = user;
-    if (!SDATA.initTokens) {
-      const result = yield [
-        call(api.get, '/api/initial-tokens/'),
-        call(api.get, '/api/sectors/'),
-        call(api.get, '/api/contracts/'),
-        call(api.get, '/api/hours/'),
-        call(api.get, '/api/nationalities/'),
-        call(api.get, '/api/application-statuses/'),
-        call(api.get, '/api/job-statuses/'),
-        call(api.get, '/api/sexes/'),
-        call(api.get, '/api/roles/'),
-        call(api.get, '/api/paypal-products/')
-      ];
-      SDATA.initTokens = result[0];
-      SDATA.sectors = result[1];
-      SDATA.contracts = result[2];
-      SDATA.hours = result[3];
-      SDATA.nationalities = result[4];
-      SDATA.appStatuses = result[5];
-      SDATA.jobStatuses = result[6];
-      SDATA.sexes = result[7];
-      SDATA.roles = result[8];
-      SDATA.paypalProducts = result[9];
-    }
-  } catch (errors) {
-    throw errors;
+function* login(action) {
+  yield call(_auth, action, '/api-rest-auth/login/');
+}
+
+function* _auth(action, endpoint) {
+  const data = yield call(postRequest({ url: endpoint }), action);
+  if (data) {
+    localStorage.setItem('token', data.key);
+    yield put({ type: C.UPDATE_AUTH, payload: { status: 'select' } });
   }
+}
 
-  // get login state
-  let loginState;
-  if (user.businesses.length > 0) {
-    loginState = 'recruiter';
-  } else if (user.job_seeker) {
-    loginState = 'jobseeker';
-  } else {
-    loginState = usertype || (yield call(helper.loadData, 'user-type'));
-    loginState = loginState || 'select';
+function* logout(action) {
+  yield put({ type: C.UPDATE_AUTH, payload: { status: 'auth', user: null, jobseeker: null, profile: null } });
+  yield put(replace('/auth'));
+  if (localStorage.getItem('token')) {
+    yield call(postRequest({ url: '/api-rest-auth/logout/' }), action);
+    localStorage.removeItem('token');
   }
+}
 
-  // get permission
+const resetPassword = postRequest({ url: '/api-rest-auth/password/reset/' });
+
+const changePassword = postRequest({ url: '/api-rest-auth/password/change/' });
+
+function* saveJobseeker(action) {
+  const { id } = action.payload.data;
   let jobseeker;
-  let permission = 0;
-  if (user.businesses.length > 0) {
-    permission = 1;
-  } else if (user.job_seeker) {
-    try {
-      jobseeker = yield call(api.get, `/api/job-seekers/${user.job_seeker}/`);
-    } catch (errors) {
-      throw errors;
-    }
-    permission = jobseeker.profile ? 2 : 1;
-    SDATA.user.profile = jobseeker.profile;
-  }
-
-  // store data
-  yield put({
-    type: C.LOGIN_SUCCESS,
-    loginState,
-    user,
-    jobseeker,
-    permission
-  });
-
-  // get redirect path
-  let redirect = MENU_DATA[loginState].redirect[permission].to;
-
-  return { loginState, permission, redirect };
-}
-
-/**
-|--------------------------------------------------
-| initLoad
-|--------------------------------------------------
-*/
-
-function getPathInfo(items, pathname) {
-  for (let i = 0; i < items.length; i++) {
-    const info = items[i];
-    if (info.items) {
-      const result = getPathInfo(info.items, pathname);
-      if (result) {
-        return result;
-      }
-    }
-
-    let to = info.to;
-    if (to && to.slice(-1) === '/') {
-      to = to.slice(0, -1);
-    }
-    if ((to === '' && pathname === '/') || (to !== '' && pathname.indexOf(to) === 0)) {
-      return info;
-    }
-  }
-  return null;
-}
-
-function* _loadAuth() {
-  // load token
-  let token = yield call(api.loadToken);
-  // get data
-  let data;
-  if (token) {
-    try {
-      data = yield call(getUserData, token);
-    } catch (errors) {
-      yield call(api.setToken);
-    }
-  }
-
-  const { router } = yield select();
-  const { pathname, search } = router.location;
-
-  if (!data) {
-    data = { loginState: 'none', permission: 0, redirect: `/auth?to=${pathname}` };
-    yield put({ type: C.LOGOUT });
-  }
-
-  // // check current path
-  const menuData = MENU_DATA[data.loginState];
-  const paths = menuData.left.concat(menuData.right, menuData.redirect || []);
-  const pathInfo = getPathInfo(paths, pathname);
-  if (!pathInfo || (pathInfo.permission || 0) > data.permission) {
-    yield put(push(data.redirect));
-  }
-
-  return data.loginState;
-}
-
-/**
-|--------------------------------------------------
-| register
-|--------------------------------------------------
-*/
-
-function* _register(model, usertype) {
-  try {
-    const { key } = yield call(api.post, '/api-rest-auth/registration/', model);
-
-    if (usertype === 'recruiter') {
-      yield call(helper.saveData, 'jobs-step', 1);
-    }
-
-    const { redirect } = yield call(getUserData, key, usertype);
-    yield put(push(redirect));
-  } catch (errors) {
-    yield put({ type: C.LOGIN_ERROR, errors });
-  }
-  // const loginModel = { email: model.email, password: model.password1 };
-  // yield call(_login, loginModel, usertype);
-}
-
-/**
-|--------------------------------------------------
-| login
-|--------------------------------------------------
-*/
-
-function* _login(model, usertype) {
-  try {
-    const { key } = yield call(api.post, '/api-rest-auth/login/', model);
-    const { redirect } = yield call(getUserData, key, usertype);
-
-    const { router } = yield select();
-    const { search } = router.location;
-    const params = helper.parseUrlParams(search);
-    const { to } = params;
-    if (to && to !== '/') {
-      yield put(push(to));
-    } else {
-      yield put(push(redirect));
-    }
-  } catch (errors) {
-    yield put({ type: C.LOGIN_ERROR, errors });
-  }
-}
-
-/**
-|--------------------------------------------------
-| logout
-|--------------------------------------------------
-*/
-
-function* _logout() {
-  // yield call(api.get, '/api-rest-auth/logout/');
-  yield call(api.setToken);
-  delete SDATA.user;
-  yield put(push('/auth'));
-}
-
-/**
-|--------------------------------------------------
-| loginFlow
-|--------------------------------------------------
-*/
-
-function* loginFlow() {
-  // yield call(clearToken);
-  let loginState = yield call(_loadAuth);
-
-  while (true) {
-    let task;
-    if (loginState === 'none') {
-      const { type, model, usertype } = yield take([C.REGISTER, C.LOGIN]);
-      if (type === C.REGISTER) {
-        task = yield fork(_register, model, usertype);
-      } else {
-        task = yield fork(_login, model);
-      }
-    }
-
-    const { type } = yield take([C.LOGIN_ERROR, C.LOGOUT]);
-    if (type === C.LOGOUT) {
-      yield _logout();
-    }
-    loginState = 'none';
-  }
-}
-
-/**
-|--------------------------------------------------
-| select usertype
-|--------------------------------------------------
-*/
-
-function* _selectUserType({ usertype }) {
-  yield call(helper.saveData, 'user-type', usertype);
-
-  if (usertype === 'recruiter') {
-    yield call(helper.saveData, 'jobs-step', 1);
-    yield put(push('/recruiter/jobs'));
+  if (!id) {
+    jobseeker = yield call(postRequest({ url: '/api/job-seekers/' }), action);
   } else {
-    yield put(push('/jobseeker/profile'));
+    jobseeker = yield call(putRequest({ url: `/api/job-seekers/${id}/` }), action);
+  }
+  if (jobseeker) {
+    yield put({ type: C.UPDATE_AUTH, payload: { jobseeker } });
   }
 }
 
-function* selectUserType() {
-  yield takeEvery(C.SELECT_USERTYPE, _selectUserType);
+function* saveJobProfile(action) {
+  const { id } = action.payload.data;
+  let profile;
+  if (!id) {
+    profile = yield call(postRequest({ url: '/api/job-profiles/' }), action);
+  } else {
+    profile = yield call(putRequest({ url: `/api/job-profiles/${id}/` }), action);
+  }
+  if (profile) {
+    yield put({ type: C.UPDATE_AUTH, payload: { profile } });
+  }
 }
 
-export default [loginFlow(), selectUserType()];
+function* getUserData() {
+  if (!DATA.initTokens) {
+    const result = yield all([
+      call(getRequest({ url: '/api/initial-tokens/' })),
+      call(getRequest({ url: '/api/sectors/' })),
+      call(getRequest({ url: '/api/contracts/' })),
+      call(getRequest({ url: '/api/hours/' })),
+      call(getRequest({ url: '/api/nationalities/' })),
+      call(getRequest({ url: '/api/application-statuses/' })),
+      call(getRequest({ url: '/api/job-statuses/' })),
+      call(getRequest({ url: '/api/sexes/' })),
+      call(getRequest({ url: '/api/roles/' })),
+      call(getRequest({ url: '/api/paypal-products/' }))
+    ]);
+
+    DATA.initTokens = result[0];
+    DATA.sectors = result[1];
+    DATA.contracts = result[2];
+    DATA.hours = result[3];
+    DATA.nationalities = result[4];
+    DATA.appStatuses = result[5];
+    DATA.jobStatuses = result[6];
+    DATA.sexes = result[7];
+    DATA.roles = result[8];
+    DATA.paypalProducts = result[9];
+
+    DATA.JOB = {
+      OPEN: helper.getJobStatusByName('OPEN'),
+      CLOSED: helper.getJobStatusByName('CLOSED')
+    };
+
+    DATA.APP = {
+      ESTABLISHED: helper.getIDByName('appStatuses', 'ESTABLISHED')
+      // ESTABLISHED: helper.getIDByName('appStatuses', 'ESTABLISHED')
+    };
+  }
+
+  const user = yield call(getRequest({ url: '/api-rest-auth/user/' }));
+  DATA.email = user.email;
+
+  const jobseekerId = user.job_seeker;
+  const jobseeker = jobseekerId ? yield call(getRequest({ url: `/api/job-seekers/${jobseekerId}/` })) : null;
+
+  const profileId = (jobseeker || {}).profile;
+  const profile = profileId ? yield call(getRequest({ url: `/api/job-profiles/${profileId}/` })) : null;
+
+  yield put({ type: C.UPDATE_AUTH, payload: { user, jobseeker, profile } });
+}
+
+export default function* sagas() {
+  yield takeLatest(C.REGISTER, register);
+  yield takeLatest(C.LOGIN, login);
+  yield takeLatest(C.LOGOUT, logout);
+  yield takeLatest(C.RESET_PASSWORD, resetPassword);
+  yield takeLatest(C.CHANGE_PASSWORD, changePassword);
+  yield takeLatest(C.GET_USERDATA, getUserData);
+
+  yield takeLatest(C.JS_SAVE_PROFILE, saveJobseeker);
+  yield takeLatest(C.JS_SAVE_JOBPROFILE, saveJobProfile);
+}

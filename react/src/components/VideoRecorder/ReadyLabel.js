@@ -6,20 +6,19 @@ const Wrapper = styled.div`
   position: absolute;
   top: 0;
   left: 0;
+  bottom: 100px;
+  ${media.mobile`bottom: 65px;`};
   width: 100%;
-  height: 100%;
   color: white;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  padding-bottom: 100px;
-  ${media.tablet`padding-bottom: 65px;`};
 
   span {
     margin-bottom: 20px;
     font-size: 40px;
-    ${media.tablet`font-size: 25px;`};
+    ${media.mobile`font-size: 25px;`};
   }
 
   div {
@@ -31,15 +30,13 @@ const Wrapper = styled.div`
     border-radius: 50%;
     border: 3px solid #fff;
     font-size: 70px;
-    ${media.tablet`
+    ${media.mobile`
       width: 90px;
       height: 90px;
       border: 2px solid #fff;
       font-size: 40px;
     `};
   }
-
-  
 `;
 
 class ReadyLabel extends PureComponent {

@@ -1,148 +1,78 @@
-import { delay } from 'redux-saga';
-import { takeEvery, put, call } from 'redux-saga/effects';
-import { FormComponent } from 'components';
-import { SDATA } from 'utils/data';
+import { takeLatest, call, put, select } from 'redux-saga/effects';
+import * as C from 'redux/constants';
 import * as helper from 'utils/helper';
-import * as api from 'utils/api';
-import * as C from './constants';
+import { getRequest, postRequest, putRequest, deleteRequest, requestSuccess } from 'utils/request';
 
-/**
-|--------------------------------------------------
-| upload logo
-|--------------------------------------------------
-*/
+const getJobs = getRequest({
+  url: ({ payload }) => `/api/user-jobs/?location=${payload.id}`
+});
 
-function* uploadLogo(logo, key, object, onUploadProgress) {
-  try {
+const removeJob = deleteRequest({
+  url: ({ payload }) => `/api/user-jobs/${payload.id}/`,
+  payloadOnSuccess: (_, { payload }) => payload
+});
+
+function* getJob(action) {
+  const { rc_jobs } = yield select();
+  const { jobs } = rc_jobs || {};
+  const { id, success } = action.payload;
+  const job = helper.getItemByID(jobs || [], id);
+
+  if (job) {
+    yield put({ type: requestSuccess(C.RC_GET_JOB), payload: job });
+    success && success(job);
+  } else {
+    yield call(getRequest({ url: `/api/user-jobs/${id}/` }), action);
+  }
+}
+
+function* saveJob(action) {
+  const { data, logo, onSuccess, onFail, onUploading } = action.payload;
+
+  let job;
+  if (!data.id) {
+    job = yield call(postRequest({ url: '/api/user-jobs/' }), action);
+  } else {
+    job = yield call(putRequest({ url: `/api/user-jobs/${data.id}/` }), action);
+  }
+
+  if (!job) {
+    return onFail && onFail('Save filed');
+  }
+
+  if (logo) {
     if (logo.file) {
-      const data = yield call(api.formData, {
-        order: 0,
-        [key]: object.id,
-        image: logo.file
-      });
-      const image = yield call(api.post, `/api/user-${key}-images/`, data, {
-        onUploadProgress: progress => {
-          onUploadProgress('Uploading...', Math.floor(progress.loaded / progress.total * 100));
+      const image = yield call(postRequest({ url: '/api/user-job-images/' }), {
+        payload: {
+          formData: true,
+          data: {
+            order: 0,
+            job: job.id,
+            image: logo.file
+          },
+          onUploadProgress: onUploading
         }
       });
-      onUploadProgress();
-      object.images = [image];
-    } else if (object.images.length > 0 && !logo.exist) {
-      yield call(api.del, `/api/user-${key}-images/${object.images[0].id}/`);
-      object.images = [];
+
+      onUploading && onUploading();
+
+      if (image) {
+        job.images = [image];
+      } else {
+        onFail('Logo upload failed!');
+      }
+    } else if (job.images.length > 0 && !logo.exist) {
+      yield call(deleteRequest({ url: `/api/user-job-images/${job.images[0].id}/` }));
+      job.images = [];
     }
-  } catch (errors) {
-    onUploadProgress();
   }
+
+  onSuccess && onSuccess(job);
 }
 
-/**
-|--------------------------------------------------
-| job load, select, save
-|--------------------------------------------------
-*/
-
-// load jobs
-
-function* _getJobs({ workplaceId }) {
-  try {
-    let endpoint = '/api/user-jobs/';
-    if (workplaceId !== undefined) {
-      endpoint = `${endpoint}?location=${workplaceId}`;
-    }
-    const jobs = yield call(api.get, endpoint);
-    yield put({ type: C.RC_GET_JOBS_SUCCESS, jobs });
-  } catch (errors) {
-    yield put({ type: C.RC_GET_JOBS_ERROR, errors });
-  }
+export default function* sagas() {
+  yield takeLatest(C.RC_GET_JOBS, getJobs);
+  yield takeLatest(C.RC_REMOVE_JOB, removeJob);
+  yield takeLatest(C.RC_GET_JOB, getJob);
+  yield takeLatest(C.RC_SAVE_JOB, saveJob);
 }
-
-function* getJobs() {
-  yield takeEvery(C.RC_GET_JOBS, _getJobs);
-}
-
-// remove job
-
-function* _removeJob({ jobId }) {
-  try {
-    yield call(api.del, `/api/user-jobs/${jobId}/`);
-    yield put({ type: C.RC_JOB_REMOVE_SUCCESS, jobId });
-  } catch (errors) {
-    helper.errorNotif('Server Error!');
-    yield put({ type: C.RC_JOB_REMOVE_ERROR, jobId });
-  }
-}
-
-function* removeJob() {
-  yield takeEvery(C.RC_JOB_REMOVE, _removeJob);
-}
-
-// update job
-
-function* _updateJob({ model }) {
-  try {
-    let job = yield call(api.put, `/api/user-jobs/${model.id}/`, model);
-    yield put({ type: C.RC_JOB_UPDATE_SUCCESS, job });
-  } catch (errors) {
-    helper.errorNotif('Server Error!');
-    yield put({ type: C.RC_JOB_UPDATE_ERROR, jobId: model.id, errors });
-  }
-}
-
-function* updateJob() {
-  yield takeEvery(C.RC_JOB_UPDATE, _updateJob);
-}
-
-// load job
-
-function* _getJob({ jobId }) {
-  try {
-    let job;
-    if (isNaN(jobId)) {
-      job = {
-        status: helper.getJobStatusByName('OPEN')
-      };
-    } else {
-      job = yield call(api.get, `/api/user-jobs/${jobId}/`);
-    }
-    yield put({ type: C.RC_JOB_GET_SUCCESS, job });
-  } catch (errors) {
-    yield put({ type: C.RC_JOB_GET_ERROR, errors });
-  }
-}
-
-function* getJob() {
-  yield takeEvery(C.RC_JOB_GET, _getJob);
-}
-
-// save job
-
-function* _saveJob({ model, logo, onUploadProgress }) {
-  try {
-    let job;
-
-    // save job
-    if (model.id) {
-      job = yield call(api.put, `/api/user-jobs/${model.id}/`, model);
-    } else {
-      job = yield call(api.post, '/api/user-jobs/', model);
-    }
-
-    // upload logo
-    if (logo) {
-      yield call(uploadLogo, logo, 'job', job, onUploadProgress);
-    }
-
-    yield put({ type: C.RC_JOB_SAVE_SUCCESS, job });
-    FormComponent.modified = false;
-    helper.successNotif('Job saved successfully!!');
-  } catch (errors) {
-    yield put({ type: C.RC_JOB_SAVE_ERROR, errors });
-  }
-}
-
-function* saveJob() {
-  yield takeEvery(C.RC_JOB_SAVE, _saveJob);
-}
-
-export default [getJobs(), removeJob(), updateJob(), getJob(), saveJob()];

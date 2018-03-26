@@ -11,7 +11,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('mjp', '0050_rename_temp_business_users'),
+        ('mjp', '0051_job_seeker_public_flag_defaults'),
     ]
 
     operations = [

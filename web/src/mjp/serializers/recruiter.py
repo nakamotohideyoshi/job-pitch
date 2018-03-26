@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from rest_framework.exceptions import PermissionDenied
 
-from mjp.models import BusinessUser, BusinessImage, LocationImage, JobImage
+from mjp.models import BusinessUser, BusinessImage, LocationImage, JobImage, JobVideo
 
 
 class BusinessImageSerializer(serializers.ModelSerializer):
@@ -53,3 +53,9 @@ class JobImageSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = JobImage
+
+
+class JobVideoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = JobVideo
+        read_only_fields = ('token',)

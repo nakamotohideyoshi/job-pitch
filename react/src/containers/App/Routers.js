@@ -1,55 +1,88 @@
 import React from 'react';
-import { Switch, Route } from 'react-router-dom';
+import { Switch, Route, Redirect } from 'react-router-dom';
 
-import Login from 'containers/common/Login';
-import Register from 'containers/common/Register';
-import Reset from 'containers/common/Reset';
-import SelectType from 'containers/common/SelectType';
-import Password from 'containers/common/Password';
-import NotFound from 'containers/common/NotFound';
+import AuthRoute from 'containers/auth/Route';
+import Login from 'containers/auth/Login';
+import Register from 'containers/auth/Register';
+import Reset from 'containers/auth/Reset';
+import SelectType from 'containers/auth/SelectType';
 
-import Applications from 'containers/recruiter/Applications';
-import Jobs from 'containers/recruiter/Jobs';
-import Credits from 'containers/recruiter/Credits';
-import RCMessages from 'containers/recruiter/RCMessages';
-import JobseekerDetail from 'containers/recruiter/JobseekerDetail';
+import RCRoute from 'containers/recruiter/Route';
+import FindTalent from 'containers/recruiter/Applications/FindTalent';
+import MyApplications from 'containers/recruiter/Applications/MyApplications';
+import MyConnections from 'containers/recruiter/Applications/MyConnections';
+import MyShortlist from 'containers/recruiter/Applications/MyShortlist';
 
-import FindJob from 'containers/jobseeker/FindJob';
-import MyApplications from 'containers/jobseeker/MyApplications';
-import Profile from 'containers/jobseeker/Profile';
-import PitchRecord from 'containers/jobseeker/PitchRecord';
-import JobProfile from 'containers/jobseeker/JobProfile';
-import JSMessages from 'containers/jobseeker/JSMessages';
-import JobDetail from 'containers/jobseeker/JobDetail';
+import RCJobs from 'containers/recruiter/Jobs';
+import RCMessages from 'containers/recruiter/Messages';
+import RCSettings from 'containers/recruiter/Settings';
 
-export default () => (
-  <Switch>
-    <Route exact path="/" component={Login} />
-    <Route exact path="/auth" component={Login} />
-    <Route exact path="/auth/register" component={Register} />
-    <Route exact path="/auth/register/:type" component={Register} />
-    <Route exact path="/auth/reset" component={Reset} />
+import JSRoute from 'containers/jobseeker/Route';
+import FindJob from 'containers/jobseeker/Find';
+import JSJobDetail from 'containers/jobseeker/JobDetail';
+import JSApplications from 'containers/jobseeker/Applications';
+import JSAppDetail from 'containers/jobseeker/AppDetail';
+import JSJobs from 'containers/jobseeker/Jobs';
+import JSMessages from 'containers/jobseeker/Messages';
+import JSSettings from 'containers/jobseeker/Settings';
 
-    <Route exact path="/select" component={SelectType} />
-    <Route exact path="/password" component={Password} />
+import NotFound from 'containers/NotFound';
 
-    <Route path="/recruiter/applications" component={Applications} />
-    <Route path="/recruiter/jobs" component={Jobs} />
-    <Route exact path="/recruiter/credits" component={Credits} />
-    <Route exact path="/recruiter/credits/:businessId" component={Credits} />
-    <Route exact path="/recruiter/messages" component={RCMessages} />
-    <Route exact path="/recruiter/messages/:appId" component={RCMessages} />
-    <Route path="/recruiter/apps/:jobId/:jobseekerId" component={JobseekerDetail} />
+export default () => {
+  return (
+    <Switch>
+      <Redirect exact from="/" to="/auth" />
+      <AuthRoute exact path="/auth" component={Login} />
+      <AuthRoute exact path="/auth/register" component={Register} />
+      <AuthRoute exact path="/auth/reset" component={Reset} />
 
-    <Route exact path="/jobseeker/find" component={FindJob} />
-    <Route exact path="/jobseeker/applications" component={MyApplications} />
-    <Route exact path="/jobseeker/profile" component={Profile} />
-    <Route exact path="/jobseeker/record" component={PitchRecord} />
-    <Route exact path="/jobseeker/jobprofile" component={JobProfile} />
-    <Route exact path="/jobseeker/messages" component={JSMessages} />
-    <Route exact path="/jobseeker/messages/:appId" component={JSMessages} />
-    <Route exact path="/jobseeker/jobs/:jobId" component={JobDetail} />
+      <AuthRoute exact path="/select" component={SelectType} />
 
-    <Route component={NotFound} />
-  </Switch>
-);
+      <Redirect exact from="/recruiter" to="/recruiter/applications/find" />
+      <Redirect exact from="/recruiter/applications" to="/recruiter/applications/find" />
+
+      <RCRoute exact path="/recruiter/applications/find" component={FindTalent} />
+      <RCRoute exact path="/recruiter/applications/find/:jobId" component={FindTalent} />
+      <RCRoute exact path="/recruiter/applications/find/:jobId/:jobseekerId" component={FindTalent} />
+      <RCRoute exact path="/recruiter/applications/apps" component={MyApplications} />
+      <RCRoute exact path="/recruiter/applications/apps/:jobId" component={MyApplications} />
+      <RCRoute exact path="/recruiter/applications/conns" component={MyConnections} />
+      <RCRoute exact path="/recruiter/applications/conns/:jobId" component={MyConnections} />
+      <RCRoute exact path="/recruiter/applications/shortlist" component={MyShortlist} />
+      <RCRoute exact path="/recruiter/applications/shortlist/:jobId" component={MyShortlist} />
+      {/* <RCRoute exact path="/recruiter/apps/:jobId/:jobseekerId" component={RCApplications} /> */}
+
+      <Redirect exact from="/recruiter/jobs" to="/recruiter/jobs/business" />
+      <RCRoute exact path="/recruiter/jobs/business" component={RCJobs} />
+      <RCRoute exact path="/recruiter/jobs/business/add" component={RCJobs} />
+      <RCRoute exact path="/recruiter/jobs/business/edit/:businessId" component={RCJobs} />
+      <RCRoute exact path="/recruiter/jobs/workplace/:businessId" component={RCJobs} />
+      <RCRoute exact path="/recruiter/jobs/workplace/add/:businessId" component={RCJobs} />
+      <RCRoute exact path="/recruiter/jobs/workplace/edit/:workplaceId" component={RCJobs} />
+      <RCRoute exact path="/recruiter/jobs/job/:workplaceId" component={RCJobs} />
+      <RCRoute exact path="/recruiter/jobs/job/add/:workplaceId" component={RCJobs} />
+      <RCRoute exact path="/recruiter/jobs/job/edit/:jobId" component={RCJobs} />
+      <RCRoute exact path="/recruiter/jobs/job/view/:jobId" component={RCJobs} />
+      <RCRoute exact path="/recruiter/messages" component={RCMessages} />
+      <Redirect exact from="/recruiter/settings" to="/recruiter/settings/credits" />
+      <RCRoute exact path="/recruiter/settings/credits" component={RCSettings} />
+      <RCRoute exact path="/recruiter/settings/credits/:businessId" component={RCSettings} />
+      <RCRoute exact path="/recruiter/settings/password" component={RCSettings} />
+
+      <Redirect exact from="/jobseeker" to="/jobseeker/find" />
+      <JSRoute exact path="/jobseeker/find" component={FindJob} />
+      <JSRoute exact path="/jobseeker/find/:jobId" component={JSJobDetail} />
+      <JSRoute exact path="/jobseeker/applications" component={JSApplications} />
+      <JSRoute exact path="/jobseeker/applications/:appId" component={JSAppDetail} />
+      <JSRoute exact path="/jobseeker/jobs/:jobId" component={JSJobs} />
+      <JSRoute exact path="/jobseeker/messages" component={JSMessages} />
+      <Redirect exact from="/jobseeker/settings" to="/jobseeker/settings/profile" />
+      <JSRoute exact path="/jobseeker/settings/profile" component={JSSettings} />
+      <JSRoute exact path="/jobseeker/settings/record" component={JSSettings} />
+      <JSRoute exact path="/jobseeker/settings/jobprofile" component={JSSettings} />
+      <JSRoute exact path="/jobseeker/settings/password" component={JSSettings} />
+
+      <Route component={NotFound} />
+    </Switch>
+  );
+};

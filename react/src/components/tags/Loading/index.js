@@ -1,33 +1,20 @@
-import styled, { css } from 'styled-components';
+import React from 'react';
+import styled from 'styled-components';
+import { Spin } from 'antd';
 
-const Loading = styled.span`
-  &:before {
-    content: '';
-    box-sizing: border-box;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    border-radius: 50%;
-
-    ${props =>
-      css`
-        width: ${props.size || 40}px;
-        height: ${props.size || 40}px;
-        margin-top: -${(props.size || 40) / 2}px;
-        margin-left: -${(props.size || 40) / 2}px;
-        border-top: 2px solid ${props.color || `#00b6a4`};
-      `};
-
-    border-right: 2px solid transparent;
-
-    animation: spinner 0.8s linear infinite;
-  }
-
-  @keyframes spinner {
-    to {
-      transform: rotate(360deg);
-    }
-  }
+const Wrapper = styled.div`
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `;
 
-export default Loading;
+export default props => (
+  <Wrapper>
+    <Spin {...props} />
+  </Wrapper>
+);

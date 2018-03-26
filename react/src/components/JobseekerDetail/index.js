@@ -1,160 +1,111 @@
-import React from 'react';
-import { ModalHeader, ModalBody, ModalFooter, Button } from 'reactstrap';
-import FontAwesomeIcon from '@fortawesome/react-fontawesome';
-import faCheckSquare from '@fortawesome/fontawesome-free-regular/faCheckSquare';
-import faPlayCircle from '@fortawesome/fontawesome-free-regular/faPlayCircle';
+import React, { Fragment } from 'react';
+import { Divider, List, Button } from 'antd';
 
-import * as helper from 'utils/helper';
-import { Board, Logo, Loading, Checkbox } from 'components';
+import { Icons, Logo } from 'components';
 import Wrapper from './Wrapper';
 
-export default class JobseekerDetail extends React.Component {
-  onPlayPitch = () => window.open(this.props.jobseeker.pitches[this.props.jobseeker.pitches.length - 1].video);
+import * as helper from 'utils/helper';
+import DATA from 'utils/data';
 
-  onViewCV = () => window.open(this.props.jobseeker.cv);
+const JobseekerDetail = ({ application, jobseeker, className }) => {
+  const image = helper.getPitch(jobseeker).thumbnail;
+  const fullName = helper.getFullJSName(jobseeker);
+  const age = jobseeker.age_public && jobseeker.age;
+  const sex = jobseeker.sex_public && helper.getNameByID('sexes', jobseeker.sex);
+  const connected = (application || {}).status === DATA.APP.ESTABLISHED;
 
-  onChangeShortlist = event => this.props.onChangeShortlist(event.target.checked);
+  let email, mobile;
+  if (connected) {
+    email = jobseeker.email_public && jobseeker.email;
+    mobile = jobseeker.mobile_public && jobseeker.mobile;
+  }
 
-  onClose = onClick => {
-    onClick();
-    this.props.onClose();
-  };
+  const playPitch = () => window.open(jobseeker.pitches[this.props.jobseeker.pitches.length - 1].video);
 
-  render() {
-    const { application, jobseeker, buttons, onClose } = this.props;
-    const image = helper.getJobseekerImg(jobseeker);
-    const fullName = helper.getFullJSName(jobseeker);
-    const age = jobseeker.age_public && jobseeker.age;
-    const sex = jobseeker.sex_public && helper.getNameByID('sexes', jobseeker.sex);
-    const connected = (application || {}).status === helper.getIDByName('appStatuses', 'ESTABLISHED');
+  const viewCV = () => window.open(jobseeker.cv);
 
-    let email, mobile;
-    if (connected) {
-      email = jobseeker.email_public && jobseeker.email;
-      mobile = jobseeker.mobile_public && jobseeker.mobile;
-    }
-
-    return (
-      <Wrapper isOpen toggle={onClose} size="lg">
-        <ModalHeader toggle={onClose}>Jobseeker Detail</ModalHeader>
-
-        <ModalBody>
-          <Board block className="main-board">
-            <div className="info">
-              <Logo src={image} circle size="100" />
-
-              <div className="content">
-                <div className="name">
-                  <h4>{fullName}</h4>
-
-                  {connected &&
-                    (application.shortlisting ? (
-                      <div className="loading">
-                        <Loading size="15" />
-                      </div>
-                    ) : (
-                      <Checkbox
-                        className="shortlisted"
-                        checked={application.shortlisted}
-                        onChange={this.onChangeShortlist}
-                        label="Shortlisted"
-                      />
-                    ))}
-                </div>
-
-                <div className="attributes">
-                  {age && (
-                    <span>
-                      <label>age:</label> {age}
-                    </span>
-                  )}
-                  {sex && (
-                    <span>
-                      <label>sex:</label> {sex}
-                    </span>
-                  )}
-                </div>
-
-                {jobseeker.pitches.length > 0 && (
-                  <div>
-                    <a onClick={this.onPlayPitch}>
-                    <FontAwesomeIcon icon={faPlayCircle} />Video Pitch
-                    </a>
-                  </div>
+  return (
+    <Wrapper className={className}>
+      <List.Item>
+        <List.Item.Meta
+          avatar={<Logo src={image} size="100px" />}
+          title={<span className="title">{fullName}</span>}
+          description={
+            <div>
+              <div>
+                {age && (
+                  <span>
+                    <label>age:</label> {age}
+                  </span>
+                )}
+                {sex && (
+                  <span>
+                    <label>sex:</label> {sex}
+                  </span>
                 )}
               </div>
-            </div>
-
-            <hr />
-
-            <div className="overview">
-              <h4>Overview</h4>
-              <div>{jobseeker.description}</div>
-              {jobseeker.cv && (
-                <Button outline color="gray" size="sm" onClick={this.onViewCV}>
-                  CV View
-                </Button>
-              )}
-            </div>
-
-            {jobseeker.has_national_insurance_number && (
-              <div className="check-label">
-                <FontAwesomeIcon icon={faCheckSquare} />
-                National Insurance number supplied
-              </div>
-            )}
-            {jobseeker.has_references && (
-              <div className="check-label">
-                <FontAwesomeIcon icon={faCheckSquare} />
-                Reference available on request
-              </div>
-            )}
-            {jobseeker.truth_confirmation && (
-              <div className="check-label">
-                <FontAwesomeIcon icon={faCheckSquare} />
-                I confirm that all information provided is truthful and confirm I have the right to work in the UK
-              </div>
-            )}
-          </Board>
-
-          {connected && (
-            <Board block className="contact-board">
-              <h4>Contact</h4>
-              {email && (
+              {jobseeker.pitches.length > 0 && (
                 <div>
-                  <label>Email:</label> {email}
+                  <a onClick={playPitch}>
+                    <Icons.Play />Video Pitch
+                  </a>
                 </div>
               )}
-              {mobile && (
-                <div>
-                  <label>Mobile:</label> {mobile}
-                </div>
-              )}
-              {!email && !mobile && <div>No contact details supplied</div>}
-            </Board>
+            </div>
+          }
+        />
+      </List.Item>
+
+      <Divider />
+
+      <h4>Overview</h4>
+
+      <div className="overview">{jobseeker.description}</div>
+
+      {jobseeker.cv && <Button onClick={viewCV}>CV View</Button>}
+
+      {jobseeker.has_national_insurance_number && (
+        <div className="check-label">
+          <Icons.Check />
+          National Insurance number supplied
+        </div>
+      )}
+      {jobseeker.has_references && (
+        <div className="check-label">
+          <Icons.Check />
+          Reference available on request
+        </div>
+      )}
+      {jobseeker.truth_confirmation && (
+        <div className="check-label">
+          <Icons.Check />
+          I confirm that all information provided is truthful and confirm I have the right to work in the UK
+        </div>
+      )}
+
+      {connected && (
+        <Fragment>
+          <Divider />
+
+          <h4>Contact</h4>
+
+          {email && (
+            <div>
+              <label>Email:</label> {email}
+            </div>
           )}
-        </ModalBody>
 
-        <ModalFooter>
-          <div>
-            {buttons &&
-              buttons.map((button, index) => (
-                <Button
-                  key={index}
-                  color={button.color}
-                  outline={button.outline}
-                  onClick={() => this.onClose(button.onClick)}
-                >
-                  {button.label}
-                </Button>
-              ))}
-          </div>
+          {mobile && (
+            <div>
+              <label>Mobile:</label> {mobile}
+            </div>
+          )}
 
-          <Button color="gray" outline onClick={onClose}>
-            Close
-          </Button>
-        </ModalFooter>
-      </Wrapper>
-    );
-  }
-}
+          {!email && !mobile && <div>No contact details supplied</div>}
+        </Fragment>
+      )}
+    </Wrapper>
+  );
+};
+
+export default JobseekerDetail;

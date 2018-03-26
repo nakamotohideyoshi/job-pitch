@@ -8,9 +8,7 @@ import App from 'containers/App';
 import registerServiceWorker from './registerServiceWorker';
 import configureStore from './configureStore';
 
-import 'bootstrap/bootstrap.css';
-import 'react-select/dist/react-select.css';
-import 'antd/dist/antd.css';
+import 'antd/theme.css';
 import './globalStyles';
 
 const history = createHistory();

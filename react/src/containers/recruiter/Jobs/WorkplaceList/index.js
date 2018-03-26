@@ -1,181 +1,196 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { Card, Row, Col, Breadcrumb, BreadcrumbItem } from 'reactstrap';
-import FontAwesomeIcon from '@fortawesome/react-fontawesome';
-import faMapMarkerAlt from '@fortawesome/fontawesome-free-solid/faMapMarkerAlt';
-import { Loading, FlexBox, MJPCard } from 'components';
+import { Link } from 'react-router-dom';
+import { Breadcrumb, List, Modal } from 'antd';
 
-import * as helper from 'utils/helper';
-import { SDATA } from 'utils/data';
-import { confirm } from 'redux/common';
-import { getWorkplaces, removeWorkplace } from 'redux/recruiter/workplaces';
+import { PageSubHeader, AlertMsg, Loading, Logo } from 'components';
 import Wrapper from './Wrapper';
+
+import { getWorkplaces, removeWorkplace } from 'redux/recruiter/workplaces';
+import * as helper from 'utils/helper';
+
+const { confirm } = Modal;
 
 class WorkplaceList extends React.Component {
   componentWillMount() {
-    const businessId = helper.str2int(this.props.match.params.businessId);
-    if (businessId) {
-      this.props.getWorkplaces(businessId);
+    const { match, getWorkplaces, refreshList } = this.props;
+    this.businessId = parseInt(match.params.businessId, 10);
+    if (refreshList) {
+      getWorkplaces({
+        id: this.businessId
+      });
     }
   }
 
-  onSelect = workplace => {
-    const { businessId } = this.props.match.params;
-    this.props.history.push(`/recruiter/jobs/${businessId}/${workplace.id}`);
+  selectWorkplace = ({ id }) => {
+    const { history } = this.props;
+    history.push(`/recruiter/jobs/job/${id}`);
   };
 
-  onAdd = () => {
-    const { businessId } = this.props.match.params;
-    this.props.history.push(`/recruiter/jobs/${businessId}/add`);
-    //   if (utils.getShared('first-time') === '2') {
-    //     utils.setShared('first-time', '3');
-    //   }
-    //   this.setState({
-    //     editingData: {
-    //       business: this.manager.getBusinessId(),
-    //       email: utils.getCookie('email'),
-    //       email_public: true,
-    //       mobile_public: true
-    //     }
-    //   });
+  addWorkplace = () => {
+    const { history } = this.props;
+    history.push(`/recruiter/jobs/workplace/add/${this.businessId}`);
   };
 
-  onEdit = workplace => {
-    const { businessId } = this.props.match.params;
-    this.props.history.push(`/recruiter/jobs/${businessId}/${workplace.id}/edit`);
+  editWorkplace = ({ id }, e) => {
+    e && e.stopPropagation();
+
+    const { history } = this.props;
+    history.push(`/recruiter/jobs/workplace/edit/${id}`);
   };
 
-  onRemove = workplace => {
-    const { confirm, removeWorkplace } = this.props;
+  removeWorkplace = ({ id, name, jobs }, e) => {
+    e && e.stopPropagation();
 
-    confirm('Confirm', `Are you sure you want to delete ${workplace.name}`, [
-      { outline: true },
-      {
-        label: 'Remove',
-        color: 'yellow',
-        onClick: () => {
-          const jobCount = workplace.jobs.length;
-          if (jobCount === 0) {
-            removeWorkplace(workplace.id);
-            return;
-          }
-
-          confirm(
-            'Confirm',
-            `Deleting this workplace will also delete ${jobCount} jobs.
-            If you want to hide the jobs instead you can deactive them.`,
-            [
-              { outline: true },
-              {
-                label: 'Remove',
-                color: 'yellow',
-                onClick: () => removeWorkplace(workplace.id)
-              }
-            ]
-          );
+    const { removeWorkplace } = this.props;
+    confirm({
+      title: `Are you sure you want to delete ${name}`,
+      okText: `Remove`,
+      okType: 'danger',
+      cancelText: 'Cancel',
+      maskClosable: true,
+      onOk: () => {
+        const jobCount = jobs.length;
+        if (jobCount === 0) {
+          removeWorkplace({ id });
+          return;
         }
+
+        confirm({
+          title: `Deleting this workplace will also delete ${jobCount} jobs.
+          If you want to hide the jobs instead you can deactive them.`,
+          okText: `Remove`,
+          okType: 'danger',
+          cancelText: 'Cancel',
+          maskClosable: true,
+          onOk: () => {
+            removeWorkplace(id);
+          }
+        });
       }
-    ]);
+    });
+  };
+
+  renderWorkplace = workplace => {
+    const logo = helper.getWorkplaceLogo(workplace);
+    const jn = workplace.jobs.length;
+    const jobCount = `Includes ${jn} job${jn !== 1 ? 's' : ''}`;
+    const jcn = jn - workplace.active_job_count;
+    const closedCount = `${jcn} inactive`;
+
+    return (
+      <List.Item
+        key={workplace.id}
+        actions={[
+          <span onClick={e => this.editWorkplace(workplace, e)}>Edit</span>,
+          <span onClick={e => this.removeWorkplace(workplace, e)}>Remove</span>
+        ]}
+        onClick={() => this.selectWorkplace(workplace)}
+      >
+        <List.Item.Meta
+          avatar={<Logo src={logo} size="80px" />}
+          title={`${workplace.name}`}
+          description={
+            <div>
+              <div className="properties">
+                <span>{jobCount}</span>
+                <span>{closedCount}</span>
+              </div>
+              <div>{workplace.description}</div>
+            </div>
+          }
+        />
+      </List.Item>
+    );
   };
 
   renderWorkplaces = () => {
-    const { workplaces } = this.props;
+    const { workplaces, loading } = this.props;
 
     if (workplaces.length === 0) {
+      if (loading) {
+        return <Loading size="large" />;
+      }
+
       return (
-        <FlexBox center>
-          <div className="alert-msg">
-            {SDATA.jobsStep === 2
-              ? `Great, you've created your business!
-                Now let's create your work place`
-              : "This business doesn't seem to have a workplace for your staff"}
-          </div>
-          <a
-            className="btn-link"
-            onClick={() => {
-              SDATA.jobsStep = 3;
-              helper.saveData('jobs-step', 3);
-              this.onAdd();
-            }}
-          >
-            Create workplace
-          </a>
-        </FlexBox>
+        <AlertMsg>
+          <span>{`Empty`}</span>
+          {/* <a onClick={this.props.getJobs}>
+            <FontAwesomeIcon icon={faSyncAlt} />
+            Refresh
+          </a> */}
+        </AlertMsg>
+        //   <div className="alert-msg">
+        //     {DATA.jobsStep === 2
+        //       ? `Great, you've created your business!
+        //         Now let's create your work place`
+        //       : "This business doesn't seem to have a workplace for your staff"}
+        //   </div>
+        //   <a
+        //     className="btn-link"
+        //     onClick={() => {
+        //       DATA.jobsStep = 3;
+        //       helper.saveData('jobs-step', 3);
+        //       this.onAdd();
+        //     }}
+        //   >
+        //     Create workplace
+        //   </a>
       );
     }
 
     return (
-      <Row>
-        {workplaces.map(workplace => {
-          const logo = helper.getWorkplaceLogo(workplace);
-          const jn = workplace.jobs.length;
-          const jobCount = `Includes ${jn} job${jn !== 1 ? 's' : ''}`;
-          const jcn = jn - workplace.active_job_count;
-          const closedCount = `${jcn} inactive`;
-
-          return (
-            <Col xs="12" sm="6" md="4" lg="3" key={workplace.id}>
-              <MJPCard
-                image={logo}
-                title={workplace.name}
-                tProperty1={
-                  <span>
-                    <FontAwesomeIcon icon={faMapMarkerAlt} style={{ marginRight: '5px' }} />
-                    {workplace.place_name}
-                  </span>
-                }
-                bProperty1={jobCount}
-                bProperty2={closedCount}
-                onClick={() => this.onSelect(workplace)}
-                loading={workplace.deleting}
-                menus={[
-                  {
-                    label: 'Edit',
-                    onClick: () => this.onEdit(workplace)
-                  },
-                  {
-                    label: 'Remove',
-                    onClick: () => this.onRemove(workplace)
-                  }
-                ]}
-              />
-            </Col>
-          );
-        })}
-        <Col xs="12" sm="6" md="4" lg="3">
-          <Card body onClick={() => this.onAdd()} className="add">
-            Add New Workplace
-          </Card>
-        </Col>
-      </Row>
+      <List itemLayout="horizontal" dataSource={workplaces} loading={loading} renderItem={this.renderWorkplace} />
+      // <Col xs="12" sm="6" md="4" lg="3" key={workplace.id}>
+      //   <MJPCard
+      //     image={logo}
+      //     title={workplace.name}
+      //     tProperty1={
+      //       <span>
+      //         <FontAwesomeIcon icon={faMapMarkerAlt} style={{ marginRight: '5px' }} />
+      //         {workplace.place_name}
+      //       </span>
+      //     }
+      //     bProperty1={jobCount}
+      //     bProperty2={closedCount}
+      //     onClick={() => this.onSelect(workplace)}
+      //     loading={workplace.deleting}
+      //     menus={[
+      //       {
+      //         label: 'Edit',
+      //         onClick: () => this.onEdit(workplace)
+      //       },
+      //       {
+      //         label: 'Remove',
+      //         onClick: () => this.onRemove(workplace)
+      //       }
+      //     ]}
+      //   />
+      // </Col>
     );
   };
 
   render() {
-    const { workplaces, errors } = this.props;
+    const { error } = this.props;
 
     return (
       <Wrapper>
-        <Breadcrumb>
-          <BreadcrumbItem>
-            <Link to="/recruiter/jobs">Businesses</Link>
-          </BreadcrumbItem>
-          <BreadcrumbItem active tag="span">
-            Workplaces
-          </BreadcrumbItem>
-        </Breadcrumb>
+        <PageSubHeader>
+          <Breadcrumb>
+            <Breadcrumb.Item>
+              <Link to="/recruiter/jobs/business">Businesses</Link>
+            </Breadcrumb.Item>
+            <Breadcrumb.Item>Workplaces</Breadcrumb.Item>
+          </Breadcrumb>
+          <Link to={`/recruiter/jobs/workplace/add/${this.businessId}`}>Add Workplace</Link>
+        </PageSubHeader>
 
-        {workplaces ? (
-          this.renderWorkplaces()
-        ) : !errors ? (
-          <FlexBox center>
-            <Loading />
-          </FlexBox>
+        {error ? (
+          <AlertMsg>
+            <span>Server Error!</span>
+          </AlertMsg>
         ) : (
-          <FlexBox center>
-            <div className="alert-msg">Server Error!</div>
-          </FlexBox>
+          this.renderWorkplaces()
         )}
       </Wrapper>
     );
@@ -185,10 +200,11 @@ class WorkplaceList extends React.Component {
 export default connect(
   state => ({
     workplaces: state.rc_workplaces.workplaces,
-    errors: state.rc_workplaces.errors
+    loading: state.rc_workplaces.loading,
+    refreshList: state.rc_workplaces.refreshList,
+    error: state.rc_workplaces.error
   }),
   {
-    confirm,
     getWorkplaces,
     removeWorkplace
   }

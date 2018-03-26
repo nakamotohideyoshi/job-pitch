@@ -1,166 +1,228 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Breadcrumb, BreadcrumbItem, Button, Form, FormGroup, Label, Row, Col, Alert } from 'reactstrap';
-
-import { SaveFormComponent, Board, Loading, Required, PopupProgress } from 'components';
-import { confirm } from 'redux/common';
-import { getJob, saveJob } from 'redux/recruiter/jobs';
-import { SDATA } from 'utils/data';
-import * as helper from 'utils/helper';
+import { Link } from 'react-router-dom';
+import { Breadcrumb, Form, Input, Select, Switch, Button, message } from 'antd';
+import { PageSubHeader, PopupProgress, ImageSelector, NoLabelField } from 'components';
 import Wrapper from './Wrapper';
 
-class JobEdit extends SaveFormComponent {
-  componentWillMount() {
-    const jobId = parseInt(this.props.match.params.jobId, 10);
-    this.props.getJob(jobId);
+import { getWorkplace } from 'redux/recruiter/workplaces';
+import { getJob, saveJob } from 'redux/recruiter/jobs';
+import DATA from 'utils/data';
+import * as helper from 'utils/helper';
+
+const { Item } = Form;
+const { Option } = Select;
+const { TextArea } = Input;
+
+class JobEdit extends React.Component {
+  state = {
+    logo: {
+      url: null,
+      file: null,
+      exist: false
+    }
+  };
+
+  componentDidMount() {
+    const { match, getWorkplace, getJob, form } = this.props;
+    const workplaceId = parseInt(match.params.workplaceId, 10);
+    if (workplaceId) {
+      getWorkplace({
+        id: workplaceId,
+        success: workplace =>
+          this.setState({
+            logo: {
+              url: helper.getWorkplaceLogo(workplace),
+              exist: false
+            }
+          }),
+        fail: this.goBuisinessList
+      });
+      return;
+    }
+
+    const jobId = parseInt(match.params.jobId, 10);
+    getJob({
+      id: jobId,
+      success: job => {
+        this.setState({
+          job,
+          logo: {
+            url: helper.getJobLogo(job),
+            exist: (job.images || []).length > 0
+          }
+        });
+
+        form.setFieldsValue({
+          status: job.status === DATA.JOB.OPEN,
+          title: job.title,
+          sector: job.sector,
+          contract: job.contract,
+          hours: job.hours,
+          description: job.description
+        });
+      },
+      fail: this.goBuisinessList
+    });
   }
 
-  componentWillReceiveProps(nextProps) {
-    const { job } = nextProps;
-    if (job && job !== this.props.job) {
-      const model = Object.assign(this.state.model, job);
-      model.active = job.status === helper.getJobStatusByName('OPEN');
-      model.location = model.location || this.props.match.params.workplaceId;
-      this.setState({
-        model,
-        logo: {
-          default: helper.getWorkplaceLogo(job.location_data),
-          url: helper.getJobLogo(job),
-          exist: (job.images || []).length > 0
+  setLogo = (file, url) =>
+    this.setState({
+      logo: {
+        url: url || helper.getWorkplaceLogo(this.props.workplace),
+        file,
+        exist: !!file
+      }
+    });
+
+  goBuisinessList = () => this.props.history.push('/recruiter/jobs/business');
+
+  goJobList = () => {
+    const { workplace, history } = this.props;
+    const { job } = this.state;
+    history.push(`/recruiter/jobs/job/${workplace.id || job.location}`);
+  };
+
+  save = () => {
+    const { form, workplace, saveJob } = this.props;
+    const { job } = this.state;
+
+    form.validateFieldsAndScroll({ scroll: { offsetTop: 70 } }, (err, values) => {
+      if (err) return;
+
+      const { logo } = this.state;
+      saveJob({
+        data: {
+          ...values,
+          status: values.status ? DATA.JOB.OPEN : DATA.jobClosed,
+          location: (workplace || {}).id || (job || {}).location,
+          id: (job || {}).id
+        },
+        logo,
+        onUploading: progress => {
+          const uploading = progress ? Math.floor(progress.loaded / progress.total * 100) : null;
+          this.setState({ uploading });
+        },
+        onSuccess: () => {
+          message.success('Job saved successfully!');
+        },
+        onFail: error => {
+          message.error(error);
         }
       });
-    }
-  }
-
-  onSave = () => {
-    if (!this.isValid(['title', 'sector', 'contract', 'hours', 'description'])) return;
-
-    const data = Object.assign({}, this.state.model);
-    data.status = helper.getJobStatusByName(data.active ? 'OPEN' : 'CLOSED');
-    this.props.saveJob(data, this.state.logo, (label, value) => {
-      const progress = label ? { label, value } : null;
-      this.setState({ progress });
     });
   };
 
-  onCancel = () => {
-    const { businessId, workplaceId } = this.props.match.params;
-    helper.routePush(`/recruiter/jobs/${businessId}/${workplaceId}`, this.props);
-  };
-
-  onRoutePush = to => {
-    helper.routePush(to, this.props);
-  };
-
   render() {
-    const { job, errors } = this.props;
-    const error = this.getError();
-    const { progress } = this.state;
+    const { workplace, saving, form } = this.props;
+    const { job } = this.state;
+    const workplace1 = workplace || (job || {}).location_data || {};
+    const business = workplace1.business_data || {};
+    const { getFieldDecorator } = form;
+    const { logo, uploading } = this.state;
 
     return (
       <Wrapper>
-        <Breadcrumb>
-          <BreadcrumbItem tag="a" onClick={() => this.onRoutePush(`/recruiter/jobs`)}>
-            Businesses
-          </BreadcrumbItem>
-          <BreadcrumbItem
-            tag="a"
-            onClick={() => {
-              const { businessId } = this.props.match.params;
-              this.onRoutePush(`/recruiter/jobs/${businessId}`);
-            }}
-          >
-            Workplaces
-          </BreadcrumbItem>
-          <BreadcrumbItem
-            tag="a"
-            onClick={() => {
-              const { businessId, workplaceId } = this.props.match.params;
-              this.onRoutePush(`/recruiter/jobs/${businessId}/${workplaceId}`);
-            }}
-          >
-            Jobs
-          </BreadcrumbItem>
-          <BreadcrumbItem active tag="span">
-            {(job || {}).id ? 'Edit' : 'Add'}
-          </BreadcrumbItem>
-        </Breadcrumb>
+        <PageSubHeader>
+          <Breadcrumb>
+            <Breadcrumb.Item>
+              <Link to="/recruiter/jobs/business">Businesses</Link>
+            </Breadcrumb.Item>
+            <Breadcrumb.Item>
+              <Link to={`/recruiter/jobs/workplace/${business.id}`}>Workplaces</Link>
+            </Breadcrumb.Item>
+            <Breadcrumb.Item>
+              <Link to={`/recruiter/jobs/job/${workplace1.id}`}>Jobs</Link>
+            </Breadcrumb.Item>
+            <Breadcrumb.Item>
+              {workplace && 'Add'}
+              {job && 'Edit'}
+            </Breadcrumb.Item>
+          </Breadcrumb>
+        </PageSubHeader>
 
-        {job ? (
-          <Board block>
-            <Form>
-              <div className="logo-container">
-                <FormGroup>
-                  <this.FormLogoSelect />
-                </FormGroup>
-              </div>
+        <Form>
+          <Item label="Active" className="status-field">
+            {getFieldDecorator('status', { valuePropName: 'checked', initialValue: true })(<Switch />)}
+          </Item>
 
-              <div className="right-container">
-                <FormGroup>
-                  <this.FormCheckbox name="active" label="Active" />
-                </FormGroup>
+          <Item label="Title">
+            {getFieldDecorator('title', {
+              rules: [
+                { required: true, message: 'Please input job title!' },
+                { whitespace: true, message: 'This field may not be blank.' }
+              ]
+            })(<Input />)}
+          </Item>
 
-                <FormGroup>
-                  <Label>
-                    Title<Required />
-                  </Label>
-                  <this.FormInput name="title" />
-                </FormGroup>
+          <Item label="Sector">
+            {getFieldDecorator('sector', {
+              rules: [{ required: true, message: 'Please select sector!' }]
+            })(
+              <Select
+                showSearch
+                allowClear
+                filterOption={(input, option) => option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
+              >
+                {DATA.sectors.map(({ id, name }) => (
+                  <Option value={id} key={id}>
+                    {name}
+                  </Option>
+                ))}
+              </Select>
+            )}
+          </Item>
 
-                <FormGroup>
-                  <Label>
-                    Sector<Required />
-                  </Label>
-                  <this.FormSelect name="sector" options={SDATA.sectors} />
-                </FormGroup>
-              </div>
+          <Item label="Contract">
+            {getFieldDecorator('contract', {
+              rules: [{ required: true, message: 'Please select contract!' }]
+            })(
+              <Select allowClear>
+                {DATA.contracts.map(({ id, name }) => (
+                  <Option value={id} key={id}>
+                    {name}
+                  </Option>
+                ))}
+              </Select>
+            )}
+          </Item>
 
-              <Row>
-                <Col xs="12" md="6">
-                  <FormGroup>
-                    <Label>
-                      Contract<Required />
-                    </Label>
-                    <this.FormSelect name="contract" options={SDATA.contracts} searchable={false} />
-                  </FormGroup>
-                </Col>
+          <Item label="Hours">
+            {getFieldDecorator('hours', {
+              rules: [{ required: true, message: 'Please select hours!' }]
+            })(
+              <Select allowClear>
+                {DATA.hours.map(({ id, name }) => (
+                  <Option value={id} key={id}>
+                    {name}
+                  </Option>
+                ))}
+              </Select>
+            )}
+          </Item>
 
-                <Col xs="12" md="6">
-                  <FormGroup>
-                    <Label>
-                      Hours<Required />
-                    </Label>
-                    <this.FormSelect name="hours" options={SDATA.hours} searchable={false} />
-                  </FormGroup>
-                </Col>
-              </Row>
+          <Item label="Description">
+            {getFieldDecorator('description', {
+              rules: [
+                { required: true, message: 'Please enter description!' },
+                { whitespace: true, message: 'This field may not be blank.' }
+              ]
+            })(<TextArea autosize={{ minRows: 3, maxRows: 20 }} />)}
+          </Item>
 
-              <FormGroup>
-                <Label>
-                  Description<Required />
-                </Label>
-                <this.FormTextArea name="description" maxLength="10000" minRows={3} maxRows={20} />
-              </FormGroup>
+          <Item label="Logo">
+            <ImageSelector url={logo.url} removable={logo.exist} onChange={this.setLogo} />
+          </Item>
 
-              {error && <Alert color="danger">{error}</Alert>}
+          <NoLabelField className="subimt-field">
+            <Button type="primary" loading={saving} onClick={this.save}>
+              Save
+            </Button>
+            <Button onClick={this.goJobList}>Cancel</Button>
+          </NoLabelField>
+        </Form>
 
-              <div>
-                <Button color="green" size="lg" disabled={job.saving} onClick={this.onSave}>
-                  {job.saving ? 'Saving...' : 'Save'}
-                </Button>
-                <Button color="gray" size="lg" outline onClick={this.onCancel}>
-                  Cancel
-                </Button>
-              </div>
-
-              {progress && <PopupProgress label={progress.label} value={progress.value} />}
-            </Form>
-          </Board>
-        ) : !errors ? (
-          <Loading />
-        ) : (
-          <Alert type="danger">Error!</Alert>
-        )}
+        {uploading && <PopupProgress label="Logo uploading..." value={uploading} />}
       </Wrapper>
     );
   }
@@ -168,8 +230,12 @@ class JobEdit extends SaveFormComponent {
 
 export default connect(
   state => ({
-    job: state.rc_jobs.selectedJob,
-    errors: state.rc_jobs.errors
+    workplace: state.rc_workplaces.workplace,
+    saving: state.rc_jobs.saving
   }),
-  { confirm, getJob, saveJob }
-)(JobEdit);
+  {
+    getWorkplace,
+    getJob,
+    saveJob
+  }
+)(Form.create()(JobEdit));

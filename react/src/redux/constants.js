@@ -1,0 +1,56 @@
+// general
+
+export const REGISTER = 'REGISTER';
+export const LOGIN = 'LOGIN';
+export const LOGOUT = 'LOGOUT';
+export const RESET_PASSWORD = 'RESET_PASSWORD';
+export const CHANGE_PASSWORD = 'CHANGE_PASSWORD';
+export const GET_USERDATA = 'GET_USERDATA';
+export const UPDATE_AUTH = 'UPDATE_AUTH';
+
+// recruiter
+
+export const RC_FIND_UPDATE = 'RC_FIND_UPDATE';
+export const RC_GET_JOBSEEKERS = 'RC_GET_JOBSEEKERS';
+export const RC_CONNECT_JOBSEEKER = 'RC_CONNECT_JOBSEEKER';
+export const RC_REMOVE_JOBSEEKER = 'RC_REMOVE_JOBSEEKER';
+
+export const RC_APPS_UPDATE = 'RC_APPS_UPDATE';
+export const RC_GET_ALL_JOBS = 'RC_GET_ALL_JOBS';
+export const RC_GET_APPS = 'RC_GET_APPS';
+export const RC_UPDATE_APP = 'RC_UPDATE_APP';
+export const RC_REMOVE_APP = 'RC_REMOVE_APP';
+
+export const RC_BUSINESSES_UPDATE = 'RC_BUSINESSES_UPDATE';
+export const RC_GET_BUSINESSES = 'RC_GET_BUSINESSES';
+export const RC_SELECT_BUSINESS = 'RC_SELECT_BUSINESS';
+export const RC_SAVE_BUSINESS = 'RC_SAVE_BUSINESS';
+export const RC_REMOVE_BUSINESS = 'RC_REMOVE_BUSINESS';
+export const RC_PURCHASE = 'RC_PURCHASE';
+
+export const RC_WORKPLACES_UPDATE = 'RC_WORKPLACES_UPDATE';
+export const RC_GET_WORKPLACES = 'RC_GET_WORKPLACES';
+export const RC_GET_WORKPLACE = 'RC_GET_WORKPLACE';
+export const RC_SAVE_WORKPLACE = 'RC_SAVE_WORKPLACE';
+export const RC_REMOVE_WORKPLACE = 'RC_REMOVE_WORKPLACE';
+
+export const RC_JOBS_UPDATE = 'RC_JOBS_UPDATE';
+export const RC_GET_JOBS = 'RC_GET_JOBS';
+export const RC_GET_JOB = 'RC_GET_JOB';
+export const RC_SAVE_JOB = 'RC_SAVE_JOB';
+export const RC_REMOVE_JOB = 'RC_REMOVE_JOB';
+
+// jobseeker
+
+export const JS_FIND_UPDATE = 'JS_FIND_UPDATE';
+export const JS_GET_JOBS = 'JS_GET_JOBS';
+export const JS_APPLY_JOB = 'JS_APPLY_JOB';
+export const JS_REMOVE_JOB = 'JS_REMOVE_JOB';
+
+export const JS_APPS_UPDATE = 'JS_APPS_UPDATE';
+export const JS_GET_APPS = 'JS_GET_APPS';
+
+export const JS_SAVE_PROFILE = 'JS_SAVE_PROFILE';
+export const JS_SAVE_JOBPROFILE = 'JS_SAVE_JOBPROFILE';
+export const JS_UPLOAD_PITCH = 'JS_UPLOAD_PITCH';
+export const JS_UPLOAD_JOBPITCH = 'JS_UPLOAD_JOBPITCH';

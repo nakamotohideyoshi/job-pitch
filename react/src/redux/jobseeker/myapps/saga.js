@@ -1,21 +1,10 @@
-import { takeEvery, put, call } from 'redux-saga/effects';
-import * as api from 'utils/api';
-import * as C from './constants';
+import { takeLatest } from 'redux-saga/effects';
 
-// get jobs
+import * as C from 'redux/constants';
+import { getRequest } from 'utils/request';
 
-function* _getApplications() {
-  try {
-    let applications = yield call(api.get, '/api/applications/');
+const getApplications = getRequest({ type: C.JS_GET_APPS, url: `/api/applications/` });
 
-    yield put({ type: C.JS_GET_APPLICATIONS_SUCCESS, applications });
-  } catch (errors) {
-    yield put({ type: C.JS_GET_APPLICATIONS_ERROR, errors });
-  }
+export default function* sagas() {
+  yield takeLatest(C.JS_GET_APPS, getApplications);
 }
-
-function* getApplications() {
-  yield takeEvery(C.JS_GET_APPLICATIONS, _getApplications);
-}
-
-export default [getApplications()];

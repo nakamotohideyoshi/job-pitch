@@ -1,6 +1,6 @@
 import React, { Fragment } from 'react';
 import { connect } from 'react-redux';
-import { Container } from 'reactstrap';
+import { Container } from 'antd';
 
 import * as helper from 'utils/helper';
 import { getJobseeker } from 'redux/recruiter/jobseeker';

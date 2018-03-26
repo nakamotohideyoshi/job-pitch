@@ -1,131 +1,77 @@
-import { delay } from 'redux-saga';
-import { takeEvery, put, call } from 'redux-saga/effects';
-import { push } from 'react-router-redux';
-import { FormComponent } from 'components';
-import { SDATA } from 'utils/data';
+import { takeLatest, call, put, select } from 'redux-saga/effects';
+import * as C from 'redux/constants';
 import * as helper from 'utils/helper';
-import * as api from 'utils/api';
-import * as C from './constants';
+import { getRequest, postRequest, putRequest, deleteRequest, requestSuccess } from 'utils/request';
 
-/**
-|--------------------------------------------------
-| upload logo
-|--------------------------------------------------
-*/
+const getWorkplaces = getRequest({
+  url: action => `/api/user-locations/?business=${action.payload.id}`
+});
 
-function* uploadLogo(logo, key, object, onUploadProgress) {
-  try {
+const removeWorkplace = deleteRequest({
+  url: action => `/api/user-locations/${action.payload.id}/`,
+  payloadOnSuccess: (_, action) => action.payload
+});
+
+function* getWorkplace(action) {
+  const { rc_workplaces } = yield select();
+  const { workplaces } = rc_workplaces || {};
+  const { id, success } = action.payload;
+  const workplace = helper.getItemByID(workplaces || [], id);
+  if (workplace) {
+    yield put({ type: requestSuccess(C.RC_GET_WORKPLACE), payload: workplace });
+    success && success(workplace);
+  } else {
+    yield call(getRequest({ url: `/api/user-locations/${id}/` }), action);
+  }
+}
+
+function* saveWorkplace(action) {
+  const { data, logo, onSuccess, onFail, onUploading } = action.payload;
+
+  let workplace;
+  if (!data.id) {
+    workplace = yield call(postRequest({ url: '/api/user-locations/' }), action);
+  } else {
+    workplace = yield call(putRequest({ url: `/api/user-locations/${data.id}/` }), action);
+  }
+
+  if (!workplace) {
+    return onFail && onFail('Save filed');
+  }
+
+  if (logo) {
     if (logo.file) {
-      const data = yield call(api.formData, {
-        order: 0,
-        [key]: object.id,
-        image: logo.file
-      });
-      const image = yield call(api.post, `/api/user-${key}-images/`, data, {
-        onUploadProgress: progress => {
-          onUploadProgress('Uploading...', Math.floor(progress.loaded / progress.total * 100));
+      const image = yield call(postRequest({ url: '/api/user-location-images/' }), {
+        payload: {
+          formData: true,
+          data: {
+            order: 0,
+            location: workplace.id,
+            image: logo.file
+          },
+          onUploadProgress: onUploading
         }
       });
-      onUploadProgress();
-      object.images = [image];
-    } else if (object.images.length > 0 && !logo.exist) {
-      yield call(api.del, `/api/user-${key}-images/${object.images[0].id}/`);
-      object.images = [];
+
+      onUploading && onUploading();
+
+      if (image) {
+        workplace.images = [image];
+      } else {
+        onFail('Logo upload failed!');
+      }
+    } else if (workplace.images.length > 0 && !logo.exist) {
+      yield call(deleteRequest({ url: `/api/user-location-images/${workplace.images[0].id}/` }));
+      workplace.images = [];
     }
-  } catch (errors) {
-    onUploadProgress();
   }
+
+  onSuccess && onSuccess(workplace);
 }
 
-/**
-|--------------------------------------------------
-| workplace load, select, save
-|--------------------------------------------------
-*/
-
-// load workplaces
-
-function* _getWorkplaces({ businessId }) {
-  try {
-    const workplaces = yield call(api.get, `/api/user-locations/?business=${businessId}`);
-    yield put({ type: C.RC_GET_WORKPLACES_SUCCESS, workplaces });
-  } catch (errors) {
-    yield put({ type: C.RC_GET_WORKPLACES_ERROR, errors });
-  }
+export default function* sagas() {
+  yield takeLatest(C.RC_GET_WORKPLACES, getWorkplaces);
+  yield takeLatest(C.RC_REMOVE_WORKPLACE, removeWorkplace);
+  yield takeLatest(C.RC_GET_WORKPLACE, getWorkplace);
+  yield takeLatest(C.RC_SAVE_WORKPLACE, saveWorkplace);
 }
-
-function* getWorkplaces() {
-  yield takeEvery(C.RC_GET_WORKPLACES, _getWorkplaces);
-}
-
-// remove workplace
-
-function* _removeWorkplace({ workplaceId }) {
-  try {
-    yield call(api.del, `/api/user-locations/${workplaceId}/`);
-    yield put({ type: C.RC_WORKPLACE_REMOVE_SUCCESS, workplaceId });
-  } catch (errors) {
-    helper.errorNotif('Server Error!');
-    yield put({ type: C.RC_WORKPLACE_REMOVE_ERROR, workplaceId });
-  }
-}
-
-function* removeWorkplace() {
-  yield takeEvery(C.RC_WORKPLACE_REMOVE, _removeWorkplace);
-}
-
-// load workplace
-
-function* _getWorkplace({ workplaceId }) {
-  try {
-    let workplace;
-    if (isNaN(workplaceId)) {
-      workplace = { email: SDATA.user.email };
-    } else {
-      workplace = yield call(api.get, `/api/user-locations/${workplaceId}/`);
-    }
-    yield put({ type: C.RC_WORKPLACE_GET_SUCCESS, workplace });
-  } catch (errors) {
-    yield put({ type: C.RC_WORKPLACE_GET_ERROR, errors });
-  }
-}
-
-function* getWorkplace() {
-  yield takeEvery(C.RC_WORKPLACE_GET, _getWorkplace);
-}
-
-// save workplace
-
-function* _saveWorkplace({ model, logo, onUploadProgress }) {
-  try {
-    let workplace;
-
-    // save
-    if (model.id) {
-      workplace = yield call(api.put, `/api/user-locations/${model.id}/`, model);
-    } else {
-      workplace = yield call(api.post, '/api/user-locations/', model);
-    }
-
-    // upload logo
-    if (logo) {
-      yield call(uploadLogo, logo, 'location', workplace, onUploadProgress);
-    }
-
-    yield put({ type: C.RC_WORKPLACE_SAVE_SUCCESS, workplace });
-    FormComponent.modified = false;
-    helper.successNotif('Workplace saved successfully!!');
-
-    if (SDATA.jobsStep === 3) {
-      yield put(push(`/recruiter/jobs/${workplace.business_data.id}/${workplace.id}`));
-    }
-  } catch (errors) {
-    yield put({ type: C.RC_WORKPLACE_SAVE_ERROR, errors });
-  }
-}
-
-function* saveWorkplace() {
-  yield takeEvery(C.RC_WORKPLACE_SAVE, _saveWorkplace);
-}
-
-export default [getWorkplaces(), removeWorkplace(), getWorkplace(), saveWorkplace()];

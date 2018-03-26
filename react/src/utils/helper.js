@@ -1,6 +1,6 @@
-import localForage from 'localforage';
-import { SDATA } from './data';
-import { FormComponent } from 'components';
+import { message } from 'antd';
+import DATA from './data';
+// import { FormComponent } from 'components';
 
 // import cookie from 'js-cookie';
 // import ApiClient from 'utils/ApiClient';
@@ -87,20 +87,20 @@ function deg2rad(deg) {
   return deg * (Math.PI / 180);
 }
 
-export function getDistanceFromLatLon(lat1, lon1, lat2, lon2) {
+export function getDistanceFromLatLon(p1, p2) {
   const R = 6371; // Radius of the earth in km
-  const dLat = deg2rad(lat2 - lat1); // deg2rad below
-  const dLon = deg2rad(lon2 - lon1);
+  const dLat = deg2rad(p2.latitude - p1.latitude); // deg2rad below
+  const dLon = deg2rad(p2.longitude - p1.longitude);
   const a =
     Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-    Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * Math.sin(dLon / 2) * Math.sin(dLon / 2);
+    Math.cos(deg2rad(p1.latitude)) * Math.cos(deg2rad(p1.latitude)) * Math.sin(dLon / 2) * Math.sin(dLon / 2);
   const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
   const d = R * c; // Distance in km
   return d;
 }
 
-export function getDistanceFromLatLonEx(lat1, lon1, lat2, lon2) {
-  const d = getDistanceFromLatLon(lat1, lon1, lat2, lon2) * 1000;
+export function getDistanceFromLatLonEx(p1, p2) {
+  const d = getDistanceFromLatLon(p1, p2) * 1000;
   if (d < 1000) {
     return `${Math.floor(d)} m`;
   }
@@ -116,13 +116,6 @@ export function getFullBWName(job) {
   return `${job.location_data.business_data.name} / ${job.location_data.name}`;
 }
 
-export function getJobseekerImg(jobSeeker) {
-  if (!jobSeeker || jobSeeker.pitches.length === 0) {
-    return noImg;
-  }
-  return jobSeeker.pitches[jobSeeker.pitches.length - 1].thumbnail || noImg;
-}
-
 export function getFullJSName(jobSeeker) {
   return `${jobSeeker.first_name} ${jobSeeker.last_name}`;
 }
@@ -134,15 +127,15 @@ export function getFullJSName(jobSeeker) {
 */
 
 export function getIDByName(key, name) {
-  return SDATA[key].filter(item => item.name === name)[0].id;
+  return DATA[key].filter(item => item.name === name)[0].id;
 }
 
 export function getNameByID(key, id) {
-  return (SDATA[key].filter(item => item.id === id)[0] || {}).name;
+  return (DATA[key].filter(item => item.id === id)[0] || {}).name;
 }
 
 export function getJobStatusByName(name) {
-  return SDATA.jobStatuses.filter(status => status.name === name)[0].id;
+  return DATA.jobStatuses.filter(status => status.name === name)[0].id;
 }
 
 export function getItemByID(objects, id) {
@@ -156,11 +149,17 @@ export function getItemByID(objects, id) {
 */
 
 export function saveData(key, value) {
-  localForage.setItem(`${SDATA.user.email}_${key}`, value);
+  const k = `${DATA.email}_${key}`;
+  if (value === null || value === undefined) {
+    localStorage.removeItem(k);
+  } else {
+    localStorage.setItem(k, value);
+  }
 }
 
 export function loadData(key) {
-  return localForage.getItem(`${SDATA.user.email}_${key}`);
+  const value = localStorage.getItem(`${DATA.email}_${key}`);
+  return JSON.parse(value);
 }
 
 /**
@@ -171,7 +170,9 @@ export function loadData(key) {
 
 export function cloneObj(object, updateInfo) {
   if (Array.isArray(object)) {
-    return object.map(item => (item.id === updateInfo.id ? cloneObj(item, updateInfo) : item));
+    const newObject = object.filter(item => item.id !== updateInfo.id);
+    newObject.push(updateInfo);
+    return newObject;
   }
   if (typeof object === 'object') {
     return Object.assign({}, object, updateInfo);
@@ -192,27 +193,27 @@ export function removeObj(object, id) {
 |--------------------------------------------------
 */
 
-export function routePush(to, { history, confirm }) {
-  if (FormComponent.modified) {
-    confirm('Confirm', 'You did not save your changes.', [
-      { outline: true },
-      {
-        label: 'Ok',
-        color: 'green',
-        onClick: () => {
-          FormComponent.modified = false;
-          history.push(to);
-        }
-      }
-    ]);
-  } else {
-    history.push(to);
-  }
-}
+// export function routePush(to, { history, confirm }) {
+//   if (FormComponent.modified) {
+//     confirm('Confirm', 'You did not save your changes.', [
+//       { outline: true },
+//       {
+//         label: 'Ok',
+//         color: 'green',
+//         onClick: () => {
+//           FormComponent.modified = false;
+//           history.push(to);
+//         }
+//       }
+//     ]);
+//   } else {
+//     history.push(to);
+//   }
+// }
 
 export function str2int(str) {
   const val = parseInt(str, 10);
-  return isNaN(val) ? undefined : val;
+  return isNaN(val) ? null : val;
 }
 
 export function getPitch(jobseeker) {
@@ -245,4 +246,27 @@ export function parseUrlParams(str) {
   }
 
   return params;
+}
+
+/* form helper */
+
+export function setErrors(form, errors, values) {
+  Object.keys(errors).forEach(key => {
+    if (values[key]) {
+      form.setFields({
+        [key]: {
+          value: values[key],
+          errors: [new Error(errors[key][0])]
+        }
+      });
+    } else {
+      errors[key].forEach(msg => message.error(msg));
+    }
+  });
+}
+
+export function getBase64(img, callback) {
+  const reader = new FileReader();
+  reader.addEventListener('load', () => callback(reader.result));
+  reader.readAsDataURL(img);
 }

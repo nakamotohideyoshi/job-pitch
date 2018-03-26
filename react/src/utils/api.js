@@ -1,6 +1,6 @@
 import axios from 'axios';
 import AWS from 'aws-sdk';
-import localForage from 'localforage';
+// import localForage from 'localforage';
 
 if (process.env.NODE_ENV !== 'production') {
   axios.defaults.baseURL = 'https://test.sclabs.co.uk';
@@ -14,16 +14,16 @@ axios.defaults.xsrfHeaderName = 'X-CSRFToken';
 |--------------------------------------------------
 */
 
-export const loadToken = () =>
-  localForage.getItem('token').then(function(value) {
-    axios.defaults.headers.common.Authorization = value ? `Token ${value}` : '';
-    return value;
-  });
+// export const loadToken = () =>
+//   localForage.getItem('token').then(function(value) {
+//     axios.defaults.headers.common.Authorization = value ? `Token ${value}` : '';
+//     return value;
+//   });
 
-export const setToken = value => {
-  axios.defaults.headers.common.Authorization = value ? `Token ${value}` : '';
-  localForage.setItem('token', value);
-};
+// export const setToken = value => {
+//   axios.defaults.headers.common.Authorization = value ? `Token ${value}` : '';
+//   localForage.setItem('token', value);
+// };
 
 /**
 |--------------------------------------------------

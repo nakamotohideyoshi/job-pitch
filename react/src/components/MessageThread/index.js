@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import { Button } from 'reactstrap';
-import Textarea from 'react-textarea-autosize';
+import { Button } from 'antd';
+// import Textarea from 'react-textarea-autosize';
 
 import * as helper from 'utils/helper';
 import Logo from '../tags/Logo';
@@ -43,7 +43,7 @@ export default class RThread extends Component {
     if ((me && userRole === 'RECRUITER') || (!me && userRole !== 'RECRUITER')) {
       avatar = helper.getJobLogo(application.job_data);
     } else {
-      avatar = helper.getJobseekerImg(application.job_seeker);
+      avatar = helper.getPitch(application.job_seeker);
     }
 
     let comment;
@@ -77,7 +77,7 @@ export default class RThread extends Component {
     if (status === 'DELETED') {
       return (
         <div className="input">
-          <Textarea placeholder="This application has been deleted" value="" disabled />
+          {/* <Textarea placeholder="This application has been deleted" value="" disabled /> */}
         </div>
       );
     }
@@ -90,7 +90,7 @@ export default class RThread extends Component {
           <Button color="green" disabled={message.trim() === ''} onClick={this.onSend}>
             Send
           </Button>
-          <Textarea placeholder="Type a message here" maxRows={15} value={message} onChange={this.onChnageInput} />
+          {/* <Textarea placeholder="Type a message here" maxRows={15} value={message} onChange={this.onChnageInput} /> */}
         </div>
       );
     }
@@ -107,7 +107,7 @@ export default class RThread extends Component {
             Connect
           </Button>
         )}
-        <Textarea placeholder={placeholders[userRole]} value="" disabled />
+        {/* <Textarea placeholder={placeholders[userRole]} value="" disabled /> */}
       </div>
     );
   };

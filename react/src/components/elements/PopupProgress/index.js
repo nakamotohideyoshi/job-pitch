@@ -1,17 +1,13 @@
 import React, { PureComponent } from 'react';
-import { Progress } from 'reactstrap';
-import Wrapper from './Wrapper';
+import { Progress } from 'antd';
+import { Wrapper } from './Wrapper';
 
 class PopupProgress extends PureComponent {
   render() {
     return (
-      <Wrapper isOpen fade={false}>
+      <Wrapper wrapClassName="ant-center-modal" visible footer={null} closable={false}>
         <label>{this.props.label}</label>
-        {this.props.value && (
-          <Progress animated color="yellow" value={this.props.value}>
-            {this.props.value}%
-          </Progress>
-        )}
+        {this.props.value && <Progress percent={this.props.value} status="active" />}
       </Wrapper>
     );
   }

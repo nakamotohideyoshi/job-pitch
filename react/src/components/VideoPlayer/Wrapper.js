@@ -1,19 +1,19 @@
 import styled from 'styled-components';
-import { Modal } from 'reactstrap';
-import media from 'utils/mediaquery';
+import { Modal } from 'antd';
 
-export default styled(Modal)`
-  .modal-body {
-    padding: 2rem;
-    ${media.tablet`padding: 1rem;`};
-  }
+export const Wrapper = styled(Modal)`
+  width: 648px !important;
 
-  .videoContainer {
+  .ant-modal-body {
     position: relative;
+  }
+`;
 
-    video {
-      width: 100%;
-      background-color: #000;
-    }
+export const VideoContainer = styled.div`
+  position: relative;
+
+  video {
+    width: 100%;
+    background-color: #000;
   }
 `;

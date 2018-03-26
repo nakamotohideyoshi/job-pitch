@@ -1,160 +1,171 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Breadcrumb, BreadcrumbItem, Button, Form, FormGroup, Label, Alert } from 'reactstrap';
-import { SaveFormComponent, Board, Loading, Required, PopupProgress } from 'components';
+import { Link } from 'react-router-dom';
+import { Breadcrumb, Form, Input, Button, message } from 'antd';
+import { AlertMsg, PopupProgress, ImageSelector } from 'components';
 
 import * as helper from 'utils/helper';
-import { SDATA } from 'utils/data';
-import { confirm } from 'redux/common';
-import { getBusiness, saveBusiness } from 'redux/recruiter/businesses';
+import DATA from 'utils/data';
+import { updateStatus, getBusinesses, saveBusiness } from 'redux/recruiter/businesses';
 import Wrapper from './Wrapper';
 
-class BusinessEdit extends SaveFormComponent {
-  componentWillMount() {
-    const businessId = parseInt(this.props.match.params.businessId, 10);
-    this.props.getBusiness(businessId);
-  }
+const { Item } = Form;
 
-  componentWillReceiveProps(nextProps) {
-    const { business } = nextProps;
-    if (business && business !== this.props.business) {
-      const model = Object.assign(this.state.model, business);
+class BusinessEdit extends React.Component {
+  state = {
+    business: null,
+    loading: false,
+    progress: null,
+    logo: {
+      url: null,
+      file: null,
+      exist: false
+    }
+  };
+
+  componentDidMount() {
+    const { match, businesses, getBusinesses } = this.props;
+    this.businessId = parseInt(match.params.businessId, 10);
+    if (this.businessId) {
+      if (businesses.length) {
+        this.getBusiness();
+      } else {
+        getBusinesses({
+          success: this.getBusiness
+        });
+      }
+    } else {
       this.setState({
-        model,
         logo: {
-          default: helper.getBusinessLogo(),
-          url: helper.getBusinessLogo(business),
-          exist: (business.images || []).length > 0
+          url: helper.getBusinessLogo()
         }
       });
     }
   }
 
-  onAddCredit = () => {
-    //   const { business, confirm } = this.props;
-    //   if (!FormComponent.needToSave) {
-    //     utils.setShared('credits_business_id', business.id);
-    //     // browserHistory.push('/recruiter/credits');
-    //     return;
-    //   }
-    //   confirm('Confirm', 'Are you sure you want to discard your changes?', [
-    //     { label: 'No' },
-    //     {
-    //       label: 'Yes',
-    //       style: 'success',
-    //       onClick: () => {
-    //         FormComponent.needToSave = false;
-    //         utils.setShared('credits_business_id', business.id);
-    //         // browserHistory.push('/recruiter/credits');
-    //       }
-    //     }
-    //   ]);
+  getBusiness = () => {
+    const { updateStatus, businesses, form } = this.props;
+    const business = helper.getItemByID(businesses, this.businessId);
+    if (business) {
+      form.setFieldsValue({
+        name: business.name
+      });
+
+      this.setState({
+        business,
+        logo: {
+          url: helper.getBusinessLogo(business),
+          exist: (business.images || []).length > 0
+        }
+      });
+
+      updateStatus({ credits: business.tokens });
+    } else {
+      this.goBuisinessList();
+    }
   };
 
-  onSave = () => {
-    if (!this.isValid(['name'])) return;
-
-    const data = Object.assign({}, this.state.model);
-    this.props.saveBusiness(data, this.state.logo, (label, value) => {
-      const progress = label ? { label, value } : null;
-      this.setState({ progress });
+  setLogo = (file, url) =>
+    this.setState({
+      logo: {
+        url: url || helper.getBusinessLogo(),
+        file,
+        exist: !!file
+      }
     });
-    //     .then(
-    //       () => {
-    //         if (this.api.user.businesses.length === 0) {
-    //           this.props.setPermission(1);
-    //         }
-    //         FormComponent.needToSave = false;
-    //         utils.successNotif('Saved!');
-    //         this.props.loadingHide();
-    //         if (utils.getShared('first-time') === '2') {
-    //           this.manager.selectBusiness(formModel.id);
-    //         } else {
-    //           this.manager.getBusinesses();
-    //           this.onClose();
-    //         }
-    //       },
-    //       () => this.props.loadingHide()
-    //     );
-  };
 
-  onCancel = () => {
-    helper.routePush(`/recruiter/jobs`, this.props);
-  };
+  addCredit = () => this.props.history.push(`/recruiter/settings/credits/${this.businessId}`);
 
-  onRoutePush = to => {
-    helper.routePush(to, this.props);
+  goBuisinessList = () => this.props.history.push('/recruiter/jobs/business');
+
+  save = () => {
+    const { form, saveBusiness } = this.props;
+
+    form.validateFieldsAndScroll({ scroll: { offsetTop: 70 } }, (err, values) => {
+      if (err) return;
+
+      const { logo } = this.state;
+      this.setState({ loading: true });
+      saveBusiness({
+        data: {
+          ...values,
+          id: this.businessId
+        },
+        logo,
+        onUploadProgress: (label, value) => {
+          const progress = label ? { label, value } : null;
+          this.setState({ progress });
+        },
+        success: uploadError => {
+          this.setState({ loading: false });
+          if (uploadError) {
+            message.error('Logo upload failed!');
+          }
+          message.success('Business saved successfully!');
+        },
+        fail: ({ data }) => {
+          this.setState({ loading: false });
+          helper.setErrors(form, data, values);
+        }
+      });
+    });
   };
 
   render() {
-    const { business, errors } = this.props;
+    const { business, loading, progress, logo } = this.state;
+    const { error, form } = this.props;
+    const { getFieldDecorator } = form;
     const creditsLabel = (business || {}).id
       ? `${business.tokens} Credit${business.tokens !== 1 ? 's' : ''}`
-      : `${SDATA.initTokens.tokens} free credits`;
-    const error = this.getError();
-    const { progress } = this.state;
+      : `${DATA.initTokens.tokens} free credits`;
 
     return (
       <Wrapper>
         <Breadcrumb>
-          <BreadcrumbItem tag="a" onClick={() => this.onRoutePush(`/recruiter/jobs`)}>
-            Businesses
-          </BreadcrumbItem>
-          <BreadcrumbItem active tag="span">
-            {business ? (business.id ? 'Edit' : 'Add') : ''}
-          </BreadcrumbItem>
+          <Breadcrumb.Item>
+            <Link to="/recruiter/jobs/business">Businesses</Link>
+          </Breadcrumb.Item>
+          <Breadcrumb.Item>{business ? (business.id ? 'Edit' : 'Add') : ''}</Breadcrumb.Item>
         </Breadcrumb>
 
-        {business ? (
-          <Board block className="board">
-            <Form>
-              <div className="logo-container">
-                <FormGroup>
-                  <this.FormLogoSelect />
-                </FormGroup>
-              </div>
-
-              <div className="right-container">
-                <FormGroup>
-                  <Label>
-                    Name<Required />
-                  </Label>
-                  <this.FormInput name="name" />
-                </FormGroup>
-
-                <FormGroup>
-                  <Label>Credits</Label>
-                  <div className="credit">
-                    <span>{creditsLabel}</span>
-                    {business.id && (
-                      <Button color="yellow" outline onClick={this.onAddCredit}>
-                        Add Credits
-                      </Button>
-                    )}
-                  </div>
-                </FormGroup>
-              </div>
-
-              {error && <Alert color="danger">{error}</Alert>}
-
-              <div>
-                <Button color="green" size="lg" disabled={business.saving} onClick={this.onSave}>
-                  {business.saving ? 'Saving...' : 'Save'}
-                </Button>
-
-                <Button color="gray" size="lg" outline onClick={this.onCancel}>
-                  Cancel
-                </Button>
-              </div>
-
-              {progress && <PopupProgress label={progress.label} value={progress.value} />}
-            </Form>
-          </Board>
-        ) : !errors ? (
-          <Loading />
+        {error ? (
+          <AlertMsg>
+            <span>Server Error!</span>
+          </AlertMsg>
         ) : (
-          <Alert type="danger">Error!</Alert>
+          <Form>
+            <Item label="Name">
+              {getFieldDecorator('name', {
+                rules: [
+                  { required: true, message: 'Please input business name!' },
+                  { whitespace: true, message: 'This field may not be blank.' }
+                ]
+              })(<Input />)}
+            </Item>
+
+            <Item label="Credits">
+              <div>{creditsLabel}</div>
+              {(business || {}).id && <Button onClick={this.addCredit}>Add Credits</Button>}
+            </Item>
+
+            <Item label="Logo">
+              <ImageSelector url={logo.url} removable={logo.exist} onChange={this.setLogo} />
+            </Item>
+
+            <div className="ant-form-item">
+              <div className="ant-form-item-label" />
+              <div className="ant-form-item-control-wrapper subimt-field">
+                <Button type="primary" loading={loading} onClick={this.save}>
+                  Save
+                </Button>
+
+                <Button onClick={this.goBuisinessList}>Cancel</Button>
+              </div>
+            </div>
+          </Form>
         )}
+
+        {progress && <PopupProgress label={progress.label} value={progress.value} />}
       </Wrapper>
     );
   }
@@ -162,8 +173,12 @@ class BusinessEdit extends SaveFormComponent {
 
 export default connect(
   state => ({
-    business: state.rc_businesses.selectedBusiness,
-    errors: state.rc_businesses.errors
+    businesses: state.rc_businesses.businesses,
+    error: state.rc_businesses.error
   }),
-  { confirm, getBusiness, saveBusiness }
-)(BusinessEdit);
+  {
+    updateStatus,
+    getBusinesses,
+    saveBusiness
+  }
+)(Form.create()(BusinessEdit));

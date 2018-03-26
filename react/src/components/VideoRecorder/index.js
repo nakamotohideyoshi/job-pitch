@@ -1,10 +1,8 @@
-import React from 'react';
-import { ModalHeader, ModalBody } from 'reactstrap';
+import React, { Fragment } from 'react';
 
-import { Alert } from 'components';
 import ReadyLabel from './ReadyLabel';
 import RecLabel from './RecLabel';
-import Wrapper from './Wrapper';
+import { Wrapper, VideoContainer, RecButton, TimeBar, ErrorLabel } from './Wrapper';
 
 const NONE = 'NONE';
 const READY = 'READY';
@@ -109,13 +107,10 @@ export default class VideoRecorder extends React.Component {
     this.recordedBlobs = [];
     let options = { mimeType: 'video/webm;codecs=vp9' };
     if (!MediaRecorder.isTypeSupported(options.mimeType)) {
-      console.log(options.mimeType + ' is not Supported');
       options = { mimeType: 'video/webm;codecs=vp8' };
       if (!MediaRecorder.isTypeSupported(options.mimeType)) {
-        console.log(options.mimeType + ' is not Supported');
         options = { mimeType: 'video/webm' };
         if (!MediaRecorder.isTypeSupported(options.mimeType)) {
-          console.log(options.mimeType + ' is not Supported');
           options = { mimeType: '' };
         }
       }
@@ -128,7 +123,6 @@ export default class VideoRecorder extends React.Component {
       return;
     }
 
-    console.log('Created MediaRecorder', this.mediaRecorder, 'with options', options);
     this.mediaRecorder.start(10); // collect 10ms of data
     this.mediaRecorder.ondataavailable = event => {
       if (event.data && event.data.size > 0) {
@@ -157,9 +151,8 @@ export default class VideoRecorder extends React.Component {
 
     this.mediaRecorder.stop();
     this.mediaRecorder = null;
-    console.log('Recorded Blobs: ', this.recordedBlobs);
 
-    var superBuffer = new Blob(this.recordedBlobs, { type: 'video/webm' });
+    const superBuffer = new Blob(this.recordedBlobs, { type: 'video/webm' });
     const url = window.URL.createObjectURL(superBuffer);
     this.props.onClose(url, superBuffer);
   };
@@ -173,38 +166,39 @@ export default class VideoRecorder extends React.Component {
     const { status, stream, error, time } = this.state;
 
     return (
-      <Wrapper isOpen size="lg">
-        <ModalHeader toggle={() => this.props.onClose()}>Video Recorder</ModalHeader>
-        <ModalBody>
-          {error && <Alert type="danger">{error}</Alert>}
-          <div className="videoContainer">
-            <video
-              preload="auto"
-              autoPlay
-              ref={ref => {
-                this.video = ref;
-              }}
-              muted
-            >
-              <track kind="captions" />
-            </video>
+      <Wrapper title="Video Recorder" visible maskClosable={false} footer={null} onCancel={() => this.props.onClose()}>
+        <VideoContainer>
+          <video
+            preload="auto"
+            autoPlay
+            ref={ref => {
+              this.video = ref;
+            }}
+            muted
+          >
+            <track kind="captions" />
+          </video>
 
-            {stream && (
-              <div className="rec-button" onClick={this.onClickButton}>
-                <span style={{ borderRadius: status === NONE ? '50%' : '18%' }} />
-              </div>
-            )}
+          {stream && (
+            <RecButton onClick={this.onClickButton}>
+              <span style={{ borderRadius: status === NONE ? '50%' : '18%' }} />
+            </RecButton>
+          )}
 
-            {status === READY && <ReadyLabel time={Math.floor(time / 1000)} />}
-            {status === RECORDING && <RecLabel time={Math.floor(time / 1000)} />}
-            {status === RECORDING && (
-              <div className="bar">
+          {status === READY && <ReadyLabel time={Math.floor(time / 1000)} />}
+
+          {status === RECORDING && (
+            <Fragment>
+              <RecLabel time={Math.floor(time / 1000)} />
+              <TimeBar>
                 <div />
                 <div style={{ width: `${100 - time / 300}%` }} />
-              </div>
-            )}
-          </div>
-        </ModalBody>
+              </TimeBar>
+            </Fragment>
+          )}
+
+          {error && <ErrorLabel>{error}</ErrorLabel>}
+        </VideoContainer>
       </Wrapper>
     );
   }

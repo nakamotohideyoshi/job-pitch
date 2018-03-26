@@ -1,61 +1,74 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { Breadcrumb, BreadcrumbItem, Button } from 'reactstrap';
+import { Link } from 'react-router-dom';
+import { Breadcrumb } from 'antd';
 
-import { Board, Loading, Alert } from 'components';
-import { confirm } from 'redux/common';
-import { getJob, updateJob, removeJob } from 'redux/recruiter/jobs';
-import * as helper from 'utils/helper';
+// import { Board, Loading, Alert } from 'components';
+// import { confirm } from 'redux/common';
+// import { getJob, updateJob, removeJob } from 'redux/recruiter/jobs';
+// import * as helper from 'utils/helper';
 import Wrapper from './Wrapper';
 
 class JobInterface extends React.Component {
-  componentWillMount() {
-    this.closedStatus = helper.getJobStatusByName('CLOSED');
-    const jobId = parseInt(this.props.match.params.jobId, 10);
-    this.props.getJob(jobId);
-  }
+  // componentWillMount() {
+  //   this.closedStatus = helper.getJobStatusByName('CLOSED');
+  //   const jobId = parseInt(this.props.match.params.jobId, 10);
+  //   this.props.getJob(jobId);
+  // }
 
-  removeJob = () => {
-    const { job } = this.props;
-    const buttons = [
-      { outline: true },
-      {
-        label: 'Remove',
-        color: 'yellow',
-        onClick: () => this.props.removeJob(job.id)
-      }
-    ];
+  // removeJob = () => {
+  //   const { job } = this.props;
+  //   const buttons = [
+  //     { outline: true },
+  //     {
+  //       label: 'Remove',
+  //       color: 'yellow',
+  //       onClick: () => this.props.removeJob(job.id)
+  //     }
+  //   ];
 
-    if (job.status !== this.closedStatus) {
-      buttons.push({
-        label: 'Deactivate',
-        color: 'yellow',
-        onClick: () => {
-          const model = Object.assign({}, job, { status: this.closedStatus });
-          this.props.updateJob(model);
-        }
-      });
-    }
+  //   if (job.status !== this.closedStatus) {
+  //     buttons.push({
+  //       label: 'Deactivate',
+  //       color: 'yellow',
+  //       onClick: () => {
+  //         const model = Object.assign({}, job, { status: this.closedStatus });
+  //         this.props.updateJob(model);
+  //       }
+  //     });
+  //   }
 
-    this.props.confirm('Confirm', `Are you sure you want to delete ${job.title}`, buttons);
-  };
+  //   this.props.confirm('Confirm', `Are you sure you want to delete ${job.title}`, buttons);
+  // };
 
-  reactivateJob = () => {
-    const model = Object.assign({}, this.props.job, {
-      status: helper.getJobStatusByName('OPEN')
-    });
-    this.props.updateJob(model);
-  };
+  // reactivateJob = () => {
+  //   const model = Object.assign({}, this.props.job, {
+  //     status: helper.getJobStatusByName('OPEN')
+  //   });
+  //   this.props.updateJob(model);
+  // };
 
   render() {
-    const { job, errors, match, history } = this.props;
-    const { businessId, workplaceId } = match.params;
-    const closed = job && job.status === this.closedStatus;
+    // const { job, errors, match, history } = this.props;
+    // const { businessId, workplaceId } = match.params;
+    // const closed = job && job.status === this.closedStatus;
 
     return (
       <Wrapper>
         <Breadcrumb>
+          <Breadcrumb.Item>
+            <Link to="/recruiter/jobs">Businesses</Link>
+          </Breadcrumb.Item>
+          <Breadcrumb.Item>
+            <Link to="/recruiter/jobs">Workplaces</Link>
+          </Breadcrumb.Item>
+          <Breadcrumb.Item>
+            <Link to="/recruiter/jobs">Jobs</Link>
+          </Breadcrumb.Item>
+          <Breadcrumb.Item>Job Detail</Breadcrumb.Item>
+        </Breadcrumb>
+
+        {/* <Breadcrumb>
           <BreadcrumbItem>
             <Link to="/recruiter/jobs">Businesses</Link>
           </BreadcrumbItem>
@@ -68,9 +81,9 @@ class JobInterface extends React.Component {
           <BreadcrumbItem active tag="span">
             Detail
           </BreadcrumbItem>
-        </Breadcrumb>
+        </Breadcrumb> */}
 
-        {job ? (
+        {/* {job ? (
           <Board block className="board">
             <h3>{job.title}</h3>
 
@@ -130,7 +143,7 @@ class JobInterface extends React.Component {
           <Loading />
         ) : (
           <Alert type="danger">Error!</Alert>
-        )}
+        )} */}
       </Wrapper>
     );
   }
@@ -138,12 +151,12 @@ class JobInterface extends React.Component {
 
 export default connect(
   state => ({
-    job: state.rc_jobs.selectedJob
+    // job: state.rc_jobs.selectedJob
   }),
   {
-    confirm,
-    getJob,
-    updateJob,
-    removeJob
+    // confirm,
+    // getJob,
+    // updateJob,
+    // removeJob
   }
 )(JobInterface);

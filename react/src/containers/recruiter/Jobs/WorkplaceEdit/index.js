@@ -1,185 +1,237 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Breadcrumb, BreadcrumbItem, Button, Form, FormGroup, Label, Alert } from 'reactstrap';
+import { Link } from 'react-router-dom';
+import { Breadcrumb, Form, Input, Checkbox, Button, Tooltip, message } from 'antd';
+import FontAwesomeIcon from '@fortawesome/react-fontawesome';
+import faQuestionCircle from '@fortawesome/fontawesome-free-regular/faQuestionCircle';
+import { PopupProgress, ImageSelector, NoLabelField, GoogleMap } from 'components';
+import Wrapper from './Wrapper';
 
-import {
-  FormComponent,
-  SaveFormComponent,
-  Board,
-  Loading,
-  GoogleMap,
-  HelpIcon,
-  Required,
-  PopupProgress
-} from 'components';
-import { confirm } from 'redux/common';
+import { selectBusiness } from 'redux/recruiter/businesses';
 import { getWorkplace, saveWorkplace } from 'redux/recruiter/workplaces';
+import DATA from 'utils/data';
 import * as helper from 'utils/helper';
-import Wrapper, { WithPublic } from './Wrapper';
 
-class WorkplaceEdit extends SaveFormComponent {
-  componentWillMount() {
-    const workplaceId = parseInt(this.props.match.params.workplaceId, 10);
-    this.props.getWorkplace(workplaceId);
-  }
+const { Item } = Form;
+const { TextArea } = Input;
 
-  componentWillReceiveProps(nextProps) {
-    const { workplace } = nextProps;
-    if (workplace && workplace !== this.props.workplace) {
-      const model = Object.assign(this.state.model, workplace);
-      model.business = model.business || this.props.match.params.businessId;
-      this.setState({
-        model,
-        logo: {
-          default: helper.getBusinessLogo(workplace.business_data),
-          url: helper.getWorkplaceLogo(workplace),
-          exist: (workplace.images || []).length > 0
-        }
-      });
+class WorkplaceEdit extends React.Component {
+  state = {
+    location: {},
+    logo: {
+      url: null,
+      file: null,
+      exist: false
     }
-  }
-
-  onSelectedLocation = (place_id, place_name, latitude, longitude) => {
-    const { model, errors } = this.state;
-    model.place_id = place_id;
-    model.place_name = place_name;
-    model.latitude = latitude;
-    model.longitude = longitude;
-    delete errors.place_name;
-    this.setState({ model });
-    FormComponent.modified = true;
   };
 
-  onSave = () => {
-    if (!this.isValid(['name', 'email', 'description', 'place_name'])) return;
+  componentDidMount() {
+    const { match, selectBusiness, getWorkplace, form } = this.props;
+    const businessId = parseInt(match.params.businessId, 10);
+    if (businessId) {
+      selectBusiness({
+        id: businessId,
+        success: business =>
+          this.setState({
+            logo: {
+              url: helper.getBusinessLogo(business),
+              exist: false
+            }
+          }),
+        fail: this.goBuisinessList
+      });
+      return;
+    }
 
-    const data = Object.assign({}, this.state.model);
-    this.props.saveWorkplace(data, this.state.logo, (label, value) => {
-      const progress = label ? { label, value } : null;
-      this.setState({ progress });
+    const workplaceId = parseInt(match.params.workplaceId, 10);
+    getWorkplace({
+      id: workplaceId,
+      success: workplace => {
+        this.setState({
+          workplace,
+          logo: {
+            url: helper.getWorkplaceLogo(workplace),
+            exist: (workplace.images || []).length > 0
+          }
+        });
+        this.selectLocation(workplace.place_id, workplace.place_name, workplace.latitude, workplace.longitude);
+
+        form.setFieldsValue({
+          name: workplace.name,
+          email: workplace.email,
+          mobile: workplace.mobile,
+          mobile_public: workplace.mobile_public,
+          description: workplace.description,
+          place_name: workplace.place_name
+        });
+      },
+      fail: this.goBuisinessList
+    });
+  }
+
+  setLogo = (file, url) =>
+    this.setState({
+      logo: {
+        url: url || helper.getBusinessLogo(this.props.business),
+        file,
+        exist: !!file
+      }
+    });
+
+  goBuisinessList = () => this.props.history.push('/recruiter/jobs/business');
+
+  goWorkplaceList = () => {
+    const { business, history } = this.props;
+    const { workplace } = this.state;
+    history.push(`/recruiter/jobs/workplace/${business.id || workplace.business}`);
+  };
+
+  selectLocation = (place_id, place_name, latitude, longitude) => {
+    this.props.form.setFieldsValue({ place_name });
+    this.setState({ location: { place_id, place_name, latitude, longitude } });
+  };
+
+  save = () => {
+    const { form, business, saveWorkplace } = this.props;
+    const { workplace } = this.state;
+
+    form.validateFieldsAndScroll({ scroll: { offsetTop: 70 } }, (err, values) => {
+      if (err) return;
+
+      const { logo } = this.state;
+      saveWorkplace({
+        data: {
+          ...values,
+          ...this.state.location,
+          business: (business || {}).id || (workplace || {}).business,
+          id: (workplace || {}).id
+        },
+        logo,
+        onUploading: progress => {
+          const uploading = progress ? Math.floor(progress.loaded / progress.total * 100) : null;
+          this.setState({ uploading });
+        },
+        onSuccess: () => {
+          message.success('Workplace saved successfully!');
+        },
+        onFail: error => {
+          message.error(error);
+        }
+      });
     });
   };
 
-  onCancel = () => {
-    const { businessId } = this.props.match.params;
-    helper.routePush(`/recruiter/jobs/${businessId}`, this.props);
-  };
-
-  onRoutePush = to => {
-    helper.routePush(to, this.props);
-  };
-
   render() {
-    const { workplace, errors } = this.props;
-    const { latitude, longitude } = this.state.model;
+    const { business, saving, form } = this.props;
+    const { workplace } = this.state;
+    const business1 = business || (workplace || {}).business_data || {};
+    const { getFieldDecorator } = form;
+    const { latitude, longitude, place_name } = this.state.location;
     const marker = latitude && { lat: latitude, lng: longitude };
-    const error = this.getError();
-    const { progress } = this.state;
+    const { logo, uploading } = this.state;
 
     return (
       <Wrapper>
         <Breadcrumb>
-          <BreadcrumbItem tag="a" onClick={() => this.onRoutePush(`/recruiter/jobs`)}>
-            Businesses
-          </BreadcrumbItem>
-          <BreadcrumbItem
-            tag="a"
-            onClick={() => {
-              const { businessId } = this.props.match.params;
-              this.onRoutePush(`/recruiter/jobs/${businessId}`);
-            }}
-          >
-            Workplaces
-          </BreadcrumbItem>
-          <BreadcrumbItem active tag="span">
-            {(workplace || {}).id ? 'Edit' : 'Add'}
-          </BreadcrumbItem>
+          <Breadcrumb.Item>
+            <Link to="/recruiter/jobs/business">Businesses</Link>
+          </Breadcrumb.Item>
+          <Breadcrumb.Item>
+            <Link to={`/recruiter/jobs/workplace/${business1.id}`}>Workplaces</Link>
+          </Breadcrumb.Item>
+          <Breadcrumb.Item>
+            {business && 'Add'}
+            {workplace && 'Edit'}
+          </Breadcrumb.Item>
         </Breadcrumb>
 
-        {workplace ? (
-          <Board block>
-            <Form>
-              <div className="logo-container">
-                <FormGroup>
-                  <this.FormLogoSelect />
-                </FormGroup>
-              </div>
+        <Form>
+          <Item label="Name">
+            {getFieldDecorator('name', {
+              rules: [
+                { required: true, message: 'Please input workplace name!' },
+                { whitespace: true, message: 'This field may not be blank.' }
+              ]
+            })(<Input />)}
+          </Item>
 
-              <div className="right-container">
-                <FormGroup>
-                  <Label>
-                    Name<Required />
-                  </Label>
-                  <this.FormInput name="name" />
-                </FormGroup>
+          <Item
+            className="with-public"
+            label={
+              <span>
+                Email&nbsp;
+                <Tooltip title="This is the email that notifications will be sent to, it can be different to your login email address.">
+                  <FontAwesomeIcon icon={faQuestionCircle} />
+                </Tooltip>
+              </span>
+            }
+          >
+            {getFieldDecorator('email', {
+              initialValue: DATA.email,
+              rules: [
+                { required: true, message: 'Please input your email!' },
+                { type: 'email', message: 'The input is not valid email!' }
+              ]
+            })(<Input />)}
+          </Item>
+          <div className="public-check">
+            {getFieldDecorator('email_public', { valuePropName: 'checked', initialValue: true })(
+              <Checkbox>Public</Checkbox>
+            )}
+          </div>
 
-                <FormGroup>
-                  <WithPublic>
-                    <Label>
-                      Email<Required />
-                      <HelpIcon
-                        style={{ left: '65px' }}
-                        position="top-start"
-                        label={`This is the email that notifications will be sent to, it can be different to your login email address.`}
-                      />
-                    </Label>
-                    <this.FormCheckbox name="email_public" label="Public" />
-                  </WithPublic>
-                  <this.FormInput name="email" type="email" className="with-public" />
-                </FormGroup>
+          <Item label="Phone number" className="with-public">
+            {getFieldDecorator('mobile')(<Input />)}
+          </Item>
+          <div className="public-check">
+            {getFieldDecorator('mobile_public', { valuePropName: 'checked', initialValue: true })(
+              <Checkbox>Public</Checkbox>
+            )}
+          </div>
 
-                <FormGroup>
-                  <WithPublic>
-                    <Label>Phone</Label>
-                    <this.FormCheckbox name="mobile_public" label="Public" />
-                  </WithPublic>
-                  <this.FormInput name="mobile" className="with-public" />
-                </FormGroup>
-              </div>
+          <Item label="Description">
+            {getFieldDecorator('description', {
+              rules: [
+                { required: true, message: 'Please enter description!' },
+                { whitespace: true, message: 'This field may not be blank.' }
+              ]
+            })(<TextArea autosize={{ minRows: 3, maxRows: 20 }} />)}
+          </Item>
 
-              <FormGroup>
-                <Label>
-                  Describe your workplace<Required />
-                </Label>
-                <this.FormTextArea name="description" maxLength="10000" minRows={3} maxRows={20} />
-              </FormGroup>
-
-              <FormGroup>
-                <Label>
-                  Location<Required />
-                  <HelpIcon
-                    style={{ left: '87px' }}
-                    position="top-start"
-                    label={`Search for a place name, street, postcode, etc. or click the map to select location.`}
-                  />
-                </Label>
-                <this.FormInput name="place_name" disabled />
-                <div className="map">
-                  <div>
-                    <GoogleMap defaultCenter={marker} markers={[marker]} onSelectedLocation={this.onSelectedLocation} />
-                  </div>
-                </div>
-              </FormGroup>
-
-              {error && <Alert color="danger">{error}</Alert>}
-
+          <Item
+            label={
+              <span>
+                Match area&nbsp;
+                <Tooltip title="Search for a place name, street, postcode, etc. or click the map to select location.">
+                  <FontAwesomeIcon icon={faQuestionCircle} />
+                </Tooltip>
+              </span>
+            }
+            extra={place_name}
+          >
+            {getFieldDecorator('place_name', { rules: [{ required: true, message: 'Please select your location!' }] })(
+              <Input type="hidden" />
+            )}
+            <div className="map">
               <div>
-                <Button color="green" size="lg" disabled={workplace.saving} onClick={this.onSave}>
-                  {workplace.saving ? 'Saving...' : 'Save'}
-                </Button>
-                <Button color="gray" size="lg" outline onClick={this.onCancel}>
-                  Cancel
-                </Button>
+                <GoogleMap marker={marker} onSelectedLocation={this.selectLocation} />
               </div>
-            </Form>
+            </div>
+          </Item>
 
-            {progress && <PopupProgress label={progress.label} value={progress.value} />}
-          </Board>
-        ) : !errors ? (
-          <Loading />
-        ) : (
-          <Alert type="danger">Error!</Alert>
-        )}
+          <Item label="Logo">
+            <ImageSelector url={logo.url} removable={logo.exist} onChange={this.setLogo} />
+          </Item>
+
+          <NoLabelField className="subimt-field">
+            <Button type="primary" loading={saving} onClick={this.save}>
+              Save
+            </Button>
+            <Button onClick={this.goWorkplaceList}>Cancel</Button>
+          </NoLabelField>
+
+          {uploading && <PopupProgress label="Logo uploading..." value={uploading} />}
+        </Form>
       </Wrapper>
     );
   }
@@ -187,8 +239,12 @@ class WorkplaceEdit extends SaveFormComponent {
 
 export default connect(
   state => ({
-    workplace: state.rc_workplaces.selectedWorkplace,
-    errors: state.rc_workplaces.errors
+    business: state.rc_businesses.business,
+    saving: state.rc_workplaces.saving
   }),
-  { confirm, getWorkplace, saveWorkplace }
-)(WorkplaceEdit);
+  {
+    selectBusiness,
+    getWorkplace,
+    saveWorkplace
+  }
+)(Form.create()(WorkplaceEdit));

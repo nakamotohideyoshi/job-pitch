@@ -2,7 +2,7 @@ from django.db.models import Max
 from rest_framework import viewsets, permissions
 from rest_framework.exceptions import PermissionDenied
 
-from mjp.models import Job, Role, ApplicationStatus, Message, Application
+from mjp.models import Job, Role, ApplicationStatus, Message, Application, Location
 from mjp.serializers.applications import ApplicationSerializer, ApplicationCreateSerializer, \
     ApplicationConnectSerializer, ApplicationShortlistUpdateSerializer, MessageCreateSerializer, MessageUpdateSerializer
 
@@ -115,7 +115,13 @@ class ApplicationViewSet(viewsets.ModelViewSet):
                                        'job__location__business__users',
                                        )
         if self.request.user.role.name == Role.RECRUITER:
-            query = query.filter(job__location__business__users=self.request.user)
+            user_locations = Location.objects.none()
+            for business_user in self.request.user.business_users.all():
+                if business_user.locations.exists():
+                    user_locations |= business_user.locations.all()
+                else:
+                    user_locations |= business_user.business.locations.all()
+            query = query.filter(job__location__in=user_locations)
             job = self.request.query_params.get('job')
             if job:
                 query = query.filter(job__pk=job)

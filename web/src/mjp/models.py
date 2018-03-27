@@ -196,7 +196,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     @property
     def is_job_seeker(self):
-        if self.is_recruiter():
+        if self.is_recruiter:
             return False
         try:
             self.job_seeker

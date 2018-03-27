@@ -1,5 +1,3 @@
-import uuid
-
 from django.conf.urls import url
 from django.contrib import admin
 from django.contrib import messages
@@ -597,11 +595,6 @@ class UserAdmin(admin.ModelAdmin):
     )
     readonly_fields = ('last_login', 'date_joined')
     list_display = ('email', 'last_login', 'date_joined', 'is_active', 'is_staff')
-
-    def save_model(self, request, obj, form, change):
-        if not change:
-            obj.set_password(uuid.uuid4())
-        super(UserAdmin, self).save_model(request, obj, form, change)
 
     def get_urls(self):
         return [

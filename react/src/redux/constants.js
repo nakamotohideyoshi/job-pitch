@@ -10,14 +10,13 @@ export const UPDATE_AUTH = 'UPDATE_AUTH';
 
 // recruiter
 
-export const RC_FIND_UPDATE = 'RC_FIND_UPDATE';
+export const RC_APPS_UPDATE = 'RC_APPS_UPDATE';
 export const RC_GET_JOBSEEKERS = 'RC_GET_JOBSEEKERS';
 export const RC_CONNECT_JOBSEEKER = 'RC_CONNECT_JOBSEEKER';
 export const RC_REMOVE_JOBSEEKER = 'RC_REMOVE_JOBSEEKER';
-
-export const RC_APPS_UPDATE = 'RC_APPS_UPDATE';
-export const RC_GET_ALL_JOBS = 'RC_GET_ALL_JOBS';
+export const RC_GET_OPENED_JOBS = 'RC_GET_OPENED_JOBS';
 export const RC_GET_APPS = 'RC_GET_APPS';
+export const RC_CONNECT_APP = 'RC_CONNECT_APP';
 export const RC_UPDATE_APP = 'RC_UPDATE_APP';
 export const RC_REMOVE_APP = 'RC_REMOVE_APP';
 

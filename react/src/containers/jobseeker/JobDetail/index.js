@@ -85,41 +85,44 @@ class JSJobDetail extends React.Component {
     const { jobseeker, applyJob, history } = this.props;
     const pitch = helper.getPitch(jobseeker);
 
-    if (pitch) {
-      confirm({
-        title: 'Yes, I want to apply to this job',
-        okText: 'Apply',
-        cancelText: 'Cancel',
-        maskClosable: true,
-        onOk: () => {
-          applyJob({
-            data: { job: this.state.job.id, job_seeker: jobseeker.id },
-            success: () => {
-              // if (this.state.newPitchData) {
-              //   this.uploadJobPitch();
-              // } else {
-              this.goFind();
-              // }
-            },
-            fail: () => message.error('Apply failed!')
-          });
-        }
-      });
-    } else {
-      confirm({
-        title: 'You need to record your pitch video to apply.',
-        okText: 'Record my pitch',
-        cancelText: 'Cancel',
-        maskClosable: true,
-        onOk: () => {
-          history.push('/jobseeker/settings/record');
-        }
-      });
-    }
+    // if (pitch) {
+    //   confirm({
+    //     title: 'Yes, I want to apply to this job',
+    //     okText: 'Apply',
+    //     cancelText: 'Cancel',
+    //     maskClosable: true,
+    //     onOk: () => {
+    //       applyJob({
+    //         data: { job: this.state.job.id, job_seeker: jobseeker.id },
+    //         success: () => {
+    //           // if (this.state.newPitchData) {
+    //           //   this.uploadJobPitch();
+    //           // } else {
+    //           this.goFind();
+    //           // }
+    //         },
+    //         fail: () => message.error('Apply failed!')
+    //       });
+    //     }
+    //   });
+    // } else {
+    //   confirm({
+    //     title: 'You need to record your pitch video to apply.',
+    //     okText: 'Record my pitch',
+    //     cancelText: 'Cancel',
+    //     maskClosable: true,
+    //     onOk: () => {
+    //       history.push('/jobseeker/settings/record');
+    //     }
+    //   });
+    // }
+
+    this.uploadJobPitch();
   };
 
   uploadJobPitch = () => {
     this.props.uploadJobPitch({
+      job: this.state.job.id,
       data: this.state.newPitchData,
       onUploadProgress: (label, value) => {
         const progress = label ? { label, value } : null;

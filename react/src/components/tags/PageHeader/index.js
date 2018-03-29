@@ -8,7 +8,7 @@ export const PageHeader = styled.div`
 
   h2 {
     margin: 0;
-    font-size: 24px;
+    font-size: 1.75rem;
     font-weight: 500;
   }
 `;
@@ -17,5 +17,5 @@ export const PageSubHeader = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 15px;
+  margin: 9px 0;
 `;

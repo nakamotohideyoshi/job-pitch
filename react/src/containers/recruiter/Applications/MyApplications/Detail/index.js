@@ -2,78 +2,149 @@ import React from 'react';
 import Helmet from 'react-helmet';
 import { withRouter, Link } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { Button } from 'antd';
+import { Button, Modal } from 'antd';
 
 import { PageHeader, Loading, AlertMsg, JobseekerDetail } from 'components';
+import DATA from 'utils/data';
 import Container from './Wrapper';
 
 import * as helper from 'utils/helper';
-import { getJobseekers, connectJobseeker, removeJobseeker } from 'redux/recruiter/apps';
+import { getApplications, connectApplication, removeApplication } from 'redux/recruiter/apps';
 
-class TalentDetail extends React.Component {
+const { confirm } = Modal;
+class AppliaitonDetail extends React.Component {
   state = {
-    jobseeker: null
+    application: null,
+    connecting: false,
+    removing: false
   };
 
   componentWillMount() {
-    const { jobseekers, getJobseekers, match } = this.props;
+    const { applications, getApplications, match } = this.props;
 
     this.jobId = helper.str2int(match.params.jobId);
 
-    if (jobseekers.length) {
-      this.getJobseeker();
+    if (applications.length) {
+      this.getApplication();
     } else {
-      getJobseekers({
+      getApplications({
         jobId: this.jobId,
-        success: this.getJobseeker
+        status: DATA.APP.CREATED,
+        success: this.getApplication
       });
     }
   }
 
-  getJobseeker = () => {
-    const { jobseekers } = this.props;
-    const jobseeker = helper.getItemByID(jobseekers, this.jobId);
-    if (jobseeker) {
-      this.setState({ jobseeker });
+  getApplication = () => {
+    const { applications, match } = this.props;
+    const appId = helper.str2int(match.params.appId);
+    const application = helper.getItemByID(applications, appId);
+    if (application) {
+      this.setState({ application });
     } else {
       this.goBack();
     }
   };
 
-  getBackUrl = () => `/recruiter/applications/find/${this.jobId}`;
-  goBack = () => this.props.history.push(this.getBackUrl());
+  goBack = () => this.props.history.push(`/recruiter/applications/apps/${this.jobId}`);
+
+  connect = () => {
+    const { business, connectApplication, history } = this.props;
+    const { id } = this.state.application;
+
+    if (business.tokens === 0) {
+      confirm({
+        title: 'You need 1 credit',
+        okText: `Credits`,
+        cancelText: 'Cancel',
+        maskClosable: true,
+        onOk: () => {
+          history.push(`/recruiter/settings/credits/${business.id}`);
+        }
+      });
+      return;
+    }
+
+    confirm({
+      title: 'Yes, I want to make this connection (1 credit)',
+      okText: `Connect`,
+      cancelText: 'Cancel',
+      maskClosable: true,
+      onOk: () => {
+        this.setState({ connecting: true });
+        connectApplication({
+          id,
+          data: {
+            id,
+            connect: DATA.APP.ESTABLISHED
+          },
+          success: this.goBack,
+          fail: () => this.setState({ connecting: false })
+        });
+      }
+    });
+  };
+
+  remove = () => {
+    const { id } = this.state.application;
+    confirm({
+      title: 'Are you sure you want to delete this applicaton?',
+      okText: `Remove`,
+      okType: 'danger',
+      cancelText: 'Cancel',
+      maskClosable: true,
+      onOk: () => {
+        this.setState({ removing: true });
+        this.props.removeApplication({
+          id,
+          success: this.goBack,
+          fail: () => this.setState({ removing: false })
+        });
+      }
+    });
+  };
+
+  renderDetail = () => {
+    const { application, connecting, removing } = this.state;
+    return (
+      <div className="content">
+        <JobseekerDetail className="job-detail" jobseeker={application.job_seeker} />
+
+        <div className="buttons">
+          <Button type="primary" loading={connecting} disabled={removing} onClick={this.connect}>
+            Connect
+          </Button>
+          <Button loading={removing} disabled={connecting} onClick={this.remove}>
+            Remove
+          </Button>
+        </div>
+      </div>
+    );
+  };
 
   render() {
     const { error } = this.props;
-    const { jobseeker } = this.state;
+    const { application } = this.state;
 
     return (
       <Container>
-        <Helmet title="Talent Detail" />
+        <Helmet title="Application Detail" />
 
         <PageHeader>
-          <h2>Talent Detail</h2>
-          <Link to={this.getBackUrl()}>{'<< Back Talent List'}</Link>
+          <h2>Application Detail</h2>
+          <Link to={`/recruiter/applications/apps/${this.jobId}`}>{'<< Back To List'}</Link>
         </PageHeader>
 
         {error ? (
           <AlertMsg>
             <span>Server Error!</span>
           </AlertMsg>
-        ) : !jobseeker ? (
-          <Loading size="large" />
+        ) : !application ? (
+          <AlertMsg>
+            <Loading size="large" />
+          </AlertMsg>
         ) : (
-          <div className="content">
-            <JobseekerDetail className="job-detail" jobseeker={jobseeker} />
-
-            <div className="buttons">
-              <Button type="primary" onClick={this.connectJobseeker}>
-                Connect
-              </Button>
-
-              <Button onClick={this.removeJobseeker}>Remove</Button>
-            </div>
-          </div>
+          this.renderDetail()
         )}
       </Container>
     );
@@ -83,14 +154,14 @@ class TalentDetail extends React.Component {
 export default withRouter(
   connect(
     state => ({
-      jobseekers: state.rc_apps.jobseekers,
-      loading: state.rc_apps.loading,
-      error: state.rc_apps.error
+      business: state.rc_businesses.business,
+      applications: state.rc_apps.applications,
+      error: state.rc_apps.errorApplications
     }),
     {
-      getJobseekers,
-      connectJobseeker,
-      removeJobseeker
+      getApplications,
+      connectApplication,
+      removeApplication
     }
-  )(TalentDetail)
+  )(AppliaitonDetail)
 );

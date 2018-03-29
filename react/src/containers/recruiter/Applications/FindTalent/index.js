@@ -1,6 +1,8 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import Truncate from 'react-truncate';
 import { List, Modal } from 'antd';
+
 import { AlertMsg, Loading, Logo, Icons } from 'components';
 import Header from '../Header';
 import Detail from './Detail';
@@ -17,26 +19,23 @@ class FindTalent extends React.Component {
   };
 
   componentWillMount() {
-    this.refresh();
+    this.jobId = helper.str2int(this.props.match.params.jobId);
+    this.getJobseekers(true);
   }
 
-  componentWillReceiveProps(nextProps) {
-    const jobId = helper.str2int(nextProps.match.params.jobId);
+  componentWillReceiveProps({ match }) {
+    const jobId = helper.str2int(match.params.jobId);
     if (this.jobId !== jobId) {
-      this.getJobseekers(jobId);
+      this.jobId = jobId;
+      this.getJobseekers();
     }
   }
 
-  refresh = () => {
-    const jobId = helper.str2int(this.props.match.params.jobId);
-    this.getJobseekers(jobId);
-  };
-
-  getJobseekers = jobId => {
-    if (jobId) {
-      this.jobId = jobId;
+  getJobseekers = clear => {
+    if (this.jobId) {
       this.props.getJobseekers({
-        jobId
+        jobId: this.jobId,
+        clear
       });
     }
   };
@@ -71,8 +70,7 @@ class FindTalent extends React.Component {
           data: {
             job: this.jobId,
             job_seeker: id
-          },
-          onSuccess: this.refresh
+          }
         });
       }
     });
@@ -109,8 +107,12 @@ class FindTalent extends React.Component {
       >
         <List.Item.Meta
           avatar={<Logo src={image} size="80px" />}
-          title={`${fullName})`}
-          description={jobseeker.description}
+          title={`${fullName}`}
+          description={
+            <Truncate lines={2} ellipsis={<span>...</span>}>
+              {jobseeker.description}
+            </Truncate>
+          }
         />
       </List.Item>
     );
@@ -143,7 +145,7 @@ class FindTalent extends React.Component {
             {`There are no more new matches for this job.
               You can restore your removed matches by clicking refresh above.`}
           </span>
-          <a onClick={this.refresh}>
+          <a onClick={() => this.getJobseekers()}>
             <Icons.Refresh />
             Refresh
           </a>
@@ -206,10 +208,9 @@ export default connect(
   state => ({
     business: state.rc_businesses.business,
     jobseekers: state.rc_apps.jobseekers,
-    loading: state.rc_apps.loading,
-    error: state.rc_apps.error,
-    searchText: state.rc_apps.searchText,
-    currentPage: state.rc_apps.currentPage
+    loading: state.rc_apps.loadingJobseekers,
+    error: state.rc_apps.errorJobseekers,
+    searchText: state.rc_apps.searchText
   }),
   {
     getJobseekers,

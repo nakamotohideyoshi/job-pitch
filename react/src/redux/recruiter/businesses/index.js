@@ -109,13 +109,14 @@ export default handleActions(
     }),
 
     [LOCATION_CHANGE]: (state, { payload: { pathname } }) => {
+      const key = pathname.split('/')[2];
       const reset = pathname.indexOf('/recruiter/jobs/business') !== 0;
       // const credits = pathname.indexOf('/recruiter/settings/credits') === 0 ? state.credits : 0;
       return {
         ...state,
         refreshList: reset || state.refreshList,
-        workplaces: reset ? [] : state.businesses
-        // credits
+        workplaces: reset ? [] : state.businesses,
+        business: key === 'applications' || key === 'jobs' ? state.business : []
       };
     }
   },

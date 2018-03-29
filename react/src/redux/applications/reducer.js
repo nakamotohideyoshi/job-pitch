@@ -1,4 +1,4 @@
-import { cloneObj, getIDByName } from 'utils/helper';
+import { updateObj, getIDByName } from 'utils/helper';
 import * as C from './constants';
 
 const initialState = {
@@ -42,7 +42,7 @@ export default function reducer(state = initialState, action = {}) {
     case C.REMOVE_APPLICATION:
       return {
         ...state,
-        applications: cloneObj(state.applications, {
+        applications: updateObj(state.applications, {
           id: action.appId,
           loading: true
         })
@@ -51,7 +51,7 @@ export default function reducer(state = initialState, action = {}) {
     case C.CONNECT_APPLICATION_SUCCESS:
       return {
         ...state,
-        applications: cloneObj(state.applications, {
+        applications: updateObj(state.applications, {
           id: action.appId,
           status: getIDByName('appStatuses', 'ESTABLISHED'),
           loading: false
@@ -61,7 +61,7 @@ export default function reducer(state = initialState, action = {}) {
     case C.REMOVE_APPLICATION_SUCCESS:
       return {
         ...state,
-        applications: cloneObj(state.applications, {
+        applications: updateObj(state.applications, {
           id: action.appId,
           status: getIDByName('appStatuses', 'DELETED'),
           loading: false
@@ -72,7 +72,7 @@ export default function reducer(state = initialState, action = {}) {
     case C.REMOVE_APPLICATION_ERROR:
       return {
         ...state,
-        applications: cloneObj(state.applications, {
+        applications: updateObj(state.applications, {
           id: action.appId,
           loading: false
         })
@@ -99,7 +99,7 @@ export default function reducer(state = initialState, action = {}) {
     case C.SET_SHORTLIST:
       return {
         ...state,
-        selectedApp: cloneObj(state.selectedApp, {
+        selectedApp: updateObj(state.selectedApp, {
           shortlisting: true
         })
       };
@@ -107,11 +107,11 @@ export default function reducer(state = initialState, action = {}) {
     case C.SET_SHORTLIST_SUCCESS:
       return {
         ...state,
-        selectedApp: cloneObj(state.selectedApp, {
+        selectedApp: updateObj(state.selectedApp, {
           shortlisting: false,
           shortlisted: action.shortlisted
         }),
-        applications: cloneObj(state.applications, {
+        applications: updateObj(state.applications, {
           id: state.selectedApp.id,
           shortlisted: action.shortlisted
         })
@@ -120,7 +120,7 @@ export default function reducer(state = initialState, action = {}) {
     case C.SET_SHORTLIST_ERROR:
       return {
         ...state,
-        selectedApp: cloneObj(state.selectedApp, {
+        selectedApp: updateObj(state.selectedApp, {
           shortlisting: false
         })
       };
@@ -134,7 +134,7 @@ export default function reducer(state = initialState, action = {}) {
     case C.SEND_MESSAGE: {
       const messages = state.selectedApp.messages.slice(0);
       messages.push({ content: action.message });
-      const selectedApp = cloneObj(state.selectedApp, { messages });
+      const selectedApp = updateObj(state.selectedApp, { messages });
       return {
         ...state,
         selectedApp
@@ -145,13 +145,13 @@ export default function reducer(state = initialState, action = {}) {
       return {
         ...state,
         selectedApp: action.application,
-        applications: cloneObj(state.applications, action.application)
+        applications: updateObj(state.applications, action.application)
       };
 
     case C.SEND_MESSAGE_ERROR: {
       const messages = state.selectedApp.messages.slice(0);
       messages.pop();
-      const selectedApp = cloneObj(state.selectedApp, { messages });
+      const selectedApp = updateObj(state.selectedApp, { messages });
       return {
         ...state,
         selectedApp

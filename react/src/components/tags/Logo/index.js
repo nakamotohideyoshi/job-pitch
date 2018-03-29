@@ -7,7 +7,7 @@ const Wrapper = styled.span`
     css`
       display: inline-block;
       ${props.size ? `width: ${props.size}; height: ${props.size}` : ''};
-      background-size: contain;
+      background-size: cover;
       background-position: center;
       background-repeat: no-repeat;
       ${props.src ? `background-image: url(${props.src})` : 'background-color: #f0f0f0'};

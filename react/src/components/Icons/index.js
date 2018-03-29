@@ -3,6 +3,7 @@ import { Icon } from 'antd';
 import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 import faSyncAlt from '@fortawesome/fontawesome-free-solid/faSyncAlt';
 import faCheckSquare from '@fortawesome/fontawesome-free-regular/faCheckSquare';
+import faStar from '@fortawesome/fontawesome-free-solid/faStar';
 
 const Video = props => (
   <svg
@@ -45,13 +46,14 @@ const Play = props => (
 const Upload = props => <Icon type="upload" {...props} />;
 
 const Refresh = props => <FontAwesomeIcon icon={faSyncAlt} {...props} />;
-
 const Check = props => <FontAwesomeIcon icon={faCheckSquare} {...props} />;
+const Star = props => <FontAwesomeIcon icon={faStar} {...props} />;
 
 export default {
   Video,
   Play,
   Upload,
   Refresh,
-  Check
+  Check,
+  Star
 };

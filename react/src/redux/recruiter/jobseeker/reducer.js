@@ -1,5 +1,5 @@
 // import { LOCATION_CHANGE } from 'react-router-redux';
-import { cloneObj, removeObj } from 'utils/helper';
+import { updateObj, removeObj } from 'utils/helper';
 import * as C from './constants';
 
 const initialState = {
@@ -20,7 +20,7 @@ export default function reducer(state = initialState, action = {}) {
         application: action.application
       };
 
-      case C.RC_GET_JOBSEEKER_ERROR:
+    case C.RC_GET_JOBSEEKER_ERROR:
       return {
         ...state,
         errors: action.errors

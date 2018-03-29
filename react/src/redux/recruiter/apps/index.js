@@ -10,12 +10,14 @@ import { requestPending, requestSuccess, requestFail } from 'utils/request';
 
 export const updateStatus = createAction(C.RC_APPS_UPDATE);
 
+export const getOpenedJobs = createAction(C.RC_GET_OPENED_JOBS);
+
 export const getJobseekers = createAction(C.RC_GET_JOBSEEKERS);
 export const connectJobseeker = createAction(C.RC_CONNECT_JOBSEEKER);
 export const removeJobseeker = createAction(C.RC_REMOVE_JOBSEEKER);
 
-export const getAllJobs = createAction(C.RC_GET_ALL_JOBS);
 export const getApplications = createAction(C.RC_GET_APPS);
+export const connectApplication = createAction(C.RC_CONNECT_APP);
 export const updateApplication = createAction(C.RC_UPDATE_APP);
 export const removeApplication = createAction(C.RC_REMOVE_APP);
 
@@ -25,19 +27,19 @@ export const removeApplication = createAction(C.RC_REMOVE_APP);
 
 const initialState = {
   jobs: [],
-  loadingJobs: false,
+  selectedJobId: null,
+  loadingJobs: true,
+  errorJobs: null,
+
+  searchText: '',
 
   jobseekers: [],
-  findJobId: null,
+  loadingJobseekers: true,
+  errorJobseekers: null,
 
   applications: [],
-  appsJobId: null,
-  loading: false,
-  error: null,
-  requestRefresh: true,
-
-  currentPage: 1,
-  searchText: ''
+  loadingApplications: true,
+  errorApplications: null
 };
 
 export default handleActions(
@@ -49,64 +51,62 @@ export default handleActions(
 
     // ---- get app jobs ----
 
-    [requestPending(C.RC_GET_ALL_JOBS)]: state => ({
+    [requestPending(C.RC_GET_OPENED_JOBS)]: state => ({
       ...state,
-      loadingJobs: true,
       jobs: [],
-      error: null
+      loadingJobs: true,
+      errorJobs: null
     }),
 
-    [requestSuccess(C.RC_GET_ALL_JOBS)]: (state, { payload }) => ({
+    [requestSuccess(C.RC_GET_OPENED_JOBS)]: (state, { payload }) => ({
       ...state,
-      loadingJobs: false,
-      jobs: payload
+      jobs: payload,
+      loadingJobs: false
     }),
 
-    [requestFail(C.RC_GET_ALL_JOBS)]: (state, { payload }) => ({
+    [requestFail(C.RC_GET_OPENED_JOBS)]: (state, { payload }) => ({
       ...state,
       loadingJobs: false,
-      jobs: []
+      errorJobs: payload
     }),
 
     // ---- get jobseekers ----
 
-    [requestPending(C.RC_GET_JOBSEEKERS)]: (state, { payload }) => ({
+    [requestPending(C.RC_GET_JOBSEEKERS)]: (state, { payload: { clear } }) => ({
       ...state,
-      loading: true,
-      findJobId: payload.jobId,
-      jobseekers: state.findJobId === payload.jobId ? state.jobseekers : [],
-      error: null
+      jobseekers: clear ? [] : state.jobseekers,
+      loadingJobseekers: true,
+      errorJobseekers: null
     }),
 
     [requestSuccess(C.RC_GET_JOBSEEKERS)]: (state, { payload }) => ({
       ...state,
-      loading: false,
       jobseekers: payload,
-      refreshList: false
+      loadingJobseekers: false
     }),
 
     [requestFail(C.RC_GET_JOBSEEKERS)]: (state, { payload }) => ({
       ...state,
-      loading: false,
-      jobseekers: [],
-      error: payload
+      loadingJobseekers: false,
+      errorJobseekers: payload
     }),
 
     // ---- connect jobseeker ----
 
-    [requestPending(C.RC_CONNECT_JOBSEEKER)]: (state, { payload }) => ({
+    [requestPending(C.RC_CONNECT_JOBSEEKER)]: state => ({
       ...state,
-      loading: true
+      loadingJobseekers: true
     }),
 
     [requestSuccess(C.RC_CONNECT_JOBSEEKER)]: (state, { payload }) => ({
       ...state,
-      loading: false
+      loadingJobseekers: false,
+      jobseekers: helper.removeObj(state.jobseekers, payload.data.job_seeker)
     }),
 
-    [requestFail(C.RC_CONNECT_JOBSEEKER)]: (state, { payload }) => ({
+    [requestFail(C.RC_CONNECT_JOBSEEKER)]: state => ({
       ...state,
-      loading: false
+      loadingJobseekers: false
     }),
 
     // ---- remove jobseeker ----
@@ -118,53 +118,74 @@ export default handleActions(
 
     // ---- get applications ----
 
-    [requestPending(C.RC_GET_APPS)]: state => ({
+    [requestPending(C.RC_GET_APPS)]: (state, { payload: { clear } }) => ({
       ...state,
-      loading: true,
-      error: null
+      applications: clear ? [] : state.applications,
+      loadingApplications: true,
+      errorApplications: null
     }),
 
     [requestSuccess(C.RC_GET_APPS)]: (state, { payload }) => ({
       ...state,
-      loading: false,
       applications: payload,
-      refreshList: false
+      loadingApplications: false
     }),
 
     [requestFail(C.RC_GET_APPS)]: (state, { payload }) => ({
       ...state,
-      loading: false,
-      applications: [],
-      error: payload
+      loadingApplications: false,
+      errorApplications: payload
     }),
 
     // ---- update application ----
 
     [requestPending(C.RC_UPDATE_APP)]: state => ({
       ...state,
-      loading: true
+      loadingApplications: true
     }),
 
-    [requestSuccess(C.RC_UPDATE_APP)]: (state, { payload }) => ({
+    [requestSuccess(C.RC_UPDATE_APP)]: state => ({
       ...state,
-      loading: false,
-      applications: helper.removeObj(state.applications, payload.id)
+      loadingApplications: false
     }),
 
     [requestFail(C.RC_UPDATE_APP)]: state => ({
       ...state,
-      loading: false
+      loadingApplicationss: false
+    }),
+
+    // ---- remove application ----
+
+    [requestPending(C.RC_REMOVE_APP)]: state => ({
+      ...state,
+      loadingApplications: true
+    }),
+
+    [requestSuccess(C.RC_REMOVE_APP)]: (state, { payload: { id } }) => ({
+      ...state,
+      loadingApplications: false,
+      applications: helper.removeObj(state.applications, id)
+    }),
+
+    [requestFail(C.RC_REMOVE_APP)]: state => ({
+      ...state,
+      loadingApplicationss: false
     }),
 
     // ---- change location ----
 
-    [LOCATION_CHANGE]: (state, a) => {
-      const reset = a.payload.pathname.indexOf('/recruiter/applications') !== 0;
+    [LOCATION_CHANGE]: (state, { payload: { pathname } }) => {
+      if (pathname.indexOf('/auth') === 0) {
+        return initialState;
+      }
+
+      const key = pathname.split('/')[2];
       return {
         ...state,
-        jobs: reset ? [] : state.jobs
+        jobs: key === 'applications' ? state.jobs : []
       };
     }
   },
+
   initialState
 );

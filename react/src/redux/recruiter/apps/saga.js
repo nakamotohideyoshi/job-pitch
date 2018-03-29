@@ -1,22 +1,44 @@
-import { takeLatest } from 'redux-saga/effects';
+import { takeLatest, call, select, put } from 'redux-saga/effects';
 import * as C from 'redux/constants';
-import { getRequest, postRequest, putRequest, deleteRequest } from 'utils/request';
+import * as helper from 'utils/helper';
+import DATA from 'utils/data';
+import { getRequest, postRequest, putRequest, deleteRequest, requestSuccess } from 'utils/request';
 
-const getAllJobs = getRequest({
-  url: '/api/user-jobs/'
+function* useToken() {
+  const { rc_apps: { jobs, selectedJobId } } = yield select();
+  const job = helper.getItemByID(jobs, selectedJobId);
+  const business = job.location_data.business_data;
+  const updatedBusiness = {
+    ...business,
+    tokens: business.tokens - 1
+  };
+  job.location_data.business_data = updatedBusiness;
+  yield put({ type: requestSuccess(C.RC_SELECT_BUSINESS), payload: updatedBusiness });
+}
+
+const getOpenedJobs = getRequest({
+  url: '/api/user-jobs/',
+  payloadOnSuccess: data => data.filter(({ status }) => status === DATA.JOB.OPEN)
 });
 
 const getJobseekers = getRequest({
-  url: ({ payload }) => `/api/job-seekers/?job=${payload.jobId}`
+  url: ({ payload: { jobId } }) => `/api/job-seekers/?job=${jobId}`
 });
 
-const connectJobseeker = postRequest({
-  url: `/api/applications/`
-});
+function* connectJobseeker(action) {
+  const result = yield call(
+    postRequest({
+      url: `/api/applications/`,
+      payloadOnSuccess: (_, { payload }) => payload
+    }),
+    action
+  );
+
+  result && (yield call(useToken));
+}
 
 const getApplications = getRequest({
-  url: ({ payload }) => {
-    const { jobId, status, shortlist } = payload;
+  url: ({ payload: { jobId, status, shortlist } }) => {
     const params = [];
     if (jobId) {
       params.push(`job=${jobId}`);
@@ -32,22 +54,37 @@ const getApplications = getRequest({
   }
 });
 
+function* connectApplication(action) {
+  const { id } = action.payload;
+  const result = yield call(
+    putRequest({
+      type: C.RC_REMOVE_APP,
+      url: `/api/applications/${id}/`,
+      payloadOnSuccess: (_, { payload }) => payload
+    }),
+    action
+  );
+
+  result && (yield call(useToken));
+}
+
 const updateApplication = putRequest({
-  url: ({ payload }) => `/api/applications/${payload.id}/`
+  url: ({ payload: { data } }) => `/api/applications/${data.id}/`
 });
 
 const removeApplication = deleteRequest({
-  url: ({ payload }) => `/api/applications/${payload.id}/`,
+  url: ({ payload: { id } }) => `/api/applications/${id}/`,
   payloadOnSuccess: (_, { payload }) => payload
 });
 
 export default function* sagas() {
-  yield takeLatest(C.RC_GET_ALL_JOBS, getAllJobs);
+  yield takeLatest(C.RC_GET_OPENED_JOBS, getOpenedJobs);
 
   yield takeLatest(C.RC_GET_JOBSEEKERS, getJobseekers);
   yield takeLatest(C.RC_CONNECT_JOBSEEKER, connectJobseeker);
 
   yield takeLatest(C.RC_GET_APPS, getApplications);
+  yield takeLatest(C.RC_CONNECT_APP, connectApplication);
   yield takeLatest(C.RC_UPDATE_APP, updateApplication);
   yield takeLatest(C.RC_REMOVE_APP, removeApplication);
 }

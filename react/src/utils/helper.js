@@ -168,11 +168,9 @@ export function loadData(key) {
 |--------------------------------------------------
 */
 
-export function cloneObj(object, updateInfo) {
+export function updateObj(object, updateInfo) {
   if (Array.isArray(object)) {
-    const newObject = object.filter(item => item.id !== updateInfo.id);
-    newObject.push(updateInfo);
-    return newObject;
+    return object.map(item => (item.id === updateInfo.id ? updateObj(item, updateInfo) : item));
   }
   if (typeof object === 'object') {
     return Object.assign({}, object, updateInfo);

@@ -2,32 +2,46 @@ import styled from 'styled-components';
 
 export default styled.div`
   .ant-list-item-meta-title {
-    display: flex;
-    justify-content: space-between;
+    font-size: 16px;
+  }
 
-    .title {
-      font-size: 16px;
+  .ant-list-item-meta-description {
+    span + span {
+      margin-left: 40px;
     }
 
-    .distance {
-      color: #8c8c8c;
+    a {
+      display: inline-flex;
+      align-items: center;
+      color: #333;
+      margin-top: 1em;
+      cursor: pointer;
+
+      svg {
+        color: #00b6a4;
+        font-size: 1.6em;
+        margin-right: 4px;
+      }
     }
   }
 
   .overview {
-    div {
-      white-space: pre-line;
-    }
+    white-space: pre-line;
+    margin-bottom: 1em;
   }
 
   .check-label {
     display: flex;
-    margin-top: 0.5rem;
+    margin-top: 0.5em;
 
     svg {
-      margin-right: 0.5rem;
-      font-size: 1.5rem;
+      margin-right: 0.25em;
+      font-size: 1.5em;
       color: #ff9300;
     }
+  }
+
+  p {
+    margin-bottom: 0.25em;
   }
 `;

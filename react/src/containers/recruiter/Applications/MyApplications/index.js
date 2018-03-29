@@ -1,12 +1,14 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import Truncate from 'react-truncate';
 import { List, Modal } from 'antd';
-import { AlertMsg, Loading, Logo, Icons } from 'components';
+
+import { AlertMsg, Loading, Logo } from 'components';
 import Header from '../Header';
 import Detail from './Detail';
 import Container from './Wrapper';
 
-import { getApplications, updateApplication, removeApplication } from 'redux/recruiter/apps';
+import { getApplications, connectApplication, removeApplication } from 'redux/recruiter/apps';
 import DATA from 'utils/data';
 import * as helper from 'utils/helper';
 
@@ -18,26 +20,24 @@ class MyApplications extends React.Component {
   };
 
   componentWillMount() {
-    this.refresh();
+    this.jobId = helper.str2int(this.props.match.params.jobId);
+    this.getApplications(true);
   }
 
-  componentWillReceiveProps(nextProps) {
-    const jobId = helper.str2int(nextProps.match.params.jobId);
+  componentWillReceiveProps({ match }) {
+    const jobId = helper.str2int(match.params.jobId);
     if (this.jobId !== jobId) {
-      this.getApplications(jobId);
+      this.jobId = jobId;
+      this.getApplications();
     }
   }
 
-  refresh = () => {
-    const jobId = helper.str2int(this.props.match.params.jobId);
-    this.getApplications(jobId);
-  };
-
-  getApplications = jobId => {
-    if (jobId) {
-      this.jobId = jobId;
+  getApplications = clear => {
+    if (this.jobId) {
       this.props.getApplications({
-        jobId
+        jobId: this.jobId,
+        status: DATA.APP.CREATED,
+        clear
       });
     }
   };
@@ -47,7 +47,7 @@ class MyApplications extends React.Component {
   connect = (id, e) => {
     e.stopPropagation();
 
-    const { business, upldateApplication, history } = this.props;
+    const { business, connectApplication, history } = this.props;
 
     if (business.tokens === 0) {
       confirm({
@@ -68,13 +68,12 @@ class MyApplications extends React.Component {
       cancelText: 'Cancel',
       maskClosable: true,
       onOk: () => {
-        upldateApplication({
-          id: id,
+        connectApplication({
+          id,
           data: {
-            id: id,
+            id,
             connect: DATA.APP.ESTABLISHED
-          },
-          onSuccess: this.refresh
+          }
         });
       }
     });
@@ -90,9 +89,7 @@ class MyApplications extends React.Component {
       cancelText: 'Cancel',
       maskClosable: true,
       onOk: () => {
-        this.props.removeApplication({
-          id
-        });
+        this.props.removeApplication({ id });
       }
     });
   };
@@ -101,6 +98,7 @@ class MyApplications extends React.Component {
     const jobseeker = app.job_seeker;
     const image = helper.getPitch(jobseeker).thumbnail;
     const fullName = helper.getFullJSName(jobseeker);
+
     return (
       <List.Item
         key={jobseeker.id}
@@ -112,16 +110,20 @@ class MyApplications extends React.Component {
       >
         <List.Item.Meta
           avatar={<Logo src={image} size="80px" />}
-          title={`${fullName})`}
-          description={jobseeker.description}
+          title={`${fullName}`}
+          description={
+            <Truncate lines={2} ellipsis={<span>...</span>}>
+              {jobseeker.description}
+            </Truncate>
+          }
         />
       </List.Item>
     );
   };
 
   renderApplications() {
-    const { loading, error, applications, searchText } = this.props;
     const { currentPage } = this.state;
+    const { applications, loading, error, searchText } = this.props;
 
     if (error) {
       return (
@@ -205,14 +207,13 @@ export default connect(
   state => ({
     business: state.rc_businesses.business,
     applications: state.rc_apps.applications,
-    loading: state.rc_apps.loading,
-    error: state.rc_apps.error,
-    searchText: state.rc_apps.searchText,
-    currentPage: state.rc_apps.currentPage
+    loading: state.rc_apps.loadingApplications,
+    error: state.rc_apps.errorApplications,
+    searchText: state.rc_apps.searchText
   }),
   {
     getApplications,
-    updateApplication,
+    connectApplication,
     removeApplication
   }
 )(MyApplications);

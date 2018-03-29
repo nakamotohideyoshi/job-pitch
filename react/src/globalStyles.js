@@ -2,6 +2,10 @@ import { injectGlobal } from 'styled-components';
 import media from 'utils/mediaquery';
 
 injectGlobal`
+  html {
+    font-size: 14px;
+  }
+ 
   .shadow1 {
     box-shadow: 0 3px 12px rgba(0, 0, 0, 0.25);
     ${media.tablet`

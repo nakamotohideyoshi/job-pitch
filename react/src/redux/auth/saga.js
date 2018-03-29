@@ -93,8 +93,9 @@ function* getUserData() {
     };
 
     DATA.APP = {
-      ESTABLISHED: helper.getIDByName('appStatuses', 'ESTABLISHED')
-      // ESTABLISHED: helper.getIDByName('appStatuses', 'ESTABLISHED')
+      CREATED: helper.getIDByName('appStatuses', 'CREATED'),
+      ESTABLISHED: helper.getIDByName('appStatuses', 'ESTABLISHED'),
+      DELETED: helper.getIDByName('appStatuses', 'DELETED')
     };
   }
 

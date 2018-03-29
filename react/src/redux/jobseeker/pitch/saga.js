@@ -68,9 +68,15 @@ function* uploadPitch({ payload: { data, onUploadProgress, success, fail } }) {
   onUploadProgress();
 }
 
-function* uploadJobPitch({ payload: { data, onUploadProgress, success, fail } }) {
+function* uploadJobPitch({ payload: { job, data, onUploadProgress, success, fail } }) {
   onUploadProgress('Starting upload...');
-  let newPitch = yield call(postRequest({ url: `/api/job-videos/` }), {});
+  let newPitch = yield call(postRequest({ url: `/api/job-videos/` }), {
+    payload: {
+      data: {
+        job
+      }
+    }
+  });
   if (!newPitch) {
     fail && fail(`Upload failed`);
     return;

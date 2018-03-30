@@ -2,10 +2,8 @@ import React from 'react';
 import Helmet from 'react-helmet';
 import { connect } from 'react-redux';
 import { message, List, Modal, Spin } from 'antd';
-import FontAwesomeIcon from '@fortawesome/react-fontawesome';
-import faSyncAlt from '@fortawesome/fontawesome-free-solid/faSyncAlt';
 
-import { Loading, PageHeader, SearchBox, AlertMsg } from 'components';
+import { Loading, PageHeader, SearchBox, AlertMsg, Icons } from 'components';
 import Container from './Wrapper';
 import NoPitch from '../NoPitch';
 
@@ -121,7 +119,7 @@ class FindJob extends React.Component {
               You can restore your removed matches by clicking refresh.`}
           </span>
           <a onClick={this.props.getJobs}>
-            <FontAwesomeIcon icon={faSyncAlt} />
+            <Icons.Refresh />
             Refresh
           </a>
         </AlertMsg>

@@ -1,16 +1,12 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Button, Modal, message } from 'antd';
-import FontAwesomeIcon from '@fortawesome/react-fontawesome';
-import faUpload from '@fortawesome/fontawesome-free-solid/faUpload';
+import { Button, message } from 'antd';
 
-import { VideoRecorder, PopupProgress } from 'components';
+import { VideoRecorder, PopupProgress, Icons } from 'components';
 import { Wrapper, HelpContent, VideoContent, ButtonContent } from './Wrapper';
 
 import * as helper from 'utils/helper';
 import { uploadPitch } from 'redux/jobseeker/pitch';
-
-const confirm = Modal.confirm;
 
 class PitchRecord extends React.Component {
   state = {
@@ -43,31 +39,18 @@ class PitchRecord extends React.Component {
     });
   };
 
-  recordPitch = () => {
-    if (navigator.userAgent.indexOf('iPhone') !== -1) {
-      confirm({
-        title: 'To record your video, you need to download the app',
-        okText: 'Sign out',
-        maskClosable: true,
-        onOk: () => {
-          window.open('https://itunes.apple.com/us/app/myjobpitch-job-matching/id1124296674?ls=1&mt=8', '_blank');
-        }
-      });
-    } else {
-      this.setState({ showRecorder: true });
-    }
+  changePitch = (property, pitchData) => {
+    this.setState({ property, pitchData });
   };
 
-  hideDialog = (url, data) => {
-    this.setState({
-      pitchUrl: url || this.state.pitchUrl,
-      pitchData: data || this.state.pitchData,
-      showRecorder: false
-    });
-  };
+  recordButton = props => (
+    <Button type="primary" {...props}>
+      Record New Pitch
+    </Button>
+  );
 
   render() {
-    const { pitchUrl, pitchData, showRecorder, progress } = this.state;
+    const { pitchUrl, pitchData, progress } = this.state;
 
     return (
       <Wrapper>
@@ -84,18 +67,14 @@ class PitchRecord extends React.Component {
         </VideoContent>
 
         <ButtonContent>
-          <Button type="primary" onClick={this.recordPitch}>
-            Record New Pitch
-          </Button>
+          <VideoRecorder buttonComponent={this.recordButton} onChange={this.changePitch} />
 
           {pitchData && (
             <Button type="secondary" onClick={this.uploadPitch}>
-              <FontAwesomeIcon icon={faUpload} /> Upload
+              <Icons.Upload /> Upload
             </Button>
           )}
         </ButtonContent>
-
-        {showRecorder && <VideoRecorder onClose={this.hideDialog} />}
 
         {progress && <PopupProgress label={progress.label} value={progress.value} />}
       </Wrapper>

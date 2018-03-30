@@ -9,34 +9,6 @@ export default styled(Container)`
     .buttons {
       margin-top: 8px;
     }
-
-    .record-info {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-top: 8px;
-
-      &:hover {
-        background-color: #dcf5ee;
-      }
-
-      > * {
-        cursor: pointer;
-      }
-
-      > span i {
-        margin-right: 8px;
-        color: #8c8c8c;
-      }
-
-      > i {
-        color: #8c8c8c;
-
-        &:hover {
-          color: #595959;
-        }
-      }
-    }
   }
 
   ${media.nottablet`

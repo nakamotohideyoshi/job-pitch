@@ -38,6 +38,12 @@ export default styled(Form)`
     margin-bottom: 12px;
   }
 
+  .btn-play {
+    position: absolute;
+    top: 4px;
+    left: 160px;
+  }
+
   .ant-upload.ant-upload-drag {
     padding: 16px 8px;
   }

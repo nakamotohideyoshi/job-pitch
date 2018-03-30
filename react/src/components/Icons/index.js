@@ -4,6 +4,13 @@ import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 import faSyncAlt from '@fortawesome/fontawesome-free-solid/faSyncAlt';
 import faCheckSquare from '@fortawesome/fontawesome-free-regular/faCheckSquare';
 import faStar from '@fortawesome/fontawesome-free-solid/faStar';
+import faQuestionCircle from '@fortawesome/fontawesome-free-regular/faQuestionCircle';
+import faSearch from '@fortawesome/fontawesome-free-solid/faSearch';
+import faCog from '@fortawesome/fontawesome-free-solid/faCog';
+import faSignOutAlt from '@fortawesome/fontawesome-free-solid/faSignOutAlt';
+import faAngleLeft from '@fortawesome/fontawesome-free-solid/faAngleLeft';
+import faAngleRight from '@fortawesome/fontawesome-free-solid/faAngleRight';
+import faTimesCircle from '@fortawesome/fontawesome-free-solid/faTimesCircle';
 
 const Video = props => (
   <svg
@@ -48,6 +55,13 @@ const Upload = props => <Icon type="upload" {...props} />;
 const Refresh = props => <FontAwesomeIcon icon={faSyncAlt} {...props} />;
 const Check = props => <FontAwesomeIcon icon={faCheckSquare} {...props} />;
 const Star = props => <FontAwesomeIcon icon={faStar} {...props} />;
+const QuestionCircle = props => <FontAwesomeIcon icon={faQuestionCircle} {...props} />;
+const Search = props => <FontAwesomeIcon icon={faSearch} {...props} />;
+const Settings = props => <FontAwesomeIcon icon={faCog} {...props} />;
+const SignOut = props => <FontAwesomeIcon icon={faSignOutAlt} {...props} />;
+const AngleRight = props => <FontAwesomeIcon icon={faAngleLeft} {...props} />;
+const AngleLeft = props => <FontAwesomeIcon icon={faAngleRight} {...props} />;
+const TimeCircle = props => <FontAwesomeIcon icon={faTimesCircle} {...props} />;
 
 export default {
   Video,
@@ -55,5 +69,12 @@ export default {
   Upload,
   Refresh,
   Check,
-  Star
+  Star,
+  Search,
+  QuestionCircle,
+  Settings,
+  SignOut,
+  AngleRight,
+  AngleLeft,
+  TimeCircle
 };

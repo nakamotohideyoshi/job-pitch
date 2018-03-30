@@ -2,10 +2,8 @@ import React from 'react';
 import Helmet from 'react-helmet';
 import { connect } from 'react-redux';
 import { List } from 'antd';
-import FontAwesomeIcon from '@fortawesome/react-fontawesome';
-import faSearch from '@fortawesome/fontawesome-free-solid/faSearch';
 
-import { Loading, PageHeader, SearchBox, AlertMsg } from 'components';
+import { Loading, PageHeader, SearchBox, AlertMsg, Icons } from 'components';
 import Container from './Wrapper';
 import NoPitch from '../NoPitch';
 
@@ -85,7 +83,7 @@ class JSApplications extends React.Component {
       return (
         <AlertMsg>
           <span>
-            <FontAwesomeIcon icon={faSearch} />No search results
+            <Icons.Search />No search results
           </span>
         </AlertMsg>
       );

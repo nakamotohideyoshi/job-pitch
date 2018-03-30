@@ -23,7 +23,6 @@ const initialState = {
   businesses: [],
   loading: false,
   error: null,
-  refreshList: true,
 
   business: null,
   saving: false,
@@ -109,6 +108,10 @@ export default handleActions(
     }),
 
     [LOCATION_CHANGE]: (state, { payload: { pathname } }) => {
+      if (pathname.indexOf('/auth') === 0) {
+        return initialState;
+      }
+
       const key = pathname.split('/')[2];
       const reset = pathname.indexOf('/recruiter/jobs/business') !== 0;
       // const credits = pathname.indexOf('/recruiter/settings/credits') === 0 ? state.credits : 0;

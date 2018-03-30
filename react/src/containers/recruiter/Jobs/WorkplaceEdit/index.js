@@ -2,9 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { Breadcrumb, Form, Input, Checkbox, Button, Tooltip, message } from 'antd';
-import FontAwesomeIcon from '@fortawesome/react-fontawesome';
-import faQuestionCircle from '@fortawesome/fontawesome-free-regular/faQuestionCircle';
-import { PopupProgress, ImageSelector, NoLabelField, GoogleMap } from 'components';
+import { PopupProgress, ImageSelector, NoLabelField, GoogleMap, Icons } from 'components';
 import Wrapper from './Wrapper';
 
 import { selectBusiness } from 'redux/recruiter/businesses';
@@ -161,7 +159,7 @@ class WorkplaceEdit extends React.Component {
               <span>
                 Email&nbsp;
                 <Tooltip title="This is the email that notifications will be sent to, it can be different to your login email address.">
-                  <FontAwesomeIcon icon={faQuestionCircle} />
+                  <Icons.QuestionCircle />
                 </Tooltip>
               </span>
             }
@@ -203,7 +201,7 @@ class WorkplaceEdit extends React.Component {
               <span>
                 Match area&nbsp;
                 <Tooltip title="Search for a place name, street, postcode, etc. or click the map to select location.">
-                  <FontAwesomeIcon icon={faQuestionCircle} />
+                  <Icons.QuestionCircle />
                 </Tooltip>
               </span>
             }

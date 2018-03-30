@@ -1,12 +1,30 @@
 import React from 'react';
-import { Wrapper, VideoContainer } from './Wrapper';
+import styled from 'styled-components';
+import { Modal } from 'antd';
+
+const Wrapper = styled(Modal)`
+  width: 648px !important;
+
+  .ant-modal-body {
+    position: relative;
+  }
+`;
+
+const Container = styled.div`
+  position: relative;
+
+  video {
+    width: 100%;
+    background-color: #000;
+  }
+`;
 
 export default ({ videoUrl, onClose }) => (
   <Wrapper title="Video Player" visible maskClosable={false} footer={null} onCancel={() => onClose()}>
-    <VideoContainer>
+    <Container>
       <video preload="auto" controls autoPlay src={videoUrl}>
         <track kind="captions" />
       </video>
-    </VideoContainer>
+    </Container>
   </Wrapper>
 );

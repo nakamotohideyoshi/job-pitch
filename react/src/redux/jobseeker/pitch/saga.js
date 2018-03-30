@@ -93,12 +93,8 @@ function* uploadJobPitch({ payload: { job, data, onUploadProgress, success, fail
   const pitchId = newPitch.id;
   do {
     yield delay(2000);
-    newPitch = yield call(getRequest({ url: `/api/pitches/${pitchId}/` }));
+    newPitch = yield call(getRequest({ url: `/api/job-videos/${pitchId}/` }));
   } while (!newPitch.video);
-
-  const { auth } = yield select();
-  const jobseeker = yield call(getRequest({ url: `/api/job-seekers/${auth.jobseeker.id}/` }));
-  yield put({ type: C.UPDATE_AUTH, payload: { jobseeker } });
 
   onUploadProgress();
 }

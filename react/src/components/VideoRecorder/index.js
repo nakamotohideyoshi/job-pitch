@@ -1,205 +1,82 @@
-import React, { Fragment } from 'react';
+import React from 'react';
+import styled from 'styled-components';
+import { Modal } from 'antd';
+import { VideoPlayer } from 'components';
+import RecordModal from './RecordModal';
 
-import ReadyLabel from './ReadyLabel';
-import RecLabel from './RecLabel';
-import { Wrapper, VideoContainer, RecButton, TimeBar, ErrorLabel } from './Wrapper';
+const { confirm } = Modal;
 
-const NONE = 'NONE';
-const READY = 'READY';
-const RECORDING = 'RECORDING';
+const Info = styled.div`
+  margin-top: 7px;
+  line-height: initial;
+  color: #8c8c8c;
 
-export default class VideoRecorder extends React.Component {
+  a {
+    color: #595959;
+    text-decoration: underline;
+  }
+`;
+
+class VideoRecorder extends React.Component {
   state = {
-    status: NONE
+    url: null,
+    data: null,
+    showRecorder: false,
+    showPlayer: false
   };
 
-  componentWillMount() {
-    this.setupVideo();
-  }
-
-  componentWillUnmount() {
-    if (this.timer) {
-      clearInterval(this.timer);
-    }
-
-    if (this.mediaRecorder) {
-      this.mediaRecorder.stop();
-    }
-
-    if (this.state.stream) {
-      const tracks = this.state.stream.getTracks();
-      tracks.forEach(track => {
-        track.stop();
-      });
-    }
-  }
-
-  setupVideo = () => {
-    if (typeof MediaRecorder === 'undefined') {
-      this.setState({
-        error: 'Your browser does not supports Media Recorder API.'
-      });
-      return;
-    }
-
-    if ((navigator.mediaDevices || {}).getUserMedia === undefined) {
-      navigator.mediaDevices.getUserMedia = constraints => {
-        const getUserMedia =
-          navigator.getUserMedia ||
-          navigator.webkitGetUserMedia ||
-          navigator.mozGetUserMedia ||
-          navigator.msGetUserMedia;
-
-        if (!getUserMedia) {
-          return Promise.reject(new Error('Your browser does not supports Media Recorder API.'));
+  openRecorder = () => {
+    if (navigator.userAgent.indexOf('iPhone') !== -1) {
+      confirm({
+        title: 'To record your video, you need to download the app',
+        okText: 'Sign out',
+        maskClosable: true,
+        onOk: () => {
+          window.open('https://itunes.apple.com/us/app/myjobpitch-job-matching/id1124296674?ls=1&mt=8', '_blank');
         }
-
-        return new Promise((resolve, reject) => {
-          getUserMedia.call(navigator, constraints, resolve, reject);
-        });
-      };
-    }
-
-    navigator.mediaDevices.getUserMedia({ audio: true, video: true }).then(
-      stream => {
-        this.video.srcObject = stream;
-        this.setState({ stream });
-      },
-      error => this.setState({ error: error.name })
-    );
-  };
-
-  onClickButton = () => {
-    switch (this.state.status) {
-      case NONE:
-        this.readyRecording();
-        break;
-      case READY:
-        this.cancelRecording();
-        break;
-      case RECORDING:
-        this.stopRecording();
-        break;
-      default:
-        break;
+      });
+    } else {
+      this.setState({ showRecorder: true });
     }
   };
 
-  readyRecording = () => {
-    this.setState({
-      status: READY,
-      time: 10000
-    });
-
-    this.timer = setInterval(() => {
-      const { time } = this.state;
-      if (time > 0) {
-        this.setState({ time: time - 1000 });
-      } else {
-        this.startRecording();
-      }
-    }, 1000);
+  closeRecorder = (videoUrl, videoData) => {
+    const url = videoUrl || this.state.url;
+    const data = videoData || this.state.data;
+    this.setState({ url, data, showRecorder: false });
+    this.props.onChange(url, data);
   };
 
-  startRecording = () => {
-    clearInterval(this.timer);
-
-    this.recordedBlobs = [];
-    let options = { mimeType: 'video/webm;codecs=vp9' };
-    if (!MediaRecorder.isTypeSupported(options.mimeType)) {
-      options = { mimeType: 'video/webm;codecs=vp8' };
-      if (!MediaRecorder.isTypeSupported(options.mimeType)) {
-        options = { mimeType: 'video/webm' };
-        if (!MediaRecorder.isTypeSupported(options.mimeType)) {
-          options = { mimeType: '' };
-        }
-      }
-    }
-
-    try {
-      this.mediaRecorder = new MediaRecorder(this.state.stream, options);
-    } catch (e) {
-      console.error('Exception while creating MediaRecorder: ' + e);
-      return;
-    }
-
-    this.mediaRecorder.start(10); // collect 10ms of data
-    this.mediaRecorder.ondataavailable = event => {
-      if (event.data && event.data.size > 0) {
-        this.recordedBlobs.push(event.data);
-      }
-    };
-
-    this.startTime = new Date().getTime();
-    this.setState({
-      status: RECORDING,
-      time: 0
-    });
-
-    this.timer = setInterval(() => {
-      const time = new Date().getTime() - this.startTime;
-      if (time < 30000) {
-        this.setState({ time });
-      } else {
-        this.stopRecording();
-      }
-    }, 100);
+  removeVideo = () => {
+    this.setState({ url: null, data: null });
+    this.props.onChange();
   };
 
-  stopRecording = () => {
-    this.cancelRecording();
-
-    this.mediaRecorder.stop();
-    this.mediaRecorder = null;
-
-    const superBuffer = new Blob(this.recordedBlobs, { type: 'video/webm' });
-    const url = window.URL.createObjectURL(superBuffer);
-    this.props.onClose(url, superBuffer);
-  };
-
-  cancelRecording = () => {
-    this.setState({ status: NONE });
-    clearInterval(this.timer);
-  };
+  openPlayer = () => this.setState({ showPlayer: true });
+  closePlayer = () => this.setState({ showPlayer: false });
 
   render() {
-    const { status, stream, error, time } = this.state;
-
+    const { showInfo, buttonComponent: Button } = this.props;
+    const { url, showRecorder, showPlayer } = this.state;
     return (
-      <Wrapper title="Video Recorder" visible maskClosable={false} footer={null} onCancel={() => this.props.onClose()}>
-        <VideoContainer>
-          <video
-            preload="auto"
-            autoPlay
-            ref={ref => {
-              this.video = ref;
-            }}
-            muted
-          >
-            <track kind="captions" />
-          </video>
+      <div>
+        <Button onClick={this.openRecorder} />
 
-          {stream && (
-            <RecButton onClick={this.onClickButton}>
-              <span style={{ borderRadius: status === NONE ? '50%' : '18%' }} />
-            </RecButton>
+        {showInfo &&
+          url && (
+            <Info>
+              <a onClick={this.openPlayer}>New video</a>
+              {' save to upload and click '}
+              <a onClick={this.removeVideo}>here</a>
+              {' to cancel'}
+            </Info>
           )}
 
-          {status === READY && <ReadyLabel time={Math.floor(time / 1000)} />}
-
-          {status === RECORDING && (
-            <Fragment>
-              <RecLabel time={Math.floor(time / 1000)} />
-              <TimeBar>
-                <div />
-                <div style={{ width: `${100 - time / 300}%` }} />
-              </TimeBar>
-            </Fragment>
-          )}
-
-          {error && <ErrorLabel>{error}</ErrorLabel>}
-        </VideoContainer>
-      </Wrapper>
+        {showRecorder && <RecordModal onClose={this.closeRecorder} />}
+        {showPlayer && <VideoPlayer videoUrl={url} onClose={this.closePlayer} />}
+      </div>
     );
   }
 }
+
+export default VideoRecorder;

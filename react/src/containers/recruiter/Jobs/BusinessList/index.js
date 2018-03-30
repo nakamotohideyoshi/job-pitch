@@ -13,9 +13,7 @@ const { confirm } = Modal;
 
 class BusinessList extends React.Component {
   componentWillMount() {
-    if (this.props.refreshList) {
-      this.props.getBusinesses();
-    }
+    this.props.getBusinesses();
   }
 
   selectBusiness = ({ id }) => {

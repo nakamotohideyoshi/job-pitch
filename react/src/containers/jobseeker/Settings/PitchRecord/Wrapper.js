@@ -36,6 +36,10 @@ export const ButtonContent = styled.div`
   margin-top: 20px;
   text-align: center;
 
+  > div {
+    display: inline-block;
+  }
+
   button {
     width: 150px;
     margin: 0 10px;

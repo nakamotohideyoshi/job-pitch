@@ -1,9 +1,6 @@
 import React from 'react';
 import { Carousel } from 'antd';
-import FontAwesomeIcon from '@fortawesome/react-fontawesome';
-import faAngleLeft from '@fortawesome/fontawesome-free-solid/faAngleLeft';
-import faAngleRight from '@fortawesome/fontawesome-free-solid/faAngleRight';
-import { LinkButton } from 'components';
+import { LinkButton, Icons } from 'components';
 
 import Wrapper from './Wrapper';
 
@@ -12,9 +9,9 @@ class Intro extends React.Component {
 
   onChange = index => this.setState({ index });
 
-  nextArrow = props => <FontAwesomeIcon icon={faAngleRight} onClick={props.onClick} className={props.className} />;
+  nextArrow = props => <Icons.AngleRight onClick={props.onClick} className={props.className} />;
 
-  prevArrow = props => <FontAwesomeIcon icon={faAngleLeft} onClick={props.onClick} className={props.className} />;
+  prevArrow = props => <Icons.AngleLeft onClick={props.onClick} className={props.className} />;
 
   render() {
     const { index } = this.state;

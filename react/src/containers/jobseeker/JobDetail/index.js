@@ -2,15 +2,14 @@ import React from 'react';
 import Helmet from 'react-helmet';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { message, Modal, Button, Icon } from 'antd';
+import { message, Modal, Button } from 'antd';
 
-import { Loading, PageHeader, AlertMsg, JobDetail, VideoRecorder, VideoPlayer, PopupProgress, Icons } from 'components';
+import { Loading, PageHeader, AlertMsg, JobDetail } from 'components';
 import Container from './Wrapper';
 import NoPitch from '../NoPitch';
 
 import * as helper from 'utils/helper';
 import { getJobs, applyJob, removeJob } from 'redux/jobseeker/find';
-import { uploadJobPitch } from 'redux/jobseeker/pitch';
 
 const { confirm } = Modal;
 
@@ -47,100 +46,36 @@ class JSJobDetail extends React.Component {
 
   goFind = () => this.props.history.push('/jobseeker/find');
 
-  recordPitch = () => {
-    if (this.props.loadingItem === this.state.job.id) return;
-
-    if (navigator.userAgent.indexOf('iPhone') !== -1) {
-      confirm({
-        title: 'To record your video, you need to download the app',
-        okText: 'Sign out',
-        maskClosable: true,
-        onOk: () => {
-          window.open('https://itunes.apple.com/us/app/myjobpitch-job-matching/id1124296674?ls=1&mt=8', '_blank');
-        }
-      });
-    } else {
-      this.setState({ showRecorder: true });
-    }
-  };
-
-  cancelNewPitch = () =>
-    this.setState({
-      newPitchUrl: null,
-      newPitchData: null
-    });
-
-  playVideo = videoUrl => this.setState({ videoUrl });
-
-  hideDialog = (url, data) => {
-    this.setState({
-      newPitchUrl: url || this.state.newPitchUrl,
-      newPitchData: data || this.state.newPitchData,
-      showRecorder: false,
-      videoUrl: null
-    });
-  };
-
   applyJob = () => {
     const { jobseeker, applyJob, history } = this.props;
     const pitch = helper.getPitch(jobseeker);
-
-    // if (pitch) {
-    //   confirm({
-    //     title: 'Yes, I want to apply to this job',
-    //     okText: 'Apply',
-    //     cancelText: 'Cancel',
-    //     maskClosable: true,
-    //     onOk: () => {
-    //       applyJob({
-    //         data: { job: this.state.job.id, job_seeker: jobseeker.id },
-    //         success: () => {
-    //           // if (this.state.newPitchData) {
-    //           //   this.uploadJobPitch();
-    //           // } else {
-    //           this.goFind();
-    //           // }
-    //         },
-    //         fail: () => message.error('Apply failed!')
-    //       });
-    //     }
-    //   });
-    // } else {
-    //   confirm({
-    //     title: 'You need to record your pitch video to apply.',
-    //     okText: 'Record my pitch',
-    //     cancelText: 'Cancel',
-    //     maskClosable: true,
-    //     onOk: () => {
-    //       history.push('/jobseeker/settings/record');
-    //     }
-    //   });
-    // }
-
-    this.uploadJobPitch();
-  };
-
-  uploadJobPitch = () => {
-    this.props.uploadJobPitch({
-      job: this.state.job.id,
-      data: this.state.newPitchData,
-      onUploadProgress: (label, value) => {
-        const progress = label ? { label, value } : null;
-        this.setState({ progress });
-      },
-      success: () => {
-        this.setState({ progress: null });
-        message.success('Profile saved successfully!');
-
-        if (!this.props.jobseeker.profile) {
-          this.props.history.push('/jobseeker/settings/jobprofile');
+    if (pitch) {
+      confirm({
+        title: 'Yes, I want to apply to this job',
+        okText: 'Apply',
+        cancelText: 'Cancel',
+        maskClosable: true,
+        onOk: () => {
+          applyJob({
+            data: { job: this.state.job.id, job_seeker: jobseeker.id },
+            success: () => {
+              this.goFind();
+            },
+            fail: () => message.error('Apply failed!')
+          });
         }
-      },
-      fail: error => {
-        this.setState({ progress: null });
-        message.error(error);
-      }
-    });
+      });
+    } else {
+      confirm({
+        title: 'You need to record your pitch video to apply.',
+        okText: 'Record my pitch',
+        cancelText: 'Cancel',
+        maskClosable: true,
+        onOk: () => {
+          history.push('/jobseeker/settings/record');
+        }
+      });
+    }
   };
 
   removeJob = () => {
@@ -164,7 +99,7 @@ class JSJobDetail extends React.Component {
 
   render() {
     const { error, jobseeker, loadingItem } = this.props;
-    const { job, showRecorder, videoUrl, newPitchUrl, progress } = this.state;
+    const { job } = this.state;
 
     if (!helper.getPitch(jobseeker)) {
       return <NoPitch title="Find Me Jobs" {...this.props} />;
@@ -190,22 +125,6 @@ class JSJobDetail extends React.Component {
             <JobDetail className="job-detail" job={job} />
 
             <div className="buttons">
-              <Button onClick={this.recordPitch}>
-                <Icons.Video />
-                Record Pitch
-              </Button>
-
-              {newPitchUrl ? (
-                <div className="record-info">
-                  <span onClick={() => this.playVideo(newPitchUrl)}>
-                    <Icon type="paper-clip" />Pitch Video
-                  </span>
-                  <Icon type="close" onClick={this.cancelNewPitch} />
-                </div>
-              ) : (
-                <div />
-              )}
-
               <Button type="primary" loading={loadingItem === job.id} onClick={this.applyJob}>
                 Apply
               </Button>
@@ -214,10 +133,6 @@ class JSJobDetail extends React.Component {
             </div>
           </div>
         )}
-
-        {showRecorder && <VideoRecorder onClose={this.hideDialog} />}
-        {videoUrl && <VideoPlayer videoUrl={videoUrl} onClose={this.hideDialog} />}
-        {progress && <PopupProgress label={progress.label} value={progress.value} />}
       </Container>
     );
   }
@@ -234,7 +149,6 @@ export default connect(
   {
     getJobs,
     applyJob,
-    removeJob,
-    uploadJobPitch
+    removeJob
   }
 )(JSJobDetail);

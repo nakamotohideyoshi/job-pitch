@@ -1,12 +1,21 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { Breadcrumb, Form, Input, Select, Switch, Button, message } from 'antd';
-import { PageSubHeader, PopupProgress, ImageSelector, NoLabelField } from 'components';
+import { Breadcrumb, Form, Input, Select, Switch, Tooltip, Button, message } from 'antd';
+import {
+  PageSubHeader,
+  PopupProgress,
+  ImageSelector,
+  NoLabelField,
+  VideoRecorder,
+  VideoPlayer,
+  Icons
+} from 'components';
 import Wrapper from './Wrapper';
 
 import { getWorkplace } from 'redux/recruiter/workplaces';
 import { getJob, saveJob } from 'redux/recruiter/jobs';
+import { uploadJobPitch } from 'redux/jobseeker/pitch';
 import DATA from 'utils/data';
 import * as helper from 'utils/helper';
 
@@ -16,6 +25,9 @@ const { TextArea } = Input;
 
 class JobEdit extends React.Component {
   state = {
+    showPlayer: false,
+    newPitchUrl: null,
+    newPitchData: null,
     logo: {
       url: null,
       file: null,
@@ -42,6 +54,7 @@ class JobEdit extends React.Component {
     }
 
     const jobId = parseInt(match.params.jobId, 10);
+
     getJob({
       id: jobId,
       success: job => {
@@ -104,7 +117,11 @@ class JobEdit extends React.Component {
           this.setState({ uploading });
         },
         onSuccess: () => {
-          message.success('Job saved successfully!');
+          if (this.state.newPitchData) {
+            this.uploadPitch();
+          } else {
+            message.success('Job saved successfully!');
+          }
         },
         onFail: error => {
           message.error(error);
@@ -113,13 +130,49 @@ class JobEdit extends React.Component {
     });
   };
 
+  uploadPitch = () => {
+    this.props.uploadJobPitch({
+      data: this.state.newPitchData,
+      onUploadProgress: (label, value) => {
+        const progress = label ? { label, value } : null;
+        this.setState({ progress });
+      },
+      success: () => {
+        this.setState({ progress: null });
+        message.success('Profile saved successfully!');
+
+        if (!this.props.jobseeker.profile) {
+          this.props.history.push('/jobseeker/settings/jobprofile');
+        }
+      },
+      fail: error => {
+        this.setState({ progress: null });
+        message.error(error);
+      }
+    });
+  };
+
+  playPitch = showPlayer => this.setState({ showPlayer });
+
+  changePitch = (newPitchUrl, newPitchData) => {
+    this.setState({ newPitchUrl, newPitchData });
+  };
+
+  recordButton = props => (
+    <Button {...props}>
+      <Icons.Video /> Record New
+    </Button>
+  );
+
   render() {
     const { workplace, saving, form } = this.props;
     const { job } = this.state;
     const workplace1 = workplace || (job || {}).location_data || {};
     const business = workplace1.business_data || {};
     const { getFieldDecorator } = form;
-    const { logo, uploading } = this.state;
+    const { logo, uploading, showPlayer } = this.state;
+
+    const pitch = {};
 
     return (
       <Wrapper>
@@ -210,6 +263,26 @@ class JobEdit extends React.Component {
             })(<TextArea autosize={{ minRows: 3, maxRows: 20 }} />)}
           </Item>
 
+          <Item
+            label={
+              <span>
+                Video pitch&nbsp;
+                <Tooltip title="Tips on how to record your pitch will be placed here.">
+                  <Icons.QuestionCircle />
+                </Tooltip>
+              </span>
+            }
+          >
+            <div>
+              <VideoRecorder showInfo buttonComponent={this.recordButton} onChange={this.changePitch} />
+              {pitch.video && (
+                <Button onClick={() => this.playPitch(true)} className="btn-play">
+                  <Icons.Play />Play Current
+                </Button>
+              )}
+            </div>
+          </Item>
+
           <Item label="Logo">
             <ImageSelector url={logo.url} removable={logo.exist} onChange={this.setLogo} />
           </Item>
@@ -222,6 +295,7 @@ class JobEdit extends React.Component {
           </NoLabelField>
         </Form>
 
+        {showPlayer && <VideoPlayer videoUrl={pitch.video} onClose={() => this.playPitch()} />}
         {uploading && <PopupProgress label="Logo uploading..." value={uploading} />}
       </Wrapper>
     );
@@ -236,6 +310,7 @@ export default connect(
   {
     getWorkplace,
     getJob,
-    saveJob
+    saveJob,
+    uploadJobPitch
   }
 )(Form.create()(JobEdit));

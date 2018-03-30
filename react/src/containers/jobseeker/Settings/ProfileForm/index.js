@@ -1,9 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Form, Input, Button, Checkbox, Modal, Switch, Select, InputNumber, Tooltip, Upload, message } from 'antd';
-import FontAwesomeIcon from '@fortawesome/react-fontawesome';
-import faQuestionCircle from '@fortawesome/fontawesome-free-regular/faQuestionCircle';
-import faUpload from '@fortawesome/fontawesome-free-solid/faUpload';
+import { Form, Input, Button, Checkbox, Switch, Select, InputNumber, Tooltip, Upload, message } from 'antd';
 
 import * as helper from 'utils/helper';
 import DATA from 'utils/data';
@@ -21,7 +18,6 @@ import imgIntro3 from 'assets/intro3.png';
 const { Item } = Form;
 const { TextArea } = Input;
 const { Option } = Select;
-const { confirm } = Modal;
 
 const INTRO_DATA = [
   {
@@ -50,9 +46,9 @@ class ProfileForm extends React.Component {
   state = {
     loading: false,
     dontShowIntro: false,
-    showRecorder: false,
-    videoUrl: null,
+    showPlayer: false,
     newPitchUrl: null,
+    newPitchData: null,
     progress: null
   };
 
@@ -147,36 +143,10 @@ class ProfileForm extends React.Component {
 
   viewCV = () => window.open(this.props.jobseeker.cv);
 
-  recordPitch = () => {
-    if (navigator.userAgent.indexOf('iPhone') !== -1) {
-      confirm({
-        title: 'To record your video, you need to download the app',
-        okText: 'Sign out',
-        maskClosable: true,
-        onOk: () => {
-          window.open('https://itunes.apple.com/us/app/myjobpitch-job-matching/id1124296674?ls=1&mt=8', '_blank');
-        }
-      });
-    } else {
-      this.setState({ showRecorder: true });
-    }
-  };
+  playPitch = showPlayer => this.setState({ showPlayer });
 
-  cancelNewPitch = () =>
-    this.setState({
-      newPitchUrl: null,
-      newPitchData: null
-    });
-
-  playVideo = videoUrl => this.setState({ videoUrl });
-
-  hideDialog = (url, data) => {
-    this.setState({
-      newPitchUrl: url || this.state.newPitchUrl,
-      newPitchData: data || this.state.newPitchData,
-      showRecorder: false,
-      videoUrl: null
-    });
+  changePitch = (newPitchUrl, newPitchData) => {
+    this.setState({ newPitchUrl, newPitchData });
   };
 
   closeIntro = () => {
@@ -184,8 +154,14 @@ class ProfileForm extends React.Component {
     this.setState({ dontShowIntro: true });
   };
 
+  recordButton = props => (
+    <Button {...props}>
+      <Icons.Video /> Record New
+    </Button>
+  );
+
   render() {
-    const { dontShowIntro, loading, showRecorder, videoUrl, newPitchUrl, progress } = this.state;
+    const { dontShowIntro, loading, showPlayer, progress } = this.state;
     const { getFieldDecorator } = this.props.form;
     const jobseeker = this.props.jobseeker || {};
     const pitch = helper.getPitch(jobseeker) || {};
@@ -297,7 +273,7 @@ class ProfileForm extends React.Component {
               National insurance number&nbsp;
               <Tooltip title="Supplying your national insurance number makes it easier for employers to recruit you.
                           Your National Insurance number will not be shared with employers.">
-                <FontAwesomeIcon icon={faQuestionCircle} />
+                <Icons.QuestionCircle />
               </Tooltip>
             </span>
           }
@@ -311,7 +287,7 @@ class ProfileForm extends React.Component {
               CV summary&nbsp;
               <Tooltip title="CV summary is what the recruiter first see,
                       write if you have previous relevant experience where and for how long.">
-                <FontAwesomeIcon icon={faQuestionCircle} />
+                <Icons.QuestionCircle />
               </Tooltip>
             </span>
           }
@@ -339,7 +315,7 @@ class ProfileForm extends React.Component {
             })(
               <Upload.Dragger beforeUpload={() => false}>
                 <p className="ant-upload-text">
-                  <FontAwesomeIcon icon={faUpload} /> Click or drag file to this area to upload CV
+                  <Icons.Upload /> Click or drag file to this area to upload CV
                 </p>
                 <p className="ant-upload-hint">
                   Upload your CV using your favourite cloud service, or take a photo if you have it printed out.
@@ -354,34 +330,27 @@ class ProfileForm extends React.Component {
             <span>
               Video pitch&nbsp;
               <Tooltip title="Tips on how to record your pitch will be placed here.">
-                <FontAwesomeIcon icon={faQuestionCircle} />
+                <Icons.QuestionCircle />
               </Tooltip>
             </span>
           }
         >
-          <Button style={{ marginRight: '12px' }} onClick={this.recordPitch}>
-            <Icons.Video /> Record New
-          </Button>
-          {pitch.video && (
-            <Button onClick={() => this.playVideo(pitch.video)}>
-              <Icons.Play />Play Current
-            </Button>
-          )}
-
-          {newPitchUrl && (
-            <div className="record-info">
-              <a onClick={() => this.playVideo(newPitchUrl)}>New video</a>
-              {' save to upload and click '}
-              <a onClick={this.cancelNewPitch}>here</a>
-              {' to cancel'}
-            </div>
-          )}
+          <div>
+            <VideoRecorder showInfo buttonComponent={this.recordButton} onChange={this.changePitch} />
+            {pitch.video && (
+              <Button onClick={() => this.playPitch(true)} className="btn-play">
+                <Icons.Play />Play Current
+              </Button>
+            )}
+          </div>
         </Item>
 
         <div className="ant-form-item">
           <div className="ant-form-item-label" />
           <div className="ant-form-item-control-wrapper">
-            {getFieldDecorator('has_references', { valuePropName: 'checked' })(<Checkbox>Remember me</Checkbox>)}
+            {getFieldDecorator('has_references', { valuePropName: 'checked' })(
+              <Checkbox>References Available</Checkbox>
+            )}
 
             {getFieldDecorator('truth_confirmation', { valuePropName: 'checked' })(
               <Checkbox>
@@ -403,8 +372,7 @@ class ProfileForm extends React.Component {
         </div>
 
         {!jobseeker.id && !dontShowIntro && <Intro data={INTRO_DATA} onClose={this.closeIntro} />}
-        {showRecorder && <VideoRecorder onClose={this.hideDialog} />}
-        {videoUrl && <VideoPlayer videoUrl={videoUrl} onClose={this.hideDialog} />}
+        {showPlayer && <VideoPlayer videoUrl={pitch.video} onClose={() => this.playPitch()} />}
         {progress && <PopupProgress label={progress.label} value={progress.value} />}
       </FormWrapper>
     );

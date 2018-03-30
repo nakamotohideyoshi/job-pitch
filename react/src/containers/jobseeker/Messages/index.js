@@ -161,7 +161,7 @@ class JSMessages extends React.Component {
           <div className="thread-container">
             <div className="thread-header">
               <a className="toggle" onClick={this.onToggleSidebar}>
-                <FontAwesomeIcon icon={faBars} size="lg" />
+                {/* <FontAwesomeIcon icon={faBars} size="lg" /> */}
               </a>
               {/* {selectedApp && this.renderThreadHeader()} */}
             </div>

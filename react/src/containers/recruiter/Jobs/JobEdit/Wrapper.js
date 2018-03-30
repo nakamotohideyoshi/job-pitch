@@ -2,6 +2,16 @@ import styled from 'styled-components';
 import media from 'utils/mediaquery';
 
 export default styled.div`
+  .fa-question-circle {
+    color: #ff9300;
+  }
+
+  .btn-play {
+    position: absolute;
+    top: 4px;
+    left: 160px;
+  }
+
   ${media.mobile`
     .status-field {
       .ant-form-item-label {

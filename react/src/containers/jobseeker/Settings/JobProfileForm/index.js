@@ -1,10 +1,8 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Form, Input, Button, Select, Tooltip, message } from 'antd';
-import FontAwesomeIcon from '@fortawesome/react-fontawesome';
-import faQuestionCircle from '@fortawesome/fontawesome-free-regular/faQuestionCircle';
 
-import { GoogleMap } from 'components';
+import { GoogleMap, Icons } from 'components';
 
 import * as helper from 'utils/helper';
 import DATA from 'utils/data';
@@ -127,7 +125,7 @@ class JobProfileForm extends React.Component {
             <span>
               Match area&nbsp;
               <Tooltip title="Search for a place name, street, postcode, etc. or click the map to select location.">
-                <FontAwesomeIcon icon={faQuestionCircle} />
+                <Icons.QuestionCircle />
               </Tooltip>
             </span>
           }

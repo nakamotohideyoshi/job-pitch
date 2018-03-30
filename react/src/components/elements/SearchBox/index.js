@@ -1,9 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { Input } from 'antd';
-import FontAwesomeIcon from '@fortawesome/react-fontawesome';
-import faSearch from '@fortawesome/fontawesome-free-solid/faSearch';
-import faTimesCircle from '@fortawesome/fontawesome-free-solid/faTimesCircle';
+import { Icons } from 'components';
 
 const Wrapper = styled(Input)`
   svg {
@@ -43,8 +41,8 @@ class SearchBox extends React.PureComponent {
         value={text}
         style={{ width: this.props.width || '100%' }}
         innerRef={node => (this.refInput = node)}
-        prefix={<FontAwesomeIcon icon={faSearch} />}
-        suffix={text ? <FontAwesomeIcon icon={faTimesCircle} onClick={this.clearText} /> : null}
+        prefix={<Icons.Search />}
+        suffix={text ? <Icons.TimeCircle onClick={this.clearText} /> : null}
         onChange={e => this.setText(e.target.value)}
       />
     );

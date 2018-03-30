@@ -3,11 +3,9 @@ import { connect } from 'react-redux';
 import { withRouter, Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { Menu, Modal } from 'antd';
-import FontAwesomeIcon from '@fortawesome/react-fontawesome';
-import faCog from '@fortawesome/fontawesome-free-solid/faCog';
 import faUserCircle from '@fortawesome/fontawesome-free-solid/faUserCircle';
-import faSignOutAlt from '@fortawesome/fontawesome-free-solid/faSignOutAlt';
 
+import { Icons } from 'components';
 import { logout } from 'redux/auth';
 import PopoverMenu from '../PopoverMenu';
 
@@ -48,12 +46,12 @@ class UserMenu extends React.Component {
       <MenuWrapper mode="inline" selectedKeys={[selectedKey]} onClick={this.handleClick}>
         <Item key="settings">
           <Link to={`/${status}/settings`}>
-            <FontAwesomeIcon icon={faCog} />
+            <Icons.Settings />
             Settings
           </Link>
         </Item>
         <Item key="signout">
-          <FontAwesomeIcon icon={faSignOutAlt} />
+          <Icons.SignOut />
           Sign out
         </Item>
       </MenuWrapper>

@@ -113,8 +113,13 @@ class JobEdit extends React.Component {
         },
         logo,
         onUploading: progress => {
-          const uploading = progress ? Math.floor(progress.loaded / progress.total * 100) : null;
-          this.setState({ uploading });
+          const value = progress ? Math.floor(progress.loaded / progress.total * 100) : null;
+          this.setState({
+            uploading: {
+              label: 'Logo uploading...',
+              value
+            }
+          });
         },
         onSuccess: () => {
           if (this.state.newPitchData) {
@@ -136,11 +141,11 @@ class JobEdit extends React.Component {
       job: job.id,
       data: newPitchData,
       onUploadProgress: (label, value) => {
-        const progress = label ? { label, value } : null;
-        this.setState({ progress });
+        const uploading = label ? { label, value } : null;
+        this.setState({ uploading });
       },
       success: () => {
-        this.setState({ progress: null });
+        this.setState({ uploading: null });
         message.success('Profile saved successfully!');
 
         if (!this.props.jobseeker.profile) {
@@ -148,7 +153,7 @@ class JobEdit extends React.Component {
         }
       },
       fail: error => {
-        this.setState({ progress: null });
+        this.setState({ uploading: null });
         message.error(error);
       }
     });
@@ -298,7 +303,7 @@ class JobEdit extends React.Component {
         </Form>
 
         {showPlayer && <VideoPlayer videoUrl={pitch.video} onClose={() => this.playPitch()} />}
-        {uploading && <PopupProgress label="Logo uploading..." value={uploading} />}
+        {uploading && <PopupProgress label={uploading.label} value={uploading.value} />}
       </Wrapper>
     );
   }

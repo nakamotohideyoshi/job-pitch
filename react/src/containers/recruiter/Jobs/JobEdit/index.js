@@ -131,8 +131,10 @@ class JobEdit extends React.Component {
   };
 
   uploadPitch = () => {
+    const { job, newPitchData } = this.state;
     this.props.uploadJobPitch({
-      data: this.state.newPitchData,
+      job: job.id,
+      data: newPitchData,
       onUploadProgress: (label, value) => {
         const progress = label ? { label, value } : null;
         this.setState({ progress });

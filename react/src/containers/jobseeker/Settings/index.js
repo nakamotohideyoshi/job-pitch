@@ -4,7 +4,8 @@ import { connect } from 'react-redux';
 import { Switch, Route, Redirect, Link } from 'react-router-dom';
 import { Menu } from 'antd';
 
-import { Container, PageHeader, PasswordForm } from 'components';
+import { Container, PageHeader } from 'components';
+import PasswordForm from 'containers/auth/Password';
 import ProfileForm from './ProfileForm';
 import PitchRecord from './PitchRecord';
 import JobProfileForm from './JobProfileForm';

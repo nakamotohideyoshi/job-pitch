@@ -20,6 +20,12 @@ export const RC_CONNECT_APP = 'RC_CONNECT_APP';
 export const RC_UPDATE_APP = 'RC_UPDATE_APP';
 export const RC_REMOVE_APP = 'RC_REMOVE_APP';
 
+export const RC_GET_APPS1 = 'RC_GET_APPS1';
+export const RC_CONNECT_APP1 = 'RC_CONNECT_APP1';
+export const RC_UPDATE_APP1 = 'RC_UPDATE_APP1';
+export const RC_REMOVE_APP1 = 'RC_REMOVE_APP1';
+export const RC_SEND_MESSAGE = 'RC_SEND_MESSAGE';
+
 export const RC_BUSINESSES_UPDATE = 'RC_BUSINESSES_UPDATE';
 export const RC_GET_BUSINESSES = 'RC_GET_BUSINESSES';
 export const RC_SELECT_BUSINESS = 'RC_SELECT_BUSINESS';
@@ -34,10 +40,13 @@ export const RC_SAVE_WORKPLACE = 'RC_SAVE_WORKPLACE';
 export const RC_REMOVE_WORKPLACE = 'RC_REMOVE_WORKPLACE';
 
 export const RC_JOBS_UPDATE = 'RC_JOBS_UPDATE';
+export const RC_GET_JOBS1 = 'RC_GET_JOBS1';
 export const RC_GET_JOBS = 'RC_GET_JOBS';
 export const RC_GET_JOB = 'RC_GET_JOB';
 export const RC_SAVE_JOB = 'RC_SAVE_JOB';
 export const RC_REMOVE_JOB = 'RC_REMOVE_JOB';
+
+export const RC_MSGS_GET_DATA = 'RC_MSGS_GET_DATA';
 
 // jobseeker
 

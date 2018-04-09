@@ -3,6 +3,14 @@ import * as C from 'redux/constants';
 import * as helper from 'utils/helper';
 import { getRequest, postRequest, putRequest, deleteRequest, requestSuccess } from 'utils/request';
 
+const getJobs1 = getRequest({
+  url: ({ payload }) => {
+    const { location } = payload || {};
+    const query = location ? `?location=${location}` : '';
+    return `/api/user-jobs/${query}`;
+  }
+});
+
 const getJobs = getRequest({
   url: ({ payload }) => `/api/user-jobs/?location=${payload.id}`
 });
@@ -71,6 +79,7 @@ function* saveJob(action) {
 }
 
 export default function* sagas() {
+  yield takeLatest(C.RC_GET_JOBS1, getJobs1);
   yield takeLatest(C.RC_GET_JOBS, getJobs);
   yield takeLatest(C.RC_REMOVE_JOB, removeJob);
   yield takeLatest(C.RC_GET_JOB, getJob);

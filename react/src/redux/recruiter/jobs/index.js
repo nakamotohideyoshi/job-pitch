@@ -3,12 +3,14 @@ import { createAction, handleActions } from 'redux-actions';
 import * as C from 'redux/constants';
 import * as helper from 'utils/helper';
 import { requestPending, requestSuccess, requestFail } from 'utils/request';
+import _ from 'lodash';
 
 // ------------------------------------
 // Actions
 // ------------------------------------
 
 export const updateStatus = createAction(C.RC_JOBS_UPDATE);
+export const getJobs1 = createAction(C.RC_GET_JOBS1);
 export const getJobs = createAction(C.RC_GET_JOBS);
 export const removeJob = createAction(C.RC_REMOVE_JOB);
 export const getJob = createAction(C.RC_GET_JOB);
@@ -19,6 +21,10 @@ export const saveJob = createAction(C.RC_SAVE_JOB);
 // ------------------------------------
 
 const initialState = {
+  jobs1: null,
+  loading1: false,
+  error1: null,
+
   jobs: [],
   loading: false,
   error: null,
@@ -33,6 +39,27 @@ export default handleActions(
     [C.RC_JOBS_UPDATE]: (state, { payload }) => ({
       ...state,
       ...payload
+    }),
+
+    // ---- get jobs ----
+
+    [requestPending(C.RC_GET_JOBS1)]: state => ({
+      ...state,
+      jobs1: null,
+      loading1: true,
+      error1: null
+    }),
+
+    [requestSuccess(C.RC_GET_JOBS1)]: (state, { payload }) => ({
+      ...state,
+      jobs1: payload,
+      loading1: false
+    }),
+
+    [requestFail(C.RC_GET_JOBS1)]: (state, { payload }) => ({
+      ...state,
+      loading1: false,
+      error1: payload
     }),
 
     // ---- get jobs ----

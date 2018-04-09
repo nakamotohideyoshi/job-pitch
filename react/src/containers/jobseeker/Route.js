@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Route, Redirect } from 'react-router-dom';
 
-import { Main } from 'components';
+import Layout from 'containers/Layout';
 import MainMenu from './MainMenu';
 
 const JSRoute = ({ component, jobseeker, profile, ...rest }) => (
@@ -15,7 +15,7 @@ const JSRoute = ({ component, jobseeker, profile, ...rest }) => (
         return <Redirect to={`/jobseeker/settings/${!jobseeker ? 'profile' : 'jobprofile'}`} />;
       }
 
-      return <Main menu={MainMenu} component={component} {...props} />;
+      return <Layout menu={MainMenu} component={component} {...props} />;
     }}
   />
 );

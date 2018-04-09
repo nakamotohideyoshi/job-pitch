@@ -62,10 +62,10 @@ const request = ({ type, method, url, headers, payloadOnSuccess, payloadOnFail }
 
       console.log('error:', errRes.data);
 
-      // if (errRes.status === 403) {
-      //   localStorage.removeItem('token');
-      //   yield put({ type: LOGOUT });
-      // }
+      if (errRes.status === 403 && errRes.data.detail === 'Invalid token.') {
+        localStorage.removeItem('token');
+        yield put({ type: LOGOUT });
+      }
 
       if (requestType) {
         yield put({

@@ -41,7 +41,7 @@ class JobseekerDetail extends React.Component {
             description={
               <Fragment>
                 <div>
-                  {!age && (
+                  {age && (
                     <span>
                       <label>age:</label> {age}
                     </span>

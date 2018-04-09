@@ -5,6 +5,24 @@ injectGlobal`
   html {
     font-size: 14px;
   }
+
+  .container {
+    width: 100%;
+    @media (max-width: 767px) {
+      max-width: 100%;
+    }
+    @media (min-width: 768px) {
+      max-width: 720px;
+    }
+    @media (min-width: 992px) {
+      max-width: 960px;
+    }
+
+    padding-right: 15px;
+    padding-left: 15px;
+    margin-right: auto;
+    margin-left: auto;
+  }
  
   .shadow1 {
     box-shadow: 0 3px 12px rgba(0, 0, 0, 0.25);
@@ -31,6 +49,13 @@ injectGlobal`
     i, svg {
       margin-right: 8px;
     }
+  }
+
+  .single-line {
+    display: block;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
   }
 
   .ant-btn {

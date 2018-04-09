@@ -38,7 +38,8 @@ function* connectJobseeker(action) {
 }
 
 const getApplications = getRequest({
-  url: ({ payload: { jobId, status, shortlist } }) => {
+  url: ({ payload }) => {
+    const { jobId, status, shortlist } = payload || {};
     const params = [];
     if (jobId) {
       params.push(`job=${jobId}`);
@@ -83,6 +84,7 @@ export default function* sagas() {
   yield takeLatest(C.RC_GET_JOBSEEKERS, getJobseekers);
   yield takeLatest(C.RC_CONNECT_JOBSEEKER, connectJobseeker);
 
+  // yield takeLatest(C.RC_GET_APPS1, getApplications);
   yield takeLatest(C.RC_GET_APPS, getApplications);
   yield takeLatest(C.RC_CONNECT_APP, connectApplication);
   yield takeLatest(C.RC_UPDATE_APP, updateApplication);

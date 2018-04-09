@@ -3,6 +3,7 @@ import { createAction, handleActions } from 'redux-actions';
 import * as C from 'redux/constants';
 import * as helper from 'utils/helper';
 import { requestPending, requestSuccess, requestFail } from 'utils/request';
+import _ from 'lodash';
 
 // ------------------------------------
 // Actions
@@ -36,6 +37,10 @@ const initialState = {
   jobseekers: [],
   loadingJobseekers: true,
   errorJobseekers: null,
+
+  applications1: null,
+  loadingApplications1: true,
+  errorApplications1: null,
 
   applications: [],
   loadingApplications: true,
@@ -118,6 +123,25 @@ export default handleActions(
 
     // ---- get applications ----
 
+    // [requestPending(C.RC_GET_APPS1)]: state => ({
+    //   ...state,
+    //   applications1: null,
+    //   loadingApplications1: true,
+    //   errorApplications1: null
+    // }),
+
+    // [requestSuccess(C.RC_GET_APPS1)]: (state, { payload }) => ({
+    //   ...state,
+    //   applications1: payload,
+    //   loadingApplications1: false
+    // }),
+
+    // [requestFail(C.RC_GET_APPS1)]: (state, { payload }) => ({
+    //   ...state,
+    //   loadingApplications1: false,
+    //   errorApplications1: payload
+    // }),
+
     [requestPending(C.RC_GET_APPS)]: (state, { payload: { clear } }) => ({
       ...state,
       applications: clear ? [] : state.applications,
@@ -180,9 +204,11 @@ export default handleActions(
       }
 
       const key = pathname.split('/')[2];
+      const reset = pathname.indexOf('/recruiter/messages') !== 0;
       return {
         ...state,
-        jobs: key === 'applications' ? state.jobs : []
+        jobs: key === 'applications' ? state.jobs : [],
+        jobs1: reset ? null : state.jobs1
       };
     }
   },

@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Route, Redirect } from 'react-router-dom';
 
-import { Main } from 'components';
+import Layout from 'containers/Layout';
 import MainMenu from './MainMenu';
 
 const RCRoute = ({ user, component, ...rest }) => (
@@ -15,7 +15,7 @@ const RCRoute = ({ user, component, ...rest }) => (
         return <Redirect to="/recruiter/jobs" />;
       }
 
-      return <Main menu={MainMenu} component={component} {...props} />;
+      return <Layout menu={MainMenu} component={component} {...props} />;
     }}
   />
 );

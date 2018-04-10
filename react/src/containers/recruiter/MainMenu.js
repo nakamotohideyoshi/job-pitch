@@ -15,6 +15,7 @@ const MenuWrapper = styled(Menu)`
 
   .ant-menu-item .ant-badge {
     color: inherit;
+    margin-left: 5px;
     .ant-badge-count {
       margin: 0 0 3px 3px;
       box-shadow: none;

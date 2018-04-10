@@ -6,7 +6,7 @@ import DATA from 'utils/data';
 import * as helper from 'utils/helper';
 
 import { AlertMsg, SearchBox, ListEx } from 'components';
-import StyledSider from './styled';
+import Wrapper from './styled';
 
 class Sidebar extends React.PureComponent {
   state = {
@@ -71,7 +71,7 @@ class Sidebar extends React.PureComponent {
     const { applications } = this.props;
 
     return (
-      <StyledSider width={300}>
+      <Wrapper className="sidebar">
         <div className="filters">
           <SearchBox onChange={this.setFilterText} />
         </div>
@@ -89,7 +89,7 @@ class Sidebar extends React.PureComponent {
             filterOption={this.filterOption}
           />
         </div>
-      </StyledSider>
+      </Wrapper>
     );
   }
 }

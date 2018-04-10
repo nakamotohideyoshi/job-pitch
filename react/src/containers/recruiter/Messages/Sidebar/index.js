@@ -6,7 +6,7 @@ import DATA from 'utils/data';
 import * as helper from 'utils/helper';
 
 import { AlertMsg, SelectEx, SearchBox, ListEx } from 'components';
-import StyledSider from './styled';
+import Wrapper from './styled';
 
 const Option = Select.Option;
 
@@ -73,7 +73,7 @@ class Sidebar extends React.PureComponent {
     const { jobs, applications } = this.props;
 
     return (
-      <StyledSider width={300}>
+      <Wrapper className="sidebar">
         <div className="filters">
           <SelectEx
             allowClear
@@ -107,7 +107,7 @@ class Sidebar extends React.PureComponent {
             filterOption={this.filterOption}
           />
         </div>
-      </StyledSider>
+      </Wrapper>
     );
   }
 }

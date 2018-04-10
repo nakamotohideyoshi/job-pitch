@@ -3,14 +3,14 @@ import { connect } from 'react-redux';
 import Truncate from 'react-truncate';
 import { List, Modal } from 'antd';
 
-import { AlertMsg, Loading, Logo, Icons } from 'components';
-import Header from '../Header';
-import Detail from '../MyConnections/Detail';
-import Container from './Wrapper';
-
 import { getApplications, removeApplication } from 'redux/recruiter/apps';
 import DATA from 'utils/data';
 import * as helper from 'utils/helper';
+
+import { AlertMsg, Loading, Logo, Icons } from 'components';
+import Header from '../Header';
+import Detail from '../MyConnections/Detail';
+import Wrapper from './styled';
 
 const { confirm } = Modal;
 
@@ -171,10 +171,10 @@ class MyApplications extends React.Component {
     }
 
     return (
-      <Container>
+      <Wrapper className="container">
         <Header />
         <div className="content">{this.renderApplications()}</div>
-      </Container>
+      </Wrapper>
     );
   }
 }

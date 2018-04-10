@@ -6,7 +6,7 @@ import { Menu } from 'antd';
 
 const Item = Menu.Item;
 
-const MenuWrapper = styled(Menu)`
+const StyledMenu = styled(Menu)`
   &.ant-menu-inline {
     width: 200px;
     margin: 0 -16px;
@@ -27,7 +27,7 @@ class MainMenu extends React.Component {
     if (!profile) return null;
 
     return (
-      <MenuWrapper theme={theme} mode={mode} selectedKeys={[selectedKey]} onClick={this.handleClick}>
+      <StyledMenu theme={theme} mode={mode} selectedKeys={[selectedKey]} onClick={this.handleClick}>
         <Item key="find">
           <Link to="/jobseeker/find">Find Job</Link>
         </Item>
@@ -37,7 +37,7 @@ class MainMenu extends React.Component {
         <Item key="messages">
           <Link to="/jobseeker/messages">Messages</Link>
         </Item>
-      </MenuWrapper>
+      </StyledMenu>
     );
   }
 }

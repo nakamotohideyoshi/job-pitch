@@ -1,7 +1,7 @@
 import React, { Fragment } from 'react';
-import { Divider, List, Button } from 'antd';
+import { Divider, List, Avatar, Button } from 'antd';
 
-import { Icons, Logo, VideoPlayer } from 'components';
+import { Icons, VideoPlayer } from 'components';
 import Wrapper from './Wrapper';
 
 import * as helper from 'utils/helper';
@@ -36,7 +36,7 @@ class JobseekerDetail extends React.Component {
       <Wrapper className={className}>
         <List.Item>
           <List.Item.Meta
-            avatar={<Logo src={image} size="100px" />}
+            avatar={<Avatar src={image} />}
             title={fullName}
             description={
               <Fragment>

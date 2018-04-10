@@ -1,12 +1,23 @@
-import { takeLatest } from 'redux-saga/effects';
+import { LOCATION_CHANGE } from 'react-router-redux';
+import { takeLatest, race, call, take } from 'redux-saga/effects';
 
 import * as C from 'redux/constants';
-import { getRequest, postRequest } from 'utils/request';
+import { getRequest, postRequest } from 'utils/request1';
 
-const getJobs = getRequest({ type: C.JS_GET_JOBS, url: `/api/jobs/` });
-const applyJob = postRequest({ type: C.JS_APPLY_JOB, url: `/api/applications/` });
+function* findJobs(action) {
+  yield race({
+    result: call(getRequest({ url: '/api/jobs/' }), action),
+    cancel: take(LOCATION_CHANGE)
+  });
+}
+
+const applyJob = postRequest({
+  url: `/api/applications/`,
+  success: (_, { payload }) => payload,
+  fail: (_, { payload }) => payload
+});
 
 export default function* sagas() {
-  yield takeLatest(C.JS_GET_JOBS, getJobs);
+  yield takeLatest(C.JS_FIND_JOBS, findJobs);
   yield takeLatest(C.JS_APPLY_JOB, applyJob);
 }

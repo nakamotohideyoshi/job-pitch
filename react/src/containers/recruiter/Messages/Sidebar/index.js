@@ -1,11 +1,11 @@
 import React, { Fragment } from 'react';
 import { withRouter } from 'react-router-dom';
-import { Select, List } from 'antd';
+import { Select, List, Avatar } from 'antd';
 
 import DATA from 'utils/data';
 import * as helper from 'utils/helper';
 
-import { AlertMsg, Logo, SelectEx, SearchBox, ListEx } from 'components';
+import { AlertMsg, SelectEx, SearchBox, ListEx } from 'components';
 import StyledSider from './styled';
 
 const Option = Select.Option;
@@ -41,18 +41,18 @@ class Sidebar extends React.PureComponent {
   renderApp = ({ id, messages, status, job_seeker }) => {
     const name = helper.getFullJSName(job_seeker);
     const image = helper.getPitch(job_seeker).thumbnail;
-    const lastMessage = messages[messages.length - 1];
+    const lastMessage = messages.filter(({ created }) => created).pop();
     const date = new Date(lastMessage.created);
     const strDate = `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear() - 2000}`;
     const userRole = helper.getNameByID('roles', lastMessage.from_role);
-    const comment = `${userRole === 'JOB_SEEKER' ? 'You: ' : ''}${lastMessage.content}`;
+    const comment = `${userRole === 'RECRUITER' ? 'You: ' : ''}${lastMessage.content}`;
     const deleted = status === DATA.APP.DELETED ? 'deleted' : '';
     const selected = id === this.props.selectedId ? 'selected' : '';
 
     return (
       <List.Item key={id} className={`${deleted} ${selected}`} onClick={() => this.selectApp(id)}>
         <List.Item.Meta
-          avatar={<Logo src={image} size="48px" />}
+          avatar={<Avatar src={image} size="large" />}
           title={
             <Fragment>
               <span className="title single-line">{name}</span>
@@ -84,7 +84,7 @@ class Sidebar extends React.PureComponent {
             {jobs.map(job => {
               return (
                 <Option key={job.id} value={job.id}>
-                  <Logo src={helper.getJobLogo(job)} size="22px" />
+                  <Avatar src={helper.getJobLogo(job)} />
                   {job.title}
                 </Option>
               );

@@ -12,7 +12,7 @@ export default styled(Layout.Sider)`
 
     .filters {
       width: 100%;
-      padding: 20px 15px;
+      padding: 23px 15px;
 
       .ant-select {
         width: 100%;
@@ -36,6 +36,11 @@ export default styled(Layout.Sider)`
 
             .ant-list-item-meta-avatar {
               margin-right: 8px;
+              .ant-avatar {
+                width: 48px;
+                height: 48px;
+                border-radius: 50%;
+              }
             }
 
             .ant-list-item-meta-content {

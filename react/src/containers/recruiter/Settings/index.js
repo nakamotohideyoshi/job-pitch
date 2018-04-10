@@ -4,10 +4,10 @@ import { connect } from 'react-redux';
 import { Switch, Route, Redirect, Link } from 'react-router-dom';
 import { Menu } from 'antd';
 
-import { Container, PageHeader } from 'components';
+import { PageHeader } from 'components';
 import PasswordForm from 'containers/auth/Password';
 import Credits from './Credits';
-import { TabMenu, Content } from './Wrapper';
+import { TabMenu, Content } from './styled';
 
 const RCSettings = ({ location, user: { businesses } }) => {
   const selectedKey = location.pathname.split('/')[3];
@@ -17,7 +17,7 @@ const RCSettings = ({ location, user: { businesses } }) => {
   }
 
   return (
-    <Container>
+    <div className="container">
       <Helmet title="Settings" />
 
       <PageHeader>
@@ -43,7 +43,7 @@ const RCSettings = ({ location, user: { businesses } }) => {
           <Route exact path="/recruiter/settings/password" component={PasswordForm} />
         </Switch>
       </Content>
-    </Container>
+    </div>
   );
 };
 

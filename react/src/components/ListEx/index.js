@@ -20,15 +20,11 @@ class ListEx extends React.Component {
       );
     }
 
-    if (data.length === 0) {
-      if (loading) {
-        return (
-          <AlertMsg>
-            <Loading size={loadingSize} />
-          </AlertMsg>
-        );
-      }
+    if (!data) {
+      return <Loading size={loadingSize} />;
+    }
 
+    if (!data.length) {
       return emptyRender;
     }
 
@@ -46,13 +42,14 @@ class ListEx extends React.Component {
     let pageConfig;
     if (pagination) {
       const pageSize = pagination.pageSize || 10;
-      const index = (currentPage - 1) * pageSize;
-      pageData = filteredData.slice(index, index + pageSize);
+      const total = filteredData.length;
+      let index = Math.min(currentPage, Math.floor((total + pageSize - 1) / pageSize));
+      pageData = filteredData.slice((index - 1) * pageSize, index * pageSize);
       pageConfig = {
         ...pagination,
         pageSize,
-        current: currentPage,
-        total: filteredData.length,
+        total,
+        current: index,
         onChange: currentPage => this.setState({ currentPage })
       };
     }

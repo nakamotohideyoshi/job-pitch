@@ -40,6 +40,10 @@ export default styled.div`
       font-size: 12px;
       color: #959595;
       margin-top: 5px;
+
+      &.error {
+        color: ${colors.error};
+      }
     }
 
     .you {

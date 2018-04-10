@@ -2,11 +2,11 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Button, message } from 'antd';
 
-import { VideoRecorder, PopupProgress, Icons } from 'components';
-import { Wrapper, HelpContent, VideoContent, ButtonContent } from './Wrapper';
-
-import * as helper from 'utils/helper';
 import { uploadPitch } from 'redux/jobseeker/pitch';
+import * as helper from 'utils/helper';
+
+import { VideoRecorder, PopupProgress, Icons } from 'components';
+import { Wrapper, HelpContent, VideoContent, ButtonContent } from './styled';
 
 class PitchRecord extends React.Component {
   state = {

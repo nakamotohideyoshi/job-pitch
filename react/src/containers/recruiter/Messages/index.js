@@ -1,33 +1,36 @@
 import React, { Fragment } from 'react';
 import Helmet from 'react-helmet';
 import { connect } from 'react-redux';
-import { Layout, List } from 'antd';
+import { Layout, List, Avatar } from 'antd';
 
-import { getData, sendMessage } from 'redux/recruiter/applications';
+import { getJobs1 } from 'redux/recruiter/jobs';
+import { getApplications, sendMessage } from 'redux/applications';
 import * as helper from 'utils/helper';
 
-import { AlertMsg, Loading, MessageThread, Logo } from 'components';
+import { AlertMsg, Loading, MessageThread } from 'components';
 import ApplicationDetails from 'containers/recruiter/ApplicationDetails';
+import JobDetails from 'containers/recruiter/JobDetails';
 import Sidebar from './Sidebar';
 import StyledLayout from './styled';
 
 class Page extends React.Component {
   state = {
     selectedId: null,
-    appDetails: false,
-    jobDetails: false
+    openAppDetails: false,
+    openJobDetails: false
   };
 
   componentWillMount() {
-    this.props.getData();
+    this.props.getJobs1();
+    this.props.getApplications();
   }
 
   componentWillReceiveProps(nextProps) {
-    const { applications, match } = nextProps;
+    const { applications, match: { params } } = nextProps;
     if (applications) {
-      const { applications: applications0, match: match0 } = this.props;
-      if (!applications0 || match0.params.appId !== match.params.appId) {
-        const appId = helper.str2int(match.params.appId) || helper.loadData('messages/appId');
+      const { applications: applications0, match: { params: params0 } } = this.props;
+      if (!applications0 || params0.appId !== params.appId) {
+        const appId = helper.str2int(params.appId) || helper.loadData('messages/appId');
         const app = helper.getItemByID(applications, appId) || applications[0] || {};
         helper.saveData('messages/appId', app.id);
         this.setState({ selectedId: app.id });
@@ -37,20 +40,19 @@ class Page extends React.Component {
   }
 
   onSend = message => {
-    const { id } = this.state.selectedApp;
     this.props.sendMessage({
-      id,
+      id: new Date().getTime(),
       data: {
-        application: id,
+        application: this.state.selectedId,
         content: message
       }
     });
   };
 
-  showAppDetails = () => this.setState({ appDetails: true });
-  hideAppDetails = () => this.setState({ appDetails: false });
-  showJobDetails = () => this.setState({ jobDetails: true });
-  hideJobDetails = () => this.setState({ jobDetails: false });
+  showAppDetails = () => this.setState({ openAppDetails: true });
+  hideAppDetails = () => this.setState({ openAppDetails: false });
+  showJobDetails = () => this.setState({ openJobDetails: true });
+  hideJobDetails = () => this.setState({ openJobDetails: false });
 
   render() {
     const { error, jobs, applications } = this.props;
@@ -65,11 +67,11 @@ class Page extends React.Component {
     const { selectedId } = this.state;
     const selectedApp = helper.getItemByID(applications, selectedId);
     const { job_data, job_seeker } = selectedApp;
-    const image = helper.getPitch(job_seeker).thumbnail;
-    const jsName = helper.getFullJSName(job_seeker);
-    const jobInfo = helper.getFullBWName(job_data);
+    const avatar = helper.getPitch(job_seeker).thumbnail;
+    const jobseekerName = helper.getFullJSName(job_seeker);
+    const jobName = helper.getFullBWName(job_data);
 
-    const { appDetails } = this.state;
+    const { openAppDetails, openJobDetails } = this.state;
 
     return (
       <StyledLayout>
@@ -80,9 +82,13 @@ class Page extends React.Component {
             <Fragment>
               <List.Item>
                 <List.Item.Meta
-                  avatar={<Logo src={image} size="50px" />}
-                  title={<span onClick={this.showAppDetails}>{jsName}</span>}
-                  description={<span onClick={this.showJobDetails}>{jobInfo}</span>}
+                  avatar={<Avatar src={avatar} />}
+                  title={<span onClick={this.showAppDetails}>{jobseekerName}</span>}
+                  description={
+                    <span onClick={this.showJobDetails}>
+                      {job_data.title} ({jobName})
+                    </span>
+                  }
                 />
               </List.Item>
               <div className="content">
@@ -97,8 +103,8 @@ class Page extends React.Component {
           )}
         </Layout.Content>
 
-        {appDetails && <ApplicationDetails appId={selectedId} onClose={this.hideAppDetails} />}
-        {/* {appDetails && <ApplicationDetails appId={selectedId} onClise={() => this.showAppDetails()} />} */}
+        {openAppDetails && <ApplicationDetails application={selectedApp} onClose={this.hideAppDetails} />}
+        {openJobDetails && <JobDetails job={job_data} onClose={this.hideJobDetails} />}
       </StyledLayout>
     );
   }
@@ -106,12 +112,13 @@ class Page extends React.Component {
 
 const enhance = connect(
   state => ({
-    jobs: state.rc_applications.jobs,
-    applications: state.rc_applications.applications,
-    error: state.rc_applications.error
+    jobs: state.rc_jobs.jobs1,
+    applications: state.applications.applications,
+    error: state.rc_jobs.error1 || state.applications.error
   }),
   {
-    getData,
+    getJobs1,
+    getApplications,
     sendMessage
   }
 );

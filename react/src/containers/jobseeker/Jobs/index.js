@@ -1,50 +1,43 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { Container, Loading, AlertMsg } from 'components';
-import { getJobs } from 'redux/jobseeker/find';
-import { getApplications } from 'redux/jobseeker/myapps';
-
+import { findJobs } from 'redux/jobseeker/find';
+import { getApplications } from 'redux/applications';
 import * as helper from 'utils/helper';
 
-class JSJobs extends React.Component {
+import { Loading, AlertMsg } from 'components';
+
+class Jobs extends React.Component {
   componentWillMount() {
-    this.findJob();
+    this.props.findJobs();
   }
 
-  findJob = () => {
-    this.props.getJobs({
-      success: jobs => {
-        const { match, history } = this.props;
-        const jobId = helper.str2int(match.params.jobId);
-        const job = helper.getItemByID(jobs, jobId);
-        if (job) {
-          history.replace(`/jobseeker/find/${jobId}`);
-        } else {
-          this.findApp();
-        }
+  componentWillReceiveProps(nextPorps) {
+    const { match, history } = this.props;
+    const jobId = helper.str2int(match.params.jobId);
+    const { jobs, applications } = nextPorps;
+    if (!this.props.jobs && jobs) {
+      const job = helper.getItemByID(jobs, jobId);
+      if (job) {
+        history.replace(`/jobseeker/find/`, { jobId });
+      } else {
+        this.props.getApplications();
       }
-    });
-  };
-
-  findApp = () => {
-    this.props.getApplications({
-      success: apps => {
-        const { match, history } = this.props;
-        const jobId = helper.str2int(match.params.jobId);
-        const app = apps.filter(app => app.job_data.id === jobId)[0];
-        if (app) {
-          history.replace(`/jobseeker/applications/${app.id}`);
-        } else {
-          history.replace(`/jobseeker/find`);
-        }
+    } else if (!this.props.applications && applications) {
+      const jobId = helper.str2int(match.params.jobId);
+      const app = applications.filter(app => app.job_data.id === jobId)[0];
+      console.log(jobId, applications, app);
+      if (app) {
+        history.replace(`/jobseeker/applications/`, { appId: app.id });
+      } else {
+        history.replace(`/jobseeker/find`);
       }
-    });
-  };
+    }
+  }
 
   render() {
     return (
-      <Container>
+      <div className="container">
         {this.props.error ? (
           <AlertMsg>
             <span>Server Error!</span>
@@ -52,17 +45,19 @@ class JSJobs extends React.Component {
         ) : (
           <Loading size="large" />
         )}
-      </Container>
+      </div>
     );
   }
 }
 
 export default connect(
   state => ({
-    error: state.js_find.error || state.js_myapps.error
+    jobs: state.js_find.jobs,
+    applications: state.applications.applications,
+    error: state.js_find.error || state.applications.error
   }),
   {
-    getJobs,
+    findJobs,
     getApplications
   }
-)(JSJobs);
+)(Jobs);

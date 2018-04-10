@@ -50,19 +50,23 @@ export default class MessageThread extends React.Component {
       }
     });
 
-  renderMessage = ({ id, content, created, from_role }) => {
+  renderMessage = ({ id, content, from_role, created, sending, error }) => {
     const { application, userRole } = this.props;
-    const me = !created || helper.getNameByID('roles', from_role) === userRole;
+    const me = sending || error || helper.getNameByID('roles', from_role) === userRole;
 
     let avatar;
-    if ((userRole === 'RECRUITER' && me) || (userRole === 'JOBSEEKER' && !me)) {
+    if ((userRole === 'RECRUITER' && me) || (userRole === 'JOB_SEEKER' && !me)) {
       avatar = helper.getJobLogo(application.job_data);
     } else {
       avatar = helper.getPitch(application.job_seeker).thumbnail;
     }
 
-    let comment = 'sending...';
-    if (created) {
+    let comment;
+    if (sending) {
+      comment = 'sending...';
+    } else if (error) {
+      comment = 'send error!';
+    } else {
       comment = new Date(created).toLocaleTimeString('en-us', {
         month: 'short',
         day: 'numeric',
@@ -76,7 +80,7 @@ export default class MessageThread extends React.Component {
         {!me && <Avatar src={avatar} />}
         <div className="message">
           <div className="bubble">{content}</div>
-          <div className="time">{comment}</div>
+          <div className={`time ${error ? 'error' : ''}`}>{comment}</div>
         </div>
         {me && <Avatar src={avatar} />}
       </div>
@@ -111,9 +115,8 @@ export default class MessageThread extends React.Component {
         label: 'You cannot send messages until you have connected. ',
         link: 'Connect'
       },
-      JOBSEEKER: {
+      JOB_SEEKER: {
         label: 'You cannot send message until your application is accepted. ',
-        link: 'Apply'
       }
     };
     const { label, link } = info[userRole];
@@ -133,8 +136,10 @@ export default class MessageThread extends React.Component {
         <div
           className="messages"
           ref={ref => {
-            this.containerRef = ref;
-            this.scrollBottom();
+            if (!this.containerRef) {
+              this.containerRef = ref;
+              this.scrollBottom();
+            }
           }}
         >
           {this.props.application.messages.map(this.renderMessage)}

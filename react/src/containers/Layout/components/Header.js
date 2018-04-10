@@ -5,10 +5,9 @@ import faBars from '@fortawesome/fontawesome-free-solid/faBars';
 import faUserCircle from '@fortawesome/fontawesome-free-solid/faUserCircle';
 import styled from 'styled-components';
 
-import { Container } from 'components';
+import titleImage from 'assets/title.png';
 import Popover from './Popover';
 import UserMenu from './UserMenu';
-import titleImage from 'assets/title.png';
 
 const Wrapper = styled(Layout.Header)`
   position: fixed;
@@ -33,7 +32,7 @@ const Wrapper = styled(Layout.Header)`
 export default ({ menu: Menu }) => {
   return (
     <Wrapper className="shadow1">
-      <Container>
+      <div className="container">
         {Menu && <Responsive maxWidth={767}>{<Popover float="left" icon={faBars} menu={Menu} />}</Responsive>}
 
         <div className="title-logo">
@@ -48,7 +47,7 @@ export default ({ menu: Menu }) => {
             <Popover float="right" menu={UserMenu} icon={faUserCircle} />
           </Fragment>
         )}
-      </Container>
+      </div>
     </Wrapper>
   );
 };

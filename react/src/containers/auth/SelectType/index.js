@@ -5,7 +5,7 @@ import { Form, Button } from 'antd';
 
 import { updateAuth } from 'redux/auth';
 
-import Container from './Wrapper';
+import Wrapper from './styled';
 
 const { Item } = Form;
 
@@ -20,7 +20,7 @@ const SelectType = ({ user, updateAuth }) => {
   }
 
   return (
-    <Container>
+    <Wrapper className="container">
       <Helmet title="Select Type" />
 
       <Form className="shadow1">
@@ -38,7 +38,7 @@ const SelectType = ({ user, updateAuth }) => {
           </Button>
         </Item>
       </Form>
-    </Container>
+    </Wrapper>
   );
 };
 

@@ -50,8 +50,7 @@ export const RC_MSGS_GET_DATA = 'RC_MSGS_GET_DATA';
 
 // jobseeker
 
-export const JS_FIND_UPDATE = 'JS_FIND_UPDATE';
-export const JS_GET_JOBS = 'JS_GET_JOBS';
+export const JS_FIND_JOBS = 'JS_FIND_JOBS';
 export const JS_APPLY_JOB = 'JS_APPLY_JOB';
 export const JS_REMOVE_JOB = 'JS_REMOVE_JOB';
 

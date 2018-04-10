@@ -3,11 +3,11 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { Breadcrumb, List, Spin, Modal } from 'antd';
 
-import { PageSubHeader, AlertMsg, Loading, Logo } from 'components';
-import Wrapper from './Wrapper';
-
 import { getBusinesses } from 'redux/recruiter/businesses';
 import * as helper from 'utils/helper';
+
+import { PageSubHeader, AlertMsg, Loading, Logo } from 'components';
+import Wrapper from './styled';
 
 const { confirm } = Modal;
 

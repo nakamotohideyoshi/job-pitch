@@ -10,7 +10,7 @@ const Wrapper = styled(Modal)`
   }
 `;
 
-const Container = styled.div`
+const VideoContainer = styled.div`
   position: relative;
 
   video {
@@ -21,10 +21,10 @@ const Container = styled.div`
 
 export default ({ videoUrl, onClose }) => (
   <Wrapper title="Video Player" visible maskClosable={false} footer={null} onCancel={() => onClose()}>
-    <Container>
+    <VideoContainer>
       <video preload="auto" controls autoPlay src={videoUrl}>
         <track kind="captions" />
       </video>
-    </Container>
+    </VideoContainer>
   </Wrapper>
 );

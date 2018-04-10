@@ -4,12 +4,12 @@ import { withRouter, Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { Button, Modal, Switch } from 'antd';
 
-import { PageHeader, Loading, AlertMsg, JobseekerDetail } from 'components';
-import DATA from 'utils/data';
-import Container from './Wrapper';
-
-import * as helper from 'utils/helper';
 import { getApplications, updateApplication, removeApplication } from 'redux/recruiter/apps';
+import DATA from 'utils/data';
+import * as helper from 'utils/helper';
+
+import { PageHeader, Loading, AlertMsg, JobseekerDetail } from 'components';
+import Wrapper from './styled';
 
 const { confirm } = Modal;
 class AppliaitonDetail extends React.Component {
@@ -124,7 +124,7 @@ class AppliaitonDetail extends React.Component {
     const { error, mode } = this.props;
     const { application } = this.state;
     return (
-      <Container>
+      <Wrapper className="container">
         <Helmet title="Application Detail" />
 
         <PageHeader>
@@ -143,7 +143,7 @@ class AppliaitonDetail extends React.Component {
         ) : (
           this.renderDetail()
         )}
-      </Container>
+      </Wrapper>
     );
   }
 }

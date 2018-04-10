@@ -6,7 +6,7 @@ import { Button, Modal } from 'antd';
 
 import { PageHeader, Loading, AlertMsg, JobseekerDetail } from 'components';
 import DATA from 'utils/data';
-import Container from './Wrapper';
+import Wrapper from './Wrapper';
 
 import * as helper from 'utils/helper';
 import { getApplications, connectApplication, removeApplication } from 'redux/recruiter/apps';
@@ -127,7 +127,7 @@ class AppliaitonDetail extends React.Component {
     const { application } = this.state;
 
     return (
-      <Container>
+      <Wrapper className="container">
         <Helmet title="Application Detail" />
 
         <PageHeader>
@@ -146,7 +146,7 @@ class AppliaitonDetail extends React.Component {
         ) : (
           this.renderDetail()
         )}
-      </Container>
+      </Wrapper>
     );
   }
 }

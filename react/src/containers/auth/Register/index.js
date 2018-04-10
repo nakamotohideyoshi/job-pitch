@@ -4,10 +4,10 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { Form, Input, Button } from 'antd';
 
-import * as helper from 'utils/helper';
 import { register } from 'redux/auth';
+import * as helper from 'utils/helper';
 
-import Container from './Wrapper';
+import Wrapper from './styled';
 
 const { Item } = Form;
 
@@ -44,7 +44,7 @@ class RegisterForm extends React.Component {
     const { loading } = this.state;
 
     return (
-      <Container>
+      <Wrapper className="container">
         <Helmet title="Create account" />
 
         <Form onSubmit={this.register} className="shadow1">
@@ -97,7 +97,7 @@ class RegisterForm extends React.Component {
         <div>
           Already registered? <Link to="/auth">Sign in</Link>
         </div>
-      </Container>
+      </Wrapper>
     );
   }
 }

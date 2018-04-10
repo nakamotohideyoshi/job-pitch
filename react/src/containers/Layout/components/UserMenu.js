@@ -4,9 +4,9 @@ import { Link } from 'react-router-dom';
 import { Menu, Modal } from 'antd';
 import styled from 'styled-components';
 
-import { Icons } from 'components';
-
 import { logout } from 'redux/auth';
+
+import { Icons } from 'components';
 
 const Wrapper = styled(Menu)`
   &.ant-menu {

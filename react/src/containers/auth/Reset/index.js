@@ -4,10 +4,10 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { Form, Input, Button, Alert } from 'antd';
 
-import * as helper from 'utils/helper';
 import { resetPassword } from 'redux/auth';
+import * as helper from 'utils/helper';
 
-import Container from './Wrapper';
+import Wrapper from './styled';
 
 const { Item } = Form;
 
@@ -51,7 +51,7 @@ class ResetForm extends React.Component {
     const { loading, sent } = this.state;
 
     return (
-      <Container>
+      <Wrapper className="container">
         <Helmet title="Reset Password" />
 
         <Form onSubmit={this.resetPassword} className="shadow1">
@@ -88,7 +88,7 @@ class ResetForm extends React.Component {
         <div>
           Return to <Link to="/auth">Sign in</Link>
         </div>
-      </Container>
+      </Wrapper>
     );
   }
 }

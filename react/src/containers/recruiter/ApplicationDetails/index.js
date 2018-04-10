@@ -1,50 +1,46 @@
 import React, { Fragment } from 'react';
-import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
+import { withRouter } from 'react-router-dom';
 import { Button, Modal, Switch } from 'antd';
 
-import { JobseekerDetail } from 'components';
-import * as helper from 'utils/helper';
+import { connectApplication, updateApplication, removeApplication } from 'redux/applications';
 import DATA from 'utils/data';
-import StyledModal from './styled';
 
-import { connectApplication, updateApplication, removeApplication } from 'redux/recruiter/applications';
+import { JobseekerDetail } from 'components';
+import StyledModal from './styled';
 
 const { confirm } = Modal;
 
 class ApplicationDetails extends React.Component {
   componentWillReceiveProps(nextProps) {
-    const { application: { status }, onClose } = this.props;
-    if (status !== nextProps.application.status) {
-      onClose();
+    if (this.props.application.status !== nextProps.application.status) {
+      this.props.onClose();
     }
   }
 
-  message = () => this.props.history.push(`/recruiter/messages/${this.props.appId}`);
+  message = () => this.props.history.push(`/recruiter/messages/${this.props.application.id}`);
 
   changeShortlisted = shortlisted => {
-    const { id } = this.props.application;
     this.props.updateApplication({
-      id,
       data: {
-        id,
+        id: this.props.application.id,
         shortlisted
       }
     });
   };
 
   connect = () => {
-    const { application: { id, job_data }, connectApplication, history } = this.props;
-    const { id: businessId, tokens } = job_data.loation_data.business_data;
+    const { application, connectApplication, history } = this.props;
+    const business = application.job_data.loation_data.business_data;
 
-    if (tokens === 0) {
+    if (business.tokens === 0) {
       confirm({
         title: 'You need 1 credit',
         okText: `Credits`,
         cancelText: 'Cancel',
         maskClosable: true,
         onOk: () => {
-          history.push(`/recruiter/settings/credits/${businessId}`);
+          history.push(`/recruiter/settings/credits/${business.id}`);
         }
       });
       return;
@@ -57,9 +53,8 @@ class ApplicationDetails extends React.Component {
       maskClosable: true,
       onOk: () => {
         connectApplication({
-          id,
           data: {
-            id,
+            id: application.id,
             connect: DATA.APP.ESTABLISHED
           }
         });
@@ -75,48 +70,44 @@ class ApplicationDetails extends React.Component {
       cancelText: 'Cancel',
       maskClosable: true,
       onOk: () => {
-        const { id } = this.props.application;
-        this.props.removeApplication({ id });
+        this.props.removeApplication({
+          id: this.props.application.id
+        });
       }
     });
   };
 
   render() {
-    const {
-      application: { job_seeker, status, shortlisted },
-      updating,
-      removing,
-      location: { pathname },
-      onClose
-    } = this.props;
+    const { application, location: { pathname }, onClose } = this.props;
+    const { job_seeker, status, shortlisted, updating, removing } = application;
     const messageButton = pathname.indexOf('/recruiter/messages') !== 0;
 
     return (
       <StyledModal visible footer={null} className="container" title="Application Details" onCancel={onClose}>
         <div className="content">
-          <JobseekerDetail className="job-detail" jobseeker={job_seeker} />
+          <JobseekerDetail className="job-detail" application={application} jobseeker={job_seeker} />
 
           {status !== DATA.APP.DELETED && (
             <div className="buttons">
               {status === DATA.APP.CREATED ? (
-                <Button type="primary" loading={!!updating} disabled={removing} onClick={this.connect}>
+                <Button type="primary" loading={updating} onClick={this.connect}>
                   Connect
                 </Button>
               ) : (
                 <Fragment>
                   <div>
                     <span>Shortlisted</span>
-                    <Switch checked={shortlisted} loading={!!updating} onChange={this.changeShortlisted} />
+                    <Switch checked={shortlisted} loading={updating} onChange={this.changeShortlisted} />
                   </div>
                   {messageButton && (
-                    <Button type="primary" disabled={removing} onClick={this.message}>
+                    <Button type="primary" onClick={this.message}>
                       Message
                     </Button>
                   )}
                 </Fragment>
               )}
 
-              <Button type="danger" loading={!!removing} disabled={updating} onClick={this.remove}>
+              <Button type="danger" loading={removing} onClick={this.remove}>
                 Remove
               </Button>
             </div>
@@ -128,16 +119,9 @@ class ApplicationDetails extends React.Component {
 }
 
 export default withRouter(
-  connect(
-    (state, props) => ({
-      application: helper.getItemByID(state.rc_applications.applications, props.appId),
-      updating: state.rc_applications.updating,
-      removing: state.rc_applications.removing
-    }),
-    {
-      connectApplication,
-      updateApplication,
-      removeApplication
-    }
-  )(ApplicationDetails)
+  connect(null, {
+    connectApplication,
+    updateApplication,
+    removeApplication
+  })(ApplicationDetails)
 );

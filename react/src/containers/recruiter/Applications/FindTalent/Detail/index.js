@@ -2,13 +2,13 @@ import React from 'react';
 import Helmet from 'react-helmet';
 import { connect } from 'react-redux';
 import { withRouter, Link } from 'react-router-dom';
-import { Button, Modal, Spin } from 'antd';
+import { Button, Modal } from 'antd';
+
+import { getJobseekers, connectJobseeker, removeJobseeker } from 'redux/recruiter/apps';
+import * as helper from 'utils/helper';
 
 import { PageHeader, Loading, AlertMsg, JobseekerDetail } from 'components';
-import Container from './Wrapper';
-
-import * as helper from 'utils/helper';
-import { getJobseekers, connectJobseeker, removeJobseeker } from 'redux/recruiter/apps';
+import Wrapper from './styled';
 
 const { confirm } = Modal;
 class TalentDetail extends React.Component {
@@ -114,11 +114,11 @@ class TalentDetail extends React.Component {
   };
 
   render() {
-    const { error, loading } = this.props;
+    const { error } = this.props;
     const { jobseeker } = this.state;
 
     return (
-      <Container>
+      <Wrapper className="container">
         <Helmet title="Talent Detail" />
 
         <PageHeader>
@@ -137,7 +137,7 @@ class TalentDetail extends React.Component {
         ) : (
           this.renderDetail()
         )}
-      </Container>
+      </Wrapper>
     );
   }
 }

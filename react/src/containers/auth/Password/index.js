@@ -5,7 +5,7 @@ import { Form, Input, Button, message } from 'antd';
 import * as helper from 'utils/helper';
 import { changePassword } from 'redux/auth';
 
-import FormWrapper from './Wrapper';
+import FormWrapper from './styled';
 
 const { Item } = Form;
 

@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { Container, Loading, AlertMsg } from 'components';
+import { Loading, AlertMsg } from 'components';
 
 import { getOpenedJobs, getJobseekers, getApplications } from 'redux/recruiter/apps';
 import DATA from 'utils/data';
@@ -65,7 +65,7 @@ class RCJobseeker extends React.Component {
 
   render() {
     return (
-      <Container>
+      <div className="container">
         {this.props.error ? (
           <AlertMsg>
             <span>Server Error!</span>
@@ -73,7 +73,7 @@ class RCJobseeker extends React.Component {
         ) : (
           <Loading size="large" />
         )}
-      </Container>
+      </div>
     );
   }
 }

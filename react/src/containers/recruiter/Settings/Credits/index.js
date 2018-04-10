@@ -3,10 +3,11 @@ import { connect } from 'react-redux';
 import { Select, Button, List } from 'antd';
 import { Logo } from 'components';
 
-import * as helper from 'utils/helper';
-import DATA from 'utils/data';
 import { updateStatus, getBusinesses, purchase } from 'redux/recruiter/businesses';
-import { Wrapper } from './Wrapper';
+import DATA from 'utils/data';
+import * as helper from 'utils/helper';
+
+import { Wrapper } from './styled';
 
 const Option = Select.Option;
 

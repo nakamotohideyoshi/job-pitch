@@ -13,8 +13,8 @@ const Wrapper = styled.div`
   align-items: center;
 `;
 
-export default props => (
-  <Wrapper>
+export default ({ className, ...props }) => (
+  <Wrapper className={className}>
     <Spin {...props} />
   </Wrapper>
 );

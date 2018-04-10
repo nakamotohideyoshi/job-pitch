@@ -13,7 +13,6 @@ import GoogleMap from './GoogleMap';
 
 import MessageThread from './MessageThread';
 
-import Container from './Container';
 import Loading from './Loading';
 
 import Intro from './Intro';
@@ -40,7 +39,6 @@ export {
   PageSubHeader,
   SearchBox,
   LinkButton,
-  Container,
   Loading,
   Intro,
   AlertMsg,

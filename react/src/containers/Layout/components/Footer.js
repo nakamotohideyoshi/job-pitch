@@ -5,10 +5,10 @@ import faFacebookF from '@fortawesome/fontawesome-free-brands/faFacebookF';
 import faTwitter from '@fortawesome/fontawesome-free-brands/faTwitter';
 import faLinkedinIn from '@fortawesome/fontawesome-free-brands/faLinkedinIn';
 import styled from 'styled-components';
+
+import { VERSION } from 'const';
 import media from 'utils/mediaquery';
 
-import { Container } from 'components';
-import { VERSION } from 'const';
 import logoImage from 'assets/logo.png';
 
 const Footer = styled(Layout.Footer)`
@@ -68,7 +68,7 @@ const Link = ({ url, label }) => (
 
 export default ({ helpUrl }) => (
   <Footer>
-    <Container>
+    <div className="container">
       <div className="menus">
         <Link url="https://www.myjobpitch.com/about/" label="About" />
         <Link url={helpUrl} label="How it works" />
@@ -88,6 +88,6 @@ export default ({ helpUrl }) => (
         © 2017 Myjobpitch Ltd
         <span>({VERSION})</span>
       </div>
-    </Container>
+    </div>
   </Footer>
 );

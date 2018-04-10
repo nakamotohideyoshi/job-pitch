@@ -2,13 +2,14 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { Breadcrumb, Form, Input, Checkbox, Button, Tooltip, message } from 'antd';
-import { PopupProgress, ImageSelector, NoLabelField, GoogleMap, Icons } from 'components';
-import Wrapper from './Wrapper';
 
 import { selectBusiness } from 'redux/recruiter/businesses';
 import { getWorkplace, saveWorkplace } from 'redux/recruiter/workplaces';
 import DATA from 'utils/data';
 import * as helper from 'utils/helper';
+
+import { PopupProgress, ImageSelector, NoLabelField, GoogleMap, Icons } from 'components';
+import Wrapper from './styled';
 
 const { Item } = Form;
 const { TextArea } = Input;

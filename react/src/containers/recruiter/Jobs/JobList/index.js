@@ -3,13 +3,13 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { Breadcrumb, List, Button, Modal, Icon } from 'antd';
 
-import { PageSubHeader, AlertMsg, Loading, Logo } from 'components';
-import Wrapper from './Wrapper';
-
 import { getWorkplace } from 'redux/recruiter/workplaces';
 import { getJobs, saveJob, removeJob } from 'redux/recruiter/jobs';
 import DATA from 'utils/data';
 import * as helper from 'utils/helper';
+
+import { PageSubHeader, AlertMsg, Loading, Logo } from 'components';
+import Wrapper from './styled';
 
 class JobList extends React.Component {
   state = {

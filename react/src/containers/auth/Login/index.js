@@ -7,7 +7,7 @@ import { Form, Input, Button } from 'antd';
 import * as helper from 'utils/helper';
 import { login } from 'redux/auth';
 
-import Container from './Wrapper';
+import Wrapper from './styled';
 
 const { Item } = Form;
 
@@ -44,7 +44,7 @@ class LoginForm extends React.Component {
     const { loading } = this.state;
 
     return (
-      <Container>
+      <Wrapper className="container">
         <Helmet title="Sign in" />
 
         <Form onSubmit={this.login} className="shadow1">
@@ -88,7 +88,7 @@ class LoginForm extends React.Component {
         <div>
           Not registered? <Link to="/auth/register">Sign up</Link>
         </div>
-      </Container>
+      </Wrapper>
     );
   }
 }

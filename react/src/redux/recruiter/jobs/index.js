@@ -22,7 +22,6 @@ export const saveJob = createAction(C.RC_SAVE_JOB);
 
 const initialState = {
   jobs1: null,
-  loading1: false,
   error1: null,
 
   jobs: [],
@@ -46,19 +45,16 @@ export default handleActions(
     [requestPending(C.RC_GET_JOBS1)]: state => ({
       ...state,
       jobs1: null,
-      loading1: true,
       error1: null
     }),
 
     [requestSuccess(C.RC_GET_JOBS1)]: (state, { payload }) => ({
       ...state,
-      jobs1: payload,
-      loading1: false
+      jobs1: payload
     }),
 
     [requestFail(C.RC_GET_JOBS1)]: (state, { payload }) => ({
       ...state,
-      loading1: false,
       error1: payload
     }),
 

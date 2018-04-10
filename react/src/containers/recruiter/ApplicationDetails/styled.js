@@ -4,14 +4,18 @@ import media from 'utils/mediaquery';
 
 export default styled(Modal)`
   width: auto !important;
+  margin-bottom: 50px !important;
 
   .ant-modal-header {
+    padding: 40px 40px 0 40px;
     border-bottom: none;
   }
 
-  .content {
-    padding-bottom: 40px;
+  .ant-modal-body {
+    padding: 40px;
+  }
 
+  .content {
     .buttons {
       .ant-switch {
         margin-left: 8px;
@@ -28,23 +32,28 @@ export default styled(Modal)`
       }
 
       .buttons {
-        margin-left: 50px;
-        width: 200px;
+        width: 150px;
+        margin-left: 30px;
+
+        > * {
+          margin-top: 20px;
+        }
         .ant-btn {
           width: 100%;
-          margin-top: 25px;
         }
       }
     }
   `};
 
   ${media.tablet`
-    .buttons { 
-      padding-top: 25px;
-    }
-    .ant-btn {
-      width: 150px;
-      margin-right: 25px;
+    .buttons {
+      > * {
+        margin-top: 25px;
+      }
+      .ant-btn {
+        width: 150px;
+        margin-right: 25px;
+      }
     }
   `};
 `;

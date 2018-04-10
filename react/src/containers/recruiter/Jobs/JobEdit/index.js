@@ -2,6 +2,13 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { Breadcrumb, Form, Input, Select, Switch, Tooltip, Button, message } from 'antd';
+
+import { getWorkplace } from 'redux/recruiter/workplaces';
+import { getJob, saveJob } from 'redux/recruiter/jobs';
+import { uploadJobPitch } from 'redux/jobseeker/pitch';
+import DATA from 'utils/data';
+import * as helper from 'utils/helper';
+
 import {
   PageSubHeader,
   PopupProgress,
@@ -11,13 +18,7 @@ import {
   VideoPlayer,
   Icons
 } from 'components';
-import Wrapper from './Wrapper';
-
-import { getWorkplace } from 'redux/recruiter/workplaces';
-import { getJob, saveJob } from 'redux/recruiter/jobs';
-import { uploadJobPitch } from 'redux/jobseeker/pitch';
-import DATA from 'utils/data';
-import * as helper from 'utils/helper';
+import Wrapper from './styled';
 
 const { Item } = Form;
 const { Option } = Select;

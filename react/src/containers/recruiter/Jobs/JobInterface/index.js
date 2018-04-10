@@ -7,7 +7,7 @@ import { Breadcrumb } from 'antd';
 // import { confirm } from 'redux/common';
 // import { getJob, updateJob, removeJob } from 'redux/recruiter/jobs';
 // import * as helper from 'utils/helper';
-import Wrapper from './Wrapper';
+import Wrapper from './styled';
 
 class JobInterface extends React.Component {
   // componentWillMount() {

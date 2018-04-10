@@ -1,15 +1,16 @@
-import { takeLatest, call, put, select } from 'redux-saga/effects';
+import { takeLatest, call, put, select, race, take } from 'redux-saga/effects';
+import { LOCATION_CHANGE } from 'react-router-redux';
 import * as C from 'redux/constants';
 import * as helper from 'utils/helper';
 import { getRequest, postRequest, putRequest, deleteRequest, requestSuccess } from 'utils/request';
+import { getRequest as getRequest1 } from 'utils/request1';
 
-const getJobs1 = getRequest({
-  url: ({ payload }) => {
-    const { location } = payload || {};
-    const query = location ? `?location=${location}` : '';
-    return `/api/user-jobs/${query}`;
-  }
-});
+function* getJobs1(action) {
+  yield race({
+    result: call(getRequest1({ url: '/api/user-jobs/' }), action),
+    cancel: take(LOCATION_CHANGE)
+  });
+}
 
 const getJobs = getRequest({
   url: ({ payload }) => `/api/user-jobs/?location=${payload.id}`

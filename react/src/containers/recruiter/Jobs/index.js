@@ -1,9 +1,8 @@
 import React from 'react';
 import Helmet from 'react-helmet';
 import { Switch, Route } from 'react-router-dom';
-import { PageHeader } from 'components';
-import Container from './Wrapper';
 
+import { PageHeader } from 'components';
 import BusinessList from './BusinessList';
 import BusinessEdit from './BusinessEdit';
 import WorkplaceList from './WorkplaceList';
@@ -11,10 +10,11 @@ import WorkplaceEdit from './WorkplaceEdit';
 import JobList from './JobList';
 import JobEdit from './JobEdit';
 import JobInterface from './JobInterface';
+import Wrapper from './styled';
 
 const RCJobs = () => {
   return (
-    <Container>
+    <Wrapper className="container">
       <Helmet title="My Workplace & Jobs" />
 
       <PageHeader>
@@ -33,7 +33,7 @@ const RCJobs = () => {
         <Route exact path="/recruiter/jobs/job/edit/:jobId" component={JobEdit} />
         <Route exact path="/recruiter/jobs/job/view/:jobId" component={JobInterface} />
       </Switch>
-    </Container>
+    </Wrapper>
   );
 };
 

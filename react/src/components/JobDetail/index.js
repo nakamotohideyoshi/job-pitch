@@ -1,5 +1,5 @@
 import React, { Fragment } from 'react';
-import { Divider, List } from 'antd';
+import { Divider, List, Avatar } from 'antd';
 
 import * as helper from 'utils/helper';
 import { GoogleMap } from 'components';
@@ -17,7 +17,7 @@ const JobDetail = ({ job, className }) => {
     <Wrapper className={className}>
       <List.Item>
         <List.Item.Meta
-          avatar={<img src={logo} alt="" width="100" />}
+          avatar={<Avatar src={logo} />}
           title={
             <Fragment>
               <span className="title">{job.title}</span>

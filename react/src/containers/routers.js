@@ -19,12 +19,10 @@ import RCMessages from 'containers/recruiter/Messages';
 import RCSettings from 'containers/recruiter/Settings';
 
 import JSRoute from 'containers/jobseeker/Route';
-import FindJob from 'containers/jobseeker/Find';
-import JSJobDetail from 'containers/jobseeker/JobDetail';
-import JSApplications from 'containers/jobseeker/Applications';
-import JSAppDetail from 'containers/jobseeker/AppDetail';
+import FindJob from 'containers/jobseeker/FindJob';
+import JSApplications from 'containers/jobseeker/MyApplications';
 import JSJobs from 'containers/jobseeker/Jobs';
-// import JSMessages from 'containers/jobseeker/Messages';
+import JSMessages from 'containers/jobseeker/Messages';
 import JSSettings from 'containers/jobseeker/Settings';
 
 import NotFound from 'containers/NotFound';
@@ -75,12 +73,10 @@ export default () => {
 
       <Redirect exact from="/jobseeker" to="/jobseeker/find" />
       <JSRoute exact path="/jobseeker/find" component={FindJob} />
-      <JSRoute exact path="/jobseeker/find/:jobId" component={JSJobDetail} />
       <JSRoute exact path="/jobseeker/applications" component={JSApplications} />
-      <JSRoute exact path="/jobseeker/applications/:appId" component={JSAppDetail} />
       <JSRoute exact path="/jobseeker/jobs/:jobId" component={JSJobs} />
-      {/* <JSRoute exact path="/jobseeker/messages" component={JSMessages} />
-      <JSRoute exact path="/jobseeker/messages/:appId" component={JSMessages} /> */}
+      <JSRoute exact path="/jobseeker/messages" component={JSMessages} />
+      <JSRoute exact path="/jobseeker/messages/:appId" component={JSMessages} />
       <Redirect exact from="/jobseeker/settings" to="/jobseeker/settings/profile" />
       <JSRoute exact path="/jobseeker/settings/profile" component={JSSettings} />
       <JSRoute exact path="/jobseeker/settings/record" component={JSSettings} />

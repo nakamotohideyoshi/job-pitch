@@ -5,10 +5,8 @@ export default styled.div`
   position: absolute;
   top: 0;
   bottom: 0;
-  left: 0;
-  right: 0;
-  /* position: relative; */
-  /* padding: 60px 0; */
+  left: 15px;
+  right: 15px;
 
   display: flex;
   flex-direction: column;

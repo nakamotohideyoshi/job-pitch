@@ -1,14 +1,11 @@
 import React from 'react';
 import { Layout } from 'antd';
-import FontAwesomeIcon from '@fortawesome/react-fontawesome';
-import faFacebookF from '@fortawesome/fontawesome-free-brands/faFacebookF';
-import faTwitter from '@fortawesome/fontawesome-free-brands/faTwitter';
-import faLinkedinIn from '@fortawesome/fontawesome-free-brands/faLinkedinIn';
 import styled from 'styled-components';
 
 import { VERSION } from 'const';
 import media from 'utils/mediaquery';
 
+import { Icons } from 'components';
 import logoImage from 'assets/logo.png';
 
 const Footer = styled(Layout.Footer)`
@@ -54,9 +51,9 @@ const Footer = styled(Layout.Footer)`
   }
 `;
 
-const SocialLink = ({ url, icon }) => (
+const SocialLink = ({ url, icon: Icon }) => (
   <a href={url} target="_blank" rel="noopener noreferrer">
-    {icon && <FontAwesomeIcon icon={icon} size="lg" />}
+    {Icon && <Icon size="lg" />}
   </a>
 );
 
@@ -78,9 +75,9 @@ export default ({ helpUrl }) => (
       </div>
 
       <div className="follow">
-        <SocialLink url="https://www.facebook.com/" icon={faFacebookF} />
-        <SocialLink url="https://www.twitter.com/" icon={faTwitter} />
-        <SocialLink url="https://www.linkedin.com/" icon={faLinkedinIn} />
+        <SocialLink url="https://www.facebook.com/" icon={Icons.Facebook} />
+        <SocialLink url="https://www.twitter.com/" icon={Icons.Twitter} />
+        <SocialLink url="https://www.linkedin.com/" icon={Icons.Linkedin} />
       </div>
 
       <div className="company">

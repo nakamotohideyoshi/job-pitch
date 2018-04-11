@@ -74,19 +74,19 @@ class JobseekerDetail extends React.Component {
 
         {jobseeker.has_national_insurance_number && (
           <div className="check-label">
-            <Icons.Check />
+            <Icons.CheckSquare size="lg" />
             National Insurance number supplied
           </div>
         )}
         {jobseeker.has_references && (
           <div className="check-label">
-            <Icons.Check />
+            <Icons.CheckSquare size="lg" />
             Reference available on request
           </div>
         )}
         {jobseeker.truth_confirmation && (
           <div className="check-label">
-            <Icons.Check />
+            <Icons.CheckSquare size="lg" />
             I confirm that all information provided is truthful and confirm I have the right to work in the UK
           </div>
         )}

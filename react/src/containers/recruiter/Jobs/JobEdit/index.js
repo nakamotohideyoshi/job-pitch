@@ -283,7 +283,7 @@ class JobEdit extends React.Component {
           >
             <div>
               <VideoRecorder showInfo buttonComponent={this.recordButton} onChange={this.changePitch} />
-              {pitch.video && (
+              {!pitch.video && (
                 <Button onClick={() => this.playPitch(true)} className="btn-play">
                   <Icons.Play />Play Current
                 </Button>

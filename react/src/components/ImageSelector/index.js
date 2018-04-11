@@ -70,7 +70,7 @@ class ImageSelector extends React.Component {
         <div className="buttons">
           <Upload showUploadList={false} beforeUpload={() => false} onChange={this.setLogo}>
             <Button>
-              <Icons.Upload /> Select File
+              <Icons.Hdd /> Select File
             </Button>
           </Upload>
 

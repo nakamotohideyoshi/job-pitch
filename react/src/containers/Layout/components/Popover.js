@@ -1,7 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
 import { Popover } from 'antd';
-import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 
 const MenuButton = styled.div`
   padding: 0 10px;
@@ -25,7 +24,7 @@ class HeaderPopover extends React.Component {
   hide = () => this.setState({ visible: false });
 
   render() {
-    const { float, icon, menu: Menu } = this.props;
+    const { float, icon: Icon, menu: Menu } = this.props;
     const placement = float === 'left' ? 'bottomLeft' : 'bottomRight';
 
     return (
@@ -37,7 +36,7 @@ class HeaderPopover extends React.Component {
         trigger="click"
       >
         <MenuButton style={{ float }}>
-          <FontAwesomeIcon icon={icon} />
+          <Icon />
         </MenuButton>
       </Popover>
     );

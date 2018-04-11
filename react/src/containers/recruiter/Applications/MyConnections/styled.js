@@ -16,15 +16,19 @@ export default styled.div`
       .ant-list-item-meta-avatar {
         position: relative;
 
-        svg.fa-star {
+        .star {
           position: absolute;
           left: -12px;
           top: -12px;
-          padding: 4px;
-          font-size: 24px;
           color: #ff9300;
           background-color: #fff;
           border-radius: 50%;
+          width: 24px;
+          height: 24px;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          font-size: 14px;
         }
       }
 

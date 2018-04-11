@@ -35,9 +35,8 @@ export default styled.div`
 
       svg {
         float: left;
-        width: 19px;
-        height: auto;
-        margin: 28px 20px;
+        margin: 29px 8px 0 25px;
+        font-size: 20px;
         cursor: pointer;
       }
 

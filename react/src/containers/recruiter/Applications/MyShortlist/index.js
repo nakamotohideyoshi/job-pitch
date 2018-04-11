@@ -83,7 +83,11 @@ class MyApplications extends React.Component {
           avatar={
             <span>
               <Logo src={image} size="80px" />
-              {app.shortlisted && <Icons.Star />}
+              {app.shortlisted && (
+                <span className="star">
+                  <Icons.Star />
+                </span>
+              )}
             </span>
           }
           title={`${fullName}`}

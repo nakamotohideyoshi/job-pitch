@@ -25,7 +25,6 @@ export default styled.div`
 
       svg {
         color: #00b6a4;
-        font-size: 1.6em;
         margin-right: 4px;
       }
     }
@@ -42,7 +41,6 @@ export default styled.div`
 
     svg {
       margin-right: 0.25em;
-      font-size: 1.5em;
       color: #ff9300;
     }
   }

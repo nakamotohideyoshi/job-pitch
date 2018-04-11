@@ -1,10 +1,9 @@
 import React, { Fragment } from 'react';
 import { Layout } from 'antd';
 import Responsive from 'react-responsive';
-import faBars from '@fortawesome/fontawesome-free-solid/faBars';
-import faUserCircle from '@fortawesome/fontawesome-free-solid/faUserCircle';
 import styled from 'styled-components';
 
+import { Icons } from 'components';
 import titleImage from 'assets/title.png';
 import Popover from './Popover';
 import UserMenu from './UserMenu';
@@ -33,7 +32,7 @@ export default ({ menu: Menu }) => {
   return (
     <Wrapper className="shadow1">
       <div className="container">
-        {Menu && <Responsive maxWidth={767}>{<Popover float="left" icon={faBars} menu={Menu} />}</Responsive>}
+        {Menu && <Responsive maxWidth={767}>{<Popover float="left" icon={Icons.Bars} menu={Menu} />}</Responsive>}
 
         <div className="title-logo">
           <img src={titleImage} alt="" />
@@ -44,7 +43,7 @@ export default ({ menu: Menu }) => {
             <Responsive minWidth={768}>
               <Menu theme="dark" mode="horizontal" />
             </Responsive>
-            <Popover float="right" menu={UserMenu} icon={faUserCircle} />
+            <Popover float="right" menu={UserMenu} icon={Icons.UserCircle} />
           </Fragment>
         )}
       </div>

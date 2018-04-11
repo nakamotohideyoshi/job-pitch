@@ -111,7 +111,7 @@ class Page extends React.Component {
         <div className="body">
           <Fragment>
             <div className="header">
-              {tablet && <Icons.Bars onClick={this.openSidebar} />}
+              {tablet && <Icons.Bars onClick={this.openSidebar} size="lg" />}
               {selectedApp && this.renderHeader(selectedApp)}
             </div>
 

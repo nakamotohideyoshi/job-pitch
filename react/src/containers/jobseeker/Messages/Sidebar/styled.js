@@ -28,11 +28,6 @@ export default styled.div`
 
           .ant-list-item-meta-avatar {
             margin-right: 8px;
-            .ant-avatar {
-              width: 48px;
-              height: 48px;
-              border-radius: 50%;
-            }
           }
 
           .ant-list-item-meta-content {

@@ -14,7 +14,7 @@ class ListEx extends React.Component {
 
     if (error) {
       return (
-        <AlertMsg>
+        <AlertMsg error>
           <span>{error}</span>
         </AlertMsg>
       );
@@ -25,11 +25,10 @@ class ListEx extends React.Component {
     }
 
     if (!data.length) {
-      return emptyRender;
+      return typeof emptyRender === 'function' ? emptyRender() : emptyRender;
     }
 
     const filteredData = filterOption ? data.filter(filterOption) : data;
-
     if (filteredData.length === 0) {
       return (
         <AlertMsg>

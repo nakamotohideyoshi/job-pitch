@@ -1,36 +1,13 @@
 import { message } from 'antd';
 import DATA from './data';
-// import { FormComponent } from 'components';
 
-// import cookie from 'js-cookie';
-// import ApiClient from 'utils/ApiClient';
-
-/* nitification system */
-
-let notifSystem;
-export function setNotifSystem(ns) {
-  notifSystem = ns;
-}
-export function clearNotifs() {
-  if (notifSystem) {
-    notifSystem.clearNotifications();
-  }
-}
-export function successNotif(msg) {
-  if (notifSystem) {
-    notifSystem.addNotification({ message: msg, level: 'success' });
-  }
-}
-export function errorNotif(msg) {
-  if (notifSystem) {
-    notifSystem.addNotification({ message: msg, level: 'error' });
-  }
-}
-
-// /* logo image */
+/**
+|--------------------------------------------------
+| logo image
+|--------------------------------------------------
+*/
 
 const defaultLogo = require('assets/default_logo.jpg');
-const noImg = require('assets/no_img.png');
 
 function getImage(imageInfo, original) {
   return original ? imageInfo.image : imageInfo.thumbnail;
@@ -69,19 +46,47 @@ export function getJobLogo(job, original) {
   return getWorkplaceLogo(location_data, original);
 }
 
-// /* date time */
+/**
+|--------------------------------------------------
+| pitch
+|--------------------------------------------------
+*/
 
-// export function getTimeString(date) {
-//   const options = {
-//     month: 'short',
-//     day: 'numeric',
-//     hour: '2-digit',
-//     minute: '2-digit'
-//   };
-//   return date.toLocaleTimeString('en-us', options);
-// }
+export function getPitch(jobseeker) {
+  if (!jobseeker) return null;
 
-// /* distance */
+  const { pitches } = jobseeker;
+  if (!pitches || !pitches.length) return null;
+
+  for (let i = 0; i < pitches.length; i++) {
+    const pitch = pitches[i];
+    if (pitch.video) {
+      return pitch;
+    }
+  }
+
+  return null;
+}
+
+/**
+|--------------------------------------------------
+| name
+|--------------------------------------------------
+*/
+
+export function getFullBWName(job) {
+  return `${job.location_data.business_data.name} / ${job.location_data.name}`;
+}
+
+export function getFullJSName(jobSeeker) {
+  return `${jobSeeker.first_name} ${jobSeeker.last_name}`;
+}
+
+/**
+|--------------------------------------------------
+| distance
+|--------------------------------------------------
+*/
 
 function deg2rad(deg) {
   return deg * (Math.PI / 180);
@@ -110,41 +115,23 @@ export function getDistanceFromLatLonEx(p1, p2) {
   return `${Math.floor(d / 1000)} m`;
 }
 
-/* name */
-
-export function getFullBWName(job) {
-  return `${job.location_data.business_data.name} / ${job.location_data.name}`;
-}
-
-export function getFullJSName(jobSeeker) {
-  return `${jobSeeker.first_name} ${jobSeeker.last_name}`;
-}
-
 /**
 |--------------------------------------------------
 | get item
 |--------------------------------------------------
 */
 
-export function getIDByName(key, name) {
-  return DATA[key].filter(item => item.name === name)[0].id;
-}
-
-export function getNameByID(key, id) {
-  return (DATA[key].filter(item => item.id === id)[0] || {}).name;
-}
-
-export function getJobStatusByName(name) {
-  return DATA.jobStatuses.filter(status => status.name === name)[0].id;
-}
-
 export function getItemByID(objects, id) {
   return objects.filter(item => item.id === id)[0];
 }
 
+export function getNameByID(key, id) {
+  return (getItemByID(DATA[key], id) || {}).name;
+}
+
 /**
 |--------------------------------------------------
-| cache data
+| localstorage
 |--------------------------------------------------
 */
 
@@ -168,6 +155,15 @@ export function loadData(key) {
 |--------------------------------------------------
 */
 
+export function addObj(objects, obj) {
+  if (Array.isArray(objects)) {
+    const newObject = objects.slice(0);
+    newObject.push(obj);
+    return newObject;
+  }
+  return objects;
+}
+
 export function updateObj(object, updateInfo) {
   if (Array.isArray(object)) {
     return object.map(item => (item.id === updateInfo.id ? updateObj(item, updateInfo) : item));
@@ -187,66 +183,9 @@ export function removeObj(object, id) {
 
 /**
 |--------------------------------------------------
-| check form modify
+| form
 |--------------------------------------------------
 */
-
-// export function routePush(to, { history, confirm }) {
-//   if (FormComponent.modified) {
-//     confirm('Confirm', 'You did not save your changes.', [
-//       { outline: true },
-//       {
-//         label: 'Ok',
-//         color: 'green',
-//         onClick: () => {
-//           FormComponent.modified = false;
-//           history.push(to);
-//         }
-//       }
-//     ]);
-//   } else {
-//     history.push(to);
-//   }
-// }
-
-export function str2int(str) {
-  const val = parseInt(str, 10);
-  return isNaN(val) ? null : val;
-}
-
-export function getPitch(jobseeker) {
-  if (!jobseeker) return null;
-
-  const { pitches } = jobseeker;
-  if (!pitches || !pitches.length) return null;
-
-  for (let i = 0; i < pitches.length; i++) {
-    const pitch = pitches[i];
-    if (pitch.video) {
-      return pitch;
-    }
-  }
-
-  return null;
-}
-
-export function parseUrlParams(str) {
-  if (str[0] === '?') {
-    str = str.slice(1);
-  }
-
-  const params = {};
-  if (str !== '') {
-    str.split('&').forEach(str => {
-      const arr = str.split('=');
-      params[arr[0]] = arr[1];
-    });
-  }
-
-  return params;
-}
-
-/* form helper */
 
 export function setErrors(form, errors, values) {
   Object.keys(errors).forEach(key => {
@@ -268,3 +207,32 @@ export function getBase64(img, callback) {
   reader.addEventListener('load', () => callback(reader.result));
   reader.readAsDataURL(img);
 }
+
+/**
+|--------------------------------------------------
+| url params
+|--------------------------------------------------
+*/
+
+export function str2int(str) {
+  const val = parseInt(str, 10);
+  return isNaN(val) ? null : val;
+}
+
+// export function parseUrlParams(str) {
+//   if (str[0] === '?') {
+//     str = str.slice(1);
+//   }
+
+//   const params = {};
+//   if (str !== '') {
+//     str.split('&').forEach(str => {
+//       const arr = str.split('=');
+//       params[arr[0]] = arr[1];
+//     });
+//   }
+
+//   return params;
+// }
+
+/* form helper */

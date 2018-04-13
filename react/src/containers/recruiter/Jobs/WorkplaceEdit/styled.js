@@ -1,7 +1,8 @@
 import styled from 'styled-components';
+import { Form } from 'antd';
 import media from 'utils/mediaquery';
 
-export default styled.div`
+export default styled(Form)`
   .with-public {
     display: inline-block;
     width: calc(100% - 90px);
@@ -16,6 +17,10 @@ export default styled.div`
 
   .fa-question-circle {
     color: #ff9300;
+  }
+
+  textarea {
+    resize: none;
   }
 
   .map {

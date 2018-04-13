@@ -12,9 +12,12 @@ function* getJobs1(action) {
   });
 }
 
-const getJobs = getRequest({
-  url: ({ payload }) => `/api/user-jobs/?location=${payload.id}`
-});
+function* getJobs(action) {
+  yield race({
+    result: call(getRequest({ url: `/api/user-jobs/` }), action),
+    cancel: take(LOCATION_CHANGE)
+  });
+}
 
 const removeJob = deleteRequest({
   url: ({ payload }) => `/api/user-jobs/${payload.id}/`,

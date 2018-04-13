@@ -1,4 +1,3 @@
-import { LOCATION_CHANGE } from 'react-router-redux';
 import { createAction, handleActions } from 'redux-actions';
 import * as C from 'redux/constants';
 import * as helper from 'utils/helper';
@@ -19,10 +18,8 @@ export const saveWorkplace = createAction(C.RC_SAVE_WORKPLACE);
 // ------------------------------------
 
 const initialState = {
-  workplaces: [],
-  loading: false,
+  workplaces: null,
   error: null,
-  refreshList: true,
 
   workplace: null,
   saving: false
@@ -37,55 +34,52 @@ export default handleActions(
 
     // ---- get workplace ----
 
-    [requestPending(C.RC_GET_WORKPLACES)]: state => ({
-      ...state,
-      loading: true,
-      error: null
-    }),
+    [requestPending(C.RC_GET_WORKPLACES)]: state => initialState,
 
     [requestSuccess(C.RC_GET_WORKPLACES)]: (state, { payload }) => ({
       ...state,
-      workplaces: payload,
-      loading: false,
-      refreshList: false
+      workplaces: payload
     }),
 
     [requestFail(C.RC_GET_WORKPLACES)]: (state, { payload }) => ({
       ...state,
-      workplaces: [],
-      loading: false,
       error: payload
     }),
 
     // ---- remove workplace ----
 
-    [requestPending(C.RC_REMOVE_WORKPLACE)]: state => ({
+    [requestPending(C.RC_REMOVE_WORKPLACE)]: (state, { payload }) => ({
       ...state,
-      loading: true
+      workplaces: helper.updateObj(state.workplaces, {
+        id: payload.id,
+        loading: true
+      })
     }),
 
     [requestSuccess(C.RC_REMOVE_WORKPLACE)]: (state, { payload }) => ({
       ...state,
-      loading: false,
       workplaces: helper.removeObj(state.workplaces, payload.id)
     }),
 
-    [requestFail(C.RC_REMOVE_WORKPLACE)]: state => ({
+    [requestFail(C.RC_REMOVE_WORKPLACE)]: (state, { payload }) => ({
       ...state,
-      loading: false
+      workplaces: helper.updateObj(state.workplaces, {
+        id: payload.id,
+        loading: false
+      })
     }),
 
     // ---- get workplace ----
 
-    [requestSuccess(C.RC_GET_WORKPLACE)]: (state, { payload }) => ({
-      ...state,
-      workplace: payload
-    }),
+    // [requestSuccess(C.RC_GET_WORKPLACE)]: (state, { payload }) => ({
+    //   ...state,
+    //   workplace: payload
+    // }),
 
-    [requestFail(C.RC_GET_WORKPLACE)]: state => ({
-      ...state,
-      workplace: null
-    }),
+    // [requestFail(C.RC_GET_WORKPLACE)]: state => ({
+    //   ...state,
+    //   workplace: null
+    // }),
 
     // ---- save workplace ----
 
@@ -96,23 +90,13 @@ export default handleActions(
 
     [requestSuccess(C.RC_SAVE_WORKPLACE)]: state => ({
       ...state,
-      saving: false,
-      refreshList: true
+      saving: false
     }),
 
     [requestFail(C.RC_SAVE_WORKPLACE)]: state => ({
       ...state,
       saving: false
-    }),
-
-    [LOCATION_CHANGE]: (state, { payload: { pathname } }) => {
-      const reset = pathname.indexOf('/recruiter/jobs/workplace') !== 0;
-      return {
-        ...state,
-        refreshList: reset || state.refreshList,
-        workplaces: reset ? [] : state.workplaces
-      };
-    }
+    })
   },
   initialState
 );

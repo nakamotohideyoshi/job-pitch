@@ -17,5 +17,5 @@ export const PageSubHeader = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin: 9px 0;
+  margin-bottom: 15px;
 `;

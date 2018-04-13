@@ -29,6 +29,12 @@ injectGlobal`
     height: 80px !important;
     border-radius: 50% !important;
   }
+
+  .avatar-48 {
+    width: 48px !important;
+    height: 48px !important;
+    border-radius: 50% !important;
+  }
  
   .shadow1 {
     box-shadow: 0 3px 12px rgba(0, 0, 0, 0.25);

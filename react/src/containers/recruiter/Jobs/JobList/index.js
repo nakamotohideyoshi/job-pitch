@@ -1,15 +1,14 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { Breadcrumb, List, Button, Modal, Icon } from 'antd';
+import { Breadcrumb, List, Modal, Avatar, Button, Icon } from 'antd';
 
 import { getWorkplace } from 'redux/recruiter/workplaces';
 import { getJobs, saveJob, removeJob } from 'redux/recruiter/jobs';
 import DATA from 'utils/data';
 import * as helper from 'utils/helper';
 
-import { PageSubHeader, AlertMsg, Loading, Logo } from 'components';
-import Wrapper from './styled';
+import { PageSubHeader, AlertMsg, LinkButton, Loading, ListEx } from 'components';
 
 class JobList extends React.Component {
   state = {
@@ -17,15 +16,14 @@ class JobList extends React.Component {
   };
 
   componentWillMount() {
-    const { history, match, getWorkplace, getJobs, refreshList } = this.props;
+    const { match, getJobs, jobs } = this.props;
     const workplaceId = parseInt(match.params.workplaceId, 10);
-    getWorkplace({
-      id: workplaceId,
-      fail: () => history.replace('/recruiter/jobs/business')
-    });
+    // if (!jobs) {
+    //   getWorkplace();
+    // }
 
-    if (refreshList) {
-      getJobs({ id: workplaceId });
+    if (!jobs) {
+      getJobs();
     }
   }
 
@@ -35,6 +33,7 @@ class JobList extends React.Component {
   };
 
   addJob = () => {
+    helper.saveData('tutorial');
     const { history, workplace } = this.props;
     history.push(`/recruiter/jobs/job/add/${workplace.id}`);
   };
@@ -86,9 +85,10 @@ class JobList extends React.Component {
           <span onClick={e => this.showRemoveDialog(job, e)}>Remove</span>
         ]}
         onClick={() => this.selectJob(job)}
+        className={job.loading ? 'loading' : ''}
       >
         <List.Item.Meta
-          avatar={<Logo src={logo} size="80px" />}
+          avatar={<Avatar src={logo} className="avatar-80" />}
           title={<span className={closed}>{`${job.title}`}</span>}
           description={
             <div className={closed}>
@@ -101,104 +101,33 @@ class JobList extends React.Component {
             </div>
           }
         />
+        {job.loading && <Loading className="mask" size="small" />}
       </List.Item>
     );
   };
 
-  renderJobs = () => {
-    const { jobs, loading } = this.props;
-
-    if (jobs.length === 0) {
-      if (loading) {
-        return <Loading size="large" />;
-      }
-
-      return (
-        <AlertMsg>
-          <span>{`Empty`}</span>
-          {/* <a onClick={this.props.getJobs}>
-        <FontAwesomeIcon icon={faSyncAlt} />
-        Refresh
-      </a> */}
-        </AlertMsg>
-      );
-    }
-
-    return <List itemLayout="horizontal" dataSource={jobs} loading={loading} renderItem={this.renderJob} />;
-
-    // if (jobs.length === 0) {
-    //   return (
-    //     <FlexBox center>
-    //       <div className="alert-msg">
-    //         {DATA.jobsStep === 3
-    //           ? 'Okay, last step, now create your first job'
-    //           : "This workplace doesn't seem to have any jobs yet!"}
-    //       </div>
-    //       <a
-    //         className="btn-link"
-    //         onClick={() => {
-    //           delete DATA.jobsStep;
-    //           helper.saveData('jobs-step');
-    //           this.onAdd();
-    //         }}
-    //       >
-    //         Create job
-    //       </a>
-    //     </FlexBox>
-    //   );
-    // }
-
-    //   return (
-    //     <Row>
-    //       {jobs.map(job => {
-    //         const logo = helper.getJobLogo(job);
-    //         const sector = helper.getNameByID('sectors', job.sector);
-    //         const contract = helper.getNameByID('contracts', job.contract);
-    //         const hours = helper.getNameByID('hours', job.hours);
-    //         const closed = job.status === this.closedStatus ? 'closed' : '';
-
-    //         return (
-    //           <Col xs="12" sm="6" md="4" lg="3" key={job.id}>
-    //             <MJPCard
-    //               image={logo}
-    //               title={job.title}
-    //               tProperty1={contract}
-    //               tProperty2={hours}
-    //               bProperty1={sector}
-    //               onClick={() => this.onSelect(job)}
-    //               loading={job.updating || job.deleting}
-    //               className={closed}
-    //               menus={[
-    //                 {
-    //                   label: 'Edit',
-    //                   onClick: () => this.onEdit(job)
-    //                 },
-    //                 {
-    //                   label: 'Remove',
-    //                   onClick: () => this.onRemove(job)
-    //                 }
-    //               ]}
-    //             />
-    //           </Col>
-    //         );
-    //       })}
-    //       <Col xs="12" sm="6" md="4" lg="3">
-    //         <Card body onClick={() => this.onAdd()} className="add">
-    //           Add New Job
-    //         </Card>
-    //       </Col>
-    //     </Row>
-    //   );
+  renderEmpty = () => {
+    const tutorial = helper.loadData('tutorial');
+    return (
+      <AlertMsg>
+        <span>
+          {tutorial === 3
+            ? `Okay, last step, now create your first job`
+            : `This workplace doesn't seem to have any jobs yet!`}
+        </span>
+        <a onClick={this.addJob}>Create job</a>
+      </AlertMsg>
+    );
   };
 
   render() {
-    const { workplace, error } = this.props;
+    const { workplace, jobs, error } = this.props;
     const { id: workplaceId, business_data } = workplace || {};
     const { id: businessId } = business_data || {};
     const { selectedJob } = this.state;
 
     return (
-      <Wrapper>
+      <Fragment>
         <PageSubHeader>
           <Breadcrumb>
             <Breadcrumb.Item>
@@ -209,16 +138,19 @@ class JobList extends React.Component {
             </Breadcrumb.Item>
             <Breadcrumb.Item>Jobs</Breadcrumb.Item>
           </Breadcrumb>
-          <Link to={`/recruiter/jobs/job/add/${workplaceId}`}>Add Job</Link>
+          <LinkButton onClick={this.addJob}>Add Job</LinkButton>
         </PageSubHeader>
 
-        {error ? (
-          <AlertMsg>
-            <span>Server Error!</span>
-          </AlertMsg>
-        ) : (
-          this.renderJobs()
-        )}
+        <div className="content">
+          <ListEx
+            data={jobs}
+            error={error && 'Server Error!'}
+            loadingSize="large"
+            pagination={{ pageSize: 10 }}
+            renderItem={this.renderJob}
+            emptyRender={this.renderEmpty}
+          />
+        </div>
 
         <Modal
           className="ant-confirm ant-confirm-confirm"
@@ -250,7 +182,7 @@ class JobList extends React.Component {
             </div>
           </div>
         </Modal>
-      </Wrapper>
+      </Fragment>
     );
   }
 }
@@ -259,8 +191,6 @@ export default connect(
   state => ({
     workplace: state.rc_workplaces.workplace,
     jobs: state.rc_jobs.jobs,
-    loading: state.rc_jobs.loading,
-    refreshList: state.rc_jobs.refreshList,
     error: state.rc_jobs.error
   }),
   {

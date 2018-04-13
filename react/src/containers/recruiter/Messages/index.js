@@ -78,7 +78,7 @@ class Page extends React.Component {
     return (
       <List.Item>
         <List.Item.Meta
-          avatar={<Avatar src={avatar} />}
+          avatar={<Avatar src={avatar} className="avatar-48" />}
           title={<span onClick={this.showAppDetails}>{jobseekerName}</span>}
           description={
             <span onClick={this.showJobDetails}>

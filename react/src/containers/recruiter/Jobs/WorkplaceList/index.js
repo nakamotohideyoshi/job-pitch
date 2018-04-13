@@ -1,180 +1,126 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { Breadcrumb, List, Modal } from 'antd';
+import { Breadcrumb, List, Avatar, Modal } from 'antd';
 
 import { getWorkplaces, removeWorkplace } from 'redux/recruiter/workplaces';
 import * as helper from 'utils/helper';
 
-import { PageSubHeader, AlertMsg, Loading, Logo } from 'components';
-import Wrapper from './styled';
+import { PageSubHeader, AlertMsg, LinkButton, Loading, ListEx, Icons } from 'components';
 
 const { confirm } = Modal;
 
 class WorkplaceList extends React.Component {
   componentWillMount() {
-    const { match, getWorkplaces, refreshList } = this.props;
-    this.businessId = parseInt(match.params.businessId, 10);
-    if (refreshList) {
-      getWorkplaces({
-        id: this.businessId
-      });
+    if (!this.props.workplaces) {
+      this.props.getWorkplaces();
     }
   }
 
   selectWorkplace = ({ id }) => {
-    const { history } = this.props;
-    history.push(`/recruiter/jobs/job/${id}`);
+    this.props.history.push(`/recruiter/jobs/job/${id}`);
   };
 
   addWorkplace = () => {
-    const { history } = this.props;
-    history.push(`/recruiter/jobs/workplace/add/${this.businessId}`);
+    const tutorial = helper.loadData('tutorial');
+    if (tutorial === 2) {
+      helper.saveData('tutorial', 3);
+    }
+
+    this.props.history.push(`/recruiter/jobs/workplace/add/${this.props.businessId}`);
   };
 
-  editWorkplace = ({ id }, e) => {
-    e && e.stopPropagation();
-
-    const { history } = this.props;
-    history.push(`/recruiter/jobs/workplace/edit/${id}`);
+  editWorkplace = ({ id }, event) => {
+    event && event.stopPropagation();
+    this.props.history.push(`/recruiter/jobs/workplace/edit/${id}`);
   };
 
-  removeWorkplace = ({ id, name, jobs }, e) => {
-    e && e.stopPropagation();
+  removeWorkplace = ({ id, name, jobs }, event) => {
+    event && event.stopPropagation();
 
-    const { removeWorkplace } = this.props;
+    const count = jobs.length;
+    let message;
+    if (count === 0) {
+      message = `Are you sure you want to delete ${name}`;
+    } else {
+      const s = count !== 1 ? 's' : '';
+      message = `Deleting this workplace will also delete ${count} job${s}.
+                 If you want to hide the jobs instead you can deactive them.`;
+    }
+
     confirm({
-      title: `Are you sure you want to delete ${name}`,
+      content: message,
       okText: `Remove`,
       okType: 'danger',
       cancelText: 'Cancel',
       maskClosable: true,
       onOk: () => {
-        const jobCount = jobs.length;
-        if (jobCount === 0) {
-          removeWorkplace({ id });
-          return;
-        }
-
-        confirm({
-          title: `Deleting this workplace will also delete ${jobCount} jobs.
-          If you want to hide the jobs instead you can deactive them.`,
-          okText: `Remove`,
-          okType: 'danger',
-          cancelText: 'Cancel',
-          maskClosable: true,
-          onOk: () => {
-            removeWorkplace(id);
-          }
+        this.props.removeWorkplace({
+          id
         });
       }
     });
   };
 
   renderWorkplace = workplace => {
+    const { id, name, description, jobs, active_job_count, loading } = workplace;
     const logo = helper.getWorkplaceLogo(workplace);
-    const jn = workplace.jobs.length;
-    const jobCount = `Includes ${jn} job${jn !== 1 ? 's' : ''}`;
-    const jcn = jn - workplace.active_job_count;
-    const closedCount = `${jcn} inactive`;
+    const count = jobs.length;
+    const strJobs = `Includes ${count} job${count !== 1 ? 's' : ''}`;
+    const strInactiveJobs = `${count - active_job_count} inactive`;
 
     return (
       <List.Item
-        key={workplace.id}
+        key={id}
         actions={[
-          <span onClick={e => this.editWorkplace(workplace, e)}>Edit</span>,
-          <span onClick={e => this.removeWorkplace(workplace, e)}>Remove</span>
+          <span onClick={e => this.editWorkplace(workplace, e)}>
+            <Icons.Pen />
+          </span>,
+          <span onClick={e => this.removeWorkplace(workplace, e)}>
+            <Icons.TrashAlt />
+          </span>
         ]}
         onClick={() => this.selectWorkplace(workplace)}
+        className={loading ? 'loading' : ''}
       >
         <List.Item.Meta
-          avatar={<Logo src={logo} size="80px" />}
-          title={`${workplace.name}`}
+          avatar={<Avatar src={logo} className="avatar-80" />}
+          title={`${name}`}
           description={
-            <div>
+            <Fragment>
               <div className="properties">
-                <span>{jobCount}</span>
-                <span>{closedCount}</span>
+                <span style={{ width: '120px' }}>{strJobs}</span>
+                <span>{strInactiveJobs}</span>
               </div>
-              <div>{workplace.description}</div>
-            </div>
+              <div>{description}</div>
+            </Fragment>
           }
         />
+        {loading && <Loading className="mask" size="small" />}
       </List.Item>
     );
   };
 
-  renderWorkplaces = () => {
-    const { workplaces, loading } = this.props;
-
-    if (workplaces.length === 0) {
-      if (loading) {
-        return <Loading size="large" />;
-      }
-
-      return (
-        <AlertMsg>
-          <span>{`Empty`}</span>
-          {/* <a onClick={this.props.getJobs}>
-            <FontAwesomeIcon icon={faSyncAlt} />
-            Refresh
-          </a> */}
-        </AlertMsg>
-        //   <div className="alert-msg">
-        //     {DATA.jobsStep === 2
-        //       ? `Great, you've created your business!
-        //         Now let's create your work place`
-        //       : "This business doesn't seem to have a workplace for your staff"}
-        //   </div>
-        //   <a
-        //     className="btn-link"
-        //     onClick={() => {
-        //       DATA.jobsStep = 3;
-        //       helper.saveData('jobs-step', 3);
-        //       this.onAdd();
-        //     }}
-        //   >
-        //     Create workplace
-        //   </a>
-      );
-    }
-
+  renderEmpty = () => {
+    const tutorial = helper.loadData('tutorial');
     return (
-      <List itemLayout="horizontal" dataSource={workplaces} loading={loading} renderItem={this.renderWorkplace} />
-      // <Col xs="12" sm="6" md="4" lg="3" key={workplace.id}>
-      //   <MJPCard
-      //     image={logo}
-      //     title={workplace.name}
-      //     tProperty1={
-      //       <span>
-      //         <FontAwesomeIcon icon={faMapMarkerAlt} style={{ marginRight: '5px' }} />
-      //         {workplace.place_name}
-      //       </span>
-      //     }
-      //     bProperty1={jobCount}
-      //     bProperty2={closedCount}
-      //     onClick={() => this.onSelect(workplace)}
-      //     loading={workplace.deleting}
-      //     menus={[
-      //       {
-      //         label: 'Edit',
-      //         onClick: () => this.onEdit(workplace)
-      //       },
-      //       {
-      //         label: 'Remove',
-      //         onClick: () => this.onRemove(workplace)
-      //       }
-      //     ]}
-      //   />
-      // </Col>
+      <AlertMsg>
+        <span>
+          {tutorial === 2
+            ? `Great, you've created your business!
+               Now let's create your work place`
+            : `This business doesn't seem to have a workplace for your staff`}
+        </span>
+        <a onClick={this.addWorkplace}>Create workplace</a>
+      </AlertMsg>
     );
   };
 
   render() {
-    const { error } = this.props;
+    const { workplaces, error } = this.props;
 
     return (
-      <Wrapper>
+      <Fragment>
         <PageSubHeader>
           <Breadcrumb>
             <Breadcrumb.Item>
@@ -182,28 +128,37 @@ class WorkplaceList extends React.Component {
             </Breadcrumb.Item>
             <Breadcrumb.Item>Workplaces</Breadcrumb.Item>
           </Breadcrumb>
-          <Link to={`/recruiter/jobs/workplace/add/${this.businessId}`}>Add Workplace</Link>
+          <LinkButton onClick={this.addWorkplace}>Add Workplace</LinkButton>
         </PageSubHeader>
 
-        {error ? (
-          <AlertMsg>
-            <span>Server Error!</span>
-          </AlertMsg>
-        ) : (
-          this.renderWorkplaces()
-        )}
-      </Wrapper>
+        <div className="content">
+          <ListEx
+            data={workplaces}
+            error={error && 'Server Error!'}
+            loadingSize="large"
+            pagination={{ pageSize: 10 }}
+            renderItem={this.renderWorkplace}
+            emptyRender={this.renderEmpty}
+          />
+        </div>
+      </Fragment>
     );
   }
 }
 
 export default connect(
-  state => ({
-    workplaces: state.rc_workplaces.workplaces,
-    loading: state.rc_workplaces.loading,
-    refreshList: state.rc_workplaces.refreshList,
-    error: state.rc_workplaces.error
-  }),
+  (state, props) => {
+    const businessId = parseInt(props.match.params.businessId, 10);
+    let { workplaces, error } = state.rc_workplaces;
+    if (workplaces) {
+      workplaces = workplaces.filter(({ business }) => business === businessId);
+    }
+    return {
+      businessId,
+      workplaces,
+      error
+    };
+  },
   {
     getWorkplaces,
     removeWorkplace

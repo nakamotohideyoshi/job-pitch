@@ -1,4 +1,4 @@
-import { LOCATION_CHANGE } from 'react-router-redux';
+// import { LOCATION_CHANGE } from 'react-router-redux';
 import { createAction, handleActions } from 'redux-actions';
 import * as C from 'redux/constants';
 import * as helper from 'utils/helper';
@@ -24,10 +24,8 @@ const initialState = {
   jobs1: null,
   error1: null,
 
-  jobs: [],
-  loading: false,
+  jobs: null,
   error: null,
-  refreshList: true,
 
   job: null,
   saving: false
@@ -62,21 +60,17 @@ export default handleActions(
 
     [requestPending(C.RC_GET_JOBS)]: state => ({
       ...state,
-      loading: true,
+      jobs: null,
       error: null
     }),
 
     [requestSuccess(C.RC_GET_JOBS)]: (state, { payload }) => ({
       ...state,
-      jobs: payload,
-      loading: false,
-      refreshList: false
+      jobs: payload
     }),
 
     [requestFail(C.RC_GET_JOBS)]: (state, { payload }) => ({
       ...state,
-      jobs: [],
-      loading: false,
       error: payload
     }),
 
@@ -126,16 +120,16 @@ export default handleActions(
     [requestFail(C.RC_SAVE_JOB)]: state => ({
       ...state,
       saving: false
-    }),
+    })
 
-    [LOCATION_CHANGE]: (state, a) => {
-      const reset = a.payload.pathname.indexOf('/recruiter/jobs/job') !== 0;
-      return {
-        ...state,
-        refreshList: reset || state.refreshList,
-        jobs: reset ? [] : state.jobs
-      };
-    }
+    // [LOCATION_CHANGE]: (state, a) => {
+    //   const reset = a.payload.pathname.indexOf('/recruiter/jobs/job') !== 0;
+    //   return {
+    //     ...state,
+    //     refreshList: reset || state.refreshList,
+    //     jobs: reset ? [] : state.jobs
+    //   };
+    // }
   },
   initialState
 );

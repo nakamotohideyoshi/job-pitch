@@ -88,14 +88,14 @@ function* getUserData() {
     DATA.paypalProducts = result[9];
 
     DATA.JOB = {
-      OPEN: helper.getJobStatusByName('OPEN'),
-      CLOSED: helper.getJobStatusByName('CLOSED')
+      OPEN: DATA.jobStatuses.filter(({ name }) => name === 'OPEN')[0].id,
+      CLOSED: DATA.jobStatuses.filter(({ name }) => name === 'CLOSED')[0].id
     };
 
     DATA.APP = {
-      CREATED: helper.getIDByName('appStatuses', 'CREATED'),
-      ESTABLISHED: helper.getIDByName('appStatuses', 'ESTABLISHED'),
-      DELETED: helper.getIDByName('appStatuses', 'DELETED')
+      CREATED: DATA.appStatuses.filter(({ name }) => name === 'CREATED')[0].id,
+      ESTABLISHED: DATA.appStatuses.filter(({ name }) => name === 'ESTABLISHED')[0].id,
+      DELETED: DATA.appStatuses.filter(({ name }) => name === 'DELETED')[0].id
     };
   }
 

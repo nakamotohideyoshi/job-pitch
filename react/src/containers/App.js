@@ -8,7 +8,7 @@ import { Loading } from 'components';
 import { getUserData } from 'redux/auth';
 import Routers from './routers';
 
-message.config({ top: 70, duration: 3 });
+message.config({ top: 70 });
 
 const App = ({ location, status, user, getUserData }) => {
   if (status !== 'auth' && !user) {

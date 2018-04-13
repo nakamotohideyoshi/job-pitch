@@ -43,12 +43,6 @@ export default styled.div`
       .ant-list-item {
         padding: 15px !important;
 
-        .ant-avatar {
-          width: 48px;
-          height: 48px;
-          border-radius: 50%;
-        }
-
         .ant-list-item-meta-title span {
           color: #ff9300;
           cursor: pointer;

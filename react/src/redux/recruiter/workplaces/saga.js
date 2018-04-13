@@ -1,32 +1,38 @@
-import { takeLatest, call, put, select } from 'redux-saga/effects';
+import { takeLatest, call, put, race, take, select } from 'redux-saga/effects';
+import { LOCATION_CHANGE } from 'react-router-redux';
+import { message } from 'antd';
 import * as C from 'redux/constants';
 import * as helper from 'utils/helper';
-import { getRequest, postRequest, putRequest, deleteRequest, requestSuccess } from 'utils/request';
+import { getRequest, postRequest, putRequest, deleteRequest, requestSuccess } from 'utils/request1';
 
-const getWorkplaces = getRequest({
-  url: action => `/api/user-locations/?business=${action.payload.id}`
-});
+function* getWorkplaces(action) {
+  yield race({
+    result: call(getRequest({ url: `/api/user-locations/` }), action),
+    cancel: take(LOCATION_CHANGE)
+  });
+}
 
 const removeWorkplace = deleteRequest({
   url: action => `/api/user-locations/${action.payload.id}/`,
-  payloadOnSuccess: (_, action) => action.payload
+  success: (_, { payload }) => payload,
+  fail: (_, { payload }) => payload
 });
 
-function* getWorkplace(action) {
-  const { rc_workplaces } = yield select();
-  const { workplaces } = rc_workplaces || {};
-  const { id, success } = action.payload;
-  const workplace = helper.getItemByID(workplaces || [], id);
-  if (workplace) {
-    yield put({ type: requestSuccess(C.RC_GET_WORKPLACE), payload: workplace });
-    success && success(workplace);
-  } else {
-    yield call(getRequest({ url: `/api/user-locations/${id}/` }), action);
-  }
-}
+// function* getWorkplace(action) {
+//   const { rc_workplaces } = yield select();
+//   const { workplaces } = rc_workplaces || {};
+//   const { id, success } = action.payload;
+//   const workplace = helper.getItemByID(workplaces || [], id);
+//   if (workplace) {
+//     yield put({ type: requestSuccess(C.RC_GET_WORKPLACE), payload: workplace });
+//     success && success(workplace);
+//   } else {
+//     yield call(getRequest({ url: `/api/user-locations/${id}/` }), action);
+//   }
+// }
 
 function* saveWorkplace(action) {
-  const { data, logo, onSuccess, onFail, onUploading } = action.payload;
+  const { data, logo, onUploading } = action.payload;
 
   let workplace;
   if (!data.id) {
@@ -36,14 +42,15 @@ function* saveWorkplace(action) {
   }
 
   if (!workplace) {
-    return onFail && onFail('Save filed');
+    message.error('Save filed!');
+    return;
   }
 
   if (logo) {
     if (logo.file) {
       const image = yield call(postRequest({ url: '/api/user-location-images/' }), {
         payload: {
-          formData: true,
+          isFormData: true,
           data: {
             order: 0,
             location: workplace.id,
@@ -58,20 +65,29 @@ function* saveWorkplace(action) {
       if (image) {
         workplace.images = [image];
       } else {
-        onFail('Logo upload failed!');
+        message.error('Logo upload failed!');
       }
-    } else if (workplace.images.length > 0 && !logo.exist) {
+    } else if (workplace.images.length && !logo.exist) {
       yield call(deleteRequest({ url: `/api/user-location-images/${workplace.images[0].id}/` }));
       workplace.images = [];
     }
   }
 
-  onSuccess && onSuccess(workplace);
+  const { rc_workplaces } = yield select();
+  let { workplaces } = rc_workplaces;
+  if (!data.id) {
+    workplaces = helper.addObj(workplaces, workplace);
+  } else {
+    workplaces = helper.updateObj(workplaces, workplace);
+  }
+  yield put({ type: C.RC_WORKPLACES_UPDATE, payload: { workplaces } });
+
+  message.success('Workplace saved successfully!');
 }
 
 export default function* sagas() {
   yield takeLatest(C.RC_GET_WORKPLACES, getWorkplaces);
   yield takeLatest(C.RC_REMOVE_WORKPLACE, removeWorkplace);
-  yield takeLatest(C.RC_GET_WORKPLACE, getWorkplace);
+  // yield takeLatest(C.RC_GET_WORKPLACE, getWorkplace);
   yield takeLatest(C.RC_SAVE_WORKPLACE, saveWorkplace);
 }

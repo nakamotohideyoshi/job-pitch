@@ -72,7 +72,7 @@ class Messages extends React.Component {
     return (
       <List.Item>
         <List.Item.Meta
-          avatar={<Avatar src={avatar} />}
+          avatar={<Avatar src={avatar} className="avatar-48" />}
           title={<span onClick={this.showJobDetails}>{jobTitle}</span>}
           description={<span onClick={this.showJobDetails}>{subName}</span>}
         />

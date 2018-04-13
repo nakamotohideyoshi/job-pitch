@@ -52,7 +52,7 @@ class Sidebar extends React.PureComponent {
     return (
       <List.Item key={id} className={`${deleted} ${selected}`} onClick={() => this.selectApp(id)}>
         <List.Item.Meta
-          avatar={<Avatar src={image} size="large" />}
+          avatar={<Avatar src={image} className="avatar-48" />}
           title={
             <Fragment>
               <span className="title single-line">{name}</span>

@@ -2,7 +2,59 @@ import styled from 'styled-components';
 import media from 'utils/mediaquery';
 
 export default styled.div`
-  .ant-list {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+
+  .content {
+    flex: 1;
+    position: relative;
+    margin-bottom: 40px;
+    min-height: 100px;
+
+    .ant-list-item {
+      position: relative;
+
+      .ant-list-item-meta-title {
+        font-size: 16px;
+      }
+
+      .properties {
+        font-size: 12px;
+        span {
+          display: inline-block;
+        }
+        /* span + span {
+          margin-left: 50px;
+        } */
+      }
+
+      .ant-list-item-action {
+        span:hover {
+          color: #00b6a4;
+        }
+      }
+
+      &.loading {
+        pointer-events: none;
+
+        .mask {
+          background-color: rgba(255, 255, 255, 0.5);
+          z-index: 1;
+        }
+      }
+
+      &:hover {
+        cursor: pointer;
+
+        .ant-list-item-meta-title {
+          color: #00b6a4;
+        }
+      }
+    }
+  }
+
+  /* .ant-list {
     margin-bottom: 30px;
 
     .ant-list-item {
@@ -30,7 +82,7 @@ export default styled.div`
         }
       }
     }
-  }
+  } */
 
   form {
     max-width: 700px;

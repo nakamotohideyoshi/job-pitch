@@ -1,4 +1,3 @@
-import { LOCATION_CHANGE } from 'react-router-redux';
 import { createAction, handleActions } from 'redux-actions';
 import * as C from 'redux/constants';
 import * as helper from 'utils/helper';
@@ -20,12 +19,12 @@ export const purchase = createAction(C.RC_PURCHASE);
 // ------------------------------------
 
 const initialState = {
-  businesses: [],
-  loading: false,
+  businesses: null,
   error: null,
 
-  business: null,
+  selectedId: null,
   saving: false,
+  saveError: null,
 
   credits: 0
 };
@@ -39,23 +38,15 @@ export default handleActions(
 
     // ---- get business ----
 
-    [requestPending(C.RC_GET_BUSINESSES)]: state => ({
-      ...state,
-      loading: true,
-      error: null
-    }),
+    [requestPending(C.RC_GET_BUSINESSES)]: state => initialState,
 
     [requestSuccess(C.RC_GET_BUSINESSES)]: (state, { payload }) => ({
       ...state,
-      businesses: payload,
-      loading: false,
-      refreshList: false
+      businesses: payload
     }),
 
     [requestFail(C.RC_GET_BUSINESSES)]: (state, { payload }) => ({
       ...state,
-      businesses: [],
-      loading: false,
       error: payload
     }),
 
@@ -63,7 +54,10 @@ export default handleActions(
 
     [requestPending(C.RC_REMOVE_BUSINESS)]: (state, { payload }) => ({
       ...state,
-      loading: true
+      businesses: helper.updateObj(state.businesses, {
+        id: payload.id,
+        loading: true
+      })
     }),
 
     [requestSuccess(C.RC_REMOVE_BUSINESS)]: (state, { payload }) => ({
@@ -72,56 +66,32 @@ export default handleActions(
       businesses: helper.removeObj(state.businesses, payload.id)
     }),
 
-    [requestFail(C.RC_REMOVE_BUSINESS)]: state => ({
+    [requestFail(C.RC_REMOVE_BUSINESS)]: (state, { payload }) => ({
       ...state,
-      loading: false
-    }),
-
-    // ---- select business ----
-
-    [requestSuccess(C.RC_SELECT_BUSINESS)]: (state, { payload }) => ({
-      ...state,
-      business: payload
-    }),
-
-    [requestFail(C.RC_SELECT_BUSINESS)]: state => ({
-      ...state,
-      business: null
+      businesses: helper.updateObj(state.businesses, {
+        id: payload.data.job,
+        loading: false
+      })
     }),
 
     // ---- save business ----
 
     [requestPending(C.RC_SAVE_BUSINESS)]: state => ({
       ...state,
-      saving: true
+      saving: true,
+      saveError: null
     }),
 
-    [requestSuccess(C.RC_SAVE_BUSINESS)]: state => ({
-      ...state,
-      saving: false,
-      refreshList: true
-    }),
-
-    [requestFail(C.RC_SAVE_BUSINESS)]: state => ({
+    [requestSuccess(C.RC_SAVE_BUSINESS)]: (state, { payload }) => ({
       ...state,
       saving: false
     }),
 
-    [LOCATION_CHANGE]: (state, { payload: { pathname } }) => {
-      if (pathname.indexOf('/auth') === 0) {
-        return initialState;
-      }
-
-      const key = pathname.split('/')[2];
-      const reset = pathname.indexOf('/recruiter/jobs/business') !== 0;
-      // const credits = pathname.indexOf('/recruiter/settings/credits') === 0 ? state.credits : 0;
-      return {
-        ...state,
-        refreshList: reset || state.refreshList,
-        workplaces: reset ? [] : state.businesses,
-        business: key === 'applications' || key === 'jobs' ? state.business : []
-      };
-    }
+    [requestFail(C.RC_SAVE_BUSINESS)]: (state, { payload }) => ({
+      ...state,
+      saving: false,
+      saveError: payload
+    })
   },
   initialState
 );

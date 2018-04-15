@@ -15,14 +15,6 @@ export default styled(Form)`
     float: right;
   }
 
-  .fa-question-circle {
-    color: #ff9300;
-  }
-
-  textarea {
-    resize: none;
-  }
-
   .map {
     position: relative;
     width: 100%;

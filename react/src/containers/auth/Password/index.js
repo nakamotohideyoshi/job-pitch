@@ -29,7 +29,7 @@ class PasswordForm extends React.Component {
           this.setState({ loading: false });
           message.success(success);
         },
-        fail: ({ data }) => {
+        fail: data => {
           this.setState({ loading: false });
           helper.setErrors(form, data, values);
         }

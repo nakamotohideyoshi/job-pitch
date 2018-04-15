@@ -1,24 +1,15 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { Breadcrumb, Form, Input, Select, Switch, Tooltip, Button, message } from 'antd';
+import { Breadcrumb, Form, Input, Select, Switch, Tooltip, Button, notification } from 'antd';
 
-import { getWorkplace } from 'redux/recruiter/workplaces';
-import { getJob, saveJob } from 'redux/recruiter/jobs';
-import { uploadJobPitch } from 'redux/jobseeker/pitch';
+import { saveJob } from 'redux/recruiter/jobs';
+import { uploadJobPitch } from 'redux/pitch';
 import DATA from 'utils/data';
 import * as helper from 'utils/helper';
 
-import {
-  PageSubHeader,
-  PopupProgress,
-  ImageSelector,
-  NoLabelField,
-  VideoRecorder,
-  VideoPlayer,
-  Icons
-} from 'components';
-import Wrapper from './styled';
+import { PopupProgress, ImageSelector, NoLabelField, VideoRecorder, VideoPlayer, Icons } from 'components';
+import StyledForm from './styled';
 
 const { Item } = Form;
 const { Option } = Select;
@@ -26,58 +17,49 @@ const { TextArea } = Input;
 
 class JobEdit extends React.Component {
   state = {
-    showPlayer: false,
-    newPitchUrl: null,
-    newPitchData: null,
     logo: {
       url: null,
       file: null,
       exist: false
-    }
+    },
+    loading: null,
+    showPlayer: false,
+    newPitchUrl: null,
+    newPitchData: null
   };
 
   componentDidMount() {
-    const { match, getWorkplace, getJob, form } = this.props;
-    const workplaceId = parseInt(match.params.workplaceId, 10);
-    if (workplaceId) {
-      getWorkplace({
-        id: workplaceId,
-        success: workplace =>
-          this.setState({
-            logo: {
-              url: helper.getWorkplaceLogo(workplace),
-              exist: false
-            }
-          }),
-        fail: this.goBuisinessList
-      });
+    const { workplace, job, form } = this.props;
+
+    if (!workplace) {
+      this.goBuisinessList();
       return;
     }
 
-    const jobId = parseInt(match.params.jobId, 10);
+    if (job) {
+      this.setState({
+        logo: {
+          url: helper.getJobLogo(job),
+          exist: (job.images || []).length > 0
+        }
+      });
 
-    getJob({
-      id: jobId,
-      success: job => {
-        this.setState({
-          job,
-          logo: {
-            url: helper.getJobLogo(job),
-            exist: (job.images || []).length > 0
-          }
-        });
-
-        form.setFieldsValue({
-          status: job.status === DATA.JOB.OPEN,
-          title: job.title,
-          sector: job.sector,
-          contract: job.contract,
-          hours: job.hours,
-          description: job.description
-        });
-      },
-      fail: this.goBuisinessList
-    });
+      form.setFieldsValue({
+        status: job.status === DATA.JOB.OPEN,
+        title: job.title,
+        sector: job.sector,
+        contract: job.contract,
+        hours: job.hours,
+        description: job.description
+      });
+    } else {
+      this.setState({
+        logo: {
+          url: helper.getWorkplaceLogo(workplace),
+          exist: false
+        }
+      });
+    }
   }
 
   setLogo = (file, url) =>
@@ -89,73 +71,87 @@ class JobEdit extends React.Component {
       }
     });
 
-  goBuisinessList = () => this.props.history.push('/recruiter/jobs/business');
+  goBuisinessList = () => {
+    this.props.history.push('/recruiter/jobs/business');
+  };
 
   goJobList = () => {
-    const { workplace, history } = this.props;
-    const { job } = this.state;
-    history.push(`/recruiter/jobs/job/${workplace.id || job.location}`);
+    const { workplace: { id }, history } = this.props;
+    history.push(`/recruiter/jobs/job/${id}`);
   };
 
   save = () => {
-    const { form, workplace, saveJob } = this.props;
-    const { job } = this.state;
+    const { form, workplace, job, saveJob } = this.props;
 
     form.validateFieldsAndScroll({ scroll: { offsetTop: 70 } }, (err, values) => {
       if (err) return;
 
-      const { logo } = this.state;
+      this.setState({
+        loading: {
+          label: 'Saving...'
+        }
+      });
+
       saveJob({
         data: {
           ...values,
-          status: values.status ? DATA.JOB.OPEN : DATA.jobClosed,
-          location: (workplace || {}).id || (job || {}).location,
+          status: values.status ? DATA.JOB.OPEN : DATA.JOB.CLOSED,
+          location: workplace.id,
           id: (job || {}).id
         },
-        logo,
-        onUploading: progress => {
-          const value = progress ? Math.floor(progress.loaded / progress.total * 100) : null;
-          this.setState({
-            uploading: {
-              label: 'Logo uploading...',
-              value
-            }
-          });
-        },
-        onSuccess: () => {
+        logo: this.state.logo,
+        onSuccess: msg => {
           if (this.state.newPitchData) {
             this.uploadPitch();
           } else {
-            message.success('Job saved successfully!');
+            notification.success({
+              message: 'Notification',
+              description: msg
+            });
+            this.goJobList();
           }
         },
         onFail: error => {
-          message.error(error);
+          this.setState({ loading: null });
+          notification.error({
+            message: 'Notification',
+            description: error
+          });
+        },
+        onProgress: progress => {
+          this.setState({
+            loading: {
+              label: 'Logo uploading...',
+              progress: Math.floor(progress.loaded / progress.total * 100)
+            }
+          });
         }
       });
     });
   };
 
   uploadPitch = () => {
-    const { job, newPitchData } = this.state;
     this.props.uploadJobPitch({
-      job: job.id,
-      data: newPitchData,
-      onUploadProgress: (label, value) => {
-        const uploading = label ? { label, value } : null;
-        this.setState({ uploading });
+      job: this.props.job.id,
+      data: this.state.newPitchData,
+      onSuccess: msg => {
+        notification.success({
+          message: 'Notification',
+          description: msg
+        });
+        this.goJobList();
       },
-      success: () => {
-        this.setState({ uploading: null });
-        message.success('Profile saved successfully!');
-
-        if (!this.props.jobseeker.profile) {
-          this.props.history.push('/jobseeker/settings/jobprofile');
-        }
+      onFail: error => {
+        this.setState({ loading: null });
+        notification.error({
+          message: 'Notification',
+          description: error
+        });
       },
-      fail: error => {
-        this.setState({ uploading: null });
-        message.error(error);
+      onProgress: (label, progress) => {
+        this.setState({
+          loading: { label, progress }
+        });
       }
     });
   };
@@ -166,158 +162,151 @@ class JobEdit extends React.Component {
     this.setState({ newPitchUrl, newPitchData });
   };
 
-  recordButton = props => (
-    <Button {...props}>
-      <Icons.Video /> Record New
-    </Button>
-  );
+  recordButton = props => <Button {...props}>Record New</Button>;
 
   render() {
-    const { workplace, saving, form } = this.props;
-    const { job } = this.state;
-    const workplace1 = workplace || (job || {}).location_data || {};
-    const business = workplace1.business_data || {};
+    const { logo, loading, showPlayer } = this.state;
+    const { workplace, job, form } = this.props;
     const { getFieldDecorator } = form;
-    const { logo, uploading, showPlayer } = this.state;
-
-    const pitch = {};
+    const pitch = helper.getPitch(job) || {};
 
     return (
-      <Wrapper>
-        <PageSubHeader>
-          <Breadcrumb>
-            <Breadcrumb.Item>
-              <Link to="/recruiter/jobs/business">Businesses</Link>
-            </Breadcrumb.Item>
-            <Breadcrumb.Item>
-              <Link to={`/recruiter/jobs/workplace/${business.id}`}>Workplaces</Link>
-            </Breadcrumb.Item>
-            <Breadcrumb.Item>
-              <Link to={`/recruiter/jobs/job/${workplace1.id}`}>Jobs</Link>
-            </Breadcrumb.Item>
-            <Breadcrumb.Item>
-              {workplace && 'Add'}
-              {job && 'Edit'}
-            </Breadcrumb.Item>
-          </Breadcrumb>
-        </PageSubHeader>
+      <Fragment>
+        <Breadcrumb>
+          <Breadcrumb.Item>
+            <Link to="/recruiter/jobs/business">Businesses</Link>
+          </Breadcrumb.Item>
+          <Breadcrumb.Item>
+            {workplace && <Link to={`/recruiter/jobs/workplace/${workplace.business_data.id}`}>Workplaces</Link>}
+          </Breadcrumb.Item>
+          <Breadcrumb.Item>{workplace && <Link to={`/recruiter/jobs/job/${workplace.id}`}>Jobs</Link>}</Breadcrumb.Item>
+          <Breadcrumb.Item>{job ? 'Edit' : 'Add'}</Breadcrumb.Item>
+        </Breadcrumb>
 
-        <Form>
-          <Item label="Active" className="status-field">
-            {getFieldDecorator('status', { valuePropName: 'checked', initialValue: true })(<Switch />)}
-          </Item>
+        <div className="content">
+          <StyledForm>
+            <Item label="Active" className="status-field">
+              {getFieldDecorator('status', { valuePropName: 'checked', initialValue: true })(<Switch />)}
+            </Item>
 
-          <Item label="Title">
-            {getFieldDecorator('title', {
-              rules: [
-                { required: true, message: 'Please input job title!' },
-                { whitespace: true, message: 'This field may not be blank.' }
-              ]
-            })(<Input />)}
-          </Item>
+            <Item label="Title">
+              {getFieldDecorator('title', {
+                rules: [
+                  { required: true, message: 'Please input job title!' },
+                  { whitespace: true, message: 'This field may not be blank.' }
+                ]
+              })(<Input autoFocus />)}
+            </Item>
 
-          <Item label="Sector">
-            {getFieldDecorator('sector', {
-              rules: [{ required: true, message: 'Please select sector!' }]
-            })(
-              <Select
-                showSearch
-                allowClear
-                filterOption={(input, option) => option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
-              >
-                {DATA.sectors.map(({ id, name }) => (
-                  <Option value={id} key={id}>
-                    {name}
-                  </Option>
-                ))}
-              </Select>
-            )}
-          </Item>
-
-          <Item label="Contract">
-            {getFieldDecorator('contract', {
-              rules: [{ required: true, message: 'Please select contract!' }]
-            })(
-              <Select allowClear>
-                {DATA.contracts.map(({ id, name }) => (
-                  <Option value={id} key={id}>
-                    {name}
-                  </Option>
-                ))}
-              </Select>
-            )}
-          </Item>
-
-          <Item label="Hours">
-            {getFieldDecorator('hours', {
-              rules: [{ required: true, message: 'Please select hours!' }]
-            })(
-              <Select allowClear>
-                {DATA.hours.map(({ id, name }) => (
-                  <Option value={id} key={id}>
-                    {name}
-                  </Option>
-                ))}
-              </Select>
-            )}
-          </Item>
-
-          <Item label="Description">
-            {getFieldDecorator('description', {
-              rules: [
-                { required: true, message: 'Please enter description!' },
-                { whitespace: true, message: 'This field may not be blank.' }
-              ]
-            })(<TextArea autosize={{ minRows: 3, maxRows: 20 }} />)}
-          </Item>
-
-          <Item
-            label={
-              <span>
-                Video pitch&nbsp;
-                <Tooltip title="Tips on how to record your pitch will be placed here.">
-                  <Icons.QuestionCircle />
-                </Tooltip>
-              </span>
-            }
-          >
-            <div>
-              <VideoRecorder showInfo buttonComponent={this.recordButton} onChange={this.changePitch} />
-              {!pitch.video && (
-                <Button onClick={() => this.playPitch(true)} className="btn-play">
-                  <Icons.Play />Play Current
-                </Button>
+            <Item label="Sector">
+              {getFieldDecorator('sector', {
+                rules: [{ required: true, message: 'Please select sector!' }]
+              })(
+                <Select
+                  showSearch
+                  allowClear
+                  filterOption={(input, option) =>
+                    option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                  }
+                >
+                  {DATA.sectors.map(({ id, name }) => (
+                    <Option value={id} key={id}>
+                      {name}
+                    </Option>
+                  ))}
+                </Select>
               )}
-            </div>
-          </Item>
+            </Item>
 
-          <Item label="Logo">
-            <ImageSelector url={logo.url} removable={logo.exist} onChange={this.setLogo} />
-          </Item>
+            <Item label="Contract">
+              {getFieldDecorator('contract', {
+                rules: [{ required: true, message: 'Please select contract!' }]
+              })(
+                <Select allowClear>
+                  {DATA.contracts.map(({ id, name }) => (
+                    <Option value={id} key={id}>
+                      {name}
+                    </Option>
+                  ))}
+                </Select>
+              )}
+            </Item>
 
-          <NoLabelField className="subimt-field">
-            <Button type="primary" loading={saving} onClick={this.save}>
-              Save
-            </Button>
-            <Button onClick={this.goJobList}>Cancel</Button>
-          </NoLabelField>
-        </Form>
+            <Item label="Hours">
+              {getFieldDecorator('hours', {
+                rules: [{ required: true, message: 'Please select hours!' }]
+              })(
+                <Select allowClear>
+                  {DATA.hours.map(({ id, name }) => (
+                    <Option value={id} key={id}>
+                      {name}
+                    </Option>
+                  ))}
+                </Select>
+              )}
+            </Item>
+
+            <Item label="Description">
+              {getFieldDecorator('description', {
+                rules: [
+                  { required: true, message: 'Please enter description!' },
+                  { whitespace: true, message: 'This field may not be blank.' }
+                ]
+              })(<TextArea autosize={{ minRows: 3, maxRows: 20 }} />)}
+            </Item>
+
+            <Item
+              label={
+                <span>
+                  Video pitch&nbsp;
+                  <Tooltip title="Tips on how to record your pitch will be placed here.">
+                    <Icons.QuestionCircle />
+                  </Tooltip>
+                </span>
+              }
+            >
+              <div>
+                <VideoRecorder showInfo buttonComponent={this.recordButton} onChange={this.changePitch} />
+                {pitch.video && (
+                  <Button onClick={() => this.playPitch(true)} className="btn-play">
+                    Play Current
+                  </Button>
+                )}
+              </div>
+            </Item>
+
+            <Item label="Logo">
+              <ImageSelector url={logo.url} removable={logo.exist} onChange={this.setLogo} />
+            </Item>
+
+            <NoLabelField className="subimt-field">
+              <Button type="primary" onClick={this.save}>
+                Save
+              </Button>
+              <Button onClick={this.goJobList}>Cancel</Button>
+            </NoLabelField>
+          </StyledForm>
+        </div>
 
         {showPlayer && <VideoPlayer videoUrl={pitch.video} onClose={() => this.playPitch()} />}
-        {uploading && <PopupProgress label={uploading.label} value={uploading.value} />}
-      </Wrapper>
+        {loading && <PopupProgress label={loading.label} value={loading.progress} />}
+      </Fragment>
     );
   }
 }
 
 export default connect(
-  state => ({
-    workplace: state.rc_workplaces.workplace,
-    saving: state.rc_jobs.saving
-  }),
+  (state, { match }) => {
+    const workplaceId = parseInt(match.params.workplaceId, 10);
+    const workplace = helper.getItemByID(state.rc_workplaces.workplaces, workplaceId);
+    const jobId = parseInt(match.params.jobId, 10);
+    const job = helper.getItemByID(state.rc_jobs.jobs, jobId);
+    return {
+      workplace: workplace || (job || {}).location_data,
+      job
+    };
+  },
   {
-    getWorkplace,
-    getJob,
     saveJob,
     uploadJobPitch
   }

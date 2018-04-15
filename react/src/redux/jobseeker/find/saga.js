@@ -2,7 +2,7 @@ import { LOCATION_CHANGE } from 'react-router-redux';
 import { takeLatest, race, call, take } from 'redux-saga/effects';
 
 import * as C from 'redux/constants';
-import { getRequest, postRequest } from 'utils/request1';
+import { getRequest, postRequest } from 'utils/request';
 
 function* findJobs(action) {
   yield race({
@@ -12,9 +12,7 @@ function* findJobs(action) {
 }
 
 const applyJob = postRequest({
-  url: `/api/applications/`,
-  success: (_, { payload }) => payload,
-  fail: (_, { payload }) => payload
+  url: `/api/applications/`
 });
 
 export default function* sagas() {

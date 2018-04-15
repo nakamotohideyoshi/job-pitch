@@ -63,7 +63,7 @@ export default styled.div`
         }
 
         &.selected {
-          background-color: ${colors.gray1};
+          background-color: ${colors.lightGreen};
           box-shadow: inset -4px 0px 0px 0px ${colors.primary};
 
           .title {
@@ -72,7 +72,7 @@ export default styled.div`
         }
 
         &:hover {
-          background-color: ${colors.gray1};
+          background-color: ${colors.lightGreen};
         }
       }
 

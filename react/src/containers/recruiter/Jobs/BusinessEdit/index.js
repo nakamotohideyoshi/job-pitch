@@ -1,70 +1,50 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { Breadcrumb, Form, Input, Button, message } from 'antd';
+import { Breadcrumb, Form, Input, Button, notification } from 'antd';
 
-import { updateStatus, getBusinesses, saveBusiness } from 'redux/recruiter/businesses';
+import { saveBusiness } from 'redux/recruiter/businesses';
 import DATA from 'utils/data';
 import * as helper from 'utils/helper';
 
-import { AlertMsg, PopupProgress, ImageSelector } from 'components';
-import Wrapper from './styled';
+import { PopupProgress, ImageSelector, NoLabelField } from 'components';
+import StyledForm from './styled';
 
 const { Item } = Form;
 
 class BusinessEdit extends React.Component {
   state = {
-    business: null,
-    loading: false,
-    progress: null,
     logo: {
       url: null,
       file: null,
       exist: false
-    }
+    },
+    loading: null
   };
 
   componentDidMount() {
-    const { match, businesses, getBusinesses } = this.props;
-    this.businessId = parseInt(match.params.businessId, 10);
-    if (this.businessId) {
-      if (businesses.length) {
-        this.getBusiness();
-      } else {
-        getBusinesses({
-          success: this.getBusiness
-        });
-      }
-    } else {
-      this.setState({
-        logo: {
-          url: helper.getBusinessLogo()
-        }
-      });
-    }
-  }
+    const { business, form } = this.props;
 
-  getBusiness = () => {
-    const { updateStatus, businesses, form } = this.props;
-    const business = helper.getItemByID(businesses, this.businessId);
     if (business) {
-      form.setFieldsValue({
-        name: business.name
-      });
-
       this.setState({
-        business,
         logo: {
           url: helper.getBusinessLogo(business),
           exist: (business.images || []).length > 0
         }
       });
 
-      updateStatus({ credits: business.tokens });
+      form.setFieldsValue({
+        name: business.name
+      });
     } else {
-      this.goBuisinessList();
+      this.setState({
+        logo: {
+          url: helper.getBusinessLogo(),
+          exist: false
+        }
+      });
     }
-  };
+  }
 
   setLogo = (file, url) =>
     this.setState({
@@ -75,73 +55,85 @@ class BusinessEdit extends React.Component {
       }
     });
 
-  addCredit = () => this.props.history.push(`/recruiter/settings/credits/${this.businessId}`);
+  addCredit = () => {
+    const { business: { id }, history } = this.props;
+    history.push(`/recruiter/settings/credits/${id}`);
+  };
 
-  goBuisinessList = () => this.props.history.push('/recruiter/jobs/business');
+  goBuisinessList = () => {
+    this.props.history.push('/recruiter/jobs/business');
+  };
 
   save = () => {
-    const { form, saveBusiness } = this.props;
+    const { form, business, saveBusiness } = this.props;
 
     form.validateFieldsAndScroll({ scroll: { offsetTop: 70 } }, (err, values) => {
       if (err) return;
 
-      const { logo } = this.state;
-      this.setState({ loading: true });
+      this.setState({
+        loading: {
+          label: 'Saving...'
+        }
+      });
+
       saveBusiness({
         data: {
           ...values,
-          id: this.businessId
+          id: (business || {}).id
         },
-        logo,
-        onUploadProgress: (label, value) => {
-          const progress = label ? { label, value } : null;
-          this.setState({ progress });
+        logo: this.state.logo,
+        onSuccess: msg => {
+          notification.success({
+            message: 'Notification',
+            description: msg
+          });
+          this.goBuisinessList();
         },
-        success: uploadError => {
-          this.setState({ loading: false });
-          if (uploadError) {
-            message.error('Logo upload failed!');
-          }
-          message.success('Business saved successfully!');
+        onFail: error => {
+          this.setState({ loading: null });
+          notification.error({
+            message: 'Notification',
+            description: error
+          });
         },
-        fail: ({ data }) => {
-          this.setState({ loading: false });
-          helper.setErrors(form, data, values);
+        onProgress: progress => {
+          this.setState({
+            loading: {
+              label: 'Logo uploading...',
+              progress: Math.floor(progress.loaded / progress.total * 100)
+            }
+          });
         }
       });
     });
   };
 
   render() {
-    const { business, loading, progress, logo } = this.state;
-    const { error, form } = this.props;
+    const { logo, loading } = this.state;
+    const { business, form } = this.props;
     const { getFieldDecorator } = form;
     const creditsLabel = (business || {}).id
       ? `${business.tokens} Credit${business.tokens !== 1 ? 's' : ''}`
       : `${DATA.initTokens.tokens} free credits`;
 
     return (
-      <Wrapper>
+      <Fragment>
         <Breadcrumb>
           <Breadcrumb.Item>
             <Link to="/recruiter/jobs/business">Businesses</Link>
           </Breadcrumb.Item>
-          <Breadcrumb.Item>{business ? (business.id ? 'Edit' : 'Add') : ''}</Breadcrumb.Item>
+          <Breadcrumb.Item>{business ? 'Edit' : 'Add'}</Breadcrumb.Item>
         </Breadcrumb>
 
-        {error ? (
-          <AlertMsg>
-            <span>Server Error!</span>
-          </AlertMsg>
-        ) : (
-          <Form>
+        <div className="content">
+          <StyledForm>
             <Item label="Name">
               {getFieldDecorator('name', {
                 rules: [
                   { required: true, message: 'Please input business name!' },
                   { whitespace: true, message: 'This field may not be blank.' }
                 ]
-              })(<Input />)}
+              })(<Input autoFocus />)}
             </Item>
 
             <Item label="Credits">
@@ -153,33 +145,30 @@ class BusinessEdit extends React.Component {
               <ImageSelector url={logo.url} removable={logo.exist} onChange={this.setLogo} />
             </Item>
 
-            <div className="ant-form-item">
-              <div className="ant-form-item-label" />
-              <div className="ant-form-item-control-wrapper subimt-field">
-                <Button type="primary" loading={loading} onClick={this.save}>
-                  Save
-                </Button>
+            <NoLabelField className="subimt-field">
+              <Button type="primary" onClick={this.save}>
+                Save
+              </Button>
+              <Button onClick={this.goBuisinessList}>Cancel</Button>
+            </NoLabelField>
+          </StyledForm>
+        </div>
 
-                <Button onClick={this.goBuisinessList}>Cancel</Button>
-              </div>
-            </div>
-          </Form>
-        )}
-
-        {progress && <PopupProgress label={progress.label} value={progress.value} />}
-      </Wrapper>
+        {loading && <PopupProgress label={loading.label} value={loading.progress} />}
+      </Fragment>
     );
   }
 }
 
 export default connect(
-  state => ({
-    businesses: state.rc_businesses.businesses,
-    error: state.rc_businesses.error
-  }),
+  (state, { match }) => {
+    const businessId = parseInt(match.params.businessId, 10);
+    const business = helper.getItemByID(state.rc_businesses.businesses, businessId);
+    return {
+      business
+    };
+  },
   {
-    updateStatus,
-    getBusinesses,
     saveBusiness
   }
 )(Form.create()(BusinessEdit));

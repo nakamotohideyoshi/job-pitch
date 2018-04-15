@@ -31,7 +31,7 @@ class RegisterForm extends React.Component {
       this.setState({ loading: true });
       this.props.register({
         data: values,
-        fail: ({ data }) => {
+        fail: data => {
           this.setState({ loading: false });
           helper.setErrors(form, data, values);
         }

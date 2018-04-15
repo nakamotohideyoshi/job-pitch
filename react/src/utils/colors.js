@@ -1,5 +1,6 @@
 export default {
   green: '#00b6a4',
+  lightGreen: '#dcf5ee',
   yellow: '#ff9300',
 
   primary: '#00b6a4',

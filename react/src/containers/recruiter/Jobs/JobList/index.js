@@ -1,14 +1,14 @@
 import React, { Fragment } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { Breadcrumb, List, Modal, Avatar, Button, Icon } from 'antd';
+import { Breadcrumb, List, Avatar } from 'antd';
 
-import { getWorkplace } from 'redux/recruiter/workplaces';
-import { getJobs, saveJob, removeJob } from 'redux/recruiter/jobs';
 import DATA from 'utils/data';
 import * as helper from 'utils/helper';
 
-import { PageSubHeader, AlertMsg, LinkButton, Loading, ListEx } from 'components';
+import DeleteDialog from './DeleteDialog';
+
+import { PageSubHeader, AlertMsg, LinkButton, Loading, ListEx, Icons } from 'components';
 
 class JobList extends React.Component {
   state = {
@@ -16,92 +16,73 @@ class JobList extends React.Component {
   };
 
   componentWillMount() {
-    const { match, getJobs, jobs } = this.props;
-    const workplaceId = parseInt(match.params.workplaceId, 10);
-    // if (!jobs) {
-    //   getWorkplace();
-    // }
-
-    if (!jobs) {
-      getJobs();
+    const { workplace, history } = this.props;
+    if (!workplace) {
+      history.replace('/recruiter/jobs/business');
     }
   }
 
   selectJob = ({ id }) => {
-    const { history } = this.props;
-    history.push(`/recruiter/jobs/job/view/${id}`);
+    this.props.history.push(`/recruiter/jobs/job/view/${id}`);
   };
 
   addJob = () => {
     helper.saveData('tutorial');
-    const { history, workplace } = this.props;
-    history.push(`/recruiter/jobs/job/add/${workplace.id}`);
+    const { workplace: { id }, history } = this.props;
+    history.push(`/recruiter/jobs/job/add/${id}`);
   };
 
-  editJob = ({ id }, e) => {
-    e && e.stopPropagation();
-
-    const { history } = this.props;
-    history.push(`/recruiter/jobs/job/edit/${id}`);
+  editJob = ({ id }, event) => {
+    event && event.stopPropagation();
+    this.props.history.push(`/recruiter/jobs/job/edit/${id}`);
   };
 
-  showRemoveDialog = (selectedJob, e) => {
-    e && e.stopPropagation();
+  showRemoveDialog = (selectedJob, event) => {
+    event && event.stopPropagation();
     this.setState({ selectedJob });
   };
 
-  removeJob = () => {
-    const { removeJob } = this.props;
-    removeJob({
-      id: this.state.selectedJob.id
-    });
-    this.showRemoveDialog();
-  };
-
-  deactivateJob = () => {
-    const { getJobs, saveJob, workplace } = this.props;
-    saveJob({
-      data: {
-        ...this.state.selectedJob,
-        status: DATA.jobClosed
-      },
-      onSuccess: () => getJobs({ id: workplace.id })
-    });
-    this.showRemoveDialog();
-  };
-
   renderJob = job => {
+    const { id, status, title, sector, contract, hours, description, loading } = job;
     const logo = helper.getJobLogo(job);
-    const sector = helper.getItemByID(DATA.sectors, job.sector).name;
-    const contract = helper.getItemByID(DATA.contracts, job.contract).short_name;
-    const hours = helper.getItemByID(DATA.hours, job.hours).short_name;
-    const closed = job.status === DATA.jobClosed ? 'closed' : '';
+    const sectorName = helper.getItemByID(DATA.sectors, sector).name;
+    const contractName = helper.getItemByID(DATA.contracts, contract).short_name;
+    const hoursName = helper.getItemByID(DATA.hours, hours).short_name;
+    const closed = status === DATA.JOB.CLOSED ? 'deleted' : '';
 
     return (
       <List.Item
-        key={job.id}
+        key={id}
         actions={[
-          <span onClick={e => this.editJob(job, e)}>Edit</span>,
-          <span onClick={e => this.showRemoveDialog(job, e)}>Remove</span>
+          <span onClick={e => this.editJob(job, e)}>
+            <Icons.Pen />
+          </span>,
+          <span onClick={e => this.showRemoveDialog(job, e)}>
+            <Icons.TrashAlt />
+          </span>
         ]}
         onClick={() => this.selectJob(job)}
-        className={job.loading ? 'loading' : ''}
+        className={loading ? 'loading' : ''}
       >
         <List.Item.Meta
           avatar={<Avatar src={logo} className="avatar-80" />}
-          title={<span className={closed}>{`${job.title}`}</span>}
+          title={<span className={closed}>{title}</span>}
           description={
-            <div className={closed}>
+            <Fragment>
               <div className="properties">
-                <span className="contract">{contract}</span>
-                <span className="hours">{hours}</span>
-                <span className="sector">{sector}</span>
+                <span className={closed} style={{ width: '60px' }}>
+                  {contractName}
+                </span>
+                <span className={closed} style={{ width: '60px' }}>
+                  {hoursName}
+                </span>
+                <span className={closed}>{sectorName}</span>
               </div>
-              <div className={closed}>{job.description}</div>
-            </div>
+              <div className={closed}>{description}</div>
+            </Fragment>
           }
         />
-        {job.loading && <Loading className="mask" size="small" />}
+        {loading && <Loading className="mask" size="small" />}
       </List.Item>
     );
   };
@@ -121,9 +102,7 @@ class JobList extends React.Component {
   };
 
   render() {
-    const { workplace, jobs, error } = this.props;
-    const { id: workplaceId, business_data } = workplace || {};
-    const { id: businessId } = business_data || {};
+    const { workplace, jobs } = this.props;
     const { selectedJob } = this.state;
 
     return (
@@ -134,7 +113,7 @@ class JobList extends React.Component {
               <Link to="/recruiter/jobs/business">Businesses</Link>
             </Breadcrumb.Item>
             <Breadcrumb.Item>
-              <Link to={`/recruiter/jobs/workplace/${businessId}`}>Workplaces</Link>
+              {workplace && <Link to={`/recruiter/jobs/workplace/${workplace.business_data.id}`}>Workplaces</Link>}
             </Breadcrumb.Item>
             <Breadcrumb.Item>Jobs</Breadcrumb.Item>
           </Breadcrumb>
@@ -144,7 +123,6 @@ class JobList extends React.Component {
         <div className="content">
           <ListEx
             data={jobs}
-            error={error && 'Server Error!'}
             loadingSize="large"
             pagination={{ pageSize: 10 }}
             renderItem={this.renderJob}
@@ -152,51 +130,20 @@ class JobList extends React.Component {
           />
         </div>
 
-        <Modal
-          className="ant-confirm ant-confirm-confirm"
-          style={{ width: '300px' }}
-          closable={false}
-          maskClosable={true}
-          title={null}
-          visible={!!selectedJob}
-          footer={null}
-          onCancel={() => this.showRemoveDialog()}
-        >
-          <div className="ant-confirm-body-wrapper">
-            <div className="ant-confirm-body">
-              <Icon type="question-circle" />
-              <span className="ant-confirm-title">{`Are you sure you want to delete ${
-                (selectedJob || {}).title
-              }`}</span>
-            </div>
-            <div className="ant-confirm-btns">
-              <Button onClick={() => this.showRemoveDialog()}>Cancel</Button>
-              <Button type="danger" onClick={this.removeJob}>
-                Remove
-              </Button>
-              {(selectedJob || {}).status === DATA.JOB.OPEN && (
-                <Button type="danger" onClick={this.deactivateJob}>
-                  Deactivate
-                </Button>
-              )}
-            </div>
-          </div>
-        </Modal>
+        <DeleteDialog job={selectedJob} onCancel={() => this.showRemoveDialog()} />
       </Fragment>
     );
   }
 }
 
-export default connect(
-  state => ({
-    workplace: state.rc_workplaces.workplace,
-    jobs: state.rc_jobs.jobs,
-    error: state.rc_jobs.error
-  }),
-  {
-    getWorkplace,
-    getJobs,
-    saveJob,
-    removeJob
-  }
-)(JobList);
+export default connect((state, { match }) => {
+  const workplaceId = parseInt(match.params.workplaceId, 10);
+  const workplace = helper.getItemByID(state.rc_workplaces.workplaces, workplaceId);
+  let { jobs } = state.rc_jobs;
+  jobs = jobs.filter(item => item.location === workplaceId);
+  helper.sort(jobs, 'title');
+  return {
+    workplace,
+    jobs
+  };
+})(JobList);

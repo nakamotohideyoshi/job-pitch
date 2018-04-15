@@ -24,6 +24,10 @@ injectGlobal`
     margin-left: auto;
   }
 
+  .deleted {
+    text-decoration: line-through red;
+  }
+
   .avatar-80 {
     width: 80px !important;
     height: 80px !important;

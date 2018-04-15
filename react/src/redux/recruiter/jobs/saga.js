@@ -1,91 +1,72 @@
-import { takeLatest, call, put, select, race, take } from 'redux-saga/effects';
-import { LOCATION_CHANGE } from 'react-router-redux';
+import { takeLatest, call, put, select } from 'redux-saga/effects';
 import * as C from 'redux/constants';
 import * as helper from 'utils/helper';
-import { getRequest, postRequest, putRequest, deleteRequest, requestSuccess } from 'utils/request';
-import { getRequest as getRequest1 } from 'utils/request1';
+import request, { getRequest, postRequest, deleteRequest } from 'utils/request';
 
-function* getJobs1(action) {
-  yield race({
-    result: call(getRequest1({ url: '/api/user-jobs/' }), action),
-    cancel: take(LOCATION_CHANGE)
-  });
-}
-
-function* getJobs(action) {
-  yield race({
-    result: call(getRequest({ url: `/api/user-jobs/` }), action),
-    cancel: take(LOCATION_CHANGE)
-  });
-}
-
-const removeJob = deleteRequest({
-  url: ({ payload }) => `/api/user-jobs/${payload.id}/`,
-  payloadOnSuccess: (_, { payload }) => payload
+export const getJobs = getRequest({
+  type: C.RC_GET_JOBS,
+  url: '/api/user-jobs/'
 });
 
-function* getJob(action) {
-  const { rc_jobs } = yield select();
-  const { jobs } = rc_jobs || {};
-  const { id, success } = action.payload;
-  const job = helper.getItemByID(jobs || [], id);
-
-  if (job) {
-    yield put({ type: requestSuccess(C.RC_GET_JOB), payload: job });
-    success && success(job);
-  } else {
-    yield call(getRequest({ url: `/api/user-jobs/${id}/` }), action);
-  }
-}
+const removeJob = deleteRequest({
+  url: ({ id }) => `/api/user-jobs/${id}/`
+});
 
 function* saveJob(action) {
-  const { data, logo, onSuccess, onFail, onUploading } = action.payload;
+  const { data, logo, onProgress, onSuccess, onFail } = action.payload;
 
-  let job;
-  if (!data.id) {
-    job = yield call(postRequest({ url: '/api/user-jobs/' }), action);
-  } else {
-    job = yield call(putRequest({ url: `/api/user-jobs/${data.id}/` }), action);
-  }
+  const job = yield call(
+    request({
+      method: data.id ? 'put' : 'post',
+      url: data.id ? `/api/user-jobs/${data.id}/` : '/api/user-jobs/'
+    }),
+    action
+  );
 
   if (!job) {
-    return onFail && onFail('Save filed');
+    onFail && onFail('Removing is failed.');
+    return;
   }
 
   if (logo) {
     if (logo.file) {
       const image = yield call(postRequest({ url: '/api/user-job-images/' }), {
         payload: {
-          formData: true,
+          isFormData: true,
           data: {
             order: 0,
             job: job.id,
             image: logo.file
           },
-          onUploadProgress: onUploading
+          onUploadProgress: onProgress
         }
       });
 
-      onUploading && onUploading();
-
-      if (image) {
-        job.images = [image];
-      } else {
-        onFail('Logo upload failed!');
+      if (!image) {
+        onSuccess && onSuccess('Job is saved successfully, Uploading logo is failed.');
+        return;
       }
-    } else if (job.images.length > 0 && !logo.exist) {
+
+      job.images = [image];
+    } else if (job.images.length && !logo.exist) {
       yield call(deleteRequest({ url: `/api/user-job-images/${job.images[0].id}/` }));
       job.images = [];
     }
   }
 
-  onSuccess && onSuccess(job);
+  let { rc_jobs: { jobs } } = yield select();
+  if (data.id) {
+    jobs = helper.updateObj(jobs, job);
+  } else {
+    jobs = helper.addObj(jobs, job);
+  }
+  yield put({ type: C.RC_JOBS_UPDATE, payload: { jobs } });
+
+  onSuccess && onSuccess('Job is saved successfully.');
 }
 
 export default function* sagas() {
-  yield takeLatest(C.RC_GET_JOBS1, getJobs1);
   yield takeLatest(C.RC_GET_JOBS, getJobs);
   yield takeLatest(C.RC_REMOVE_JOB, removeJob);
-  yield takeLatest(C.RC_GET_JOB, getJob);
   yield takeLatest(C.RC_SAVE_JOB, saveJob);
 }

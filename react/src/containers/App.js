@@ -1,14 +1,15 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Redirect, withRouter } from 'react-router-dom';
-import { message } from 'antd';
+import { message, notification } from 'antd';
 
 import { Loading } from 'components';
 
 import { getUserData } from 'redux/auth';
 import Routers from './routers';
 
-message.config({ top: 70 });
+message.config({ top: 60 });
+notification.config({ top: 60 });
 
 const App = ({ location, status, user, getUserData }) => {
   if (status !== 'auth' && !user) {

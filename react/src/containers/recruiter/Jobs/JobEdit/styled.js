@@ -1,15 +1,12 @@
 import styled from 'styled-components';
+import { Form } from 'antd';
 import media from 'utils/mediaquery';
 
-export default styled.div`
-  .fa-question-circle {
-    color: #ff9300;
-  }
-
+export default styled(Form)`
   .btn-play {
     position: absolute;
     top: 4px;
-    left: 160px;
+    left: 125px;
   }
 
   ${media.mobile`

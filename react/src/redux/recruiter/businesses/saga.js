@@ -1,52 +1,30 @@
-import { takeLatest, call, put, race, take, select } from 'redux-saga/effects';
-import { LOCATION_CHANGE } from 'react-router-redux';
+import { takeLatest, call, put, select } from 'redux-saga/effects';
 import * as C from 'redux/constants';
 import * as helper from 'utils/helper';
-import { getRequest, postRequest, putRequest, deleteRequest, requestSuccess, requestFail } from 'utils/request1';
+import request, { getRequest, postRequest, deleteRequest } from 'utils/request';
 
-function* getBusinesses(action) {
-  yield race({
-    result: call(getRequest({ url: `/api/user-businesses/` }), action),
-    cancel: take(LOCATION_CHANGE)
-  });
-}
-
-const removeBusiness = deleteRequest({
-  url: action => `/api/user-businesses/${action.payload.id}/`,
-  success: (_, { payload }) => payload,
-  fail: (_, { payload }) => payload
+export const getBusinesses = getRequest({
+  type: C.RC_GET_BUSINESSES,
+  url: `/api/user-businesses/`
 });
 
-// function* selectBusiness(action) {
-//   let business = action.payload.business;
-//   if (business) {
-//     yield put({ type: requestSuccess(C.RC_SELECT_BUSINESS), payload: business });
-//     return;
-//   }
-
-//   const { id, success } = action.payload;
-//   const { rc_businesses } = yield select();
-//   const { businesses } = rc_businesses || {};
-//   business = helper.getItemByID(businesses || [], id);
-//   if (business) {
-//     yield put({ type: requestSuccess(C.RC_SELECT_BUSINESS), payload: business });
-//     success && success(business);
-//   } else {
-//     yield call(getRequest({ url: `/api/user-businesses/${id}/` }), action);
-//   }
-// }
+const removeBusiness = deleteRequest({
+  url: ({ id }) => `/api/user-businesses/${id}/`
+});
 
 function* saveBusiness(action) {
-  const { data: { id }, logo, onUploadProgress } = action.payload;
+  const { data, logo, onProgress, onSuccess, onFail } = action.payload;
 
-  let business;
-  if (!id) {
-    business = yield call(postRequest({ url: '/api/user-businesses/' }), action);
-  } else {
-    business = yield call(putRequest({ url: `/api/user-businesses/${id}/` }), action);
-  }
+  const business = yield call(
+    request({
+      method: data.id ? 'put' : 'post',
+      url: data.id ? `/api/user-businesses/${data.id}/` : '/api/user-businesses/'
+    }),
+    action
+  );
 
   if (!business) {
+    onFail && onFail('Removing is failed.');
     return;
   }
 
@@ -60,35 +38,40 @@ function* saveBusiness(action) {
             business: business.id,
             image: logo.file
           },
-          onUploadProgress
+          onUploadProgress: onProgress
         }
       });
 
-      onUploadProgress && onUploadProgress();
-
-      if (image) {
-        business.images = [image];
-      } else {
-        // onFail('Logo upload failed!');
+      if (!image) {
+        onSuccess && onSuccess('Business is saved successfully, Uploading logo is failed.');
+        return;
       }
-    } else if (business.images.length > 0 && !logo.exist) {
+
+      business.images = [image];
+    } else if (business.images.length && !logo.exist) {
       yield call(deleteRequest({ url: `/api/user-business-images/${business.images[0].id}/` }));
       business.images = [];
     }
   }
 
-  // const { rc_business } = yield select();
-  // let {businesses} = rc_business;
+  let { rc_businesses: { businesses } } = yield select();
+  if (data.id) {
+    businesses = helper.updateObj(businesses, business);
+  } else {
+    businesses = helper.addObj(businesses, business);
+  }
+  yield put({ type: C.RC_BUSINESSES_UPDATE, payload: { businesses } });
 
-  // yield put({type: C.RC_BUSINESSES_UPDATE, payload:})
+  onSuccess && onSuccess('Business is saved successfully.');
 }
 
-const purchase = postRequest({ url: `/api/paypal/purchase/` });
+const purchase = postRequest({
+  url: `/api/paypal/purchase/`
+});
 
 export default function* sagas() {
   yield takeLatest(C.RC_GET_BUSINESSES, getBusinesses);
   yield takeLatest(C.RC_REMOVE_BUSINESS, removeBusiness);
-  // yield takeLatest(C.RC_SELECT_BUSINESS, selectBusiness);
   yield takeLatest(C.RC_SAVE_BUSINESS, saveBusiness);
   yield takeLatest(C.RC_PURCHASE, purchase);
 }

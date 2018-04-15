@@ -1,5 +1,4 @@
 import auth from './auth';
-
 import applications from './applications';
 
 import rc_apps from './recruiter/apps';

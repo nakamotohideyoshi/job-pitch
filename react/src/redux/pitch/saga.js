@@ -68,35 +68,38 @@ function* uploadPitch({ payload: { data, onUploadProgress, success, fail } }) {
   onUploadProgress();
 }
 
-function* uploadJobPitch({ payload: { job, data, onUploadProgress, success, fail } }) {
-  onUploadProgress('Starting upload...');
+function* uploadJobPitch(action) {
+  const { job, data, onProgress, onSuccess, onFail } = action.payload;
+
+  onProgress('Starting pitch upload...');
+
   let newPitch = yield call(postRequest({ url: `/api/job-videos/` }), {
-    payload: {
-      data: {
-        job
-      }
-    }
+    payload: { data: { job } }
   });
+
   if (!newPitch) {
-    fail && fail(`Upload failed`);
+    onFail(`Uploading pitch is failed.`);
     return;
   }
 
   try {
-    yield call(_uploadPitch, newPitch, data, onUploadProgress);
+    yield call(_uploadPitch, newPitch, data, onProgress);
   } catch (error) {
-    fail && fail(`Upload failed`);
+    onFail(`Uploading pitch is failed.`);
     return;
   }
 
-  onUploadProgress('Processing...');
+  onProgress('Processing...');
+
   const pitchId = newPitch.id;
   do {
     yield delay(2000);
     newPitch = yield call(getRequest({ url: `/api/job-videos/${pitchId}/` }));
   } while (!newPitch.video);
 
-  onUploadProgress();
+  yield put({ type: C.RC_UPDATE_JOB, payload: { id: job, videos: [newPitch] } });
+
+  onSuccess('Job is saved successfully.');
 }
 
 export default function* sagas() {

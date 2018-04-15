@@ -10,7 +10,6 @@ import { requestPending, requestSuccess, requestFail } from 'utils/request';
 export const updateStatus = createAction(C.RC_WORKPLACES_UPDATE);
 export const getWorkplaces = createAction(C.RC_GET_WORKPLACES);
 export const removeWorkplace = createAction(C.RC_REMOVE_WORKPLACE);
-export const getWorkplace = createAction(C.RC_GET_WORKPLACE);
 export const saveWorkplace = createAction(C.RC_SAVE_WORKPLACE);
 
 // ------------------------------------
@@ -18,11 +17,7 @@ export const saveWorkplace = createAction(C.RC_SAVE_WORKPLACE);
 // ------------------------------------
 
 const initialState = {
-  workplaces: null,
-  error: null,
-
-  workplace: null,
-  saving: false
+  workplaces: null
 };
 
 export default handleActions(
@@ -41,9 +36,9 @@ export default handleActions(
       workplaces: payload
     }),
 
-    [requestFail(C.RC_GET_WORKPLACES)]: (state, { payload }) => ({
+    [requestFail(C.RC_GET_WORKPLACES)]: state => ({
       ...state,
-      error: payload
+      workplaces: []
     }),
 
     // ---- remove workplace ----
@@ -56,46 +51,17 @@ export default handleActions(
       })
     }),
 
-    [requestSuccess(C.RC_REMOVE_WORKPLACE)]: (state, { payload }) => ({
+    [requestSuccess(C.RC_REMOVE_WORKPLACE)]: (state, { request }) => ({
       ...state,
-      workplaces: helper.removeObj(state.workplaces, payload.id)
+      workplaces: helper.removeObj(state.workplaces, request.id)
     }),
 
-    [requestFail(C.RC_REMOVE_WORKPLACE)]: (state, { payload }) => ({
+    [requestFail(C.RC_REMOVE_WORKPLACE)]: (state, { request }) => ({
       ...state,
       workplaces: helper.updateObj(state.workplaces, {
-        id: payload.id,
+        id: request.id,
         loading: false
       })
-    }),
-
-    // ---- get workplace ----
-
-    // [requestSuccess(C.RC_GET_WORKPLACE)]: (state, { payload }) => ({
-    //   ...state,
-    //   workplace: payload
-    // }),
-
-    // [requestFail(C.RC_GET_WORKPLACE)]: state => ({
-    //   ...state,
-    //   workplace: null
-    // }),
-
-    // ---- save workplace ----
-
-    [requestPending(C.RC_SAVE_WORKPLACE)]: state => ({
-      ...state,
-      saving: true
-    }),
-
-    [requestSuccess(C.RC_SAVE_WORKPLACE)]: state => ({
-      ...state,
-      saving: false
-    }),
-
-    [requestFail(C.RC_SAVE_WORKPLACE)]: state => ({
-      ...state,
-      saving: false
     })
   },
   initialState

@@ -2,20 +2,14 @@ import React, { Fragment } from 'react';
 import { connect } from 'react-redux';
 import { Breadcrumb, List, Avatar, Modal } from 'antd';
 
-import { getBusinesses } from 'redux/recruiter/businesses';
+import { removeBusiness } from 'redux/recruiter/businesses';
 import * as helper from 'utils/helper';
 
-import { PageSubHeader, AlertMsg, LinkButton, Loading, ListEx } from 'components';
+import { PageSubHeader, AlertMsg, LinkButton, Loading, ListEx, Icons } from 'components';
 
 const { confirm } = Modal;
 
 class BusinessList extends React.Component {
-  componentWillMount() {
-    if (!this.props.businesses) {
-      this.props.getBusinesses();
-    }
-  }
-
   selectBusiness = ({ id }) => {
     this.props.history.push(`/recruiter/jobs/workplace/${id}`);
   };
@@ -27,7 +21,7 @@ class BusinessList extends React.Component {
     }
 
     const { user, history } = this.props;
-    if (user.can_create_businesses) {
+    if (user.can_create_businesses || user.businesses.length === 0) {
       history.push('/recruiter/jobs/business/add');
     } else {
       confirm({
@@ -51,24 +45,30 @@ class BusinessList extends React.Component {
     event && event.stopPropagation();
 
     const count = locations.length;
-    let message;
+    let content;
     if (count === 0) {
-      message = `Are you sure you want to delete ${name}`;
+      content = `Are you sure you want to delete ${name}`;
     } else {
       const s = count !== 1 ? 's' : '';
-      message = `Deleting this business will also delete ${count} workplace${s} and all their jobs.
+      content = `Deleting this business will also delete ${count} workplace${s} and all their jobs.
                 If you want to hide the jobs instead you can deactive them.`;
     }
 
     confirm({
-      content: message,
+      content,
       okText: `Remove`,
       okType: 'danger',
       cancelText: 'Cancel',
       maskClosable: true,
       onOk: () => {
         this.props.removeBusiness({
-          id
+          id,
+          successMsg: {
+            message: `${name} is removed successfully.`
+          },
+          failMsg: {
+            message: `Removing ${name} is failed.`
+          }
         });
       }
     });
@@ -85,15 +85,19 @@ class BusinessList extends React.Component {
       <List.Item
         key={id}
         actions={[
-          <span onClick={e => this.editBusiness(business, e)}>Edit</span>,
-          <span onClick={e => this.removeBusiness(business, e)}>Remove</span>
+          <span onClick={e => this.editBusiness(business, e)}>
+            <Icons.Pen />
+          </span>,
+          <span onClick={e => this.removeBusiness(business, e)}>
+            <Icons.TrashAlt />
+          </span>
         ]}
         onClick={() => this.selectBusiness(business)}
         className={loading ? 'loading' : ''}
       >
         <List.Item.Meta
           avatar={<Avatar src={logo} className="avatar-80" />}
-          title={`${name}`}
+          title={name}
           description={
             <div className="properties">
               <span style={{ width: '120px' }}>{strTokens}</span>
@@ -122,8 +126,6 @@ class BusinessList extends React.Component {
   };
 
   render() {
-    const { businesses, error } = this.props;
-
     return (
       <Fragment>
         <PageSubHeader>
@@ -135,8 +137,7 @@ class BusinessList extends React.Component {
 
         <div className="content">
           <ListEx
-            data={businesses}
-            error={error && 'Server Error!'}
+            data={this.props.businesses}
             loadingSize="large"
             pagination={{ pageSize: 10 }}
             renderItem={this.renderBusiness}
@@ -149,12 +150,15 @@ class BusinessList extends React.Component {
 }
 
 export default connect(
-  state => ({
-    user: state.auth.user,
-    businesses: state.rc_businesses.businesses,
-    error: state.rc_businesses.error
-  }),
+  state => {
+    const businesses = state.rc_businesses.businesses.slice(0);
+    helper.sort(businesses, 'name');
+    return {
+      user: state.auth.user,
+      businesses
+    };
+  },
   {
-    getBusinesses
+    removeBusiness
   }
 )(BusinessList);

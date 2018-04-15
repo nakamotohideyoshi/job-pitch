@@ -22,14 +22,14 @@ const getOpenedJobs = getRequest({
 });
 
 const getJobseekers = getRequest({
-  url: ({ payload: { jobId } }) => `/api/job-seekers/?job=${jobId}`
+  url: ({ jobId }) => `/api/job-seekers/?job=${jobId}`
 });
 
 function* connectJobseeker(action) {
   const result = yield call(
     postRequest({
       url: `/api/applications/`,
-      payloadOnSuccess: (_, { payload }) => payload
+      payloadOnSuccess: payload => payload
     }),
     action
   );
@@ -38,8 +38,7 @@ function* connectJobseeker(action) {
 }
 
 const getApplications = getRequest({
-  url: ({ payload }) => {
-    const { jobId, status, shortlist } = payload || {};
+  url: ({ jobId, status, shortlist }) => {
     const params = [];
     if (jobId) {
       params.push(`job=${jobId}`);
@@ -61,7 +60,7 @@ function* connectApplication(action) {
     putRequest({
       type: C.RC_REMOVE_APP,
       url: `/api/applications/${id}/`,
-      payloadOnSuccess: (_, { payload }) => payload
+      payloadOnSuccess: payload => payload
     }),
     action
   );
@@ -70,12 +69,12 @@ function* connectApplication(action) {
 }
 
 const updateApplication = putRequest({
-  url: ({ payload: { data } }) => `/api/applications/${data.id}/`
+  url: ({ data }) => `/api/applications/${data.id}/`
 });
 
 const removeApplication = deleteRequest({
-  url: ({ payload: { id } }) => `/api/applications/${id}/`,
-  payloadOnSuccess: (_, { payload }) => payload
+  url: ({ id }) => `/api/applications/${id}/`,
+  payloadOnSuccess: payload => payload
 });
 
 export default function* sagas() {

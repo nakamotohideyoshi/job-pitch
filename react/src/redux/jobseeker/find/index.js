@@ -1,7 +1,7 @@
 import { createAction, handleActions } from 'redux-actions';
 import * as C from 'redux/constants';
 import * as helper from 'utils/helper';
-import { requestPending, requestSuccess, requestFail } from 'utils/request1';
+import { requestPending, requestSuccess, requestFail } from 'utils/request';
 
 // ------------------------------------
 // Actions

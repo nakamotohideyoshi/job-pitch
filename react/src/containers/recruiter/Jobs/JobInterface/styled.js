@@ -1,26 +1,27 @@
 import styled from 'styled-components';
 
 export default styled.div`
-  /* position: relative;
-  min-height: 346px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 40px 0;
 
-  h4 {
-    margin-bottom: 25px;
+  > * {
+    width: 100%;
   }
 
-  .buttons {
+  > div {
     display: flex;
-    flex-direction: column;
+    justify-content: space-between;
     align-items: center;
 
-    .btn {
-      width: 80%;
-      max-width: 440px;
-      margin: 10px 0;
+    h3 {
+      /* text-align: left; */
     }
   }
 
-  span {
-    color: #959595;
-  } */
+  .ant-btn {
+    max-width: 350px;
+    margin-top: 25px;
+  }
 `;

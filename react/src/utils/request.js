@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { call, put } from 'redux-saga/effects';
 import { LOGOUT } from 'redux/constants';
+import { notification } from 'antd';
 
 axios.defaults.xsrfCookieName = 'csrftoken';
 axios.defaults.xsrfHeaderName = 'X-CSRFToken';
@@ -20,62 +21,71 @@ const convertFormData = data => {
   return formData;
 };
 
-const request = ({ type, method, url, headers, payloadOnSuccess, payloadOnFail }) =>
-  function* api(action = {}) {
-    const { data, params, onUploadProgress, formData, success, fail } = action.payload || {};
-
-    const requestType = type || action.type;
+const request = ({ type: type1, method, url }) =>
+  function* api(action) {
+    const { type: type2, payload } = action || {};
+    const { data: reqData, isFormData, params, onUploadProgress, success, fail, successMsg, failMsg } = payload || {};
+    const type = type1 || type2;
 
     try {
-      if (requestType) {
-        yield put({
-          type: requestPending(requestType),
-          payload: action.payload
-        });
-      }
+      type &&
+        (yield put({
+          type: requestPending(type),
+          payload
+        }));
+
       const token = localStorage.getItem('token');
       axios.defaults.headers.common.Authorization = token ? `Token ${token}` : '';
 
-      const res = yield call(axios.request, {
-        url: typeof url === 'string' ? url : url && url(action),
+      const { data } = yield call(axios.request, {
+        url: typeof url === 'string' ? url : url(payload),
         method: method.toLowerCase(),
-        headers: headers || {},
-        data: formData ? convertFormData(data) : data,
+        data: isFormData ? convertFormData(reqData) : reqData,
         params,
         onUploadProgress
       });
 
-      console.log('api:', res.data);
+      type &&
+        (yield put({
+          type: requestSuccess(type),
+          payload: data,
+          request: payload
+        }));
 
-      if (requestType) {
-        yield put({
-          type: requestSuccess(requestType),
-          payload: payloadOnSuccess ? payloadOnSuccess(res.data, action) : res.data
+      success && success(data);
+
+      successMsg &&
+        notification.success({
+          message: successMsg.title || 'Notification',
+          description: successMsg.message
         });
-      }
 
-      success && success(res.data);
-
-      return res.data;
+      console.log('api:', data);
+      return data;
     } catch (err) {
-      const errRes = err.response;
+      const { status, data } = err.response;
 
-      console.log('error:', errRes.data);
-
-      if (errRes.status === 403 && errRes.data.detail === 'Invalid token.') {
+      if (status === 403 && data.detail === 'Invalid token.') {
         localStorage.removeItem('token');
         yield put({ type: LOGOUT });
       }
 
-      if (requestType) {
-        yield put({
-          type: requestFail(requestType),
-          payload: payloadOnFail ? payloadOnFail(errRes, action) : errRes
+      type &&
+        (yield put({
+          type: requestFail(type),
+          payload: data,
+          request: payload
+        }));
+
+      fail && fail(data);
+
+      failMsg &&
+        notification.error({
+          message: failMsg.title || 'Notification',
+          description: data.detail || failMsg.message
         });
-      }
 
-      fail && fail(errRes);
-
+      console.log('error:', data);
       return null;
     }
   };

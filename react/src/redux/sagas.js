@@ -2,8 +2,7 @@ import { all } from 'redux-saga/effects';
 
 import auth from './auth/saga';
 import applications from './applications/saga';
-
-import pitch from './jobseeker/pitch/saga';
+import pitch from './pitch/saga';
 
 import rc_apps from './recruiter/apps/saga';
 import rc_businesses from './recruiter/businesses/saga';

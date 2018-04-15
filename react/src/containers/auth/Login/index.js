@@ -31,7 +31,7 @@ class LoginForm extends React.Component {
       this.setState({ loading: true });
       this.props.login({
         data: values,
-        fail: ({ data }) => {
+        fail: data => {
           this.setState({ loading: false });
           helper.setErrors(form, data, values);
         }

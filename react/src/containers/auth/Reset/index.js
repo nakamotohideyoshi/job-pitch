@@ -38,7 +38,7 @@ class ResetForm extends React.Component {
       this.props.resetPassword({
         data: values,
         success: () => this.setState({ loading: false, sent: true }),
-        fail: ({ data }) => {
+        fail: data => {
           this.setState({ loading: false });
           helper.setErrors(form, data, values);
         }

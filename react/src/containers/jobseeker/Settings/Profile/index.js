@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { Form, Input, Button, Checkbox, Switch, Select, InputNumber, Tooltip, Upload, message } from 'antd';
 
 import { saveJobseeker } from 'redux/auth';
-import { uploadPitch } from 'redux/jobseeker/pitch';
+import { uploadPitch } from 'redux/pitch';
 import DATA from 'utils/data';
 import * as helper from 'utils/helper';
 
@@ -110,7 +110,7 @@ class Profile extends React.Component {
             }
           }
         },
-        fail: ({ data }) => {
+        fail: data => {
           this.setState({ loading: false });
           helper.setErrors(form, data, values);
         }
@@ -153,11 +153,7 @@ class Profile extends React.Component {
     this.setState({ dontShowIntro: true });
   };
 
-  recordButton = props => (
-    <Button {...props}>
-      <Icons.Video /> Record New
-    </Button>
-  );
+  recordButton = props => <Button {...props}>Record New</Button>;
 
   render() {
     const { dontShowIntro, loading, showPlayer, progress } = this.state;
@@ -338,7 +334,7 @@ class Profile extends React.Component {
             <VideoRecorder showInfo buttonComponent={this.recordButton} onChange={this.changePitch} />
             {pitch.video && (
               <Button onClick={() => this.playPitch(true)} className="btn-play">
-                <Icons.Play />Play Current
+                Play Current
               </Button>
             )}
           </div>

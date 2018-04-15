@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Button, message } from 'antd';
 
-import { uploadPitch } from 'redux/jobseeker/pitch';
+import { uploadPitch } from 'redux/pitch';
 import * as helper from 'utils/helper';
 
 import { VideoRecorder, PopupProgress, Icons } from 'components';

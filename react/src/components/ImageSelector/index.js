@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Upload, Button, message } from 'antd';
-import { Logo, Icons } from 'components';
+import { Upload, Button, Avatar, message } from 'antd';
+import { Icons } from 'components';
 
 import * as helper from 'utils/helper';
 
@@ -15,6 +15,12 @@ const Wrapper = styled.div`
     margin-right: 15px;
     border-radius: 4px;
     border: 1px solid #d9d9d9;
+
+    .ant-avatar {
+      width: 150px;
+      height: 150px;
+      border-radius: 50%;
+    }
   }
 
   .buttons {
@@ -65,7 +71,7 @@ class ImageSelector extends React.Component {
     return (
       <Wrapper>
         <div className="logo">
-          <Logo src={url} size="150px" />
+          <Avatar src={url} />
         </div>
         <div className="buttons">
           <Upload showUploadList={false} beforeUpload={() => false} onChange={this.setLogo}>

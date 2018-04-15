@@ -60,7 +60,7 @@ class JobProfile extends React.Component {
             setTimeout(() => this.props.history.push('/jobseeker/find'));
           }
         },
-        fail: ({ data }) => {
+        fail: data => {
           this.setState({ loading: false });
           helper.setErrors(form, data, values);
         }

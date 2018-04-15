@@ -52,10 +52,10 @@ export function getJobLogo(job, original) {
 |--------------------------------------------------
 */
 
-export function getPitch(jobseeker) {
-  if (!jobseeker) return null;
+export function getPitch(object) {
+  if (!object) return null;
 
-  const { pitches } = jobseeker;
+  const pitches = object.pitches || object.videos;
   if (!pitches || !pitches.length) return null;
 
   for (let i = 0; i < pitches.length; i++) {
@@ -179,6 +179,26 @@ export function removeObj(object, id) {
     return object.filter(item => item.id !== id);
   }
   return object;
+}
+
+export function sort(arr, key) {
+  arr.sort((a, b) => {
+    let a1 = a[key];
+    let b1 = b[key];
+    if (typeof a1 === 'string') {
+      a1 = a1.toUpperCase();
+      b1 = b1.toUpperCase();
+      if (a1 < b1) {
+        return -1;
+      }
+      if (a1 > b1) {
+        return 1;
+      }
+      return 0;
+    }
+
+    return 0;
+  });
 }
 
 /**

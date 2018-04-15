@@ -2,8 +2,9 @@ import React, { Fragment } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { Breadcrumb, List, Avatar, Modal } from 'antd';
+import _ from 'lodash';
 
-import { getWorkplaces, removeWorkplace } from 'redux/recruiter/workplaces';
+import { removeWorkplace } from 'redux/recruiter/workplaces';
 import * as helper from 'utils/helper';
 
 import { PageSubHeader, AlertMsg, LinkButton, Loading, ListEx, Icons } from 'components';
@@ -11,9 +12,10 @@ import { PageSubHeader, AlertMsg, LinkButton, Loading, ListEx, Icons } from 'com
 const { confirm } = Modal;
 
 class WorkplaceList extends React.Component {
-  componentWillMount() {
-    if (!this.props.workplaces) {
-      this.props.getWorkplaces();
+  componentDidMount() {
+    const { business, history } = this.props;
+    if (!business) {
+      history.replace('/recruiter/jobs/business');
     }
   }
 
@@ -27,7 +29,8 @@ class WorkplaceList extends React.Component {
       helper.saveData('tutorial', 3);
     }
 
-    this.props.history.push(`/recruiter/jobs/workplace/add/${this.props.businessId}`);
+    const { business: { id }, history } = this.props;
+    history.push(`/recruiter/jobs/workplace/add/${id}`);
   };
 
   editWorkplace = ({ id }, event) => {
@@ -39,24 +42,30 @@ class WorkplaceList extends React.Component {
     event && event.stopPropagation();
 
     const count = jobs.length;
-    let message;
+    let content;
     if (count === 0) {
-      message = `Are you sure you want to delete ${name}`;
+      content = `Are you sure you want to delete ${name}`;
     } else {
       const s = count !== 1 ? 's' : '';
-      message = `Deleting this workplace will also delete ${count} job${s}.
+      content = `Deleting this workplace will also delete ${count} job${s}.
                  If you want to hide the jobs instead you can deactive them.`;
     }
 
     confirm({
-      content: message,
+      content,
       okText: `Remove`,
       okType: 'danger',
       cancelText: 'Cancel',
       maskClosable: true,
       onOk: () => {
         this.props.removeWorkplace({
-          id
+          id,
+          successMsg: {
+            message: `${name} is removed successfully.`
+          },
+          failMsg: {
+            message: `Removing ${name} is failed.`
+          }
         });
       }
     });
@@ -85,7 +94,7 @@ class WorkplaceList extends React.Component {
       >
         <List.Item.Meta
           avatar={<Avatar src={logo} className="avatar-80" />}
-          title={`${name}`}
+          title={name}
           description={
             <Fragment>
               <div className="properties">
@@ -117,8 +126,6 @@ class WorkplaceList extends React.Component {
   };
 
   render() {
-    const { workplaces, error } = this.props;
-
     return (
       <Fragment>
         <PageSubHeader>
@@ -133,8 +140,7 @@ class WorkplaceList extends React.Component {
 
         <div className="content">
           <ListEx
-            data={workplaces}
-            error={error && 'Server Error!'}
+            data={this.props.workplaces}
             loadingSize="large"
             pagination={{ pageSize: 10 }}
             renderItem={this.renderWorkplace}
@@ -147,20 +153,18 @@ class WorkplaceList extends React.Component {
 }
 
 export default connect(
-  (state, props) => {
-    const businessId = parseInt(props.match.params.businessId, 10);
-    let { workplaces, error } = state.rc_workplaces;
-    if (workplaces) {
-      workplaces = workplaces.filter(({ business }) => business === businessId);
-    }
+  (state, { match }) => {
+    const businessId = parseInt(match.params.businessId, 10);
+    const business = helper.getItemByID(state.rc_businesses.businesses, businessId);
+    let { workplaces } = state.rc_workplaces;
+    workplaces = workplaces.filter(item => item.business === businessId);
+    helper.sort(workplaces, 'name');
     return {
-      businessId,
-      workplaces,
-      error
+      business,
+      workplaces
     };
   },
   {
-    getWorkplaces,
     removeWorkplace
   }
 )(WorkplaceList);

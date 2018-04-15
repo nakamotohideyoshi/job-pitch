@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 import media from 'utils/mediaquery';
+import colors from 'utils/colors';
 
 export default styled.div`
   flex: 1;
@@ -14,6 +15,8 @@ export default styled.div`
 
     .ant-list-item {
       position: relative;
+      padding-left: 12px;
+      padding-right: 12px;
 
       .ant-list-item-meta-title {
         font-size: 16px;
@@ -24,9 +27,6 @@ export default styled.div`
         span {
           display: inline-block;
         }
-        /* span + span {
-          margin-left: 50px;
-        } */
       }
 
       .ant-list-item-action {
@@ -46,6 +46,7 @@ export default styled.div`
 
       &:hover {
         cursor: pointer;
+        background-color: ${colors.lightGreen};
 
         .ant-list-item-meta-title {
           color: #00b6a4;
@@ -54,48 +55,26 @@ export default styled.div`
     }
   }
 
-  /* .ant-list {
-    margin-bottom: 30px;
-
-    .ant-list-item {
-      .ant-list-item-meta-title {
-        font-size: 16px;
-      }
-
-      .properties {
-        font-size: 12px;
-        span {
-          display: inline-block;
-        }
-      }
-
-      .ant-list-item-action {
-        span:hover {
-          color: #00b6a4;
-        }
-      }
-
-      &:hover {
-        cursor: pointer;
-        .ant-list-item-meta-title {
-          color: #00b6a4;
-        }
-      }
-    }
-  } */
-
   form {
     max-width: 700px;
     width: 100%;
     margin: 40px auto;
     padding: 0 15px;
 
+    .fa-question-circle {
+      color: #ff9300;
+    }
+
+    textarea {
+      resize: none;
+    }
+
     .subimt-field {
       margin-top: 15px;
 
       .ant-btn {
-        width: 150px;
-        margin-right: 20px;
+        width: 170px;
+        margin-right: 15px;
       }
     }
 

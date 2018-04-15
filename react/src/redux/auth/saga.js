@@ -5,6 +5,9 @@ import { getRequest, postRequest, putRequest } from 'utils/request';
 import * as C from 'redux/constants';
 import * as helper from 'utils/helper';
 import DATA from 'utils/data';
+import { getBusinesses } from 'redux/recruiter/businesses/saga';
+import { getWorkplaces } from 'redux/recruiter/workplaces/saga';
+import { getJobs } from 'redux/recruiter/jobs/saga';
 
 function* register(action) {
   yield call(_auth, action, '/api-rest-auth/registration/');
@@ -14,8 +17,8 @@ function* login(action) {
   yield call(_auth, action, '/api-rest-auth/login/');
 }
 
-function* _auth(action, endpoint) {
-  const data = yield call(postRequest({ url: endpoint }), action);
+function* _auth(action, url) {
+  const data = yield call(postRequest({ url }), action);
   if (data) {
     localStorage.setItem('token', data.key);
     yield put({ type: C.UPDATE_AUTH, payload: { status: 'select' } });
@@ -31,9 +34,13 @@ function* logout(action) {
   }
 }
 
-const resetPassword = postRequest({ url: '/api-rest-auth/password/reset/' });
+const resetPassword = postRequest({
+  url: '/api-rest-auth/password/reset/'
+});
 
-const changePassword = postRequest({ url: '/api-rest-auth/password/change/' });
+const changePassword = postRequest({
+  url: '/api-rest-auth/password/change/'
+});
 
 function* saveJobseeker(action) {
   const { id } = action.payload.data;
@@ -103,12 +110,16 @@ function* getUserData() {
   DATA.email = user.email;
 
   const jobseekerId = user.job_seeker;
-  const jobseeker = jobseekerId ? yield call(getRequest({ url: `/api/job-seekers/${jobseekerId}/` })) : null;
+  if (jobseekerId) {
+    const jobseeker = jobseekerId ? yield call(getRequest({ url: `/api/job-seekers/${jobseekerId}/` })) : null;
+    const profileId = (jobseeker || {}).profile;
+    const profile = profileId ? yield call(getRequest({ url: `/api/job-profiles/${profileId}/` })) : null;
+    yield put({ type: C.UPDATE_AUTH, payload: { jobseeker, profile } });
+  } else {
+    yield all([call(getBusinesses), call(getWorkplaces), call(getJobs)]);
+  }
 
-  const profileId = (jobseeker || {}).profile;
-  const profile = profileId ? yield call(getRequest({ url: `/api/job-profiles/${profileId}/` })) : null;
-
-  yield put({ type: C.UPDATE_AUTH, payload: { user, jobseeker, profile } });
+  yield put({ type: C.UPDATE_AUTH, payload: { user } });
 }
 
 export default function* sagas() {

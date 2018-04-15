@@ -207,8 +207,7 @@ export default handleActions(
       const reset = pathname.indexOf('/recruiter/messages') !== 0;
       return {
         ...state,
-        jobs: key === 'applications' ? state.jobs : [],
-        jobs1: reset ? null : state.jobs1
+        jobs: key === 'applications' ? state.jobs : []
       };
     }
   },

@@ -1,6 +1,6 @@
 import { takeLatest, call, put, race, take } from 'redux-saga/effects';
 import { LOCATION_CHANGE } from 'react-router-redux';
-import { getRequest, postRequest, putRequest, deleteRequest, requestSuccess, requestFail } from 'utils/request1';
+import { getRequest, postRequest, putRequest, deleteRequest, requestSuccess, requestFail } from 'utils/request';
 import DATA from 'utils/data';
 import * as C from 'redux/constants';
 
@@ -12,30 +12,26 @@ function* getApplications(action) {
 }
 
 const connectApplication = putRequest({
-  url: ({ payload }) => `/api/applications/${payload.data.id}/`,
-  success: (_, { payload }) => ({
-    data: {
-      id: payload.data.id,
-      status: DATA.APP.ESTABLISHED
-    }
-  }),
-  fail: (_, { payload }) => ({
-    data: {
-      id: payload.data.id
-    }
-  })
+  url: ({ data }) => `/api/applications/${data.id}/`,
+  // payloadOnSuccess: ({ data }) => ({
+  //   data: {
+  //     id: data.id,
+  //     status: DATA.APP.ESTABLISHED
+  //   }
+  // }),
+  // payloadOnFail: ({ data }) => ({
+  //   data: {
+  //     id: data.id
+  //   }
+  // })
 });
 
 const updateApplication = putRequest({
-  url: ({ payload }) => `/api/applications/${payload.data.id}/`,
-  success: (_, { payload }) => payload,
-  fail: (_, { payload }) => payload
+  url: ({ data }) => `/api/applications/${data.id}/`
 });
 
 const removeApplication = deleteRequest({
-  url: ({ payload }) => `/api/applications/${payload.id}/`,
-  success: (_, { payload }) => payload,
-  fail: (_, { payload }) => payload
+  url: ({ id }) => `/api/applications/${id}/`
 });
 
 function* sendMessage({ payload }) {

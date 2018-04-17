@@ -20,7 +20,7 @@ export const purchase = createAction(C.RC_PURCHASE);
 
 const initialState = {
   businesses: null,
-  selectedBusiness: null
+  selectedId: null
 };
 
 export default handleActions(
@@ -28,6 +28,11 @@ export default handleActions(
     [C.RC_BUSINESSES_UPDATE]: (state, { payload }) => ({
       ...state,
       ...payload
+    }),
+
+    [C.RC_SELECT_BUSINESS]: (state, { payload }) => ({
+      ...state,
+      selectedId: payload
     }),
 
     // ---- get business ----

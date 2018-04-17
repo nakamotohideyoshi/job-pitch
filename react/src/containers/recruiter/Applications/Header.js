@@ -1,53 +1,53 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import Helmet from 'react-helmet';
 import { connect } from 'react-redux';
 import { withRouter, Link } from 'react-router-dom';
-import { Menu, Select, Spin, message } from 'antd';
+import { Menu, Select } from 'antd';
 import styled from 'styled-components';
+
+import { selectBusiness } from 'redux/recruiter/businesses';
+import { updateStatus } from 'redux/applications';
+import DATA from 'utils/data';
+import * as helper from 'utils/helper';
 
 import { PageHeader, SearchBox, Logo } from 'components';
 
-import * as helper from 'utils/helper';
-import { updateStatus, getOpenedJobs } from 'redux/recruiter/apps';
-import { selectBusiness } from 'redux/recruiter/businesses';
-
 const Option = Select.Option;
 
-const Wrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-
-  .ant-menu {
+const StyledMenu = styled(Menu)`
+  &.ant-menu {
     line-height: 38px;
     font-size: 12px;
     font-weight: 500;
-    margin-bottom: 30px;
   }
+`;
 
-  .filters {
-    display: flex;
+const Filters = styled.div`
+  display: flex;
+  margin: 20px 12px;
 
-    .ant-select {
-      flex: 1;
-      margin-right: 20px;
+  .ant-select {
+    flex: 1;
+    margin-right: 20px;
 
-      .ant-select-selection-selected-value .logo {
-        float: left;
-        margin: 4px 8px 0 0;
-      }
+    .ant-select-selection-selected-value .logo {
+      float: left;
+      margin: 4px 8px 0 0 !important;
     }
   }
 `;
 
 class Header extends React.Component {
   componentWillMount() {
-    if (this.props.jobs.length) {
-      this.selectJob();
-    } else {
-      this.props.getOpenedJobs({
-        success: () => this.selectJob(),
-        fail: () => message.error('Server Eror')
-      });
+    const { jobs, selectedJob, match, history } = this.props;
+    if (!selectedJob) {
+      const jobId = helper.loadData('applications/jobId');
+      const job = helper.getItemByID(jobs, jobId) || jobs[0];
+      if (job) {
+        const arr = match.url.split('/');
+        arr[4] = job.id;
+        history.replace(arr.join('/'));
+      }
     }
   }
 
@@ -74,18 +74,19 @@ class Header extends React.Component {
   changeSearch = searchText => this.props.updateStatus({ searchText });
 
   render() {
-    const { jobs, selectedJobId, loadingJobs, searchText, match } = this.props;
+    const { jobs, selectedJob, searchText, match } = this.props;
     const selectedKey = match.url.split('/')[3];
+    const selectedJobId = (selectedJob || {}).id;
 
     return (
-      <Wrapper>
+      <Fragment>
         <Helmet title="Applications" />
 
         <PageHeader>
           <h2>Applications</h2>
         </PageHeader>
 
-        <Menu mode="horizontal" selectedKeys={[selectedKey]}>
+        <StyledMenu mode="horizontal" selectedKeys={[selectedKey]}>
           <Menu.Item key="find">
             <Link to={`/recruiter/applications/find/${selectedJobId || ''}`}>Find Talent</Link>
           </Menu.Item>
@@ -98,13 +99,13 @@ class Header extends React.Component {
           <Menu.Item key="shortlist">
             <Link to={`/recruiter/applications/shortlist/${selectedJobId || ''}`}>My Shortlist</Link>
           </Menu.Item>
-        </Menu>
+        </StyledMenu>
 
-        <div className="filters">
+        <Filters>
           <Select
             showSearch
             value={selectedJobId}
-            placeholder={loadingJobs ? <Spin size="small" /> : 'Select a job'}
+            placeholder="Select a job"
             filterOption={(input, option) => option.props.children[1].toLowerCase().indexOf(input.toLowerCase()) >= 0}
             onChange={this.selectJob}
           >
@@ -120,23 +121,26 @@ class Header extends React.Component {
           </Select>
 
           <SearchBox width="200px" defaultValue={searchText} onChange={this.changeSearch} />
-        </div>
-      </Wrapper>
+        </Filters>
+      </Fragment>
     );
   }
 }
 
 export default withRouter(
   connect(
-    state => ({
-      jobs: state.rc_apps.jobs,
-      selectedJobId: state.rc_apps.selectedJobId,
-      loadingJobs: state.rc_apps.loadingJobs,
-      searchText: state.rc_apps.searchText
-    }),
+    (state, { match }) => {
+      const jobs = state.rc_jobs.jobs.filter(({ status }) => status === DATA.JOB.OPEN);
+      const jobId = helper.str2int(match.params.jobId);
+      const selectedJob = helper.getItemByID(jobs, jobId);
+      return {
+        jobs,
+        selectedJob,
+        searchText: state.applications.searchText
+      };
+    },
     {
       updateStatus,
-      getOpenedJobs,
       selectBusiness
     }
   )(Header)

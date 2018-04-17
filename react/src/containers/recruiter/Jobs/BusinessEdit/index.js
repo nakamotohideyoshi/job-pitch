@@ -1,4 +1,5 @@
-import React, { Fragment } from 'react';
+import React from 'react';
+import Helmet from 'react-helmet';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { Breadcrumb, Form, Input, Button, notification } from 'antd';
@@ -7,8 +8,8 @@ import { saveBusiness } from 'redux/recruiter/businesses';
 import DATA from 'utils/data';
 import * as helper from 'utils/helper';
 
-import { PopupProgress, ImageSelector, NoLabelField } from 'components';
-import StyledForm from './styled';
+import { PageHeader, PageSubHeader, PopupProgress, ImageSelector, NoLabelField } from 'components';
+import Wrapper from '../styled';
 
 const { Item } = Form;
 
@@ -117,16 +118,24 @@ class BusinessEdit extends React.Component {
       : `${DATA.initTokens.tokens} free credits`;
 
     return (
-      <Fragment>
-        <Breadcrumb>
-          <Breadcrumb.Item>
-            <Link to="/recruiter/jobs/business">Businesses</Link>
-          </Breadcrumb.Item>
-          <Breadcrumb.Item>{business ? 'Edit' : 'Add'}</Breadcrumb.Item>
-        </Breadcrumb>
+      <Wrapper className="container">
+        <Helmet title="My Workplace & Jobs" />
+
+        <PageHeader>
+          <h2>My Workplace & Jobs</h2>
+        </PageHeader>
+
+        <PageSubHeader>
+          <Breadcrumb>
+            <Breadcrumb.Item>
+              <Link to="/recruiter/jobs/business">Businesses</Link>
+            </Breadcrumb.Item>
+            <Breadcrumb.Item>{business ? 'Edit' : 'Add'}</Breadcrumb.Item>
+          </Breadcrumb>
+        </PageSubHeader>
 
         <div className="content">
-          <StyledForm>
+          <Form>
             <Item label="Name">
               {getFieldDecorator('name', {
                 rules: [
@@ -151,18 +160,18 @@ class BusinessEdit extends React.Component {
               </Button>
               <Button onClick={this.goBuisinessList}>Cancel</Button>
             </NoLabelField>
-          </StyledForm>
+          </Form>
         </div>
 
         {loading && <PopupProgress label={loading.label} value={loading.progress} />}
-      </Fragment>
+      </Wrapper>
     );
   }
 }
 
 export default connect(
   (state, { match }) => {
-    const businessId = parseInt(match.params.businessId, 10);
+    const businessId = helper.str2int(match.params.businessId);
     const business = helper.getItemByID(state.rc_businesses.businesses, businessId);
     return {
       business

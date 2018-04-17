@@ -83,7 +83,7 @@ export default function* sagas() {
   yield takeLatest(C.RC_GET_JOBSEEKERS, getJobseekers);
   yield takeLatest(C.RC_CONNECT_JOBSEEKER, connectJobseeker);
 
-  // yield takeLatest(C.RC_GET_APPS1, getApplications);
+  // yield takeLatest(C.GET_APPLICATIONS, getApplications);
   yield takeLatest(C.RC_GET_APPS, getApplications);
   yield takeLatest(C.RC_CONNECT_APP, connectApplication);
   yield takeLatest(C.RC_UPDATE_APP, updateApplication);

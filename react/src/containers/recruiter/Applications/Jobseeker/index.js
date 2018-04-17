@@ -3,24 +3,20 @@ import { connect } from 'react-redux';
 
 import { Loading, AlertMsg } from 'components';
 
-import { getOpenedJobs, getJobseekers, getApplications } from 'redux/recruiter/apps';
+import { getJobseekers, getApplications } from 'redux/recruiter/apps';
 import DATA from 'utils/data';
 import * as helper from 'utils/helper';
 
 class RCJobseeker extends React.Component {
   componentWillMount() {
-    this.props.getOpenedJobs({
-      success: () => {
-        const { jobs, match } = this.props;
-        this.jobId = helper.str2int(match.params.jobId);
-        const job = helper.getItemByID(jobs, this.jobId);
-        if (job) {
-          this.findJobseeker();
-        } else {
-          this.findTanlent();
-        }
-      }
-    });
+    const { jobs, match } = this.props;
+    this.jobId = helper.str2int(match.params.jobId);
+    const job = helper.getItemByID(jobs, this.jobId);
+    if (job) {
+      this.findJobseeker();
+    } else {
+      this.findTanlent();
+    }
   }
 
   findJobseeker = () => {
@@ -80,13 +76,12 @@ class RCJobseeker extends React.Component {
 
 export default connect(
   state => ({
-    jobs: state.rc_apps.jobs,
+    jobs: state.rc_jobs.jobs,
     jobseekers: state.rc_apps.jobseekers,
-    applications: state.rc_apps.applications,
-    error: state.rc_apps.errorJobs || state.rc_apps.errorJobseekers || state.rc_apps.errorApplications
+    applications: state.applications.applications,
+    error: state.rc_apps.errorJobseekers || state.applications.error
   }),
   {
-    getOpenedJobs,
     getJobseekers,
     getApplications
   }

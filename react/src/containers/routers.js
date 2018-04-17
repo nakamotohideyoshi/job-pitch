@@ -14,7 +14,13 @@ import MyConnections from 'containers/recruiter/Applications/MyConnections';
 import MyShortlist from 'containers/recruiter/Applications/MyShortlist';
 import RCJobseeker from 'containers/recruiter/Applications/Jobseeker';
 
-import RCJobs from 'containers/recruiter/Jobs';
+import BusinessList from 'containers/recruiter/Jobs/BusinessList';
+import BusinessEdit from 'containers/recruiter/Jobs/BusinessEdit';
+import WorkplaceList from 'containers/recruiter/Jobs/WorkplaceList';
+import WorkplaceEdit from 'containers/recruiter/Jobs/WorkplaceEdit';
+import JobList from 'containers/recruiter/Jobs/JobList';
+import JobEdit from 'containers/recruiter/Jobs/JobEdit';
+import JobInterface from 'containers/recruiter/Jobs/JobInterface';
 import RCMessages from 'containers/recruiter/Messages';
 import RCSettings from 'containers/recruiter/Settings';
 
@@ -54,16 +60,16 @@ export default () => {
       <RCRoute exact path="/recruiter/apps/:jobId/:jobseekerId" component={RCJobseeker} />
 
       <Redirect exact from="/recruiter/jobs" to="/recruiter/jobs/business" />
-      <RCRoute exact path="/recruiter/jobs/business" component={RCJobs} />
-      <RCRoute exact path="/recruiter/jobs/business/add" component={RCJobs} />
-      <RCRoute exact path="/recruiter/jobs/business/edit/:businessId" component={RCJobs} />
-      <RCRoute exact path="/recruiter/jobs/workplace/:businessId" component={RCJobs} />
-      <RCRoute exact path="/recruiter/jobs/workplace/add/:businessId" component={RCJobs} />
-      <RCRoute exact path="/recruiter/jobs/workplace/edit/:workplaceId" component={RCJobs} />
-      <RCRoute exact path="/recruiter/jobs/job/:workplaceId" component={RCJobs} />
-      <RCRoute exact path="/recruiter/jobs/job/add/:workplaceId" component={RCJobs} />
-      <RCRoute exact path="/recruiter/jobs/job/edit/:jobId" component={RCJobs} />
-      <RCRoute exact path="/recruiter/jobs/job/view/:jobId" component={RCJobs} />
+      <RCRoute exact path="/recruiter/jobs/business" component={BusinessList} />
+      <RCRoute exact path="/recruiter/jobs/business/add" component={BusinessEdit} />
+      <RCRoute exact path="/recruiter/jobs/business/edit/:businessId" component={BusinessEdit} />
+      <RCRoute exact path="/recruiter/jobs/workplace/:businessId" component={WorkplaceList} />
+      <RCRoute exact path="/recruiter/jobs/workplace/add/:businessId" component={WorkplaceEdit} />
+      <RCRoute exact path="/recruiter/jobs/workplace/edit/:workplaceId" component={WorkplaceEdit} />
+      <RCRoute exact path="/recruiter/jobs/job/:workplaceId" component={JobList} />
+      <RCRoute exact path="/recruiter/jobs/job/add/:workplaceId" component={JobEdit} />
+      <RCRoute exact path="/recruiter/jobs/job/edit/:jobId" component={JobEdit} />
+      <RCRoute exact path="/recruiter/jobs/job/view/:jobId" component={JobInterface} />
       <RCRoute exact path="/recruiter/messages" component={RCMessages} />
       <RCRoute exact path="/recruiter/messages/:appId" component={RCMessages} />
       <Redirect exact from="/recruiter/settings" to="/recruiter/settings/credits" />

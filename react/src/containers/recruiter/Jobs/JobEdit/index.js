@@ -1,4 +1,5 @@
-import React, { Fragment } from 'react';
+import React from 'react';
+import Helmet from 'react-helmet';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { Breadcrumb, Form, Input, Select, Switch, Tooltip, Button, notification } from 'antd';
@@ -8,7 +9,17 @@ import { uploadJobPitch } from 'redux/pitch';
 import DATA from 'utils/data';
 import * as helper from 'utils/helper';
 
-import { PopupProgress, ImageSelector, NoLabelField, VideoRecorder, VideoPlayer, Icons } from 'components';
+import {
+  PageHeader,
+  PageSubHeader,
+  PopupProgress,
+  ImageSelector,
+  NoLabelField,
+  VideoRecorder,
+  VideoPlayer,
+  Icons
+} from 'components';
+import Wrapper from '../styled';
 import StyledForm from './styled';
 
 const { Item } = Form;
@@ -171,17 +182,27 @@ class JobEdit extends React.Component {
     const pitch = helper.getPitch(job) || {};
 
     return (
-      <Fragment>
-        <Breadcrumb>
-          <Breadcrumb.Item>
-            <Link to="/recruiter/jobs/business">Businesses</Link>
-          </Breadcrumb.Item>
-          <Breadcrumb.Item>
-            {workplace && <Link to={`/recruiter/jobs/workplace/${workplace.business_data.id}`}>Workplaces</Link>}
-          </Breadcrumb.Item>
-          <Breadcrumb.Item>{workplace && <Link to={`/recruiter/jobs/job/${workplace.id}`}>Jobs</Link>}</Breadcrumb.Item>
-          <Breadcrumb.Item>{job ? 'Edit' : 'Add'}</Breadcrumb.Item>
-        </Breadcrumb>
+      <Wrapper className="container">
+        <Helmet title="My Workplace & Jobs" />
+
+        <PageHeader>
+          <h2>My Workplace & Jobs</h2>
+        </PageHeader>
+
+        <PageSubHeader>
+          <Breadcrumb>
+            <Breadcrumb.Item>
+              <Link to="/recruiter/jobs/business">Businesses</Link>
+            </Breadcrumb.Item>
+            <Breadcrumb.Item>
+              {workplace && <Link to={`/recruiter/jobs/workplace/${workplace.business_data.id}`}>Workplaces</Link>}
+            </Breadcrumb.Item>
+            <Breadcrumb.Item>
+              {workplace && <Link to={`/recruiter/jobs/job/${workplace.id}`}>Jobs</Link>}
+            </Breadcrumb.Item>
+            <Breadcrumb.Item>{job ? 'Edit' : 'Add'}</Breadcrumb.Item>
+          </Breadcrumb>
+        </PageSubHeader>
 
         <div className="content">
           <StyledForm>
@@ -290,16 +311,16 @@ class JobEdit extends React.Component {
 
         {showPlayer && <VideoPlayer videoUrl={pitch.video} onClose={() => this.playPitch()} />}
         {loading && <PopupProgress label={loading.label} value={loading.progress} />}
-      </Fragment>
+      </Wrapper>
     );
   }
 }
 
 export default connect(
   (state, { match }) => {
-    const workplaceId = parseInt(match.params.workplaceId, 10);
+    const workplaceId = helper.str2int(match.params.workplaceId);
     const workplace = helper.getItemByID(state.rc_workplaces.workplaces, workplaceId);
-    const jobId = parseInt(match.params.jobId, 10);
+    const jobId = helper.str2int(match.params.jobId);
     const job = helper.getItemByID(state.rc_jobs.jobs, jobId);
     return {
       workplace: workplace || (job || {}).location_data,

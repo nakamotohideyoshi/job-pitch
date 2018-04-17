@@ -236,7 +236,7 @@ export function getBase64(img, callback) {
 
 export function str2int(str) {
   const val = parseInt(str, 10);
-  return isNaN(val) ? null : val;
+  return isNaN(val) ? undefined : val;
 }
 
 // export function parseUrlParams(str) {

@@ -1,4 +1,5 @@
-import React, { Fragment } from 'react';
+import React from 'react';
+import Helmet from 'react-helmet';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { Breadcrumb, Form, Input, Checkbox, Button, Tooltip, notification } from 'antd';
@@ -7,7 +8,8 @@ import { saveWorkplace } from 'redux/recruiter/workplaces';
 import DATA from 'utils/data';
 import * as helper from 'utils/helper';
 
-import { PopupProgress, ImageSelector, NoLabelField, GoogleMap, Icons } from 'components';
+import { PageHeader, PageSubHeader, PopupProgress, ImageSelector, NoLabelField, GoogleMap, Icons } from 'components';
+import Wrapper from '../styled';
 import StyledForm from './styled';
 
 const { Item } = Form;
@@ -137,16 +139,24 @@ class WorkplaceEdit extends React.Component {
     const marker = latitude && { lat: latitude, lng: longitude };
 
     return (
-      <Fragment>
-        <Breadcrumb>
-          <Breadcrumb.Item>
-            <Link to="/recruiter/jobs/business">Businesses</Link>
-          </Breadcrumb.Item>
-          <Breadcrumb.Item>
-            {business && <Link to={`/recruiter/jobs/workplace/${business.id}`}>Workplaces</Link>}
-          </Breadcrumb.Item>
-          <Breadcrumb.Item>{workplace ? 'Edit' : 'Add'}</Breadcrumb.Item>
-        </Breadcrumb>
+      <Wrapper className="container">
+        <Helmet title="My Workplace & Jobs" />
+
+        <PageHeader>
+          <h2>My Workplace & Jobs</h2>
+        </PageHeader>
+
+        <PageSubHeader>
+          <Breadcrumb>
+            <Breadcrumb.Item>
+              <Link to="/recruiter/jobs/business">Businesses</Link>
+            </Breadcrumb.Item>
+            <Breadcrumb.Item>
+              {business && <Link to={`/recruiter/jobs/workplace/${business.id}`}>Workplaces</Link>}
+            </Breadcrumb.Item>
+            <Breadcrumb.Item>{workplace ? 'Edit' : 'Add'}</Breadcrumb.Item>
+          </Breadcrumb>
+        </PageSubHeader>
 
         <div className="content">
           <StyledForm>
@@ -237,16 +247,16 @@ class WorkplaceEdit extends React.Component {
             {loading && <PopupProgress label={loading.label} value={loading.progress} />}
           </StyledForm>
         </div>
-      </Fragment>
+      </Wrapper>
     );
   }
 }
 
 export default connect(
   (state, { match }) => {
-    const businessId = parseInt(match.params.businessId, 10);
+    const businessId = helper.str2int(match.params.businessId);
     const business = helper.getItemByID(state.rc_businesses.businesses, businessId);
-    const workplaceId = parseInt(match.params.workplaceId, 10);
+    const workplaceId = helper.str2int(match.params.workplaceId);
     const workplace = helper.getItemByID(state.rc_workplaces.workplaces, workplaceId);
     return {
       business: business || (workplace || {}).business_data,

@@ -1,4 +1,5 @@
-import React, { Fragment } from 'react';
+import React from 'react';
+import Helmet from 'react-helmet';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { Breadcrumb, Button, Spin } from 'antd';
@@ -7,7 +8,9 @@ import { saveJob } from 'redux/recruiter/jobs';
 import DATA from 'utils/data';
 import * as helper from 'utils/helper';
 
+import { PageHeader, PageSubHeader } from 'components';
 import DeleteDialog from '../JobList/DeleteDialog';
+import Wrapper from '../styled';
 import Details from './styled';
 
 class JobInterface extends React.Component {
@@ -112,29 +115,37 @@ class JobInterface extends React.Component {
     const { business_data } = location_data;
 
     return (
-      <Fragment>
-        <Breadcrumb>
-          <Breadcrumb.Item>
-            <Link to="/recruiter/jobs/business">Businesses</Link>
-          </Breadcrumb.Item>
-          <Breadcrumb.Item>
-            <Link to={`/recruiter/jobs/workplace/${business_data.id}`}>Workplaces</Link>
-          </Breadcrumb.Item>
-          <Breadcrumb.Item>
-            <Link to={`/recruiter/jobs/job/${location_data.id}`}>Jobs</Link>
-          </Breadcrumb.Item>
-          <Breadcrumb.Item>Job Details</Breadcrumb.Item>
-        </Breadcrumb>
+      <Wrapper className="container">
+        <Helmet title="My Workplace & Jobs" />
+
+        <PageHeader>
+          <h2>My Workplace & Jobs</h2>
+        </PageHeader>
+
+        <PageSubHeader>
+          <Breadcrumb>
+            <Breadcrumb.Item>
+              <Link to="/recruiter/jobs/business">Businesses</Link>
+            </Breadcrumb.Item>
+            <Breadcrumb.Item>
+              <Link to={`/recruiter/jobs/workplace/${business_data.id}`}>Workplaces</Link>
+            </Breadcrumb.Item>
+            <Breadcrumb.Item>
+              <Link to={`/recruiter/jobs/job/${location_data.id}`}>Jobs</Link>
+            </Breadcrumb.Item>
+            <Breadcrumb.Item>Job Details</Breadcrumb.Item>
+          </Breadcrumb>
+        </PageSubHeader>
 
         {loading ? <Spin>{this.renderDetails()}</Spin> : this.renderDetails()}
-      </Fragment>
+      </Wrapper>
     );
   }
 }
 
 export default connect(
   (state, { match }) => {
-    const jobId = parseInt(match.params.jobId, 10);
+    const jobId = helper.str2int(match.params.jobId);
     const job = helper.getItemByID(state.rc_jobs.jobs, jobId);
     return {
       job

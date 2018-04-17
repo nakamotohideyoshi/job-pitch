@@ -8,11 +8,12 @@ import * as helper from 'utils/helper';
 // Actions
 // ------------------------------------
 
-export const getApplications = createAction(C.RC_GET_APPS1);
-export const connectApplication = createAction(C.RC_CONNECT_APP1);
-export const updateApplication = createAction(C.RC_UPDATE_APP1);
-export const removeApplication = createAction(C.RC_REMOVE_APP1);
-export const sendMessage = createAction(C.RC_SEND_MESSAGE);
+export const updateStatus = createAction(C.APPLICATIONS_UPDATE);
+export const getApplications = createAction(C.GET_APPLICATIONS);
+export const connectApplication = createAction(C.CONNECT_APPLICATION);
+export const updateApplication = createAction(C.UPDATE_APPLICATION);
+export const removeApplication = createAction(C.REMOVE_APPLICATION);
+export const sendMessage = createAction(C.SEND_MESSAGE);
 
 // ------------------------------------
 // Reducer
@@ -20,30 +21,37 @@ export const sendMessage = createAction(C.RC_SEND_MESSAGE);
 
 const initialState = {
   applications: null,
-  error: null
+  error: null,
+  searchText: ''
 };
 
 export default handleActions(
   {
-    [C.RC_GET_APPS1]: () => state => ({
+    [C.APPLICATIONS_UPDATE]: (state, { payload }) => ({
       ...state,
-      applications: null,
-      error: null
+      ...payload
     }),
 
-    [requestSuccess(C.RC_GET_APPS1)]: (state, { payload }) => ({
+    // ---- get applications ----
+
+    [requestPending(C.GET_APPLICATIONS)]: (state, { payload }) => ({
+      ...state,
+      applications: payload.clear ? null : state.applications
+    }),
+
+    [requestSuccess(C.GET_APPLICATIONS)]: (state, { payload }) => ({
       ...state,
       applications: payload
     }),
 
-    [requestFail(C.RC_GET_APPS1)]: (state, { payload }) => ({
+    [requestFail(C.GET_APPLICATIONS)]: (state, { payload }) => ({
       ...state,
       error: payload
     }),
 
-    // ---- update application ----
+    // ---- connect application ----
 
-    [requestPending(C.RC_UPDATE_APP1)]: (state, { payload }) => ({
+    [requestPending(C.CONNECT_APPLICATION)]: (state, { payload }) => ({
       ...state,
       applications: helper.updateObj(state.applications, {
         id: payload.data.id,
@@ -51,25 +59,52 @@ export default handleActions(
       })
     }),
 
-    [requestSuccess(C.RC_UPDATE_APP1)]: (state, { payload }) => ({
+    [requestSuccess(C.CONNECT_APPLICATION)]: (state, { request }) => ({
       ...state,
       applications: helper.updateObj(state.applications, {
-        ...payload.data,
+        id: request.data.id,
+        status: DATA.APP.ESTABLISHED,
         updating: false
       })
     }),
 
-    [requestFail(C.RC_UPDATE_APP1)]: (state, { payload }) => ({
+    [requestFail(C.CONNECT_APPLICATION)]: (state, { request }) => ({
+      ...state,
+      applications: helper.updateObj(state.applications, {
+        id: request.data.id,
+        updating: false
+      })
+    }),
+
+    // ---- update application ----
+
+    [requestPending(C.UPDATE_APPLICATION)]: (state, { payload }) => ({
       ...state,
       applications: helper.updateObj(state.applications, {
         id: payload.data.id,
+        updating: true
+      })
+    }),
+
+    [requestSuccess(C.UPDATE_APPLICATION)]: (state, { request }) => ({
+      ...state,
+      applications: helper.updateObj(state.applications, {
+        ...request.data,
+        updating: false
+      })
+    }),
+
+    [requestFail(C.UPDATE_APPLICATION)]: (state, { request }) => ({
+      ...state,
+      applications: helper.updateObj(state.applications, {
+        id: request.data.id,
         updating: false
       })
     }),
 
     // ---- remove application ----
 
-    [requestPending(C.RC_REMOVE_APP1)]: (state, { payload }) => ({
+    [requestPending(C.REMOVE_APPLICATION)]: (state, { payload }) => ({
       ...state,
       applications: helper.updateObj(state.applications, {
         id: payload.id,
@@ -77,26 +112,26 @@ export default handleActions(
       })
     }),
 
-    [requestSuccess(C.RC_REMOVE_APP1)]: (state, { payload }) => ({
+    [requestSuccess(C.REMOVE_APPLICATION)]: (state, { request }) => ({
       ...state,
       applications: helper.updateObj(state.applications, {
-        id: payload.id,
+        id: request.id,
         status: DATA.APP.DELETED,
         removing: false
       })
     }),
 
-    [requestFail(C.RC_REMOVE_APP1)]: (state, { payload }) => ({
+    [requestFail(C.REMOVE_APPLICATION)]: (state, { request }) => ({
       ...state,
       applications: helper.updateObj(state.applications, {
-        id: payload.id,
+        id: request.id,
         removing: false
       })
     }),
 
     // send message
 
-    [C.RC_SEND_MESSAGE]: (state, { payload }) => {
+    [C.SEND_MESSAGE]: (state, { payload }) => {
       const appId = payload.data.application;
       const application = helper.getItemByID(state.applications, appId);
       const messages = application.messages.slice(0);
@@ -115,7 +150,7 @@ export default handleActions(
       };
     },
 
-    [requestSuccess(C.RC_SEND_MESSAGE)]: (state, { payload }) => {
+    [requestSuccess(C.SEND_MESSAGE)]: (state, { payload }) => {
       const { application } = payload;
       const applications = helper.removeObj(state.applications, application.id);
       applications.unshift(application);
@@ -125,7 +160,7 @@ export default handleActions(
       };
     },
 
-    [requestFail(C.RC_SEND_MESSAGE)]: (state, { payload }) => {
+    [requestFail(C.SEND_MESSAGE)]: (state, { payload }) => {
       const appId = payload.data.application;
       const application = helper.getItemByID(state.applications, appId);
       const messages = helper.updateObj(application.messages, {
@@ -143,6 +178,5 @@ export default handleActions(
       };
     }
   },
-
   initialState
 );

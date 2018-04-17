@@ -1,4 +1,5 @@
 import React, { Fragment } from 'react';
+import Helmet from 'react-helmet';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { Breadcrumb, List, Avatar } from 'antd';
@@ -7,8 +8,9 @@ import DATA from 'utils/data';
 import * as helper from 'utils/helper';
 
 import DeleteDialog from './DeleteDialog';
+import Wrapper from '../styled';
 
-import { PageSubHeader, AlertMsg, LinkButton, Loading, ListEx, Icons } from 'components';
+import { PageHeader, PageSubHeader, AlertMsg, LinkButton, Loading, ListEx, Icons } from 'components';
 
 class JobList extends React.Component {
   state = {
@@ -106,7 +108,13 @@ class JobList extends React.Component {
     const { selectedJob } = this.state;
 
     return (
-      <Fragment>
+      <Wrapper className="container">
+        <Helmet title="My Workplace & Jobs" />
+
+        <PageHeader>
+          <h2>My Workplace & Jobs</h2>
+        </PageHeader>
+
         <PageSubHeader>
           <Breadcrumb>
             <Breadcrumb.Item>
@@ -131,13 +139,13 @@ class JobList extends React.Component {
         </div>
 
         <DeleteDialog job={selectedJob} onCancel={() => this.showRemoveDialog()} />
-      </Fragment>
+      </Wrapper>
     );
   }
 }
 
 export default connect((state, { match }) => {
-  const workplaceId = parseInt(match.params.workplaceId, 10);
+  const workplaceId = helper.str2int(match.params.workplaceId);
   const workplace = helper.getItemByID(state.rc_workplaces.workplaces, workplaceId);
   let { jobs } = state.rc_jobs;
   jobs = jobs.filter(item => item.location === workplaceId);

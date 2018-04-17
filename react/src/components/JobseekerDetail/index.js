@@ -55,7 +55,7 @@ class JobseekerDetail extends React.Component {
                 {pitch && (
                   <div>
                     <a onClick={() => this.playPitch(true)}>
-                      <Icons.Play />Video Pitch
+                      <Icons.PlayCircle />Video Pitch
                     </a>
                   </div>
                 )}

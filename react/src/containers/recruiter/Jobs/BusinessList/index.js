@@ -1,11 +1,13 @@
-import React, { Fragment } from 'react';
+import React from 'react';
+import Helmet from 'react-helmet';
 import { connect } from 'react-redux';
 import { Breadcrumb, List, Avatar, Modal } from 'antd';
 
 import { removeBusiness } from 'redux/recruiter/businesses';
 import * as helper from 'utils/helper';
 
-import { PageSubHeader, AlertMsg, LinkButton, Loading, ListEx, Icons } from 'components';
+import { PageHeader, PageSubHeader, AlertMsg, LinkButton, Loading, ListEx, Icons } from 'components';
+import Wrapper from '../styled';
 
 const { confirm } = Modal;
 
@@ -127,7 +129,13 @@ class BusinessList extends React.Component {
 
   render() {
     return (
-      <Fragment>
+      <Wrapper className="container">
+        <Helmet title="My Workplace & Jobs" />
+
+        <PageHeader>
+          <h2>My Workplace & Jobs</h2>
+        </PageHeader>
+
         <PageSubHeader>
           <Breadcrumb>
             <Breadcrumb.Item>Businesses</Breadcrumb.Item>
@@ -144,7 +152,7 @@ class BusinessList extends React.Component {
             emptyRender={this.renderEmpty}
           />
         </div>
-      </Fragment>
+      </Wrapper>
     );
   }
 }

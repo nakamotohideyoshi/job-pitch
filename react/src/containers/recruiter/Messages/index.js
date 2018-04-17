@@ -3,7 +3,6 @@ import Helmet from 'react-helmet';
 import { connect } from 'react-redux';
 import { List, Avatar } from 'antd';
 
-import { getJobs } from 'redux/recruiter/jobs';
 import { getApplications, sendMessage } from 'redux/applications';
 import * as helper from 'utils/helper';
 
@@ -23,7 +22,6 @@ class Page extends React.Component {
   };
 
   componentWillMount() {
-    this.props.getJobs();
     this.props.getApplications();
 
     window.addEventListener('resize', this.onResize);
@@ -91,12 +89,12 @@ class Page extends React.Component {
   };
 
   render() {
-    const { error, jobs, applications } = this.props;
+    const { jobs, applications, error } = this.props;
 
     if (error) {
       return <AlertMsg error>Server Error!</AlertMsg>;
     }
-    if (!jobs || !applications) {
+    if (!applications) {
       return <Loading size="large" />;
     }
 
@@ -140,10 +138,9 @@ const enhance = connect(
   state => ({
     jobs: state.rc_jobs.jobs,
     applications: state.applications.applications,
-    error: state.rc_jobs.error1 || state.applications.error
+    error: state.applications.error
   }),
   {
-    getJobs,
     getApplications,
     sendMessage
   }

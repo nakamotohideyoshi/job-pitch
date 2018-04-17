@@ -6,10 +6,10 @@ import { List, Modal } from 'antd';
 import { getJobseekers, connectJobseeker, removeJobseeker } from 'redux/recruiter/apps';
 import * as helper from 'utils/helper';
 
-import { AlertMsg, Loading, Logo, Icons } from 'components';
+import { AlertMsg, Loading, Logo, ListEx, Icons } from 'components';
 import Header from '../Header';
+import Wrapper from '../styled';
 import Detail from './Detail';
-import Wrapper from './styled';
 
 const { confirm } = Modal;
 
@@ -198,7 +198,15 @@ class FindTalent extends React.Component {
     return (
       <Wrapper className="container">
         <Header />
-        <div className="content">{this.renderJobseekers()}</div>
+        <div className="content">
+          <ListEx
+            data={this.props.workplaces}
+            loadingSize="large"
+            pagination={{ pageSize: 10 }}
+            renderItem={this.renderWorkplace}
+            emptyRender={this.renderEmpty}
+          />
+        </div>
       </Wrapper>
     );
   }

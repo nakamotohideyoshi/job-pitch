@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { Select, Button, List } from 'antd';
 import { Logo } from 'components';
 
-import { updateStatus, getBusinesses, purchase } from 'redux/recruiter/businesses';
+import { selectBusiness, purchase } from 'redux/recruiter/businesses';
 import DATA from 'utils/data';
 import * as helper from 'utils/helper';
 
@@ -13,33 +13,13 @@ const Option = Select.Option;
 
 class Credits extends React.Component {
   state = {
-    businessId: null,
     loading: false
   };
 
-  componentWillMount() {
-    if (this.props.businesses.length) {
-      this.getBusiness();
-    } else {
-      this.props.getBusinesses({
-        success: this.getBusiness
-      });
-    }
-  }
-
-  getBusiness = () => {
-    const { match, businesses } = this.props;
-    const businessId = helper.str2int(match.params.businessId) || helper.loadData('credits/businessId');
-    const business = helper.getItemByID(businesses, businessId) || businesses[0];
-    this.selectBusiness(business.id);
-  };
-
   selectBusiness = businessId => {
-    const { businesses, updateStatus, history } = this.props;
-    const { tokens } = helper.getItemByID(businesses, businessId);
-    updateStatus({ credits: tokens });
+    const { selectBusiness, history } = this.props;
+    selectBusiness(businessId);
     helper.saveData('credits/businessId', businessId);
-    this.setState({ businessId });
     history.replace(`/recruiter/settings/credits/${businessId}`);
   };
 
@@ -59,11 +39,12 @@ class Credits extends React.Component {
   };
 
   render() {
-    const { businessId, loading } = this.state;
+    const { business, businesses } = this.props;
+    const { loading } = this.state;
     return (
       <Wrapper>
-        <Select size="large" value={businessId} onChange={this.selectBusiness}>
-          {this.props.businesses.map(b => {
+        <Select size="large" value={business.id} onChange={this.selectBusiness}>
+          {businesses.map(b => {
             const logo = helper.getBusinessLogo(b);
             const n = b.tokens;
             return (
@@ -99,12 +80,17 @@ class Credits extends React.Component {
 }
 
 export default connect(
-  state => ({
-    businesses: state.rc_businesses.businesses
-  }),
+  (state, { match }) => {
+    const businessId = helper.str2int(match.params.businessId) || helper.loadData('credits/businessId');
+    const { businesses } = state.rc_businesses;
+    const business = helper.getItemByID(businesses, businessId) || businesses[0];
+    return {
+      businesses,
+      business
+    };
+  },
   {
-    updateStatus,
-    getBusinesses,
+    selectBusiness,
     purchase
   }
 )(Credits);

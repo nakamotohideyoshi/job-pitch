@@ -123,20 +123,20 @@ export default handleActions(
 
     // ---- get applications ----
 
-    // [requestPending(C.RC_GET_APPS1)]: state => ({
+    // [requestPending(C.GET_APPLICATIONS)]: state => ({
     //   ...state,
     //   applications1: null,
     //   loadingApplications1: true,
     //   errorApplications1: null
     // }),
 
-    // [requestSuccess(C.RC_GET_APPS1)]: (state, { payload }) => ({
+    // [requestSuccess(C.GET_APPLICATIONS)]: (state, { payload }) => ({
     //   ...state,
     //   applications1: payload,
     //   loadingApplications1: false
     // }),
 
-    // [requestFail(C.RC_GET_APPS1)]: (state, { payload }) => ({
+    // [requestFail(C.GET_APPLICATIONS)]: (state, { payload }) => ({
     //   ...state,
     //   loadingApplications1: false,
     //   errorApplications1: payload

@@ -8,6 +8,13 @@ export const CHANGE_PASSWORD = 'CHANGE_PASSWORD';
 export const GET_USERDATA = 'GET_USERDATA';
 export const UPDATE_AUTH = 'UPDATE_AUTH';
 
+export const APPLICATIONS_UPDATE = 'APPLICATIONS_UPDATE';
+export const GET_APPLICATIONS = 'GET_APPLICATIONS';
+export const CONNECT_APPLICATION = 'CONNECT_APPLICATION';
+export const UPDATE_APPLICATION = 'UPDATE_APPLICATION';
+export const REMOVE_APPLICATION = 'REMOVE_APPLICATION';
+export const SEND_MESSAGE = 'SEND_MESSAGE';
+
 // recruiter
 
 export const RC_APPS_UPDATE = 'RC_APPS_UPDATE';
@@ -19,12 +26,6 @@ export const RC_GET_APPS = 'RC_GET_APPS';
 export const RC_CONNECT_APP = 'RC_CONNECT_APP';
 export const RC_UPDATE_APP = 'RC_UPDATE_APP';
 export const RC_REMOVE_APP = 'RC_REMOVE_APP';
-
-export const RC_GET_APPS1 = 'RC_GET_APPS1';
-export const RC_CONNECT_APP1 = 'RC_CONNECT_APP1';
-export const RC_UPDATE_APP1 = 'RC_UPDATE_APP1';
-export const RC_REMOVE_APP1 = 'RC_REMOVE_APP1';
-export const RC_SEND_MESSAGE = 'RC_SEND_MESSAGE';
 
 export const RC_BUSINESSES_UPDATE = 'RC_BUSINESSES_UPDATE';
 export const RC_GET_BUSINESSES = 'RC_GET_BUSINESSES';
@@ -43,8 +44,6 @@ export const RC_GET_JOBS = 'RC_GET_JOBS';
 export const RC_SAVE_JOB = 'RC_SAVE_JOB';
 export const RC_REMOVE_JOB = 'RC_REMOVE_JOB';
 export const RC_UPDATE_JOB = 'RC_UPDATE_JOB';
-
-export const RC_MSGS_GET_DATA = 'RC_MSGS_GET_DATA';
 
 // jobseeker
 

@@ -39,17 +39,17 @@ function* sendMessage({ payload }) {
   if (result) {
     const application = yield call(getRequest({ url: `/api/applications/${payload.data.application}/` }));
     if (application) {
-      yield put({ type: requestSuccess(C.RC_SEND_MESSAGE), payload: { application } });
+      yield put({ type: requestSuccess(C.SEND_MESSAGE), payload: { application } });
       return;
     }
   }
-  yield put({ type: requestFail(C.RC_SEND_MESSAGE), payload });
+  yield put({ type: requestFail(C.SEND_MESSAGE), payload });
 }
 
 export default function* sagas() {
-  yield takeLatest(C.RC_GET_APPS1, getApplications);
-  yield takeLatest(C.RC_CONNECT_APP1, connectApplication);
-  yield takeLatest(C.RC_UPDATE_APP1, updateApplication);
-  yield takeLatest(C.RC_REMOVE_APP1, removeApplication);
-  yield takeLatest(C.RC_SEND_MESSAGE, sendMessage);
+  yield takeLatest(C.GET_APPLICATIONS, getApplications);
+  yield takeLatest(C.CONNECT_APPLICATION, connectApplication);
+  yield takeLatest(C.UPDATE_APPLICATION, updateApplication);
+  yield takeLatest(C.REMOVE_APPLICATION, removeApplication);
+  yield takeLatest(C.SEND_MESSAGE, sendMessage);
 }

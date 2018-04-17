@@ -1,13 +1,14 @@
 import React, { Fragment } from 'react';
+import Helmet from 'react-helmet';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { Breadcrumb, List, Avatar, Modal } from 'antd';
-import _ from 'lodash';
 
 import { removeWorkplace } from 'redux/recruiter/workplaces';
 import * as helper from 'utils/helper';
 
-import { PageSubHeader, AlertMsg, LinkButton, Loading, ListEx, Icons } from 'components';
+import { PageHeader, PageSubHeader, AlertMsg, LinkButton, Loading, ListEx, Icons } from 'components';
+import Wrapper from '../styled';
 
 const { confirm } = Modal;
 
@@ -127,7 +128,13 @@ class WorkplaceList extends React.Component {
 
   render() {
     return (
-      <Fragment>
+      <Wrapper className="container">
+        <Helmet title="My Workplace & Jobs" />
+
+        <PageHeader>
+          <h2>My Workplace & Jobs</h2>
+        </PageHeader>
+
         <PageSubHeader>
           <Breadcrumb>
             <Breadcrumb.Item>
@@ -147,14 +154,14 @@ class WorkplaceList extends React.Component {
             emptyRender={this.renderEmpty}
           />
         </div>
-      </Fragment>
+      </Wrapper>
     );
   }
 }
 
 export default connect(
   (state, { match }) => {
-    const businessId = parseInt(match.params.businessId, 10);
+    const businessId = helper.str2int(match.params.businessId);
     const business = helper.getItemByID(state.rc_businesses.businesses, businessId);
     let { workplaces } = state.rc_workplaces;
     workplaces = workplaces.filter(item => item.business === businessId);

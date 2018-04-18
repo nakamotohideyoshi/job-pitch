@@ -24,7 +24,7 @@ const StyledMenu = styled(Menu)`
 
 const Filters = styled.div`
   display: flex;
-  margin: 20px 12px;
+  margin: 20px 0;
 
   .ant-select {
     flex: 1;

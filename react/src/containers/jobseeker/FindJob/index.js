@@ -49,7 +49,7 @@ class FindJob extends React.Component {
     const pitch = helper.getPitch(jobseeker);
     if (pitch) {
       confirm({
-        title: 'Yes, I want to apply to this job',
+        content: 'Yes, I want to apply to this job',
         okText: 'Apply',
         cancelText: 'Cancel',
         maskClosable: true,
@@ -64,7 +64,7 @@ class FindJob extends React.Component {
       });
     } else {
       confirm({
-        title: 'You need to record your pitch video to apply.',
+        content: 'You need to record your pitch video to apply.',
         okText: 'Record my pitch',
         cancelText: 'Cancel',
         maskClosable: true,
@@ -79,7 +79,7 @@ class FindJob extends React.Component {
     event && event.stopPropagation();
 
     confirm({
-      title: 'Are you sure you are not interested in this job?',
+      content: 'Are you sure you are not interested in this job?',
       okText: `I'm Sure`,
       okType: 'danger',
       cancelText: 'Cancel',

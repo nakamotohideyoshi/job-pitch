@@ -1,55 +1,68 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import Truncate from 'react-truncate';
-import { List, Modal } from 'antd';
+import { List, Modal, Avatar } from 'antd';
 
-import { getJobseekers, connectJobseeker, removeJobseeker } from 'redux/recruiter/apps';
+import { findJobseekers, connectJobseeker, removeJobseeker } from 'redux/recruiter/find';
 import * as helper from 'utils/helper';
 
-import { AlertMsg, Loading, Logo, ListEx, Icons } from 'components';
+import { AlertMsg, Loading, ListEx, Icons } from 'components';
+import ApplicationDetails from 'containers/recruiter/ApplicationDetails';
 import Header from '../Header';
 import Wrapper from '../styled';
-import Detail from './Detail';
 
 const { confirm } = Modal;
 
 class FindTalent extends React.Component {
   state = {
-    currentPage: 1
+    selectedJobseeker: null
   };
 
   componentWillMount() {
-    this.jobId = helper.str2int(this.props.match.params.jobId);
-    this.getJobseekers(true);
-  }
-
-  componentWillReceiveProps({ match }) {
-    const jobId = helper.str2int(match.params.jobId);
-    if (this.jobId !== jobId) {
-      this.jobId = jobId;
-      this.getJobseekers();
-    }
-  }
-
-  getJobseekers = clear => {
-    if (this.jobId) {
-      this.props.getJobseekers({
-        jobId: this.jobId,
-        clear
+    const { jobseekers, location } = this.props;
+    const { jobseekerId } = location.state || {};
+    if (jobseekerId) {
+      this.setState({
+        selectedJobseeker: helper.getItemByID(jobseekers, jobseekerId)
       });
+    } else {
+      this.findJobseekers();
     }
+  }
+
+  componentWillReceiveProps({ job }) {
+    if (this.props.job !== job) {
+      this.findJobseekers();
+    }
+  }
+
+  findJobseekers = () => {
+    const { job, findJobseekers } = this.props;
+    job &&
+      findJobseekers({
+        params: {
+          job: job.id
+        }
+      });
   };
 
-  select = jobseekerId => this.props.history.push(`/recruiter/applications/find/${this.jobId}/${jobseekerId}`);
+  showDetails = selectedJobseeker => {
+    this.setState({ selectedJobseeker });
+  };
 
-  connect = (id, e) => {
-    e.stopPropagation();
+  hideDetails = () => {
+    this.setState({ selectedJobseeker: null });
+  };
 
-    const { business, connectJobseeker, history } = this.props;
+  connect = ({ id }, event) => {
+    event && event.stopPropagation();
 
+    const { job, connectJobseeker, history } = this.props;
+
+    const business = job.location_data.business_data;
     if (business.tokens === 0) {
       confirm({
-        title: 'You need 1 credit',
+        content: 'You need 1 credit',
         okText: `Credits`,
         cancelText: 'Cancel',
         maskClosable: true,
@@ -61,26 +74,33 @@ class FindTalent extends React.Component {
     }
 
     confirm({
-      title: 'Are you sure you want to connect this talent? (1 credit)',
+      content: 'Are you sure you want to connect this talent? (1 credit)',
       okText: `Connect`,
       cancelText: 'Cancel',
       maskClosable: true,
       onOk: () => {
         connectJobseeker({
+          id,
           data: {
             job: this.jobId,
             job_seeker: id
+          },
+          successMsg: {
+            message: `Jobseeker is connected.`
+          },
+          failMsg: {
+            message: `Connection is failed.`
           }
         });
       }
     });
   };
 
-  remove = (id, e) => {
-    e.stopPropagation();
+  remove = ({ id }, event) => {
+    event && event.stopPropagation();
 
     confirm({
-      title: 'Are you sure you want to delete this talent?',
+      content: 'Are you sure you want to delete this talent?',
       okText: `Remove`,
       okType: 'danger',
       cancelText: 'Cancel',
@@ -93,6 +113,12 @@ class FindTalent extends React.Component {
     });
   };
 
+  filterOption = jobseeker =>
+    helper
+      .getFullJSName(jobseeker)
+      .toLowerCase()
+      .indexOf(this.props.searchText.toLowerCase()) >= 0;
+
   renderJobseeker = jobseeker => {
     const image = helper.getPitch(jobseeker).thumbnail;
     const fullName = helper.getFullJSName(jobseeker);
@@ -100,128 +126,82 @@ class FindTalent extends React.Component {
       <List.Item
         key={jobseeker.id}
         actions={[
-          <span onClick={e => this.connect(jobseeker.id, e)}>Connect</span>,
-          <span onClick={e => this.remove(jobseeker.id, e)}>Remove</span>
+          <span onClick={e => this.connect(jobseeker, e)}>
+            <Icons.Link />
+          </span>,
+          <span onClick={e => this.remove(jobseeker, e)}>
+            <Icons.TrashAlt />
+          </span>
         ]}
-        onClick={() => this.select(jobseeker.id)}
+        onClick={() => this.showDetails(jobseeker)}
+        className={jobseeker.loading ? 'loading' : ''}
       >
         <List.Item.Meta
-          avatar={<Logo src={image} size="80px" />}
-          title={`${fullName}`}
+          avatar={<Avatar src={image} className="avatar-80" />}
+          title={fullName}
           description={
             <Truncate lines={2} ellipsis={<span>...</span>}>
               {jobseeker.description}
             </Truncate>
           }
         />
+        {jobseeker.loading && <Loading className="mask" size="small" />}
       </List.Item>
     );
   };
 
-  renderJobseekers() {
-    const { loading, error, jobseekers, searchText } = this.props;
-    const { currentPage } = this.state;
-
-    if (error) {
-      return (
-        <AlertMsg>
-          <span>Server Error!</span>
-        </AlertMsg>
-      );
-    }
-
-    if (jobseekers.length === 0) {
-      if (loading) {
-        return (
-          <AlertMsg>
-            <Loading size="large" />
-          </AlertMsg>
-        );
-      }
-
-      return (
-        <AlertMsg>
-          <span>
-            {`There are no more new matches for this job.
-              You can restore your removed matches by clicking refresh above.`}
-          </span>
-          <a onClick={() => this.getJobseekers()}>
-            <Icons.Refresh />
-            Refresh
-          </a>
-        </AlertMsg>
-      );
-    }
-
-    const filteredJobseeksers = jobseekers.filter(
-      jobseeker =>
-        helper
-          .getFullJSName(jobseeker)
-          .toLowerCase()
-          .indexOf(searchText) >= 0
-    );
-
-    if (filteredJobseeksers.length === 0) {
-      return (
-        <AlertMsg>
-          <span>No search results</span>
-        </AlertMsg>
-      );
-    }
-
-    const pageSize = 10;
-    const index = (currentPage - 1) * pageSize;
-    const pageJobseekers = filteredJobseeksers.slice(index, index + pageSize);
-    const pagination = {
-      pageSize,
-      current: currentPage,
-      total: filteredJobseeksers.length,
-      onChange: currentPage => this.setState({ currentPage })
-    };
-
-    return (
-      <List
-        itemLayout="horizontal"
-        pagination={pagination}
-        dataSource={pageJobseekers}
-        loading={loading}
-        renderItem={this.renderJobseeker}
-      />
-    );
-  }
-
   render() {
-    if (this.props.match.params.jobseekerId) {
-      return <Detail />;
-    }
-
+    const { job, jobseekers, error } = this.props;
+    const { selectedJobseeker } = this.state;
     return (
       <Wrapper className="container">
         <Header />
         <div className="content">
-          <ListEx
-            data={this.props.workplaces}
-            loadingSize="large"
-            pagination={{ pageSize: 10 }}
-            renderItem={this.renderWorkplace}
-            emptyRender={this.renderEmpty}
-          />
+          {job && (
+            <ListEx
+              data={jobseekers}
+              loadingSize="large"
+              pagination={{ pageSize: 10 }}
+              filterOption={this.filterOption}
+              error={error}
+              renderItem={this.renderApplication}
+              emptyRender={
+                <AlertMsg>
+                  <span>
+                    {`There are no more new matches for this job.
+                  You can restore your removed matches by clicking refresh above.`}
+                  </span>
+                  <a onClick={() => this.findJobseekers()}>
+                    <Icons.Refresh />
+                    Refresh
+                  </a>
+                </AlertMsg>
+              }
+            />
+          )}
         </div>
+
+        {selectedJobseeker && <ApplicationDetails jobseeker={selectedJobseeker} onClose={this.hideDetails} />}
       </Wrapper>
     );
   }
 }
 
 export default connect(
-  state => ({
-    business: state.rc_businesses.business,
-    jobseekers: state.rc_apps.jobseekers,
-    loading: state.rc_apps.loadingJobseekers,
-    error: state.rc_apps.errorJobseekers,
-    searchText: state.rc_apps.searchText
-  }),
+  (state, { match }) => {
+    const jobId = helper.str2int(match.params.jobId);
+    const job = helper.getItemByID(state.rc_jobs.jobs, jobId);
+    const { jobseekers, error } = state.rc_find;
+    const { searchText } = state.applications;
+    return {
+      job,
+      jobseekers,
+      error,
+      searchText
+    };
+  },
   {
-    getJobseekers,
+    findJobseekers,
     connectJobseeker,
     removeJobseeker
   }

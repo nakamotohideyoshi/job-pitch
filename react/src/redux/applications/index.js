@@ -1,6 +1,5 @@
 import { createAction, handleActions } from 'redux-actions';
 import { requestPending, requestSuccess, requestFail } from 'utils/request';
-import DATA from 'utils/data';
 import * as C from 'redux/constants';
 import * as helper from 'utils/helper';
 
@@ -34,9 +33,9 @@ export default handleActions(
 
     // ---- get applications ----
 
-    [requestPending(C.GET_APPLICATIONS)]: (state, { payload }) => ({
+    [requestPending(C.GET_APPLICATIONS)]: state => ({
       ...state,
-      applications: payload.clear ? null : state.applications
+      applications: null
     }),
 
     [requestSuccess(C.GET_APPLICATIONS)]: (state, { payload }) => ({
@@ -49,83 +48,29 @@ export default handleActions(
       error: payload
     }),
 
-    // ---- connect application ----
-
-    [requestPending(C.CONNECT_APPLICATION)]: (state, { payload }) => ({
-      ...state,
-      applications: helper.updateObj(state.applications, {
-        id: payload.data.id,
-        updating: true
-      })
-    }),
-
-    [requestSuccess(C.CONNECT_APPLICATION)]: (state, { request }) => ({
-      ...state,
-      applications: helper.updateObj(state.applications, {
-        id: request.data.id,
-        status: DATA.APP.ESTABLISHED,
-        updating: false
-      })
-    }),
-
-    [requestFail(C.CONNECT_APPLICATION)]: (state, { request }) => ({
-      ...state,
-      applications: helper.updateObj(state.applications, {
-        id: request.data.id,
-        updating: false
-      })
-    }),
-
     // ---- update application ----
 
     [requestPending(C.UPDATE_APPLICATION)]: (state, { payload }) => ({
       ...state,
       applications: helper.updateObj(state.applications, {
-        id: payload.data.id,
-        updating: true
+        id: payload.id,
+        loading: true
       })
     }),
 
-    [requestSuccess(C.UPDATE_APPLICATION)]: (state, { request }) => ({
+    [requestSuccess(C.UPDATE_APPLICATION)]: (state, { payload }) => ({
       ...state,
       applications: helper.updateObj(state.applications, {
-        ...request.data,
-        updating: false
+        ...payload,
+        loading: false
       })
     }),
 
     [requestFail(C.UPDATE_APPLICATION)]: (state, { request }) => ({
       ...state,
       applications: helper.updateObj(state.applications, {
-        id: request.data.id,
-        updating: false
-      })
-    }),
-
-    // ---- remove application ----
-
-    [requestPending(C.REMOVE_APPLICATION)]: (state, { payload }) => ({
-      ...state,
-      applications: helper.updateObj(state.applications, {
-        id: payload.id,
-        removing: true
-      })
-    }),
-
-    [requestSuccess(C.REMOVE_APPLICATION)]: (state, { request }) => ({
-      ...state,
-      applications: helper.updateObj(state.applications, {
         id: request.id,
-        status: DATA.APP.DELETED,
-        removing: false
-      })
-    }),
-
-    [requestFail(C.REMOVE_APPLICATION)]: (state, { request }) => ({
-      ...state,
-      applications: helper.updateObj(state.applications, {
-        id: request.id,
-        removing: false
+        loading: false
       })
     }),
 
@@ -151,9 +96,8 @@ export default handleActions(
     },
 
     [requestSuccess(C.SEND_MESSAGE)]: (state, { payload }) => {
-      const { application } = payload;
-      const applications = helper.removeObj(state.applications, application.id);
-      applications.unshift(application);
+      const applications = helper.removeObj(state.applications, payload.id);
+      applications.unshift(payload);
       return {
         ...state,
         applications

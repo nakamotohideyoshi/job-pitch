@@ -62,10 +62,10 @@ class WorkplaceList extends React.Component {
         this.props.removeWorkplace({
           id,
           successMsg: {
-            message: `${name} is removed successfully.`
+            message: `Workplace(${name}) is removed.`
           },
           failMsg: {
-            message: `Removing ${name} is failed.`
+            message: `Removing workplace(${name}) is failed.`
           }
         });
       }

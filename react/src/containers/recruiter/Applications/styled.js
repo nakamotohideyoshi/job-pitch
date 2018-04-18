@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-import media from 'utils/mediaquery';
 import colors from 'utils/colors';
 
 export default styled.div`
@@ -12,7 +11,6 @@ export default styled.div`
     position: relative;
     margin-bottom: 40px;
     min-height: 100px;
-    ${media.tablet`padding: 25px 10px;`};
 
     .ant-list-item {
       position: relative;
@@ -21,6 +19,17 @@ export default styled.div`
 
       .ant-list-item-meta-title {
         font-size: 16px;
+      }
+
+      .ant-list-item-meta-avatar {
+        position: relative;
+        svg {
+          position: absolute;
+          left: -6px;
+          top: -6px;
+          font-size: 12px;
+          color: #ff9300;
+        }
       }
 
       .ant-list-item-action {

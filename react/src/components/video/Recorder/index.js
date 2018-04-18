@@ -28,7 +28,7 @@ class VideoRecorder extends React.Component {
   openRecorder = () => {
     if (navigator.userAgent.indexOf('iPhone') !== -1) {
       confirm({
-        title: 'To record your video, you need to download the app',
+        content: 'To record your video, you need to download the app',
         okText: 'Sign out',
         maskClosable: true,
         onOk: () => {

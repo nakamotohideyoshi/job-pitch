@@ -66,10 +66,10 @@ class BusinessList extends React.Component {
         this.props.removeBusiness({
           id,
           successMsg: {
-            message: `${name} is removed successfully.`
+            message: `Business(${name}) is removed.`
           },
           failMsg: {
-            message: `Removing ${name} is failed.`
+            message: `Removing business(${name}) is failed.`
           }
         });
       }

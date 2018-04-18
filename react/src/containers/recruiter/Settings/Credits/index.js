@@ -43,7 +43,7 @@ class Credits extends React.Component {
     const { loading } = this.state;
     return (
       <Wrapper>
-        <Select size="large" value={business.id} onChange={this.selectBusiness}>
+        <Select value={business.id} onChange={this.selectBusiness}>
           {businesses.map(b => {
             const logo = helper.getBusinessLogo(b);
             const n = b.tokens;

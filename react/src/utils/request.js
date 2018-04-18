@@ -1,5 +1,6 @@
 import axios from 'axios';
-import { call, put } from 'redux-saga/effects';
+import { call, put, take, race } from 'redux-saga/effects';
+import { LOCATION_CHANGE } from 'react-router-redux';
 import { LOGOUT } from 'redux/constants';
 import { notification } from 'antd';
 
@@ -21,7 +22,7 @@ const convertFormData = data => {
   return formData;
 };
 
-const request = ({ type: type1, method, url }) =>
+const request = ({ type: type1, method, url, payloadOnSuccess, payloadOnFail }) =>
   function* api(action) {
     const { type: type2, payload } = action || {};
     const { data: reqData, isFormData, params, onUploadProgress, success, fail, successMsg, failMsg } = payload || {};
@@ -48,7 +49,7 @@ const request = ({ type: type1, method, url }) =>
       type &&
         (yield put({
           type: requestSuccess(type),
-          payload: data,
+          payload: payloadOnSuccess ? payloadOnSuccess(payload, data) : data,
           request: payload
         }));
 
@@ -73,7 +74,7 @@ const request = ({ type: type1, method, url }) =>
       type &&
         (yield put({
           type: requestFail(type),
-          payload: data,
+          payload: payloadOnFail ? payloadOnFail(payload, data) : data,
           request: payload
         }));
 
@@ -98,5 +99,13 @@ export const getRequest = params => request({ ...params, method: 'get' });
 export const postRequest = params => request({ ...params, method: 'post' });
 export const putRequest = params => request({ ...params, method: 'put' });
 export const deleteRequest = params => request({ ...params, method: 'delete' });
+
+export const weakRequest = api =>
+  function* fun(action) {
+    return yield race({
+      result: call(api, action),
+      cancel: take(LOCATION_CHANGE)
+    });
+  };
 
 export default request;

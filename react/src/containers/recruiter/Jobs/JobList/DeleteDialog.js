@@ -10,10 +10,10 @@ const DeleteDialog = ({ job, removeJob, saveJob, onCancel }) => {
     removeJob({
       id,
       successMsg: {
-        message: `${title} is removed successfully.`
+        message: `Job(${title}) is removed.`
       },
       failMsg: {
-        message: `Removing ${title} is failed.`
+        message: `Removing job(${title}) is failed.`
       }
     });
     onCancel();
@@ -26,10 +26,10 @@ const DeleteDialog = ({ job, removeJob, saveJob, onCancel }) => {
         status: DATA.JOB.CLOSED
       },
       successMsg: {
-        message: `${title} is closed.`
+        message: `Job(${title}) is closed.`
       },
       failMsg: {
-        message: `Closing ${title} is failed.`
+        message: `Closing job(${title}) is failed.`
       }
     });
     onCancel();

@@ -22,7 +22,7 @@ const initialState = {
 
 export default handleActions(
   {
-    // ---- get jobs ----
+    // ---- find jobs ----
 
     [requestPending(C.JS_FIND_JOBS)]: state => ({
       ...state,

@@ -26,7 +26,7 @@ class UserMenu extends React.PureComponent {
 
     if (key === 'signout') {
       confirm({
-        title: 'Are you sure you want to sign out?',
+        content: 'Are you sure you want to sign out?',
         okText: 'Sign out',
         maskClosable: true,
         onOk: () => {

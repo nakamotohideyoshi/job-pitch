@@ -21,9 +21,11 @@ class ApplicationDetails extends React.Component {
   message = () => this.props.history.push(`/recruiter/messages/${this.props.application.id}`);
 
   changeShortlisted = shortlisted => {
+    const { id } = this.props.application;
     this.props.updateApplication({
+      id,
       data: {
-        id: this.props.application.id,
+        id,
         shortlisted
       }
     });
@@ -31,11 +33,12 @@ class ApplicationDetails extends React.Component {
 
   connect = () => {
     const { application, connectApplication, history } = this.props;
+    const { id } = application;
     const business = application.job_data.loation_data.business_data;
 
     if (business.tokens === 0) {
       confirm({
-        title: 'You need 1 credit',
+        content: 'You need 1 credit',
         okText: `Credits`,
         cancelText: 'Cancel',
         maskClosable: true,
@@ -47,15 +50,22 @@ class ApplicationDetails extends React.Component {
     }
 
     confirm({
-      title: 'Yes, I want to make this connection (1 credit)',
+      content: 'Yes, I want to make this connection (1 credit)',
       okText: `Connect`,
       cancelText: 'Cancel',
       maskClosable: true,
       onOk: () => {
         connectApplication({
+          id,
           data: {
-            id: application.id,
+            id,
             connect: DATA.APP.ESTABLISHED
+          },
+          successMsg: {
+            message: `Application is connected.`
+          },
+          failMsg: {
+            message: `Connection is failed.`
           }
         });
       }
@@ -64,14 +74,20 @@ class ApplicationDetails extends React.Component {
 
   remove = () => {
     confirm({
-      title: 'Are you sure you want to delete this applicaton?',
+      content: 'Are you sure you want to delete this applicaton?',
       okText: `Remove`,
       okType: 'danger',
       cancelText: 'Cancel',
       maskClosable: true,
       onOk: () => {
         this.props.removeApplication({
-          id: this.props.application.id
+          id: this.props.application.id,
+          successMsg: {
+            message: `Application is removed.`
+          },
+          failMsg: {
+            message: `Removing is failed.`
+          }
         });
       }
     });
@@ -79,7 +95,7 @@ class ApplicationDetails extends React.Component {
 
   render() {
     const { application, location: { pathname }, onClose } = this.props;
-    const { job_seeker, status, shortlisted, updating, removing } = application;
+    const { job_seeker, status, shortlisted, loading, removing } = application;
     const messageButton = pathname.indexOf('/recruiter/messages') !== 0;
 
     return (
@@ -90,14 +106,14 @@ class ApplicationDetails extends React.Component {
           {status !== DATA.APP.DELETED && (
             <div className="buttons">
               {status === DATA.APP.CREATED ? (
-                <Button type="primary" loading={updating} onClick={this.connect}>
+                <Button type="primary" loading={loading} onClick={this.connect}>
                   Connect
                 </Button>
               ) : (
                 <Fragment>
                   <div>
                     <span>Shortlisted</span>
-                    <Switch checked={shortlisted} loading={updating} onChange={this.changeShortlisted} />
+                    <Switch checked={shortlisted} loading={loading} onChange={this.changeShortlisted} />
                   </div>
                   {messageButton && (
                     <Button type="primary" onClick={this.message}>

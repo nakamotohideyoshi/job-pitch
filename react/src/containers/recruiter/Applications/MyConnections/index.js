@@ -1,194 +1,187 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import Truncate from 'react-truncate';
-import { List, Modal } from 'antd';
+import { List, Modal, Avatar } from 'antd';
 
-import { getApplications, removeApplication } from 'redux/recruiter/apps';
+import { getApplications, removeApplication } from 'redux/applications';
 import DATA from 'utils/data';
 import * as helper from 'utils/helper';
 
-import { AlertMsg, Loading, Logo, Icons } from 'components';
+import { AlertMsg, Loading, ListEx, Icons } from 'components';
+import ApplicationDetails from 'containers/recruiter/ApplicationDetails';
 import Header from '../Header';
-import Detail from './Detail';
-import Wrapper from './styled';
+import Wrapper from '../styled';
 
 const { confirm } = Modal;
 
 class MyConnections extends React.Component {
   state = {
-    currentPage: 1
+    selectedApp: null
   };
 
   componentWillMount() {
-    this.jobId = helper.str2int(this.props.match.params.jobId);
-    this.getApplications(true);
-  }
-
-  componentWillReceiveProps({ match }) {
-    const jobId = helper.str2int(match.params.jobId);
-    if (this.jobId !== jobId) {
-      this.jobId = jobId;
+    const { applications, location } = this.props;
+    const { appId } = location.state || {};
+    if (appId) {
+      this.setState({
+        selectedApp: helper.getItemByID(applications, appId)
+      });
+    } else {
       this.getApplications();
     }
   }
 
-  getApplications = clear => {
-    if (this.jobId) {
-      this.props.getApplications({
-        jobId: this.jobId,
-        status: DATA.APP.ESTABLISHED,
-        clear
-      });
+  componentWillReceiveProps({ job, shortlist }) {
+    if (this.props.job !== job || this.props.shortlist !== shortlist) {
+      this.getApplications();
     }
+  }
+
+  getApplications = () => {
+    const { job, getApplications, shortlist } = this.props;
+    job &&
+      getApplications({
+        params: {
+          job: job.id,
+          status: DATA.APP.ESTABLISHED,
+          shortlist: shortlist && 1
+        }
+      });
   };
 
-  select = appId => this.props.history.push(`/recruiter/applications/conns/${this.jobId}/${appId}`);
+  showDetails = selectedApp => {
+    this.setState({ selectedApp });
+  };
 
-  message = (id, e) => {
-    e.stopPropagation();
+  hideDetails = () => {
+    this.setState({ selectedApp: null });
+  };
+
+  message = ({ id }, event) => {
+    event && event.stopPropagation();
     this.props.history.push(`/recruiter/messages/${id}`);
   };
 
-  remove = (id, e) => {
-    e.stopPropagation();
+  remove = ({ id }, event) => {
+    event && event.stopPropagation();
 
     confirm({
-      title: 'Are you sure you want to delete this applicaton?',
+      content: 'Are you sure you want to delete this applicaton?',
       okText: `Remove`,
       okType: 'danger',
       cancelText: 'Cancel',
       maskClosable: true,
       onOk: () => {
-        this.props.removeApplication({ id });
+        this.props.removeApplication({
+          id,
+          successMsg: {
+            message: `Application is removed.`
+          },
+          failMsg: {
+            message: `Removing is failed.`
+          }
+        });
       }
     });
   };
 
-  renderApplication = app => {
-    const jobseeker = app.job_seeker;
-    const image = helper.getPitch(jobseeker).thumbnail;
-    const fullName = helper.getFullJSName(jobseeker);
+  filterOption = ({ job_seeker }) =>
+    helper
+      .getFullJSName(job_seeker)
+      .toLowerCase()
+      .indexOf(this.props.searchText.toLowerCase()) >= 0;
 
+  renderApplication = app => {
+    const { job_seeker, loading } = app;
+    const image = helper.getPitch(job_seeker).thumbnail;
+    const fullName = helper.getFullJSName(job_seeker);
     return (
       <List.Item
-        key={jobseeker.id}
+        key={job_seeker.id}
         actions={[
-          <span onClick={e => this.message(app.id, e)}>Message</span>,
-          <span onClick={e => this.remove(app.id, e)}>Remove</span>
+          <span onClick={e => this.message(app, e)}>
+            <Icons.Comment />
+          </span>,
+          <span onClick={e => this.remove(app, e)}>
+            <Icons.TrashAlt />
+          </span>
         ]}
-        onClick={() => this.select(app.id)}
+        onClick={() => this.showDetails(app)}
+        className={loading ? 'loading' : ''}
       >
         <List.Item.Meta
           avatar={
             <span>
-              <Logo src={image} size="80px" />
-              {app.shortlisted && (
-                <span className="star">
-                  <Icons.Star />
-                </span>
-              )}
+              <Avatar src={image} className="avatar-80" />
+              {app.shortlisted && <Icons.Star />}
             </span>
           }
-          title={`${fullName}`}
+          title={fullName}
           description={
             <Truncate lines={2} ellipsis={<span>...</span>}>
-              {jobseeker.description}
+              {job_seeker.description}
             </Truncate>
           }
         />
+        {loading && <Loading className="mask" size="small" />}
       </List.Item>
     );
   };
 
-  renderApplications() {
-    const { currentPage } = this.state;
-    const { applications, loading, error, searchText } = this.props;
-
-    if (error) {
-      return (
-        <AlertMsg>
-          <span>Server Error!</span>
-        </AlertMsg>
-      );
-    }
-
-    if (applications.length === 0) {
-      if (loading) {
-        return (
-          <AlertMsg>
-            <Loading size="large" />
-          </AlertMsg>
-        );
-      }
-
-      return (
-        <AlertMsg>
-          <span>
-            {`No candidates have applied for this job yet.
-              Once that happens, their applications will appear here.`}
-          </span>
-        </AlertMsg>
-      );
-    }
-
-    const filteredApplications = applications.filter(
-      ({ job_seeker }) =>
-        helper
-          .getFullJSName(job_seeker)
-          .toLowerCase()
-          .indexOf(searchText) >= 0
-    );
-
-    if (filteredApplications.length === 0) {
-      return (
-        <AlertMsg>
-          <span>No search results</span>
-        </AlertMsg>
-      );
-    }
-
-    const pageSize = 10;
-    const index = (currentPage - 1) * pageSize;
-    const pageApplications = filteredApplications.slice(index, index + pageSize);
-    const pagination = {
-      pageSize,
-      current: currentPage,
-      total: filteredApplications.length,
-      onChange: currentPage => this.setState({ currentPage })
-    };
-
-    return (
-      <List
-        itemLayout="horizontal"
-        pagination={pagination}
-        dataSource={pageApplications}
-        loading={loading}
-        renderItem={this.renderApplication}
-      />
-    );
-  }
-
   render() {
-    if (this.props.match.params.appId) {
-      return <Detail mode="conns" />;
-    }
-
+    const { job, shortlist, applications, error } = this.props;
+    const { selectedApp } = this.state;
     return (
       <Wrapper className="container">
         <Header />
-        <div className="content">{this.renderApplications()}</div>
+        <div className="content">
+          {job && (
+            <ListEx
+              data={applications}
+              loadingSize="large"
+              pagination={{ pageSize: 10 }}
+              filterOption={this.filterOption}
+              error={error}
+              renderItem={this.renderApplication}
+              emptyRender={
+                <AlertMsg>
+                  <span>
+                    {shortlist
+                      ? `You have not shortlisted any applications for this job,
+                       turn off shortlist view to see the non-shortlisted applications.`
+                      : `No candidates have applied for this job yet.
+                       Once that happens, their applications will appear here.`}
+                  </span>
+                </AlertMsg>
+              }
+            />
+          )}
+        </div>
+
+        {selectedApp && <ApplicationDetails application={selectedApp} onClose={this.hideDetails} />}
       </Wrapper>
     );
   }
 }
 
 export default connect(
-  state => ({
-    applications: state.rc_apps.applications,
-    loading: state.rc_apps.loadingApplications,
-    error: state.rc_apps.errorApplications,
-    searchText: state.rc_apps.searchText
-  }),
+  (state, { match }) => {
+    const jobId = helper.str2int(match.params.jobId);
+    const job = helper.getItemByID(state.rc_jobs.jobs, jobId);
+    const { applications, error, searchText } = state.applications;
+    const shortlist = match.path.split('/')[3] === 'shortlist';
+    return {
+      job,
+      shortlist,
+      applications: applications
+        ? applications.filter(
+            ({ status, shortlisted }) => status === DATA.APP.ESTABLISHED && (!shortlist || shortlisted)
+          )
+        : null,
+      error,
+      searchText
+    };
+  },
   {
     getApplications,
     removeApplication

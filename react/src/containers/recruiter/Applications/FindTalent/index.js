@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import Truncate from 'react-truncate';
-import { List, Modal, Avatar } from 'antd';
+import { List, Modal, Avatar, Tooltip } from 'antd';
 
 import { findJobseekers, connectJobseeker, removeJobseeker } from 'redux/recruiter/find';
 import * as helper from 'utils/helper';
@@ -127,12 +127,16 @@ class FindTalent extends React.Component {
       <List.Item
         key={jobseeker.id}
         actions={[
-          <span onClick={e => this.connect(jobseeker, e)}>
-            <Icons.Link />
-          </span>,
-          <span onClick={e => this.remove(jobseeker, e)}>
-            <Icons.TrashAlt />
-          </span>
+          <Tooltip placement="bottom" title="Connect">
+            <span onClick={e => this.connect(jobseeker, e)}>
+              <Icons.Link />
+            </span>
+          </Tooltip>,
+          <Tooltip placement="bottom" title="Remove">
+            <span onClick={e => this.remove(jobseeker, e)}>
+              <Icons.TrashAlt />
+            </span>
+          </Tooltip>
         ]}
         onClick={() => this.showDetails(jobseeker)}
         className={jobseeker.loading ? 'loading' : ''}

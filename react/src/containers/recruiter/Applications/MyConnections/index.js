@@ -16,15 +16,15 @@ const { confirm } = Modal;
 
 class MyConnections extends React.Component {
   state = {
-    selectedApp: null
+    selectedId: null
   };
 
   componentWillMount() {
-    const { applications, location } = this.props;
+    const { location } = this.props;
     const { appId } = location.state || {};
     if (appId) {
       this.setState({
-        selectedApp: helper.getItemByID(applications, appId)
+        selectedId: appId
       });
     } else {
       this.getApplications();
@@ -33,28 +33,29 @@ class MyConnections extends React.Component {
 
   componentWillReceiveProps({ job, shortlist }) {
     if (this.props.job !== job || this.props.shortlist !== shortlist) {
-      this.getApplications();
+      this.getApplications(job);
     }
   }
 
-  getApplications = () => {
-    const { job, getApplications, shortlist } = this.props;
-    job &&
+  getApplications = job => {
+    const jobId = (job || this.props.job || {}).id;
+    const { getApplications, shortlist } = this.props;
+    jobId &&
       getApplications({
         params: {
-          job: job.id,
+          job: jobId,
           status: DATA.APP.ESTABLISHED,
           shortlist: shortlist && 1
         }
       });
   };
 
-  showDetails = selectedApp => {
-    this.setState({ selectedApp });
+  showDetails = selectedId => {
+    this.setState({ selectedId });
   };
 
   hideDetails = () => {
-    this.setState({ selectedApp: null });
+    this.setState({ selectedId: null });
   };
 
   message = ({ id }, event) => {
@@ -106,7 +107,7 @@ class MyConnections extends React.Component {
             <Icons.TrashAlt />
           </span>
         ]}
-        onClick={() => this.showDetails(app)}
+        onClick={() => this.showDetails(app.id)}
         className={loading ? 'loading' : ''}
       >
         <List.Item.Meta
@@ -130,7 +131,7 @@ class MyConnections extends React.Component {
 
   render() {
     const { job, shortlist, applications, error } = this.props;
-    const { selectedApp } = this.state;
+    const selectedApp = helper.getItemByID(applications, this.state.selectedId);
     return (
       <Wrapper className="container">
         <Header />

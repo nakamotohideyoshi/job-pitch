@@ -94,40 +94,41 @@ class ApplicationDetails extends React.Component {
   };
 
   render() {
-    const { application, location: { pathname }, onClose } = this.props;
-    const { job_seeker, status, shortlisted, loading, removing } = application;
+    const { application, jobseeker, location: { pathname }, onClose } = this.props;
+    const { job_seeker, status, shortlisted, loading, removing } = application || {};
     const messageButton = pathname.indexOf('/recruiter/messages') !== 0;
 
     return (
       <StyledModal visible footer={null} className="container" title="Application Details" onCancel={onClose}>
         <div className="content">
-          <JobseekerDetail className="job-detail" application={application} jobseeker={job_seeker} />
+          <JobseekerDetail className="job-detail" application={application} jobseeker={jobseeker || job_seeker} />
 
-          {status !== DATA.APP.DELETED && (
-            <div className="buttons">
-              {status === DATA.APP.CREATED ? (
-                <Button type="primary" loading={loading} onClick={this.connect}>
-                  Connect
+          {application &&
+            status !== DATA.APP.DELETED && (
+              <div className="buttons">
+                {status === DATA.APP.CREATED ? (
+                  <Button type="primary" loading={loading} onClick={this.connect}>
+                    Connect
+                  </Button>
+                ) : (
+                  <Fragment>
+                    <div>
+                      <span>Shortlisted</span>
+                      <Switch checked={shortlisted} loading={loading} onChange={this.changeShortlisted} />
+                    </div>
+                    {messageButton && (
+                      <Button type="primary" onClick={this.message}>
+                        Message
+                      </Button>
+                    )}
+                  </Fragment>
+                )}
+
+                <Button type="danger" loading={removing} onClick={this.remove}>
+                  Remove
                 </Button>
-              ) : (
-                <Fragment>
-                  <div>
-                    <span>Shortlisted</span>
-                    <Switch checked={shortlisted} loading={loading} onChange={this.changeShortlisted} />
-                  </div>
-                  {messageButton && (
-                    <Button type="primary" onClick={this.message}>
-                      Message
-                    </Button>
-                  )}
-                </Fragment>
-              )}
-
-              <Button type="danger" loading={removing} onClick={this.remove}>
-                Remove
-              </Button>
-            </div>
-          )}
+              </div>
+            )}
         </div>
       </StyledModal>
     );

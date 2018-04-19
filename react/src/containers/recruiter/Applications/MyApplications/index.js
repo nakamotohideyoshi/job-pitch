@@ -33,16 +33,16 @@ class MyApplications extends React.Component {
 
   componentWillReceiveProps({ job }) {
     if (this.props.job !== job) {
-      this.getApplications();
+      this.getApplications(job);
     }
   }
 
-  getApplications = () => {
-    const { job, getApplications } = this.props;
-    job &&
-      getApplications({
+  getApplications = job => {
+    const jobId = (job || this.props.job || {}).id;
+    jobId &&
+      this.props.getApplications({
         params: {
-          job: job.id,
+          job: jobId,
           status: DATA.APP.CREATED
         }
       });
@@ -142,7 +142,7 @@ class MyApplications extends React.Component {
             <Icons.TrashAlt />
           </span>
         ]}
-        onClick={() => this.showDetails(app)}
+        onClick={() => this.showDetails(app.id)}
         className={loading ? 'loading' : ''}
       >
         <List.Item.Meta

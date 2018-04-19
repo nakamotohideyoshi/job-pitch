@@ -93,19 +93,11 @@ class WorkplaceList extends React.Component {
         onClick={() => this.selectWorkplace(workplace)}
         className={loading ? 'loading' : ''}
       >
-        <List.Item.Meta
-          avatar={<Avatar src={logo} className="avatar-80" />}
-          title={name}
-          description={
-            <Fragment>
-              <div className="properties">
-                <span style={{ width: '120px' }}>{strJobs}</span>
-                <span>{strInactiveJobs}</span>
-              </div>
-              <div>{description}</div>
-            </Fragment>
-          }
-        />
+        <List.Item.Meta avatar={<Avatar src={logo} className="avatar-80" />} title={name} description={description} />
+        <div className="properties">
+          <span style={{ width: '120px' }}>{strJobs}</span>
+          <span>{strInactiveJobs}</span>
+        </div>
         {loading && <Loading className="mask" size="small" />}
       </List.Item>
     );

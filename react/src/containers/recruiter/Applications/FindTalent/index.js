@@ -30,18 +30,19 @@ class FindTalent extends React.Component {
     }
   }
 
-  componentWillReceiveProps({ job }) {
+  componentWillReceiveProps(nextProps) {
+    const { job } = nextProps;
     if (this.props.job !== job) {
-      this.findJobseekers();
+      this.findJobseekers(job);
     }
   }
 
-  findJobseekers = () => {
-    const { job, findJobseekers } = this.props;
-    job &&
-      findJobseekers({
+  findJobseekers = job => {
+    const jobId = (job || this.props.job || {}).id;
+    jobId &&
+      this.props.findJobseekers({
         params: {
-          job: job.id
+          job: jobId
         }
       });
   };
@@ -164,7 +165,7 @@ class FindTalent extends React.Component {
               pagination={{ pageSize: 10 }}
               filterOption={this.filterOption}
               error={error}
-              renderItem={this.renderApplication}
+              renderItem={this.renderJobseeker}
               emptyRender={
                 <AlertMsg>
                   <span>

@@ -190,12 +190,14 @@ class JobEdit extends React.Component {
     const { getFieldDecorator } = form;
     const pitch = helper.getPitch(job) || {};
 
+    const title = job ? 'Edit' : 'Add';
+
     return (
       <Wrapper className="container">
-        <Helmet title="My Workplace & Jobs" />
+        <Helmet title={`${title} Job`} />
 
         <PageHeader>
-          <h2>My Workplace & Jobs</h2>
+          <h2>{title} Job</h2>
         </PageHeader>
 
         <PageSubHeader>
@@ -209,7 +211,7 @@ class JobEdit extends React.Component {
             <Breadcrumb.Item>
               {workplace && <Link to={`/recruiter/jobs/job/${workplace.id}`}>Jobs</Link>}
             </Breadcrumb.Item>
-            <Breadcrumb.Item>{job ? 'Edit' : 'Add'}</Breadcrumb.Item>
+            <Breadcrumb.Item>{title}</Breadcrumb.Item>
           </Breadcrumb>
         </PageSubHeader>
 

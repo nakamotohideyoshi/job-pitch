@@ -121,12 +121,14 @@ class BusinessEdit extends React.Component {
       ? `${business.tokens} Credit${business.tokens !== 1 ? 's' : ''}`
       : `${DATA.initTokens.tokens} free credits`;
 
+    const title = business ? 'Edit' : 'Add';
+
     return (
       <Wrapper className="container">
-        <Helmet title="My Workplace & Jobs" />
+        <Helmet title={`${title} Business`} />
 
         <PageHeader>
-          <h2>My Workplace & Jobs</h2>
+          <h2>{title} Business</h2>
         </PageHeader>
 
         <PageSubHeader>
@@ -134,7 +136,7 @@ class BusinessEdit extends React.Component {
             <Breadcrumb.Item>
               <Link to="/recruiter/jobs/business">Businesses</Link>
             </Breadcrumb.Item>
-            <Breadcrumb.Item>{business ? 'Edit' : 'Add'}</Breadcrumb.Item>
+            <Breadcrumb.Item>{title}</Breadcrumb.Item>
           </Breadcrumb>
         </PageSubHeader>
 

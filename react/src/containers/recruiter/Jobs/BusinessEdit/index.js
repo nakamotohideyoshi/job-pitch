@@ -66,7 +66,7 @@ class BusinessEdit extends React.Component {
   };
 
   save = () => {
-    const { form, business, saveBusiness } = this.props;
+    const { form, business, saveBusiness, history } = this.props;
 
     form.validateFieldsAndScroll({ scroll: { offsetTop: 70 } }, (err, values) => {
       if (err) return;
@@ -83,12 +83,16 @@ class BusinessEdit extends React.Component {
           id: (business || {}).id
         },
         logo: this.state.logo,
-        onSuccess: msg => {
+        onSuccess: ({ id }) => {
           notification.success({
             message: 'Notification',
-            description: msg
+            description: 'Business is saved successfully.'
           });
-          this.goBuisinessList();
+          if (business) {
+            this.goBuisinessList();
+          } else {
+            history.push(`/recruiter/jobs/workplace/${id}`);
+          }
         },
         onFail: error => {
           this.setState({ loading: null });

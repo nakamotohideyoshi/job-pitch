@@ -4,13 +4,18 @@ import { connect } from 'react-redux';
 import { Form, Button } from 'antd';
 
 import { updateAuth } from 'redux/auth';
+import * as helper from 'utils/helper';
 
 import Wrapper from './styled';
 
 const { Item } = Form;
 
 const SelectType = ({ user, updateAuth }) => {
-  const setRecruiter = () => updateAuth({ status: 'recruiter' });
+  const setRecruiter = () => {
+    helper.saveData('tutorial', 1);
+    updateAuth({ status: 'recruiter' });
+  };
+
   const setJobseeker = () => updateAuth({ status: 'jobseeker' });
 
   if (user.businesses.length > 0) {

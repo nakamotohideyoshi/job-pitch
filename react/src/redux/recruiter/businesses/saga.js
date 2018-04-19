@@ -43,7 +43,8 @@ function* saveBusiness(action) {
       });
 
       if (!image) {
-        onSuccess && onSuccess('Business is saved successfully, Uploading logo is failed.');
+        onFail && onFail('Uploading logo is failed.');
+        onSuccess && onSuccess(business);
         return;
       }
 
@@ -62,7 +63,7 @@ function* saveBusiness(action) {
   }
   yield put({ type: C.RC_BUSINESSES_UPDATE, payload: { businesses } });
 
-  onSuccess && onSuccess('Business is saved successfully.');
+  onSuccess && onSuccess(business);
 }
 
 const purchase = postRequest({

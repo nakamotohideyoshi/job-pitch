@@ -22,8 +22,8 @@ class BusinessList extends React.Component {
       helper.saveData('tutorial', 2);
     }
 
-    const { user, history } = this.props;
-    if (user.can_create_businesses || user.businesses.length === 0) {
+    const { user, businesses, history } = this.props;
+    if (user.can_create_businesses || businesses.length === 0) {
       history.push('/recruiter/jobs/business/add');
     } else {
       confirm({
@@ -113,6 +113,7 @@ class BusinessList extends React.Component {
 
   renderEmpty = () => {
     const tutorial = helper.loadData('tutorial');
+    console.log('load tutorial', tutorial);
     return (
       <AlertMsg>
         <span>

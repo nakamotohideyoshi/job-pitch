@@ -98,15 +98,14 @@ class BusinessList extends React.Component {
         className={loading ? 'loading' : ''}
       >
         <List.Item.Meta
+          style={{ alignItems: 'center' }}
           avatar={<Avatar src={logo} className="avatar-80" />}
           title={name}
-          description={
-            <div className="properties">
-              <span style={{ width: '120px' }}>{strTokens}</span>
-              <span>{strWorkplaces}</span>
-            </div>
-          }
         />
+        <div className="properties">
+          <span style={{ width: '120px' }}>{strTokens}</span>
+          <span style={{ width: '130px' }}>{strWorkplaces}</span>
+        </div>
         {loading && <Loading className="mask" size="small" />}
       </List.Item>
     );

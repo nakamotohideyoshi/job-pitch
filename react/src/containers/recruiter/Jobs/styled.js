@@ -29,6 +29,10 @@ export default styled.div`
         }
       }
 
+      .ant-list-item-content {
+        flex: initial;
+      }
+
       .ant-list-item-action {
         span:hover {
           color: #00b6a4;

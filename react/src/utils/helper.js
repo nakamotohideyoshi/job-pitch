@@ -122,7 +122,7 @@ export function getDistanceFromLatLonEx(p1, p2) {
 */
 
 export function getItemByID(objects, id) {
-  return objects.filter(item => item.id === id)[0];
+  return (objects || []).filter(item => item.id === id)[0];
 }
 
 export function getNameByID(key, id) {

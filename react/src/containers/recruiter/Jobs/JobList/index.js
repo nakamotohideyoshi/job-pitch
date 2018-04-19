@@ -101,10 +101,10 @@ class JobList extends React.Component {
 
     return (
       <Wrapper className="container">
-        <Helmet title="My Workplace & Jobs" />
+        <Helmet title="My Jobs" />
 
         <PageHeader>
-          <h2>My Workplace & Jobs</h2>
+          <h2>My Jobs</h2>
         </PageHeader>
 
         <PageSubHeader>

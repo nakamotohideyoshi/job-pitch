@@ -142,12 +142,14 @@ class WorkplaceEdit extends React.Component {
     const { latitude, longitude, place_name } = this.state.location;
     const marker = latitude && { lat: latitude, lng: longitude };
 
+    const title = workplace ? 'Edit' : 'Add';
+
     return (
       <Wrapper className="container">
-        <Helmet title="My Workplace & Jobs" />
+        <Helmet title={`${title} Workplace`} />
 
         <PageHeader>
-          <h2>My Workplace & Jobs</h2>
+          <h2>{title} Workplace</h2>
         </PageHeader>
 
         <PageSubHeader>
@@ -158,7 +160,7 @@ class WorkplaceEdit extends React.Component {
             <Breadcrumb.Item>
               {business && <Link to={`/recruiter/jobs/workplace/${business.id}`}>Workplaces</Link>}
             </Breadcrumb.Item>
-            <Breadcrumb.Item>{workplace ? 'Edit' : 'Add'}</Breadcrumb.Item>
+            <Breadcrumb.Item>{title}</Breadcrumb.Item>
           </Breadcrumb>
         </PageSubHeader>
 

@@ -121,10 +121,10 @@ class WorkplaceList extends React.Component {
   render() {
     return (
       <Wrapper className="container">
-        <Helmet title="My Workplace & Jobs" />
+        <Helmet title="My Workplaces" />
 
         <PageHeader>
-          <h2>My Workplace & Jobs</h2>
+          <h2>My Workplaces</h2>
         </PageHeader>
 
         <PageSubHeader>

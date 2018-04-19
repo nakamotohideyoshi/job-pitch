@@ -37,8 +37,13 @@ export default styled.div`
       }
 
       .ant-list-item-action {
-        span:hover {
-          color: #00b6a4;
+        opacity: 0;
+        transition: opacity 0.3s;
+        span {
+          padding: 8px;
+          &:hover {
+            color: #00b6a4;
+          }
         }
       }
 
@@ -57,6 +62,10 @@ export default styled.div`
 
         .ant-list-item-meta-title {
           color: #00b6a4;
+        }
+
+        .ant-list-item-action {
+          opacity: 1;
         }
       }
     }

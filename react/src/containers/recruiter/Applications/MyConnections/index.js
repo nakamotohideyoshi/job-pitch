@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import Truncate from 'react-truncate';
-import { List, Modal, Avatar } from 'antd';
+import { List, Modal, Avatar, Tooltip } from 'antd';
 
 import { getApplications, removeApplication } from 'redux/applications';
 import DATA from 'utils/data';
@@ -100,12 +100,16 @@ class MyConnections extends React.Component {
       <List.Item
         key={job_seeker.id}
         actions={[
-          <span onClick={e => this.message(app, e)}>
-            <Icons.Comment />
-          </span>,
-          <span onClick={e => this.remove(app, e)}>
-            <Icons.TrashAlt />
-          </span>
+          <Tooltip placement="bottom" title="Message">
+            <span onClick={e => this.message(app, e)}>
+              <Icons.Comment />
+            </span>
+          </Tooltip>,
+          <Tooltip placement="bottom" title="Remove">
+            <span onClick={e => this.remove(app, e)}>
+              <Icons.TrashAlt />
+            </span>
+          </Tooltip>
         ]}
         onClick={() => this.showDetails(app.id)}
         className={loading ? 'loading' : ''}

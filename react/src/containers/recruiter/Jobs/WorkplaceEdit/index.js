@@ -86,7 +86,7 @@ class WorkplaceEdit extends React.Component {
   };
 
   save = () => {
-    const { form, business, workplace, saveWorkplace } = this.props;
+    const { form, business, workplace, saveWorkplace, history } = this.props;
 
     form.validateFieldsAndScroll({ scroll: { offsetTop: 70 } }, (err, values) => {
       if (err) return;
@@ -105,12 +105,16 @@ class WorkplaceEdit extends React.Component {
           id: (workplace || {}).id
         },
         logo: this.state.logo,
-        onSuccess: msg => {
+        onSuccess: ({ id }) => {
           notification.success({
             message: 'Notification',
-            description: msg
+            description: 'Workplace is saved successfully.'
           });
-          this.goWorkplaceList();
+          if (workplace) {
+            this.goWorkplaceList();
+          } else {
+            history.push(`/recruiter/jobs/job/${id}`);
+          }
         },
         onFail: error => {
           this.setState({ loading: null });

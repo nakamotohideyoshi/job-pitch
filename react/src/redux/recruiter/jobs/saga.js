@@ -43,7 +43,8 @@ function* saveJob(action) {
       });
 
       if (!image) {
-        onSuccess && onSuccess('Job is saved successfully, Uploading logo is failed.');
+        onFail && onFail('Uploading logo is failed.');
+        onSuccess && onSuccess(job);
         return;
       }
 
@@ -62,7 +63,7 @@ function* saveJob(action) {
   }
   yield put({ type: C.RC_JOBS_UPDATE, payload: { jobs } });
 
-  onSuccess && onSuccess('Job is saved successfully.');
+  onSuccess && onSuccess(job);
 }
 
 export default function* sagas() {

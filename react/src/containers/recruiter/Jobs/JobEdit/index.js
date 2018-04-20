@@ -92,7 +92,7 @@ class JobEdit extends React.Component {
   };
 
   save = () => {
-    const { form, workplace, job, saveJob } = this.props;
+    const { form, workplace, job, saveJob, history } = this.props;
 
     form.validateFieldsAndScroll({ scroll: { offsetTop: 70 } }, (err, values) => {
       if (err) return;
@@ -111,15 +111,19 @@ class JobEdit extends React.Component {
           id: (job || {}).id
         },
         logo: this.state.logo,
-        onSuccess: msg => {
+        onSuccess: ({ id }) => {
           if (this.state.newPitchData) {
-            this.uploadPitch();
+            this.uploadPitch(id);
           } else {
             notification.success({
               message: 'Notification',
-              description: msg
+              description: 'Job is saved successfully.'
             });
-            this.goJobList();
+            if (job) {
+              this.goJobList();
+            } else {
+              history.push(`/recruiter/jobs/job/view/${id}`);
+            }
           }
         },
         onFail: error => {
@@ -141,16 +145,21 @@ class JobEdit extends React.Component {
     });
   };
 
-  uploadPitch = () => {
-    this.props.uploadJobPitch({
-      job: this.props.job.id,
+  uploadPitch = id => {
+    const { job, uploadJobPitch, history } = this.props;
+    uploadJobPitch({
+      job: id,
       data: this.state.newPitchData,
       onSuccess: msg => {
         notification.success({
           message: 'Notification',
-          description: msg
+          description: 'Job is saved successfully.'
         });
-        this.goJobList();
+        if (job) {
+          this.goJobList();
+        } else {
+          history.push(`/recruiter/jobs/job/view/${id}`);
+        }
       },
       onFail: error => {
         this.setState({ loading: null });
@@ -181,12 +190,14 @@ class JobEdit extends React.Component {
     const { getFieldDecorator } = form;
     const pitch = helper.getPitch(job) || {};
 
+    const title = job ? 'Edit' : 'Add';
+
     return (
       <Wrapper className="container">
-        <Helmet title="My Workplace & Jobs" />
+        <Helmet title={`${title} Job`} />
 
         <PageHeader>
-          <h2>My Workplace & Jobs</h2>
+          <h2>{title} Job</h2>
         </PageHeader>
 
         <PageSubHeader>
@@ -200,7 +211,7 @@ class JobEdit extends React.Component {
             <Breadcrumb.Item>
               {workplace && <Link to={`/recruiter/jobs/job/${workplace.id}`}>Jobs</Link>}
             </Breadcrumb.Item>
-            <Breadcrumb.Item>{job ? 'Edit' : 'Add'}</Breadcrumb.Item>
+            <Breadcrumb.Item>{title}</Breadcrumb.Item>
           </Breadcrumb>
         </PageSubHeader>
 

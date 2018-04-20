@@ -66,7 +66,7 @@ class BusinessEdit extends React.Component {
   };
 
   save = () => {
-    const { form, business, saveBusiness } = this.props;
+    const { form, business, saveBusiness, history } = this.props;
 
     form.validateFieldsAndScroll({ scroll: { offsetTop: 70 } }, (err, values) => {
       if (err) return;
@@ -83,12 +83,16 @@ class BusinessEdit extends React.Component {
           id: (business || {}).id
         },
         logo: this.state.logo,
-        onSuccess: msg => {
+        onSuccess: ({ id }) => {
           notification.success({
             message: 'Notification',
-            description: msg
+            description: 'Business is saved successfully.'
           });
-          this.goBuisinessList();
+          if (business) {
+            this.goBuisinessList();
+          } else {
+            history.push(`/recruiter/jobs/workplace/${id}`);
+          }
         },
         onFail: error => {
           this.setState({ loading: null });
@@ -117,12 +121,14 @@ class BusinessEdit extends React.Component {
       ? `${business.tokens} Credit${business.tokens !== 1 ? 's' : ''}`
       : `${DATA.initTokens.tokens} free credits`;
 
+    const title = business ? 'Edit' : 'Add';
+
     return (
       <Wrapper className="container">
-        <Helmet title="My Workplace & Jobs" />
+        <Helmet title={`${title} Business`} />
 
         <PageHeader>
-          <h2>My Workplace & Jobs</h2>
+          <h2>{title} Business</h2>
         </PageHeader>
 
         <PageSubHeader>
@@ -130,7 +136,7 @@ class BusinessEdit extends React.Component {
             <Breadcrumb.Item>
               <Link to="/recruiter/jobs/business">Businesses</Link>
             </Breadcrumb.Item>
-            <Breadcrumb.Item>{business ? 'Edit' : 'Add'}</Breadcrumb.Item>
+            <Breadcrumb.Item>{title}</Breadcrumb.Item>
           </Breadcrumb>
         </PageSubHeader>
 

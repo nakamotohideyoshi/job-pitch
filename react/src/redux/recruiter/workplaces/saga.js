@@ -43,7 +43,8 @@ function* saveWorkplace(action) {
       });
 
       if (!image) {
-        onSuccess && onSuccess('Workplace is saved successfully, Uploading logo is failed.');
+        onFail && onFail('Uploading logo is failed.');
+        onSuccess && onSuccess(workplace);
         return;
       }
 
@@ -62,7 +63,7 @@ function* saveWorkplace(action) {
   }
   yield put({ type: C.RC_WORKPLACES_UPDATE, payload: { workplaces } });
 
-  onSuccess && onSuccess('Workplace is saved successfully.');
+  onSuccess && onSuccess(workplace);
 }
 
 export default function* sagas() {

@@ -86,7 +86,7 @@ class WorkplaceEdit extends React.Component {
   };
 
   save = () => {
-    const { form, business, workplace, saveWorkplace } = this.props;
+    const { form, business, workplace, saveWorkplace, history } = this.props;
 
     form.validateFieldsAndScroll({ scroll: { offsetTop: 70 } }, (err, values) => {
       if (err) return;
@@ -105,12 +105,16 @@ class WorkplaceEdit extends React.Component {
           id: (workplace || {}).id
         },
         logo: this.state.logo,
-        onSuccess: msg => {
+        onSuccess: ({ id }) => {
           notification.success({
             message: 'Notification',
-            description: msg
+            description: 'Workplace is saved successfully.'
           });
-          this.goWorkplaceList();
+          if (workplace) {
+            this.goWorkplaceList();
+          } else {
+            history.push(`/recruiter/jobs/job/${id}`);
+          }
         },
         onFail: error => {
           this.setState({ loading: null });
@@ -138,12 +142,14 @@ class WorkplaceEdit extends React.Component {
     const { latitude, longitude, place_name } = this.state.location;
     const marker = latitude && { lat: latitude, lng: longitude };
 
+    const title = workplace ? 'Edit' : 'Add';
+
     return (
       <Wrapper className="container">
-        <Helmet title="My Workplace & Jobs" />
+        <Helmet title={`${title} Workplace`} />
 
         <PageHeader>
-          <h2>My Workplace & Jobs</h2>
+          <h2>{title} Workplace</h2>
         </PageHeader>
 
         <PageSubHeader>
@@ -154,7 +160,7 @@ class WorkplaceEdit extends React.Component {
             <Breadcrumb.Item>
               {business && <Link to={`/recruiter/jobs/workplace/${business.id}`}>Workplaces</Link>}
             </Breadcrumb.Item>
-            <Breadcrumb.Item>{workplace ? 'Edit' : 'Add'}</Breadcrumb.Item>
+            <Breadcrumb.Item>{title}</Breadcrumb.Item>
           </Breadcrumb>
         </PageSubHeader>
 

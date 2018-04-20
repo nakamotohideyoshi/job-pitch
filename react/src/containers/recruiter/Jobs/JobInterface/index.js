@@ -116,10 +116,10 @@ class JobInterface extends React.Component {
 
     return (
       <Wrapper className="container">
-        <Helmet title="My Workplace & Jobs" />
+        <Helmet title="Job Details" />
 
         <PageHeader>
-          <h2>My Workplace & Jobs</h2>
+          <h2>Job Details</h2>
         </PageHeader>
 
         <PageSubHeader>
@@ -133,7 +133,7 @@ class JobInterface extends React.Component {
             <Breadcrumb.Item>
               <Link to={`/recruiter/jobs/job/${location_data.id}`}>Jobs</Link>
             </Breadcrumb.Item>
-            <Breadcrumb.Item>Job Details</Breadcrumb.Item>
+            <Breadcrumb.Item>Details</Breadcrumb.Item>
           </Breadcrumb>
         </PageSubHeader>
 

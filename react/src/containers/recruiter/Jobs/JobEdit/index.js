@@ -278,7 +278,16 @@ class JobEdit extends React.Component {
               )}
             </Item>
 
-            <Item label="Description">
+            <Item
+              label={
+                <span>
+                  Description&nbsp;
+                  <Tooltip title="Don't type in phone numbers/email address here.">
+                    <Icons.QuestionCircle />
+                  </Tooltip>
+                </span>
+              }
+            >
               {getFieldDecorator('description', {
                 rules: [
                   { required: true, message: 'Please enter description!' },

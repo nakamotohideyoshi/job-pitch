@@ -50,4 +50,6 @@ ios/My Job Pitch-Swift/MyJobPitch.xcworkspace/
 
 web/src/local.py
 web/src/local_live.py
+web/src/web/static/css/*.map
+web/src/web/static/js/*.map
 web/media/

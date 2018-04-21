@@ -280,8 +280,8 @@ class Profile extends React.Component {
           label={
             <span>
               CV summary&nbsp;
-              <Tooltip title="CV summary is what the recruiter first see,
-                      write if you have previous relevant experience where and for how long.">
+              <Tooltip title="CV summary is what the recruiter first see, write if you have previous relevant experience where and for how long.
+                Don't type in phone numbers/email address here.">
                 <Icons.QuestionCircle />
               </Tooltip>
             </span>

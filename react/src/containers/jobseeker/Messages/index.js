@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { List, Avatar } from 'antd';
 
 import { getApplications, sendMessage } from 'redux/applications';
+import DATA from 'utils/data';
 import * as helper from 'utils/helper';
 
 import { AlertMsg, Loading, MessageThread, Icons } from 'components';
@@ -112,7 +113,13 @@ class Messages extends React.Component {
           {tablet && open && <span className="mask" onClick={this.closeSidebar} />}
         </div>
 
-        {openJobDetails && <JobDetails job={selectedApp.job_data} onClose={this.hideJobDetails} />}
+        {openJobDetails && (
+          <JobDetails
+            job={selectedApp.job_data}
+            roughLocation={selectedApp.status === DATA.APP.CREATED}
+            onClose={this.hideJobDetails}
+          />
+        )}
       </Wrapper>
     );
   }

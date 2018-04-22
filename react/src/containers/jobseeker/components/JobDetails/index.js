@@ -4,11 +4,11 @@ import { Button } from 'antd';
 import { JobDetail } from 'components';
 import StyledModal from './styled';
 
-export default ({ job, onApply, onRemove, onMessage, onClose }) => {
+export default ({ job, onApply, onRemove, onMessage, onClose, roughLocation }) => {
   return (
     <StyledModal visible footer={null} className="container" title="Job Details" onCancel={onClose}>
       <div className="content">
-        <JobDetail className="job-detail" job={job} />
+        <JobDetail className="job-detail" job={job} roughLocation={roughLocation} />
 
         <div className="buttons">
           {onApply && (

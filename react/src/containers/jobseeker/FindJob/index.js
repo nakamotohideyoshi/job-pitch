@@ -185,6 +185,7 @@ class FindJob extends React.Component {
             onApply={() => this.onApplyJob(selectedId)}
             onRemove={() => this.onRemoveJob(selectedId)}
             onClose={() => this.onSelectJob()}
+            roughLocation
           />
         )}
       </Wrapper>

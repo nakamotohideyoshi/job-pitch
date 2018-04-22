@@ -2,7 +2,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { compose, withProps, lifecycle } from 'recompose';
-import { withScriptjs, withGoogleMap, GoogleMap, Marker } from 'react-google-maps';
+import { withScriptjs, withGoogleMap, GoogleMap, Marker, Circle } from 'react-google-maps';
 import { SearchBox } from 'react-google-maps/lib/components/places/SearchBox';
 
 const Input = styled.input`
@@ -102,7 +102,8 @@ const MapWithASearchBox = compose(
         <Input placeholder="Search" />
       </SearchBox>
     )}
-    {props.marker && <Marker position={props.marker} />}
+    {props.circle && <Circle {...props.circle} />}
+    {!props.circle && props.marker && <Marker position={props.marker} />}
   </GoogleMap>
 ));
 

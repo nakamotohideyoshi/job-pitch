@@ -5,13 +5,30 @@ import * as helper from 'utils/helper';
 import { GoogleMap } from 'components';
 import Wrapper from './Wrapper';
 
-const JobDetail = ({ job, className }) => {
+const JobDetail = ({ job, className, roughLocation }) => {
   const logo = helper.getJobLogo(job);
   const workplace = job.location_data;
   const bwName = helper.getFullBWName(job);
   const marker = { lat: workplace.latitude, lng: workplace.longitude };
   const contract = helper.getNameByID('contracts', job.contract);
   const hours = helper.getNameByID('hours', job.hours);
+
+  let circle;
+  if (roughLocation) {
+    const alpha = 2 * Math.PI * Math.random();
+    const rand = Math.random();
+    marker.lat += 0.00723658915343 * Math.cos(alpha) * rand;
+    marker.lng += 0.00880063687103 * Math.sin(alpha) * rand;
+    circle = {
+      center: marker,
+      radius: 804.672,
+      options: {
+        fillColor: '#ff930080',
+        strokeColor: '#00b6a4',
+        strokeWeight: 2
+      }
+    };
+  }
 
   return (
     <Wrapper className={className}>
@@ -58,7 +75,7 @@ const JobDetail = ({ job, className }) => {
 
       <div className="map">
         <div>
-          <GoogleMap marker={marker} />
+          <GoogleMap marker={marker} circle={circle} />
         </div>
       </div>
     </Wrapper>

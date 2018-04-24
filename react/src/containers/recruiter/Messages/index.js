@@ -1,9 +1,10 @@
 import React, { Fragment } from 'react';
 import Helmet from 'react-helmet';
 import { connect } from 'react-redux';
-import { List, Avatar } from 'antd';
+import { List, Modal, Avatar } from 'antd';
 
-import { getApplications, sendMessage } from 'redux/applications';
+import { getApplications, connectApplication, updateApplication, sendMessage } from 'redux/applications';
+import DATA from 'utils/data';
 import * as helper from 'utils/helper';
 
 import { AlertMsg, Loading, MessageThread, Icons } from 'components';
@@ -11,6 +12,8 @@ import ApplicationDetails from 'containers/recruiter/ApplicationDetails';
 import JobDetails from 'containers/recruiter/JobDetails';
 import Sidebar from './Sidebar';
 import Wrapper from './styled';
+
+const { confirm } = Modal;
 
 class Page extends React.Component {
   state = {
@@ -45,6 +48,57 @@ class Page extends React.Component {
       }
     }
   }
+
+  onConnect = ({ id, job_data }, event) => {
+    event && event.stopPropagation();
+
+    const { businesses, connectApplication, history } = this.props;
+    const business = helper.getItemByID(businesses, job_data.location_data.business_data.id);
+    if (business.tokens === 0) {
+      confirm({
+        content: 'You need 1 credit',
+        okText: `Credits`,
+        cancelText: 'Cancel',
+        maskClosable: true,
+        onOk: () => {
+          history.push(`/recruiter/settings/credits/${business.id}`);
+        }
+      });
+      return;
+    }
+
+    confirm({
+      content: 'Yes, I want to make this connection (1 credit)',
+      okText: `Connect`,
+      cancelText: 'Cancel',
+      maskClosable: true,
+      onOk: () => {
+        connectApplication({
+          id,
+          data: {
+            id,
+            connect: DATA.APP.ESTABLISHED
+          },
+          successMsg: {
+            message: `Application is connected.`
+          },
+          failMsg: {
+            message: `Connection is failed.`
+          }
+        });
+      }
+    });
+  };
+
+  onShortlist = ({ id, shortlisted }) => {
+    this.props.updateApplication({
+      id,
+      data: {
+        id,
+        shortlisted: !shortlisted
+      }
+    });
+  };
 
   onSend = message => {
     this.props.sendMessage({
@@ -127,7 +181,14 @@ class Page extends React.Component {
           {tablet && open && <span className="mask" onClick={this.closeSidebar} />}
         </div>
 
-        {openAppDetails && <ApplicationDetails application={selectedApp} onClose={this.hideAppDetails} />}
+        {openAppDetails && (
+          <ApplicationDetails
+            application={selectedApp}
+            onShortlist={selectedApp.status === DATA.APP.ESTABLISHED ? () => this.onShortlist(selectedApp) : null}
+            onConnect={selectedApp.status === DATA.APP.CREATED ? () => this.onConnect(selectedApp) : null}
+            onClose={this.hideAppDetails}
+          />
+        )}
         {openJobDetails && <JobDetails job={selectedApp.job_data} onClose={this.hideJobDetails} />}
       </Wrapper>
     );
@@ -138,10 +199,13 @@ const enhance = connect(
   state => ({
     jobs: state.rc_jobs.jobs,
     applications: state.applications.applications,
+    businesses: state.rc_businesses.businesses,
     error: state.applications.error
   }),
   {
     getApplications,
+    connectApplication,
+    updateApplication,
     sendMessage
   }
 );

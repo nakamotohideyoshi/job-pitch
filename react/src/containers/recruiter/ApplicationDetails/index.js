@@ -1,144 +1,46 @@
-import React, { Fragment } from 'react';
-import { connect } from 'react-redux';
-import { withRouter } from 'react-router-dom';
-import { Button, Modal, Switch } from 'antd';
-
-import { connectApplication, updateApplication, removeApplication } from 'redux/applications';
-import DATA from 'utils/data';
+import React from 'react';
+import { Button, Switch } from 'antd';
 
 import { JobseekerDetail } from 'components';
 import StyledModal from './styled';
 
-const { confirm } = Modal;
+export default ({ application, jobseeker, onConnect, onRemove, onShortlist, onMessage, onClose }) => {
+  const { job_seeker, shortlisted, loading } = application || {};
+  const jobseeker1 = jobseeker || job_seeker;
+  const loading1 = loading || jobseeker1.loading;
 
-class ApplicationDetails extends React.Component {
-  componentWillReceiveProps(nextProps) {
-    if (this.props.application.status !== nextProps.application.status) {
-      this.props.onClose();
-    }
-  }
+  return (
+    <StyledModal visible footer={null} className="container" title="Application Details" onCancel={onClose}>
+      <div className="content">
+        <JobseekerDetail className="details" application={application} jobseeker={jobseeker1} />
 
-  message = () => this.props.history.push(`/recruiter/messages/${this.props.application.id}`);
+        <div className="buttons">
+          {onShortlist && (
+            <div>
+              <span>Shortlisted</span>
+              <Switch checked={shortlisted} loading={loading1} onChange={onShortlist} />
+            </div>
+          )}
 
-  changeShortlisted = shortlisted => {
-    const { id } = this.props.application;
-    this.props.updateApplication({
-      id,
-      data: {
-        id,
-        shortlisted
-      }
-    });
-  };
+          {onConnect && (
+            <Button type="primary" loading={loading1} onClick={onConnect}>
+              Connect
+            </Button>
+          )}
 
-  connect = () => {
-    const { application, connectApplication, history } = this.props;
-    const { id } = application;
-    const business = application.job_data.loation_data.business_data;
+          {onMessage && (
+            <Button type="primary" onClick={onMessage}>
+              Message
+            </Button>
+          )}
 
-    if (business.tokens === 0) {
-      confirm({
-        content: 'You need 1 credit',
-        okText: `Credits`,
-        cancelText: 'Cancel',
-        maskClosable: true,
-        onOk: () => {
-          history.push(`/recruiter/settings/credits/${business.id}`);
-        }
-      });
-      return;
-    }
-
-    confirm({
-      content: 'Yes, I want to make this connection (1 credit)',
-      okText: `Connect`,
-      cancelText: 'Cancel',
-      maskClosable: true,
-      onOk: () => {
-        connectApplication({
-          id,
-          data: {
-            id,
-            connect: DATA.APP.ESTABLISHED
-          },
-          successMsg: {
-            message: `Application is connected.`
-          },
-          failMsg: {
-            message: `Connection is failed.`
-          }
-        });
-      }
-    });
-  };
-
-  remove = () => {
-    confirm({
-      content: 'Are you sure you want to delete this applicaton?',
-      okText: `Remove`,
-      okType: 'danger',
-      cancelText: 'Cancel',
-      maskClosable: true,
-      onOk: () => {
-        this.props.removeApplication({
-          id: this.props.application.id,
-          successMsg: {
-            message: `Application is removed.`
-          },
-          failMsg: {
-            message: `Removing is failed.`
-          }
-        });
-      }
-    });
-  };
-
-  render() {
-    const { application, jobseeker, location: { pathname }, onClose } = this.props;
-    const { job_seeker, status, shortlisted, loading, removing } = application || {};
-    const messageButton = pathname.indexOf('/recruiter/messages') !== 0;
-
-    return (
-      <StyledModal visible footer={null} className="container" title="Application Details" onCancel={onClose}>
-        <div className="content">
-          <JobseekerDetail className="job-detail" application={application} jobseeker={jobseeker || job_seeker} />
-
-          {application &&
-            status !== DATA.APP.DELETED && (
-              <div className="buttons">
-                {status === DATA.APP.CREATED ? (
-                  <Button type="primary" loading={loading} onClick={this.connect}>
-                    Connect
-                  </Button>
-                ) : (
-                  <Fragment>
-                    <div>
-                      <span>Shortlisted</span>
-                      <Switch checked={shortlisted} loading={loading} onChange={this.changeShortlisted} />
-                    </div>
-                    {messageButton && (
-                      <Button type="primary" onClick={this.message}>
-                        Message
-                      </Button>
-                    )}
-                  </Fragment>
-                )}
-
-                <Button type="danger" loading={removing} onClick={this.remove}>
-                  Remove
-                </Button>
-              </div>
-            )}
+          {onRemove && (
+            <Button type="danger" disabled={loading1} onClick={onRemove}>
+              Remove
+            </Button>
+          )}
         </div>
-      </StyledModal>
-    );
-  }
-}
-
-export default withRouter(
-  connect(null, {
-    connectApplication,
-    updateApplication,
-    removeApplication
-  })(ApplicationDetails)
-);
+      </div>
+    </StyledModal>
+  );
+};

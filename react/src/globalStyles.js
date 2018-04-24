@@ -1,9 +1,14 @@
 import { injectGlobal } from 'styled-components';
 import media from 'utils/mediaquery';
+import colors from 'utils/colors';
 
 injectGlobal`
   html {
     font-size: 14px;
+  }
+
+  textarea.ant-input {
+    resize: none;
   }
 
   .container {

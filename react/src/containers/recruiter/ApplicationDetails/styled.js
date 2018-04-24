@@ -9,6 +9,10 @@ export default styled(Modal)`
   .ant-modal-header {
     padding: 40px 40px 0 40px;
     border-bottom: none;
+
+    .ant-modal-title {
+      font-size: 24px;
+    }
   }
 
   .ant-modal-body {
@@ -27,19 +31,18 @@ export default styled(Modal)`
     .content {
       display: flex;
 
-      .job-detail {
+      .details {
         flex: 1;
       }
 
       .buttons {
-        width: 150px;
-        margin-left: 30px;
-
+        display: flex;
+        flex-direction: column;
+        
         > * {
+          width: 150px;
           margin-top: 20px;
-        }
-        .ant-btn {
-          width: 100%;
+          margin-left: 30px;
         }
       }
     }

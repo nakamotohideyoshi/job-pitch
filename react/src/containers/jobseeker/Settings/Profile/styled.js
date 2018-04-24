@@ -30,10 +30,6 @@ export default styled(Form)`
     color: #ff9300;
   }
 
-  textarea {
-    resize: none;
-  }
-
   .btn-cv-view {
     margin-bottom: 12px;
   }

@@ -112,11 +112,11 @@ export default class MessageThread extends React.Component {
 
     const info = {
       RECRUITER: {
-        label: 'You cannot send messages until you have connected. ',
+        label: 'You cannot send messages until you have connected.',
         link: 'Connect'
       },
       JOB_SEEKER: {
-        label: 'You cannot send message until your application is accepted. ',
+        label: 'You cannot send message until your application is accepted.'
       }
     };
     const { label, link } = info[userRole];

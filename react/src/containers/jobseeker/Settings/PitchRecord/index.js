@@ -56,7 +56,10 @@ class PitchRecord extends React.Component {
       <Wrapper>
         <HelpContent>
           {`Here you can record your 30 second pitch. The 30 sec.
-                video will be viewed by prospective employers.`}
+                video will be viewed by prospective employers. Example `}
+          <a href="https://vimeo.com/255467562" target="_blank" rel="noopener noreferrer">
+            video pitch
+          </a>
         </HelpContent>
 
         <VideoContent>

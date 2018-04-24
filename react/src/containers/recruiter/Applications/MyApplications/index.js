@@ -23,9 +23,7 @@ class MyApplications extends React.Component {
     const { location } = this.props;
     const { appId } = location.state || {};
     if (appId) {
-      this.setState({
-        selectedId: appId
-      });
+      this.setState({ selectedId: appId });
     } else {
       this.getApplications();
     }
@@ -34,6 +32,13 @@ class MyApplications extends React.Component {
   componentWillReceiveProps({ job }) {
     if (this.props.job !== job) {
       this.getApplications(job);
+    }
+
+    const { selectedId } = this.state;
+    if (selectedId) {
+      const { applications } = this.props;
+      const selectedApp = applications && helper.getItemByID(applications, selectedId);
+      !selectedApp && this.onSelect();
     }
   }
 
@@ -48,20 +53,12 @@ class MyApplications extends React.Component {
       });
   };
 
-  showDetails = selectedId => {
-    this.setState({ selectedId });
-  };
+  onSelect = selectedId => this.setState({ selectedId });
 
-  hideDetails = () => {
-    this.setState({ selectedId: null });
-  };
-
-  connect = ({ id }, event) => {
+  onConnect = ({ id }, event) => {
     event && event.stopPropagation();
 
-    const { job, connectApplication, history } = this.props;
-
-    const business = job.location_data.business_data;
+    const { business, connectApplication, history } = this.props;
     if (business.tokens === 0) {
       confirm({
         content: 'You need 1 credit',
@@ -98,7 +95,7 @@ class MyApplications extends React.Component {
     });
   };
 
-  remove = ({ id }, event) => {
+  onRemove = ({ id }, event) => {
     event && event.stopPropagation();
 
     confirm({
@@ -128,30 +125,31 @@ class MyApplications extends React.Component {
       .indexOf(this.props.searchText.toLowerCase()) >= 0;
 
   renderApplication = app => {
-    const { job_seeker, loading } = app;
+    const { id, job_seeker, loading } = app;
     const image = helper.getPitch(job_seeker).thumbnail;
-    const fullName = helper.getFullJSName(job_seeker);
+    const name = helper.getFullJSName(job_seeker);
+
     return (
       <List.Item
-        key={job_seeker.id}
+        key={id}
         actions={[
           <Tooltip placement="bottom" title="Connect">
-            <span onClick={e => this.connect(app, e)}>
+            <span onClick={e => this.onConnect(app, e)}>
               <Icons.Link />
             </span>
           </Tooltip>,
           <Tooltip placement="bottom" title="Remove">
-            <span onClick={e => this.remove(app, e)}>
+            <span onClick={e => this.onRemove(app, e)}>
               <Icons.TrashAlt />
             </span>
           </Tooltip>
         ]}
-        onClick={() => this.showDetails(app.id)}
+        onClick={() => this.onSelect(id)}
         className={loading ? 'loading' : ''}
       >
         <List.Item.Meta
           avatar={<Avatar src={image} className="avatar-80" />}
-          title={fullName}
+          title={name}
           description={
             <Truncate lines={2} ellipsis={<span>...</span>}>
               {job_seeker.description}
@@ -163,9 +161,19 @@ class MyApplications extends React.Component {
     );
   };
 
+  renderEmpty = () => (
+    <AlertMsg>
+      <span>
+        {`No applications at the moment. Once that happens you can go trough them here,
+                shortlist and easy switch to Find Talent mode and "head hunt" as well.`}
+      </span>
+    </AlertMsg>
+  );
+
   render() {
     const { job, applications, error } = this.props;
-    const selectedApp = helper.getItemByID(applications, this.state.selectedId);
+    const selectedApp = applications && helper.getItemByID(applications, this.state.selectedId);
+
     return (
       <Wrapper className="container">
         <Header />
@@ -178,19 +186,19 @@ class MyApplications extends React.Component {
               filterOption={this.filterOption}
               error={error}
               renderItem={this.renderApplication}
-              emptyRender={
-                <AlertMsg>
-                  <span>
-                    {`No applications at the moment. Once that happens you can go trough them here,
-                shortlist and easy switch to Find Talent mode and "head hunt" as well.`}
-                  </span>
-                </AlertMsg>
-              }
+              emptyRender={this.renderEmpty}
             />
           )}
         </div>
 
-        {selectedApp && <ApplicationDetails application={selectedApp} onClose={this.hideDetails} />}
+        {selectedApp && (
+          <ApplicationDetails
+            application={selectedApp}
+            onConnect={() => this.onConnect(selectedApp)}
+            onRemove={() => this.onRemove(selectedApp)}
+            onClose={() => this.onSelect()}
+          />
+        )}
       </Wrapper>
     );
   }
@@ -198,10 +206,15 @@ class MyApplications extends React.Component {
 
 export default connect(
   (state, { match }) => {
+    const { businesses, selectedId } = state.rc_businesses;
+    const business = helper.getItemByID(businesses || [], selectedId);
+
     const jobId = helper.str2int(match.params.jobId);
     const job = helper.getItemByID(state.rc_jobs.jobs, jobId);
     const { applications, error, searchText } = state.applications;
+
     return {
+      business,
       job,
       applications: applications ? applications.filter(({ status }) => status === DATA.APP.CREATED) : null,
       error,

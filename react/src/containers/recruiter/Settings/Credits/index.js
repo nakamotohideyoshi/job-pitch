@@ -24,14 +24,12 @@ class Credits extends React.Component {
   };
 
   purchase = product => {
-    const { businessId } = this.state;
-
     this.setState({ loading: true });
 
     this.props.purchase({
       data: {
         product_code: product.product_code,
-        business: businessId
+        business: this.props.business.id
       },
       success: ({ approval_url }) => (window.location.href = approval_url),
       fail: () => this.setState({ loading: false })

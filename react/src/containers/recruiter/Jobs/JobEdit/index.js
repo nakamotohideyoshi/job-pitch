@@ -2,7 +2,7 @@ import React from 'react';
 import Helmet from 'react-helmet';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { Breadcrumb, Form, Input, Select, Switch, Tooltip, Button, notification } from 'antd';
+import { Breadcrumb, Form, Input, Select, Switch, Popover, Button, notification } from 'antd';
 
 import { saveJob } from 'redux/recruiter/jobs';
 import { uploadJobPitch } from 'redux/pitch';
@@ -282,9 +282,17 @@ class JobEdit extends React.Component {
               label={
                 <span>
                   Description&nbsp;
-                  <Tooltip title="Don't type in phone numbers/email address here.">
+                  <Popover
+                    placement="right"
+                    content={
+                      <span>
+                        Don't type in phone numbers or<br />
+                        email address here.
+                      </span>
+                    }
+                  >
                     <Icons.QuestionCircle />
-                  </Tooltip>
+                  </Popover>
                 </span>
               }
             >
@@ -300,9 +308,20 @@ class JobEdit extends React.Component {
               label={
                 <span>
                   Video pitch&nbsp;
-                  <Tooltip title="Tips on how to record your pitch will be placed here.">
+                  <Popover
+                    placement="right"
+                    content={
+                      <span>
+                        Tips on how to record your pitch will be<br />
+                        placed here. Example{' '}
+                        <a href="https://vimeo.com/255467562" target="_blank" rel="noopener noreferrer">
+                          video pitch
+                        </a>
+                      </span>
+                    }
+                  >
                     <Icons.QuestionCircle />
-                  </Tooltip>
+                  </Popover>
                 </span>
               }
             >

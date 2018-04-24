@@ -1,12 +1,12 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Form, Input, Button, Select, Tooltip, message } from 'antd';
+import { Form, Input, Button, Select, Popover, message } from 'antd';
 
 import { saveJobProfile } from 'redux/auth';
 import DATA from 'utils/data';
 import * as helper from 'utils/helper';
 
-import { GoogleMap, Icons } from 'components';
+import { NoLabelField, GoogleMap, Icons } from 'components';
 import FormWrapper from './styled';
 
 const { Item } = Form;
@@ -123,9 +123,17 @@ class JobProfile extends React.Component {
           label={
             <span>
               Match area&nbsp;
-              <Tooltip title="Search for a place name, street, postcode, etc. or click the map to select location.">
+              <Popover
+                placement="right"
+                content={
+                  <span>
+                    Search for a place name, street, postcode, etc.<br />
+                    or click the map to select location.
+                  </span>
+                }
+              >
                 <Icons.QuestionCircle />
-              </Tooltip>
+              </Popover>
             </span>
           }
           extra={place_name}
@@ -152,14 +160,11 @@ class JobProfile extends React.Component {
           )}
         </Item>
 
-        <div className="ant-form-item">
-          <div className="ant-form-item-label" />
-          <div className="ant-form-item-control-wrapper">
-            <Button type="primary" loading={this.state.loading} onClick={this.save}>
-              Save
-            </Button>
-          </div>
-        </div>
+        <NoLabelField>
+          <Button type="primary" loading={this.state.loading} onClick={this.save}>
+            Save
+          </Button>
+        </NoLabelField>
       </FormWrapper>
     );
   }

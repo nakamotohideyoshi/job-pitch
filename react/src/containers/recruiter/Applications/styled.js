@@ -17,10 +17,6 @@ export default styled.div`
       padding-left: 12px;
       padding-right: 12px;
 
-      .ant-list-item-meta-title {
-        font-size: 16px;
-      }
-
       .ant-list-item-meta-avatar {
         position: relative;
         svg {
@@ -34,13 +30,17 @@ export default styled.div`
 
       .ant-list-item-content {
         flex: initial;
+
+        .ant-list-item-meta-title {
+          font-size: 16px;
+        }
       }
 
       .ant-list-item-action {
         opacity: 0;
         transition: opacity 0.3s;
         span {
-          padding: 8px;
+          padding: 4px;
           &:hover {
             color: #00b6a4;
           }
@@ -59,10 +59,6 @@ export default styled.div`
       &:hover {
         cursor: pointer;
         background-color: ${colors.lightGreen};
-
-        .ant-list-item-meta-title {
-          color: #00b6a4;
-        }
 
         .ant-list-item-action {
           opacity: 1;

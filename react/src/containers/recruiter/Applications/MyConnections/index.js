@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import Truncate from 'react-truncate';
 import { List, Modal, Avatar, Tooltip } from 'antd';
 
-import { getApplications, removeApplication } from 'redux/applications';
+import { getApplications, updateApplication, removeApplication } from 'redux/applications';
 import DATA from 'utils/data';
 import * as helper from 'utils/helper';
 
@@ -23,9 +23,7 @@ class MyConnections extends React.Component {
     const { location } = this.props;
     const { appId } = location.state || {};
     if (appId) {
-      this.setState({
-        selectedId: appId
-      });
+      this.setState({ selectedId: appId });
     } else {
       this.getApplications();
     }
@@ -34,6 +32,13 @@ class MyConnections extends React.Component {
   componentWillReceiveProps({ job, shortlist }) {
     if (this.props.job !== job || this.props.shortlist !== shortlist) {
       this.getApplications(job);
+    }
+
+    const { selectedId } = this.state;
+    if (selectedId) {
+      const { applications } = this.props;
+      const selectedApp = applications && helper.getItemByID(applications, selectedId);
+      !selectedApp && this.onSelect();
     }
   }
 
@@ -50,20 +55,14 @@ class MyConnections extends React.Component {
       });
   };
 
-  showDetails = selectedId => {
-    this.setState({ selectedId });
-  };
+  onSelect = selectedId => this.setState({ selectedId });
 
-  hideDetails = () => {
-    this.setState({ selectedId: null });
-  };
-
-  message = ({ id }, event) => {
+  onMessage = ({ id }, event) => {
     event && event.stopPropagation();
     this.props.history.push(`/recruiter/messages/${id}`);
   };
 
-  remove = ({ id }, event) => {
+  onRemove = ({ id }, event) => {
     event && event.stopPropagation();
 
     confirm({
@@ -86,6 +85,16 @@ class MyConnections extends React.Component {
     });
   };
 
+  onShortlist = ({ id, shortlisted }) => {
+    this.props.updateApplication({
+      id,
+      data: {
+        id,
+        shortlisted: !shortlisted
+      }
+    });
+  };
+
   filterOption = ({ job_seeker }) =>
     helper
       .getFullJSName(job_seeker)
@@ -93,25 +102,26 @@ class MyConnections extends React.Component {
       .indexOf(this.props.searchText.toLowerCase()) >= 0;
 
   renderApplication = app => {
-    const { job_seeker, loading } = app;
+    const { id, job_seeker, loading } = app;
     const image = helper.getPitch(job_seeker).thumbnail;
-    const fullName = helper.getFullJSName(job_seeker);
+    const name = helper.getFullJSName(job_seeker);
+
     return (
       <List.Item
-        key={job_seeker.id}
+        key={id}
         actions={[
           <Tooltip placement="bottom" title="Message">
-            <span onClick={e => this.message(app, e)}>
+            <span onClick={e => this.onMessage(app, e)}>
               <Icons.Comment />
             </span>
           </Tooltip>,
           <Tooltip placement="bottom" title="Remove">
-            <span onClick={e => this.remove(app, e)}>
+            <span onClick={e => this.onRemove(app, e)}>
               <Icons.TrashAlt />
             </span>
           </Tooltip>
         ]}
-        onClick={() => this.showDetails(app.id)}
+        onClick={() => this.onSelect(id)}
         className={loading ? 'loading' : ''}
       >
         <List.Item.Meta
@@ -121,7 +131,7 @@ class MyConnections extends React.Component {
               {app.shortlisted && <Icons.Star />}
             </span>
           }
-          title={fullName}
+          title={name}
           description={
             <Truncate lines={2} ellipsis={<span>...</span>}>
               {job_seeker.description}
@@ -133,8 +143,20 @@ class MyConnections extends React.Component {
     );
   };
 
+  renderEmpty = () => (
+    <AlertMsg>
+      <span>
+        {this.props.shortlist
+          ? `You have not shortlisted any applications for this job,
+                       turn off shortlist view to see the non-shortlisted applications.`
+          : `No candidates have applied for this job yet.
+                       Once that happens, their applications will appear here.`}
+      </span>
+    </AlertMsg>
+  );
+
   render() {
-    const { job, shortlist, applications, error } = this.props;
+    const { job, applications, error } = this.props;
     const selectedApp = helper.getItemByID(applications, this.state.selectedId);
     return (
       <Wrapper className="container">
@@ -148,22 +170,20 @@ class MyConnections extends React.Component {
               filterOption={this.filterOption}
               error={error}
               renderItem={this.renderApplication}
-              emptyRender={
-                <AlertMsg>
-                  <span>
-                    {shortlist
-                      ? `You have not shortlisted any applications for this job,
-                       turn off shortlist view to see the non-shortlisted applications.`
-                      : `No candidates have applied for this job yet.
-                       Once that happens, their applications will appear here.`}
-                  </span>
-                </AlertMsg>
-              }
+              emptyRender={this.renderEmpty}
             />
           )}
         </div>
 
-        {selectedApp && <ApplicationDetails application={selectedApp} onClose={this.hideDetails} />}
+        {selectedApp && (
+          <ApplicationDetails
+            application={selectedApp}
+            onShortlist={() => this.onShortlist(selectedApp)}
+            onMessage={() => this.onMessage(selectedApp)}
+            onRemove={() => this.onRemove(selectedApp)}
+            onClose={() => this.onSelect()}
+          />
+        )}
       </Wrapper>
     );
   }
@@ -189,6 +209,7 @@ export default connect(
   },
   {
     getApplications,
+    updateApplication,
     removeApplication
   }
 )(MyConnections);

@@ -6,12 +6,20 @@ import { Breadcrumb, List, Avatar, Modal } from 'antd';
 import { removeBusiness } from 'redux/recruiter/businesses';
 import * as helper from 'utils/helper';
 
-import { PageHeader, PageSubHeader, AlertMsg, LinkButton, Loading, ListEx, Icons } from 'components';
+import { PageHeader, PageSubHeader, AlertMsg, LinkButton, Loading, ListEx, Icons, Email } from 'components';
 import Wrapper from '../styled';
 
 const { confirm } = Modal;
 
 class BusinessList extends React.Component {
+  state = {
+    emailDialog: false
+  };
+
+  showEmailDialog = show => {
+    this.setState({ emailDialog: show });
+  };
+
   selectBusiness = ({ id }) => {
     this.props.history.push(`/recruiter/jobs/workplace/${id}`);
   };
@@ -28,7 +36,7 @@ class BusinessList extends React.Component {
     } else {
       confirm({
         content: `More than one company?`,
-        okText: `Get in touch!`,
+        okText: `Contact Us`,
         cancelText: 'Cancel',
         maskClosable: true,
         onOk: () => {
@@ -152,6 +160,8 @@ class BusinessList extends React.Component {
             emptyRender={this.renderEmpty}
           />
         </div>
+
+        {this.state.emailDialog && <Email to="support@myjobpitch.com" onClose={() => this.showEmailDialog()} />}
       </Wrapper>
     );
   }

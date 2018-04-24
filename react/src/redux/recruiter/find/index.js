@@ -26,7 +26,8 @@ export default handleActions(
 
     [requestPending(C.RC_FIND_JOBSEEKERS)]: state => ({
       ...state,
-      jobseekers: null
+      jobseekers: null,
+      error: null
     }),
 
     [requestSuccess(C.RC_FIND_JOBSEEKERS)]: (state, { payload }) => ({
@@ -41,32 +42,40 @@ export default handleActions(
 
     // ---- connect jobseeker ----
 
+    [C.RC_CONNECT_JOBSEEKER]: (state, { payload }) => ({
+      ...state,
+      jobseekers: helper.updateObj(state.jobseekers, {
+        id: payload.data.job_seeker,
+        loading: true
+      })
+    }),
+
     [requestPending(C.RC_CONNECT_JOBSEEKER)]: (state, { payload }) => ({
       ...state,
       jobseekers: helper.updateObj(state.jobseekers, {
-        id: payload.id,
+        id: payload.data.job_seeker,
         loading: true
       })
     }),
 
     [requestSuccess(C.RC_CONNECT_JOBSEEKER)]: (state, { request }) => ({
       ...state,
-      jobseekers: helper.removeObj(state.jobseekers, request.id)
+      jobseekers: helper.removeObj(state.jobseekers, request.data.job_seeker)
     }),
 
     [requestFail(C.RC_CONNECT_JOBSEEKER)]: (state, { request }) => ({
       ...state,
       jobseekers: helper.updateObj(state.jobseekers, {
-        id: request.id,
+        id: request.data.job_seeker,
         loading: false
       })
     }),
 
     // ---- remove jobseeker ----
 
-    [C.RC_REMOVE_JOBSEEKER]: (state, { payload: { id } }) => ({
+    [C.RC_REMOVE_JOBSEEKER]: (state, { payload }) => ({
       ...state,
-      jobseekers: helper.removeObj(state.jobseekers, id)
+      jobseekers: helper.removeObj(state.jobseekers, payload.id)
     })
   },
   initialState

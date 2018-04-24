@@ -1,7 +1,7 @@
 import { createAction, handleActions } from 'redux-actions';
+import { requestPending, requestSuccess, requestFail } from 'utils/request';
 import * as C from 'redux/constants';
 import * as helper from 'utils/helper';
-import { requestPending, requestSuccess, requestFail } from 'utils/request';
 
 // ------------------------------------
 // Actions
@@ -50,15 +50,15 @@ export default handleActions(
       })
     }),
 
-    [requestSuccess(C.JS_APPLY_JOB)]: (state, { payload }) => ({
+    [requestSuccess(C.JS_APPLY_JOB)]: (state, { request }) => ({
       ...state,
-      jobs: helper.removeObj(state.jobs, payload.data.job)
+      jobs: helper.removeObj(state.jobs, request.data.job)
     }),
 
-    [requestFail(C.JS_APPLY_JOB)]: (state, { payload }) => ({
+    [requestFail(C.JS_APPLY_JOB)]: (state, { request }) => ({
       ...state,
       jobs: helper.updateObj(state.jobs, {
-        id: payload.data.job,
+        id: request.data.job,
         loading: false
       })
     }),

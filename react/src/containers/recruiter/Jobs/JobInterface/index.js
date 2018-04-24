@@ -63,7 +63,7 @@ class JobInterface extends React.Component {
       <Details className="content">
         <div>
           <h3>{title}</h3>
-          <span>{closed ? 'CLOSED' : ''}</span>
+          <span>{closed ? '( CLOSED )' : ''}</span>
         </div>
 
         <Button type="primary" onClick={() => history.push(`/recruiter/jobs/job/edit/${id}`)}>

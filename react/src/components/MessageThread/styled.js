@@ -90,7 +90,6 @@ export default styled.div`
     textarea {
       border: none;
       box-shadow: none;
-      resize: none;
       transition: none;
     }
 

@@ -35,7 +35,8 @@ export default handleActions(
 
     [requestPending(C.GET_APPLICATIONS)]: state => ({
       ...state,
-      applications: null
+      applications: null,
+      error: null
     }),
 
     [requestSuccess(C.GET_APPLICATIONS)]: (state, { payload }) => ({

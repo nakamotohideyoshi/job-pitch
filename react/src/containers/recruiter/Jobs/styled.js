@@ -18,24 +18,27 @@ export default styled.div`
       padding-left: 12px;
       padding-right: 12px;
 
-      .ant-list-item-meta-title {
-        font-size: 16px;
-      }
+      .ant-list-item-content {
+        flex: initial;
 
-      .properties {
-        font-size: 12px;
-        span {
-          display: inline-block;
+        .ant-list-item-meta-title {
+          font-size: 16px;
+        }
+
+        .properties {
+          font-size: 12px;
+          span {
+            display: inline-block;
+          }
         }
       }
 
-      .ant-list-item-content {
-        flex: initial;
-      }
-
       .ant-list-item-action {
-        span:hover {
-          color: #00b6a4;
+        span {
+          padding: 4px;
+          &:hover {
+            color: #00b6a4;
+          }
         }
       }
 
@@ -51,10 +54,6 @@ export default styled.div`
       &:hover {
         cursor: pointer;
         background-color: ${colors.lightGreen};
-
-        .ant-list-item-meta-title {
-          color: #00b6a4;
-        }
       }
     }
   }
@@ -65,12 +64,9 @@ export default styled.div`
     margin: 40px auto;
     padding: 0 15px;
 
-    .fa-question-circle {
+    .ant-form-item-label svg {
       color: #ff9300;
-    }
-
-    textarea {
-      resize: none;
+      cursor: pointer;
     }
 
     .subimt-field {

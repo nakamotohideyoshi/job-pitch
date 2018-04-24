@@ -9,40 +9,44 @@ export default styled(Modal)`
   .ant-modal-header {
     padding: 40px 40px 0 40px;
     border-bottom: none;
+
+    .ant-modal-title {
+      font-size: 24px;
+    }
   }
 
   .ant-modal-body {
     padding: 40px;
   }
 
-  .content {
-    .ant-switch {
-      margin-left: 8px;
-    }
-  }
-
   ${media.nottablet`
     .content {
       display: flex;
 
-      .job-detail {
+      .details {
         flex: 1;
       }
 
-      .ant-btn {
-        margin-left: 30px;
-        margin-top: 20px;
-        width: 100%;
-        width: 150px;
+      .buttons {
+        display: flex;
+        flex-direction: column;
+
+        .ant-btn {
+          width: 150px;
+          margin-left: 30px;
+          margin-top: 20px;
+        }
       }
     }
   `};
 
   ${media.tablet`
-    .ant-btn {
-      margin-top: 25px;
-      width: 150px;
-      margin-right: 25px;
+    .buttons {
+      .ant-btn {
+        margin-top: 25px;
+        width: 150px;
+        margin-right: 25px;
+      }
     }
   `};
 `;

@@ -4,6 +4,8 @@ import { connect } from 'react-redux';
 import { withRouter, Link } from 'react-router-dom';
 import { Menu, Badge } from 'antd';
 
+import * as helper from 'utils/helper';
+
 const Item = Menu.Item;
 
 const MenuWrapper = styled(Menu)`
@@ -31,8 +33,8 @@ class MainMenu extends React.Component {
   };
 
   render() {
-    const { user, business, location, theme, mode } = this.props;
-    const existBusiness = user.businesses.length > 0;
+    const { businesses, business, location, theme, mode } = this.props;
+    const existBusiness = businesses.length > 0;
     let selectedKey = location.pathname.split('/')[2];
     if (location.pathname.indexOf('/recruiter/settings/credits') === 0) {
       selectedKey = 'credits';
@@ -69,11 +71,12 @@ class MainMenu extends React.Component {
 }
 
 export default withRouter(
-  connect(
-    state => ({
-      user: state.auth.user,
-      business: state.rc_businesses.business
-    }),
-    {}
-  )(MainMenu)
+  connect(state => {
+    const { businesses, selectedId } = state.rc_businesses;
+    const business = helper.getItemByID(businesses || [], selectedId);
+    return {
+      businesses,
+      business
+    };
+  })(MainMenu)
 );

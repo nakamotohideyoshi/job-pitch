@@ -15,25 +15,29 @@ const { confirm } = Modal;
 
 class FindTalent extends React.Component {
   state = {
-    selectedJobseeker: null
+    selectedId: null
   };
 
   componentWillMount() {
-    const { jobseekers, location } = this.props;
+    const { location } = this.props;
     const { jobseekerId } = location.state || {};
     if (jobseekerId) {
-      this.setState({
-        selectedJobseeker: helper.getItemByID(jobseekers, jobseekerId)
-      });
+      this.setState({ selectedId: jobseekerId });
     } else {
       this.findJobseekers();
     }
   }
 
-  componentWillReceiveProps(nextProps) {
-    const { job } = nextProps;
+  componentWillReceiveProps({ job }) {
     if (this.props.job !== job) {
       this.findJobseekers(job);
+    }
+
+    const { selectedId } = this.state;
+    if (selectedId) {
+      const { jobseekers } = this.props;
+      const selectedJobseeker = jobseekers && helper.getItemByID(jobseekers, selectedId);
+      !selectedJobseeker && this.onSelect();
     }
   }
 
@@ -47,20 +51,12 @@ class FindTalent extends React.Component {
       });
   };
 
-  showDetails = selectedJobseeker => {
-    this.setState({ selectedJobseeker });
-  };
+  onSelect = selectedId => this.setState({ selectedId });
 
-  hideDetails = () => {
-    this.setState({ selectedJobseeker: null });
-  };
-
-  connect = ({ id }, event) => {
+  onConnect = ({ id }, event) => {
     event && event.stopPropagation();
 
-    const { job, connectJobseeker, history } = this.props;
-
-    const business = job.location_data.business_data;
+    const { business, job, connectJobseeker, history } = this.props;
     if (business.tokens === 0) {
       confirm({
         content: 'You need 1 credit',
@@ -81,9 +77,8 @@ class FindTalent extends React.Component {
       maskClosable: true,
       onOk: () => {
         connectJobseeker({
-          id,
           data: {
-            job: this.jobId,
+            job: job.id,
             job_seeker: id
           },
           successMsg: {
@@ -97,7 +92,7 @@ class FindTalent extends React.Component {
     });
   };
 
-  remove = ({ id }, event) => {
+  onRemove = ({ id }, event) => {
     event && event.stopPropagation();
 
     confirm({
@@ -121,43 +116,58 @@ class FindTalent extends React.Component {
       .indexOf(this.props.searchText.toLowerCase()) >= 0;
 
   renderJobseeker = jobseeker => {
+    const { id, description, loading } = jobseeker;
     const image = helper.getPitch(jobseeker).thumbnail;
-    const fullName = helper.getFullJSName(jobseeker);
+    const name = helper.getFullJSName(jobseeker);
+
     return (
       <List.Item
-        key={jobseeker.id}
+        key={id}
         actions={[
           <Tooltip placement="bottom" title="Connect">
-            <span onClick={e => this.connect(jobseeker, e)}>
+            <span onClick={e => this.onConnect(jobseeker, e)}>
               <Icons.Link />
             </span>
           </Tooltip>,
           <Tooltip placement="bottom" title="Remove">
-            <span onClick={e => this.remove(jobseeker, e)}>
+            <span onClick={e => this.onRemove(jobseeker, e)}>
               <Icons.TrashAlt />
             </span>
           </Tooltip>
         ]}
-        onClick={() => this.showDetails(jobseeker)}
-        className={jobseeker.loading ? 'loading' : ''}
+        onClick={() => this.onSelect(id)}
+        className={loading ? 'loading' : ''}
       >
         <List.Item.Meta
           avatar={<Avatar src={image} className="avatar-80" />}
-          title={fullName}
+          title={name}
           description={
             <Truncate lines={2} ellipsis={<span>...</span>}>
-              {jobseeker.description}
+              {description}
             </Truncate>
           }
         />
-        {jobseeker.loading && <Loading className="mask" size="small" />}
+        {loading && <Loading className="mask" size="small" />}
       </List.Item>
     );
   };
 
+  renderEmpty = () => (
+    <AlertMsg>
+      <span>
+        {`There are no more new matches for this job.
+                  You can restore your removed matches by clicking refresh above.`}
+      </span>
+      <a onClick={() => this.findJobseekers()}>
+        <Icons.Refresh />
+        Refresh
+      </a>
+    </AlertMsg>
+  );
+
   render() {
     const { job, jobseekers, error } = this.props;
-    const { selectedJobseeker } = this.state;
+    const selectedJobseeker = jobseekers && helper.getItemByID(jobseekers, this.state.selectedId);
     return (
       <Wrapper className="container">
         <Header />
@@ -168,25 +178,21 @@ class FindTalent extends React.Component {
               loadingSize="large"
               pagination={{ pageSize: 10 }}
               filterOption={this.filterOption}
-              error={error}
+              error={error && 'Server Error!'}
               renderItem={this.renderJobseeker}
-              emptyRender={
-                <AlertMsg>
-                  <span>
-                    {`There are no more new matches for this job.
-                  You can restore your removed matches by clicking refresh above.`}
-                  </span>
-                  <a onClick={() => this.findJobseekers()}>
-                    <Icons.Refresh />
-                    Refresh
-                  </a>
-                </AlertMsg>
-              }
+              emptyRender={this.renderEmpty}
             />
           )}
         </div>
 
-        {selectedJobseeker && <ApplicationDetails jobseeker={selectedJobseeker} onClose={this.hideDetails} />}
+        {selectedJobseeker && (
+          <ApplicationDetails
+            jobseeker={selectedJobseeker}
+            onConnect={() => this.onConnect(selectedJobseeker)}
+            onRemove={() => this.onRemove(selectedJobseeker)}
+            onClose={() => this.onSelect()}
+          />
+        )}
       </Wrapper>
     );
   }
@@ -194,11 +200,16 @@ class FindTalent extends React.Component {
 
 export default connect(
   (state, { match }) => {
+    const { businesses, selectedId } = state.rc_businesses;
+    const business = helper.getItemByID(businesses || [], selectedId);
+
     const jobId = helper.str2int(match.params.jobId);
     const job = helper.getItemByID(state.rc_jobs.jobs, jobId);
     const { jobseekers, error } = state.rc_find;
     const { searchText } = state.applications;
+
     return {
+      business,
       job,
       jobseekers,
       error,

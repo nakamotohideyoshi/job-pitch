@@ -4,20 +4,14 @@ export default styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin: 40px 0;
+  margin-bottom: 40px;
 
   > * {
     width: 100%;
   }
 
   > div {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-
-    h3 {
-      /* text-align: left; */
-    }
+    text-align: center;
   }
 
   .ant-btn {

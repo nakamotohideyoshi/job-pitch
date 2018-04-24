@@ -28,6 +28,8 @@ import ListEx from './ListEx';
 import VideoRecorder from './video/Recorder';
 import VideoPlayer from './video/Player';
 
+import Email from './Email';
+
 export {
   GoogleMap,
   PopupProgress,
@@ -48,5 +50,6 @@ export {
   SelectEx,
   ListEx,
   VideoRecorder,
-  VideoPlayer
+  VideoPlayer,
+  Email
 };

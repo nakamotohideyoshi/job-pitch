@@ -6,7 +6,6 @@ import { Menu, Select } from 'antd';
 import styled from 'styled-components';
 
 import { selectBusiness } from 'redux/recruiter/businesses';
-import { updateStatus } from 'redux/applications';
 import DATA from 'utils/data';
 import * as helper from 'utils/helper';
 
@@ -39,39 +38,47 @@ const Filters = styled.div`
 
 class Header extends React.Component {
   componentWillMount() {
-    const { jobs, selectedJob, match, history } = this.props;
-    if (!selectedJob) {
-      const jobId = helper.loadData('applications/jobId');
-      const job = helper.getItemByID(jobs, jobId) || jobs[0];
-      if (job) {
-        const arr = match.url.split('/');
-        arr[4] = job.id;
-        history.replace(arr.join('/'));
+    const { selectedJob, jobId } = this.props;
+    const { id } = selectedJob || {};
+    if (id !== jobId) {
+      const { match, history } = this.props;
+      const arr = match.url.split('/');
+      arr[4] = id;
+      history.replace(arr.join('/'));
+      return;
+    }
+    if (selectedJob) {
+      this.props.selectBusiness(selectedJob.location_data.business_data.id);
+      helper.saveData('applications/jobId', id);
+    }
+  }
+
+  componentWillReceiveProps(nextProps) {
+    const { selectedJob, jobId } = nextProps;
+    const { id } = selectedJob || {};
+    if (id !== jobId) {
+      const { match, history } = this.props;
+      const arr = match.url.split('/');
+      arr[4] = id;
+      history.replace(arr.join('/'));
+    } else {
+      if (selectedJob && (selectedJob !== this.props.selectedJob || jobId !== this.props.jobId)) {
+        this.props.selectBusiness(selectedJob.location_data.business_data.id);
+        helper.saveData('applications/jobId', id);
       }
     }
   }
 
-  selectJob = id => {
-    const { history, match, jobs, selectBusiness } = this.props;
-    const jobId = id || helper.str2int(match.params.jobId) || helper.loadData('applications/jobId');
-    const job = helper.getItemByID(jobs, jobId) || jobs[0];
-
-    if (job) {
-      selectBusiness({
-        business: job.location_data.business_data
-      });
-    }
-
-    const selectedJobId = (job || {}).id;
-    this.props.updateStatus({ selectedJobId });
-    helper.saveData('applications/jobId', selectedJobId);
-
-    const arr = match.url.split('/');
-    arr[4] = selectedJobId;
-    history.replace(arr.join('/'));
+  onChangeSearch = searchText => {
+    this.props.updateStatus({ searchText });
   };
 
-  changeSearch = searchText => this.props.updateStatus({ searchText });
+  onSelectJob = id => {
+    const { match, history } = this.props;
+    const arr = match.url.split('/');
+    arr[4] = id;
+    history.replace(arr.join('/'));
+  };
 
   render() {
     const { jobs, selectedJob, searchText, match } = this.props;
@@ -107,7 +114,7 @@ class Header extends React.Component {
             value={selectedJobId}
             placeholder="Select a job"
             filterOption={(input, option) => option.props.children[1].toLowerCase().indexOf(input.toLowerCase()) >= 0}
-            onChange={this.selectJob}
+            onChange={this.onSelectJob}
           >
             {jobs.map(job => {
               const logo = helper.getJobLogo(job);
@@ -120,7 +127,7 @@ class Header extends React.Component {
             })}
           </Select>
 
-          <SearchBox width="200px" defaultValue={searchText} onChange={this.changeSearch} />
+          <SearchBox width="200px" defaultValue={searchText} onChange={this.onChangeSearch} />
         </Filters>
       </Fragment>
     );
@@ -132,15 +139,16 @@ export default withRouter(
     (state, { match }) => {
       const jobs = state.rc_jobs.jobs.filter(({ status }) => status === DATA.JOB.OPEN);
       const jobId = helper.str2int(match.params.jobId);
-      const selectedJob = helper.getItemByID(jobs, jobId);
+      const id = jobId || helper.loadData('applications/jobId');
+      const selectedJob = helper.getItemByID(jobs, id) || jobs[0];
       return {
         jobs,
+        jobId,
         selectedJob,
         searchText: state.applications.searchText
       };
     },
     {
-      updateStatus,
       selectBusiness
     }
   )(Header)

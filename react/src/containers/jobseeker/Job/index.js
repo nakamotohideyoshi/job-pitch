@@ -12,23 +12,19 @@ class Jobs extends React.Component {
     this.props.findJobs();
   }
 
-  componentWillReceiveProps(nextPorps) {
-    const { match, history } = this.props;
-    const jobId = helper.str2int(match.params.jobId);
-    const { jobs, applications } = nextPorps;
+  componentWillReceiveProps({ jobs, job, applications, application, history }) {
     if (!this.props.jobs && jobs) {
-      const job = helper.getItemByID(jobs, jobId);
       if (job) {
-        history.replace(`/jobseeker/find/`, { jobId });
+        history.replace(`/jobseeker/find/`, { jobId: job.id });
       } else {
         this.props.getApplications();
       }
-    } else if (!this.props.applications && applications) {
-      const jobId = helper.str2int(match.params.jobId);
-      const app = applications.filter(app => app.job_data.id === jobId)[0];
-      console.log(jobId, applications, app);
-      if (app) {
-        history.replace(`/jobseeker/applications/`, { appId: app.id });
+      return;
+    }
+
+    if (!this.props.applications && applications) {
+      if (application) {
+        history.replace(`/jobseeker/applications/`, { appId: application.id });
       } else {
         history.replace(`/jobseeker/find`);
       }
@@ -51,11 +47,20 @@ class Jobs extends React.Component {
 }
 
 export default connect(
-  state => ({
-    jobs: state.js_find.jobs,
-    applications: state.applications.applications,
-    error: state.js_find.error || state.applications.error
-  }),
+  (state, { match }) => {
+    const { jobs, error: error1 } = state.js_find;
+    const { applications, error: error2 } = state.applications;
+    const jobId = helper.str2int(match.params.jobId);
+    const job = helper.getItemByID(jobs || [], jobId);
+    const application = (applications || []).filter(({ job_data }) => job_data.id === jobId)[0];
+    return {
+      job,
+      jobs,
+      application,
+      applications,
+      error: error1 || error2
+    };
+  },
   {
     findJobs,
     getApplications

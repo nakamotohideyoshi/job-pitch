@@ -1,89 +1,99 @@
 import React from 'react';
 import Helmet from 'react-helmet';
 import { connect } from 'react-redux';
+import Truncate from 'react-truncate';
 import { List, Avatar } from 'antd';
 
 import { getApplications } from 'redux/applications';
 import DATA from 'utils/data';
 import * as helper from 'utils/helper';
 
-import { PageHeader, SearchBox, AlertMsg, ListEx } from 'components';
+import { PageHeader, SearchBox, AlertMsg, ListEx, Icons } from 'components';
 import JobDetails from '../components/JobDetails';
 import NoPitch from '../components/NoPitch';
 import Wrapper from './styled';
 
 class MyApplications extends React.Component {
   state = {
-    filterText: '',
-    selectedId: null
+    selectedId: null,
+    searchText: ''
   };
 
   componentWillMount() {
-    const { appId } = this.props.location.state || {};
+    const { getApplications, location } = this.props;
+    const { appId } = location.state || {};
     if (appId) {
       this.setState({ selectedId: appId });
     } else {
-      this.props.getApplications();
+      getApplications();
     }
   }
 
-  onChangeFilterText = filterText => this.setState({ filterText });
+  onChangeSearchText = searchText => this.setState({ searchText });
 
-  onSelectApp = selectedId => this.setState({ selectedId });
+  onSelect = selectedId => this.setState({ selectedId });
 
-  onMessage = (appId, event) => {
+  onMessage = ({ id }, event) => {
     event && event.stopPropagation();
-    this.props.history.push(`/jobseeker/messages/${appId}/`);
+    this.props.history.push(`/jobseeker/messages/${id}/`);
   };
 
   filterOption = ({ job_data }) => {
-    const filterText = this.state.filterText.toLowerCase();
-    const subName = helper.getFullBWName(job_data);
-    return (
-      !filterText ||
-      job_data.title.toLowerCase().indexOf(filterText) >= 0 ||
-      subName.toLowerCase().indexOf(filterText) >= 0
-    );
+    const searchText = this.state.searchText.toLowerCase();
+    const name = helper.getFullBWName(job_data);
+    return job_data.title.toLowerCase().indexOf(searchText) >= 0 || name.toLowerCase().indexOf(searchText) >= 0;
   };
 
   renderApp = app => {
-    const job = app.job_data;
-    const logo = helper.getJobLogo(job);
-    const subName = helper.getFullBWName(job);
-    const contract = helper.getItemByID(DATA.contracts, job.contract).short_name;
-    const hours = helper.getItemByID(DATA.hours, job.hours).short_name;
+    const { id, job_data } = app;
+    const { title, contract, hours, description } = job_data;
+    const logo = helper.getJobLogo(job_data);
+    const name = helper.getFullBWName(job_data);
+    const contractName = helper.getItemByID(DATA.contracts, contract).short_name;
+    const hoursName = helper.getItemByID(DATA.hours, hours).short_name;
 
     return (
       <List.Item
-        key={app.id}
-        actions={[<span onClick={e => this.onMessage(app.id, e)}>Message</span>]}
-        onClick={() => this.onSelectApp(app.id)}
+        key={id}
+        actions={[
+          <span onClick={e => this.onMessage(app, e)}>
+            <Icons.Comment />
+          </span>
+        ]}
+        onClick={() => this.onSelect(id)}
       >
         <List.Item.Meta
           avatar={<Avatar src={logo} className="avatar-80" />}
-          title={`${job.title} (${subName})`}
+          title={`${title} (${name})`}
           description={
-            <div>
-              <div>
-                {contract} / {hours}
-              </div>
-              <div>{job.description}</div>
-            </div>
+            <Truncate lines={2} ellipsis={<span>...</span>}>
+              {description}
+            </Truncate>
           }
         />
+        <div className="properties">
+          <span>
+            {contractName} / {hoursName}
+          </span>
+        </div>
       </List.Item>
     );
   };
+
+  renderEmpty = () => (
+    <AlertMsg>
+      <span>You have no applications.</span>
+    </AlertMsg>
+  );
 
   render() {
     const { jobseeker, applications, error } = this.props;
 
     if (!helper.getPitch(jobseeker)) {
-      return <NoPitch title="My Applications" {...this.props} />;
+      return <NoPitch title="My Applications" />;
     }
 
-    const { selectedId } = this.state;
-    const selectedApp = applications && helper.getItemByID(applications, selectedId);
+    const selectedApp = applications && helper.getItemByID(applications, this.state.selectedId);
 
     return (
       <Wrapper className="container">
@@ -91,30 +101,26 @@ class MyApplications extends React.Component {
 
         <PageHeader>
           <h2>My Applications</h2>
-          <SearchBox width="200px" onChange={this.onChangeFilterText} />
+          <SearchBox width="200px" onChange={this.onChangeSearchText} />
         </PageHeader>
 
         <div className="content">
           <ListEx
             data={applications}
-            error={error && 'Server Error!'}
             loadingSize="large"
             pagination={{ pageSize: 10 }}
             filterOption={this.filterOption}
+            error={error && 'Server Error!'}
             renderItem={this.renderApp}
-            emptyRender={
-              <AlertMsg>
-                <span>You have no applications.</span>
-              </AlertMsg>
-            }
+            emptyRender={this.renderEmpty}
           />
         </div>
 
         {selectedApp && (
           <JobDetails
             job={selectedApp.job_data}
-            onMessage={() => this.onMessage(selectedId)}
-            onClose={() => this.onSelectApp()}
+            onMessage={() => this.onMessage(selectedApp)}
+            onClose={() => this.onSelect()}
           />
         )}
       </Wrapper>

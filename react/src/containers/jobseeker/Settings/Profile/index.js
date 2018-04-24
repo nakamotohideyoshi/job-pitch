@@ -1,13 +1,13 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Form, Input, Button, Checkbox, Switch, Select, InputNumber, Tooltip, Upload, message } from 'antd';
+import { Form, Input, Button, Checkbox, Switch, Select, InputNumber, Popover, Upload, message } from 'antd';
 
 import { saveJobseeker } from 'redux/auth';
 import { uploadPitch } from 'redux/pitch';
 import DATA from 'utils/data';
 import * as helper from 'utils/helper';
 
-import { VideoRecorder, VideoPlayer, PopupProgress, Intro, Icons } from 'components';
+import { NoLabelField, VideoRecorder, VideoPlayer, PopupProgress, Intro, Icons } from 'components';
 import imgLogo from 'assets/logo1.png';
 import imgIntro1 from 'assets/intro1.png';
 import imgIntro2 from 'assets/intro2.png';
@@ -266,10 +266,18 @@ class Profile extends React.Component {
           label={
             <span>
               National insurance number&nbsp;
-              <Tooltip title="Supplying your national insurance number makes it easier for employers to recruit you.
-                          Your National Insurance number will not be shared with employers.">
+              <Popover
+                placement="right"
+                content={
+                  <span>
+                    Supplying your national insurance number makes<br />
+                    it easier for employers to recruit you. Your National<br />
+                    Insurance number will not be shared with employers.
+                  </span>
+                }
+              >
                 <Icons.QuestionCircle />
-              </Tooltip>
+              </Popover>
             </span>
           }
         >
@@ -280,10 +288,18 @@ class Profile extends React.Component {
           label={
             <span>
               CV summary&nbsp;
-              <Tooltip title="CV summary is what the recruiter first see, write if you have previous relevant experience where and for how long.
-                Don't type in phone numbers/email address here.">
+              <Popover
+                placement="right"
+                content={
+                  <span>
+                    CV summary is what the recruiter first see, write if you<br />
+                    have previous relevant experience where and for how long.<br />
+                    Don't type in phone numbers/email address here.
+                  </span>
+                }
+              >
                 <Icons.QuestionCircle />
-              </Tooltip>
+              </Popover>
             </span>
           }
         >
@@ -295,38 +311,46 @@ class Profile extends React.Component {
           })(<TextArea autosize={{ minRows: 3, maxRows: 20 }} />)}
         </Item>
 
-        <div className="ant-form-item">
-          <div className="ant-form-item-label" />
-          <div className="ant-form-item-control-wrapper">
-            {jobseeker.cv && (
-              <Button style={{ marginBottom: '12px' }} onClick={this.viewCV}>
-                View CV
-              </Button>
-            )}
+        <NoLabelField>
+          {jobseeker.cv && (
+            <Button style={{ marginBottom: '12px' }} onClick={this.viewCV}>
+              View CV
+            </Button>
+          )}
 
-            {getFieldDecorator('cv', {
-              valuePropName: 'fileList',
-              getValueFromEvent: e => e && e.fileList
-            })(
-              <Upload.Dragger beforeUpload={() => false}>
-                <p className="ant-upload-text">
-                  <Icons.Upload /> Click or drag file to this area to upload CV
-                </p>
-                <p className="ant-upload-hint">
-                  Upload your CV using your favourite cloud service, or take a photo if you have it printed out.
-                </p>
-              </Upload.Dragger>
-            )}
-          </div>
-        </div>
+          {getFieldDecorator('cv', {
+            valuePropName: 'fileList',
+            getValueFromEvent: e => e && e.fileList
+          })(
+            <Upload.Dragger beforeUpload={() => false}>
+              <p className="ant-upload-text">
+                <Icons.Upload /> Click or drag file to this area to upload CV
+              </p>
+              <p className="ant-upload-hint">
+                Upload your CV using your favourite cloud service, or take a photo if you have it printed out.
+              </p>
+            </Upload.Dragger>
+          )}
+        </NoLabelField>
 
         <Item
           label={
             <span>
               Video pitch&nbsp;
-              <Tooltip title="Tips on how to record your pitch will be placed here.">
+              <Popover
+                placement="right"
+                content={
+                  <span>
+                    Tips on how to record your pitch will be<br />
+                    placed here. Example{' '}
+                    <a href="https://vimeo.com/255467562" target="_blank" rel="noopener noreferrer">
+                      video pitch
+                    </a>
+                  </span>
+                }
+              >
                 <Icons.QuestionCircle />
-              </Tooltip>
+              </Popover>
             </span>
           }
         >
@@ -340,31 +364,23 @@ class Profile extends React.Component {
           </div>
         </Item>
 
-        <div className="ant-form-item">
-          <div className="ant-form-item-label" />
-          <div className="ant-form-item-control-wrapper">
-            {getFieldDecorator('has_references', { valuePropName: 'checked' })(
-              <Checkbox>References Available</Checkbox>
-            )}
+        <NoLabelField>
+          {getFieldDecorator('has_references', { valuePropName: 'checked' })(<Checkbox>References Available</Checkbox>)}
 
-            {getFieldDecorator('truth_confirmation', { valuePropName: 'checked' })(
-              <Checkbox>
-                By ticking this box I confirm that all information given is true, I understand that any falsification
-                may lead to dismissal, and that I am entitled to work in UK & Northern Ireland. If required I will give
-                full details if I have been convicted of any criminal offence.
-              </Checkbox>
-            )}
-          </div>
-        </div>
+          {getFieldDecorator('truth_confirmation', { valuePropName: 'checked' })(
+            <Checkbox>
+              By ticking this box I confirm that all information given is true, I understand that any falsification may
+              lead to dismissal, and that I am entitled to work in UK & Northern Ireland. If required I will give full
+              details if I have been convicted of any criminal offence.
+            </Checkbox>
+          )}
+        </NoLabelField>
 
-        <div className="ant-form-item">
-          <div className="ant-form-item-label" />
-          <div className="ant-form-item-control-wrapper">
-            <Button type="primary" loading={loading} onClick={this.save}>
-              Save
-            </Button>
-          </div>
-        </div>
+        <NoLabelField>
+          <Button type="primary" loading={loading} onClick={this.save}>
+            Save
+          </Button>
+        </NoLabelField>
 
         {!jobseeker.id && !dontShowIntro && <Intro data={INTRO_DATA} onClose={this.closeIntro} />}
         {showPlayer && <VideoPlayer videoUrl={pitch.video} onClose={() => this.playPitch()} />}

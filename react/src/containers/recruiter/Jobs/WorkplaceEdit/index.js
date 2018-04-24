@@ -2,7 +2,7 @@ import React from 'react';
 import Helmet from 'react-helmet';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { Breadcrumb, Form, Input, Checkbox, Button, Tooltip, notification } from 'antd';
+import { Breadcrumb, Form, Input, Checkbox, Button, Popover, notification } from 'antd';
 
 import { saveWorkplace } from 'redux/recruiter/workplaces';
 import DATA from 'utils/data';
@@ -180,9 +180,18 @@ class WorkplaceEdit extends React.Component {
               label={
                 <span>
                   Email&nbsp;
-                  <Tooltip title="This is the email that notifications will be sent to, it can be different to your login email address.">
+                  <Popover
+                    placement="right"
+                    content={
+                      <span>
+                        This is the email that notifications<br />
+                        will be sent to, it can be different<br />
+                        to your login email address.
+                      </span>
+                    }
+                  >
                     <Icons.QuestionCircle />
-                  </Tooltip>
+                  </Popover>
                 </span>
               }
             >
@@ -213,9 +222,17 @@ class WorkplaceEdit extends React.Component {
               label={
                 <span>
                   Description&nbsp;
-                  <Tooltip title="Don't type in phone numbers/email address here.">
+                  <Popover
+                    placement="right"
+                    content={
+                      <span>
+                        Don't type in phone numbers or<br />
+                        email address here.
+                      </span>
+                    }
+                  >
                     <Icons.QuestionCircle />
-                  </Tooltip>
+                  </Popover>
                 </span>
               }
             >
@@ -231,9 +248,17 @@ class WorkplaceEdit extends React.Component {
               label={
                 <span>
                   Match area&nbsp;
-                  <Tooltip title="Search for a place name, street, postcode, etc. or click the map to select location.">
+                  <Popover
+                    placement="right"
+                    content={
+                      <span>
+                        Search for a place name, street, postcode,<br />
+                        etc. or click the map to select location.
+                      </span>
+                    }
+                  >
                     <Icons.QuestionCircle />
-                  </Tooltip>
+                  </Popover>
                 </span>
               }
               extra={place_name}

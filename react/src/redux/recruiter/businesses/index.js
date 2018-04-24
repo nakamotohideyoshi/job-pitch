@@ -1,4 +1,5 @@
 import { createAction, handleActions } from 'redux-actions';
+import { LOCATION_CHANGE } from 'react-router-redux';
 import * as C from 'redux/constants';
 import * as helper from 'utils/helper';
 import { requestPending, requestSuccess, requestFail } from 'utils/request';
@@ -70,7 +71,19 @@ export default handleActions(
         id: request.id,
         loading: false
       })
-    })
+    }),
+
+    // ---- change locaiton ----
+
+    [LOCATION_CHANGE]: (state, { payload }) => {
+      const arr = payload.pathname.split('/');
+      const flag = arr[2] === 'applications';
+
+      return {
+        ...state,
+        selectedId: flag ? state.selectedId : null
+      };
+    }
   },
   initialState
 );

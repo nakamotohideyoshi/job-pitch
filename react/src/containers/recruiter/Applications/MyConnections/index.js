@@ -7,8 +7,7 @@ import { getApplications, updateApplication, removeApplication } from 'redux/app
 import DATA from 'utils/data';
 import * as helper from 'utils/helper';
 
-import { AlertMsg, Loading, ListEx, Icons } from 'components';
-import ApplicationDetails from 'containers/recruiter/ApplicationDetails';
+import { AlertMsg, Loading, ListEx, Icons, JobseekerDetails } from 'components';
 import Header from '../Header';
 import Wrapper from '../styled';
 
@@ -176,7 +175,8 @@ class MyConnections extends React.Component {
         </div>
 
         {selectedApp && (
-          <ApplicationDetails
+          <JobseekerDetails
+            title="Application Details"
             application={selectedApp}
             onShortlist={() => this.onShortlist(selectedApp)}
             onMessage={() => this.onMessage(selectedApp)}

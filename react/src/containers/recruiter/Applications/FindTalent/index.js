@@ -6,8 +6,7 @@ import { List, Modal, Avatar, Tooltip } from 'antd';
 import { findJobseekers, connectJobseeker, removeJobseeker } from 'redux/recruiter/find';
 import * as helper from 'utils/helper';
 
-import { AlertMsg, Loading, ListEx, Icons } from 'components';
-import ApplicationDetails from 'containers/recruiter/ApplicationDetails';
+import { AlertMsg, Loading, ListEx, Icons, JobseekerDetails } from 'components';
 import Header from '../Header';
 import Wrapper from '../styled';
 
@@ -186,7 +185,8 @@ class FindTalent extends React.Component {
         </div>
 
         {selectedJobseeker && (
-          <ApplicationDetails
+          <JobseekerDetails
+            title="Jobseeker Details"
             jobseeker={selectedJobseeker}
             onConnect={() => this.onConnect(selectedJobseeker)}
             onRemove={() => this.onRemove(selectedJobseeker)}

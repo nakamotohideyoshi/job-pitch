@@ -312,10 +312,13 @@ class JobEdit extends React.Component {
                     placement="right"
                     content={
                       <span>
-                        Tips on how to record your pitch will be<br />
-                        placed here. Example{' '}
+                        Record your up to 30 sec selfie video. The key is to<br />
+                        just be yourself! You can record on your phone pretty<br />
+                        much anywhere, at home on the bus or in a coffee shop<br />
+                        it doesn’t matter, and you can re-record as many times<br />
+                        times as you want. Check out our{' '}
                         <a href="https://vimeo.com/255467562" target="_blank" rel="noopener noreferrer">
-                          video pitch
+                          example video
                         </a>
                       </span>
                     }

@@ -35,12 +35,17 @@ class BusinessList extends React.Component {
       history.push('/recruiter/jobs/business/add');
     } else {
       confirm({
-        content: `More than one company?`,
+        content: (
+          <span>
+            Got more that one business?<br />Get in touch to talk about how we can help you.<br />Remember, you can
+            always create additional workplaces under your existing business.
+          </span>
+        ),
         okText: `Contact Us`,
         cancelText: 'Cancel',
         maskClosable: true,
         onOk: () => {
-          window.open('mailto:support@myjobpitch.com');
+          window.open('https://www.myjobpitch.com/contact/');
         }
       });
     }

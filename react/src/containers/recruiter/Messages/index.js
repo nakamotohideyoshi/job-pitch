@@ -7,8 +7,7 @@ import { getApplications, connectApplication, updateApplication, sendMessage } f
 import DATA from 'utils/data';
 import * as helper from 'utils/helper';
 
-import { AlertMsg, Loading, MessageThread, Icons } from 'components';
-import ApplicationDetails from 'containers/recruiter/ApplicationDetails';
+import { AlertMsg, Loading, MessageThread, Icons, JobseekerDetails } from 'components';
 import JobDetails from 'containers/recruiter/JobDetails';
 import Sidebar from './Sidebar';
 import Wrapper from './styled';
@@ -182,7 +181,8 @@ class Page extends React.Component {
         </div>
 
         {openAppDetails && (
-          <ApplicationDetails
+          <JobseekerDetails
+            title="Application Details"
             application={selectedApp}
             onShortlist={selectedApp.status === DATA.APP.ESTABLISHED ? () => this.onShortlist(selectedApp) : null}
             onConnect={selectedApp.status === DATA.APP.CREATED ? () => this.onConnect(selectedApp) : null}

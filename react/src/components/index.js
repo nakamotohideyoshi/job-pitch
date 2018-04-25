@@ -6,7 +6,7 @@ import NoLabelField from './NoLabelField';
 import PopupProgress from './PopupProgress';
 import SearchBox from './SearchBox';
 
-import JobseekerDetail from './JobseekerDetail';
+import JobseekerDetails from './JobseekerDetails';
 import JobDetail from './JobDetail';
 
 import GoogleMap from './GoogleMap';
@@ -34,7 +34,7 @@ export {
   GoogleMap,
   PopupProgress,
   Logo,
-  JobseekerDetail,
+  JobseekerDetails,
   JobDetail,
   MessageThread,
   PageHeader,

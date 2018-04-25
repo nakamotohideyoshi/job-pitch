@@ -7,8 +7,7 @@ import { getApplications, connectApplication, removeApplication } from 'redux/ap
 import DATA from 'utils/data';
 import * as helper from 'utils/helper';
 
-import { AlertMsg, Loading, ListEx, Icons } from 'components';
-import ApplicationDetails from 'containers/recruiter/ApplicationDetails';
+import { AlertMsg, Loading, ListEx, Icons, JobseekerDetails } from 'components';
 import Header from '../Header';
 import Wrapper from '../styled';
 
@@ -192,7 +191,8 @@ class MyApplications extends React.Component {
         </div>
 
         {selectedApp && (
-          <ApplicationDetails
+          <JobseekerDetails
+            title="Application Details"
             application={selectedApp}
             onConnect={() => this.onConnect(selectedApp)}
             onRemove={() => this.onRemove(selectedApp)}

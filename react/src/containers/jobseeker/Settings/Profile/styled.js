@@ -60,6 +60,15 @@ export default styled(Form)`
     }
   }
 
+  .btn-save {
+    width: 100px;
+  }
+
+  .btn-preview {
+    margin-left: 20px;
+    width: 100px;
+  }
+
   ${media.mobile`
     .ant-form-item:first-child {
       .ant-form-item-label {

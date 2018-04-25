@@ -1,18 +1,18 @@
 import React from 'react';
 import { Button, Switch } from 'antd';
 
-import { JobseekerDetail } from 'components';
+import Details from './Details';
 import StyledModal from './styled';
 
-export default ({ application, jobseeker, onConnect, onRemove, onShortlist, onMessage, onClose }) => {
+export default ({ application, jobseeker, onConnect, onRemove, onShortlist, onMessage, onClose, title }) => {
   const { job_seeker, shortlisted, loading } = application || {};
   const jobseeker1 = jobseeker || job_seeker;
   const loading1 = loading || jobseeker1.loading;
 
   return (
-    <StyledModal visible footer={null} className="container" title="Application Details" onCancel={onClose}>
+    <StyledModal visible className="container" title={title} footer={null} onCancel={onClose}>
       <div className="content">
-        <JobseekerDetail className="details" application={application} jobseeker={jobseeker1} />
+        <Details className="details" application={application} jobseeker={jobseeker1} />
 
         <div className="buttons">
           {onShortlist && (

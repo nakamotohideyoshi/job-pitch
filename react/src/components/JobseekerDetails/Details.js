@@ -1,13 +1,13 @@
 import React, { Fragment } from 'react';
 import { Divider, List, Avatar, Button } from 'antd';
 
-import { Icons, VideoPlayer } from 'components';
-import Wrapper from './Wrapper';
-
 import * as helper from 'utils/helper';
 import DATA from 'utils/data';
 
-class JobseekerDetail extends React.Component {
+import { Icons, VideoPlayer } from 'components';
+import Wrapper from './Details.styled';
+
+export default class Details extends React.Component {
   state = {
     show: false
   };
@@ -118,5 +118,3 @@ class JobseekerDetail extends React.Component {
     );
   }
 }
-
-export default JobseekerDetail;

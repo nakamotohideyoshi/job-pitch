@@ -7,7 +7,7 @@ import { uploadPitch } from 'redux/pitch';
 import DATA from 'utils/data';
 import * as helper from 'utils/helper';
 
-import { NoLabelField, VideoRecorder, VideoPlayer, PopupProgress, Intro, Icons } from 'components';
+import { NoLabelField, VideoRecorder, VideoPlayer, PopupProgress, Intro, Icons, JobseekerDetails } from 'components';
 import imgLogo from 'assets/logo1.png';
 import imgIntro1 from 'assets/intro1.png';
 import imgIntro2 from 'assets/intro2.png';
@@ -46,6 +46,7 @@ class Profile extends React.Component {
     loading: false,
     dontShowIntro: false,
     showPlayer: false,
+    visiblePreview: false,
     newPitchUrl: null,
     newPitchData: null,
     progress: null
@@ -79,6 +80,10 @@ class Profile extends React.Component {
 
     this.setState({ dontShowIntro: Profile.dontShowIntro });
   }
+
+  showPreview = visible => {
+    this.setState({ visiblePreview: visible });
+  };
 
   save = () => {
     const { form, saveJobseeker, jobseeker } = this.props;
@@ -156,7 +161,7 @@ class Profile extends React.Component {
   recordButton = props => <Button {...props}>Record New</Button>;
 
   render() {
-    const { dontShowIntro, loading, showPlayer, progress } = this.state;
+    const { dontShowIntro, loading, showPlayer, progress, visiblePreview } = this.state;
     const { getFieldDecorator } = this.props.form;
     const jobseeker = this.props.jobseeker || {};
     const pitch = helper.getPitch(jobseeker) || {};
@@ -377,14 +382,20 @@ class Profile extends React.Component {
         </NoLabelField>
 
         <NoLabelField>
-          <Button type="primary" loading={loading} onClick={this.save}>
+          <Button type="primary" className="btn-save" loading={loading} onClick={this.save}>
             Save
+          </Button>
+          <Button className="btn-preview" onClick={() => this.showPreview(true)}>
+            Preview
           </Button>
         </NoLabelField>
 
         {!jobseeker.id && !dontShowIntro && <Intro data={INTRO_DATA} onClose={this.closeIntro} />}
         {showPlayer && <VideoPlayer videoUrl={pitch.video} onClose={() => this.playPitch()} />}
         {progress && <PopupProgress label={progress.label} value={progress.value} />}
+        {visiblePreview && (
+          <JobseekerDetails title="My Profile" jobseeker={jobseeker} onClose={() => this.showPreview(false)} />
+        )}
       </FormWrapper>
     );
   }

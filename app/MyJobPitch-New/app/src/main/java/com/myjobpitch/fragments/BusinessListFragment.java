@@ -163,8 +163,9 @@ public class BusinessListFragment extends BaseFragment {
             AppHelper.setEmptyViewText(emptyView, "Hi, Welcome to My Job Pitch\nLet's start by easily adding your business!");
             AppHelper.setEmptyButtonText(emptyView, "Create business");
         } else if (!canCreateBusinesses) {
-            AppHelper.setEmptyViewText(emptyView, "More than one company?\nGet in touch!");
-            AppHelper.setEmptyButtonText(emptyView, "support@myjobpitch.com");
+            AppHelper.setEmptyViewText(emptyView, "Got more that one business?\nGet in touch to talk about how we can help you.\nRemember, you can
+            always create additional workplaces under your existing business.");
+            AppHelper.setEmptyButtonText(emptyView, "Contact Us");
         }
     }
 

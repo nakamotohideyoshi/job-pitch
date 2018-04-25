@@ -55,11 +55,14 @@ class PitchRecord extends React.Component {
     return (
       <Wrapper>
         <HelpContent>
-          {`Here you can record your 30 second pitch. The 30 sec.
-                video will be viewed by prospective employers. Example `}
+          Record your up to 30 sec selfie video. The key is to just be yourself! You can record on your phone pretty
+          much anywhere, at home on the bus or in a coffee shop it doesn’t matter, and you can re-record as many times
+          as you want.<br />
+          Check out our{' '}
           <a href="https://vimeo.com/255467562" target="_blank" rel="noopener noreferrer">
-            video pitch
+            example video
           </a>
+          !
         </HelpContent>
 
         <VideoContent>

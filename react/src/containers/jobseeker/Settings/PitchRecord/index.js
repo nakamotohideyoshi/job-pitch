@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Button, message } from 'antd';
 
-import { uploadPitch } from 'redux/pitch';
+import { uploadPitch } from 'redux/jobseeker/profile';
 import * as helper from 'utils/helper';
 
 import { VideoRecorder, PopupProgress, Icons } from 'components';
@@ -90,7 +90,7 @@ class PitchRecord extends React.Component {
 
 export default connect(
   state => ({
-    jobseeker: state.auth.jobseeker
+    jobseeker: state.js_profile.jobseeker
   }),
   { uploadPitch }
 )(PitchRecord);

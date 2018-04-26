@@ -58,5 +58,5 @@ const Settings = ({ location, jobseeker }) => {
 };
 
 export default connect(state => ({
-  jobseeker: state.auth.jobseeker
+  jobseeker: state.js_profile.jobseeker
 }))(Settings);

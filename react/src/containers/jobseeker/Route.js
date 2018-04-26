@@ -21,6 +21,6 @@ const JSRoute = ({ component, jobseeker, profile, ...rest }) => (
 );
 
 export default connect(state => ({
-  jobseeker: state.auth.jobseeker,
-  profile: state.auth.profile
+  jobseeker: state.js_profile.jobseeker,
+  profile: state.js_profile.profile
 }))(JSRoute);

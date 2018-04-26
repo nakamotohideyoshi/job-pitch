@@ -4,8 +4,7 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { Breadcrumb, Form, Input, Select, Switch, Popover, Button, notification } from 'antd';
 
-import { saveJob } from 'redux/recruiter/jobs';
-import { uploadJobPitch } from 'redux/pitch';
+import { saveJob, uploadPitch } from 'redux/recruiter/jobs';
 import DATA from 'utils/data';
 import * as helper from 'utils/helper';
 
@@ -146,8 +145,8 @@ class JobEdit extends React.Component {
   };
 
   uploadPitch = id => {
-    const { job, uploadJobPitch, history } = this.props;
-    uploadJobPitch({
+    const { job, uploadPitch, history } = this.props;
+    uploadPitch({
       job: id,
       data: this.state.newPitchData,
       onSuccess: msg => {
@@ -371,6 +370,6 @@ export default connect(
   },
   {
     saveJob,
-    uploadJobPitch
+    uploadPitch
   }
 )(Form.create()(JobEdit));

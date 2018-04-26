@@ -16,6 +16,13 @@ class Credits extends React.Component {
     loading: false
   };
 
+  componentWillMount() {
+    const { business } = this.props;
+    if (business) {
+      this.props.selectBusiness(business.id);
+    }
+  }
+
   selectBusiness = businessId => {
     const { selectBusiness, history } = this.props;
     selectBusiness(businessId);

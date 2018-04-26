@@ -130,7 +130,7 @@ class MyApplications extends React.Component {
 
 export default connect(
   state => ({
-    jobseeker: state.auth.jobseeker,
+    jobseeker: state.js_profile.jobseeker,
     applications: state.applications.applications,
     error: state.applications.error
   }),

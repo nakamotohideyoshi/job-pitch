@@ -1,13 +1,13 @@
 import { replace } from 'react-router-redux';
 import { takeLatest, all, call, put } from 'redux-saga/effects';
 
-import { getRequest, postRequest, putRequest } from 'utils/request';
-import * as C from 'redux/constants';
-import * as helper from 'utils/helper';
 import DATA from 'utils/data';
+import { getRequest, postRequest, requestSuccess } from 'utils/request';
+
 import { getBusinesses } from 'redux/recruiter/businesses/saga';
 import { getWorkplaces } from 'redux/recruiter/workplaces/saga';
 import { getJobs } from 'redux/recruiter/jobs/saga';
+import * as C from 'redux/constants';
 
 function* register(action) {
   yield call(_auth, action, '/api-rest-auth/registration/');
@@ -41,32 +41,6 @@ const resetPassword = postRequest({
 const changePassword = postRequest({
   url: '/api-rest-auth/password/change/'
 });
-
-function* saveJobseeker(action) {
-  const { id } = action.payload.data;
-  let jobseeker;
-  if (!id) {
-    jobseeker = yield call(postRequest({ url: '/api/job-seekers/' }), action);
-  } else {
-    jobseeker = yield call(putRequest({ url: `/api/job-seekers/${id}/` }), action);
-  }
-  if (jobseeker) {
-    yield put({ type: C.UPDATE_AUTH, payload: { jobseeker } });
-  }
-}
-
-function* saveJobProfile(action) {
-  const { id } = action.payload.data;
-  let profile;
-  if (!id) {
-    profile = yield call(postRequest({ url: '/api/job-profiles/' }), action);
-  } else {
-    profile = yield call(putRequest({ url: `/api/job-profiles/${id}/` }), action);
-  }
-  if (profile) {
-    yield put({ type: C.UPDATE_AUTH, payload: { profile } });
-  }
-}
 
 function* getUserData() {
   if (!DATA.initTokens) {
@@ -114,7 +88,8 @@ function* getUserData() {
     const jobseeker = jobseekerId ? yield call(getRequest({ url: `/api/job-seekers/${jobseekerId}/` })) : null;
     const profileId = (jobseeker || {}).profile;
     const profile = profileId ? yield call(getRequest({ url: `/api/job-profiles/${profileId}/` })) : null;
-    yield put({ type: C.UPDATE_AUTH, payload: { jobseeker, profile } });
+    yield put({ type: requestSuccess(C.JS_SAVE_PROFILE), payload: jobseeker });
+    yield put({ type: requestSuccess(C.JS_SAVE_JOBPROFILE), payload: profile });
   } else {
     yield all([call(getBusinesses), call(getWorkplaces), call(getJobs)]);
   }
@@ -129,7 +104,4 @@ export default function* sagas() {
   yield takeLatest(C.RESET_PASSWORD, resetPassword);
   yield takeLatest(C.CHANGE_PASSWORD, changePassword);
   yield takeLatest(C.GET_USERDATA, getUserData);
-
-  yield takeLatest(C.JS_SAVE_PROFILE, saveJobseeker);
-  yield takeLatest(C.JS_SAVE_JOBPROFILE, saveJobProfile);
 }

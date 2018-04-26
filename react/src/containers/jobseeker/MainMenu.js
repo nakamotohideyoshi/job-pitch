@@ -45,7 +45,7 @@ class MainMenu extends React.Component {
 export default withRouter(
   connect(
     state => ({
-      profile: state.auth.profile
+      profile: state.js_profile.profile
     }),
     {}
   )(MainMenu)

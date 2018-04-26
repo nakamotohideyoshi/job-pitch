@@ -2,8 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Form, Input, Button, Checkbox, Switch, Select, InputNumber, Popover, Upload, message } from 'antd';
 
-import { saveJobseeker } from 'redux/auth';
-import { uploadPitch } from 'redux/pitch';
+import { saveJobseeker, uploadPitch } from 'redux/jobseeker/profile';
 import DATA from 'utils/data';
 import * as helper from 'utils/helper';
 
@@ -406,7 +405,7 @@ class Profile extends React.Component {
 
 export default connect(
   state => ({
-    jobseeker: state.auth.jobseeker
+    jobseeker: state.js_profile.jobseeker
   }),
   { saveJobseeker, uploadPitch }
 )(Form.create()(Profile));

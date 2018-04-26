@@ -15,18 +15,13 @@ export const changePassword = createAction(C.CHANGE_PASSWORD);
 export const getUserData = createAction(C.GET_USERDATA);
 export const updateAuth = createAction(C.UPDATE_AUTH);
 
-export const saveJobseeker = createAction(C.JS_SAVE_PROFILE);
-export const saveJobProfile = createAction(C.JS_SAVE_JOBPROFILE);
-
 // ------------------------------------
 // Reducer
 // ------------------------------------
 
 const initialState = {
   status: 'auth',
-  user: null,
-  jobseeker: null,
-  profile: null
+  user: null
 };
 
 export default handleActions(

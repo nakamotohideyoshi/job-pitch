@@ -1,9 +1,28 @@
 import { delay } from 'redux-saga';
-import { takeLatest, put, call, select } from 'redux-saga/effects';
+import { takeLatest, call, put, select } from 'redux-saga/effects';
+
+import { getRequest, postRequest, putRequest, requestSuccess } from 'utils/request';
+import * as C from 'redux/constants';
+
 import AWS from 'aws-sdk';
 
-import * as C from 'redux/constants';
-import { getRequest, postRequest } from 'utils/request';
+function* saveJobseeker(action) {
+  const { id } = action.payload.data;
+  if (!id) {
+    yield call(postRequest({ url: '/api/job-seekers/' }), action);
+  } else {
+    yield call(putRequest({ url: `/api/job-seekers/${id}/` }), action);
+  }
+}
+
+function* saveJobProfile(action) {
+  const { id } = action.payload.data;
+  if (!id) {
+    yield call(postRequest({ url: '/api/job-profiles/' }), action);
+  } else {
+    yield call(putRequest({ url: `/api/job-profiles/${id}/` }), action);
+  }
+}
 
 export const _uploadPitch = ({ id, token }, pitchData, onUploadProgress) =>
   new Promise(resolve => {
@@ -23,7 +42,7 @@ export const _uploadPitch = ({ id, token }, pitchData, onUploadProgress) =>
       .upload(
         {
           Bucket: 'mjp-android-uploads',
-          Key: `${folder}/${token}.${id}.${new Date().getTime()}`,
+          Key: `${folder}/${token}.${id}.pitches.${new Date().getTime()}`,
           Body: pitchData,
           ContentType: 'video/webm'
         },
@@ -39,9 +58,12 @@ export const _uploadPitch = ({ id, token }, pitchData, onUploadProgress) =>
       });
   });
 
-function* uploadPitch({ payload: { data, onUploadProgress, success, fail } }) {
-  onUploadProgress('Starting upload...');
-  let newPitch = yield call(postRequest({ url: `/api/pitches/` }), {});
+function* uploadPitch(action) {
+  const { data, onUploadProgress, success, fail } = action.payload;
+
+  onUploadProgress('Starting pitch upload...');
+  let newPitch = yield call(postRequest({ url: `/api/pitches/` }));
+
   if (!newPitch) {
     fail && fail(`Upload failed`);
     return;
@@ -55,54 +77,22 @@ function* uploadPitch({ payload: { data, onUploadProgress, success, fail } }) {
   }
 
   onUploadProgress('Processing...');
+
   const pitchId = newPitch.id;
   do {
     yield delay(2000);
     newPitch = yield call(getRequest({ url: `/api/pitches/${pitchId}/` }));
   } while (!newPitch.video);
 
-  const { auth } = yield select();
-  const jobseeker = yield call(getRequest({ url: `/api/job-seekers/${auth.jobseeker.id}/` }));
-  yield put({ type: C.UPDATE_AUTH, payload: { jobseeker } });
+  const { js_profile } = yield select();
+  const jobseeker = yield call(getRequest({ url: `/api/job-seekers/${js_profile.jobseeker.id}/` }));
+  yield put({ type: requestSuccess(C.JS_SAVE_PROFILE), payload: jobseeker });
 
   onUploadProgress();
 }
 
-function* uploadJobPitch(action) {
-  const { job, data, onProgress, onSuccess, onFail } = action.payload;
-
-  onProgress('Starting pitch upload...');
-
-  let newPitch = yield call(postRequest({ url: `/api/job-videos/` }), {
-    payload: { data: { job } }
-  });
-
-  if (!newPitch) {
-    onFail(`Uploading pitch is failed.`);
-    return;
-  }
-
-  try {
-    yield call(_uploadPitch, newPitch, data, onProgress);
-  } catch (error) {
-    onFail(`Uploading pitch is failed.`);
-    return;
-  }
-
-  onProgress('Processing...');
-
-  const pitchId = newPitch.id;
-  do {
-    yield delay(2000);
-    newPitch = yield call(getRequest({ url: `/api/job-videos/${pitchId}/` }));
-  } while (!newPitch.video);
-
-  yield put({ type: C.RC_UPDATE_JOB, payload: { id: job, videos: [newPitch] } });
-
-  onSuccess('Job is saved successfully.');
-}
-
 export default function* sagas() {
+  yield takeLatest(C.JS_SAVE_PROFILE, saveJobseeker);
+  yield takeLatest(C.JS_SAVE_JOBPROFILE, saveJobProfile);
   yield takeLatest(C.JS_UPLOAD_PITCH, uploadPitch);
-  yield takeLatest(C.JS_UPLOAD_JOBPITCH, uploadJobPitch);
 }

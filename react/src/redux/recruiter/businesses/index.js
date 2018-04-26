@@ -77,7 +77,7 @@ export default handleActions(
 
     [LOCATION_CHANGE]: (state, { payload }) => {
       const arr = payload.pathname.split('/');
-      const flag = arr[2] === 'applications';
+      const flag = arr[2] === 'applications' || arr[3] === 'credits';
 
       return {
         ...state,

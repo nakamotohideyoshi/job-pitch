@@ -11,6 +11,7 @@ export const updateStatus = createAction(C.RC_JOBS_UPDATE);
 export const getJobs = createAction(C.RC_GET_JOBS);
 export const removeJob = createAction(C.RC_REMOVE_JOB);
 export const saveJob = createAction(C.RC_SAVE_JOB);
+export const uploadPitch = createAction(C.JS_UPLOAD_JOBPITCH);
 
 // ------------------------------------
 // Reducer

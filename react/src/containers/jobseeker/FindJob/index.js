@@ -194,8 +194,8 @@ class FindJob extends React.Component {
 
 export default connect(
   state => ({
-    jobseeker: state.auth.jobseeker,
-    profile: state.auth.profile,
+    jobseeker: state.js_profile.jobseeker,
+    profile: state.js_profile.profile,
     jobs: state.js_find.jobs,
     error: state.js_find.error
   }),

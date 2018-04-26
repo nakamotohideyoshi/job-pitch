@@ -7,6 +7,7 @@ import rc_workplaces from './recruiter/workplaces';
 import rc_jobs from './recruiter/jobs';
 
 import js_find from './jobseeker/find';
+import js_profile from './jobseeker/profile';
 
 export default {
   auth,
@@ -17,5 +18,6 @@ export default {
   rc_workplaces,
   rc_jobs,
 
-  js_find
+  js_find,
+  js_profile
 };

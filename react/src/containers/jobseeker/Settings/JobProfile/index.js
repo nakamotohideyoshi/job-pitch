@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Form, Input, Button, Select, Popover, message } from 'antd';
 
-import { saveJobProfile } from 'redux/auth';
+import { saveJobProfile } from 'redux/jobseeker/profile';
 import DATA from 'utils/data';
 import * as helper from 'utils/helper';
 
@@ -172,8 +172,8 @@ class JobProfile extends React.Component {
 
 export default connect(
   state => ({
-    jobseeker: state.auth.jobseeker,
-    profile: state.auth.profile
+    jobseeker: state.js_profile.jobseeker,
+    profile: state.js_profile.profile
   }),
   { saveJobProfile }
 )(Form.create()(JobProfile));

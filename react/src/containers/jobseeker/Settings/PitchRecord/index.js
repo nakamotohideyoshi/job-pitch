@@ -39,8 +39,8 @@ class PitchRecord extends React.Component {
     });
   };
 
-  changePitch = (property, pitchData) => {
-    this.setState({ property, pitchData });
+  changePitch = (pitchUrl, pitchData) => {
+    this.setState({ pitchUrl, pitchData });
   };
 
   recordButton = props => (

@@ -209,14 +209,14 @@ class JobVideoViewSet(viewsets.ModelViewSet):
                 if request.method in permissions.SAFE_METHODS:
                     return True
                 return request.user.businesses.exists()
-            if request.user.is_anonymous() and request.method in ('GET', 'PUT'):
+            if request.user.is_anonymous() and request.method in ('GET', 'PATCH'):
                 return True
             return False
 
         def has_object_permission(self, request, view, obj):
             if request.user and request.user.is_authenticated():
                 return request.user.businesses.filter(pk=obj.job.location.business_id).exists()
-            if request.user.is_anonymous() and request.method in ('GET', 'PUT'):
+            if request.user.is_anonymous() and request.method in ('GET', 'PATCH'):
                 return request.GET.get('token') == obj.token
             return False
 
@@ -224,7 +224,7 @@ class JobVideoViewSet(viewsets.ModelViewSet):
         query = super(JobVideoViewSet, self).get_queryset()
         if self.request.user.is_authenticated():
             return query.filter(job__location__business__users=self.request.user)
-        if self.request.user.is_anonymous() and self.request.method in ('GET', 'PUT'):
+        if self.request.user.is_anonymous() and self.request.method in ('GET', 'PATCH'):
             return query.filter(token=self.request.GET.get('token'))
 
     def perform_create(self, serializer):

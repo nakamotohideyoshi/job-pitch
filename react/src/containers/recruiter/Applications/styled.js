@@ -37,12 +37,15 @@ export default styled.div`
       }
 
       .ant-list-item-action {
-        opacity: 0;
-        transition: opacity 0.3s;
         span {
-          padding: 4px;
+          width: 30px;
+          height: 30px;
+          display: inline-flex;
+          justify-content: center;
+          align-items: center;
+          border-radius: 50%;
           &:hover {
-            color: #00b6a4;
+            box-shadow: 0px 0 4px 0px rgba(0, 0, 0, 0.15);
           }
         }
       }
@@ -59,10 +62,6 @@ export default styled.div`
       &:hover {
         cursor: pointer;
         background-color: ${colors.lightGreen};
-
-        .ant-list-item-action {
-          opacity: 1;
-        }
       }
     }
   }

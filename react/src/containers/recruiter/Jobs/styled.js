@@ -35,9 +35,14 @@ export default styled.div`
 
       .ant-list-item-action {
         span {
-          padding: 4px;
+          width: 30px;
+          height: 30px;
+          display: inline-flex;
+          justify-content: center;
+          align-items: center;
+          border-radius: 50%;
           &:hover {
-            color: #00b6a4;
+            box-shadow: 0px 0 4px 0px rgba(0, 0, 0, 0.15);
           }
         }
       }

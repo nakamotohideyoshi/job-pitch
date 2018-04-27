@@ -17,11 +17,11 @@ const JobDetail = ({ job, className, roughLocation }) => {
   if (roughLocation) {
     const alpha = 2 * Math.PI * Math.random();
     const rand = Math.random();
-    marker.lat += 0.00723658915343 * Math.cos(alpha) * rand;
-    marker.lng += 0.00880063687103 * Math.sin(alpha) * rand;
+    marker.lat += 0.00434195349206 * Math.cos(alpha) * rand;
+    marker.lng += 0.00528038212262 * Math.sin(alpha) * rand;
     circle = {
       center: marker,
-      radius: 804.672,
+      radius: 482.8,
       options: {
         fillColor: '#ff930080',
         strokeColor: '#00b6a4',

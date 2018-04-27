@@ -52,14 +52,14 @@ class PitchViewSet(viewsets.ModelViewSet):
                 except JobSeeker.DoesNotExist:
                     return False
                 return True
-            if request.user.is_anonymous() and request.method in ('GET', 'PUT'):
+            if request.user.is_anonymous() and request.method in ('GET', 'PATCH'):
                 return True
             return False
 
         def has_object_permission(self, request, view, obj):
             if request.user and request.user.is_authenticated():
                 return obj.job_seeker == request.user.job_seeker
-            if request.user.is_anonymous() and request.method in ('GET', 'PUT'):
+            if request.user.is_anonymous() and request.method in ('GET', 'PATCH'):
                 return request.GET.get('token') == obj.token
             return False
 
@@ -67,7 +67,7 @@ class PitchViewSet(viewsets.ModelViewSet):
         query = super(PitchViewSet, self).get_queryset()
         if self.request.user.is_authenticated():
             return query.filter(job_seeker=self.request.user.job_seeker)
-        if self.request.user.is_anonymous() and self.request.method in ('GET', 'PUT'):
+        if self.request.user.is_anonymous() and self.request.method in ('GET', 'PATCH'):
             return query.filter(token=self.request.GET.get('token'))
 
     def perform_create(self, serializer):

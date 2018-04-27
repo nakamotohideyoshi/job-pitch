@@ -77,7 +77,7 @@ class Profile extends React.Component {
       });
     }
 
-    this.setState({ dontShowIntro: Profile.dontShowIntro });
+    this.setState({ dontShowIntro: DATA[`dontShowIntro_${DATA.email}`] });
   }
 
   showPreview = visible => {
@@ -153,7 +153,7 @@ class Profile extends React.Component {
   };
 
   closeIntro = () => {
-    Profile.dontShowIntro = true;
+    DATA[`dontShowIntro_${DATA.email}`] = true;
     this.setState({ dontShowIntro: true });
   };
 

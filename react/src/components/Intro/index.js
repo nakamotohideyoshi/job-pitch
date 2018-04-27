@@ -9,9 +9,9 @@ class Intro extends React.Component {
 
   onChange = index => this.setState({ index });
 
-  nextArrow = props => <Icons.AngleLeft onClick={props.onClick} />;
+  prevArrow = props => <Icons.AngleLeft className="slick-prev" onClick={props.onClick} />;
 
-  prevArrow = props => <Icons.AngleRight onClick={props.onClick} />;
+  nextArrow = props => <Icons.AngleRight className="slick-next" onClick={props.onClick} />;
 
   render() {
     const { index } = this.state;

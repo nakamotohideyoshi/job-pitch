@@ -4,21 +4,50 @@ import { connect } from 'react-redux';
 import { Breadcrumb, List, Avatar, Modal } from 'antd';
 
 import { removeBusiness } from 'redux/recruiter/businesses';
+import DATA from 'utils/data';
 import * as helper from 'utils/helper';
 
-import { PageHeader, PageSubHeader, AlertMsg, LinkButton, Loading, ListEx, Icons, Email } from 'components';
+import { PageHeader, PageSubHeader, AlertMsg, LinkButton, Loading, ListEx, Icons, Intro } from 'components';
+import imgLogo from 'assets/logo1.png';
+import imgIntro1 from 'assets/intro1.png';
+import imgIntro2 from 'assets/intro2.png';
+import imgIntro3 from 'assets/intro3.png';
 import Wrapper from '../styled';
 
 const { confirm } = Modal;
 
+const INTRO_DATA = [
+  {
+    title: 'Welcome!',
+    image: imgLogo,
+    comment: `description`
+  },
+  {
+    title: 'title1',
+    image: imgIntro1,
+    comment: `description1`
+  },
+  {
+    title: 'title2',
+    image: imgIntro2,
+    comment: `description2.`
+  },
+  {
+    title: 'title3',
+    image: imgIntro3,
+    comment: `description3!`
+  }
+];
+
 class BusinessList extends React.Component {
   state = {
-    emailDialog: false
+    dontShowIntro: false
   };
 
-  showEmailDialog = show => {
-    this.setState({ emailDialog: show });
-  };
+  componentDidMount() {
+    console.log(`dontShowIntro_${DATA.email}`, DATA[`dontShowIntro_${DATA.email}`]);
+    this.setState({ dontShowIntro: DATA[`dontShowIntro_${DATA.email}`] });
+  }
 
   selectBusiness = ({ id }) => {
     this.props.history.push(`/recruiter/jobs/workplace/${id}`);
@@ -54,6 +83,11 @@ class BusinessList extends React.Component {
   editBusiness = ({ id }, event) => {
     event && event.stopPropagation();
     this.props.history.push(`/recruiter/jobs/business/edit/${id}`);
+  };
+
+  closeIntro = () => {
+    DATA[`dontShowIntro_${DATA.email}`] = true;
+    this.setState({ dontShowIntro: true });
   };
 
   removeBusiness = ({ id, name, locations }, event) => {
@@ -126,7 +160,6 @@ class BusinessList extends React.Component {
 
   renderEmpty = () => {
     const tutorial = helper.loadData('tutorial');
-    console.log('load tutorial', tutorial);
     return (
       <AlertMsg>
         <span>
@@ -141,6 +174,9 @@ class BusinessList extends React.Component {
   };
 
   render() {
+    const { businesses } = this.props;
+    const { dontShowIntro } = this.state;
+
     return (
       <Wrapper className="container">
         <Helmet title="My Businesses" />
@@ -166,7 +202,7 @@ class BusinessList extends React.Component {
           />
         </div>
 
-        {this.state.emailDialog && <Email to="support@myjobpitch.com" onClose={() => this.showEmailDialog()} />}
+        {businesses.length === 0 && !dontShowIntro && <Intro data={INTRO_DATA} onClose={this.closeIntro} />}
       </Wrapper>
     );
   }

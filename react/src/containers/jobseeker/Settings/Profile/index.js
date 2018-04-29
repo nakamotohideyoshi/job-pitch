@@ -90,6 +90,26 @@ class Profile extends React.Component {
     form.validateFieldsAndScroll({ scroll: { offsetTop: 70 } }, (err, values) => {
       if (err) return;
 
+      if (helper.checkIfEmailInString(values.description)) {
+        form.setFields({
+          description: {
+            value: values.description,
+            errors: [new Error(`Don't type in email address here.`)]
+          }
+        });
+        return;
+      }
+
+      if (helper.checkIfPhoneNumberInString(values.description)) {
+        form.setFields({
+          description: {
+            value: values.description,
+            errors: [new Error(`Don't type in phone number here.`)]
+          }
+        });
+        return;
+      }
+
       if (!values.truth_confirmation) {
         message.error('You must check the box confirming the truth of the information you have provided.');
         return;
@@ -297,8 +317,7 @@ class Profile extends React.Component {
                 content={
                   <span>
                     CV summary is what the recruiter first see, write if you<br />
-                    have previous relevant experience where and for how long.<br />
-                    Don't type in phone numbers/email address here.
+                    have previous relevant experience where and for how long.
                   </span>
                 }
               >

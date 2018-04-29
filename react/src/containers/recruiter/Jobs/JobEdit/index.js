@@ -96,6 +96,26 @@ class JobEdit extends React.Component {
     form.validateFieldsAndScroll({ scroll: { offsetTop: 70 } }, (err, values) => {
       if (err) return;
 
+      if (helper.checkIfEmailInString(values.description)) {
+        form.setFields({
+          description: {
+            value: values.description,
+            errors: [new Error(`Don't type in email address here.`)]
+          }
+        });
+        return;
+      }
+
+      if (helper.checkIfPhoneNumberInString(values.description)) {
+        form.setFields({
+          description: {
+            value: values.description,
+            errors: [new Error(`Don't type in phone number here.`)]
+          }
+        });
+        return;
+      }
+
       this.setState({
         loading: {
           label: 'Saving...'

@@ -256,3 +256,19 @@ export function str2int(str) {
 // }
 
 /* form helper */
+
+/**
+|--------------------------------------------------
+| check string (email and phone number)
+|--------------------------------------------------
+*/
+
+export function checkIfEmailInString(str) {
+  const re = /(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))/;
+  return re.test(str);
+}
+
+export function checkIfPhoneNumberInString(str) {
+  const re = /(\(\d{2,3}\)[-\s]?|\d{2,3}[-\s])\d{3,5}[-\s]\d{3,5}/;
+  return re.test(str);
+}

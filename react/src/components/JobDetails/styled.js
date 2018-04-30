@@ -20,6 +20,25 @@ export default styled.div`
     }
   }
 
+  .ant-list-item-meta-description {
+    span + span {
+      margin-left: 40px;
+    }
+
+    a {
+      display: inline-flex;
+      align-items: center;
+      color: #333;
+      margin-top: 1em;
+      cursor: pointer;
+
+      svg {
+        color: #00b6a4;
+        margin-right: 4px;
+      }
+    }
+  }
+
   .overview {
     div {
       white-space: pre-line;

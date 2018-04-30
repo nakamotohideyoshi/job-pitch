@@ -2,7 +2,7 @@ import React from 'react';
 import Helmet from 'react-helmet';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { Breadcrumb, Form, Input, Select, Switch, Popover, Button, notification } from 'antd';
+import { Breadcrumb, Form, Input, Select, Switch, Popover, Button, notification, Upload, message } from 'antd';
 
 import { saveJob, uploadPitch } from 'redux/recruiter/jobs';
 import DATA from 'utils/data';
@@ -14,8 +14,7 @@ import {
   PopupProgress,
   ImageSelector,
   NoLabelField,
-  VideoRecorder,
-  VideoPlayer,
+  PitchSelector,
   Icons
 } from 'components';
 import Wrapper from '../styled';
@@ -33,9 +32,7 @@ class JobEdit extends React.Component {
       exist: false
     },
     loading: null,
-    showPlayer: false,
-    newPitchUrl: null,
-    newPitchData: null
+    pitchData: null
   };
 
   componentDidMount() {
@@ -131,7 +128,7 @@ class JobEdit extends React.Component {
         },
         logo: this.state.logo,
         onSuccess: ({ id }) => {
-          if (this.state.newPitchData) {
+          if (this.state.pitchData) {
             this.uploadPitch(id);
           } else {
             notification.success({
@@ -168,7 +165,7 @@ class JobEdit extends React.Component {
     const { job, uploadPitch, history } = this.props;
     uploadPitch({
       job: id,
-      data: this.state.newPitchData,
+      data: this.state.pitchData,
       onSuccess: msg => {
         notification.success({
           message: 'Notification',
@@ -195,19 +192,15 @@ class JobEdit extends React.Component {
     });
   };
 
-  playPitch = showPlayer => this.setState({ showPlayer });
-
-  changePitch = (newPitchUrl, newPitchData) => {
-    this.setState({ newPitchUrl, newPitchData });
+  changePitch = pitchData => {
+    this.setState({ pitchData });
   };
 
-  recordButton = props => <Button {...props}>Record New</Button>;
-
   render() {
-    const { logo, loading, showPlayer } = this.state;
+    const { logo, loading } = this.state;
     const { workplace, job, form } = this.props;
     const { getFieldDecorator } = form;
-    const pitch = helper.getPitch(job) || {};
+    const pitch = helper.getPitch(job);
 
     const title = job ? 'Edit' : 'Add';
 
@@ -347,14 +340,7 @@ class JobEdit extends React.Component {
                 </span>
               }
             >
-              <div>
-                <VideoRecorder showInfo buttonComponent={this.recordButton} onChange={this.changePitch} />
-                {pitch.video && (
-                  <Button onClick={() => this.playPitch(true)} className="btn-play">
-                    Play Current
-                  </Button>
-                )}
-              </div>
+              <PitchSelector currentPitch={pitch} onChange={this.changePitch} />
             </Item>
 
             <Item label="Logo">
@@ -370,7 +356,6 @@ class JobEdit extends React.Component {
           </StyledForm>
         </div>
 
-        {showPlayer && <VideoPlayer videoUrl={pitch.video} onClose={() => this.playPitch()} />}
         {loading && <PopupProgress label={loading.label} value={loading.progress} />}
       </Wrapper>
     );

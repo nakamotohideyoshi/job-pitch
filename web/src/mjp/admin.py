@@ -594,9 +594,11 @@ class UserAdmin(admin.ModelAdmin):
         'is_superuser',
         'groups',
         'user_permissions',
+        'can_create_businesses',
     )
     readonly_fields = ('last_login', 'date_joined')
-    list_display = ('email', 'last_login', 'date_joined', 'is_active', 'is_staff')
+    list_display = ('email', 'last_login', 'date_joined', 'is_active', 'is_staff', 'can_create_businesses')
+    search_fields = ('email',)
 
     def save_model(self, request, obj, form, change):
         if not change:

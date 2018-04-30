@@ -86,8 +86,7 @@ class BusinessListController: MJPController {
             emptyMessage.text = "Hi, Welcome to MyJobPitch\nLets start with easy adding your Business"
             emptyButton.setTitle("Create business", for: .normal)
         } else if !AppData.user.canCreateBusinesses {
-            emptyMessage.text = "Got more that one business?\nGet in touch to talk about how we can help you.\nRemember, you can
-            always create additional workplaces under your existing business."
+            emptyMessage.text = "Got more that one business?\nGet in touch to talk about how we can help you.\nRemember, you can always create additional workplaces under your existing business."
             emptyButton.setTitle("Contact Us", for: .normal)
         }
     }

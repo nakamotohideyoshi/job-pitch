@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11762" systemVersion="15G19009" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="bVj-gg-QoO">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11762" systemVersion="15G20015" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="bVj-gg-QoO">
     <device id="retina5_5" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
@@ -331,7 +331,7 @@ All you're missing is your video pitch!</string>
             <objects>
                 <navigationController navigationBarHidden="YES" id="Tn3-dg-KpG" sceneMemberID="viewController">
                     <nil key="simulatedTopBarMetrics"/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" translucent="NO" id="pbS-fN-baU">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" translucent="NO" id="pbS-fN-baU">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -2280,7 +2280,7 @@ et dolore magna aliqua.</string>
                                 <rect key="frame" x="0.0" y="64" width="375" height="643"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Ku2-vm-MXU" userLabel="Content View">
-                                        <rect key="frame" x="0.0" y="0.0" width="375" height="641"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="375" height="640.33333333333337"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Sector:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="UO7-Ko-T7R">
                                                 <rect key="frame" x="20" y="15" width="62" height="22"/>
@@ -2340,13 +2340,13 @@ et dolore magna aliqua.</string>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="In order to match you with jobs in your area, you must tell us your location, and specify the maximum distance to search." textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="pXm-sQ-9tp">
-                                                <rect key="frame" x="20" y="318" width="335" height="58"/>
+                                                <rect key="frame" x="20" y="318" width="335" height="57.333333333333314"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                                 <nil key="textColor"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Address" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="pyH-Sm-FHw">
-                                                <rect key="frame" x="20" y="396" width="335" height="40"/>
+                                                <rect key="frame" x="20" y="395.33333333333331" width="335" height="40"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="40" id="XYc-iv-jyU"/>
                                                 </constraints>
@@ -2355,13 +2355,13 @@ et dolore magna aliqua.</string>
                                                 <textInputTraits key="textInputTraits"/>
                                             </textField>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tPf-TC-mCO">
-                                                <rect key="frame" x="20" y="441" width="335" height="0.0"/>
+                                                <rect key="frame" x="20" y="440.33333333333331" width="335" height="0.0"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                                 <color key="textColor" red="1" green="0.0" blue="0.031372549020000001" alpha="1" colorSpace="calibratedRGB"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gbf-z8-KLC" customClass="YellowButton" customModule="MyJobPitch" customModuleProvider="target">
-                                                <rect key="frame" x="20" y="451" width="335" height="40"/>
+                                                <rect key="frame" x="20" y="450.33333333333337" width="335" height="40"/>
                                                 <color key="backgroundColor" red="1" green="0.57254901960000004" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="40" id="kuk-ms-zuc"/>
@@ -2375,7 +2375,7 @@ et dolore magna aliqua.</string>
                                                 </connections>
                                             </button>
                                             <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Select Radius" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="47X-so-z3Y" customClass="ButtonTextField" customModule="MyJobPitch" customModuleProvider="target">
-                                                <rect key="frame" x="20" y="511" width="335" height="40"/>
+                                                <rect key="frame" x="20" y="510.33333333333337" width="335" height="40"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="40" id="Mq6-PR-5eo"/>
                                                 </constraints>
@@ -2384,7 +2384,7 @@ et dolore magna aliqua.</string>
                                                 <textInputTraits key="textInputTraits"/>
                                             </textField>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="8GG-yf-nFb" customClass="GreenButton" customModule="MyJobPitch" customModuleProvider="target">
-                                                <rect key="frame" x="20" y="571" width="335" height="40"/>
+                                                <rect key="frame" x="20" y="570.33333333333337" width="335" height="40"/>
                                                 <color key="backgroundColor" red="0.0" green="0.73333333329999995" blue="0.6588235294" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="40" id="YAU-vU-wUg"/>
@@ -3507,10 +3507,10 @@ et dolore magna aliqua.</string>
                                 </connections>
                             </tableView>
                             <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="HUX-vu-9Ck">
-                                <rect key="frame" x="21" y="417" width="371" height="92"/>
+                                <rect key="frame" x="10" y="417" width="393" height="92"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Tx0-PO-vMN">
-                                        <rect key="frame" x="0.0" y="0.0" width="371" height="48"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="393" height="48"/>
                                         <string key="text">Hi, Welcome to MyJobPitch
 Lets start with easy adding your Business</string>
                                         <fontDescription key="fontDescription" type="system" pointSize="20"/>
@@ -3518,7 +3518,7 @@ Lets start with easy adding your Business</string>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="YTu-g5-5T8">
-                                        <rect key="frame" x="121" y="58" width="130" height="34"/>
+                                        <rect key="frame" x="132" y="58" width="130" height="34"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="18"/>
                                         <state key="normal" title="Create business"/>
                                         <connections>
@@ -3545,6 +3545,7 @@ Lets start with easy adding your Business</string>
                             <constraint firstItem="eet-zo-FvN" firstAttribute="leading" secondItem="eGu-2e-9us" secondAttribute="leading" id="exx-Ef-gan"/>
                             <constraint firstItem="tF0-Jr-oka" firstAttribute="top" secondItem="4kX-Iw-ajp" secondAttribute="bottom" id="gvB-6P-nhM"/>
                             <constraint firstItem="4kX-Iw-ajp" firstAttribute="top" secondItem="Ly7-Ty-4cj" secondAttribute="bottom" priority="250" id="m0l-r4-yiS"/>
+                            <constraint firstItem="HUX-vu-9Ck" firstAttribute="width" secondItem="eGu-2e-9us" secondAttribute="width" multiplier="0.95" id="r5U-rY-IzQ"/>
                             <constraint firstAttribute="trailing" secondItem="4kX-Iw-ajp" secondAttribute="trailing" id="scM-LZ-wgG"/>
                             <constraint firstItem="HUX-vu-9Ck" firstAttribute="centerX" secondItem="4kX-Iw-ajp" secondAttribute="centerX" id="wyr-xL-K6f"/>
                             <constraint firstAttribute="trailing" secondItem="eet-zo-FvN" secondAttribute="trailing" id="zg3-Mc-fRU"/>

@@ -45,7 +45,6 @@ class BusinessList extends React.Component {
   };
 
   componentDidMount() {
-    console.log(`dontShowIntro_${DATA.email}`, DATA[`dontShowIntro_${DATA.email}`]);
     this.setState({ dontShowIntro: DATA[`dontShowIntro_${DATA.email}`] });
   }
 

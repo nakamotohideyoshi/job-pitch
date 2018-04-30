@@ -7,7 +7,7 @@ import PopupProgress from './PopupProgress';
 import SearchBox from './SearchBox';
 
 import JobseekerDetails from './JobseekerDetails';
-import JobDetail from './JobDetail';
+import JobDetails from './JobDetails';
 
 import GoogleMap from './GoogleMap';
 
@@ -25,6 +25,7 @@ import Icons from './Icons';
 import SelectEx from './SelectEx';
 import ListEx from './ListEx';
 
+import PitchSelector from './PitchSelector';
 import VideoRecorder from './video/Recorder';
 import VideoPlayer from './video/Player';
 
@@ -35,7 +36,7 @@ export {
   PopupProgress,
   Logo,
   JobseekerDetails,
-  JobDetail,
+  JobDetails,
   MessageThread,
   PageHeader,
   PageSubHeader,
@@ -49,6 +50,7 @@ export {
   NoLabelField,
   SelectEx,
   ListEx,
+  PitchSelector,
   VideoRecorder,
   VideoPlayer,
   Email

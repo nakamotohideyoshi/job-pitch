@@ -6,7 +6,7 @@ import { saveJobseeker, uploadPitch } from 'redux/jobseeker/profile';
 import DATA from 'utils/data';
 import * as helper from 'utils/helper';
 
-import { NoLabelField, VideoRecorder, VideoPlayer, PopupProgress, Intro, Icons, JobseekerDetails } from 'components';
+import { NoLabelField, PitchSelector, PopupProgress, Intro, Icons, JobseekerDetails } from 'components';
 import imgLogo from 'assets/logo1.png';
 import imgIntro1 from 'assets/intro1.png';
 import imgIntro2 from 'assets/intro2.png';
@@ -44,10 +44,8 @@ class Profile extends React.Component {
   state = {
     loading: false,
     dontShowIntro: false,
-    showPlayer: false,
     visiblePreview: false,
-    newPitchUrl: null,
-    newPitchData: null,
+    pitchData: null,
     progress: null
   };
 
@@ -125,7 +123,7 @@ class Profile extends React.Component {
         },
         success: () => {
           this.setState({ loading: false });
-          if (this.state.newPitchData) {
+          if (this.state.pitchData) {
             this.uploadPitch();
           } else {
             message.success('Profile saved successfully!!');
@@ -144,7 +142,7 @@ class Profile extends React.Component {
 
   uploadPitch = () => {
     this.props.uploadPitch({
-      data: this.state.newPitchData,
+      data: this.state.pitchData,
       onUploadProgress: (label, value) => {
         const progress = label ? { label, value } : null;
         this.setState({ progress });
@@ -166,10 +164,8 @@ class Profile extends React.Component {
 
   viewCV = () => window.open(this.props.jobseeker.cv);
 
-  playPitch = showPlayer => this.setState({ showPlayer });
-
-  changePitch = (newPitchUrl, newPitchData) => {
-    this.setState({ newPitchUrl, newPitchData });
+  changePitch = pitchData => {
+    this.setState({ pitchData });
   };
 
   closeIntro = () => {
@@ -177,13 +173,11 @@ class Profile extends React.Component {
     this.setState({ dontShowIntro: true });
   };
 
-  recordButton = props => <Button {...props}>Record New</Button>;
-
   render() {
-    const { dontShowIntro, loading, showPlayer, progress, visiblePreview } = this.state;
+    const { dontShowIntro, loading, progress, visiblePreview } = this.state;
     const { getFieldDecorator } = this.props.form;
     const jobseeker = this.props.jobseeker || {};
-    const pitch = helper.getPitch(jobseeker) || {};
+    const pitch = helper.getPitch(jobseeker);
 
     return (
       <FormWrapper>
@@ -380,14 +374,7 @@ class Profile extends React.Component {
             </span>
           }
         >
-          <div>
-            <VideoRecorder showInfo buttonComponent={this.recordButton} onChange={this.changePitch} />
-            {pitch.video && (
-              <Button onClick={() => this.playPitch(true)} className="btn-play">
-                Play Current
-              </Button>
-            )}
-          </div>
+          <PitchSelector currentPitch={pitch} onChange={this.changePitch} />
         </Item>
 
         <NoLabelField>
@@ -412,7 +399,6 @@ class Profile extends React.Component {
         </NoLabelField>
 
         {!jobseeker.id && !dontShowIntro && <Intro data={INTRO_DATA} onClose={this.closeIntro} />}
-        {showPlayer && <VideoPlayer videoUrl={pitch.video} onClose={() => this.playPitch()} />}
         {progress && <PopupProgress label={progress.label} value={progress.value} />}
         {visiblePreview && (
           <JobseekerDetails title="My Profile" jobseeker={jobseeker} onClose={() => this.showPreview(false)} />

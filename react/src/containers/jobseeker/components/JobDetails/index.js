@@ -1,13 +1,13 @@
 import React from 'react';
 import { Button } from 'antd';
 
-import { JobDetail } from 'components';
+import { JobDetails } from 'components';
 import StyledModal from './styled';
 
 export default ({ job, onApply, onRemove, onMessage, onClose, roughLocation }) => (
   <StyledModal visible className="container" title="Job Details" footer={null} onCancel={onClose}>
     <div className="content">
-      <JobDetail className="details" job={job} roughLocation={roughLocation} />
+      <JobDetails className="details" job={job} roughLocation={roughLocation} />
 
       <div className="buttons">
         {onApply && (

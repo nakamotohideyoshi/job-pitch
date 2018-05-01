@@ -2,7 +2,7 @@ import React, { Fragment } from 'react';
 import Helmet from 'react-helmet';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { Breadcrumb, List, Avatar } from 'antd';
+import { Breadcrumb, List, Avatar, Tooltip } from 'antd';
 
 import DATA from 'utils/data';
 import * as helper from 'utils/helper';
@@ -56,12 +56,16 @@ class JobList extends React.Component {
       <List.Item
         key={id}
         actions={[
-          <span onClick={e => this.editJob(job, e)}>
-            <Icons.Pen />
-          </span>,
-          <span onClick={e => this.showRemoveDialog(job, e)}>
-            <Icons.TrashAlt />
-          </span>
+          <Tooltip placement="bottom" title="Edit">
+            <span onClick={e => this.editJob(job, e)}>
+              <Icons.Pen />
+            </span>
+          </Tooltip>,
+          <Tooltip placement="bottom" title="Remove">
+            <span onClick={e => this.showRemoveDialog(job, e)}>
+              <Icons.TrashAlt />
+            </span>
+          </Tooltip>
         ]}
         onClick={() => this.selectJob(job)}
         className={loading ? 'loading' : ''}

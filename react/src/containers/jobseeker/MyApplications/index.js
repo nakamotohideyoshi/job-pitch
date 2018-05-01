@@ -2,7 +2,7 @@ import React from 'react';
 import Helmet from 'react-helmet';
 import { connect } from 'react-redux';
 import Truncate from 'react-truncate';
-import { List, Avatar } from 'antd';
+import { List, Avatar, Tooltip } from 'antd';
 
 import { getApplications } from 'redux/applications';
 import DATA from 'utils/data';
@@ -56,9 +56,11 @@ class MyApplications extends React.Component {
       <List.Item
         key={id}
         actions={[
-          <span onClick={e => this.onMessage(app, e)}>
-            <Icons.Comment />
-          </span>
+          <Tooltip placement="bottom" title="Message">
+            <span onClick={e => this.onMessage(app, e)}>
+              <Icons.Comment />
+            </span>
+          </Tooltip>
         ]}
         onClick={() => this.onSelect(id)}
       >

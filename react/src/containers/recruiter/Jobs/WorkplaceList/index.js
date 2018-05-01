@@ -2,7 +2,7 @@ import React from 'react';
 import Helmet from 'react-helmet';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { Breadcrumb, List, Avatar, Modal } from 'antd';
+import { Breadcrumb, List, Avatar, Modal, Tooltip } from 'antd';
 
 import { removeWorkplace } from 'redux/recruiter/workplaces';
 import * as helper from 'utils/helper';
@@ -83,12 +83,16 @@ class WorkplaceList extends React.Component {
       <List.Item
         key={id}
         actions={[
-          <span onClick={e => this.editWorkplace(workplace, e)}>
-            <Icons.Pen />
-          </span>,
-          <span onClick={e => this.removeWorkplace(workplace, e)}>
-            <Icons.TrashAlt />
-          </span>
+          <Tooltip placement="bottom" title="Edit">
+            <span onClick={e => this.editWorkplace(workplace, e)}>
+              <Icons.Pen />
+            </span>
+          </Tooltip>,
+          <Tooltip placement="bottom" title="Remove">
+            <span onClick={e => this.removeWorkplace(workplace, e)}>
+              <Icons.TrashAlt />
+            </span>
+          </Tooltip>
         ]}
         onClick={() => this.selectWorkplace(workplace)}
         className={loading ? 'loading' : ''}

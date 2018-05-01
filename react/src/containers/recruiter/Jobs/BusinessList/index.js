@@ -1,7 +1,7 @@
 import React from 'react';
 import Helmet from 'react-helmet';
 import { connect } from 'react-redux';
-import { Breadcrumb, List, Avatar, Modal } from 'antd';
+import { Breadcrumb, List, Avatar, Modal, Tooltip } from 'antd';
 
 import { removeBusiness } from 'redux/recruiter/businesses';
 import DATA from 'utils/data';
@@ -133,12 +133,16 @@ class BusinessList extends React.Component {
       <List.Item
         key={id}
         actions={[
-          <span onClick={e => this.editBusiness(business, e)}>
-            <Icons.Pen />
-          </span>,
-          <span onClick={e => this.removeBusiness(business, e)}>
-            <Icons.TrashAlt />
-          </span>
+          <Tooltip placement="bottom" title="Edit">
+            <span onClick={e => this.editBusiness(business, e)}>
+              <Icons.Pen />
+            </span>
+          </Tooltip>,
+          <Tooltip placement="bottom" title="Remove">
+            <span onClick={e => this.removeBusiness(business, e)}>
+              <Icons.TrashAlt />
+            </span>
+          </Tooltip>
         ]}
         onClick={() => this.selectBusiness(business)}
         className={loading ? 'loading' : ''}

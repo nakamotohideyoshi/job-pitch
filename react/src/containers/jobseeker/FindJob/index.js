@@ -2,7 +2,7 @@ import React from 'react';
 import Helmet from 'react-helmet';
 import { connect } from 'react-redux';
 import Truncate from 'react-truncate';
-import { List, Avatar, Modal } from 'antd';
+import { List, Avatar, Modal, Tooltip } from 'antd';
 
 import { findJobs, applyJob, removeJob } from 'redux/jobseeker/find';
 import DATA from 'utils/data';
@@ -105,12 +105,16 @@ class FindJob extends React.Component {
       <List.Item
         key={id}
         actions={[
-          <span onClick={e => this.onApply(job, e)}>
-            <Icons.Link />
-          </span>,
-          <span onClick={e => this.onRemove(job, e)}>
-            <Icons.TrashAlt />
-          </span>
+          <Tooltip placement="bottom" title="Apply">
+            <span onClick={e => this.onApply(job, e)}>
+              <Icons.Link />
+            </span>
+          </Tooltip>,
+          <Tooltip placement="bottom" title="Remove">
+            <span onClick={e => this.onRemove(job, e)}>
+              <Icons.TrashAlt />
+            </span>
+          </Tooltip>
         ]}
         onClick={() => this.onSelect(id)}
         className={loading ? 'loading' : ''}

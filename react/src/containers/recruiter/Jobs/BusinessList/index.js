@@ -20,22 +20,22 @@ const INTRO_DATA = [
   {
     title: 'Welcome!',
     image: imgLogo,
-    comment: `description`
+    comment: `Faster Screening of Candidates, no more piles of CV’s and remember adverts are always free.`
   },
   {
-    title: 'title1',
+    title: 'Post your first job',
     image: imgIntro1,
-    comment: `description1`
+    comment: `Get started by creating your workplaces and jobs.`
   },
   {
-    title: 'title2',
+    title: 'Screen potential candidates',
     image: imgIntro2,
-    comment: `description2.`
+    comment: `Our simple candidate selection system lets you quickly find the right person!`
   },
   {
-    title: 'title3',
+    title: 'Reusable ads',
     image: imgIntro3,
-    comment: `description3!`
+    comment: `Your job ads can be quickly reactivated to save efforts next time.`
   }
 ];
 

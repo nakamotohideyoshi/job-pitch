@@ -48,6 +48,11 @@ class PitchSelector extends React.Component {
       return;
     }
 
+    if (file.size > 10000000) {
+      message.error('You can only upload file less than 10MB!');
+      return;
+    }
+
     const data = file.originFileObj;
     helper.getBase64(data, url => {
       this.setState({ url });

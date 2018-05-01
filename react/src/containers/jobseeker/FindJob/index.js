@@ -1,14 +1,15 @@
 import React from 'react';
 import Helmet from 'react-helmet';
 import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
 import Truncate from 'react-truncate';
-import { List, Avatar, Modal, Tooltip } from 'antd';
+import { List, Avatar, Modal, Tooltip, Breadcrumb } from 'antd';
 
 import { findJobs, applyJob, removeJob } from 'redux/jobseeker/find';
 import DATA from 'utils/data';
 import * as helper from 'utils/helper';
 
-import { PageHeader, SearchBox, AlertMsg, ListEx, Icons, Loading } from 'components';
+import { PageHeader, PageSubHeader, SearchBox, AlertMsg, ListEx, Icons, Loading, LinkButton } from 'components';
 import JobDetails from '../components/JobDetails';
 import NoPitch from '../components/NoPitch';
 import Wrapper from './styled';
@@ -169,6 +170,11 @@ class FindJob extends React.Component {
           <h2>Find Me Jobs</h2>
           <SearchBox width="200px" onChange={this.onChangeSearchText} />
         </PageHeader>
+
+        <PageSubHeader>
+          <Breadcrumb />
+          <Link to="/jobseeker/settings/jobprofile">Change job matches</Link>
+        </PageSubHeader>
 
         <div className="content">
           <ListEx

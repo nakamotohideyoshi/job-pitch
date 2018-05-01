@@ -2,7 +2,7 @@ import React from 'react';
 import Helmet from 'react-helmet';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { Breadcrumb, Form, Input, Select, Switch, Popover, Button, notification, Upload, message } from 'antd';
+import { Breadcrumb, Form, Input, Select, Switch, Popover, Button, notification, Tooltip } from 'antd';
 
 import { saveJob, uploadPitch } from 'redux/recruiter/jobs';
 import DATA from 'utils/data';
@@ -367,7 +367,15 @@ export default connect(
     const workplaceId = helper.str2int(match.params.workplaceId);
     const workplace = helper.getItemByID(state.rc_workplaces.workplaces, workplaceId);
     const jobId = helper.str2int(match.params.jobId);
-    const job = helper.getItemByID(state.rc_jobs.jobs, jobId);
+    const { jobs } = state.rc_jobs;
+    const job = helper.getItemByID(jobs, jobId);
+
+    // const videos = jobs.filter(item => {
+    //   if (item.location === (workplace || {}).id) {
+    //     const pitch = helper.getPitch(item);
+    //     return pitch.video;
+    //   }
+    // });
     return {
       workplace: workplace || (job || {}).location_data,
       job

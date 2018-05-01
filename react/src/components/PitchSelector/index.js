@@ -1,5 +1,5 @@
 import React from 'react';
-import { Modal, Upload, message } from 'antd';
+import { Modal, Upload, message, Tooltip } from 'antd';
 
 import * as helper from 'utils/helper';
 
@@ -69,12 +69,14 @@ class PitchSelector extends React.Component {
       <Wrapper>
         <div className="buttons">
           {video && (
-            <div className="currentPitch" onClick={() => this.playPitch(video)}>
-              <div className="thumbnail" style={{ backgroundImage: `url(${thumbnail})` }} />
-              <div className="mask">
-                <Icons.PlayCircle />
+            <Tooltip placement="bottom" title="Current Pitch">
+              <div className="currentPitch" onClick={() => this.playPitch(video)}>
+                <div className="thumbnail" style={{ backgroundImage: `url(${thumbnail})` }} />
+                <div className="mask">
+                  <Icons.PlayCircle />
+                </div>
               </div>
-            </div>
+            </Tooltip>
           )}
 
           <Upload.Dragger

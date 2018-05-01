@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import { Progress } from 'antd';
-import { Wrapper } from './Wrapper';
+import { Wrapper } from './styled';
 
 class PopupProgress extends PureComponent {
   render() {

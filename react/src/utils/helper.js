@@ -269,6 +269,5 @@ export function checkIfEmailInString(str) {
 }
 
 export function checkIfPhoneNumberInString(str) {
-  const re = /(\(\d{2,3}\)[-\s]?|\d{2,3}[-\s])\d{3,5}[-\s]\d{3,5}/;
-  return re.test(str);
+  return /\d{7,}/.test(str.replace(/[\s-]/g, ''));
 }

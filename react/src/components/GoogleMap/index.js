@@ -72,7 +72,6 @@ const MapWithASearchBox = compose(
 
     componentWillReceiveProps(nextProps) {
       const { marker } = nextProps;
-
       if (marker) {
         if (!this.props.marker) {
           this.setState({ center: marker });
@@ -86,7 +85,7 @@ const MapWithASearchBox = compose(
 )(props => (
   <GoogleMap
     ref={props.onMapMounted}
-    defaultZoom={14}
+    zoom={props.zoom || 14}
     center={props.center}
     options={props.options}
     onBoundsChanged={props.onBoundsChanged}
@@ -102,7 +101,7 @@ const MapWithASearchBox = compose(
         <Input placeholder="Search" />
       </SearchBox>
     )}
-    {props.circle && <Circle {...props.circle} />}
+    {props.circle && <Circle {...props.circle} onClick={props.onClickMap} />}
     {!props.circle && props.marker && <Marker position={props.marker} />}
   </GoogleMap>
 ));

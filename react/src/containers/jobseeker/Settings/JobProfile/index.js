@@ -78,6 +78,20 @@ class JobProfile extends React.Component {
     const { latitude, longitude, place_name } = this.state.location;
     const marker = latitude && { lat: latitude, lng: longitude };
 
+    const search_radius = this.props.form.getFieldValue('search_radius');
+    if (!this.zoom) {
+      this.zoom = { 1: 13, 2: 12, 5: 11, 10: 10, 50: 7 }[search_radius];
+    }
+    const circle = {
+      center: marker,
+      radius: 1609.344 * search_radius,
+      options: {
+        fillColor: '#ff930080',
+        strokeColor: '#00b6a4',
+        strokeWeight: 2
+      }
+    };
+
     return (
       <FormWrapper>
         <Item label="Sectors">
@@ -143,7 +157,12 @@ class JobProfile extends React.Component {
           )}
           <div className="map">
             <div>
-              <GoogleMap marker={marker} onSelectedLocation={this.selectLocation} />
+              <GoogleMap
+                marker={marker}
+                circle={circle}
+                zoom={this.zoom}
+                onSelectedLocation={this.selectLocation}
+              />
             </div>
           </div>
         </Item>

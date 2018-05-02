@@ -223,13 +223,24 @@ class JobProfileController: MJPController {
     
     @IBAction func myLocationAction(_ sender: Any) {
         
-        MapController.showModal(latitude: latitude, longitude: longitude,
-                                        complete: { (locationCoordinate, placeID, placeName) in
-                                            self.latitude = locationCoordinate.latitude as NSNumber!
-                                            self.longitude = locationCoordinate.longitude as NSNumber!
-                                            self.placeID = placeID
-                                            self.placeName = placeName
-                                            self.addressField.text = placeName
+        let radiusName = selectedRadiusNames[0]
+        var radius: Double = 1
+        for (value, name) in radiusData {
+            if radiusName == name {
+                radius = Double(value)
+                break
+            }
+        }
+        
+        MapController.showModal(latitude: latitude,
+                                longitude: longitude,
+                                radius: radius * 1609.344,
+                                complete: { (locationCoordinate, placeID, placeName) in
+                                    self.latitude = locationCoordinate.latitude as NSNumber!
+                                    self.longitude = locationCoordinate.longitude as NSNumber!
+                                    self.placeID = placeID
+                                    self.placeName = placeName
+                                    self.addressField.text = placeName
         })
         
     }

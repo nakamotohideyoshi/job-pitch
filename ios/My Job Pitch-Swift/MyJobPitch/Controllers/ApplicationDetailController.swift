@@ -88,10 +88,25 @@ class ApplicationDetailController: MJPController {
             messageButton.removeFromSuperview()
         }
         
-        let marker = GMSMarker()
-        marker.map = mapView
-        marker.position = CLLocationCoordinate2DMake(location.latitude.doubleValue, location.longitude.doubleValue)
-        mapView.camera = GMSCameraPosition.camera(withTarget: marker.position, zoom: 15)
+        var position = CLLocationCoordinate2DMake(location.latitude.doubleValue, location.longitude.doubleValue)
+        if (application != nil) {
+            let marker = GMSMarker()
+            marker.map = mapView
+            marker.position = position
+            mapView.camera = GMSCameraPosition.camera(withTarget: marker.position, zoom: 15)
+        } else {
+            let alpha = 2 * Double.pi * drand48();
+            let rand = drand48();
+            position.latitude += 0.00434195349206 * cos(alpha) * rand;
+            position.longitude += 0.00528038212262 * sin(alpha) * rand;
+            
+            let circ = GMSCircle(position: position, radius: 482.8)
+            circ.fillColor = UIColor(red: 1, green: 147/255.0, blue: 0, alpha: 0.2)
+            circ.strokeColor = UIColor(red: 0, green: 182/255.0, blue: 164/255.0, alpha: 1)
+            circ.strokeWidth = 2
+            circ.map = mapView
+        }
+        mapView.camera = GMSCameraPosition.camera(withTarget: position, zoom: 14)
     }
     
     @IBAction func imageClickAction(_ sender: Any) {

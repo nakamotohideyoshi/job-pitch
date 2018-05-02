@@ -19,6 +19,7 @@ class MapController: UIViewController {
     @IBOutlet weak var mapView: GMSMapView!
     
     var currentPos: CLLocationCoordinate2D!
+    var radius: CLLocationDistance!
     var placeID: String!
     var placeName: String!
     
@@ -26,6 +27,9 @@ class MapController: UIViewController {
     
     var searchController: UISearchController!
     var myPos: CLLocationCoordinate2D!
+    
+    var marker: GMSMarker!
+    var circ: GMSCircle!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -37,10 +41,49 @@ class MapController: UIViewController {
         mapView.settings.myLocationButton = true
         mapView.addObserver(self, forKeyPath: "myLocation", options: NSKeyValueObservingOptions.new, context: nil)
         
-        if currentPos != nil {
-            mapView.camera = GMSCameraPosition.camera(withTarget: currentPos, zoom: 14)
+        if (radius == nil) {
+            marker = GMSMarker()
+            marker.map = mapView
+        } else {
+            circ = GMSCircle(position: currentPos, radius: radius)
+            circ.fillColor = UIColor(red: 1, green: 147/255.0, blue: 0, alpha: 0.2)
+            circ.strokeColor = UIColor(red: 0, green: 182/255.0, blue: 164/255.0, alpha: 1)
+            circ.strokeWidth = 2
+            circ.map = mapView
         }
-                
+        
+        if currentPos != nil {
+            updatePosition(currentPos)
+            mapView.camera = GMSCameraPosition.camera(withTarget: currentPos, zoom: getZoom())
+        }
+    }
+    
+    func updatePosition(_ position: CLLocationCoordinate2D) {
+        currentPos = position
+        if (marker != nil) {
+            marker.position = position
+        } else {
+            circ.position = position
+        }
+    }
+    
+    func getZoom() -> Float  {
+        if (marker != nil) {
+            return 14
+        }
+        if (radius < 2000) {
+            return 13
+        }
+        if (radius < 4000) {
+            return 12
+        }
+        if (radius < 10000) {
+            return 11
+        }
+        if (radius < 20000) {
+            return 10
+        }
+        return 7
     }
     
     override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
@@ -50,7 +93,8 @@ class MapController: UIViewController {
             myPos = location.coordinate
             mapView.removeObserver(self, forKeyPath: "myLocation")
             if currentPos == nil {
-                mapView.camera = GMSCameraPosition.camera(withTarget: myPos, zoom: 14)
+                updatePosition(myPos)
+                mapView.camera = GMSCameraPosition.camera(withTarget: myPos, zoom: getZoom())
             }
         }
         
@@ -99,13 +143,14 @@ class MapController: UIViewController {
         dismiss(animated: true, completion: nil)
     }
     
-    static func showModal(latitude: NSNumber!, longitude: NSNumber!,
+    static func showModal(latitude: NSNumber!, longitude: NSNumber!, radius: CLLocationDistance!,
                           complete: ((CLLocationCoordinate2D, String, String) -> Void)!) {
         
         let controller = AppHelper.mainStoryboard.instantiateViewController(withIdentifier: "MapController") as! MapController
         if latitude != nil {
             controller.currentPos = CLLocationCoordinate2DMake(latitude as CLLocationDegrees, longitude as CLLocationDegrees)
         }
+        controller.radius = radius;
         controller.complete = complete
         
         let navController = UINavigationController(rootViewController: controller)
@@ -117,8 +162,8 @@ class MapController: UIViewController {
 
 extension MapController: GMSMapViewDelegate {
     
-    func mapView(_ mapView: GMSMapView, idleAt position: GMSCameraPosition) {
-        currentPos = position.target
+    func mapView(_ mapView: GMSMapView, didTapAt coordinate: CLLocationCoordinate2D) {
+        updatePosition(coordinate)
     }
     
 }
@@ -126,7 +171,8 @@ extension MapController: GMSMapViewDelegate {
 extension MapController: GMSAutocompleteResultsViewControllerDelegate {
     
     func resultsController(_ resultsController: GMSAutocompleteResultsViewController, didAutocompleteWith place: GMSPlace) {
-        mapView.camera = GMSCameraPosition.camera(withTarget: place.coordinate, zoom: 14)
+        updatePosition(place.coordinate)
+        mapView.camera = GMSCameraPosition.camera(withTarget: currentPos, zoom: getZoom())
         searchController.dismiss(animated: true, completion: nil)
     }
     

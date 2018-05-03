@@ -15,6 +15,7 @@ public class Job extends MJPObjectWithDates {
 
     private Location location_data;
     private List<Image> images;
+    private List<Pitch> videos;
 
     public String getTitle() {
         return title;
@@ -78,6 +79,10 @@ public class Job extends MJPObjectWithDates {
 
     public List<Image> getImages() {
         return images;
+    }
+
+    public List<Pitch> getVideos() {
+        return videos;
     }
 
 }

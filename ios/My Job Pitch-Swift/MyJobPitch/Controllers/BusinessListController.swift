@@ -24,7 +24,7 @@ class BusinessListController: MJPController {
     var canCreateBusinesses = false
     var isAddMode = false
     
-    var noRefresh = false
+    var refresh = true
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -49,11 +49,10 @@ class BusinessListController: MJPController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        if !noRefresh {
+        if refresh {
+            refresh = false
             showLoading()
             self.loadBusinesses()
-        } else {
-            noRefresh = false
         }
     }
     
@@ -94,6 +93,7 @@ class BusinessListController: MJPController {
     @IBAction func addAction(_ sender: Any) {
         
         if AppData.user.canCreateBusinesses || data.count == 0 {
+            refresh = true
             BusinessEditController.pushController(business: nil)
         } else {
             let url = URL(string: "mailto:support@myjobpitch.com")!
@@ -141,6 +141,7 @@ extension BusinessListController: UITableViewDataSource {
                               backgroundColor: AppData.greenColor,
                               padding: 20,
                               callback: { (cell) -> Bool in
+                                self.refresh = true
                                 BusinessEditController.pushController(business: business)
                                 return true
                 })
@@ -155,12 +156,8 @@ extension BusinessListController: UITableViewDataSource {
                                   padding: 20,
                                   callback: { (cell) -> Bool in
                                     
-                                    self.noRefresh = true
-                                    
                                     let message = String(format: "Are you sure you want to delete %@", business.name)
                                     PopupController.showYellow(message, ok: "Delete", okCallback: {
-                                        
-                                        self.noRefresh = true
                                         
                                         let locationCount = business.locations.count
                                         if locationCount == 0 {
@@ -200,6 +197,7 @@ extension BusinessListController: UITableViewDataSource {
 extension BusinessListController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        refresh = true
         let controller = AppHelper.mainStoryboard.instantiateViewController(withIdentifier: "LocationList") as! BusinessDetailController
         controller.businessId = (data[indexPath.row] as! Business).id
         navigationController?.pushViewController(controller, animated: true)

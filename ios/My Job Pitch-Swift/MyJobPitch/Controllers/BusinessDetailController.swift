@@ -30,7 +30,7 @@ class BusinessDetailController: MJPController {
     var isFirstCreate = false
     var businessId: NSNumber!
     
-    var noRefresh = false
+    var refresh = true
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -62,7 +62,8 @@ class BusinessDetailController: MJPController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        if !noRefresh {
+        if refresh {
+            refresh = false
             showLoading()
             API.shared().loadBusiness(id: businessId, success: { (data) in
                 self.business = data as! Business
@@ -71,8 +72,6 @@ class BusinessDetailController: MJPController {
                 }
                 self.loadLocations()
             }, failure: self.handleErrors)
-        } else {
-            noRefresh = false
         }
     }
     
@@ -107,16 +106,13 @@ class BusinessDetailController: MJPController {
     }
     
     @IBAction func editBusinessAction(_ sender: Any) {
+        refresh = true
         BusinessEditController.pushController(business: business)
     }
     
     @IBAction func deleteBusinessAction(_ sender: Any) {
-        noRefresh = true
-        
         let message = String(format: "Are you sure you want to delete %@", headerName.text!)
         PopupController.showYellow(message, ok: "Delete", okCallback: {
-            self.noRefresh = true
-            
             let locationCount = self.business.locations.count
             if locationCount == 0 {
                 self.deleteBusiness()
@@ -133,6 +129,7 @@ class BusinessDetailController: MJPController {
     }
     
     @IBAction func addLocationAction(_ sender: Any) {
+        refresh = true
         isFirstCreate = false
         LocationEditController.pushController(business: business, location: nil)
     }
@@ -178,14 +175,8 @@ extension BusinessDetailController: UITableViewDataSource {
                               backgroundColor: AppData.yellowColor,
                               padding: 20,
                               callback: { (cell) -> Bool in
-                                
-                                self.noRefresh = true
-                                
                                 let message = String(format: "Are you sure you want to delete %@", location.name)
                                 PopupController.showYellow(message, ok: "Delete", okCallback: {
-                                    
-                                     self.noRefresh = true
-                                    
                                     let jobCount = location.jobs.count
                                     if jobCount == 0 {
                                         self.deleteWorkplace(location)
@@ -212,6 +203,7 @@ extension BusinessDetailController: UITableViewDataSource {
                               backgroundColor: AppData.greenColor,
                               padding: 20,
                               callback: { (cell) -> Bool in
+                                self.refresh = true
                                 LocationEditController.pushController(business: nil, location: location)
                                 return true
                 })
@@ -230,6 +222,8 @@ extension BusinessDetailController: UITableViewDataSource {
 extension BusinessDetailController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        
+        refresh = true
         
         let location = data[indexPath.row] as! Location
         

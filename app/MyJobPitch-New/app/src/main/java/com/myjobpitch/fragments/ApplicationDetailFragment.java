@@ -1,5 +1,6 @@
 package com.myjobpitch.fragments;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +14,8 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.Circle;
+import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.myjobpitch.R;
@@ -172,8 +175,22 @@ public class ApplicationDetailFragment extends BaseFragment {
                 googleMap.getUiSettings().setMyLocationButtonEnabled(false);
                 Location location = job.getLocation_data();
                 LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
-                googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15));
-                googleMap.addMarker(new MarkerOptions().position(latLng));
+                if (application != null) {
+                    googleMap.addMarker(new MarkerOptions().position(latLng));
+                } else {
+                    double alpha = 2 * Math.PI * Math.random();
+                    double rand = Math.random();
+                    latLng = new LatLng(
+                            latLng.latitude + 0.00434195349206 * Math.cos(alpha) * rand,
+                            latLng.longitude + 0.00528038212262 * Math.sin(alpha) * rand);
+                    googleMap.addCircle(new CircleOptions()
+                            .center(latLng)
+                            .radius(482.8)
+                            .strokeWidth(2)
+                            .strokeColor(Color.argb(255, 0, 182, 164))
+                            .fillColor(Color.argb(51, 255, 147, 0)));
+                }
+                googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 14));
             }
         });
 

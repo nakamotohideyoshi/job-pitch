@@ -6,8 +6,8 @@ android {
         applicationId "com.myjobpitch"
         minSdkVersion 19
         targetSdkVersion 27
-        versionCode 83
-        versionName "1.1-beta.83"
+        versionCode 87
+        versionName "1.1-beta.87"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
     }
@@ -21,6 +21,9 @@ android {
         exclude 'META-INF/LICENSE'
         exclude 'META-INF/license.txt'
         exclude 'META-INF/notice.txt'
+    }
+    lintOptions {
+        checkReleaseBuilds false
     }
 }
 
@@ -38,6 +41,7 @@ dependencies {
     implementation 'com.android.support.constraint:constraint-layout:1.1.0'
     implementation 'com.android.support:cardview-v7:27.1.1'
     implementation 'com.android.support:support-v4:27.1.1'
+    implementation 'com.android.support:recyclerview-v7:27.1.1'
     implementation 'com.google.android.gms:play-services-maps:15.0.1'
     implementation 'com.google.android.gms:play-services-places:15.0.0'
     implementation 'com.google.android.gms:play-services-location:15.0.0'
@@ -49,10 +53,16 @@ dependencies {
     implementation 'com.amazonaws:aws-android-sdk-core:2.6.18'
     implementation 'com.amazonaws:aws-android-sdk-s3:2.6.18'
     implementation 'com.dropbox.core:dropbox-core-sdk:3.0.7'
-    implementation 'com.weiwangcn.betterspinner:library:1.1.0'
-    implementation 'com.weiwangcn.betterspinner:library-material:1.1.0'
-    implementation 'com.nostra13.universalimageloader:universal-image-loader:1.9.5'
     implementation 'com.daimajia.swipelayout:library:1.2.0@aar'
+    implementation 'com.rengwuxian.materialedittext:library:2.1.4'
+    implementation ('com.weiwangcn.betterspinner:library:1.1.0') {
+        exclude group: 'com.android.support', module: 'appcompat-v7'
+    }
+    implementation ('com.weiwangcn.betterspinner:library-material:1.1.0') {
+        exclude group: 'com.android.support', module: 'appcompat-v7'
+        exclude group: 'com.rengwuxian.materialedittext', module: 'library'
+    }
+    implementation 'com.nostra13.universalimageloader:universal-image-loader:1.9.5'
     implementation 'de.hdodenhof:circleimageview:2.2.0'
     implementation 'com.github.rubensousa:bottomsheetbuilder:1.6.1'
     implementation 'com.squareup.okhttp3:okhttp:3.10.0'

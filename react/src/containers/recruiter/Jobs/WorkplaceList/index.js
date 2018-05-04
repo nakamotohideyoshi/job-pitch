@@ -138,7 +138,7 @@ class WorkplaceList extends React.Component {
             </Breadcrumb.Item>
             <Breadcrumb.Item>Workplaces</Breadcrumb.Item>
           </Breadcrumb>
-          <LinkButton onClick={this.addWorkplace}>Add Workplace</LinkButton>
+          <LinkButton onClick={this.addWorkplace}>Add new workplace</LinkButton>
         </PageSubHeader>
 
         <div className="content">

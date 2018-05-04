@@ -74,7 +74,7 @@ class ResetForm extends React.Component {
                 />
               )
             ) : (
-              <Alert message="Password reset e-mail has been sent." type="success" />
+              <Alert message="Password reset requested, please check your email." type="success" />
             )}
           </Item>
 

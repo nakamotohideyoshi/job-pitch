@@ -192,7 +192,7 @@ class BusinessList extends React.Component {
           <Breadcrumb>
             <Breadcrumb.Item>Businesses</Breadcrumb.Item>
           </Breadcrumb>
-          <LinkButton onClick={this.addBusiness}>Add Business</LinkButton>
+          <LinkButton onClick={this.addBusiness}>Add new business</LinkButton>
         </PageSubHeader>
 
         <div className="content">

@@ -121,7 +121,7 @@ class JobList extends React.Component {
             </Breadcrumb.Item>
             <Breadcrumb.Item>Jobs</Breadcrumb.Item>
           </Breadcrumb>
-          <LinkButton onClick={this.addJob}>Add Job</LinkButton>
+          <LinkButton onClick={this.addJob}>Add new job</LinkButton>
         </PageSubHeader>
 
         <div className="content">

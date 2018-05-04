@@ -2,6 +2,7 @@ package com.myjobpitch;
 
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -24,27 +25,37 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.Circle;
+import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
-import com.myjobpitch.utils.Loading;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.io.IOException;
 import java.util.List;
 
 
-public class SelectPlaceActivity extends FragmentActivity implements GoogleMap.OnCameraIdleListener, PlaceSelectionListener, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
+public class SelectPlaceActivity extends FragmentActivity implements GoogleMap.OnMapClickListener, PlaceSelectionListener, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
     public static final String LATITUDE = "latitude";
     public static final String LONGITUDE = "longitude";
     public static final String ADDRESS = "address";
+    public static final String RADIUS = "radius";
 
     GoogleMap mMap;
     LatLng mCurrentPos;
     GoogleApiClient mGoogleApiClient;
 
+    double radius;
+    Marker marker;
+    Circle circle;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_select_place);
+
+        radius = getIntent().getDoubleExtra(RADIUS, 0);
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
@@ -71,7 +82,7 @@ public class SelectPlaceActivity extends FragmentActivity implements GoogleMap.O
     }
 
     void settingMap() {
-        mMap.setOnCameraIdleListener(this);
+        mMap.setOnMapClickListener(this);
 
         final int d = (int) (50 * getResources().getDisplayMetrics().density);
         mMap.setPadding(0, d, 0, d);
@@ -85,9 +96,52 @@ public class SelectPlaceActivity extends FragmentActivity implements GoogleMap.O
         });
 
         if (getIntent().hasExtra(LATITUDE)) {
-            mCurrentPos = new LatLng(getIntent().getDoubleExtra(LATITUDE, 0), getIntent().getDoubleExtra(LONGITUDE, 0));
-            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(mCurrentPos, 14));
+            updatePosition(getIntent().getDoubleExtra(LATITUDE, 0), getIntent().getDoubleExtra(LONGITUDE, 0));
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(mCurrentPos, getZoom()));
         }
+    }
+
+    void updatePosition(double latitude, double longitude) {
+        mCurrentPos = new LatLng(latitude, longitude);
+
+
+        if (radius == 0) {
+            if (marker == null) {
+                marker = mMap.addMarker(new MarkerOptions().position(mCurrentPos));
+            } else {
+                marker.setPosition(mCurrentPos);
+            }
+        } else {
+            if (circle == null) {
+                circle = mMap.addCircle(new CircleOptions()
+                        .center(mCurrentPos)
+                        .radius(radius)
+                        .strokeWidth(2)
+                        .strokeColor(Color.argb(255, 0, 182, 164))
+                        .fillColor(Color.argb(51, 255, 147, 0)));
+            } else {
+                circle.setCenter(mCurrentPos);
+            }
+        }
+    }
+
+    float getZoom() {
+        if (marker != null) {
+            return 14;
+        }
+        if (radius < 2000) {
+            return 13;
+        }
+        if (radius < 4000) {
+            return 12;
+        }
+        if (radius < 10000) {
+            return 11;
+        }
+        if (radius < 20000) {
+            return 10;
+        }
+        return 7;
     }
 
     private void createGoogleApiClient() {
@@ -138,8 +192,8 @@ public class SelectPlaceActivity extends FragmentActivity implements GoogleMap.O
                 Location location = LocationServices.FusedLocationApi.getLastLocation(
                         mGoogleApiClient);
                 if (location != null) {
-                    mCurrentPos = new LatLng(location.getLatitude(), location.getLongitude());
-                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(mCurrentPos, 14));
+                    updatePosition(location.getLatitude(), location.getLongitude());
+                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(mCurrentPos, getZoom()));
                 }
             }
         }
@@ -173,13 +227,15 @@ public class SelectPlaceActivity extends FragmentActivity implements GoogleMap.O
     }
 
     @Override
-    public void onCameraIdle() {
-        mCurrentPos = mMap.getCameraPosition().target;
+    public void onMapClick(LatLng latLng) {
+        updatePosition(latLng.latitude, latLng.longitude);
     }
 
     @Override
     public void onPlaceSelected(Place place) {
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(place.getLatLng(), 14));
+        LatLng latLng = place.getLatLng();
+        updatePosition(latLng.latitude, latLng.longitude);
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(place.getLatLng(), getZoom()));
     }
 
     @Override

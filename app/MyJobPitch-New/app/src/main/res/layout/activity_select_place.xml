@@ -27,14 +27,6 @@
             />
     </FrameLayout>
 
-    <ImageView
-        android:layout_width="40dp"
-        android:layout_height="80dp"
-        android:layout_centerVertical="true"
-        android:layout_centerHorizontal="true"
-        android:paddingBottom="40dp"
-        android:src="@drawable/map_marker"/>
-
     <Button
         android:id="@+id/select_button"
         android:text="Select"

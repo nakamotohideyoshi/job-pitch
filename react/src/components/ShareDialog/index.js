@@ -12,7 +12,7 @@ const Wrapper = styled(Modal)`
   }
 `;
 
-export default ({ url, onClose }) => {
+export default ({ url, comment, onClose }) => {
   let inputRef;
   const copyLink = () => {
     inputRef.input.select();
@@ -28,9 +28,7 @@ export default ({ url, onClose }) => {
           inputRef = ref;
         }}
       />
-      <div className="ant-form-explain">
-        Share this link to your job on your website, in an email, or anywhere else.
-      </div>
+      <div className="ant-form-explain">{comment}</div>
     </Wrapper>
   );
 };

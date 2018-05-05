@@ -149,7 +149,13 @@ class JobList extends React.Component {
         </div>
 
         <DeleteDialog job={selectedJob} onCancel={() => this.showRemoveDialog()} />
-        {shareJobId && <ShareDialog url={`here share link...`} onClose={this.closeShareDialog} />}
+        {shareJobId && (
+          <ShareDialog
+            url={`here share link...`}
+            comment="Share this link to your job on your website, in an email, or anywhere else."
+            onClose={this.closeShareDialog}
+          />
+        )}
       </Wrapper>
     );
   }

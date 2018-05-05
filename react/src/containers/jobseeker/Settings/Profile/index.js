@@ -6,7 +6,16 @@ import { saveJobseeker, uploadPitch } from 'redux/jobseeker/profile';
 import DATA from 'utils/data';
 import * as helper from 'utils/helper';
 
-import { NoLabelField, PitchSelector, PopupProgress, Intro, Icons, JobseekerDetails } from 'components';
+import {
+  NoLabelField,
+  PitchSelector,
+  PopupProgress,
+  Intro,
+  Icons,
+  JobseekerDetails,
+  ShareDialog,
+  LinkButton
+} from 'components';
 import imgLogo from 'assets/logo1.png';
 import imgIntro1 from 'assets/intro1.png';
 import imgIntro2 from 'assets/intro2.png';
@@ -46,7 +55,8 @@ class Profile extends React.Component {
     dontShowIntro: false,
     visiblePreview: false,
     pitchData: null,
-    progress: null
+    progress: null,
+    showShare: false
   };
 
   componentDidMount() {
@@ -77,6 +87,14 @@ class Profile extends React.Component {
 
     this.setState({ dontShowIntro: DATA[`dontShowIntro_${DATA.email}`] });
   }
+
+  openShareDialog = () => {
+    this.setState({ showShare: true });
+  };
+
+  closeShareDialog = () => {
+    this.setState({ showShare: false });
+  };
 
   showPreview = visible => {
     this.setState({ visiblePreview: visible });
@@ -174,16 +192,23 @@ class Profile extends React.Component {
   };
 
   render() {
-    const { dontShowIntro, loading, progress, visiblePreview } = this.state;
+    const { dontShowIntro, loading, progress, visiblePreview, showShare } = this.state;
     const { getFieldDecorator } = this.props.form;
     const jobseeker = this.props.jobseeker || {};
     const pitch = helper.getPitch(jobseeker);
 
     return (
       <FormWrapper>
-        <Item label="Active">
+        <Item label="Active" className="with-public">
           {getFieldDecorator('active', { valuePropName: 'checked', initialValue: true })(<Switch />)}
         </Item>
+        {jobseeker.id && (
+          <div className="public-check" style={{ paddingTop: '8px' }}>
+            <LinkButton onClick={this.openShareDialog}>
+              <Icons.ShareAlt style={{ fontSize: '15px' }} />Share
+            </LinkButton>
+          </div>
+        )}
 
         <Item label="First name">
           {getFieldDecorator('first_name', {
@@ -403,6 +428,14 @@ class Profile extends React.Component {
         {visiblePreview && (
           <JobseekerDetails title="My Profile" jobseeker={jobseeker} onClose={() => this.showPreview(false)} />
         )}
+        {jobseeker.id &&
+          showShare && (
+            <ShareDialog
+              url={`here share link...`}
+              comment="Share this link to your profile on your website, in an email, or anywhere else."
+              onClose={this.closeShareDialog}
+            />
+          )}
       </FormWrapper>
     );
   }

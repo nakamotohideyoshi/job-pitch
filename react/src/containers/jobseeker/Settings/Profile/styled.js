@@ -64,7 +64,7 @@ export default styled(Form)`
     width: 100px;
   }
 
-  .btn-preview {
+  .ant-btn + .ant-btn {
     margin-left: 20px;
     width: 100px;
   }

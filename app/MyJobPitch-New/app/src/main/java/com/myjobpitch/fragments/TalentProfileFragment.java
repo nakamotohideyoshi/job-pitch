@@ -300,6 +300,13 @@ public class TalentProfileFragment extends FormFragment {
         getApp().pushFragment(fragment);
     }
 
+    @OnClick(R.id.example_video)
+    void onPlayExamle() {
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.setData(Uri.parse("https://vimeo.com/255467562"));
+        startActivity(intent);
+    }
+
     @OnClick(R.id.job_seeker_record_new)
     void onRecordNew() {
         Intent intent = new Intent(getApp(), CameraActivity.class);

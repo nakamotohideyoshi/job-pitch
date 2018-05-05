@@ -236,19 +236,20 @@ class JobEdit extends React.Component {
             </Breadcrumb.Item>
             <Breadcrumb.Item>{title}</Breadcrumb.Item>
           </Breadcrumb>
-
-          {job && (
-            <LinkButton onClick={this.openShareDialog}>
-              <Icons.ShareAlt style={{ fontSize: '15px' }} />Share
-            </LinkButton>
-          )}
         </PageSubHeader>
 
         <div className="content">
           <StyledForm>
-            <Item label="Active" className="status-field">
+            <Item label="Active" className="status-field with-public">
               {getFieldDecorator('status', { valuePropName: 'checked', initialValue: true })(<Switch />)}
             </Item>
+            {job && (
+              <div className="public-check" style={{ paddingTop: '8px' }}>
+                <LinkButton onClick={this.openShareDialog}>
+                  <Icons.ShareAlt style={{ fontSize: '15px' }} />Share
+                </LinkButton>
+              </div>
+            )}
 
             <Item label="Title">
               {getFieldDecorator('title', {
@@ -376,7 +377,14 @@ class JobEdit extends React.Component {
 
         {loading && <PopupProgress label={loading.label} value={loading.progress} />}
 
-        {job && showShare && <ShareDialog url={`here share link...`} onClose={this.closeShareDialog} />}
+        {job &&
+          showShare && (
+            <ShareDialog
+              url={`here share link...`}
+              comment="Share this link to your job on your website, in an email, or anywhere else."
+              onClose={this.closeShareDialog}
+            />
+          )}
       </Wrapper>
     );
   }

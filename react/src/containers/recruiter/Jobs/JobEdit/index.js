@@ -15,7 +15,9 @@ import {
   ImageSelector,
   NoLabelField,
   PitchSelector,
-  Icons
+  Icons,
+  LinkButton,
+  ShareDialog
 } from 'components';
 import Wrapper from '../styled';
 import StyledForm from './styled';
@@ -32,7 +34,8 @@ class JobEdit extends React.Component {
       exist: false
     },
     loading: null,
-    pitchData: null
+    pitchData: null,
+    showShare: false
   };
 
   componentDidMount() {
@@ -68,6 +71,14 @@ class JobEdit extends React.Component {
       });
     }
   }
+
+  openShareDialog = () => {
+    this.setState({ showShare: true });
+  };
+
+  closeShareDialog = () => {
+    this.setState({ showShare: false });
+  };
 
   setLogo = (file, url) =>
     this.setState({
@@ -197,7 +208,7 @@ class JobEdit extends React.Component {
   };
 
   render() {
-    const { logo, loading } = this.state;
+    const { logo, loading, showShare } = this.state;
     const { workplace, job, form } = this.props;
     const { getFieldDecorator } = form;
     const pitch = helper.getPitch(job);
@@ -225,6 +236,12 @@ class JobEdit extends React.Component {
             </Breadcrumb.Item>
             <Breadcrumb.Item>{title}</Breadcrumb.Item>
           </Breadcrumb>
+
+          {job && (
+            <LinkButton onClick={this.openShareDialog}>
+              <Icons.ShareAlt style={{ fontSize: '15px' }} />Share
+            </LinkButton>
+          )}
         </PageSubHeader>
 
         <div className="content">
@@ -351,12 +368,15 @@ class JobEdit extends React.Component {
               <Button type="primary" onClick={this.save}>
                 Save
               </Button>
+
               <Button onClick={this.goJobList}>Cancel</Button>
             </NoLabelField>
           </StyledForm>
         </div>
 
         {loading && <PopupProgress label={loading.label} value={loading.progress} />}
+
+        {job && showShare && <ShareDialog url={`here share link...`} onClose={this.closeShareDialog} />}
       </Wrapper>
     );
   }

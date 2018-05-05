@@ -31,6 +31,8 @@ import VideoPlayer from './video/Player';
 
 import Email from './Email';
 
+import ShareDialog from './ShareDialog';
+
 export {
   GoogleMap,
   PopupProgress,
@@ -53,5 +55,6 @@ export {
   PitchSelector,
   VideoRecorder,
   VideoPlayer,
-  Email
+  Email,
+  ShareDialog
 };

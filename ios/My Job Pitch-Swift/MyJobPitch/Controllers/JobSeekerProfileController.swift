@@ -278,6 +278,10 @@ class JobSeekerProfileController: MJPController {
 
     }
     
+    @IBAction func playDemoAction(_ sender: Any) {
+        UIApplication.shared.openURL(NSURL(string: "https://vimeo.com/255467562")! as URL)
+    }
+    
     @IBAction func pitchRecordAction(_ sender: Any) {
         
         if jobSeeker?.getPitch() == nil {

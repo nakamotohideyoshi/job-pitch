@@ -41,7 +41,9 @@ export default styled.div`
 
   .overview {
     div {
-      white-space: pre-line;
+      /* white-space: pre-line; */
+      word-break: break-all;
+      hyphens: auto;
     }
   }
 

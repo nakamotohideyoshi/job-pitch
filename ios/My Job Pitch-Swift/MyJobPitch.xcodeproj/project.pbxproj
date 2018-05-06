@@ -17,6 +17,8 @@
 		D72AE4241E1156C3004C3F02 /* CustomView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D72AE4231E1156C3004C3F02 /* CustomView.swift */; };
 		D72AE42E1E11AD50004C3F02 /* ChangePasswordController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D72AE42D1E11AD50004C3F02 /* ChangePasswordController.swift */; };
 		D730C3F61EAE95C100332C6C /* InitialTokens.swift in Sources */ = {isa = PBXBuildFile; fileRef = D730C3F51EAE95C100332C6C /* InitialTokens.swift */; };
+		D73CC7CF209FE4A000DE6546 /* JobPitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = D73CC7CE209FE4A000DE6546 /* JobPitch.swift */; };
+		D73CC7D1209FF14100DE6546 /* JobPitchUploader.swift in Sources */ = {isa = PBXBuildFile; fileRef = D73CC7D0209FF14100DE6546 /* JobPitchUploader.swift */; };
 		D7425B141FC43F5700A6831E /* MJPPlayerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7425B131FC43F5700A6831E /* MJPPlayerController.swift */; };
 		D749E34F1E09B479000FD0B1 /* ResetPasswordController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D749E34E1E09B479000FD0B1 /* ResetPasswordController.swift */; };
 		D749E3511E09C09E000FD0B1 /* AppHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = D749E3501E09C09E000FD0B1 /* AppHelper.swift */; };
@@ -125,6 +127,8 @@
 		D72AE4231E1156C3004C3F02 /* CustomView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CustomView.swift; path = Views/CustomView.swift; sourceTree = "<group>"; };
 		D72AE42D1E11AD50004C3F02 /* ChangePasswordController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ChangePasswordController.swift; path = Controllers/ChangePasswordController.swift; sourceTree = "<group>"; };
 		D730C3F51EAE95C100332C6C /* InitialTokens.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = InitialTokens.swift; path = Models/InitialTokens.swift; sourceTree = "<group>"; };
+		D73CC7CE209FE4A000DE6546 /* JobPitch.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = JobPitch.swift; path = Models/JobPitch.swift; sourceTree = "<group>"; };
+		D73CC7D0209FF14100DE6546 /* JobPitchUploader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = JobPitchUploader.swift; path = Utils/JobPitchUploader.swift; sourceTree = "<group>"; };
 		D7425B131FC43F5700A6831E /* MJPPlayerController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MJPPlayerController.swift; path = Controllers/MJPPlayerController.swift; sourceTree = "<group>"; };
 		D749E34E1E09B479000FD0B1 /* ResetPasswordController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ResetPasswordController.swift; path = Controllers/ResetPasswordController.swift; sourceTree = "<group>"; };
 		D749E3501E09C09E000FD0B1 /* AppHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AppHelper.swift; path = Utils/AppHelper.swift; sourceTree = "<group>"; };
@@ -477,6 +481,7 @@
 				D7F770021E08E3D100ECB684 /* PasswordChangeRequest.swift */,
 				D7F770031E08E3D100ECB684 /* PasswordResetRequest.swift */,
 				D7F770041E08E3D100ECB684 /* Pitch.swift */,
+				D73CC7CE209FE4A000DE6546 /* JobPitch.swift */,
 				D7F770051E08E3D100ECB684 /* Profile.swift */,
 				D7F770061E08E3D100ECB684 /* RegisterRequest.swift */,
 				D7F770071E08E3D100ECB684 /* Role.swift */,
@@ -498,6 +503,7 @@
 				D749E3501E09C09E000FD0B1 /* AppHelper.swift */,
 				D749E3541E0A8724000FD0B1 /* AppData.swift */,
 				D7E9347A1F4C153B00299762 /* PitchUploader.swift */,
+				D73CC7D0209FF14100DE6546 /* JobPitchUploader.swift */,
 			);
 			name = Utils;
 			sourceTree = "<group>";
@@ -716,6 +722,7 @@
 				D76C90461E238C90009C35E4 /* SideMenuController.swift in Sources */,
 				D7ECFBBF1E12FCEF00E2E071 /* JobSeekerProfileController.swift in Sources */,
 				D7CFBC6B1EF8E409003FC132 /* FileCell.swift in Sources */,
+				D73CC7D1209FF14100DE6546 /* JobPitchUploader.swift in Sources */,
 				D7F770171E08E3D100ECB684 /* MJPObjectWithDates.swift in Sources */,
 				D7ECFBBD1E12D9A100E2E071 /* MapController.swift in Sources */,
 				D788341D1ECAAF0600D99F4B /* UIColor+MDCRGB8Bit.m in Sources */,
@@ -775,6 +782,7 @@
 				D7F7700E1E08E3D100ECB684 /* Hours.swift in Sources */,
 				D787F6391E287A6700C47A88 /* LocationEditController.swift in Sources */,
 				D7F770101E08E3D100ECB684 /* Job.swift in Sources */,
+				D73CC7CF209FE4A000DE6546 /* JobPitch.swift in Sources */,
 				D749E34F1E09B479000FD0B1 /* ResetPasswordController.swift in Sources */,
 				D749E3551E0A8724000FD0B1 /* AppData.swift in Sources */,
 				D78834311ECAAF3E00D99F4B /* MDCSwipeResult.m in Sources */,

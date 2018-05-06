@@ -384,6 +384,29 @@ class APIConfigure: NSObject {
                          method: .any)
 
 
+        // ================= JobPitch =====================
+        
+        let jobPitchArray = [ "id", "video", "thumbnail", "job", "token" ]
+        
+        let jobPitchMapping = createResponseMappingForClass(JobPitch.classForCoder(),
+                                                         array: pitchArray,
+                                                         dictionary: nil,
+                                                         relationships: nil)
+        
+        configureSimpleMapping(JobPitch.classForCoder(),
+                               mappingArray: jobPitchArray,
+                               mappingDictionary: nil,
+                               mappingRelationships: nil,
+                               path: "/api/job-videos/",
+                               method: .POST)
+        
+        configureSimpleMapping(JobPitch.classForCoder(),
+                               mappingArray: jobPitchArray,
+                               mappingDictionary: nil,
+                               mappingRelationships: nil,
+                               path: "/api/job-videos/:pk/",
+                               method: .GET)
+        
         // ================= Job =====================
 
         let jobArray = [ "id", "created", "updated", "title", "sector",
@@ -396,8 +419,11 @@ class APIConfigure: NSObject {
                                    "mapping": locationMapping ],
                                  [ "source": "images",
                                    "destination": "images",
-                                   "mapping": imageMapping ] ]
-
+                                   "mapping": imageMapping ],
+                                 [ "source":          "videos",
+                                   "destination":     "videos",
+                                   "mapping":         jobPitchMapping ] ]
+        
         let jobMapping = createResponseMappingForClass(Job.classForCoder(),
                                                        array: jobArray,
                                                        dictionary: inverseDictionary(jobDictionary),

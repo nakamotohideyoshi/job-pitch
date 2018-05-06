@@ -98,7 +98,7 @@ export const _uploadPitch = ({ id, token }, pitchData, onUploadProgress) =>
         }
       )
       .on('httpUploadProgress', progress => {
-        onUploadProgress('Uploading...', Math.floor(progress.loaded / progress.total * 100));
+        onUploadProgress('Uploading Pitch...', Math.floor(progress.loaded / progress.total * 100));
       });
   });
 

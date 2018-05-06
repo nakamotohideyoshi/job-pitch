@@ -5,23 +5,25 @@ import com.amazonaws.mobileconnectors.s3.transferutility.TransferUtility;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.myjobpitch.api.MJPApi;
 import com.myjobpitch.api.MJPApiException;
-import com.myjobpitch.api.data.Pitch;
+import com.myjobpitch.api.data.JobPitch;
 import com.myjobpitch.tasks.APIAction;
 import com.myjobpitch.tasks.APITask;
 import com.myjobpitch.tasks.APITaskListener;
 
 import java.io.File;
 
-public class AWSPitchUpload extends AWSPitchUploadBase {
+public class AWSJobPitchUpload extends AWSJobPitchUploadBase {
     private final File file;
     private final TransferUtility transferUtility;
     private TransferObserver mObserver;
     private boolean mCancelled = false;
+    private int job;
 
-    public AWSPitchUpload(TransferUtility transferUtility, File file) {
+    public AWSJobPitchUpload(TransferUtility transferUtility, File file, int job) {
         super(null);
         this.transferUtility = transferUtility;
         this.file = file;
+        this.job = job;
     }
 
     @Override
@@ -32,7 +34,9 @@ public class AWSPitchUpload extends AWSPitchUploadBase {
         new APITask(new APIAction() {
             @Override
             public void run() throws MJPApiException {
-                pitch = MJPApi.shared().create(Pitch.class, new Pitch());
+                JobPitch data = new JobPitch();
+                data.setJob(job);
+                pitch = MJPApi.shared().create(JobPitch.class, data);
             }
         }).addListener(new APITaskListener() {
             @Override
@@ -42,10 +46,10 @@ public class AWSPitchUpload extends AWSPitchUploadBase {
                         return;
                     mObserver = transferUtility.upload(
                             "mjp-android-uploads",
-                            String.format("%s/%s.%s.pitches.%s", MJPApi.shared().getApiRoot().replace("/", ""), pitch.getToken(), pitch.getId(), file.getName()),
+                            String.format("%s/%s.%s.job-videos.%s", MJPApi.shared().getApiRoot().replace("/", ""), pitch.getToken(), pitch.getId(), file.getName()),
                             file
                     );
-                    mObserver.setTransferListener(AWSPitchUpload.this);
+                    mObserver.setTransferListener(AWSJobPitchUpload.this);
                     listener.onStateChange(PitchUpload.UPLOADING);
                 }
             }

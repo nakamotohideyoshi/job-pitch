@@ -1,5 +1,6 @@
 package com.myjobpitch.fragments;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -18,6 +19,7 @@ import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.myjobpitch.MediaPlayerActivity;
 import com.myjobpitch.R;
 import com.myjobpitch.api.MJPApi;
 import com.myjobpitch.api.MJPApiException;
@@ -46,6 +48,9 @@ public class ApplicationDetailFragment extends BaseFragment {
 
     @BindView(R.id.job_image_view)
     View logoView;
+
+    @BindView(R.id.job_pitch_play)
+    View playButton;
 
     @BindView(R.id.job_title)
     TextView titleView;
@@ -157,6 +162,10 @@ public class ApplicationDetailFragment extends BaseFragment {
             attributesView.setText(hours.getName());
         }
 
+        if (job.getPitch() == null || job.getPitch().getVideo() == null) {
+            playButton.setVisibility(View.GONE);
+        }
+
         descView.setText(job.getDescription());
         locationDescView.setText(location.getDescription());
 
@@ -216,6 +225,13 @@ public class ApplicationDetailFragment extends BaseFragment {
 
         new PhotoView(getApp(), path)
                 .show();
+    }
+
+    @OnClick(R.id.job_pitch_play)
+    void onPitchPlay() {
+        Intent intent = new Intent(getApp(), MediaPlayerActivity.class);
+        intent.putExtra(MediaPlayerActivity.PATH, jobSeeker.getPitch().getVideo());
+        startActivity(intent);
     }
 
     @OnClick(R.id.apply_button)

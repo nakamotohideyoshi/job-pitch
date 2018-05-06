@@ -2,7 +2,7 @@
 //  PitchUploader.swift
 //  MyJobPitch
 //
-//  Created by dev on 8/14/17.
+//  Created by dev on 5/4/18.
 //  Copyright © 2017 myjobpitch. All rights reserved.
 //
 
@@ -10,21 +10,23 @@ import UIKit
 import AWSS3
 import AVFoundation
 
-class PitchUploader: NSObject {
-
+class JobPitchUploader: NSObject {
+    
     var videoUrl: URL!
-    var pitch: Pitch!
-    var complete: ((Pitch?) -> Void)!
+    var pitch: JobPitch!
+    var complete: ((JobPitch?) -> Void)!
     var progress: ((Float) -> Void)!
     
-    func uploadVideo(videoUrl: URL!, complete:((Pitch?) -> Void)!, progress:((Float) -> Void)!) {
+    func uploadVideo(videoUrl: URL!, job: NSNumber, complete:((JobPitch?) -> Void)!, progress:((Float) -> Void)!) {
         
         self.videoUrl = videoUrl
         self.complete = complete
         self.progress = progress
         
-        API.shared().savePitch(pitch: Pitch(), success: { (data) in
-            self.pitch = data as! Pitch!
+        let pitch = JobPitch()
+        pitch.job = job
+        API.shared().saveJobPitch(pitch: pitch, success: { (data) in
+            self.pitch = data as! JobPitch!
             self.convertVideo()
         }) { (message, errors) in
             self.uploadFailed()
@@ -67,7 +69,7 @@ class PitchUploader: NSObject {
         }
         
         let urlKey = API.apiRoot.absoluteString.replacingOccurrences(of: "/", with: "")
-        let keyname = String(format: "%@/%@.%@.pitches.%@", urlKey, pitch.token, pitch.id, url.lastPathComponent)
+        let keyname = String(format: "%@/%@.%@.job-videos.%@", urlKey, pitch.token, pitch.id, url.lastPathComponent)
         let transferUtility = AWSS3TransferUtility.default()
         (transferUtility.uploadFile(url,
                                     bucket: "mjp-android-uploads",
@@ -93,8 +95,8 @@ class PitchUploader: NSObject {
     
     func getPitch() {
         
-        API.shared().getPitch(id: pitch.id, success: { (data) in
-            let pitch = data as! Pitch
+        API.shared().getJobPitch(id: pitch.id, success: { (data) in
+            let pitch = data as! JobPitch
             if pitch.video == nil {
                 Thread.sleep(forTimeInterval: 2)
                 self.getPitch()

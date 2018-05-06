@@ -19,6 +19,7 @@ import com.myjobpitch.api.data.Hours;
 import com.myjobpitch.api.data.ImageUpload;
 import com.myjobpitch.api.data.InitialTokens;
 import com.myjobpitch.api.data.Job;
+import com.myjobpitch.api.data.JobPitch;
 import com.myjobpitch.api.data.JobProfile;
 import com.myjobpitch.api.data.JobSeeker;
 import com.myjobpitch.api.data.JobStatus;
@@ -76,6 +77,7 @@ public class MJPApi {
         classEndPoints.put(JobSeeker.class, "job-seekers");
         classEndPoints.put(Pitch.class, "pitches");
         classEndPoints.put(Job.class, "jobs");
+        classEndPoints.put(JobPitch.class, "job-videos");
         classEndPoints.put(Location.class, "locations");
         classEndPoints.put(Business.class, "businesses");
         classEndPoints.put(Sector.class, "sectors");

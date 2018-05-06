@@ -19,52 +19,80 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
+
                 <include
                     android:id="@+id/job_image_view"
                     layout="@layout/view_image_loader"
                     android:layout_width="80dp"
                     android:layout_height="80dp"
-                    android:layout_marginRight="10dp"/>
+                    android:layout_marginRight="10dp" />
 
                 <TextView
                     android:id="@+id/job_title"
-                    android:text="Job Title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_toRightOf="@+id/job_image_view"
-                    android:textSize="20sp"
+                    android:text="Job Title"
                     android:textColor="@color/colorPrimary"
-                    android:textStyle="bold"/>
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/job_subtitle"
-                    android:text="Business Work Place"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/job_title"
                     android:layout_alignLeft="@+id/job_title"
+                    android:layout_below="@+id/job_title"
                     android:layout_marginTop="5dp"
-                    android:textSize="18sp"/>
+                    android:text="Business Work Place"
+                    android:textSize="18sp" />
 
                 <TextView
                     android:id="@+id/job_attributes"
-                    android:text="Full-time"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/job_subtitle"
                     android:layout_alignLeft="@+id/job_subtitle"
+                    android:layout_below="@+id/job_subtitle"
                     android:layout_marginTop="3dp"
+                    android:text="Full-time"
                     android:textColor="@color/colorGreen"
-                    android:textSize="16sp"/>
+                    android:textSize="16sp" />
 
                 <TextView
                     android:id="@+id/job_distance"
-                    android:text="0.04 Km"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
-                    android:textSize="14sp"
-                    android:textColor="@color/colorPrimary"/>
+                    android:text="0.04 Km"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="14sp" />
+
+
+                <LinearLayout
+                    android:id="@+id/job_pitch_play"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignStart="@+id/job_title"
+                    android:layout_below="@+id/job_attributes"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginBottom="8dp"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/icon_play1" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"
+                        android:text="Video Pitch"
+                        android:textColor="#000"
+                        android:textSize="18sp" />
+                </LinearLayout>
 
             </RelativeLayout>
 

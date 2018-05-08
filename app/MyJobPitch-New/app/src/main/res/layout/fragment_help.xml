@@ -113,56 +113,6 @@
                 android:src="@drawable/icon_right_arrow"/>
         </LinearLayout>
 
-        <LinearLayout
-            android:id="@+id/help_shareapp"
-            android:layout_width="match_parent"
-            android:layout_height="75dp"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
-            android:background="@drawable/table_cell">
-            <ImageView
-                android:layout_width="60dp"
-                android:layout_height="30dp"
-                android:src="@drawable/help_share"
-                android:tint="@color/colorPrimary"/>
-            <TextView
-                android:text="Share the App"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:textSize="18sp"
-                android:textColor="#202020"/>
-            <ImageView
-                android:layout_width="60dp"
-                android:layout_height="15dp"
-                android:src="@drawable/icon_right_arrow"/>
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/help_twitter"
-            android:layout_width="match_parent"
-            android:layout_height="75dp"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
-            android:background="@drawable/table_cell">
-            <ImageView
-                android:layout_width="60dp"
-                android:layout_height="30dp"
-                android:src="@drawable/help_twitter"
-                android:tint="@color/colorPrimary"/>
-            <TextView
-                android:text="Follow @myjobpitch"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:textSize="18sp"
-                android:textColor="#202020"/>
-            <ImageView
-                android:layout_width="60dp"
-                android:layout_height="15dp"
-                android:src="@drawable/icon_right_arrow"/>
-        </LinearLayout>
-
     </LinearLayout>
 
 </FrameLayout>

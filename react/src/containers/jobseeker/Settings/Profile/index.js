@@ -30,7 +30,7 @@ const INTRO_DATA = [
   {
     title: 'Welcome!',
     image: imgLogo,
-    comment: `You're just a few steps away from you next job!`
+    comment: `You're just a few steps away from your next job!`
   },
   {
     title: 'Complete your profile',
@@ -45,7 +45,7 @@ const INTRO_DATA = [
   {
     title: 'Get hired',
     image: imgIntro3,
-    comment: `You will be able to apply and recruiters will be able to search and see your profile the moment its complete, what are you waiting for!`
+    comment: `You will be able to apply and recruiters will be able to search and see your profile the moment it's complete, what are you waiting for!`
   }
 ];
 

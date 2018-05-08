@@ -9,9 +9,9 @@ class Intro extends React.Component {
 
   onChange = index => this.setState({ index });
 
-  prevArrow = props => <Icons.AngleLeft className="slick-prev" onClick={props.onClick} />;
+  prevArrow = props => <Icons.AngleLeft className={props.className} onClick={props.onClick} />;
 
-  nextArrow = props => <Icons.AngleRight className="slick-next" onClick={props.onClick} />;
+  nextArrow = props => <Icons.AngleRight className={props.className} onClick={props.onClick} />;
 
   render() {
     const { index } = this.state;
@@ -27,14 +27,12 @@ class Intro extends React.Component {
       <Wrapper visible footer={null} maskClosable={false} onCancel={this.props.onClose} zIndex={2000}>
         <Carousel afterChange={this.onChange} {...settings}>
           {this.props.data.map((data, i) => (
-            <div key={i}>
+            <div key={i} className="content">
+              <h3>{data.title}</h3>
               <div>
-                <h3>{data.title}</h3>
-                <div>
-                  <img src={data.image} alt="" />
-                </div>
-                <label>{data.comment}</label>
+                <img src={data.image} alt="" />
               </div>
+              <label>{data.comment}</label>
             </div>
           ))}
         </Carousel>

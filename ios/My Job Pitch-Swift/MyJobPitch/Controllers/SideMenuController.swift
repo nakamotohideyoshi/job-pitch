@@ -29,16 +29,17 @@ class SideMenuController: UIViewController {
         
         "change_pass":  ["icon": "menu-key",            "title": "Change Password",         "identifier": "ChangePassword",     "per": ""],
         "help":         ["icon": "menu-help",           "title": "Help",                    "identifier": "Help",               "per": ""],
+        "share":        ["icon": "menu-share",          "title": "Share",                   "identifier": "Share",              "per": ""],
         "contact_us":   ["icon": "menu-contact-us",     "title": "Contact Us",              "identifier": "ContactUs",          "per": ""],
         "log_out":      ["icon": "menu-logout",         "title": "Log Out",                 "identifier": "Signin",             "per": ""]
     ]
     
     static let jobSeekerMenu = [
-        "find_job", "applications1", "messages", "job_profile", "add_record", "view_profile", "change_pass", "help", "contact_us", "log_out"
+        "find_job", "applications1", "messages", "job_profile", "add_record", "view_profile", "change_pass", "help", "share", "contact_us", "log_out"
     ]
     
     static let recruiterMenu = [
-        "find_talent", "applications", "connections", "shortlist", "messages", "businesses", "change_pass", "help", "contact_us", "log_out"
+        "find_talent", "applications", "connections", "shortlist", "messages", "businesses", "change_pass", "help", "share", "contact_us", "log_out"
     ]
     
     static func getCurrentTitle(_ id: String!) -> String! {
@@ -176,7 +177,7 @@ extension SideMenuController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
-        var id = data[indexPath.row]
+        let id = data[indexPath.row]
         
         if SideMenuController.menuItems[id]?["identifier"] == "" {
             return
@@ -194,6 +195,10 @@ extension SideMenuController: UITableViewDelegate {
                                                         SideMenuController.pushController(id: id)
             }, cancel: "Cancel", cancelCallback: nil)
             popupController.okButton?.backgroundColor = AppData.greenColor
+        } else if id == "share" {
+            let itemProvider = MyCustomProvider(placeholderItem: "")
+            let controller = UIActivityViewController(activityItems: [itemProvider], applicationActivities: nil)
+            present(controller, animated: true, completion: nil)
         } else if id == "contact_us" {
             let url = URL(string: "mailto:support@myjobpitch.com")!
             if #available(iOS 10.0, *) {
@@ -202,10 +207,29 @@ extension SideMenuController: UITableViewDelegate {
                 UIApplication.shared.openURL(url)
             }
             //revealViewController().revealToggle(animated: false)
-        } else  {
+        } else {
             SideMenuController.pushController(id: id)
         }
 
+    }
+    
+}
+
+class MyCustomProvider: UIActivityItemProvider {
+    
+    override func activityViewController(_ activityViewController: UIActivityViewController, itemForActivityType activityType: UIActivityType) -> Any? {
+        if activityType == UIActivityType.postToFacebook {
+            UIPasteboard.general.string = AppData.user.isRecruiter() ? "https://www.myjobpitch.com/recruiters/" : "https://www.myjobpitch.com/candidates/";
+            return ""
+        }
+        return AppData.user.isRecruiter() ? "https://www.myjobpitch.com/recruiters/" : "https://www.myjobpitch.com/candidates/";
+    }
+    
+    override func activityViewController(_ activityViewController: UIActivityViewController, subjectForActivityType activityType: UIActivityType?) -> String {
+        if activityType?.rawValue == "com.apple.UIKit.activity.Mail" {
+            return AppData.user.isRecruiter() ? "https://www.myjobpitch.com/recruiters/" : "https://www.myjobpitch.com/candidates/";
+        }
+        return ""
     }
     
 }

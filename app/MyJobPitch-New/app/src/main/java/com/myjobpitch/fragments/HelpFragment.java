@@ -47,27 +47,6 @@ public class HelpFragment extends BaseFragment {
         goWebviewFragment("Privacy", "privacy");
     }
 
-    @OnClick(R.id.help_shareapp)
-    void onShareApp() {
-        String link = AppData.user.isRecruiter() ? "https://www.myjobpitch.com/recruiters/" : "https://www.myjobpitch.com/candidates/";
-        Intent sharingIntent = new Intent(Intent.ACTION_SEND);
-        sharingIntent.setType("text/html");
-        sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, link);
-        startActivity(Intent.createChooser(sharingIntent,"Share using"));
-    }
-
-    @OnClick(R.id.help_twitter)
-    void onFollow() {
-        Intent intent;
-        try {
-            getActivity().getPackageManager().getPackageInfo("com.twitter.android", 0);
-            intent = new Intent(Intent.ACTION_VIEW, Uri.parse("twitter://user?screen_name=myjobpitch"));
-        } catch (Exception e) {
-            intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://twitter.com/myjobpitch"));
-        }
-        startActivity(intent);
-    }
-
     void goWebviewFragment(String title, String filename) {
         WebviewFragment fragment = new WebviewFragment();
         fragment.title = title;

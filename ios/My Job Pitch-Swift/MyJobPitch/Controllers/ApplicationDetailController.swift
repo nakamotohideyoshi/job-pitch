@@ -9,6 +9,8 @@
 import UIKit
 import GoogleMaps
 import JTSImageViewController
+import AVFoundation
+import AVKit
 
 class ApplicationDetailController: MJPController {
 
@@ -22,6 +24,7 @@ class ApplicationDetailController: MJPController {
     @IBOutlet weak var mapView: GMSMapView!
     @IBOutlet weak var messageButton: RoundButton!
     @IBOutlet weak var chooseView: UIView!
+    @IBOutlet weak var pitchPlayButton: UIButton!
     
     var job: Job!
     var application: Application!
@@ -88,6 +91,10 @@ class ApplicationDetailController: MJPController {
             messageButton.removeFromSuperview()
         }
         
+        if job.getPitch() == nil {
+            pitchPlayButton.isHidden = true
+        }
+        
         var position = CLLocationCoordinate2DMake(location.latitude.doubleValue, location.longitude.doubleValue)
         if (application != nil) {
             let marker = GMSMarker()
@@ -107,6 +114,15 @@ class ApplicationDetailController: MJPController {
             circ.map = mapView
         }
         mapView.camera = GMSCameraPosition.camera(withTarget: position, zoom: 14)
+    }
+    
+    @IBAction func videoPitchAction(_ sender: Any) {
+        if let video = job.getPitch()?.video {
+            let player = AVPlayer(url: URL(string: video)!)
+            let playerController = AVPlayerViewController();
+            playerController.player = player
+            present(playerController, animated: true, completion: nil)
+        }
     }
     
     @IBAction func imageClickAction(_ sender: Any) {

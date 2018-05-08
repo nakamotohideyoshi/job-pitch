@@ -230,7 +230,7 @@ public class ApplicationDetailFragment extends BaseFragment {
     @OnClick(R.id.job_pitch_play)
     void onPitchPlay() {
         Intent intent = new Intent(getApp(), MediaPlayerActivity.class);
-        intent.putExtra(MediaPlayerActivity.PATH, jobSeeker.getPitch().getVideo());
+        intent.putExtra(MediaPlayerActivity.PATH, job.getPitch().getVideo());
         startActivity(intent);
     }
 

@@ -331,7 +331,7 @@ All you're missing is your video pitch!</string>
             <objects>
                 <navigationController navigationBarHidden="YES" id="Tn3-dg-KpG" sceneMemberID="viewController">
                     <nil key="simulatedTopBarMetrics"/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" translucent="NO" id="pbS-fN-baU">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" translucent="NO" id="pbS-fN-baU">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -352,14 +352,14 @@ All you're missing is your video pitch!</string>
                         <viewControllerLayoutGuide type="bottom" id="77Y-IX-ICT"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="C9Y-20-nAd">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="820"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="840"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="gp3-eA-lgW">
-                                <rect key="frame" x="0.0" y="64" width="375" height="756"/>
+                                <rect key="frame" x="0.0" y="64" width="375" height="776"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="w22-Hu-RDD" userLabel="Content View">
-                                        <rect key="frame" x="0.0" y="0.0" width="375" height="747"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="375" height="767"/>
                                         <subviews>
                                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="z7g-oz-bU3">
                                                 <rect key="frame" x="20" y="20" width="75" height="75"/>
@@ -402,13 +402,13 @@ All you're missing is your video pitch!</string>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Job Description:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Hod-I7-UhZ">
-                                                <rect key="frame" x="20" y="115" width="139" height="22"/>
+                                                <rect key="frame" x="20" y="135" width="139" height="22"/>
                                                 <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="18"/>
                                                 <color key="textColor" red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="calibratedRGB"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Scx-pS-8Dh">
-                                                <rect key="frame" x="20" y="147" width="335" height="77"/>
+                                                <rect key="frame" x="20" y="167" width="335" height="77"/>
                                                 <string key="text">Lorem ipsum dolor sit amet,
 consectetur adipiscing elit, sed do
 eiusmod tempor incididunt ut labore
@@ -418,7 +418,7 @@ et dolore magna aliqua.</string>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="TFj-6p-5rM" customClass="GreenButton" customModule="MyJobPitch" customModuleProvider="target">
-                                                <rect key="frame" x="20" y="244" width="335" height="40"/>
+                                                <rect key="frame" x="20" y="264" width="335" height="40"/>
                                                 <color key="backgroundColor" red="0.0" green="0.73333333329999995" blue="0.6588235294" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="40" id="SaX-HA-3oM"/>
@@ -432,7 +432,7 @@ et dolore magna aliqua.</string>
                                                 </connections>
                                             </button>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="9dc-J1-Moi">
-                                                <rect key="frame" x="20" y="304" width="335" height="96"/>
+                                                <rect key="frame" x="20" y="324" width="335" height="96"/>
                                                 <subviews>
                                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="YkI-fb-bCQ" customClass="GreenButton" customModule="MyJobPitch" customModuleProvider="target">
                                                         <rect key="frame" x="0.0" y="0.0" width="335" height="40"/>
@@ -472,13 +472,13 @@ et dolore magna aliqua.</string>
                                                 </constraints>
                                             </view>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Workplace Description:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1Zb-gP-07D">
-                                                <rect key="frame" x="20" y="420" width="197" height="22"/>
+                                                <rect key="frame" x="20" y="440" width="197" height="22"/>
                                                 <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="18"/>
                                                 <color key="textColor" red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="calibratedRGB"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jV5-AI-jep">
-                                                <rect key="frame" x="20" y="452" width="335" height="77"/>
+                                                <rect key="frame" x="20" y="472" width="335" height="77"/>
                                                 <string key="text">Lorem ipsum dolor sit amet,
 consectetur adipiscing elit, sed do
 eiusmod tempor incididunt ut labore
@@ -488,12 +488,25 @@ et dolore magna aliqua.</string>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="I6G-SN-8If" customClass="GMSMapView">
-                                                <rect key="frame" x="20" y="539" width="335" height="188"/>
+                                                <rect key="frame" x="20" y="559" width="335" height="188"/>
                                                 <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                                                 <constraints>
                                                     <constraint firstAttribute="width" secondItem="I6G-SN-8If" secondAttribute="height" multiplier="16:9" id="rer-Kt-8Bm"/>
                                                 </constraints>
                                             </view>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="lMK-KL-Qjr">
+                                                <rect key="frame" x="110" y="103" width="127" height="25"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="height" constant="25" id="WKx-1U-CA1"/>
+                                                </constraints>
+                                                <fontDescription key="fontDescription" type="system" pointSize="18"/>
+                                                <state key="normal" title="  Video Pitch" image="play-icon">
+                                                    <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                </state>
+                                                <connections>
+                                                    <action selector="videoPitchAction:" destination="dLn-iH-H0Z" eventType="touchUpInside" id="pID-fW-V1N"/>
+                                                </connections>
+                                            </button>
                                         </subviews>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         <constraints>
@@ -502,7 +515,7 @@ et dolore magna aliqua.</string>
                                             <constraint firstItem="eEy-fI-Mmb" firstAttribute="top" secondItem="3JZ-PJ-g8a" secondAttribute="top" constant="3" id="6Mm-nZ-IzS"/>
                                             <constraint firstItem="Gmn-4V-DXg" firstAttribute="top" secondItem="z7g-oz-bU3" secondAttribute="top" id="7lh-yR-av3"/>
                                             <constraint firstItem="TFj-6p-5rM" firstAttribute="trailing" secondItem="Scx-pS-8Dh" secondAttribute="trailing" id="BLo-AS-h6g"/>
-                                            <constraint firstItem="Hod-I7-UhZ" firstAttribute="top" secondItem="z7g-oz-bU3" secondAttribute="bottom" constant="20" id="C4G-9a-pA7"/>
+                                            <constraint firstItem="Hod-I7-UhZ" firstAttribute="top" secondItem="z7g-oz-bU3" secondAttribute="bottom" constant="40" id="C4G-9a-pA7"/>
                                             <constraint firstAttribute="trailing" secondItem="eEy-fI-Mmb" secondAttribute="trailing" constant="20" id="Cam-gk-iAu"/>
                                             <constraint firstItem="1Zb-gP-07D" firstAttribute="top" secondItem="TFj-6p-5rM" secondAttribute="bottom" priority="750" constant="20" id="Dld-6e-Deo"/>
                                             <constraint firstItem="WtJ-hl-NCK" firstAttribute="top" secondItem="3JZ-PJ-g8a" secondAttribute="bottom" constant="5" id="HdU-VO-tCp"/>
@@ -527,6 +540,7 @@ et dolore magna aliqua.</string>
                                             <constraint firstItem="9dc-J1-Moi" firstAttribute="top" secondItem="Scx-pS-8Dh" secondAttribute="bottom" priority="750" constant="20" id="dHR-yV-rVD"/>
                                             <constraint firstItem="Hod-I7-UhZ" firstAttribute="leading" secondItem="z7g-oz-bU3" secondAttribute="leading" id="f4w-1l-5uG"/>
                                             <constraint firstItem="3JZ-PJ-g8a" firstAttribute="leading" secondItem="z7g-oz-bU3" secondAttribute="trailing" constant="15" id="fDU-VZ-V4R"/>
+                                            <constraint firstItem="lMK-KL-Qjr" firstAttribute="top" secondItem="8bF-hh-xEh" secondAttribute="bottom" constant="5" id="g6g-iL-CSF"/>
                                             <constraint firstAttribute="bottom" secondItem="I6G-SN-8If" secondAttribute="bottom" constant="20" id="he6-P9-byd"/>
                                             <constraint firstItem="3JZ-PJ-g8a" firstAttribute="top" secondItem="z7g-oz-bU3" secondAttribute="top" id="hx7-hB-bDP"/>
                                             <constraint firstItem="I6G-SN-8If" firstAttribute="leading" secondItem="Scx-pS-8Dh" secondAttribute="leading" id="oFg-SX-uQ6"/>
@@ -538,6 +552,7 @@ et dolore magna aliqua.</string>
                                             <constraint firstItem="jV5-AI-jep" firstAttribute="top" secondItem="1Zb-gP-07D" secondAttribute="bottom" constant="10" id="rb1-3j-FQc"/>
                                             <constraint firstAttribute="trailing" secondItem="Scx-pS-8Dh" secondAttribute="trailing" constant="20" id="uw7-ax-HHs"/>
                                             <constraint firstItem="Gmn-4V-DXg" firstAttribute="trailing" secondItem="z7g-oz-bU3" secondAttribute="trailing" id="yDH-6y-eqj"/>
+                                            <constraint firstItem="lMK-KL-Qjr" firstAttribute="leading" secondItem="8bF-hh-xEh" secondAttribute="leading" id="z9H-eO-6Sc"/>
                                         </constraints>
                                     </view>
                                 </subviews>
@@ -561,7 +576,7 @@ et dolore magna aliqua.</string>
                     <navigationItem key="navigationItem" title="Job Detail" id="8hj-8o-sA3"/>
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
                     <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
-                    <size key="freeformSize" width="375" height="820"/>
+                    <size key="freeformSize" width="375" height="840"/>
                     <connections>
                         <outlet property="attributes" destination="8bF-hh-xEh" id="pm0-QN-rR6"/>
                         <outlet property="chooseView" destination="9dc-J1-Moi" id="Ikx-Fa-5ki"/>
@@ -573,6 +588,7 @@ et dolore magna aliqua.</string>
                         <outlet property="locationDescription" destination="jV5-AI-jep" id="LJ4-SX-0KD"/>
                         <outlet property="mapView" destination="I6G-SN-8If" id="wdQ-35-GKL"/>
                         <outlet property="messageButton" destination="TFj-6p-5rM" id="TVy-me-JAF"/>
+                        <outlet property="pitchPlayButton" destination="lMK-KL-Qjr" id="ET7-yu-zxc"/>
                         <outlet property="scrollView" destination="gp3-eA-lgW" id="bbO-AE-U1G"/>
                     </connections>
                 </viewController>
@@ -691,11 +707,11 @@ et dolore magna aliqua.</string>
                                         <rect key="frame" x="0.0" y="28" width="414" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="FwQ-9S-5ai" id="KKf-Hd-fE5">
-                                            <rect key="frame" x="0.0" y="0.0" width="414" height="43"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="414" height="43.666666666666664"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="6ed-oU-w2g">
-                                                    <rect key="frame" x="15" y="0.0" width="384" height="43"/>
+                                                    <rect key="frame" x="15" y="0.0" width="384" height="43.666666666666664"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <nil key="textColor"/>
@@ -5338,7 +5354,7 @@ If required I will give full details if I have been convicted of any criminal of
                                         <rect key="frame" x="0.0" y="28" width="414" height="50"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="nzo-B5-0ue" id="OSP-T5-Qi6">
-                                            <rect key="frame" x="0.0" y="0.0" width="414" height="49"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="414" height="50"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="0AW-b2-3pX">
@@ -5842,7 +5858,7 @@ jobs yet.</string>
                                         <rect key="frame" x="0.0" y="28" width="414" height="50"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="Ye8-XR-eD2" id="d3R-MQ-WJS">
-                                            <rect key="frame" x="0.0" y="0.0" width="414" height="49"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="414" height="50"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="60E-gj-h1L">

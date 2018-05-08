@@ -20,7 +20,7 @@ const INTRO_DATA = [
   {
     title: 'Welcome!',
     image: imgLogo,
-    comment: `Faster Screening of Candidates, no more piles of CV’s and remember adverts are always free.`
+    comment: `Faster Screening of Candidates, no more piles of CVs and remember adverts are always free.`
   },
   {
     title: 'Post your first job',
@@ -35,7 +35,7 @@ const INTRO_DATA = [
   {
     title: 'Reusable ads',
     image: imgIntro3,
-    comment: `Your job ads can be quickly reactivated to save efforts next time.`
+    comment: `Your job ads can be quickly reactivated to save effort next time.`
   }
 ];
 

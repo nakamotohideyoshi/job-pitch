@@ -9,8 +9,8 @@ export default styled(Modal)`
       .slick-slide {
         padding-bottom: 20px;
 
-        > div {
-          display: flex;
+        .content {
+          display: flex !important;
           flex-direction: column;
           text-align: center;
           height: 360px;

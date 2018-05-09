@@ -17,6 +17,7 @@ from mjp.serializers import (
     BusinessSerializer,
     LocationSerializer,
     JobSerializer,
+    JobSerializerV1,
 )
 from mjp.serializers.recruiter import (
     BusinessImageSerializer,
@@ -163,7 +164,15 @@ class UserJobViewSet(viewsets.ModelViewSet):
             return True
 
     permission_classes = (permissions.IsAuthenticated, UserJobPermission)
-    serializer_class = JobSerializer
+
+    def get_serializer_class(self):
+        try:
+            version = int(self.request.version)
+        except (TypeError, ValueError):
+            version = 1
+        if version > 1:
+            return JobSerializer
+        return JobSerializerV1
 
     def get_queryset(self):
         location = self.request.query_params.get('location', None)

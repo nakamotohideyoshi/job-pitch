@@ -43,15 +43,6 @@ class ApplicationViewSet(viewsets.ModelViewSet):
     update_status_serializer_class = ApplicationConnectSerializer
     update_shortlist_serializer_class = ApplicationShortlistUpdateSerializer
 
-    def get_serializer_class(self):
-        try:
-            version = int(self.request.version)
-        except (TypeError, ValueError):
-            version = 1
-        if version > 1:
-            return ApplicationSerializer
-        return ApplicationSerializerV1
-
     def perform_create(self, serializer):
         job = Job.objects.get(pk=self.request.data['job'])
         role = self.request.user.role
@@ -110,7 +101,13 @@ class ApplicationViewSet(viewsets.ModelViewSet):
             if self.request.data.get('connect') is not None:
                 return self.update_status_serializer_class
             raise PermissionDenied()
-        return self.serializer_class
+        try:
+            version = int(self.request.version)
+        except (TypeError, ValueError):
+            version = 1
+        if version > 1:
+            return ApplicationSerializer
+        return ApplicationSerializerV1
 
     def get_queryset(self):
         query = Application.objects.annotate(Max('messages__created')).order_by('-messages__created__max', '-updated')

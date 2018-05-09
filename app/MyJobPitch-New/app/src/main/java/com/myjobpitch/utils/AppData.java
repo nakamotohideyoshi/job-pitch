@@ -24,7 +24,8 @@ import java.util.List;
 
 public class AppData {
 
-    public static final boolean PRODUCT_VERSION = false;
+    public static final int API_VERSION = 2;
+    public static final boolean PRODUCTION = false;
 
     public static User user;
     public static boolean existProfile = false;

@@ -52,7 +52,7 @@ class LoginController: MJPController {
         
         navigationController?.navigationBar.isHidden = true
         
-        if (AppData.productVersion) {
+        if (AppData.production) {
             apiButton.removeFromSuperview()
         } else {
             if let url = UserDefaults.standard.string(forKey: "api") {

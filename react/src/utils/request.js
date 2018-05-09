@@ -3,7 +3,9 @@ import { call, put, take, race } from 'redux-saga/effects';
 import { LOCATION_CHANGE } from 'react-router-redux';
 import { LOGOUT } from 'redux/constants';
 import { notification } from 'antd';
+import { API_VERSION } from 'const';
 
+axios.defaults.headers.common['Accept'] = `application/json; version=${API_VERSION}`;
 axios.defaults.xsrfCookieName = 'csrftoken';
 axios.defaults.xsrfHeaderName = 'X-CSRFToken';
 if (process.env.NODE_ENV !== 'production') {

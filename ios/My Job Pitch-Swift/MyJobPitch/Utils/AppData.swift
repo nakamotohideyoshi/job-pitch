@@ -12,8 +12,9 @@ class AppData: NSObject {
 
     // const
     
-    static let productVersion = false
-
+    static let apiVersion = 2
+    static let production = false
+    
     static let greenColor = UIColor(red: 0/256.0, green: 187/256.0, blue: 168/256.0, alpha: 1)
     static let yellowColor = UIColor(red: 256/256.0, green: 147/256.0, blue: 0/256.0, alpha: 1)
     static let greyColor = UIColor(red: 214/256.0, green: 214/256.0, blue: 214/256.0, alpha: 1)

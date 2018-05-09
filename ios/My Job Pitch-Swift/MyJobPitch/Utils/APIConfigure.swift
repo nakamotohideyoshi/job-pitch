@@ -18,6 +18,7 @@ class APIConfigure: NSObject {
         super.init()
 
         let client = AFRKHTTPClient(baseURL: API.apiRoot)
+        client?.setDefaultHeader("Accept", value: String(format: "application/json; version=%d", AppData.apiVersion))
  
         RKObjectManager.setShared(nil)
         manager = RKObjectManager.init(httpClient: client)!

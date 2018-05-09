@@ -122,7 +122,7 @@
             </LinearLayout>
 
             <TextView
-                android:text="Record your up to 30 sec selfie video. The key is to just be yourself! You can record on your phone pretty much anywhere, at home on the bus or in a coffee shop it doesn’t matter, and you can re-record as many times as you want."
+                android:text="Record or upload a short video intro to showcase your company. Tell potential candidates about the role, and why it is a great place to work!"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"

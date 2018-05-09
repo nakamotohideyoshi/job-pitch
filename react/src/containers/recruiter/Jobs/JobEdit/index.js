@@ -342,11 +342,9 @@ class JobEdit extends React.Component {
                     placement="right"
                     content={
                       <span>
-                        Record your up to 30 sec selfie video. The key is to<br />
-                        just be yourself! You can record on your phone pretty<br />
-                        much anywhere, at home on the bus or in a coffee shop<br />
-                        it doesn’t matter, and you can re-record as many times<br />
-                        times as you want. Check out our{' '}
+                        Record or upload a short video intro to showcase your company.<br />
+                        Tell potential candidates about the role, and why it is a great<br />
+                        place to work! Check out our{' '}
                         <a href="https://vimeo.com/255467562" target="_blank" rel="noopener noreferrer">
                           example video
                         </a>

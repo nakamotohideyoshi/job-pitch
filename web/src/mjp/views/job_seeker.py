@@ -2,7 +2,7 @@ from django.contrib.gis.measure import D
 from rest_framework import permissions, viewsets
 
 from mjp.models import Business, Location, JobSeeker, JobProfile, Pitch, Job
-from mjp.serializers import BusinessSerializer, LocationSerializer, JobSerializer
+from mjp.serializers import BusinessSerializer, LocationSerializer, JobSerializer, JobSerializerV1
 from mjp.serializers.job_seeker import PitchSerializer, JobProfileSerializer
 
 
@@ -95,7 +95,6 @@ class PitchViewSet(viewsets.ModelViewSet):
     queryset = Pitch.objects.all()
 
 
-
 class JobViewSet(viewsets.ReadOnlyModelViewSet):
     class JobPermission(permissions.BasePermission):
         def has_permission(self, request, view):
@@ -106,7 +105,15 @@ class JobViewSet(viewsets.ReadOnlyModelViewSet):
             return True
 
     permission_classes = (permissions.IsAuthenticated, JobPermission)
-    serializer_class = JobSerializer
+
+    def get_serializer_class(self):
+        try:
+            version = int(self.request.version)
+        except (TypeError, ValueError):
+            version = 1
+        if version > 1:
+            return JobSerializer
+        return JobSerializerV1
 
     def get_queryset(self):
         job_seeker = self.request.user.job_seeker

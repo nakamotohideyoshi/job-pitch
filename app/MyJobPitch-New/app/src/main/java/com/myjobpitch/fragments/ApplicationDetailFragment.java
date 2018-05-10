@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -15,7 +16,6 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -29,6 +29,7 @@ import com.myjobpitch.api.data.Business;
 import com.myjobpitch.api.data.Contract;
 import com.myjobpitch.api.data.Hours;
 import com.myjobpitch.api.data.Job;
+import com.myjobpitch.api.data.JobPitch;
 import com.myjobpitch.api.data.JobProfile;
 import com.myjobpitch.api.data.JobSeeker;
 import com.myjobpitch.api.data.Location;
@@ -46,11 +47,8 @@ import butterknife.OnClick;
 
 public class ApplicationDetailFragment extends BaseFragment {
 
-    @BindView(R.id.job_image_view)
+    @BindView(R.id.job_logo_view)
     View logoView;
-
-    @BindView(R.id.job_pitch_play)
-    View playButton;
 
     @BindView(R.id.job_title)
     TextView titleView;
@@ -58,19 +56,29 @@ public class ApplicationDetailFragment extends BaseFragment {
     @BindView(R.id.job_subtitle)
     TextView subtitleView;
 
-    @BindView(R.id.job_attributes)
-    TextView attributesView;
+    @BindView(R.id.job_contract)
+    TextView contractText;
 
-    @BindView(R.id.job_distance)
-    TextView distanceView;
-
-    @BindView(R.id.job_desc)
-    TextView descView;
+    @BindView(R.id.job_hours)
+    TextView hoursText;
 
     @BindView(R.id.apply_button)
     Button applyButton;
     @BindView(R.id.remove_button)
     Button removeButton;
+
+    @BindView(R.id.job_distance_view)
+    View distanceView;
+    @BindView(R.id.job_distance)
+    TextView distanceText;
+
+    @BindView(R.id.job_desc)
+    TextView descView;
+
+    @BindView(R.id.job_pitch_play)
+    View pitchPlayView;
+    @BindView(R.id.job_pitch_thumbnail)
+    ImageView pitchThumbnailView;
 
     @BindView(R.id.location_desc)
     TextView locationDescView;
@@ -79,12 +87,10 @@ public class ApplicationDetailFragment extends BaseFragment {
     MapView mapView;
 
     GoogleMap googleMap;
-
     JobSeeker jobSeeker;
     JobProfile profile;
 
     public Application application;
-
     public Job job;
     public Action action;
 
@@ -101,7 +107,7 @@ public class ApplicationDetailFragment extends BaseFragment {
         final View view = inflater.inflate(R.layout.fragment_application_detail, container, false);
         ButterKnife.bind(this, view);
 
-        title = "Job Detail";
+        title = "Job Details";
 
         // map setting
 
@@ -152,18 +158,17 @@ public class ApplicationDetailFragment extends BaseFragment {
         Hours hours = AppData.get(Hours.class, job.getHours());
 
         titleView.setText(job.getTitle());
-        distanceView.setText(AppHelper.distance(profile.getLatitude(), profile.getLongitude(), location.getLatitude(), location.getLongitude()));
+        distanceText.setText(AppHelper.distance(profile.getLatitude(), profile.getLongitude(), location.getLatitude(), location.getLongitude()));
         subtitleView.setText(AppHelper.getBusinessName(job));
 
-        attributesView.setText(hours.getName());
-        if (contract.getId() == AppData.get(Contract.class, Contract.PERMANENT).getId()) {
-            attributesView.setText(String.format("%s (%s)", hours.getName(), contract.getName()));
-        } else {
-            attributesView.setText(hours.getName());
-        }
+        hoursText.setText(hours.getName());
+        contractText.setText(contract.getName());
 
-        if (job.getPitch() == null || job.getPitch().getVideo() == null) {
-            playButton.setVisibility(View.GONE);
+        JobPitch pitch = job.getPitch();
+        if (pitch == null || pitch.getVideo() == null) {
+            pitchPlayView.setVisibility(View.GONE);
+        } else {
+            AppHelper.loadImage(pitch.getThumbnail(), pitchThumbnailView);
         }
 
         descView.setText(job.getDescription());
@@ -205,7 +210,7 @@ public class ApplicationDetailFragment extends BaseFragment {
 
     }
 
-    @OnClick(R.id.job_image_view)
+    @OnClick(R.id.job_logo_view)
     void onClickImage() {
 
         String path = "res:///" + R.drawable.default_logo;

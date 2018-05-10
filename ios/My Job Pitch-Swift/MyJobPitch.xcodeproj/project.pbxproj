@@ -59,7 +59,7 @@
 		D7896AEB1E0C854600533884 /* LocationDetailController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7896AEA1E0C854600533884 /* LocationDetailController.swift */; };
 		D7896AED1E0C85BF00533884 /* JobCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7896AEC1E0C85BF00533884 /* JobCell.swift */; };
 		D7896AEF1E0CC51300533884 /* JobSeekerDetailController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7896AEE1E0CC51300533884 /* JobSeekerDetailController.swift */; };
-		D7896AF11E0F0D6300533884 /* ApplicationDetailController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7896AF01E0F0D6300533884 /* ApplicationDetailController.swift */; };
+		D7896AF11E0F0D6300533884 /* ApplicationDetailsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7896AF01E0F0D6300533884 /* ApplicationDetailsController.swift */; };
 		D7AF8DC91E1C997200C57DDC /* PitchController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7AF8DC81E1C997200C57DDC /* PitchController.swift */; };
 		D7AF8DCB1E1C9CEA00C57DDC /* CameraController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7AF8DCA1E1C9CEA00C57DDC /* CameraController.swift */; };
 		D7B07B831E08DDE1005B9EBE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7B07B821E08DDE1005B9EBE /* AppDelegate.swift */; };
@@ -184,7 +184,7 @@
 		D7896AEA1E0C854600533884 /* LocationDetailController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = LocationDetailController.swift; path = Controllers/LocationDetailController.swift; sourceTree = "<group>"; };
 		D7896AEC1E0C85BF00533884 /* JobCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = JobCell.swift; path = Views/JobCell.swift; sourceTree = "<group>"; };
 		D7896AEE1E0CC51300533884 /* JobSeekerDetailController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = JobSeekerDetailController.swift; path = Controllers/JobSeekerDetailController.swift; sourceTree = "<group>"; };
-		D7896AF01E0F0D6300533884 /* ApplicationDetailController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ApplicationDetailController.swift; path = Controllers/ApplicationDetailController.swift; sourceTree = "<group>"; };
+		D7896AF01E0F0D6300533884 /* ApplicationDetailsController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ApplicationDetailsController.swift; path = Controllers/ApplicationDetailsController.swift; sourceTree = "<group>"; };
 		D7AF8DC81E1C997200C57DDC /* PitchController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PitchController.swift; path = Controllers/PitchController.swift; sourceTree = "<group>"; };
 		D7AF8DCA1E1C9CEA00C57DDC /* CameraController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CameraController.swift; path = Controllers/CameraController.swift; sourceTree = "<group>"; };
 		D7B07B7F1E08DDE1005B9EBE /* MyJobPitch.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MyJobPitch.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -305,7 +305,7 @@
 		D749E35C1E0B6AC0000FD0B1 /* JobSeeker */ = {
 			isa = PBXGroup;
 			children = (
-				D7896AF01E0F0D6300533884 /* ApplicationDetailController.swift */,
+				D7896AF01E0F0D6300533884 /* ApplicationDetailsController.swift */,
 				D7ECFBBE1E12FCEF00E2E071 /* JobSeekerProfileController.swift */,
 				D76C905C1E261ABC009C35E4 /* JobProfileController.swift */,
 				D7AF8DC81E1C997200C57DDC /* PitchController.swift */,
@@ -694,7 +694,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				D7F7702B1E099D3E00ECB684 /* PopupController.swift in Sources */,
-				D7896AF11E0F0D6300533884 /* ApplicationDetailController.swift in Sources */,
+				D7896AF11E0F0D6300533884 /* ApplicationDetailsController.swift in Sources */,
 				D7AF8DC91E1C997200C57DDC /* PitchController.swift in Sources */,
 				D7B6F5381E6466E50026A7BD /* JobDetailController.swift in Sources */,
 				D78834291ECAAF3400D99F4B /* MDCSwipeOptions.m in Sources */,

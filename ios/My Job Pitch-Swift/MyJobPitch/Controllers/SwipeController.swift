@@ -198,7 +198,7 @@ class SwipeController: MJPController {
         
         if isFindJob {
             let job = data[currentIndex - cards.count] as! Job
-            ApplicationDetailController.pushController(job: job,
+            ApplicationDetailsController.pushController(job: job,
                                                        application: nil,
                                                chooseDelegate: self)
         } else {

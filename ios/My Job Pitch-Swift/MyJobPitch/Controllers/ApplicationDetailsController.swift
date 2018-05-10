@@ -1,5 +1,5 @@
 //
-//  ApplicationDetailController.swift
+//  ApplicationDetailsController.swift
 //  MyJobPitch
 //
 //  Created by dev on 12/25/16.
@@ -12,19 +12,23 @@ import JTSImageViewController
 import AVFoundation
 import AVKit
 
-class ApplicationDetailController: MJPController {
+class ApplicationDetailsController: MJPController {
 
     @IBOutlet weak var imgView: UIImageView!
     @IBOutlet weak var jobTitle: UILabel!
-    @IBOutlet weak var distance: UILabel!
     @IBOutlet weak var jobBusinessLocation: UILabel!
-    @IBOutlet weak var attributes: UILabel!
+    @IBOutlet weak var contractLabel: UILabel!
+    @IBOutlet weak var hoursLabel: UILabel!
+    @IBOutlet weak var distanceLabel: UILabel!
+    @IBOutlet weak var distanceView: UIView!
+    @IBOutlet weak var removeView: UIView!
+    @IBOutlet weak var applyView: UIView!
+    @IBOutlet weak var messageView: UIView!
     @IBOutlet weak var jobDescription: UILabel!
+    @IBOutlet weak var pitchView: UIView!
+    @IBOutlet weak var pitchThumbnail: UIImageView!
     @IBOutlet weak var locationDescription: UILabel!
     @IBOutlet weak var mapView: GMSMapView!
-    @IBOutlet weak var messageButton: RoundButton!
-    @IBOutlet weak var chooseView: UIView!
-    @IBOutlet weak var pitchPlayButton: UIButton!
     
     var job: Job!
     var application: Application!
@@ -71,28 +75,28 @@ class ApplicationDetailController: MJPController {
         let hours = AppData.getHours(job.hours)!
         
         jobTitle.text = job.title
-        distance.text = AppHelper.distance(latitude1: profile.latitude, longitude1: profile.longitude, latitude2: location.latitude, longitude2: location.longitude)
-        
         jobBusinessLocation.text = job.getBusinessName()
         
-        if contract.id == AppData.getContractByName(Contract.CONTRACT_PERMANENT).id {
-            attributes.text = String(format: "%@ (%@)", hours.name, contract.shortName)
-        } else {
-            attributes.text = hours.name
-        }
+        distanceLabel.text = AppHelper.distance(latitude1: profile.latitude, longitude1: profile.longitude, latitude2: location.latitude, longitude2: location.longitude)
+        
+        contractLabel.text = contract.name
+        hoursLabel.text = hours.name
         
         jobDescription.text = job.desc
         locationDescription.text = location.desc
         
         if application != nil || onlyView {
-            chooseView.removeFromSuperview()
+            removeView.removeFromSuperview()
+            applyView.removeFromSuperview()
         }
         if application == nil || onlyView {
-            messageButton.removeFromSuperview()
+            messageView.removeFromSuperview()
         }
         
         if job.getPitch() == nil {
-            pitchPlayButton.isHidden = true
+            pitchView.removeFromSuperview()
+        } else {
+            AppHelper.loadImageURL(imageUrl: (job.getPitch()?.thumbnail)!, imageView: pitchThumbnail, completion: nil)
         }
         
         var position = CLLocationCoordinate2DMake(location.latitude.doubleValue, location.longitude.doubleValue)
@@ -116,15 +120,6 @@ class ApplicationDetailController: MJPController {
         mapView.camera = GMSCameraPosition.camera(withTarget: position, zoom: 14)
     }
     
-    @IBAction func videoPitchAction(_ sender: Any) {
-        if let video = job.getPitch()?.video {
-            let player = AVPlayer(url: URL(string: video)!)
-            let playerController = AVPlayerViewController();
-            playerController.player = player
-            present(playerController, animated: true, completion: nil)
-        }
-    }
-    
     @IBAction func imageClickAction(_ sender: Any) {
     
         let imageInfo = JTSImageInfo()
@@ -143,8 +138,11 @@ class ApplicationDetailController: MJPController {
         
     }
     
-    @IBAction func messageAction(_ sender: Any) {
-        MessageController0.showModal(application: application)
+    @IBAction func removeAction(_ sender: Any) {
+        PopupController.showYellow("Are you sure you are not interested in this job?", ok: "I'm Sure", okCallback: {
+            _ = self.navigationController?.popViewController(animated: true)
+            self.chooseDelegate?.remove()
+        }, cancel: "Cancel", cancelCallback: nil)
     }
     
     @IBAction func applyAction(_ sender: Any) {
@@ -156,17 +154,23 @@ class ApplicationDetailController: MJPController {
         }, cancel: "Cancel", cancelCallback: nil)
     }
     
-    @IBAction func removeAction(_ sender: Any) {
-        PopupController.showYellow("Are you sure you are not interested in this job?", ok: "I'm Sure", okCallback: {
-            _ = self.navigationController?.popViewController(animated: true)
-            self.chooseDelegate?.remove()
-        }, cancel: "Cancel", cancelCallback: nil)
+    @IBAction func messageAction(_ sender: Any) {
+        MessageController0.showModal(application: application)
+    }
+    
+    @IBAction func videoPitchAction(_ sender: Any) {
+        if let video = job.getPitch()?.video {
+            let player = AVPlayer(url: URL(string: video)!)
+            let playerController = AVPlayerViewController();
+            playerController.player = player
+            present(playerController, animated: true, completion: nil)
+        }
     }
 
     static func pushController(job: Job!,
                                application: Application!,
                                chooseDelegate: ChooseDelegate!) {
-        let controller = AppHelper.mainStoryboard.instantiateViewController(withIdentifier: "ApplicationDetail") as! ApplicationDetailController
+        let controller = AppHelper.mainStoryboard.instantiateViewController(withIdentifier: "ApplicationDetails") as! ApplicationDetailsController
         controller.job = job
         controller.application = application
         controller.chooseDelegate = chooseDelegate

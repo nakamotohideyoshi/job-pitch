@@ -34,6 +34,7 @@ class HeaderPopover extends React.Component {
         onVisibleChange={this.show}
         content={<Menu theme="light" mode="inline" onClick={this.hide} />}
         trigger="click"
+        overlayStyle={{ position: 'fixed' }}
       >
         <MenuButton style={{ float }}>
           <Icon />

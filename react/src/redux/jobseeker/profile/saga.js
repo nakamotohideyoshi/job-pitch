@@ -59,24 +59,24 @@ export const _uploadPitch = ({ id, token }, pitchData, onUploadProgress) =>
   });
 
 function* uploadPitch(action) {
-  const { data, onUploadProgress, success, fail } = action.payload;
+  const { data, onProgress, onSuccess, onFail } = action.payload;
 
-  onUploadProgress('Starting pitch upload...');
+  onProgress('Starting pitch upload...');
   let newPitch = yield call(postRequest({ url: `/api/pitches/` }));
 
   if (!newPitch) {
-    fail && fail(`Upload failed`);
+    onFail && onFail();
     return;
   }
 
   try {
-    yield call(_uploadPitch, newPitch, data, onUploadProgress);
+    yield call(_uploadPitch, newPitch, data, onProgress);
   } catch (error) {
-    fail && fail(`Upload failed`);
+    onFail && onFail();
     return;
   }
 
-  onUploadProgress('Processing...');
+  onProgress('Processing...');
 
   const pitchId = newPitch.id;
   do {
@@ -88,7 +88,7 @@ function* uploadPitch(action) {
   const jobseeker = yield call(getRequest({ url: `/api/job-seekers/${js_profile.jobseeker.id}/` }));
   yield put({ type: requestSuccess(C.JS_SAVE_PROFILE), payload: jobseeker });
 
-  onUploadProgress();
+  onSuccess && onSuccess();
 }
 
 export default function* sagas() {

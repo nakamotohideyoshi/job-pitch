@@ -18502,3 +18502,9 @@ li.ant-select-tree-treenode-disabled > .ant-select-tree-node-content-wrapper:hov
   word-break: break-all;
   hyphens: auto;
 }
+.ant-upload.ant-upload-drag {
+  padding: 0;
+}
+.ant-upload.ant-upload-drag .ant-upload-btn {
+  padding: 16px 8px;
+}

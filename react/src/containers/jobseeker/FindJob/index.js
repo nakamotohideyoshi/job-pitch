@@ -48,13 +48,27 @@ class FindJob extends React.Component {
   onApply = ({ id }, event) => {
     event && event.stopPropagation();
 
+    const { jobseeker, history, applyJob } = this.props;
+
+    if (!jobseeker.active) {
+      confirm({
+        content: 'To apply please activate your account',
+        okText: 'Activation',
+        cancelText: 'Cancel',
+        maskClosable: true,
+        onOk: () => {
+          history.push('/jobseeker/settings/profile');
+        }
+      });
+      return;
+    }
+
     confirm({
       content: 'Yes, I want to apply to this job',
       okText: 'Apply',
       cancelText: 'Cancel',
       maskClosable: true,
       onOk: () => {
-        const { jobseeker, applyJob } = this.props;
         applyJob({
           data: {
             job: id,
@@ -106,7 +120,7 @@ class FindJob extends React.Component {
       <List.Item
         key={id}
         actions={[
-          <Tooltip placement="bottom" title="Apply">
+          <Tooltip placement="bottom" title={'Apply'}>
             <span onClick={e => this.onApply(job, e)}>
               <Icons.Link />
             </span>

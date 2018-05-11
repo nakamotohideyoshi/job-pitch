@@ -1,6 +1,7 @@
 import React, { Fragment } from 'react';
 import Helmet from 'react-helmet';
 import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
 import { List, Avatar } from 'antd';
 
 import { getApplications, sendMessage } from 'redux/applications';
@@ -81,6 +82,23 @@ class Messages extends React.Component {
     );
   };
 
+  renderInput = selectedApp => {
+    if (!this.props.jobseeker.active) {
+      return (
+        <div>
+          {'To message please activate your account. '}
+          <Link to="/jobseeker/settings/profile">Activation</Link>
+        </div>
+      );
+    }
+
+    if (selectedApp.status === DATA.APP.CREATED) {
+      return <div>You cannot send message until your application is accepted.</div>;
+    }
+
+    return null;
+  };
+
   render() {
     const { error, applications } = this.props;
 
@@ -107,7 +125,14 @@ class Messages extends React.Component {
             </div>
 
             <div className="content">
-              {selectedApp && <MessageThread userRole="JOB_SEEKER" application={selectedApp} onSend={this.onSend} />}
+              {selectedApp && (
+                <MessageThread
+                  userRole="JOB_SEEKER"
+                  application={selectedApp}
+                  onSend={this.onSend}
+                  inputRenderer={this.renderInput}
+                />
+              )}
             </div>
           </Fragment>
           {tablet && open && <span className="mask" onClick={this.closeSidebar} />}
@@ -127,6 +152,7 @@ class Messages extends React.Component {
 
 const enhance = connect(
   state => ({
+    jobseeker: state.js_profile.jobseeker,
     applications: state.applications.applications,
     error: state.applications.error
   }),

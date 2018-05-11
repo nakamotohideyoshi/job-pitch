@@ -40,10 +40,6 @@ export default styled(Form)`
     left: 160px;
   }
 
-  .ant-upload.ant-upload-drag {
-    padding: 16px 8px;
-  }
-
   .ant-checkbox-wrapper + .ant-checkbox-wrapper {
     margin-left: 0;
     margin-top: 12px;

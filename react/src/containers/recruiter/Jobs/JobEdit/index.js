@@ -212,7 +212,6 @@ class JobEdit extends React.Component {
     const { workplace, job, form } = this.props;
     const { getFieldDecorator } = form;
     const pitch = helper.getPitch(job);
-
     const title = job ? 'Edit' : 'Add';
 
     return (

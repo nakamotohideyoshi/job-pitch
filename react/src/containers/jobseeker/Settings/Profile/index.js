@@ -133,7 +133,7 @@ class Profile extends React.Component {
 
       this.setState({ loading: true });
       saveJobseeker({
-        formData: true,
+        isFormData: true,
         data: {
           ...values,
           id: (jobseeker || {}).id,

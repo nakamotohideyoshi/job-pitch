@@ -111,14 +111,14 @@ function* uploadPitch(action) {
   });
 
   if (!newPitch) {
-    onFail && onFail(`Uploading pitch is failed.`);
+    onFail && onFail(`.`);
     return;
   }
 
   try {
     yield call(_uploadPitch, newPitch, data, onProgress);
   } catch (error) {
-    onFail && onFail(`Uploading pitch is failed.`);
+    onFail && onFail(`Uploading is failed.`);
     return;
   }
 

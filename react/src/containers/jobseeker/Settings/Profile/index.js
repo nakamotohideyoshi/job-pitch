@@ -1,6 +1,18 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Form, Input, Button, Checkbox, Switch, Select, InputNumber, Popover, Upload, message } from 'antd';
+import {
+  Form,
+  Input,
+  Button,
+  Checkbox,
+  Switch,
+  Select,
+  InputNumber,
+  Popover,
+  Upload,
+  message,
+  notification
+} from 'antd';
 
 import { saveJobseeker, uploadPitch } from 'redux/jobseeker/profile';
 import DATA from 'utils/data';
@@ -51,11 +63,10 @@ const INTRO_DATA = [
 
 class Profile extends React.Component {
   state = {
-    loading: false,
     dontShowIntro: false,
-    visiblePreview: false,
+    showPreview: false,
     pitchData: null,
-    progress: null,
+    loading: null,
     showShare: false
   };
 
@@ -85,19 +96,38 @@ class Profile extends React.Component {
       });
     }
 
-    this.setState({ dontShowIntro: DATA[`dontShowIntro_${DATA.email}`] });
+    this.setState({
+      dontShowIntro: DATA[`dontShowIntro_${DATA.email}`]
+    });
   }
 
-  openShareDialog = () => {
+  openShare = () => {
     this.setState({ showShare: true });
   };
 
-  closeShareDialog = () => {
+  closeShare = () => {
     this.setState({ showShare: false });
   };
 
-  showPreview = visible => {
-    this.setState({ visiblePreview: visible });
+  openPreview = () => {
+    this.setState({ showPreview: true });
+  };
+
+  closePreview = () => {
+    this.setState({ showPreview: false });
+  };
+
+  closeIntro = () => {
+    DATA[`dontShowIntro_${DATA.email}`] = true;
+    this.setState({ dontShowIntro: true });
+  };
+
+  viewCV = () => {
+    window.open(this.props.jobseeker.cv);
+  };
+
+  changePitch = pitchData => {
+    this.setState({ pitchData });
   };
 
   save = () => {
@@ -131,28 +161,34 @@ class Profile extends React.Component {
         return;
       }
 
-      this.setState({ loading: true });
+      this.setState({
+        loading: {
+          label: 'Saving...'
+        }
+      });
+
+      const cv = (values.cv || [])[0];
+
       saveJobseeker({
         isFormData: true,
         data: {
           ...values,
-          id: (jobseeker || {}).id,
-          cv: (values.cv || [])[0]
+          cv: (cv || {}).originFileObj,
+          id: (jobseeker || {}).id
         },
         success: () => {
-          this.setState({ loading: false });
+          form.setFieldsValue({
+            cv: null
+          });
           if (this.state.pitchData) {
             this.uploadPitch();
           } else {
-            message.success('Profile saved successfully!!');
-            if (!jobseeker) {
-              setTimeout(() => this.props.history.push('/jobseeker/settings/jobprofile'));
-            }
+            this.saveCompleted();
           }
         },
-        fail: data => {
-          this.setState({ loading: false });
-          helper.setErrors(form, data, values);
+        fail: () => {
+          this.setState({ loading: null });
+          message.error('Saving is failed');
         }
       });
     });
@@ -161,38 +197,38 @@ class Profile extends React.Component {
   uploadPitch = () => {
     this.props.uploadPitch({
       data: this.state.pitchData,
-      onUploadProgress: (label, value) => {
-        const progress = label ? { label, value } : null;
-        this.setState({ progress });
+      onSuccess: () => {
+        this.saveCompleted();
       },
-      success: () => {
-        this.setState({ progress: null });
-        message.success('Profile saved successfully!');
-
-        if (!this.props.jobseeker.profile) {
-          this.props.history.push('/jobseeker/settings/jobprofile');
-        }
+      onFail: () => {
+        this.setState({ loading: null });
+        message.error('Uploading is failed.');
       },
-      fail: error => {
-        this.setState({ progress: null });
-        message.error(error);
+      onProgress: (label, progress) => {
+        this.setState({
+          loading: { label, progress }
+        });
       }
     });
   };
 
-  viewCV = () => window.open(this.props.jobseeker.cv);
-
-  changePitch = pitchData => {
-    this.setState({ pitchData });
-  };
-
-  closeIntro = () => {
-    DATA[`dontShowIntro_${DATA.email}`] = true;
-    this.setState({ dontShowIntro: true });
+  saveCompleted = () => {
+    const { active, profile } = this.props.jobseeker;
+    this.setState({ loading: null });
+    message.success('Profile is saved successfully.');
+    if (!active) {
+      notification.info({
+        message: 'Profile is deactivated',
+        description: 'Your profile will not be visible and will not be able to apply for job or send message'
+      });
+    }
+    if (!profile) {
+      setTimeout(() => this.props.history.push('/jobseeker/settings/jobprofile'));
+    }
   };
 
   render() {
-    const { dontShowIntro, loading, progress, visiblePreview, showShare } = this.state;
+    const { dontShowIntro, loading, showPreview, showShare } = this.state;
     const { getFieldDecorator } = this.props.form;
     const jobseeker = this.props.jobseeker || {};
     const pitch = helper.getPitch(jobseeker);
@@ -204,7 +240,7 @@ class Profile extends React.Component {
         </Item>
         {jobseeker.id && (
           <div className="public-check" style={{ paddingTop: '8px' }}>
-            <LinkButton onClick={this.openShareDialog}>
+            <LinkButton onClick={this.openShare}>
               <Icons.ShareAlt style={{ fontSize: '15px' }} />Share
             </LinkButton>
           </div>
@@ -418,22 +454,21 @@ class Profile extends React.Component {
           <Button type="primary" className="btn-save" loading={loading} onClick={this.save}>
             Save
           </Button>
-          <Button className="btn-preview" onClick={() => this.showPreview(true)}>
+          <Button className="btn-preview" onClick={this.openPreview}>
             Preview
           </Button>
         </NoLabelField>
 
         {!jobseeker.id && !dontShowIntro && <Intro data={INTRO_DATA} onClose={this.closeIntro} />}
-        {progress && <PopupProgress label={progress.label} value={progress.value} />}
-        {visiblePreview && (
-          <JobseekerDetails title="My Profile" jobseeker={jobseeker} onClose={() => this.showPreview(false)} />
-        )}
+        {/* {progress && <PopupProgress label={progress.label} value={progress.value} />} */}
+        {loading && <PopupProgress label={loading.label} value={loading.progress} />}
+        {showPreview && <JobseekerDetails title="My Profile" jobseeker={jobseeker} onClose={this.closePreview} />}
         {jobseeker.id &&
           showShare && (
             <ShareDialog
               url={`here share link...`}
               comment="Share this link to your profile on your website, in an email, or anywhere else."
-              onClose={this.closeShareDialog}
+              onClose={this.closeShare}
             />
           )}
       </FormWrapper>

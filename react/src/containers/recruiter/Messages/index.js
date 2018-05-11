@@ -7,7 +7,7 @@ import { getApplications, connectApplication, updateApplication, sendMessage } f
 import DATA from 'utils/data';
 import * as helper from 'utils/helper';
 
-import { AlertMsg, Loading, MessageThread, Icons, JobseekerDetails } from 'components';
+import { AlertMsg, Loading, MessageThread, Icons, JobseekerDetails, LinkButton } from 'components';
 import JobDetails from 'containers/recruiter/JobDetails';
 import Sidebar from './Sidebar';
 import Wrapper from './styled';
@@ -141,6 +141,19 @@ class Page extends React.Component {
     );
   };
 
+  renderInput = selectedApp => {
+    if (selectedApp.status === DATA.APP.CREATED) {
+      return (
+        <div>
+          You cannot send messages until you have connected.
+          <LinkButton onClick={this.showAppDetails}>Connect</LinkButton>
+        </div>
+      );
+    }
+
+    return null;
+  };
+
   render() {
     const { jobs, applications, error } = this.props;
 
@@ -172,7 +185,7 @@ class Page extends React.Component {
                   userRole="RECRUITER"
                   application={selectedApp}
                   onSend={this.onSend}
-                  onConnect={this.showAppDetails}
+                  inputRenderer={this.renderInput}
                 />
               )}
             </div>

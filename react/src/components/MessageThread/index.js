@@ -88,11 +88,15 @@ export default class MessageThread extends React.Component {
   };
 
   renderInput = () => {
-    const { application: { status }, userRole, onConnect } = this.props;
+    const { application } = this.props;
+    const { message } = this.state;
 
-    if (status === DATA.APP.ESTABLISHED) {
-      const { message } = this.state;
-      return (
+    if (application.status === DATA.APP.DELETED) {
+      return <div>This application has been deleted</div>;
+    }
+
+    return (
+      this.props.inputRenderer(application) || (
         <Fragment>
           <TextArea
             placeholder="Type a message here"
@@ -103,30 +107,7 @@ export default class MessageThread extends React.Component {
           />
           <Icons.Send size="lg" className={message.trim() === '' ? 'disabled' : ''} onClick={this.onSend} />
         </Fragment>
-      );
-    }
-
-    if (status === DATA.APP.DELETED) {
-      return <div>This application has been deleted</div>;
-    }
-
-    const info = {
-      RECRUITER: {
-        label: 'You cannot send messages until you have connected.',
-        link: 'Connect'
-      },
-      JOB_SEEKER: {
-        label: 'You cannot send message until your application is accepted.'
-      }
-    };
-    const { label, link } = info[userRole];
-    return (
-      <Fragment>
-        <div>
-          {label}
-          {onConnect && <LinkButton onClick={onConnect}>{link}</LinkButton>}
-        </div>
-      </Fragment>
+      )
     );
   };
 

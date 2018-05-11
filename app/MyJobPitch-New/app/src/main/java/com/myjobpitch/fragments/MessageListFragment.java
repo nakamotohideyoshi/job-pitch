@@ -42,18 +42,21 @@ public class MessageListFragment extends ApplicationsFragment {
 
     @Override
     protected List<Application> getApplications() throws MJPApiException {
-        JobSeeker jobSeeker = MJPApi.shared().get(JobSeeker.class, AppData.user.getJob_seeker());
-        if (jobSeeker.getPitch() == null) {
-            Handler mainHandler = new Handler(MessageListFragment.this.getContext().getMainLooper());
+        Integer jobseekerId = AppData.user.getJob_seeker();
+        if (jobseekerId != null) {
+            JobSeeker jobSeeker = MJPApi.shared().get(JobSeeker.class, jobseekerId);
+            if (jobSeeker.getPitch() == null) {
+                Handler mainHandler = new Handler(MessageListFragment.this.getContext().getMainLooper());
 
-            Runnable myRunnable = new Runnable() {
-                @Override
-                public void run() {
-                    noPitchView.setVisibility(View.VISIBLE);
-                }
-            };
-            mainHandler.post(myRunnable);
-            return new ArrayList<>();
+                Runnable myRunnable = new Runnable() {
+                    @Override
+                    public void run() {
+                        noPitchView.setVisibility(View.VISIBLE);
+                    }
+                };
+                mainHandler.post(myRunnable);
+                return new ArrayList<>();
+            }
         }
 
         return MJPApi.shared().get(Application.class);

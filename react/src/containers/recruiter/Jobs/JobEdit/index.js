@@ -15,10 +15,9 @@ import {
   ImageSelector,
   NoLabelField,
   PitchSelector,
-  Icons,
-  LinkButton,
-  ShareDialog
+  Icons
 } from 'components';
+import JobDetails from 'containers/recruiter/JobDetails';
 import Wrapper from '../styled';
 import StyledForm from './styled';
 
@@ -35,7 +34,7 @@ class JobEdit extends React.Component {
     },
     loading: null,
     pitchData: null,
-    showShare: false
+    showPreview: false
   };
 
   componentDidMount() {
@@ -72,14 +71,6 @@ class JobEdit extends React.Component {
     }
   }
 
-  openShareDialog = () => {
-    this.setState({ showShare: true });
-  };
-
-  closeShareDialog = () => {
-    this.setState({ showShare: false });
-  };
-
   setLogo = (file, url) =>
     this.setState({
       logo: {
@@ -96,6 +87,14 @@ class JobEdit extends React.Component {
   goJobList = () => {
     const { workplace: { id }, history } = this.props;
     history.push(`/recruiter/jobs/job/${id}`);
+  };
+
+  openPreview = () => {
+    this.setState({ showPreview: true });
+  };
+
+  closePreview = () => {
+    this.setState({ showPreview: false });
   };
 
   save = () => {
@@ -208,7 +207,7 @@ class JobEdit extends React.Component {
   };
 
   render() {
-    const { logo, loading, showShare } = this.state;
+    const { logo, loading, showPreview } = this.state;
     const { workplace, job, form } = this.props;
     const { getFieldDecorator } = form;
     const pitch = helper.getPitch(job);
@@ -239,16 +238,9 @@ class JobEdit extends React.Component {
 
         <div className="content">
           <StyledForm>
-            <Item label="Active" className="status-field with-public">
+            <Item label="Active" className="status-field">
               {getFieldDecorator('status', { valuePropName: 'checked', initialValue: true })(<Switch />)}
             </Item>
-            {job && (
-              <div className="public-check" style={{ paddingTop: '8px' }}>
-                <LinkButton onClick={this.openShareDialog}>
-                  <Icons.ShareAlt style={{ fontSize: '15px' }} />Share
-                </LinkButton>
-              </div>
-            )}
 
             <Item label="Title">
               {getFieldDecorator('title', {
@@ -366,22 +358,16 @@ class JobEdit extends React.Component {
               <Button type="primary" onClick={this.save}>
                 Save
               </Button>
-
+              <Button className="btn-preview" onClick={this.openPreview}>
+                Preview
+              </Button>
               <Button onClick={this.goJobList}>Cancel</Button>
             </NoLabelField>
           </StyledForm>
         </div>
 
         {loading && <PopupProgress label={loading.label} value={loading.progress} />}
-
-        {job &&
-          showShare && (
-            <ShareDialog
-              url={`here share link...`}
-              comment="Share this link to your job on your website, in an email, or anywhere else."
-              onClose={this.closeShareDialog}
-            />
-          )}
+        {job && showPreview && <JobDetails job={job} onClose={this.closePreview} />}
       </Wrapper>
     );
   }

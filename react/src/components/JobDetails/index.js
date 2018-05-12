@@ -2,7 +2,7 @@ import React, { Fragment } from 'react';
 import { Divider, List, Avatar } from 'antd';
 
 import * as helper from 'utils/helper';
-import { GoogleMap, Icons, VideoPlayer } from 'components';
+import { GoogleMap, Icons, VideoPlayer, SocialShare } from 'components';
 import Wrapper from './styled';
 
 export default class JobDetails extends React.Component {
@@ -69,6 +69,8 @@ export default class JobDetails extends React.Component {
                     </a>
                   </div>
                 )}
+                <div className="label">Share Job</div>
+                <SocialShare url="https://test.sclabs.co.uk/" round size={32} />
               </div>
             }
           />

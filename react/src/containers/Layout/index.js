@@ -5,7 +5,7 @@ import styled from 'styled-components';
 
 import Header from './components/Header';
 import Footer from './components/Footer';
-import SocialShare from './components/SocialShare';
+import SharePanel from './components/SharePanel';
 
 const Wrapper = styled(Layout)`
   min-height: 100vh;
@@ -44,7 +44,7 @@ const MainLayout = ({ status, menu, component: Component, ...rest }) => {
 
       {arr[2] !== 'messages' && <Footer helpUrl={helpUrl} />}
 
-      {arr[2] !== 'messages' && url && <SocialShare url={url} />}
+      {arr[2] !== 'messages' && url && <SharePanel url={url} />}
     </Wrapper>
   );
 };

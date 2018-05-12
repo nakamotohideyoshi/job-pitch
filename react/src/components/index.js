@@ -31,7 +31,7 @@ import VideoPlayer from './video/Player';
 
 import Email from './Email';
 
-import ShareDialog from './ShareDialog';
+import SocialShare from './SocialShare';
 
 export {
   GoogleMap,
@@ -56,5 +56,5 @@ export {
   VideoRecorder,
   VideoPlayer,
   Email,
-  ShareDialog
+  SocialShare
 };

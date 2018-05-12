@@ -78,7 +78,7 @@ export default styled.div`
       margin-top: 15px;
 
       .ant-btn {
-        width: 170px;
+        width: 150px;
         margin-right: 15px;
       }
     }

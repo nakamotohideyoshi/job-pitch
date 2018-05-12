@@ -28,6 +28,17 @@ export default styled.div`
         margin-right: 4px;
       }
     }
+
+    .label {
+      color: #595959;
+      margin-top: 5px;
+
+      .fa-link {
+        font-size: 11px;
+        margin-left: 3px;
+        cursor: pointer;
+      }
+    }
   }
 
   .overview {

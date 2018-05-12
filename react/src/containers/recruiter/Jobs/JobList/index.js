@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import React from 'react';
 import Helmet from 'react-helmet';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
@@ -7,14 +7,13 @@ import { Breadcrumb, List, Avatar, Tooltip } from 'antd';
 import DATA from 'utils/data';
 import * as helper from 'utils/helper';
 
-import { PageHeader, PageSubHeader, AlertMsg, LinkButton, Loading, ListEx, Icons, ShareDialog } from 'components';
+import { PageHeader, PageSubHeader, AlertMsg, LinkButton, Loading, ListEx, Icons } from 'components';
 import DeleteDialog from './DeleteDialog';
 import Wrapper from '../styled';
 
 class JobList extends React.Component {
   state = {
-    selectedJob: null,
-    shareJobId: null
+    selectedJob: null
   };
 
   componentWillMount() {
@@ -44,15 +43,6 @@ class JobList extends React.Component {
     this.setState({ selectedJob });
   };
 
-  openShareDialog = ({ id }, event) => {
-    event && event.stopPropagation();
-    this.setState({ shareJobId: id });
-  };
-
-  closeShareDialog = () => {
-    this.setState({ shareJobId: null });
-  };
-
   renderJob = job => {
     const { id, status, title, sector, contract, hours, description, loading } = job;
     const logo = helper.getJobLogo(job);
@@ -65,11 +55,6 @@ class JobList extends React.Component {
       <List.Item
         key={id}
         actions={[
-          <Tooltip placement="bottom" title="Share">
-            <span onClick={e => this.openShareDialog(job, e)}>
-              <Icons.ShareAlt />
-            </span>
-          </Tooltip>,
           <Tooltip placement="bottom" title="Edit">
             <span onClick={e => this.editJob(job, e)}>
               <Icons.Pen />
@@ -115,7 +100,7 @@ class JobList extends React.Component {
 
   render() {
     const { workplace, jobs } = this.props;
-    const { selectedJob, shareJobId } = this.state;
+    const { selectedJob } = this.state;
 
     return (
       <Wrapper className="container">
@@ -149,13 +134,6 @@ class JobList extends React.Component {
         </div>
 
         <DeleteDialog job={selectedJob} onCancel={() => this.showRemoveDialog()} />
-        {shareJobId && (
-          <ShareDialog
-            url={`here share link...`}
-            comment="Share this link to your job on your website, in an email, or anywhere else."
-            onClose={this.closeShareDialog}
-          />
-        )}
       </Wrapper>
     );
   }

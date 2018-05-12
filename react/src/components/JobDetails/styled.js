@@ -37,6 +37,11 @@ export default styled.div`
         margin-right: 4px;
       }
     }
+
+    .label {
+      color: #595959;
+      margin-top: 5px;
+    }
   }
 
   .overview {

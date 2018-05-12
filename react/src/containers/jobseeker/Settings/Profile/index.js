@@ -18,16 +18,7 @@ import { saveJobseeker, uploadPitch } from 'redux/jobseeker/profile';
 import DATA from 'utils/data';
 import * as helper from 'utils/helper';
 
-import {
-  NoLabelField,
-  PitchSelector,
-  PopupProgress,
-  Intro,
-  Icons,
-  JobseekerDetails,
-  ShareDialog,
-  LinkButton
-} from 'components';
+import { NoLabelField, PitchSelector, PopupProgress, Intro, Icons, JobseekerDetails, LinkButton } from 'components';
 import imgLogo from 'assets/logo1.png';
 import imgIntro1 from 'assets/intro1.png';
 import imgIntro2 from 'assets/intro2.png';
@@ -66,8 +57,7 @@ class Profile extends React.Component {
     dontShowIntro: false,
     showPreview: false,
     pitchData: null,
-    loading: null,
-    showShare: false
+    loading: null
   };
 
   componentDidMount() {
@@ -100,14 +90,6 @@ class Profile extends React.Component {
       dontShowIntro: DATA[`dontShowIntro_${DATA.email}`]
     });
   }
-
-  openShare = () => {
-    this.setState({ showShare: true });
-  };
-
-  closeShare = () => {
-    this.setState({ showShare: false });
-  };
 
   openPreview = () => {
     this.setState({ showPreview: true });
@@ -228,7 +210,7 @@ class Profile extends React.Component {
   };
 
   render() {
-    const { dontShowIntro, loading, showPreview, showShare } = this.state;
+    const { dontShowIntro, loading, showPreview } = this.state;
     const { getFieldDecorator } = this.props.form;
     const jobseeker = this.props.jobseeker || {};
     const pitch = helper.getPitch(jobseeker);
@@ -460,17 +442,8 @@ class Profile extends React.Component {
         </NoLabelField>
 
         {!jobseeker.id && !dontShowIntro && <Intro data={INTRO_DATA} onClose={this.closeIntro} />}
-        {/* {progress && <PopupProgress label={progress.label} value={progress.value} />} */}
         {loading && <PopupProgress label={loading.label} value={loading.progress} />}
         {showPreview && <JobseekerDetails title="My Profile" jobseeker={jobseeker} onClose={this.closePreview} />}
-        {jobseeker.id &&
-          showShare && (
-            <ShareDialog
-              url={`here share link...`}
-              comment="Share this link to your profile on your website, in an email, or anywhere else."
-              onClose={this.closeShare}
-            />
-          )}
       </FormWrapper>
     );
   }

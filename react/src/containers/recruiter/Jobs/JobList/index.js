@@ -2,6 +2,7 @@ import React from 'react';
 import Helmet from 'react-helmet';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
+import Truncate from 'react-truncate';
 import { Breadcrumb, List, Avatar, Tooltip } from 'antd';
 
 import DATA from 'utils/data';
@@ -69,7 +70,15 @@ class JobList extends React.Component {
         onClick={() => this.selectJob(job)}
         className={loading ? 'loading' : ''}
       >
-        <List.Item.Meta avatar={<Avatar src={logo} className="avatar-80" />} title={title} description={description} />
+        <List.Item.Meta
+          avatar={<Avatar src={logo} className="avatar-80" />}
+          title={title}
+          description={
+            <Truncate lines={2} ellipsis={<span>...</span>}>
+              {description}
+            </Truncate>
+          }
+        />
         <div className="properties">
           <span className={closed} style={{ width: '60px' }}>
             {contractName}

@@ -2,6 +2,7 @@ import React from 'react';
 import Helmet from 'react-helmet';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
+import Truncate from 'react-truncate';
 import { Breadcrumb, List, Avatar, Modal, Tooltip } from 'antd';
 
 import { removeWorkplace } from 'redux/recruiter/workplaces';
@@ -97,7 +98,15 @@ class WorkplaceList extends React.Component {
         onClick={() => this.selectWorkplace(workplace)}
         className={loading ? 'loading' : ''}
       >
-        <List.Item.Meta avatar={<Avatar src={logo} className="avatar-80" />} title={name} description={description} />
+        <List.Item.Meta
+          avatar={<Avatar src={logo} className="avatar-80" />}
+          title={name}
+          description={
+            <Truncate lines={2} ellipsis={<span>...</span>}>
+              {description}
+            </Truncate>
+          }
+        />
         <div className="properties">
           <span style={{ width: '120px' }}>{strJobs}</span>
           <span>{strInactiveJobs}</span>

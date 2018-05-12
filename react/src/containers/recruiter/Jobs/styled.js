@@ -25,6 +25,10 @@ export default styled.div`
           font-size: 16px;
         }
 
+        .ant-list-item-meta-description {
+          margin-right: 10px;
+        }
+
         .properties {
           font-size: 12px;
           span {

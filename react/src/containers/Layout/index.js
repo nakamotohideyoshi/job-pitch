@@ -1,9 +1,11 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import { Layout } from 'antd';
 import styled from 'styled-components';
 
 import Header from './components/Header';
 import Footer from './components/Footer';
+import SocialShare from './components/SocialShare';
 
 const Wrapper = styled(Layout)`
   min-height: 100vh;
@@ -15,7 +17,7 @@ const Main = styled(Layout)`
   margin-top: 50px;
 `;
 
-export default ({ menu, component: Component, ...rest }) => {
+const MainLayout = ({ status, menu, component: Component, ...rest }) => {
   const arr = rest.location.pathname.split('/');
 
   let helpUrl = 'https://www.myjobpitch.com/what-is-my-job-pitch/';
@@ -23,6 +25,13 @@ export default ({ menu, component: Component, ...rest }) => {
     helpUrl = 'https://www.myjobpitch.com/recruiters/';
   } else if (arr[1] === 'jobseeker') {
     helpUrl = 'https://www.myjobpitch.com/jobseeker/';
+  }
+
+  let url;
+  if (status === 'recruiter') {
+    url = 'https://www.myjobpitch.com/recruiters/';
+  } else if (status === 'jobseeker') {
+    url = 'https://www.myjobpitch.com/candidates/';
   }
 
   return (
@@ -34,6 +43,12 @@ export default ({ menu, component: Component, ...rest }) => {
       </Main>
 
       {arr[2] !== 'messages' && <Footer helpUrl={helpUrl} />}
+
+      {arr[2] !== 'messages' && url && <SocialShare url={url} />}
     </Wrapper>
   );
 };
+
+export default connect(state => ({
+  status: state.auth.status
+}))(MainLayout);

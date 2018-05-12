@@ -75,9 +75,9 @@ export default ({ helpUrl }) => (
       </div>
 
       <div className="follow">
-        <SocialLink url="https://www.facebook.com/" icon={Icons.Facebook} />
-        <SocialLink url="https://www.twitter.com/" icon={Icons.Twitter} />
-        <SocialLink url="https://www.linkedin.com/" icon={Icons.Linkedin} />
+        <SocialLink url="https://www.facebook.com/myjobpitchapp/" icon={Icons.Facebook} />
+        <SocialLink url="https://twitter.com/myjobpitch/" icon={Icons.Twitter} />
+        <SocialLink url="https://www.linkedin.com/company/my-job-pitch/" icon={Icons.Linkedin} />
       </div>
 
       <div className="company">

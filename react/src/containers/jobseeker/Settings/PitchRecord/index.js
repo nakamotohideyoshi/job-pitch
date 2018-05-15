@@ -100,7 +100,6 @@ class PitchRecord extends React.Component {
           )}
         </ButtonContent>
 
-        <PopupProgress label={'loading.label'} value={99} />
         {showRecorder && <VideoRecorder onClose={this.closeRecorder} />}
         {loading && <PopupProgress label={loading.label} value={loading.progress} />}
       </Wrapper>

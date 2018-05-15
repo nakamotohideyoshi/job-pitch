@@ -2,7 +2,7 @@ import React, { Fragment } from 'react';
 
 import ReadyLabel from './ReadyLabel';
 import RecLabel from './RecLabel';
-import { Wrapper, VideoContainer, RecButton, TimeBar, ErrorLabel } from './Wrapper';
+import { Wrapper, VideoContainer, RecButton, TimeBar, ErrorLabel } from './Recorder.styled';
 
 const NONE = 'NONE';
 const READY = 'READY';

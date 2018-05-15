@@ -11,7 +11,7 @@ import UserMenu from './UserMenu';
 const Wrapper = styled(Layout.Header)`
   position: fixed;
   width: 100%;
-  z-index: 2000;
+  z-index: 100;
 
   .title-logo {
     float: left;

@@ -1,16 +1,21 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Button, message } from 'antd';
+import { Button, message, Modal } from 'antd';
 
 import { uploadPitch } from 'redux/jobseeker/profile';
 import * as helper from 'utils/helper';
 
-import { VideoRecorder, PopupProgress, Icons } from 'components';
+import { PopupProgress, Icons, VideoRecorder } from 'components';
 import { Wrapper, HelpContent, VideoContent, ButtonContent } from './styled';
+
+const { confirm } = Modal;
 
 class PitchRecord extends React.Component {
   state = {
-    loading: false
+    showRecorder: false,
+    pitchUrl: null,
+    pitchData: null,
+    loading: null
   };
 
   componentWillMount() {
@@ -21,36 +26,48 @@ class PitchRecord extends React.Component {
     });
   }
 
+  openRecorder = () => {
+    if (navigator.userAgent.indexOf('iPhone') !== -1) {
+      confirm({
+        content: 'To record your video, you need to download the app',
+        okText: 'Sign out',
+        maskClosable: true,
+        onOk: () => {
+          window.open('https://itunes.apple.com/us/app/myjobpitch-job-matching/id1124296674?ls=1&mt=8', '_blank');
+        }
+      });
+    } else {
+      this.setState({ showRecorder: true });
+    }
+  };
+
+  closeRecorder = (url, data) => {
+    const pitchUrl = url || this.state.pitchUrl;
+    const pitchData = data || this.state.pitchData;
+    this.setState({ pitchUrl, pitchData, showRecorder: false });
+  };
+
   uploadPitch = () => {
     this.props.uploadPitch({
       data: this.state.pitchData,
-      onUploadProgress: (label, value) => {
-        const progress = label ? { label, value } : null;
-        this.setState({ progress });
+      onSuccess: () => {
+        this.setState({ loading: null });
+        message.success('Pitch is uploaded successfully.');
       },
-      success: () => {
-        this.setState({ progress: null });
-        message.success('Pitch uploaded successfully!');
+      onFail: error => {
+        this.setState({ loading: null });
+        message.error('Uploading is failed.');
       },
-      fail: error => {
-        this.setState({ progress: null });
-        message.error(error);
+      onProgress: (label, progress) => {
+        this.setState({
+          loading: { label, progress }
+        });
       }
     });
   };
 
-  changePitch = (pitchUrl, pitchData) => {
-    this.setState({ pitchUrl, pitchData });
-  };
-
-  recordButton = props => (
-    <Button type="primary" {...props}>
-      Record New Pitch
-    </Button>
-  );
-
   render() {
-    const { pitchUrl, pitchData, progress } = this.state;
+    const { pitchUrl, pitchData, loading, showRecorder } = this.state;
 
     return (
       <Wrapper>
@@ -73,8 +90,9 @@ class PitchRecord extends React.Component {
         </VideoContent>
 
         <ButtonContent>
-          <VideoRecorder buttonComponent={this.recordButton} onChange={this.changePitch} />
-
+          <Button type="primary" onClick={this.openRecorder}>
+            Record New Pitch
+          </Button>
           {pitchData && (
             <Button type="secondary" onClick={this.uploadPitch}>
               <Icons.Upload /> Upload
@@ -82,7 +100,9 @@ class PitchRecord extends React.Component {
           )}
         </ButtonContent>
 
-        {progress && <PopupProgress label={progress.label} value={progress.value} />}
+        <PopupProgress label={'loading.label'} value={99} />
+        {showRecorder && <VideoRecorder onClose={this.closeRecorder} />}
+        {loading && <PopupProgress label={loading.label} value={loading.progress} />}
       </Wrapper>
     );
   }

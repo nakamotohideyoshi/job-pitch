@@ -24,7 +24,8 @@ import java.util.List;
 
 public class AppData {
 
-    public static final boolean PRODUCT_VERSION = false;
+    public static final int API_VERSION = 2;
+    public static final boolean PRODUCTION = false;
 
     public static User user;
     public static boolean existProfile = false;
@@ -97,6 +98,7 @@ public class AppData {
     public final static int PAGE_HELP = 14;
     public final static int PAGE_LOGOUT = 15;
     public final static int PAGE_CONTACT_UP = 16;
+    public final static int PAGE_SHARE = 17;
 
     public static final int JOBSEEKER = 1;
     public static final int RECRUITER = 2;

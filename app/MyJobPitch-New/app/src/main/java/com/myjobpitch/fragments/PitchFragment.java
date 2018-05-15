@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.media.ThumbnailUtils;
+import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
@@ -124,6 +125,13 @@ public class PitchFragment extends BaseFragment {
     void onNewRecord() {
         Intent intent = new Intent(getApp(), CameraActivity.class);
         startActivityForResult(intent, 10000);
+    }
+
+    @OnClick(R.id.example_video)
+    void onPlayExamle() {
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.setData(Uri.parse("https://vimeo.com/255467562"));
+        startActivity(intent);
     }
 
     @OnClick(R.id.upload_button)

@@ -1,175 +1,399 @@
 import React from 'react';
+import Helmet from 'react-helmet';
 import { connect } from 'react-redux';
-import { Breadcrumb, BreadcrumbItem, Button, Form, FormGroup, Label, Row, Col, Alert } from 'reactstrap';
+import { Link } from 'react-router-dom';
+import { Breadcrumb, Form, Input, Select, Switch, Popover, Button, notification, Tooltip } from 'antd';
 
-import { SaveFormComponent, Board, Loading, Required, PopupProgress } from 'components';
-import { confirm } from 'redux/common';
-import { getJob, saveJob } from 'redux/recruiter/jobs';
-import { SDATA } from 'utils/data';
+import { saveJob, uploadPitch } from 'redux/recruiter/jobs';
+import DATA from 'utils/data';
 import * as helper from 'utils/helper';
-import Wrapper from './Wrapper';
 
-class JobEdit extends SaveFormComponent {
-  componentWillMount() {
-    const jobId = parseInt(this.props.match.params.jobId, 10);
-    this.props.getJob(jobId);
-  }
+import {
+  PageHeader,
+  PageSubHeader,
+  PopupProgress,
+  ImageSelector,
+  NoLabelField,
+  PitchSelector,
+  Icons
+} from 'components';
+import JobDetails from 'containers/recruiter/JobDetails';
+import Wrapper from '../styled';
+import StyledForm from './styled';
 
-  componentWillReceiveProps(nextProps) {
-    const { job } = nextProps;
-    if (job && job !== this.props.job) {
-      const model = Object.assign(this.state.model, job);
-      model.active = job.status === helper.getJobStatusByName('OPEN');
-      model.location = model.location || this.props.match.params.workplaceId;
+const { Item } = Form;
+const { Option } = Select;
+const { TextArea } = Input;
+
+class JobEdit extends React.Component {
+  state = {
+    logo: {
+      url: null,
+      file: null,
+      exist: false
+    },
+    loading: null,
+    pitchData: null,
+    showPreview: false
+  };
+
+  componentDidMount() {
+    const { workplace, job, form } = this.props;
+
+    if (!workplace) {
+      this.goBuisinessList();
+      return;
+    }
+
+    if (job) {
       this.setState({
-        model,
         logo: {
-          default: helper.getWorkplaceLogo(job.location_data),
           url: helper.getJobLogo(job),
           exist: (job.images || []).length > 0
+        }
+      });
+
+      form.setFieldsValue({
+        status: job.status === DATA.JOB.OPEN,
+        title: job.title,
+        sector: job.sector,
+        contract: job.contract,
+        hours: job.hours,
+        description: job.description
+      });
+    } else {
+      this.setState({
+        logo: {
+          url: helper.getWorkplaceLogo(workplace),
+          exist: false
         }
       });
     }
   }
 
-  onSave = () => {
-    if (!this.isValid(['title', 'sector', 'contract', 'hours', 'description'])) return;
+  setLogo = (file, url) =>
+    this.setState({
+      logo: {
+        url: url || helper.getWorkplaceLogo(this.props.workplace),
+        file,
+        exist: !!file
+      }
+    });
 
-    const data = Object.assign({}, this.state.model);
-    data.status = helper.getJobStatusByName(data.active ? 'OPEN' : 'CLOSED');
-    this.props.saveJob(data, this.state.logo, (label, value) => {
-      const progress = label ? { label, value } : null;
-      this.setState({ progress });
+  goBuisinessList = () => {
+    this.props.history.push('/recruiter/jobs/business');
+  };
+
+  goJobList = () => {
+    const { workplace: { id }, history } = this.props;
+    history.push(`/recruiter/jobs/job/${id}`);
+  };
+
+  openPreview = () => {
+    this.setState({ showPreview: true });
+  };
+
+  closePreview = () => {
+    this.setState({ showPreview: false });
+  };
+
+  save = () => {
+    const { form, workplace, job, saveJob, history } = this.props;
+
+    form.validateFieldsAndScroll({ scroll: { offsetTop: 70 } }, (err, values) => {
+      if (err) return;
+
+      if (helper.checkIfEmailInString(values.description)) {
+        form.setFields({
+          description: {
+            value: values.description,
+            errors: [new Error(`Don't type in email address here.`)]
+          }
+        });
+        return;
+      }
+
+      if (helper.checkIfPhoneNumberInString(values.description)) {
+        form.setFields({
+          description: {
+            value: values.description,
+            errors: [new Error(`Don't type in phone number here.`)]
+          }
+        });
+        return;
+      }
+
+      this.setState({
+        loading: {
+          label: 'Saving...'
+        }
+      });
+
+      saveJob({
+        data: {
+          ...values,
+          status: values.status ? DATA.JOB.OPEN : DATA.JOB.CLOSED,
+          location: workplace.id,
+          id: (job || {}).id
+        },
+        logo: this.state.logo,
+        onSuccess: ({ id }) => {
+          if (this.state.pitchData) {
+            this.uploadPitch(id);
+          } else {
+            notification.success({
+              message: 'Notification',
+              description: 'Job is saved successfully.'
+            });
+            if (job) {
+              this.goJobList();
+            } else {
+              history.push(`/recruiter/jobs/job/view/${id}`);
+            }
+          }
+        },
+        onFail: error => {
+          this.setState({ loading: null });
+          notification.error({
+            message: 'Notification',
+            description: error
+          });
+        },
+        onProgress: progress => {
+          this.setState({
+            loading: {
+              label: 'Logo uploading...',
+              progress: Math.floor(progress.loaded / progress.total * 100)
+            }
+          });
+        }
+      });
     });
   };
 
-  onCancel = () => {
-    const { businessId, workplaceId } = this.props.match.params;
-    helper.routePush(`/recruiter/jobs/${businessId}/${workplaceId}`, this.props);
+  uploadPitch = id => {
+    const { job, uploadPitch, history } = this.props;
+    uploadPitch({
+      job: id,
+      data: this.state.pitchData,
+      onSuccess: msg => {
+        notification.success({
+          message: 'Notification',
+          description: 'Job is saved successfully.'
+        });
+        if (job) {
+          this.goJobList();
+        } else {
+          history.push(`/recruiter/jobs/job/view/${id}`);
+        }
+      },
+      onFail: error => {
+        this.setState({ loading: null });
+        notification.error({
+          message: 'Notification',
+          description: error
+        });
+      },
+      onProgress: (label, progress) => {
+        this.setState({
+          loading: { label, progress }
+        });
+      }
+    });
   };
 
-  onRoutePush = to => {
-    helper.routePush(to, this.props);
+  changePitch = pitchData => {
+    this.setState({ pitchData });
   };
 
   render() {
-    const { job, errors } = this.props;
-    const error = this.getError();
-    const { progress } = this.state;
+    const { logo, loading, showPreview } = this.state;
+    const { workplace, job, form } = this.props;
+    const { getFieldDecorator } = form;
+    const pitch = helper.getPitch(job);
+    const title = job ? 'Edit' : 'Add';
 
     return (
-      <Wrapper>
-        <Breadcrumb>
-          <BreadcrumbItem tag="a" onClick={() => this.onRoutePush(`/recruiter/jobs`)}>
-            Businesses
-          </BreadcrumbItem>
-          <BreadcrumbItem
-            tag="a"
-            onClick={() => {
-              const { businessId } = this.props.match.params;
-              this.onRoutePush(`/recruiter/jobs/${businessId}`);
-            }}
-          >
-            Workplaces
-          </BreadcrumbItem>
-          <BreadcrumbItem
-            tag="a"
-            onClick={() => {
-              const { businessId, workplaceId } = this.props.match.params;
-              this.onRoutePush(`/recruiter/jobs/${businessId}/${workplaceId}`);
-            }}
-          >
-            Jobs
-          </BreadcrumbItem>
-          <BreadcrumbItem active tag="span">
-            {(job || {}).id ? 'Edit' : 'Add'}
-          </BreadcrumbItem>
-        </Breadcrumb>
+      <Wrapper className="container">
+        <Helmet title={`${title} Job`} />
 
-        {job ? (
-          <Board block>
-            <Form>
-              <div className="logo-container">
-                <FormGroup>
-                  <this.FormLogoSelect />
-                </FormGroup>
-              </div>
+        <PageHeader>
+          <h2>{title} Job</h2>
+        </PageHeader>
 
-              <div className="right-container">
-                <FormGroup>
-                  <this.FormCheckbox name="active" label="Active" />
-                </FormGroup>
+        <PageSubHeader>
+          <Breadcrumb>
+            <Breadcrumb.Item>
+              <Link to="/recruiter/jobs/business">Businesses</Link>
+            </Breadcrumb.Item>
+            <Breadcrumb.Item>
+              {workplace && <Link to={`/recruiter/jobs/workplace/${workplace.business_data.id}`}>Workplaces</Link>}
+            </Breadcrumb.Item>
+            <Breadcrumb.Item>
+              {workplace && <Link to={`/recruiter/jobs/job/${workplace.id}`}>Jobs</Link>}
+            </Breadcrumb.Item>
+            <Breadcrumb.Item>{title}</Breadcrumb.Item>
+          </Breadcrumb>
+        </PageSubHeader>
 
-                <FormGroup>
-                  <Label>
-                    Title<Required />
-                  </Label>
-                  <this.FormInput name="title" />
-                </FormGroup>
+        <div className="content">
+          <StyledForm>
+            <Item label="Active" className="status-field">
+              {getFieldDecorator('status', { valuePropName: 'checked', initialValue: true })(<Switch />)}
+            </Item>
 
-                <FormGroup>
-                  <Label>
-                    Sector<Required />
-                  </Label>
-                  <this.FormSelect name="sector" options={SDATA.sectors} />
-                </FormGroup>
-              </div>
+            <Item label="Title">
+              {getFieldDecorator('title', {
+                rules: [
+                  { required: true, message: 'Please input job title!' },
+                  { whitespace: true, message: 'This field may not be blank.' }
+                ]
+              })(<Input autoFocus />)}
+            </Item>
 
-              <Row>
-                <Col xs="12" md="6">
-                  <FormGroup>
-                    <Label>
-                      Contract<Required />
-                    </Label>
-                    <this.FormSelect name="contract" options={SDATA.contracts} searchable={false} />
-                  </FormGroup>
-                </Col>
+            <Item label="Sector">
+              {getFieldDecorator('sector', {
+                rules: [{ required: true, message: 'Please select sector!' }]
+              })(
+                <Select
+                  showSearch
+                  allowClear
+                  filterOption={(input, option) =>
+                    option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                  }
+                >
+                  {DATA.sectors.map(({ id, name }) => (
+                    <Option value={id} key={id}>
+                      {name}
+                    </Option>
+                  ))}
+                </Select>
+              )}
+            </Item>
 
-                <Col xs="12" md="6">
-                  <FormGroup>
-                    <Label>
-                      Hours<Required />
-                    </Label>
-                    <this.FormSelect name="hours" options={SDATA.hours} searchable={false} />
-                  </FormGroup>
-                </Col>
-              </Row>
+            <Item label="Contract">
+              {getFieldDecorator('contract', {
+                rules: [{ required: true, message: 'Please select contract!' }]
+              })(
+                <Select allowClear>
+                  {DATA.contracts.map(({ id, name }) => (
+                    <Option value={id} key={id}>
+                      {name}
+                    </Option>
+                  ))}
+                </Select>
+              )}
+            </Item>
 
-              <FormGroup>
-                <Label>
-                  Description<Required />
-                </Label>
-                <this.FormTextArea name="description" maxLength="10000" minRows={3} maxRows={20} />
-              </FormGroup>
+            <Item label="Hours">
+              {getFieldDecorator('hours', {
+                rules: [{ required: true, message: 'Please select hours!' }]
+              })(
+                <Select allowClear>
+                  {DATA.hours.map(({ id, name }) => (
+                    <Option value={id} key={id}>
+                      {name}
+                    </Option>
+                  ))}
+                </Select>
+              )}
+            </Item>
 
-              {error && <Alert color="danger">{error}</Alert>}
+            <Item
+              label={
+                <span>
+                  Description&nbsp;
+                  <Popover
+                    placement="right"
+                    content={
+                      <span>
+                        Don't type in phone numbers or<br />
+                        email address here.
+                      </span>
+                    }
+                  >
+                    <Icons.QuestionCircle />
+                  </Popover>
+                </span>
+              }
+            >
+              {getFieldDecorator('description', {
+                rules: [
+                  { required: true, message: 'Please enter description!' },
+                  { whitespace: true, message: 'This field may not be blank.' }
+                ]
+              })(<TextArea autosize={{ minRows: 3, maxRows: 20 }} />)}
+            </Item>
 
-              <div>
-                <Button color="green" size="lg" disabled={job.saving} onClick={this.onSave}>
-                  {job.saving ? 'Saving...' : 'Save'}
-                </Button>
-                <Button color="gray" size="lg" outline onClick={this.onCancel}>
-                  Cancel
-                </Button>
-              </div>
+            <Item
+              label={
+                <span>
+                  Video pitch&nbsp;
+                  <Popover
+                    placement="right"
+                    content={
+                      <span>
+                        Record or upload a short video intro to showcase your company.<br />
+                        Tell potential candidates about the role, and why it is a great<br />
+                        place to work! Check out our{' '}
+                        <a href="https://vimeo.com/255467562" target="_blank" rel="noopener noreferrer">
+                          example video
+                        </a>
+                      </span>
+                    }
+                  >
+                    <Icons.QuestionCircle />
+                  </Popover>
+                </span>
+              }
+            >
+              <PitchSelector currentPitch={pitch} onChange={this.changePitch} />
+            </Item>
 
-              {progress && <PopupProgress label={progress.label} value={progress.value} />}
-            </Form>
-          </Board>
-        ) : !errors ? (
-          <Loading />
-        ) : (
-          <Alert type="danger">Error!</Alert>
-        )}
+            <Item label="Logo">
+              <ImageSelector url={logo.url} removable={logo.exist} onChange={this.setLogo} />
+            </Item>
+
+            <NoLabelField className="subimt-field">
+              <Button type="primary" onClick={this.save}>
+                Save
+              </Button>
+              <Button className="btn-preview" onClick={this.openPreview}>
+                Preview
+              </Button>
+              <Button onClick={this.goJobList}>Cancel</Button>
+            </NoLabelField>
+          </StyledForm>
+        </div>
+
+        {loading && <PopupProgress label={loading.label} value={loading.progress} />}
+        {job && showPreview && <JobDetails job={job} onClose={this.closePreview} />}
       </Wrapper>
     );
   }
 }
 
 export default connect(
-  state => ({
-    job: state.rc_jobs.selectedJob,
-    errors: state.rc_jobs.errors
-  }),
-  { confirm, getJob, saveJob }
-)(JobEdit);
+  (state, { match }) => {
+    const workplaceId = helper.str2int(match.params.workplaceId);
+    const workplace = helper.getItemByID(state.rc_workplaces.workplaces, workplaceId);
+    const jobId = helper.str2int(match.params.jobId);
+    const { jobs } = state.rc_jobs;
+    const job = helper.getItemByID(jobs, jobId);
+
+    // const videos = jobs.filter(item => {
+    //   if (item.location === (workplace || {}).id) {
+    //     const pitch = helper.getPitch(item);
+    //     return pitch.video;
+    //   }
+    // });
+    return {
+      workplace: workplace || (job || {}).location_data,
+      job
+    };
+  },
+  {
+    saveJob,
+    uploadPitch
+  }
+)(Form.create()(JobEdit));

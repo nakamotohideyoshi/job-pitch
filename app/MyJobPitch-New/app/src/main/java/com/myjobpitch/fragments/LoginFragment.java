@@ -4,7 +4,6 @@ import android.animation.Animator;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
@@ -100,7 +99,7 @@ public class LoginFragment extends FormFragment {
 
         // get server url
 
-        if (AppData.PRODUCT_VERSION) {
+        if (AppData.PRODUCTION) {
             ((ViewGroup)mSelectServer.getParent()).removeView(mSelectServer);
         } else {
             String apiUrl = AppData.getServerUrl();

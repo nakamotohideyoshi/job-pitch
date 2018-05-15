@@ -1,169 +1,189 @@
 import React from 'react';
+import Helmet from 'react-helmet';
 import { connect } from 'react-redux';
-import { Breadcrumb, BreadcrumbItem, Button, Form, FormGroup, Label, Alert } from 'reactstrap';
-import { SaveFormComponent, Board, Loading, Required, PopupProgress } from 'components';
+import { Link } from 'react-router-dom';
+import { Breadcrumb, Form, Input, Button, notification } from 'antd';
 
+import { saveBusiness } from 'redux/recruiter/businesses';
+import DATA from 'utils/data';
 import * as helper from 'utils/helper';
-import { SDATA } from 'utils/data';
-import { confirm } from 'redux/common';
-import { getBusiness, saveBusiness } from 'redux/recruiter/businesses';
-import Wrapper from './Wrapper';
 
-class BusinessEdit extends SaveFormComponent {
-  componentWillMount() {
-    const businessId = parseInt(this.props.match.params.businessId, 10);
-    this.props.getBusiness(businessId);
-  }
+import { PageHeader, PageSubHeader, PopupProgress, ImageSelector, NoLabelField } from 'components';
+import Wrapper from '../styled';
 
-  componentWillReceiveProps(nextProps) {
-    const { business } = nextProps;
-    if (business && business !== this.props.business) {
-      const model = Object.assign(this.state.model, business);
+const { Item } = Form;
+
+class BusinessEdit extends React.Component {
+  state = {
+    logo: {
+      url: null,
+      file: null,
+      exist: false
+    },
+    loading: null
+  };
+
+  componentDidMount() {
+    const { business, form } = this.props;
+
+    if (business) {
       this.setState({
-        model,
         logo: {
-          default: helper.getBusinessLogo(),
           url: helper.getBusinessLogo(business),
           exist: (business.images || []).length > 0
+        }
+      });
+
+      form.setFieldsValue({
+        name: business.name
+      });
+    } else {
+      this.setState({
+        logo: {
+          url: helper.getBusinessLogo(),
+          exist: false
         }
       });
     }
   }
 
-  onAddCredit = () => {
-    //   const { business, confirm } = this.props;
-    //   if (!FormComponent.needToSave) {
-    //     utils.setShared('credits_business_id', business.id);
-    //     // browserHistory.push('/recruiter/credits');
-    //     return;
-    //   }
-    //   confirm('Confirm', 'Are you sure you want to discard your changes?', [
-    //     { label: 'No' },
-    //     {
-    //       label: 'Yes',
-    //       style: 'success',
-    //       onClick: () => {
-    //         FormComponent.needToSave = false;
-    //         utils.setShared('credits_business_id', business.id);
-    //         // browserHistory.push('/recruiter/credits');
-    //       }
-    //     }
-    //   ]);
-  };
-
-  onSave = () => {
-    if (!this.isValid(['name'])) return;
-
-    const data = Object.assign({}, this.state.model);
-    this.props.saveBusiness(data, this.state.logo, (label, value) => {
-      const progress = label ? { label, value } : null;
-      this.setState({ progress });
+  setLogo = (file, url) =>
+    this.setState({
+      logo: {
+        url: url || helper.getBusinessLogo(),
+        file,
+        exist: !!file
+      }
     });
-    //     .then(
-    //       () => {
-    //         if (this.api.user.businesses.length === 0) {
-    //           this.props.setPermission(1);
-    //         }
-    //         FormComponent.needToSave = false;
-    //         utils.successNotif('Saved!');
-    //         this.props.loadingHide();
-    //         if (utils.getShared('first-time') === '2') {
-    //           this.manager.selectBusiness(formModel.id);
-    //         } else {
-    //           this.manager.getBusinesses();
-    //           this.onClose();
-    //         }
-    //       },
-    //       () => this.props.loadingHide()
-    //     );
+
+  addCredit = () => {
+    const { business: { id }, history } = this.props;
+    history.push(`/recruiter/settings/credits/${id}`);
   };
 
-  onCancel = () => {
-    helper.routePush(`/recruiter/jobs`, this.props);
+  goBuisinessList = () => {
+    this.props.history.push('/recruiter/jobs/business');
   };
 
-  onRoutePush = to => {
-    helper.routePush(to, this.props);
+  save = () => {
+    const { form, business, saveBusiness, history } = this.props;
+
+    form.validateFieldsAndScroll({ scroll: { offsetTop: 70 } }, (err, values) => {
+      if (err) return;
+
+      this.setState({
+        loading: {
+          label: 'Saving...'
+        }
+      });
+
+      saveBusiness({
+        data: {
+          ...values,
+          id: (business || {}).id
+        },
+        logo: this.state.logo,
+        onSuccess: ({ id }) => {
+          notification.success({
+            message: 'Notification',
+            description: 'Business is saved successfully.'
+          });
+          if (business) {
+            this.goBuisinessList();
+          } else {
+            history.push(`/recruiter/jobs/workplace/${id}`);
+          }
+        },
+        onFail: error => {
+          this.setState({ loading: null });
+          notification.error({
+            message: 'Notification',
+            description: error
+          });
+        },
+        onProgress: progress => {
+          this.setState({
+            loading: {
+              label: 'Logo uploading...',
+              progress: Math.floor(progress.loaded / progress.total * 100)
+            }
+          });
+        }
+      });
+    });
   };
 
   render() {
-    const { business, errors } = this.props;
+    const { logo, loading } = this.state;
+    const { business, form } = this.props;
+    const { getFieldDecorator } = form;
     const creditsLabel = (business || {}).id
       ? `${business.tokens} Credit${business.tokens !== 1 ? 's' : ''}`
-      : `${SDATA.initTokens.tokens} free credits`;
-    const error = this.getError();
-    const { progress } = this.state;
+      : `${DATA.initTokens.tokens} free credits`;
+
+    const title = business ? 'Edit' : 'Add';
 
     return (
-      <Wrapper>
-        <Breadcrumb>
-          <BreadcrumbItem tag="a" onClick={() => this.onRoutePush(`/recruiter/jobs`)}>
-            Businesses
-          </BreadcrumbItem>
-          <BreadcrumbItem active tag="span">
-            {business ? (business.id ? 'Edit' : 'Add') : ''}
-          </BreadcrumbItem>
-        </Breadcrumb>
+      <Wrapper className="container">
+        <Helmet title={`${title} Business`} />
 
-        {business ? (
-          <Board block className="board">
-            <Form>
-              <div className="logo-container">
-                <FormGroup>
-                  <this.FormLogoSelect />
-                </FormGroup>
-              </div>
+        <PageHeader>
+          <h2>{title} Business</h2>
+        </PageHeader>
 
-              <div className="right-container">
-                <FormGroup>
-                  <Label>
-                    Name<Required />
-                  </Label>
-                  <this.FormInput name="name" />
-                </FormGroup>
+        <PageSubHeader>
+          <Breadcrumb>
+            <Breadcrumb.Item>
+              <Link to="/recruiter/jobs/business">Businesses</Link>
+            </Breadcrumb.Item>
+            <Breadcrumb.Item>{title}</Breadcrumb.Item>
+          </Breadcrumb>
+        </PageSubHeader>
 
-                <FormGroup>
-                  <Label>Credits</Label>
-                  <div className="credit">
-                    <span>{creditsLabel}</span>
-                    {business.id && (
-                      <Button color="yellow" outline onClick={this.onAddCredit}>
-                        Add Credits
-                      </Button>
-                    )}
-                  </div>
-                </FormGroup>
-              </div>
+        <div className="content">
+          <Form>
+            <Item label="Name">
+              {getFieldDecorator('name', {
+                rules: [
+                  { required: true, message: 'Please input business name!' },
+                  { whitespace: true, message: 'This field may not be blank.' }
+                ]
+              })(<Input autoFocus />)}
+            </Item>
 
-              {error && <Alert color="danger">{error}</Alert>}
+            <Item label="Credits">
+              <div>{creditsLabel}</div>
+              {(business || {}).id && <Button onClick={this.addCredit}>Add Credits</Button>}
+            </Item>
 
-              <div>
-                <Button color="green" size="lg" disabled={business.saving} onClick={this.onSave}>
-                  {business.saving ? 'Saving...' : 'Save'}
-                </Button>
+            <Item label="Logo">
+              <ImageSelector url={logo.url} removable={logo.exist} onChange={this.setLogo} />
+            </Item>
 
-                <Button color="gray" size="lg" outline onClick={this.onCancel}>
-                  Cancel
-                </Button>
-              </div>
+            <NoLabelField className="subimt-field">
+              <Button type="primary" onClick={this.save}>
+                Save
+              </Button>
+              <Button onClick={this.goBuisinessList}>Cancel</Button>
+            </NoLabelField>
+          </Form>
+        </div>
 
-              {progress && <PopupProgress label={progress.label} value={progress.value} />}
-            </Form>
-          </Board>
-        ) : !errors ? (
-          <Loading />
-        ) : (
-          <Alert type="danger">Error!</Alert>
-        )}
+        {loading && <PopupProgress label={loading.label} value={loading.progress} />}
       </Wrapper>
     );
   }
 }
 
 export default connect(
-  state => ({
-    business: state.rc_businesses.selectedBusiness,
-    errors: state.rc_businesses.errors
-  }),
-  { confirm, getBusiness, saveBusiness }
-)(BusinessEdit);
+  (state, { match }) => {
+    const businessId = helper.str2int(match.params.businessId);
+    const business = helper.getItemByID(state.rc_businesses.businesses, businessId);
+    return {
+      business
+    };
+  },
+  {
+    saveBusiness
+  }
+)(Form.create()(BusinessEdit));

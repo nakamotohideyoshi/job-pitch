@@ -231,7 +231,7 @@ extension ApplicationListController: UITableViewDelegate {
                                                      chooseDelegate: self)
         } else {
             
-            ApplicationDetailController.pushController(job: nil,
+            ApplicationDetailsController.pushController(job: nil,
                                                application: application,
                                                chooseDelegate: self)
         }

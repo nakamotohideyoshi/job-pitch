@@ -409,6 +409,13 @@ class JobImage(models.Model):
         ordering = ['order']
 
 
+class JobVideo(models.Model):
+    token = models.TextField(default=uuid.uuid4, editable=False)
+    job = models.ForeignKey(Job, related_name='videos')
+    video = models.URLField(max_length=512, null=True)
+    thumbnail = models.URLField(max_length=512, null=True)
+
+
 class JobSeeker(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, related_name='job_seeker')
     first_name = models.CharField(max_length=100)

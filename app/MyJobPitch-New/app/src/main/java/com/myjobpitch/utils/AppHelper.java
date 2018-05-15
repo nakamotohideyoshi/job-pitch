@@ -39,7 +39,7 @@ public class AppHelper {
     }
 
     public static String getBusinessName(Job job) {
-        return job.getLocation_data().getBusiness_data().getName() + ", " + job.getLocation_data().getName();
+        return job.getLocation_data().getBusiness_data().getName() + " (" + job.getLocation_data().getName() + ")";
     }
 
     // distance

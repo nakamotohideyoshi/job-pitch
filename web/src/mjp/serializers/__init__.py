@@ -12,6 +12,7 @@ from mjp.models import (
     Pitch,
     AppDeprecation,
     BusinessUser,
+    JobVideo,
 )
 
 
@@ -81,7 +82,7 @@ class LocationSerializer(serializers.ModelSerializer):
         exclude = ('latlng',)
 
 
-class JobSerializer(serializers.ModelSerializer):
+class JobSerializerV1(serializers.ModelSerializer):
     location_data = LocationSerializer(source='location', read_only=True)
     images = RelatedImageURLField(many=True, read_only=True)
 
@@ -97,6 +98,16 @@ class JobSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Job
+
+
+class EmbeddedVideoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = JobVideo
+        exclude = ('token', 'job')
+
+
+class JobSerializer(JobSerializerV1):
+    videos = EmbeddedVideoSerializer(many=True, read_only=True)
 
 
 class EmbeddedPitchSerializer(serializers.ModelSerializer):

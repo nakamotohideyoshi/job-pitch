@@ -1,12 +1,15 @@
-import React, { Component } from 'react';
-import { Button } from 'reactstrap';
-import Textarea from 'react-textarea-autosize';
+import React, { Fragment } from 'react';
+import { Input, Avatar } from 'antd';
 
 import * as helper from 'utils/helper';
-import Logo from '../tags/Logo';
-import Wrapper from './Wrapper';
+import DATA from 'utils/data';
 
-export default class RThread extends Component {
+import { Icons, LinkButton } from 'components';
+import Wrapper from './styled';
+
+const { TextArea } = Input;
+
+export default class MessageThread extends React.Component {
   state = {
     message: ''
   };
@@ -14,6 +17,7 @@ export default class RThread extends Component {
   componentWillReceiveProps(nextProps) {
     if ((nextProps.application || {}).id !== (this.props.application || {}).id) {
       this.setState({ message: '' });
+      this.scrollBottom();
     }
   }
 
@@ -22,93 +26,88 @@ export default class RThread extends Component {
   onSend = () => {
     const message = this.state.message.trim();
     this.setState({ message: '' });
+    this.scrollBottom(true);
     this.props.onSend(message);
-    this.scrollBottom();
   };
 
-  scrollBottom = () => {
+  onKeyUp = event => {
+    if (event.key === 'Enter' && event.ctrlKey) {
+      this.onSend();
+    }
+  };
+
+  scrollBottom = smooth =>
     setTimeout(() => {
-      if (this.contentRef) {
-        this.contentRef.scrollTop = this.contentRef.scrollHeight;
+      if (this.containerRef) {
+        if (smooth) {
+          this.containerRef.scroll({
+            top: this.containerRef.scrollHeight,
+            behavior: 'smooth'
+          });
+        } else {
+          this.containerRef.scrollTop = this.containerRef.scrollHeight;
+        }
       }
-    }, 0);
-  };
+    });
 
-  renderMessage = (info, index) => {
-    const { content, created, from_role } = info;
+  renderMessage = ({ id, content, from_role, created, sending, error }) => {
     const { application, userRole } = this.props;
-    const me = !created || helper.getNameByID('roles', from_role) === userRole;
+    const me = sending || error || helper.getNameByID('roles', from_role) === userRole;
 
     let avatar;
-    if ((me && userRole === 'RECRUITER') || (!me && userRole !== 'RECRUITER')) {
+    if ((userRole === 'RECRUITER' && me) || (userRole === 'JOB_SEEKER' && !me)) {
       avatar = helper.getJobLogo(application.job_data);
     } else {
-      avatar = helper.getJobseekerImg(application.job_seeker);
+      avatar = helper.getPitch(application.job_seeker).thumbnail;
     }
 
     let comment;
-    if (created) {
+    if (sending) {
+      comment = 'sending...';
+    } else if (error) {
+      comment = 'send error!';
+    } else {
       comment = new Date(created).toLocaleTimeString('en-us', {
         month: 'short',
         day: 'numeric',
         hour: '2-digit',
         minute: '2-digit'
       });
-    } else {
-      comment = 'sending...';
     }
 
     return (
-      <div key={index} className={me ? 'me' : 'you'}>
-        {!me && <Logo src={avatar} size="40" className="avatar" circle />}
+      <div key={id} className={me ? 'me' : 'you'}>
+        {!me && <Avatar src={avatar} />}
         <div className="message">
           <div className="bubble">{content}</div>
-          <div className="time">{comment}</div>
+          <div className={`time ${error ? 'error' : ''}`}>{comment}</div>
         </div>
-        {me && <Logo src={avatar} size="40" className="avatar" circle />}
+        {me && <Avatar src={avatar} />}
       </div>
     );
   };
 
   renderInput = () => {
-    const { application, userRole, onConnect } = this.props;
+    const { application } = this.props;
+    const { message } = this.state;
 
-    const status = helper.getNameByID('appStatuses', application.status);
-    if (status === 'DELETED') {
-      return (
-        <div className="input">
-          <Textarea placeholder="This application has been deleted" value="" disabled />
-        </div>
-      );
+    if (application.status === DATA.APP.DELETED) {
+      return <div>This application has been deleted</div>;
     }
-
-    if (status === 'ESTABLISHED') {
-      const { message } = this.state;
-
-      return (
-        <div className="input">
-          <Button color="green" disabled={message.trim() === ''} onClick={this.onSend}>
-            Send
-          </Button>
-          <Textarea placeholder="Type a message here" maxRows={15} value={message} onChange={this.onChnageInput} />
-        </div>
-      );
-    }
-
-    const placeholders = {
-      RECRUITER: 'You cannot send messages until you have connected',
-      JOB_SEEKER: 'You cannot send message until your application is accepted'
-    };
 
     return (
-      <div className="input">
-        {onConnect && (
-          <Button color="green" onClick={onConnect}>
-            Connect
-          </Button>
-        )}
-        <Textarea placeholder={placeholders[userRole]} value="" disabled />
-      </div>
+      this.props.inputRenderer(application) || (
+        <Fragment>
+          <TextArea
+            placeholder="Type a message here"
+            autosize={{ minRows: 1, maxRows: 15 }}
+            value={message}
+            onChange={this.onChnageInput}
+            onKeyUp={this.onKeyUp}
+          />
+          <Icons.Send size="lg" className={message.trim() === '' ? 'disabled' : ''} onClick={this.onSend} />
+        </Fragment>
+      )
     );
   };
 
@@ -118,16 +117,16 @@ export default class RThread extends Component {
         <div
           className="messages"
           ref={ref => {
-            if (!this.contentRef) {
-              this.contentRef = ref;
+            if (!this.containerRef) {
+              this.containerRef = ref;
               this.scrollBottom();
             }
           }}
         >
-          {this.props.application.messages.map((info, index) => this.renderMessage(info, index))}
+          {this.props.application.messages.map(this.renderMessage)}
         </div>
 
-        {this.renderInput()}
+        <div className="input">{this.renderInput()}</div>
       </Wrapper>
     );
   }

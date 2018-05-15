@@ -226,6 +226,8 @@ public class JobProfileFragment extends FormFragment {
             intent.putExtra(SelectPlaceActivity.LONGITUDE, mLongitude);
         if (mLatitude != null)
             intent.putExtra(SelectPlaceActivity.LATITUDE, mLatitude);
+        int radiusIndex = mRadiusNames.indexOf(mRadiusView.getText().toString());
+        intent.putExtra(SelectPlaceActivity.RADIUS, radiusValues.get(radiusIndex) * 1609.344);
         startActivityForResult(intent, 10000);
     }
 

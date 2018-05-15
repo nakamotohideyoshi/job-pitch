@@ -57,15 +57,34 @@
     </style>
 
     <style name="BoldLabel">
-        <item name="android:textColor">@color/colorAccent</item>
+        <item name="android:textColor">#000</item>
         <item name="android:textSize">@dimen/label_fontsize</item>
         <item name="android:textStyle">bold</item>
     </style>
 
-
     <style name="GreyLabel">
         <item name="android:textColor">@color/greyLabel</item>
         <item name="android:textSize">@dimen/label_fontsize</item>
+    </style>
+
+    <style name="SmallText">
+        <item name="android:textColor">@color/colorPrimary</item>
+        <item name="android:textSize">@dimen/small_fontsize</item>
+    </style>
+
+    <style name="DefaultText">
+        <item name="android:textColor">@color/colorPrimary</item>
+        <item name="android:textSize">@dimen/default_fontsize</item>
+    </style>
+
+    <style name="LargeText">
+        <item name="android:textColor">@color/colorPrimary</item>
+        <item name="android:textSize">@dimen/large_fontsize</item>
+    </style>
+
+    <style name="XLargeText">
+        <item name="android:textColor">@color/colorPrimary</item>
+        <item name="android:textSize">@dimen/xlarge_fontsize</item>
     </style>
 
     <style name="LinkButton">

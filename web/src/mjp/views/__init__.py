@@ -25,8 +25,15 @@ from mjp.serializers import (
 )
 from mjp.views.applications import ApplicationViewSet, MessageViewSet
 from mjp.views.job_seeker import JobProfileViewSet, PitchViewSet, BusinessViewSet, LocationViewSet, JobViewSet
-from mjp.views.recruiter import UserBusinessViewSet, UserBusinessImageViewSet, UserLocationViewSet, \
-    UserLocationImageViewSet, UserJobViewSet, UserJobImageViewSet
+from mjp.views.recruiter import (
+    UserBusinessViewSet,
+    UserBusinessImageViewSet,
+    UserLocationViewSet,
+    UserLocationImageViewSet,
+    UserJobViewSet,
+    UserJobImageViewSet,
+    JobVideoViewSet,
+)
 
 
 def SimpleViewSet(router, model, base, permissions=(permissions.IsAuthenticated,), overrides={},
@@ -122,3 +129,4 @@ router.register('user-locations', UserLocationViewSet, base_name='user-location'
 router.register('user-location-images', UserLocationImageViewSet, base_name='user-location-image')
 router.register('user-jobs', UserJobViewSet, base_name='user-job')
 router.register('user-job-images', UserJobImageViewSet, base_name='user-job-image')
+router.register('job-videos', JobVideoViewSet, base_name='job-videos')

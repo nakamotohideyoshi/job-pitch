@@ -1,135 +1,98 @@
 import { delay } from 'redux-saga';
-import { takeEvery, put, call, select } from 'redux-saga/effects';
-import { push } from 'react-router-redux';
-import { FormComponent } from 'components';
-import { MENU_DATA, SDATA } from 'utils/data';
-import * as helper from 'utils/helper';
-import * as api from 'utils/api';
-import * as AUTH from 'redux/auth/constants';
-import * as C from './constants';
+import { takeLatest, call, put, select } from 'redux-saga/effects';
 
-/**
-|--------------------------------------------------
-| loadProfile
-|--------------------------------------------------
-*/
+import { getRequest, postRequest, putRequest, requestSuccess } from 'utils/request';
+import * as C from 'redux/constants';
 
-function* _loadProfile() {
-  try {
-    let jobseeker;
-    if (!SDATA.user.job_seeker) {
-      // new
-      jobseeker = {
-        active: true,
-        email_public: true,
-        telephone_public: true,
-        mobile_public: true,
-        age_public: true,
-        sex_public: true,
-        nationality_public: true,
-        user: SDATA.user.id,
-        email: SDATA.user.email,
-        age: null
-      };
-    } else {
-      // get
-      jobseeker = yield call(api.get, `/api/job-seekers/${SDATA.user.job_seeker}/`);
-    }
-    yield put({ type: C.JS_PROFILE_LOAD_SUCESS, jobseeker });
-  } catch (errors) {
-    yield put({ type: C.JS_PROFILE_LOAD_ERROR, errors });
+import AWS from 'aws-sdk';
+
+function* saveJobseeker(action) {
+  const { id } = action.payload.data;
+  if (!id) {
+    yield call(postRequest({ url: '/api/job-seekers/' }), action);
+  } else {
+    yield call(putRequest({ url: `/api/job-seekers/${id}/` }), action);
   }
 }
 
-function* loadProfile() {
-  yield takeEvery(C.JS_PROFILE_LOAD, _loadProfile);
+function* saveJobProfile(action) {
+  const { id } = action.payload.data;
+  if (!id) {
+    yield call(postRequest({ url: '/api/job-profiles/' }), action);
+  } else {
+    yield call(putRequest({ url: `/api/job-profiles/${id}/` }), action);
+  }
 }
 
-/**
-|--------------------------------------------------
-| saveProfile
-|--------------------------------------------------
-*/
+export const _uploadPitch = ({ id, token }, pitchData, onUploadProgress) =>
+  new Promise(resolve => {
+    const folder = window.location.origin.replace('//', '');
+    const s3 = new AWS.S3({
+      apiVersion: '2006-03-01',
+      credentials: new AWS.CognitoIdentityCredentials(
+        {
+          IdentityPoolId: 'eu-west-1:93ae6986-5938-4130-a3c0-f96c39d75be2'
+        },
+        {
+          region: 'eu-west-1'
+        }
+      )
+    });
+    s3
+      .upload(
+        {
+          Bucket: 'mjp-android-uploads',
+          Key: `${folder}/${token}.${id}.pitches.${new Date().getTime()}`,
+          Body: pitchData,
+          ContentType: 'video/webm'
+        },
+        (error, data) => {
+          if (error) {
+            throw error;
+          }
+          resolve();
+        }
+      )
+      .on('httpUploadProgress', progress => {
+        onUploadProgress('Uploading...', Math.floor(progress.loaded / progress.total * 100));
+      });
+  });
 
-function* _saveProfile({ model, pitchData, onUploadProgress }) {
-  let jobseeker;
+function* uploadPitch(action) {
+  const { data, onProgress, onSuccess, onFail } = action.payload;
 
-  // save profile
-  try {
-    const data = yield call(api.formData, model);
-    if (model.id) {
-      jobseeker = yield call(api.put, `/api/job-seekers/${model.id}/`, data);
-    } else {
-      jobseeker = yield call(api.post, '/api/job-seekers/', data);
-    }
-  } catch (errors) {
-    yield put({ type: C.JS_PROFILE_SAVE_ERROR, errors });
+  onProgress('Starting pitch upload...');
+  let newPitch = yield call(postRequest({ url: `/api/pitches/` }));
+
+  if (!newPitch) {
+    onFail && onFail();
     return;
   }
 
-  // upload pitch
-  if (!pitchData) {
-    yield put({ type: C.JS_PROFILE_SAVE_SUCCESS, jobseeker });
-  } else {
-    try {
-      yield call(_uploadPitch, {
-        jobseekerId: jobseeker.id,
-        pitchData,
-        onUploadProgress
-      });
-    } catch (errors) {
-      helper.errorNotif('Pitch uploading error!!');
-    }
-  }
-
-  FormComponent.modified = false;
-  helper.successNotif('Profile saved successfully!!');
-
-  // update store
-  if (!model.id) {
-    SDATA.user.job_seeker = jobseeker.id;
-    yield put({ type: AUTH.UPDATE_INFO, permission: 1 });
-    yield put(push('/jobseeker/jobprofile'));
-  }
-}
-
-function* saveProfile() {
-  yield takeEvery(C.JS_PROFILE_SAVE, _saveProfile);
-}
-
-/**
-|--------------------------------------------------
-| uploadPitch
-|--------------------------------------------------
-*/
-
-function* _uploadPitch({ type, jobseekerId, pitchData, onUploadProgress }) {
   try {
-    onUploadProgress('Starting upload...');
-    const newPitch = yield call(api.post, '/api/pitches/', {});
-    yield call(api.uploadPitch, newPitch, pitchData, onUploadProgress);
-    onUploadProgress('Processing...');
-    let pitch;
-    do {
-      yield delay(2000);
-      pitch = yield call(api.get, `/api/pitches/${newPitch.id}/`);
-    } while (!pitch.video);
-    onUploadProgress();
-    const jobseeker = yield call(api.get, `/api/job-seekers/${jobseekerId}/`);
-    yield put({ type: C.JS_PROFILE_SAVE_SUCCESS, jobseeker });
-
-    if (type) {
-      FormComponent.modified = false;
-      helper.successNotif('Profile saved successfully!!');
-    }
-  } catch (errors) {
-    onUploadProgress();
-    yield put({ type: C.JS_PROFILE_SAVE_ERROR, errors });
+    yield call(_uploadPitch, newPitch, data, onProgress);
+  } catch (error) {
+    onFail && onFail();
+    return;
   }
+
+  onProgress('Processing...');
+
+  const pitchId = newPitch.id;
+  do {
+    yield delay(2000);
+    newPitch = yield call(getRequest({ url: `/api/pitches/${pitchId}/` }));
+  } while (!newPitch.video);
+
+  const { js_profile } = yield select();
+  const jobseeker = yield call(getRequest({ url: `/api/job-seekers/${js_profile.jobseeker.id}/` }));
+  yield put({ type: requestSuccess(C.JS_SAVE_PROFILE), payload: jobseeker });
+
+  onSuccess && onSuccess();
 }
 
-function* uploadPitch() {
-  yield takeEvery(C.JS_PITCH_UPLOAD, _uploadPitch);
+export default function* sagas() {
+  yield takeLatest(C.JS_SAVE_PROFILE, saveJobseeker);
+  yield takeLatest(C.JS_SAVE_JOBPROFILE, saveJobProfile);
+  yield takeLatest(C.JS_UPLOAD_PITCH, uploadPitch);
 }
-
-export default [loadProfile(), saveProfile(), uploadPitch()];

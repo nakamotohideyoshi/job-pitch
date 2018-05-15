@@ -1,149 +1,157 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import Helmet from 'react-helmet';
 import { connect } from 'react-redux';
-import { Breadcrumb, BreadcrumbItem, Button } from 'reactstrap';
+import { Link } from 'react-router-dom';
+import { Breadcrumb, Button, Spin } from 'antd';
 
-import { Board, Loading, Alert } from 'components';
-import { confirm } from 'redux/common';
-import { getJob, updateJob, removeJob } from 'redux/recruiter/jobs';
+import { saveJob } from 'redux/recruiter/jobs';
+import DATA from 'utils/data';
 import * as helper from 'utils/helper';
-import Wrapper from './Wrapper';
+
+import { PageHeader, PageSubHeader } from 'components';
+import DeleteDialog from '../JobList/DeleteDialog';
+import Wrapper from '../styled';
+import Details from './styled';
 
 class JobInterface extends React.Component {
-  componentWillMount() {
-    this.closedStatus = helper.getJobStatusByName('CLOSED');
-    const jobId = parseInt(this.props.match.params.jobId, 10);
-    this.props.getJob(jobId);
+  state = {
+    showDialog: false
+  };
+
+  componentDidMount() {
+    const { job } = this.props;
+    if (!job) {
+      this.props.history.push('/recruiter/jobs/business');
+    } else {
+      this.workplaceId = job.location;
+    }
   }
 
-  removeJob = () => {
-    const { job } = this.props;
-    const buttons = [
-      { outline: true },
-      {
-        label: 'Remove',
-        color: 'yellow',
-        onClick: () => this.props.removeJob(job.id)
-      }
-    ];
-
-    if (job.status !== this.closedStatus) {
-      buttons.push({
-        label: 'Deactivate',
-        color: 'yellow',
-        onClick: () => {
-          const model = Object.assign({}, job, { status: this.closedStatus });
-          this.props.updateJob(model);
-        }
-      });
+  componentWillReceiveProps({ job }) {
+    if (!job) {
+      this.props.history.push(`/recruiter/jobs/job/${this.workplaceId}`);
     }
+  }
 
-    this.props.confirm('Confirm', `Are you sure you want to delete ${job.title}`, buttons);
+  showRemoveDialog = show => {
+    this.setState({ showDialog: show });
   };
 
   reactivateJob = () => {
-    const model = Object.assign({}, this.props.job, {
-      status: helper.getJobStatusByName('OPEN')
+    const { job } = this.props;
+    this.props.saveJob({
+      data: {
+        ...job,
+        status: DATA.JOB.OPEN
+      },
+      successMsg: {
+        message: `${job.title} is opened.`
+      },
+      failMsg: {
+        message: `Opening ${job.title} is failed.`
+      }
     });
-    this.props.updateJob(model);
+  };
+
+  renderDetails = () => {
+    const { showDialog } = this.state;
+    const { job, history } = this.props;
+    const { id, status, title } = job;
+    const closed = status === DATA.JOB.CLOSED;
+
+    return (
+      <Details className="content">
+        <div>
+          <h3>{title}</h3>
+          <span>{closed ? '( CLOSED )' : ''}</span>
+        </div>
+
+        <Button type="primary" onClick={() => history.push(`/recruiter/jobs/job/edit/${id}`)}>
+          Edit
+        </Button>
+
+        <Button type="primary" onClick={() => this.showRemoveDialog(true)}>
+          Delete
+        </Button>
+
+        {closed && (
+          <Button type="primary" onClick={this.reactivateJob}>
+            Reactivate
+          </Button>
+        )}
+
+        <Button type="primary" disabled={closed} onClick={() => history.push(`/recruiter/applications/find/${id}`)}>
+          Find talent
+        </Button>
+
+        <Button type="primary" disabled={closed} onClick={() => history.push(`/recruiter/applications/apps/${id}`)}>
+          Applications
+        </Button>
+
+        <Button type="primary" disabled={closed} onClick={() => history.push(`/recruiter/applications/conns/${id}`)}>
+          Connections
+        </Button>
+
+        <Button
+          type="primary"
+          disabled={closed}
+          onClick={() => history.push(`/recruiter/applications/shortlist/${id}`)}
+        >
+          Shortlist
+        </Button>
+
+        <DeleteDialog job={showDialog && job} onCancel={() => this.showRemoveDialog()} />
+      </Details>
+    );
   };
 
   render() {
-    const { job, errors, match, history } = this.props;
-    const { businessId, workplaceId } = match.params;
-    const closed = job && job.status === this.closedStatus;
+    const { job } = this.props;
+    if (!job) {
+      return null;
+    }
+
+    const { location_data, loading } = job;
+    const { business_data } = location_data;
 
     return (
-      <Wrapper>
-        <Breadcrumb>
-          <BreadcrumbItem>
-            <Link to="/recruiter/jobs">Businesses</Link>
-          </BreadcrumbItem>
-          <BreadcrumbItem>
-            <Link to={`/recruiter/jobs/${businessId}`}>Workplaces</Link>
-          </BreadcrumbItem>
-          <BreadcrumbItem>
-            <Link to={`/recruiter/jobs/${businessId}/${workplaceId}`}>Jobs</Link>
-          </BreadcrumbItem>
-          <BreadcrumbItem active tag="span">
-            Detail
-          </BreadcrumbItem>
-        </Breadcrumb>
+      <Wrapper className="container">
+        <Helmet title="Job Details" />
 
-        {job ? (
-          <Board block className="board">
-            <h3>{job.title}</h3>
+        <PageHeader>
+          <h2>Job Details</h2>
+        </PageHeader>
 
-            <div className="buttons">
-              <Button
-                color="green"
-                onClick={() => history.push(`/recruiter/jobs/${businessId}/${workplaceId}/${job.id}/edit`)}
-              >
-                Edit
-              </Button>
+        <PageSubHeader>
+          <Breadcrumb>
+            <Breadcrumb.Item>
+              <Link to="/recruiter/jobs/business">Businesses</Link>
+            </Breadcrumb.Item>
+            <Breadcrumb.Item>
+              <Link to={`/recruiter/jobs/workplace/${business_data.id}`}>Workplaces</Link>
+            </Breadcrumb.Item>
+            <Breadcrumb.Item>
+              <Link to={`/recruiter/jobs/job/${location_data.id}`}>Jobs</Link>
+            </Breadcrumb.Item>
+            <Breadcrumb.Item>Details</Breadcrumb.Item>
+          </Breadcrumb>
+        </PageSubHeader>
 
-              <Button color="green" onClick={this.removeJob}>
-                {job.deleting ? 'Deleting...' : 'Delete'}
-              </Button>
-
-              {closed && (
-                <Button color="green" onClick={this.reactivateJob}>
-                  {job.updating ? 'Reactivating...' : 'Reactivate'}
-                </Button>
-              )}
-
-              <Button
-                color="green"
-                disabled={closed}
-                onClick={() => history.push(`/recruiter/applications/find/${job.id}`)}
-              >
-                Find talent
-              </Button>
-
-              <Button
-                color="green"
-                disabled={closed}
-                onClick={() => history.push(`/recruiter/applications/apps/${job.id}`)}
-              >
-                Applications
-              </Button>
-
-              <Button
-                color="green"
-                disabled={closed}
-                onClick={() => history.push(`/recruiter/applications/conns/${job.id}`)}
-              >
-                Connections
-              </Button>
-
-              <Button
-                color="green"
-                disabled={closed}
-                onClick={() => history.push(`/recruiter/applications/shortlist/${job.id}`)}
-              >
-                Shortlist
-              </Button>
-            </div>
-            <span>{closed ? 'CLOSED' : ''}</span>
-          </Board>
-        ) : !errors ? (
-          <Loading />
-        ) : (
-          <Alert type="danger">Error!</Alert>
-        )}
+        {loading ? <Spin>{this.renderDetails()}</Spin> : this.renderDetails()}
       </Wrapper>
     );
   }
 }
 
 export default connect(
-  state => ({
-    job: state.rc_jobs.selectedJob
-  }),
+  (state, { match }) => {
+    const jobId = helper.str2int(match.params.jobId);
+    const job = helper.getItemByID(state.rc_jobs.jobs, jobId);
+    return {
+      job
+    };
+  },
   {
-    confirm,
-    getJob,
-    updateJob,
-    removeJob
+    saveJob
   }
 )(JobInterface);

@@ -19,6 +19,7 @@ import com.myjobpitch.api.data.Hours;
 import com.myjobpitch.api.data.ImageUpload;
 import com.myjobpitch.api.data.InitialTokens;
 import com.myjobpitch.api.data.Job;
+import com.myjobpitch.api.data.JobPitch;
 import com.myjobpitch.api.data.JobProfile;
 import com.myjobpitch.api.data.JobSeeker;
 import com.myjobpitch.api.data.JobStatus;
@@ -32,6 +33,7 @@ import com.myjobpitch.api.data.PurchaseInfo;
 import com.myjobpitch.api.data.Role;
 import com.myjobpitch.api.data.Sector;
 import com.myjobpitch.api.data.Sex;
+import com.myjobpitch.utils.AppData;
 
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpAuthentication;
@@ -76,6 +78,7 @@ public class MJPApi {
         classEndPoints.put(JobSeeker.class, "job-seekers");
         classEndPoints.put(Pitch.class, "pitches");
         classEndPoints.put(Job.class, "jobs");
+        classEndPoints.put(JobPitch.class, "job-videos");
         classEndPoints.put(Location.class, "locations");
         classEndPoints.put(Business.class, "businesses");
         classEndPoints.put(Sector.class, "sectors");
@@ -119,6 +122,12 @@ public class MJPApi {
 		this(apiUrl);
 	}
 
+	private HttpHeaders getDefaultHttpHeaders() {
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Accept", String.format("application/json; version=%d", AppData.API_VERSION));
+        return headers;
+    }
+
     private URI getTypeUrl(String path) {
         return getTypeUrl(path, null);
     }
@@ -156,7 +165,7 @@ public class MJPApi {
 	}
 
 	private <T> HttpEntity<T> createAuthenticatedRequest(T object) {
-        return createAuthenticatedRequest(object, new HttpHeaders());
+        return createAuthenticatedRequest(object, getDefaultHttpHeaders());
     }
 
     private <T> HttpEntity<T> createAuthenticatedRequest(T object, HttpHeaders headers) {
@@ -400,7 +409,7 @@ public class MJPApi {
         parts.put("order", Arrays.asList(new Object[]{image.getOrder().toString()}));
 
         try {
-            HttpHeaders headers = new HttpHeaders();
+            HttpHeaders headers = getDefaultHttpHeaders();
             headers.setContentType(MediaType.MULTIPART_FORM_DATA);
             HttpEntity<MultiValueMap<String, Object>> request = createAuthenticatedRequest(parts, headers);
             rest.postForObject(getTypeUrl(endpoint), request, Object.class);
@@ -448,7 +457,7 @@ public class MJPApi {
 
         try {
             HttpMethod method = jobSeeker.getId() == null ? HttpMethod.POST : HttpMethod.PUT;
-            HttpHeaders headers = new HttpHeaders();
+            HttpHeaders headers = getDefaultHttpHeaders();
             headers.setContentType(MediaType.MULTIPART_FORM_DATA);
             HttpEntity<MultiValueMap<String, Object>> request = createAuthenticatedRequest(parts, headers);
             return rest.exchange(getObjectUrl("job-seekers", jobSeeker.getId()), method, request, JobSeeker.class).getBody();

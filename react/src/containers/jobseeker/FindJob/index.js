@@ -1,222 +1,230 @@
-import React, { Fragment } from 'react';
+import React from 'react';
 import Helmet from 'react-helmet';
 import { connect } from 'react-redux';
-import { Row, Col } from 'reactstrap';
-import FontAwesomeIcon from '@fortawesome/react-fontawesome';
-import faSyncAlt from '@fortawesome/fontawesome-free-solid/faSyncAlt';
-import faSearch from '@fortawesome/fontawesome-free-solid/faSearch';
-import { PageHeader, SearchBar, Loading, FlexBox, MJPCard, JobDetail } from 'components';
+import { Link } from 'react-router-dom';
+import Truncate from 'react-truncate';
+import { List, Avatar, Modal, Tooltip, Breadcrumb } from 'antd';
 
+import { findJobs, applyJob, removeJob } from 'redux/jobseeker/find';
+import DATA from 'utils/data';
 import * as helper from 'utils/helper';
-import { SDATA } from 'utils/data';
-import { confirm } from 'redux/common';
-import { getJobs, applyJob, removeJob } from 'redux/jobseeker/find';
-import Container from './Wrapper';
 
-import NoPitch from '../NoPitch';
+import { PageHeader, PageSubHeader, SearchBox, AlertMsg, ListEx, Icons, Loading, LinkButton } from 'components';
+import JobDetails from '../components/JobDetails';
+import NoPitch from '../components/NoPitch';
+import Wrapper from './styled';
+
+const { confirm } = Modal;
 
 class FindJob extends React.Component {
-  state = {};
+  state = {
+    selectedId: null,
+    searchText: ''
+  };
 
   componentWillMount() {
-    this.onRefresh();
+    const { findJobs, location } = this.props;
+    const { jobId } = location.state || {};
+    if (jobId) {
+      this.setState({ selectedId: jobId });
+    } else {
+      findJobs();
+    }
   }
 
   componentWillReceiveProps(nextProps) {
-    if (this.props.jobs === null && nextProps.jobs) {
-      helper.loadData('jobs_selectedid').then(id => {
-        if (id) {
-          helper.saveData('jobs_selectedid');
-          const job = helper.getItemByID(nextProps.jobs, id);
-          this.onDetail(job);
-        }
-      });
+    const { selectedId } = this.state;
+    if (selectedId) {
+      const { jobs } = this.props;
+      const selectedJob = jobs && helper.getItemByID(jobs, selectedId);
+      !selectedJob && this.onSelect();
     }
   }
 
-  onRefresh = () => this.props.getJobs();
+  onChangeSearchText = searchText => this.setState({ searchText });
 
-  onDetail = selectedJob => this.setState({ selectedJob });
+  onSelect = selectedId => this.setState({ selectedId });
 
-  onApply = job => {
-    const { confirm, jobseeker, applyJob } = this.props;
+  onApply = ({ id }, event) => {
+    event && event.stopPropagation();
 
-    if (jobseeker.pitches.length === 0) {
-      confirm('Alert', 'You need to record your pitch video to apply.', [
-        { outline: true },
-        {
-          label: 'Record my pitch',
-          color: 'green',
-          onClick: () => {
-            this.props.history.push('/jobseeker/record');
+    const { jobseeker, history, applyJob } = this.props;
+
+    if (!jobseeker.active) {
+      confirm({
+        content: 'To apply please activate your account',
+        okText: 'Activation',
+        cancelText: 'Cancel',
+        maskClosable: true,
+        onOk: () => {
+          history.push('/jobseeker/settings/profile');
+        }
+      });
+      return;
+    }
+
+    confirm({
+      content: 'Yes, I want to apply to this job',
+      okText: 'Apply',
+      cancelText: 'Cancel',
+      maskClosable: true,
+      onOk: () => {
+        applyJob({
+          data: {
+            job: id,
+            job_seeker: jobseeker.id
+          },
+          successMsg: {
+            message: `Job is applied.`
+          },
+          failMsg: {
+            message: `Failed.`
           }
-        }
-      ]);
-    } else {
-      confirm('Confirm', 'Yes, I want to apply to this job', [
-        { outline: true },
-        {
-          label: 'Apply',
-          color: 'green',
-          onClick: () => applyJob(job.id)
-        }
-      ]);
-    }
-  };
-
-  onRemove = job => {
-    this.props.confirm('Confirm', 'Are you sure you are not interested in this job?', [
-      { outline: true },
-      {
-        label: "I'm Sure",
-        color: 'yellow',
-        onClick: () => this.props.removeJob(job.id)
+        });
       }
-    ]);
+    });
   };
 
-  filterApp = filterText => this.setState({ filterText });
+  onRemove = ({ id }, event) => {
+    event && event.stopPropagation();
 
-  renderJobs = () => {
-    const { jobs, profile } = this.props;
+    confirm({
+      content: 'Are you sure you are not interested in this job?',
+      okText: `I'm Sure`,
+      okType: 'danger',
+      cancelText: 'Cancel',
+      maskClosable: true,
+      onOk: () => {
+        this.props.removeJob({
+          id
+        });
+      }
+    });
+  };
 
-    if (jobs.length === 0) {
-      return (
-        <FlexBox center>
-          <div className="alert-msg">
-            {`There are no more jobs that match your profile.
-            You can restore your removed matches by clicking refresh.`}
-          </div>
-          <a className="btn-link" onClick={this.onRefresh}>
-            <FontAwesomeIcon icon={faSyncAlt} />
-            Refresh
-          </a>
-        </FlexBox>
-      );
-    }
+  filterOption = job => {
+    const searchText = this.state.searchText.toLowerCase();
+    const name = helper.getFullBWName(job);
+    return job.title.toLowerCase().indexOf(searchText) >= 0 || name.toLowerCase().indexOf(searchText) >= 0;
+  };
 
-    const { filterText } = this.state;
-    const filteredJobs = jobs.filter(
-      job =>
-        !filterText ||
-        job.title.toLowerCase().indexOf(filterText) !== -1 ||
-        job.location_data.name.toLowerCase().indexOf(filterText) !== -1 ||
-        job.location_data.business_data.name.toLowerCase().indexOf(filterText) !== -1
-    );
-
-    if (filteredJobs.length === 0) {
-      return (
-        <FlexBox center>
-          <div className="alert-msg">
-            <FontAwesomeIcon icon={faSearch} />
-            No search results
-          </div>
-        </FlexBox>
-      );
-    }
+  renderJob = job => {
+    const { id, title, contract, hours, description, location_data, loading } = job;
+    const logo = helper.getJobLogo(job);
+    const name = helper.getFullBWName(job);
+    const contractName = helper.getItemByID(DATA.contracts, contract).short_name;
+    const hoursName = helper.getItemByID(DATA.hours, hours).short_name;
+    const distance = helper.getDistanceFromLatLonEx(location_data, this.props.profile);
 
     return (
-      <Row>
-        {filteredJobs.map(job => {
-          const logo = helper.getJobLogo(job);
-          const businessName = helper.getFullBWName(job);
-          const contract = helper.getItemByID(SDATA.contracts, job.contract).short_name;
-          const hours = helper.getItemByID(SDATA.hours, job.hours).short_name;
-          const distance = helper.getDistanceFromLatLonEx(
-            job.location_data.latitude,
-            job.location_data.longitude,
-            profile.latitude,
-            profile.longitude
-          );
-
-          return (
-            <Col xs="12" sm="6" md="4" lg="3" key={job.id}>
-              <MJPCard
-                image={logo}
-                title={job.title}
-                tProperty1={businessName}
-                // description={job.description}
-                bProperty1={`${contract} / ${hours}`}
-                bProperty2={distance}
-                onClick={() => this.onDetail(job)}
-                loading={job.loading}
-                menus={[
-                  {
-                    label: 'Apply',
-                    onClick: () => this.onApply(job)
-                  },
-                  {
-                    label: 'Remove',
-                    onClick: () => this.onRemove(job)
-                  }
-                ]}
-              />
-            </Col>
-          );
-        })}
-      </Row>
+      <List.Item
+        key={id}
+        actions={[
+          <Tooltip placement="bottom" title={'Apply'}>
+            <span onClick={e => this.onApply(job, e)}>
+              <Icons.Link />
+            </span>
+          </Tooltip>,
+          <Tooltip placement="bottom" title="Remove">
+            <span onClick={e => this.onRemove(job, e)}>
+              <Icons.TrashAlt />
+            </span>
+          </Tooltip>
+        ]}
+        onClick={() => this.onSelect(id)}
+        className={loading ? 'loading' : ''}
+      >
+        <List.Item.Meta
+          avatar={<Avatar src={logo} className="avatar-80" />}
+          title={`${title} (${name})`}
+          description={
+            <Truncate lines={2} ellipsis={<span>...</span>}>
+              {description}
+            </Truncate>
+          }
+        />
+        <div className="properties">
+          <span style={{ width: '100px' }}>
+            {contractName} / {hoursName}
+          </span>
+          <span style={{ width: '60px' }}>{distance}</span>
+        </div>
+        {loading && <Loading className="mask" size="small" />}
+      </List.Item>
     );
   };
+
+  renderEmpty = () => (
+    <AlertMsg>
+      <span>
+        {`There are no more jobs that match your profile.
+          You can restore your removed matches by clicking refresh.`}
+      </span>
+      <a onClick={() => this.props.findJobs()}>
+        <Icons.Refresh />
+        Refresh
+      </a>
+    </AlertMsg>
+  );
 
   render() {
-    const { jobs, errors, jobseeker } = this.props;
-    const { selectedJob } = this.state;
+    const { jobseeker, jobs, error } = this.props;
 
-    if (jobseeker) {
-      if (!helper.getPitch(jobseeker)) {
-        return <NoPitch />;
-      }
+    if (!helper.getPitch(jobseeker)) {
+      return <NoPitch title="Find Me Jobs" />;
     }
 
+    const selectedJob = jobs && helper.getItemByID(jobs, this.state.selectedId);
+
     return (
-      <Fragment>
+      <Wrapper className="container">
         <Helmet title="Find Me Jobs" />
 
-        <Container>
-          {jobs && (
-            <PageHeader>
-              <span>Find Me Jobs</span>
-              <SearchBar size="sm" onChange={this.filterApp} />
-            </PageHeader>
-          )}
-          {jobs && this.renderJobs()}
-          {!jobs && <FlexBox center>{!errors ? <Loading /> : <div className="alert-msg">Server Error!</div>}</FlexBox>}
-        </Container>
+        <PageHeader>
+          <h2>Find Me Jobs</h2>
+          <SearchBox width="200px" onChange={this.onChangeSearchText} />
+        </PageHeader>
+
+        <PageSubHeader>
+          <Breadcrumb />
+          <Link to="/jobseeker/settings/jobprofile">Change job matches</Link>
+        </PageSubHeader>
+
+        <div className="content">
+          <ListEx
+            data={jobs}
+            loadingSize="large"
+            pagination={{ pageSize: 10 }}
+            filterOption={this.filterOption}
+            error={error && 'Server Error!'}
+            renderItem={this.renderJob}
+            emptyRender={this.renderEmpty}
+          />
+        </div>
 
         {selectedJob && (
-          <JobDetail
+          <JobDetails
             job={selectedJob}
-            onClose={() => this.onDetail()}
-            buttons={[
-              {
-                label: 'Connect',
-                color: 'green',
-                onClick: () => this.onApply(selectedJob)
-              },
-              {
-                label: 'Remove',
-                color: 'yellow',
-                onClick: () => this.onRemove(selectedJob)
-              }
-            ]}
+            onApply={() => this.onApply(selectedJob)}
+            onRemove={() => this.onRemove(selectedJob)}
+            onClose={() => this.onSelect()}
+            roughLocation
           />
         )}
-      </Fragment>
+      </Wrapper>
     );
   }
 }
 
 export default connect(
   state => ({
-    jobseeker: state.js_find.jobseeker,
-    profile: state.js_find.profile,
+    jobseeker: state.js_profile.jobseeker,
+    profile: state.js_profile.profile,
     jobs: state.js_find.jobs,
-    selectedJob: state.js_find.selectedJob,
-    errors: state.js_find.errors
+    error: state.js_find.error
   }),
   {
-    confirm,
-    getJobs,
+    findJobs,
     applyJob,
     removeJob
   }

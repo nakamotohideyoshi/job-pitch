@@ -3,8 +3,15 @@ from rest_framework import viewsets, permissions
 from rest_framework.exceptions import PermissionDenied
 
 from mjp.models import Job, Role, ApplicationStatus, Message, Application, Location
-from mjp.serializers.applications import ApplicationSerializer, ApplicationCreateSerializer, \
-    ApplicationConnectSerializer, ApplicationShortlistUpdateSerializer, MessageCreateSerializer, MessageUpdateSerializer
+from mjp.serializers.applications import (
+    ApplicationSerializer,
+    ApplicationSerializerV1,
+    ApplicationCreateSerializer,
+    ApplicationConnectSerializer,
+    ApplicationShortlistUpdateSerializer,
+    MessageCreateSerializer,
+    MessageUpdateSerializer,
+)
 
 
 class ApplicationViewSet(viewsets.ModelViewSet):
@@ -32,7 +39,6 @@ class ApplicationViewSet(viewsets.ModelViewSet):
                     return is_recruiter
 
     permission_classes = (permissions.IsAuthenticated, ApplicationPermission)
-    serializer_class = ApplicationSerializer
     create_serializer_class = ApplicationCreateSerializer
     update_status_serializer_class = ApplicationConnectSerializer
     update_shortlist_serializer_class = ApplicationShortlistUpdateSerializer
@@ -95,7 +101,13 @@ class ApplicationViewSet(viewsets.ModelViewSet):
             if self.request.data.get('connect') is not None:
                 return self.update_status_serializer_class
             raise PermissionDenied()
-        return self.serializer_class
+        try:
+            version = int(self.request.version)
+        except (TypeError, ValueError):
+            version = 1
+        if version > 1:
+            return ApplicationSerializer
+        return ApplicationSerializerV1
 
     def get_queryset(self):
         query = Application.objects.annotate(Max('messages__created')).order_by('-messages__created__max', '-updated')

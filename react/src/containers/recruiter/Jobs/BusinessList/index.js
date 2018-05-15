@@ -1,177 +1,226 @@
 import React from 'react';
+import Helmet from 'react-helmet';
 import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
-import { Card, Row, Col, Breadcrumb, BreadcrumbItem } from 'reactstrap';
-import { Loading, FlexBox, MJPCard } from 'components';
+import { Breadcrumb, List, Avatar, Modal, Tooltip } from 'antd';
 
+import { removeBusiness } from 'redux/recruiter/businesses';
+import DATA from 'utils/data';
 import * as helper from 'utils/helper';
-import { SDATA } from 'utils/data';
-import { confirm } from 'redux/common';
-import { getBusinesses, removeBusiness } from 'redux/recruiter/businesses';
-import Wrapper from './Wrapper';
+
+import { PageHeader, PageSubHeader, AlertMsg, LinkButton, Loading, ListEx, Icons, Intro } from 'components';
+import imgLogo from 'assets/logo1.png';
+import imgIntro1 from 'assets/intro1.png';
+import imgIntro2 from 'assets/intro2.png';
+import imgIntro3 from 'assets/intro3.png';
+import Wrapper from '../styled';
+
+const { confirm } = Modal;
+
+const INTRO_DATA = [
+  {
+    title: 'Welcome!',
+    image: imgLogo,
+    comment: `Faster Screening of Candidates, no more piles of CVs and remember adverts are always free.`
+  },
+  {
+    title: 'Post your first job',
+    image: imgIntro1,
+    comment: `Get started by creating your workplaces and jobs.`
+  },
+  {
+    title: 'Screen potential candidates',
+    image: imgIntro2,
+    comment: `Our simple candidate selection system lets you quickly find the right person!`
+  },
+  {
+    title: 'Reusable ads',
+    image: imgIntro3,
+    comment: `Your job ads can be quickly reactivated to save effort next time.`
+  }
+];
 
 class BusinessList extends React.Component {
-  componentWillMount() {
-    this.props.getBusinesses();
+  state = {
+    dontShowIntro: false
+  };
+
+  componentDidMount() {
+    this.setState({ dontShowIntro: DATA[`dontShowIntro_${DATA.email}`] });
   }
 
-  onSelect = business => {
-    this.props.history.push(`/recruiter/jobs/${business.id}`);
+  selectBusiness = ({ id }) => {
+    this.props.history.push(`/recruiter/jobs/workplace/${id}`);
   };
 
-  onAdd = () => {
-    this.props.history.push(`/recruiter/jobs/add`);
-  };
-
-  onEdit = business => this.props.history.push(`/recruiter/jobs/${business.id}/edit`);
-
-  onRemove = business => {
-    const { confirm, removeBusiness } = this.props;
-
-    confirm('Confirm', `Are you sure you want to delete ${business.name}`, [
-      { outline: true },
-      {
-        label: 'Remove',
-        color: 'yellow',
-        onClick: () => {
-          const workplaceCount = business.locations.length;
-          if (workplaceCount === 0) {
-            removeBusiness(business.id);
-            return;
-          }
-
-          confirm(
-            'Confirm',
-            `Deleting this business will also delete ${workplaceCount} workplaces and all their jobs.
-             If you want to hide the jobs instead you can deactive them.`,
-            [
-              { outline: true },
-              {
-                label: 'Remove',
-                color: 'yellow',
-                onClick: () => removeBusiness(business.id)
-              }
-            ]
-          );
-        }
-      }
-    ]);
-  };
-
-  renderBusinesses = () => {
-    const { businesses } = this.props;
-
-    if (businesses.length === 0) {
-      return (
-        <FlexBox center>
-          <div className="alert-msg">
-            {SDATA.jobsStep === 1
-              ? `Hi, Welcome to My Job Pitch
-                Let's start by easily adding your business!`
-              : `You have not added any businesses yet.`}
-          </div>
-          <a
-            className="btn-link"
-            onClick={() => {
-              SDATA.jobsStep = 2;
-              helper.saveData('jobs-step', 2);
-              this.onAdd();
-            }}
-          >
-            {SDATA.jobsStep === 1 ? 'Get started!' : 'Create business'}
-          </a>
-        </FlexBox>
-      );
+  addBusiness = () => {
+    const tutorial = helper.loadData('tutorial');
+    if (tutorial === 1) {
+      helper.saveData('tutorial', 2);
     }
 
-    return (
-      <Row>
-        {businesses.map(business => {
-          const logo = helper.getBusinessLogo(business);
-          const tn = business.tokens;
-          const tokenCount = `${tn} credit${tn !== 1 ? 's' : ''}`;
-          const wn = business.locations.length;
-          const workplaceCount = `Includes ${wn} workplace${wn !== 1 ? 's' : ''}`;
+    const { user, businesses, history } = this.props;
+    if (user.can_create_businesses || businesses.length === 0) {
+      history.push('/recruiter/jobs/business/add');
+    } else {
+      confirm({
+        content: (
+          <span>
+            Got more that one business?<br />Get in touch to talk about how we can help you.<br />Remember, you can
+            always create additional workplaces under your existing business.
+          </span>
+        ),
+        okText: `Contact Us`,
+        cancelText: 'Cancel',
+        maskClosable: true,
+        onOk: () => {
+          window.open('https://www.myjobpitch.com/contact/');
+        }
+      });
+    }
+  };
 
-          const menus = [
-            {
-              label: 'Edit',
-              onClick: () => this.onEdit(business)
-            }
-          ];
-          if (businesses.length > 1) {
-            menus.push({
-              label: 'Remove',
-              onClick: () => this.onRemove(business)
-            });
+  editBusiness = ({ id }, event) => {
+    event && event.stopPropagation();
+    this.props.history.push(`/recruiter/jobs/business/edit/${id}`);
+  };
+
+  closeIntro = () => {
+    DATA[`dontShowIntro_${DATA.email}`] = true;
+    this.setState({ dontShowIntro: true });
+  };
+
+  removeBusiness = ({ id, name, locations }, event) => {
+    event && event.stopPropagation();
+
+    const count = locations.length;
+    let content;
+    if (count === 0) {
+      content = `Are you sure you want to delete ${name}`;
+    } else {
+      const s = count !== 1 ? 's' : '';
+      content = `Deleting this business will also delete ${count} workplace${s} and all their jobs.
+                If you want to hide the jobs instead you can deactive them.`;
+    }
+
+    confirm({
+      content,
+      okText: `Remove`,
+      okType: 'danger',
+      cancelText: 'Cancel',
+      maskClosable: true,
+      onOk: () => {
+        this.props.removeBusiness({
+          id,
+          successMsg: {
+            message: `Business(${name}) is removed.`
+          },
+          failMsg: {
+            message: `Removing business(${name}) is failed.`
           }
+        });
+      }
+    });
+  };
 
-          return (
-            <Col xs="12" sm="6" md="4" lg="3" key={business.id}>
-              <MJPCard
-                image={logo}
-                title={business.name}
-                tProperty1={tokenCount}
-                bProperty1={workplaceCount}
-                onClick={() => this.onSelect(business)}
-                loading={business.deleting}
-                menus={menus}
-              />
-            </Col>
-          );
-        })}
-        <Col xs="12" sm="6" md="4" lg="3">
-          {SDATA.user.can_create_businesses ? (
-            <Card body onClick={() => this.onAdd()} className="add">
-              Add New Business
-            </Card>
-          ) : (
-            <Card body onClick={() => this.onAdd()} className="add">
-              More than one company?
-              <br />
-              Get in touch!
-            </Card>
-          )}
-        </Col>
-      </Row>
+  renderBusiness = business => {
+    const { id, name, tokens, locations, loading } = business;
+    const logo = helper.getBusinessLogo(business);
+    const strTokens = `${tokens} credit${tokens !== 1 ? 's' : ''}`;
+    const count = locations.length;
+    const strWorkplaces = `Includes ${count} workplace${count !== 1 ? 's' : ''}`;
+
+    return (
+      <List.Item
+        key={id}
+        actions={[
+          <Tooltip placement="bottom" title="Edit">
+            <span onClick={e => this.editBusiness(business, e)}>
+              <Icons.Pen />
+            </span>
+          </Tooltip>,
+          <Tooltip placement="bottom" title="Remove">
+            <span onClick={e => this.removeBusiness(business, e)}>
+              <Icons.TrashAlt />
+            </span>
+          </Tooltip>
+        ]}
+        onClick={() => this.selectBusiness(business)}
+        className={loading ? 'loading' : ''}
+      >
+        <List.Item.Meta
+          style={{ alignItems: 'center' }}
+          avatar={<Avatar src={logo} className="avatar-80" />}
+          title={name}
+        />
+        <div className="properties">
+          <span style={{ width: '120px' }}>{strTokens}</span>
+          <span style={{ width: '130px' }}>{strWorkplaces}</span>
+        </div>
+        {loading && <Loading className="mask" size="small" />}
+      </List.Item>
+    );
+  };
+
+  renderEmpty = () => {
+    const tutorial = helper.loadData('tutorial');
+    return (
+      <AlertMsg>
+        <span>
+          {tutorial === 1
+            ? `Hi, Welcome to My Job Pitch
+               Let's start by easily adding your business!`
+            : `You have not added any businesses yet.`}
+        </span>
+        <a onClick={this.addBusiness}>{tutorial === 1 ? 'Get started!' : 'Create business'}</a>
+      </AlertMsg>
     );
   };
 
   render() {
-    const { businesses, errors } = this.props;
+    const { businesses } = this.props;
+    const { dontShowIntro } = this.state;
 
     return (
-      <Wrapper>
-        <Breadcrumb>
-          <BreadcrumbItem active tag="span">
-            Businesses
-          </BreadcrumbItem>
-        </Breadcrumb>
+      <Wrapper className="container">
+        <Helmet title="My Businesses" />
 
-        {businesses ? (
-          this.renderBusinesses()
-        ) : !errors ? (
-          <FlexBox center>
-            <Loading />
-          </FlexBox>
-        ) : (
-          <FlexBox center>
-            <div className="alert-msg">Server Error!</div>
-          </FlexBox>
-        )}
+        <PageHeader>
+          <h2>My Businesses</h2>
+        </PageHeader>
+
+        <PageSubHeader>
+          <Breadcrumb>
+            <Breadcrumb.Item>Businesses</Breadcrumb.Item>
+          </Breadcrumb>
+          <LinkButton onClick={this.addBusiness}>Add new business</LinkButton>
+        </PageSubHeader>
+
+        <div className="content">
+          <ListEx
+            data={this.props.businesses}
+            loadingSize="large"
+            pagination={{ pageSize: 10 }}
+            renderItem={this.renderBusiness}
+            emptyRender={this.renderEmpty}
+          />
+        </div>
+
+        {businesses.length === 0 && !dontShowIntro && <Intro data={INTRO_DATA} onClose={this.closeIntro} />}
       </Wrapper>
     );
   }
 }
 
 export default connect(
-  state => ({
-    businesses: state.rc_businesses.businesses,
-    errors: state.rc_businesses.errors
-  }),
+  state => {
+    const businesses = state.rc_businesses.businesses.slice(0);
+    helper.sort(businesses, 'name');
+    return {
+      user: state.auth.user,
+      businesses
+    };
+  },
   {
-    confirm,
-    getBusinesses,
     removeBusiness
   }
 )(BusinessList);

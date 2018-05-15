@@ -2,8 +2,8 @@
 import React from 'react';
 import styled from 'styled-components';
 import { compose, withProps, lifecycle } from 'recompose';
-import { withScriptjs, withGoogleMap, GoogleMap, Marker } from 'react-google-maps';
-const { SearchBox } = require('react-google-maps/lib/components/places/SearchBox');
+import { withScriptjs, withGoogleMap, GoogleMap, Marker, Circle } from 'react-google-maps';
+import { SearchBox } from 'react-google-maps/lib/components/places/SearchBox';
 
 const Input = styled.input`
   border: none;
@@ -26,20 +26,23 @@ const MapWithASearchBox = compose(
   }),
   lifecycle({
     componentWillMount() {
-      const { defaultCenter, markers, onSelectedLocation, options } = this.props;
-
+      const { marker, onSelectedLocation, options } = this.props;
       this.setState({
         bounds: null,
-        center: defaultCenter || { lat: 0, lng: 0 },
-        markers,
-        options: options,
+        center: marker || { lat: 1, lng: 1 },
+        marker,
+        options,
         onMapMounted: ref => {
           this.map = ref;
         },
+        onSearchBoxMounted: onSelectedLocation
+          ? ref => {
+              this.searchBox = ref;
+            }
+          : null,
         onBoundsChanged: () => {
           this.setState({
-            bounds: this.map.getBounds(),
-            center: this.map.getCenter()
+            bounds: this.map.getBounds()
           });
         },
         onClickMap: event => {
@@ -53,11 +56,6 @@ const MapWithASearchBox = compose(
             });
           }
         },
-        onSearchBoxMounted: onSelectedLocation
-          ? ref => {
-              this.searchBox = ref;
-            }
-          : null,
         onPlacesChanged: () => {
           const places = this.searchBox.getPlaces();
           const place = places[0];
@@ -70,23 +68,15 @@ const MapWithASearchBox = compose(
           this.setState({ center: place.geometry.location });
         }
       });
-
-      if (!defaultCenter) {
-        navigator.geolocation.getCurrentPosition(pos => {
-          this.setState({
-            center: {
-              lat: pos.coords.latitude,
-              lng: pos.coords.longitude
-            }
-          });
-        });
-      }
     },
 
     componentWillReceiveProps(nextProps) {
-      const { markers } = nextProps;
-      if (markers) {
-        this.setState({ markers });
+      const { marker } = nextProps;
+      if (marker) {
+        if (!this.props.marker) {
+          this.setState({ center: marker });
+        }
+        this.setState({ marker });
       }
     }
   }),
@@ -95,11 +85,11 @@ const MapWithASearchBox = compose(
 )(props => (
   <GoogleMap
     ref={props.onMapMounted}
-    defaultZoom={14}
+    zoom={props.zoom || 14}
     center={props.center}
     options={props.options}
-    onClick={props.onClickMap}
     onBoundsChanged={props.onBoundsChanged}
+    onClick={props.onClickMap}
   >
     {props.onSearchBoxMounted && (
       <SearchBox
@@ -111,8 +101,8 @@ const MapWithASearchBox = compose(
         <Input placeholder="Search" />
       </SearchBox>
     )}
-
-    {props.markers && props.markers.map((position, index) => <Marker key={index} position={position} />)}
+    {props.circle && <Circle {...props.circle} onClick={props.onClickMap} />}
+    {!props.circle && props.marker && <Marker position={props.marker} />}
   </GoogleMap>
 ));
 

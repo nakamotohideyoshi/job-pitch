@@ -1,133 +1,78 @@
-import { delay } from 'redux-saga';
-import { takeEvery, put, call } from 'redux-saga/effects';
-import { push } from 'react-router-redux';
-import { FormComponent } from 'components';
-import { SDATA } from 'utils/data';
+import { takeLatest, call, put, select } from 'redux-saga/effects';
+import * as C from 'redux/constants';
 import * as helper from 'utils/helper';
-import * as api from 'utils/api';
-import * as C from './constants';
+import request, { getRequest, postRequest, deleteRequest } from 'utils/request';
 
-/**
-|--------------------------------------------------
-| upload logo
-|--------------------------------------------------
-*/
+export const getBusinesses = getRequest({
+  type: C.RC_GET_BUSINESSES,
+  url: `/api/user-businesses/`
+});
 
-function* uploadLogo(logo, key, object, onUploadProgress) {
-  try {
+const removeBusiness = deleteRequest({
+  url: ({ id }) => `/api/user-businesses/${id}/`
+});
+
+function* saveBusiness(action) {
+  const { data, logo, onProgress, onSuccess, onFail } = action.payload;
+
+  const business = yield call(
+    request({
+      method: data.id ? 'put' : 'post',
+      url: data.id ? `/api/user-businesses/${data.id}/` : '/api/user-businesses/'
+    }),
+    action
+  );
+
+  if (!business) {
+    onFail && onFail('Removing is failed.');
+    return;
+  }
+
+  if (logo) {
     if (logo.file) {
-      const data = yield call(api.formData, {
-        order: 0,
-        [key]: object.id,
-        image: logo.file
-      });
-      const image = yield call(api.post, `/api/user-${key}-images/`, data, {
-        onUploadProgress: progress => {
-          onUploadProgress('Uploading...', Math.floor(progress.loaded / progress.total * 100));
+      const image = yield call(postRequest({ url: '/api/user-business-images/' }), {
+        payload: {
+          isFormData: true,
+          data: {
+            order: 0,
+            business: business.id,
+            image: logo.file
+          },
+          onUploadProgress: onProgress
         }
       });
-      onUploadProgress();
-      object.images = [image];
-    } else if (object.images.length > 0 && !logo.exist) {
-      yield call(api.del, `/api/user-${key}-images/${object.images[0].id}/`);
-      object.images = [];
+
+      if (!image) {
+        onFail && onFail('Uploading logo is failed.');
+        onSuccess && onSuccess(business);
+        return;
+      }
+
+      business.images = [image];
+    } else if (business.images.length && !logo.exist) {
+      yield call(deleteRequest({ url: `/api/user-business-images/${business.images[0].id}/` }));
+      business.images = [];
     }
-  } catch (errors) {
-    onUploadProgress();
   }
-}
 
-/**
-|--------------------------------------------------
-| business load, select, save
-|--------------------------------------------------
-*/
-
-// load businesses
-
-function* _getBusinesses() {
-  try {
-    const businesses = yield call(api.get, `/api/user-businesses/`);
-    SDATA.jobsStep = yield call(helper.loadData, 'jobs-step');
-
-    yield put({ type: C.RC_GET_BUSINESSES_SUCCESS, businesses });
-  } catch (errors) {
-    yield put({ type: C.RC_GET_BUSINESSES_ERROR, errors });
+  let { rc_businesses: { businesses } } = yield select();
+  if (data.id) {
+    businesses = helper.updateObj(businesses, business);
+  } else {
+    businesses = helper.addObj(businesses, business);
   }
+  yield put({ type: C.RC_BUSINESSES_UPDATE, payload: { businesses } });
+
+  onSuccess && onSuccess(business);
 }
 
-function* getBusinesses() {
-  yield takeEvery(C.RC_GET_BUSINESSES, _getBusinesses);
+const purchase = postRequest({
+  url: `/api/paypal/purchase/`
+});
+
+export default function* sagas() {
+  yield takeLatest(C.RC_GET_BUSINESSES, getBusinesses);
+  yield takeLatest(C.RC_REMOVE_BUSINESS, removeBusiness);
+  yield takeLatest(C.RC_SAVE_BUSINESS, saveBusiness);
+  yield takeLatest(C.RC_PURCHASE, purchase);
 }
-
-// remove business
-
-function* _removeBusiness({ businessId }) {
-  try {
-    yield call(api.del, `/api/user-businesses/${businessId}/`);
-    yield put({ type: C.RC_BUSINESS_REMOVE_SUCCESS, businessId });
-  } catch (errors) {
-    helper.errorNotif('Server Error!');
-    yield put({ type: C.RC_BUSINESS_REMOVE_ERROR, businessId });
-  }
-}
-
-function* removeBusiness() {
-  yield takeEvery(C.RC_BUSINESS_REMOVE, _removeBusiness);
-}
-
-// load business
-
-function* _getBusiness({ businessId }) {
-  try {
-    let business;
-    if (isNaN(businessId)) {
-      business = {};
-    } else {
-      business = yield call(api.get, `/api/user-businesses/${businessId}/`);
-    }
-    yield put({ type: C.RC_BUSINESS_GET_SUCCESS, business });
-  } catch (errors) {
-    yield put({ type: C.RC_BUSINESS_GET_ERROR, errors });
-  }
-}
-
-function* getBusiness() {
-  yield takeEvery(C.RC_BUSINESS_GET, _getBusiness);
-}
-
-// save business
-
-function* _saveBusiness({ model, logo, onUploadProgress }) {
-  try {
-    let business;
-
-    // save
-    if (model.id) {
-      business = yield call(api.put, `/api/user-businesses/${model.id}/`, model);
-    } else {
-      business = yield call(api.post, '/api/user-businesses/', model);
-    }
-
-    // upload logo
-    if (logo) {
-      yield call(uploadLogo, logo, 'business', business, onUploadProgress);
-    }
-
-    yield put({ type: C.RC_BUSINESS_SAVE_SUCCESS, business });
-    FormComponent.modified = false;
-    helper.successNotif('Business saved successfully!!');
-
-    if (SDATA.jobsStep === 2) {
-      yield put(push(`/recruiter/jobs/${business.id}`));
-    }
-  } catch (errors) {
-    yield put({ type: C.RC_BUSINESS_SAVE_ERROR, errors });
-  }
-}
-
-function* saveBusiness() {
-  yield takeEvery(C.RC_BUSINESS_SAVE, _saveBusiness);
-}
-
-export default [getBusinesses(), removeBusiness(), getBusiness(), saveBusiness()];

@@ -19,6 +19,18 @@ class Job: MJPObjectWithDates {
     var status: NSNumber!
     var locationData: Location!
     var images: NSArray!
+    var videos: NSArray!
+    
+    func getPitch() -> JobPitch? {
+        if videos != nil {
+            for pitch in videos as! [JobPitch] {
+                if pitch.video != nil {
+                    return pitch
+                }
+            }
+        }
+        return nil
+    }
  
     func getImage() -> Image? {
         if images != nil && images.count > 0 {

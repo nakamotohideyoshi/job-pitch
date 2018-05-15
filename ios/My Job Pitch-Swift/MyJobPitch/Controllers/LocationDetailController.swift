@@ -23,7 +23,7 @@ class LocationDetailController: MJPController {
     var isFirstCreate = false
     var location: Location!
     
-    var noRefresh = false
+    var refresh = true
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -36,15 +36,14 @@ class LocationDetailController: MJPController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        if !noRefresh {
+        if refresh {
+            refresh = false
             showLoading()
             API.shared().loadLocation(id: location.id, success: { (data) in
                 self.location = data as! Location
                 self.updateLocationInfo()
                 self.loadJobs()
             }, failure: self.handleErrors)
-        } else {
-            noRefresh = false
         }
     }
     
@@ -75,16 +74,13 @@ class LocationDetailController: MJPController {
     }
     
     @IBAction func editLocationAction(_ sender: Any) {
+        refresh = true
         LocationEditController.pushController(business: nil, location: location)
     }
     
     @IBAction func deleteLocationAction(_ sender: Any) {
-        noRefresh = true
-        
         let message = String(format: "Are you sure you want to delete %@", location.name)
         PopupController.showYellow(message, ok: "Delete", okCallback: {
-        
-            self.noRefresh = true
             
             let jobCount = self.location.jobs.count
             if jobCount == 0 {
@@ -101,6 +97,7 @@ class LocationDetailController: MJPController {
     }
     
     @IBAction func addJobAction(_ sender: Any) {
+        refresh = true
         isFirstCreate = false
         JobEditController.pushController(location: location, job: nil)
     }
@@ -136,8 +133,6 @@ extension LocationDetailController: UITableViewDataSource {
                           padding: 20,
                           callback: { (cell) -> Bool in
                             
-                            self.noRefresh = true
-                            
                             let message = String(format: "Are you sure you want to delete %@", job.title)
                             PopupController.showYellow(message, ok: "Delete", okCallback: {
                                 
@@ -162,6 +157,7 @@ extension LocationDetailController: UITableViewDataSource {
                           backgroundColor: AppData.greenColor,
                           padding: 20,
                           callback: { (cell) -> Bool in
+                            self.refresh = true
                             JobEditController.pushController(location: nil, job: job)
                             return true
             })
@@ -177,6 +173,8 @@ extension LocationDetailController: UITableViewDataSource {
 extension LocationDetailController: UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        refresh = true
+        
         let controller = AppHelper.mainStoryboard.instantiateViewController(withIdentifier: "JobDetail") as! JobDetailController
         controller.job = data[indexPath.row] as! Job
         navigationController?.pushViewController(controller, animated: true)

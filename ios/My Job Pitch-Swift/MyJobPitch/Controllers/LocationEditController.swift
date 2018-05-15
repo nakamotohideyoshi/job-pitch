@@ -224,13 +224,15 @@ class LocationEditController: MJPController {
     
     @IBAction func myLocationAction(_ sender: Any) {
         
-        MapController.showModal(latitude: latitude, longitude: longitude,
-                                        complete: { (locationCoordinate, placeID, placeName) in
-                                            self.latitude = locationCoordinate.latitude as NSNumber!
-                                            self.longitude = locationCoordinate.longitude as NSNumber!
-                                            self.placeID = placeID
-                                            self.placeName = placeName
-                                            self.addressField.text = placeName
+        MapController.showModal(latitude: latitude,
+                                longitude: longitude,
+                                radius: nil,
+                                complete: { (locationCoordinate, placeID, placeName) in
+                                    self.latitude = locationCoordinate.latitude as NSNumber!
+                                    self.longitude = locationCoordinate.longitude as NSNumber!
+                                    self.placeID = placeID
+                                    self.placeName = placeName
+                                    self.addressField.text = placeName
         })
         
     }

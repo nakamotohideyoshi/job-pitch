@@ -1,36 +1,13 @@
-import localForage from 'localforage';
-import { SDATA } from './data';
-import { FormComponent } from 'components';
+import { message } from 'antd';
+import DATA from './data';
 
-// import cookie from 'js-cookie';
-// import ApiClient from 'utils/ApiClient';
-
-/* nitification system */
-
-let notifSystem;
-export function setNotifSystem(ns) {
-  notifSystem = ns;
-}
-export function clearNotifs() {
-  if (notifSystem) {
-    notifSystem.clearNotifications();
-  }
-}
-export function successNotif(msg) {
-  if (notifSystem) {
-    notifSystem.addNotification({ message: msg, level: 'success' });
-  }
-}
-export function errorNotif(msg) {
-  if (notifSystem) {
-    notifSystem.addNotification({ message: msg, level: 'error' });
-  }
-}
-
-// /* logo image */
+/**
+|--------------------------------------------------
+| logo image
+|--------------------------------------------------
+*/
 
 const defaultLogo = require('assets/default_logo.jpg');
-const noImg = require('assets/no_img.png');
 
 function getImage(imageInfo, original) {
   return original ? imageInfo.image : imageInfo.thumbnail;
@@ -69,38 +46,66 @@ export function getJobLogo(job, original) {
   return getWorkplaceLogo(location_data, original);
 }
 
-// /* date time */
+/**
+|--------------------------------------------------
+| pitch
+|--------------------------------------------------
+*/
 
-// export function getTimeString(date) {
-//   const options = {
-//     month: 'short',
-//     day: 'numeric',
-//     hour: '2-digit',
-//     minute: '2-digit'
-//   };
-//   return date.toLocaleTimeString('en-us', options);
-// }
+export function getPitch(object) {
+  if (!object) return null;
 
-// /* distance */
+  const pitches = object.pitches || object.videos;
+  if (!pitches || !pitches.length) return null;
+
+  for (let i = 0; i < pitches.length; i++) {
+    const pitch = pitches[i];
+    if (pitch.video) {
+      return pitch;
+    }
+  }
+
+  return null;
+}
+
+/**
+|--------------------------------------------------
+| name
+|--------------------------------------------------
+*/
+
+export function getFullBWName(job) {
+  return `${job.location_data.business_data.name} / ${job.location_data.name}`;
+}
+
+export function getFullJSName(jobSeeker) {
+  return `${jobSeeker.first_name} ${jobSeeker.last_name}`;
+}
+
+/**
+|--------------------------------------------------
+| distance
+|--------------------------------------------------
+*/
 
 function deg2rad(deg) {
   return deg * (Math.PI / 180);
 }
 
-export function getDistanceFromLatLon(lat1, lon1, lat2, lon2) {
+export function getDistanceFromLatLon(p1, p2) {
   const R = 6371; // Radius of the earth in km
-  const dLat = deg2rad(lat2 - lat1); // deg2rad below
-  const dLon = deg2rad(lon2 - lon1);
+  const dLat = deg2rad(p2.latitude - p1.latitude); // deg2rad below
+  const dLon = deg2rad(p2.longitude - p1.longitude);
   const a =
     Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-    Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * Math.sin(dLon / 2) * Math.sin(dLon / 2);
+    Math.cos(deg2rad(p1.latitude)) * Math.cos(deg2rad(p1.latitude)) * Math.sin(dLon / 2) * Math.sin(dLon / 2);
   const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
   const d = R * c; // Distance in km
   return d;
 }
 
-export function getDistanceFromLatLonEx(lat1, lon1, lat2, lon2) {
-  const d = getDistanceFromLatLon(lat1, lon1, lat2, lon2) * 1000;
+export function getDistanceFromLatLonEx(p1, p2) {
+  const d = getDistanceFromLatLon(p1, p2) * 1000;
   if (d < 1000) {
     return `${Math.floor(d)} m`;
   }
@@ -110,57 +115,38 @@ export function getDistanceFromLatLonEx(lat1, lon1, lat2, lon2) {
   return `${Math.floor(d / 1000)} m`;
 }
 
-/* name */
-
-export function getFullBWName(job) {
-  return `${job.location_data.business_data.name} / ${job.location_data.name}`;
-}
-
-export function getJobseekerImg(jobSeeker) {
-  if (!jobSeeker || jobSeeker.pitches.length === 0) {
-    return noImg;
-  }
-  return jobSeeker.pitches[jobSeeker.pitches.length - 1].thumbnail || noImg;
-}
-
-export function getFullJSName(jobSeeker) {
-  return `${jobSeeker.first_name} ${jobSeeker.last_name}`;
-}
-
 /**
 |--------------------------------------------------
 | get item
 |--------------------------------------------------
 */
 
-export function getIDByName(key, name) {
-  return SDATA[key].filter(item => item.name === name)[0].id;
+export function getItemByID(objects, id) {
+  return (objects || []).filter(item => item.id === id)[0];
 }
 
 export function getNameByID(key, id) {
-  return (SDATA[key].filter(item => item.id === id)[0] || {}).name;
-}
-
-export function getJobStatusByName(name) {
-  return SDATA.jobStatuses.filter(status => status.name === name)[0].id;
-}
-
-export function getItemByID(objects, id) {
-  return objects.filter(item => item.id === id)[0];
+  return (getItemByID(DATA[key], id) || {}).name;
 }
 
 /**
 |--------------------------------------------------
-| cache data
+| localstorage
 |--------------------------------------------------
 */
 
 export function saveData(key, value) {
-  localForage.setItem(`${SDATA.user.email}_${key}`, value);
+  const k = `${DATA.email}_${key}`;
+  if (value === null || value === undefined) {
+    localStorage.removeItem(k);
+  } else {
+    localStorage.setItem(k, value);
+  }
 }
 
 export function loadData(key) {
-  return localForage.getItem(`${SDATA.user.email}_${key}`);
+  const value = localStorage.getItem(`${DATA.email}_${key}`);
+  return JSON.parse(value);
 }
 
 /**
@@ -169,9 +155,18 @@ export function loadData(key) {
 |--------------------------------------------------
 */
 
-export function cloneObj(object, updateInfo) {
+export function addObj(objects, obj) {
+  if (Array.isArray(objects)) {
+    const newObject = objects.slice(0);
+    newObject.push(obj);
+    return newObject;
+  }
+  return objects;
+}
+
+export function updateObj(object, updateInfo) {
   if (Array.isArray(object)) {
-    return object.map(item => (item.id === updateInfo.id ? cloneObj(item, updateInfo) : item));
+    return object.map(item => (item.id === updateInfo.id ? updateObj(item, updateInfo) : item));
   }
   if (typeof object === 'object') {
     return Object.assign({}, object, updateInfo);
@@ -186,63 +181,93 @@ export function removeObj(object, id) {
   return object;
 }
 
+export function sort(arr, key) {
+  arr.sort((a, b) => {
+    let a1 = a[key];
+    let b1 = b[key];
+    if (typeof a1 === 'string') {
+      a1 = a1.toUpperCase();
+      b1 = b1.toUpperCase();
+      if (a1 < b1) {
+        return -1;
+      }
+      if (a1 > b1) {
+        return 1;
+      }
+      return 0;
+    }
+
+    return 0;
+  });
+}
+
 /**
 |--------------------------------------------------
-| check form modify
+| form
 |--------------------------------------------------
 */
 
-export function routePush(to, { history, confirm }) {
-  if (FormComponent.modified) {
-    confirm('Confirm', 'You did not save your changes.', [
-      { outline: true },
-      {
-        label: 'Ok',
-        color: 'green',
-        onClick: () => {
-          FormComponent.modified = false;
-          history.push(to);
+export function setErrors(form, errors, values) {
+  Object.keys(errors).forEach(key => {
+    if (values[key]) {
+      form.setFields({
+        [key]: {
+          value: values[key],
+          errors: [new Error(errors[key][0])]
         }
-      }
-    ]);
-  } else {
-    history.push(to);
-  }
+      });
+    } else {
+      errors[key].forEach(msg => message.error(msg));
+    }
+  });
 }
+
+export function getBase64(img, callback) {
+  const reader = new FileReader();
+  reader.addEventListener('load', () => callback(reader.result));
+  reader.readAsDataURL(img);
+}
+
+/**
+|--------------------------------------------------
+| url params
+|--------------------------------------------------
+*/
 
 export function str2int(str) {
   const val = parseInt(str, 10);
   return isNaN(val) ? undefined : val;
 }
 
-export function getPitch(jobseeker) {
-  if (!jobseeker) return null;
+// export function parseUrlParams(str) {
+//   if (str[0] === '?') {
+//     str = str.slice(1);
+//   }
 
-  const { pitches } = jobseeker;
-  if (!pitches || !pitches.length) return null;
+//   const params = {};
+//   if (str !== '') {
+//     str.split('&').forEach(str => {
+//       const arr = str.split('=');
+//       params[arr[0]] = arr[1];
+//     });
+//   }
 
-  for (let i = 0; i < pitches.length; i++) {
-    const pitch = pitches[i];
-    if (pitch.video) {
-      return pitch;
-    }
-  }
+//   return params;
+// }
 
-  return null;
+/* form helper */
+
+/**
+|--------------------------------------------------
+| check string (email and phone number)
+|--------------------------------------------------
+*/
+
+export function checkIfEmailInString(str) {
+  const re = /(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))/;
+  return re.test(str);
 }
 
-export function parseUrlParams(str) {
-  if (str[0] === '?') {
-    str = str.slice(1);
-  }
-
-  const params = {};
-  if (str !== '') {
-    str.split('&').forEach(str => {
-      const arr = str.split('=');
-      params[arr[0]] = arr[1];
-    });
-  }
-
-  return params;
+export function checkIfPhoneNumberInString(str) {
+  return /\d{7,}/.test(str.replace(/[\s-]/g, ''));
 }

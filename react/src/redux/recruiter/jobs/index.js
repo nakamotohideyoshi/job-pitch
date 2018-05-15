@@ -1,29 +1,102 @@
-import * as C from './constants';
+import { createAction, handleActions } from 'redux-actions';
+import * as C from 'redux/constants';
+import * as helper from 'utils/helper';
+import { requestPending, requestSuccess, requestFail } from 'utils/request';
 
-export function getJobs(workplaceId) {
-  return { type: C.RC_GET_JOBS, workplaceId };
-}
+// ------------------------------------
+// Actions
+// ------------------------------------
 
-export function removeJob(jobId) {
-  return { type: C.RC_JOB_REMOVE, jobId };
-}
+export const updateStatus = createAction(C.RC_JOBS_UPDATE);
+export const getJobs = createAction(C.RC_GET_JOBS);
+export const removeJob = createAction(C.RC_REMOVE_JOB);
+export const saveJob = createAction(C.RC_SAVE_JOB);
+export const uploadPitch = createAction(C.JS_UPLOAD_JOBPITCH);
 
-export function updateJob(model) {
-  return { type: C.RC_JOB_UPDATE, model };
-}
+// ------------------------------------
+// Reducer
+// ------------------------------------
 
-export function getJob(jobId) {
-  return { type: C.RC_JOB_GET, jobId };
-}
+const initialState = {
+  jobs: null
+};
 
-export function saveJob(model, logo, onUploadProgress) {
-  return { type: C.RC_JOB_SAVE, model, logo, onUploadProgress };
-}
+export default handleActions(
+  {
+    [C.RC_JOBS_UPDATE]: (state, { payload }) => ({
+      ...state,
+      ...payload
+    }),
 
-export function selectJob(job) {
-  return { type: C.RC_JOB_SELECT, job };
-}
+    // ---- get jobs ----
 
-export function getJobsWithSeelctedJob(jobId) {
-  return { type: C.RC_GET_JOBS_WITH_SELECTEDJOB, jobId };
-}
+    [requestPending(C.RC_GET_JOBS)]: state => initialState,
+
+    [requestSuccess(C.RC_GET_JOBS)]: (state, { payload }) => ({
+      ...state,
+      jobs: payload
+    }),
+
+    [requestFail(C.RC_GET_JOBS)]: state => ({
+      ...state,
+      jobs: []
+    }),
+
+    // ---- remove job ----
+
+    [requestPending(C.RC_REMOVE_JOB)]: (state, { payload }) => ({
+      ...state,
+      jobs: helper.updateObj(state.jobs, {
+        id: payload.id,
+        loading: true
+      })
+    }),
+
+    [requestSuccess(C.RC_REMOVE_JOB)]: (state, { request }) => ({
+      ...state,
+      jobs: helper.removeObj(state.jobs, request.id)
+    }),
+
+    [requestFail(C.RC_REMOVE_JOB)]: (state, { request }) => ({
+      ...state,
+      jobs: helper.updateObj(state.jobs, {
+        id: request.id,
+        loading: false
+      })
+    }),
+
+    // ---- save job ----
+
+    [requestPending(C.RC_SAVE_JOB)]: (state, { payload }) => ({
+      ...state,
+      jobs: helper.updateObj(state.jobs, {
+        id: payload.data.id,
+        loading: true
+      })
+    }),
+
+    [requestSuccess(C.RC_SAVE_JOB)]: (state, { request }) => ({
+      ...state,
+      jobs: helper.updateObj(state.jobs, {
+        id: request.data.id,
+        loading: false
+      })
+    }),
+
+    [requestFail(C.RC_SAVE_JOB)]: (state, { request }) => ({
+      ...state,
+      jobs: helper.updateObj(state.jobs, {
+        id: request.data.id,
+        loading: false
+      })
+    }),
+
+    // ---- update job ----
+
+    [C.RC_UPDATE_JOB]: (state, { payload }) => ({
+      ...state,
+      jobs: helper.updateObj(state.jobs, payload)
+    })
+  },
+  initialState
+);

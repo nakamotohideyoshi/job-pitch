@@ -1,31 +1,127 @@
-import * as C from './constants';
+import { createAction, handleActions } from 'redux-actions';
+import { requestPending, requestSuccess, requestFail } from 'utils/request';
+import * as C from 'redux/constants';
+import * as helper from 'utils/helper';
 
-export function getApplications(jobId, statusName, shortlist) {
-  return { type: C.GET_APPLICATIONS, jobId, statusName, shortlist };
-}
+// ------------------------------------
+// Actions
+// ------------------------------------
 
-export function connectApplication(appId) {
-  return { type: C.CONNECT_APPLICATION, appId };
-}
+export const updateStatus = createAction(C.APPLICATIONS_UPDATE);
+export const getApplications = createAction(C.GET_APPLICATIONS);
+export const connectApplication = createAction(C.CONNECT_APPLICATION);
+export const updateApplication = createAction(C.UPDATE_APPLICATION);
+export const removeApplication = createAction(C.REMOVE_APPLICATION);
+export const sendMessage = createAction(C.SEND_MESSAGE);
 
-export function removeApplication(appId) {
-  return { type: C.REMOVE_APPLICATION, appId };
-}
+// ------------------------------------
+// Reducer
+// ------------------------------------
 
-export function selectApplication(appId) {
-  return { type: C.SELECT_APPLICATION, appId };
-}
+const initialState = {
+  applications: null,
+  error: null,
+  searchText: ''
+};
 
-export function setShortlist(shortlisted) {
-  return { type: C.SET_SHORTLIST, shortlisted };
-}
+export default handleActions(
+  {
+    [C.APPLICATIONS_UPDATE]: (state, { payload }) => ({
+      ...state,
+      ...payload
+    }),
 
-// message applications
+    // ---- get applications ----
 
-export function getMsgApplications(appId) {
-  return { type: C.GET_MSG_APPLICATIONS, appId };
-}
+    [requestPending(C.GET_APPLICATIONS)]: state => ({
+      ...state,
+      applications: null,
+      error: null
+    }),
 
-export function sendMessage(message) {
-  return { type: C.SEND_MESSAGE, message };
-}
+    [requestSuccess(C.GET_APPLICATIONS)]: (state, { payload }) => ({
+      ...state,
+      applications: payload
+    }),
+
+    [requestFail(C.GET_APPLICATIONS)]: (state, { payload }) => ({
+      ...state,
+      error: payload
+    }),
+
+    // ---- update application ----
+
+    [requestPending(C.UPDATE_APPLICATION)]: (state, { payload }) => ({
+      ...state,
+      applications: helper.updateObj(state.applications, {
+        id: payload.id,
+        loading: true
+      })
+    }),
+
+    [requestSuccess(C.UPDATE_APPLICATION)]: (state, { payload }) => ({
+      ...state,
+      applications: helper.updateObj(state.applications, {
+        ...payload,
+        loading: false
+      })
+    }),
+
+    [requestFail(C.UPDATE_APPLICATION)]: (state, { request }) => ({
+      ...state,
+      applications: helper.updateObj(state.applications, {
+        id: request.id,
+        loading: false
+      })
+    }),
+
+    // send message
+
+    [C.SEND_MESSAGE]: (state, { payload }) => {
+      const appId = payload.data.application;
+      const application = helper.getItemByID(state.applications, appId);
+      const messages = application.messages.slice(0);
+      messages.push({
+        id: payload.id,
+        content: payload.data.content,
+        sending: true
+      });
+
+      return {
+        ...state,
+        applications: helper.updateObj(state.applications, {
+          id: appId,
+          messages
+        })
+      };
+    },
+
+    [requestSuccess(C.SEND_MESSAGE)]: (state, { payload }) => {
+      const applications = helper.removeObj(state.applications, payload.id);
+      applications.unshift(payload);
+      return {
+        ...state,
+        applications
+      };
+    },
+
+    [requestFail(C.SEND_MESSAGE)]: (state, { payload }) => {
+      const appId = payload.data.application;
+      const application = helper.getItemByID(state.applications, appId);
+      const messages = helper.updateObj(application.messages, {
+        id: payload.id,
+        sending: false,
+        error: true
+      });
+
+      return {
+        ...state,
+        applications: helper.updateObj(state.applications, {
+          id: appId,
+          messages
+        })
+      };
+    }
+  },
+  initialState
+);

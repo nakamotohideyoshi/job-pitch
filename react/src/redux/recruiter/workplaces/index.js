@@ -1,17 +1,68 @@
-import * as C from './constants';
+import { createAction, handleActions } from 'redux-actions';
+import * as C from 'redux/constants';
+import * as helper from 'utils/helper';
+import { requestPending, requestSuccess, requestFail } from 'utils/request';
 
-export function getWorkplaces(businessId) {
-  return { type: C.RC_GET_WORKPLACES, businessId };
-}
+// ------------------------------------
+// Actions
+// ------------------------------------
 
-export function removeWorkplace(workplaceId) {
-  return { type: C.RC_WORKPLACE_REMOVE, workplaceId };
-}
+export const updateStatus = createAction(C.RC_WORKPLACES_UPDATE);
+export const getWorkplaces = createAction(C.RC_GET_WORKPLACES);
+export const removeWorkplace = createAction(C.RC_REMOVE_WORKPLACE);
+export const saveWorkplace = createAction(C.RC_SAVE_WORKPLACE);
 
-export function getWorkplace(workplaceId) {
-  return { type: C.RC_WORKPLACE_GET, workplaceId };
-}
+// ------------------------------------
+// Reducer
+// ------------------------------------
 
-export function saveWorkplace(model, logo, onUploadProgress) {
-  return { type: C.RC_WORKPLACE_SAVE, model, logo, onUploadProgress };
-}
+const initialState = {
+  workplaces: null
+};
+
+export default handleActions(
+  {
+    [C.RC_WORKPLACES_UPDATE]: (state, { payload }) => ({
+      ...state,
+      ...payload
+    }),
+
+    // ---- get workplace ----
+
+    [requestPending(C.RC_GET_WORKPLACES)]: state => initialState,
+
+    [requestSuccess(C.RC_GET_WORKPLACES)]: (state, { payload }) => ({
+      ...state,
+      workplaces: payload
+    }),
+
+    [requestFail(C.RC_GET_WORKPLACES)]: state => ({
+      ...state,
+      workplaces: []
+    }),
+
+    // ---- remove workplace ----
+
+    [requestPending(C.RC_REMOVE_WORKPLACE)]: (state, { payload }) => ({
+      ...state,
+      workplaces: helper.updateObj(state.workplaces, {
+        id: payload.id,
+        loading: true
+      })
+    }),
+
+    [requestSuccess(C.RC_REMOVE_WORKPLACE)]: (state, { request }) => ({
+      ...state,
+      workplaces: helper.removeObj(state.workplaces, request.id)
+    }),
+
+    [requestFail(C.RC_REMOVE_WORKPLACE)]: (state, { request }) => ({
+      ...state,
+      workplaces: helper.updateObj(state.workplaces, {
+        id: request.id,
+        loading: false
+      })
+    })
+  },
+  initialState
+);

@@ -278,18 +278,12 @@ class JobSeekerProfileController: MJPController {
 
     }
     
-    @IBAction func pitchRecordAction(_ sender: Any) {
-        
-        if jobSeeker?.getPitch() == nil {
-            PopupController.showGreen("Here you can record your 30 second pitch. The 30 sec. video will be viewed by prospective employers.", ok: "OK", okCallback: {
-                self.showCamera()
-            }, cancel: nil, cancelCallback: nil)
-        } else {
-            showCamera()
-        }
+    @IBAction func playDemoAction(_ sender: Any) {
+        UIApplication.shared.openURL(NSURL(string: "https://vimeo.com/255467562")! as URL)
     }
     
-    func showCamera() {
+    @IBAction func pitchRecordAction(_ sender: Any) {
+        
         let controller = AppHelper.mainStoryboard.instantiateViewController(withIdentifier: "Camera") as! CameraController
         controller.complete = { (videoUrl) in
             self.videoUrl = videoUrl

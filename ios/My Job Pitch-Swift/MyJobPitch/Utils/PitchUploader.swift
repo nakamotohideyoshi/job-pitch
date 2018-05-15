@@ -67,7 +67,7 @@ class PitchUploader: NSObject {
         }
         
         let urlKey = API.apiRoot.absoluteString.replacingOccurrences(of: "/", with: "")
-        let keyname = String(format: "%@/%@.%@.%@", urlKey, pitch.token, pitch.id, url.lastPathComponent)
+        let keyname = String(format: "%@/%@.%@.pitches.%@", urlKey, pitch.token, pitch.id, url.lastPathComponent)
         let transferUtility = AWSS3TransferUtility.default()
         (transferUtility.uploadFile(url,
                                     bucket: "mjp-android-uploads",

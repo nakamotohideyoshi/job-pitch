@@ -7,6 +7,9 @@
 //
 
 import UIKit
+import AssetsLibrary
+import AVFoundation
+import AVKit
 
 class JobEditController: MJPController {
 
@@ -24,12 +27,15 @@ class JobEditController: MJPController {
     @IBOutlet weak var imgView: UIImageView!
     @IBOutlet weak var addLogoButton: UIButton!
     @IBOutlet weak var removeImageButton: UIButton!
+    @IBOutlet weak var playButtonView: UIView!
     
     var isAddMode = false
     var isNew = false
     
     var location: Location!
     var job: Job!
+    
+    var videoUrl: URL!
     
     var imagePicker: UIImagePickerController!
     var logoImage: UIImage!
@@ -171,6 +177,8 @@ class JobEditController: MJPController {
             }
             hoursField.text = selectedHoursNames.joined(separator: ", ")
             
+            playButtonView.isHidden = job.getPitch()?.video == nil
+            
             if let image = job.getImage() {
                 AppHelper.loadImageURL(imageUrl: (image.image)!, imageView: imgView, completion: nil)
                 if job.images != nil && job.images.count > 0 {
@@ -248,6 +256,47 @@ class JobEditController: MJPController {
         
     }
     
+    @IBAction func pitchHelpAction(_ sender: Any) {
+        let controller = storyboard?.instantiateViewController(withIdentifier: "WebView") as! WebViewController
+        controller.navigationItem.title = "Recording Pitch"
+        controller.file = "pitch"
+        controller.isModal = true
+        let navController = UINavigationController(rootViewController: controller)
+        present(navController, animated: true, completion: nil)
+    }
+    
+    @IBAction func playDemoAction(_ sender: Any) {
+        UIApplication.shared.openURL(NSURL(string: "https://vimeo.com/255467562")! as URL)
+    }
+    
+    @IBAction func pitchRecordAction(_ sender: Any) {
+        let controller = AppHelper.mainStoryboard.instantiateViewController(withIdentifier: "Camera") as! CameraController
+        controller.complete = { (videoUrl) in
+            self.videoUrl = videoUrl
+            self.playButtonView.isHidden = false
+        }
+        present(controller, animated: true, completion: nil)
+    }
+    
+    @IBAction func pitchPlayAction(_ sender: Any) {
+        
+        var url = videoUrl
+        
+        if url == nil {
+            if let video = job.getPitch()?.video {
+                url = URL(string: video)
+            }
+        }
+        
+        if url != nil {
+            let player = AVPlayer(url: url!)
+            let playerController = AVPlayerViewController();
+            playerController.player = player
+            present(playerController, animated: true, completion: nil)
+        }
+    }
+    
+    
     func downloadedLogo(path: String) {
         let url = URL(fileURLWithPath: path)
         do {
@@ -286,8 +335,6 @@ class JobEditController: MJPController {
         if loadingView != nil || !valid() {
             return
         }
-        
-        showLoading()
         
         if job == nil {
             job = Job()
@@ -332,6 +379,8 @@ class JobEditController: MJPController {
             }
         }
         
+        showLoading()
+        
         API.shared().saveJob(job: job, success: { (data) in
             
             if self.logoImage != nil {
@@ -346,21 +395,44 @@ class JobEditController: MJPController {
                                          progress: { (bytesWriteen, totalBytesWritten, totalBytesExpectedToWrite) in
                                             self.loadingView.progressView.progress = Float(totalBytesWritten) / Float(totalBytesExpectedToWrite)
                 }, success: { (data) in
-                    self.saveFinished()
+                    self.uploadPitch()
                 }, failure: self.handleErrors)
                 
             } else if self.origImage?.id != nil && self.removeImageButton.isHidden {
                 
                 API.shared().deleteImage(id: (self.origImage?.id)!, endpoint: "user-job-images", success: {
-                    self.saveFinished()
+                    self.uploadPitch()
                 }, failure: self.handleErrors)
                 
             } else {
-                self.saveFinished()
+                self.uploadPitch()
             }
             
         }, failure: self.handleErrors)
         
+    }
+    
+    func uploadPitch() {
+        if self.videoUrl == nil {
+            self.saveFinished();
+            return;
+        }
+        
+        self.loadingView.showLoadingIcon("")
+        
+        JobPitchUploader().uploadVideo(videoUrl: self.videoUrl, job: job.id, complete: { (pitch) in
+            self.saveFinished()
+        }) { (progress) in
+            print(progress)
+            if progress < 1 {
+                if self.loadingView.progressView == nil {
+                    self.loadingView.showProgressBar("Uploading Pitch...")
+                }
+                self.loadingView.progressView.progress = progress
+            } else {
+                self.loadingView.showLoadingIcon("")
+            }
+        }
     }
     
     func saveFinished() {

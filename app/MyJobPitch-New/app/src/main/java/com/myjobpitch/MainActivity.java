@@ -395,6 +395,14 @@ public class MainActivity extends AppCompatActivity
     public boolean onNavigationItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (mCurrentPageID != id) {
+            if (id == AppData.PAGE_SHARE) {
+                String link = AppData.user.isRecruiter() ? "https://www.myjobpitch.com/recruiters/" : "https://www.myjobpitch.com/candidates/";
+                Intent sharingIntent = new Intent(Intent.ACTION_SEND);
+                sharingIntent.setType("text/html");
+                sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, link);
+                startActivity(Intent.createChooser(sharingIntent,"Share using"));
+                return false;
+            }
             if (id == AppData.PAGE_CONTACT_UP) {
                 Intent emailIntent = new Intent(Intent.ACTION_SENDTO);
                 emailIntent.setData(Uri.parse("mailto:support@myjobpitch.com"));
@@ -456,16 +464,17 @@ public class MainActivity extends AppCompatActivity
         new MenuItemInfo(AppData.PAGE_HELP, "Help", R.drawable.menu_help, HelpFragment.class, ""),
         new MenuItemInfo(AppData.PAGE_LOGOUT, "Log Out", R.drawable.menu_logout, null, ""),
         new MenuItemInfo(AppData.PAGE_CONTACT_UP, "Contact Us", R.drawable.menu_contact_us, null, ""),
+        new MenuItemInfo(AppData.PAGE_SHARE, "Share", R.drawable.menu_share, null, ""),
     };
 
     int[] jobSeekerMenu = {
             AppData.PAGE_FIND_JOB, AppData.PAGE_JS_APPLICATIONS, AppData.PAGE_MESSAGES, AppData.PAGE_JOB_PROFILE, AppData.PAGE_ADD_RECORD,
-            AppData.PAGE_VIEW_PROFILE, AppData.PAGE_CHANGE_PASS, AppData.PAGE_HELP, AppData.PAGE_CONTACT_UP, AppData.PAGE_LOGOUT
+            AppData.PAGE_VIEW_PROFILE, AppData.PAGE_CHANGE_PASS, AppData.PAGE_HELP, AppData.PAGE_SHARE, AppData.PAGE_CONTACT_UP, AppData.PAGE_LOGOUT
     };
 
     int[] recruiterMenu = {
             AppData.PAGE_FIND_TALENT, AppData.PAGE_R_APPLICATIONS, AppData.PAGE_CONNECTIONS, AppData.PAGE_MY_SHORTLIST, AppData.PAGE_MESSAGES,
-            AppData.PAGE_ADD_JOB, AppData.PAGE_PAYMENT, AppData.PAGE_CHANGE_PASS, AppData.PAGE_HELP, AppData.PAGE_CONTACT_UP, AppData.PAGE_LOGOUT
+            AppData.PAGE_ADD_JOB, AppData.PAGE_PAYMENT, AppData.PAGE_CHANGE_PASS, AppData.PAGE_HELP, AppData.PAGE_SHARE, AppData.PAGE_CONTACT_UP, AppData.PAGE_LOGOUT
     };
 
 }

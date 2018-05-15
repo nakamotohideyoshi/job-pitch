@@ -65,6 +65,10 @@ class PitchController: MJPController {
         }
     }
     
+    @IBAction func playDemoAction(_ sender: Any) {
+        UIApplication.shared.openURL(NSURL(string: "https://vimeo.com/255467562")! as URL)
+    }
+    
     @IBAction func recordVideoAction(_ sender: Any) {
         
         let controller = AppHelper.mainStoryboard.instantiateViewController(withIdentifier: "Camera") as! CameraController

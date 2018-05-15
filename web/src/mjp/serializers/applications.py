@@ -2,17 +2,21 @@ from django.db import transaction
 from rest_framework import serializers
 
 from mjp.models import Message, Application, Role, TokenStore, ApplicationStatus
-from mjp.serializers import JobSerializer, JobSeekerReadSerializer, SimpleSerializer
+from mjp.serializers import JobSerializer, JobSeekerReadSerializer, SimpleSerializer, JobSerializerV1
 
 
-class ApplicationSerializer(serializers.ModelSerializer):
-    job_data = JobSerializer(source='job', read_only=True)
+class ApplicationSerializerV1(serializers.ModelSerializer):
+    job_data = JobSerializerV1(source='job', read_only=True)
     job_seeker = JobSeekerReadSerializer(read_only=True)
     messages = SimpleSerializer(Message)(many=True, read_only=True)
 
     class Meta:
         model = Application
         read_only_fields = ('status', 'created_by', 'deleted_by', 'job', 'shortlisted',)
+
+
+class ApplicationSerializer(ApplicationSerializerV1):
+    job_data = JobSerializer(source='job', read_only=True)
 
 
 class ApplicationCreateSerializer(serializers.ModelSerializer):

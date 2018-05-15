@@ -1,48 +1,32 @@
-import { delay } from 'redux-saga';
-import { takeEvery, put, call } from 'redux-saga/effects';
-import * as helper from 'utils/helper';
-import * as api from 'utils/api';
-import * as C from './constants';
+import { takeLatest } from 'redux-saga/effects';
+import * as C from 'redux/constants';
+import { weakRequest, getRequest, postRequest } from 'utils/request';
 
-/**
-|--------------------------------------------------
-| jobseekers
-|--------------------------------------------------
-*/
+// function* useToken() {
+//   const { rc_apps: { jobs, selectedJobId } } = yield select();
+//   const job = helper.getItemByID(jobs, selectedJobId);
+//   const business = job.location_data.business_data;
+//   const updatedBusiness = {
+//     ...business,
+//     tokens: business.tokens - 1
+//   };
+//   job.location_data.business_data = updatedBusiness;
+//   yield put({ type: requestSuccess(C.RC_SELECT_BUSINESS), payload: updatedBusiness });
+// }
 
-// get jobseekers
+const findJobseekers = weakRequest(
+  getRequest({
+    url: '/api/job-seekers/'
+  })
+);
 
-function* _getJobseekers({ jobId }) {
-  try {
-    const jobseekers = yield call(api.get, `/api/job-seekers/?job=${jobId}`);
-    yield put({ type: C.RC_GET_JOBSEEKERS_SUCCESS, jobseekers });
-  } catch (errors) {
-    yield put({ type: C.RC_GET_JOBSEEKERS_ERROR, errors });
-  }
+const connectJobseeker = weakRequest(
+  postRequest({
+    url: `/api/applications/`
+  })
+);
+
+export default function* sagas() {
+  yield takeLatest(C.RC_FIND_JOBSEEKERS, findJobseekers);
+  yield takeLatest(C.RC_CONNECT_JOBSEEKER, connectJobseeker);
 }
-
-function* getJobseekers() {
-  yield takeEvery(C.RC_GET_JOBSEEKERS, _getJobseekers);
-}
-
-// connect jobseeker
-
-function* _connectJobseeker({ jobseekerId, jobId }) {
-  try {
-    yield call(api.post, '/api/applications/', {
-      job: jobId,
-      job_seeker: jobseekerId
-    });
-
-    yield put({ type: C.RC_CONNECT_JOBSEEKER_SUCCESS, jobseekerId });
-  } catch (errors) {
-    yield put({ type: C.RC_CONNECT_JOBSEEKER_ERROR, jobseekerId });
-    helper.errorNotif('Server Error!');
-  }
-}
-
-function* connectJobseeker() {
-  yield takeEvery(C.RC_CONNECT_JOBSEEKER, _connectJobseeker);
-}
-
-export default [getJobseekers(), connectJobseeker()];

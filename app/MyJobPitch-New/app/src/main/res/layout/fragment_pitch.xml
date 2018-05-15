@@ -15,14 +15,32 @@
         android:orientation="vertical">
 
         <TextView
-            android:text="Here you can record your 30 second pitch. The 30 sec. video will be viewed by prospective employers."
+            android:text="Record your up to 30 sec selfie video. The key is to just be yourself! You can record on your phone pretty much anywhere, at home on the bus or in a coffee shop it doesn’t matter, and you can re-record as many times as you want."
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_marginTop="15dp"
-            android:layout_marginBottom="15dp"
             android:textSize="@dimen/default_fontsize"
             android:textStyle="bold"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="15dp">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Check out our "
+                android:textSize="@dimen/default_fontsize"
+                android:textStyle="bold"/>
+            <TextView
+                android:id="@+id/example_video"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="example video"
+                android:textSize="@dimen/default_fontsize"
+                android:textStyle="bold"
+                android:textColor="@color/colorGreen"/>
+        </LinearLayout>
 
         <FrameLayout
             android:layout_width="match_parent"

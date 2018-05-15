@@ -3,10 +3,9 @@
     <dimen name="fragment_horizontal_margin">16dp</dimen>
     <dimen name="fragment_vertical_margin">16dp</dimen>
 
-    <dimen name="corner_radius">5dp</dimen>
+    <dimen name="corner_radius">4dp</dimen>
     <dimen name="button_height">40dp</dimen>
     <dimen name="input_height">40dp</dimen>
-    <dimen name="default_fontsize">16sp</dimen>
 
     <dimen name="camera_button_size">66dp</dimen>
     <dimen name="camera_button_radius">33dp</dimen>
@@ -16,6 +15,11 @@
     <dimen name="nav_horizontal_padding">10dp</dimen>
     <dimen name="design_navigation_icon_size">35dp</dimen>
 
-    <dimen name="label_fontsize">18sp</dimen>
+    <dimen name="small_fontsize">12sp</dimen>
+    <dimen name="default_fontsize">14sp</dimen>
+    <dimen name="large_fontsize">16sp</dimen>
+    <dimen name="xlarge_fontsize">20sp</dimen>
+
+    <dimen name="label_fontsize">16sp</dimen>
 
 </resources>

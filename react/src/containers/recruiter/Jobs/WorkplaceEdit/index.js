@@ -1,194 +1,329 @@
 import React from 'react';
+import Helmet from 'react-helmet';
 import { connect } from 'react-redux';
-import { Breadcrumb, BreadcrumbItem, Button, Form, FormGroup, Label, Alert } from 'reactstrap';
+import { Link } from 'react-router-dom';
+import { Breadcrumb, Form, Input, Checkbox, Button, Popover, notification } from 'antd';
 
-import {
-  FormComponent,
-  SaveFormComponent,
-  Board,
-  Loading,
-  GoogleMap,
-  HelpIcon,
-  Required,
-  PopupProgress
-} from 'components';
-import { confirm } from 'redux/common';
-import { getWorkplace, saveWorkplace } from 'redux/recruiter/workplaces';
+import { saveWorkplace } from 'redux/recruiter/workplaces';
+import DATA from 'utils/data';
 import * as helper from 'utils/helper';
-import Wrapper, { WithPublic } from './Wrapper';
 
-class WorkplaceEdit extends SaveFormComponent {
-  componentWillMount() {
-    const workplaceId = parseInt(this.props.match.params.workplaceId, 10);
-    this.props.getWorkplace(workplaceId);
-  }
+import { PageHeader, PageSubHeader, PopupProgress, ImageSelector, NoLabelField, GoogleMap, Icons } from 'components';
+import Wrapper from '../styled';
+import StyledForm from './styled';
 
-  componentWillReceiveProps(nextProps) {
-    const { workplace } = nextProps;
-    if (workplace && workplace !== this.props.workplace) {
-      const model = Object.assign(this.state.model, workplace);
-      model.business = model.business || this.props.match.params.businessId;
+const { Item } = Form;
+const { TextArea } = Input;
+
+class WorkplaceEdit extends React.Component {
+  state = {
+    logo: {
+      url: null,
+      file: null,
+      exist: false
+    },
+    location: {},
+    loading: null
+  };
+
+  componentDidMount() {
+    const { business, workplace, form } = this.props;
+
+    if (!business) {
+      this.goBuisinessList();
+      return;
+    }
+
+    if (workplace) {
       this.setState({
-        model,
         logo: {
-          default: helper.getBusinessLogo(workplace.business_data),
           url: helper.getWorkplaceLogo(workplace),
           exist: (workplace.images || []).length > 0
+        }
+      });
+
+      this.selectLocation(workplace.place_id, workplace.place_name, workplace.latitude, workplace.longitude);
+
+      form.setFieldsValue({
+        name: workplace.name,
+        email: workplace.email,
+        mobile: workplace.mobile,
+        mobile_public: workplace.mobile_public,
+        description: workplace.description,
+        place_name: workplace.place_name
+      });
+    } else {
+      this.setState({
+        logo: {
+          url: helper.getBusinessLogo(business),
+          exist: false
         }
       });
     }
   }
 
-  onSelectedLocation = (place_id, place_name, latitude, longitude) => {
-    const { model, errors } = this.state;
-    model.place_id = place_id;
-    model.place_name = place_name;
-    model.latitude = latitude;
-    model.longitude = longitude;
-    delete errors.place_name;
-    this.setState({ model });
-    FormComponent.modified = true;
+  setLogo = (file, url) =>
+    this.setState({
+      logo: {
+        url: url || helper.getBusinessLogo(this.props.business),
+        file,
+        exist: !!file
+      }
+    });
+
+  goBuisinessList = () => {
+    this.props.history.push('/recruiter/jobs/business');
   };
 
-  onSave = () => {
-    if (!this.isValid(['name', 'email', 'description', 'place_name'])) return;
+  goWorkplaceList = () => {
+    const { business: { id }, history } = this.props;
+    history.push(`/recruiter/jobs/workplace/${id}`);
+  };
 
-    const data = Object.assign({}, this.state.model);
-    this.props.saveWorkplace(data, this.state.logo, (label, value) => {
-      const progress = label ? { label, value } : null;
-      this.setState({ progress });
+  selectLocation = (place_id, place_name, latitude, longitude) => {
+    this.props.form.setFieldsValue({ place_name });
+    this.setState({ location: { place_id, place_name, latitude, longitude } });
+  };
+
+  save = () => {
+    const { form, business, workplace, saveWorkplace, history } = this.props;
+
+    form.validateFieldsAndScroll({ scroll: { offsetTop: 70 } }, (err, values) => {
+      if (err) return;
+
+      if (helper.checkIfEmailInString(values.description)) {
+        form.setFields({
+          description: {
+            value: values.description,
+            errors: [new Error(`Don't type in email address here.`)]
+          }
+        });
+        return;
+      }
+
+      if (helper.checkIfPhoneNumberInString(values.description)) {
+        form.setFields({
+          description: {
+            value: values.description,
+            errors: [new Error(`Don't type in phone number here.`)]
+          }
+        });
+        return;
+      }
+
+      this.setState({
+        loading: {
+          label: 'Saving...'
+        }
+      });
+
+      saveWorkplace({
+        data: {
+          ...values,
+          ...this.state.location,
+          business: business.id,
+          id: (workplace || {}).id
+        },
+        logo: this.state.logo,
+        onSuccess: ({ id }) => {
+          notification.success({
+            message: 'Notification',
+            description: 'Workplace is saved successfully.'
+          });
+          if (workplace) {
+            this.goWorkplaceList();
+          } else {
+            history.push(`/recruiter/jobs/job/${id}`);
+          }
+        },
+        onFail: error => {
+          this.setState({ loading: null });
+          notification.error({
+            message: 'Notification',
+            description: error
+          });
+        },
+        onProgress: progress => {
+          this.setState({
+            loading: {
+              label: 'Logo uploading...',
+              progress: Math.floor(progress.loaded / progress.total * 100)
+            }
+          });
+        }
+      });
     });
   };
 
-  onCancel = () => {
-    const { businessId } = this.props.match.params;
-    helper.routePush(`/recruiter/jobs/${businessId}`, this.props);
-  };
-
-  onRoutePush = to => {
-    helper.routePush(to, this.props);
-  };
-
   render() {
-    const { workplace, errors } = this.props;
-    const { latitude, longitude } = this.state.model;
+    const { logo, loading } = this.state;
+    const { business, workplace, form } = this.props;
+    const { getFieldDecorator } = form;
+    const { latitude, longitude, place_name } = this.state.location;
     const marker = latitude && { lat: latitude, lng: longitude };
-    const error = this.getError();
-    const { progress } = this.state;
+
+    const title = workplace ? 'Edit' : 'Add';
 
     return (
-      <Wrapper>
-        <Breadcrumb>
-          <BreadcrumbItem tag="a" onClick={() => this.onRoutePush(`/recruiter/jobs`)}>
-            Businesses
-          </BreadcrumbItem>
-          <BreadcrumbItem
-            tag="a"
-            onClick={() => {
-              const { businessId } = this.props.match.params;
-              this.onRoutePush(`/recruiter/jobs/${businessId}`);
-            }}
-          >
-            Workplaces
-          </BreadcrumbItem>
-          <BreadcrumbItem active tag="span">
-            {(workplace || {}).id ? 'Edit' : 'Add'}
-          </BreadcrumbItem>
-        </Breadcrumb>
+      <Wrapper className="container">
+        <Helmet title={`${title} Workplace`} />
 
-        {workplace ? (
-          <Board block>
-            <Form>
-              <div className="logo-container">
-                <FormGroup>
-                  <this.FormLogoSelect />
-                </FormGroup>
-              </div>
+        <PageHeader>
+          <h2>{title} Workplace</h2>
+        </PageHeader>
 
-              <div className="right-container">
-                <FormGroup>
-                  <Label>
-                    Name<Required />
-                  </Label>
-                  <this.FormInput name="name" />
-                </FormGroup>
+        <PageSubHeader>
+          <Breadcrumb>
+            <Breadcrumb.Item>
+              <Link to="/recruiter/jobs/business">Businesses</Link>
+            </Breadcrumb.Item>
+            <Breadcrumb.Item>
+              {business && <Link to={`/recruiter/jobs/workplace/${business.id}`}>Workplaces</Link>}
+            </Breadcrumb.Item>
+            <Breadcrumb.Item>{title}</Breadcrumb.Item>
+          </Breadcrumb>
+        </PageSubHeader>
 
-                <FormGroup>
-                  <WithPublic>
-                    <Label>
-                      Email<Required />
-                      <HelpIcon
-                        style={{ left: '65px' }}
-                        position="top-start"
-                        label={`This is the email that notifications will be sent to, it can be different to your login email address.`}
-                      />
-                    </Label>
-                    <this.FormCheckbox name="email_public" label="Public" />
-                  </WithPublic>
-                  <this.FormInput name="email" type="email" className="with-public" />
-                </FormGroup>
+        <div className="content">
+          <StyledForm>
+            <Item label="Name">
+              {getFieldDecorator('name', {
+                rules: [
+                  { required: true, message: 'Please input workplace name!' },
+                  { whitespace: true, message: 'This field may not be blank.' }
+                ]
+              })(<Input autoFocus />)}
+            </Item>
 
-                <FormGroup>
-                  <WithPublic>
-                    <Label>Phone</Label>
-                    <this.FormCheckbox name="mobile_public" label="Public" />
-                  </WithPublic>
-                  <this.FormInput name="mobile" className="with-public" />
-                </FormGroup>
-              </div>
+            <Item
+              className="with-public"
+              label={
+                <span>
+                  Email&nbsp;
+                  <Popover
+                    placement="right"
+                    content={
+                      <span>
+                        This is the email that notifications<br />
+                        will be sent to, it can be different<br />
+                        to your login email address.
+                      </span>
+                    }
+                  >
+                    <Icons.QuestionCircle />
+                  </Popover>
+                </span>
+              }
+            >
+              {getFieldDecorator('email', {
+                initialValue: DATA.email,
+                rules: [
+                  { required: true, message: 'Please input your email!' },
+                  { type: 'email', message: 'The input is not valid email!' }
+                ]
+              })(<Input />)}
+            </Item>
+            <div className="public-check">
+              {getFieldDecorator('email_public', { valuePropName: 'checked', initialValue: true })(
+                <Checkbox>Public</Checkbox>
+              )}
+            </div>
 
-              <FormGroup>
-                <Label>
-                  Describe your workplace<Required />
-                </Label>
-                <this.FormTextArea name="description" maxLength="10000" minRows={3} maxRows={20} />
-              </FormGroup>
+            <Item label="Phone number" className="with-public">
+              {getFieldDecorator('mobile')(<Input />)}
+            </Item>
+            <div className="public-check">
+              {getFieldDecorator('mobile_public', { valuePropName: 'checked', initialValue: true })(
+                <Checkbox>Public</Checkbox>
+              )}
+            </div>
 
-              <FormGroup>
-                <Label>
-                  Location<Required />
-                  <HelpIcon
-                    style={{ left: '87px' }}
-                    position="top-start"
-                    label={`Search for a place name, street, postcode, etc. or click the map to select location.`}
-                  />
-                </Label>
-                <this.FormInput name="place_name" disabled />
-                <div className="map">
-                  <div>
-                    <GoogleMap defaultCenter={marker} markers={[marker]} onSelectedLocation={this.onSelectedLocation} />
-                  </div>
+            <Item
+              label={
+                <span>
+                  Description&nbsp;
+                  <Popover
+                    placement="right"
+                    content={
+                      <span>
+                        Don't type in phone numbers or<br />
+                        email address here.
+                      </span>
+                    }
+                  >
+                    <Icons.QuestionCircle />
+                  </Popover>
+                </span>
+              }
+            >
+              {getFieldDecorator('description', {
+                rules: [
+                  { required: true, message: 'Please enter description!' },
+                  { whitespace: true, message: 'This field may not be blank.' }
+                ]
+              })(<TextArea autosize={{ minRows: 3, maxRows: 20 }} />)}
+            </Item>
+
+            <Item
+              label={
+                <span>
+                  Match area&nbsp;
+                  <Popover
+                    placement="right"
+                    content={
+                      <span>
+                        Search for a place name, street, postcode,<br />
+                        etc. or click the map to select location.
+                      </span>
+                    }
+                  >
+                    <Icons.QuestionCircle />
+                  </Popover>
+                </span>
+              }
+              extra={place_name}
+            >
+              {getFieldDecorator('place_name', {
+                rules: [{ required: true, message: 'Please select your location!' }]
+              })(<Input type="hidden" />)}
+              <div className="map">
+                <div>
+                  <GoogleMap marker={marker} onSelectedLocation={this.selectLocation} />
                 </div>
-              </FormGroup>
-
-              {error && <Alert color="danger">{error}</Alert>}
-
-              <div>
-                <Button color="green" size="lg" disabled={workplace.saving} onClick={this.onSave}>
-                  {workplace.saving ? 'Saving...' : 'Save'}
-                </Button>
-                <Button color="gray" size="lg" outline onClick={this.onCancel}>
-                  Cancel
-                </Button>
               </div>
-            </Form>
+            </Item>
 
-            {progress && <PopupProgress label={progress.label} value={progress.value} />}
-          </Board>
-        ) : !errors ? (
-          <Loading />
-        ) : (
-          <Alert type="danger">Error!</Alert>
-        )}
+            <Item label="Logo">
+              <ImageSelector url={logo.url} removable={logo.exist} onChange={this.setLogo} />
+            </Item>
+
+            <NoLabelField className="subimt-field">
+              <Button type="primary" onClick={this.save}>
+                Save
+              </Button>
+              <Button onClick={this.goWorkplaceList}>Cancel</Button>
+            </NoLabelField>
+
+            {loading && <PopupProgress label={loading.label} value={loading.progress} />}
+          </StyledForm>
+        </div>
       </Wrapper>
     );
   }
 }
 
 export default connect(
-  state => ({
-    workplace: state.rc_workplaces.selectedWorkplace,
-    errors: state.rc_workplaces.errors
-  }),
-  { confirm, getWorkplace, saveWorkplace }
-)(WorkplaceEdit);
+  (state, { match }) => {
+    const businessId = helper.str2int(match.params.businessId);
+    const business = helper.getItemByID(state.rc_businesses.businesses, businessId);
+    const workplaceId = helper.str2int(match.params.workplaceId);
+    const workplace = helper.getItemByID(state.rc_workplaces.workplaces, workplaceId);
+    return {
+      business: business || (workplace || {}).business_data,
+      workplace
+    };
+  },
+  {
+    saveWorkplace
+  }
+)(Form.create()(WorkplaceEdit));

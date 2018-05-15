@@ -105,6 +105,7 @@ class MJPController: UIViewController {
         
         let errors = NSMutableDictionary()
         let requiredFields = getRequiredFields()
+        var firstField: UIView? = nil
         
         for (key, fields) in requiredFields {
             if let field = fields.firstObject {
@@ -116,6 +117,13 @@ class MJPController: UIViewController {
                 }
                 if str.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
                     errors[key] = ["This field is required."]
+                    if (firstField == nil) {
+                        firstField = field as? UIView
+                        let frame = (firstField?.frame)!
+                        let origin = CGPoint(x: frame.origin.x, y: frame.origin.y - 15)
+                        let rect = CGRect(origin: origin, size: frame.size)
+                        scrollView.scrollRectToVisible(rect, animated: true);
+                    }
                 }
             }
         }

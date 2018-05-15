@@ -10,6 +10,8 @@ import UIKit
 
 class HelpController: UITableViewController {
     
+    var shareData: NSMutableDictionary = NSMutableDictionary()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -28,7 +30,6 @@ class HelpController: UITableViewController {
         label.attributedText = title
         navigationItem.titleView = label
         label.sizeToFit()
-        
     }
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {

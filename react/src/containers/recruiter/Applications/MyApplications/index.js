@@ -1,142 +1,202 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
-import { Row, Col } from 'reactstrap';
-import faStar from '@fortawesome/fontawesome-free-regular/faStar';
-import { Loading, FlexBox, MJPCard, JobseekerDetail } from 'components';
+import Truncate from 'react-truncate';
+import { List, Modal, Avatar, Tooltip } from 'antd';
 
+import { getApplications, connectApplication, removeApplication } from 'redux/applications';
+import DATA from 'utils/data';
 import * as helper from 'utils/helper';
-import { confirm } from 'redux/common';
-import { getApplications, selectApplication, connectApplication, removeApplication } from 'redux/applications';
-import Wrapper from './Wrapper';
 
-class MyApplications extends Component {
-  state = {};
+import { AlertMsg, Loading, ListEx, Icons, JobseekerDetails } from 'components';
+import Header from '../Header';
+import Wrapper from '../styled';
+
+const { confirm } = Modal;
+
+class MyApplications extends React.Component {
+  state = {
+    selectedId: null
+  };
 
   componentWillMount() {
-    this.appStatus = helper.getIDByName('appStatuses', 'CREATED');
-    this.jobId = helper.str2int(this.props.match.params.jobId);
-    this.onRefresh();
-
-    this.tokens = helper.getItemByID(this.props.jobs, this.jobId).location_data.business_data.tokens;
+    const { location } = this.props;
+    const { appId } = location.state || {};
+    if (appId) {
+      this.setState({ selectedId: appId });
+    } else {
+      this.getApplications();
+    }
   }
 
-  componentWillReceiveProps(nextProps) {
-    const jobId = helper.str2int(nextProps.match.params.jobId);
-    if (this.jobId !== jobId) {
-      this.jobId = jobId;
-      this.onRefresh();
-
-      this.tokens = helper.getItemByID(nextProps.jobs, this.jobId).location_data.business_data.tokens;
+  componentWillReceiveProps({ job }) {
+    if (this.props.job !== job) {
+      this.getApplications(job);
     }
 
-    if (this.props.applications === null && nextProps.applications) {
-      helper.loadData('apps_selectedid').then(id => {
-        if (id) {
-          helper.saveData('apps_selectedid');
-          this.props.selectApplication(id);
+    const { selectedId } = this.state;
+    if (selectedId) {
+      const { applications } = this.props;
+      const selectedApp = applications && helper.getItemByID(applications, selectedId);
+      !selectedApp && this.onSelect();
+    }
+  }
+
+  getApplications = job => {
+    const jobId = (job || this.props.job || {}).id;
+    jobId &&
+      this.props.getApplications({
+        params: {
+          job: jobId,
+          status: DATA.APP.CREATED
         }
       });
-    }
-  }
-
-  onRefresh = () => this.props.getApplications(this.jobId, 'CREATED');
-
-  onDetail = appId => this.props.selectApplication(appId);
-
-  onConnect = appId => {
-    this.props.confirm('Confirm', 'Yes, I want to make this connection (1 credit)', [
-      { outline: true },
-      {
-        label: 'Connect',
-        color: 'green',
-        onClick: () => this.props.connectApplication(appId)
-      }
-    ]);
   };
 
-  onRemove = appId => {
-    this.props.confirm('Confirm', 'Are you sure you want to delete this applicaton?', [
-      { outline: true },
-      {
-        label: 'Remove',
-        color: 'yellow',
-        onClick: () => this.props.removeApplication(appId)
+  onSelect = selectedId => this.setState({ selectedId });
+
+  onConnect = ({ id }, event) => {
+    event && event.stopPropagation();
+
+    const { business, connectApplication, history } = this.props;
+    if (business.tokens === 0) {
+      confirm({
+        content: 'You need 1 credit',
+        okText: `Credits`,
+        cancelText: 'Cancel',
+        maskClosable: true,
+        onOk: () => {
+          history.push(`/recruiter/settings/credits/${business.id}`);
+        }
+      });
+      return;
+    }
+
+    confirm({
+      content: 'Yes, I want to make this connection (1 credit)',
+      okText: `Connect`,
+      cancelText: 'Cancel',
+      maskClosable: true,
+      onOk: () => {
+        connectApplication({
+          id,
+          data: {
+            id,
+            connect: DATA.APP.ESTABLISHED
+          },
+          successMsg: {
+            message: `Application is connected.`
+          },
+          failMsg: {
+            message: `Connection is failed.`
+          }
+        });
       }
-    ]);
+    });
   };
 
-  render() {
-    const { applications, selectedApp, errors } = this.props;
+  onRemove = ({ id }, event) => {
+    event && event.stopPropagation();
 
-    if (!applications) {
-      return <FlexBox center>{!errors ? <Loading /> : <div className="alert-msg">Server Error!</div>}</FlexBox>;
-    }
+    confirm({
+      content: 'Are you sure you want to delete this applicaton?',
+      okText: `Remove`,
+      okType: 'danger',
+      cancelText: 'Cancel',
+      maskClosable: true,
+      onOk: () => {
+        this.props.removeApplication({
+          id,
+          successMsg: {
+            message: `Application is removed.`
+          },
+          failMsg: {
+            message: `Removing is failed.`
+          }
+        });
+      }
+    });
+  };
 
-    const createdApps = applications.filter(app => app.status === this.appStatus);
+  filterOption = ({ job_seeker }) =>
+    helper
+      .getFullJSName(job_seeker)
+      .toLowerCase()
+      .indexOf(this.props.searchText.toLowerCase()) >= 0;
 
-    if (createdApps.length === 0) {
-      return (
-        <FlexBox center>
-          <div className="alert-msg">
-            {`No applications at the moment. Once that happens you can go trough them here,
-              shortlist and easy switch to Find Talent mode and "head hunt" as well.`}
-          </div>
-        </FlexBox>
-      );
-    }
+  renderApplication = app => {
+    const { id, job_seeker, loading } = app;
+    const image = helper.getPitch(job_seeker).thumbnail;
+    const name = helper.getFullJSName(job_seeker);
 
     return (
-      <Wrapper>
-        <Row>
-          {createdApps.map(app => {
-            const jobseeker = app.job_seeker;
-            const image = helper.getJobseekerImg(jobseeker);
-            const fullName = helper.getFullJSName(jobseeker);
+      <List.Item
+        key={id}
+        actions={[
+          <Tooltip placement="bottom" title="Connect">
+            <span onClick={e => this.onConnect(app, e)}>
+              <Icons.Link />
+            </span>
+          </Tooltip>,
+          <Tooltip placement="bottom" title="Remove">
+            <span onClick={e => this.onRemove(app, e)}>
+              <Icons.TrashAlt />
+            </span>
+          </Tooltip>
+        ]}
+        onClick={() => this.onSelect(id)}
+        className={loading ? 'loading' : ''}
+      >
+        <List.Item.Meta
+          avatar={<Avatar src={image} className="avatar-80" />}
+          title={name}
+          description={
+            <Truncate lines={2} ellipsis={<span>...</span>}>
+              {job_seeker.description}
+            </Truncate>
+          }
+        />
+        {loading && <Loading className="mask" size="small" />}
+      </List.Item>
+    );
+  };
 
-            return (
-              <Col xs="12" sm="6" md="4" lg="3" key={app.id}>
-                <MJPCard
-                  image={image}
-                  title={fullName}
-                  icon={app.shortlisted ? faStar : ''}
-                  description={jobseeker.description}
-                  onClick={() => this.onDetail(app.id)}
-                  loading={app.loading}
-                  menus={[
-                    {
-                      label: 'Connect',
-                      color: 'green',
-                      disabled: this.tokens === 0,
-                      onClick: () => this.onConnect(app.id)
-                    },
-                    {
-                      label: 'Remove',
-                      color: 'yellow',
-                      onClick: () => this.onRemove(app.id)
-                    }
-                  ]}
-                />
-              </Col>
-            );
-          })}
-        </Row>
+  renderEmpty = () => (
+    <AlertMsg>
+      <span>
+        {`No applications at the moment. Once that happens you can go trough them here,
+                shortlist and easy switch to Find Talent mode and "head hunt" as well.`}
+      </span>
+    </AlertMsg>
+  );
+
+  render() {
+    const { job, applications, error } = this.props;
+    const selectedApp = applications && helper.getItemByID(applications, this.state.selectedId);
+
+    return (
+      <Wrapper className="container">
+        <Header />
+        <div className="content">
+          {job && (
+            <ListEx
+              data={applications}
+              loadingSize="large"
+              pagination={{ pageSize: 10 }}
+              filterOption={this.filterOption}
+              error={error}
+              renderItem={this.renderApplication}
+              emptyRender={this.renderEmpty}
+            />
+          )}
+        </div>
 
         {selectedApp && (
-          <JobseekerDetail
-            jobseeker={selectedApp.job_seeker}
-            onClose={() => this.onDetail()}
-            buttons={[
-              {
-                label: 'Connect',
-                color: 'green',
-                onClick: () => this.onConnect(selectedApp.id)
-              },
-              {
-                label: 'Remove',
-                color: 'yellow',
-                onClick: () => this.onRemove(selectedApp.id)
-              }
-            ]}
+          <JobseekerDetails
+            title="Application Details"
+            application={selectedApp}
+            onConnect={() => this.onConnect(selectedApp)}
+            onRemove={() => this.onRemove(selectedApp)}
+            onClose={() => this.onSelect()}
           />
         )}
       </Wrapper>
@@ -145,16 +205,24 @@ class MyApplications extends Component {
 }
 
 export default connect(
-  state => ({
-    jobs: state.rc_jobs.jobs,
-    applications: state.applications.applications,
-    selectedApp: state.applications.selectedApp,
-    errors: state.applications.errors
-  }),
+  (state, { match }) => {
+    const { businesses, selectedId } = state.rc_businesses;
+    const business = helper.getItemByID(businesses || [], selectedId);
+
+    const jobId = helper.str2int(match.params.jobId);
+    const job = helper.getItemByID(state.rc_jobs.jobs, jobId);
+    const { applications, error, searchText } = state.applications;
+
+    return {
+      business,
+      job,
+      applications: applications ? applications.filter(({ status }) => status === DATA.APP.CREATED) : null,
+      error,
+      searchText
+    };
+  },
   {
-    confirm,
     getApplications,
-    selectApplication,
     connectApplication,
     removeApplication
   }

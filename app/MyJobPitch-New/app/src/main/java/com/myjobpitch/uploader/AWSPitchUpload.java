@@ -12,9 +12,6 @@ import com.myjobpitch.tasks.APITaskListener;
 
 import java.io.File;
 
-/**
- * Created by jcockburn on 11/09/15.
- */
 public class AWSPitchUpload extends AWSPitchUploadBase {
     private final File file;
     private final TransferUtility transferUtility;
@@ -45,7 +42,7 @@ public class AWSPitchUpload extends AWSPitchUploadBase {
                         return;
                     mObserver = transferUtility.upload(
                             "mjp-android-uploads",
-                            String.format("%s/%s.%s.%s", MJPApi.shared().getApiRoot().replace("/", ""), pitch.getToken(), pitch.getId(), file.getName()),
+                            String.format("%s/%s.%s.pitches.%s", MJPApi.shared().getApiRoot().replace("/", ""), pitch.getToken(), pitch.getId(), file.getName()),
                             file
                     );
                     mObserver.setTransferListener(AWSPitchUpload.this);

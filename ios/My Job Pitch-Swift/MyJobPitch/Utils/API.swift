@@ -491,6 +491,21 @@ class API: NSObject {
                      failure: failure)
     }
 
+    // ================= JovPitch =====================
+    
+    func saveJobPitch(pitch: JobPitch,
+                   success: ((NSObject?) -> Void)!,
+                   failure: ((String?, NSDictionary?) -> Void)!) {
+        postObject("/api/job-videos/", request: pitch,
+                   success: success,
+                   failure: failure)
+    }
+    
+    func getJobPitch(id: NSNumber,
+                  success: ((NSObject) -> Void)!,
+                  failure: ((String?, NSDictionary?) -> Void)!) {
+        getObject(String(format: "/api/job-videos/%@/", id), success: success, failure: failure)
+    }
 
     // ================= Job =====================
 

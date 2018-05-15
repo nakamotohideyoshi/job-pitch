@@ -102,6 +102,102 @@
                 app:met_floatingLabel="normal"
                 app:met_primaryColor="@color/colorGreen"/>
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="25dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+                <TextView
+                    android:text="Video Pitch:"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:theme="@style/BoldLabel" />
+                <ImageButton
+                    android:id="@+id/job_pitch_help"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:background="@drawable/icon_help"/>
+            </LinearLayout>
+
+            <TextView
+                android:text="Record or upload a short video intro to showcase your company. Tell potential candidates about the role, and why it is a great place to work!"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginTop="8dp"
+                android:textSize="@dimen/default_fontsize"
+                android:textStyle="bold"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="15dp">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Check out our "
+                    android:textSize="@dimen/default_fontsize"
+                    android:textStyle="bold"/>
+                <TextView
+                    android:id="@+id/example_video"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="example video"
+                    android:textSize="@dimen/default_fontsize"
+                    android:textStyle="bold"
+                    android:textColor="@color/colorGreen"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:orientation="horizontal">
+                <LinearLayout
+                    android:id="@+id/job_record_new"
+                    android:layout_width="98dp"
+                    android:layout_height="98dp"
+                    android:layout_marginRight="15dp"
+                    android:orientation="vertical"
+                    android:background="@color/colorPrimary"
+                    android:gravity="center">
+                    <ImageView
+                        android:layout_width="35dp"
+                        android:layout_height="35dp"
+                        android:layout_gravity="center"
+                        android:background="@drawable/icon_record" />
+                    <TextView
+                        android:text="Record New"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginTop="10dp"
+                        android:textColor="#fff"/>
+                </LinearLayout>
+                <LinearLayout
+                    android:id="@+id/job_video_play"
+                    android:layout_width="98dp"
+                    android:layout_height="98dp"
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    android:background="@color/colorPrimary"
+                    android:visibility="invisible">
+                    <ImageView
+                        android:layout_width="35dp"
+                        android:layout_height="35dp"
+                        android:layout_gravity="center"
+                        android:background="@drawable/icon_play" />
+                    <TextView
+                        android:text="Play Current"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginTop="10dp"
+                        android:textColor="#fff"/>
+                </LinearLayout>
+            </LinearLayout>
+
             <include
                 android:id="@+id/job_logo"
                 layout="@layout/view_image_selector"

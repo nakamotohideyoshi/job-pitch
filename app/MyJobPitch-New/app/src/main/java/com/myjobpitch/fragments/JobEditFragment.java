@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +15,8 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.myjobpitch.CameraActivity;
+import com.myjobpitch.MediaPlayerActivity;
 import com.myjobpitch.R;
 import com.myjobpitch.api.MJPApi;
 import com.myjobpitch.api.MJPApiException;
@@ -21,16 +24,27 @@ import com.myjobpitch.api.data.Business;
 import com.myjobpitch.api.data.Contract;
 import com.myjobpitch.api.data.Hours;
 import com.myjobpitch.api.data.Job;
+import com.myjobpitch.api.data.JobPitch;
+import com.myjobpitch.api.data.JobSeeker;
 import com.myjobpitch.api.data.JobStatus;
 import com.myjobpitch.api.data.Location;
+import com.myjobpitch.api.data.Nationality;
+import com.myjobpitch.api.data.Pitch;
 import com.myjobpitch.api.data.Sector;
+import com.myjobpitch.api.data.Sex;
 import com.myjobpitch.tasks.APIAction;
 import com.myjobpitch.tasks.APITask;
 import com.myjobpitch.tasks.APITaskListener;
 import com.myjobpitch.tasks.UploadImageTask;
+import com.myjobpitch.uploader.AWSJobPitchUploader;
+import com.myjobpitch.uploader.AWSPitchUploader;
+import com.myjobpitch.uploader.PitchUpload;
+import com.myjobpitch.uploader.PitchUploadListener;
 import com.myjobpitch.utils.AppData;
 import com.myjobpitch.utils.AppHelper;
 import com.myjobpitch.utils.ImageSelector;
+import com.myjobpitch.utils.Loading;
+import com.myjobpitch.views.Popup;
 import com.myjobpitch.views.SelectDialog;
 import com.myjobpitch.views.SelectDialog.SelectItem;
 import com.rengwuxian.materialedittext.MaterialEditText;
@@ -46,6 +60,8 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class JobEditFragment extends FormFragment {
+
+    static final int REQUEST_NEW_PITCH = 2;
 
     @BindView(R.id.job_active)
     CheckBox activeView;
@@ -65,6 +81,9 @@ public class JobEditFragment extends FormFragment {
     @BindView(R.id.job_hours)
     MaterialBetterSpinner hoursView;
 
+    @BindView(R.id.job_video_play)
+    View mRecordVideoPlay;
+
     @BindView(R.id.job_logo)
     View logoView;
 
@@ -78,6 +97,10 @@ public class JobEditFragment extends FormFragment {
 
     public Location location;
     public Job job;
+
+    JobPitch mPitch;
+    String mVideoPath;
+    int requestCode;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -100,26 +123,38 @@ public class JobEditFragment extends FormFragment {
 
         } else {
 
-            title = "Edit Job";
             location = job.getLocation_data();
 
-            showLoading(view);
-            new APITask(new APIAction() {
-                @Override
-                public void run() throws MJPApiException {
-                    job = MJPApi.shared().getUserJob(job.getId());
+            if (title != "") {
+                load();
+                if (mVideoPath != null) {
+                    mRecordVideoPlay.setVisibility(View.VISIBLE);
                 }
-            }).addListener(new APITaskListener() {
-                @Override
-                public void onSuccess() {
-                    hideLoading();
-                    load();
-                }
-                @Override
-                public void onError(JsonNode errors) {
-                    errorHandler(errors);
-                }
-            }).execute();
+            } else {
+                title = "Edit Job";
+
+                showLoading(view);
+                new APITask(new APIAction() {
+                    @Override
+                    public void run() throws MJPApiException {
+                        job = MJPApi.shared().getUserJob(job.getId());
+                    }
+                }).addListener(new APITaskListener() {
+                    @Override
+                    public void onSuccess() {
+                        hideLoading();
+                        load();
+                        if (mVideoPath != null) {
+                            mRecordVideoPlay.setVisibility(View.VISIBLE);
+                        }
+                    }
+                    @Override
+                    public void onError(JsonNode errors) {
+                        errorHandler(errors);
+                    }
+                }).execute();
+            }
+
         }
 
         return  view;
@@ -187,6 +222,8 @@ public class JobEditFragment extends FormFragment {
         contractView.setAdapter(new ArrayAdapter<>(getApp(),  android.R.layout.simple_dropdown_item_1line, contractNames));
         hoursView.setAdapter(new ArrayAdapter<>(getApp(),  android.R.layout.simple_dropdown_item_1line, hoursNames));
 
+        mPitch = job.getPitch();
+        mRecordVideoPlay.setVisibility(mPitch != null && mPitch.getVideo() != null ? View.VISIBLE : View.INVISIBLE);
     }
 
     @OnClick(R.id.job_sector_button)
@@ -205,6 +242,44 @@ public class JobEditFragment extends FormFragment {
         });
     }
 
+    @OnClick(R.id.job_pitch_help)
+    void onPitchHelp() {
+        saveData();
+        WebviewFragment fragment = new WebviewFragment();
+        fragment.title = "Record Pitch";
+        fragment.mFilename = "pitch";
+        getApp().pushFragment(fragment);
+    }
+
+    @OnClick(R.id.example_video)
+    void onPlayExamle() {
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.setData(Uri.parse("https://vimeo.com/255467562"));
+        startActivity(intent);
+    }
+
+    @OnClick(R.id.job_record_new)
+    void onRecordNew() {
+        Intent intent = new Intent(getApp(), CameraActivity.class);
+        startActivityForResult(intent, REQUEST_NEW_PITCH);
+        requestCode = REQUEST_NEW_PITCH;
+    }
+
+    @OnClick(R.id.job_video_play)
+    void onPitchPlay() {
+        String path = null;
+        if (mVideoPath != null) {
+            path = mVideoPath;
+        } else if (mPitch != null) {
+            path = mPitch.getVideo();
+        }
+        if (path != null) {
+            Intent intent = new Intent(getApp(), MediaPlayerActivity.class);
+            intent.putExtra(MediaPlayerActivity.PATH, path);
+            startActivity(intent);
+        }
+    }
+
     @Override
     protected HashMap<String, EditText> getRequiredFields() {
         return new HashMap<String, EditText>() {
@@ -221,7 +296,10 @@ public class JobEditFragment extends FormFragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == Activity.RESULT_OK) {
-            if (requestCode == AppData.REQUEST_IMAGE_CAPTURE) {
+            if (this.requestCode == REQUEST_NEW_PITCH) {
+                mVideoPath = data.getStringExtra(CameraActivity.OUTPUT_FILE);
+                mRecordVideoPlay.setVisibility(View.VISIBLE);
+            } else if (requestCode == AppData.REQUEST_IMAGE_CAPTURE) {
                 Bitmap photo = (Bitmap) data.getExtras().get("data");
                 File file = AppHelper.saveBitmap(photo);
                 imageSelector.setImageUri(Uri.fromFile(file));
@@ -241,11 +319,7 @@ public class JobEditFragment extends FormFragment {
         }
     }
 
-    @OnClick(R.id.job_save)
-    void saveJob() {
-
-        if (!valid()) return;
-
+    void saveData() {
         if (job == null) {
             job = new Job();
             job.setLocation(location.getId());
@@ -269,6 +343,14 @@ public class JobEditFragment extends FormFragment {
 
         int hoursIndex = hoursNames.indexOf(hoursView.getText().toString());
         job.setHours(AppData.get(Hours.class).get(hoursIndex).getId());
+    }
+
+    @OnClick(R.id.job_save)
+    void saveJob() {
+
+        if (!valid()) return;
+
+        saveData();
 
         showLoading();
 
@@ -301,7 +383,7 @@ public class JobEditFragment extends FormFragment {
             .addListener(new APITaskListener() {
                 @Override
                 public void onSuccess() {
-                    compltedSave();
+                    uploadPitch();
                 }
                 @Override
                 public void onError(JsonNode errors) {
@@ -319,7 +401,7 @@ public class JobEditFragment extends FormFragment {
             }).addListener(new APITaskListener() {
                 @Override
                 public void onSuccess() {
-                    compltedSave();
+                    uploadPitch();
                 }
                 @Override
                 public void onError(JsonNode errors) {
@@ -328,8 +410,56 @@ public class JobEditFragment extends FormFragment {
             }).execute();
 
         } else {
-            compltedSave();
+            uploadPitch();
         }
+    }
+
+    void uploadPitch() {
+
+        if (mVideoPath == null) {
+            compltedSave();
+            return;
+        }
+
+        AWSJobPitchUploader pitchUploader = new AWSJobPitchUploader(getApp());
+        PitchUpload upload = pitchUploader.upload(new File(mVideoPath), job.getId());
+        upload.setPitchUploadListener(new PitchUploadListener() {
+            @Override
+            public void onStateChange(int state) {
+                switch (state) {
+                    case PitchUpload.STARTING:
+                        break;
+                    case PitchUpload.UPLOADING:
+                        loading.setType(Loading.Type.PROGRESS);
+                        break;
+                    case PitchUpload.PROCESSING:
+                        loading.setType(Loading.Type.SPIN);
+                        break;
+                    case PitchUpload.COMPLETE:
+                        compltedSave();
+                        break;
+                }
+            }
+
+            @Override
+            public void onProgress(double current, long total) {
+                int complete = (int) (((float) current / total) * 100);
+                if (complete < 100) {
+                    loading.setProgress(complete);
+                    loading.setLabel(Integer.toString(complete) + "%");
+                }
+            }
+
+            @Override
+            public void onError(String message) {
+                hideLoading();
+                Popup popup = new Popup(getContext(), "Error uploading video!", true);
+                popup.addGreyButton("Ok", null);
+                popup.show();
+            }
+        });
+        upload.start();
+
     }
 
     private void compltedSave() {

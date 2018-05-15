@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.contrib.gis.db.models.functions import Distance
 from django.contrib.gis.measure import D
 from django.db.models import F, Q
@@ -85,12 +86,14 @@ class JobSeekerViewSet(viewsets.ModelViewSet):
             exclude_pks = self.request.query_params.get('exclude')
             if exclude_pks:
                 query = query.exclude(pk__in=map(int, exclude_pks.split(',')))
-            query = query.filter(Q(profile__contract=job.contract) | Q(profile__contract=None),
-                                 Q(profile__hours=job.hours) | Q(profile__hours=None),
-                                 profile__sectors=job.sector,
-                                 )
-            query = query.annotate(distance=Distance(F('profile__latlng'), job.location.latlng))
-            query = query.filter(distance__lte=F('profile__search_radius') * D(mi=1).m)
+            query = query.filter(profile__sectors=job.sector)
+            if not settings.DEMO_MODE:
+                query = query.filter(
+                    Q(profile__contract=job.contract) | Q(profile__contract=None),
+                    Q(profile__hours=job.hours) | Q(profile__hours=None),
+                )
+                query = query.annotate(distance=Distance(F('profile__latlng'), job.location.latlng))
+                query = query.filter(distance__lte=F('profile__search_radius') * D(mi=1).m)
             return query[:25]
         return JobSeeker.objects.filter(user=self.request.user)
 

@@ -53,7 +53,7 @@ class FindJob extends React.Component {
     if (!jobseeker.active) {
       confirm({
         content: 'To apply please activate your account',
-        okText: 'Activation',
+        okText: 'Activate',
         cancelText: 'Cancel',
         maskClosable: true,
         onOk: () => {

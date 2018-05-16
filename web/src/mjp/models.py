@@ -239,6 +239,9 @@ class Hours(models.Model):
 
 
 class JobStatus(models.Model):
+    OPEN = 'OPEN'
+    CLOSED = 'CLOSED'
+
     name = models.CharField(max_length=20)
     friendly_name = models.CharField(max_length=255)
     description = models.TextField()

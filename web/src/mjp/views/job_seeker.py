@@ -1,8 +1,15 @@
 from django.contrib.gis.measure import D
-from rest_framework import permissions, viewsets
+from rest_framework import permissions, viewsets, generics
+from rest_framework.throttling import AnonRateThrottle
 
-from mjp.models import Business, Location, JobSeeker, JobProfile, Pitch, Job
-from mjp.serializers import BusinessSerializer, LocationSerializer, JobSerializer, JobSerializerV1
+from mjp.models import Business, Location, JobSeeker, JobProfile, Pitch, Job, JobStatus
+from mjp.serializers import (
+    BusinessSerializer,
+    LocationSerializer,
+    JobSerializer,
+    JobSerializerV1,
+    PublicJobListingSerializer,
+)
 from mjp.serializers.job_seeker import PitchSerializer, JobProfileSerializer
 
 
@@ -127,9 +134,19 @@ class JobViewSet(viewsets.ReadOnlyModelViewSet):
         if job_profile.hours_id:
             query = query.filter(hours=job_profile.hours)
         query = query.filter(sector__in=job_profile.sectors.all())
-        query = query.filter(status__name="OPEN")
+        query = query.filter(status__name=JobStatus.OPEN)
         query = query.filter(location__latlng__distance_lte=(job_profile.latlng, D(mi=job_profile.search_radius)))
         return query
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
+
+
+class PublicListingThrottle(AnonRateThrottle):
+    rate = '1/s'
+
+
+class PublicJobListing(generics.RetrieveAPIView):
+    queryset = Job.objects.filter(status__name=JobStatus.OPEN)
+    serializer_class = PublicJobListingSerializer
+    throttle_classes = (PublicListingThrottle,)

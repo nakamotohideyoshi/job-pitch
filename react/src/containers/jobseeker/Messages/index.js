@@ -87,7 +87,7 @@ class Messages extends React.Component {
       return (
         <div>
           {'To message please activate your account. '}
-          <Link to="/jobseeker/settings/profile">Activation</Link>
+          <Link to="/jobseeker/settings/profile">Activate</Link>
         </div>
       );
     }

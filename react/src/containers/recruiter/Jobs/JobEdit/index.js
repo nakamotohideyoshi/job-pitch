@@ -335,10 +335,9 @@ class JobEdit extends React.Component {
                       <span>
                         Record or upload a short video intro to showcase your company.<br />
                         Tell potential candidates about the role, and why it is a great<br />
-                        place to work! Check out our{' '}
-                        <a href="https://vimeo.com/255467562" target="_blank" rel="noopener noreferrer">
-                          example video
-                        </a>
+                        place to work!
+
+                        
                       </span>
                     }
                   >

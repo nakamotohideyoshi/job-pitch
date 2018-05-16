@@ -257,16 +257,7 @@ class JobEditController: MJPController {
     }
     
     @IBAction func pitchHelpAction(_ sender: Any) {
-        let controller = storyboard?.instantiateViewController(withIdentifier: "WebView") as! WebViewController
-        controller.navigationItem.title = "Recording Pitch"
-        controller.file = "pitch"
-        controller.isModal = true
-        let navController = UINavigationController(rootViewController: controller)
-        present(navController, animated: true, completion: nil)
-    }
-    
-    @IBAction func playDemoAction(_ sender: Any) {
-        UIApplication.shared.openURL(NSURL(string: "https://vimeo.com/255467562")! as URL)
+        PopupController.showGray("In a competative job market, job seekers would like know what kind of workplace they will be working in.\nUse a video pitch to showcase why your business is a great place to work, and why great candidates should choose this role.", ok: "Close")
     }
     
     @IBAction func pitchRecordAction(_ sender: Any) {

@@ -244,18 +244,9 @@ public class JobEditFragment extends FormFragment {
 
     @OnClick(R.id.job_pitch_help)
     void onPitchHelp() {
-        saveData();
-        WebviewFragment fragment = new WebviewFragment();
-        fragment.title = "Record Pitch";
-        fragment.mFilename = "pitch";
-        getApp().pushFragment(fragment);
-    }
-
-    @OnClick(R.id.example_video)
-    void onPlayExamle() {
-        Intent intent = new Intent(Intent.ACTION_VIEW);
-        intent.setData(Uri.parse("https://vimeo.com/255467562"));
-        startActivity(intent);
+        Popup popup = new Popup(getContext(), "In a competative job market, job seekers would like know what kind of workplace they will be working in.\nUse a video pitch to showcase why your business is a great place to work, and why great candidates should choose this role.", true);
+        popup.addGreyButton("Close", null);
+        popup.show();
     }
 
     @OnClick(R.id.job_record_new)

@@ -129,25 +129,6 @@
                 android:layout_marginTop="8dp"
                 android:textSize="@dimen/default_fontsize"
                 android:textStyle="bold"/>
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="15dp">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Check out our "
-                    android:textSize="@dimen/default_fontsize"
-                    android:textStyle="bold"/>
-                <TextView
-                    android:id="@+id/example_video"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="example video"
-                    android:textSize="@dimen/default_fontsize"
-                    android:textStyle="bold"
-                    android:textColor="@color/colorGreen"/>
-            </LinearLayout>
 
             <LinearLayout
                 android:layout_width="wrap_content"

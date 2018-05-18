@@ -96,6 +96,8 @@ class Applications extends React.Component {
 
   render() {
     const { jobs, job, jobseekers, myApplications, myConnections, myShortlist, match } = this.props;
+    const location = job.location_data;
+    const business = location.business_data;
     const searchText = this.state.searchText.toLowerCase();
     const activeKey = match.url.split('/')[3];
     const jobId = (job || {}).id;
@@ -125,6 +127,9 @@ class Applications extends React.Component {
                 <Option key={job.id} value={job.id}>
                   <Logo src={logo} className="logo" size="22px" />
                   {job.title}
+                  <span className="right-menu-item">
+                    {location.name}, {business.name}
+                  </span>
                 </Option>
               );
             })}

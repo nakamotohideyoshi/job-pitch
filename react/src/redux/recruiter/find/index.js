@@ -1,3 +1,4 @@
+import { LOCATION_CHANGE } from 'react-router-redux';
 import { createAction, handleActions } from 'redux-actions';
 import { requestPending, requestSuccess, requestFail } from 'utils/request';
 import * as C from 'redux/constants';
@@ -76,7 +77,17 @@ export default handleActions(
     [C.RC_REMOVE_JOBSEEKER]: (state, { payload }) => ({
       ...state,
       jobseekers: helper.removeObj(state.jobseekers, payload.id)
-    })
+    }),
+
+    // ---- change location ----
+
+    [LOCATION_CHANGE]: (state, { payload }) => {
+      const clear = payload.pathname.indexOf('/recruiter/applications') !== 0;
+      return {
+        ...state,
+        jobseekers: clear ? null : state.jobseekers
+      };
+    }
   },
   initialState
 );

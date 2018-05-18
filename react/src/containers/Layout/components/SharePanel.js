@@ -9,7 +9,7 @@ const Wrapper = styled.div`
   width: 0;
   height: 100vh;
   align-items: center;
-  transition left 0.3s;
+  transition: left 0.3s;
   &.show {
     left: 0;
   }

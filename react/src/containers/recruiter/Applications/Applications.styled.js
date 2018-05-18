@@ -6,11 +6,16 @@ export default styled.div`
   display: flex;
   flex-direction: column;
 
-  .content {
+  .ant-tabs-nav-container {
+    font-size: 12px;
+    font-weight: 500;
+  }
+
+  .ant-tabs-tabpane {
     flex: 1;
     position: relative;
     margin-bottom: 40px;
-    min-height: 100px;
+    min-height: 150px;
 
     .ant-list-item {
       position: relative;

@@ -3,6 +3,8 @@ package com.myjobpitch.fragments;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,11 +30,13 @@ import com.myjobpitch.api.data.ApplicationForCreation;
 import com.myjobpitch.api.data.Business;
 import com.myjobpitch.api.data.Contract;
 import com.myjobpitch.api.data.Hours;
+import com.myjobpitch.api.data.Image;
 import com.myjobpitch.api.data.Job;
 import com.myjobpitch.api.data.JobPitch;
 import com.myjobpitch.api.data.JobProfile;
 import com.myjobpitch.api.data.JobSeeker;
 import com.myjobpitch.api.data.Location;
+import com.myjobpitch.models.JobResourceModel;
 import com.myjobpitch.tasks.APIAction;
 import com.myjobpitch.tasks.APITask;
 import com.myjobpitch.tasks.APITaskListener;
@@ -41,14 +45,17 @@ import com.myjobpitch.utils.AppHelper;
 import com.myjobpitch.views.Popup;
 import com.myjobpitch.views.PhotoView;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class ApplicationDetailFragment extends BaseFragment {
 
-    @BindView(R.id.job_logo_view)
-    View logoView;
+    @BindView(R.id.viewpager)
+    ViewPager viewPager;
 
     @BindView(R.id.job_title)
     TextView titleView;
@@ -75,11 +82,6 @@ public class ApplicationDetailFragment extends BaseFragment {
     @BindView(R.id.job_desc)
     TextView descView;
 
-    @BindView(R.id.job_pitch_play)
-    View pitchPlayView;
-    @BindView(R.id.job_pitch_thumbnail)
-    ImageView pitchThumbnailView;
-
     @BindView(R.id.location_desc)
     TextView locationDescView;
 
@@ -89,6 +91,8 @@ public class ApplicationDetailFragment extends BaseFragment {
     GoogleMap googleMap;
     JobSeeker jobSeeker;
     JobProfile profile;
+
+    List<JobResourceModel> resources = new ArrayList<>();
 
     public Application application;
     public Job job;
@@ -119,6 +123,10 @@ public class ApplicationDetailFragment extends BaseFragment {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        JobResourcePagerAdapter pagerAdapter = new JobResourcePagerAdapter();
+        viewPager.setAdapter(pagerAdapter);
+        viewPager.addOnPageChangeListener(pagerAdapter);
 
         // load data
 
@@ -151,7 +159,24 @@ public class ApplicationDetailFragment extends BaseFragment {
 
     void load() {
 
-        AppHelper.loadJobLogo(job, AppHelper.getImageView(logoView));
+        JobPitch pitch = job.getPitch();
+        if (pitch != null) {
+            JobResourceModel resource = new JobResourceModel();
+            resource.thumbnail = pitch.getThumbnail();
+            resource.video = pitch.getVideo();
+            resources.add(resource);
+        }
+
+        JobResourceModel logoModel = new JobResourceModel();
+        logoModel.isLogo = true;
+        Image logo = job.getLogo();
+        if (logo != null) {
+            logoModel.thumbnail = logo.getThumbnail();
+            logoModel.image = logo.getImage();
+        }
+        resources.add(logoModel);
+
+//        AppHelper.loadJobLogo(job, AppHelper.getImageView(logoView));
 
         Location location = job.getLocation_data();
         Contract contract = AppData.get(Contract.class, job.getContract());
@@ -164,12 +189,12 @@ public class ApplicationDetailFragment extends BaseFragment {
         hoursText.setText(hours.getName());
         contractText.setText(contract.getName());
 
-        JobPitch pitch = job.getPitch();
-        if (pitch == null || pitch.getVideo() == null) {
-            pitchPlayView.setVisibility(View.GONE);
-        } else {
-            AppHelper.loadImage(pitch.getThumbnail(), pitchThumbnailView);
-        }
+//        JobPitch pitch = job.getPitch();
+//        if (pitch == null || pitch.getVideo() == null) {
+//            pitchPlayView.setVisibility(View.GONE);
+//        } else {
+//            AppHelper.loadImage(pitch.getThumbnail(), pitchThumbnailView);
+//        }
 
         descView.setText(job.getDescription());
         locationDescView.setText(location.getDescription());
@@ -208,35 +233,8 @@ public class ApplicationDetailFragment extends BaseFragment {
             }
         });
 
-    }
+        viewPager.getAdapter().notifyDataSetChanged();
 
-    @OnClick(R.id.job_logo_view)
-    void onClickImage() {
-
-        String path = "res:///" + R.drawable.default_logo;
-        if (job.getImages().size() > 0) {
-            path = job.getImages().get(0).getImage();
-        } else {
-            Location location = job.getLocation_data();
-            if (location.getImages().size() > 0) {
-                path = location.getImages().get(0).getImage();
-            } else {
-                Business business = location.getBusiness_data();
-                if (business.getImages().size() > 0) {
-                    path = business.getImages().get(0).getImage();
-                }
-            }
-        }
-
-        new PhotoView(getApp(), path)
-                .show();
-    }
-
-    @OnClick(R.id.job_pitch_play)
-    void onPitchPlay() {
-        Intent intent = new Intent(getApp(), MediaPlayerActivity.class);
-        intent.putExtra(MediaPlayerActivity.PATH, job.getPitch().getVideo());
-        startActivity(intent);
     }
 
     @OnClick(R.id.apply_button)
@@ -302,6 +300,98 @@ public class ApplicationDetailFragment extends BaseFragment {
         });
         popup.addGreyButton("Cancel", null);
         popup.show();
+    }
+
+
+    class JobResourcePagerAdapter extends PagerAdapter implements ViewPager.OnPageChangeListener {
+
+        @Override
+        public Object instantiateItem(ViewGroup container, int position) {
+            ViewGroup layout = (ViewGroup) LayoutInflater.from(getContext()).inflate(R.layout.view_job_resource, container, false);
+
+            final JobResourceModel model = resources.get(position);
+
+            View imageContainer = layout.findViewById(R.id.image_container);
+            if (model.thumbnail != null) {
+                AppHelper.loadImage(model.thumbnail, imageContainer);
+            } else {
+                if (model.isLogo) {
+                    AppHelper.getImageView(imageContainer).setImageResource(R.drawable.default_logo);
+                }
+            }
+
+            imageContainer.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (model.video != null) {
+                        Intent intent = new Intent(getApp(), MediaPlayerActivity.class);
+                        intent.putExtra(MediaPlayerActivity.PATH, model.video);
+                        startActivity(intent);
+                    } else {
+                        new PhotoView(getApp(), model.image != null ? model.image : "res:///" + R.drawable.default_logo)
+                                .show();
+                    }
+                }
+            });
+
+            View playIcon = layout.findViewById(R.id.play_icon);
+            playIcon.setVisibility(model.video == null ? View.GONE : View.VISIBLE);
+
+            AppHelper.getImageView(imageContainer).setScaleType(model.isLogo ? ImageView.ScaleType.FIT_CENTER : ImageView.ScaleType.CENTER_CROP);
+
+            ViewGroup.LayoutParams layoutParams = imageContainer.getLayoutParams();
+            if (model.isLogo) {
+                int d = (int) (container.getWidth() * 0.25);
+                layoutParams.width = d;
+                layoutParams.height = d;
+            } else {
+                layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT;
+                layoutParams.height = ViewGroup.LayoutParams.MATCH_PARENT;
+            }
+            imageContainer.setLayoutParams(layoutParams);
+
+            container.addView(layout);
+
+            return layout;
+        }
+
+        @Override
+        public void destroyItem(ViewGroup container, int position, Object view) {
+            container.removeView((View) view);
+        }
+
+        @Override
+        public int getCount() {
+            return resources.size();
+        }
+
+        @Override
+        public boolean isViewFromObject(View view, Object object) {
+            return view == object;
+        }
+
+        @Override
+        public int getItemPosition(Object object){
+            return POSITION_NONE;
+        }
+
+        @Override
+        public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+        }
+
+        @Override
+        public void onPageSelected(int position) {
+        }
+
+        @Override
+        public void onPageScrollStateChanged(int state) {
+            if (state == ViewPager.SCROLL_STATE_IDLE) {
+
+                int position = viewPager.getCurrentItem();
+
+            }
+        }
+
     }
 
 }

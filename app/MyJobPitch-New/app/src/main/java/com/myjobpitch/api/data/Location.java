@@ -161,4 +161,11 @@ public class Location extends MJPObjectWithDates {
     public Integer getActive_job_count() {
         return active_job_count;
     }
+
+    public Image getLogo() {
+        if (images != null && images.size() > 0) {
+            return images.get(0);
+        }
+        return business_data.getLogo();
+    }
 }

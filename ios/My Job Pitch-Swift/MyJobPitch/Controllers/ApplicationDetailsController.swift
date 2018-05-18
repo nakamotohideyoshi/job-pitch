@@ -73,7 +73,7 @@ class ApplicationDetailsController: MJPController {
         logoModel.isLogo = true
         let image = job.getImage()
         if image != nil {
-            logoModel.thumbnail = image?.image
+            logoModel.thumbnail = image?.thumbnail
             logoModel.image = image?.image
         }
         resources.append(logoModel)

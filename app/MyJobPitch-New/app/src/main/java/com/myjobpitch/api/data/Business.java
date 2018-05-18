@@ -35,4 +35,11 @@ public class Business extends MJPObjectWithDates {
         return tokens;
     }
 
+    public Image getLogo() {
+        if (images != null && images.size() > 0) {
+            return images.get(0);
+        }
+        return null;
+    }
+
 }

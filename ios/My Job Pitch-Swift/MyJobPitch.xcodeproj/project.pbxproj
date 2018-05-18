@@ -16,9 +16,42 @@
 		D72AE41D1E106D77004C3F02 /* ApplicationCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D72AE41C1E106D77004C3F02 /* ApplicationCell.swift */; };
 		D72AE4241E1156C3004C3F02 /* CustomView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D72AE4231E1156C3004C3F02 /* CustomView.swift */; };
 		D72AE42E1E11AD50004C3F02 /* ChangePasswordController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D72AE42D1E11AD50004C3F02 /* ChangePasswordController.swift */; };
-		D730C3F61EAE95C100332C6C /* InitialTokens.swift in Sources */ = {isa = PBXBuildFile; fileRef = D730C3F51EAE95C100332C6C /* InitialTokens.swift */; };
-		D73CC7CF209FE4A000DE6546 /* JobPitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = D73CC7CE209FE4A000DE6546 /* JobPitch.swift */; };
 		D73CC7D1209FF14100DE6546 /* JobPitchUploader.swift in Sources */ = {isa = PBXBuildFile; fileRef = D73CC7D0209FF14100DE6546 /* JobPitchUploader.swift */; };
+		D742268D20ACC579002D3F4C /* iCarousel.m in Sources */ = {isa = PBXBuildFile; fileRef = D742268C20ACC579002D3F4C /* iCarousel.m */; };
+		D742269020ACC5E2002D3F4C /* JobResource.xib in Resources */ = {isa = PBXBuildFile; fileRef = D742268E20ACC5E2002D3F4C /* JobResource.xib */; };
+		D742269220ACCB3A002D3F4C /* JobResource.swift in Sources */ = {isa = PBXBuildFile; fileRef = D742269120ACCB3A002D3F4C /* JobResource.swift */; };
+		D74226B420ACCDED002D3F4C /* Application.swift in Sources */ = {isa = PBXBuildFile; fileRef = D742269520ACCDED002D3F4C /* Application.swift */; };
+		D74226B520ACCDED002D3F4C /* ApplicationStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = D742269620ACCDED002D3F4C /* ApplicationStatus.swift */; };
+		D74226B620ACCDED002D3F4C /* AuthToken.swift in Sources */ = {isa = PBXBuildFile; fileRef = D742269720ACCDED002D3F4C /* AuthToken.swift */; };
+		D74226B720ACCDED002D3F4C /* Business.swift in Sources */ = {isa = PBXBuildFile; fileRef = D742269820ACCDED002D3F4C /* Business.swift */; };
+		D74226B820ACCDED002D3F4C /* Contract.swift in Sources */ = {isa = PBXBuildFile; fileRef = D742269920ACCDED002D3F4C /* Contract.swift */; };
+		D74226B920ACCDED002D3F4C /* Hours.swift in Sources */ = {isa = PBXBuildFile; fileRef = D742269A20ACCDED002D3F4C /* Hours.swift */; };
+		D74226BA20ACCDED002D3F4C /* Image.swift in Sources */ = {isa = PBXBuildFile; fileRef = D742269B20ACCDED002D3F4C /* Image.swift */; };
+		D74226BB20ACCDED002D3F4C /* InitialTokens.swift in Sources */ = {isa = PBXBuildFile; fileRef = D742269C20ACCDED002D3F4C /* InitialTokens.swift */; };
+		D74226BC20ACCDED002D3F4C /* Job.swift in Sources */ = {isa = PBXBuildFile; fileRef = D742269D20ACCDED002D3F4C /* Job.swift */; };
+		D74226BD20ACCDED002D3F4C /* JobPitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = D742269E20ACCDED002D3F4C /* JobPitch.swift */; };
+		D74226BE20ACCDED002D3F4C /* JobSeeker.swift in Sources */ = {isa = PBXBuildFile; fileRef = D742269F20ACCDED002D3F4C /* JobSeeker.swift */; };
+		D74226BF20ACCDED002D3F4C /* JobStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = D74226A020ACCDED002D3F4C /* JobStatus.swift */; };
+		D74226C020ACCDED002D3F4C /* Location.swift in Sources */ = {isa = PBXBuildFile; fileRef = D74226A120ACCDED002D3F4C /* Location.swift */; };
+		D74226C120ACCDED002D3F4C /* LoginRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = D74226A220ACCDED002D3F4C /* LoginRequest.swift */; };
+		D74226C220ACCDED002D3F4C /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = D74226A320ACCDED002D3F4C /* Message.swift */; };
+		D74226C320ACCDED002D3F4C /* MJPObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = D74226A420ACCDED002D3F4C /* MJPObject.swift */; };
+		D74226C420ACCDED002D3F4C /* MJPObjectWithDates.swift in Sources */ = {isa = PBXBuildFile; fileRef = D74226A520ACCDED002D3F4C /* MJPObjectWithDates.swift */; };
+		D74226C520ACCDED002D3F4C /* MJPObjectWithName.swift in Sources */ = {isa = PBXBuildFile; fileRef = D74226A620ACCDED002D3F4C /* MJPObjectWithName.swift */; };
+		D74226C620ACCDED002D3F4C /* MJPObjectWithNameDesc.swift in Sources */ = {isa = PBXBuildFile; fileRef = D74226A720ACCDED002D3F4C /* MJPObjectWithNameDesc.swift */; };
+		D74226C720ACCDED002D3F4C /* MJPObjectWithNameShortName.swift in Sources */ = {isa = PBXBuildFile; fileRef = D74226A820ACCDED002D3F4C /* MJPObjectWithNameShortName.swift */; };
+		D74226C820ACCDED002D3F4C /* MJPObjectWithNameShortNameDesc.swift in Sources */ = {isa = PBXBuildFile; fileRef = D74226A920ACCDED002D3F4C /* MJPObjectWithNameShortNameDesc.swift */; };
+		D74226C920ACCDED002D3F4C /* Nationality.swift in Sources */ = {isa = PBXBuildFile; fileRef = D74226AA20ACCDED002D3F4C /* Nationality.swift */; };
+		D74226CA20ACCDED002D3F4C /* PasswordChangeRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = D74226AB20ACCDED002D3F4C /* PasswordChangeRequest.swift */; };
+		D74226CB20ACCDED002D3F4C /* PasswordResetRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = D74226AC20ACCDED002D3F4C /* PasswordResetRequest.swift */; };
+		D74226CC20ACCDED002D3F4C /* Pitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = D74226AD20ACCDED002D3F4C /* Pitch.swift */; };
+		D74226CD20ACCDED002D3F4C /* Profile.swift in Sources */ = {isa = PBXBuildFile; fileRef = D74226AE20ACCDED002D3F4C /* Profile.swift */; };
+		D74226CE20ACCDED002D3F4C /* RegisterRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = D74226AF20ACCDED002D3F4C /* RegisterRequest.swift */; };
+		D74226CF20ACCDED002D3F4C /* Role.swift in Sources */ = {isa = PBXBuildFile; fileRef = D74226B020ACCDED002D3F4C /* Role.swift */; };
+		D74226D020ACCDED002D3F4C /* Sector.swift in Sources */ = {isa = PBXBuildFile; fileRef = D74226B120ACCDED002D3F4C /* Sector.swift */; };
+		D74226D120ACCDED002D3F4C /* Sex.swift in Sources */ = {isa = PBXBuildFile; fileRef = D74226B220ACCDED002D3F4C /* Sex.swift */; };
+		D74226D220ACCDED002D3F4C /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = D74226B320ACCDED002D3F4C /* User.swift */; };
+		D74226D420ACCE12002D3F4C /* JobResourceModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D74226D320ACCE12002D3F4C /* JobResourceModel.swift */; };
 		D7425B141FC43F5700A6831E /* MJPPlayerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7425B131FC43F5700A6831E /* MJPPlayerController.swift */; };
 		D749E34F1E09B479000FD0B1 /* ResetPasswordController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D749E34E1E09B479000FD0B1 /* ResetPasswordController.swift */; };
 		D749E3511E09C09E000FD0B1 /* AppHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = D749E3501E09C09E000FD0B1 /* AppHelper.swift */; };
@@ -80,35 +113,6 @@
 		D7ECFBBF1E12FCEF00E2E071 /* JobSeekerProfileController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7ECFBBE1E12FCEF00E2E071 /* JobSeekerProfileController.swift */; };
 		D7F4DE30202383700018B3A9 /* IntroController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7F4DE2F202383700018B3A9 /* IntroController.swift */; };
 		D7F76FEB1E08E05F00ECB684 /* API.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7F76FEA1E08E05F00ECB684 /* API.swift */; };
-		D7F76FED1E08E08200ECB684 /* Application.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7F76FEC1E08E08200ECB684 /* Application.swift */; };
-		D7F76FEF1E08E09900ECB684 /* ApplicationStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7F76FEE1E08E09900ECB684 /* ApplicationStatus.swift */; };
-		D7F7700B1E08E3D100ECB684 /* AuthToken.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7F76FF01E08E3D100ECB684 /* AuthToken.swift */; };
-		D7F7700C1E08E3D100ECB684 /* Business.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7F76FF11E08E3D100ECB684 /* Business.swift */; };
-		D7F7700D1E08E3D100ECB684 /* Contract.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7F76FF21E08E3D100ECB684 /* Contract.swift */; };
-		D7F7700E1E08E3D100ECB684 /* Hours.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7F76FF31E08E3D100ECB684 /* Hours.swift */; };
-		D7F7700F1E08E3D100ECB684 /* Image.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7F76FF41E08E3D100ECB684 /* Image.swift */; };
-		D7F770101E08E3D100ECB684 /* Job.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7F76FF51E08E3D100ECB684 /* Job.swift */; };
-		D7F770111E08E3D100ECB684 /* JobSeeker.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7F76FF61E08E3D100ECB684 /* JobSeeker.swift */; };
-		D7F770121E08E3D100ECB684 /* JobStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7F76FF71E08E3D100ECB684 /* JobStatus.swift */; };
-		D7F770131E08E3D100ECB684 /* Location.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7F76FF81E08E3D100ECB684 /* Location.swift */; };
-		D7F770141E08E3D100ECB684 /* LoginRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7F76FF91E08E3D100ECB684 /* LoginRequest.swift */; };
-		D7F770151E08E3D100ECB684 /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7F76FFA1E08E3D100ECB684 /* Message.swift */; };
-		D7F770161E08E3D100ECB684 /* MJPObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7F76FFB1E08E3D100ECB684 /* MJPObject.swift */; };
-		D7F770171E08E3D100ECB684 /* MJPObjectWithDates.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7F76FFC1E08E3D100ECB684 /* MJPObjectWithDates.swift */; };
-		D7F770181E08E3D100ECB684 /* MJPObjectWithName.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7F76FFD1E08E3D100ECB684 /* MJPObjectWithName.swift */; };
-		D7F770191E08E3D100ECB684 /* MJPObjectWithNameDesc.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7F76FFE1E08E3D100ECB684 /* MJPObjectWithNameDesc.swift */; };
-		D7F7701A1E08E3D100ECB684 /* MJPObjectWithNameShortName.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7F76FFF1E08E3D100ECB684 /* MJPObjectWithNameShortName.swift */; };
-		D7F7701B1E08E3D100ECB684 /* MJPObjectWithNameShortNameDesc.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7F770001E08E3D100ECB684 /* MJPObjectWithNameShortNameDesc.swift */; };
-		D7F7701C1E08E3D100ECB684 /* Nationality.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7F770011E08E3D100ECB684 /* Nationality.swift */; };
-		D7F7701D1E08E3D100ECB684 /* PasswordChangeRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7F770021E08E3D100ECB684 /* PasswordChangeRequest.swift */; };
-		D7F7701E1E08E3D100ECB684 /* PasswordResetRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7F770031E08E3D100ECB684 /* PasswordResetRequest.swift */; };
-		D7F7701F1E08E3D100ECB684 /* Pitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7F770041E08E3D100ECB684 /* Pitch.swift */; };
-		D7F770201E08E3D100ECB684 /* Profile.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7F770051E08E3D100ECB684 /* Profile.swift */; };
-		D7F770211E08E3D100ECB684 /* RegisterRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7F770061E08E3D100ECB684 /* RegisterRequest.swift */; };
-		D7F770221E08E3D100ECB684 /* Role.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7F770071E08E3D100ECB684 /* Role.swift */; };
-		D7F770231E08E3D100ECB684 /* Sector.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7F770081E08E3D100ECB684 /* Sector.swift */; };
-		D7F770241E08E3D100ECB684 /* Sex.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7F770091E08E3D100ECB684 /* Sex.swift */; };
-		D7F770251E08E3D100ECB684 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7F7700A1E08E3D100ECB684 /* User.swift */; };
 		D7F770271E0918FF00ECB684 /* LoginController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7F770261E0918FF00ECB684 /* LoginController.swift */; };
 		D7F770291E09196300ECB684 /* MJPController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7F770281E09196300ECB684 /* MJPController.swift */; };
 		D7F7702B1E099D3E00ECB684 /* PopupController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7F7702A1E099D3E00ECB684 /* PopupController.swift */; };
@@ -126,9 +130,43 @@
 		D72AE41C1E106D77004C3F02 /* ApplicationCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ApplicationCell.swift; path = Views/ApplicationCell.swift; sourceTree = "<group>"; };
 		D72AE4231E1156C3004C3F02 /* CustomView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CustomView.swift; path = Views/CustomView.swift; sourceTree = "<group>"; };
 		D72AE42D1E11AD50004C3F02 /* ChangePasswordController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ChangePasswordController.swift; path = Controllers/ChangePasswordController.swift; sourceTree = "<group>"; };
-		D730C3F51EAE95C100332C6C /* InitialTokens.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = InitialTokens.swift; path = Models/InitialTokens.swift; sourceTree = "<group>"; };
-		D73CC7CE209FE4A000DE6546 /* JobPitch.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = JobPitch.swift; path = Models/JobPitch.swift; sourceTree = "<group>"; };
 		D73CC7D0209FF14100DE6546 /* JobPitchUploader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = JobPitchUploader.swift; path = Utils/JobPitchUploader.swift; sourceTree = "<group>"; };
+		D742268B20ACC579002D3F4C /* iCarousel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = iCarousel.h; path = Utils/iCarousel/iCarousel.h; sourceTree = "<group>"; };
+		D742268C20ACC579002D3F4C /* iCarousel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = iCarousel.m; path = Utils/iCarousel/iCarousel.m; sourceTree = "<group>"; };
+		D742268F20ACC5E2002D3F4C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/JobResource.xib; sourceTree = "<group>"; };
+		D742269120ACCB3A002D3F4C /* JobResource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = JobResource.swift; path = Views/JobResource.swift; sourceTree = "<group>"; };
+		D742269520ACCDED002D3F4C /* Application.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Application.swift; path = Models/api/Application.swift; sourceTree = "<group>"; };
+		D742269620ACCDED002D3F4C /* ApplicationStatus.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ApplicationStatus.swift; path = Models/api/ApplicationStatus.swift; sourceTree = "<group>"; };
+		D742269720ACCDED002D3F4C /* AuthToken.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AuthToken.swift; path = Models/api/AuthToken.swift; sourceTree = "<group>"; };
+		D742269820ACCDED002D3F4C /* Business.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Business.swift; path = Models/api/Business.swift; sourceTree = "<group>"; };
+		D742269920ACCDED002D3F4C /* Contract.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Contract.swift; path = Models/api/Contract.swift; sourceTree = "<group>"; };
+		D742269A20ACCDED002D3F4C /* Hours.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Hours.swift; path = Models/api/Hours.swift; sourceTree = "<group>"; };
+		D742269B20ACCDED002D3F4C /* Image.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Image.swift; path = Models/api/Image.swift; sourceTree = "<group>"; };
+		D742269C20ACCDED002D3F4C /* InitialTokens.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = InitialTokens.swift; path = Models/api/InitialTokens.swift; sourceTree = "<group>"; };
+		D742269D20ACCDED002D3F4C /* Job.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Job.swift; path = Models/api/Job.swift; sourceTree = "<group>"; };
+		D742269E20ACCDED002D3F4C /* JobPitch.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = JobPitch.swift; path = Models/api/JobPitch.swift; sourceTree = "<group>"; };
+		D742269F20ACCDED002D3F4C /* JobSeeker.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = JobSeeker.swift; path = Models/api/JobSeeker.swift; sourceTree = "<group>"; };
+		D74226A020ACCDED002D3F4C /* JobStatus.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = JobStatus.swift; path = Models/api/JobStatus.swift; sourceTree = "<group>"; };
+		D74226A120ACCDED002D3F4C /* Location.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Location.swift; path = Models/api/Location.swift; sourceTree = "<group>"; };
+		D74226A220ACCDED002D3F4C /* LoginRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = LoginRequest.swift; path = Models/api/LoginRequest.swift; sourceTree = "<group>"; };
+		D74226A320ACCDED002D3F4C /* Message.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Message.swift; path = Models/api/Message.swift; sourceTree = "<group>"; };
+		D74226A420ACCDED002D3F4C /* MJPObject.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MJPObject.swift; path = Models/api/MJPObject.swift; sourceTree = "<group>"; };
+		D74226A520ACCDED002D3F4C /* MJPObjectWithDates.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MJPObjectWithDates.swift; path = Models/api/MJPObjectWithDates.swift; sourceTree = "<group>"; };
+		D74226A620ACCDED002D3F4C /* MJPObjectWithName.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MJPObjectWithName.swift; path = Models/api/MJPObjectWithName.swift; sourceTree = "<group>"; };
+		D74226A720ACCDED002D3F4C /* MJPObjectWithNameDesc.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MJPObjectWithNameDesc.swift; path = Models/api/MJPObjectWithNameDesc.swift; sourceTree = "<group>"; };
+		D74226A820ACCDED002D3F4C /* MJPObjectWithNameShortName.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MJPObjectWithNameShortName.swift; path = Models/api/MJPObjectWithNameShortName.swift; sourceTree = "<group>"; };
+		D74226A920ACCDED002D3F4C /* MJPObjectWithNameShortNameDesc.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MJPObjectWithNameShortNameDesc.swift; path = Models/api/MJPObjectWithNameShortNameDesc.swift; sourceTree = "<group>"; };
+		D74226AA20ACCDED002D3F4C /* Nationality.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Nationality.swift; path = Models/api/Nationality.swift; sourceTree = "<group>"; };
+		D74226AB20ACCDED002D3F4C /* PasswordChangeRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PasswordChangeRequest.swift; path = Models/api/PasswordChangeRequest.swift; sourceTree = "<group>"; };
+		D74226AC20ACCDED002D3F4C /* PasswordResetRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PasswordResetRequest.swift; path = Models/api/PasswordResetRequest.swift; sourceTree = "<group>"; };
+		D74226AD20ACCDED002D3F4C /* Pitch.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Pitch.swift; path = Models/api/Pitch.swift; sourceTree = "<group>"; };
+		D74226AE20ACCDED002D3F4C /* Profile.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Profile.swift; path = Models/api/Profile.swift; sourceTree = "<group>"; };
+		D74226AF20ACCDED002D3F4C /* RegisterRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = RegisterRequest.swift; path = Models/api/RegisterRequest.swift; sourceTree = "<group>"; };
+		D74226B020ACCDED002D3F4C /* Role.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Role.swift; path = Models/api/Role.swift; sourceTree = "<group>"; };
+		D74226B120ACCDED002D3F4C /* Sector.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Sector.swift; path = Models/api/Sector.swift; sourceTree = "<group>"; };
+		D74226B220ACCDED002D3F4C /* Sex.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Sex.swift; path = Models/api/Sex.swift; sourceTree = "<group>"; };
+		D74226B320ACCDED002D3F4C /* User.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = User.swift; path = Models/api/User.swift; sourceTree = "<group>"; };
+		D74226D320ACCE12002D3F4C /* JobResourceModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = JobResourceModel.swift; path = Models/view/JobResourceModel.swift; sourceTree = "<group>"; };
 		D7425B131FC43F5700A6831E /* MJPPlayerController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MJPPlayerController.swift; path = Controllers/MJPPlayerController.swift; sourceTree = "<group>"; };
 		D749E34E1E09B479000FD0B1 /* ResetPasswordController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ResetPasswordController.swift; path = Controllers/ResetPasswordController.swift; sourceTree = "<group>"; };
 		D749E3501E09C09E000FD0B1 /* AppHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AppHelper.swift; path = Utils/AppHelper.swift; sourceTree = "<group>"; };
@@ -209,35 +247,6 @@
 		D7ECFBBE1E12FCEF00E2E071 /* JobSeekerProfileController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = JobSeekerProfileController.swift; path = Controllers/JobSeekerProfileController.swift; sourceTree = "<group>"; };
 		D7F4DE2F202383700018B3A9 /* IntroController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = IntroController.swift; path = Controllers/IntroController.swift; sourceTree = "<group>"; };
 		D7F76FEA1E08E05F00ECB684 /* API.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = API.swift; path = Utils/API.swift; sourceTree = "<group>"; };
-		D7F76FEC1E08E08200ECB684 /* Application.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Application.swift; path = Models/Application.swift; sourceTree = "<group>"; };
-		D7F76FEE1E08E09900ECB684 /* ApplicationStatus.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ApplicationStatus.swift; path = Models/ApplicationStatus.swift; sourceTree = "<group>"; };
-		D7F76FF01E08E3D100ECB684 /* AuthToken.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AuthToken.swift; path = Models/AuthToken.swift; sourceTree = "<group>"; };
-		D7F76FF11E08E3D100ECB684 /* Business.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Business.swift; path = Models/Business.swift; sourceTree = "<group>"; };
-		D7F76FF21E08E3D100ECB684 /* Contract.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Contract.swift; path = Models/Contract.swift; sourceTree = "<group>"; };
-		D7F76FF31E08E3D100ECB684 /* Hours.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Hours.swift; path = Models/Hours.swift; sourceTree = "<group>"; };
-		D7F76FF41E08E3D100ECB684 /* Image.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Image.swift; path = Models/Image.swift; sourceTree = "<group>"; };
-		D7F76FF51E08E3D100ECB684 /* Job.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Job.swift; path = Models/Job.swift; sourceTree = "<group>"; };
-		D7F76FF61E08E3D100ECB684 /* JobSeeker.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = JobSeeker.swift; path = Models/JobSeeker.swift; sourceTree = "<group>"; };
-		D7F76FF71E08E3D100ECB684 /* JobStatus.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = JobStatus.swift; path = Models/JobStatus.swift; sourceTree = "<group>"; };
-		D7F76FF81E08E3D100ECB684 /* Location.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Location.swift; path = Models/Location.swift; sourceTree = "<group>"; };
-		D7F76FF91E08E3D100ECB684 /* LoginRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = LoginRequest.swift; path = Models/LoginRequest.swift; sourceTree = "<group>"; };
-		D7F76FFA1E08E3D100ECB684 /* Message.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Message.swift; path = Models/Message.swift; sourceTree = "<group>"; };
-		D7F76FFB1E08E3D100ECB684 /* MJPObject.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MJPObject.swift; path = Models/MJPObject.swift; sourceTree = "<group>"; };
-		D7F76FFC1E08E3D100ECB684 /* MJPObjectWithDates.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MJPObjectWithDates.swift; path = Models/MJPObjectWithDates.swift; sourceTree = "<group>"; };
-		D7F76FFD1E08E3D100ECB684 /* MJPObjectWithName.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MJPObjectWithName.swift; path = Models/MJPObjectWithName.swift; sourceTree = "<group>"; };
-		D7F76FFE1E08E3D100ECB684 /* MJPObjectWithNameDesc.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MJPObjectWithNameDesc.swift; path = Models/MJPObjectWithNameDesc.swift; sourceTree = "<group>"; };
-		D7F76FFF1E08E3D100ECB684 /* MJPObjectWithNameShortName.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MJPObjectWithNameShortName.swift; path = Models/MJPObjectWithNameShortName.swift; sourceTree = "<group>"; };
-		D7F770001E08E3D100ECB684 /* MJPObjectWithNameShortNameDesc.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MJPObjectWithNameShortNameDesc.swift; path = Models/MJPObjectWithNameShortNameDesc.swift; sourceTree = "<group>"; };
-		D7F770011E08E3D100ECB684 /* Nationality.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Nationality.swift; path = Models/Nationality.swift; sourceTree = "<group>"; };
-		D7F770021E08E3D100ECB684 /* PasswordChangeRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PasswordChangeRequest.swift; path = Models/PasswordChangeRequest.swift; sourceTree = "<group>"; };
-		D7F770031E08E3D100ECB684 /* PasswordResetRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PasswordResetRequest.swift; path = Models/PasswordResetRequest.swift; sourceTree = "<group>"; };
-		D7F770041E08E3D100ECB684 /* Pitch.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Pitch.swift; path = Models/Pitch.swift; sourceTree = "<group>"; };
-		D7F770051E08E3D100ECB684 /* Profile.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Profile.swift; path = Models/Profile.swift; sourceTree = "<group>"; };
-		D7F770061E08E3D100ECB684 /* RegisterRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = RegisterRequest.swift; path = Models/RegisterRequest.swift; sourceTree = "<group>"; };
-		D7F770071E08E3D100ECB684 /* Role.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Role.swift; path = Models/Role.swift; sourceTree = "<group>"; };
-		D7F770081E08E3D100ECB684 /* Sector.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Sector.swift; path = Models/Sector.swift; sourceTree = "<group>"; };
-		D7F770091E08E3D100ECB684 /* Sex.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Sex.swift; path = Models/Sex.swift; sourceTree = "<group>"; };
-		D7F7700A1E08E3D100ECB684 /* User.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = User.swift; path = Models/User.swift; sourceTree = "<group>"; };
 		D7F770261E0918FF00ECB684 /* LoginController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = LoginController.swift; path = Controllers/LoginController.swift; sourceTree = "<group>"; };
 		D7F770281E09196300ECB684 /* MJPController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MJPController.swift; path = Controllers/MJPController.swift; sourceTree = "<group>"; };
 		D7F7702A1E099D3E00ECB684 /* PopupController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PopupController.swift; path = Controllers/PopupController.swift; sourceTree = "<group>"; };
@@ -300,6 +309,61 @@
 				D7CFBC6A1EF8E409003FC132 /* FileCell.swift */,
 			);
 			name = Cells;
+			sourceTree = "<group>";
+		};
+		D742268A20ACC567002D3F4C /* iCarousel */ = {
+			isa = PBXGroup;
+			children = (
+				D742268B20ACC579002D3F4C /* iCarousel.h */,
+				D742268C20ACC579002D3F4C /* iCarousel.m */,
+			);
+			name = iCarousel;
+			sourceTree = "<group>";
+		};
+		D742269320ACCDAA002D3F4C /* view */ = {
+			isa = PBXGroup;
+			children = (
+				D74226D320ACCE12002D3F4C /* JobResourceModel.swift */,
+			);
+			name = view;
+			sourceTree = "<group>";
+		};
+		D742269420ACCDBB002D3F4C /* api */ = {
+			isa = PBXGroup;
+			children = (
+				D742269520ACCDED002D3F4C /* Application.swift */,
+				D742269620ACCDED002D3F4C /* ApplicationStatus.swift */,
+				D742269720ACCDED002D3F4C /* AuthToken.swift */,
+				D742269820ACCDED002D3F4C /* Business.swift */,
+				D742269920ACCDED002D3F4C /* Contract.swift */,
+				D742269A20ACCDED002D3F4C /* Hours.swift */,
+				D742269B20ACCDED002D3F4C /* Image.swift */,
+				D742269C20ACCDED002D3F4C /* InitialTokens.swift */,
+				D742269D20ACCDED002D3F4C /* Job.swift */,
+				D742269E20ACCDED002D3F4C /* JobPitch.swift */,
+				D742269F20ACCDED002D3F4C /* JobSeeker.swift */,
+				D74226A020ACCDED002D3F4C /* JobStatus.swift */,
+				D74226A120ACCDED002D3F4C /* Location.swift */,
+				D74226A220ACCDED002D3F4C /* LoginRequest.swift */,
+				D74226A320ACCDED002D3F4C /* Message.swift */,
+				D74226A420ACCDED002D3F4C /* MJPObject.swift */,
+				D74226A520ACCDED002D3F4C /* MJPObjectWithDates.swift */,
+				D74226A620ACCDED002D3F4C /* MJPObjectWithName.swift */,
+				D74226A720ACCDED002D3F4C /* MJPObjectWithNameDesc.swift */,
+				D74226A820ACCDED002D3F4C /* MJPObjectWithNameShortName.swift */,
+				D74226A920ACCDED002D3F4C /* MJPObjectWithNameShortNameDesc.swift */,
+				D74226AA20ACCDED002D3F4C /* Nationality.swift */,
+				D74226AB20ACCDED002D3F4C /* PasswordChangeRequest.swift */,
+				D74226AC20ACCDED002D3F4C /* PasswordResetRequest.swift */,
+				D74226AD20ACCDED002D3F4C /* Pitch.swift */,
+				D74226AE20ACCDED002D3F4C /* Profile.swift */,
+				D74226AF20ACCDED002D3F4C /* RegisterRequest.swift */,
+				D74226B020ACCDED002D3F4C /* Role.swift */,
+				D74226B120ACCDED002D3F4C /* Sector.swift */,
+				D74226B220ACCDED002D3F4C /* Sex.swift */,
+				D74226B320ACCDED002D3F4C /* User.swift */,
+			);
+			name = api;
 			sourceTree = "<group>";
 		};
 		D749E35C1E0B6AC0000FD0B1 /* JobSeeker */ = {
@@ -410,6 +474,7 @@
 				D7B07B821E08DDE1005B9EBE /* AppDelegate.swift */,
 				D758ECEF1E1FD8D200430010 /* MyJobPitch-Bridging-Header.h */,
 				D7B07B891E08DDE1005B9EBE /* Assets.xcassets */,
+				D742268E20ACC5E2002D3F4C /* JobResource.xib */,
 				D7B07B861E08DDE1005B9EBE /* Main.storyboard */,
 				D7B07B8B1E08DDE1005B9EBE /* LaunchScreen.storyboard */,
 				D7B07B8E1E08DDE1005B9EBE /* Info.plist */,
@@ -451,6 +516,7 @@
 				D72AE4231E1156C3004C3F02 /* CustomView.swift */,
 				D749E3581E0B21C0000FD0B1 /* SwipeCard.swift */,
 				D7E934781F4BD90600299762 /* LoadingView.swift */,
+				D742269120ACCB3A002D3F4C /* JobResource.swift */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -458,37 +524,8 @@
 		D7F76FE71E08DFEB00ECB684 /* Models */ = {
 			isa = PBXGroup;
 			children = (
-				D7F76FEC1E08E08200ECB684 /* Application.swift */,
-				D7F76FEE1E08E09900ECB684 /* ApplicationStatus.swift */,
-				D7F76FF01E08E3D100ECB684 /* AuthToken.swift */,
-				D7F76FF11E08E3D100ECB684 /* Business.swift */,
-				D7F76FF21E08E3D100ECB684 /* Contract.swift */,
-				D7F76FF31E08E3D100ECB684 /* Hours.swift */,
-				D7F76FF41E08E3D100ECB684 /* Image.swift */,
-				D7F76FF51E08E3D100ECB684 /* Job.swift */,
-				D7F76FF61E08E3D100ECB684 /* JobSeeker.swift */,
-				D7F76FF71E08E3D100ECB684 /* JobStatus.swift */,
-				D7F76FF81E08E3D100ECB684 /* Location.swift */,
-				D7F76FF91E08E3D100ECB684 /* LoginRequest.swift */,
-				D7F76FFA1E08E3D100ECB684 /* Message.swift */,
-				D7F76FFB1E08E3D100ECB684 /* MJPObject.swift */,
-				D7F76FFC1E08E3D100ECB684 /* MJPObjectWithDates.swift */,
-				D7F76FFD1E08E3D100ECB684 /* MJPObjectWithName.swift */,
-				D7F76FFE1E08E3D100ECB684 /* MJPObjectWithNameDesc.swift */,
-				D7F76FFF1E08E3D100ECB684 /* MJPObjectWithNameShortName.swift */,
-				D7F770001E08E3D100ECB684 /* MJPObjectWithNameShortNameDesc.swift */,
-				D7F770011E08E3D100ECB684 /* Nationality.swift */,
-				D7F770021E08E3D100ECB684 /* PasswordChangeRequest.swift */,
-				D7F770031E08E3D100ECB684 /* PasswordResetRequest.swift */,
-				D7F770041E08E3D100ECB684 /* Pitch.swift */,
-				D73CC7CE209FE4A000DE6546 /* JobPitch.swift */,
-				D7F770051E08E3D100ECB684 /* Profile.swift */,
-				D7F770061E08E3D100ECB684 /* RegisterRequest.swift */,
-				D7F770071E08E3D100ECB684 /* Role.swift */,
-				D7F770081E08E3D100ECB684 /* Sector.swift */,
-				D7F770091E08E3D100ECB684 /* Sex.swift */,
-				D7F7700A1E08E3D100ECB684 /* User.swift */,
-				D730C3F51EAE95C100332C6C /* InitialTokens.swift */,
+				D742269420ACCDBB002D3F4C /* api */,
+				D742269320ACCDAA002D3F4C /* view */,
 			);
 			name = Models;
 			sourceTree = "<group>";
@@ -496,6 +533,7 @@
 		D7F76FE91E08E02F00ECB684 /* Utils */ = {
 			isa = PBXGroup;
 			children = (
+				D742268A20ACC567002D3F4C /* iCarousel */,
 				D78834161ECAAEE900D99F4B /* MDCSwipeToChoose */,
 				D76C903B1E238580009C35E4 /* SWRevealViewController */,
 				D7F76FEA1E08E05F00ECB684 /* API.swift */,
@@ -577,6 +615,7 @@
 				D7CFBBAC1EF7D294003FC132 /* GoogleService-Info.plist in Resources */,
 				D7B07B8D1E08DDE1005B9EBE /* LaunchScreen.storyboard in Resources */,
 				D76C90511E25173D009C35E4 /* help-recruiter.html in Resources */,
+				D742269020ACC5E2002D3F4C /* JobResource.xib in Resources */,
 				D7B07B8A1E08DDE1005B9EBE /* Assets.xcassets in Resources */,
 				D76C905A1E255540009C35E4 /* privacy.html in Resources */,
 				D76C90501E25173D009C35E4 /* help-jobseeker.html in Resources */,
@@ -693,97 +732,100 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D74226BC20ACCDED002D3F4C /* Job.swift in Sources */,
 				D7F7702B1E099D3E00ECB684 /* PopupController.swift in Sources */,
 				D7896AF11E0F0D6300533884 /* ApplicationDetailsController.swift in Sources */,
 				D7AF8DC91E1C997200C57DDC /* PitchController.swift in Sources */,
 				D7B6F5381E6466E50026A7BD /* JobDetailController.swift in Sources */,
+				D74226C520ACCDED002D3F4C /* MJPObjectWithName.swift in Sources */,
 				D78834291ECAAF3400D99F4B /* MDCSwipeOptions.m in Sources */,
 				D7B6F5361E640B2F0026A7BD /* MessageController0.swift in Sources */,
 				D7ECFBBB1E125F5E00E2E071 /* SelectionController.swift in Sources */,
-				D7F76FED1E08E08200ECB684 /* Application.swift in Sources */,
+				D74226C220ACCDED002D3F4C /* Message.swift in Sources */,
 				D76C905D1E261ABC009C35E4 /* JobProfileController.swift in Sources */,
 				D787F63F1E287D1400C47A88 /* LocationCell.swift in Sources */,
-				D7F7700F1E08E3D100ECB684 /* Image.swift in Sources */,
-				D7F770211E08E3D100ECB684 /* RegisterRequest.swift in Sources */,
 				D7F76FEB1E08E05F00ECB684 /* API.swift in Sources */,
 				D749E3531E0A36CD000FD0B1 /* APIConfigure.swift in Sources */,
 				D7AF8DCB1E1C9CEA00C57DDC /* CameraController.swift in Sources */,
-				D7F770251E08E3D100ECB684 /* User.swift in Sources */,
-				D7F770201E08E3D100ECB684 /* Profile.swift in Sources */,
 				D7C828031E51AC1000CD9C08 /* SelectJobController.swift in Sources */,
 				D78834301ECAAF3E00D99F4B /* MDCPanState.m in Sources */,
 				D749E3571E0B2026000FD0B1 /* SwipeController.swift in Sources */,
+				D74226D220ACCDED002D3F4C /* User.swift in Sources */,
 				D72AE42E1E11AD50004C3F02 /* ChangePasswordController.swift in Sources */,
+				D74226BE20ACCDED002D3F4C /* JobSeeker.swift in Sources */,
+				D74226CB20ACCDED002D3F4C /* PasswordResetRequest.swift in Sources */,
 				D7E9347B1F4C153B00299762 /* PitchUploader.swift in Sources */,
 				D72AE4131E1049BE004C3F02 /* SearchController.swift in Sources */,
+				D74226C620ACCDED002D3F4C /* MJPObjectWithNameDesc.swift in Sources */,
 				D72AE4161E1055AC004C3F02 /* MessageController.swift in Sources */,
 				D78834231ECAAF1B00D99F4B /* UIView+MDCBorderedLabel.m in Sources */,
-				D7F76FEF1E08E09900ECB684 /* ApplicationStatus.swift in Sources */,
+				D74226BB20ACCDED002D3F4C /* InitialTokens.swift in Sources */,
+				D74226C920ACCDED002D3F4C /* Nationality.swift in Sources */,
+				D74226BA20ACCDED002D3F4C /* Image.swift in Sources */,
 				D76C90461E238C90009C35E4 /* SideMenuController.swift in Sources */,
+				D74226B820ACCDED002D3F4C /* Contract.swift in Sources */,
+				D74226CF20ACCDED002D3F4C /* Role.swift in Sources */,
+				D74226C820ACCDED002D3F4C /* MJPObjectWithNameShortNameDesc.swift in Sources */,
+				D74226CE20ACCDED002D3F4C /* RegisterRequest.swift in Sources */,
 				D7ECFBBF1E12FCEF00E2E071 /* JobSeekerProfileController.swift in Sources */,
+				D74226C120ACCDED002D3F4C /* LoginRequest.swift in Sources */,
+				D74226BD20ACCDED002D3F4C /* JobPitch.swift in Sources */,
 				D7CFBC6B1EF8E409003FC132 /* FileCell.swift in Sources */,
 				D73CC7D1209FF14100DE6546 /* JobPitchUploader.swift in Sources */,
-				D7F770171E08E3D100ECB684 /* MJPObjectWithDates.swift in Sources */,
 				D7ECFBBD1E12D9A100E2E071 /* MapController.swift in Sources */,
 				D788341D1ECAAF0600D99F4B /* UIColor+MDCRGB8Bit.m in Sources */,
 				D7896AEF1E0CC51300533884 /* JobSeekerDetailController.swift in Sources */,
-				D7F7700C1E08E3D100ECB684 /* Business.swift in Sources */,
 				D7B7D8C71EFCFFE300649A5F /* DropboxController.swift in Sources */,
-				D7F770141E08E3D100ECB684 /* LoginRequest.swift in Sources */,
+				D74226C420ACCDED002D3F4C /* MJPObjectWithDates.swift in Sources */,
+				D74226C020ACCDED002D3F4C /* Location.swift in Sources */,
+				D74226B620ACCDED002D3F4C /* AuthToken.swift in Sources */,
 				D7F4DE30202383700018B3A9 /* IntroController.swift in Sources */,
-				D7F770121E08E3D100ECB684 /* JobStatus.swift in Sources */,
 				D787F6331E2879F900C47A88 /* BusinessListController.swift in Sources */,
-				D7F7701C1E08E3D100ECB684 /* Nationality.swift in Sources */,
-				D730C3F61EAE95C100332C6C /* InitialTokens.swift in Sources */,
-				D7F770231E08E3D100ECB684 /* Sector.swift in Sources */,
+				D74226C320ACCDED002D3F4C /* MJPObject.swift in Sources */,
+				D74226BF20ACCDED002D3F4C /* JobStatus.swift in Sources */,
+				D74226D120ACCDED002D3F4C /* Sex.swift in Sources */,
+				D74226D020ACCDED002D3F4C /* Sector.swift in Sources */,
 				D7F770271E0918FF00ECB684 /* LoginController.swift in Sources */,
-				D7F7701F1E08E3D100ECB684 /* Pitch.swift in Sources */,
 				D7896AED1E0C85BF00533884 /* JobCell.swift in Sources */,
-				D7F770131E08E3D100ECB684 /* Location.swift in Sources */,
 				D7896AEB1E0C854600533884 /* LocationDetailController.swift in Sources */,
-				D7F770161E08E3D100ECB684 /* MJPObject.swift in Sources */,
 				D78834201ECAAF0F00D99F4B /* MDCViewState.m in Sources */,
-				D7F7700B1E08E3D100ECB684 /* AuthToken.swift in Sources */,
-				D7F770221E08E3D100ECB684 /* Role.swift in Sources */,
-				D7F7701E1E08E3D100ECB684 /* PasswordResetRequest.swift in Sources */,
-				D7F770181E08E3D100ECB684 /* MJPObjectWithName.swift in Sources */,
-				D7F7701D1E08E3D100ECB684 /* PasswordChangeRequest.swift in Sources */,
 				D76C903E1E23858C009C35E4 /* SWRevealViewController.m in Sources */,
+				D74226C720ACCDED002D3F4C /* MJPObjectWithNameShortName.swift in Sources */,
 				D749E3591E0B21C0000FD0B1 /* SwipeCard.swift in Sources */,
+				D74226B720ACCDED002D3F4C /* Business.swift in Sources */,
 				D72AE4111E10470A004C3F02 /* MessageListController.swift in Sources */,
 				D72AE41D1E106D77004C3F02 /* ApplicationCell.swift in Sources */,
+				D742269220ACCB3A002D3F4C /* JobResource.swift in Sources */,
 				D787F6371E287A5000C47A88 /* BusinessEditController.swift in Sources */,
+				D74226B520ACCDED002D3F4C /* ApplicationStatus.swift in Sources */,
+				D74226CD20ACCDED002D3F4C /* Profile.swift in Sources */,
 				D7425B141FC43F5700A6831E /* MJPPlayerController.swift in Sources */,
-				D7F770241E08E3D100ECB684 /* Sex.swift in Sources */,
+				D742268D20ACC579002D3F4C /* iCarousel.m in Sources */,
+				D74226D420ACCE12002D3F4C /* JobResourceModel.swift in Sources */,
 				D787F63B1E287A8B00C47A88 /* JobEditController.swift in Sources */,
-				D7F7700D1E08E3D100ECB684 /* Contract.swift in Sources */,
 				D787F6351E287A1F00C47A88 /* BusinessDetailController.swift in Sources */,
-				D7F770111E08E3D100ECB684 /* JobSeeker.swift in Sources */,
 				D7F770291E09196300ECB684 /* MJPController.swift in Sources */,
-				D7F7701A1E08E3D100ECB684 /* MJPObjectWithNameShortName.swift in Sources */,
 				D72AE4241E1156C3004C3F02 /* CustomView.swift in Sources */,
 				D78834381ECAAF4B00D99F4B /* UIView+MDCSwipeToChoose.m in Sources */,
-				D7F7701B1E08E3D100ECB684 /* MJPObjectWithNameShortNameDesc.swift in Sources */,
 				D72AE41B1E106D0A004C3F02 /* ApplicationListController.swift in Sources */,
 				D7B07B831E08DDE1005B9EBE /* AppDelegate.swift in Sources */,
 				D7E934791F4BD90600299762 /* LoadingView.swift in Sources */,
+				D74226B420ACCDED002D3F4C /* Application.swift in Sources */,
 				D76C90401E238AAF009C35E4 /* SideMenuCell.swift in Sources */,
 				D76C90551E2540D1009C35E4 /* HelpController.swift in Sources */,
+				D74226CC20ACCDED002D3F4C /* Pitch.swift in Sources */,
 				D78834371ECAAF4B00D99F4B /* MDCSwipeToChooseView.m in Sources */,
 				D787F63D1E287C8400C47A88 /* BusinessCell.swift in Sources */,
-				D7F770191E08E3D100ECB684 /* MJPObjectWithNameDesc.swift in Sources */,
 				D749E3511E09C09E000FD0B1 /* AppHelper.swift in Sources */,
-				D7F770151E08E3D100ECB684 /* Message.swift in Sources */,
 				D788342A1ECAAF3400D99F4B /* MDCSwipeToChooseViewOptions.m in Sources */,
 				D7CFBC691EF871A4003FC132 /* GoogleDriveController.swift in Sources */,
 				D788341C1ECAAF0600D99F4B /* MDCGeometry.m in Sources */,
 				D72AE4191E1057B0004C3F02 /* MessageCell.swift in Sources */,
 				D76C90531E25405A009C35E4 /* WebViewController.swift in Sources */,
-				D7F7700E1E08E3D100ECB684 /* Hours.swift in Sources */,
 				D787F6391E287A6700C47A88 /* LocationEditController.swift in Sources */,
-				D7F770101E08E3D100ECB684 /* Job.swift in Sources */,
-				D73CC7CF209FE4A000DE6546 /* JobPitch.swift in Sources */,
 				D749E34F1E09B479000FD0B1 /* ResetPasswordController.swift in Sources */,
+				D74226B920ACCDED002D3F4C /* Hours.swift in Sources */,
+				D74226CA20ACCDED002D3F4C /* PasswordChangeRequest.swift in Sources */,
 				D749E3551E0A8724000FD0B1 /* AppData.swift in Sources */,
 				D78834311ECAAF3E00D99F4B /* MDCSwipeResult.m in Sources */,
 			);
@@ -792,6 +834,14 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXVariantGroup section */
+		D742268E20ACC5E2002D3F4C /* JobResource.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				D742268F20ACC5E2002D3F4C /* Base */,
+			);
+			name = JobResource.xib;
+			sourceTree = "<group>";
+		};
 		D7B07B861E08DDE1005B9EBE /* Main.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (

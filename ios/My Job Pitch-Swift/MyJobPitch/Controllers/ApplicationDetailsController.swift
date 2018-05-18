@@ -8,13 +8,9 @@
 
 import UIKit
 import GoogleMaps
-import JTSImageViewController
-import AVFoundation
-import AVKit
 
 class ApplicationDetailsController: MJPController {
 
-    @IBOutlet weak var imgView: UIImageView!
     @IBOutlet weak var jobTitle: UILabel!
     @IBOutlet weak var jobBusinessLocation: UILabel!
     @IBOutlet weak var contractLabel: UILabel!
@@ -25,10 +21,10 @@ class ApplicationDetailsController: MJPController {
     @IBOutlet weak var applyView: UIView!
     @IBOutlet weak var messageView: UIView!
     @IBOutlet weak var jobDescription: UILabel!
-    @IBOutlet weak var pitchView: UIView!
-    @IBOutlet weak var pitchThumbnail: UIImageView!
     @IBOutlet weak var locationDescription: UILabel!
     @IBOutlet weak var mapView: GMSMapView!
+    @IBOutlet weak var carousel: iCarousel!
+    @IBOutlet weak var pageControl: UIPageControl!
     
     var job: Job!
     var application: Application!
@@ -37,6 +33,8 @@ class ApplicationDetailsController: MJPController {
     
     var jobSeeker: JobSeeker!
     var profile: Profile!
+    
+    var resources = Array<JobResourceModel>()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -63,12 +61,22 @@ class ApplicationDetailsController: MJPController {
     
     func load() {
         
+        let pitch = job.getPitch()
+        if pitch != nil {
+            let resource = JobResourceModel()
+            resource.thumbnail = pitch?.thumbnail
+            resource.video = pitch?.video
+            resources.append(resource)
+        }
+        
+        let logoModel = JobResourceModel()
+        logoModel.isLogo = true
         let image = job.getImage()
         if image != nil {
-            AppHelper.loadImageURL(imageUrl: (image?.image)!, imageView: imgView, completion: nil)
-        } else {
-            imgView.image = UIImage(named: "default-logo")
+            logoModel.thumbnail = image?.image
+            logoModel.image = image?.image
         }
+        resources.append(logoModel)
         
         let location = job.locationData!
         let contract = AppData.getContract(job.contract)!
@@ -93,12 +101,6 @@ class ApplicationDetailsController: MJPController {
             messageView.removeFromSuperview()
         }
         
-        if job.getPitch() == nil {
-            pitchView.removeFromSuperview()
-        } else {
-            AppHelper.loadImageURL(imageUrl: (job.getPitch()?.thumbnail)!, imageView: pitchThumbnail, completion: nil)
-        }
-        
         var position = CLLocationCoordinate2DMake(location.latitude.doubleValue, location.longitude.doubleValue)
         if (application != nil) {
             let marker = GMSMarker()
@@ -118,24 +120,9 @@ class ApplicationDetailsController: MJPController {
             circ.map = mapView
         }
         mapView.camera = GMSCameraPosition.camera(withTarget: position, zoom: 14)
-    }
-    
-    @IBAction func imageClickAction(_ sender: Any) {
-    
-        let imageInfo = JTSImageInfo()
-        imageInfo.referenceRect = imgView.frame
-        imageInfo.referenceView = view
         
-        let image = job.getImage()
-        if image != nil {
-            imageInfo.imageURL = URL(string: (image?.image)!)
-        } else {
-            imageInfo.image = UIImage(named: "default-logo")
-        }
-        
-        let imageViewer = JTSImageViewController.init(imageInfo: imageInfo, mode: .image, backgroundStyle: .init(rawValue: 0))
-        imageViewer?.show(from: self, transition: .fromOriginalPosition)
-        
+        pageControl.numberOfPages = resources.count
+        carousel.reloadData()
     }
     
     @IBAction func removeAction(_ sender: Any) {
@@ -157,15 +144,6 @@ class ApplicationDetailsController: MJPController {
     @IBAction func messageAction(_ sender: Any) {
         MessageController0.showModal(application: application)
     }
-    
-    @IBAction func videoPitchAction(_ sender: Any) {
-        if let video = job.getPitch()?.video {
-            let player = AVPlayer(url: URL(string: video)!)
-            let playerController = AVPlayerViewController();
-            playerController.player = player
-            present(playerController, animated: true, completion: nil)
-        }
-    }
 
     static func pushController(job: Job!,
                                application: Application!,
@@ -177,4 +155,42 @@ class ApplicationDetailsController: MJPController {
         AppHelper.getFrontController().navigationController?.pushViewController(controller, animated: true)
     }
 
+}
+
+extension ApplicationDetailsController: iCarouselDataSource {
+    
+    func numberOfItems(in carousel: iCarousel) -> Int {
+        return resources.count
+    }
+    
+    func carousel(_ carousel: iCarousel, viewForItemAt index: Int, reusing view: UIView?) -> UIView {
+        //create new view if no view is available for recycling
+        var jobResource: JobResource!
+        if view == nil {
+            jobResource = JobResource.instanceFromNib(carousel.bounds)
+            jobResource.controller = self
+        } else {
+            jobResource = view as! JobResource
+        }
+        
+        jobResource.model = resources[index]
+        return jobResource
+    }
+    
+}
+
+extension ApplicationDetailsController: iCarouselDelegate {
+//    func carousel(_ carousel: iCarousel, valueFor option: iCarouselOption, withDefault value: CGFloat) -> CGFloat {
+//        switch option {
+//        case .wrap:
+//            return 1
+//        default:
+//            return value
+//        }
+//    }
+    
+    func carouselCurrentItemIndexDidChange(_ carousel: iCarousel) {
+        pageControl.currentPage = carousel.currentItemIndex
+    }
+    
 }

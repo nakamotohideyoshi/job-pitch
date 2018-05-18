@@ -4,3 +4,4 @@
 
 #import "SWRevealViewController.h"
 #import "MDCSwipeToChoose.h"
+#import "iCarousel.h"

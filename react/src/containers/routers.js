@@ -8,9 +8,7 @@ import Reset from 'containers/auth/Reset';
 import SelectType from 'containers/auth/SelectType';
 
 import RCRoute from 'containers/recruiter/Route';
-import FindTalent from 'containers/recruiter/Applications/FindTalent';
-import MyApplications from 'containers/recruiter/Applications/MyApplications';
-import MyConnections from 'containers/recruiter/Applications/MyConnections';
+import RCApplications from 'containers/recruiter/Applications';
 import RCJobseeker from 'containers/recruiter/Applications/Jobseeker';
 import BusinessList from 'containers/recruiter/Jobs/BusinessList';
 import BusinessEdit from 'containers/recruiter/Jobs/BusinessEdit';
@@ -43,15 +41,15 @@ export default () => {
 
       <Redirect exact from="/recruiter" to="/recruiter/applications/find" />
       <Redirect exact from="/recruiter/applications" to="/recruiter/applications/find" />
-      <RCRoute exact path="/recruiter/applications/find" component={FindTalent} />
-      <RCRoute exact path="/recruiter/applications/find/:jobId" component={FindTalent} />
-      <RCRoute exact path="/recruiter/applications/find/:jobId/:jobseekerId" component={FindTalent} />
-      <RCRoute exact path="/recruiter/applications/apps" component={MyApplications} />
-      <RCRoute exact path="/recruiter/applications/apps/:jobId" component={MyApplications} />
-      <RCRoute exact path="/recruiter/applications/conns" component={MyConnections} />
-      <RCRoute exact path="/recruiter/applications/conns/:jobId" component={MyConnections} />
-      <RCRoute exact path="/recruiter/applications/shortlist" component={MyConnections} />
-      <RCRoute exact path="/recruiter/applications/shortlist/:jobId" component={MyConnections} />
+      <RCRoute exact path="/recruiter/applications/find" component={RCApplications} />
+      <RCRoute exact path="/recruiter/applications/find/:jobId" component={RCApplications} />
+      <RCRoute exact path="/recruiter/applications/find/:jobId/:jobseekerId" component={RCApplications} />
+      <RCRoute exact path="/recruiter/applications/apps" component={RCApplications} />
+      <RCRoute exact path="/recruiter/applications/apps/:jobId" component={RCApplications} />
+      <RCRoute exact path="/recruiter/applications/conns" component={RCApplications} />
+      <RCRoute exact path="/recruiter/applications/conns/:jobId" component={RCApplications} />
+      <RCRoute exact path="/recruiter/applications/shortlist" component={RCApplications} />
+      <RCRoute exact path="/recruiter/applications/shortlist/:jobId" component={RCApplications} />
       <RCRoute exact path="/recruiter/apps/:jobId/:jobseekerId" component={RCJobseeker} />
 
       <Redirect exact from="/recruiter/jobs" to="/recruiter/jobs/business" />

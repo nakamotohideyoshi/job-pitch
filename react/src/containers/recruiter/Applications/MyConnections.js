@@ -1,15 +1,13 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import { withRouter } from 'react-router-dom';
 import Truncate from 'react-truncate';
 import { List, Modal, Avatar, Tooltip } from 'antd';
 
-import { getApplications, updateApplication, removeApplication } from 'redux/applications';
-import DATA from 'utils/data';
+import { updateApplication, removeApplication } from 'redux/applications';
 import * as helper from 'utils/helper';
 
 import { AlertMsg, Loading, ListEx, Icons, JobseekerDetails } from 'components';
-import Header from '../Header';
-import Wrapper from '../styled';
 
 const { confirm } = Modal;
 
@@ -19,40 +17,11 @@ class MyConnections extends React.Component {
   };
 
   componentWillMount() {
-    const { location } = this.props;
-    const { appId } = location.state || {};
-    if (appId) {
-      this.setState({ selectedId: appId });
-    } else {
-      this.getApplications();
+    const { tab, id } = this.props.location.state || {};
+    if (tab === 'conns') {
+      this.setState({ selectedId: id });
     }
   }
-
-  componentWillReceiveProps({ job, shortlist }) {
-    if (this.props.job !== job || this.props.shortlist !== shortlist) {
-      this.getApplications(job);
-    }
-
-    const { selectedId } = this.state;
-    if (selectedId) {
-      const { applications } = this.props;
-      const selectedApp = applications && helper.getItemByID(applications, selectedId);
-      !selectedApp && this.onSelect();
-    }
-  }
-
-  getApplications = job => {
-    const jobId = (job || this.props.job || {}).id;
-    const { getApplications, shortlist } = this.props;
-    jobId &&
-      getApplications({
-        params: {
-          job: jobId,
-          status: DATA.APP.ESTABLISHED,
-          shortlist: shortlist && 1
-        }
-      });
-  };
 
   onSelect = selectedId => this.setState({ selectedId });
 
@@ -94,11 +63,11 @@ class MyConnections extends React.Component {
     });
   };
 
-  filterOption = ({ job_seeker }) =>
+  filterOption = application =>
     helper
-      .getFullJSName(job_seeker)
+      .getFullJSName(application.job_seeker)
       .toLowerCase()
-      .indexOf(this.props.searchText.toLowerCase()) >= 0;
+      .indexOf(this.props.searchText) >= 0;
 
   renderApplication = app => {
     const { id, job_seeker, loading } = app;
@@ -155,25 +124,20 @@ class MyConnections extends React.Component {
   );
 
   render() {
-    const { job, applications, error } = this.props;
+    const { job, applications } = this.props;
     const selectedApp = helper.getItemByID(applications, this.state.selectedId);
     return (
-      <Wrapper className="container">
-        <Header />
-        <div className="content">
-          {job && (
-            <ListEx
-              data={applications}
-              loadingSize="large"
-              pagination={{ pageSize: 10 }}
-              filterOption={this.filterOption}
-              error={error}
-              renderItem={this.renderApplication}
-              emptyRender={this.renderEmpty}
-            />
-          )}
-        </div>
-
+      <div className="content">
+        {job && (
+          <ListEx
+            data={applications}
+            loadingSize="large"
+            pagination={{ pageSize: 10 }}
+            renderItem={this.renderApplication}
+            filterOption={this.filterOption}
+            emptyRender={this.renderEmpty}
+          />
+        )}
         {selectedApp && (
           <JobseekerDetails
             title="Application Details"
@@ -184,32 +148,14 @@ class MyConnections extends React.Component {
             onClose={() => this.onSelect()}
           />
         )}
-      </Wrapper>
+      </div>
     );
   }
 }
 
-export default connect(
-  (state, { match }) => {
-    const jobId = helper.str2int(match.params.jobId);
-    const job = helper.getItemByID(state.rc_jobs.jobs, jobId);
-    const { applications, error, searchText } = state.applications;
-    const shortlist = match.path.split('/')[3] === 'shortlist';
-    return {
-      job,
-      shortlist,
-      applications: applications
-        ? applications.filter(
-            ({ status, shortlisted }) => status === DATA.APP.ESTABLISHED && (!shortlist || shortlisted)
-          )
-        : null,
-      error,
-      searchText
-    };
-  },
-  {
-    getApplications,
+export default withRouter(
+  connect(null, {
     updateApplication,
     removeApplication
-  }
-)(MyConnections);
+  })(MyConnections)
+);

@@ -10,58 +10,43 @@ import { Loading, AlertMsg } from 'components';
 
 class RCJobseeker extends React.Component {
   componentWillMount() {
-    if (this.props.job) {
-      this.findJobseekers();
-    } else {
-      this.goFind();
+    const { job } = this.props;
+    if (!job) {
+      this.props.history.replace('/recruiter/applications/find');
+      return;
     }
+
+    this.props.findJobseekers({
+      params: {
+        job: job.id
+      }
+    });
+    this.props.getApplications({
+      params: {
+        job: job.id
+      }
+    });
   }
 
   componentWillReceiveProps({ job, jobseekers, jobseeker, applications, application, history }) {
-    if (!this.props.jobseekers && jobseekers) {
+    if (jobseekers && applications) {
       if (jobseeker) {
-        history.replace(`/recruiter/applications/find/${job.id}/`, { jobseekerId: jobseeker.id });
-      } else {
-        this.getApplications();
+        history.replace(`/recruiter/applications/find/${job.id}/`, { tab: 'find', id: jobseeker.id });
+        return;
       }
-      return;
-    }
-    if (!this.props.applications && applications) {
       if (application) {
         if (application.status === DATA.APP.CREATED) {
-          history.replace(`/recruiter/applications/apps/${job.id}/`, { applicationId: application.id });
+          history.replace(`/recruiter/applications/apps/${job.id}/`, { tab: 'apps', id: application.id });
           return;
         }
         if (application.status === DATA.APP.ESTABLISHED) {
-          history.replace(`/recruiter/applications/conns/${job.id}/`, { applicationId: application.id });
+          history.replace(`/recruiter/applications/conns/${job.id}/`, { tab: 'conns', id: application.id });
           return;
         }
-        this.goFind();
       }
+      this.props.history.replace('/recruiter/applications/find');
     }
   }
-
-  findJobseekers = () => {
-    const { job, findJobseekers } = this.props;
-    findJobseekers({
-      params: {
-        job: job.id
-      }
-    });
-  };
-
-  getApplications = () => {
-    const { job, getApplications } = this.props;
-    getApplications({
-      params: {
-        job: job.id
-      }
-    });
-  };
-
-  goFind = () => {
-    this.props.history.replace('/recruiter/applications/find');
-  };
 
   render() {
     return (
@@ -82,11 +67,16 @@ export default connect(
   (state, { match }) => {
     const jobId = helper.str2int(match.params.jobId);
     const job = helper.getItemByID(state.rc_jobs.jobs, jobId);
-    const { jobseekers, error: error1 } = state.rc_find;
-    const { applications, error: error2 } = state.applications;
+
     const jobseekerId = helper.str2int(match.params.jobseekerId);
+
+    const { jobseekers, error: error1 } = state.rc_find;
     const jobseeker = helper.getItemByID(jobseekers || [], jobseekerId);
-    const application = (applications || []).filter(({ job_seeker }) => job_seeker.id === jobseekerId)[0];
+
+    const { applications, error: error2 } = state.applications;
+    const application = (applications || []).filter(
+      ({ status, job_seeker }) => status !== DATA.APP.DELETED && job_seeker.id === jobseekerId
+    )[0];
     return {
       job,
       jobseeker,

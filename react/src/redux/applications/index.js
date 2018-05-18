@@ -1,3 +1,4 @@
+import { LOCATION_CHANGE } from 'react-router-redux';
 import { createAction, handleActions } from 'redux-actions';
 import { requestPending, requestSuccess, requestFail } from 'utils/request';
 import * as C from 'redux/constants';
@@ -20,8 +21,7 @@ export const sendMessage = createAction(C.SEND_MESSAGE);
 
 const initialState = {
   applications: null,
-  error: null,
-  searchText: ''
+  error: null
 };
 
 export default handleActions(
@@ -120,6 +120,17 @@ export default handleActions(
           id: appId,
           messages
         })
+      };
+    },
+
+    // ---- change location ----
+
+    [LOCATION_CHANGE]: (state, { payload }) => {
+      const key = payload.pathname.split('/')[2];
+      const clear = key !== 'applications' && key !== 'messages';
+      return {
+        ...state,
+        applications: clear ? null : state.applications
       };
     }
   },

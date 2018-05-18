@@ -1,15 +1,14 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import { withRouter } from 'react-router-dom';
 import Truncate from 'react-truncate';
 import { List, Modal, Avatar, Tooltip } from 'antd';
 
-import { getApplications, connectApplication, removeApplication } from 'redux/applications';
+import { connectApplication, removeApplication } from 'redux/applications';
 import DATA from 'utils/data';
 import * as helper from 'utils/helper';
 
 import { AlertMsg, Loading, ListEx, Icons, JobseekerDetails } from 'components';
-import Header from '../Header';
-import Wrapper from '../styled';
 
 const { confirm } = Modal;
 
@@ -19,45 +18,18 @@ class MyApplications extends React.Component {
   };
 
   componentWillMount() {
-    const { location } = this.props;
-    const { appId } = location.state || {};
-    if (appId) {
-      this.setState({ selectedId: appId });
-    } else {
-      this.getApplications();
+    const { tab, id } = this.props.location.state || {};
+    if (tab === 'apps') {
+      this.setState({ selectedId: id });
     }
   }
-
-  componentWillReceiveProps({ job }) {
-    if (this.props.job !== job) {
-      this.getApplications(job);
-    }
-
-    const { selectedId } = this.state;
-    if (selectedId) {
-      const { applications } = this.props;
-      const selectedApp = applications && helper.getItemByID(applications, selectedId);
-      !selectedApp && this.onSelect();
-    }
-  }
-
-  getApplications = job => {
-    const jobId = (job || this.props.job || {}).id;
-    jobId &&
-      this.props.getApplications({
-        params: {
-          job: jobId,
-          status: DATA.APP.CREATED
-        }
-      });
-  };
 
   onSelect = selectedId => this.setState({ selectedId });
 
   onConnect = ({ id }, event) => {
     event && event.stopPropagation();
 
-    const { business, connectApplication, history } = this.props;
+    const { business } = this.props;
     if (business.tokens === 0) {
       confirm({
         content: 'You need 1 credit',
@@ -65,7 +37,7 @@ class MyApplications extends React.Component {
         cancelText: 'Cancel',
         maskClosable: true,
         onOk: () => {
-          history.push(`/recruiter/settings/credits/${business.id}`);
+          this.props.history.push(`/recruiter/settings/credits/${business.id}`);
         }
       });
       return;
@@ -77,7 +49,7 @@ class MyApplications extends React.Component {
       cancelText: 'Cancel',
       maskClosable: true,
       onOk: () => {
-        connectApplication({
+        this.props.connectApplication({
           id,
           data: {
             id,
@@ -117,11 +89,11 @@ class MyApplications extends React.Component {
     });
   };
 
-  filterOption = ({ job_seeker }) =>
+  filterOption = application =>
     helper
-      .getFullJSName(job_seeker)
+      .getFullJSName(application.job_seeker)
       .toLowerCase()
-      .indexOf(this.props.searchText.toLowerCase()) >= 0;
+      .indexOf(this.props.searchText) >= 0;
 
   renderApplication = app => {
     const { id, job_seeker, loading } = app;
@@ -170,26 +142,21 @@ class MyApplications extends React.Component {
   );
 
   render() {
-    const { job, applications, error } = this.props;
+    const { job, applications } = this.props;
     const selectedApp = applications && helper.getItemByID(applications, this.state.selectedId);
 
     return (
-      <Wrapper className="container">
-        <Header />
-        <div className="content">
-          {job && (
-            <ListEx
-              data={applications}
-              loadingSize="large"
-              pagination={{ pageSize: 10 }}
-              filterOption={this.filterOption}
-              error={error}
-              renderItem={this.renderApplication}
-              emptyRender={this.renderEmpty}
-            />
-          )}
-        </div>
-
+      <div className="content">
+        {job && (
+          <ListEx
+            data={applications}
+            loadingSize="large"
+            pagination={{ pageSize: 10 }}
+            renderItem={this.renderApplication}
+            filterOption={this.filterOption}
+            emptyRender={this.renderEmpty}
+          />
+        )}
         {selectedApp && (
           <JobseekerDetails
             title="Application Details"
@@ -199,31 +166,14 @@ class MyApplications extends React.Component {
             onClose={() => this.onSelect()}
           />
         )}
-      </Wrapper>
+      </div>
     );
   }
 }
 
-export default connect(
-  (state, { match }) => {
-    const { businesses, selectedId } = state.rc_businesses;
-    const business = helper.getItemByID(businesses || [], selectedId);
-
-    const jobId = helper.str2int(match.params.jobId);
-    const job = helper.getItemByID(state.rc_jobs.jobs, jobId);
-    const { applications, error, searchText } = state.applications;
-
-    return {
-      business,
-      job,
-      applications: applications ? applications.filter(({ status }) => status === DATA.APP.CREATED) : null,
-      error,
-      searchText
-    };
-  },
-  {
-    getApplications,
+export default withRouter(
+  connect(null, {
     connectApplication,
     removeApplication
-  }
-)(MyApplications);
+  })(MyApplications)
+);

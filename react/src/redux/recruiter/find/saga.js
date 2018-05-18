@@ -1,4 +1,4 @@
-import { takeLatest } from 'redux-saga/effects';
+import { takeLatest, call, put } from 'redux-saga/effects';
 import * as C from 'redux/constants';
 import { weakRequest, getRequest, postRequest } from 'utils/request';
 
@@ -14,17 +14,23 @@ import { weakRequest, getRequest, postRequest } from 'utils/request';
 //   yield put({ type: requestSuccess(C.RC_SELECT_BUSINESS), payload: updatedBusiness });
 // }
 
-const findJobseekers = weakRequest(
-  getRequest({
-    url: '/api/job-seekers/'
-  })
-);
+const findJobseekers = getRequest({
+  url: '/api/job-seekers/'
+});
 
-const connectJobseeker = weakRequest(
-  postRequest({
-    url: `/api/applications/`
-  })
-);
+function* connectJobseeker(action) {
+  const result = yield call(postRequest({ url: `/api/applications/` }), action);
+  if (result) {
+    yield put({
+      type: C.GET_APPLICATIONS,
+      payload: {
+        params: {
+          job: action.payload.data.id
+        }
+      }
+    });
+  }
+}
 
 export default function* sagas() {
   yield takeLatest(C.RC_FIND_JOBSEEKERS, findJobseekers);

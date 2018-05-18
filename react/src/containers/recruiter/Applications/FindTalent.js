@@ -1,5 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import { withRouter } from 'react-router-dom';
 import Truncate from 'react-truncate';
 import { List, Modal, Avatar, Tooltip } from 'antd';
 
@@ -7,8 +8,6 @@ import { findJobseekers, connectJobseeker, removeJobseeker } from 'redux/recruit
 import * as helper from 'utils/helper';
 
 import { AlertMsg, Loading, ListEx, Icons, JobseekerDetails } from 'components';
-import Header from '../Header';
-import Wrapper from '../styled';
 
 const { confirm } = Modal;
 
@@ -18,25 +17,9 @@ class FindTalent extends React.Component {
   };
 
   componentWillMount() {
-    const { location } = this.props;
-    const { jobseekerId } = location.state || {};
-    if (jobseekerId) {
-      this.setState({ selectedId: jobseekerId });
-    } else {
-      this.findJobseekers();
-    }
-  }
-
-  componentWillReceiveProps({ job }) {
-    if (this.props.job !== job) {
-      this.findJobseekers(job);
-    }
-
-    const { selectedId } = this.state;
-    if (selectedId) {
-      const { jobseekers } = this.props;
-      const selectedJobseeker = jobseekers && helper.getItemByID(jobseekers, selectedId);
-      !selectedJobseeker && this.onSelect();
+    const { tab, id } = this.props.location.state || {};
+    if (tab === 'find') {
+      this.setState({ selectedId: id });
     }
   }
 
@@ -55,7 +38,9 @@ class FindTalent extends React.Component {
   onConnect = ({ id }, event) => {
     event && event.stopPropagation();
 
-    const { business, job, connectJobseeker, history } = this.props;
+    const { job } = this.props;
+    const business = job.location_data.business_data;
+
     if (business.tokens === 0) {
       confirm({
         content: 'You need 1 credit',
@@ -63,7 +48,7 @@ class FindTalent extends React.Component {
         cancelText: 'Cancel',
         maskClosable: true,
         onOk: () => {
-          history.push(`/recruiter/settings/credits/${business.id}`);
+          this.props.history.push(`/recruiter/settings/credits/${business.id}`);
         }
       });
       return;
@@ -75,7 +60,7 @@ class FindTalent extends React.Component {
       cancelText: 'Cancel',
       maskClosable: true,
       onOk: () => {
-        connectJobseeker({
+        this.props.connectJobseeker({
           data: {
             job: job.id,
             job_seeker: id
@@ -112,7 +97,7 @@ class FindTalent extends React.Component {
     helper
       .getFullJSName(jobseeker)
       .toLowerCase()
-      .indexOf(this.props.searchText.toLowerCase()) >= 0;
+      .indexOf(this.props.searchText) >= 0;
 
   renderJobseeker = jobseeker => {
     const { id, description, loading } = jobseeker;
@@ -165,25 +150,20 @@ class FindTalent extends React.Component {
   );
 
   render() {
-    const { job, jobseekers, error } = this.props;
+    const { job, jobseekers } = this.props;
     const selectedJobseeker = jobseekers && helper.getItemByID(jobseekers, this.state.selectedId);
     return (
-      <Wrapper className="container">
-        <Header />
-        <div className="content">
-          {job && (
-            <ListEx
-              data={jobseekers}
-              loadingSize="large"
-              pagination={{ pageSize: 10 }}
-              filterOption={this.filterOption}
-              error={error && 'Server Error!'}
-              renderItem={this.renderJobseeker}
-              emptyRender={this.renderEmpty}
-            />
-          )}
-        </div>
-
+      <div className="content">
+        {job && (
+          <ListEx
+            data={jobseekers}
+            loadingSize="large"
+            pagination={{ pageSize: 10 }}
+            renderItem={this.renderJobseeker}
+            filterOption={this.filterOption}
+            emptyRender={this.renderEmpty}
+          />
+        )}
         {selectedJobseeker && (
           <JobseekerDetails
             title="Jobseeker Details"
@@ -193,32 +173,15 @@ class FindTalent extends React.Component {
             onClose={() => this.onSelect()}
           />
         )}
-      </Wrapper>
+      </div>
     );
   }
 }
 
-export default connect(
-  (state, { match }) => {
-    const { businesses, selectedId } = state.rc_businesses;
-    const business = helper.getItemByID(businesses || [], selectedId);
-
-    const jobId = helper.str2int(match.params.jobId);
-    const job = helper.getItemByID(state.rc_jobs.jobs, jobId);
-    const { jobseekers, error } = state.rc_find;
-    const { searchText } = state.applications;
-
-    return {
-      business,
-      job,
-      jobseekers,
-      error,
-      searchText
-    };
-  },
-  {
+export default withRouter(
+  connect(null, {
     findJobseekers,
     connectJobseeker,
     removeJobseeker
-  }
-)(FindTalent);
+  })(FindTalent)
+);

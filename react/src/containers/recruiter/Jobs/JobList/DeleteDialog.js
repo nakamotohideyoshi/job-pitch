@@ -35,6 +35,12 @@ const DeleteDialog = ({ job, removeJob, saveJob, onCancel }) => {
     onCancel();
   };
 
+  const isOpen = (job || {}).status === DATA.JOB.OPEN;
+  let comment = 'Removing this job will permanently delete all related applications and messages.';
+  if (isOpen) {
+    comment = `${comment} If you just want to hide the job from the public, choose deactivate instead.`;
+  }
+
   return (
     <Modal
       className="ant-confirm ant-confirm-confirm"
@@ -48,14 +54,14 @@ const DeleteDialog = ({ job, removeJob, saveJob, onCancel }) => {
       <div className="ant-confirm-body-wrapper">
         <div className="ant-confirm-body">
           <Icon type="question-circle" />
-          <span className="ant-confirm-title">{`Are you sure you want to delete ${(job || {}).title}`}</span>
+          <div className="ant-confirm-content">{comment}</div>
         </div>
         <div className="ant-confirm-btns">
           <Button onClick={onCancel}>Cancel</Button>
           <Button type="danger" onClick={onRemoveJob}>
             Remove
           </Button>
-          {(job || {}).status === DATA.JOB.OPEN && (
+          {isOpen && (
             <Button type="danger" onClick={onDeactivateJob}>
               Deactivate
             </Button>

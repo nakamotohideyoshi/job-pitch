@@ -38,9 +38,7 @@ class JobResource: UIView {
             }
             playButton.frame = imageView.frame
             
-            if model.video == nil {
-                playIcon.removeFromSuperview()
-            }
+            playIcon.isHidden = model.video == nil
         }
     }
     

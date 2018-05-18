@@ -18515,3 +18515,12 @@ li.ant-select-tree-treenode-disabled > .ant-select-tree-node-content-wrapper:hov
 .ant-progress-text {
   width: 3em;
 }
+.ant-select-selection-selected-value,
+.ant-select-dropdown-menu-item {
+  width: 100%;
+}
+.ant-select-selection-selected-value .right-menu-item,
+.ant-select-dropdown-menu-item .right-menu-item {
+  float: right;
+  opacity: 0.5;
+}

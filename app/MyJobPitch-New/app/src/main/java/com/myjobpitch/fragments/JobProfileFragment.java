@@ -81,9 +81,6 @@ public class JobProfileFragment extends FormFragment {
         final View view = inflater.inflate(R.layout.fragment_job_profile, container, false);
         ButterKnife.bind(this, view);
 
-        // menu
-        addMenuItem(MENUGROUP2, 100, "Save", R.drawable.ic_save);
-
         // data
         mSectors = AppData.get(Sector.class);
 

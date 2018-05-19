@@ -70,7 +70,7 @@ export default class JobDetails extends React.Component {
                   </div>
                 )}
                 <div className="label">Share Job</div>
-                <SocialShare url="https://test.sclabs.co.uk/" round size={32} />
+                <SocialShare url={`${window.location.origin}/jobseeker/jobs/${job.id}`} />
               </div>
             }
           />

@@ -29,7 +29,7 @@ class SideMenuController: UIViewController {
         
         "change_pass":  ["icon": "menu-key",            "title": "Change Password",         "identifier": "ChangePassword",     "per": ""],
         "help":         ["icon": "menu-help",           "title": "Help",                    "identifier": "Help",               "per": ""],
-        "share":        ["icon": "menu-share",          "title": "Share",                   "identifier": "Share",              "per": ""],
+        "share":        ["icon": "menu-share",          "title": "Tell a friend",           "identifier": "Share",              "per": ""],
         "contact_us":   ["icon": "menu-contact-us",     "title": "Contact Us",              "identifier": "ContactUs",          "per": ""],
         "log_out":      ["icon": "menu-logout",         "title": "Log Out",                 "identifier": "Signin",             "per": ""]
     ]
@@ -196,7 +196,8 @@ extension SideMenuController: UITableViewDelegate {
             }, cancel: "Cancel", cancelCallback: nil)
             popupController.okButton?.backgroundColor = AppData.greenColor
         } else if id == "share" {
-            let itemProvider = MyCustomProvider(placeholderItem: "")
+            let url = AppData.user.isRecruiter() ? "https://www.myjobpitch.com/recruiters/" : "https://www.myjobpitch.com/candidates/"
+            let itemProvider = ShareProvider(placeholderItem: url)
             let controller = UIActivityViewController(activityItems: [itemProvider], applicationActivities: nil)
             present(controller, animated: true, completion: nil)
         } else if id == "contact_us" {
@@ -215,19 +216,19 @@ extension SideMenuController: UITableViewDelegate {
     
 }
 
-class MyCustomProvider: UIActivityItemProvider {
+class ShareProvider: UIActivityItemProvider {
     
     override func activityViewController(_ activityViewController: UIActivityViewController, itemForActivityType activityType: UIActivityType) -> Any? {
         if activityType == UIActivityType.postToFacebook {
-            UIPasteboard.general.string = AppData.user.isRecruiter() ? "https://www.myjobpitch.com/recruiters/" : "https://www.myjobpitch.com/candidates/";
+            UIPasteboard.general.string = placeholderItem as? String
             return ""
         }
-        return AppData.user.isRecruiter() ? "https://www.myjobpitch.com/recruiters/" : "https://www.myjobpitch.com/candidates/";
+        return placeholderItem as! String
     }
     
     override func activityViewController(_ activityViewController: UIActivityViewController, subjectForActivityType activityType: UIActivityType?) -> String {
         if activityType?.rawValue == "com.apple.UIKit.activity.Mail" {
-            return AppData.user.isRecruiter() ? "https://www.myjobpitch.com/recruiters/" : "https://www.myjobpitch.com/candidates/";
+            return placeholderItem as! String
         }
         return ""
     }

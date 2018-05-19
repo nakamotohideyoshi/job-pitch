@@ -3,7 +3,7 @@ import Helmet from 'react-helmet';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import Truncate from 'react-truncate';
-import { Breadcrumb, List, Avatar, Tooltip } from 'antd';
+import { Breadcrumb, List, Avatar, Tooltip, Dropdown, Menu } from 'antd';
 
 import DATA from 'utils/data';
 import * as helper from 'utils/helper';
@@ -11,6 +11,12 @@ import * as helper from 'utils/helper';
 import { PageHeader, PageSubHeader, AlertMsg, LinkButton, Loading, ListEx, Icons } from 'components';
 import DeleteDialog from './DeleteDialog';
 import Wrapper from '../styled';
+
+const menu = (
+  <Menu>
+    <Menu.Item key="3">3rd menu item</Menu.Item>
+  </Menu>
+);
 
 class JobList extends React.Component {
   state = {

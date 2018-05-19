@@ -21,6 +21,13 @@ export default styled(Form)`
     left: 125px;
   }
 
+  ${media.notmobile`
+    .share {
+      display: flex;
+      align-items: center;
+    }
+  `};
+
   ${media.mobile`
     .status-field {
       .ant-form-item-label {

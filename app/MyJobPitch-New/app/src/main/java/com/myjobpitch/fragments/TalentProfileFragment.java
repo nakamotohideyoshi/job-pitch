@@ -139,9 +139,6 @@ public class TalentProfileFragment extends FormFragment {
 
         title = "Edit Profile";
 
-        // menu
-        addMenuItem(MENUGROUP2, 100, "Save", R.drawable.ic_save);
-
         // data
         for (Sex sex : AppData.get(Sex.class)) {
             mSexNames.add(sex.getName());

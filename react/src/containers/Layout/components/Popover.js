@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { Popover } from 'antd';
 
-const MenuButton = styled.div`
+export const MenuButton = styled.div`
   padding: 0 10px;
   color: #999999;
   transition: color 0.3s;

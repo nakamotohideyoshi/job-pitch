@@ -118,6 +118,7 @@ class JobEditController: MJPController {
         
         if job == nil {
             navigationItem.title = "Add Job"
+            navigationItem.rightBarButtonItem = nil
             isNew = true
             load()
         } else {
@@ -319,6 +320,13 @@ class JobEditController: MJPController {
         removeImageButton.isHidden = true
         addLogoButton.setTitle("Add Logo", for: .normal)
         
+    }
+    
+    @IBAction func shareAction(_ sender: Any) {
+        let url = String(format: "%@/jobseeker/jobs/%d", API.apiRoot.absoluteString, job.id)
+        let itemProvider = ShareProvider(placeholderItem: url)
+        let controller = UIActivityViewController(activityItems: [itemProvider], applicationActivities: nil)
+        present(controller, animated: true, completion: nil)
     }
     
     @IBAction func saveAction(_ sender: Any) {

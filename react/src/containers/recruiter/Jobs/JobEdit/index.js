@@ -2,7 +2,7 @@ import React from 'react';
 import Helmet from 'react-helmet';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { Breadcrumb, Form, Input, Select, Switch, Popover, Button, notification, Tooltip } from 'antd';
+import { Breadcrumb, Form, Input, Select, Switch, Popover, Button, notification } from 'antd';
 
 import { saveJob, uploadPitch } from 'redux/recruiter/jobs';
 import DATA from 'utils/data';
@@ -15,7 +15,8 @@ import {
   ImageSelector,
   NoLabelField,
   PitchSelector,
-  Icons
+  Icons,
+  SocialShare
 } from 'components';
 import JobDetails from 'containers/recruiter/JobDetails';
 import Wrapper from '../styled';
@@ -336,8 +337,6 @@ class JobEdit extends React.Component {
                         Record or upload a short video intro to showcase your company.<br />
                         Tell potential candidates about the role, and why it is a great<br />
                         place to work!
-
-                        
                       </span>
                     }
                   >
@@ -352,6 +351,12 @@ class JobEdit extends React.Component {
             <Item label="Logo">
               <ImageSelector url={logo.url} removable={logo.exist} onChange={this.setLogo} />
             </Item>
+
+            {job && (
+              <Item label="Share" className="share">
+                <SocialShare url={`${window.location.origin}/jobseeker/jobs/${job.id}`} />
+              </Item>
+            )}
 
             <NoLabelField className="subimt-field">
               <Button type="primary" onClick={this.save}>

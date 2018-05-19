@@ -464,7 +464,7 @@ public class MainActivity extends AppCompatActivity
         new MenuItemInfo(AppData.PAGE_HELP, "Help", R.drawable.menu_help, HelpFragment.class, ""),
         new MenuItemInfo(AppData.PAGE_LOGOUT, "Log Out", R.drawable.menu_logout, null, ""),
         new MenuItemInfo(AppData.PAGE_CONTACT_UP, "Contact Us", R.drawable.menu_contact_us, null, ""),
-        new MenuItemInfo(AppData.PAGE_SHARE, "Share", R.drawable.menu_share, null, ""),
+        new MenuItemInfo(AppData.PAGE_SHARE, "Tell a friend", R.drawable.menu_share, null, ""),
     };
 
     int[] jobSeekerMenu = {

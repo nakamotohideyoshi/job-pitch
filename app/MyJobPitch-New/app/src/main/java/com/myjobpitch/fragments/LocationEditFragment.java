@@ -83,9 +83,6 @@ public class LocationEditFragment extends FormFragment {
         isFirstCreate = getApp().getSharedPreferences("firstCreate", MODE_PRIVATE)
                 .getBoolean("workplace", true);
 
-        // save button
-        addMenuItem(MENUGROUP2, 100, "Save", R.drawable.ic_save);
-
         // title and location info
 
         if (location == null) {

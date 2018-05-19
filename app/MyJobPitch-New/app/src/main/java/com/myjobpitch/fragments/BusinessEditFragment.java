@@ -64,9 +64,6 @@ public class BusinessEditFragment extends FormFragment {
         imageSelector = new ImageSelector(logoView, R.drawable.default_logo);
         isFirstCreate = AppData.user.getBusinesses().size() == 0;
 
-        // save button
-        addMenuItem(MENUGROUP2, 100, "Save", R.drawable.ic_save);
-
         if (business == null) {
 
             title = "Add Business";

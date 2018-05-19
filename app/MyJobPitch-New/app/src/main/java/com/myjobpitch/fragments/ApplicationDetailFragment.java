@@ -113,6 +113,8 @@ public class ApplicationDetailFragment extends BaseFragment {
 
         title = "Job Details";
 
+        addMenuItem(MENUGROUP2, 100, "Share", R.drawable.ic_share);
+
         // map setting
 
         mapView.onCreate(savedInstanceState);
@@ -302,6 +304,16 @@ public class ApplicationDetailFragment extends BaseFragment {
         popup.show();
     }
 
+    @Override
+    public void onMenuSelected(int menuID) {
+        if (menuID == 100) {
+            String link = String.format("%sjobseeker/jobs/%d", MJPApi.apiUrl, job.getId());
+            Intent sharingIntent = new Intent(Intent.ACTION_SEND);
+            sharingIntent.setType("text/html");
+            sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, link);
+            startActivity(Intent.createChooser(sharingIntent,"Share using"));
+        }
+    }
 
     class JobResourcePagerAdapter extends PagerAdapter implements ViewPager.OnPageChangeListener {
 

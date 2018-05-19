@@ -4,7 +4,7 @@ import { Divider, List, Avatar, Button } from 'antd';
 import * as helper from 'utils/helper';
 import DATA from 'utils/data';
 
-import { Icons, VideoPlayer, SocialShare } from 'components';
+import { Icons, VideoPlayer } from 'components';
 import Wrapper from './Details.styled';
 
 export default class Details extends React.Component {
@@ -59,8 +59,6 @@ export default class Details extends React.Component {
                     </a>
                   </div>
                 )}
-                <div className="label">Share Jobseeker</div>
-                <SocialShare url="https://test.sclabs.co.uk/" />
               </Fragment>
             }
           />

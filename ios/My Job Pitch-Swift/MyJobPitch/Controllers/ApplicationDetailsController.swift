@@ -144,7 +144,14 @@ class ApplicationDetailsController: MJPController {
     @IBAction func messageAction(_ sender: Any) {
         MessageController0.showModal(application: application)
     }
-
+    
+    @IBAction func shareAction(_ sender: Any) {
+        let url = String(format: "%@/jobseeker/jobs/%d", API.apiRoot.absoluteString, job.id)
+        let itemProvider = ShareProvider(placeholderItem: url)
+        let controller = UIActivityViewController(activityItems: [itemProvider], applicationActivities: nil)
+        present(controller, animated: true, completion: nil)
+    }
+    
     static func pushController(job: Job!,
                                application: Application!,
                                chooseDelegate: ChooseDelegate!) {

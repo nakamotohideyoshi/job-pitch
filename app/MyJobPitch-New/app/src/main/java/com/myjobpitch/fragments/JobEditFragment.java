@@ -110,8 +110,6 @@ public class JobEditFragment extends FormFragment {
 
         isAddMode = getApp().getCurrentPageID() != AppData.PAGE_ADD_JOB;
 
-        // save button
-        addMenuItem(MENUGROUP2, 100, "Save", R.drawable.ic_save);
 
         // title and job info
 
@@ -124,6 +122,8 @@ public class JobEditFragment extends FormFragment {
         } else {
 
             location = job.getLocation_data();
+
+            addMenuItem(MENUGROUP2, 100, "Share", R.drawable.ic_share);
 
             if (title != "") {
                 load();
@@ -197,8 +197,12 @@ public class JobEditFragment extends FormFragment {
                 imageSelector.loadImage(null);
             }
 
+            mPitch = job.getPitch();
+            mRecordVideoPlay.setVisibility(mPitch != null && mPitch.getVideo() != null ? View.VISIBLE : View.INVISIBLE);
+
         } else {
             imageSelector.loadImage(null);
+            mRecordVideoPlay.setVisibility(View.INVISIBLE);
         }
 
         if (jobSector != -1) {
@@ -222,8 +226,6 @@ public class JobEditFragment extends FormFragment {
         contractView.setAdapter(new ArrayAdapter<>(getApp(),  android.R.layout.simple_dropdown_item_1line, contractNames));
         hoursView.setAdapter(new ArrayAdapter<>(getApp(),  android.R.layout.simple_dropdown_item_1line, hoursNames));
 
-        mPitch = job.getPitch();
-        mRecordVideoPlay.setVisibility(mPitch != null && mPitch.getVideo() != null ? View.VISIBLE : View.INVISIBLE);
     }
 
     @OnClick(R.id.job_sector_button)
@@ -306,7 +308,11 @@ public class JobEditFragment extends FormFragment {
     @Override
     public void onMenuSelected(int menuID) {
         if (menuID == 100) {
-            saveJob();
+            String link = String.format("%sjobseeker/jobs/%d", MJPApi.apiUrl, job.getId());
+            Intent sharingIntent = new Intent(Intent.ACTION_SEND);
+            sharingIntent.setType("text/html");
+            sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, link);
+            startActivity(Intent.createChooser(sharingIntent,"Share using"));
         }
     }
 

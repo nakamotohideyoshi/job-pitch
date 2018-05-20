@@ -10,13 +10,8 @@ import * as helper from 'utils/helper';
 
 import { PageHeader, PageSubHeader, AlertMsg, LinkButton, Loading, ListEx, Icons } from 'components';
 import DeleteDialog from './DeleteDialog';
+import Mark from './Mark';
 import Wrapper from '../styled';
-
-const menu = (
-  <Menu>
-    <Menu.Item key="3">3rd menu item</Menu.Item>
-  </Menu>
-);
 
 class JobList extends React.Component {
   state = {
@@ -56,7 +51,7 @@ class JobList extends React.Component {
     const sectorName = helper.getItemByID(DATA.sectors, sector).name;
     const contractName = helper.getItemByID(DATA.contracts, contract).short_name;
     const hoursName = helper.getItemByID(DATA.hours, hours).short_name;
-    const closed = status === DATA.JOB.CLOSED ? 'deleted' : '';
+    const closed = status === DATA.JOB.CLOSED ? 'disabled' : '';
 
     return (
       <List.Item
@@ -74,7 +69,7 @@ class JobList extends React.Component {
           </Tooltip>
         ]}
         onClick={() => this.selectJob(job)}
-        className={loading ? 'loading' : ''}
+        className={`${loading ? 'loading' : ''} ${closed}`}
       >
         <List.Item.Meta
           avatar={<Avatar src={logo} className="avatar-80" />}
@@ -86,14 +81,11 @@ class JobList extends React.Component {
           }
         />
         <div className="properties">
-          <span className={closed} style={{ width: '60px' }}>
-            {contractName}
-          </span>
-          <span className={closed} style={{ width: '60px' }}>
-            {hoursName}
-          </span>
-          <span className={closed}>{sectorName}</span>
+          <span style={{ width: '60px' }}>{contractName}</span>
+          <span style={{ width: '60px' }}>{hoursName}</span>
+          <span>{sectorName}</span>
         </div>
+        {closed && <Mark>Inactive</Mark>}
         {loading && <Loading className="mask" size="small" />}
       </List.Item>
     );
@@ -159,7 +151,6 @@ export default connect((state, { match }) => {
   const workplace = helper.getItemByID(state.rc_workplaces.workplaces, workplaceId);
   let { jobs } = state.rc_jobs;
   jobs = jobs.filter(item => item.location === workplaceId);
-  helper.sort(jobs, 'title');
   return {
     workplace,
     jobs

@@ -214,7 +214,6 @@ class BusinessList extends React.Component {
 export default connect(
   state => {
     const businesses = state.rc_businesses.businesses.slice(0);
-    helper.sort(businesses, 'name');
     return {
       user: state.auth.user,
       businesses

@@ -170,7 +170,6 @@ export default connect(
     const business = helper.getItemByID(state.rc_businesses.businesses, businessId);
     let { workplaces } = state.rc_workplaces;
     workplaces = workplaces.filter(item => item.business === businessId);
-    helper.sort(workplaces, 'name');
     return {
       business,
       workplaces

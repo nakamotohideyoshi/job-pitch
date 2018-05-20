@@ -158,7 +158,7 @@ export function loadData(key) {
 export function addObj(objects, obj) {
   if (Array.isArray(objects)) {
     const newObject = objects.slice(0);
-    newObject.push(obj);
+    newObject.unshift(obj);
     return newObject;
   }
   return objects;

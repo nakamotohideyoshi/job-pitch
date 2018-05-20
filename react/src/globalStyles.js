@@ -29,9 +29,9 @@ injectGlobal`
     margin-left: auto;
   }
 
-  .deleted {
+  /* .deleted {
     text-decoration: line-through red;
-  }
+  } */
 
   .avatar-80 {
     width: 80px !important;

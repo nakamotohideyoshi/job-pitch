@@ -63,6 +63,11 @@ function* saveJob(action) {
   } else {
     jobs = helper.addObj(jobs, job);
   }
+  jobs.sort((a, b) => {
+    const sort1 = a.status - b.status;
+    if (sort1 !== 0) return sort1;
+    return new Date(b.created).getTime() - new Date(a.created).getTime();
+  });
   yield put({ type: C.RC_JOBS_UPDATE, payload: { jobs } });
 
   onSuccess && onSuccess(job);

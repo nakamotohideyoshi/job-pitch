@@ -122,6 +122,7 @@ class ApplicationDetailsController: MJPController {
         mapView.camera = GMSCameraPosition.camera(withTarget: position, zoom: 14)
         
         pageControl.numberOfPages = resources.count
+        carousel.bounces = false
         carousel.reloadData()
     }
     

@@ -71,6 +71,7 @@ class JobResource: UIView {
         let jobResource = JobResource(frame: frame)
         jobResource.addSubview(view)
         jobResource.imageView = view.viewWithTag(1) as! UIImageView
+        jobResource.imageView.frame = frame
         jobResource.playIcon = view.viewWithTag(2) as! UIImageView
         jobResource.playButton = view.viewWithTag(3) as! UIButton
         jobResource.playButton.addTarget(jobResource, action: #selector(jobResource.viewAction(_:)), for: .touchUpInside)

@@ -1,14 +1,11 @@
 package com.myjobpitch.api.data;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.myjobpitch.api.MJPAPIObject;
 
 public class JobPitch extends MJPAPIObject {
     private String token;
     private String video;
     private String thumbnail;
-
-    @JsonProperty("job")
     private Integer job;
 
     public Integer getJob() {

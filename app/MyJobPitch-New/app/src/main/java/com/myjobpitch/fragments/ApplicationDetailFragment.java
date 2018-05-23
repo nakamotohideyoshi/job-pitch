@@ -171,14 +171,12 @@ public class ApplicationDetailFragment extends BaseFragment {
 
         JobResourceModel logoModel = new JobResourceModel();
         logoModel.isLogo = true;
-        Image logo = job.getLogo();
+        Image logo = AppHelper.getJobLogo(job);
         if (logo != null) {
             logoModel.thumbnail = logo.getThumbnail();
             logoModel.image = logo.getImage();
         }
         resources.add(logoModel);
-
-//        AppHelper.loadJobLogo(job, AppHelper.getImageView(logoView));
 
         Location location = job.getLocation_data();
         Contract contract = AppData.get(Contract.class, job.getContract());
@@ -190,13 +188,6 @@ public class ApplicationDetailFragment extends BaseFragment {
 
         hoursText.setText(hours.getName());
         contractText.setText(contract.getName());
-
-//        JobPitch pitch = job.getPitch();
-//        if (pitch == null || pitch.getVideo() == null) {
-//            pitchPlayView.setVisibility(View.GONE);
-//        } else {
-//            AppHelper.loadImage(pitch.getThumbnail(), pitchThumbnailView);
-//        }
 
         descView.setText(job.getDescription());
         locationDescView.setText(location.getDescription());

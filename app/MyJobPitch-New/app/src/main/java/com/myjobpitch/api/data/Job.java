@@ -93,11 +93,4 @@ public class Job extends MJPObjectWithDates {
         return null;
     }
 
-    public Image getLogo() {
-        if (images != null && images.size() > 0) {
-            return images.get(0);
-        }
-        return location_data.getLogo();
-    }
-
 }

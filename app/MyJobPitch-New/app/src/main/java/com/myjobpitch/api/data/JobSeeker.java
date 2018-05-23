@@ -153,24 +153,12 @@ public class JobSeeker extends MJPObjectWithDates {
         return pitches;
     }
 
-    public Pitch getUploadingPitch() {
-        if (pitches != null)
-            for (Pitch pitch : pitches)
-                if (pitch.getVideo() == null)
-                    return pitch;
-        return null;
-    }
-
     public Pitch getPitch() {
         if (pitches != null)
             for (Pitch pitch : pitches)
                 if (pitch.getVideo() != null)
                     return pitch;
         return null;
-    }
-
-    public boolean hasUploadingPitch() {
-        return getUploadingPitch() != null;
     }
 
     public boolean hasPitch() {

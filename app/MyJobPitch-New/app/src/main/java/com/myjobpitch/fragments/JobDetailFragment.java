@@ -63,6 +63,10 @@ public class JobDetailFragment extends BaseFragment {
                     FindTalentFragment fragment = new FindTalentFragment();
                     fragment.job = job;
                     getApp().pushFragment(fragment);
+                } else if (position == 4) {
+                    MessageListFragment fragment = new MessageListFragment();
+                    fragment.job = job;
+                    getApp().pushFragment(fragment);
                 } else {
                     RecruiterApplicationsFragment fragment = new RecruiterApplicationsFragment();
                     fragment.job = job;

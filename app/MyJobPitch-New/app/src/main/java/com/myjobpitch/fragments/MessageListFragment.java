@@ -10,6 +10,7 @@ import com.myjobpitch.R;
 import com.myjobpitch.api.MJPApi;
 import com.myjobpitch.api.MJPApiException;
 import com.myjobpitch.api.data.Application;
+import com.myjobpitch.api.data.ApplicationStatus;
 import com.myjobpitch.api.data.Job;
 import com.myjobpitch.api.data.JobSeeker;
 import com.myjobpitch.api.data.Message;
@@ -23,6 +24,7 @@ import java.util.List;
 public class MessageListFragment extends ApplicationsFragment {
 
     View noPitchView;
+    Job job;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -59,7 +61,8 @@ public class MessageListFragment extends ApplicationsFragment {
             }
         }
 
-        return MJPApi.shared().get(Application.class);
+        String query = job != null ? "job=" + job.getId() : null;
+        return MJPApi.shared().get(Application.class, query);
     }
 
     @Override

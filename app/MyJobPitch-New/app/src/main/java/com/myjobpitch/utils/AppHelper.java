@@ -13,6 +13,7 @@ import android.widget.TextView;
 import com.myjobpitch.R;
 import com.myjobpitch.MainActivity;
 import com.myjobpitch.api.data.Business;
+import com.myjobpitch.api.data.Image;
 import com.myjobpitch.api.data.Job;
 import com.myjobpitch.api.data.JobSeeker;
 import com.myjobpitch.api.data.Pitch;
@@ -26,6 +27,7 @@ import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 public class AppHelper {
 
@@ -107,8 +109,9 @@ public class AppHelper {
     public static void showBusinessInfo(Business business, View view) {
 
         // logo
-        if (business.getImages().size() > 0) {
-            loadImage(business.getImages().get(0).getThumbnail(), view);
+        Image logo = getBusinessLogo(business);
+        if (logo != null) {
+            loadImage(logo.getThumbnail(), view);
         } else {
             getImageView(view).setImageResource(R.drawable.default_logo);
         }
@@ -129,15 +132,11 @@ public class AppHelper {
     public static void showLocationInfo(com.myjobpitch.api.data.Location location, View view) {
 
         // logo
-        if (location.getImages().size() > 0) {
-            loadImage(location.getImages().get(0).getThumbnail(), view);
+        Image logo = getWorkplaceLogo(location);
+        if (logo != null) {
+            loadImage(logo.getThumbnail(), view);
         } else {
-            Business business = location.getBusiness_data();
-            if (business.getImages().size() > 0) {
-                loadImage(business.getImages().get(0).getThumbnail(), view);
-            } else {
-                getImageView(view).setImageResource(R.drawable.default_logo);
-            }
+            getImageView(view).setImageResource(R.drawable.default_logo);
         }
 
         // location name
@@ -154,7 +153,7 @@ public class AppHelper {
     public static void showJobInfo(Job job, View view) {
 
         // logo
-        AppHelper.loadJobLogo(job, view);
+        loadJobLogo(job, view);
 
         // job title
         getItemTitleView(view).setText(job.getTitle());
@@ -208,41 +207,6 @@ public class AppHelper {
 
     }
 
-    public static void loadJobLogo(Job job, View container) {
-        loadJobLogo(job, getImageView(container));
-    }
-
-    public static void loadJobLogo(Job job, ImageView imageView) {
-        if (job.getImages().size() > 0) {
-            loadImage(job.getImages().get(0).getThumbnail(), imageView);
-        } else {
-            com.myjobpitch.api.data.Location location = job.getLocation_data();
-            if (location.getImages().size() > 0) {
-                loadImage(location.getImages().get(0).getThumbnail(), imageView);
-            } else {
-                Business business = location.getBusiness_data();
-                if (business.getImages().size() > 0) {
-                    loadImage(business.getImages().get(0).getThumbnail(), imageView);
-                } else {
-                    imageView.setImageResource(R.drawable.default_logo);
-                }
-            }
-        }
-    }
-
-    public static void loadJobSeekerImage(JobSeeker jobSeeker, View container) {
-        loadJobSeekerImage(jobSeeker, getImageView(container));
-    }
-
-    public static void loadJobSeekerImage(JobSeeker jobSeeker, ImageView imageView) {
-        Pitch pitch = jobSeeker.getPitch();
-        if (pitch != null) {
-            loadImage(pitch.getThumbnail(), imageView);
-        } else {
-            imageView.setImageResource(R.drawable.icon_no_img);
-        }
-    }
-
     public static File saveBitmap(Bitmap bmp) {
         File dir = new File (Environment.getExternalStorageDirectory(), "MyJobPitch");
         if (!dir.exists()) {
@@ -261,4 +225,55 @@ public class AppHelper {
         }
         return file;
     }
+
+    public static void loadJobSeekerImage(JobSeeker jobSeeker, View container) {
+        loadJobSeekerImage(jobSeeker, getImageView(container));
+    }
+
+    public static void loadJobSeekerImage(JobSeeker jobSeeker, ImageView imageView) {
+        Pitch pitch = jobSeeker.getPitch();
+        if (pitch != null) {
+            loadImage(pitch.getThumbnail(), imageView);
+        } else {
+            imageView.setImageResource(R.drawable.icon_no_img);
+        }
+    }
+
+    public static void loadJobLogo(Job job, View container) {
+        loadJobLogo(job, getImageView(container));
+    }
+
+    public static void loadJobLogo(Job job, ImageView imageView) {
+        Image logo = getJobLogo(job);
+        if (logo != null) {
+            loadImage(logo.getThumbnail(), imageView);
+        } else {
+            imageView.setImageResource(R.drawable.default_logo);
+        }
+    }
+
+    public static Image getBusinessLogo(Business business) {
+        List<Image> images = business.getImages();
+        if (images != null && images.size() > 0) {
+            return images.get(0);
+        }
+        return null;
+    }
+
+    public static Image getWorkplaceLogo(com.myjobpitch.api.data.Location workplace) {
+        List<Image> images = workplace.getImages();
+        if (images != null && images.size() > 0) {
+            return images.get(0);
+        }
+        return getBusinessLogo(workplace.getBusiness_data());
+    }
+
+    public static Image getJobLogo(Job job) {
+        List<Image> images = job.getImages();
+        if (images != null && images.size() > 0) {
+            return images.get(0);
+        }
+        return getWorkplaceLogo(job.getLocation_data());
+    }
+
 }

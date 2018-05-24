@@ -7,15 +7,15 @@ injectGlobal`
     font-size: 14px;
   }
 
+  h2 {
+    
+  }
+
   textarea.ant-input {
     resize: none;
   }
 
   .container {
-    width: 100%;
-    @media (max-width: 767px) {
-      max-width: 100%;
-    }
     @media (min-width: 768px) {
       max-width: 720px;
     }
@@ -23,15 +23,21 @@ injectGlobal`
       max-width: 960px;
     }
 
+    @media (min-width: 1200px) {
+      max-width: 1140px;
+    }
+
+    width: 100%;
     padding-right: 15px;
     padding-left: 15px;
     margin-right: auto;
     margin-left: auto;
   }
 
-  /* .deleted {
-    text-decoration: line-through red;
-  } */
+  .description {
+    word-break: break-all;
+    hyphens: auto;
+  }
 
   .avatar-80 {
     width: 80px !important;

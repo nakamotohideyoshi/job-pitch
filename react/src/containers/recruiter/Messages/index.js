@@ -7,8 +7,16 @@ import { getApplications, connectApplication, updateApplication, sendMessage } f
 import DATA from 'utils/data';
 import * as helper from 'utils/helper';
 
-import { AlertMsg, Loading, MessageThread, Icons, JobseekerDetails, LinkButton } from 'components';
-import JobDetails from 'containers/recruiter/JobDetails';
+import {
+  AlertMsg,
+  Loading,
+  MessageThread,
+  Icons,
+  JobseekerDetails,
+  LinkButton,
+  JobDetails,
+  LargeModal
+} from 'components';
 import Sidebar from './Sidebar';
 import Wrapper from './styled';
 
@@ -202,7 +210,11 @@ class Page extends React.Component {
             onClose={this.hideAppDetails}
           />
         )}
-        {openJobDetails && <JobDetails job={selectedApp.job_data} onClose={this.hideJobDetails} />}
+        {openJobDetails && (
+          <LargeModal visible title="Job Details" onCancel={this.hideJobDetails}>
+            <JobDetails job={selectedApp.job_data} />
+          </LargeModal>
+        )}
       </Wrapper>
     );
   }

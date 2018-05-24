@@ -75,7 +75,7 @@ export function getPitch(object) {
 */
 
 export function getFullBWName(job) {
-  return `${job.location_data.business_data.name} / ${job.location_data.name}`;
+  return `${job.location_data.business_data.name}, ${job.location_data.name}`;
 }
 
 export function getFullJSName(jobSeeker) {

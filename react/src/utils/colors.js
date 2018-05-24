@@ -8,7 +8,7 @@ export default {
   white: '#fff',
 
   text1: '#000',
-  text2: '#595959',
+  text2: '#464646',
   text3: '#8c8c8c',
 
   gray1: '#f2f2f2', // 0.05

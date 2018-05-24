@@ -19,6 +19,7 @@ const Wrapper = styled.ul`
   list-style: none;
   margin: 0;
   padding: 0;
+  height: 32px;
 
   li > div {
     float: left;
@@ -33,9 +34,9 @@ const Wrapper = styled.ul`
   }
 `;
 
-const SocialShare = ({ url }) => {
+const SocialShare = ({ url, ...rest }) => {
   return (
-    <Wrapper>
+    <Wrapper {...rest}>
       <li>
         <EmailShareButton url={url}>
           <EmailIcon round size={32} />
@@ -69,7 +70,7 @@ const SocialShare = ({ url }) => {
 };
 
 SocialShare.propTypes = {
-  url: PropTypes.string.isRequired,
+  url: PropTypes.string.isRequired
 };
 
 export default SocialShare;

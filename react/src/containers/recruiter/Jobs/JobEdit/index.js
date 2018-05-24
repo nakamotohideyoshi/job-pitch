@@ -16,9 +16,10 @@ import {
   NoLabelField,
   PitchSelector,
   Icons,
-  SocialShare
+  SocialShare,
+  JobDetails,
+  LargeModal
 } from 'components';
-import JobDetails from 'containers/recruiter/JobDetails';
 import Wrapper from '../styled';
 import StyledForm from './styled';
 
@@ -371,7 +372,12 @@ class JobEdit extends React.Component {
         </div>
 
         {loading && <PopupProgress label={loading.label} value={loading.progress} />}
-        {job && showPreview && <JobDetails job={job} onClose={this.closePreview} />}
+        {job &&
+          showPreview && (
+            <LargeModal visible title="Job Details" onCancel={this.closePreview}>
+              <JobDetails job={job} />
+            </LargeModal>
+          )}
       </Wrapper>
     );
   }

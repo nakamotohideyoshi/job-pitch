@@ -8,8 +8,7 @@ import { getApplications, sendMessage } from 'redux/applications';
 import DATA from 'utils/data';
 import * as helper from 'utils/helper';
 
-import { AlertMsg, Loading, MessageThread, Icons } from 'components';
-import JobDetails from '../components/JobDetails';
+import { AlertMsg, Loading, MessageThread, Icons, JobDetails, LargeModal } from 'components';
 import Sidebar from './Sidebar';
 import Wrapper from './styled';
 
@@ -139,11 +138,9 @@ class Messages extends React.Component {
         </div>
 
         {openJobDetails && (
-          <JobDetails
-            job={selectedApp.job_data}
-            roughLocation={selectedApp.status === DATA.APP.CREATED}
-            onClose={this.hideJobDetails}
-          />
+          <LargeModal visible title="Job Details" onCancel={this.hideJobDetails}>
+            <JobDetails job={selectedApp.job_data} roughLocation={selectedApp.status === DATA.APP.CREATED} />
+          </LargeModal>
         )}
       </Wrapper>
     );

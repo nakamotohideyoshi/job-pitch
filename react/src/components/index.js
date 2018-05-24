@@ -33,6 +33,8 @@ import Email from './Email';
 
 import SocialShare from './SocialShare';
 
+import LargeModal from './LargeModal';
+
 export {
   GoogleMap,
   PopupProgress,
@@ -56,5 +58,6 @@ export {
   VideoRecorder,
   VideoPlayer,
   Email,
-  SocialShare
+  SocialShare,
+  LargeModal
 };

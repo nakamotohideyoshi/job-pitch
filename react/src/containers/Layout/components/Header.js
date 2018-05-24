@@ -27,7 +27,7 @@ const Wrapper = styled(Layout.Header)`
 
   .title-logo {
     float: left;
-    margin: 0 24px -1px 10px;
+    margin: 0 24px 0 10px;
   }
 
   .ant-menu {

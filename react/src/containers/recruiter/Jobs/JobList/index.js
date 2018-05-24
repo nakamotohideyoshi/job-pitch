@@ -3,7 +3,7 @@ import Helmet from 'react-helmet';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import Truncate from 'react-truncate';
-import { Breadcrumb, List, Avatar, Tooltip, Dropdown, Menu } from 'antd';
+import { Breadcrumb, List, Avatar, Tooltip } from 'antd';
 
 import DATA from 'utils/data';
 import * as helper from 'utils/helper';

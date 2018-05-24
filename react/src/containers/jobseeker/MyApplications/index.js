@@ -2,14 +2,13 @@ import React from 'react';
 import Helmet from 'react-helmet';
 import { connect } from 'react-redux';
 import Truncate from 'react-truncate';
-import { List, Avatar, Tooltip } from 'antd';
+import { List, Avatar, Tooltip, Button } from 'antd';
 
 import { getApplications } from 'redux/applications';
 import DATA from 'utils/data';
 import * as helper from 'utils/helper';
 
-import { PageHeader, SearchBox, AlertMsg, ListEx, Icons } from 'components';
-import JobDetails from '../components/JobDetails';
+import { PageHeader, SearchBox, AlertMsg, ListEx, Icons, JobDetails, LargeModal } from 'components';
 import NoPitch from '../components/NoPitch';
 import Wrapper from './styled';
 
@@ -119,11 +118,16 @@ class MyApplications extends React.Component {
         </div>
 
         {selectedApp && (
-          <JobDetails
-            job={selectedApp.job_data}
-            onMessage={() => this.onMessage(selectedApp)}
-            onClose={() => this.onSelect()}
-          />
+          <LargeModal visible title="Job Details" onCancel={() => this.onSelect()}>
+            <JobDetails
+              job={selectedApp.job_data}
+              actions={
+                <Button type="primary" onClick={() => this.onMessage(selectedApp)}>
+                  Message
+                </Button>
+              }
+            />
+          </LargeModal>
         )}
       </Wrapper>
     );

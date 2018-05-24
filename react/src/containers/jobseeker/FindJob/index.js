@@ -3,14 +3,23 @@ import Helmet from 'react-helmet';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import Truncate from 'react-truncate';
-import { List, Avatar, Modal, Tooltip, Breadcrumb } from 'antd';
+import { List, Avatar, Modal, Tooltip, Breadcrumb, Button } from 'antd';
 
 import { findJobs, applyJob, removeJob } from 'redux/jobseeker/find';
 import DATA from 'utils/data';
 import * as helper from 'utils/helper';
 
-import { PageHeader, PageSubHeader, SearchBox, AlertMsg, ListEx, Icons, Loading, LinkButton } from 'components';
-import JobDetails from '../components/JobDetails';
+import {
+  PageHeader,
+  PageSubHeader,
+  SearchBox,
+  AlertMsg,
+  ListEx,
+  Icons,
+  Loading,
+  JobDetails,
+  LargeModal
+} from 'components';
 import NoPitch from '../components/NoPitch';
 import Wrapper from './styled';
 
@@ -114,7 +123,7 @@ class FindJob extends React.Component {
     const name = helper.getFullBWName(job);
     const contractName = helper.getItemByID(DATA.contracts, contract).short_name;
     const hoursName = helper.getItemByID(DATA.hours, hours).short_name;
-    const distance = helper.getDistanceFromLatLonEx(location_data, this.props.profile);
+    job.distance = helper.getDistanceFromLatLonEx(location_data, this.props.profile);
 
     return (
       <List.Item
@@ -147,7 +156,7 @@ class FindJob extends React.Component {
           <span style={{ width: '100px' }}>
             {contractName} / {hoursName}
           </span>
-          <span style={{ width: '60px' }}>{distance}</span>
+          <span style={{ width: '60px' }}>{job.distance}</span>
         </div>
         {loading && <Loading className="mask" size="small" />}
       </List.Item>
@@ -203,13 +212,22 @@ class FindJob extends React.Component {
         </div>
 
         {selectedJob && (
-          <JobDetails
-            job={selectedJob}
-            onApply={() => this.onApply(selectedJob)}
-            onRemove={() => this.onRemove(selectedJob)}
-            onClose={() => this.onSelect()}
-            roughLocation
-          />
+          <LargeModal visible title="Job Details" onCancel={() => this.onSelect()}>
+            <JobDetails
+              job={selectedJob}
+              roughLocation
+              actions={
+                <div>
+                  <Button type="primary" loading={selectedJob.loading} onClick={() => this.onApply(selectedJob)}>
+                    Apply for job
+                  </Button>
+                  <Button type="danger" disabled={selectedJob.loading} onClick={() => this.onRemove(selectedJob)}>
+                    Remove
+                  </Button>
+                </div>
+              }
+            />
+          </LargeModal>
         )}
       </Wrapper>
     );

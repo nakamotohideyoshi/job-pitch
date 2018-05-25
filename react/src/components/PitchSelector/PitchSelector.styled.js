@@ -8,9 +8,9 @@ export default styled.div`
       position: relative;
       display: inline-block;
       width: 162px;
-      height: 104px;
+      height: 96px;
       margin-right: 15px;
-      padding: 8px;
+      padding: 6px;
       border-radius: 4px;
       border: 1px solid #d9d9d9;
       cursor: pointer;
@@ -22,28 +22,30 @@ export default styled.div`
         background-position: center;
       }
 
-      .mask {
+      .play-icon {
         position: absolute;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        left: 8px;
-        right: 8px;
-        top: 8px;
-        bottom: 8px;
-        transition: background-color 0.3s;
-
-        svg {
-          font-size: 30px;
-          color: transparent;
-          transition: color 0.3s;
+        top: 50%;
+        left: 50%;
+        margin-left: -25px;
+        margin-top: -25px;
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        background-color: rgba(0, 0, 0, 0.2);
+        &:before {
+          content: '\\F101';
+          display: block;
+          line-height: 50px;
+          color: #fff;
+          font-family: VideoJS;
+          font-size: 36px;
+          text-align: center;
         }
+      }
 
-        &:hover {
-          background-color: rgba(0, 0, 0, 0.5);
-          svg {
-            color: rgba(255, 255, 255, 0.85);
-          }
+      &:hover {
+        .play-icon {
+          background-color: rgba(0, 0, 0, 0.4);
         }
       }
     }

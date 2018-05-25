@@ -76,9 +76,7 @@ class PitchSelector extends React.Component {
             <Tooltip placement="bottom" title="Current Pitch">
               <div className="currentPitch" onClick={() => this.playPitch(video)}>
                 <div className="thumbnail" style={{ backgroundImage: `url(${thumbnail})` }} />
-                <div className="mask">
-                  <Icons.PlayCircle />
-                </div>
+                <span class="play-icon" />
               </div>
             </Tooltip>
           )}

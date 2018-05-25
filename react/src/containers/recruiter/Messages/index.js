@@ -1,7 +1,7 @@
 import React, { Fragment } from 'react';
 import Helmet from 'react-helmet';
 import { connect } from 'react-redux';
-import { List, Modal, Avatar } from 'antd';
+import { List, Modal, Avatar, Button, Switch } from 'antd';
 
 import { getApplications, connectApplication, updateApplication, sendMessage } from 'redux/applications';
 import DATA from 'utils/data';
@@ -12,10 +12,10 @@ import {
   Loading,
   MessageThread,
   Icons,
+  LargeModal,
   JobseekerDetails,
   LinkButton,
-  JobDetails,
-  LargeModal
+  JobDetails
 } from 'components';
 import Sidebar from './Sidebar';
 import Wrapper from './styled';
@@ -202,13 +202,31 @@ class Page extends React.Component {
         </div>
 
         {openAppDetails && (
-          <JobseekerDetails
-            title="Application Details"
-            application={selectedApp}
-            onShortlist={selectedApp.status === DATA.APP.ESTABLISHED ? () => this.onShortlist(selectedApp) : null}
-            onConnect={selectedApp.status === DATA.APP.CREATED ? () => this.onConnect(selectedApp) : null}
-            onClose={this.hideAppDetails}
-          />
+          <LargeModal visible title="Application Details" onCancel={this.hideAppDetails}>
+            <JobseekerDetails
+              jobseeker={selectedApp.job_seeker}
+              connected
+              actions={
+                <div>
+                  {selectedApp.status === DATA.APP.ESTABLISHED && (
+                    <div style={{ marginBottom: '24px' }}>
+                      <span style={{ marginRight: '5px' }}>Shortlisted</span>
+                      <Switch
+                        checked={selectedApp.shortlisted}
+                        loading={selectedApp.loading}
+                        onChange={() => this.onShortlist(selectedApp)}
+                      />
+                    </div>
+                  )}
+                  {selectedApp.status === DATA.APP.CREATED && (
+                    <Button type="primary" loading={selectedApp.loading} onClick={() => this.onConnect(selectedApp)}>
+                      Connect
+                    </Button>
+                  )}
+                </div>
+              }
+            />
+          </LargeModal>
         )}
         {openJobDetails && (
           <LargeModal visible title="Job Details" onCancel={this.hideJobDetails}>

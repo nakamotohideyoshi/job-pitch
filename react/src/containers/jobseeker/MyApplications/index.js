@@ -57,7 +57,7 @@ class MyApplications extends React.Component {
         actions={[
           <Tooltip placement="bottom" title="Message">
             <span onClick={e => this.onMessage(app, e)}>
-              <Icons.Comment />
+              <Icons.CommentAlt />
             </span>
           </Tooltip>
         ]}

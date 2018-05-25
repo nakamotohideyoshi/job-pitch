@@ -18,7 +18,7 @@ import { saveJobseeker, uploadPitch } from 'redux/jobseeker/profile';
 import DATA from 'utils/data';
 import * as helper from 'utils/helper';
 
-import { NoLabelField, PitchSelector, PopupProgress, Intro, Icons, JobseekerDetails } from 'components';
+import { NoLabelField, PitchSelector, PopupProgress, Intro, Icons, LargeModal, JobseekerDetails } from 'components';
 import imgLogo from 'assets/logo1.png';
 import imgIntro1 from 'assets/intro1.png';
 import imgIntro2 from 'assets/intro2.png';
@@ -436,7 +436,11 @@ class Profile extends React.Component {
 
         {!jobseeker.id && !dontShowIntro && <Intro data={INTRO_DATA} onClose={this.closeIntro} />}
         {loading && <PopupProgress label={loading.label} value={loading.progress} />}
-        {showPreview && <JobseekerDetails title="My Profile" jobseeker={jobseeker} onClose={this.closePreview} />}
+        {showPreview && (
+          <LargeModal visible title="Jobseeker Details" onCancel={this.closePreview}>
+            <JobseekerDetails jobseeker={jobseeker} />
+          </LargeModal>
+        )}
       </FormWrapper>
     );
   }

@@ -3,21 +3,19 @@ import colors from 'utils/colors';
 import media from 'utils/mediaquery';
 
 export default styled.div`
-  .logo {
+  .avatar {
     position: relative;
     ${media.tablet` margin-bottom: 24px;`};
     padding-top: 100%;
-    background-color: #fff;
     border: 1px solid #ebebeb;
-    border-radius: 6px;
 
     span {
       position: absolute;
-      top: 8%;
-      bottom: 8%;
-      left: 8%;
-      right: 8%;
-      background-size: contain;
+      top: 0;
+      bottom: 0;
+      width: 100%;
+      height: 100%;
+      background-size: cover;
       background-repeat: no-repeat;
       background-position: center;
     }
@@ -27,19 +25,11 @@ export default styled.div`
     ${media.desktop`margin-bottom: 24px;`};
 
     .name {
-      margin-bottom: 0.25em;
+      margin-bottom: 1em;
       font-size: 24px;
       font-weight: 300;
       line-height: 1.2em;
       color: ${colors.text2};
-    }
-
-    .sub-name {
-      margin-bottom: 1em;
-      font-size: 18px;
-      font-weight: 300;
-      line-height: 1.2em;
-      color: ${colors.text3};
     }
 
     ul {
@@ -47,7 +37,7 @@ export default styled.div`
       padding: 0;
       color: ${colors.text3};
       li {
-        margin-bottom: 16px;
+        margin-bottom: 8px;
         font-weight: 100;
         svg {
           margin-right: 0.5em;
@@ -56,10 +46,6 @@ export default styled.div`
         }
       }
     }
-  }
-
-  .social-icons {
-    margin-bottom: 24px;
   }
 
   button {
@@ -85,20 +71,20 @@ export default styled.div`
   }
 
   .description,
-  .map {
+  .btn-cv,
+  .check-label {
     margin-top: 18px;
   }
 
-  .map {
-    position: relative;
-    width: 100%;
-    padding-top: 33%;
-
-    > div {
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      top: 0;
+  .check-label {
+    display: flex;
+    svg {
+      margin-right: 0.25em;
+      color: #ff9300;
     }
+  }
+
+  .check-label + .check-label {
+    margin-top: 0.5em;
   }
 `;

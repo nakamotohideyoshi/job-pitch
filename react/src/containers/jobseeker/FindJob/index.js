@@ -129,12 +129,12 @@ class FindJob extends React.Component {
       <List.Item
         key={id}
         actions={[
-          <Tooltip placement="bottom" title={'Apply'}>
+          <Tooltip placement="bottom" title={'Apply for job'}>
             <span onClick={e => this.onApply(job, e)}>
               <Icons.Link />
             </span>
           </Tooltip>,
-          <Tooltip placement="bottom" title="Remove">
+          <Tooltip placement="bottom" title="Not interested">
             <span onClick={e => this.onRemove(job, e)}>
               <Icons.TrashAlt />
             </span>
@@ -222,7 +222,7 @@ class FindJob extends React.Component {
                     Apply for job
                   </Button>
                   <Button type="danger" disabled={selectedJob.loading} onClick={() => this.onRemove(selectedJob)}>
-                    Remove
+                    Not interested
                   </Button>
                 </div>
               }

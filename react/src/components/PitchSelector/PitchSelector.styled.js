@@ -7,7 +7,7 @@ export default styled.div`
     .currentPitch {
       position: relative;
       display: inline-block;
-      width: 104px;
+      width: 162px;
       height: 104px;
       margin-right: 15px;
       padding: 8px;

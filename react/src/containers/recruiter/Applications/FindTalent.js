@@ -2,12 +2,12 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import Truncate from 'react-truncate';
-import { List, Modal, Avatar, Tooltip } from 'antd';
+import { List, Modal, Avatar, Tooltip, Button } from 'antd';
 
 import { findJobseekers, connectJobseeker, removeJobseeker } from 'redux/recruiter/find';
 import * as helper from 'utils/helper';
 
-import { AlertMsg, Loading, ListEx, Icons, JobseekerDetails } from 'components';
+import { AlertMsg, Loading, ListEx, Icons, LargeModal, JobseekerDetails } from 'components';
 
 const { confirm } = Modal;
 
@@ -165,13 +165,29 @@ class FindTalent extends React.Component {
           />
         )}
         {selectedJobseeker && (
-          <JobseekerDetails
-            title="Jobseeker Details"
-            jobseeker={selectedJobseeker}
-            onConnect={() => this.onConnect(selectedJobseeker)}
-            onRemove={() => this.onRemove(selectedJobseeker)}
-            onClose={() => this.onSelect()}
-          />
+          <LargeModal visible title="Jobseeker Details" onCancel={() => this.onSelect()}>
+            <JobseekerDetails
+              jobseeker={selectedJobseeker}
+              actions={
+                <div>
+                  <Button
+                    type="primary"
+                    loading={selectedJobseeker.loading}
+                    onClick={() => this.onConnect(selectedJobseeker)}
+                  >
+                    Connect
+                  </Button>
+                  <Button
+                    type="danger"
+                    disabled={selectedJobseeker.loading}
+                    onClick={() => this.onRemove(selectedJobseeker)}
+                  >
+                    Remove
+                  </Button>
+                </div>
+              }
+            />
+          </LargeModal>
         )}
       </div>
     );

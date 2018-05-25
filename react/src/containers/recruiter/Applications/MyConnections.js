@@ -2,12 +2,12 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import Truncate from 'react-truncate';
-import { List, Modal, Avatar, Tooltip } from 'antd';
+import { List, Modal, Avatar, Tooltip, Button, Switch } from 'antd';
 
 import { updateApplication, removeApplication } from 'redux/applications';
 import * as helper from 'utils/helper';
 
-import { AlertMsg, Loading, ListEx, Icons, JobseekerDetails } from 'components';
+import { AlertMsg, Loading, ListEx, Icons, LargeModal, JobseekerDetails } from 'components';
 
 const { confirm } = Modal;
 
@@ -80,7 +80,7 @@ class MyConnections extends React.Component {
         actions={[
           <Tooltip placement="bottom" title="Message">
             <span onClick={e => this.onMessage(app, e)}>
-              <Icons.Comment />
+              <Icons.CommentAlt />
             </span>
           </Tooltip>,
           <Tooltip placement="bottom" title="Remove">
@@ -139,14 +139,30 @@ class MyConnections extends React.Component {
           />
         )}
         {selectedApp && (
-          <JobseekerDetails
-            title="Application Details"
-            application={selectedApp}
-            onShortlist={() => this.onShortlist(selectedApp)}
-            onMessage={() => this.onMessage(selectedApp)}
-            onRemove={() => this.onRemove(selectedApp)}
-            onClose={() => this.onSelect()}
-          />
+          <LargeModal visible title="Application Details" onCancel={() => this.onSelect()}>
+            <JobseekerDetails
+              jobseeker={selectedApp.job_seeker}
+              connected
+              actions={
+                <div>
+                  <div style={{ marginBottom: '24px' }}>
+                    <span style={{ marginRight: '5px' }}>Shortlisted</span>
+                    <Switch
+                      checked={selectedApp.shortlisted}
+                      loading={selectedApp.loading}
+                      onChange={() => this.onShortlist(selectedApp)}
+                    />
+                  </div>
+                  <Button type="primary" disabled={selectedApp.loading} onClick={() => this.onMessage(selectedApp)}>
+                    Message
+                  </Button>
+                  <Button type="danger" disabled={selectedApp.loading} onClick={() => this.onRemove(selectedApp)}>
+                    Remove
+                  </Button>
+                </div>
+              }
+            />
+          </LargeModal>
         )}
       </div>
     );

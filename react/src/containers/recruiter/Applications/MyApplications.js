@@ -2,13 +2,13 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import Truncate from 'react-truncate';
-import { List, Modal, Avatar, Tooltip } from 'antd';
+import { List, Modal, Avatar, Tooltip, Button } from 'antd';
 
 import { connectApplication, removeApplication } from 'redux/applications';
 import DATA from 'utils/data';
 import * as helper from 'utils/helper';
 
-import { AlertMsg, Loading, ListEx, Icons, JobseekerDetails } from 'components';
+import { AlertMsg, Loading, ListEx, Icons, LargeModal, JobseekerDetails } from 'components';
 
 const { confirm } = Modal;
 
@@ -158,13 +158,22 @@ class MyApplications extends React.Component {
           />
         )}
         {selectedApp && (
-          <JobseekerDetails
-            title="Application Details"
-            application={selectedApp}
-            onConnect={() => this.onConnect(selectedApp)}
-            onRemove={() => this.onRemove(selectedApp)}
-            onClose={() => this.onSelect()}
-          />
+          <LargeModal visible title="Application Details" onCancel={() => this.onSelect()}>
+            <JobseekerDetails
+              jobseeker={selectedApp.job_seeker}
+              connected
+              actions={
+                <div>
+                  <Button type="primary" loading={selectedApp.loading} onClick={() => this.onConnect(selectedApp)}>
+                    Connect
+                  </Button>
+                  <Button type="danger" disabled={selectedApp.loading} onClick={() => this.onRemove(selectedApp)}>
+                    Remove
+                  </Button>
+                </div>
+              }
+            />
+          </LargeModal>
         )}
       </div>
     );

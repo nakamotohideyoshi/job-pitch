@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import media from 'utils/mediaquery';
 
 export default styled.div`
   .ant-avatar {
@@ -39,6 +40,15 @@ export default styled.div`
         cursor: pointer;
       }
     }
+  }
+
+  .pitch-video {
+    float: right;
+    margin: 18px 0 2em 2em;
+    width: 50%;
+    ${media.desktop`
+      width: 100%;
+    `};
   }
 
   .overview {

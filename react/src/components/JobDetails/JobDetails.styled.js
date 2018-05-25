@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import colors from 'utils/colors';
-import media from 'utils/mediaquery.js';
+import media from 'utils/mediaquery';
 
 export default styled.div`
   .logo {
@@ -22,7 +22,7 @@ export default styled.div`
   }
 
   .info {
-    ${media.desktop` margin-bottom: 24px;`};
+    ${media.desktop`margin-bottom: 24px;`};
 
     .name {
       margin-bottom: 0.25em;
@@ -73,35 +73,13 @@ export default styled.div`
     margin: 40px 0;
   }
 
-  .job-resource {
-    position: relative;
-    padding-top: 33%;
-    cursor: pointer;
-    > span {
-      position: absolute;
-      top: 0;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      background-size: cover;
-      background-position: center;
-      svg {
-        width: 8%;
-        height: auto;
-        color: #fff;
-        opacity: 0.3;
-        transition: opacity 0.3s;
-      }
-
-      &:hover {
-        svg {
-          opacity: 1;
-        }
-      }
-    }
+  .pitch-video {
+    margin: 18px 0 2em 2em;
+    width: 50%;
+    float: right;
+    ${media.desktop`
+      width: 100%;
+    `};
   }
 
   .ant-carousel,

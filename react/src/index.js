@@ -9,6 +9,7 @@ import registerServiceWorker from './registerServiceWorker';
 import configureStore from './configureStore';
 
 import 'antd/theme.css';
+import 'video.js/dist/video-js.css';
 import './globalStyles';
 
 const history = createHistory();

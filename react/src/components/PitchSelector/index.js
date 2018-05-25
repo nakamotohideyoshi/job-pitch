@@ -3,7 +3,7 @@ import { Modal, Upload, message, Tooltip } from 'antd';
 
 import * as helper from 'utils/helper';
 
-import { VideoPlayer, VideoRecorder, Icons } from 'components';
+import { VideoPlayerModal, VideoRecorder, Icons } from 'components';
 import Wrapper from './styled';
 
 const { confirm } = Modal;
@@ -130,7 +130,19 @@ class PitchSelector extends React.Component {
         )}
 
         {showRecorder && <VideoRecorder onClose={this.closeRecorder} />}
-        {playUrl && <VideoPlayer videoUrl={playUrl} onClose={() => this.playPitch()} />}
+        {playUrl && (
+          <VideoPlayerModal
+            autoplay
+            controls
+            sources={[
+              {
+                src: playUrl,
+                type: 'video/mp4'
+              }
+            ]}
+            onClose={() => this.playPitch()}
+          />
+        )}
       </Wrapper>
     );
   }

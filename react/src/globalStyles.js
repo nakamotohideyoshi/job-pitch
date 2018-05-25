@@ -7,10 +7,6 @@ injectGlobal`
     font-size: 14px;
   }
 
-  h2 {
-    
-  }
-
   textarea.ant-input {
     resize: none;
   }
@@ -35,6 +31,7 @@ injectGlobal`
   }
 
   .description {
+    white-space: pre-line;
     word-break: break-all;
     hyphens: auto;
   }

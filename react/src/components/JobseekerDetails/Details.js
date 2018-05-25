@@ -8,12 +8,6 @@ import { Icons, VideoPlayer } from 'components';
 import Wrapper from './Details.styled';
 
 export default class Details extends React.Component {
-  state = {
-    show: false
-  };
-
-  playPitch = show => this.setState({ show });
-
   viewCV = () => window.open(this.props.jobseeker.cv);
 
   render() {
@@ -30,7 +24,7 @@ export default class Details extends React.Component {
       mobile = jobseeker.mobile_public && jobseeker.mobile;
     }
 
-    const pitch = helper.getPitch(jobseeker);
+    const pitches = jobseeker.pitches.filter(({ video }) => video);
 
     return (
       <Wrapper className={className}>
@@ -52,13 +46,6 @@ export default class Details extends React.Component {
                     </span>
                   )}
                 </div>
-                {pitch && (
-                  <div>
-                    <a onClick={() => this.playPitch(true)}>
-                      <Icons.PlayCircle />Video Pitch
-                    </a>
-                  </div>
-                )}
               </Fragment>
             }
           />
@@ -66,9 +53,25 @@ export default class Details extends React.Component {
 
         <Divider />
 
-        <h3>Overview</h3>
-
-        <div className="overview">{jobseeker.description}</div>
+        <div>
+          <h3>Overview</h3>
+          {pitches.map(({ id, thumbnail, video }) => (
+            <div key={id} className="pitch-video">
+              <VideoPlayer
+                controls
+                poster={thumbnail}
+                preload="none"
+                sources={[
+                  {
+                    src: video,
+                    type: 'video/mp4'
+                  }
+                ]}
+              />
+            </div>
+          ))}
+          <p className="description">{jobseeker.description}</p>
+        </div>
 
         {jobseeker.cv && <Button onClick={this.viewCV}>CV View</Button>}
 
@@ -112,8 +115,6 @@ export default class Details extends React.Component {
             {!email && !mobile && <p>No contact details supplied</p>}
           </Fragment>
         )}
-
-        {this.state.show && <VideoPlayer videoUrl={pitch.video} onClose={() => this.playPitch()} />}
       </Wrapper>
     );
   }

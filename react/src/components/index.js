@@ -27,7 +27,7 @@ import ListEx from './ListEx';
 
 import PitchSelector from './PitchSelector';
 import VideoRecorder from './video/Recorder';
-import VideoPlayer from './video/Player';
+import { VideoPlayer, VideoPlayerModal } from './video/Player';
 
 import Email from './Email';
 
@@ -57,6 +57,7 @@ export {
   PitchSelector,
   VideoRecorder,
   VideoPlayer,
+  VideoPlayerModal,
   Email,
   SocialShare,
   LargeModal

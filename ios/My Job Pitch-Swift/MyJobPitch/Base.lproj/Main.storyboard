@@ -5744,7 +5744,7 @@ jobs yet.</string>
                                                         <nil key="highlightedColor"/>
                                                     </label>
                                                     <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="749" image="intro2" translatesAutoresizingMaskIntoConstraints="NO" id="Sw8-N5-GY3">
-                                                        <rect key="frame" x="103.66666666666663" y="40" width="207.00000000000011" height="492"/>
+                                                        <rect key="frame" x="104" y="40" width="207" height="492"/>
                                                     </imageView>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Quick and easy! Use your phone camera to record a quick video introduction for yourself." lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="25x-io-NG6">
                                                         <rect key="frame" x="20" y="513.66666666666652" width="374" height="38.333333333333371"/>
@@ -5956,13 +5956,13 @@ jobs yet.</string>
                                                         <nil key="highlightedColor"/>
                                                     </label>
                                                     <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="2TZ-xr-kUe">
-                                                        <rect key="frame" x="19.333333333333343" y="251" width="337.66666666666663" height="20"/>
+                                                        <rect key="frame" x="18.666666666666657" y="250.66666666666669" width="339" height="20"/>
                                                         <subviews>
                                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Hij-qd-y2o">
-                                                                <rect key="frame" x="0.0" y="0.0" width="112.66666666666667" height="20"/>
+                                                                <rect key="frame" x="0.0" y="0.0" width="112.99999999999999" height="20"/>
                                                                 <subviews>
                                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="xw1-vr-pXI">
-                                                                        <rect key="frame" x="17.666666666666671" y="0.0" width="78" height="20"/>
+                                                                        <rect key="frame" x="18.333333333333329" y="0.0" width="78" height="20"/>
                                                                         <subviews>
                                                                             <imageView userInteractionEnabled="NO" alpha="0.5" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="icon-contract" translatesAutoresizingMaskIntoConstraints="NO" id="zLS-L4-3uA">
                                                                                 <rect key="frame" x="0.3333333333333357" y="0.0" width="20" height="20"/>
@@ -5972,7 +5972,7 @@ jobs yet.</string>
                                                                                 </constraints>
                                                                             </imageView>
                                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Full-time" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="taa-5h-mOy">
-                                                                                <rect key="frame" x="28.333333333333329" y="3.6666666666666856" width="50" height="14.333333333333314"/>
+                                                                                <rect key="frame" x="28.333333333333329" y="3" width="50" height="14.333333333333314"/>
                                                                                 <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                                                                 <color key="textColor" red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="calibratedRGB"/>
                                                                                 <nil key="highlightedColor"/>
@@ -5997,10 +5997,10 @@ jobs yet.</string>
                                                                 </constraints>
                                                             </view>
                                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="wCK-Xd-K6D">
-                                                                <rect key="frame" x="112.66666666666667" y="0.0" width="112.33333333333333" height="20"/>
+                                                                <rect key="frame" x="113" y="0.0" width="113" height="20"/>
                                                                 <subviews>
                                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4Uu-2B-LDR">
-                                                                        <rect key="frame" x="12" y="0.0" width="88.666666666666657" height="20"/>
+                                                                        <rect key="frame" x="13" y="0.0" width="88.666666666666686" height="20"/>
                                                                         <subviews>
                                                                             <imageView userInteractionEnabled="NO" alpha="0.5" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="icon-time" translatesAutoresizingMaskIntoConstraints="NO" id="Gxd-ci-S5I">
                                                                                 <rect key="frame" x="0.0" y="0.0" width="20" height="20"/>
@@ -6010,7 +6010,7 @@ jobs yet.</string>
                                                                                 </constraints>
                                                                             </imageView>
                                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Temporary" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Mo7-Vv-xf4">
-                                                                                <rect key="frame" x="28" y="3.6666666666666856" width="60.666666666666657" height="14.333333333333314"/>
+                                                                                <rect key="frame" x="28" y="3" width="60.666666666666686" height="14.333333333333314"/>
                                                                                 <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                                                                 <color key="textColor" red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="calibratedRGB"/>
                                                                                 <nil key="highlightedColor"/>
@@ -6035,20 +6035,20 @@ jobs yet.</string>
                                                                 </constraints>
                                                             </view>
                                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="z3d-PQ-vHU">
-                                                                <rect key="frame" x="225" y="0.0" width="112.66666666666663" height="20"/>
+                                                                <rect key="frame" x="226" y="0.0" width="113" height="20"/>
                                                                 <subviews>
                                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="DKY-RO-grl">
                                                                         <rect key="frame" x="19.333333333333343" y="0.0" width="75.333333333333314" height="20"/>
                                                                         <subviews>
                                                                             <imageView userInteractionEnabled="NO" alpha="0.5" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="icon-distance" translatesAutoresizingMaskIntoConstraints="NO" id="LwX-Ks-f4T">
-                                                                                <rect key="frame" x="0.66666666666662877" y="0.0" width="20" height="20"/>
+                                                                                <rect key="frame" x="0.0" y="0.0" width="20" height="20"/>
                                                                                 <constraints>
                                                                                     <constraint firstAttribute="height" constant="20" id="kQ5-HF-4le"/>
                                                                                     <constraint firstAttribute="width" constant="20" id="xx9-je-t8T"/>
                                                                                 </constraints>
                                                                             </imageView>
                                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0.04 Km" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qaa-bK-Vfz">
-                                                                                <rect key="frame" x="28.666666666666629" y="3.6666666666666856" width="47.333333333333371" height="14.333333333333314"/>
+                                                                                <rect key="frame" x="28" y="3" width="47.333333333333314" height="14.333333333333314"/>
                                                                                 <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                                                                 <color key="textColor" red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="calibratedRGB"/>
                                                                                 <nil key="highlightedColor"/>
@@ -6079,13 +6079,13 @@ jobs yet.</string>
                                                         </constraints>
                                                     </stackView>
                                                     <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="oHa-3V-r0o">
-                                                        <rect key="frame" x="-188" y="287" width="751" height="40"/>
+                                                        <rect key="frame" x="-188" y="286.66666666666669" width="751" height="40"/>
                                                         <subviews>
                                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="uZP-gg-7ve">
-                                                                <rect key="frame" x="0.0" y="0.0" width="188.33333333333334" height="40"/>
+                                                                <rect key="frame" x="0.0" y="0.0" width="188" height="40"/>
                                                                 <subviews>
                                                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mrj-Ge-5Ls" customClass="GreyButton" customModule="MyJobPitch" customModuleProvider="target">
-                                                                        <rect key="frame" x="12" y="0.0" width="170.33333333333334" height="40"/>
+                                                                        <rect key="frame" x="12" y="0.0" width="170" height="40"/>
                                                                         <color key="backgroundColor" red="0.83921568629999999" green="0.83921568629999999" blue="0.83921568629999999" alpha="1" colorSpace="calibratedRGB"/>
                                                                         <constraints>
                                                                             <constraint firstAttribute="height" constant="40" id="rfj-vx-DSJ"/>
@@ -6108,10 +6108,10 @@ jobs yet.</string>
                                                                 </constraints>
                                                             </view>
                                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="x1y-UA-384">
-                                                                <rect key="frame" x="188.33333333333337" y="0.0" width="187.66666666666663" height="40"/>
+                                                                <rect key="frame" x="188" y="0.0" width="188" height="40"/>
                                                                 <subviews>
                                                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dnD-gF-6Ud" customClass="GreenButton" customModule="MyJobPitch" customModuleProvider="target">
-                                                                        <rect key="frame" x="6" y="0.0" width="169.66666666666666" height="40"/>
+                                                                        <rect key="frame" x="6" y="0.0" width="170" height="40"/>
                                                                         <color key="backgroundColor" red="0.0" green="0.73333333329999995" blue="0.6588235294" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                                         <constraints>
                                                                             <constraint firstAttribute="height" constant="40" id="5uq-L7-NAh"/>

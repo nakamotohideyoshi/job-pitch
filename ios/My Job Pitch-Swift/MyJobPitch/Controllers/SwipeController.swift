@@ -43,6 +43,9 @@ class SwipeController: MJPController {
             let credits = searchJob.locationData.businessData.tokens as Int
             creditsButton.setTitle(String(format: "%d %@", credits, credits > 1 ? "Credits" : "Credit"), for: .normal)
             emptyView.text = "There are no more new matches for this job. You can restore your removed matches by clicking refresh above."
+            
+            let item = UIBarButtonItem(barButtonSystemItem: .compose, target: self, action: #selector(goJobDetail))
+            navigationItem.rightBarButtonItems?.append(item)
         } else {
             creditsButton.removeFromSuperview()
             emptyView.text = "There are no more jobs that match your profile. You can restore your removed matches by clicking refresh above."
@@ -57,6 +60,12 @@ class SwipeController: MJPController {
             card.center = CGPoint(x: cardsView.frame.size.width*0.5, y: card.frame.size.height*0.5+10+10*CGFloat(index))
         }
         
+    }
+    
+    func goJobDetail(_ sender: Any) {
+        let controller = AppHelper.mainStoryboard.instantiateViewController(withIdentifier: "JobDetail") as! JobDetailController
+        controller.job = searchJob
+        navigationController?.pushViewController(controller, animated: true)
     }
     
     func newCard(index: Int) -> SwipeCard {

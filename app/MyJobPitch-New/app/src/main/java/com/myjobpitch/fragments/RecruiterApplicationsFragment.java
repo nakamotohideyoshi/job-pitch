@@ -50,6 +50,8 @@ public class RecruiterApplicationsFragment extends ApplicationsFragment {
         int applyButtonIcon = listKind == APPLICATIONS ? R.drawable.swipe_icon_connect : R.drawable.swipe_icon_message;
         View view = initView(inflater, container, applyButtonIcon, emptyTexts[listKind], R.layout.cell_application_list);
         title = titles[listKind];
+
+        addMenuItem(MENUGROUP1, 101, "Job Details", R.drawable.ic_edit);
         return  view;
     }
 
@@ -161,4 +163,12 @@ public class RecruiterApplicationsFragment extends ApplicationsFragment {
         popup.show();
     }
 
+    @Override
+    public void onMenuSelected(int menuID) {
+        if (menuID == 101) {
+            JobDetailFragment fragment = new JobDetailFragment();
+            fragment.job = job;
+            getApp().pushFragment(fragment);
+        }
+    }
 }

@@ -17,7 +17,7 @@ class SearchController: MJPController {
     var selectedItem: Any!
     
     var navTitleView: UIView!
-    var searchItem: UIBarButtonItem!
+    var searchItems: [UIBarButtonItem]?
     var searchBar: UISearchBar!
 
     override func viewDidLoad() {
@@ -29,12 +29,12 @@ class SearchController: MJPController {
         
         navTitleView = navigationItem.titleView
         
-        searchItem = UIBarButtonItem(barButtonSystemItem: .search, target: self, action: #selector(searchAction))
-        navigationItem.rightBarButtonItem = searchItem
+        searchItems = [UIBarButtonItem(barButtonSystemItem: .search, target: self, action: #selector(searchAction))]
+        navigationItem.rightBarButtonItems = searchItems
         searchBar = UISearchBar()
         searchBar.delegate = self
         searchBar.showsCancelButton = true
-        searchBar.alpha = 0        
+        searchBar.alpha = 0
     }
     
     func filterItem(item: Any, text: String) -> Bool {
@@ -58,7 +58,7 @@ class SearchController: MJPController {
     
     func searchAction(_ sender: Any) {
         
-        self.navigationItem.rightBarButtonItem = nil
+        self.navigationItem.rightBarButtonItems = nil
         
         UIView.animate(withDuration: 0.3, animations: {
             self.navTitleView?.alpha = 0
@@ -100,7 +100,7 @@ extension SearchController: UISearchBarDelegate {
             self.searchBar.alpha = 0
         }) { (finished) in
             self.navigationItem.titleView = self.navTitleView
-            self.navigationItem.rightBarButtonItem = self.searchItem
+            self.navigationItem.rightBarButtonItems = self.searchItems
             
             UIView.animate(withDuration: 0.3, animations: {
                 self.navTitleView?.alpha = 1

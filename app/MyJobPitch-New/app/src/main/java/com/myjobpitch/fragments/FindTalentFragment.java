@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.myjobpitch.R;
 import com.myjobpitch.api.MJPApi;
 import com.myjobpitch.api.MJPApiException;
 import com.myjobpitch.api.data.Application;
@@ -31,6 +32,9 @@ public class FindTalentFragment extends SwipeFragment<JobSeeker> {
         View view = initView(inflater, container, "There are no more new matches for this job. You can restore your removed matches by clicking refresh above.");
         title = "Find Talent";
         showCredits();
+
+
+        addMenuItem(MENUGROUP1, 101, "Job Details", R.drawable.ic_edit);
         return  view;
     }
 
@@ -123,6 +127,17 @@ public class FindTalentFragment extends SwipeFragment<JobSeeker> {
             }
         };
         getApp().pushFragment(fragment);
+    }
+
+    @Override
+    public void onMenuSelected(int menuID) {
+        if (menuID == 101) {
+            JobDetailFragment fragment = new JobDetailFragment();
+            fragment.job = job;
+            getApp().pushFragment(fragment);
+        } else {
+            super.onMenuSelected(menuID);
+        }
     }
 
 }

@@ -45,7 +45,7 @@ public class SwipeFragment<T> extends BaseFragment {
         AppHelper.setEmptyViewText(emptyView, emptyText);
         emptyButton.setVisibility(View.GONE);
 
-        // save button
+        // refresh button
         addMenuItem(MENUGROUP1, 100, "Refresh", R.drawable.ic_refresh);
 
         return  view;

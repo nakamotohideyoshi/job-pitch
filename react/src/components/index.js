@@ -31,7 +31,7 @@ import { VideoPlayer, VideoPlayerModal } from './video/Player';
 
 import Email from './Email';
 
-import SocialShare from './SocialShare';
+import { ShareLink, SocialShare } from './SocialShare';
 
 import LargeModal from './LargeModal';
 
@@ -59,6 +59,7 @@ export {
   VideoPlayer,
   VideoPlayerModal,
   Email,
+  ShareLink,
   SocialShare,
   LargeModal
 };

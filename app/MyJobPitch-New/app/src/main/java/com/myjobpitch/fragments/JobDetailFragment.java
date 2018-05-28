@@ -1,6 +1,7 @@
 package com.myjobpitch.fragments;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -49,6 +50,8 @@ public class JobDetailFragment extends BaseFragment {
                              Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_job_detail, container, false);
         ButterKnife.bind(this, view);
+
+        addMenuItem(MENUGROUP2, 100, "Share", R.drawable.ic_share);
 
         // menu list
 
@@ -136,6 +139,17 @@ public class JobDetailFragment extends BaseFragment {
         });
         popup.addGreyButton("Cancel", null);
         popup.show();
+    }
+
+    @Override
+    public void onMenuSelected(int menuID) {
+        if (menuID == 100) {
+            String link = String.format("%sjobseeker/jobs/%d", MJPApi.apiUrl, job.getId());
+            Intent sharingIntent = new Intent(Intent.ACTION_SEND);
+            sharingIntent.setType("text/html");
+            sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, link);
+            startActivity(Intent.createChooser(sharingIntent,"Share using"));
+        }
     }
 
     // menu adapter ========================================

@@ -1,2 +1,3 @@
+import ShareLink from './ShareLink';
 import SocialShare from './SocialShare';
-export default SocialShare;
+export { ShareLink, SocialShare };

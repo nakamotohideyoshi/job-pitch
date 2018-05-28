@@ -4,16 +4,18 @@ import styled, { css } from 'styled-components';
 import { Modal, Input } from 'antd';
 import { Icons } from 'components';
 
-const LinkIcon = styled.div`
-  ${({ round, size }) => css`
-    display: inline-flex;
-    background: #e0e0e0;
-    width: ${size}px;
-    height: ${size}px;
-    justify-content: center;
-    align-items: center;
-    ${round && 'border-radius: 50%;'};
-  `};
+const LinkIcon = styled.span`
+  ${({ round, size }) =>
+    size &&
+    css`
+      display: inline-flex;
+      background: #e0e0e0;
+      width: ${size}px;
+      height: ${size}px;
+      justify-content: center;
+      align-items: center;
+      ${round && 'border-radius: 50%;'};
+    `};
 `;
 
 const StyledModal = styled(Modal)`
@@ -31,16 +33,19 @@ class ShareLink extends React.Component {
     showDialog: false
   };
 
-  copyLink = () => {
+  copyLink = event => {
+    event && event.stopPropagation();
     this.inputRef.input.select();
     document.execCommand('Copy');
   };
 
-  openDialog = () => {
+  openDialog = event => {
+    event && event.stopPropagation();
     this.setState({ showDialog: true });
   };
 
-  closeDialog = () => {
+  closeDialog = event => {
+    event && event.stopPropagation();
     this.setState({ showDialog: false });
   };
 
@@ -77,7 +82,6 @@ ShareLink.propTypes = {
 
 ShareLink.defaultProps = {
   round: true,
-  size: 32,
   title: 'Share Link',
   comment: 'Share this link on your website, in an email, or anywhere else.'
 };

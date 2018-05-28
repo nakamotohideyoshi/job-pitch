@@ -61,7 +61,7 @@ public class MessageFragment extends BaseFragment {
         final View view =  inflater.inflate(R.layout.fragment_message, container, false);
         ButterKnife.bind(this, view);
 
-        title = "Message";
+        title = "Messages";
 
         // get data
 
@@ -117,7 +117,7 @@ public class MessageFragment extends BaseFragment {
 
             AppHelper.loadJobSeekerImage(jobSeeker, AppHelper.getImageView(headerView));
             AppHelper.getItemTitleView(headerView).setText(AppHelper.getJobSeekerName(jobSeeker));
-            AppHelper.getItemSubTitleView(headerView).setText(String.format("%s (%s)", job.getTitle(), AppHelper.getBusinessName(job)));
+            AppHelper.getItemSubTitleView(headerView).setText(String.format("%s, %s", job.getTitle(), AppHelper.getBusinessName(job)));
 
             myName = job.getLocation_data().getBusiness_data().getName();
             myAvatar = jobImage;

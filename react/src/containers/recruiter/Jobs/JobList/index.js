@@ -8,7 +8,7 @@ import { Breadcrumb, List, Avatar, Tooltip } from 'antd';
 import DATA from 'utils/data';
 import * as helper from 'utils/helper';
 
-import { PageHeader, PageSubHeader, AlertMsg, LinkButton, Loading, ListEx, Icons } from 'components';
+import { PageHeader, PageSubHeader, AlertMsg, LinkButton, Loading, ListEx, Icons, ShareLink } from 'components';
 import DeleteDialog from './DeleteDialog';
 import Mark from './Mark';
 import Wrapper from '../styled';
@@ -57,6 +57,9 @@ class JobList extends React.Component {
       <List.Item
         key={id}
         actions={[
+          <Tooltip placement="bottom" title="Share Link">
+            <ShareLink url={`${window.location.origin}/jobseeker/jobs/${id}`} />
+          </Tooltip>,
           <Tooltip placement="bottom" title="Edit">
             <span onClick={e => this.editJob(job, e)}>
               <Icons.Pen />

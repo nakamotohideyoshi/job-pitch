@@ -60,6 +60,13 @@ class JobDetailController: MJPController {
         }, cancel: "Cancel", cancelCallback: nil)
     }
     
+    @IBAction func shareAction(_ sender: Any) {
+        let url = String(format: "%@/jobseeker/jobs/%d", API.apiRoot.absoluteString, job.id)
+        let itemProvider = ShareProvider(placeholderItem: url)
+        let controller = UIActivityViewController(activityItems: [itemProvider], applicationActivities: nil)
+        present(controller, animated: true, completion: nil)
+    }
+    
 }
 
 

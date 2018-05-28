@@ -21,7 +21,7 @@ const Wrapper = styled.ul`
   padding: 0;
   height: 32px;
 
-  li > div {
+  li > * {
     float: left;
     margin-right: 5px;
     outline: none;

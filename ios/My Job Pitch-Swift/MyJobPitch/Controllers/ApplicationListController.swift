@@ -49,6 +49,12 @@ class ApplicationListController: SearchController {
             emptyView.text = "You have no applications."
         }
         
+        if isRecruiter {
+            let item = UIBarButtonItem(barButtonSystemItem: .compose, target: self, action: #selector(goJobDetail))
+            searchItems?.append(item)
+            navigationItem.rightBarButtonItems = searchItems
+        }
+        
         tableView.addPullToRefresh {
             self.loadData()
         }
@@ -100,6 +106,12 @@ class ApplicationListController: SearchController {
             self.tableView.pullToRefreshView.stopAnimating()
         }, failure: self.handleErrors)
         
+    }
+    
+    func goJobDetail(_ sender: Any) {
+        let controller = AppHelper.mainStoryboard.instantiateViewController(withIdentifier: "JobDetail") as! JobDetailController
+        controller.job = job
+        navigationController?.pushViewController(controller, animated: true)
     }
     
     override func filterItem(item: Any, text: String) -> Bool {

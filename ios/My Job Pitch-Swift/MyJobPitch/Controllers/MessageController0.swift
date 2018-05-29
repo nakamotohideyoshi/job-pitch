@@ -17,11 +17,18 @@ class MessageController0: MJPController {
     @IBOutlet weak var containerView: UIView!
     
     var application: Application!
+    var goAllMessages: Bool?
+    var allMessageItems: [UIBarButtonItem]?
     
     override func viewDidLoad() {
         super.viewDidLoad()
 
         headerView.addUnderLine(paddingLeft: 0, paddingRight: 0, color: AppData.greyBorderColor)
+        if self.goAllMessages! {
+            allMessageItems = [UIBarButtonItem(title: "All Messages", style: .plain, target: self, action: #selector(goAllMessageList))]
+            allMessageItems![0].image = UIImage(named: "menu-message")
+            navigationItem.rightBarButtonItems = allMessageItems
+        }
         
         headerView.isHidden = true
         showLoading()
@@ -33,6 +40,10 @@ class MessageController0: MJPController {
             self.load()
         }, failure: self.handleErrors)
         
+    }
+    
+    func goAllMessageList() {
+        MessageListController.pushController(job: nil)
     }
     
     func load() {
@@ -86,14 +97,16 @@ class MessageController0: MJPController {
     
     @IBAction func closeAction(_ sender: Any) {
         navigationController?.dismiss(animated: true, completion: nil)
+        navigationController?.popViewController(animated: true)
     }
 
-    static func showModal(application: Application) {
+    static func showModal(application: Application, goAllMessages: Bool) {
         
         let controller = AppHelper.mainStoryboard.instantiateViewController(withIdentifier: "Message0") as! MessageController0
         controller.application = application
-        let navController = UINavigationController(rootViewController: controller)
-        AppHelper.getFrontController().present(navController, animated: true, completion: nil)
+        controller.goAllMessages = goAllMessages
+        
+        AppHelper.getFrontController().navigationController?.pushViewController(controller, animated: true)
         
     }
     

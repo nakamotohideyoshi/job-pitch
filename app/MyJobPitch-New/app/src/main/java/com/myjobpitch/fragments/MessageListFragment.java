@@ -85,7 +85,7 @@ public class MessageListFragment extends ApplicationsFragment {
             JobSeeker jobSeeker = application.getJobSeeker();
             AppHelper.loadJobSeekerImage(jobSeeker, AppHelper.getImageView(view));
             setItemTitle(view, AppHelper.getJobSeekerName(jobSeeker));
-            setItemSubTitle(view, String.format("%s, %s", job.getTitle(), AppHelper.getBusinessName(job)));
+            setItemSubTitle(view, String.format("%s, (%s)", job.getTitle(), AppHelper.getBusinessName(job)));
         }
 
         SimpleDateFormat format = new SimpleDateFormat("MMM d, h:mm a");
@@ -107,6 +107,7 @@ public class MessageListFragment extends ApplicationsFragment {
     protected void selectedApplication(Application application) {
         MessageFragment fragment = new MessageFragment();
         fragment.application = application;
+        fragment.allMessages =  job != null;
         getApp().pushFragment(fragment);
     }
 

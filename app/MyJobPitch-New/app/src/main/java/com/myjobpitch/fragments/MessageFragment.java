@@ -54,6 +54,7 @@ public class MessageFragment extends BaseFragment {
     String myAvatar;
     String otherName;
     String otherAvatar;
+    Boolean allMessages;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -61,7 +62,12 @@ public class MessageFragment extends BaseFragment {
         final View view =  inflater.inflate(R.layout.fragment_message, container, false);
         ButterKnife.bind(this, view);
 
-        title = "Messages";
+        title = "Message";
+
+        // All Messages button
+        if (allMessages) {
+            addMenuItem(MENUGROUP1, 105, "All Messages", R.drawable.menu_message);
+        }
 
         // get data
 
@@ -192,6 +198,17 @@ public class MessageFragment extends BaseFragment {
             }
         }).execute();
     }
+
+    @Override
+    public void onMenuSelected(int menuID) {
+        if (menuID == 105) {
+            MessageListFragment fragment = new MessageListFragment();
+            getApp().pushFragment(fragment);
+        } else {
+            super.onMenuSelected(menuID);
+        }
+    }
+
 
     @OnClick(R.id.header_view)
     void onClickHeader() {

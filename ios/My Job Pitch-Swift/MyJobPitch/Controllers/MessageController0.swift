@@ -43,7 +43,7 @@ class MessageController0: MJPController {
     }
     
     func goAllMessageList() {
-        MessageListController.pushController(job: nil)
+        SideMenuController.pushController(id: "messages")
     }
     
     func load() {

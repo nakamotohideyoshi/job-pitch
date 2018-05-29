@@ -198,7 +198,7 @@ class JobSeekerDetailController: MJPController {
     
     @IBAction func applyAction(_ sender: Any) {
         if isConnected {
-            let goAllMessages = job != nil
+            let goAllMessages = true
             MessageController0.showModal(application: application, goAllMessages: goAllMessages)
         } else {
             let message = application == nil ? "Are you sure you want to connect this talent?" : "Are you sure you want to connect this application?"

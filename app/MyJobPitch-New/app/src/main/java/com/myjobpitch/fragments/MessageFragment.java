@@ -54,7 +54,7 @@ public class MessageFragment extends BaseFragment {
     String myAvatar;
     String otherName;
     String otherAvatar;
-    Boolean allMessages;
+    Boolean allMessages = true;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -202,8 +202,7 @@ public class MessageFragment extends BaseFragment {
     @Override
     public void onMenuSelected(int menuID) {
         if (menuID == 105) {
-            MessageListFragment fragment = new MessageListFragment();
-            getApp().pushFragment(fragment);
+            getApp().setRootFragement(AppData.PAGE_MESSAGES);
         } else {
             super.onMenuSelected(menuID);
         }

@@ -143,7 +143,8 @@ class ApplicationDetailsController: MJPController {
     }
     
     @IBAction func messageAction(_ sender: Any) {
-        MessageController0.showModal(application: application)
+        let goAllMessages = job != nil
+        MessageController0.showModal(application: application, goAllMessages: goAllMessages)
     }
     
     @IBAction func shareAction(_ sender: Any) {

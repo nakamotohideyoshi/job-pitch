@@ -1,13 +1,19 @@
 from django.contrib.gis.geos import Point
 from rest_framework import serializers
 
-from mjp.models import Pitch, JobProfile
+from mjp.models import Pitch, JobProfile, ApplicationPitch
 
 
 class PitchSerializer(serializers.ModelSerializer):
     class Meta:
         model = Pitch
         read_only_fields = ('token', 'job_seeker',)
+
+
+class ApplicationPitchSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ApplicationPitch
+        read_only_fields = ('token')
 
 
 class JobProfileSerializer(serializers.ModelSerializer):

@@ -1,7 +1,7 @@
 from django.db import transaction
 from rest_framework import serializers
 
-from mjp.models import Message, Application, Role, TokenStore, ApplicationStatus
+from mjp.models import Message, Application, Role, TokenStore, ApplicationStatus, ApplicationPitch
 from mjp.serializers import JobSerializer, JobSeekerReadSerializer, SimpleSerializer, JobSerializerV1
 
 
@@ -15,8 +15,18 @@ class ApplicationSerializerV1(serializers.ModelSerializer):
         read_only_fields = ('status', 'created_by', 'deleted_by', 'job', 'shortlisted',)
 
 
-class ApplicationSerializer(ApplicationSerializerV1):
+class ApplicationSerializerV2(ApplicationSerializerV1):
     job_data = JobSerializer(source='job', read_only=True)
+
+
+class EmbeddedApplicationPitchSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ApplicationPitch
+        exclude = ('token', 'job_seeker', 'application')
+
+
+class ApplicationSerializer(ApplicationSerializerV2):
+    pitches = EmbeddedApplicationPitchSerializer(read_only=True, many=True)
 
 
 class ApplicationCreateSerializer(serializers.ModelSerializer):

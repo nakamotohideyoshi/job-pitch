@@ -18,40 +18,40 @@ from django.utils.translation import gettext as _
 
 
 def _fix_image_rotation(image):
- orientation_to_rotation_map = {
-     3: Image.ROTATE_180,
-     6: Image.ROTATE_270,
-     8: Image.ROTATE_90,
- }
- try:
-     exif = _get_exif_from_image(image)
-     orientation = _get_orientation_from_exif(exif)
-     rotation = orientation_to_rotation_map.get(orientation)
-     if rotation:
-         image = image.transpose(rotation)
- finally:
-     return image
+    orientation_to_rotation_map = {
+        3: Image.ROTATE_180,
+        6: Image.ROTATE_270,
+        8: Image.ROTATE_90,
+    }
+    try:
+        exif = _get_exif_from_image(image)
+        orientation = _get_orientation_from_exif(exif)
+        rotation = orientation_to_rotation_map.get(orientation)
+        if rotation:
+            image = image.transpose(rotation)
+    finally:
+        return image
 
 
 def _get_exif_from_image(image):
- exif = {}
+    exif = {}
 
- if hasattr(image, '_getexif'):  # only jpegs have _getexif
-     exif_or_none = image._getexif()
-     if exif_or_none is not None:
-         exif = exif_or_none
+    if hasattr(image, '_getexif'):  # only jpegs have _getexif
+        exif_or_none = image._getexif()
+        if exif_or_none is not None:
+            exif = exif_or_none
 
- return exif
+    return exif
 
 
 def _get_orientation_from_exif(exif):
- ORIENTATION_TAG = 'Orientation'
- orientation_iterator = (
-     exif.get(tag_key) for tag_key, tag_value in ExifTags.TAGS.items()
-     if tag_value == ORIENTATION_TAG
- )
- orientation = next(orientation_iterator, None)
- return orientation
+    ORIENTATION_TAG = 'Orientation'
+    orientation_iterator = (
+        exif.get(tag_key) for tag_key, tag_value in ExifTags.TAGS.items()
+        if tag_value == ORIENTATION_TAG
+    )
+    orientation = next(orientation_iterator, None)
+    return orientation
 
 
 def create_thumbnail(image, thumbnail, name=None, content_type=None):
@@ -517,6 +517,14 @@ class Application(models.Model):
 
     def __str__(self):
         return "%s: %s for %s" % (type(self).__name__, self.job.title, self.job_seeker.get_full_name())
+
+
+class ApplicationPitch(models.Model):
+    job_seeker = models.ForeignKey(JobSeeker, related_name='application_pitches')
+    application = models.ForeignKey(Application, related_name='pitches', null=True, blank=True)
+    token = models.TextField(default=uuid.uuid4, editable=False)
+    video = models.URLField(max_length=512, null=True)
+    thumbnail = models.URLField(max_length=512, null=True)
 
 
 class Message(models.Model):

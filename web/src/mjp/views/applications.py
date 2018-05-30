@@ -1,17 +1,19 @@
 from django.db.models import Max
-from rest_framework import viewsets, permissions
+from rest_framework import viewsets, permissions, serializers
 from rest_framework.exceptions import PermissionDenied
 
-from mjp.models import Job, Role, ApplicationStatus, Message, Application, Location
+from mjp.models import Job, Role, ApplicationStatus, Message, Application, Location, ApplicationPitch
 from mjp.serializers.applications import (
     ApplicationSerializer,
     ApplicationSerializerV1,
+    ApplicationSerializerV2,
     ApplicationCreateSerializer,
     ApplicationConnectSerializer,
     ApplicationShortlistUpdateSerializer,
     MessageCreateSerializer,
     MessageUpdateSerializer,
 )
+from mjp.serializers.job_seeker import ApplicationPitchSerializer
 
 
 class ApplicationViewSet(viewsets.ModelViewSet):
@@ -105,9 +107,11 @@ class ApplicationViewSet(viewsets.ModelViewSet):
             version = int(self.request.version)
         except (TypeError, ValueError):
             version = 1
-        if version > 1:
-            return ApplicationSerializer
-        return ApplicationSerializerV1
+        if version == 1:
+            return ApplicationSerializerV1
+        elif version == 2:
+            return ApplicationSerializerV2
+        return ApplicationSerializer
 
     def get_queryset(self):
         query = Application.objects.annotate(Max('messages__created')).order_by('-messages__created__max', '-updated')
@@ -199,3 +203,73 @@ class MessageViewSet(viewsets.ModelViewSet):
     update_serializer_class = MessageUpdateSerializer
     serializer_class = MessageCreateSerializer
 
+
+class ApplicationPitchViewSet(viewsets.ModelViewSet):
+    class ApplicationPitchPermission(permissions.BasePermission):
+        def has_permission(self, request, view):
+            if request.user and request.user.is_authenticated():
+                if request.method in permissions.SAFE_METHODS:
+                    return True
+                return request.user.job_seeker is not None
+            if request.user.is_anonymous() and request.method in ('GET', 'PATCH'):
+                return True
+            return False
+
+        def has_object_permission(self, request, view, obj):
+            if request.user and request.user.is_authenticated():
+                return request.user.job_seeker == obj.job_seeker
+            if request.user.is_anonymous() and request.method in ('GET', 'PATCH'):
+                return request.GET.get('token') == obj.token
+            return False
+
+    def get_queryset(self):
+        query = super(ApplicationPitchViewSet, self).get_queryset()
+        if self.request.user.is_authenticated():
+            return query.filter(job_seeker__user=self.request.user)
+        if self.request.user.is_anonymous() and self.request.method in ('GET', 'PATCH'):
+            return query.filter(token=self.request.GET.get('token'))
+
+    def perform_create(self, serializer):
+        job_seeker = serializer.validated_data['job_seeker']
+        if self.request.user.job_seeker != job_seeker:
+            raise serializers.ValidationError({'job_seeker': 'does not exist'})
+        self._perform_save(serializer, job_seeker)
+
+    def perform_update(self, serializer):
+        job_seeker = serializer.instance.job_seeker
+        if self.request.user.job_seeker != job_seeker:
+            raise serializers.ValidationError({'job_seeker': 'does not exist'})
+        if 'job_seeker' in serializer.validated_data and serializer.validated_data.get('job_seeker') != job_seeker:
+            raise serializers.ValidationError({'job_seeker': 'does not exist'})
+        self._perform_save(serializer, job_seeker)
+
+    def _perform_save(self, serializer, job_seeker):
+        if 'application' in serializer.validated_data:
+            application = serializer.validated_data['application']
+        elif serializer.instance:
+            application = serializer.instance.application
+        else:
+            application = None
+
+        if application is not None:
+            if application.job_seeker != job_seeker:
+                raise serializers.ValidationError({'application': 'does not exist'})
+            if 'video' in serializer.validated_data and serializer.validated_data['video'] is None:
+                raise serializers.ValidationError({'application': 'cannot set application if video not set'})
+            if serializer.instance is not None and serializer.instance.video is None:
+                raise serializers.ValidationError({'application': 'cannot set application if video not set'})
+        pitch = serializer.save()
+        if application is None or pitch.video is None:
+            if pitch.video is None:
+                # delete any other uploads
+                ApplicationPitch.objects.filter(job_seeker=job_seeker, video__isnull=True).exclude(pk=pitch.pk).delete()
+            if application is None:
+                # delete any unlinked pitch except this one
+                ApplicationPitch.objects.filter(job_seeker=job_seeker, application__isnull=True).exclude(pk=pitch.pk).delete()
+        else:
+            # delete any pitch except this one
+            ApplicationPitch.objects.filter(application=application).exclude(pk=pitch.pk).delete()
+
+    permission_classes = (ApplicationPitchPermission,)
+    serializer_class = ApplicationPitchSerializer
+    queryset = ApplicationPitch.objects.all()

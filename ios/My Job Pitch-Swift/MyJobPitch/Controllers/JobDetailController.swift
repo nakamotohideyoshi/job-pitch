@@ -17,20 +17,92 @@ class JobDetailController: MJPController {
     
     var job: Job!
     
+    var isRecruiter = false
+    
     let menuItems = [
         "find_talent", "applications", "connections", "shortlist", "messages"
+    ]
+    
+    var countItems = [
+        "", "", "", "", ""
     ]
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
         showLoading()
+        
+        isRecruiter = AppData.user.isRecruiter()
+        
         API.shared().loadJob(id: job.id, success: { (data) in
-            self.hideLoading()
+//            self.hideLoading()
             self.job = data as! Job
             self.updateJobInfo()
+            self.getAllApplications()
+        }, failure: self.handleErrors)
+        
+    }
+    
+    func getAllApplications() {
+        var cnt_applications = 0, cnt_connections = 0, cnt_shortlists = 0
+        API.shared().loadApplicationsForJob(jobId: job.id, status: nil, shortlisted: false, success: { (data) in
+            for application in data as! [Application] {
+                if application.status == 1 {
+                   cnt_applications += 1
+                } else if application.status == 2  {
+                    cnt_connections += 1
+                    if application.shortlisted {
+                        cnt_shortlists += 1
+                    }
+                }
+            }
+            self.countItems[1] = " (\(cnt_applications))"
+            self.countItems[2] = " (\(cnt_connections))"
+            self.countItems[3] = " (\(cnt_shortlists))"
+            self.tableView.reloadData()
+            self.hideLoading()
         }, failure: self.handleErrors)
     }
+    
+    func getApplicationsCount() {
+        if isRecruiter {
+            let statusName = ApplicationStatus.APPLICATION_CREATED
+            let status = AppData.getApplicationStatusByName(statusName).id
+            
+            API.shared().loadApplicationsForJob(jobId: job.id, status: status, shortlisted: false, success: { (data) in
+                self.countItems[1] = " (\(data.count))"
+                print("connectioins:  %d", data.count)
+                self.tableView.reloadData()
+            }, failure: self.handleErrors)
+        }
+    }
+    
+    func getConnectionsCount() {
+        if isRecruiter {
+            let statusName = ApplicationStatus.APPLICATION_ESTABLISHED
+            let status = AppData.getApplicationStatusByName(statusName).id
+            
+            API.shared().loadApplicationsForJob(jobId: job.id, status: status, shortlisted: false, success: { (data) in
+                self.countItems[2] = " (\(data.count))"
+                print("connectioins:  %d", data.count)
+                self.tableView.reloadData()
+            }, failure: self.handleErrors)
+        }
+    }
+    
+    func getShortlistedCount() {
+        if isRecruiter {
+            let statusName = ApplicationStatus.APPLICATION_ESTABLISHED
+            let status = AppData.getApplicationStatusByName(statusName).id
+            
+            API.shared().loadApplicationsForJob(jobId: job.id, status: status, shortlisted: true, success: { (data) in
+                self.countItems[3] = " (\(data.count))"
+                print("connectioins:  %d", data.count)
+                self.tableView.reloadData()
+            }, failure: self.handleErrors)
+        }
+    }
+    
     
     func updateJobInfo() {
         if let image = job.getImage() {
@@ -85,8 +157,9 @@ extension JobDetailController: UITableViewDataSource {
         let titleView = cell.viewWithTag(2) as! UILabel
         
         let item = SideMenuController.menuItems[menuItems[indexPath.row]]!
+        let count = countItems[indexPath.row]
         iconView.image = UIImage(named: item["icon"]!)?.withRenderingMode(.alwaysTemplate)
-        titleView.text = item["title"]
+        titleView.text = item["title"]! + count
         
         return cell
     }

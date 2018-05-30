@@ -24,12 +24,15 @@ import JSRoute from 'containers/jobseeker/Route';
 import FindJob from 'containers/jobseeker/FindJob';
 import JSApplications from 'containers/jobseeker/MyApplications';
 import JSJob from 'containers/jobseeker/Job';
+import JSPublicJob from 'containers/jobseeker/PublicJob';
 import JSMessages from 'containers/jobseeker/Messages';
 import JSSettings from 'containers/jobseeker/Settings';
 
 import NotFound from 'containers/NotFound';
 
-export default () => {
+import Layout from 'containers/Layout';
+
+export default props => {
   return (
     <Switch>
       <Redirect exact from="/" to="/auth" />
@@ -73,6 +76,12 @@ export default () => {
       <Redirect exact from="/jobseeker" to="/jobseeker/find" />
       <JSRoute exact path="/jobseeker/find" component={FindJob} />
       <JSRoute exact path="/jobseeker/applications" component={JSApplications} />
+
+      {props.auth === 'auth' ? (
+        <Route exact path="/jobseeker/jobs/:jobId" render={props => <Layout component={JSPublicJob} {...props} />} />
+      ) : (
+        <JSRoute exact path="/jobseeker/jobs/:jobId" component={JSJob} />
+      )}
       <JSRoute exact path="/jobseeker/jobs/:jobId" component={JSJob} />
       <JSRoute exact path="/jobseeker/messages" component={JSMessages} />
       <JSRoute exact path="/jobseeker/messages/:appId" component={JSMessages} />

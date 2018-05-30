@@ -18,6 +18,7 @@ class JobDetailController: MJPController {
     var job: Job!
     
     var isRecruiter = false
+    var refresh = true
     
     let menuItems = [
         "find_talent", "applications", "connections", "shortlist", "messages"
@@ -30,16 +31,17 @@ class JobDetailController: MJPController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        showLoading()
-        
-        isRecruiter = AppData.user.isRecruiter()
-        
-        API.shared().loadJob(id: job.id, success: { (data) in
-//            self.hideLoading()
-            self.job = data as! Job
-            self.updateJobInfo()
+        if refresh {
+            refresh = false
+            showLoading()
+            isRecruiter = AppData.user.isRecruiter()
+            
+            API.shared().loadJob(id: job.id, success: { (data) in
+                self.job = data as! Job
+                self.updateJobInfo()
+            }, failure: self.handleErrors)
             self.getAllApplications()
-        }, failure: self.handleErrors)
+        }
         
     }
     
@@ -64,46 +66,6 @@ class JobDetailController: MJPController {
         }, failure: self.handleErrors)
     }
     
-    func getApplicationsCount() {
-        if isRecruiter {
-            let statusName = ApplicationStatus.APPLICATION_CREATED
-            let status = AppData.getApplicationStatusByName(statusName).id
-            
-            API.shared().loadApplicationsForJob(jobId: job.id, status: status, shortlisted: false, success: { (data) in
-                self.countItems[1] = " (\(data.count))"
-                print("connectioins:  %d", data.count)
-                self.tableView.reloadData()
-            }, failure: self.handleErrors)
-        }
-    }
-    
-    func getConnectionsCount() {
-        if isRecruiter {
-            let statusName = ApplicationStatus.APPLICATION_ESTABLISHED
-            let status = AppData.getApplicationStatusByName(statusName).id
-            
-            API.shared().loadApplicationsForJob(jobId: job.id, status: status, shortlisted: false, success: { (data) in
-                self.countItems[2] = " (\(data.count))"
-                print("connectioins:  %d", data.count)
-                self.tableView.reloadData()
-            }, failure: self.handleErrors)
-        }
-    }
-    
-    func getShortlistedCount() {
-        if isRecruiter {
-            let statusName = ApplicationStatus.APPLICATION_ESTABLISHED
-            let status = AppData.getApplicationStatusByName(statusName).id
-            
-            API.shared().loadApplicationsForJob(jobId: job.id, status: status, shortlisted: true, success: { (data) in
-                self.countItems[3] = " (\(data.count))"
-                print("connectioins:  %d", data.count)
-                self.tableView.reloadData()
-            }, failure: self.handleErrors)
-        }
-    }
-    
-    
     func updateJobInfo() {
         if let image = job.getImage() {
             AppHelper.loadImageURL(imageUrl: (image.thumbnail)!, imageView: headerImgView, completion: nil)
@@ -116,6 +78,7 @@ class JobDetailController: MJPController {
     }
     
     @IBAction func editJobAction(_ sender: Any) {
+        self.refresh = true
         JobEditController.pushController(location: nil, job: job)
     }
     

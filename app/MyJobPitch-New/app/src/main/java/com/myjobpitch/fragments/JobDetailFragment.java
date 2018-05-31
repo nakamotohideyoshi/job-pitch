@@ -3,6 +3,8 @@ package com.myjobpitch.fragments;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,12 +19,20 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.myjobpitch.R;
 import com.myjobpitch.api.MJPApi;
 import com.myjobpitch.api.MJPApiException;
+import com.myjobpitch.api.data.Application;
+import com.myjobpitch.api.data.ApplicationStatus;
 import com.myjobpitch.api.data.Job;
 import com.myjobpitch.tasks.APIAction;
 import com.myjobpitch.tasks.APITask;
 import com.myjobpitch.tasks.APITaskListener;
+import com.myjobpitch.utils.AppData;
 import com.myjobpitch.utils.AppHelper;
 import com.myjobpitch.views.Popup;
+
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
+import java.util.ListIterator;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -44,6 +54,7 @@ public class JobDetailFragment extends BaseFragment {
     MenuAdapter adapter;
 
     public Job job;
+    public List <Application>  data;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -94,7 +105,6 @@ public class JobDetailFragment extends BaseFragment {
         }).addListener(new APITaskListener() {
             @Override
             public void onSuccess() {
-                hideLoading();
                 AppHelper.showJobInfo(job, infoView);
             }
             @Override
@@ -102,6 +112,48 @@ public class JobDetailFragment extends BaseFragment {
                 errorHandler(errors);
             }
         }).execute();
+
+        new APITask(new APIAction() {
+            @Override
+            public void run() throws MJPApiException {
+                String query = "job=" + job.getId();
+                data = MJPApi.shared().get(Application.class, query);
+
+            }
+        }).addListener(new APITaskListener() {
+            @Override
+            public void onSuccess() {
+                int cnt_applications = 0, cnt_connections = 0, cnt_shortlists = 0;
+
+                for(int i=0; i<data.size(); i++) {
+
+                    if (data.get(i).getStatus() == 1)
+                        cnt_applications++;
+
+                    else if (data.get(i).getStatus() == 2) {
+                        cnt_connections++;
+
+                        if (data.get(i).getShortlisted())
+                            cnt_shortlists++;
+                    }
+                }
+
+                counts[1] = " (" + cnt_applications + ")";
+                counts[2] = " (" + cnt_connections + ")";
+                counts[3] = " (" + cnt_shortlists + ")";
+
+                adapter.notifyDataSetChanged();
+
+                hideLoading();
+
+            }
+            @Override
+            public void onError(JsonNode errors) {
+                errorHandler(errors);
+            }
+        }).execute();
+
+
 
         return view;
     }
@@ -161,6 +213,9 @@ public class JobDetailFragment extends BaseFragment {
     private String[] titles = {
             "Find Talent", "Applications", "Connections", "My Shortlist", "Messages"
     };
+    public String[] counts = {
+            "", "", "", "", ""
+    };
 
     private class MenuAdapter extends ArrayAdapter<String> {
 
@@ -178,7 +233,7 @@ public class JobDetailFragment extends BaseFragment {
             imageView.setImageResource(images[position]);
 
             TextView textView = (TextView) convertView.findViewById(R.id.cell_text);
-            textView.setText(titles[position]);
+            textView.setText(titles[position] + counts[position]);
 
             return convertView;
         }

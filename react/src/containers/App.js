@@ -19,19 +19,20 @@ const App = ({ location, status, user, getUserData }) => {
 
   const { pathname, search } = location;
   const urlStatus = pathname.split('/')[1];
-  if (urlStatus !== status) {
-    let redirect;
-    if (urlStatus !== '' && status === 'auth') {
-      redirect = `/auth?redirect=${pathname}${search}`;
-    } else if (urlStatus === 'auth' && status !== 'auth') {
-      redirect = `/select${search}`;
-    } else if (urlStatus === 'select' && status !== 'select') {
-      redirect = search.split('redirect=')[1];
+  if (pathname.indexOf('/jobseeker/jobs/') !== 0) {
+    if (urlStatus !== status) {
+      let redirect;
+      if (urlStatus !== '' && status === 'auth') {
+        redirect = `/auth?redirect=${pathname}${search}`;
+      } else if (urlStatus === 'auth' && status !== 'auth') {
+        redirect = `/select${search}`;
+      } else if (urlStatus === 'select' && status !== 'select') {
+        redirect = search.split('redirect=')[1];
+      }
+      return <Redirect to={redirect || `/${status}`} />;
     }
-    return <Redirect to={redirect || `/${status}`} />;
   }
-
-  return <Routers />;
+  return <Routers auth={status} />;
 };
 
 export default withRouter(

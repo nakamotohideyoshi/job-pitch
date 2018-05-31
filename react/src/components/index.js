@@ -8,6 +8,7 @@ import SearchBox from './SearchBox';
 
 import JobseekerDetails from './JobseekerDetails';
 import JobDetails from './JobDetails';
+import PublicJobDetails from './JobDetails/PublicJobDetails';
 
 import GoogleMap from './GoogleMap';
 
@@ -41,6 +42,7 @@ export {
   Logo,
   JobseekerDetails,
   JobDetails,
+  PublicJobDetails,
   MessageThread,
   PageHeader,
   PageSubHeader,

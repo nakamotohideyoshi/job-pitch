@@ -8,6 +8,12 @@ const findJobs = weakRequest(
   })
 );
 
+const findPublicJob = weakRequest(
+  getRequest({
+    url: ({ jobId }) => `/api/public/jobs/${jobId}/`
+  })
+);
+
 const applyJob = weakRequest(
   postRequest({
     url: `/api/applications/`
@@ -16,5 +22,6 @@ const applyJob = weakRequest(
 
 export default function* sagas() {
   yield takeLatest(C.JS_FIND_JOBS, findJobs);
+  yield takeLatest(C.JS_FIND_PUBLIC_JOB, findPublicJob);
   yield takeLatest(C.JS_APPLY_JOB, applyJob);
 }

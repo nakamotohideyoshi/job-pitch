@@ -3,7 +3,8 @@ import Helmet from 'react-helmet';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import Truncate from 'react-truncate';
-import { Breadcrumb, List, Avatar, Tooltip } from 'antd';
+import { Breadcrumb, List, Avatar, Tooltip, Modal, Input } from 'antd';
+import styled, { css } from 'styled-components';
 
 import DATA from 'utils/data';
 import * as helper from 'utils/helper';
@@ -13,9 +14,37 @@ import DeleteDialog from './DeleteDialog';
 import Mark from './Mark';
 import Wrapper from '../styled';
 
+const StyledModal = styled(Modal)`
+  .ant-input-group-addon {
+    cursor: pointer;
+  }
+
+  .ant-form-explain {
+    margin-top: 8px;
+  }
+`;
+
 class JobList extends React.Component {
   state = {
-    selectedJob: null
+    selectedJob: null,
+    showDialog: false,
+    selected: ''
+  };
+
+  copyLink = event => {
+    event && event.stopPropagation();
+    this.inputRef.input.select();
+    document.execCommand('Copy');
+  };
+
+  openDialog(event, id) {
+    event && event.stopPropagation();
+    this.setState({ showDialog: true, selected: id });
+  }
+
+  closeDialog = event => {
+    event && event.stopPropagation();
+    this.setState({ showDialog: false });
   };
 
   componentWillMount() {
@@ -57,8 +86,11 @@ class JobList extends React.Component {
       <List.Item
         key={id}
         actions={[
-          <Tooltip placement="bottom" title="Share Link">
-            <ShareLink url={`${window.location.origin}/jobseeker/jobs/${id}`} />
+          <Tooltip placement="bottom" title="Share Job">
+            <span onClick={e => this.openDialog(e, id)}>
+              <Icons.ShareAlt />
+            </span>
+            {/* <ShareLink url={`${window.location.origin}/jobseeker/jobs/${id}`} /> */}
           </Tooltip>,
           <Tooltip placement="bottom" title="Edit">
             <span onClick={e => this.editJob(job, e)}>
@@ -110,7 +142,7 @@ class JobList extends React.Component {
 
   render() {
     const { workplace, jobs } = this.props;
-    const { selectedJob } = this.state;
+    const { selectedJob, selected } = this.state;
 
     return (
       <Wrapper className="container">
@@ -144,6 +176,18 @@ class JobList extends React.Component {
         </div>
 
         <DeleteDialog job={selectedJob} onCancel={() => this.showRemoveDialog()} />
+        <StyledModal visible={this.state.showDialog} title={'Share Link'} footer={null} onCancel={this.closeDialog}>
+          <Input
+            readOnly
+            addonAfter={<div onClick={this.copyLink}>Copy link</div>}
+            value={`${window.location.origin}/jobseeker/jobs/${selected}`}
+            ref={ref => {
+              this.inputRef = ref;
+            }}
+            id={selected}
+          />
+          <div className="ant-form-explain">{'Share this link on your website, in an email, or anywhere else.'}</div>
+        </StyledModal>
       </Wrapper>
     );
   }

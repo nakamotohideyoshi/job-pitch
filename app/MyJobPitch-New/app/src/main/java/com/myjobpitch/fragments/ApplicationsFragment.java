@@ -33,6 +33,9 @@ public class ApplicationsFragment extends BaseFragment {
     @BindView(R.id.application_list)
     ListView listView;
 
+    @BindView(R.id.job_title_view)
+    View jobTitleView;
+
     @BindView(R.id.empty_view)
     View emptyView;
 
@@ -51,6 +54,8 @@ public class ApplicationsFragment extends BaseFragment {
 
         AppHelper.setEmptyViewText(emptyView, emptyText);
         AppHelper.setEmptyButtonText(emptyView, "Refresh");
+
+        AppHelper.setJobTitleViewText(jobTitleView, "");
 
         // pull to refresh
 

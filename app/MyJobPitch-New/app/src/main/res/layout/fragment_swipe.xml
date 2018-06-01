@@ -10,15 +10,25 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <include
+            android:id="@+id/job_title_view"
+            layout="@layout/view_job_title_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top|center_horizontal"
+            android:visibility="visible" />
+
+
         <com.daprlabs.aaron.swipedeck.SwipeDeck
             android:id="@+id/swipe_deck"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:padding="10dp"
             android:layout_marginBottom="60dp"
+            android:layout_marginTop="16dp"
+            android:padding="10dp"
             swipedeck:card_spacing="15dp"
             swipedeck:max_visible="3"
-            swipedeck:preview_layout="@layout/view_swipe_card"/>
+            swipedeck:preview_layout="@layout/view_swipe_card" />
 
         <TextView
             android:id="@+id/credits"

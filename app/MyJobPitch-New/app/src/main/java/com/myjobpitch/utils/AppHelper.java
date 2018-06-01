@@ -41,7 +41,7 @@ public class AppHelper {
     }
 
     public static String getBusinessName(Job job) {
-        return job.getLocation_data().getBusiness_data().getName() + " (" + job.getLocation_data().getName() + ")";
+        return job.getLocation_data().getBusiness_data().getName() + ", " + job.getLocation_data().getName();
     }
 
     // distance
@@ -68,6 +68,11 @@ public class AppHelper {
     public static void setEmptyViewText(View emptyView, String title) {
         ((TextView)emptyView.findViewById(R.id.empty_text)).setText(title);
     }
+
+    public static void setJobTitleViewText(View jobTitleView, String title) {
+        ((TextView)jobTitleView.findViewById(R.id.job_title_text)).setText(title);
+    }
+
 
     public static void setEmptyButtonText(View emptyView, String text) {
         ((TextView)emptyView.findViewById(R.id.empty_button)).setText(text);

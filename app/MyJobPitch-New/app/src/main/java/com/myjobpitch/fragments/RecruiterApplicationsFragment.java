@@ -51,6 +51,10 @@ public class RecruiterApplicationsFragment extends ApplicationsFragment {
         View view = initView(inflater, container, applyButtonIcon, emptyTexts[listKind], R.layout.cell_application_list);
         title = titles[listKind];
 
+        if (job != null) {
+            AppHelper.setJobTitleViewText(jobTitleView, String.format("%s (%s)", job.getTitle(), AppHelper.getBusinessName(job)));
+        }
+
         addMenuItem(MENUGROUP1, 101, "Job Details", R.drawable.ic_edit);
         return  view;
     }

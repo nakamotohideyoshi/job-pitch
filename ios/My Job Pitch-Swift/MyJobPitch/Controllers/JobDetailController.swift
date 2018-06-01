@@ -137,7 +137,15 @@ extension JobDetailController: UITableViewDelegate {
         if id == "find_talent" {
             SwipeController.pushController(job: job)
         } else if id == "messages" {
-            MessageListController.pushController(job: job)
+            if job.status == 2 {
+                PopupController.showGreen("To message please active your job", ok: "activation", okCallback: {
+                    self.refresh = true
+                    JobEditController.pushController(location: nil, job: self.job)
+                }, cancel: "Cancel", cancelCallback: nil)
+                return
+            } else {
+                MessageListController.pushController(job: job)
+            }
         } else {
             ApplicationListController.pushController(job: job, mode: id)
         }

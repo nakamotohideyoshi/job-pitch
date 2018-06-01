@@ -15,6 +15,7 @@ class MessageListController: SearchController {
     @IBOutlet weak var noPitchView: UIView!
     
     var job: Job!
+    var jobSeeker: JobSeeker!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -26,13 +27,14 @@ class MessageListController: SearchController {
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
+        super.viewWillAppear(animated)
         showLoading()
         
         if !AppData.user.isRecruiter() {
             API.shared().loadJobSeekerWithId(id: AppData.user.jobSeeker, success: { (data) in
-                let jobSeeker = data as! JobSeeker
-                if jobSeeker.getPitch() != nil {
+                self.jobSeeker = data as! JobSeeker
+                
+                if self.jobSeeker.getPitch() != nil {
                     self.loadData()
                 } else {
                     self.noPitchView.isHidden = false
@@ -164,6 +166,21 @@ extension MessageListController: UITableViewDataSource {
 extension MessageListController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+       
+        if AppData.user.isJobSeeker() {
+            if (!jobSeeker.active) {
+                PopupController.showGreen("To message please active your account", ok: "activation", okCallback: {
+                    SideMenuController.pushController(id: "user_profile")
+                }, cancel: "Cancel", cancelCallback: nil)
+                return
+            }
+        } else {
+            let application = data[indexPath.row] as! Application
+            if (application.job.status == 2) {
+                JobEditController.pushController(location: nil, job: application.job)
+                return
+            }
+        }
         
         let application = data[indexPath.row] as! Application
         MessageController0.showModal(application: application)

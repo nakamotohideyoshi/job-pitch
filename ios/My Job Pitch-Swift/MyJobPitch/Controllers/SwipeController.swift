@@ -256,6 +256,24 @@ extension SwipeController: ChooseDelegate {
     
     func apply(callback: (()->Void)!) {
         
+        if AppData.user.isRecruiter() {
+            if (searchJob.status == 2) {
+                PopupController.showGreen("To apply please activate your job", ok: "activation", okCallback: {
+                    SideMenuController.pushController(id: "job_profile")
+                }, cancel: "Cancel", cancelCallback: nil)
+                reloadCard()
+                return
+            }
+        } else {
+            if (!jobSeeker.active) {
+                PopupController.showGreen("To apply please activate your account", ok: "activation", okCallback: {
+                    SideMenuController.pushController(id: "user_profile")
+                }, cancel: "Cancel", cancelCallback: nil)
+                reloadCard()
+                return
+            }
+        }        
+        
         if isFindJob && jobSeeker.getPitch() == nil {
             PopupController.showGreen("You need to record your pitch video to apply.", ok: "Record my pitch", okCallback: {
                 SideMenuController.pushController(id: "add_record")

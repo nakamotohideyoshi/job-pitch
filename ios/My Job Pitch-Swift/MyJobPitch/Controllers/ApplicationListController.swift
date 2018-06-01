@@ -14,6 +14,7 @@ class ApplicationListController: SearchController {
     
     @IBOutlet weak var emptyView: UILabel!
     @IBOutlet weak var noPitchView: UIView!
+    @IBOutlet weak var jobTitleView: UILabel!
     
     var isRecruiter = false
     var isApplication = false
@@ -53,6 +54,7 @@ class ApplicationListController: SearchController {
             let item = UIBarButtonItem(barButtonSystemItem: .compose, target: self, action: #selector(goJobDetail))
             searchItems?.append(item)
             navigationItem.rightBarButtonItems = searchItems
+            jobTitleView.text = job.title + ", (" + job.getBusinessName() + ")"
         }
         
         tableView.addPullToRefresh {

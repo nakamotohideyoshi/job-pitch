@@ -8,6 +8,7 @@ import Wrapper from './JobDetails.styled';
 export default ({ job, className, roughLocation, actions }) => {
   const logo = helper.getJobLogo(job);
   const workplace = job.location;
+  const title = job.title;
   const marker = { lat: workplace.latitude, lng: workplace.longitude };
 
   let circle;
@@ -34,6 +35,19 @@ export default ({ job, className, roughLocation, actions }) => {
           <div className="logo">
             <span style={{ backgroundImage: `url(${logo})` }} />
           </div>
+        </Col>
+        <Col sm={24} md={14} lg={19}>
+          <Row gutter={32}>
+            <Col md={24} lg={14}>
+              <div className="info">
+                <div className="name">{title}</div>
+              </div>
+            </Col>
+            <Col md={24} lg={10}>
+              <h3>Login or Register to Apply</h3>
+              {actions}
+            </Col>
+          </Row>
         </Col>
       </Row>
       <Divider />

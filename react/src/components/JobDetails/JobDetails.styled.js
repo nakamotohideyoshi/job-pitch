@@ -23,6 +23,10 @@ export default styled.div`
     }
   }
 
+  &.publicJobContainer {
+    margin: 20px 0px 20px 0px;
+  }
+
   .info {
     ${media.desktop`margin-bottom: 24px;`};
 

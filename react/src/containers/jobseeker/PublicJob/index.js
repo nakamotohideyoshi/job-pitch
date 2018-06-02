@@ -18,9 +18,11 @@ class JSPublicJob extends React.Component {
   }
 
   componentWillReceiveProps({ jobs }) {
-    this.setState({
-      job: jobs[0]
-    });
+    if (jobs) {
+      this.setState({
+        job: jobs[0]
+      });
+    }
   }
 
   renderComponent() {
@@ -35,12 +37,28 @@ class JSPublicJob extends React.Component {
       return (
         <PublicJobDetails
           job={this.state.job}
+          className="publicJobContainer"
           roughLocation
-          actions={
-            <Button type="primary" onClick={() => {}}>
-              Message
+          actions={[
+            <Button
+              type="primary"
+              key="1"
+              onClick={() => {
+                this.props.history.push(`/auth?redirect=${this.props.location.pathname}`);
+              }}
+            >
+              Sign in
+            </Button>,
+            <Button
+              type="primary"
+              key="2"
+              onClick={() => {
+                this.props.history.push(`/auth/register`);
+              }}
+            >
+              Register
             </Button>
-          }
+          ]}
         />
       );
     } else {

@@ -235,7 +235,31 @@ public class ApplicationDetailFragment extends BaseFragment {
         if (application != null) {
             MessageFragment fragment = new MessageFragment();
             fragment.application = application;
-            getApp().pushFragment(fragment);
+
+            if (AppData.user.isJobSeeker()) {
+                if (!jobSeeker.isActive()) {
+                    Popup popup = new Popup(getContext(), "To message please activate your account", true);
+                    popup.addGreenButton("Activate", new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+
+                            TalentProfileFragment fragment = new TalentProfileFragment();
+                            fragment.jobSeeker = jobSeeker;
+                            fragment.isActivation = true;
+                            getApp().pushFragment(fragment);
+                        }
+                    });
+                    popup.addGreyButton("Cancel", new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                        }
+                    });
+                    popup.show();
+                } else {
+                    getApp().pushFragment(fragment);
+                }
+            }
+
         } else {
             if (jobSeeker.getPitch() == null) {
                 Popup popup = new Popup(getContext(), "You need to record your pitch video to apply.", true);

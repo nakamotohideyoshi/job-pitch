@@ -13,6 +13,7 @@ import imgIntro1 from 'assets/intro1.png';
 import imgIntro2 from 'assets/intro2.png';
 import imgIntro3 from 'assets/intro3.png';
 import Wrapper from '../styled';
+import * as _ from 'lodash';
 
 const { confirm } = Modal;
 
@@ -41,11 +42,22 @@ const INTRO_DATA = [
 
 class BusinessList extends React.Component {
   state = {
-    dontShowIntro: false
+    dontShowIntro: false,
+    countList: null
   };
 
   componentDidMount() {
-    this.setState({ dontShowIntro: DATA[`dontShowIntro_${DATA.email}`] });
+    let countList = {};
+    _.forEach(this.props.businesses, business => {
+      let newApplications = _.filter(DATA.applications, application => {
+        return application.job_data.location_data.business === business.id && application.status === 1;
+      });
+      countList[business.id] = newApplications.length;
+    });
+    this.setState({
+      dontShowIntro: DATA[`dontShowIntro_${DATA.email}`],
+      countList: countList
+    });
   }
 
   selectBusiness = ({ id }) => {
@@ -128,6 +140,10 @@ class BusinessList extends React.Component {
     const strTokens = `${tokens} credit${tokens !== 1 ? 's' : ''}`;
     const count = locations.length;
     const strWorkplaces = `Includes ${count} workplace${count !== 1 ? 's' : ''}`;
+    if (this.state.countList !== null) {
+      var newApplicationsCount = this.state.countList[business.id];
+      var strNewApplications = `${newApplicationsCount} new application${newApplicationsCount !== 1 ? 's' : ''}`;
+    }
 
     return (
       <List.Item
@@ -152,9 +168,16 @@ class BusinessList extends React.Component {
           avatar={<Avatar src={logo} className="avatar-80" />}
           title={name}
         />
-        <div className="properties">
+        <div className="properties" style={{ display: 'flex', alignItems: 'flex-end' }}>
           <span style={{ width: '120px' }}>{strTokens}</span>
-          <span style={{ width: '130px' }}>{strWorkplaces}</span>
+          <div style={{ display: 'flex', flexDirection: 'column' }}>
+            <span style={{ width: '130px' }}>{strWorkplaces}</span>
+            {newApplicationsCount && newApplicationsCount > 0 ? (
+              <span style={{ width: '130px', color: '#ff9300' }}>{strNewApplications}</span>
+            ) : (
+              ''
+            )}
+          </div>
         </div>
         {loading && <Loading className="mask" size="small" />}
       </List.Item>

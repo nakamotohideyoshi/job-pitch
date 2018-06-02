@@ -5,20 +5,37 @@ import { Link } from 'react-router-dom';
 import Truncate from 'react-truncate';
 import { Breadcrumb, List, Avatar, Modal, Tooltip } from 'antd';
 
+import DATA from 'utils/data';
+
 import { removeWorkplace } from 'redux/recruiter/workplaces';
 import * as helper from 'utils/helper';
 
 import { PageHeader, PageSubHeader, AlertMsg, LinkButton, Loading, ListEx, Icons } from 'components';
 import Wrapper from '../styled';
+import * as _ from 'lodash';
 
 const { confirm } = Modal;
 
 class WorkplaceList extends React.Component {
+  state = {
+    countList: null
+  };
+
   componentDidMount() {
     const { business, history } = this.props;
     if (!business) {
       history.replace('/recruiter/jobs/business');
     }
+    let countList = {};
+    _.forEach(this.props.workplaces, workplace => {
+      let newApplications = _.filter(DATA.applications, application => {
+        return application.job_data.location === workplace.id && application.status === 1;
+      });
+      countList[workplace.id] = newApplications.length;
+    });
+    this.setState({
+      countList: countList
+    });
   }
 
   selectWorkplace = ({ id }) => {
@@ -80,6 +97,11 @@ class WorkplaceList extends React.Component {
     const strJobs = `Includes ${count} job${count !== 1 ? 's' : ''}`;
     const strInactiveJobs = `${count - active_job_count} inactive`;
 
+    if (this.state.countList !== null) {
+      var newApplicationsCount = this.state.countList[workplace.id];
+      var strNewApplications = `${newApplicationsCount} new application${newApplicationsCount !== 1 ? 's' : ''}`;
+    }
+
     return (
       <List.Item
         key={id}
@@ -107,10 +129,21 @@ class WorkplaceList extends React.Component {
             </Truncate>
           }
         />
-        <div className="properties">
+        <div className="properties" style={{ display: 'flex', alignItems: 'flex-start' }}>
+          <div style={{ display: 'flex', flexDirection: 'column' }}>
+            <span style={{ width: '130px' }}>{strJobs}</span>
+            {newApplicationsCount && newApplicationsCount > 0 ? (
+              <span style={{ width: '130px', color: '#ff9300' }}>{strNewApplications}</span>
+            ) : (
+              ''
+            )}
+          </div>
+          <span style={{ width: '120px' }}>{strInactiveJobs}</span>
+        </div>
+        {/* <div className="properties">
           <span style={{ width: '120px' }}>{strJobs}</span>
           <span>{strInactiveJobs}</span>
-        </div>
+        </div> */}
         {loading && <Loading className="mask" size="small" />}
       </List.Item>
     );

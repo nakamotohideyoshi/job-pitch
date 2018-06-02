@@ -9,6 +9,8 @@ import styled, { css } from 'styled-components';
 import DATA from 'utils/data';
 import * as helper from 'utils/helper';
 
+import * as _ from 'lodash';
+
 import { PageHeader, PageSubHeader, AlertMsg, LinkButton, Loading, ListEx, Icons, ShareLink } from 'components';
 import DeleteDialog from './DeleteDialog';
 import Mark from './Mark';
@@ -28,8 +30,32 @@ class JobList extends React.Component {
   state = {
     selectedJob: null,
     showDialog: false,
-    selected: ''
+    selected: '',
+    countList: null
   };
+
+  componentDidMount() {
+    let countList = {};
+    _.forEach(this.props.jobs, job => {
+      let applications = _.filter(DATA.applications, application => {
+        return application.job === job.id;
+      });
+      let newApplications = _.filter(DATA.applications, application => {
+        return application.job === job.id && application.status === 1;
+      });
+      let connections = _.filter(DATA.applications, application => {
+        return application.job === job.id && application.status === 2;
+      });
+      countList[job.id] = {
+        totalApplications: applications.length,
+        newApplications: newApplications.length,
+        connections: connections.length
+      };
+    });
+    this.setState({
+      countList: countList
+    });
+  }
 
   copyLink = event => {
     event && event.stopPropagation();
@@ -74,6 +100,16 @@ class JobList extends React.Component {
     this.setState({ selectedJob });
   };
 
+  showApps = ({ id }, event) => {
+    event && event.stopPropagation();
+    this.props.history.push(`/recruiter/applications/apps/${id}`);
+  };
+
+  showCons = ({ id }, event) => {
+    event && event.stopPropagation();
+    this.props.history.push(`/recruiter/applications/conns/${id}`);
+  };
+
   renderJob = job => {
     const { id, status, title, sector, contract, hours, description, loading } = job;
     const logo = helper.getJobLogo(job);
@@ -81,6 +117,16 @@ class JobList extends React.Component {
     const contractName = helper.getItemByID(DATA.contracts, contract).short_name;
     const hoursName = helper.getItemByID(DATA.hours, hours).short_name;
     const closed = status === DATA.JOB.CLOSED ? 'disabled' : '';
+    var width = '80px';
+    if (this.state.countList !== null) {
+      var count = this.state.countList[job.id];
+      var strApplications = `${count.totalApplications} application${count.totalApplications > 1 ? 's' : ''}`;
+      var strNewApplications = `(${count.newApplications} new)`;
+      var strConnections = `${count.connections} connection${count.connections > 1 ? 's' : ''}`;
+      if (count.totalApplications < 2) {
+        width = '75px';
+      }
+    }
 
     return (
       <List.Item
@@ -115,10 +161,23 @@ class JobList extends React.Component {
             </Truncate>
           }
         />
-        <div className="properties">
+        {/* <div className="properties">
           <span style={{ width: '60px' }}>{contractName}</span>
           <span style={{ width: '60px' }}>{hoursName}</span>
           <span>{sectorName}</span>
+        </div> */}
+        <div className="properties">
+          <span style={{ width: width, color: '#00b6a4' }} onClick={e => this.showApps(job, e)}>
+            {strApplications}
+          </span>
+          {count && count.newApplications && count.newApplications > 0 ? (
+            <span style={{ width: '60px', color: '#ff9300' }}>{strNewApplications}</span>
+          ) : (
+            ''
+          )}
+          <span style={{ width: '80px', color: '#00b6a4' }} onClick={e => this.showCons(job, e)}>
+            {strConnections}
+          </span>
         </div>
         {closed && <Mark>Inactive</Mark>}
         {loading && <Loading className="mask" size="small" />}

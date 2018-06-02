@@ -54,7 +54,8 @@ function* getUserData() {
       call(getRequest({ url: '/api/job-statuses/' })),
       call(getRequest({ url: '/api/sexes/' })),
       call(getRequest({ url: '/api/roles/' })),
-      call(getRequest({ url: '/api/paypal-products/' }))
+      call(getRequest({ url: '/api/paypal-products/' })),
+      call(getRequest({ url: '/api/applications/' }))
     ]);
 
     DATA.initTokens = result[0];
@@ -67,6 +68,7 @@ function* getUserData() {
     DATA.sexes = result[7];
     DATA.roles = result[8];
     DATA.paypalProducts = result[9];
+    DATA.applications = result[10];
 
     DATA.JOB = {
       OPEN: DATA.jobStatuses.filter(({ name }) => name === 'OPEN')[0].id,

@@ -93,41 +93,63 @@ public class FindJobFragment extends SwipeFragment<Job> {
 
     @Override
     protected void swipedRight(final Job job) {
-        if (jobSeeker.getPitch() == null) {
-            Popup popup = new Popup(getContext(), "You need to record your pitch video to apply.", true);
-            popup.addGreenButton("Record my pitch", new View.OnClickListener() {
+        if (!jobSeeker.isActive()) {
+            cardStack.unSwipeCard();
+            Popup popup = new Popup(getContext(), "To apply please activate your account", true);
+            popup.addGreenButton("Activate", new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    getApp().setRootFragement(AppData.PAGE_ADD_RECORD);
+
+                    TalentProfileFragment fragment = new TalentProfileFragment();
+                    fragment.jobSeeker = jobSeeker;
+                    fragment.isActivation = true;
+                    getApp().pushFragment(fragment);
                 }
             });
             popup.addGreyButton("Cancel", new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    cardStack.unSwipeCard();
                 }
             });
             popup.show();
         } else {
-            new APITask(new APIAction() {
-                @Override
-                public void run() throws MJPApiException {
-                    ApplicationForCreation applicationForCreation = new ApplicationForCreation();
-                    applicationForCreation.setJob(job.getId());
-                    applicationForCreation.setJob_seeker(jobSeeker.getId());
-                    applicationForCreation.setShortlisted(false);
-                    MJPApi.shared().create(ApplicationForCreation.class, applicationForCreation);
-                }
-            }).addListener(new APITaskListener() {
-                @Override
-                public void onSuccess() {
+            if (jobSeeker.getPitch() == null) {
+                Popup popup = new Popup(getContext(), "You need to record your pitch video to apply.", true);
+                popup.addGreenButton("Record my pitch", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        getApp().setRootFragement(AppData.PAGE_ADD_RECORD);
+                    }
+                });
+                popup.addGreyButton("Cancel", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        cardStack.unSwipeCard();
+                    }
+                });
+                popup.show();
+            } else {
+                new APITask(new APIAction() {
+                    @Override
+                    public void run() throws MJPApiException {
+                        ApplicationForCreation applicationForCreation = new ApplicationForCreation();
+                        applicationForCreation.setJob(job.getId());
+                        applicationForCreation.setJob_seeker(jobSeeker.getId());
+                        applicationForCreation.setShortlisted(false);
+                        MJPApi.shared().create(ApplicationForCreation.class, applicationForCreation);
+                    }
+                }).addListener(new APITaskListener() {
+                    @Override
+                    public void onSuccess() {
 
-                }
-                @Override
-                public void onError(JsonNode errors) {
-                    cardStack.unSwipeCard();
-                }
-            }).execute();
+                    }
+
+                    @Override
+                    public void onError(JsonNode errors) {
+                        cardStack.unSwipeCard();
+                    }
+                }).execute();
+            }
         }
     }
 

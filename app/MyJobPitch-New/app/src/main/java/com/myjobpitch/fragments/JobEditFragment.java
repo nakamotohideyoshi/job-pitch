@@ -97,6 +97,7 @@ public class JobEditFragment extends FormFragment {
 
     public Location location;
     public Job job;
+    public boolean activation = false;
 
     JobPitch mPitch;
     String mVideoPath;
@@ -460,7 +461,7 @@ public class JobEditFragment extends FormFragment {
     }
 
     private void compltedSave() {
-        if (!isNew) {
+        if (!isNew || activation) {
             getApp().popFragment();
             return;
         }

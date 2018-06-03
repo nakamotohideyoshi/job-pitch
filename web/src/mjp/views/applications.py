@@ -279,26 +279,37 @@ class ApplicationPitchViewSet(viewsets.ModelViewSet):
 class InterviewViewSet(viewsets.ModelViewSet):
     class InterviewPermission(permissions.BasePermission):
         def has_permission(self, request, view):
-            return request.user and request.user.is_authenticated() and request.user.is_recruiter
+            if request.user and request.user.is_authenticated():
+                if request.user.is_recruiter:
+                    return True
+                if request.method in permissions.SAFE_METHODS:
+                    return True
+            return False
 
         def has_object_permission(self, request, view, obj):
-            if request.user and request.user.is_authenticated() and request.user.is_recruiter:
-                business = obj.application.job.location.business
-                for business_user in business.business_users.filter(business=business):
-                    if business_user.locations.exists():
-                        return business_user.locations.filter(user=request.user).exists()
-                    return True
+            if request.user and request.user.is_authenticated():
+                if request.user.is_recruiter:
+                    business = obj.application.job.location.business
+                    for business_user in business.business_users.filter(business=business):
+                        if business_user.locations.exists():
+                            return business_user.locations.filter(user=request.user).exists()
+                        return True
+                elif request.method in permissions.SAFE_METHODS:
+                    return obj.application.job_seeker == request.user.job_seeker
             return False
 
     def get_queryset(self):
         query = super(InterviewViewSet, self).get_queryset()
-        user_locations = Location.objects.none()
-        for business_user in self.request.user.business_users.all():
-            if business_user.locations.exists():
-                user_locations |= business_user.locations.all()
-            else:
-                user_locations |= business_user.business.locations.all()
-        query = query.filter(application__job__location__in=user_locations)
+        if self.request.user.is_recruiter:
+            user_locations = Location.objects.none()
+            for business_user in self.request.user.business_users.all():
+                if business_user.locations.exists():
+                    user_locations |= business_user.locations.all()
+                else:
+                    user_locations |= business_user.business.locations.all()
+            query = query.filter(application__job__location__in=user_locations)
+        else:
+            query = query.filter(application__job_seeker=self.request.user.job_seeker)
         return query
 
     queryset = Interview.objects.all()

@@ -138,10 +138,12 @@ extension JobDetailController: UITableViewDelegate {
             SwipeController.pushController(job: job)
         } else if id == "messages" {
             if job.status == 2 {
-                PopupController.showGreen("To message please active your job", ok: "activation", okCallback: {
+                PopupController.showGreen("To message please active your job", ok: "activate", okCallback: {
                     self.refresh = true
                     JobEditController.pushController(location: nil, job: self.job)
-                }, cancel: "Cancel", cancelCallback: nil)
+                }, cancel: "Cancel", cancelCallback: {
+                    self.refresh = false
+                })
                 return
             } else {
                 MessageListController.pushController(job: job)

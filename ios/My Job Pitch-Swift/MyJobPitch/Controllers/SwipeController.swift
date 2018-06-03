@@ -256,18 +256,12 @@ extension SwipeController: ChooseDelegate {
     
     func apply(callback: (()->Void)!) {
         
-        if AppData.user.isRecruiter() {
-            if (searchJob.status == 2) {
-                PopupController.showGreen("To apply please activate your job", ok: "activation", okCallback: {
-                    SideMenuController.pushController(id: "job_profile")
-                }, cancel: "Cancel", cancelCallback: nil)
-                reloadCard()
-                return
-            }
-        } else {
+        if AppData.user.isJobSeeker(){
             if (!jobSeeker.active) {
-                PopupController.showGreen("To apply please activate your account", ok: "activation", okCallback: {
-                    SideMenuController.pushController(id: "user_profile")
+                PopupController.showGreen("To apply please activate your account", ok: "activate", okCallback: {
+                    let controller = AppHelper.mainStoryboard.instantiateViewController(withIdentifier: "JobSeekerProfile") as! JobSeekerProfileController
+                    controller.activation = true
+                    AppHelper.getFrontController().navigationController?.present(controller, animated: true)
                 }, cancel: "Cancel", cancelCallback: nil)
                 reloadCard()
                 return

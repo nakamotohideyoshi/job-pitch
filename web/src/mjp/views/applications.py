@@ -13,8 +13,8 @@ from mjp.serializers.applications import (
     MessageCreateSerializer,
     MessageUpdateSerializer,
 )
+from mjp.serializers.applications import InterviewSerializer
 from mjp.serializers.job_seeker import ApplicationPitchSerializer
-from mjp.serializers.recruiter import InterviewSerializer
 
 
 class ApplicationViewSet(viewsets.ModelViewSet):

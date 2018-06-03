@@ -106,3 +106,23 @@ class MessageUpdateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Message
         fields = ('read',)
+
+
+class InterviewSerializer(serializers.ModelSerializer):
+    invitation = serializers.CharField(allow_blank=True, write_only=True)
+    messages = MessageSerializer(many=True, read_only=True)
+
+    def create(self, validated_data):
+        invitation = validated_data.pop('invitation')
+        interview = super(InterviewSerializer, self).create(validated_data)
+        Message.objects.create(
+            application=validated_data['application'],
+            from_role=Role.objects.get(name=Role.RECRUITER),
+            content=invitation,
+            interview=interview,
+        )
+        return interview
+
+    class Meta:
+        model = Interview
+        fields = ('invitation', 'application', 'at', 'messages', 'notes', 'feedback')

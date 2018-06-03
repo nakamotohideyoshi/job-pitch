@@ -138,11 +138,11 @@ class PublicJobListingSerializer(serializers.ModelSerializer):
     sector = SimpleSerializer(Sector, meta_overrides={'fields': ('name', 'description')})()
     contract = SimpleSerializer(Contract, meta_overrides={'fields': ('name', 'short_name', 'description')})()
     hours = SimpleSerializer(Hours, meta_overrides={'fields': ('name', 'short_name', 'description')})()
-    location = PublicLocationListingSerializer()
+    location_data = PublicLocationListingSerializer()
 
     class Meta:
         model = Job
-        fields = ('title', 'description', 'images', 'sector', 'contract', 'hours', 'location')
+        fields = ('title', 'description', 'images', 'sector', 'contract', 'hours', 'location_data')
 
 
 class EmbeddedPitchSerializer(serializers.ModelSerializer):

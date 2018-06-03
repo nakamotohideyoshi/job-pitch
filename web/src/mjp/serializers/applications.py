@@ -5,10 +5,16 @@ from mjp.models import Message, Application, Role, TokenStore, ApplicationStatus
 from mjp.serializers import JobSerializer, JobSeekerReadSerializer, SimpleSerializer, JobSerializerV1
 
 
+class MessageSerializerV1(serializers.ModelSerializer):
+    class Meta:
+        model = Message
+        fields = ('system', 'content', 'read', 'created', 'application', 'from_role')
+
+
 class ApplicationSerializerV1(serializers.ModelSerializer):
     job_data = JobSerializerV1(source='job', read_only=True)
     job_seeker = JobSeekerReadSerializer(read_only=True)
-    messages = SimpleSerializer(Message)(many=True, read_only=True)
+    messages = MessageSerializerV1(many=True, read_only=True)
 
     class Meta:
         model = Application
@@ -33,9 +39,16 @@ class EmbeddedInterviewSerializer(serializers.ModelSerializer):
         fields = ('at', 'messages', 'notes', 'feedback')
 
 
+class MessageSerializer(MessageSerializerV1):
+    class Meta:
+        model = Message
+        fields = MessageSerializerV1.Meta.fields + ('interview',)
+
+
 class ApplicationSerializer(ApplicationSerializerV2):
     pitches = EmbeddedApplicationPitchSerializer(read_only=True, many=True)
     interviews = EmbeddedInterviewSerializer(read_only=True, many=True)
+    messages = MessageSerializer(many=True, read_only=True)
 
 
 class ApplicationCreateSerializer(serializers.ModelSerializer):

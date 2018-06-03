@@ -2,7 +2,7 @@ from django.db.models import Max
 from rest_framework import viewsets, permissions, serializers
 from rest_framework.exceptions import PermissionDenied
 
-from mjp.models import Job, Role, ApplicationStatus, Message, Application, Location, ApplicationPitch
+from mjp.models import Job, Role, ApplicationStatus, Message, Application, Location, ApplicationPitch, Interview
 from mjp.serializers.applications import (
     ApplicationSerializer,
     ApplicationSerializerV1,
@@ -14,6 +14,7 @@ from mjp.serializers.applications import (
     MessageUpdateSerializer,
 )
 from mjp.serializers.job_seeker import ApplicationPitchSerializer
+from mjp.serializers.recruiter import InterviewSerializer
 
 
 class ApplicationViewSet(viewsets.ModelViewSet):
@@ -273,3 +274,33 @@ class ApplicationPitchViewSet(viewsets.ModelViewSet):
     permission_classes = (ApplicationPitchPermission,)
     serializer_class = ApplicationPitchSerializer
     queryset = ApplicationPitch.objects.all()
+
+
+class InterviewViewSet(viewsets.ModelViewSet):
+    class InterviewPermission(permissions.BasePermission):
+        def has_permission(self, request, view):
+            return request.user and request.user.is_authenticated() and request.user.is_recruiter
+
+        def has_object_permission(self, request, view, obj):
+            if request.user and request.user.is_authenticated() and request.user.is_recruiter:
+                business = obj.application.job.location.business
+                for business_user in business.business_users.filter(business=business):
+                    if business_user.locations.exists():
+                        return business_user.locations.filter(user=request.user).exists()
+                    return True
+            return False
+
+    def get_queryset(self):
+        query = super(InterviewViewSet, self).get_queryset()
+        user_locations = Location.objects.none()
+        for business_user in self.request.user.business_users.all():
+            if business_user.locations.exists():
+                user_locations |= business_user.locations.all()
+            else:
+                user_locations |= business_user.business.locations.all()
+        query = query.filter(application__job__location__in=user_locations)
+        return query
+
+    queryset = Interview.objects.all()
+    serializer_class = InterviewSerializer
+    permission_classes = (InterviewPermission,)

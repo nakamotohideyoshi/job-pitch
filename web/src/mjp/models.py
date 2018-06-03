@@ -278,6 +278,8 @@ class Nationality(models.Model):
 class ApplicationStatus(models.Model):
     CREATED = 'CREATED'
     ESTABLISHED = 'ESTABLISHED'
+    ACCEPTED = 'ACCEPTED'
+    DECLINED = 'DECLINED'
     DELETED = 'DELETED'
 
     name = models.CharField(max_length=20)
@@ -527,6 +529,16 @@ class ApplicationPitch(models.Model):
     thumbnail = models.URLField(max_length=512, null=True)
 
 
+class Interview(models.Model):
+    at = models.DateTimeField()
+    application = models.ForeignKey(Application, related_name='interviews')
+    notes = models.TextField(blank=True, help_text='Private recruiter notes')
+    feedback = models.TextField(blank=True, help_text='Job seeker visible feedback')
+
+    class Meta:
+        ordering = ('at',)
+
+
 class Message(models.Model):
     application = models.ForeignKey(Application, related_name='messages')
     system = models.BooleanField(default=False)
@@ -534,6 +546,7 @@ class Message(models.Model):
     content = models.TextField()
     read = models.BooleanField(default=False)
     created = models.DateTimeField(auto_now_add=True)
+    interview = models.ForeignKey(Interview, related_name='messages', null=True, blank=True)
 
     class Meta:
         ordering = ('created',)

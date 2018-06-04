@@ -78,9 +78,29 @@ public class JobDetailFragment extends BaseFragment {
                     fragment.job = job;
                     getApp().pushFragment(fragment);
                 } else if (position == 4) {
-                    MessageListFragment fragment = new MessageListFragment();
-                    fragment.job = job;
-                    getApp().pushFragment(fragment);
+                    if (job.getStatus() == 2) {
+                        Popup popup = new Popup(getContext(), "To message please activate your job", true);
+                        popup.addGreenButton("Activate", new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                JobEditFragment fragment = new JobEditFragment();
+                                fragment.job = job;
+                                fragment.activation = true;
+                                getApp().pushFragment(fragment);
+                            }
+                        });
+                        popup.addGreyButton("Cancel", new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                            }
+                        });
+                        popup.show();
+                    } else {
+                        MessageListFragment fragment = new MessageListFragment();
+                        fragment.job = job;
+                        getApp().pushFragment(fragment);
+                    }
+
                 } else {
                     RecruiterApplicationsFragment fragment = new RecruiterApplicationsFragment();
                     fragment.job = job;

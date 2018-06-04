@@ -143,6 +143,16 @@ class ApplicationDetailsController: MJPController {
     }
     
     @IBAction func messageAction(_ sender: Any) {
+        if AppData.user.isJobSeeker() {
+            if (!jobSeeker.active) {
+                PopupController.showGreen("To message please active your account", ok: "activate", okCallback: {
+                    let controller = AppHelper.mainStoryboard.instantiateViewController(withIdentifier: "JobSeekerProfile") as! JobSeekerProfileController
+                    controller.activation = true
+                    AppHelper.getFrontController().navigationController?.present(controller, animated: true)
+                }, cancel: "Cancel", cancelCallback: nil)
+                return
+            }
+        }
         let goAllMessages = job != nil
         MessageController0.showModal(application: application, goAllMessages: goAllMessages)
     }

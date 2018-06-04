@@ -15,6 +15,8 @@ class MessageListController: SearchController {
     @IBOutlet weak var noPitchView: UIView!
     
     var job: Job!
+    var jobSeeker: JobSeeker!
+    var refresh = true
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -26,22 +28,27 @@ class MessageListController: SearchController {
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        showLoading()
+        super.viewWillAppear(animated)
         
-        if !AppData.user.isRecruiter() {
-            API.shared().loadJobSeekerWithId(id: AppData.user.jobSeeker, success: { (data) in
-                let jobSeeker = data as! JobSeeker
-                if jobSeeker.getPitch() != nil {
-                    self.loadData()
-                } else {
-                    self.noPitchView.isHidden = false
-                    self.navigationItem.rightBarButtonItem = nil
-                    self.hideLoading()
-                }
-            }, failure: self.handleErrors)
-        } else {
-            loadData()
+        if self.refresh {
+            showLoading()
+            
+            if !AppData.user.isRecruiter() {
+                API.shared().loadJobSeekerWithId(id: AppData.user.jobSeeker, success: { (data) in
+                    self.jobSeeker = data as! JobSeeker
+                    
+                    if self.jobSeeker.getPitch() != nil {
+                        self.loadData()
+                    } else {
+                        self.noPitchView.isHidden = false
+                        self.navigationItem.rightBarButtonItem = nil
+                        self.hideLoading()
+                    }
+                }, failure: self.handleErrors)
+            } else {
+                loadData()
+            }
+            self.refresh = false
         }
     }
     
@@ -164,6 +171,31 @@ extension MessageListController: UITableViewDataSource {
 extension MessageListController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+       
+        if AppData.user.isJobSeeker() {
+            if (!jobSeeker.active) {
+                self.refresh = true
+                PopupController.showGreen("To message please active your account", ok: "activate", okCallback: {
+                    let controller = AppHelper.mainStoryboard.instantiateViewController(withIdentifier: "JobSeekerProfile") as! JobSeekerProfileController
+                    controller.activation = true
+                    AppHelper.getFrontController().navigationController?.present(controller, animated: true)
+                }, cancel: "Cancel", cancelCallback: {
+                    self.refresh = false
+                })
+                return
+            }
+        } else {
+            let application = data[indexPath.row] as! Application
+            if (application.job.status == 2) {
+                PopupController.showGreen("To message please active your account", ok: "activate", okCallback: {
+                    self.refresh = true
+                    JobEditController.pushController(location: nil, job: application.job)
+                }, cancel: "Cancel", cancelCallback: {
+                    self.refresh = false
+                })
+                return
+            }
+        }
         
         let application = data[indexPath.row] as! Application
         let goAllMessages = job != nil

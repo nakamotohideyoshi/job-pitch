@@ -126,6 +126,7 @@ public class TalentProfileFragment extends FormFragment {
     Pitch mPitch;
     String mVideoPath;
     int requestCode;
+    boolean isActivation = false;
 
     Uri cvUri;
 
@@ -547,6 +548,10 @@ public class TalentProfileFragment extends FormFragment {
     }
 
     void saveCompleted() {
+        if (isActivation) {
+            getApp().popFragment();
+            return;
+        }
         if (viewFragment != null) {
             viewFragment.jobSeeker = null;
             getApp().popFragment();

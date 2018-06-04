@@ -56,6 +56,7 @@ class JobSeekerProfileController: MJPController {
         
     var jobSeeker: JobSeeker!
     var saveComplete: (() -> Void)!
+    var activation: Bool = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -419,12 +420,17 @@ class JobSeekerProfileController: MJPController {
     }
     
     func saveSuccess() {
-        if saveComplete != nil {
+        if activation {
             dismiss(animated: true, completion: nil)
-            saveComplete?()
         } else {
-            SideMenuController.pushController(id: "job_profile")
+            if saveComplete != nil {
+                dismiss(animated: true, completion: nil)
+                saveComplete?()
+            } else {
+                SideMenuController.pushController(id: "job_profile")
+            }
         }
+        
     }
     
     @IBAction func cancel(_ sender: Any) {

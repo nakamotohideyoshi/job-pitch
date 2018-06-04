@@ -1,11 +1,11 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11762" systemVersion="15G20015" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="bVj-gg-QoO">
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13771" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="bVj-gg-QoO">
     <device id="retina5_5" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11757"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="Constraints with non-1.0 multipliers" minToolsVersion="5.1"/>
@@ -104,7 +104,7 @@ sdafsdf</string>
                                 </connections>
                             </tableView>
                             <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="OW2-wO-B54">
-                                <rect key="frame" x="35" y="352.33333333333326" width="344" height="95.666666666666686"/>
+                                <rect key="frame" x="35" y="352.33333333333331" width="344" height="95.666666666666686"/>
                                 <string key="text">You have no messages!  Once you have connected through the main interface with someone, you'll be able to communicate with them here.</string>
                                 <fontDescription key="fontDescription" type="system" pointSize="20"/>
                                 <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
@@ -137,7 +137,7 @@ sdafsdf</string>
                                                 </connections>
                                             </button>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xpv-wE-14w">
-                                                <rect key="frame" x="41" y="49" width="332" height="150.66666666666669"/>
+                                                <rect key="frame" x="41" y="49" width="332" height="150.66666666666666"/>
                                                 <string key="text">Recruiters are looking for someone with your exact profile.
 You are the perfect candidate, let your personality shine and land you the job thet you really want!
 
@@ -209,8 +209,21 @@ All you're missing is your video pitch!</string>
                         <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="x3V-yx-sVi">
+                                <rect key="frame" x="0.0" y="64" width="414" height="40"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="40" id="JFy-3g-3Ux"/>
+                                </constraints>
+                            </view>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="9M8-8a-AcT">
+                                <rect key="frame" x="41.666666666666657" y="64" width="331.33333333333337" height="40"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="E23-SR-OY4">
-                                <rect key="frame" x="0.0" y="64" width="414" height="645"/>
+                                <rect key="frame" x="0.0" y="104" width="414" height="605"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             </view>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="right" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="XQS-aA-5j0">
@@ -224,16 +237,16 @@ All you're missing is your video pitch!</string>
                                 </connections>
                             </button>
                             <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="There are no more new matches for this job. You can restore your removed matches by clicking refresh above." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="oN5-3h-dvf">
-                                <rect key="frame" x="35" y="332.33333333333326" width="344" height="71.666666666666686"/>
+                                <rect key="frame" x="35" y="332.33333333333331" width="344" height="71.666666666666686"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="20"/>
                                 <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="BXg-zT-5TX">
-                                <rect key="frame" x="0.0" y="64" width="414" height="672"/>
+                                <rect key="frame" x="0.0" y="104" width="414" height="632"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="zLc-SZ-yfL">
-                                        <rect key="frame" x="0.0" y="201.33333333333329" width="414" height="269.66666666666674"/>
+                                        <rect key="frame" x="0.0" y="181.33333333333329" width="414" height="269.66666666666674"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Your pitch video is missing!" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="XdY-mK-18B">
                                                 <rect key="frame" x="41" y="10" width="332" height="24"/>
@@ -256,7 +269,7 @@ All you're missing is your video pitch!</string>
                                                 </connections>
                                             </button>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aer-1Y-vki">
-                                                <rect key="frame" x="41" y="49" width="332" height="150.66666666666669"/>
+                                                <rect key="frame" x="41" y="49" width="332" height="150.66666666666666"/>
                                                 <string key="text">Recruiters are looking for someone with your exact profile.
 You are the perfect candidate, let your personality shine and land you the job thet you really want!
 
@@ -290,6 +303,9 @@ All you're missing is your video pitch!</string>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
+                            <constraint firstItem="9M8-8a-AcT" firstAttribute="width" secondItem="x3V-yx-sVi" secondAttribute="width" multiplier="0.8" id="3q9-yq-gNW"/>
+                            <constraint firstItem="x3V-yx-sVi" firstAttribute="width" secondItem="k7z-YD-hbw" secondAttribute="width" id="4o0-eX-KTG"/>
+                            <constraint firstItem="9M8-8a-AcT" firstAttribute="centerY" secondItem="x3V-yx-sVi" secondAttribute="centerY" id="5Hq-9b-67a"/>
                             <constraint firstAttribute="trailingMargin" secondItem="oN5-3h-dvf" secondAttribute="trailing" constant="15" id="8zI-bb-cKu"/>
                             <constraint firstItem="BXg-zT-5TX" firstAttribute="leading" secondItem="k7z-YD-hbw" secondAttribute="leading" id="905-ix-nEQ"/>
                             <constraint firstItem="oN5-3h-dvf" firstAttribute="leading" secondItem="k7z-YD-hbw" secondAttribute="leadingMargin" constant="15" id="F7E-Cc-T4Y"/>
@@ -299,12 +315,16 @@ All you're missing is your video pitch!</string>
                             <constraint firstItem="XQS-aA-5j0" firstAttribute="top" secondItem="E23-SR-OY4" secondAttribute="bottom" id="NHb-8H-U5i"/>
                             <constraint firstAttribute="trailing" secondItem="E23-SR-OY4" secondAttribute="trailing" id="Qrv-Rw-dFU"/>
                             <constraint firstAttribute="trailing" secondItem="XQS-aA-5j0" secondAttribute="trailing" constant="8" id="VUh-Rq-dEb"/>
+                            <constraint firstItem="9M8-8a-AcT" firstAttribute="centerX" secondItem="x3V-yx-sVi" secondAttribute="centerX" id="YSl-He-wCY"/>
+                            <constraint firstItem="9M8-8a-AcT" firstAttribute="height" secondItem="x3V-yx-sVi" secondAttribute="height" id="bSh-Wg-Xbt"/>
                             <constraint firstItem="oN5-3h-dvf" firstAttribute="centerY" secondItem="k7z-YD-hbw" secondAttribute="centerY" id="hV8-VA-hz8"/>
                             <constraint firstItem="oN5-3h-dvf" firstAttribute="centerX" secondItem="k7z-YD-hbw" secondAttribute="centerX" id="jEO-PF-1W0"/>
-                            <constraint firstItem="E23-SR-OY4" firstAttribute="top" secondItem="1n2-yg-3ID" secondAttribute="bottom" id="jap-GE-qQM"/>
-                            <constraint firstItem="BXg-zT-5TX" firstAttribute="top" secondItem="1n2-yg-3ID" secondAttribute="bottom" id="nQC-s9-weX"/>
+                            <constraint firstItem="E23-SR-OY4" firstAttribute="top" secondItem="1n2-yg-3ID" secondAttribute="bottom" constant="40" id="jap-GE-qQM"/>
+                            <constraint firstItem="BXg-zT-5TX" firstAttribute="top" secondItem="1n2-yg-3ID" secondAttribute="bottom" constant="40" id="nQC-s9-weX"/>
+                            <constraint firstItem="x3V-yx-sVi" firstAttribute="top" secondItem="1n2-yg-3ID" secondAttribute="bottom" id="na5-BO-ELe"/>
                             <constraint firstItem="E23-SR-OY4" firstAttribute="leading" secondItem="k7z-YD-hbw" secondAttribute="leading" id="qOo-2o-7vc"/>
                             <constraint firstItem="tuj-oZ-NWZ" firstAttribute="top" secondItem="E23-SR-OY4" secondAttribute="bottom" priority="250" constant="10" id="tA3-BR-9T9"/>
+                            <constraint firstItem="x3V-yx-sVi" firstAttribute="centerX" secondItem="k7z-YD-hbw" secondAttribute="centerX" id="vYr-n3-7Cz"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="yIw-dg-dpG">
@@ -319,6 +339,7 @@ All you're missing is your video pitch!</string>
                         <outlet property="cardsView" destination="E23-SR-OY4" id="MPd-9m-IKU"/>
                         <outlet property="creditsButton" destination="XQS-aA-5j0" id="hwn-2U-29M"/>
                         <outlet property="emptyView" destination="oN5-3h-dvf" id="uJ5-6b-rKz"/>
+                        <outlet property="jobTitleView" destination="9M8-8a-AcT" id="HkN-Jt-YZa"/>
                         <outlet property="noRecordView" destination="BXg-zT-5TX" id="wiQ-CL-sGY"/>
                     </connections>
                 </viewController>
@@ -332,7 +353,6 @@ All you're missing is your video pitch!</string>
                 <navigationController navigationBarHidden="YES" id="Tn3-dg-KpG" sceneMemberID="viewController">
                     <nil key="simulatedTopBarMetrics"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" translucent="NO" id="pbS-fN-baU">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <connections>
@@ -443,11 +463,11 @@ All you're missing is your video pitch!</string>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <searchBar contentMode="redraw" translatesAutoresizingMaskIntoConstraints="NO" id="DLW-89-mQx">
-                                <rect key="frame" x="0.0" y="64" width="414" height="44"/>
+                                <rect key="frame" x="0.0" y="64" width="414" height="56"/>
                                 <textInputTraits key="textInputTraits"/>
                             </searchBar>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="0oB-8I-PDg">
-                                <rect key="frame" x="0.0" y="108" width="414" height="559"/>
+                                <rect key="frame" x="0.0" y="120" width="414" height="547"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="SelectionCell" textLabel="6ed-oU-w2g" style="IBUITableViewCellStyleDefault" id="FwQ-9S-5ai">
@@ -568,7 +588,7 @@ All you're missing is your video pitch!</string>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="hAN-9a-Y1V">
-                                                <rect key="frame" x="50" y="261.66666666666663" width="314" height="234.99999999999994"/>
+                                                <rect key="frame" x="50" y="261.66666666666669" width="314" height="235"/>
                                                 <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                                                 <constraints>
                                                     <constraint firstAttribute="width" secondItem="hAN-9a-Y1V" secondAttribute="height" multiplier="4:3" id="Maz-f2-zXe"/>
@@ -586,7 +606,7 @@ All you're missing is your video pitch!</string>
                                                 </connections>
                                             </button>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Credits cannot be added through the app, please go to our web page." textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="yTG-8I-qFL">
-                                                <rect key="frame" x="20" y="159" width="374" height="40.666666666666686"/>
+                                                <rect key="frame" x="20" y="159" width="374" height="40.666666666666657"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                 <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                                                 <nil key="highlightedColor"/>
@@ -700,7 +720,7 @@ All you're missing is your video pitch!</string>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="OHE-5f-Uf7">
-                                <rect key="frame" x="20" y="93.999999999999986" width="374" height="107.66666666666664"/>
+                                <rect key="frame" x="20" y="94" width="374" height="107.66666666666669"/>
                                 <string key="text">Record your up to 30 sec selfie video. The key is to just be yourself! You can record on your phone pretty much anywhere, at home on the bus or in a coffee shop it doesn’t matter, and you can re-record as many times as you want.</string>
                                 <fontDescription key="fontDescription" type="system" pointSize="18"/>
                                 <color key="textColor" red="0.25882352939999997" green="0.25882352939999997" blue="0.25882352939999997" alpha="1" colorSpace="calibratedRGB"/>
@@ -737,7 +757,7 @@ All you're missing is your video pitch!</string>
                                 </constraints>
                             </view>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="bPx-Ug-Eby">
-                                <rect key="frame" x="20" y="248.66666666666669" width="374" height="210.00000000000006"/>
+                                <rect key="frame" x="20" y="248.66666666666663" width="374" height="210"/>
                                 <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                                 <constraints>
                                     <constraint firstAttribute="width" secondItem="bPx-Ug-Eby" secondAttribute="height" multiplier="16:9" id="chu-Mg-T4v"/>
@@ -756,13 +776,13 @@ All you're missing is your video pitch!</string>
                                 <nil key="highlightedColor"/>
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="trR-S1-GZs">
-                                <rect key="frame" x="20" y="248.66666666666669" width="374" height="210.00000000000006"/>
+                                <rect key="frame" x="20" y="248.66666666666663" width="374" height="210"/>
                                 <connections>
                                     <action selector="playVideoAction:" destination="z60-gs-9bt" eventType="touchUpInside" id="xdj-rb-V3O"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="c8c-2z-a3y" customClass="GreenButton" customModule="MyJobPitch" customModuleProvider="target">
-                                <rect key="frame" x="20" y="488.66666666666663" width="374" height="39.999999999999886"/>
+                                <rect key="frame" x="20" y="488.66666666666669" width="374" height="40.000000000000057"/>
                                 <color key="backgroundColor" red="0.0" green="0.73333333329999995" blue="0.6588235294" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="40" id="hOy-jk-uzQ"/>
@@ -999,8 +1019,27 @@ All you're missing is your video pitch!</string>
                         <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="pKt-rs-7TI">
+                                <rect key="frame" x="0.0" y="64" width="414" height="40"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="CiD-mJ-FIf">
+                                        <rect key="frame" x="41.333333333333343" y="-0.3333333333333357" width="331.33333333333326" height="40"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstItem="CiD-mJ-FIf" firstAttribute="centerY" secondItem="pKt-rs-7TI" secondAttribute="centerY" id="1wY-4O-tjt"/>
+                                    <constraint firstAttribute="height" constant="40" id="AoO-Ep-O5C"/>
+                                    <constraint firstItem="CiD-mJ-FIf" firstAttribute="height" secondItem="pKt-rs-7TI" secondAttribute="height" id="BAS-lg-ofW"/>
+                                    <constraint firstItem="CiD-mJ-FIf" firstAttribute="width" secondItem="pKt-rs-7TI" secondAttribute="width" multiplier="0.8" id="Fql-M2-QEn"/>
+                                    <constraint firstItem="CiD-mJ-FIf" firstAttribute="centerX" secondItem="pKt-rs-7TI" secondAttribute="centerX" id="cFV-Cp-as7"/>
+                                </constraints>
+                            </view>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="110" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="ycZ-AQ-6at">
-                                <rect key="frame" x="0.0" y="64" width="414" height="672"/>
+                                <rect key="frame" x="0.0" y="104" width="414" height="632"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="ApplicationCell1" rowHeight="110" id="Xkx-ny-XCA" userLabel="ApplicationCell" customClass="ApplicationCell1" customModule="MyJobPitch" customModuleProvider="target">
@@ -1018,7 +1057,7 @@ All you're missing is your video pitch!</string>
                                                     </constraints>
                                                 </imageView>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Job Title" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="haU-hz-F7Z">
-                                                    <rect key="frame" x="120" y="8" width="238" height="24"/>
+                                                    <rect key="frame" x="120" y="11" width="238" height="24"/>
                                                     <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="20"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
@@ -1083,7 +1122,7 @@ All you're missing is your video pitch!</string>
                                                     </constraints>
                                                 </imageView>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Jobseeker" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="TWo-UC-Tbh">
-                                                    <rect key="frame" x="120" y="8" width="223" height="24"/>
+                                                    <rect key="frame" x="120" y="11" width="223" height="24"/>
                                                     <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="20"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
@@ -1107,7 +1146,7 @@ All you're missing is your video pitch!</string>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="star-icon" translatesAutoresizingMaskIntoConstraints="NO" id="CaL-43-uqI">
-                                                    <rect key="frame" x="343" y="10" width="20" height="20"/>
+                                                    <rect key="frame" x="343" y="13" width="20" height="20"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" constant="20" id="rIL-36-tmX"/>
                                                         <constraint firstAttribute="height" constant="20" id="uDc-Ph-sFh"/>
@@ -1150,16 +1189,16 @@ All you're missing is your video pitch!</string>
                                 </connections>
                             </tableView>
                             <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="No candidates have applied for this job yet. Once that happens, their applications will appear here." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="faJ-FA-sbE">
-                                <rect key="frame" x="35" y="364.33333333333326" width="344" height="71.666666666666686"/>
+                                <rect key="frame" x="35" y="384.33333333333331" width="344" height="71.666666666666686"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="20"/>
                                 <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="e6X-vo-5lH">
-                                <rect key="frame" x="0.0" y="64" width="414" height="672"/>
+                                <rect key="frame" x="0.0" y="104" width="414" height="632"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="NLY-zH-Y8U">
-                                        <rect key="frame" x="0.0" y="201.33333333333329" width="414" height="269.66666666666674"/>
+                                        <rect key="frame" x="0.0" y="181.33333333333329" width="414" height="269.66666666666674"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Your pitch video is missing!" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xMK-4P-2Gq">
                                                 <rect key="frame" x="41" y="10" width="332" height="24"/>
@@ -1182,7 +1221,7 @@ All you're missing is your video pitch!</string>
                                                 </connections>
                                             </button>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Gct-Rb-ZfZ">
-                                                <rect key="frame" x="41" y="49" width="332" height="150.66666666666669"/>
+                                                <rect key="frame" x="41" y="49" width="332" height="150.66666666666666"/>
                                                 <string key="text">Recruiters are looking for someone with your exact profile.
 You are the perfect candidate, let your personality shine and land you the job thet you really want!
 
@@ -1224,16 +1263,20 @@ All you're missing is your video pitch!</string>
                             <constraint firstItem="ycZ-AQ-6at" firstAttribute="leading" secondItem="8qO-fU-yaH" secondAttribute="leading" id="9hi-VS-oce"/>
                             <constraint firstItem="faJ-FA-sbE" firstAttribute="centerX" secondItem="ycZ-AQ-6at" secondAttribute="centerX" id="IhF-nb-Mz0"/>
                             <constraint firstAttribute="trailingMargin" secondItem="faJ-FA-sbE" secondAttribute="trailing" constant="15" id="Nfk-oC-XQ0"/>
-                            <constraint firstItem="e6X-vo-5lH" firstAttribute="top" secondItem="XNb-i1-pym" secondAttribute="bottom" id="YlC-2o-Nks"/>
+                            <constraint firstItem="e6X-vo-5lH" firstAttribute="top" secondItem="XNb-i1-pym" secondAttribute="bottom" constant="40" id="YlC-2o-Nks"/>
                             <constraint firstAttribute="trailing" secondItem="ycZ-AQ-6at" secondAttribute="trailing" id="cV0-rc-3tQ"/>
+                            <constraint firstItem="pKt-rs-7TI" firstAttribute="width" secondItem="8qO-fU-yaH" secondAttribute="width" id="daC-4p-aaQ"/>
+                            <constraint firstItem="pKt-rs-7TI" firstAttribute="top" secondItem="XNb-i1-pym" secondAttribute="bottom" id="e0H-dd-0w7"/>
+                            <constraint firstItem="pKt-rs-7TI" firstAttribute="centerX" secondItem="8qO-fU-yaH" secondAttribute="centerX" id="iZ4-ex-gFA"/>
                             <constraint firstItem="faJ-FA-sbE" firstAttribute="centerY" secondItem="ycZ-AQ-6at" secondAttribute="centerY" id="nJq-ik-W9u"/>
-                            <constraint firstItem="ycZ-AQ-6at" firstAttribute="top" secondItem="XNb-i1-pym" secondAttribute="bottom" id="udr-ND-Gzr"/>
+                            <constraint firstItem="ycZ-AQ-6at" firstAttribute="top" secondItem="XNb-i1-pym" secondAttribute="bottom" constant="40" id="udr-ND-Gzr"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Applications" id="0kP-P6-Lbu"/>
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
                     <connections>
                         <outlet property="emptyView" destination="faJ-FA-sbE" id="XKi-mK-uC7"/>
+                        <outlet property="jobTitleView" destination="CiD-mJ-FIf" id="QxY-sy-N3W"/>
                         <outlet property="noPitchView" destination="e6X-vo-5lH" id="fdd-py-TW0"/>
                         <outlet property="scrollView" destination="ycZ-AQ-6at" id="GTJ-Mt-Hu3"/>
                         <outlet property="tableView" destination="ycZ-AQ-6at" id="LcJ-JM-76u"/>
@@ -1387,13 +1430,13 @@ All you're missing is your video pitch!</string>
                                                     </constraints>
                                                 </imageView>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Job Title" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="y1L-wf-cYp">
-                                                    <rect key="frame" x="95" y="8" width="268" height="24"/>
+                                                    <rect key="frame" x="95" y="11" width="268" height="24"/>
                                                     <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="20"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="sub title" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rMh-Iy-Uf9">
-                                                    <rect key="frame" x="95" y="42" width="268" height="20"/>
+                                                    <rect key="frame" x="95" y="45" width="268" height="20"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                                     <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                                                     <nil key="highlightedColor"/>
@@ -1653,7 +1696,7 @@ et dolore magna aliqua.</string>
                                                         </constraints>
                                                     </view>
                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="NQr-gz-Tfg">
-                                                        <rect key="frame" x="0.0" y="60" width="335" height="64.666666666666686"/>
+                                                        <rect key="frame" x="0.0" y="60.000000000000007" width="335" height="64.666666666666686"/>
                                                         <subviews>
                                                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="check-icon" translatesAutoresizingMaskIntoConstraints="NO" id="vYN-hd-4e3">
                                                                 <rect key="frame" x="0.0" y="2" width="20" height="20"/>
@@ -1663,7 +1706,7 @@ et dolore magna aliqua.</string>
                                                                 </constraints>
                                                             </imageView>
                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="I confirm that all information provided is truthful and confirm I have the right to work in the UK" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rwX-Vu-8pc">
-                                                                <rect key="frame" x="30" y="0.0" width="305" height="64.666666666666686"/>
+                                                                <rect key="frame" x="30" y="0.0" width="305" height="64.666666666666671"/>
                                                                 <fontDescription key="fontDescription" type="system" pointSize="18"/>
                                                                 <nil key="textColor"/>
                                                                 <nil key="highlightedColor"/>
@@ -1699,10 +1742,10 @@ et dolore magna aliqua.</string>
                                                 </constraints>
                                             </view>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ecW-7L-PvT">
-                                                <rect key="frame" x="20" y="435.66666666666663" width="335" height="160.99999999999989"/>
+                                                <rect key="frame" x="20" y="435.66666666666674" width="335" height="161"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Contact:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hi3-nS-ND0">
-                                                        <rect key="frame" x="0.0" y="0.0" width="73" height="21.999999999999943"/>
+                                                        <rect key="frame" x="0.0" y="0.0" width="73" height="22"/>
                                                         <constraints>
                                                             <constraint firstAttribute="height" constant="22" id="0VH-O0-jTk"/>
                                                         </constraints>
@@ -2835,7 +2878,7 @@ et dolore magna aliqua.</string>
                                                     </constraints>
                                                 </imageView>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="LKa-jp-9PP">
-                                                    <rect key="frame" x="62" y="16" width="334" height="21"/>
+                                                    <rect key="frame" x="62" y="16" width="327" height="21"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                     <nil key="highlightedColor"/>
@@ -2963,23 +3006,23 @@ et dolore magna aliqua.</string>
                                         <rect key="frame" x="0.0" y="0.0" width="414" height="75"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="tdj-HL-aEF" id="hvq-tt-w8g">
-                                            <rect key="frame" x="0.0" y="0.0" width="381" height="75"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="376" height="75"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <imageView userInteractionEnabled="NO" alpha="0.69999999999999996" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="about" translatesAutoresizingMaskIntoConstraints="NO" id="n10-PU-Qls">
-                                                    <rect key="frame" x="28" y="20" width="35" height="35"/>
+                                                    <rect key="frame" x="40" y="20" width="35" height="35"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" secondItem="n10-PU-Qls" secondAttribute="height" multiplier="1:1" id="djP-GE-vvd"/>
                                                     </constraints>
                                                 </imageView>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="About" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zng-Be-eJE">
-                                                    <rect key="frame" x="83" y="27" width="280" height="22"/>
+                                                    <rect key="frame" x="95" y="27" width="263" height="22"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="18"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="HUg-FR-anm">
-                                                    <rect key="frame" x="16" y="75" width="401" height="0.0"/>
+                                                    <rect key="frame" x="28" y="75" width="384" height="0.0"/>
                                                     <color key="backgroundColor" red="0.80000000000000004" green="0.80000000000000004" blue="0.80000000000000004" alpha="1" colorSpace="calibratedRGB"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="0.5" id="M6S-71-znM"/>
@@ -3006,23 +3049,23 @@ et dolore magna aliqua.</string>
                                         <rect key="frame" x="0.0" y="75" width="414" height="75"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="OmY-Pb-uZV" id="3Ir-xc-5LZ">
-                                            <rect key="frame" x="0.0" y="0.0" width="381" height="75"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="376" height="75"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <imageView userInteractionEnabled="NO" alpha="0.69999999999999996" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="how-it-works" translatesAutoresizingMaskIntoConstraints="NO" id="LUs-6I-5HB">
-                                                    <rect key="frame" x="28" y="20" width="35" height="35"/>
+                                                    <rect key="frame" x="40" y="20" width="35" height="35"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" secondItem="LUs-6I-5HB" secondAttribute="height" multiplier="1:1" id="bej-DX-4my"/>
                                                     </constraints>
                                                 </imageView>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="How it works" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6u8-EB-oIa">
-                                                    <rect key="frame" x="83" y="26" width="280" height="22"/>
+                                                    <rect key="frame" x="95" y="26" width="263" height="22"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="18"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="qXa-NM-U1Z">
-                                                    <rect key="frame" x="16" y="75" width="401" height="0.0"/>
+                                                    <rect key="frame" x="28" y="75" width="384" height="0.0"/>
                                                     <color key="backgroundColor" red="0.80000000000000004" green="0.80000000000000004" blue="0.80000000000000004" alpha="1" colorSpace="calibratedRGB"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="0.5" id="5gn-V9-ccy"/>
@@ -3049,23 +3092,23 @@ et dolore magna aliqua.</string>
                                         <rect key="frame" x="0.0" y="150" width="414" height="75"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="KEj-hC-zVC" id="1bd-V6-Hfj">
-                                            <rect key="frame" x="0.0" y="0.0" width="381" height="75"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="376" height="75"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <imageView userInteractionEnabled="NO" alpha="0.69999999999999996" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="terms" translatesAutoresizingMaskIntoConstraints="NO" id="hT2-M4-V1I">
-                                                    <rect key="frame" x="28" y="20" width="35" height="35"/>
+                                                    <rect key="frame" x="40" y="20" width="35" height="35"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" secondItem="hT2-M4-V1I" secondAttribute="height" multiplier="1:1" id="T0h-Ll-Iel"/>
                                                     </constraints>
                                                 </imageView>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Terms and Conditions" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Arc-uM-cd6">
-                                                    <rect key="frame" x="83" y="26" width="280" height="22"/>
+                                                    <rect key="frame" x="95" y="26" width="263" height="22"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="18"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="QTx-89-NFS">
-                                                    <rect key="frame" x="16" y="75" width="401" height="0.0"/>
+                                                    <rect key="frame" x="28" y="75" width="384" height="0.0"/>
                                                     <color key="backgroundColor" red="0.80000000000000004" green="0.80000000000000004" blue="0.80000000000000004" alpha="1" colorSpace="calibratedRGB"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="0.5" id="HPV-1w-hqB"/>
@@ -3092,23 +3135,23 @@ et dolore magna aliqua.</string>
                                         <rect key="frame" x="0.0" y="225" width="414" height="75"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="7BI-st-W8I" id="AnK-hN-dm0">
-                                            <rect key="frame" x="0.0" y="0.0" width="381" height="75"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="376" height="75"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <imageView userInteractionEnabled="NO" alpha="0.69999999999999996" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="privacy" translatesAutoresizingMaskIntoConstraints="NO" id="0X8-8e-rgH">
-                                                    <rect key="frame" x="28" y="20" width="35" height="35"/>
+                                                    <rect key="frame" x="40" y="20" width="35" height="35"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" secondItem="0X8-8e-rgH" secondAttribute="height" multiplier="1:1" id="BKV-6m-hi8"/>
                                                     </constraints>
                                                 </imageView>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Privacy Policy" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="IoF-Ts-SfZ">
-                                                    <rect key="frame" x="83" y="27" width="280" height="22"/>
+                                                    <rect key="frame" x="95" y="27" width="263" height="22"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="18"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="6lG-cS-Tz9">
-                                                    <rect key="frame" x="16" y="75" width="401" height="0.0"/>
+                                                    <rect key="frame" x="28" y="75" width="384" height="0.0"/>
                                                     <color key="backgroundColor" red="0.80000000000000004" green="0.80000000000000004" blue="0.80000000000000004" alpha="1" colorSpace="calibratedRGB"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="0.5" id="2MA-pT-Ub3"/>
@@ -3241,19 +3284,19 @@ et dolore magna aliqua.</string>
                                                     </constraints>
                                                 </imageView>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Business Name" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="T2t-Ab-gh1">
-                                                    <rect key="frame" x="95" y="8" width="263" height="24"/>
+                                                    <rect key="frame" x="95" y="11" width="263" height="24"/>
                                                     <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="20"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="sub title" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="RJM-t7-DAq">
-                                                    <rect key="frame" x="95" y="42" width="201" height="20"/>
+                                                    <rect key="frame" x="95" y="45" width="201" height="20"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                                     <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="999Credit" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fx9-wE-gEX">
-                                                    <rect key="frame" x="296" y="45" width="70" height="15"/>
+                                                    <rect key="frame" x="296" y="48" width="70" height="15"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" constant="70" id="3tZ-VG-Bgt"/>
                                                     </constraints>
@@ -3531,13 +3574,13 @@ Lets start with easy adding your Business</string>
                                                     </constraints>
                                                 </imageView>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Workplace Name" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="GAz-iA-hM9">
-                                                    <rect key="frame" x="95" y="8" width="268" height="24"/>
+                                                    <rect key="frame" x="95" y="11" width="268" height="24"/>
                                                     <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="20"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="sub title" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="eZt-8P-p1B">
-                                                    <rect key="frame" x="95" y="42" width="268" height="20"/>
+                                                    <rect key="frame" x="95" y="45" width="268" height="20"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                                     <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                                                     <nil key="highlightedColor"/>
@@ -3924,7 +3967,7 @@ Now tap to create your workplaces.</string>
                                                 </connections>
                                             </button>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vyS-eo-cZC">
-                                                <rect key="frame" x="20" y="955.00000000000011" width="335" height="150.66666666666686"/>
+                                                <rect key="frame" x="20" y="954.99999999999989" width="335" height="150.66666666666663"/>
                                                 <string key="text">Record your up to 30 sec selfie video. The key is to just be yourself! You can record on your phone pretty much anywhere, at home on the bus or in a coffee shop it doesn’t matter, and you can re-record as many times as you want.</string>
                                                 <fontDescription key="fontDescription" type="system" pointSize="18"/>
                                                 <color key="textColor" red="0.25882352939999997" green="0.25882352939999997" blue="0.25882352939999997" alpha="1" colorSpace="calibratedRGB"/>
@@ -5045,23 +5088,23 @@ If required I will give full details if I have been convicted of any criminal of
                                         <rect key="frame" x="0.0" y="28" width="414" height="50"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="nzo-B5-0ue" id="OSP-T5-Qi6">
-                                            <rect key="frame" x="0.0" y="0.0" width="414" height="50"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="414" height="49.666666666666664"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="0AW-b2-3pX">
-                                                    <rect key="frame" x="16" y="14" width="21" height="21"/>
+                                                    <rect key="frame" x="23" y="17" width="16" height="16"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" secondItem="0AW-b2-3pX" secondAttribute="height" multiplier="1:1" id="Tgr-s3-9Gf"/>
                                                     </constraints>
                                                 </imageView>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Tiv-Gh-CTA">
-                                                    <rect key="frame" x="47" y="14" width="309" height="21"/>
+                                                    <rect key="frame" x="49" y="14" width="300" height="21"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="9999K" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="loK-ch-uHu">
-                                                    <rect key="frame" x="356" y="17" width="50" height="15"/>
+                                                    <rect key="frame" x="349" y="17" width="50" height="15"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" constant="50" id="tve-nv-1BG"/>
                                                     </constraints>
@@ -5209,13 +5252,13 @@ If required I will give full details if I have been convicted of any criminal of
                                                     </constraints>
                                                 </imageView>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Job Title" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="giK-cf-AS7">
-                                                    <rect key="frame" x="95" y="8" width="268" height="24"/>
+                                                    <rect key="frame" x="95" y="11" width="268" height="24"/>
                                                     <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="20"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Business Name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9eo-da-OPB">
-                                                    <rect key="frame" x="95" y="42" width="268" height="20"/>
+                                                    <rect key="frame" x="95" y="45" width="268" height="20"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                                     <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                                                     <nil key="highlightedColor"/>
@@ -5246,10 +5289,10 @@ If required I will give full details if I have been convicted of any criminal of
                                 </connections>
                             </tableView>
                             <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fAC-0p-uia">
-                                <rect key="frame" x="99" y="414" width="216" height="92"/>
+                                <rect key="frame" x="103.33333333333333" y="414" width="207.33333333333337" height="92"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="653-ay-k6t">
-                                        <rect key="frame" x="0.0" y="0.0" width="216" height="48"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="207.33333333333334" height="48"/>
                                         <string key="text">You have not added any
 jobs yet.</string>
                                         <fontDescription key="fontDescription" type="system" pointSize="20"/>
@@ -5257,7 +5300,7 @@ jobs yet.</string>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="P7X-wh-9Gn">
-                                        <rect key="frame" x="66" y="58" width="84" height="34"/>
+                                        <rect key="frame" x="61.666666666666671" y="58" width="84.000000000000014" height="34"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="18"/>
                                         <state key="normal" title="Create job"/>
                                         <connections>
@@ -5555,23 +5598,23 @@ jobs yet.</string>
                                         <rect key="frame" x="0.0" y="28" width="414" height="50"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="Ye8-XR-eD2" id="d3R-MQ-WJS">
-                                            <rect key="frame" x="0.0" y="0.0" width="414" height="50"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="414" height="49.666666666666664"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="60E-gj-h1L">
-                                                    <rect key="frame" x="16" y="14" width="21" height="21"/>
+                                                    <rect key="frame" x="23" y="17" width="16" height="16"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" secondItem="60E-gj-h1L" secondAttribute="height" multiplier="1:1" id="mTe-6d-6yZ"/>
                                                     </constraints>
                                                 </imageView>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jo9-dH-e6b">
-                                                    <rect key="frame" x="47" y="14" width="309" height="21"/>
+                                                    <rect key="frame" x="49" y="14" width="300" height="21"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="9999K" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Whg-CU-HVR">
-                                                    <rect key="frame" x="356" y="17" width="50" height="15"/>
+                                                    <rect key="frame" x="349" y="17" width="50" height="15"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" constant="50" id="qQU-L3-EGj"/>
                                                     </constraints>
@@ -5646,13 +5689,13 @@ jobs yet.</string>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" pagingEnabled="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" translatesAutoresizingMaskIntoConstraints="NO" id="CbQ-1g-LtM">
-                                <rect key="frame" x="0.0" y="0.0" width="414" height="572"/>
+                                <rect key="frame" x="0.0" y="20" width="414" height="552"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="8Sh-Q9-ob4">
-                                        <rect key="frame" x="0.0" y="0.0" width="1656" height="572"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="1656" height="552"/>
                                         <subviews>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="jDl-rA-e4H">
-                                                <rect key="frame" x="0.0" y="0.0" width="414" height="572"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="414" height="552"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Welcome!" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5bV-Vn-8QS">
                                                         <rect key="frame" x="40" y="40" width="334" height="22"/>
@@ -5661,10 +5704,10 @@ jobs yet.</string>
                                                         <nil key="highlightedColor"/>
                                                     </label>
                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="zcG-bz-lVo">
-                                                        <rect key="frame" x="103" y="40" width="207" height="492"/>
+                                                        <rect key="frame" x="103" y="40" width="207" height="472"/>
                                                         <subviews>
                                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="AaQ-Vv-dZc">
-                                                                <rect key="frame" x="0.0" y="143" width="207" height="207"/>
+                                                                <rect key="frame" x="0.0" y="133" width="207" height="207"/>
                                                                 <subviews>
                                                                     <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="749" image="logo" translatesAutoresizingMaskIntoConstraints="NO" id="SnA-Oi-sI9">
                                                                         <rect key="frame" x="31" y="21" width="145" height="145"/>
@@ -5690,7 +5733,7 @@ jobs yet.</string>
                                                         </constraints>
                                                     </view>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="You're just a few steps away from you next job!" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="KPi-wp-Wa6">
-                                                        <rect key="frame" x="20" y="532" width="374" height="20"/>
+                                                        <rect key="frame" x="20" y="512" width="374" height="20"/>
                                                         <fontDescription key="fontDescription" type="system" weight="medium" pointSize="16"/>
                                                         <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                                                         <nil key="highlightedColor"/>
@@ -5708,7 +5751,7 @@ jobs yet.</string>
                                                 </constraints>
                                             </view>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="isD-Yv-gbw">
-                                                <rect key="frame" x="414" y="0.0" width="414" height="572"/>
+                                                <rect key="frame" x="414" y="0.0" width="414" height="552"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Complete your profile" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Da4-g1-tsl">
                                                         <rect key="frame" x="40" y="40" width="334" height="22"/>
@@ -5717,10 +5760,10 @@ jobs yet.</string>
                                                         <nil key="highlightedColor"/>
                                                     </label>
                                                     <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="749" image="intro1" translatesAutoresizingMaskIntoConstraints="NO" id="Jdl-D5-7ZX">
-                                                        <rect key="frame" x="104" y="40" width="207" height="492"/>
+                                                        <rect key="frame" x="104" y="40" width="207" height="472"/>
                                                     </imageView>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="It only takes a few seconds but will save you countless hours of searching!" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2kq-Fk-e7z">
-                                                        <rect key="frame" x="20" y="513.66666666666652" width="374" height="38.333333333333371"/>
+                                                        <rect key="frame" x="20" y="493.66666666666657" width="374" height="38.333333333333314"/>
                                                         <fontDescription key="fontDescription" type="system" weight="medium" pointSize="16"/>
                                                         <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                                                         <nil key="highlightedColor"/>
@@ -5741,7 +5784,7 @@ jobs yet.</string>
                                                 </constraints>
                                             </view>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="xK9-Zc-JKr">
-                                                <rect key="frame" x="828" y="0.0" width="414" height="572"/>
+                                                <rect key="frame" x="828" y="0.0" width="414" height="552"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Record Your Pitch" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aQI-Tl-Nt7">
                                                         <rect key="frame" x="40" y="40" width="334" height="22"/>
@@ -5750,10 +5793,10 @@ jobs yet.</string>
                                                         <nil key="highlightedColor"/>
                                                     </label>
                                                     <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="749" image="intro2" translatesAutoresizingMaskIntoConstraints="NO" id="Sw8-N5-GY3">
-                                                        <rect key="frame" x="104" y="40" width="207" height="492"/>
+                                                        <rect key="frame" x="104" y="40" width="207" height="472"/>
                                                     </imageView>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Quick and easy! Use your phone camera to record a quick video introduction for yourself." lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="25x-io-NG6">
-                                                        <rect key="frame" x="20" y="513.66666666666652" width="374" height="38.333333333333371"/>
+                                                        <rect key="frame" x="20" y="493.66666666666657" width="374" height="38.333333333333314"/>
                                                         <fontDescription key="fontDescription" type="system" weight="medium" pointSize="16"/>
                                                         <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                                                         <nil key="highlightedColor"/>
@@ -5771,7 +5814,7 @@ jobs yet.</string>
                                                 </constraints>
                                             </view>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="TQR-iz-0KI">
-                                                <rect key="frame" x="1242" y="0.0" width="414" height="572"/>
+                                                <rect key="frame" x="1242" y="0.0" width="414" height="552"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Get hired" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="T8r-lg-Uyf">
                                                         <rect key="frame" x="40" y="40" width="334" height="22"/>
@@ -5780,10 +5823,10 @@ jobs yet.</string>
                                                         <nil key="highlightedColor"/>
                                                     </label>
                                                     <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="749" image="intro3" translatesAutoresizingMaskIntoConstraints="NO" id="EBN-d8-5lG">
-                                                        <rect key="frame" x="103" y="40" width="207" height="492"/>
+                                                        <rect key="frame" x="103" y="40" width="207" height="472"/>
                                                     </imageView>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ond-VR-x2t">
-                                                        <rect key="frame" x="20" y="494.66666666666674" width="374" height="57.333333333333258"/>
+                                                        <rect key="frame" x="20" y="474.66666666666669" width="374" height="57.333333333333314"/>
                                                         <string key="text">You will be able to apply and recruiters will be able to search and see your profile the moment its complete, what are you waiting for!</string>
                                                         <fontDescription key="fontDescription" type="system" weight="medium" pointSize="16"/>
                                                         <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
@@ -5950,7 +5993,7 @@ jobs yet.</string>
                                                         <color key="currentPageIndicatorTintColor" red="1" green="0.57254901960000004" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                     </pageControl>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Job Title" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="QMn-fF-oCL">
-                                                        <rect key="frame" x="12" y="196" width="351" height="21.666666666666686"/>
+                                                        <rect key="frame" x="12" y="196" width="351" height="21.666666666666657"/>
                                                         <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="18"/>
                                                         <color key="textColor" red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="calibratedRGB"/>
                                                         <nil key="highlightedColor"/>
@@ -5965,7 +6008,7 @@ jobs yet.</string>
                                                         <rect key="frame" x="18.666666666666657" y="250.66666666666669" width="339" height="20"/>
                                                         <subviews>
                                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Hij-qd-y2o">
-                                                                <rect key="frame" x="0.0" y="0.0" width="112.99999999999999" height="20"/>
+                                                                <rect key="frame" x="0.0" y="0.0" width="113" height="20"/>
                                                                 <subviews>
                                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="xw1-vr-pXI">
                                                                         <rect key="frame" x="18.333333333333329" y="0.0" width="78" height="20"/>
@@ -5978,7 +6021,7 @@ jobs yet.</string>
                                                                                 </constraints>
                                                                             </imageView>
                                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Full-time" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="taa-5h-mOy">
-                                                                                <rect key="frame" x="28.333333333333329" y="3" width="50" height="14.333333333333314"/>
+                                                                                <rect key="frame" x="28.333333333333329" y="3.0000000000000009" width="50" height="14.333333333333336"/>
                                                                                 <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                                                                 <color key="textColor" red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="calibratedRGB"/>
                                                                                 <nil key="highlightedColor"/>
@@ -6006,7 +6049,7 @@ jobs yet.</string>
                                                                 <rect key="frame" x="113" y="0.0" width="113" height="20"/>
                                                                 <subviews>
                                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4Uu-2B-LDR">
-                                                                        <rect key="frame" x="13" y="0.0" width="88.666666666666686" height="20"/>
+                                                                        <rect key="frame" x="13" y="0.0" width="88.666666666666671" height="20"/>
                                                                         <subviews>
                                                                             <imageView userInteractionEnabled="NO" alpha="0.5" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="icon-time" translatesAutoresizingMaskIntoConstraints="NO" id="Gxd-ci-S5I">
                                                                                 <rect key="frame" x="0.0" y="0.0" width="20" height="20"/>
@@ -6016,7 +6059,7 @@ jobs yet.</string>
                                                                                 </constraints>
                                                                             </imageView>
                                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Temporary" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Mo7-Vv-xf4">
-                                                                                <rect key="frame" x="28" y="3" width="60.666666666666686" height="14.333333333333314"/>
+                                                                                <rect key="frame" x="27.999999999999996" y="3.0000000000000009" width="60.666666666666657" height="14.333333333333336"/>
                                                                                 <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                                                                 <color key="textColor" red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="calibratedRGB"/>
                                                                                 <nil key="highlightedColor"/>
@@ -6044,7 +6087,7 @@ jobs yet.</string>
                                                                 <rect key="frame" x="226" y="0.0" width="113" height="20"/>
                                                                 <subviews>
                                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="DKY-RO-grl">
-                                                                        <rect key="frame" x="19.333333333333343" y="0.0" width="75.333333333333314" height="20"/>
+                                                                        <rect key="frame" x="19.333333333333343" y="0.0" width="75.333333333333329" height="20"/>
                                                                         <subviews>
                                                                             <imageView userInteractionEnabled="NO" alpha="0.5" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="icon-distance" translatesAutoresizingMaskIntoConstraints="NO" id="LwX-Ks-f4T">
                                                                                 <rect key="frame" x="0.0" y="0.0" width="20" height="20"/>
@@ -6054,7 +6097,7 @@ jobs yet.</string>
                                                                                 </constraints>
                                                                             </imageView>
                                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0.04 Km" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qaa-bK-Vfz">
-                                                                                <rect key="frame" x="28" y="3" width="47.333333333333314" height="14.333333333333314"/>
+                                                                                <rect key="frame" x="28.000000000000004" y="3.0000000000000009" width="47.333333333333343" height="14.333333333333336"/>
                                                                                 <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                                                                 <color key="textColor" red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="calibratedRGB"/>
                                                                                 <nil key="highlightedColor"/>
@@ -6195,10 +6238,10 @@ jobs yet.</string>
                                                 </constraints>
                                             </view>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="RCj-Mv-RPP">
-                                                <rect key="frame" x="0.0" y="350.66666666666674" width="375" height="122.33333333333331"/>
+                                                <rect key="frame" x="0.0" y="350.66666666666669" width="375" height="122.33333333333331"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Job Description" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="EYj-Ia-TqS">
-                                                        <rect key="frame" x="12" y="12" width="351" height="19.333333333333314"/>
+                                                        <rect key="frame" x="12" y="11.999999999999998" width="351" height="19.333333333333329"/>
                                                         <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="16"/>
                                                         <nil key="highlightedColor"/>
                                                     </label>
@@ -6225,10 +6268,10 @@ et dolore magna aliqua.</string>
                                                 </constraints>
                                             </view>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="u4j-vy-LdD">
-                                                <rect key="frame" x="0.0" y="485.00000000000006" width="375" height="331.33333333333343"/>
+                                                <rect key="frame" x="0.0" y="485" width="375" height="331.33333333333326"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Workplace Description" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tS3-Qk-yoX">
-                                                        <rect key="frame" x="12" y="12" width="351" height="19.333333333333371"/>
+                                                        <rect key="frame" x="12" y="11.999999999999998" width="351" height="19.333333333333329"/>
                                                         <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="16"/>
                                                         <nil key="highlightedColor"/>
                                                     </label>

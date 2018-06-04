@@ -27,6 +27,9 @@ public class SwipeFragment<T> extends BaseFragment {
     @BindView(R.id.empty_view)
     View emptyView;
 
+    @BindView(R.id.job_title_view)
+    View jobTitleView;
+
     @BindView(R.id.empty_button)
     View emptyButton;
 
@@ -44,6 +47,8 @@ public class SwipeFragment<T> extends BaseFragment {
         // empty view
         AppHelper.setEmptyViewText(emptyView, emptyText);
         emptyButton.setVisibility(View.GONE);
+
+        AppHelper.setJobTitleViewText(jobTitleView, "");
 
         // refresh button
         addMenuItem(MENUGROUP1, 100, "Refresh", R.drawable.ic_refresh);

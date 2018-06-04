@@ -324,7 +324,18 @@ class InterviewViewSet(viewsets.ModelViewSet):
             content=invitation,
             interview=interview,
         )
-        return interview
+
+    def perform_update(self, serializer):
+        interview = self.get_object()
+        super(InterviewViewSet, self).perform_update(serializer)
+        if 'at' in serializer.validated_data and serializer.validated_data['at'] != interview.at:
+            Message.objects.create(
+                system=True,
+                application=interview.application,
+                from_role=Role.objects.get(name=Role.RECRUITER),
+                content='Interview recheduled',
+                interview=interview,
+            )
 
     def perform_destroy(self, interview):
         interview.cancelled = timezone.now()

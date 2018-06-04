@@ -1,4 +1,5 @@
 from django.db.models import Max
+from django.utils import timezone
 from rest_framework import viewsets, permissions, serializers
 from rest_framework.exceptions import PermissionDenied
 
@@ -282,7 +283,7 @@ class InterviewViewSet(viewsets.ModelViewSet):
             if request.user and request.user.is_authenticated():
                 if request.user.is_recruiter:
                     return True
-                if request.method in permissions.SAFE_METHODS:
+                if request.method in permissions.SAFE_METHODS + ("DELETE",):
                     return True
             return False
 
@@ -294,7 +295,7 @@ class InterviewViewSet(viewsets.ModelViewSet):
                         if business_user.locations.exists():
                             return business_user.locations.filter(user=request.user).exists()
                         return True
-                elif request.method in permissions.SAFE_METHODS:
+                elif request.method in permissions.SAFE_METHODS + ("DELETE",):
                     return obj.application.job_seeker == request.user.job_seeker
             return False
 
@@ -311,6 +312,35 @@ class InterviewViewSet(viewsets.ModelViewSet):
         else:
             query = query.filter(application__job_seeker=self.request.user.job_seeker)
         return query
+
+    def perform_create(self, serializer):
+        validated_data = serializer.validated_data
+        invitation = validated_data.pop('invitation')
+        interview = super(InterviewViewSet, self).perform_create(serializer)
+        Message.objects.create(
+            system=True,
+            application=validated_data['application'],
+            from_role=Role.objects.get(name=Role.RECRUITER),
+            content=invitation,
+            interview=interview,
+        )
+        return interview
+
+    def perform_destroy(self, interview):
+        interview.cancelled = timezone.now()
+        role = self.request.user.role
+        interview.cancelled_by = role
+        interview.save()
+        message = Message()
+        message.system = True
+        message.application = interview.application
+        message.interview = interview
+        message.from_role = role
+        if role.name == Role.RECRUITER:
+            message.content = 'The recruiter has cancelled this interview'
+        else:
+            message.content = 'The job seeker has cancelled this interview'
+        message.save()
 
     queryset = Interview.objects.all()
     serializer_class = InterviewSerializer

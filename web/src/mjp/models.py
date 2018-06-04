@@ -534,6 +534,8 @@ class Interview(models.Model):
     application = models.ForeignKey(Application, related_name='interviews')
     notes = models.TextField(blank=True, help_text='Private recruiter notes')
     feedback = models.TextField(blank=True, help_text='Job seeker visible feedback')
+    cancelled = models.DateTimeField(blank=True, null=True)
+    cancelled_by = models.ForeignKey(Role, null=True, blank=True)
 
     class Meta:
         ordering = ('at',)

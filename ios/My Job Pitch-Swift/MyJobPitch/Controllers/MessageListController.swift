@@ -166,7 +166,8 @@ extension MessageListController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
         let application = data[indexPath.row] as! Application
-        MessageController0.showModal(application: application)
+        let goAllMessages = job != nil
+        MessageController0.showModal(application: application, goAllMessages: goAllMessages)
         
     }
     

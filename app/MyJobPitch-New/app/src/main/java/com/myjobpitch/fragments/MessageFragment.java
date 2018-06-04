@@ -54,6 +54,7 @@ public class MessageFragment extends BaseFragment {
     String myAvatar;
     String otherName;
     String otherAvatar;
+    Boolean allMessages = true;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -62,6 +63,11 @@ public class MessageFragment extends BaseFragment {
         ButterKnife.bind(this, view);
 
         title = "Message";
+
+        // All Messages button
+        if (allMessages) {
+            addMenuItem(MENUGROUP1, 105, "All Messages", R.drawable.menu_message);
+        }
 
         // get data
 
@@ -117,7 +123,7 @@ public class MessageFragment extends BaseFragment {
 
             AppHelper.loadJobSeekerImage(jobSeeker, AppHelper.getImageView(headerView));
             AppHelper.getItemTitleView(headerView).setText(AppHelper.getJobSeekerName(jobSeeker));
-            AppHelper.getItemSubTitleView(headerView).setText(String.format("%s (%s)", job.getTitle(), AppHelper.getBusinessName(job)));
+            AppHelper.getItemSubTitleView(headerView).setText(String.format("%s, %s", job.getTitle(), AppHelper.getBusinessName(job)));
 
             myName = job.getLocation_data().getBusiness_data().getName();
             myAvatar = jobImage;
@@ -192,6 +198,16 @@ public class MessageFragment extends BaseFragment {
             }
         }).execute();
     }
+
+    @Override
+    public void onMenuSelected(int menuID) {
+        if (menuID == 105) {
+            getApp().setRootFragement(AppData.PAGE_MESSAGES);
+        } else {
+            super.onMenuSelected(menuID);
+        }
+    }
+
 
     @OnClick(R.id.header_view)
     void onClickHeader() {

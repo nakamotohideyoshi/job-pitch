@@ -189,7 +189,8 @@ extension ApplicationListController: UITableViewDataSource {
                                 }, cancel: "Cancel", cancelCallback: nil)
                             } else {
                                 ApplicationListController.refreshRequest = true
-                                MessageController0.showModal(application: self.selectedItem as! Application)
+                                let goAllMessages = self.job != nil
+                                MessageController0.showModal(application: self.selectedItem as! Application, goAllMessages: goAllMessages)
                             }
                             
                             return false

@@ -69,6 +69,11 @@ public class AppHelper {
         ((TextView)emptyView.findViewById(R.id.empty_text)).setText(title);
     }
 
+    public static void setJobTitleViewText(View jobTitleView, String title) {
+        ((TextView)jobTitleView.findViewById(R.id.job_title_text)).setText(title);
+    }
+
+
     public static void setEmptyButtonText(View emptyView, String text) {
         ((TextView)emptyView.findViewById(R.id.empty_button)).setText(text);
     }

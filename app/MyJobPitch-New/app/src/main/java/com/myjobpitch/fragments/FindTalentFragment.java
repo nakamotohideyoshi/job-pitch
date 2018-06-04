@@ -33,6 +33,9 @@ public class FindTalentFragment extends SwipeFragment<JobSeeker> {
         title = "Find Talent";
         showCredits();
 
+        if (job != null) {
+            AppHelper.setJobTitleViewText(jobTitleView, String.format("%s (%s)", job.getTitle(), AppHelper.getBusinessName(job)));
+        }
 
         addMenuItem(MENUGROUP1, 101, "Job Details", R.drawable.ic_edit);
         return  view;

@@ -138,7 +138,7 @@ class PublicJobListingSerializer(serializers.ModelSerializer):
     sector = SimpleSerializer(Sector, meta_overrides={'fields': ('name', 'description')})()
     contract = SimpleSerializer(Contract, meta_overrides={'fields': ('name', 'short_name', 'description')})()
     hours = SimpleSerializer(Hours, meta_overrides={'fields': ('name', 'short_name', 'description')})()
-    location_data = PublicLocationListingSerializer()
+    location_data = PublicLocationListingSerializer(source='location')
 
     class Meta:
         model = Job

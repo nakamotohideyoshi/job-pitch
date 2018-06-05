@@ -4,6 +4,8 @@ import { connect } from 'react-redux';
 import { List, Modal, Avatar, Button, Switch } from 'antd';
 
 import { getApplications, connectApplication, updateApplication, sendMessage } from 'redux/applications';
+import { updateLatest } from 'redux/messages';
+
 import DATA from 'utils/data';
 import * as helper from 'utils/helper';
 
@@ -33,7 +35,9 @@ class Page extends React.Component {
 
   componentWillMount() {
     this.props.getApplications();
-
+    if (this.props.latest !== '') {
+      this.props.updateLatest({ id: this.props.latest, data: { read: true } });
+    }
     window.addEventListener('resize', this.onResize);
     this.onResize();
   }
@@ -243,13 +247,15 @@ const enhance = connect(
     jobs: state.rc_jobs.jobs,
     applications: state.applications.applications,
     businesses: state.rc_businesses.businesses,
-    error: state.applications.error
+    error: state.applications.error,
+    latest: state.messages.latest
   }),
   {
     getApplications,
     connectApplication,
     updateApplication,
-    sendMessage
+    sendMessage,
+    updateLatest
   }
 );
 

@@ -2,7 +2,9 @@ import React from 'react';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
 import { withRouter, Link } from 'react-router-dom';
-import { Menu } from 'antd';
+import { Menu, Badge } from 'antd';
+import { getApplications, getAllApplications } from 'redux/applications';
+import { updateCount } from 'redux/messages';
 
 const Item = Menu.Item;
 
@@ -12,6 +14,15 @@ const StyledMenu = styled(Menu)`
     margin: 0 -16px;
     border-right: none;
   }
+  .ant-menu-item .ant-badge {
+    color: inherit;
+    margin-left: 5px;
+    .ant-badge-count {
+      margin: 0 0 3px 3px;
+      box-shadow: none;
+      background-color: #ff9300;
+    }
+  }
 `;
 
 class MainMenu extends React.Component {
@@ -20,9 +31,33 @@ class MainMenu extends React.Component {
     onClick && onClick();
   };
 
+  componentDidMount() {
+    setInterval(() => {
+      if (this.props.location.pathname.indexOf('/jobseeker/messages') === 0) {
+        // alert('aaa');
+      } else {
+        this.props.getAllApplications();
+      }
+    }, 3000);
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.allApplications !== null) {
+      this.props.updateCount({ applications: nextProps.allApplications, from_role: 1 });
+    }
+  }
+
   render() {
-    const { profile, theme, mode, location } = this.props;
+    const { profile, theme, mode, location, count } = this.props;
     const selectedKey = location.pathname.split('/')[2];
+
+    var countStr = '';
+    if (count > 0 && count < 10) {
+      countStr = count;
+    }
+    if (count >= 9) {
+      countStr = '10+';
+    }
 
     if (!profile) return null;
 
@@ -35,7 +70,9 @@ class MainMenu extends React.Component {
           <Link to="/jobseeker/applications">My Applications</Link>
         </Item>
         <Item key="messages">
-          <Link to="/jobseeker/messages">Messages</Link>
+          <Link to="/jobseeker/messages">
+            Messages<Badge count={countStr} />
+          </Link>
         </Item>
       </StyledMenu>
     );
@@ -44,9 +81,19 @@ class MainMenu extends React.Component {
 
 export default withRouter(
   connect(
-    state => ({
-      profile: state.js_profile.profile
-    }),
-    {}
+    state => {
+      const { allApplications } = state.applications;
+      const { count } = state.messages;
+      return {
+        profile: state.js_profile.profile,
+        allApplications,
+        count
+      };
+    },
+    {
+      getApplications,
+      getAllApplications,
+      updateCount
+    }
   )(MainMenu)
 );

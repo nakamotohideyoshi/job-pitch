@@ -36,21 +36,18 @@ class MainMenu extends React.Component {
   };
 
   componentDidMount() {
-    // this.props.getAllApplications();
     setInterval(() => {
-      console.log(this.props.location.pathname);
       if (this.props.location.pathname.indexOf('/recruiter/messages') === 0) {
-        // alert('sd');
+        // alert('aaa');
       } else {
         this.props.getAllApplications();
       }
-      // console.log();
     }, 3000);
   }
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.allApplications !== null) {
-      this.props.updateCount(nextProps.allApplications);
+      this.props.updateCount({ applications: nextProps.allApplications, from_role: 2 });
     }
   }
 

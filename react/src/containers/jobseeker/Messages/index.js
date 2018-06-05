@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 import { List, Avatar } from 'antd';
 
 import { getApplications, sendMessage } from 'redux/applications';
+import { updateLatest } from 'redux/messages';
 import DATA from 'utils/data';
 import * as helper from 'utils/helper';
 
@@ -22,7 +23,9 @@ class Messages extends React.Component {
 
   componentWillMount() {
     this.props.getApplications();
-
+    if (this.props.latest !== '') {
+      this.props.updateLatest({ id: this.props.latest, data: { read: true } });
+    }
     window.addEventListener('resize', this.onResize);
     this.onResize();
   }
@@ -151,11 +154,13 @@ const enhance = connect(
   state => ({
     jobseeker: state.js_profile.jobseeker,
     applications: state.applications.applications,
-    error: state.applications.error
+    error: state.applications.error,
+    latest: state.messages.latest
   }),
   {
     getApplications,
-    sendMessage
+    sendMessage,
+    updateLatest
   }
 );
 

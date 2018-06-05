@@ -10,6 +10,7 @@ import * as helper from 'utils/helper';
 
 export const updateStatus = createAction(C.APPLICATIONS_UPDATE);
 export const getApplications = createAction(C.GET_APPLICATIONS);
+export const getAllApplications = createAction(C.GET_ALL_APPLICATIONS);
 export const connectApplication = createAction(C.CONNECT_APPLICATION);
 export const updateApplication = createAction(C.UPDATE_APPLICATION);
 export const removeApplication = createAction(C.REMOVE_APPLICATION);
@@ -21,7 +22,8 @@ export const sendMessage = createAction(C.SEND_MESSAGE);
 
 const initialState = {
   applications: null,
-  error: null
+  error: null,
+  allApplications: null
 };
 
 export default handleActions(
@@ -45,6 +47,24 @@ export default handleActions(
     }),
 
     [requestFail(C.GET_APPLICATIONS)]: (state, { payload }) => ({
+      ...state,
+      error: payload
+    }),
+
+    // ---- get all applications ----
+
+    [requestPending(C.GET_ALL_APPLICATIONS)]: state => ({
+      ...state,
+      allApplications: null,
+      error: null
+    }),
+
+    [requestSuccess(C.GET_ALL_APPLICATIONS)]: (state, { payload }) => ({
+      ...state,
+      allApplications: payload
+    }),
+
+    [requestFail(C.GET_ALL_APPLICATIONS)]: (state, { payload }) => ({
       ...state,
       error: payload
     }),

@@ -1,5 +1,6 @@
 import auth from './auth';
 import applications from './applications';
+import messages from './messages';
 
 import rc_find from './recruiter/find';
 import rc_businesses from './recruiter/businesses';
@@ -12,6 +13,7 @@ import js_profile from './jobseeker/profile';
 export default {
   auth,
   applications,
+  messages,
 
   rc_find,
   rc_businesses,

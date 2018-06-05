@@ -17,6 +17,12 @@ const getApplications = weakRequest(
   })
 );
 
+const getAllApplications = weakRequest(
+  getRequest({
+    url: '/api/applications/'
+  })
+);
+
 const updateApplication = weakRequest(
   putRequest({
     url: ({ id }) => `/api/applications/${id}/`
@@ -59,6 +65,7 @@ function* sendMessage({ payload }) {
 
 export default function* sagas() {
   yield takeLatest(C.GET_APPLICATIONS, getApplications);
+  yield takeLatest(C.GET_ALL_APPLICATIONS, getAllApplications);
   yield takeLatest(C.UPDATE_APPLICATION, updateApplication);
   yield takeLatest(C.CONNECT_APPLICATION, connectApplication);
   yield takeLatest(C.REMOVE_APPLICATION, removeApplication);

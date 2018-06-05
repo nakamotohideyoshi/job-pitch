@@ -104,6 +104,7 @@ export const deleteRequest = params => request({ ...params, method: 'delete' });
 
 export const weakRequest = api =>
   function* fun(action) {
+    // console.log('######', action.payload)
     return yield race({
       result: call(api, action),
       cancel: take(LOCATION_CHANGE)

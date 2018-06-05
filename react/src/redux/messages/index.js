@@ -1,6 +1,6 @@
 // import { LOCATION_CHANGE } from 'react-router-redux';
 import { createAction, handleActions } from 'redux-actions';
-// import { requestPending, requestSuccess, requestFail } from 'utils/request';
+import { requestPending, requestSuccess, requestFail } from 'utils/request';
 import * as C from 'redux/constants';
 
 // ------------------------------------
@@ -24,18 +24,12 @@ export default handleActions(
     [C.MESSAGES_UPDATE]: (state, { payload }) => ({
       ...state,
       ...payload
-    })
-    // ---- change location ----
+    }),
 
-    // [C.COUNT_UPDATE]: (state, { payload }) => {
-    //   console.log('{{{}}}}}', payload);
-    //   let { count, latest } = payload;
-    //   return {
-    //     ...state,
-    //     count: count,
-    //     latest: latest
-    //   };
-    // }
+    [requestSuccess(C.MESSAGES_UPDATE)]: (state, { payload }) => ({
+      ...state,
+      ...payload
+    })
   },
   initialState
 );

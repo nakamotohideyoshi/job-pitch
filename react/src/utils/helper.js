@@ -279,17 +279,19 @@ export function checkIfPhoneNumberInString(str) {
 |--------------------------------------------------
 */
 
-export function getNewMessages(applications) {
+export function getNewMessages({ applications, from_role }) {
   let messageList = [];
   _.forEach(applications, application => {
     _.forEach(application.messages, message => {
-      messageList.push(message);
+      if (message.from_role === from_role) {
+        messageList.push(message);
+      }
     });
   });
   let sortedMessages = _.sortBy(messageList, 'created').reverse();
   let count = 0;
   for (let i = 0; i < sortedMessages.length; i++) {
-    if (!sortedMessages.read) {
+    if (!sortedMessages[i].read) {
       count++;
     } else {
       break;
@@ -299,6 +301,6 @@ export function getNewMessages(applications) {
     }
   }
   let latest = sortedMessages.length > 0 ? sortedMessages[0].id : '';
-  console.log('sorted--->', sortedMessages.length, count, latest);
+  console.log('sorted--->', sortedMessages, from_role);
   return { count, latest: latest };
 }

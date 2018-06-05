@@ -35,7 +35,6 @@ class Page extends React.Component {
 
   componentWillMount() {
     this.props.getApplications();
-    // console.log("opopop", this.props.updateLatest)
     if (this.props.latest !== '') {
       this.props.updateLatest({ id: this.props.latest, data: { read: true } });
     }

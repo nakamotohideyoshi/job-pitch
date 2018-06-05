@@ -4,6 +4,9 @@ import { connect } from 'react-redux';
 import { withRouter, Link } from 'react-router-dom';
 import { Menu, Badge } from 'antd';
 
+import { getApplications, getAllApplications } from 'redux/applications';
+import { updateCount } from 'redux/messages';
+
 import * as helper from 'utils/helper';
 
 const Item = Menu.Item;
@@ -32,12 +35,38 @@ class MainMenu extends React.Component {
     onClick && onClick();
   };
 
+  componentDidMount() {
+    // this.props.getAllApplications();
+    setInterval(() => {
+      console.log(this.props.location.pathname);
+      if (this.props.location.pathname.indexOf('/recruiter/messages') === 0) {
+        // alert('sd');
+      } else {
+        this.props.getAllApplications();
+      }
+      // console.log();
+    }, 3000);
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.allApplications !== null) {
+      this.props.updateCount(nextProps.allApplications);
+    }
+  }
+
   render() {
-    const { businesses, business, location, theme, mode } = this.props;
+    const { businesses, business, location, theme, mode, count } = this.props;
     const existBusiness = businesses.length > 0;
     let selectedKey = location.pathname.split('/')[2];
     if (location.pathname.indexOf('/recruiter/settings/credits') === 0) {
       selectedKey = 'credits';
+    }
+    var countStr = '';
+    if (count > 0 && count < 10) {
+      countStr = count;
+    }
+    if (count >= 9) {
+      countStr = '10+';
     }
 
     return (
@@ -62,7 +91,9 @@ class MainMenu extends React.Component {
 
         {existBusiness && (
           <Item key="messages">
-            <Link to="/recruiter/messages">Messages</Link>
+            <Link to="/recruiter/messages">
+              Messages<Badge count={countStr} />
+            </Link>
           </Item>
         )}
       </MenuWrapper>
@@ -71,12 +102,23 @@ class MainMenu extends React.Component {
 }
 
 export default withRouter(
-  connect(state => {
-    const { businesses, selectedId } = state.rc_businesses;
-    const business = helper.getItemByID(businesses || [], selectedId);
-    return {
-      businesses,
-      business
-    };
-  })(MainMenu)
+  connect(
+    state => {
+      const { businesses, selectedId } = state.rc_businesses;
+      const { allApplications } = state.applications;
+      const { count } = state.messages;
+      const business = helper.getItemByID(businesses || [], selectedId);
+      return {
+        businesses,
+        business,
+        allApplications,
+        count
+      };
+    },
+    {
+      getApplications,
+      getAllApplications,
+      updateCount
+    }
+  )(MainMenu)
 );

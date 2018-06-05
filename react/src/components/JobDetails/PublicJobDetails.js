@@ -7,7 +7,7 @@ import Wrapper from './JobDetails.styled';
 
 export default ({ job, className, roughLocation, actions }) => {
   const logo = helper.getJobLogo(job);
-  const workplace = job.location;
+  const workplace = job.location_data;
   const title = job.title;
   const marker = { lat: workplace.latitude, lng: workplace.longitude };
 

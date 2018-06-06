@@ -14,9 +14,6 @@ from mjp.models import (
     BusinessUser,
     JobVideo,
     JobStatus,
-    Hours,
-    Contract,
-    Sector,
 )
 
 
@@ -112,37 +109,6 @@ class EmbeddedVideoSerializer(serializers.ModelSerializer):
 
 class JobSerializer(JobSerializerV1):
     videos = EmbeddedVideoSerializer(many=True, read_only=True)
-
-
-class PublicBusinessListingSerializer(serializers.ModelSerializer):
-    images = RelatedImageURLField(many=True, read_only=True)
-
-    class Meta:
-        model = Business
-        fields = ('name', 'images')
-
-
-class PublicLocationListingSerializer(serializers.ModelSerializer):
-    images = RelatedImageURLField(many=True, read_only=True)
-    longitude = serializers.FloatField(source='latlng.x')
-    latitude = serializers.FloatField(source='latlng.y')
-    business = PublicBusinessListingSerializer()
-
-    class Meta:
-        model = Location
-        fields = ('name', 'images', 'longitude', 'latitude', 'business')
-
-
-class PublicJobListingSerializer(serializers.ModelSerializer):
-    images = RelatedImageURLField(many=True, read_only=True)
-    sector = SimpleSerializer(Sector, meta_overrides={'fields': ('name', 'description')})()
-    contract = SimpleSerializer(Contract, meta_overrides={'fields': ('name', 'short_name', 'description')})()
-    hours = SimpleSerializer(Hours, meta_overrides={'fields': ('name', 'short_name', 'description')})()
-    location_data = PublicLocationListingSerializer(source='location')
-
-    class Meta:
-        model = Job
-        fields = ('title', 'description', 'images', 'sector', 'contract', 'hours', 'location_data')
 
 
 class EmbeddedPitchSerializer(serializers.ModelSerializer):

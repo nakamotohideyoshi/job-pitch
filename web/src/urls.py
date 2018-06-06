@@ -6,14 +6,15 @@ from django.contrib import admin
 from django.contrib.auth.views import password_reset_confirm, password_reset_complete
 
 from mjp import views
-from mjp.views import ecommerce, job_seeker
+from mjp.views import ecommerce, job_seeker, public
 
 urlpatterns = [
     url(r'^api/paypal/purchase/$', ecommerce.PayPalPurchaseView.as_view()),
     url(r'^api/paypal/confirm/$', ecommerce.PayPalPurchaseConfirmView.as_view(), name="paypal-confirm"),
     url(r'^api/android/purchase/$', ecommerce.AndroidPurchaseView.as_view()),
     url(r'^api/initial-tokens/$', ecommerce.InitialTokensView.as_view()),
-    url(r'^api/public/jobs/(?P<pk>\d+)/$', job_seeker.PublicJobListing.as_view()),
+    url(r'^api/public/jobs/(?P<pk>\d+)/$', public.PublicJobListing.as_view()),
+    url(r'^api/public/job-seekers/(?P<pk>\d+)/$', public.PublicJobSeekerListing.as_view()),
     url(r'^api/', include(views.router.urls)),
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     url(r'^api-rest-auth/', include('rest_auth.urls')),

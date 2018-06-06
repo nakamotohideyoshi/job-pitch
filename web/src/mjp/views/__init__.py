@@ -17,7 +17,9 @@ from mjp.models import (
     ApplicationStatus,
     Role,
     AppDeprecation,
-    ProductTokens, PayPalProduct)
+    ProductTokens,
+    PayPalProduct,
+)
 from mjp.serializers import (
     SimpleSerializer,
     JobSeekerSerializer,
@@ -34,6 +36,7 @@ from mjp.views.recruiter import (
     UserJobViewSet,
     UserJobImageViewSet,
     JobVideoViewSet,
+    BusinessUserViewSet,
 )
 
 
@@ -135,3 +138,4 @@ router.register('user-job-images', UserJobImageViewSet, base_name='user-job-imag
 router.register('job-videos', JobVideoViewSet, base_name='job-videos')
 router.register('application-pitches', ApplicationPitchViewSet, base_name='application-pitches')
 router.register('interviews', InterviewViewSet, base_name='interviews')
+router.register('user-businesses/(?P<business_pk>[0-9]+)/users', BusinessUserViewSet, base_name='business-users')

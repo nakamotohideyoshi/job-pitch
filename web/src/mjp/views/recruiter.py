@@ -24,6 +24,9 @@ from mjp.serializers.recruiter import (
     LocationImageSerializer,
     JobImageSerializer,
     JobVideoSerializer,
+    BusinessUserSerializer,
+    BusinessUserCreateSerializer,
+    BusinessUserUpdateSerializer,
 )
 
 
@@ -261,3 +264,56 @@ class JobVideoViewSet(viewsets.ModelViewSet):
     permission_classes = (JobVideoPermission,)
     serializer_class = JobVideoSerializer
     queryset = JobVideo.objects.all()
+
+
+class BusinessUserViewSet(viewsets.ModelViewSet):
+    class BusinessUserPermission(permissions.BasePermission):
+        def has_permission(self, request, view):
+            if request.user and request.user.is_authenticated() and request.user.is_recruiter:
+                try:
+                    business = Business.objects.get(pk=view.kwargs['business_pk'])
+                except Business.DoesNotExist:
+                    return False
+                try:
+                    business_user = business.business_users.get(user=request.user)
+                except BusinessUser.DoesNotExist:
+                    return False
+                return not business_user.locations.exists()
+            return False
+
+        def has_object_permission(self, request, view, obj):
+            if request.user and request.user.is_authenticated():
+                if request.user == obj.user:
+                    return False
+                try:
+                    business_user = obj.business.business_users.get(user=request.user)
+                except BusinessUser.DoesNotExist:
+                    return False
+                return not business_user.locations.exists()
+            return False
+
+    serializer_class = BusinessUserSerializer
+    queryset = BusinessUser.objects.all()
+    permission_classes = (BusinessUserPermission,)
+
+    def get_serializer_class(self):
+        if self.request.method == 'POST':
+            return BusinessUserCreateSerializer
+        if self.request.method == 'PUT':
+            return BusinessUserUpdateSerializer
+        return super(BusinessUserViewSet, self).get_serializer_class()
+
+    def get_serializer_context(self):
+        context = super(BusinessUserViewSet, self).get_serializer_context()
+        if self.request.method == 'POST':
+            context['business'] = Business.objects.get(pk=self.kwargs['business_pk'])
+        return context
+
+    def get_queryset(self):
+        query = super(BusinessUserViewSet, self).get_queryset()
+        query = query.filter(
+            business__pk=self.kwargs['business_pk'],
+            business__business_users__user=self.request.user,
+            business__business_users__locations__isnull=True,
+        )
+        return query

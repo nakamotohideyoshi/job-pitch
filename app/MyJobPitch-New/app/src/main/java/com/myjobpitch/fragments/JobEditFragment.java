@@ -274,6 +274,25 @@ public class JobEditFragment extends FormFragment {
         }
     }
 
+    @OnClick(R.id.job_active)
+    void onActivate() {
+        if (!activeView.isChecked()) {
+            Popup popup = new Popup(getContext(), "Your profile will not be visible and will not be able to apply for jobs or send messages", true);
+            popup.addGreenButton("Deactivate", new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                }
+            });
+            popup.addGreyButton("Cancel", new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    activeView.setChecked(true);
+                }
+            });
+            popup.show();
+        }
+    }
+
     @Override
     protected HashMap<String, EditText> getRequiredFields() {
         return new HashMap<String, EditText>() {

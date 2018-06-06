@@ -43,7 +43,8 @@ from .models import (
     BusinessImage,
     JobImage,
     AppDeprecation,
-    BusinessUser)
+    BusinessUser,
+)
 
 
 @admin.register(Sex, Nationality, Contract, Hours, Message)

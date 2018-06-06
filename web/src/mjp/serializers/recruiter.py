@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from rest_framework.exceptions import PermissionDenied
 
-from mjp.models import BusinessUser, BusinessImage, LocationImage, JobImage, JobVideo
+from mjp.models import BusinessUser, BusinessImage, LocationImage, JobImage, JobVideo, User
 
 
 class BusinessImageSerializer(serializers.ModelSerializer):
@@ -59,3 +59,62 @@ class JobVideoSerializer(serializers.ModelSerializer):
     class Meta:
         model = JobVideo
         read_only_fields = ('token',)
+
+
+class BusinessUserSerializer(serializers.ModelSerializer):
+    email = serializers.EmailField(source='user.email')
+
+    class Meta:
+        model = BusinessUser
+        fields = ('id', 'user', 'email', 'locations', 'business')
+
+
+class BusinessUserCreateSerializer(serializers.ModelSerializer):
+    email = serializers.EmailField()
+
+    def validate_business(self, value):
+        request = self.context['request']
+        try:
+            business_user = request.user.business_users.get(business=value)
+        except BusinessUser.DoesNotExist:
+            raise PermissionDenied()
+        if business_user.locations.exists():
+            raise PermissionDenied()
+        return value
+
+    def validate(self, attrs):
+        business = self.context['business']
+        for location in attrs['locations']:
+            if location.business != business:
+                raise serializers.ValidationError({
+                    'locations': 'All locations must be in the same business',
+                })
+        return attrs
+
+    def create(self, validated_data):
+        data = dict(validated_data)
+        email = data.pop('email')
+        user, created = User.objects.get_or_create(
+            email=email,
+        )
+        data['user'] = user
+        data['business'] = self.context['business']
+        return super(BusinessUserCreateSerializer, self).create(data)
+
+    class Meta:
+        model = BusinessUser
+        fields = ('email', 'locations')
+
+
+class BusinessUserUpdateSerializer(serializers.ModelSerializer):
+    def validate_locations(self, value):
+        for location in value:
+            if location.business != self.instance.business:
+                raise serializers.ValidationError({
+                    'locations': 'All locations must be in the same business',
+                })
+        return value
+
+    class Meta:
+        model = BusinessUser
+        fields = ('locations',)

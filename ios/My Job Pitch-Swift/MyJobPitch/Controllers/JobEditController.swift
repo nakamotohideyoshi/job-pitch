@@ -206,6 +206,19 @@ class JobEditController: MJPController {
         ]
     }
     
+    @IBAction func onActivate(_ sender: Any) {
+        if !self.active.isOn {
+            PopupController.showGreen("Your profile will not be visible and will not be able to apply for jobs or send messages", ok: "Deactivate", okCallback: {
+            }, cancel: "Cancel", cancelCallback: {
+                self.activateBackUp()
+            })
+        }
+    }
+    
+    func activateBackUp() {
+        self.active.setOn(true, animated: true)
+    }
+    
     @IBAction func addLogoAction(_ sender: Any) {
         
         let actionSheetContoller = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)

@@ -327,6 +327,25 @@ public class TalentProfileFragment extends FormFragment {
         }
     }
 
+    @OnClick(R.id.job_seeker_active)
+    void onActivate() {
+        if (!mActiveView.isChecked()) {
+            Popup popup = new Popup(getContext(), "Your profile will not be visible and will not be able to apply for jobs or send messages", true);
+            popup.addGreenButton("Deactivate", new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                }
+            });
+            popup.addGreyButton("Cancel", new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mActiveView.setChecked(true);
+                }
+            });
+            popup.show();
+        }
+    }
+
     void saveData() {
         if (jobSeeker == null) {
             jobSeeker = new JobSeeker();

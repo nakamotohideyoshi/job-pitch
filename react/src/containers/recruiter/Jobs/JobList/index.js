@@ -38,7 +38,7 @@ class JobList extends React.Component {
     let countList = {};
     _.forEach(this.props.jobs, job => {
       let applications = _.filter(DATA.applications, application => {
-        return application.job === job.id;
+        return application.job === job.id && application.status === 1;
       });
       let newApplications = _.filter(DATA.applications, application => {
         return application.job === job.id && application.status === 1;
@@ -117,14 +117,14 @@ class JobList extends React.Component {
     const contractName = helper.getItemByID(DATA.contracts, contract).short_name;
     const hoursName = helper.getItemByID(DATA.hours, hours).short_name;
     const closed = status === DATA.JOB.CLOSED ? 'disabled' : '';
-    var width = '80px';
+    var width = '90px';
     if (this.state.countList !== null) {
       var count = this.state.countList[job.id];
       var strApplications = `${count.totalApplications} application${count.totalApplications > 1 ? 's' : ''}`;
       var strNewApplications = `(${count.newApplications} new)`;
       var strConnections = `${count.connections} connection${count.connections > 1 ? 's' : ''}`;
       if (count.totalApplications < 2) {
-        width = '75px';
+        width = '80px';
       }
     }
 
@@ -167,14 +167,14 @@ class JobList extends React.Component {
           <span>{sectorName}</span>
         </div> */}
         <div className="properties">
-          <span style={{ width: width, color: '#00b6a4' }} onClick={e => this.showApps(job, e)}>
+          <span style={{ width: width, color: '#ff9300' }} onClick={e => this.showApps(job, e)}>
             {strApplications}
           </span>
-          {count && count.newApplications && count.newApplications > 0 ? (
+          {/* {count && count.newApplications && count.newApplications > 0 ? (
             <span style={{ width: '60px', color: '#ff9300' }}>{strNewApplications}</span>
           ) : (
             ''
-          )}
+          )} */}
           <span style={{ width: '80px', color: '#00b6a4' }} onClick={e => this.showCons(job, e)}>
             {strConnections}
           </span>

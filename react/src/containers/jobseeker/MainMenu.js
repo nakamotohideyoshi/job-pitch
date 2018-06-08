@@ -38,7 +38,7 @@ class MainMenu extends React.Component {
       } else {
         this.props.getAllApplications();
       }
-    }, 3000);
+    }, 30000);
   }
 
   componentWillReceiveProps(nextProps) {

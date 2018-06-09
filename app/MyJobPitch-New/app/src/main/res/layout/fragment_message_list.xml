@@ -5,11 +5,19 @@
     android:layout_height="match_parent"
     android:background="#fff"
     tools:context="com.myjobpitch.fragments.MessageListFragment">
+    <include
+        android:id="@+id/job_title_view"
+        layout="@layout/view_job_title_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top|center_horizontal"
+        android:visibility="visible" />
 
     <ListView
         android:id="@+id/application_list"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        android:layout_marginTop="16dp" />
 
     <include
         android:id="@+id/empty_view"
@@ -17,12 +25,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:visibility="gone"/>
+        android:layout_marginTop="16dp"
+        android:visibility="gone" />
 
     <FrameLayout
         android:id="@+id/nopitch_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginTop="16dp"
         android:background="#fff"
         android:visibility="gone">
 
@@ -54,12 +64,12 @@
 
             <Button
                 android:id="@+id/go_record_now"
-                android:text="Record now!"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/button_height"
                 android:layout_marginTop="20dp"
                 android:background="@drawable/button_yellow"
-                android:theme="@style/Button"/>
+                android:text="Record now!"
+                android:theme="@style/Button" />
 
         </LinearLayout>
 

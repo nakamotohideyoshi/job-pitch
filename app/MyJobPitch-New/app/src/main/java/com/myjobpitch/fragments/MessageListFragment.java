@@ -30,6 +30,9 @@ public class MessageListFragment extends ApplicationsFragment {
     View noPitchView;
     Job job;
 
+    @BindView(R.id.job_title_view)
+    View jobTitleView;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -46,6 +49,13 @@ public class MessageListFragment extends ApplicationsFragment {
         // header view, loading data
 
         title = "Messages";
+
+        if (job != null) {
+            AppHelper.setJobTitleViewText(jobTitleView, String.format("%s (%s)", job.getTitle(), AppHelper.getBusinessName(job)));
+            addMenuItem(MENUGROUP1, 105, "All Messages", R.drawable.menu_message);
+        } else  {
+            AppHelper.setJobTitleViewText(jobTitleView, "All Messages");
+        }
 
         return view;
     }
@@ -106,6 +116,15 @@ public class MessageListFragment extends ApplicationsFragment {
     }
 
     @Override
+    public void onMenuSelected(int menuID) {
+        if (menuID == 105) {
+            getApp().setRootFragement(AppData.PAGE_MESSAGES);
+        } else {
+            super.onMenuSelected(menuID);
+        }
+    }
+
+    @Override
     protected void selectedApplication(Application application) {
 
         if (AppData.user.isJobSeeker()) {
@@ -131,7 +150,6 @@ public class MessageListFragment extends ApplicationsFragment {
             } else {
                 MessageFragment fragment = new MessageFragment();
                 fragment.application = application;
-                fragment.allMessages =  job != null;
                 getApp().pushFragment(fragment);
             }
         } else {
@@ -157,7 +175,6 @@ public class MessageListFragment extends ApplicationsFragment {
             } else {
                 MessageFragment fragment = new MessageFragment();
                 fragment.application = application;
-                fragment.allMessages =  job != null;
                 getApp().pushFragment(fragment);
             }
         }

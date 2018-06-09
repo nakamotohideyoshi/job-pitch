@@ -16,6 +16,7 @@ import com.myjobpitch.api.data.Application;
 import com.myjobpitch.tasks.APIAction;
 import com.myjobpitch.tasks.APITask;
 import com.myjobpitch.tasks.APITaskListener;
+import com.myjobpitch.utils.AppData;
 import com.myjobpitch.utils.AppHelper;
 import com.myjobpitch.utils.MJPArraySwipeAdapter;
 
@@ -102,12 +103,34 @@ public class ApplicationsFragment extends BaseFragment {
                 adapter.closeAllItems();
                 emptyView.setVisibility(applications.size()==0 ? View.VISIBLE : View.GONE);
                 swipeRefreshLayout.setRefreshing(false);
+                if (AppData.user.isJobSeeker()) {
+                    showNewMessagesCounts();
+                }
             }
             @Override
             public void onError(JsonNode errors) {
                 errorHandler(errors);
             }
         }).execute();
+    }
+
+    void showNewMessagesCounts() {
+        long newMessageCount = getApp().newMessageCount;
+        if (newMessageCount > 0 && newMessageCount < 10) {
+            int id = getResources().getIdentifier("com.myjobpitch:drawable/menu_message" + getApp().newMessageCount,null, null);
+            addMenuItem(MENUGROUP1, 109, "All Messages", id);
+        } else if (newMessageCount >= 10) {
+            addMenuItem(MENUGROUP1, 109, "All Messages", R.drawable.menu_message10);
+        }
+    }
+
+    @Override
+    public void onMenuSelected(int menuID) {
+        if (menuID == 109) {
+            getApp().setRootFragement(AppData.PAGE_MESSAGES);
+        } else {
+            super.onMenuSelected(menuID);
+        }
     }
 
     @OnClick(R.id.empty_button)

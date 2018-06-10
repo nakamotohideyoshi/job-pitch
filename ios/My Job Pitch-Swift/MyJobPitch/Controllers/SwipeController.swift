@@ -18,6 +18,7 @@ class SwipeController: MJPController {
     @IBOutlet weak var jobTitleView: UILabel!
     
     var isFindJob = false
+    var isRefresh = true
     var searchJob: Job!
     
     var cards = NSMutableArray()
@@ -67,6 +68,13 @@ class SwipeController: MJPController {
         let controller = AppHelper.mainStoryboard.instantiateViewController(withIdentifier: "JobDetail") as! JobDetailController
         controller.job = searchJob
         navigationController?.pushViewController(controller, animated: true)
+    }
+    
+    func goProfile(_ sender: Any) {
+        isRefresh = true
+        let controller = AppHelper.mainStoryboard.instantiateViewController(withIdentifier: "JobSeekerProfile") as! JobSeekerProfileController
+        controller.activation = true
+        AppHelper.getFrontController().navigationController?.present(controller, animated: true)
     }
     
     func newCard(index: Int) -> SwipeCard {
@@ -157,6 +165,18 @@ class SwipeController: MJPController {
             
             API.shared().loadJobSeekerWithId(id: AppData.user.jobSeeker, success: { (data) in
                 self.jobSeeker = data as! JobSeeker
+                
+                if (!self.jobSeeker.active && self.isRefresh) {
+                    let item = UIBarButtonItem(barButtonSystemItem: .compose, target: self, action: #selector(self.goProfile))
+                    self.navigationItem.rightBarButtonItems?.append(item)
+                    self.isRefresh = false
+                }
+                
+                if (!self.jobSeeker.active) {
+                    self.jobTitleView.text = "Your profile is not active"
+                } else {
+                    self.jobTitleView.text = ""
+                }
                 
                 if self.jobSeeker.getPitch() != nil {
                     API.shared().loadJobProfileWithId(id: self.jobSeeker.profile, success: { (data) in

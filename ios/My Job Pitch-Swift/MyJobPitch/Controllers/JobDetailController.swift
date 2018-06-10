@@ -49,7 +49,7 @@ class JobDetailController: MJPController {
         var cnt_applications = 0, cnt_connections = 0, cnt_shortlists = 0
         API.shared().loadApplicationsForJob(jobId: job.id, status: nil, shortlisted: false, success: { (data) in
             for application in data as! [Application] {
-                if application.status != 3 {
+                if application.status == 1 {
                    cnt_applications += 1
                 } else if application.status == 2  {
                     cnt_connections += 1

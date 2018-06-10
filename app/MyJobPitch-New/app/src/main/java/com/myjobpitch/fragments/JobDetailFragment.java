@@ -147,7 +147,7 @@ public class JobDetailFragment extends BaseFragment {
 
                 for(int i=0; i<data.size(); i++) {
 
-                    if (data.get(i).getStatus() != 3)
+                    if (data.get(i).getStatus() == 1)
                         cnt_applications++;
 
                     else if (data.get(i).getStatus() == 2) {

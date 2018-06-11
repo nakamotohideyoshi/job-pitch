@@ -43,6 +43,11 @@ class PasswordForm extends React.Component {
 
     return (
       <FormWrapper onSubmit={this.changePassword}>
+        <label>Email</label>
+        <Item>
+          <Input disabled value={this.props.email} />
+        </Item>
+
         <label>New password</label>
         <Item>
           {getFieldDecorator('new_password1', {
@@ -73,4 +78,9 @@ class PasswordForm extends React.Component {
   }
 }
 
-export default connect(null, { changePassword })(Form.create()(PasswordForm));
+export default connect(
+  state => ({
+    email: state.auth.user.email
+  }),
+  { changePassword }
+)(Form.create()(PasswordForm));

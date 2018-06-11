@@ -64,6 +64,7 @@ public class BaseFragment extends Fragment {
         if (iconRes != -1) {
             menuItem.setIcon(iconRes);
         }
+        menuItem.setTitle(text);
         menuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
         return menuItem;
     }

@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
@@ -21,9 +22,13 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.github.rubensousa.bottomsheetbuilder.BottomSheetBuilder;
 import com.github.rubensousa.bottomsheetbuilder.adapter.BottomSheetItemClickListener;
 import com.myjobpitch.api.MJPApi;
+import com.myjobpitch.api.MJPApiException;
+import com.myjobpitch.api.data.Application;
+import com.myjobpitch.api.data.Message;
 import com.myjobpitch.fragments.BaseFragment;
 import com.myjobpitch.fragments.BusinessListFragment;
 import com.myjobpitch.fragments.ChangePasswordFragment;
@@ -38,12 +43,16 @@ import com.myjobpitch.fragments.MessageListFragment;
 import com.myjobpitch.fragments.PaymentFragment;
 import com.myjobpitch.fragments.PitchFragment;
 import com.myjobpitch.fragments.SelectJobFragment;
+import com.myjobpitch.tasks.APIAction;
+import com.myjobpitch.tasks.APITask;
+import com.myjobpitch.tasks.APITaskListener;
 import com.myjobpitch.utils.AppData;
 import com.myjobpitch.views.Popup;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import butterknife.BindView;
@@ -78,6 +87,110 @@ public class MainActivity extends AppCompatActivity
         return instance;
     }
 
+    Handler timerHandler = new Handler();
+    public long newMessageCount = 0;
+    public List <Application>  applications;
+    public List <Message> newMessages;
+    public Message startMessage;
+    public Message lastMessage;
+    public Boolean refresh = true;
+
+    Runnable timerRunnable = new Runnable() {
+        @Override
+        public void run() {
+
+            if (refresh) {
+
+                new APITask(new APIAction() {
+                    @Override
+                    public void run() throws MJPApiException {
+                        String query = null;
+                        applications = MJPApi.shared().get(Application.class, query);
+
+                    }
+                }).addListener(new APITaskListener() {
+                    @Override
+                    public void onSuccess() {
+
+                        newMessages = new ArrayList<Message>();
+                        Integer from_role = AppData.user.isJobSeeker() ? 1 : 2;
+
+                        for (int i = 0; i < applications.size(); i++) {
+
+                            List<Message> messages = applications.get(i).getMessages();
+
+                            for (int j = messages.size() - 1; j >= 0; j--) {
+                                if (messages.get(j).getFrom_role() == from_role) {
+                                    if (!messages.get(j).getRead()) {
+                                        // New Message
+                                        newMessages.add(messages.get(j));
+                                    } else {
+                                        // find start Message
+                                        if (startMessage == null) {
+                                            startMessage = messages.get(j);
+                                        } else {
+                                            if (startMessage.getCreated().compareTo(messages.get(j).getCreated()) < 0) {
+                                                startMessage = messages.get(j);
+                                            }
+                                        }
+                                        break;
+                                    }
+                                }
+                            }
+
+                        }
+
+                        newMessageCount = startMessage == null ? newMessages.size() : 0;
+                        if (newMessages.size() > 0) {
+                            for (int i = 0; i < newMessages.size() - 1; i++) {
+                                if (startMessage != null) {
+                                    if (startMessage.getCreated().compareTo(newMessages.get(i).getCreated()) < 0) {
+                                        newMessageCount++;
+                                        if (lastMessage == null) {
+                                            lastMessage = newMessages.get(i);
+                                        } else {
+                                            if (lastMessage.getCreated().compareTo(newMessages.get(i).getCreated()) < 0) {
+                                                lastMessage = newMessages.get(i);
+                                            }
+                                        }
+                                    }
+                                } else {
+                                    if (lastMessage == null) {
+                                        lastMessage = newMessages.get(i);
+                                    } else {
+                                        if (lastMessage.getCreated().compareTo(newMessages.get(i).getCreated()) < 0) {
+                                            lastMessage = newMessages.get(i);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onError(JsonNode errors) {
+                        errorHandler(errors);
+                    }
+                }).execute();
+            }
+
+            timerHandler.postDelayed(this, 30000);
+        }
+    };
+
+    public  void isRefresh(Boolean isRefresh) {
+        refresh = isRefresh;
+    }
+
+    public void errorHandler(JsonNode errors) {
+
+        if (errors == null) {
+            Popup popup = new Popup(null, "Connection Error", true);
+            popup.addGreyButton("Ok", null);
+            popup.show();
+        }
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -92,6 +205,7 @@ public class MainActivity extends AppCompatActivity
 
         instance = this;
 
+
         // image loaders
         Fresco.initialize(getApplicationContext());
         ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(this).build();
@@ -99,6 +213,10 @@ public class MainActivity extends AppCompatActivity
 
         mFragmentManager = getSupportFragmentManager();
         replaceFragment(new LoginFragment());
+    }
+
+    public void startNewMessageCount() {
+        timerHandler.postDelayed(timerRunnable, 0);
     }
 
     public int getCurrentPageID() {

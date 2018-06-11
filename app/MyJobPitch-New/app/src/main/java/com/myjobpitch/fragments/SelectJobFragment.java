@@ -160,6 +160,7 @@ public class SelectJobFragment extends BaseFragment {
                 adapter.addAll(jobs);
                 emptyView.setVisibility(jobs.size()==0 ? View.VISIBLE : View.GONE);
                 swipeRefreshLayout.setRefreshing(false);
+                showNewMessagesCounts();
             }
             @Override
             public void onError(JsonNode errors) {
@@ -167,6 +168,25 @@ public class SelectJobFragment extends BaseFragment {
             }
         }).execute();
 
+    }
+
+    void showNewMessagesCounts() {
+        long newMessageCount = getApp().newMessageCount;
+        if (newMessageCount > 0 && newMessageCount < 10) {
+            int id = getResources().getIdentifier("com.myjobpitch:drawable/menu_message" + getApp().newMessageCount,null, null);
+            addMenuItem(MENUGROUP1, 107, "All Messages", id);
+        } else if (newMessageCount >= 10) {
+            addMenuItem(MENUGROUP1, 107, "All Messages", R.drawable.menu_message10);
+        }
+    }
+
+    @Override
+    public void onMenuSelected(int menuID) {
+        if (menuID == 107) {
+            getApp().setRootFragement(AppData.PAGE_MESSAGES);
+        } else {
+            super.onMenuSelected(menuID);
+        }
     }
 
     @OnClick(R.id.nav_right_button)

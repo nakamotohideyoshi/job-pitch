@@ -20,6 +20,9 @@ class ApplicationListController: SearchController {
     var isApplication = false
     var isConnectBtn = false
     var isShortlisted = false
+    var isRefresh = true
+    
+    var jobSeeker: JobSeeker!
     
     var job: Job!
     var mode = ""   // if "", applications
@@ -55,6 +58,13 @@ class ApplicationListController: SearchController {
             searchItems?.append(item)
             navigationItem.rightBarButtonItems = searchItems
             jobTitleView.text = job.title + ", (" + job.getBusinessName() + ")"
+        } else {
+            let item = UIBarButtonItem(barButtonSystemItem: .compose, target: self, action: #selector(self.goProfile))
+            self.searchItems?.append(item)
+            self.navigationItem.rightBarButtonItems = self.searchItems
+            if (jobSeeker != nil) {
+                showInactiveBanner()
+            }
         }
         
         tableView.addPullToRefresh {
@@ -78,8 +88,11 @@ class ApplicationListController: SearchController {
             
             if !isRecruiter {
                 API.shared().loadJobSeekerWithId(id: AppData.user.jobSeeker, success: { (data) in
-                    let jobSeeker = data as! JobSeeker
-                    if jobSeeker.getPitch() != nil {
+                    self.jobSeeker = data as! JobSeeker
+                    
+                    self.showInactiveBanner()
+                    
+                    if self.jobSeeker.getPitch() != nil {
                         self.loadData()
                     } else {
                         self.noPitchView.isHidden = false
@@ -90,6 +103,14 @@ class ApplicationListController: SearchController {
             } else {
                 loadData()
             }
+        }
+    }
+    
+    func showInactiveBanner () {
+        if !jobSeeker.active {
+            self.jobTitleView.text = "Your profile is not activate"
+        } else {
+            self.jobTitleView.text = ""
         }
     }
     
@@ -114,6 +135,13 @@ class ApplicationListController: SearchController {
         let controller = AppHelper.mainStoryboard.instantiateViewController(withIdentifier: "JobDetail") as! JobDetailController
         controller.job = job
         navigationController?.pushViewController(controller, animated: true)
+    }
+    
+    func goProfile(_ sender: Any) {
+        let controller = AppHelper.mainStoryboard.instantiateViewController(withIdentifier: "JobSeekerProfile") as! JobSeekerProfileController
+        controller.activation = true
+        AppHelper.getFrontController().navigationController?.present(controller, animated: true)
+        ApplicationListController.refreshRequest = true
     }
     
     override func filterItem(item: Any, text: String) -> Bool {

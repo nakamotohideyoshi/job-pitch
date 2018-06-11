@@ -198,8 +198,7 @@ class JobSeekerDetailController: MJPController {
     
     @IBAction func applyAction(_ sender: Any) {
         if isConnected {
-            let goAllMessages = true
-            MessageController0.showModal(application: application, goAllMessages: goAllMessages)
+            MessageController0.showModal(application: application)
         } else {
             let message = application == nil ? "Are you sure you want to connect this talent?" : "Are you sure you want to connect this application?"
             PopupController.showGreen(message, ok: "Connect (1 credit)", okCallback: {

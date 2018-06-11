@@ -11,11 +11,14 @@ import android.widget.TextView;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.myjobpitch.R;
+import com.myjobpitch.api.MJPApi;
 import com.myjobpitch.api.MJPApiException;
 import com.myjobpitch.api.data.Application;
+import com.myjobpitch.api.data.JobSeeker;
 import com.myjobpitch.tasks.APIAction;
 import com.myjobpitch.tasks.APITask;
 import com.myjobpitch.tasks.APITaskListener;
+import com.myjobpitch.utils.AppData;
 import com.myjobpitch.utils.AppHelper;
 import com.myjobpitch.utils.MJPArraySwipeAdapter;
 
@@ -38,6 +41,8 @@ public class ApplicationsFragment extends BaseFragment {
 
     @BindView(R.id.empty_view)
     View emptyView;
+
+    JobSeeker jobSeeker;
 
     private ApplicationAdapter adapter;
     private int applyButtonIcon;
@@ -82,10 +87,38 @@ public class ApplicationsFragment extends BaseFragment {
             }
         });
 
+        if (AppData.user.isJobSeeker()) {
+            addMenuItem(MENUGROUP1, 112, "Edit Profile", R.drawable.ic_edit);
+        }
+        if (jobSeeker != null) {
+            showInactiveBanner();
+        }
+
         onRefresh();
 
         return view;
     }
+
+    @Override
+    public void onMenuSelected(int menuID) {
+        if (menuID == 112) {
+            TalentProfileFragment fragment = new TalentProfileFragment();
+            fragment.jobSeeker = jobSeeker;
+            fragment.isActivation = true;
+            getApp().pushFragment(fragment);
+        } else {
+            super.onMenuSelected(menuID);
+        }
+    }
+
+    void showInactiveBanner() {
+        if (!jobSeeker.isActive()) {
+            AppHelper.setJobTitleViewText(jobTitleView, "Your Profile is not Activate");
+        } else {
+            AppHelper.setJobTitleViewText(jobTitleView, "");
+        }
+    }
+
 
     private void loadApplications() {
         final List<Application> applications = new ArrayList();
@@ -93,6 +126,7 @@ public class ApplicationsFragment extends BaseFragment {
             @Override
             public void run() throws MJPApiException {
                 applications.addAll(getApplications());
+                jobSeeker = MJPApi.shared().get(JobSeeker.class, AppData.user.getJob_seeker());
             }
         }).addListener(new APITaskListener() {
             @Override
@@ -102,6 +136,8 @@ public class ApplicationsFragment extends BaseFragment {
                 adapter.closeAllItems();
                 emptyView.setVisibility(applications.size()==0 ? View.VISIBLE : View.GONE);
                 swipeRefreshLayout.setRefreshing(false);
+
+                showInactiveBanner();
             }
             @Override
             public void onError(JsonNode errors) {

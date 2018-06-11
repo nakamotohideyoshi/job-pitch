@@ -46,6 +46,12 @@ public class FindJobFragment extends SwipeFragment<Job> {
             }
         });
 
+        if (AppData.user.isJobSeeker()) {
+            addMenuItem(MENUGROUP1, 111, "Edit Profile", R.drawable.ic_edit);
+        }
+        if (jobSeeker != null) {
+            showInactiveBanner();
+        }
         return  view;
     }
 
@@ -65,6 +71,8 @@ public class FindJobFragment extends SwipeFragment<Job> {
             @Override
             public void onSuccess() {
                 hideLoading();
+                showInactiveBanner();
+
                 if (jobSeeker.getPitch() == null) {
                     noPitchView.setVisibility(View.VISIBLE);
                 } else {
@@ -76,6 +84,14 @@ public class FindJobFragment extends SwipeFragment<Job> {
                 errorHandler(errors);
             }
         }).execute();
+    }
+
+    void showInactiveBanner() {
+        if (!jobSeeker.isActive()) {
+            AppHelper.setJobTitleViewText(jobTitleView, "Your Profile is not Activate");
+        } else {
+            AppHelper.setJobTitleViewText(jobTitleView, "");
+        }
     }
 
     @Override
@@ -168,6 +184,18 @@ public class FindJobFragment extends SwipeFragment<Job> {
             }
         };
         getApp().pushFragment(fragment);
+    }
+
+    @Override
+    public void onMenuSelected(int menuID) {
+        if (menuID == 111) {
+            TalentProfileFragment fragment = new TalentProfileFragment();
+            fragment.jobSeeker = jobSeeker;
+            fragment.isActivation = true;
+            getApp().pushFragment(fragment);
+        } else {
+            super.onMenuSelected(menuID);
+        }
     }
 
 }

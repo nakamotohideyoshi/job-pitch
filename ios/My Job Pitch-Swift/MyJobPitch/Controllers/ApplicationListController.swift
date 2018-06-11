@@ -22,6 +22,8 @@ class ApplicationListController: SearchController {
     var isShortlisted = false
     var isRefresh = true
     
+    var jobSeeker: JobSeeker!
+    
     var job: Job!
     var mode = ""   // if "", applications
     
@@ -56,6 +58,13 @@ class ApplicationListController: SearchController {
             searchItems?.append(item)
             navigationItem.rightBarButtonItems = searchItems
             jobTitleView.text = job.title + ", (" + job.getBusinessName() + ")"
+        } else {
+            let item = UIBarButtonItem(barButtonSystemItem: .compose, target: self, action: #selector(self.goProfile))
+            self.searchItems?.append(item)
+            self.navigationItem.rightBarButtonItems = self.searchItems
+            if (jobSeeker != nil) {
+                showInactiveBanner()
+            }
         }
         
         tableView.addPullToRefresh {
@@ -79,22 +88,11 @@ class ApplicationListController: SearchController {
             
             if !isRecruiter {
                 API.shared().loadJobSeekerWithId(id: AppData.user.jobSeeker, success: { (data) in
-                    let jobSeeker = data as! JobSeeker
+                    self.jobSeeker = data as! JobSeeker
                     
-                    if (!jobSeeker.active && self.isRefresh) {
-                        let item = UIBarButtonItem(barButtonSystemItem: .compose, target: self, action: #selector(self.goProfile))
-                        self.searchItems?.append(item)
-                        self.navigationItem.rightBarButtonItems = self.searchItems
-                        self.isRefresh = false
-                    }
+                    self.showInactiveBanner()
                     
-                    if !jobSeeker.active {
-                        self.jobTitleView.text = "Your profile is not active"
-                    } else {
-                        self.jobTitleView.text = ""
-                    }
-                    
-                    if jobSeeker.getPitch() != nil {
+                    if self.jobSeeker.getPitch() != nil {
                         self.loadData()
                     } else {
                         self.noPitchView.isHidden = false
@@ -105,6 +103,14 @@ class ApplicationListController: SearchController {
             } else {
                 loadData()
             }
+        }
+    }
+    
+    func showInactiveBanner () {
+        if !jobSeeker.active {
+            self.jobTitleView.text = "Your profile is not activate"
+        } else {
+            self.jobTitleView.text = ""
         }
     }
     

@@ -50,7 +50,7 @@ public class FindJobFragment extends SwipeFragment<Job> {
             addMenuItem(MENUGROUP1, 111, "Edit Profile", R.drawable.ic_edit);
         }
         if (jobSeeker != null) {
-            showDeactivateBanner();
+            showInactiveBanner();
         }
         return  view;
     }
@@ -71,7 +71,7 @@ public class FindJobFragment extends SwipeFragment<Job> {
             @Override
             public void onSuccess() {
                 hideLoading();
-                showDeactivateBanner();
+                showInactiveBanner();
 
                 if (jobSeeker.getPitch() == null) {
                     noPitchView.setVisibility(View.VISIBLE);
@@ -86,7 +86,7 @@ public class FindJobFragment extends SwipeFragment<Job> {
         }).execute();
     }
 
-    void showDeactivateBanner() {
+    void showInactiveBanner() {
         if (!jobSeeker.isActive()) {
             AppHelper.setJobTitleViewText(jobTitleView, "Your Profile is not Activate");
         } else {

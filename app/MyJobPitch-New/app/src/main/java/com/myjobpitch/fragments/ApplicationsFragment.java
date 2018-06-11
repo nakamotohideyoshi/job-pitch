@@ -91,7 +91,7 @@ public class ApplicationsFragment extends BaseFragment {
             addMenuItem(MENUGROUP1, 112, "Edit Profile", R.drawable.ic_edit);
         }
         if (jobSeeker != null) {
-            showDeactivateBanner();
+            showInactiveBanner();
         }
 
         onRefresh();
@@ -111,7 +111,7 @@ public class ApplicationsFragment extends BaseFragment {
         }
     }
 
-    void showDeactivateBanner() {
+    void showInactiveBanner() {
         if (!jobSeeker.isActive()) {
             AppHelper.setJobTitleViewText(jobTitleView, "Your Profile is not Activate");
         } else {
@@ -137,7 +137,7 @@ public class ApplicationsFragment extends BaseFragment {
                 emptyView.setVisibility(applications.size()==0 ? View.VISIBLE : View.GONE);
                 swipeRefreshLayout.setRefreshing(false);
 
-                showDeactivateBanner();
+                showInactiveBanner();
             }
             @Override
             public void onError(JsonNode errors) {

@@ -51,8 +51,27 @@ class SwipeController: MJPController {
         } else {
             creditsButton.removeFromSuperview()
             emptyView.text = "There are no more jobs that match your profile. You can restore your removed matches by clicking refresh above."
+            
+            let item = UIBarButtonItem(barButtonSystemItem: .compose, target: self, action: #selector(self.goProfile))
+            self.navigationItem.rightBarButtonItems?.append(item)
+            
+            if (jobSeeker != nil) {
+                showInactiveBanner()
+            }
         }
         
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        showLoading()
+        if !AppData.user.isRecruiter() {
+            API.shared().loadJobSeekerWithId(id: AppData.user.jobSeeker, success: { (data) in
+                self.hideLoading()
+                self.jobSeeker = data as! JobSeeker
+                self.showInactiveBanner()
+            }, failure: self.handleErrors)
+        }
     }
     
     func updateCardPosition(index: Int) {
@@ -62,6 +81,14 @@ class SwipeController: MJPController {
             card.center = CGPoint(x: cardsView.frame.size.width*0.5, y: card.frame.size.height*0.5+10+10*CGFloat(index))
         }
         
+    }
+    
+    func showInactiveBanner () {
+        if !self.jobSeeker.active {
+            self.jobTitleView.text = "Your profile is not activate"
+        } else {
+            self.jobTitleView.text = ""
+        }
     }
     
     func goJobDetail(_ sender: Any) {
@@ -166,17 +193,7 @@ class SwipeController: MJPController {
             API.shared().loadJobSeekerWithId(id: AppData.user.jobSeeker, success: { (data) in
                 self.jobSeeker = data as! JobSeeker
                 
-                if (!self.jobSeeker.active && self.isRefresh) {
-                    let item = UIBarButtonItem(barButtonSystemItem: .compose, target: self, action: #selector(self.goProfile))
-                    self.navigationItem.rightBarButtonItems?.append(item)
-                    self.isRefresh = false
-                }
-                
-                if (!self.jobSeeker.active) {
-                    self.jobTitleView.text = "Your profile is not active"
-                } else {
-                    self.jobTitleView.text = ""
-                }
+                self.showInactiveBanner()
                 
                 if self.jobSeeker.getPitch() != nil {
                     API.shared().loadJobProfileWithId(id: self.jobSeeker.profile, success: { (data) in

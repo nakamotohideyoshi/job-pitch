@@ -11,16 +11,25 @@ import SVPullToRefresh
 
 class MessageListController: SearchController {
     
+    @IBOutlet weak var jobTitleView: UILabel!
     @IBOutlet weak var emptyView: UILabel!
     @IBOutlet weak var noPitchView: UIView!
     
     var job: Job!
     var jobSeeker: JobSeeker!
     var refresh = true
+    var allMessageItems: [UIBarButtonItem]?
     
     override func viewDidLoad() {
         super.viewDidLoad()
         title = "Messages"
+        
+        if (self.job != nil) {
+            let item = UIBarButtonItem(title: "All Messages", style: .plain, target: self, action: #selector(goAllMessageList))
+            item.image = UIImage(named: "menu-message")
+            navigationItem.rightBarButtonItems?.append(item)
+            jobTitleView.text = job.title + ", (" + job.getBusinessName() + ")"
+        }
 
         tableView.addPullToRefresh {
             self.loadData()
@@ -50,6 +59,10 @@ class MessageListController: SearchController {
             }
             self.refresh = false
         }
+    }
+    
+    func goAllMessageList() {
+        SideMenuController.pushController(id: "messages")
     }
     
     func loadData() {
@@ -198,8 +211,7 @@ extension MessageListController: UITableViewDelegate {
         }
         
         let application = data[indexPath.row] as! Application
-        let goAllMessages = job != nil
-        MessageController0.showModal(application: application, goAllMessages: goAllMessages)
+        MessageController0.showModal(application: application)
         
     }
     

@@ -11,7 +11,7 @@ const RCRoute = ({ user, component, ...rest }) => (
     render={({ ...props }) => {
       const key = props.location.pathname.split('/')[2];
 
-      if (user.businesses.length === 0 && (key === 'applications' || key === 'messages')) {
+      if (user.businesses.length === 0 && (key === 'applications' || key === 'messages' || key === 'users')) {
         return <Redirect to="/recruiter/jobs" />;
       }
 

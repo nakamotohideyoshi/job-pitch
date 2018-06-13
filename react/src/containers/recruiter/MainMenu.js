@@ -93,6 +93,10 @@ class MainMenu extends React.Component {
             </Link>
           </Item>
         )}
+
+        <Item key="users">
+          <Link to="/recruiter/users">Users</Link>
+        </Item>
       </MenuWrapper>
     );
   }

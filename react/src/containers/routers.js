@@ -20,6 +20,8 @@ import JobInterface from 'containers/recruiter/Jobs/JobInterface';
 import RCMessages from 'containers/recruiter/Messages';
 import RCSettings from 'containers/recruiter/Settings';
 
+import BusinessListForUser from 'containers/recruiter/Users/BusinessListForUser';
+
 import JSRoute from 'containers/jobseeker/Route';
 import FindJob from 'containers/jobseeker/FindJob';
 import JSApplications from 'containers/jobseeker/MyApplications';
@@ -72,6 +74,9 @@ export default props => {
       <RCRoute exact path="/recruiter/settings/credits" component={RCSettings} />
       <RCRoute exact path="/recruiter/settings/credits/:businessId" component={RCSettings} />
       <RCRoute exact path="/recruiter/settings/password" component={RCSettings} />
+
+      <Redirect exact from="/recruiter/users" to="/recruiter/users/business" />
+      <RCRoute exact path="/recruiter/users/business" component={BusinessListForUser} />
 
       <Redirect exact from="/jobseeker" to="/jobseeker/find" />
       <JSRoute exact path="/jobseeker/find" component={FindJob} />

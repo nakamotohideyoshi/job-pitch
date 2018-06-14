@@ -569,7 +569,13 @@ class API: NSObject {
         postObject("/api/messages/", request: message,
                    success: success, failure: failure)
     }
-
+    
+    func updateMessageStatus(update: MessageForUpdate,
+                                 success: ((NSObject?) -> Void)!,
+                                 failure: ((String?, NSDictionary?) -> Void)!) {
+        putObject(String(format: "/api/messages/%@/", update.id),
+                  request: update, success: success, failure: failure)
+    }
 
     // ================= Application =====================
 

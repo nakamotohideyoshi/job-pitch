@@ -487,6 +487,15 @@ class APIConfigure: NSObject {
                                mappingRelationships: nil,
                                path: "/api/messages/",
                                method: .POST)
+        
+        let updateMessageArray = ["id", "read"]
+        
+        configureSimpleMapping(MessageForUpdate.classForCoder(),
+                               mappingArray: updateMessageArray,
+                               mappingDictionary: ["from_role": "fromRole"],
+                               mappingRelationships: nil,
+                               path: "/api/messages/:pk/",
+                               method: .PUT)
 
 
         // ================= Application =====================

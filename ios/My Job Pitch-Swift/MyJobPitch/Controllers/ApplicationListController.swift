@@ -65,6 +65,17 @@ class ApplicationListController: SearchController {
             if (jobSeeker != nil) {
                 showInactiveBanner()
             }
+            if (AppData.newMessagesCount > 0) {
+                let item1 = UIBarButtonItem(title: "All Messages", style: .plain, target: self, action: #selector(goAllMessageList))
+                var fileName: String!
+                if (AppData.newMessagesCount<10) {
+                    fileName =  "nav-message\(AppData.newMessagesCount)"
+                } else {
+                    fileName = "nav-message10"
+                }
+                item1.image = UIImage(named: fileName)
+                navigationItem.rightBarButtonItems?.append(item1)
+            }
         }
         
         tableView.addPullToRefresh {
@@ -104,6 +115,10 @@ class ApplicationListController: SearchController {
                 loadData()
             }
         }
+    }
+    
+    func goAllMessageList() {
+        SideMenuController.pushController(id: "messages")
     }
     
     func showInactiveBanner () {

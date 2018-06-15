@@ -38,6 +38,9 @@ class MessageListController: SearchController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        AppData.newMessagesCount = 0
+        AppData.isTimerRunning = false
+        updateMessage()
         
         if self.refresh {
             showLoading()
@@ -59,6 +62,20 @@ class MessageListController: SearchController {
             }
             self.refresh = false
         }
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        AppData.isTimerRunning = true
+        super.viewWillDisappear(animated)
+    }
+    
+    func updateMessage() {
+        let message = MessageForUpdate()
+        message.id = AppData.lastMessage.id
+        message.fromRole = AppData.lastMessage.fromRole
+        API.shared().updateMessageStatus(update: message, success: { (data) in
+            print("success")
+        }, failure: self.handleErrors)
     }
     
     func goAllMessageList() {

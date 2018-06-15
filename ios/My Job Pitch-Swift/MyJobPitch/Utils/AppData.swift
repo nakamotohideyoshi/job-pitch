@@ -47,6 +47,10 @@ class AppData: NSObject {
     static var jobStatuses: NSArray!
     static var applicationStatuses: NSArray!
     static var roles: NSArray!
+    static var startMessage: Message!
+    static var lastMessage: Message!
+    static var newMessagesCount: Int = 0
+    static var isTimerRunning  = true
     
     static var initialTokens: InitialTokens!
 

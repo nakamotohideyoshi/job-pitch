@@ -37,6 +37,19 @@ class SelectJobController: MJPController {
         headerImgView.image = UIImage(named: item["icon"]!)?.withRenderingMode(.alwaysTemplate)
         headerTitle.text = titles[SideMenuController.currentID]
         
+        if (AppData.newMessagesCount > 0) {
+            let item1 = UIBarButtonItem(title: "All Messages", style: .plain, target: self, action: #selector(goAllMessageList))
+            var fileName: String!
+            if (AppData.newMessagesCount<10) {
+                fileName =  "nav-message\(AppData.newMessagesCount)"
+            } else {
+                fileName = "nav-message10"
+            }
+            item1.image = UIImage(named: fileName)
+            navigationItem.rightBarButtonItem = item1
+        }
+        
+        
         jobActive = AppData.getJobStatusByName(JobStatus.JOB_STATUS_OPEN).id
         
         tableView.addPullToRefresh {
@@ -48,6 +61,10 @@ class SelectJobController: MJPController {
         super.viewWillAppear(animated)
         showLoading()
         refresh()
+    }
+    
+    func goAllMessageList() {
+        SideMenuController.pushController(id: "messages")
     }
     
     func refresh() {

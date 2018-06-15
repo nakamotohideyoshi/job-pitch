@@ -101,7 +101,7 @@ class LoginController: MJPController {
         showLoading()
         
         API.shared().getUser(success: { (data) in
-            
+            super.runTimer()
             AppData.user = data as! User
             
             AppData.loadData(success: {

@@ -21,6 +21,8 @@ import RCMessages from 'containers/recruiter/Messages';
 import RCSettings from 'containers/recruiter/Settings';
 
 import BusinessListForUser from 'containers/recruiter/Users/BusinessListForUser';
+import UserList from 'containers/recruiter/Users/UserList';
+import UserEdit from 'containers/recruiter/Users/UserEdit';
 
 import JSRoute from 'containers/jobseeker/Route';
 import FindJob from 'containers/jobseeker/FindJob';
@@ -77,6 +79,9 @@ export default props => {
 
       <Redirect exact from="/recruiter/users" to="/recruiter/users/business" />
       <RCRoute exact path="/recruiter/users/business" component={BusinessListForUser} />
+      <RCRoute exact path="/recruiter/users/:businessId" component={UserList} />
+      <RCRoute exact path="/recruiter/users/:businessId/add" component={UserEdit} />
+      <RCRoute exact path="/recruiter/users/:businessId/edit/:userId" component={UserEdit} />
 
       <Redirect exact from="/jobseeker" to="/jobseeker/find" />
       <JSRoute exact path="/jobseeker/find" component={FindJob} />

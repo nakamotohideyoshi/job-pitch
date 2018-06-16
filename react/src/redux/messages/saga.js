@@ -1,4 +1,4 @@
-import { takeEvery, takeLatest, put, call } from 'redux-saga/effects';
+import { takeEvery, takeLatest, put } from 'redux-saga/effects';
 import * as helper from 'utils/helper';
 import { weakRequest, putRequest } from 'utils/request';
 import * as C from 'redux/constants';

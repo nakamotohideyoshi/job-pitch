@@ -44,6 +44,12 @@ export const RC_SAVE_JOB = 'RC_SAVE_JOB';
 export const RC_REMOVE_JOB = 'RC_REMOVE_JOB';
 export const RC_UPDATE_JOB = 'RC_UPDATE_JOB';
 
+export const RC_USERS_UPDATE = 'RC_USERS_UPDATE';
+export const RC_GET_USERS = 'RC_GET_USERS';
+export const RC_SAVE_USER = 'RC_SAVE_USER';
+export const RC_REMOVE_USER = 'RC_REMOVE_USER';
+export const RC_UPDATE_USER = 'RC_UPDATE_USER';
+
 // jobseeker
 
 export const JS_FIND_JOBS = 'JS_FIND_JOBS';

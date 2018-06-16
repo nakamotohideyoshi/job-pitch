@@ -11,11 +11,11 @@ import Wrapper from '../styled';
 
 class BusinessListForUser extends React.Component {
   selectBusiness = ({ id }) => {
-    this.props.history.push(`/recruiter/jobs/workplace/${id}`);
+    this.props.history.push(`/recruiter/users/${id}`);
   };
 
   renderBusiness = business => {
-    const { id, name, tokens, locations, loading } = business;
+    const { id, name, loading } = business;
     const logo = helper.getBusinessLogo(business);
 
     return (

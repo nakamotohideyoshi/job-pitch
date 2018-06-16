@@ -14,7 +14,6 @@ const RCRoute = ({ user, component, ...rest }) => (
       if (user.businesses.length === 0 && (key === 'applications' || key === 'messages' || key === 'users')) {
         return <Redirect to="/recruiter/jobs" />;
       }
-
       return <Layout menu={MainMenu} component={component} {...props} />;
     }}
   />

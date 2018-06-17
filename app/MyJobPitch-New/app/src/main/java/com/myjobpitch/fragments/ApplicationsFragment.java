@@ -128,7 +128,9 @@ public class ApplicationsFragment extends BaseFragment {
             @Override
             public void run() throws MJPApiException {
                 applications.addAll(getApplications());
-                jobSeeker = MJPApi.shared().get(JobSeeker.class, AppData.user.getJob_seeker());
+                if (AppData.user.isJobSeeker()) {
+                    jobSeeker = MJPApi.shared().get(JobSeeker.class, AppData.user.getJob_seeker());
+                }
             }
         }).addListener(new APITaskListener() {
             @Override
@@ -139,8 +141,8 @@ public class ApplicationsFragment extends BaseFragment {
                 emptyView.setVisibility(applications.size()==0 ? View.VISIBLE : View.GONE);
                 swipeRefreshLayout.setRefreshing(false);
 
-                showInactiveBanner();
                 if (AppData.user.isJobSeeker()) {
+                    showInactiveBanner();
                     showNewMessagesCounts();
                 }
             }

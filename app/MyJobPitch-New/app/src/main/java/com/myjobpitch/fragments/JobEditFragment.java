@@ -277,7 +277,7 @@ public class JobEditFragment extends FormFragment {
     @OnClick(R.id.job_active)
     void onActivate() {
         if (!activeView.isChecked()) {
-            Popup popup = new Popup(getContext(), "Your profile will not be visible and will not be able to apply for jobs or send messages", true);
+            Popup popup = new Popup(getContext(), "Your job posting will not be visible for jobseekers and will not be able to apply or message you for this job.", true);
             popup.addGreenButton("Deactivate", new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {

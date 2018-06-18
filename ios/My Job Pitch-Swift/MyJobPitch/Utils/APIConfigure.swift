@@ -558,6 +558,18 @@ class APIConfigure: NSObject {
                                mappingRelationships: nil,
                                path: "/api/applications/:pk/",
                                method: .PUT)
+        
+        
+        //================== Deprecation ================
+        
+        let deprecationArray = [ "id", "platform", "warning", "error" ]
+        
+        configureResponseMapping(Deprecation.classForCoder(),
+                                 responseArray: deprecationArray,
+                                 responseDictionary: nil,
+                                 responseRelationships: nil,
+                                 path: "/api/deprecation/",
+                                 method: .GET)
 
 
         // ================= Error =====================

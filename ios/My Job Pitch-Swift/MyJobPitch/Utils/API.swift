@@ -636,5 +636,12 @@ class API: NSObject {
         deleteObject(String(format: "/api/applications/%@/", id),
                      success: success, failure: failure)
     }
+    
+     // ================= Deprecation =====================
+    
+    func loadDepreactions(success: ((NSArray) -> Void)!,
+                          failure: ((String?, NSDictionary?) -> Void)!) {
+        getObjects("/api/deprecation/", success: success, failure: failure)
+    }
 
 }

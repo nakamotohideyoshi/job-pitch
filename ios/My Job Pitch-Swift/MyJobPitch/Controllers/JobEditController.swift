@@ -208,7 +208,7 @@ class JobEditController: MJPController {
     
     @IBAction func onActivate(_ sender: Any) {
         if !self.active.isOn {
-            PopupController.showGreen("Your profile will not be visible and will not be able to apply for jobs or send messages", ok: "Deactivate", okCallback: {
+            PopupController.showGreen("Your job posting will not be visible for jobseekers and will not be able to apply or message you for this job.", ok: "Deactivate", okCallback: {
             }, cancel: "Cancel", cancelCallback: {
                 self.activateBackUp()
             })

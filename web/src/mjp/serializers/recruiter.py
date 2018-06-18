@@ -1,3 +1,4 @@
+from django.db import transaction
 from rest_framework import serializers
 from rest_framework.exceptions import PermissionDenied
 
@@ -70,7 +71,7 @@ class BusinessUserSerializer(serializers.ModelSerializer):
 
 
 class BusinessUserCreateSerializer(serializers.ModelSerializer):
-    email = serializers.EmailField()
+    email = serializers.EmailField(write_only=True)
 
     def validate_business(self, value):
         request = self.context['request']
@@ -94,12 +95,21 @@ class BusinessUserCreateSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         data = dict(validated_data)
         email = data.pop('email')
-        user, created = User.objects.get_or_create(
-            email=email,
-        )
-        data['user'] = user
-        data['business'] = self.context['business']
-        return super(BusinessUserCreateSerializer, self).create(data)
+        business = self.context['business']
+        with transaction.atomic():
+            user, created = User.objects.get_or_create(
+                email=email,
+            )
+            if not created and BusinessUser.objects.filter(
+                        user=user,
+                        business=business,
+                    ).exists():
+                raise serializers.ValidationError({
+                    'email': 'This user already exists',
+                })
+            data['user'] = user
+            data['business'] = business
+            return super(BusinessUserCreateSerializer, self).create(data)
 
     class Meta:
         model = BusinessUser

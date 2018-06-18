@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2FA7FC6220D841240024163A /* Deprecation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FA7FC6120D841240024163A /* Deprecation.swift */; };
 		8DAACC8E94BF22668BF0A289 /* Pods_MyJobPitch.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 27B30165DDDB50C20065D004 /* Pods_MyJobPitch.framework */; };
 		D72AE4111E10470A004C3F02 /* MessageListController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D72AE4101E10470A004C3F02 /* MessageListController.swift */; };
 		D72AE4131E1049BE004C3F02 /* SearchController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D72AE4121E1049BE004C3F02 /* SearchController.swift */; };
@@ -120,6 +121,7 @@
 
 /* Begin PBXFileReference section */
 		27B30165DDDB50C20065D004 /* Pods_MyJobPitch.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MyJobPitch.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		2FA7FC6120D841240024163A /* Deprecation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Deprecation.swift; path = Models/api/Deprecation.swift; sourceTree = "<group>"; };
 		3AFB29B0047E979820654701 /* Pods-MyJobPitch.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MyJobPitch.debug.xcconfig"; path = "Pods/Target Support Files/Pods-MyJobPitch/Pods-MyJobPitch.debug.xcconfig"; sourceTree = "<group>"; };
 		4EBE93C472BCA0F516AF140F /* Pods-MyJobPitch.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MyJobPitch.release.xcconfig"; path = "Pods/Target Support Files/Pods-MyJobPitch/Pods-MyJobPitch.release.xcconfig"; sourceTree = "<group>"; };
 		D72AE4101E10470A004C3F02 /* MessageListController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MessageListController.swift; path = Controllers/MessageListController.swift; sourceTree = "<group>"; };
@@ -362,6 +364,7 @@
 				D74226B120ACCDED002D3F4C /* Sector.swift */,
 				D74226B220ACCDED002D3F4C /* Sex.swift */,
 				D74226B320ACCDED002D3F4C /* User.swift */,
+				2FA7FC6120D841240024163A /* Deprecation.swift */,
 			);
 			name = api;
 			sourceTree = "<group>";
@@ -809,6 +812,7 @@
 				D7F770291E09196300ECB684 /* MJPController.swift in Sources */,
 				D72AE4241E1156C3004C3F02 /* CustomView.swift in Sources */,
 				D78834381ECAAF4B00D99F4B /* UIView+MDCSwipeToChoose.m in Sources */,
+				2FA7FC6220D841240024163A /* Deprecation.swift in Sources */,
 				D72AE41B1E106D0A004C3F02 /* ApplicationListController.swift in Sources */,
 				D7B07B831E08DDE1005B9EBE /* AppDelegate.swift in Sources */,
 				D7E934791F4BD90600299762 /* LoadingView.swift in Sources */,

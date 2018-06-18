@@ -45,6 +45,15 @@ class LoginController: MJPController {
         }
     }
     
+    var isDeprecationError = false
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        if self.isDeprecationError {
+            self.showDeprecationError()
+        }
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -62,9 +71,13 @@ class LoginController: MJPController {
                 apiButton.setTitle(url, for: .normal)
             }
         }
-        
+        // Check API deprecation
+        checkDeprecation()
+    }
+    
+    func isLogin() {
         emailField.text = AppData.email
-        if loginButton != nil && remember {
+        if loginButton != nil && remember && !isDeprecationError {
             rememberSwitch.isOn = true
             
             if !API.shared().isLogin() {
@@ -77,7 +90,67 @@ class LoginController: MJPController {
         
         API.shared().clearToken()
         AppData.clearData()
+    }
+    
+    func checkDeprecation(){
         
+        // Call Deprecation API
+        showLoading()
+        API.shared().loadDepreactions(success: { (data) in
+            self.hideLoading()
+            let deprecations: NSMutableArray!
+            
+            // App version
+            if let version = Bundle.main.infoDictionary?["CFBundleVersion"] as? String {
+                deprecations = data.mutableCopy() as! NSMutableArray
+                
+                for deprecation in deprecations as! [Deprecation]{
+                    if deprecation.platform == "IOS" {
+                        if  version <= deprecation.error {
+                            self.showDeprecationError()
+                        } else if version <= deprecation.warning {
+                            self.showDeprecationWarning()
+                        } else {
+                            self.isLogin()
+                        }
+                    }
+                }
+            }
+           
+        }, failure: self.handleErrors)
+    }
+    
+    func showDeprecationError() {
+        guard let url = URL(string: "https://itunes.apple.com/us/app/myjobpitch-job-matching/id1124296674?ls=1&amp;mt=8") else {
+            return //be safe
+        }
+        self.isDeprecationError = true
+        PopupController.showGreen("Your app is out of date, you must upgrade to continue", ok: "Update", okCallback: {
+            if #available(iOS 10.0, *) {
+                UIApplication.shared.open(url, options: [:], completionHandler: nil)
+            } else {
+                UIApplication.shared.openURL(url)
+            }
+        }, cancel: "Close app", cancelCallback: {
+            UIControl().sendAction(#selector(NSXPCConnection.suspend),
+                                   to: UIApplication.shared, for: nil)
+        })
+    }
+    
+    func showDeprecationWarning() {
+        guard let url = URL(string: "https://itunes.apple.com/us/app/myjobpitch-job-matching/id1124296674?ls=1&amp;mt=8") else {
+            return //be safe
+        }
+        self.isDeprecationError = false
+        PopupController.showGreen("Your app is out of date, update now to take advantage of teh latest features", ok: "Update", okCallback: {
+            if #available(iOS 10.0, *) {
+                UIApplication.shared.open(url, options: [:], completionHandler: nil)
+            } else {
+                UIApplication.shared.openURL(url)
+            }
+        }, cancel: "Dismiss", cancelCallback: {
+            
+        })
     }
     
     override func showLoading() {
@@ -158,6 +231,11 @@ class LoginController: MJPController {
     
     @IBAction func loginAction(_ sender: Any) {
         
+        if isDeprecationError {
+            showDeprecationError()
+            return
+        }
+        
         if valid() {
             
             showLoading()
@@ -172,7 +250,12 @@ class LoginController: MJPController {
     }
 
     @IBAction func registerAction(_ sender: Any) {
-
+        
+        if isDeprecationError {
+            showDeprecationError()
+            return
+        }
+        
         if valid() {
             
             showLoading()
@@ -190,12 +273,24 @@ class LoginController: MJPController {
     }
 
     @IBAction func goSignupAction(_ sender: Any) {
+        
+        if isDeprecationError {
+            showDeprecationError()
+            return
+        }
+        
         view.endEditing(true)
         let controller = AppHelper.mainStoryboard.instantiateViewController(withIdentifier: "Signup")
         navigationController?.pushViewController(controller, animated: true)
     }
     
     @IBAction func goSigninAction(_ sender: Any) {
+        
+        if isDeprecationError {
+            showDeprecationError()
+            return
+        }
+        
         view.endEditing(true)
         _ = navigationController?.popViewController(animated: true)
     }

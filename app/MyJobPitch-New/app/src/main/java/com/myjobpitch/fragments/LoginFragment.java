@@ -406,57 +406,75 @@ public class LoginFragment extends FormFragment {
 
     @OnClick(R.id.login_button)
     void onLogin() {
-        if (valid()) {
-            login();
+        if (depreactionError) {
+            showDeprecationError();
+        } else {
+            if (valid()) {
+                login();
+            }
         }
+
     }
 
     @OnClick(R.id.register_button1)
     void onRegister1() {
-        if (valid()) {
-            AppData.saveUserType(AppData.JOBSEEKER);
-            login();
+        if (depreactionError) {
+            showDeprecationError();
+        } else {
+            if (valid()) {
+                AppData.saveUserType(AppData.JOBSEEKER);
+                login();
+            }
         }
     }
 
     @OnClick(R.id.register_button2)
     void onRegister2() {
-        if (valid()) {
-            AppData.saveUserType(AppData.RECRUITER);
-            login();
+        if (depreactionError) {
+            showDeprecationError();
+        } else {
+            if (valid()) {
+                AppData.saveUserType(AppData.RECRUITER);
+                login();
+            }
         }
     }
 
     @OnClick(R.id.reset_button)
     void onResetPassword() {
-        if (valid()) {
-            showLoading();
-            loading.setBackground(R.color.colorPrimary);
+        if (depreactionError) {
+            showDeprecationError();
+        } else {
+            if (valid()) {
+                showLoading();
+                loading.setBackground(R.color.colorPrimary);
 
-            new APITask(new APIAction() {
-                @Override
-                public void run() throws MJPApiException {
-                    String email = mResetEmailView.getText().toString().trim();
-                    MJPApi.shared().resetPassword(email);
-                }
-            }).addListener(new APITaskListener() {
-                @Override
-                public void onSuccess() {
-                    hideLoading();
-                    Popup popup = new Popup(getContext(), "Password reset requested, please check your email.", true);
-                    popup.addGreyButton("OK", new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            onResetCancel();
-                        }
-                    });
-                    popup.show();
-                }
-                @Override
-                public void onError(JsonNode errors) {
-                    errorHandler(errors);
-                }
-            }).execute();
+                new APITask(new APIAction() {
+                    @Override
+                    public void run() throws MJPApiException {
+                        String email = mResetEmailView.getText().toString().trim();
+                        MJPApi.shared().resetPassword(email);
+                    }
+                }).addListener(new APITaskListener() {
+                    @Override
+                    public void onSuccess() {
+                        hideLoading();
+                        Popup popup = new Popup(getContext(), "Password reset requested, please check your email.", true);
+                        popup.addGreyButton("OK", new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                onResetCancel();
+                            }
+                        });
+                        popup.show();
+                    }
+
+                    @Override
+                    public void onError(JsonNode errors) {
+                        errorHandler(errors);
+                    }
+                }).execute();
+            }
         }
     }
 
@@ -464,28 +482,44 @@ public class LoginFragment extends FormFragment {
 
     @OnClick(R.id.go_register)
     void onShowRegister() {
-        status = Status.REGISTER;
-        movingView(loginPanel, registerPanel, -1);
+        if (depreactionError) {
+            showDeprecationError();
+        } else {
+            status = Status.REGISTER;
+            movingView(loginPanel, registerPanel, -1);
+        }
     }
 
     @OnClick(R.id.go_login)
     void onShowLogin() {
-        status = Status.LOGIN;
-        movingView(registerPanel, loginPanel, 1);
+        if (depreactionError) {
+            showDeprecationError();
+        } else {
+            status = Status.LOGIN;
+            movingView(registerPanel, loginPanel, 1);
+        }
     }
 
     @OnClick(R.id.forgot_password)
     void onShowReset() {
-        status = Status.RESET;
-        mResetEmailView.setText(mUserEmailView.getText());
-        movingView(loginContainer, resetContainer, -1);
+        if (depreactionError) {
+            showDeprecationError();
+        } else {
+            status = Status.RESET;
+            mResetEmailView.setText(mUserEmailView.getText());
+            movingView(loginContainer, resetContainer, -1);
+        }
     }
 
     @OnClick(R.id.reset_cancel)
     void onResetCancel() {
-        status = Status.LOGIN;
-        mUserEmailView.setText(mResetEmailView.getText());
-        movingView(resetContainer, loginContainer, 1);
+        if (depreactionError) {
+            showDeprecationError();
+        } else {
+            status = Status.LOGIN;
+            mUserEmailView.setText(mResetEmailView.getText());
+            movingView(resetContainer, loginContainer, 1);
+        }
     }
 
     private boolean isAnimation = false;

@@ -15,6 +15,7 @@ import com.myjobpitch.api.data.ApplicationStatusUpdate;
 import com.myjobpitch.api.data.Business;
 import com.myjobpitch.api.data.ChangePassword;
 import com.myjobpitch.api.data.Contract;
+import com.myjobpitch.api.data.Deprecation;
 import com.myjobpitch.api.data.Hours;
 import com.myjobpitch.api.data.ImageUpload;
 import com.myjobpitch.api.data.InitialTokens;
@@ -467,6 +468,10 @@ public class MJPApi {
             }
             throw e;
         }
+    }
+
+    public List<Deprecation> loadDeprecations() throws MJPApiException {
+        return Arrays.asList(rest.exchange(getTypeUrl("deprecation"), HttpMethod.GET, null, Deprecation[].class).getBody());
     }
 
     public Business sendPurchaseInfo(Integer businessId, String productId, String purchaseToken) throws MJPApiException {

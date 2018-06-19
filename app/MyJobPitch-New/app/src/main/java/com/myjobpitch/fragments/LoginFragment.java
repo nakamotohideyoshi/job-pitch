@@ -5,6 +5,9 @@ import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
@@ -25,6 +28,9 @@ import com.myjobpitch.api.MJPApi;
 import com.myjobpitch.api.MJPApiException;
 import com.myjobpitch.api.auth.AuthToken;
 import com.myjobpitch.api.auth.User;
+import com.myjobpitch.api.data.Application;
+import com.myjobpitch.api.data.Deprecation;
+import com.myjobpitch.api.data.Message;
 import com.myjobpitch.tasks.APIAction;
 import com.myjobpitch.tasks.APITask;
 import com.myjobpitch.tasks.APITaskListener;
@@ -32,7 +38,9 @@ import com.myjobpitch.utils.AppData;
 import com.myjobpitch.utils.AppHelper;
 import com.myjobpitch.views.Popup;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -76,6 +84,13 @@ public class LoginFragment extends FormFragment {
     private boolean isLoggedin = false;
     private boolean showIntro = true;
 
+    public String versionName = "0.0.0";
+    public int versionCode = 0;
+
+    public Boolean depreactionError = false;
+
+    public List<Deprecation>  deprecations;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -111,8 +126,15 @@ public class LoginFragment extends FormFragment {
             }
         }
 
+        checkDeprecation(view);
+
+        return view;
+    }
+
+    public void isLogin(View view) {
         // check auto login
-        if (MJPApi.instance == null && mRememberView.isChecked()) {
+
+        if (MJPApi.instance == null && mRememberView.isChecked() && !depreactionError) {
             String token = AppData.getToken();
             MJPApi.shared().setToken(token);
 
@@ -139,10 +161,115 @@ public class LoginFragment extends FormFragment {
             }).execute();
         }
 
-
         isLoggedin = false;
+    }
 
-        return view;
+    private  void checkDeprecation(final View view) {
+        showLoading(view);
+        try {
+            PackageInfo packageInfo = getActivity().getPackageManager().getPackageInfo(getContext().getPackageName(), 0);
+            versionName = packageInfo.versionName.replace("-beta", "");
+            versionCode = packageInfo.versionCode;
+
+            new APITask(new APIAction() {
+                @Override
+                public void run() throws MJPApiException {
+                    String query = null;
+                    deprecations  = MJPApi.shared().loadDeprecations();
+
+                }
+            }).addListener(new APITaskListener() {
+                @Override
+                public void onSuccess() {
+                    hideLoading();
+                    for (int i=0; i<deprecations.size(); i++) {
+                        if (deprecations.get(i).getPlatform().equals("ANDROID")) {
+                            if (versionCompare(versionName, deprecations.get(i).getError()) <= 0) {
+                                depreactionError = true;
+                                showDeprecationError();
+                            } else if (versionCompare(versionName, deprecations.get(i).getWarning()) <= 0) {
+                                depreactionError = false;
+                                showDeprecationWarning();
+                            } else {
+                                depreactionError = false;
+                                isLogin(view);
+                            }
+                        }
+                    }
+                }
+
+                @Override
+                public void onError(JsonNode errors) {
+                    errorHandler(errors);
+                }
+            }).execute();
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void showDeprecationError() {
+        Popup popup = new Popup(getContext(), "Your app is out of date, you must upgrade to continue", true);
+        popup.addGreenButton("Update", new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                goToGooglePlayStore();
+            }
+        });
+        popup.addGreyButton("Close app", new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                android.os.Process.killProcess(android.os.Process.myPid());
+            }
+        });
+        popup.show();
+    }
+
+
+    public void showDeprecationWarning() {
+        Popup popup = new Popup(getContext(), "Your app is out of date, update now to take advantage of teh latest features", true);
+        popup.addGreenButton("Update", new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                goToGooglePlayStore();
+            }
+        });
+        popup.addGreyButton("Dismiss", new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+        popup.show();
+    }
+
+    public void goToGooglePlayStore() {
+
+        final String appPackageName = getContext().getPackageName(); // getPackageName() from Context or Activity object
+        try {
+            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + appPackageName)));
+        } catch (android.content.ActivityNotFoundException e) {
+            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + appPackageName)));
+        }
+
+    }
+
+    public static int versionCompare(String str1, String str2) {
+        String[] values1 = str1.split("\\.");
+        String[] values2 = str2.split("\\.");
+        int i = 0;
+        // set index to first non-equal ordinal or length of shortest version string
+        while (i < values1.length && i < values2.length && values1[i].equals(values2[i])) {
+            i++;
+        }
+        // compare first non-equal ordinal number
+        if (i < values1.length && i < values2.length) {
+            int diff = Integer.valueOf(values1[i]).compareTo(Integer.valueOf(values2[i]));
+            return Integer.signum(diff);
+        }
+        // the strings are equal or one string is a substring of the other
+        // e.g. "1.2.3" = "1.2.3" or "1.2.3" < "1.2.3.4"
+        return Integer.signum(values1.length - values2.length);
     }
 
 

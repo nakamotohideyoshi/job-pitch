@@ -70,12 +70,14 @@ class MessageListController: SearchController {
     }
     
     func updateMessage() {
-        let message = MessageForUpdate()
-        message.id = AppData.lastMessage.id
-        message.fromRole = AppData.lastMessage.fromRole
-        API.shared().updateMessageStatus(update: message, success: { (data) in
-            print("success")
-        }, failure: self.handleErrors)
+        if (AppData.lastMessage != nil) {
+            let message = MessageForUpdate()
+            message.id = AppData.lastMessage.id
+            message.fromRole = AppData.lastMessage.fromRole
+            API.shared().updateMessageStatus(update: message, success: { (data) in
+                print("success")
+            }, failure: self.handleErrors)
+        }
     }
     
     func goAllMessageList() {

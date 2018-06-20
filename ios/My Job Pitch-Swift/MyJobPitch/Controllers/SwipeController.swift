@@ -75,8 +75,8 @@ class SwipeController: MJPController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        showLoading()
         if !AppData.user.isRecruiter() {
+            showLoading()
             API.shared().loadJobSeekerWithId(id: AppData.user.jobSeeker, success: { (data) in
                 self.hideLoading()
                 self.jobSeeker = data as! JobSeeker

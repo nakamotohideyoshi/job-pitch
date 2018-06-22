@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2F870FB620DBCA7600F9427C /* BusinessUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F870FB520DBCA7600F9427C /* BusinessUser.swift */; };
+		2F870FB820DBCC0900F9427C /* BusinessUserCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F870FB720DBCC0900F9427C /* BusinessUserCell.swift */; };
+		2F870FBA20DC9DBD00F9427C /* BusinessUserListController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F870FB920DC9DBD00F9427C /* BusinessUserListController.swift */; };
+		2F870FBC20DCB78D00F9427C /* BusinessUserEditController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F870FBB20DCB78D00F9427C /* BusinessUserEditController.swift */; };
 		2FA7FC6220D841240024163A /* Deprecation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FA7FC6120D841240024163A /* Deprecation.swift */; };
 		8DAACC8E94BF22668BF0A289 /* Pods_MyJobPitch.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 27B30165DDDB50C20065D004 /* Pods_MyJobPitch.framework */; };
 		D72AE4111E10470A004C3F02 /* MessageListController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D72AE4101E10470A004C3F02 /* MessageListController.swift */; };
@@ -121,6 +125,10 @@
 
 /* Begin PBXFileReference section */
 		27B30165DDDB50C20065D004 /* Pods_MyJobPitch.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MyJobPitch.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		2F870FB520DBCA7600F9427C /* BusinessUser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = BusinessUser.swift; path = Models/api/BusinessUser.swift; sourceTree = "<group>"; };
+		2F870FB720DBCC0900F9427C /* BusinessUserCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = BusinessUserCell.swift; path = Views/BusinessUserCell.swift; sourceTree = "<group>"; };
+		2F870FB920DC9DBD00F9427C /* BusinessUserListController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = BusinessUserListController.swift; path = Controllers/BusinessUserListController.swift; sourceTree = "<group>"; };
+		2F870FBB20DCB78D00F9427C /* BusinessUserEditController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = BusinessUserEditController.swift; path = Controllers/BusinessUserEditController.swift; sourceTree = "<group>"; };
 		2FA7FC6120D841240024163A /* Deprecation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Deprecation.swift; path = Models/api/Deprecation.swift; sourceTree = "<group>"; };
 		3AFB29B0047E979820654701 /* Pods-MyJobPitch.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MyJobPitch.debug.xcconfig"; path = "Pods/Target Support Files/Pods-MyJobPitch/Pods-MyJobPitch.debug.xcconfig"; sourceTree = "<group>"; };
 		4EBE93C472BCA0F516AF140F /* Pods-MyJobPitch.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MyJobPitch.release.xcconfig"; path = "Pods/Target Support Files/Pods-MyJobPitch/Pods-MyJobPitch.release.xcconfig"; sourceTree = "<group>"; };
@@ -309,6 +317,7 @@
 				D787F63C1E287C8400C47A88 /* BusinessCell.swift */,
 				D787F63E1E287D1400C47A88 /* LocationCell.swift */,
 				D7CFBC6A1EF8E409003FC132 /* FileCell.swift */,
+				2F870FB720DBCC0900F9427C /* BusinessUserCell.swift */,
 			);
 			name = Cells;
 			sourceTree = "<group>";
@@ -365,6 +374,7 @@
 				D74226B220ACCDED002D3F4C /* Sex.swift */,
 				D74226B320ACCDED002D3F4C /* User.swift */,
 				2FA7FC6120D841240024163A /* Deprecation.swift */,
+				2F870FB520DBCA7600F9427C /* BusinessUser.swift */,
 			);
 			name = api;
 			sourceTree = "<group>";
@@ -392,6 +402,8 @@
 				D7B6F5371E6466E50026A7BD /* JobDetailController.swift */,
 				D787F63A1E287A8B00C47A88 /* JobEditController.swift */,
 				D7C828021E51AC1000CD9C08 /* SelectJobController.swift */,
+				2F870FB920DC9DBD00F9427C /* BusinessUserListController.swift */,
+				2F870FBB20DCB78D00F9427C /* BusinessUserEditController.swift */,
 			);
 			name = Recruiter;
 			sourceTree = "<group>";
@@ -750,10 +762,12 @@
 				D76C905D1E261ABC009C35E4 /* JobProfileController.swift in Sources */,
 				D787F63F1E287D1400C47A88 /* LocationCell.swift in Sources */,
 				D7F76FEB1E08E05F00ECB684 /* API.swift in Sources */,
+				2F870FBA20DC9DBD00F9427C /* BusinessUserListController.swift in Sources */,
 				D749E3531E0A36CD000FD0B1 /* APIConfigure.swift in Sources */,
 				D7AF8DCB1E1C9CEA00C57DDC /* CameraController.swift in Sources */,
 				D7C828031E51AC1000CD9C08 /* SelectJobController.swift in Sources */,
 				D78834301ECAAF3E00D99F4B /* MDCPanState.m in Sources */,
+				2F870FB820DBCC0900F9427C /* BusinessUserCell.swift in Sources */,
 				D749E3571E0B2026000FD0B1 /* SwipeController.swift in Sources */,
 				D74226D220ACCDED002D3F4C /* User.swift in Sources */,
 				D72AE42E1E11AD50004C3F02 /* ChangePasswordController.swift in Sources */,
@@ -772,6 +786,7 @@
 				D74226CF20ACCDED002D3F4C /* Role.swift in Sources */,
 				D74226C820ACCDED002D3F4C /* MJPObjectWithNameShortNameDesc.swift in Sources */,
 				D74226CE20ACCDED002D3F4C /* RegisterRequest.swift in Sources */,
+				2F870FB620DBCA7600F9427C /* BusinessUser.swift in Sources */,
 				D7ECFBBF1E12FCEF00E2E071 /* JobSeekerProfileController.swift in Sources */,
 				D74226C120ACCDED002D3F4C /* LoginRequest.swift in Sources */,
 				D74226BD20ACCDED002D3F4C /* JobPitch.swift in Sources */,
@@ -812,6 +827,7 @@
 				D7F770291E09196300ECB684 /* MJPController.swift in Sources */,
 				D72AE4241E1156C3004C3F02 /* CustomView.swift in Sources */,
 				D78834381ECAAF4B00D99F4B /* UIView+MDCSwipeToChoose.m in Sources */,
+				2F870FBC20DCB78D00F9427C /* BusinessUserEditController.swift in Sources */,
 				2FA7FC6220D841240024163A /* Deprecation.swift in Sources */,
 				D72AE41B1E106D0A004C3F02 /* ApplicationListController.swift in Sources */,
 				D7B07B831E08DDE1005B9EBE /* AppDelegate.swift in Sources */,

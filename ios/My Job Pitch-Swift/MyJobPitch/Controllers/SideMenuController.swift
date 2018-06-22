@@ -26,6 +26,7 @@ class SideMenuController: UIViewController {
         "shortlist":    ["icon": "menu-shortlist",      "title": "My Shortlist",            "identifier": "SelectJob",          "per": "B"],
         "businesses":   ["icon": "menu-business",       "title": "Add or Edit Jobs",        "identifier": "BusinessList",       "per": ""],
         "payment":      ["icon": "menu-payment",        "title": "Payment",                 "identifier": "",                   "per": ""],
+        "users":        ["icon": "menu-user-profile",   "title": "Users",                   "identifier": "BusinessList",       "per": ""],
         
         "change_pass":  ["icon": "menu-key",            "title": "Change Password",         "identifier": "ChangePassword",     "per": ""],
         "help":         ["icon": "menu-help",           "title": "Help",                    "identifier": "Help",               "per": ""],
@@ -39,7 +40,7 @@ class SideMenuController: UIViewController {
     ]
     
     static let recruiterMenu = [
-        "find_talent", "applications", "connections", "shortlist", "messages", "businesses", "change_pass", "help", "share", "contact_us", "log_out"
+        "find_talent", "applications", "connections", "shortlist", "messages", "businesses", "change_pass", "users", "help", "share", "contact_us", "log_out"
     ]
     
     static func getCurrentTitle(_ id: String!) -> String! {

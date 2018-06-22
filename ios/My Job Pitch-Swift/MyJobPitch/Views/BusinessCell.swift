@@ -31,4 +31,19 @@ class BusinessCell: MGSwipeTableCell {
         
     }
     
+    func setUsersData(_ business: Business) {
+        
+        if let image = business.getImage() {
+            AppHelper.loadImageURL(imageUrl: (image.thumbnail)!, imageView: imgView, completion: nil)
+        } else {
+            imgView.image = UIImage(named: "default-logo")
+        }
+        
+        nameLabel.text = business.name
+        let userCount = business.users.count
+        subTitle.text = String(format: "%lu %@", userCount, userCount > 1 ? "users" : "user")
+        creditCount.isHidden = true
+        
+    }
+    
 }

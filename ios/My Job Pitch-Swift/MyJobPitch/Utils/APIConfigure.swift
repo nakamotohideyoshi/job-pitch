@@ -570,7 +570,44 @@ class APIConfigure: NSObject {
                                  responseRelationships: nil,
                                  path: "/api/deprecation/",
                                  method: .GET)
-
+        
+        //================== BusinessUser ================
+        
+        
+        let businessUserArray = [ "id", "user", "email", "locations", "business"]
+        
+        configureResponseMapping(BusinessUser.classForCoder(),
+                                 responseArray: businessUserArray,
+                                 responseDictionary: nil,
+                                 responseRelationships: nil,
+                                 path: "/api/user-businesses/:pk/users/",
+                                 method: .GET)
+        
+        
+        let createBusinessUserArray = [ "email", "locations" ]
+        
+        configureSimpleMapping(BusinessUserForCreation.classForCoder(),
+                               mappingArray: createBusinessUserArray,
+                               mappingDictionary: nil,
+                               mappingRelationships: nil,
+                               path: "/api/user-businesses/:pk/users/",
+                               method: .POST)
+        
+        
+         let updateBusinessUserArray = [ "locations" ]
+        
+        configureSimpleMapping(BusinessUserForUpdate.classForCoder(),
+                               mappingArray: updateBusinessUserArray,
+                               mappingDictionary: nil,
+                               mappingRelationships: nil,
+                               path: "/api/user-businesses/:pk/users/:pk/",
+                               method: .PUT)
+        configureSimpleMapping(BusinessUser.classForCoder(),
+                               mappingArray: nil,
+                               mappingDictionary: nil,
+                               mappingRelationships: nil,
+                               path: "/api/user-businesses/:pk/users/:pk/",
+                               method: .DELETE)
 
         // ================= Error =====================
 

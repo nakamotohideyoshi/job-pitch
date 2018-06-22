@@ -27,6 +27,7 @@ import UserEdit from 'containers/recruiter/Users/UserEdit';
 import JSRoute from 'containers/jobseeker/Route';
 import FindJob from 'containers/jobseeker/FindJob';
 import JSApplications from 'containers/jobseeker/MyApplications';
+import JSInterviews from 'containers/jobseeker/JSInterviews';
 import JSJob from 'containers/jobseeker/Job';
 import JSPublicJob from 'containers/jobseeker/PublicJob';
 import JSMessages from 'containers/jobseeker/Messages';
@@ -59,6 +60,9 @@ export default props => {
       <RCRoute exact path="/recruiter/applications/shortlist/:jobId" component={RCApplications} />
       <RCRoute exact path="/recruiter/apps/:jobId/:jobseekerId" component={RCJobseeker} />
 
+      <RCRoute exact path="/recruiter/applications/interviews" component={RCApplications} />
+      <RCRoute exact path="/recruiter/applications/interviews/:jobId" component={RCApplications} />
+
       <Redirect exact from="/recruiter/jobs" to="/recruiter/jobs/business" />
       <RCRoute exact path="/recruiter/jobs/business" component={BusinessList} />
       <RCRoute exact path="/recruiter/jobs/business/add" component={BusinessEdit} />
@@ -86,6 +90,8 @@ export default props => {
       <Redirect exact from="/jobseeker" to="/jobseeker/find" />
       <JSRoute exact path="/jobseeker/find" component={FindJob} />
       <JSRoute exact path="/jobseeker/applications" component={JSApplications} />
+
+      <JSRoute exact path="/jobseeker/interviews" component={JSInterviews} />
 
       {props.auth === 'auth' ? (
         <Route exact path="/jobseeker/jobs/:jobId" render={props => <Layout component={JSPublicJob} {...props} />} />

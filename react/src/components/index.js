@@ -7,6 +7,7 @@ import PopupProgress from './PopupProgress';
 import SearchBox from './SearchBox';
 
 import JobseekerDetails from './JobseekerDetails';
+import InterviewEdit from './InterviewEdit';
 import JobDetails from './JobDetails';
 import PublicJobDetails from './JobDetails/PublicJobDetails';
 
@@ -41,6 +42,7 @@ export {
   PopupProgress,
   Logo,
   JobseekerDetails,
+  InterviewEdit,
   JobDetails,
   PublicJobDetails,
   MessageThread,

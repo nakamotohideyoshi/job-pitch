@@ -16,6 +16,7 @@ import {
   Icons,
   LargeModal,
   JobseekerDetails,
+  InterviewEdit,
   LinkButton,
   JobDetails
 } from 'components';
@@ -29,6 +30,7 @@ class Page extends React.Component {
     selectedId: null,
     openAppDetails: false,
     openJobDetails: false,
+    openInterviewEdit: false,
     tablet: false,
     open: false
   };
@@ -134,12 +136,15 @@ class Page extends React.Component {
   showJobDetails = () => this.setState({ openJobDetails: true });
   hideJobDetails = () => this.setState({ openJobDetails: false });
 
+  showInterviewEdit = () => this.setState({ openInterviewEdit: true });
+  hideInterviewEdit = () => this.setState({ openInterviewEdit: false });
+
   renderHeader = ({ job_data, job_seeker }) => {
     const avatar = helper.getPitch(job_seeker).thumbnail;
     const jobseekerName = helper.getFullJSName(job_seeker);
     const jobName = helper.getFullBWName(job_data);
     return (
-      <List.Item>
+      <List.Item actions={[<LinkButton onClick={this.showInterviewEdit}>Arrange Trial/Interview</LinkButton>]}>
         <List.Item.Meta
           avatar={<Avatar src={avatar} className="avatar-48" />}
           title={<span onClick={this.showAppDetails}>{jobseekerName}</span>}
@@ -178,7 +183,7 @@ class Page extends React.Component {
 
     const { selectedId } = this.state;
     const selectedApp = helper.getItemByID(applications, selectedId);
-    const { openAppDetails, openJobDetails, tablet, open } = this.state;
+    const { openAppDetails, openJobDetails, openInterviewEdit, tablet, open } = this.state;
 
     return (
       <Wrapper tablet={tablet} open={open}>
@@ -229,6 +234,16 @@ class Page extends React.Component {
                   )}
                 </div>
               }
+            />
+          </LargeModal>
+        )}
+        {openInterviewEdit && (
+          <LargeModal visible title="Request Interview" onCancel={this.hideInterviewEdit}>
+            <InterviewEdit
+              jobseeker={selectedApp.job_seeker}
+              connected
+              application={selectedApp}
+              gotoOrigin={this.hideInterviewEdit}
             />
           </LargeModal>
         )}

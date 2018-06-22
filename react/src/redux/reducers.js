@@ -1,5 +1,6 @@
 import auth from './auth';
 import applications from './applications';
+import interviews from './interviews';
 import messages from './messages';
 
 import rc_find from './recruiter/find';
@@ -15,6 +16,7 @@ export default {
   auth,
   applications,
   messages,
+  interviews,
 
   rc_find,
   rc_businesses,

@@ -50,6 +50,12 @@ export const RC_SAVE_USER = 'RC_SAVE_USER';
 export const RC_REMOVE_USER = 'RC_REMOVE_USER';
 export const RC_UPDATE_USER = 'RC_UPDATE_USER';
 
+export const INTERVIEWS_UPDATE = 'INTERVIEWS_UPDATE';
+export const GET_INTERVIEWS = 'GET_INTERVIEWS';
+export const SAVE_INTERVIEW = 'SAVE_INTERVIEW';
+export const REMOVE_INTERVIEW = 'REMOVE_INTERVIEW';
+export const UPDATE_INTERVIEW = 'UPDATE_INTERVIEW';
+
 // jobseeker
 
 export const JS_FIND_JOBS = 'JS_FIND_JOBS';

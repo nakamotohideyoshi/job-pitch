@@ -7,6 +7,7 @@ import styled from 'styled-components';
 import { selectBusiness } from 'redux/recruiter/businesses';
 import { findJobseekers } from 'redux/recruiter/find';
 import { getApplications } from 'redux/applications';
+import { getInterviews } from 'redux/interviews';
 import DATA from 'utils/data';
 import * as helper from 'utils/helper';
 
@@ -14,7 +15,10 @@ import { PageHeader, SearchBox, Logo } from 'components';
 import FindTalent from './FindTalent';
 import MyApplications from './MyApplications';
 import MyConnections from './MyConnections';
+import Interviews from './Interviews';
 import Wrapper from './Applications.styled';
+
+import * as _ from 'lodash';
 
 const Option = Select.Option;
 const TabPane = Tabs.TabPane;
@@ -84,6 +88,7 @@ class Applications extends React.Component {
         job: id
       }
     });
+    this.props.getInterviews();
   };
 
   jobsFilterOption = (input, option) => option.props.children[1].toLowerCase().indexOf(input.toLowerCase()) >= 0;
@@ -95,7 +100,7 @@ class Applications extends React.Component {
   onChangeSearchText = searchText => this.setState({ searchText });
 
   render() {
-    const { jobs, job, jobseekers, myApplications, myConnections, myShortlist, match } = this.props;
+    const { jobs, job, jobseekers, myApplications, myConnections, myShortlist, match, myInterviews } = this.props;
     const location = job.location_data;
     const business = location.business_data;
     const searchText = this.state.searchText.toLowerCase();
@@ -104,6 +109,7 @@ class Applications extends React.Component {
     const appCount = (myApplications || []).length;
     const connCount = (myConnections || []).length;
     const shortCount = (myShortlist || []).length;
+    const interviewCount = (myInterviews || []).length;
 
     return (
       <Wrapper className="container">
@@ -151,6 +157,9 @@ class Applications extends React.Component {
           <TabPane tab={`My Shortlist (${shortCount})`} key="shortlist">
             <MyConnections job={job} applications={myShortlist} searchText={searchText} shortlist />
           </TabPane>
+          <TabPane tab={`Interviews (${interviewCount})`} key="interviews">
+            <Interviews job={job} applications={myInterviews} searchText={searchText} />
+          </TabPane>
         </Tabs>
       </Wrapper>
     );
@@ -165,9 +174,22 @@ export default connect(
     const job = helper.getItemByID(jobs, id) || jobs[0];
 
     const { applications } = state.applications;
+    const { interviews } = state.interviews;
     const myApplications = applications && applications.filter(({ status }) => status === DATA.APP.CREATED);
     const myConnections = applications && applications.filter(({ status }) => status === DATA.APP.ESTABLISHED);
     const myShortlist = myConnections && myConnections.filter(({ shortlisted }) => shortlisted);
+
+    let myInterviews = [];
+
+    _.forEach(interviews, interview => {
+      _.forEach(applications, application => {
+        if (interview.application === application.id) {
+          let applicationWithInterview = Object.assign({}, application);
+          applicationWithInterview.interview = interview;
+          myInterviews.push(applicationWithInterview);
+        }
+      });
+    });
 
     return {
       jobs,
@@ -176,12 +198,14 @@ export default connect(
       jobseekers: state.rc_find.jobseekers,
       myApplications,
       myConnections,
-      myShortlist
+      myShortlist,
+      myInterviews
     };
   },
   {
     selectBusiness,
     findJobseekers,
-    getApplications
+    getApplications,
+    getInterviews
   }
 )(Applications);

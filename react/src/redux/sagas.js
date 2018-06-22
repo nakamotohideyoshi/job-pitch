@@ -2,6 +2,7 @@ import { all } from 'redux-saga/effects';
 
 import auth from './auth/saga';
 import applications from './applications/saga';
+import interviews from './interviews/saga';
 import messages from './messages/saga';
 
 import rc_find from './recruiter/find/saga';
@@ -18,6 +19,7 @@ export default function* rootSaga() {
     auth(),
     applications(),
     messages(),
+    interviews(),
     js_find(),
     js_profile(),
     rc_find(),

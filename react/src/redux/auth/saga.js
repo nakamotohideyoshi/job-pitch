@@ -55,7 +55,7 @@ function* getUserData() {
       call(getRequest({ url: '/api/sexes/' })),
       call(getRequest({ url: '/api/roles/' })),
       call(getRequest({ url: '/api/paypal-products/' })),
-      call(getRequest({ url: '/api/applications/' }))
+      call(getRequest({ url: '/api/applications/' })),
     ]);
 
     DATA.initTokens = result[0];

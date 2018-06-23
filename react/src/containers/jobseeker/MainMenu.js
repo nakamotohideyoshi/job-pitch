@@ -69,6 +69,9 @@ class MainMenu extends React.Component {
         <Item key="applications">
           <Link to="/jobseeker/applications">My Applications</Link>
         </Item>
+        <Item key="interviews">
+          <Link to="/jobseeker/interviews">Interviews</Link>
+        </Item>
         <Item key="messages">
           <Link to="/jobseeker/messages">
             Messages<Badge count={countStr} />

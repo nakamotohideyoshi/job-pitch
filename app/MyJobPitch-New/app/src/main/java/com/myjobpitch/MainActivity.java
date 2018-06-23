@@ -583,6 +583,7 @@ public class MainActivity extends AppCompatActivity
         new MenuItemInfo(AppData.PAGE_LOGOUT, "Log Out", R.drawable.menu_logout, null, ""),
         new MenuItemInfo(AppData.PAGE_CONTACT_UP, "Contact Us", R.drawable.menu_contact_us, null, ""),
         new MenuItemInfo(AppData.PAGE_SHARE, "Tell a friend", R.drawable.menu_share, null, ""),
+        new MenuItemInfo(AppData.PAGE_USERS, "Users", R.drawable.menu_user_profile, BusinessListFragment.class, ""),
     };
 
     int[] jobSeekerMenu = {
@@ -592,7 +593,7 @@ public class MainActivity extends AppCompatActivity
 
     int[] recruiterMenu = {
             AppData.PAGE_FIND_TALENT, AppData.PAGE_R_APPLICATIONS, AppData.PAGE_CONNECTIONS, AppData.PAGE_MY_SHORTLIST, AppData.PAGE_MESSAGES,
-            AppData.PAGE_ADD_JOB, AppData.PAGE_PAYMENT, AppData.PAGE_CHANGE_PASS, AppData.PAGE_HELP, AppData.PAGE_SHARE, AppData.PAGE_CONTACT_UP, AppData.PAGE_LOGOUT
+            AppData.PAGE_ADD_JOB, AppData.PAGE_PAYMENT, AppData.PAGE_CHANGE_PASS, AppData.PAGE_USERS, AppData.PAGE_HELP, AppData.PAGE_SHARE, AppData.PAGE_CONTACT_UP, AppData.PAGE_LOGOUT
     };
 
 }

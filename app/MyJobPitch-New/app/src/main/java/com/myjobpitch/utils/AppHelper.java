@@ -13,6 +13,7 @@ import android.widget.TextView;
 import com.myjobpitch.R;
 import com.myjobpitch.MainActivity;
 import com.myjobpitch.api.data.Business;
+import com.myjobpitch.api.data.BusinessUser;
 import com.myjobpitch.api.data.Image;
 import com.myjobpitch.api.data.Job;
 import com.myjobpitch.api.data.JobSeeker;
@@ -94,6 +95,7 @@ public class AppHelper {
         return (ImageView) view.findViewById(R.id.image_view);
     }
 
+
     public static ProgressBar getProgressBar(ImageView imageView) {
         View view = (View)imageView.getParent();
         return (ProgressBar) view.findViewById(R.id.progress_bar);
@@ -109,6 +111,29 @@ public class AppHelper {
     }
     public static TextView getItemAttributesView(View view) {
         return (TextView) view.findViewById(R.id.item_attributes);
+    }
+
+    public static void showBusinessUserInfo(BusinessUser businessUser, View view, List<com.myjobpitch.api.data.Location> locations) {
+
+        // email
+        getItemTitleView(view).setText(businessUser.getEmail());
+
+        // location
+        int locationCount = businessUser.getLocations().size();
+        String subTitle = locationCount == 0 ? "Administrator" : "";
+
+        for (int i=0; i<locations.size(); i++) {
+            if (businessUser.getLocations().indexOf(locations.get(i).getId()) > -1) {
+                if (subTitle == "") {
+                    subTitle = locations.get(i).getName();
+                } else {
+                    subTitle = subTitle + ", " + locations.get(i).getName();
+                }
+            }
+        }
+
+        getItemSubTitleView(view).setText(subTitle);
+
     }
 
     public static void showBusinessInfo(Business business, View view) {
@@ -132,6 +157,16 @@ public class AppHelper {
         int creditCount = business.getTokens();
         getItemAttributesView(view).setText(creditCount + (creditCount > 1 ? " credits" : " credit"));
 
+    }
+
+    public static void showBusinessInfo1(Business business, View view) {
+
+        // business name
+        getItemTitleView(view).setText(business.getName());
+
+        // location count
+        int userCount = business.getUsers().size();
+        getItemSubTitleView(view).setText(userCount + (userCount > 1 ? " users" : " users"));
     }
 
     public static void showLocationInfo(com.myjobpitch.api.data.Location location, View view) {

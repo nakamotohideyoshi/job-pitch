@@ -62,6 +62,7 @@ public class BusinessListFragment extends BaseFragment {
     private BusinessesAdapter adapter;
     private boolean canCreateBusinesses;
     private boolean isAddMode = false;
+    private boolean isUserMode = false;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -69,21 +70,32 @@ public class BusinessListFragment extends BaseFragment {
         View view = inflater.inflate(R.layout.fragment_business_list, container, false);
         ButterKnife.bind(this, view);
 
-        isAddMode = getApp().getCurrentPageID() != AppData.PAGE_ADD_JOB;
-        canCreateBusinesses = AppData.user.getCan_create_businesses();
+        isUserMode = getApp().getCurrentPageID() == AppData.PAGE_USERS;
+
+        canCreateBusinesses = (AppData.user.getCan_create_businesses() && !isUserMode);
+        isAddMode = (getApp().getCurrentPageID() != AppData.PAGE_ADD_JOB && !isUserMode);
+
 
         // header view
 
-        if (isAddMode) {
-            title = "Add job";
-            headerImageView.setColorFilter(ContextCompat.getColor(getApp(), R.color.colorGreen));
-            naveTitleView.setText("Select business");
-            emptyView.setVisibility(View.GONE);
-        } else {
-            title = "Businesses";
+        if (isUserMode) {
+
+            title = "Choose Business";
             headerView.setVisibility(View.GONE);
-            addMenuItem = addMenuItem(MENUGROUP1, 100, "Add", R.drawable.ic_add);
-            addMenuItem.setVisible(false);
+            emptyView.setVisibility(View.GONE);
+
+        } else {
+            if (isAddMode) {
+                title = "Add job";
+                headerImageView.setColorFilter(ContextCompat.getColor(getApp(), R.color.colorGreen));
+                naveTitleView.setText("Select business");
+                emptyView.setVisibility(View.GONE);
+            } else {
+                title = "Businesses";
+                headerView.setVisibility(View.GONE);
+                addMenuItem = addMenuItem(MENUGROUP1, 100, "Add", R.drawable.ic_add);
+                addMenuItem.setVisible(false);
+            }
         }
 
         // pull to refresh
@@ -111,9 +123,17 @@ public class BusinessListFragment extends BaseFragment {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                BusinessDetailFragment fragment = new BusinessDetailFragment();
-                fragment.businessId = adapter.getItem(position).getId();
-                getApp().pushFragment(fragment);
+                if (isUserMode) {
+                    BusinessUserListFragment fragment = new BusinessUserListFragment();
+                    fragment.businessId = adapter.getItem(position).getId();
+                    fragment.businessName = adapter.getItem(position).getName();
+                    getApp().pushFragment(fragment);
+                } else {
+                    BusinessDetailFragment fragment = new BusinessDetailFragment();
+                    fragment.businessId = adapter.getItem(position).getId();
+
+                    getApp().pushFragment(fragment);
+                }
             }
         });
 
@@ -151,21 +171,35 @@ public class BusinessListFragment extends BaseFragment {
     private void updatedBusinessList() {
         adapter.closeAllItems();
 
-        if (isAddMode) {
-            addButton.setVisibility(canCreateBusinesses ? View.VISIBLE : View.GONE);
-            return;
+        int count = adapter.getCount();
+
+        if (isUserMode) {
+
+            emptyView.setVisibility(count == 0 ? View.VISIBLE : View.GONE);
+            if (count == 0) {
+                AppHelper.setEmptyViewText(emptyView, "You are not an administrator of any businesses");
+                emptyView.findViewById(R.id.empty_button).setVisibility(View.GONE);
+            }
+
+        } else {
+
+            if (isAddMode) {
+                addButton.setVisibility(canCreateBusinesses ? View.VISIBLE : View.GONE);
+                return;
+            }
+
+
+            addMenuItem.setVisible(count == 0 || canCreateBusinesses);
+            emptyView.setVisibility(count == 0 || !canCreateBusinesses ? View.VISIBLE : View.GONE);
+            if (count == 0) {
+                AppHelper.setEmptyViewText(emptyView, "Hi, Welcome to My Job Pitch\nLet's start by easily adding your business!");
+                AppHelper.setEmptyButtonText(emptyView, "Create business");
+            } else if (!canCreateBusinesses) {
+                AppHelper.setEmptyViewText(emptyView, "Got more that one business?\nGet in touch to talk about how we can help you.\nRemember, you can always create additional workplaces under your existing business.");
+                AppHelper.setEmptyButtonText(emptyView, "Contact Us");
+            }
         }
 
-        int count = adapter.getCount();
-        addMenuItem.setVisible(count == 0 || canCreateBusinesses);
-        emptyView.setVisibility(count == 0 || !canCreateBusinesses ? View.VISIBLE : View.GONE);
-        if (count == 0) {
-            AppHelper.setEmptyViewText(emptyView, "Hi, Welcome to My Job Pitch\nLet's start by easily adding your business!");
-            AppHelper.setEmptyButtonText(emptyView, "Create business");
-        } else if (!canCreateBusinesses) {
-            AppHelper.setEmptyViewText(emptyView, "Got more that one business?\nGet in touch to talk about how we can help you.\nRemember, you can always create additional workplaces under your existing business.");
-            AppHelper.setEmptyButtonText(emptyView, "Contact Us");
-        }
     }
 
     private void deleteBusiness(final Business business) {
@@ -251,43 +285,52 @@ public class BusinessListFragment extends BaseFragment {
 
         @Override
         public int getSwipeLayoutResourceId(int position) {
-            return R.id.job_list_item;
+            return isUserMode ? R.id.user_list_item : R.id.job_list_item;
         }
 
         @Override
         public View generateView(int position, ViewGroup parent) {
-            return LayoutInflater.from(getContext()).inflate(R.layout.cell_job_list_swipe, parent, false);
+            return LayoutInflater.from(getContext()).inflate((isUserMode ? R.layout.cell_user_list_swipe : R.layout.cell_job_list_swipe), parent, false);
         }
 
         @Override
         public void fillValues(final int position, View convertView) {
 
-            AppHelper.showBusinessInfo(getItem(position), convertView);
+
             ImageButton editButton = AppHelper.getEditButton(convertView);
             ImageButton removeButton = AppHelper.getRemoveButton(convertView);
-            if (isAddMode) {
+
+            if (isUserMode) {
+                AppHelper.showBusinessInfo1(getItem(position), convertView);
                 editButton.setVisibility(View.GONE);
                 removeButton.setVisibility(View.GONE);
+
             } else {
-                editButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        closeItem(position);
-                        BusinessEditFragment fragment = new BusinessEditFragment();
-                        fragment.business = getItem(position);
-                        getApp().pushFragment(fragment);
-                    }
-                });
-                if (AppData.user.getBusinesses().size() > 1) {
-                    removeButton.setVisibility(View.VISIBLE);
-                    removeButton.setOnClickListener(new View.OnClickListener() {
+                AppHelper.showBusinessInfo(getItem(position), convertView);
+                if (isAddMode) {
+                    editButton.setVisibility(View.GONE);
+                    removeButton.setVisibility(View.GONE);
+                } else {
+                    editButton.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            deleteBusiness(getItem(position));
+                            closeItem(position);
+                            BusinessEditFragment fragment = new BusinessEditFragment();
+                            fragment.business = getItem(position);
+                            getApp().pushFragment(fragment);
                         }
                     });
-                } else {
-                    removeButton.setVisibility(View.GONE);
+                    if (AppData.user.getBusinesses().size() > 1) {
+                        removeButton.setVisibility(View.VISIBLE);
+                        removeButton.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                deleteBusiness(getItem(position));
+                            }
+                        });
+                    } else {
+                        removeButton.setVisibility(View.GONE);
+                    }
                 }
             }
         }

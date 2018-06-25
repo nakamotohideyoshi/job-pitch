@@ -643,5 +643,34 @@ class API: NSObject {
                           failure: ((String?, NSDictionary?) -> Void)!) {
         getObjects("/api/deprecation/", success: success, failure: failure)
     }
+    
+    // ================= BusinessUser =====================
+    
+    
+    func loadBusinessUsers(businessId: NSNumber!,
+                                  success: ((NSArray) -> Void)!,
+                                  failure: ((String?, NSDictionary?) -> Void)!) {
+        getObjects(String(format: "/api/user-businesses/%@/users/", businessId), success: success, failure: failure)
+    }
+    
+    func createBusinessUser(businessId: NSNumber!, businessUser: BusinessUserForCreation,
+                     success: ((NSObject?) -> Void)!,
+                     failure: ((String?, NSDictionary?) -> Void)!) {
+        postObject(String(format: "/api/user-businesses/%@/users/", businessId), request: businessUser, success: success, failure: failure)
+    }
+    
+    func updateBusinessUser(businessId: NSNumber!, businessUserId: NSNumber!, businessUser: BusinessUserForUpdate,
+                      success: ((NSObject?) -> Void)!,
+                      failure: ((String?, NSDictionary?) -> Void)!) {
+        putObject(String(format: "/api/user-businesses/%@/users/%@/", businessId, businessUserId),
+                      request: businessUser, success: success, failure: failure)
+    }
+    
+    func deleteBusinessUser(businessId: NSNumber!, businessUserId: NSNumber!,
+                           success: (() -> Void)!,
+                           failure: ((String?, NSDictionary?) -> Void)!) {
+        deleteObject(String(format: "/api/user-businesses/%@/users/%@/", businessId, businessUserId),
+                     success: success, failure: failure)
+    }
 
 }

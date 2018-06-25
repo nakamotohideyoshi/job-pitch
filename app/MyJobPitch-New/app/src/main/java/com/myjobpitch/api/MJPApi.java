@@ -13,6 +13,9 @@ import com.myjobpitch.api.data.ApplicationShortlistUpdate;
 import com.myjobpitch.api.data.ApplicationStatus;
 import com.myjobpitch.api.data.ApplicationStatusUpdate;
 import com.myjobpitch.api.data.Business;
+import com.myjobpitch.api.data.BusinessUser;
+import com.myjobpitch.api.data.BusinessUserForCreation;
+import com.myjobpitch.api.data.BusinessUserForUpdate;
 import com.myjobpitch.api.data.ChangePassword;
 import com.myjobpitch.api.data.Contract;
 import com.myjobpitch.api.data.Deprecation;
@@ -473,6 +476,40 @@ public class MJPApi {
     public List<Deprecation> loadDeprecations() throws MJPApiException {
         return Arrays.asList(rest.exchange(getTypeUrl("deprecation"), HttpMethod.GET, null, Deprecation[].class).getBody());
     }
+
+    public List<BusinessUser> getUserBusinessUsers(Integer business_id) throws MJPApiException {
+        URI uri = getTypeUrl(String.format("user-businesses/%s/users", business_id));
+        return Arrays.asList(rest.exchange(uri, HttpMethod.GET, createAuthenticatedRequest(), BusinessUser[].class).getBody());
+    }
+
+    public BusinessUserForCreation createBusinessUser(BusinessUserForCreation businessUserForCreation, Integer business_id) throws MJPApiException {
+        try {
+            return rest.exchange(getTypeUrl(String.format("user-businesses/%s/users", business_id)), HttpMethod.POST, createAuthenticatedRequest(businessUserForCreation), BusinessUserForCreation.class).getBody();
+        } catch (HttpClientErrorException e) {
+            if (e.getStatusCode().value() == 400) {
+                throw new MJPApiException(e);
+            }
+            throw e;
+        }
+    }
+
+    public BusinessUserForUpdate updateBusinessUser(BusinessUserForUpdate businessUserForUpdate, Integer business_id, Integer user_id) throws MJPApiException {
+        try {
+            return rest.exchange(getTypeUrl(String.format("user-businesses/%s/users/%s", business_id, user_id)), HttpMethod.PUT, createAuthenticatedRequest(businessUserForUpdate), BusinessUserForUpdate.class).getBody();
+        } catch (HttpClientErrorException e) {
+            if (e.getStatusCode().value() == 400) {
+                throw new MJPApiException(e);
+            }
+            throw e;
+        }
+    }
+
+    public void deleteBusinessUser(Integer business_id, Integer user_id) throws MJPApiException {
+        rest.exchange(getTypeUrl(String.format("user-businesses/%s/users/%s", business_id, user_id)), HttpMethod.DELETE, createAuthenticatedRequest(), Void.class);
+    }
+
+
+
 
     public Business sendPurchaseInfo(Integer businessId, String productId, String purchaseToken) throws MJPApiException {
         PurchaseInfo purchaseInfo = new PurchaseInfo(businessId, productId, purchaseToken);

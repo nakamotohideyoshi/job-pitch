@@ -49,6 +49,7 @@ class LoginController: MJPController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        super.stopTimer()
         if self.isDeprecationError {
             self.showDeprecationError()
         }

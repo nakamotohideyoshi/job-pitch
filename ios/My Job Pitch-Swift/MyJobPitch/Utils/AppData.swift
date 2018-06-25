@@ -53,6 +53,8 @@ class AppData: NSObject {
     static var isTimerRunning  = true
     
     static var initialTokens: InitialTokens!
+    
+    static var timer: Timer?
 
     static func clearData() {
         existProfile = false

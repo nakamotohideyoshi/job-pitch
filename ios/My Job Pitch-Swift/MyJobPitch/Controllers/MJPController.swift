@@ -22,9 +22,6 @@ class MJPController: UIViewController {
     var showKeyboard = false
     
     var loadingView: LoadingView!
-    var seconds = 3
-    var timer: Timer?
-    var isTimerRunning  = false
     var allApplications: NSMutableArray!
     
     override func viewDidLoad() {
@@ -68,8 +65,8 @@ class MJPController: UIViewController {
     }
     
     func runTimer() {
-        if timer == nil {
-            timer = Timer.scheduledTimer(timeInterval: 30, target: self, selector: #selector(getNewMesssageCount), userInfo: nil, repeats: true)
+        if AppData.timer == nil {
+            AppData.timer = Timer.scheduledTimer(timeInterval: 30, target: self, selector: #selector(getNewMesssageCount), userInfo: nil, repeats: true)
         }
     }
     
@@ -147,9 +144,9 @@ class MJPController: UIViewController {
     }
     
     func stopTimer() {
-        if timer != nil {
-            timer?.invalidate()
-            timer = nil
+        if AppData.timer != nil {
+            AppData.timer?.invalidate()
+            AppData.timer = nil
         }
     }
     

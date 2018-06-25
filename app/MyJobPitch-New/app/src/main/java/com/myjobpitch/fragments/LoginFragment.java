@@ -126,7 +126,12 @@ public class LoginFragment extends FormFragment {
             }
         }
 
-        checkDeprecation(view);
+        if (MJPApi.instance == null && !depreactionError) {
+
+            checkDeprecation(view);
+        }
+
+        isLoggedin = false;
 
         return view;
     }
@@ -134,7 +139,7 @@ public class LoginFragment extends FormFragment {
     public void isLogin(View view) {
         // check auto login
 
-        if (MJPApi.instance == null && mRememberView.isChecked() && !depreactionError) {
+        if (mRememberView.isChecked() && !depreactionError) {
             String token = AppData.getToken();
             MJPApi.shared().setToken(token);
 
@@ -162,6 +167,7 @@ public class LoginFragment extends FormFragment {
         }
 
         isLoggedin = false;
+
     }
 
     private  void checkDeprecation(final View view) {

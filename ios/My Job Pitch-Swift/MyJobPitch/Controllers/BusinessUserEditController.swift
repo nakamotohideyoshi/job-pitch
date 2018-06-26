@@ -9,14 +9,13 @@
 import UIKit
 
 class BusinessUserEditController: MJPController {
-
-    @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var saveButton: GreenButton!
-    @IBOutlet weak var createButton: GreenButton!
     @IBOutlet weak var isAdministrator: UISwitch!
     @IBOutlet weak var emailAddress: UITextField!
-    @IBOutlet weak var locationTitle: UILabel!
-    @IBOutlet weak var locationNames: UITextField!
+    @IBOutlet weak var workPlaceSelector: ButtonTextField!
+    @IBOutlet weak var emailError: UILabel!
+    @IBOutlet weak var workplaceError: UILabel!
+    @IBOutlet weak var deleteButton: YellowButton!
     
     var isEditMode = false
     var businessUser: BusinessUser!
@@ -25,73 +24,64 @@ class BusinessUserEditController: MJPController {
     var locations: [Location]!
     var isSelectedLocation: [Bool]!
     
+    var locationNames = [String]()
+    var selectedLocationsNames = [String]()
+    var selectedLocations = [NSNumber]()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        createButton.isHidden = isEditMode
-        saveButton.isHidden = !isEditMode
+        deleteButton.isHidden = !isEditMode
         
         if isEditMode {
             isAdministrator.isOn = businessUser.locations.count == 0
             emailAddress.text = businessUser.email
             emailAddress.isEnabled = false
+            emailAddress.textColor = UIColor.darkGray
         } else {
             isAdministrator.isOn = false
             emailAddress.text = ""
             emailAddress.isEnabled = true
+            emailAddress.textColor = UIColor.black
+            saveButton.setTitle("Send Invitation", for: .normal)
         }
         
-        locationNames.isEnabled = !isAdministrator.isOn
+        workPlaceSelector.isEnabled = !isAdministrator.isOn
         
-        
-        if isSelectedLocation == nil {
-            isSelectedLocation = Array(repeating: false, count: locations.count)
+        for location in locations {
+            locationNames.append(location.name)
             if isEditMode {
-                for i in 0...locations.count-1 {
-                    if businessUser.locations.contains(locations[i].id) {
-                        isSelectedLocation[i] = true
-                    }
+                if businessUser.locations.contains(location.id) {
+                    selectedLocationsNames.append(location.name)
                 }
+                
             }
         }
-        
-    }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
-
-    @IBAction func createAction(_ sender: Any) {
-        
-        showLoading()
-        
-        let businessUserForCreation = BusinessUserForCreation()
-        
-        businessUserForCreation.email = emailAddress.text
-        
-        var selectedLocations = [NSNumber]()
-        
-        if !isAdministrator.isOn {
-            for i in 0...locations.count-1 {
-                if isSelectedLocation[i] {
-                    selectedLocations.append(locations[i].id)
-                }
-            }
+        workPlaceSelector.clickCallback = {
+            SelectionController.showPopup(title: "",
+                                          items: self.locationNames,
+                                          selectedItems: self.selectedLocationsNames,
+                                          multiSelection: true,
+                                          search: true,
+                                          doneCallback: { (items) in
+                                            self.selectedLocationsNames = items
+                                            self.selectedLocations.removeAll()
+                                            for item in items {
+                                                if let index = self.locationNames.index(of: item) {
+                                                    if index > -1 {
+                                                        self.selectedLocations.append(self.locations[index].id)
+                                                    }
+                                                }
+                                            }
+                                            self.workPlaceSelector.text = items.joined(separator: ", ")
+            })
         }
-        
-        businessUserForCreation.locations = selectedLocations as NSArray
-        
-        API.shared().createBusinessUser(businessId: businessId, businessUser: businessUserForCreation, success: { (data) in
-            self.hideLoading()
-            _ = self.navigationController?.popViewController(animated: true)
-            return
-        }, failure: self.handleErrors)
-        
-        
+
         
     }
+    
     @IBAction func setAdministrator(_ sender: Any) {
         isAdministrator.isOn = !isAdministrator.isOn
+        workPlaceSelector.isEnabled = !isAdministrator.isOn
     }
     
     @IBAction func deleteAction(_ sender: Any) {
@@ -107,71 +97,39 @@ class BusinessUserEditController: MJPController {
     
     @IBAction func saveAction(_ sender: Any) {
         
-        showLoading()
+        if !isAdministrator.isOn && selectedLocations.count == 0 {
+            PopupController.showGreen("You must select at least one work place.", ok: "Ok", okCallback: {
+            }, cancel: "Cancel", cancelCallback: {
+                
+            })
+        } else {
         
-        let businessUserForUpdate = BusinessUserForUpdate()
-        
-        var selectedLocations = [NSNumber]()
-        
-        if !isAdministrator.isOn {
-            for i in 0...locations.count-1 {
-                if isSelectedLocation[i] {
-                    selectedLocations.append(locations[i].id)
-                }
+            showLoading()
+            
+            if isEditMode {
+                let businessUserForUpdate = BusinessUserForUpdate()
+                
+                businessUserForUpdate.locations = isAdministrator.isOn ? [] : selectedLocations as NSArray
+                
+                API.shared().updateBusinessUser(businessId: businessId, businessUserId: businessUser.id, businessUser: businessUserForUpdate, success: { (data) in
+                    self.hideLoading()
+                    _ = self.navigationController?.popViewController(animated: true)
+                    return
+                }, failure: self.handleErrors)
+            } else  {
+                let businessUserForCreation = BusinessUserForCreation()
+                
+                businessUserForCreation.email = emailAddress.text
+                
+                businessUserForCreation.locations = isAdministrator.isOn ? [] : selectedLocations as NSArray
+                
+                API.shared().createBusinessUser(businessId: businessId, businessUser: businessUserForCreation, success: { (data) in
+                    self.hideLoading()
+                    _ = self.navigationController?.popViewController(animated: true)
+                    return
+                }, failure: self.handleErrors)
             }
         }
-        
-        businessUserForUpdate.locations = selectedLocations as NSArray
-        
-        API.shared().updateBusinessUser(businessId: businessId, businessUserId: businessUser.id, businessUser: businessUserForUpdate, success: { (data) in
-            self.hideLoading()
-            _ = self.navigationController?.popViewController(animated: true)
-            return
-        }, failure: self.handleErrors)
     }
-}
-
-extension BusinessUserEditController: UITableViewDataSource {
-    
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return locations.count
-    }
-    
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        
-        let location = locations[indexPath.row]
-        let cell = tableView.dequeueReusableCell(withIdentifier: "BusinessUserEditCell", for: indexPath)
-        
-        cell.textLabel?.text = location.name
-        
-    
-        if isSelectedLocation[indexPath.row]{
-            cell.accessoryType = .checkmark
-            cell.isSelected = true
-        } else  {
-            cell.accessoryType = .none
-            cell.isSelected = false
-        }
-        
-        cell.addUnderLine(paddingLeft: 15, paddingRight: 0, color: AppData.greyBorderColor)
-        
-        return cell
-        
-    }
-    
-}
-
-extension BusinessUserEditController: UITableViewDelegate {
-    
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        isSelectedLocation[indexPath.row] = !isSelectedLocation[indexPath.row]
-        tableView.reloadData()
-    }
-    
-    func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
-        isSelectedLocation[indexPath.row] = false
-        tableView.reloadData()
-    }
-    
 }
 

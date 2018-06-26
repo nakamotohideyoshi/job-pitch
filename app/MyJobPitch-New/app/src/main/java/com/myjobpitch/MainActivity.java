@@ -219,6 +219,10 @@ public class MainActivity extends AppCompatActivity
         timerHandler.postDelayed(timerRunnable, 0);
     }
 
+    public  void stopNewMessageCount() {
+        timerHandler.removeCallbacks(timerRunnable);
+    }
+
     public int getCurrentPageID() {
         return mCurrentPageID;
     }
@@ -350,6 +354,7 @@ public class MainActivity extends AppCompatActivity
         popup.addGreenButton("Log Out", new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                stopNewMessageCount();
                 //MJPApi.shared().logout();
                 MJPApi.shared().clearToken();
                 AppData.clearData();

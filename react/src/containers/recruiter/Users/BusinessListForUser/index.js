@@ -7,10 +7,13 @@ import * as helper from 'utils/helper';
 
 import { PageHeader, PageSubHeader, Loading, ListEx } from 'components';
 
+import { getUsers } from 'redux/recruiter/users';
+
 import Wrapper from '../styled';
 
 class BusinessListForUser extends React.Component {
   selectBusiness = ({ id }) => {
+    this.props.getUsers({ id });
     this.props.history.push(`/recruiter/users/${id}`);
   };
 
@@ -59,10 +62,13 @@ class BusinessListForUser extends React.Component {
   }
 }
 
-export default connect(state => {
-  const businesses = state.rc_businesses.businesses.slice(0);
-  return {
-    user: state.auth.user,
-    businesses
-  };
-})(BusinessListForUser);
+export default connect(
+  state => {
+    const businesses = state.rc_businesses.businesses.slice(0);
+    return {
+      user: state.auth.user,
+      businesses
+    };
+  },
+  { getUsers }
+)(BusinessListForUser);

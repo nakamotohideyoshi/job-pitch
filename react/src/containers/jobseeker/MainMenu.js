@@ -25,6 +25,8 @@ const StyledMenu = styled(Menu)`
   }
 `;
 
+var timer = null;
+
 class MainMenu extends React.Component {
   handleClick = () => {
     const { onClick } = this.props;
@@ -32,13 +34,17 @@ class MainMenu extends React.Component {
   };
 
   componentDidMount() {
-    setInterval(() => {
+    timer = setInterval(() => {
       if (this.props.location.pathname.indexOf('/jobseeker/messages') === 0) {
         // alert('aaa');
       } else {
         this.props.getAllApplications();
       }
     }, 30000);
+  }
+
+  componentWillUnmount() {
+    clearInterval(timer);
   }
 
   componentWillReceiveProps(nextProps) {

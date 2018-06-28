@@ -12,9 +12,11 @@ import android.widget.TextView;
 
 import com.myjobpitch.R;
 import com.myjobpitch.MainActivity;
+import com.myjobpitch.api.data.Application;
 import com.myjobpitch.api.data.Business;
 import com.myjobpitch.api.data.BusinessUser;
 import com.myjobpitch.api.data.Image;
+import com.myjobpitch.api.data.Interview;
 import com.myjobpitch.api.data.Job;
 import com.myjobpitch.api.data.JobSeeker;
 import com.myjobpitch.api.data.Pitch;
@@ -113,6 +115,17 @@ public class AppHelper {
         return (TextView) view.findViewById(R.id.item_attributes);
     }
 
+    public static TextView getItemStatusTitleView(View view) {
+        return (TextView) view.findViewById(R.id.item_status);
+    }
+    public static TextView getItemDateTimeTitleView(View view) {
+        return (TextView) view.findViewById(R.id.item_date_time);
+    }
+
+    public static TextView getItemLocationTitleView(View view) {
+        return (TextView) view.findViewById(R.id.item_location);
+    }
+
     public static void showBusinessUserInfo(BusinessUser businessUser, View view, List<com.myjobpitch.api.data.Location> locations) {
 
         // email
@@ -133,6 +146,37 @@ public class AppHelper {
         }
 
         getItemSubTitleView(view).setText(subTitle);
+
+    }
+
+    public static void showInterviewInfo(Interview interview, View view, Application application, Job job) {
+
+        JobSeeker jobSeeker = application.getJobSeeker();
+        loadJobSeekerImage(jobSeeker, getImageView(view));
+
+
+        // job seeker name
+        getItemTitleView(view).setText(jobSeeker.getFirst_name() + " " + jobSeeker.getLast_name());
+
+        // CV
+
+        getItemSubTitleView(view).setText(jobSeeker.getCV() == null ? "Can't find CV" : jobSeeker.getCV());
+
+        // Status
+        String interviewStatus = interview.getCancelled_by() == null ? "Pending" : "Complete";
+        String applicationStatus = application.getStatus() == 1 ? "Undecided" : (application.getStatus() == 2 ? "Accepted" : "Rejected");
+        getItemStatusTitleView(view).setText(String.format("%s (%s)", interviewStatus, applicationStatus));
+
+        // Date/Time
+        SimpleDateFormat format = new SimpleDateFormat("E d MMM, yyyy");
+        SimpleDateFormat format1 = new SimpleDateFormat("HH:mm");
+        getItemDateTimeTitleView(view).setText(format.format(interview.getAt()) + " at " + format1.format(interview.getAt()));
+
+        // Location
+
+        getItemLocationTitleView(view).setText(job.getLocation_data().getName());
+
+
 
     }
 

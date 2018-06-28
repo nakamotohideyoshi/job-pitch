@@ -589,15 +589,17 @@ public class MainActivity extends AppCompatActivity
         new MenuItemInfo(AppData.PAGE_CONTACT_UP, "Contact Us", R.drawable.menu_contact_us, null, ""),
         new MenuItemInfo(AppData.PAGE_SHARE, "Tell a friend", R.drawable.menu_share, null, ""),
         new MenuItemInfo(AppData.PAGE_USERS, "Users", R.drawable.menu_user_profile, BusinessListFragment.class, ""),
+        new MenuItemInfo(AppData.PAGE_R_INTERVIEWS, "Interviews", R.drawable.menu_connect, SelectJobFragment.class, "B"),
+        new MenuItemInfo(AppData.PAGE_JS_INTERVIEWS, "Interviews", R.drawable.menu_connect, TalentApplicationsFragment.class, "P"),
     };
 
     int[] jobSeekerMenu = {
-            AppData.PAGE_FIND_JOB, AppData.PAGE_JS_APPLICATIONS, AppData.PAGE_MESSAGES, AppData.PAGE_JOB_PROFILE, AppData.PAGE_ADD_RECORD,
+            AppData.PAGE_FIND_JOB, AppData.PAGE_JS_APPLICATIONS, AppData.PAGE_MESSAGES, AppData.PAGE_JS_INTERVIEWS, AppData.PAGE_JOB_PROFILE, AppData.PAGE_ADD_RECORD,
             AppData.PAGE_VIEW_PROFILE, AppData.PAGE_CHANGE_PASS, AppData.PAGE_HELP, AppData.PAGE_SHARE, AppData.PAGE_CONTACT_UP, AppData.PAGE_LOGOUT
     };
 
     int[] recruiterMenu = {
-            AppData.PAGE_FIND_TALENT, AppData.PAGE_R_APPLICATIONS, AppData.PAGE_CONNECTIONS, AppData.PAGE_MY_SHORTLIST, AppData.PAGE_MESSAGES,
+            AppData.PAGE_FIND_TALENT, AppData.PAGE_R_APPLICATIONS, AppData.PAGE_CONNECTIONS, AppData.PAGE_MY_SHORTLIST, AppData.PAGE_MESSAGES, AppData.PAGE_R_INTERVIEWS,
             AppData.PAGE_ADD_JOB, AppData.PAGE_PAYMENT, AppData.PAGE_CHANGE_PASS, AppData.PAGE_USERS, AppData.PAGE_HELP, AppData.PAGE_SHARE, AppData.PAGE_CONTACT_UP, AppData.PAGE_LOGOUT
     };
 

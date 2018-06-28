@@ -21,11 +21,11 @@ class JobDetailController: MJPController {
     var refresh = true
     
     let menuItems = [
-        "find_talent", "applications", "connections", "shortlist", "messages"
+        "find_talent", "applications", "connections", "shortlist", "messages", "interviews"
     ]
     
     var countItems = [
-        "", "", "", "", ""
+        "", "", "", "", "", ""
     ]
     
     override func viewWillAppear(_ animated: Bool) {

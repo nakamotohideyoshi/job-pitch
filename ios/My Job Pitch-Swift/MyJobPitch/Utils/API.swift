@@ -672,5 +672,12 @@ class API: NSObject {
         deleteObject(String(format: "/api/user-businesses/%@/users/%@/", businessId, businessUserId),
                      success: success, failure: failure)
     }
+    
+    // ================== Interviews ============================
+    
+    func loadInterviews(success: ((NSArray) -> Void)!,
+                        failure: ((String?, NSDictionary?) -> Void)!) {
+        getObjects("/api/interviews/", success: success, failure: failure)
+    }
 
 }

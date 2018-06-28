@@ -608,6 +608,19 @@ class APIConfigure: NSObject {
                                mappingRelationships: nil,
                                path: "/api/user-businesses/:pk/users/:pk/",
                                method: .DELETE)
+        
+        // ================= Interviews ================
+        
+        let interviewArray = [ "application", "at", "message", "note", "feedback", "cancelled" ]
+        
+        let interviewsDictionary = [ "cancelledBy": "cancelled_by" ]
+        
+        configureResponseMapping(Interview.classForCoder(),
+                                 responseArray: interviewArray,
+                                 responseDictionary: interviewsDictionary,
+                                 responseRelationships: nil,
+                                 path: "/api/interviews/",
+                                 method: .GET)
 
         // ================= Error =====================
 

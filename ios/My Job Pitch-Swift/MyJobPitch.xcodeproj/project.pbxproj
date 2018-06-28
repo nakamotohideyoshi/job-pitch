@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2F030F1120E81B9E00EDFE60 /* InterviewMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F030F1020E81B9E00EDFE60 /* InterviewMessage.swift */; };
+		2F030F1320E81C2000EDFE60 /* Interview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F030F1220E81C2000EDFE60 /* Interview.swift */; };
+		2F030F1520E8EE2800EDFE60 /* InterviewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F030F1420E8EE2800EDFE60 /* InterviewCell.swift */; };
+		2F030F1720E8EF5300EDFE60 /* InterviewListController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F030F1620E8EF5300EDFE60 /* InterviewListController.swift */; };
 		2F870FB620DBCA7600F9427C /* BusinessUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F870FB520DBCA7600F9427C /* BusinessUser.swift */; };
 		2F870FB820DBCC0900F9427C /* BusinessUserCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F870FB720DBCC0900F9427C /* BusinessUserCell.swift */; };
 		2F870FBA20DC9DBD00F9427C /* BusinessUserListController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F870FB920DC9DBD00F9427C /* BusinessUserListController.swift */; };
@@ -125,6 +129,10 @@
 
 /* Begin PBXFileReference section */
 		27B30165DDDB50C20065D004 /* Pods_MyJobPitch.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MyJobPitch.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		2F030F1020E81B9E00EDFE60 /* InterviewMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = InterviewMessage.swift; path = Models/api/InterviewMessage.swift; sourceTree = "<group>"; };
+		2F030F1220E81C2000EDFE60 /* Interview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Interview.swift; path = Models/api/Interview.swift; sourceTree = "<group>"; };
+		2F030F1420E8EE2800EDFE60 /* InterviewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = InterviewCell.swift; path = Views/InterviewCell.swift; sourceTree = "<group>"; };
+		2F030F1620E8EF5300EDFE60 /* InterviewListController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = InterviewListController.swift; path = Controllers/InterviewListController.swift; sourceTree = "<group>"; };
 		2F870FB520DBCA7600F9427C /* BusinessUser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = BusinessUser.swift; path = Models/api/BusinessUser.swift; sourceTree = "<group>"; };
 		2F870FB720DBCC0900F9427C /* BusinessUserCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = BusinessUserCell.swift; path = Views/BusinessUserCell.swift; sourceTree = "<group>"; };
 		2F870FB920DC9DBD00F9427C /* BusinessUserListController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = BusinessUserListController.swift; path = Controllers/BusinessUserListController.swift; sourceTree = "<group>"; };
@@ -318,6 +326,7 @@
 				D787F63E1E287D1400C47A88 /* LocationCell.swift */,
 				D7CFBC6A1EF8E409003FC132 /* FileCell.swift */,
 				2F870FB720DBCC0900F9427C /* BusinessUserCell.swift */,
+				2F030F1420E8EE2800EDFE60 /* InterviewCell.swift */,
 			);
 			name = Cells;
 			sourceTree = "<group>";
@@ -375,6 +384,8 @@
 				D74226B320ACCDED002D3F4C /* User.swift */,
 				2FA7FC6120D841240024163A /* Deprecation.swift */,
 				2F870FB520DBCA7600F9427C /* BusinessUser.swift */,
+				2F030F1020E81B9E00EDFE60 /* InterviewMessage.swift */,
+				2F030F1220E81C2000EDFE60 /* Interview.swift */,
 			);
 			name = api;
 			sourceTree = "<group>";
@@ -520,6 +531,7 @@
 				D7CFBC681EF871A4003FC132 /* GoogleDriveController.swift */,
 				D7B7D8C61EFCFFE300649A5F /* DropboxController.swift */,
 				D7425B131FC43F5700A6831E /* MJPPlayerController.swift */,
+				2F030F1620E8EF5300EDFE60 /* InterviewListController.swift */,
 			);
 			name = Contollers;
 			sourceTree = "<group>";
@@ -804,7 +816,9 @@
 				D74226C320ACCDED002D3F4C /* MJPObject.swift in Sources */,
 				D74226BF20ACCDED002D3F4C /* JobStatus.swift in Sources */,
 				D74226D120ACCDED002D3F4C /* Sex.swift in Sources */,
+				2F030F1720E8EF5300EDFE60 /* InterviewListController.swift in Sources */,
 				D74226D020ACCDED002D3F4C /* Sector.swift in Sources */,
+				2F030F1320E81C2000EDFE60 /* Interview.swift in Sources */,
 				D7F770271E0918FF00ECB684 /* LoginController.swift in Sources */,
 				D7896AED1E0C85BF00533884 /* JobCell.swift in Sources */,
 				D7896AEB1E0C854600533884 /* LocationDetailController.swift in Sources */,
@@ -826,6 +840,7 @@
 				D787F6351E287A1F00C47A88 /* BusinessDetailController.swift in Sources */,
 				D7F770291E09196300ECB684 /* MJPController.swift in Sources */,
 				D72AE4241E1156C3004C3F02 /* CustomView.swift in Sources */,
+				2F030F1120E81B9E00EDFE60 /* InterviewMessage.swift in Sources */,
 				D78834381ECAAF4B00D99F4B /* UIView+MDCSwipeToChoose.m in Sources */,
 				2F870FBC20DCB78D00F9427C /* BusinessUserEditController.swift in Sources */,
 				2FA7FC6220D841240024163A /* Deprecation.swift in Sources */,
@@ -838,6 +853,7 @@
 				D74226CC20ACCDED002D3F4C /* Pitch.swift in Sources */,
 				D78834371ECAAF4B00D99F4B /* MDCSwipeToChooseView.m in Sources */,
 				D787F63D1E287C8400C47A88 /* BusinessCell.swift in Sources */,
+				2F030F1520E8EE2800EDFE60 /* InterviewCell.swift in Sources */,
 				D749E3511E09C09E000FD0B1 /* AppHelper.swift in Sources */,
 				D788342A1ECAAF3400D99F4B /* MDCSwipeToChooseViewOptions.m in Sources */,
 				D7CFBC691EF871A4003FC132 /* GoogleDriveController.swift in Sources */,

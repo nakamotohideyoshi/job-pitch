@@ -100,6 +100,8 @@ public class AppData {
     public final static int PAGE_CONTACT_UP = 16;
     public final static int PAGE_SHARE = 17;
     public final static int PAGE_USERS = 18;
+    public final static int PAGE_R_INTERVIEWS = 19;
+    public final static int PAGE_JS_INTERVIEWS = 20;
 
     public static final int JOBSEEKER = 1;
     public static final int RECRUITER = 2;

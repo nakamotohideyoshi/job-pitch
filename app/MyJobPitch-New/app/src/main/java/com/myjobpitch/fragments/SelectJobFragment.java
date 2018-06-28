@@ -86,6 +86,9 @@ public class SelectJobFragment extends BaseFragment {
             case AppData.PAGE_MY_SHORTLIST:
                 commentView.setText("Select a job below to view the job seekers you have shortlisted for that role.");
                 break;
+            case AppData.PAGE_R_INTERVIEWS:
+                commentView.setText("Select a job below to view and arrange interviews.");
+                break;
         }
 
         navTitleView.setText("Select a Job");
@@ -121,6 +124,11 @@ public class SelectJobFragment extends BaseFragment {
                 if (pageId == AppData.PAGE_FIND_TALENT) {
                     FindTalentFragment fragment = new FindTalentFragment();
                     fragment.job = job;
+                    getApp().pushFragment(fragment);
+                } else if (pageId == AppData.PAGE_R_INTERVIEWS) {
+                    InterviewsFragment fragment = new InterviewsFragment();
+                    fragment.job = job;
+                    fragment.title = title;
                     getApp().pushFragment(fragment);
                 } else {
                     RecruiterApplicationsFragment fragment = new RecruiterApplicationsFragment();

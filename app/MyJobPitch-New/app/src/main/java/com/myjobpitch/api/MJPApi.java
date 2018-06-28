@@ -22,6 +22,7 @@ import com.myjobpitch.api.data.Deprecation;
 import com.myjobpitch.api.data.Hours;
 import com.myjobpitch.api.data.ImageUpload;
 import com.myjobpitch.api.data.InitialTokens;
+import com.myjobpitch.api.data.Interview;
 import com.myjobpitch.api.data.Job;
 import com.myjobpitch.api.data.JobPitch;
 import com.myjobpitch.api.data.JobProfile;
@@ -477,7 +478,7 @@ public class MJPApi {
         return Arrays.asList(rest.exchange(getTypeUrl("deprecation"), HttpMethod.GET, null, Deprecation[].class).getBody());
     }
 
-    public List<BusinessUser> getUserBusinessUsers(Integer business_id) throws MJPApiException {
+    public List<BusinessUser> getBusinessUsers(Integer business_id) throws MJPApiException {
         URI uri = getTypeUrl(String.format("user-businesses/%s/users", business_id));
         return Arrays.asList(rest.exchange(uri, HttpMethod.GET, createAuthenticatedRequest(), BusinessUser[].class).getBody());
     }
@@ -506,6 +507,11 @@ public class MJPApi {
 
     public void deleteBusinessUser(Integer business_id, Integer user_id) throws MJPApiException {
         rest.exchange(getTypeUrl(String.format("user-businesses/%s/users/%s", business_id, user_id)), HttpMethod.DELETE, createAuthenticatedRequest(), Void.class);
+    }
+
+    public List<Interview> getAllInterviews() throws MJPApiException {
+        URI uri = getTypeUrl("interviews");
+        return Arrays.asList(rest.exchange(uri, HttpMethod.GET, createAuthenticatedRequest(), Interview[].class).getBody());
     }
 
 

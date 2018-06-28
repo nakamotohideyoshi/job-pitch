@@ -227,14 +227,14 @@ public class JobDetailFragment extends BaseFragment {
     // menu adapter ========================================
 
     private int[] images = {
-            R.drawable.menu_search, R.drawable.menu_application, R.drawable.menu_connect, R.drawable.menu_shortlisted, R.drawable.menu_message
+            R.drawable.menu_search, R.drawable.menu_application, R.drawable.menu_connect, R.drawable.menu_shortlisted, R.drawable.menu_message, R.drawable.menu_connect
     };
 
     private String[] titles = {
-            "Find Talent", "Applications", "Connections", "My Shortlist", "Messages"
+            "Find Talent", "Applications", "Connections", "My Shortlist", "Messages", "Interviews"
     };
     public String[] counts = {
-            "", "", "", "", ""
+            "", "", "", "", "", ""
     };
 
     private class MenuAdapter extends ArrayAdapter<String> {

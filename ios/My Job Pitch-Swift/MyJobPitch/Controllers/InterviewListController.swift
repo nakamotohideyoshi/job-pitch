@@ -106,11 +106,16 @@ extension InterviewListController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         refresh = true
-        
-        
-//            let controller = AppHelper.mainStoryboard.instantiateViewController(withIdentifier: "BusinessUserList") as! BusinessUserListController
-//            controller.businessId = (data[indexPath.row] as! Business).id
-//            navigationController?.pushViewController(controller, animated: true)
+        let controller = AppHelper.mainStoryboard.instantiateViewController(withIdentifier: "InterviewDetail") as! InterviewDetailController
+        controller.interviewId = interviews[indexPath.row].id
+        controller.job = job
+        for application in self.applications as! [Application] {
+            if application.id == interviews[indexPath.row].application {
+                controller.application = application
+                navigationController?.pushViewController(controller, animated: true)
+                break
+            }
+        }
         
     }
     

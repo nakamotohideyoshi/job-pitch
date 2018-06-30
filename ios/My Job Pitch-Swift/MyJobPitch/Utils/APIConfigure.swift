@@ -611,7 +611,7 @@ class APIConfigure: NSObject {
         
         // ================= Interviews ================
         
-        let interviewArray = [ "application", "at", "message", "note", "feedback", "cancelled" ]
+        let interviewArray = ["id", "application", "at", "message", "note", "feedback", "cancelled" ]
         
         let interviewsDictionary = [ "cancelledBy": "cancelled_by" ]
         
@@ -620,6 +620,13 @@ class APIConfigure: NSObject {
                                  responseDictionary: interviewsDictionary,
                                  responseRelationships: nil,
                                  path: "/api/interviews/",
+                                 method: .GET)
+        
+        configureResponseMapping(Interview.classForCoder(),
+                                 responseArray: interviewArray,
+                                 responseDictionary: interviewsDictionary,
+                                 responseRelationships: nil,
+                                 path: "/api/interviews/:pk/",
                                  method: .GET)
 
         // ================= Error =====================

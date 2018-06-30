@@ -679,5 +679,10 @@ class API: NSObject {
                         failure: ((String?, NSDictionary?) -> Void)!) {
         getObjects("/api/interviews/", success: success, failure: failure)
     }
+    
+    func loadInterview(interviewId: NSNumber!, success: ((NSObject?) -> Void)!,
+                        failure: ((String?, NSDictionary?) -> Void)!) {
+        getObject(String(format: "/api/interviews/%@/", interviewId), success: success, failure: failure)
+    }
 
 }

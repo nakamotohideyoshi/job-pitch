@@ -36,7 +36,11 @@ class InterviewCell: MGSwipeTableCell {
         
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "E d MMM, yyyy"
-        dataTime.text = dateFormatter.string(from: interview.at)
+        
+        let dateFormatter1 = DateFormatter()
+        dateFormatter1.dateFormat = "HH:mm"
+        
+        dataTime.text = String(format: "%@ at %@", dateFormatter.string(from: interview.at), dateFormatter1.string(from: interview.at))
         
         location.text = job.locationData.name
         

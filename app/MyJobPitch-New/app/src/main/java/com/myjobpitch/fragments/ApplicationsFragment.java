@@ -115,7 +115,7 @@ public class ApplicationsFragment extends BaseFragment {
 
     void showInactiveBanner() {
         if (!jobSeeker.isActive()) {
-            AppHelper.setJobTitleViewText(jobTitleView, "Your profile is not active");
+            AppHelper.setJobTitleViewText(jobTitleView, "Your profile is not active!");
         } else {
             AppHelper.setJobTitleViewText(jobTitleView, "");
         }

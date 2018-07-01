@@ -100,7 +100,7 @@ class SwipeController: MJPController {
     
     func showInactiveBanner () {
         if !self.jobSeeker.active {
-            self.jobTitleView.text = "Your profile is not activate"
+            self.jobTitleView.text = "Your profile is not active"
         } else {
             self.jobTitleView.text = ""
         }

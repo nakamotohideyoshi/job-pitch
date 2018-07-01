@@ -17,6 +17,19 @@
             layout="@layout/view_job_item"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
+
+        <Button
+            android:id="@+id/interview_create"
+            android:text="Arrange Trial/Interview"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/button_height"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/button_green"
+            android:theme="@style/Button"/>
+
         <View
             android:layout_width="match_parent"
             android:layout_height="0.5dp"

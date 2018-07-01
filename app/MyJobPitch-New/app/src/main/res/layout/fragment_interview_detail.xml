@@ -1,0 +1,81 @@
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.myjobpitch.fragments.InterviewDetailFragment">
+
+    <include
+        android:id="@+id/job_title_view"
+        layout="@layout/view_job_title_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top|center_horizontal"
+        android:visibility="visible" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#fff"
+        android:layout_marginTop="20dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="16dp"
+            android:orientation="vertical">
+
+            <include
+                android:id="@+id/header_view"
+                layout="@layout/view_interview_item"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <Button
+                android:id="@+id/interview_edit"
+                android:text="Edit Interview"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/button_height"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/button_green"
+                android:theme="@style/Button"/>
+            <Button
+                android:id="@+id/interview_complete"
+                android:text="Complete Interview"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/button_height"
+                android:layout_marginTop="15dp"
+                android:background="@drawable/button_green"
+                android:theme="@style/Button"/>
+            <Button
+                android:id="@+id/interview_accept"
+                android:text="Accept Invitation"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/button_height"
+                android:layout_marginTop="15dp"
+                android:background="@drawable/button_green"
+                android:theme="@style/Button"/>
+            <Button
+                android:id="@+id/interview_message"
+                android:text="Message"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/button_height"
+                android:layout_marginTop="15dp"
+                android:background="@drawable/button_green"
+                android:theme="@style/Button"/>
+            <Button
+                android:id="@+id/interview_cancel"
+                android:text="Cancel"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/button_height"
+                android:layout_marginTop="15dp"
+                android:layout_marginBottom="15dp"
+                android:background="@drawable/button_yellow"
+                android:theme="@style/Button"/>
+
+
+        </LinearLayout>
+    </ScrollView>
+
+</FrameLayout>

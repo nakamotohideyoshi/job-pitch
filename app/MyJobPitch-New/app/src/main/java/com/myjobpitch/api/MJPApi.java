@@ -23,6 +23,8 @@ import com.myjobpitch.api.data.Hours;
 import com.myjobpitch.api.data.ImageUpload;
 import com.myjobpitch.api.data.InitialTokens;
 import com.myjobpitch.api.data.Interview;
+import com.myjobpitch.api.data.InterviewForCreation;
+import com.myjobpitch.api.data.InterviewForUpdate;
 import com.myjobpitch.api.data.Job;
 import com.myjobpitch.api.data.JobPitch;
 import com.myjobpitch.api.data.JobProfile;
@@ -513,6 +515,34 @@ public class MJPApi {
         URI uri = getTypeUrl("interviews");
         return Arrays.asList(rest.exchange(uri, HttpMethod.GET, createAuthenticatedRequest(), Interview[].class).getBody());
     }
+
+    public Interview getInterview(Integer interviewId) throws MJPApiException {
+        URI uri = getTypeUrl(String.format("interviews/%s", interviewId));
+        return rest.exchange(uri, HttpMethod.GET, createAuthenticatedRequest(), Interview.class).getBody();
+    }
+
+    public InterviewForCreation createInterview(InterviewForCreation interviewForCreation) throws MJPApiException {
+        try {
+            return rest.exchange(getTypeUrl("interviews"), HttpMethod.POST, createAuthenticatedRequest(interviewForCreation), InterviewForCreation.class).getBody();
+        } catch (HttpClientErrorException e) {
+            if (e.getStatusCode().value() == 400) {
+                throw new MJPApiException(e);
+            }
+            throw e;
+        }
+    }
+
+    public InterviewForUpdate updateInterview(InterviewForUpdate interviewForUpdate, Integer interviewId) throws MJPApiException {
+        try {
+            return rest.exchange(getTypeUrl(String.format("interviews/%s", interviewId)), HttpMethod.PUT, createAuthenticatedRequest(interviewForUpdate), InterviewForUpdate.class).getBody();
+        } catch (HttpClientErrorException e) {
+            if (e.getStatusCode().value() == 400) {
+                throw new MJPApiException(e);
+            }
+            throw e;
+        }
+    }
+
 
 
 

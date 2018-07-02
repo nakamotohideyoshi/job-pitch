@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -41,6 +42,9 @@ public class MessageFragment extends BaseFragment {
 
     @BindView(R.id.header_view)
     View headerView;
+
+    @BindView(R.id.interview_create)
+    Button createButton;
 
     @BindView(R.id.messagesList)
     MessagesList messagesList;
@@ -112,6 +116,8 @@ public class MessageFragment extends BaseFragment {
             myAvatar = jobSeekerImage;
             otherName = job.getLocation_data().getBusiness_data().getName();
             otherAvatar = jobImage;
+
+            createButton.setVisibility(View.GONE);
 
         } else {
 
@@ -206,6 +212,14 @@ public class MessageFragment extends BaseFragment {
             fragment.viewMode = true;
             getApp().pushFragment(fragment);
         }
+    }
+
+    @OnClick(R.id.interview_create)
+    void onCreate() {
+        InterviewEditFragment fragment = new InterviewEditFragment();
+        fragment.application = application;
+        fragment.isEditMode = false;
+        getApp().pushFragment(fragment);
     }
 
     class MessageItem implements IMessage {

@@ -672,5 +672,30 @@ class API: NSObject {
         deleteObject(String(format: "/api/user-businesses/%@/users/%@/", businessId, businessUserId),
                      success: success, failure: failure)
     }
+    
+    // ================== Interviews ============================
+    
+    func loadInterviews(success: ((NSArray) -> Void)!,
+                        failure: ((String?, NSDictionary?) -> Void)!) {
+        getObjects("/api/interviews/", success: success, failure: failure)
+    }
+    
+    func loadInterview(interviewId: NSNumber!, success: ((NSObject?) -> Void)!,
+                        failure: ((String?, NSDictionary?) -> Void)!) {
+        getObject(String(format: "/api/interviews/%@/", interviewId), success: success, failure: failure)
+    }
+    
+    func createInterview(interview: InterviewForCreation,
+                         success: ((NSObject?) -> Void)!,
+                         failure: ((String?, NSDictionary?) -> Void)!) {
+        postObject("/api/interviews/", request: interview, success: success, failure: failure)
+    }
+    
+    func updateInterview(interviewId: NSNumber!, interview: InterviewForUpdate,
+                            success: ((NSObject?) -> Void)!,
+                            failure: ((String?, NSDictionary?) -> Void)!) {
+        putObject(String(format: "/api/interviews/%@/",interviewId),
+                  request: interview, success: success, failure: failure)
+    }
 
 }

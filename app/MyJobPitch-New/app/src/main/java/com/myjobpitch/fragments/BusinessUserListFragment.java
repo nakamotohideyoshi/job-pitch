@@ -149,7 +149,7 @@ public class BusinessUserListFragment extends BaseFragment {
         new APITask(new APIAction() {
             @Override
             public void run() throws MJPApiException {
-                businessUsers.addAll(MJPApi.shared().getUserBusinessUsers(businessId));
+                businessUsers.addAll(MJPApi.shared().getBusinessUsers(businessId));
             }
         }).addListener(new APITaskListener() {
             @Override

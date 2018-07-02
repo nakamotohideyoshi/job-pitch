@@ -22,8 +22,10 @@ class UserList extends React.Component {
     selectedUser: null
   };
 
-  componentDidMount() {
-    this.props.getUsers(this.props.business);
+  componentWillMount() {
+    if (this.props.users === null) {
+      this.props.getUsers(this.props.business);
+    }
   }
 
   openDialog(event, id) {

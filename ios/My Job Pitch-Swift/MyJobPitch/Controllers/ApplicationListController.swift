@@ -123,7 +123,7 @@ class ApplicationListController: SearchController {
     
     func showInactiveBanner () {
         if !jobSeeker.active {
-            self.jobTitleView.text = "Your profile is not activate"
+            self.jobTitleView.text = "Your profile is not active!"
         } else {
             self.jobTitleView.text = ""
         }

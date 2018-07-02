@@ -89,7 +89,7 @@ public class FindJobFragment extends SwipeFragment<Job> {
 
     void showInactiveBanner() {
         if (!jobSeeker.isActive()) {
-            AppHelper.setJobTitleViewText(jobTitleView, "Your Profile is not Activate");
+            AppHelper.setJobTitleViewText(jobTitleView, "Your profile is not active!");
         } else {
             AppHelper.setJobTitleViewText(jobTitleView, "");
         }

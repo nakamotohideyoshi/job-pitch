@@ -15,19 +15,30 @@ class MessageController0: MJPController {
     @IBOutlet weak var titleLabel: UILabel!;
     @IBOutlet weak var subTitleLabel: UILabel!;
     @IBOutlet weak var containerView: UIView!
+    @IBOutlet weak var interviewView: UIView!
     
     var application: Application!
     
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        if AppData.user.isJobSeeker() {
+            headerView.addUnderLine(paddingLeft: 0, paddingRight: 0, color: AppData.greyBorderColor)
+        } else {
+            headerView.addUnderLine(paddingLeft: 0, paddingRight: 0, color: AppData.greyBorderColor)
+        }
 
-        headerView.addUnderLine(paddingLeft: 0, paddingRight: 0, color: AppData.greyBorderColor)
+        
         
         headerView.isHidden = true
+        interviewView.isHidden = true
         showLoading()
         API.shared().loadApplicationWithId(id: application.id, success: { (data) in
             self.headerView.isHidden = false
+            if AppData.user.isRecruiter()  {
+                self.interviewView.isHidden = false
+            }
             self.hideLoading()
             
             self.application = data as! Application
@@ -90,6 +101,12 @@ class MessageController0: MJPController {
         navigationController?.popViewController(animated: true)
     }
 
+    @IBAction func createInterview(_ sender: Any) {
+        let controller = AppHelper.mainStoryboard.instantiateViewController(withIdentifier: "InterviewEdit") as! InterviewEditController
+        controller.application = application
+        controller.isEditMode = false
+        navigationController?.pushViewController(controller, animated: true)
+    }
     static func showModal(application: Application) {
         
         let controller = AppHelper.mainStoryboard.instantiateViewController(withIdentifier: "Message0") as! MessageController0

@@ -148,6 +148,10 @@ extension JobDetailController: UITableViewDelegate {
             } else {
                 MessageListController.pushController(job: job)
             }
+        } else if id == "interviews" {
+            let controller = AppHelper.mainStoryboard.instantiateViewController(withIdentifier: "InterviewList") as! InterviewListController
+            controller.job = job
+            AppHelper.getFrontController().navigationController?.pushViewController(controller, animated: true)
         } else {
             ApplicationListController.pushController(job: job, mode: id)
         }

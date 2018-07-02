@@ -26,6 +26,8 @@ class SideMenuController: UIViewController {
         "shortlist":    ["icon": "menu-shortlist",      "title": "My Shortlist",            "identifier": "SelectJob",          "per": "B"],
         "interviews":  ["icon": "menu-connect",        "title": "Interviews",             "identifier": "SelectJob",          "per": "B"],
         
+        "j_interviews":  ["icon": "menu-connect",        "title": "Interviews",             "identifier": "InterviewList",          "per": "J"],
+        
         "businesses":   ["icon": "menu-business",       "title": "Add or Edit Jobs",        "identifier": "BusinessList",       "per": ""],
         "payment":      ["icon": "menu-payment",        "title": "Payment",                 "identifier": "",                   "per": ""],
         "users":        ["icon": "menu-user-profile",   "title": "Users",                   "identifier": "BusinessList",       "per": ""],
@@ -38,7 +40,7 @@ class SideMenuController: UIViewController {
     ]
     
     static let jobSeekerMenu = [
-        "find_job", "applications1", "messages", "job_profile", "add_record", "view_profile", "change_pass", "help", "share", "contact_us", "log_out"
+        "find_job", "applications1", "messages", "j_interviews", "job_profile", "add_record", "view_profile", "change_pass", "help", "share", "contact_us", "log_out"
     ]
     
     static let recruiterMenu = [

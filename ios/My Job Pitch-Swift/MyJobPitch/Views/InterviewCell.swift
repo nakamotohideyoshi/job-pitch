@@ -20,7 +20,7 @@ class InterviewCell: MGSwipeTableCell {
     @IBOutlet weak var dataTime: UILabel!
     @IBOutlet weak var status: UILabel!
     
-    func setData(_ interview: Interview, _ application: Application, _ job: Job) {
+    func setData(_ interview: Interview, _ application: Application) {
         
         if let image = application.jobSeeker.getPitch()?.thumbnail {
             AppHelper.loadImageURL(imageUrl: image, imageView: imgView, completion: nil)
@@ -42,7 +42,7 @@ class InterviewCell: MGSwipeTableCell {
         
         dataTime.text = String(format: "%@ at %@", dateFormatter.string(from: interview.at), dateFormatter1.string(from: interview.at))
         
-        location.text = job.locationData.name
+        location.text = application.job.locationData.name
         
     }
 }

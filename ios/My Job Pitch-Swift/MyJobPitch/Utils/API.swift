@@ -684,5 +684,18 @@ class API: NSObject {
                         failure: ((String?, NSDictionary?) -> Void)!) {
         getObject(String(format: "/api/interviews/%@/", interviewId), success: success, failure: failure)
     }
+    
+    func createInterview(interview: InterviewForCreation,
+                         success: ((NSObject?) -> Void)!,
+                         failure: ((String?, NSDictionary?) -> Void)!) {
+        postObject("/api/interviews/", request: interview, success: success, failure: failure)
+    }
+    
+    func updateInterview(interviewId: NSNumber!, interview: InterviewForUpdate,
+                            success: ((NSObject?) -> Void)!,
+                            failure: ((String?, NSDictionary?) -> Void)!) {
+        putObject(String(format: "/api/interviews/%@/",interviewId),
+                  request: interview, success: success, failure: failure)
+    }
 
 }

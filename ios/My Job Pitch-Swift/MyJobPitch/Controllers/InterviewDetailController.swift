@@ -33,7 +33,6 @@ class InterviewDetailController: MJPController {
     
     var interview: Interview!
     var interviewId: NSNumber!
-    var job: Job!
     var application: Application!
     
     var refresh = true
@@ -41,7 +40,7 @@ class InterviewDetailController: MJPController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        jobTitleView.text = String(format: "%@, (%@)", job.title, job.getBusinessName())
+        jobTitleView.text = String(format: "%@, (%@)", application.job.title, application.job.getBusinessName())
         self.scrollView.isScrollEnabled = false
     }
     
@@ -83,7 +82,7 @@ class InterviewDetailController: MJPController {
         dateFormatter1.dateFormat = "HH:mm"
         
         dataTime.text = String(format: "%@ at %@", dateFormatter.string(from: interview.at), dateFormatter1.string(from: interview.at))
-        location.text = job.locationData.name
+        location.text = application.job.locationData.name
         
         feedbackContent.text = interview.feedback
         noteContent.text = interview.note
@@ -108,7 +107,6 @@ class InterviewDetailController: MJPController {
         refresh = true
         let controller = AppHelper.mainStoryboard.instantiateViewController(withIdentifier: "InterviewEdit") as! InterviewEditController
         controller.interview = interview
-        controller.job = job
         controller.application = application
         controller.isEditMode = true
         navigationController?.pushViewController(controller, animated: true)
@@ -121,6 +119,7 @@ class InterviewDetailController: MJPController {
     }
     
     @IBAction func goToMessage(_ sender: Any) {
+        MessageController0.showModal(application: application)
     }
     
     @IBAction func cancel(_ sender: Any) {

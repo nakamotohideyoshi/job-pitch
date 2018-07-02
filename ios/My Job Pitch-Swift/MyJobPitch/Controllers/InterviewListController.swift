@@ -26,8 +26,11 @@ class InterviewListController: MJPController {
     override func viewDidLoad() {
         super.viewDidLoad()
         emptyView.isHidden = true
-        
-        jobTitleView.text = String(format: "%@, (%@)", job.title, job.getBusinessName())
+        if AppData.user.isRecruiter() {
+            jobTitleView.text = String(format: "%@, (%@)", job.title, job.getBusinessName())
+        } else  {
+            jobTitleView.text = ""
+        }
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -54,7 +57,13 @@ class InterviewListController: MJPController {
             var isEmpty = true
             var applicationIds: [NSNumber]! = [NSNumber]()
             for application in self.applications as! [Application] {
-                applicationIds.append(application.id)
+                if AppData.user.isRecruiter() {
+                    applicationIds.append(application.id)
+                } else {
+                    if application.jobSeeker.id == AppData.user.jobSeeker {
+                        applicationIds.append(application.id)
+                    }
+                }
             }
             
             self.data = data.mutableCopy() as! NSMutableArray
@@ -62,6 +71,7 @@ class InterviewListController: MJPController {
             
             self.interviews = [Interview]()
             for interview in data as! [Interview] {
+                
                 if applicationIds.contains(interview.application) {
                     self.interviews.append(interview)
                     isEmpty = false
@@ -89,7 +99,7 @@ extension InterviewListController: UITableViewDataSource {
         
         for application in self.applications as! [Application] {
             if application.id == interview.application {
-                cell.setData(interview, application, job)
+                cell.setData(interview, application)
                 break
             }
         }
@@ -108,7 +118,6 @@ extension InterviewListController: UITableViewDelegate {
         refresh = true
         let controller = AppHelper.mainStoryboard.instantiateViewController(withIdentifier: "InterviewDetail") as! InterviewDetailController
         controller.interviewId = interviews[indexPath.row].id
-        controller.job = job
         for application in self.applications as! [Application] {
             if application.id == interviews[indexPath.row].application {
                 controller.application = application

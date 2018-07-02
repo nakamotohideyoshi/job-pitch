@@ -24,6 +24,10 @@ class SideMenuController: UIViewController {
         "applications": ["icon": "menu-application",    "title": "Applications",            "identifier": "ApplicationList",    "per": "B"],
         "connections":  ["icon": "menu-connect",        "title": "Connections",             "identifier": "SelectJob",          "per": "B"],
         "shortlist":    ["icon": "menu-shortlist",      "title": "My Shortlist",            "identifier": "SelectJob",          "per": "B"],
+        "interviews":  ["icon": "menu-connect",        "title": "Interviews",             "identifier": "SelectJob",          "per": "B"],
+        
+        "j_interviews":  ["icon": "menu-connect",        "title": "Interviews",             "identifier": "InterviewList",          "per": "J"],
+        
         "businesses":   ["icon": "menu-business",       "title": "Add or Edit Jobs",        "identifier": "BusinessList",       "per": ""],
         "payment":      ["icon": "menu-payment",        "title": "Payment",                 "identifier": "",                   "per": ""],
         "users":        ["icon": "menu-user-profile",   "title": "Users",                   "identifier": "BusinessList",       "per": ""],
@@ -36,11 +40,11 @@ class SideMenuController: UIViewController {
     ]
     
     static let jobSeekerMenu = [
-        "find_job", "applications1", "messages", "job_profile", "add_record", "view_profile", "change_pass", "help", "share", "contact_us", "log_out"
+        "find_job", "applications1", "messages", "j_interviews", "job_profile", "add_record", "view_profile", "change_pass", "help", "share", "contact_us", "log_out"
     ]
     
     static let recruiterMenu = [
-        "find_talent", "applications", "connections", "shortlist", "messages", "businesses", "change_pass", "users", "help", "share", "contact_us", "log_out"
+        "find_talent", "applications", "connections", "shortlist", "messages", "interviews", "businesses", "change_pass", "users", "help", "share", "contact_us", "log_out"
     ]
     
     static func getCurrentTitle(_ id: String!) -> String! {

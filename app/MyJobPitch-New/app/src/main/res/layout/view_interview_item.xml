@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <include
+        android:id="@+id/item_img"
+        layout="@layout/view_image_loader"
+        android:layout_width="65dp"
+        android:layout_height="65dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginEnd="10dp"/>
+
+    <TextView
+        android:id="@+id/item_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:layout_toEndOf="@+id/item_img"
+        android:layout_toRightOf="@+id/item_img"
+        android:ellipsize="end"
+        android:lines="1"
+        android:text="Title Title Title Title Title Title Title "
+        android:textColor="@color/blackText"
+        android:textSize="18sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/item_subtitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/item_title"
+        android:layout_toEndOf="@+id/item_img"
+        android:layout_toRightOf="@+id/item_img"
+        android:ellipsize="end"
+        android:lines="1"
+        android:text="subtitle subtitle subtitle subtitle subtitle subtitle "
+        android:textColor="@color/blackText"
+        android:textSize="13sp" />
+
+    <TextView
+        android:id="@+id/item_status_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/item_img"
+        android:ellipsize="end"
+        android:lines="1"
+        android:text="Status:"
+        android:textSize="13sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/item_status"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/item_title"
+        android:layout_alignTop="@+id/item_status_label"
+        android:layout_toRightOf="@+id/item_status_label"
+        android:ellipsize="end"
+        android:lines="1"
+        android:text="status status status status status status status status"
+        android:textSize="13sp" />
+
+    <TextView
+        android:id="@+id/item_date_time_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/item_status_label"
+        android:ellipsize="end"
+        android:lines="1"
+        android:text="Date/Time:"
+        android:textSize="13sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/item_date_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/item_title"
+        android:layout_alignTop="@+id/item_date_time_label"
+        android:layout_toRightOf="@+id/item_date_time_label"
+        android:ellipsize="end"
+        android:lines="1"
+        android:text="date/time date/time date/time date/time date/time date/time date/time"
+        android:textSize="13sp" />
+
+    <TextView
+        android:id="@+id/item_location_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/item_date_time_label"
+        android:ellipsize="end"
+        android:lines="1"
+        android:text="Location:"
+        android:textSize="13sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/item_location"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/item_title"
+        android:layout_alignTop="@+id/item_location_label"
+        android:layout_toRightOf="@+id/item_location_label"
+        android:ellipsize="end"
+        android:lines="1"
+        android:text="location location location location location location"
+        android:textSize="13sp" />
+    <TextView
+        android:id="@+id/item_feedback_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/item_location_label"
+        android:ellipsize="end"
+        android:lines="1"
+        android:text="Feedback:"
+        android:textSize="13sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/item_feedback"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:layout_alignStart="@+id/item_title"
+        android:layout_alignTop="@+id/item_feedback_label"
+        android:layout_toRightOf="@+id/item_feedback_label"
+        android:ellipsize="end"
+        android:lines="100"
+        android:text="feedback feedback feedback feedback feedback feedback feedback feedback feedback"
+        android:textSize="13sp" />
+    <TextView
+        android:id="@+id/item_notes_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/item_feedback"
+        android:ellipsize="end"
+        android:lines="1"
+        android:text="Notes:"
+        android:textSize="13sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/item_notes"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:layout_alignStart="@+id/item_title"
+        android:layout_alignTop="@+id/item_notes_label"
+        android:layout_toRightOf="@+id/item_notes_label"
+        android:ellipsize="end"
+        android:lines="100"
+        android:text="note note note note note note note note note note note"
+        android:textSize="13sp" />
+
+
+</RelativeLayout>

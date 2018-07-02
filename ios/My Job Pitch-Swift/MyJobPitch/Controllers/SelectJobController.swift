@@ -26,6 +26,7 @@ class SelectJobController: MJPController {
         "applications": "Select a job below to view jobseekers who have expressed interest in a job.",
         "connections":  "Select a job below to view jobseekers you have connected with.",
         "shortlist":    "Select a job below to view the jobseekers you have shortlisted for that role.",
+        "interviews":    "Select a job below to view and arrange interviews.",
     ]
     
     override func viewDidLoad() {
@@ -126,6 +127,10 @@ extension SelectJobController: UITableViewDelegate {
         let job = data[indexPath.row] as! Job
         if SideMenuController.currentID == "find_talent" {
             SwipeController.pushController(job: job)
+        } else if SideMenuController.currentID == "interviews" {
+            let controller = AppHelper.mainStoryboard.instantiateViewController(withIdentifier: "InterviewList") as! InterviewListController
+            controller.job = job
+            AppHelper.getFrontController().navigationController?.pushViewController(controller, animated: true)
         } else {
             ApplicationListController.pushController(job: job, mode: SideMenuController.currentID)
         }

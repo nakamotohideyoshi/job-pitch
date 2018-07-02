@@ -86,6 +86,16 @@ public class InterviewsFragment extends BaseFragment {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                InterviewDetailFragment fragment = new InterviewDetailFragment();
+                fragment.interviewId = adapter.getItem(position).getId();
+
+                for (int i=0; i<applications.size(); i++) {
+                    if (adapter.getItem(position).getApplication().intValue() == applications.get(i).getId().intValue()) {
+                        fragment.application = applications.get(i);
+                        getApp().pushFragment(fragment);
+                        break;
+                    }
+                }
 
             }
         });

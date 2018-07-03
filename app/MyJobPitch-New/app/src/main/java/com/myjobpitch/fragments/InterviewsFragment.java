@@ -58,12 +58,18 @@ public class InterviewsFragment extends BaseFragment {
         View view = inflater.inflate(R.layout.fragment_interview_list, container, false);
         ButterKnife.bind(this, view);
 
+        title = "Interviews";
+
         // empty view
 
         AppHelper.setEmptyViewText(emptyView, "No Interviews");
         AppHelper.setEmptyButtonText(emptyView, "Refresh");
 
-        AppHelper.setJobTitleViewText(jobTitleView, String.format("%s, (%s)", job.getTitle(), AppHelper.getBusinessName(job)));
+        if (AppData.user.isRecruiter()) {
+            AppHelper.setJobTitleViewText(jobTitleView, String.format("%s, (%s)", job.getTitle(), AppHelper.getBusinessName(job)));
+        } else {
+            AppHelper.setJobTitleViewText(jobTitleView, "");
+        }
 
         // pull to refresh
 
@@ -104,35 +110,9 @@ public class InterviewsFragment extends BaseFragment {
             addMenuItem(MENUGROUP1, 112, "Edit Profile", R.drawable.ic_edit);
         }
 
-        if (jobSeeker != null) {
-            showInactiveBanner();
-        }
-
         onRefresh();
 
         return view;
-    }
-
-    @Override
-    public void onMenuSelected(int menuID) {
-        if (menuID == 109) {
-            getApp().setRootFragement(AppData.PAGE_MESSAGES);
-        } else if (menuID == 112) {
-            TalentProfileFragment fragment = new TalentProfileFragment();
-            fragment.jobSeeker = jobSeeker;
-            fragment.isActivation = true;
-            getApp().pushFragment(fragment);
-        } else {
-            super.onMenuSelected(menuID);
-        }
-    }
-
-    void showInactiveBanner() {
-        if (!jobSeeker.isActive()) {
-            AppHelper.setJobTitleViewText(jobTitleView, "Your Profile is not Activate");
-        } else {
-            AppHelper.setJobTitleViewText(jobTitleView, "");
-        }
     }
 
     private void loadApplications() {
@@ -140,7 +120,7 @@ public class InterviewsFragment extends BaseFragment {
         new APITask(new APIAction() {
             @Override
             public void run() throws MJPApiException {
-                String query = "job=" + job.getId();
+                String query = job == null ? null : "job=" + job.getId();
                 applications.addAll(MJPApi.shared().get(Application.class, query));
             }
         }).addListener(new APITaskListener() {
@@ -169,7 +149,14 @@ public class InterviewsFragment extends BaseFragment {
                 Boolean isEmpty = true;
                 List<Integer> applicationIds = new ArrayList<>();
                 for (int i=0; i<applications.size(); i++) {
-                    applicationIds.add(applications.get(i).getId());
+
+                    if (AppData.user.isRecruiter()) {
+                        applicationIds.add(applications.get(i).getId());
+                    } else {
+                        if (applications.get(i).getJobSeeker().getId().intValue() == AppData.user.getJob_seeker().intValue()) {
+                            applicationIds.add(applications.get(i).getId());
+                        }
+                    }
                 }
 
                 for (int i=0; i<interviews.size(); i++) {
@@ -183,27 +170,12 @@ public class InterviewsFragment extends BaseFragment {
                 emptyView.setVisibility(isEmpty ? View.VISIBLE : View.GONE);
                 swipeRefreshLayout.setRefreshing(false);
 
-                if (AppData.user.isJobSeeker()) {
-                    showInactiveBanner();
-                    showNewMessagesCounts();
-                }
             }
             @Override
             public void onError(JsonNode errors) {
                 errorHandler(errors);
             }
         }).execute();
-    }
-
-
-    void showNewMessagesCounts() {
-        long newMessageCount = getApp().newMessageCount;
-        if (newMessageCount > 0 && newMessageCount < 10) {
-            int id = getResources().getIdentifier("com.myjobpitch:drawable/menu_message" + getApp().newMessageCount,null, null);
-            addMenuItem(MENUGROUP1, 109, "All Messages", id);
-        } else if (newMessageCount >= 10) {
-            addMenuItem(MENUGROUP1, 109, "All Messages", R.drawable.menu_message10);
-        }
     }
 
     @OnClick(R.id.empty_button)
@@ -235,7 +207,7 @@ public class InterviewsFragment extends BaseFragment {
 
             for (int i=0; i<applications.size(); i++) {
                 if (getItem(position).getApplication().intValue() == applications.get(i).getId().intValue()) {
-                    AppHelper.showInterviewInfo(getItem(position), convertView, applications.get(i), job);
+                    AppHelper.showInterviewInfo(getItem(position), convertView, applications.get(i));
                     break;
                 }
             }

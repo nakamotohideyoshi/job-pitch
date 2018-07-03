@@ -149,7 +149,7 @@ public class AppHelper {
 
     }
 
-    public static void showInterviewInfo(Interview interview, View view, Application application, Job job) {
+    public static void showInterviewInfo(Interview interview, View view, Application application) {
 
         JobSeeker jobSeeker = application.getJobSeeker();
         loadJobSeekerImage(jobSeeker, getImageView(view));
@@ -174,7 +174,7 @@ public class AppHelper {
 
         // Location
 
-        getItemLocationTitleView(view).setText(job.getLocation_data().getName());
+        getItemLocationTitleView(view).setText(application.getJob_data().getLocation_data().getName());
 
 
 

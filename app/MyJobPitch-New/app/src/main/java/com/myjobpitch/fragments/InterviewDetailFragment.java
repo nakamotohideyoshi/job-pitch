@@ -204,4 +204,19 @@ public class InterviewDetailFragment extends BaseFragment {
         fragment.application = application;
         getApp().pushFragment(fragment);
     }
+
+    @OnClick(R.id.interview_cancel)
+    void onCancel() {
+        getApp().popFragment();
+    }
+
+    @OnClick(R.id.interview_accept)
+    void onAccept() {
+
+    }
+
+    @OnClick(R.id.interview_complete)
+    void onComplete() {
+
+    }
 }

@@ -34,6 +34,7 @@ import com.myjobpitch.fragments.BusinessListFragment;
 import com.myjobpitch.fragments.ChangePasswordFragment;
 import com.myjobpitch.fragments.FindJobFragment;
 import com.myjobpitch.fragments.HelpFragment;
+import com.myjobpitch.fragments.InterviewsFragment;
 import com.myjobpitch.fragments.JobProfileFragment;
 import com.myjobpitch.fragments.TalentApplicationsFragment;
 import com.myjobpitch.fragments.TalentDetailFragment;
@@ -590,7 +591,7 @@ public class MainActivity extends AppCompatActivity
         new MenuItemInfo(AppData.PAGE_SHARE, "Tell a friend", R.drawable.menu_share, null, ""),
         new MenuItemInfo(AppData.PAGE_USERS, "Users", R.drawable.menu_user_profile, BusinessListFragment.class, ""),
         new MenuItemInfo(AppData.PAGE_R_INTERVIEWS, "Interviews", R.drawable.menu_connect, SelectJobFragment.class, "B"),
-        new MenuItemInfo(AppData.PAGE_JS_INTERVIEWS, "Interviews", R.drawable.menu_connect, TalentApplicationsFragment.class, "P"),
+        new MenuItemInfo(AppData.PAGE_JS_INTERVIEWS, "Interviews", R.drawable.menu_connect, InterviewsFragment.class, "P"),
     };
 
     int[] jobSeekerMenu = {

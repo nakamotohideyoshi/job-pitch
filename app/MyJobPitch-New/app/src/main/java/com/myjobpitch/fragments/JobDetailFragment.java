@@ -101,6 +101,10 @@ public class JobDetailFragment extends BaseFragment {
                         getApp().pushFragment(fragment);
                     }
 
+                } else if (position == 5) {
+                    InterviewsFragment fragment = new InterviewsFragment();
+                    fragment.job = job;
+                    getApp().pushFragment(fragment);
                 } else {
                     RecruiterApplicationsFragment fragment = new RecruiterApplicationsFragment();
                     fragment.job = job;

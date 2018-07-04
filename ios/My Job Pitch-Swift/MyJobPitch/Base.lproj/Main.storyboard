@@ -1728,7 +1728,7 @@ et dolore magna aliqua.</string>
                                                                     <constraint firstAttribute="width" constant="20" id="do7-lI-sBq"/>
                                                                 </constraints>
                                                             </imageView>
-                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="I confirm that all information provided is truthful and confirm I have the right to work in the UK" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rwX-Vu-8pc">
+                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="I confirm that all information provided is truthful and confirm I have the legal right to work" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rwX-Vu-8pc">
                                                                 <rect key="frame" x="30" y="0.0" width="305" height="64.666666666666671"/>
                                                                 <fontDescription key="fontDescription" type="system" pointSize="18"/>
                                                                 <nil key="textColor"/>
@@ -7229,7 +7229,6 @@ consectetur adipiscing </string>
         <!--Arrange Interview-->
         <scene sceneID="r8l-1C-qyC">
             <objects>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="P1x-pD-goN" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <viewController storyboardIdentifier="InterviewEdit" automaticallyAdjustsScrollViewInsets="NO" id="1dA-bJ-X9a" customClass="InterviewEditController" customModule="MyJobPitch" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="y6d-Me-xBR"/>
@@ -7466,6 +7465,7 @@ consectetur adipiscing </string>
                         <outlet property="scrollView" destination="qyv-9J-g5i" id="XyB-6y-SUD"/>
                     </connections>
                 </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="P1x-pD-goN" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-8688.4057971014499" y="1823.6413043478262"/>
         </scene>

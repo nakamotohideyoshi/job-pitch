@@ -147,13 +147,14 @@
                     android:layout_height="20dp"
                     android:src="@drawable/icon_check"
                     android:scaleType="fitCenter"/>
+
                 <TextView
-                    android:text="I confirm that all information provided is truthful and confirm I have the right to work in the UK"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
+                    android:text="I confirm that all information provided is truthful and confirm I have the legal right to work"
                     android:textColor="@color/blackText"
-                    android:textSize="18sp"/>
+                    android:textSize="18sp" />
             </LinearLayout>
 
             <LinearLayout

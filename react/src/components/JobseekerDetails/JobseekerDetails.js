@@ -109,7 +109,7 @@ export default ({ jobseeker, connected, className, actions }) => {
       {jobseeker.truth_confirmation && (
         <div className="check-label">
           <Icons.CheckSquare size="lg" />
-          I confirm that all information provided is truthful and confirm I have the right to work in the UK
+          I confirm that all information provided is truthful and confirm I have the legal right to work
         </div>
       )}
     </Wrapper>

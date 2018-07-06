@@ -8,7 +8,7 @@
 
 import UIKit
 
-class InterviewEditController: MJPController {
+class InterviewEditController: MJPController, WWCalendarTimeSelectorProtocol {
     @IBOutlet weak var jobTitleView: UILabel!
     @IBOutlet weak var imgView: UIImageView!
     @IBOutlet weak var jobSeekerName: UILabel!
@@ -21,6 +21,8 @@ class InterviewEditController: MJPController {
     var interview: Interview!
     var application: Application!
     var isEditMode = false
+    
+    fileprivate var singleDate: Date = Date()
     
     
     override func viewDidLoad() {
@@ -50,22 +52,26 @@ class InterviewEditController: MJPController {
             let dateFormatter1 = DateFormatter()
             dateFormatter1.dateFormat = "HH:mm"
             
-            dateTimeLabel.text = String(format: "%@ at %@", dateFormatter.string(from: interview.at), dateFormatter1.string(from: interview.at))
+            singleDate = interview.at
+            dateTimeLabel.text = String(format: "%@ at %@", dateFormatter.string(from: singleDate), dateFormatter1.string(from: singleDate))
             
             note.text = interview.note
         }
     }
 
     @IBAction func getDateTime(_ sender: Any) {
-        let date = Date()
         
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "E d MMM, yyyy"
+        let selector = WWCalendarTimeSelector.instantiate()
+        selector.delegate = self
+        selector.optionTopPanelTitle = "Choose Calendar!"
         
-        let dateFormatter1 = DateFormatter()
-        dateFormatter1.dateFormat = "HH:mm"
+        selector.optionCurrentDate = singleDate
         
-        dateTimeLabel.text = String(format: "%@ at %@", dateFormatter.string(from: date), dateFormatter1.string(from: date))
+        selector.optionStyles.showDateMonth(true)
+        selector.optionStyles.showYear(true)
+        selector.optionStyles.showTime(true)
+        
+        present(selector, animated: true, completion: nil)
     }
     
     @IBAction func sendInvitation(_ sender: Any) {
@@ -74,7 +80,7 @@ class InterviewEditController: MJPController {
         if isEditMode {
             let interviewForUpdate = InterviewForUpdate()
             
-            interviewForUpdate.at = Date()
+            interviewForUpdate.at = singleDate
             interviewForUpdate.application = application.id
             interviewForUpdate.note = note.text
             interviewForUpdate.feedback = ""
@@ -87,7 +93,7 @@ class InterviewEditController: MJPController {
             
             let interviewForCreation = InterviewForCreation()
             
-            interviewForCreation.at = Date()
+            interviewForCreation.at = singleDate
             interviewForCreation.application = application.id
             interviewForCreation.note = note.text
             interviewForCreation.feedback = ""
@@ -103,6 +109,17 @@ class InterviewEditController: MJPController {
     func doneCreateAction() {
         _ = navigationController?.popViewController(animated: true)
         return
+    }
+    
+    func WWCalendarTimeSelectorDone(_ selector: WWCalendarTimeSelector, date: Date) {
+        singleDate = date
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "E d MMM, yyyy"
+        
+        let dateFormatter1 = DateFormatter()
+        dateFormatter1.dateFormat = "HH:mm"
+        
+        dateTimeLabel.text = String(format: "%@ at %@", dateFormatter.string(from: singleDate), dateFormatter1.string(from: singleDate))
     }
     
 }

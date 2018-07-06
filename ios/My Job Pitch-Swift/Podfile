@@ -16,7 +16,7 @@ target 'MyJobPitch' do
     pod 'LLSimpleCamera'
     pod 'JSQMessagesViewController'
     pod 'JTSImageViewController'
-    pod 'Nuke'
+    pod 'Nuke', '5.2'
     pod 'SwiftyDropbox'
     
 end

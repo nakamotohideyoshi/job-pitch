@@ -119,7 +119,10 @@ class InterviewDetailController: MJPController {
     }
     
     @IBAction func goToMessage(_ sender: Any) {
-        MessageController0.showModal(application: application)
+        let controller = AppHelper.mainStoryboard.instantiateViewController(withIdentifier: "Message0") as! MessageController0
+        controller.application = application
+        controller.interview = interview
+        AppHelper.getFrontController().navigationController?.pushViewController(controller, animated: true)
     }
     
     @IBAction func cancel(_ sender: Any) {

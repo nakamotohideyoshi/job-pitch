@@ -18,7 +18,9 @@ class MessageController0: MJPController {
     @IBOutlet weak var interviewView: UIView!
     
     var application: Application!
+    var refresh = true
     
+    var interview: Interview!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -28,11 +30,21 @@ class MessageController0: MJPController {
         } else {
             headerView.addUnderLine(paddingLeft: 0, paddingRight: 0, color: AppData.greyBorderColor)
         }
-
-        
         
         headerView.isHidden = true
         interviewView.isHidden = true
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        if refresh {
+            loadApplication()
+            refresh = false
+        }
+    }
+    
+    func loadApplication() {
         showLoading()
         API.shared().loadApplicationWithId(id: application.id, success: { (data) in
             self.headerView.isHidden = false
@@ -44,8 +56,7 @@ class MessageController0: MJPController {
             self.application = data as! Application
             self.load()
         }, failure: self.handleErrors)
-        
-    } 
+    }
     
     func load() {
         
@@ -102,10 +113,13 @@ class MessageController0: MJPController {
     }
 
     @IBAction func createInterview(_ sender: Any) {
+        refresh = true
+        
         let controller = AppHelper.mainStoryboard.instantiateViewController(withIdentifier: "InterviewEdit") as! InterviewEditController
         controller.application = application
-        controller.isEditMode = false
-        navigationController?.pushViewController(controller, animated: true)
+        controller.interview = interview
+        controller.isEditMode = interview == nil ? false : true
+        AppHelper.getFrontController().navigationController?.pushViewController(controller, animated: true)
     }
     static func showModal(application: Application) {
         

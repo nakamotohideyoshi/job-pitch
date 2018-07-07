@@ -72,7 +72,7 @@ class InterviewListController: MJPController {
             self.interviews = [Interview]()
             for interview in data as! [Interview] {
                 
-                if applicationIds.contains(interview.application) {
+                if applicationIds.contains(interview.application) && interview.cancelled == nil {
                     self.interviews.append(interview)
                     isEmpty = false
                 }

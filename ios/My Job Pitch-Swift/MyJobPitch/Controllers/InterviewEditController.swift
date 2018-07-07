@@ -55,8 +55,7 @@ class InterviewEditController: MJPController, WWCalendarTimeSelectorProtocol {
             singleDate = interview.at
             dateTimeLabel.text = String(format: "%@ at %@", dateFormatter.string(from: singleDate), dateFormatter1.string(from: singleDate))
             
-            note.text = interview.note
-        }
+            note.text = interview.notes        }
     }
 
     @IBAction func getDateTime(_ sender: Any) {
@@ -82,7 +81,7 @@ class InterviewEditController: MJPController, WWCalendarTimeSelectorProtocol {
             
             interviewForUpdate.at = singleDate
             interviewForUpdate.application = application.id
-            interviewForUpdate.note = note.text
+            interviewForUpdate.notes = note.text
             interviewForUpdate.feedback = ""
             interviewForUpdate.invitation = message.text
             
@@ -95,7 +94,7 @@ class InterviewEditController: MJPController, WWCalendarTimeSelectorProtocol {
             
             interviewForCreation.at = singleDate
             interviewForCreation.application = application.id
-            interviewForCreation.note = note.text
+            interviewForCreation.notes = note.text
             interviewForCreation.feedback = ""
             interviewForCreation.invitation = message.text
             

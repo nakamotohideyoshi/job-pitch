@@ -12,7 +12,7 @@ class Interview: MJPObject {
     var application: NSNumber!
     var at: Date!
     var messages: NSArray!
-    var note: String!
+    var notes: String!
     var feedback: String!
     var cancelled: Date!
     var cancelledBy: NSNumber!
@@ -27,7 +27,7 @@ class InterviewForCreation: MJPObject {
     var invitation:String!
     var at: Date!
     var application: NSNumber!
-    var note: String!
+    var notes: String!
     var feedback: String!
 }
 
@@ -35,6 +35,6 @@ class InterviewForUpdate: MJPObject {
     var invitation:String!
     var at: Date!
     var application: NSNumber!
-    var note: String!
+    var notes: String!
     var feedback: String!
 }

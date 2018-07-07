@@ -11,10 +11,17 @@ import java.util.List;
 public class InterviewForUpdate extends MJPAPIObject {
 
     private String invitation;
-    private Date at;
+    private String at;
     private Integer application;
     private String notes;
     private String feedback;
+    private List<InterviewMessage> messages;
+    private Date cancelled;
+    private Integer cancelled_by;
+
+    public List<InterviewMessage> getMessages() {
+        return messages;
+    }
 
     public void setApplication(Integer application) {
         this.application = application;
@@ -24,11 +31,11 @@ public class InterviewForUpdate extends MJPAPIObject {
         return application;
     }
 
-    public void setAt(Date at) {
+    public void setAt(String at) {
         this.at = at;
     }
 
-    public Date getAt() {
+    public String getAt() {
         return at;
     }
 
@@ -48,12 +55,20 @@ public class InterviewForUpdate extends MJPAPIObject {
         return invitation;
     }
 
-    public void setNotes(String note) {
+    public void setNotes(String notes) {
         this.notes = notes;
     }
 
     public String getNotes() {
         return notes;
+    }
+
+    public Date getCancelled() {
+        return cancelled;
+    }
+
+    public Integer getCancelled_by() {
+        return cancelled_by;
     }
 }
 

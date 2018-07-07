@@ -10,29 +10,64 @@ import java.util.List;
  */
 public class InterviewForCreation extends MJPAPIObject {
     private String invitation;
-    private Date at;
+    private String at;
     private Integer application;
     private String notes;
     private String feedback;
+    private List<InterviewMessage> messages;
+    private Date cancelled;
+    private Integer cancelled_by;
+
+    public List<InterviewMessage> getMessages() {
+        return messages;
+    }
 
     public void setApplication(Integer application) {
         this.application = application;
     }
 
-    public void setAt(Date at) {
+    public Integer getApplication() {
+        return application;
+    }
+
+    public void setAt(String at) {
         this.at = at;
+    }
+
+    public String getAt() {
+        return at;
     }
 
     public void setFeedback(String feedback) {
         this.feedback = feedback;
     }
 
+    public String getFeedback() {
+        return feedback;
+    }
+
     public void setInvitation(String invitation) {
         this.invitation = invitation;
     }
 
-    public void setNotes(String note) {
+    public String getInvitation() {
+        return invitation;
+    }
+
+    public void setNotes(String notes) {
         this.notes = notes;
+    }
+
+    public String getNotes() {
+        return notes;
+    }
+
+    public Date getCancelled() {
+        return cancelled;
+    }
+
+    public Integer getCancelled_by() {
+        return cancelled_by;
     }
 }
 

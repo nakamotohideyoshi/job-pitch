@@ -13,6 +13,7 @@ import com.myjobpitch.api.MJPApi;
 import com.myjobpitch.api.MJPApiException;
 import com.myjobpitch.api.data.Application;
 import com.myjobpitch.api.data.Business;
+import com.myjobpitch.api.data.Interview;
 import com.myjobpitch.api.data.Job;
 import com.myjobpitch.api.data.JobSeeker;
 import com.myjobpitch.api.data.Location;
@@ -58,6 +59,7 @@ public class MessageFragment extends BaseFragment {
     String myAvatar;
     String otherName;
     String otherAvatar;
+    public Interview interview;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -218,7 +220,8 @@ public class MessageFragment extends BaseFragment {
     void onCreate() {
         InterviewEditFragment fragment = new InterviewEditFragment();
         fragment.application = application;
-        fragment.isEditMode = false;
+        fragment.interview = interview;
+        fragment.isEditMode = interview != null;
         getApp().pushFragment(fragment);
     }
 

@@ -160,7 +160,7 @@ public class InterviewsFragment extends BaseFragment {
                 }
 
                 for (int i=0; i<interviews.size(); i++) {
-                    if (applicationIds.contains(interviews.get(i).getApplication())) {
+                    if (applicationIds.contains(interviews.get(i).getApplication()) && interviews.get(i).getCancelled() == null) {
                         adapter.add(interviews.get(i));
                         isEmpty = false;
                     }

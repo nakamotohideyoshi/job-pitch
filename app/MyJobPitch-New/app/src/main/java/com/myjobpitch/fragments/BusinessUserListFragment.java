@@ -91,12 +91,14 @@ public class BusinessUserListFragment extends BaseFragment {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                BusinessUserEditFragment fragment = new BusinessUserEditFragment();
-                fragment.isEditMode = true;
-                fragment.businessUser = adapter.getItem(position);
-                fragment.businessId = businessId;
-                fragment.locations = locations;
-                getApp().pushFragment(fragment);
+                if (adapter.getItem(position).getUser() != AppData.user.getId().intValue()) {
+                    BusinessUserEditFragment fragment = new BusinessUserEditFragment();
+                    fragment.isEditMode = true;
+                    fragment.businessUser = adapter.getItem(position);
+                    fragment.businessId = businessId;
+                    fragment.locations = locations;
+                    getApp().pushFragment(fragment);
+                }
             }
         });
 

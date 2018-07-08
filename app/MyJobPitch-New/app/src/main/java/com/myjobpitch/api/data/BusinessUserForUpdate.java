@@ -12,4 +12,8 @@ public class BusinessUserForUpdate extends MJPAPIObject {
         this.locations = locations;
     }
 
+    public List<Integer> getLocations() {
+        return locations;
+    }
+
 }

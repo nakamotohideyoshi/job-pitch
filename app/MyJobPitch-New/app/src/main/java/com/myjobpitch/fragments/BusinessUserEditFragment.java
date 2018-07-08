@@ -169,10 +169,6 @@ public class BusinessUserEditFragment extends FormFragment {
        }
     }
 
-    void saveData() {
-
-    }
-
     @OnClick(R.id.user_delete)
     void deleteUser() {
 
@@ -220,7 +216,7 @@ public class BusinessUserEditFragment extends FormFragment {
         } else {
             if (isEditMode) {
                 final BusinessUserForUpdate businessUserForUpdate = new BusinessUserForUpdate();
-                businessUserForUpdate.setLocations(activeView.isChecked() ? null : selectedLocations);
+                businessUserForUpdate.setLocations(activeView.isChecked() ? new ArrayList<Integer>() : selectedLocations);
                 new APITask(new APIAction() {
                     @Override
                     public void run() throws MJPApiException {
@@ -238,7 +234,7 @@ public class BusinessUserEditFragment extends FormFragment {
                 }).execute();
             } else {
                 final BusinessUserForCreation businessUserForCreation = new BusinessUserForCreation();
-                businessUserForCreation.setLocations(activeView.isChecked() ? null : selectedLocations);
+                businessUserForCreation.setLocations(activeView.isChecked() ? new ArrayList<Integer>() : selectedLocations);
                 businessUserForCreation.setEmail(emailView.getText().toString());
                 new APITask(new APIAction() {
                     @Override

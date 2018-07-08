@@ -135,6 +135,10 @@ public class AppHelper {
         int locationCount = businessUser.getLocations().size();
         String subTitle = locationCount == 0 ? "Administrator" : "";
 
+        if (businessUser.getUser() == AppData.user.getId().intValue()) {
+            subTitle = "Super Administrator";
+        }
+
         for (int i=0; i<locations.size(); i++) {
             if (businessUser.getLocations().indexOf(locations.get(i).getId()) > -1) {
                 if (subTitle == "") {

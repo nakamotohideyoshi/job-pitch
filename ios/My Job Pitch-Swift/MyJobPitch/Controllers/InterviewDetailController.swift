@@ -85,7 +85,7 @@ class InterviewDetailController: MJPController {
         location.text = application.job.locationData.name
         
         feedbackContent.text = interview.feedback
-        noteContent.text = interview.note
+        noteContent.text = interview.notes
         
         if AppData.user.isRecruiter() {
             acceptButton.isHidden = true
@@ -119,10 +119,21 @@ class InterviewDetailController: MJPController {
     }
     
     @IBAction func goToMessage(_ sender: Any) {
-        MessageController0.showModal(application: application)
+        let controller = AppHelper.mainStoryboard.instantiateViewController(withIdentifier: "Message0") as! MessageController0
+        controller.application = application
+        controller.interview = interview
+        AppHelper.getFrontController().navigationController?.pushViewController(controller, animated: true)
     }
     
     @IBAction func cancel(_ sender: Any) {
+        showLoading()
+        
+        API.shared().deleteInterview(interviewId: interview.id, success: { (data) in
+            self.actionDone()
+        }, failure: self.handleErrors)
+    }
+    
+    func actionDone() {
         _ = navigationController?.popViewController(animated: true)
         return
     }

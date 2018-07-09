@@ -611,13 +611,13 @@ class APIConfigure: NSObject {
         
         // ================= Interviews ================
         
-        let interviewArray = ["id", "application", "at", "message", "note", "feedback", "cancelled" ]
+        let interviewArray = ["id", "application", "at", "message", "notes", "feedback", "cancelled" ]
         
         let interviewsDictionary = [ "cancelledBy": "cancelled_by" ]
         
-        let createInterviewArray = [ "invitation", "application", "at", "note", "feedback" ]
+        let createInterviewArray = [ "invitation", "application", "at", "notes", "feedback" ]
         
-        let updateInterviewArray = [ "invitation", "application", "at", "note", "feedback" ]
+        let updateInterviewArray = [ "invitation", "application", "at", "notes", "feedback" ]
         
         configureResponseMapping(Interview.classForCoder(),
                                  responseArray: interviewArray,
@@ -646,6 +646,13 @@ class APIConfigure: NSObject {
                                mappingRelationships: nil,
                                path: "/api/interviews/:pk/",
                                method: .PUT)
+        
+        configureSimpleMapping(Interview.classForCoder(),
+                               mappingArray: nil,
+                               mappingDictionary: nil,
+                               mappingRelationships: nil,
+                               path: "/api/interviews/:pk/",
+                               method: .DELETE)
 
         // ================= Error =====================
 

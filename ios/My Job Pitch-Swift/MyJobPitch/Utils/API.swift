@@ -697,5 +697,12 @@ class API: NSObject {
         putObject(String(format: "/api/interviews/%@/",interviewId),
                   request: interview, success: success, failure: failure)
     }
+    
+    func deleteInterview(interviewId: NSNumber,
+                           success: (() -> Void)!,
+                           failure: ((String?, NSDictionary?) -> Void)!) {
+        deleteObject(String(format: "/api/interviews/%@/", interviewId),
+                     success: success, failure: failure)
+    }
 
 }

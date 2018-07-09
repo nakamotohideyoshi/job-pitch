@@ -1,6 +1,9 @@
 package com.myjobpitch.fragments;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -11,9 +14,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.TimePicker;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.myjobpitch.CameraActivity;
@@ -52,8 +57,12 @@ import com.rengwuxian.materialedittext.MaterialEditText;
 import com.weiwangcn.betterspinner.library.material.MaterialBetterSpinner;
 
 import java.io.File;
+import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -91,6 +100,17 @@ public class InterviewEditFragment extends FormFragment {
     public Boolean isEditMode = true;
     public Application application;
 
+    Calendar dateAndTime;
+
+    int year;
+    int month;
+    int day;
+    int hour;
+    int minute;
+
+    String tempStr;
+
+
     Date date;
 
 
@@ -119,6 +139,8 @@ public class InterviewEditFragment extends FormFragment {
         // CV
         itemSubTitle.setText(jobSeeker.getCV() == null ? "Can't find CV" : jobSeeker.getCV());
 
+        date = new Date();
+
         if (isEditMode) {
             // Date/Time
             SimpleDateFormat format = new SimpleDateFormat("E d MMM, yyyy");
@@ -136,17 +158,67 @@ public class InterviewEditFragment extends FormFragment {
 
     @OnClick(R.id.interview_date_time_button)
     void getDate() {
-        date = new Date();
-        SimpleDateFormat format = new SimpleDateFormat("E d MMM, yyyy");
-        SimpleDateFormat format1 = new SimpleDateFormat("HH:mm");
-        interviewDateTime.setText(format.format(date) + " at " + format1.format(date));
+        dateAndTime = Calendar.getInstance();
+
+        dateAndTime.setTimeInMillis(date.getTime());
+
+        year = dateAndTime.get(Calendar.YEAR);
+        month = dateAndTime.get(Calendar.MONTH);
+        day = dateAndTime.get(Calendar.DAY_OF_MONTH);
+
+        final DatePickerDialog datePickerDialog;
+
+
+        datePickerDialog = new DatePickerDialog(getActivity(), AlertDialog.THEME_DEVICE_DEFAULT_LIGHT, new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker datePicker, int selectedYear, int selectedMonth, int selectedDayOfMonth) {
+                tempStr = selectedDayOfMonth + "/" + selectedMonth + "/" + selectedYear;
+                getTime();
+
+            }
+        }, year, month, day);
+
+        datePickerDialog.setTitle("Select Date");
+        datePickerDialog.show();
+    }
+
+    void getTime() {
+        TimePickerDialog timePickerDialog;
+
+        hour = dateAndTime.get(Calendar.HOUR_OF_DAY);
+        minute = dateAndTime.get(Calendar.MINUTE);
+
+        timePickerDialog = new TimePickerDialog(getContext(), AlertDialog.THEME_DEVICE_DEFAULT_LIGHT, new TimePickerDialog.OnTimeSetListener() {
+            @Override
+            public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
+                date = new Date();
+                tempStr += " " + selectedHour + ":" + selectedMinute;
+
+                SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy hh:mm");
+                try {
+                    date = dateFormat.parse(tempStr);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+
+                SimpleDateFormat format = new SimpleDateFormat("E d MMM, yyyy");
+                SimpleDateFormat format1 = new SimpleDateFormat("HH:mm");
+                interviewDateTime.setText(format.format(date) + " at " + format1.format(date));
+            }
+        }, hour, minute, true);//Yes 24 hour time
+
+        timePickerDialog.setTitle("Select Time");
+        timePickerDialog.show();
     }
 
     @OnClick(R.id.interview_create)
     void onCreateInterview() {
+
         if (isEditMode) {
             final InterviewForUpdate interviewForUpdate = new InterviewForUpdate();
-            interviewForUpdate.setAt(date);
+            android.text.format.DateFormat df = new android.text.format.DateFormat();
+            String dateStr = String.format("%s", df.format("yyyy-MM-dd hh:mm:ss", date));
+            interviewForUpdate.setAt(dateStr);
             interviewForUpdate.setApplication(application.getId());
             interviewForUpdate.setInvitation("");
             interviewForUpdate.setNotes(interviewNotes.getText().toString() == null ? "" : interviewNotes.getText().toString());
@@ -170,7 +242,9 @@ public class InterviewEditFragment extends FormFragment {
 
         } else {
             final InterviewForCreation interviewForCreation = new InterviewForCreation();
-            interviewForCreation.setAt(date);
+            android.text.format.DateFormat df = new android.text.format.DateFormat();
+            String dateStr = String.format("%s", df.format("yyyy-MM-dd hh:mm:ss", date));
+            interviewForCreation.setAt(dateStr);
             interviewForCreation.setApplication(application.getId());
             interviewForCreation.setInvitation("");
             interviewForCreation.setNotes(interviewNotes.getText().toString() == null ? "" : interviewNotes.getText().toString());
@@ -192,9 +266,7 @@ public class InterviewEditFragment extends FormFragment {
                 }
             }).execute();
         }
+
     }
-
-
-
 
 }

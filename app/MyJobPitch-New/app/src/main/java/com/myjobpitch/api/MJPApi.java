@@ -543,6 +543,10 @@ public class MJPApi {
         }
     }
 
+    public void deleteInterview(Integer interviewId) {
+        rest.exchange(getObjectUrl("interviews", interviewId), HttpMethod.DELETE, createAuthenticatedRequest(), Void.class);
+    }
+
 
 
 

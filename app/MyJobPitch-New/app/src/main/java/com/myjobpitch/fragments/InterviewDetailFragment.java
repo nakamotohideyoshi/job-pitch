@@ -202,12 +202,27 @@ public class InterviewDetailFragment extends BaseFragment {
     void onMessage() {
         MessageFragment fragment = new MessageFragment();
         fragment.application = application;
+        fragment.interview = interview;
         getApp().pushFragment(fragment);
     }
 
     @OnClick(R.id.interview_cancel)
     void onCancel() {
-        getApp().popFragment();
+        new APITask(new APIAction() {
+            @Override
+            public void run() throws MJPApiException {
+                MJPApi.shared().deleteInterview(interviewId);
+            }
+        }).addListener(new APITaskListener() {
+            @Override
+            public void onSuccess() {
+                getApp().popFragment();
+            }
+            @Override
+            public void onError(JsonNode errors) {
+                errorHandler(errors);
+            }
+        }).execute();
     }
 
     @OnClick(R.id.interview_accept)

@@ -185,8 +185,10 @@ export default connect(
       _.forEach(applications, application => {
         if (interview.application === application.id) {
           let applicationWithInterview = Object.assign({}, application);
-          applicationWithInterview.interview = interview;
-          myInterviews.push(applicationWithInterview);
+          if (interview.cancelled == null) {
+            applicationWithInterview.interview = interview;
+            myInterviews.push(applicationWithInterview);
+          }
         }
       });
     });

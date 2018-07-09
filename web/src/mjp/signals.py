@@ -55,6 +55,6 @@ def send_message_notification_email(sender, instance, created, *args, **kwargs):
 
 
 @receiver(post_save, sender=JobSeeker)
-def send_message_notification_email(sender, instance, created, *args, **kwargs):
+def send_welcome_email(sender, instance, created, *args, **kwargs):
     if created:
         instance.send_welcome_email()

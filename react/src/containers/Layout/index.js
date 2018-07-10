@@ -53,7 +53,9 @@ const MainLayout = ({ menu, jobseeker, auth, component: Component, ...rest }) =>
   }
   var bannerShown = false;
   if (auth === 'jobseeker') {
-    bannerShown = !jobseeker.active;
+    if (jobseeker !== null) {
+      bannerShown = !jobseeker.active;
+    }
   }
 
   var linkShown = rest.location.pathname !== '/jobseeker/settings/profile';

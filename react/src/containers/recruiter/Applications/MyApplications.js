@@ -29,7 +29,9 @@ class MyApplications extends React.Component {
   onConnect = ({ id }, event) => {
     event && event.stopPropagation();
 
-    const { business } = this.props;
+    const { job } = this.props;
+    const business = job.location_data.business_data;
+
     if (business.tokens === 0) {
       confirm({
         content: 'You need 1 credit',

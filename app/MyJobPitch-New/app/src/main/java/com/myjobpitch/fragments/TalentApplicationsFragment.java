@@ -34,10 +34,29 @@ public class TalentApplicationsFragment extends ApplicationsFragment {
                 getApp().setRootFragement(AppData.PAGE_ADD_RECORD);
             }
         });
+        showNewMessagesCounts();
 
         return  view;
     }
 
+    void showNewMessagesCounts() {
+        long newMessageCount = getApp().newMessageCount;
+        if (newMessageCount > 0 && newMessageCount < 10) {
+            int id = getResources().getIdentifier("com.myjobpitch:drawable/menu_message" + getApp().newMessageCount,null, null);
+            addMenuItem(MENUGROUP2, 109, "All Messages", id);
+        } else if (newMessageCount >= 10) {
+            addMenuItem(MENUGROUP2, 109, "All Messages", R.drawable.menu_message10);
+        }
+    }
+
+    @Override
+    public void onMenuSelected(int menuID) {
+        if (menuID == 109) {
+            getApp().setRootFragement(AppData.PAGE_MESSAGES);
+        } else {
+            super.onMenuSelected(menuID);
+        }
+    }
     @Override
     protected List<Application> getApplications() throws MJPApiException {
         JobSeeker jobSeeker = MJPApi.shared().get(JobSeeker.class, AppData.user.getJob_seeker());

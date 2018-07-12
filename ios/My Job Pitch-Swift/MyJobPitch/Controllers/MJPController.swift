@@ -139,7 +139,9 @@ class MJPController: UIViewController {
                 AppData.startMessage = startMessage
                 AppData.newMessagesCount = newMessagesCount
                 
-            }, failure: self.handleErrors)
+            }, failure: {(message: String?, errors: NSDictionary?) in
+                
+            })
         }
     }
     

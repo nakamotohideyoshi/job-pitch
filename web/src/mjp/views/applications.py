@@ -8,9 +8,10 @@ from rest_framework.response import Response
 
 from mjp.models import Job, Role, ApplicationStatus, Message, Application, Location, ApplicationPitch, Interview
 from mjp.serializers.applications import (
-    ApplicationSerializer,
     ApplicationSerializerV1,
     ApplicationSerializerV2,
+    ApplicationSerializerV3,
+    ApplicationSerializer,
     ApplicationCreateSerializer,
     ApplicationConnectSerializer,
     ApplicationShortlistUpdateSerializer,
@@ -116,6 +117,8 @@ class ApplicationViewSet(viewsets.ModelViewSet):
             return ApplicationSerializerV1
         elif version == 2:
             return ApplicationSerializerV2
+        elif version == 3:
+            return ApplicationSerializerV3
         return ApplicationSerializer
 
     def get_queryset(self):

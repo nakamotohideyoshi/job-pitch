@@ -2,7 +2,13 @@ from django.db import transaction
 from rest_framework import serializers
 
 from mjp.models import Message, Application, Role, TokenStore, ApplicationStatus, ApplicationPitch, Interview
-from mjp.serializers import JobSerializer, JobSeekerReadSerializer, SimpleSerializer, JobSerializerV1
+from mjp.serializers import (
+    JobSerializerV1,
+    JobSerializer,
+    JobSeekerReadSerializerV1,
+    JobSeekerReadSerializer,
+    SimpleSerializer,
+)
 
 
 class MessageSerializerV1(serializers.ModelSerializer):
@@ -13,7 +19,7 @@ class MessageSerializerV1(serializers.ModelSerializer):
 
 class ApplicationSerializerV1(serializers.ModelSerializer):
     job_data = JobSerializerV1(source='job', read_only=True)
-    job_seeker = JobSeekerReadSerializer(read_only=True)
+    job_seeker = JobSeekerReadSerializerV1(read_only=True)
     messages = MessageSerializerV1(many=True, read_only=True)
 
     class Meta:
@@ -39,16 +45,20 @@ class EmbeddedInterviewSerializer(serializers.ModelSerializer):
         fields = ('id', 'at', 'messages', 'notes', 'feedback')
 
 
-class MessageSerializer(MessageSerializerV1):
+class MessageSerializer(MessageSerializerV1):  # v2
     class Meta:
         model = Message
         fields = MessageSerializerV1.Meta.fields + ('interview',)
 
 
-class ApplicationSerializer(ApplicationSerializerV2):
+class ApplicationSerializerV3(ApplicationSerializerV2):
     pitches = EmbeddedApplicationPitchSerializer(read_only=True, many=True)
     interviews = EmbeddedInterviewSerializer(read_only=True, many=True)
     messages = MessageSerializer(many=True, read_only=True)
+
+
+class ApplicationSerializer(ApplicationSerializerV3):  # v4
+    job_seeker = JobSeekerReadSerializer(read_only=True)
 
 
 class ApplicationCreateSerializer(serializers.ModelSerializer):

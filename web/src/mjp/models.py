@@ -443,6 +443,8 @@ class JobSeeker(models.Model):
     truth_confirmation = models.BooleanField(default=False)
     national_insurance_number = models.CharField(max_length=13, blank=True)
     pitch_reminder_sent = models.DateTimeField(null=True)
+    profile_image = models.ImageField(upload_to='job-seeker-profile/%Y/%m/%d', max_length=255, blank=True, null=True)
+    profile_thumb = models.ImageField(upload_to='job-seeker-profile/%Y/%m/%d', max_length=255, blank=True, null=True)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
 
@@ -475,6 +477,10 @@ class JobSeeker(models.Model):
                 from_email=settings.DEFAULT_FROM_EMAIL,
                 recipient_list=["jamie_cockburn@hotmail.co.uk"],
             )
+
+    def save(self, *args, **kwargs):
+        create_thumbnail(self.profile_image, self.profile_thumb)
+        super(JobSeeker, self).save(*args, **kwargs)
 
     def __str__(self):
         return "%s: %s" % (type(self).__name__, self.get_full_name())

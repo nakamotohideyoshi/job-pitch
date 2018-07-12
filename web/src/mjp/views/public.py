@@ -2,7 +2,11 @@ from rest_framework import generics
 from rest_framework.throttling import AnonRateThrottle
 
 from mjp.models import Job, JobStatus, JobSeeker
-from mjp.serializers.public import PublicJobListingSerializer, PublicJobSeekerListingSerializer
+from mjp.serializers.public import (
+    PublicJobListingSerializer,
+    PublicJobSeekerListingSerializerV1,
+    PublicJobSeekerListingSerializer,
+)
 
 
 class PublicListingThrottle(AnonRateThrottle):
@@ -17,5 +21,14 @@ class PublicJobListing(generics.RetrieveAPIView):
 
 class PublicJobSeekerListing(generics.RetrieveAPIView):
     queryset = JobSeeker.objects.filter(active=True)
-    serializer_class = PublicJobSeekerListingSerializer
     throttle_classes = (PublicListingThrottle,)
+
+    def get_serializer_class(self):
+        try:
+            version = int(self.request.version)
+        except (TypeError, ValueError):
+            version = 1
+
+        if version > 3:
+            return PublicJobSeekerListingSerializer
+        return PublicJobSeekerListingSerializerV1

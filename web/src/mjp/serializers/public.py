@@ -35,7 +35,7 @@ class PublicJobListingSerializer(serializers.ModelSerializer):
         fields = ('title', 'description', 'images', 'sector', 'contract', 'hours', 'location_data')
 
 
-class PublicJobSeekerListingSerializer(serializers.ModelSerializer):
+class PublicJobSeekerListingSerializerV1(serializers.ModelSerializer):
     pitches = EmbeddedPitchSerializer(many=True, read_only=True)
 
     email = serializers.SerializerMethodField()
@@ -102,3 +102,9 @@ class PublicJobSeekerListingSerializer(serializers.ModelSerializer):
             'has_national_insurance_number',
             'pitches',
         )
+
+
+class PublicJobSeekerListingSerializer(PublicJobSeekerListingSerializerV1):  # v4
+    class Meta:
+        model = JobSeeker
+        fields = PublicJobSeekerListingSerializerV1.Meta.fields + ('profile_image', 'profile_thumb')

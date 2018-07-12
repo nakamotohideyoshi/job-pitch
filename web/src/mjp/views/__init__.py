@@ -22,7 +22,9 @@ from mjp.models import (
 )
 from mjp.serializers import (
     SimpleSerializer,
+    JobSeekerSerializerV1,
     JobSeekerSerializer,
+    JobSeekerReadSerializerV1,
     JobSeekerReadSerializer,
     AppDeprecationSerializer,
 )
@@ -74,9 +76,19 @@ class JobSeekerViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.IsAuthenticated, JobSeekerPermission)
 
     def get_serializer_class(self):
+        try:
+            version = int(self.request.version)
+        except (TypeError, ValueError):
+            version = 1
+
         if self.request.query_params.get('job'):
-            return JobSeekerReadSerializer
-        return JobSeekerSerializer
+            if version > 3:
+                return JobSeekerReadSerializer
+            return JobSeekerReadSerializerV1
+
+        if version > 3:
+            return JobSeekerSerializer
+        return JobSeekerSerializerV1
 
     def get_queryset(self):
         job = self.request.query_params.get('job')

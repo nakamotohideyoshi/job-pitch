@@ -107,7 +107,7 @@ class EmbeddedVideoSerializer(serializers.ModelSerializer):
         exclude = ('token', 'job')
 
 
-class JobSerializer(JobSerializerV1):
+class JobSerializer(JobSerializerV1):  # v2
     videos = EmbeddedVideoSerializer(many=True, read_only=True)
 
 
@@ -117,7 +117,7 @@ class EmbeddedPitchSerializer(serializers.ModelSerializer):
         exclude = ('token', 'job_seeker')
 
 
-class JobSeekerSerializer(serializers.ModelSerializer):
+class JobSeekerSerializerV1(serializers.ModelSerializer):
     user = serializers.PrimaryKeyRelatedField(read_only=True)
     profile = serializers.PrimaryKeyRelatedField(read_only=True)
     pitches = EmbeddedPitchSerializer(many=True, read_only=True)
@@ -145,10 +145,16 @@ class JobSeekerSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = JobSeeker
+        exclude = ("pitch_reminder_sent", "profile_image", "profile_thumb")
+
+
+class JobSeekerSerializer(JobSeekerSerializerV1):  # v4
+    class Meta:
+        model = JobSeeker
         exclude = ("pitch_reminder_sent",)
 
 
-class JobSeekerReadSerializer(serializers.ModelSerializer):
+class JobSeekerReadSerializerV1(serializers.ModelSerializer):
     pitches = EmbeddedPitchSerializer(many=True, read_only=True)
 
     email = serializers.SerializerMethodField()
@@ -219,6 +225,12 @@ class JobSeekerReadSerializer(serializers.ModelSerializer):
             'updated',
             'pitches',
         )
+
+
+class JobSeekerReadSerializer(JobSeekerReadSerializerV1):  # v4
+    class Meta:
+        model = JobSeeker
+        fields = JobSeekerReadSerializerV1.Meta.fields + ('profile_image', 'profile_thumb')
 
 
 class AppDeprecationSerializer(serializers.ModelSerializer):

@@ -114,5 +114,16 @@ class InterviewSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Interview
-        fields = ('id', 'invitation', 'application', 'at', 'messages', 'notes', 'feedback', 'cancelled', 'cancelled_by')
-        read_only_fields = ('cancelled', 'cancelled_by')
+        fields = (
+            'id',
+            'invitation',
+            'application',
+            'at',
+            'messages',
+            'notes',
+            'feedback',
+            'cancelled',
+            'cancelled_by',
+            'status',
+        )
+        read_only_fields = ('cancelled', 'cancelled_by', 'status')

@@ -419,8 +419,8 @@ class Profile extends React.Component {
           {getFieldDecorator('truth_confirmation', { valuePropName: 'checked' })(
             <Checkbox>
               By ticking this box I confirm that all information given is true, I understand that any falsification may
-              lead to dismissal, and that I am entitled to work in UK & Northern Ireland. If required I will give full
-              details if I have been convicted of any criminal offence.
+              lead to dismissal, and that I am entitled to work. If required by employer I will give full details if I
+              have been convicted of any criminal offence.
             </Checkbox>
           )}
         </NoLabelField>

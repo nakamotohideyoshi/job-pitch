@@ -152,7 +152,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
-                    android:text="I confirm that all information provided is truthful and confirm I have the legal right to work"
+                    android:text="By ticking this box I confirm that all information given is true, I understand that any falsification may lead to dismissal, and that I am entitled to work. If required by employer I will give full details if I have been convicted of any criminal offence."
                     android:textColor="@color/blackText"
                     android:textSize="18sp" />
             </LinearLayout>

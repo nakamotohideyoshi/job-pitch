@@ -6,7 +6,7 @@ from django.contrib import admin
 from django.contrib.auth.views import password_reset_confirm, password_reset_complete
 
 from mjp import views
-from mjp.views import ecommerce, job_seeker, public
+from mjp.views import ecommerce, public
 
 urlpatterns = [
     url(r'^api/paypal/purchase/$', ecommerce.PayPalPurchaseView.as_view()),

@@ -530,12 +530,24 @@ class ApplicationPitch(models.Model):
 
 
 class Interview(models.Model):
+    PENDING = 'PENDING'
+    ACCEPTED = 'ACCEPTED'
+    COMPLETE = 'COMPLETED'
+    CANCELLED = 'CANCELLED'
+    STATUS_CHOICES = (
+        (PENDING, 'Pending'),
+        (ACCEPTED, 'Accepted'),
+        (COMPLETE, 'Complete'),
+        (CANCELLED, 'Cancelled'),
+    )
+
     at = models.DateTimeField()
     application = models.ForeignKey(Application, related_name='interviews')
     notes = models.TextField(blank=True, help_text='Private recruiter notes')
     feedback = models.TextField(blank=True, help_text='Job seeker visible feedback')
     cancelled = models.DateTimeField(blank=True, null=True)
     cancelled_by = models.ForeignKey(Role, null=True, blank=True)
+    status = models.CharField(default=PENDING, choices=STATUS_CHOICES, max_length=32)
 
     class Meta:
         ordering = ('at',)

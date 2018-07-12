@@ -1,7 +1,10 @@
 from django.db.models import Max
+from django.http import Http404
 from django.utils import timezone
 from rest_framework import viewsets, permissions, serializers
+from rest_framework.decorators import detail_route
 from rest_framework.exceptions import PermissionDenied
+from rest_framework.response import Response
 
 from mjp.models import Job, Role, ApplicationStatus, Message, Application, Location, ApplicationPitch, Interview
 from mjp.serializers.applications import (
@@ -295,8 +298,11 @@ class InterviewViewSet(viewsets.ModelViewSet):
                         if business_user.locations.exists():
                             return business_user.locations.filter(user=request.user).exists()
                         return True
-                elif request.method in permissions.SAFE_METHODS + ("DELETE",):
-                    return obj.application.job_seeker == request.user.job_seeker
+                elif obj.application.job_seeker == request.user.job_seeker:
+                    if request.method in permissions.SAFE_METHODS:
+                        return True
+                    if request.method == "DELETE" and obj.status != Interview.COMPLETE:
+                        return True
             return False
 
     def get_queryset(self):
@@ -338,10 +344,12 @@ class InterviewViewSet(viewsets.ModelViewSet):
             )
 
     def perform_destroy(self, interview):
-        interview.cancelled = timezone.now()
         role = self.request.user.role
+        interview.status = Interview.CANCELLED
+        interview.cancelled = timezone.now()
         interview.cancelled_by = role
         interview.save()
+
         message = Message()
         message.system = True
         message.application = interview.application
@@ -352,6 +360,52 @@ class InterviewViewSet(viewsets.ModelViewSet):
         else:
             message.content = 'The job seeker has cancelled this interview'
         message.save()
+
+    @detail_route(methods=['POST'])
+    def accept(self, request, pk):
+        if request.user.role.name != Role.JOB_SEEKER:
+            raise Http404()
+
+        interview = self.get_object()
+        if interview.status != Interview.PENDING:
+            raise serializers.ValidationError('This interview cannot be accepted')
+
+        interview.status = Interview.ACCEPTED
+        interview.save()
+
+        message = Message()
+        message.system = True
+        message.application = interview.application
+        message.interview = interview
+        message.from_role = request.user.role
+        message.content = '{} has accepted your interview request'.format(request.user.job_seeker.get_full_name())
+        message.save()
+
+        serializer = InterviewSerializer(instance=interview)
+        return Response(serializer.data)
+
+    @detail_route(methods=['POST'])
+    def complete(self, request, pk):
+        if request.user.role.name != Role.RECRUITER:
+            raise Http404()
+
+        interview = self.get_object()
+        if interview.status == Interview.COMPLETE:
+            raise serializers.ValidationError('Interview is already complete')
+
+        interview.status = Interview.COMPLETE
+        interview.save()
+
+        message = Message()
+        message.system = True
+        message.application = interview.application
+        message.interview = interview
+        message.from_role = request.user.role
+        message.content = 'Interview completed'
+        message.save()
+
+        serializer = InterviewSerializer(instance=interview)
+        return Response(serializer.data)
 
     queryset = Interview.objects.all()
     serializer_class = InterviewSerializer

@@ -4,7 +4,7 @@ from mjp.models import Contract, Sector, Hours, Location, Job, Business, JobSeek
 from mjp.serializers import SimpleSerializer, RelatedImageURLField, EmbeddedPitchSerializer
 
 
-class PublicBusinessListingSerializer(serializers.ModelSerializer):
+class PublicEmbeddedBusinessListingSerializer(serializers.ModelSerializer):
     images = RelatedImageURLField(many=True, read_only=True)
 
     class Meta:
@@ -12,27 +12,42 @@ class PublicBusinessListingSerializer(serializers.ModelSerializer):
         fields = ('name', 'images')
 
 
-class PublicLocationListingSerializer(serializers.ModelSerializer):
+class PublicEmbeddedLocationListingSerializer(serializers.ModelSerializer):
     images = RelatedImageURLField(many=True, read_only=True)
     longitude = serializers.FloatField(source='latlng.x')
     latitude = serializers.FloatField(source='latlng.y')
-    business = PublicBusinessListingSerializer()
+    business = PublicEmbeddedBusinessListingSerializer()
 
     class Meta:
         model = Location
         fields = ('name', 'images', 'longitude', 'latitude', 'business')
 
 
-class PublicJobListingSerializer(serializers.ModelSerializer):
+class PublicEmbeddedJobListingSerializer(serializers.ModelSerializer):
     images = RelatedImageURLField(many=True, read_only=True)
     sector = SimpleSerializer(Sector, meta_overrides={'fields': ('name', 'description')})()
     contract = SimpleSerializer(Contract, meta_overrides={'fields': ('name', 'short_name', 'description')})()
     hours = SimpleSerializer(Hours, meta_overrides={'fields': ('name', 'short_name', 'description')})()
-    location_data = PublicLocationListingSerializer(source='location')
 
     class Meta:
         model = Job
-        fields = ('title', 'description', 'images', 'sector', 'contract', 'hours', 'location_data')
+        fields = ('title', 'description', 'images', 'sector', 'contract', 'hours')
+
+
+class PublicJobListingSerializer(PublicEmbeddedJobListingSerializer):
+    location_data = PublicEmbeddedLocationListingSerializer(source='location')
+
+    class Meta:
+        model = Job
+        fields = PublicEmbeddedJobListingSerializer.Meta.fields + ('location_data',)
+
+
+class PublicLocationListingSerializer(PublicEmbeddedLocationListingSerializer):
+    jobs = PublicEmbeddedJobListingSerializer(many=True)
+
+    class Meta:
+        model = Location
+        fields = PublicEmbeddedLocationListingSerializer.Meta.fields + ('jobs',)
 
 
 class PublicJobSeekerListingSerializerV1(serializers.ModelSerializer):

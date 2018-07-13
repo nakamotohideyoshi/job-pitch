@@ -13,6 +13,7 @@ urlpatterns = [
     url(r'^api/paypal/confirm/$', ecommerce.PayPalPurchaseConfirmView.as_view(), name="paypal-confirm"),
     url(r'^api/android/purchase/$', ecommerce.AndroidPurchaseView.as_view()),
     url(r'^api/initial-tokens/$', ecommerce.InitialTokensView.as_view()),
+    url(r'^api/public/locations/(?P<pk>\d+)/$', public.PublicLocationListing.as_view()),
     url(r'^api/public/jobs/(?P<pk>\d+)/$', public.PublicJobListing.as_view()),
     url(r'^api/public/job-seekers/(?P<pk>\d+)/$', public.PublicJobSeekerListing.as_view()),
     url(r'^api/', include(views.router.urls)),

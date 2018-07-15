@@ -16,6 +16,7 @@ public class Interview extends MJPAPIObject {
     private String feedback;
     private Date cancelled;
     private Integer cancelled_by;
+    private String status;
 
     public Integer getApplication() {
         return application;
@@ -43,6 +44,10 @@ public class Interview extends MJPAPIObject {
 
     public Integer getCancelled_by() {
         return cancelled_by;
+    }
+
+    public String getStatus() {
+        return status;
     }
 }
 

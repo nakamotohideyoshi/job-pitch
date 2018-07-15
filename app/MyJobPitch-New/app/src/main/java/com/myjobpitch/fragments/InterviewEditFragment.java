@@ -220,7 +220,7 @@ public class InterviewEditFragment extends FormFragment {
             String dateStr = String.format("%s", df.format("yyyy-MM-dd hh:mm:ss", date));
             interviewForUpdate.setAt(dateStr);
             interviewForUpdate.setApplication(application.getId());
-            interviewForUpdate.setInvitation("");
+            interviewForUpdate.setInvitation(interviewMessage.getText().toString() == null ? "" : interviewMessage.getText().toString());
             interviewForUpdate.setNotes(interviewNotes.getText().toString() == null ? "" : interviewNotes.getText().toString());
             interviewForUpdate.setFeedback("");
 
@@ -246,7 +246,7 @@ public class InterviewEditFragment extends FormFragment {
             String dateStr = String.format("%s", df.format("yyyy-MM-dd hh:mm:ss", date));
             interviewForCreation.setAt(dateStr);
             interviewForCreation.setApplication(application.getId());
-            interviewForCreation.setInvitation("");
+            interviewForCreation.setInvitation(interviewMessage.getText().toString() == null ? "" : interviewMessage.getText().toString());
             interviewForCreation.setNotes(interviewNotes.getText().toString() == null ? "" : interviewNotes.getText().toString());
             interviewForCreation.setFeedback("");
 

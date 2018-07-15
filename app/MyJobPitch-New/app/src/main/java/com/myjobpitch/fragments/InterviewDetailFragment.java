@@ -149,19 +149,34 @@ public class InterviewDetailFragment extends BaseFragment {
     private void loadDetail() {
 
         JobSeeker jobSeeker = application.getJobSeeker();
-        AppHelper.loadJobSeekerImage(jobSeeker, imageView);
+        Job job = application.getJob_data();
 
-        // job seeker name
-        itemTitle.setText(jobSeeker.getFirst_name() + " " + jobSeeker.getLast_name());
+        if (AppData.user.isRecruiter()) {
+            AppHelper.loadJobSeekerImage(jobSeeker, imageView);
 
-        // CV
+            // job seeker name
+            itemTitle.setText(jobSeeker.getFirst_name() + " " + jobSeeker.getLast_name());
 
-        itemSubTitle.setText(jobSeeker.getCV() == null ? "Can't find CV" : jobSeeker.getCV());
+            // CV
+
+            itemSubTitle.setText(jobSeeker.getCV() == null ? "Can't find CV" : jobSeeker.getCV());
+
+
+        } else {
+            AppHelper.loadJobLogo(job, imageView);
+
+            // job title
+            itemTitle.setText(job.getTitle());
+
+            // job Description
+
+            itemSubTitle.setText(job.getDescription() == null ? "Can't find Description" : job.getDescription());
+        }
 
         // Status
-        String interviewStatus = interview.getCancelled_by() == null ? "Pending" : "Complete";
-        String applicationStatus = application.getStatus() == 1 ? "Undecided" : (application.getStatus() == 2 ? "Accepted" : "Rejected");
-        itemStatus.setText(String.format("%s (%s)", interviewStatus, applicationStatus));
+        //String interviewStatus = interview.getCancelled_by() == null ? "Pending" : "Complete";
+        //String applicationStatus = application.getStatus() == 1 ? "Undecided" : (application.getStatus() == 2 ? "Accepted" : "Rejected");
+        itemStatus.setText(String.format("%s", interview.getStatus()));
 
         // Date/Time
         SimpleDateFormat format = new SimpleDateFormat("E d MMM, yyyy");
@@ -227,11 +242,39 @@ public class InterviewDetailFragment extends BaseFragment {
 
     @OnClick(R.id.interview_accept)
     void onAccept() {
-
+        new APITask(new APIAction() {
+            @Override
+            public void run() throws MJPApiException {
+                MJPApi.shared().acceptInterview(interviewId);
+            }
+        }).addListener(new APITaskListener() {
+            @Override
+            public void onSuccess() {
+                getApp().popFragment();
+            }
+            @Override
+            public void onError(JsonNode errors) {
+                errorHandler(errors);
+            }
+        }).execute();
     }
 
     @OnClick(R.id.interview_complete)
     void onComplete() {
-
+        new APITask(new APIAction() {
+            @Override
+            public void run() throws MJPApiException {
+                MJPApi.shared().completeInterview(interviewId);
+            }
+        }).addListener(new APITaskListener() {
+            @Override
+            public void onSuccess() {
+                getApp().popFragment();
+            }
+            @Override
+            public void onError(JsonNode errors) {
+                errorHandler(errors);
+            }
+        }).execute();
     }
 }

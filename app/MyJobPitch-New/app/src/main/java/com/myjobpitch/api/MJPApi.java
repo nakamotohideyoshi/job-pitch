@@ -548,6 +548,29 @@ public class MJPApi {
     }
 
 
+    public void completeInterview(Integer interviewId) throws MJPApiException {
+        try {
+            rest.exchange(getTypeUrl(String.format("interviews/%s/complete", interviewId)), HttpMethod.POST, createAuthenticatedRequest(), Void.class);
+        } catch (HttpClientErrorException e) {
+            if (e.getStatusCode().value() == 400) {
+                throw new MJPApiException(e);
+            }
+            throw e;
+        }
+    }
+
+    public void acceptInterview(Integer interviewId) throws MJPApiException {
+        try {
+            rest.exchange(getTypeUrl(String.format("interviews/%s/accept", interviewId)), HttpMethod.POST, createAuthenticatedRequest(), Void.class);
+        } catch (HttpClientErrorException e) {
+            if (e.getStatusCode().value() == 400) {
+                throw new MJPApiException(e);
+            }
+            throw e;
+        }
+    }
+
+
 
 
 

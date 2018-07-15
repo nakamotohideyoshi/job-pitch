@@ -7039,6 +7039,9 @@ consectetur adipiscing </string>
                                                 <state key="normal" title="Complete Interview">
                                                     <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                 </state>
+                                                <connections>
+                                                    <action selector="completeInterview:" destination="M8h-ob-atn" eventType="touchUpInside" id="YOs-Bc-TI9"/>
+                                                </connections>
                                             </button>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rnh-s6-KVB" customClass="GreenButton" customModule="MyJobPitch" customModuleProvider="target">
                                                 <rect key="frame" x="15" y="409" width="384" height="40"/>
@@ -7080,7 +7083,6 @@ consectetur adipiscing </string>
                                                 </state>
                                                 <connections>
                                                     <action selector="acceptInvitation:" destination="M8h-ob-atn" eventType="touchUpInside" id="80k-6c-nyu"/>
-                                                    <action selector="completeInterview:" destination="M8h-ob-atn" eventType="touchUpInside" id="ylX-8T-Jgp"/>
                                                 </connections>
                                             </button>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="qF9-Sc-Ocb" customClass="GreenButton" customModule="MyJobPitch" customModuleProvider="target">

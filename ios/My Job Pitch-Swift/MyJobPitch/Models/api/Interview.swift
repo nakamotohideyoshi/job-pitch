@@ -16,6 +16,7 @@ class Interview: MJPObject {
     var feedback: String!
     var cancelled: Date!
     var cancelledBy: NSNumber!
+    var status: String!
 }
 
 class InterviewForCancel: MJPObject {

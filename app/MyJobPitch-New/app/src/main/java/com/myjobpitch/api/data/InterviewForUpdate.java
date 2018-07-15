@@ -18,6 +18,7 @@ public class InterviewForUpdate extends MJPAPIObject {
     private List<InterviewMessage> messages;
     private Date cancelled;
     private Integer cancelled_by;
+    private String status;
 
     public List<InterviewMessage> getMessages() {
         return messages;
@@ -69,6 +70,10 @@ public class InterviewForUpdate extends MJPAPIObject {
 
     public Integer getCancelled_by() {
         return cancelled_by;
+    }
+
+    public String getStatus() {
+        return status;
     }
 }
 

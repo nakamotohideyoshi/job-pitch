@@ -11,6 +11,7 @@ import android.widget.TextView;
 import com.myjobpitch.R;
 
 import com.daprlabs.aaron.swipedeck.SwipeDeck;
+import com.myjobpitch.utils.AppData;
 import com.myjobpitch.utils.AppHelper;
 
 import java.util.ArrayList;
@@ -52,9 +53,28 @@ public class SwipeFragment<T> extends BaseFragment {
 
         // refresh button
         addMenuItem(MENUGROUP1, 100, "Refresh", R.drawable.ic_refresh);
+        if (AppData.user.isJobSeeker()) {
+            addMenuItem(MENUGROUP1, 111, "Edit Profile", R.drawable.ic_edit);
+        } else {
+            addMenuItem(MENUGROUP1, 101, "Job Details", R.drawable.ic_edit);
+        }
+
+        // new message indication
+        showNewMessagesCounts();
 
         return  view;
     }
+
+    void showNewMessagesCounts() {
+        long newMessageCount = getApp().newMessageCount;
+        if (newMessageCount > 0 && newMessageCount < 10) {
+            int id = getResources().getIdentifier("com.myjobpitch:drawable/menu_message" + getApp().newMessageCount,null, null);
+            addMenuItem(MENUGROUP2, 108, "All Messages", id);
+        } else if (newMessageCount >= 10) {
+            addMenuItem(MENUGROUP2, 108, "All Messages", R.drawable.menu_message10);
+        }
+    }
+
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -115,6 +135,10 @@ public class SwipeFragment<T> extends BaseFragment {
     public void onMenuSelected(int menuID) {
         if (menuID == 100) {
             loadData();
+        } else if (menuID == 101) {
+            goToJobDetail();
+        } else if (menuID == 111) {
+            goToEditProfile();
         }
     }
 
@@ -174,6 +198,14 @@ public class SwipeFragment<T> extends BaseFragment {
     }
 
     protected void selectedCard(T object) {
+    }
+
+    protected void goToJobDetail() {
+
+    }
+
+    protected void goToEditProfile() {
+
     }
 
 }

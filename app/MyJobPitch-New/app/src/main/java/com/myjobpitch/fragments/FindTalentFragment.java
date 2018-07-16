@@ -37,7 +37,6 @@ public class FindTalentFragment extends SwipeFragment<JobSeeker> {
             AppHelper.setJobTitleViewText(jobTitleView, String.format("%s (%s)", job.getTitle(), AppHelper.getBusinessName(job)));
         }
 
-        addMenuItem(MENUGROUP1, 101, "Job Details", R.drawable.ic_edit);
         return  view;
     }
 
@@ -133,14 +132,10 @@ public class FindTalentFragment extends SwipeFragment<JobSeeker> {
     }
 
     @Override
-    public void onMenuSelected(int menuID) {
-        if (menuID == 101) {
-            JobDetailFragment fragment = new JobDetailFragment();
-            fragment.job = job;
-            getApp().pushFragment(fragment);
-        } else {
-            super.onMenuSelected(menuID);
-        }
+    protected  void goToJobDetail() {
+        JobDetailFragment fragment = new JobDetailFragment();
+        fragment.job = job;
+        getApp().pushFragment(fragment);
     }
 
 }

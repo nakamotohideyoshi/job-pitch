@@ -88,8 +88,9 @@ public class ApplicationsFragment extends BaseFragment {
         });
 
         if (AppData.user.isJobSeeker()) {
-            addMenuItem(MENUGROUP1, 112, "Edit Profile", R.drawable.ic_edit);
+            addMenuItem(MENUGROUP2, 100, "Edit Profile", R.drawable.ic_edit);
         }
+
         if (jobSeeker != null) {
             showInactiveBanner();
         }
@@ -101,9 +102,7 @@ public class ApplicationsFragment extends BaseFragment {
 
     @Override
     public void onMenuSelected(int menuID) {
-        if (menuID == 109) {
-            getApp().setRootFragement(AppData.PAGE_MESSAGES);
-        } else if (menuID == 112) {
+        if (menuID == 100) {
             TalentProfileFragment fragment = new TalentProfileFragment();
             fragment.jobSeeker = jobSeeker;
             fragment.isActivation = true;
@@ -143,7 +142,6 @@ public class ApplicationsFragment extends BaseFragment {
 
                 if (AppData.user.isJobSeeker()) {
                     showInactiveBanner();
-                    showNewMessagesCounts();
                 }
             }
             @Override
@@ -151,16 +149,6 @@ public class ApplicationsFragment extends BaseFragment {
                 errorHandler(errors);
             }
         }).execute();
-    }
-
-    void showNewMessagesCounts() {
-        long newMessageCount = getApp().newMessageCount;
-        if (newMessageCount > 0 && newMessageCount < 10) {
-            int id = getResources().getIdentifier("com.myjobpitch:drawable/menu_message" + getApp().newMessageCount,null, null);
-            addMenuItem(MENUGROUP1, 109, "All Messages", id);
-        } else if (newMessageCount >= 10) {
-            addMenuItem(MENUGROUP1, 109, "All Messages", R.drawable.menu_message10);
-        }
     }
 
     @OnClick(R.id.empty_button)

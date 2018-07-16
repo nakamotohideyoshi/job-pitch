@@ -96,7 +96,7 @@ class PitchRecord extends React.Component {
             ]}
           />
 
-          {!pitchUrl && <span> No Pitch </span>}
+          {!pitchUrl && <span> Great show who you are here for your next Job </span>}
         </div>
 
         <div className="button-container">

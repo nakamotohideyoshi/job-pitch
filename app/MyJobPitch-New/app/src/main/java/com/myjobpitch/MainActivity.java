@@ -170,7 +170,7 @@ public class MainActivity extends AppCompatActivity
 
                     @Override
                     public void onError(JsonNode errors) {
-                        errorHandler(errors);
+
                     }
                 }).execute();
             }

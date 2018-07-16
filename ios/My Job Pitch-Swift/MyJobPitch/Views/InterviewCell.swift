@@ -22,17 +22,30 @@ class InterviewCell: MGSwipeTableCell {
     
     func setData(_ interview: Interview, _ application: Application) {
         
-        if let image = application.jobSeeker.getPitch()?.thumbnail {
-            AppHelper.loadImageURL(imageUrl: image, imageView: imgView, completion: nil)
+        if AppData.user.isRecruiter() {
+        
+            if let image = application.jobSeeker.getPitch()?.thumbnail {
+                AppHelper.loadImageURL(imageUrl: image, imageView: imgView, completion: nil)
+            } else {
+                imgView.image = UIImage(named: "no-img")
+            }
+            cvDescription.text = application.jobSeeker.cv == nil ? "Can't find CV" : application.jobSeeker.cv
+            jobSeekerName.text = application.jobSeeker.getFullName()
+            
         } else {
-            imgView.image = UIImage(named: "no-img")
+            if let image = application.job.getPitch()?.thumbnail {
+                AppHelper.loadImageURL(imageUrl: image, imageView: imgView, completion: nil)
+            } else {
+                imgView.image = UIImage(named: "no-img")
+            }
+            cvDescription.text = application.job.desc == nil ? "Can't find Description" : application.job.desc
+            jobSeekerName.text = application.job.title
         }
-        cvDescription.text = application.jobSeeker.cv == nil ? "Can't find CV" : application.jobSeeker.cv
-        jobSeekerName.text = application.jobSeeker.getFullName()
+        
         // Status
-        let interviewStatus = interview.cancelledBy == nil ? "Pending" : "Complete";
-        let applicationStatus = application.status == 1 ? "Undecided" : (application.status == 2 ? "Accepted" : "Rejected");
-        status.text = String(format:"%@ (%@)", interviewStatus, applicationStatus)
+//        let interviewStatus = interview.cancelledBy == nil ? "Pending" : "Complete";
+//        let applicationStatus = application.status == 1 ? "Undecided" : (application.status == 2 ? "Accepted" : "Rejected");
+        status.text = String(format:"%@", interview.status)
         
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "E d MMM, yyyy"

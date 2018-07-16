@@ -156,20 +156,29 @@ public class AppHelper {
     public static void showInterviewInfo(Interview interview, View view, Application application) {
 
         JobSeeker jobSeeker = application.getJobSeeker();
-        loadJobSeekerImage(jobSeeker, getImageView(view));
+        Job job = application.getJob_data();
 
+        if (AppData.user.isRecruiter()) {
+            loadJobSeekerImage(jobSeeker, getImageView(view));
 
-        // job seeker name
-        getItemTitleView(view).setText(jobSeeker.getFirst_name() + " " + jobSeeker.getLast_name());
+            // job seeker name
+            getItemTitleView(view).setText(jobSeeker.getFirst_name() + " " + jobSeeker.getLast_name());
 
-        // CV
+            // CV
 
-        getItemSubTitleView(view).setText(jobSeeker.getCV() == null ? "Can't find CV" : jobSeeker.getCV());
+            getItemSubTitleView(view).setText(jobSeeker.getCV() == null ? "Can't find CV" : jobSeeker.getCV());
+        } else {
+            loadJobLogo(job, getImageView(view));
+
+            getItemTitleView(view).setText(job.getTitle());
+
+            getItemSubTitleView(view).setText(job.getDescription() == null ? "Can't find Description" : job.getDescription());
+        }
 
         // Status
-        String interviewStatus = interview.getCancelled_by() == null ? "Pending" : "Complete";
-        String applicationStatus = application.getStatus() == 1 ? "Undecided" : (application.getStatus() == 2 ? "Accepted" : "Rejected");
-        getItemStatusTitleView(view).setText(String.format("%s (%s)", interviewStatus, applicationStatus));
+        //String interviewStatus = interview.getCancelled_by() == null ? "Pending" : "Complete";
+        //String applicationStatus = application.getStatus() == 1 ? "Undecided" : (application.getStatus() == 2 ? "Accepted" : "Rejected");
+        getItemStatusTitleView(view).setText(String.format("%s", interview.getStatus()));
 
         // Date/Time
         SimpleDateFormat format = new SimpleDateFormat("E d MMM, yyyy");

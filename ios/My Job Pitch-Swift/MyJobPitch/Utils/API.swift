@@ -704,5 +704,17 @@ class API: NSObject {
         deleteObject(String(format: "/api/interviews/%@/", interviewId),
                      success: success, failure: failure)
     }
+    
+    func acceptInterview(interviewId: NSNumber,
+                         success: ((NSObject?) -> Void)!,
+                         failure: ((String?, NSDictionary?) -> Void)!) {
+        postObject(String(format: "/api/interviews/%@/accept/", interviewId), request:nil, success: success, failure: failure)
+    }
+    
+    func completeInterview(interviewId: NSNumber,
+                         success: ((NSObject?) -> Void)!,
+                         failure: ((String?, NSDictionary?) -> Void)!) {
+        postObject(String(format: "/api/interviews/%@/complete/", interviewId), request:nil, success: success, failure: failure)
+    }
 
 }

@@ -55,7 +55,9 @@ class InterviewEditController: MJPController, WWCalendarTimeSelectorProtocol {
             singleDate = interview.at
             dateTimeLabel.text = String(format: "%@ at %@", dateFormatter.string(from: singleDate), dateFormatter1.string(from: singleDate))
             
-            note.text = interview.notes        }
+            note.text = interview.notes
+            
+        }
     }
 
     @IBAction func getDateTime(_ sender: Any) {

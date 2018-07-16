@@ -115,8 +115,12 @@ class SwipeController: MJPController {
     func goProfile(_ sender: Any) {
         isRefresh = true
         let controller = AppHelper.mainStoryboard.instantiateViewController(withIdentifier: "JobSeekerProfile") as! JobSeekerProfileController
+        controller.saveComplete = { () in
+            SideMenuController.pushController(id: "find_job")
+        }
         controller.activation = true
-        AppHelper.getFrontController().navigationController?.present(controller, animated: true)
+        let navController = UINavigationController(rootViewController: controller)
+        present(navController, animated: true, completion: nil)
     }
     
     func newCard(index: Int) -> SwipeCard {

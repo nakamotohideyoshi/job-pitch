@@ -206,11 +206,15 @@ extension MessageListController: UITableViewDelegate {
        
         if AppData.user.isJobSeeker() {
             if (!jobSeeker.active) {
-                self.refresh = true
                 PopupController.showGreen("To message please active your account", ok: "activate", okCallback: {
+                    self.refresh = true
                     let controller = AppHelper.mainStoryboard.instantiateViewController(withIdentifier: "JobSeekerProfile") as! JobSeekerProfileController
+                    controller.saveComplete = { () in
+                        SideMenuController.pushController(id: "find_job")
+                    }
                     controller.activation = true
-                    AppHelper.getFrontController().navigationController?.present(controller, animated: true)
+                    let navController = UINavigationController(rootViewController: controller)
+                    self.present(navController, animated: true, completion: nil)
                 }, cancel: "Cancel", cancelCallback: {
                     self.refresh = false
                 })

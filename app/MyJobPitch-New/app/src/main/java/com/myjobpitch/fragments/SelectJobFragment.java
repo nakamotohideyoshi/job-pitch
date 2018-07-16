@@ -139,6 +139,9 @@ public class SelectJobFragment extends BaseFragment {
             }
         });
 
+        // new message indication
+        showNewMessagesCounts();
+
         // loading data
 
         swipeRefreshLayout.setRefreshing(true);
@@ -168,7 +171,6 @@ public class SelectJobFragment extends BaseFragment {
                 adapter.addAll(jobs);
                 emptyView.setVisibility(jobs.size()==0 ? View.VISIBLE : View.GONE);
                 swipeRefreshLayout.setRefreshing(false);
-                showNewMessagesCounts();
             }
             @Override
             public void onError(JsonNode errors) {

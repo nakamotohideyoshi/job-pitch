@@ -313,6 +313,7 @@ class JobSeekerProfileController: MJPController {
     @IBAction func onActivate(_ sender: Any) {
         if !self.active.isOn {
             PopupController.showGreen("Your profile will not be visible and will not be able to apply for jobs or send messages", ok: "Deactivate", okCallback: {
+                self.saveAction(sender)
             }, cancel: "Cancel", cancelCallback: {
                 self.activateBackUp()
             })

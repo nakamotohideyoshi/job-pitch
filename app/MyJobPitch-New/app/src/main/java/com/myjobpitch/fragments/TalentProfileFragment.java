@@ -334,6 +334,7 @@ public class TalentProfileFragment extends FormFragment {
             popup.addGreenButton("Deactivate", new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    onSave();
                 }
             });
             popup.addGreyButton("Cancel", new View.OnClickListener() {

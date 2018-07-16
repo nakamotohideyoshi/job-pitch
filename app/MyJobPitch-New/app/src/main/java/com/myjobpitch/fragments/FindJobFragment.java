@@ -46,12 +46,10 @@ public class FindJobFragment extends SwipeFragment<Job> {
             }
         });
 
-        if (AppData.user.isJobSeeker()) {
-            addMenuItem(MENUGROUP1, 111, "Edit Profile", R.drawable.ic_edit);
-        }
         if (jobSeeker != null) {
             showInactiveBanner();
         }
+
         return  view;
     }
 
@@ -78,7 +76,6 @@ public class FindJobFragment extends SwipeFragment<Job> {
                 } else {
                     setData(data);
                 }
-                showNewMessagesCounts();
             }
             @Override
             public void onError(JsonNode errors) {
@@ -92,15 +89,6 @@ public class FindJobFragment extends SwipeFragment<Job> {
             AppHelper.setJobTitleViewText(jobTitleView, "Your profile is not active!");
         } else {
             AppHelper.setJobTitleViewText(jobTitleView, "");
-        }
-    }
-    void showNewMessagesCounts() {
-        long newMessageCount = getApp().newMessageCount;
-        if (newMessageCount > 0 && newMessageCount < 10) {
-            int id = getResources().getIdentifier("com.myjobpitch:drawable/menu_message" + getApp().newMessageCount,null, null);
-            addMenuItem(MENUGROUP1, 108, "All Messages", id);
-        } else if (newMessageCount >= 10) {
-            addMenuItem(MENUGROUP1, 108, "All Messages", R.drawable.menu_message10);
         }
     }
 
@@ -201,14 +189,17 @@ public class FindJobFragment extends SwipeFragment<Job> {
 
         if (menuID == 108) {
             getApp().setRootFragement(AppData.PAGE_MESSAGES);
-        } else if (menuID == 111) {
-            TalentProfileFragment fragment = new TalentProfileFragment();
-            fragment.jobSeeker = jobSeeker;
-            fragment.isActivation = true;
-            getApp().pushFragment(fragment);
         } else {
             super.onMenuSelected(menuID);
         }
+    }
+
+    @Override
+    protected void goToEditProfile() {
+        TalentProfileFragment fragment = new TalentProfileFragment();
+        fragment.jobSeeker = jobSeeker;
+        fragment.isActivation = true;
+        getApp().pushFragment(fragment);
     }
 
 }

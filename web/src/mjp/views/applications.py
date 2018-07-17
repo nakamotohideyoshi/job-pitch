@@ -342,7 +342,7 @@ class InterviewViewSet(viewsets.ModelViewSet):
                 system=True,
                 application=interview.application,
                 from_role=Role.objects.get(name=Role.RECRUITER),
-                content='Interview recheduled',
+                content='Interview rescheduled',
                 interview=interview,
             )
 

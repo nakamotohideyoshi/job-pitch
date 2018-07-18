@@ -5,7 +5,7 @@ import { Button, message, Modal } from 'antd';
 import { uploadPitch } from 'redux/jobseeker/profile';
 import * as helper from 'utils/helper';
 
-import { PopupProgress, Icons, VideoRecorder, VideoPlayer } from 'components';
+import { PopupProgress, Icons, VideoRecorder, VideoPlayer, VideoPlayerModal } from 'components';
 import Wrapper from './PitchRecord.styled';
 
 const { confirm } = Modal;
@@ -15,7 +15,9 @@ class PitchRecord extends React.Component {
     showRecorder: false,
     pitchUrl: null,
     pitchData: null,
-    loading: null
+    loading: null,
+    newPitchUrl: null,
+    showNewPitch: false
   };
 
   componentWillMount() {
@@ -43,9 +45,10 @@ class PitchRecord extends React.Component {
   };
 
   closeRecorder = (url, data) => {
-    const pitchUrl = url || this.state.pitchUrl;
+    const pitchUrl = this.state.pitchUrl;
     const pitchData = data || this.state.pitchData;
-    this.setState({ pitchUrl, pitchData, showRecorder: false });
+    const newPitchUrl = url === undefined ? null : url;
+    this.setState({ pitchUrl, pitchData, showRecorder: false, newPitchUrl });
   };
 
   uploadPitch = () => {
@@ -67,8 +70,16 @@ class PitchRecord extends React.Component {
     });
   };
 
+  showModal = () => {
+    this.setState({ showNewPitch: true });
+  };
+
+  hideModal = () => {
+    this.setState({ showNewPitch: false });
+  };
+
   render() {
-    const { pitchUrl, pitchData, loading, showRecorder, poster } = this.state;
+    const { pitchUrl, pitchData, loading, showRecorder, poster, newPitchUrl, showNewPitch } = this.state;
 
     return (
       <Wrapper>
@@ -99,10 +110,29 @@ class PitchRecord extends React.Component {
           {!pitchUrl && <span> Great show who you are here for your next Job </span>}
         </div>
 
+        {showNewPitch && (
+          <VideoPlayerModal
+            autoplay
+            controls
+            sources={[
+              {
+                src: newPitchUrl,
+                type: 'video/mp4'
+              }
+            ]}
+            onClose={() => this.hideModal()}
+          />
+        )}
+
         <div className="button-container">
           <Button type="primary" onClick={this.openRecorder}>
             Record New Pitch
           </Button>
+          {newPitchUrl && (
+            <Button type="secondary" onClick={this.showModal}>
+              <Icons.PlayCircle /> New Pitch
+            </Button>
+          )}
           {pitchData && (
             <Button type="secondary" onClick={this.uploadPitch}>
               <Icons.Upload /> Upload

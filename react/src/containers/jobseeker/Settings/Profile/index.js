@@ -429,9 +429,11 @@ class Profile extends React.Component {
           <Button type="primary" className="btn-save" loading={loading} onClick={this.save}>
             Save
           </Button>
-          <Button className="btn-preview" onClick={this.openPreview}>
-            Preview
-          </Button>
+          {pitch && (
+            <Button className="btn-preview" onClick={this.openPreview}>
+              Preview
+            </Button>
+          )}
         </NoLabelField>
 
         {!jobseeker.id && !dontShowIntro && <Intro data={INTRO_DATA} onClose={this.closeIntro} />}

@@ -157,12 +157,7 @@ class JobProfile extends React.Component {
           )}
           <div className="map">
             <div>
-              <GoogleMap
-                marker={marker}
-                circle={circle}
-                zoom={this.zoom}
-                onSelectedLocation={this.selectLocation}
-              />
+              <GoogleMap marker={marker} circle={circle} zoom={this.zoom} onSelectedLocation={this.selectLocation} />
             </div>
           </div>
         </Item>

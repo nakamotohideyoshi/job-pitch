@@ -1,6 +1,6 @@
 import { injectGlobal } from 'styled-components';
 import media from 'utils/mediaquery';
-import colors from 'utils/colors';
+// import colors from 'utils/colors';
 
 injectGlobal`
   html {

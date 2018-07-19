@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 import { Breadcrumb, Form, Input, Select, Button, notification, Checkbox } from 'antd';
 
 import { saveUser } from 'redux/recruiter/users';
-import DATA from 'utils/data';
+// import DATA from 'utils/data';
 import * as helper from 'utils/helper';
 
 import { PageHeader, PageSubHeader, PopupProgress, NoLabelField } from 'components';

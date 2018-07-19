@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import { findPublicJob } from 'redux/jobseeker/find';
-import * as helper from 'utils/helper';
+// import * as helper from 'utils/helper';
 
 import { Button } from 'antd';
 

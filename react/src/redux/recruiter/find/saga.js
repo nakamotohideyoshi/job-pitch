@@ -1,6 +1,6 @@
 import { takeLatest, call, put } from 'redux-saga/effects';
 import * as C from 'redux/constants';
-import { weakRequest, getRequest, postRequest } from 'utils/request';
+import { getRequest, postRequest } from 'utils/request';
 
 // function* useToken() {
 //   const { rc_apps: { jobs, selectedJobId } } = yield select();

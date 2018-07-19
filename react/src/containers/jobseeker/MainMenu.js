@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { withRouter, Link } from 'react-router-dom';
 import { Menu, Badge } from 'antd';
 import { getApplications, getAllApplications } from 'redux/applications';
-import { updateCount } from 'redux/messages';
+import { updateCount, clearUpdated } from 'redux/messages';
 
 const Item = Menu.Item;
 
@@ -35,12 +35,17 @@ class MainMenu extends React.Component {
 
   componentDidMount() {
     timer = setInterval(() => {
-      if (this.props.location.pathname.indexOf('/jobseeker/messages') === 0) {
-        // alert('aaa');
-      } else {
+      // if (this.props.location.pathname.indexOf('/jobseeker/messages') === 0) {
+      //   // alert('aaa');
+      // } else {
+      //   this.props.getAllApplications();
+      // }
+      const { auth_businesses, job_seeker } = this.props;
+      if (!(auth_businesses.length === 0 && job_seeker === null)) {
         this.props.getAllApplications();
+        this.props.clearUpdated();
       }
-    }, 30000);
+    }, 10000);
   }
 
   componentWillUnmount() {
@@ -48,7 +53,7 @@ class MainMenu extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.allApplications !== null) {
+    if (nextProps.allApplications !== null && !nextProps.updated) {
       this.props.updateCount({ applications: nextProps.allApplications, from_role: 1 });
     }
   }
@@ -63,6 +68,10 @@ class MainMenu extends React.Component {
     }
     if (count >= 9) {
       countStr = '10+';
+    }
+
+    if (this.props.location.pathname.indexOf('/jobseeker/messages') === 0) {
+      countStr = '';
     }
 
     if (!profile) return null;
@@ -92,17 +101,23 @@ export default withRouter(
   connect(
     state => {
       const { allApplications } = state.applications;
-      const { count } = state.messages;
+      const { count, updated } = state.messages;
+      const { job_seeker } = state.auth.user;
+      const auth_businesses = state.auth.user.businesses;
       return {
         profile: state.js_profile.profile,
         allApplications,
-        count
+        count,
+        updated,
+        auth_businesses,
+        job_seeker
       };
     },
     {
       getApplications,
       getAllApplications,
-      updateCount
+      updateCount,
+      clearUpdated
     }
   )(MainMenu)
 );

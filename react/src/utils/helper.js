@@ -301,6 +301,5 @@ export function getNewMessages({ applications, from_role }) {
     }
   }
   let latest = sortedMessages.length > 0 ? sortedMessages[0].id : '';
-  console.log('sorted--->', sortedMessages, from_role);
   return { count, latest: latest };
 }

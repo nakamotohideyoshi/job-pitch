@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { List, Avatar } from 'antd';
 
-import { getApplications, sendMessage } from 'redux/applications';
+import { getApplications, getAllApplications, sendMessage } from 'redux/applications';
 import { updateLatest } from 'redux/messages';
 import DATA from 'utils/data';
 import * as helper from 'utils/helper';
@@ -23,9 +23,6 @@ class Messages extends React.Component {
 
   componentWillMount() {
     this.props.getApplications();
-    if (this.props.latest !== '') {
-      this.props.updateLatest({ id: this.props.latest, data: { read: true } });
-    }
     window.addEventListener('resize', this.onResize);
     this.onResize();
   }
@@ -35,7 +32,11 @@ class Messages extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const { applications, match: { params } } = nextProps;
+    const { applications, match: { params }, count } = nextProps;
+    if (count !== 0) {
+      this.props.updateLatest({ id: nextProps.latest, data: { read: true } });
+      this.props.getApplications();
+    }
     if (applications) {
       const { applications: applications0, match: { params: params0 } } = this.props;
       if (!applications0 || params0.appId !== params.appId) {
@@ -155,10 +156,12 @@ const enhance = connect(
     jobseeker: state.js_profile.jobseeker,
     applications: state.applications.applications,
     error: state.applications.error,
-    latest: state.messages.latest
+    latest: state.messages.latest,
+    count: state.messages.count
   }),
   {
     getApplications,
+    getAllApplications,
     sendMessage,
     updateLatest
   }

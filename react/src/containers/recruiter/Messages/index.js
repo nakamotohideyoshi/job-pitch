@@ -3,7 +3,13 @@ import Helmet from 'react-helmet';
 import { connect } from 'react-redux';
 import { List, Modal, Avatar, Button, Switch } from 'antd';
 
-import { getApplications, connectApplication, updateApplication, sendMessage } from 'redux/applications';
+import {
+  getApplications,
+  getAllApplications,
+  connectApplication,
+  updateApplication,
+  sendMessage
+} from 'redux/applications';
 import { updateLatest } from 'redux/messages';
 
 import DATA from 'utils/data';
@@ -37,9 +43,6 @@ class Page extends React.Component {
 
   componentWillMount() {
     this.props.getApplications();
-    if (this.props.latest !== '') {
-      this.props.updateLatest({ id: this.props.latest, data: { read: true } });
-    }
     window.addEventListener('resize', this.onResize);
     this.onResize();
   }
@@ -49,7 +52,11 @@ class Page extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const { applications, match: { params } } = nextProps;
+    const { applications, match: { params }, count } = nextProps;
+    if (count !== 0) {
+      this.props.updateLatest({ id: nextProps.latest, data: { read: true } });
+      this.props.getApplications();
+    }
     if (applications) {
       const { applications: applications0, match: { params: params0 } } = this.props;
       if (!applications0 || params0.appId !== params.appId) {
@@ -263,10 +270,12 @@ const enhance = connect(
     applications: state.applications.applications,
     businesses: state.rc_businesses.businesses,
     error: state.applications.error,
-    latest: state.messages.latest
+    latest: state.messages.latest,
+    count: state.messages.count
   }),
   {
     getApplications,
+    getAllApplications,
     connectApplication,
     updateApplication,
     sendMessage,

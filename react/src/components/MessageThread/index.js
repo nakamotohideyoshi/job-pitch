@@ -4,7 +4,7 @@ import { Input, Avatar } from 'antd';
 import * as helper from 'utils/helper';
 import DATA from 'utils/data';
 
-import { Icons, LinkButton } from 'components';
+import { Icons } from 'components';
 import Wrapper from './styled';
 
 const { TextArea } = Input;

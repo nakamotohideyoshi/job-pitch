@@ -19,6 +19,7 @@ export const SEND_MESSAGE = 'SEND_MESSAGE';
 export const MESSAGES_UPDATE = 'MESSAGES_UPDATE';
 export const UPDATE_COUNT = 'UPDATE_COUNT';
 export const UPDATE_LATEST = 'UPDATE_LATEST';
+export const CLEAR_UPDATED = 'CLEAR_UPDATED';
 
 // recruiter
 

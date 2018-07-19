@@ -88,12 +88,12 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { saveInterview } from 'redux/interviews';
-import { Form, Input, Button, DatePicker, message, Divider, Row, Col, notification } from 'antd';
+import { Form, Input, Button, DatePicker, Divider, Row, Col, notification } from 'antd';
 
 import styled from 'styled-components';
 import media from 'utils/mediaquery';
 
-import { NoLabelField } from 'components';
+// import { NoLabelField } from 'components';
 
 import Wrapper from './InterviewEdit.styled';
 
@@ -209,8 +209,8 @@ class InterviewEdit extends React.Component {
   render() {
     const { loading } = this.state;
     const { getFieldDecorator } = this.props.form;
-    const { jobseeker, className, connected, application, view } = this.props;
-    const interview = application ? application.interview : null;
+    const { jobseeker, className, connected, view } = this.props;
+    // const interview = application ? application.interview : null;
 
     const image = helper.getPitch(jobseeker).thumbnail;
     const fullName = helper.getFullJSName(jobseeker);

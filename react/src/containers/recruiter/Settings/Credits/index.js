@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Select, Button, List, Tooltip } from 'antd';
+import { Select, Button, List } from 'antd';
 
 import { selectBusiness, purchase } from 'redux/recruiter/businesses';
 import DATA from 'utils/data';

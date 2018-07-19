@@ -8,9 +8,13 @@ function* updateCount(action) {
   yield put({ type: C.MESSAGES_UPDATE, payload: { count, latest } });
 }
 
+function* clearUpdated() {
+  yield put({ type: C.MESSAGES_UPDATE, payload: { updated: false } });
+}
+
 const updateLatest = weakRequest(
   putRequest({
-    type: C.MESSAGES_UPDATE,
+    type: C.UPDATE_LATEST,
     url: ({ id }) => `/api/messages/${id}/`,
     payloadOnSuccess: ({ id }) => ({ count: 0, latest: id })
   })
@@ -30,5 +34,6 @@ const updateLatest = weakRequest(
 
 export default function* sagas() {
   yield takeEvery(C.UPDATE_COUNT, updateCount);
+  yield takeEvery(C.CLEAR_UPDATED, clearUpdated);
   yield takeLatest(C.UPDATE_LATEST, updateLatest);
 }

@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import Truncate from 'react-truncate';
-import { List, Modal, Avatar, Tooltip, Button, Switch } from 'antd';
+import { List, Modal, Avatar, Tooltip } from 'antd';
 
 import { removeInterview } from 'redux/interviews';
 import * as helper from 'utils/helper';

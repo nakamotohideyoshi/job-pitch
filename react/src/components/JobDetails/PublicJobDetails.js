@@ -2,7 +2,7 @@ import React from 'react';
 import { Divider, Row, Col } from 'antd';
 
 import * as helper from 'utils/helper';
-import { GoogleMap, Icons, VideoPlayer, SocialShare } from 'components';
+import { GoogleMap } from 'components';
 import Wrapper from './JobDetails.styled';
 
 export default ({ job, className, roughLocation, actions }) => {

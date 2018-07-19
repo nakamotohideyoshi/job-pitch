@@ -4,14 +4,14 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import Truncate from 'react-truncate';
 import { Breadcrumb, List, Avatar, Tooltip, Modal, Input } from 'antd';
-import styled, { css } from 'styled-components';
+import styled from 'styled-components';
 
 import DATA from 'utils/data';
 import * as helper from 'utils/helper';
 
 import * as _ from 'lodash';
 
-import { PageHeader, PageSubHeader, AlertMsg, LinkButton, Loading, ListEx, Icons, ShareLink } from 'components';
+import { PageHeader, PageSubHeader, AlertMsg, LinkButton, Loading, ListEx, Icons } from 'components';
 import DeleteDialog from './DeleteDialog';
 import Mark from './Mark';
 import Wrapper from '../styled';
@@ -111,11 +111,11 @@ class JobList extends React.Component {
   };
 
   renderJob = job => {
-    const { id, status, title, sector, contract, hours, description, loading } = job;
+    const { id, status, title, description, loading } = job;
     const logo = helper.getJobLogo(job);
-    const sectorName = helper.getItemByID(DATA.sectors, sector).name;
-    const contractName = helper.getItemByID(DATA.contracts, contract).short_name;
-    const hoursName = helper.getItemByID(DATA.hours, hours).short_name;
+    // const sectorName = helper.getItemByID(DATA.sectors, sector).name;
+    // const contractName = helper.getItemByID(DATA.contracts, contract).short_name;
+    // const hoursName = helper.getItemByID(DATA.hours, hours).short_name;
     const closed = status === DATA.JOB.CLOSED ? 'disabled' : '';
     if (this.state.countList !== null) {
       var count = this.state.countList[job.id];

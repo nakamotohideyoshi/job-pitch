@@ -351,17 +351,18 @@ public class LoginFragment extends FormFragment {
 
     void goMain() {
         User user = AppData.user;
-
-        getApp().startNewMessageCount();
+        getApp().startChecking();
 
         if (user.isRecruiter()) {
             showMainPage(AppData.PAGE_FIND_TALENT);
+            getApp().startNewMessageCount();
             return;
         }
 
         if (user.isJobSeeker()) {
             if (AppData.existProfile) {
                 showMainPage(AppData.PAGE_FIND_JOB);
+                getApp().startNewMessageCount();
             } else {
                 showMainPage(AppData.PAGE_JOB_PROFILE);
             }

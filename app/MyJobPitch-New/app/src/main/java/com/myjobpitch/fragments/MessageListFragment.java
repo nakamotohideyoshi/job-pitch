@@ -40,6 +40,24 @@ public class MessageListFragment extends ApplicationsFragment {
     @BindView(R.id.job_title_view)
     View jobTitleView;
 
+    Handler indicationHandler = new Handler();
+
+    Runnable indicationTimerRunnable = new Runnable() {
+        @Override
+        public void run() {
+            updateMessage();
+            indicationHandler.postDelayed(this, 10000);
+        }
+    };
+
+    public void startChecking() {
+        indicationHandler.postDelayed(indicationTimerRunnable, 0);
+    }
+
+    public  void stopChecking() {
+        indicationHandler.removeCallbacks(indicationTimerRunnable);
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -61,20 +79,24 @@ public class MessageListFragment extends ApplicationsFragment {
             AppHelper.setJobTitleViewText(jobTitleView, String.format("%s (%s)", job.getTitle(), AppHelper.getBusinessName(job)));
             addMenuItem(MENUGROUP1, 105, "All Messages", R.drawable.menu_message);
         } else {
-            getApp().newMessageCount = 0;
             AppHelper.setJobTitleViewText(jobTitleView, "All Messages");
-            updateMessage(getApp().lastMessage);
-            getApp().isRefresh(false);
-
+            startChecking();
         }
 
         return view;
     }
 
+    public void updateMessage() {
+        long newMessageCount = getApp().newMessageCount;
+        if (newMessageCount > 0) {
+            updateMessage(getApp().lastMessage);
+        }
+    }
+
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        getApp().isRefresh(true);
+        stopChecking();
     }
 
 

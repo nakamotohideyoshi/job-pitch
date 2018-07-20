@@ -59,22 +59,8 @@ public class SwipeFragment<T> extends BaseFragment {
             addMenuItem(MENUGROUP1, 101, "Job Details", R.drawable.ic_edit);
         }
 
-        // new message indication
-        showNewMessagesCounts();
-
         return  view;
     }
-
-    void showNewMessagesCounts() {
-        long newMessageCount = getApp().newMessageCount;
-        if (newMessageCount > 0 && newMessageCount < 10) {
-            int id = getResources().getIdentifier("com.myjobpitch:drawable/menu_message" + getApp().newMessageCount,null, null);
-            addMenuItem(MENUGROUP2, 108, "All Messages", id);
-        } else if (newMessageCount >= 10) {
-            addMenuItem(MENUGROUP2, 108, "All Messages", R.drawable.menu_message10);
-        }
-    }
-
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {

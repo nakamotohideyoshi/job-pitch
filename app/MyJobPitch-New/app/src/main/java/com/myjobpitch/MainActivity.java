@@ -100,7 +100,7 @@ public class MainActivity extends AppCompatActivity
         @Override
         public void run() {
 
-            if (refresh) {
+            if (refresh && AppData.getUserType() != 0) {
 
                 new APITask(new APIAction() {
                     @Override
@@ -114,27 +114,29 @@ public class MainActivity extends AppCompatActivity
                     public void onSuccess() {
 
                         newMessages = new ArrayList<Message>();
-                        Integer from_role = AppData.user.isJobSeeker() ? 1 : 2;
+                        Integer from_role = AppData.user.isJobSeeker() ? AppData.JOBSEEKER : AppData.RECRUITER;
 
-                        for (int i = 0; i < applications.size(); i++) {
+                        for (Application application: applications) {
 
-                            List<Message> messages = applications.get(i).getMessages();
+                            List<Message> messages = application.getMessages();
+                            if (messages.size() > 0) {
 
-                            for (int j = messages.size() - 1; j >= 0; j--) {
-                                if (messages.get(j).getFrom_role() == from_role) {
-                                    if (!messages.get(j).getRead()) {
-                                        // New Message
-                                        newMessages.add(messages.get(j));
-                                    } else {
-                                        // find start Message
-                                        if (startMessage == null) {
-                                            startMessage = messages.get(j);
+                                for (int j = messages.size() - 1; j >= 0; j--) {
+                                    if (messages.get(j).getFrom_role() == from_role) {
+                                        if (!messages.get(j).getRead()) {
+                                            // New Message
+                                            newMessages.add(messages.get(j));
                                         } else {
-                                            if (startMessage.getCreated().compareTo(messages.get(j).getCreated()) < 0) {
+                                            // find start Message
+                                            if (startMessage == null) {
                                                 startMessage = messages.get(j);
+                                            } else {
+                                                if (startMessage.getCreated().compareTo(messages.get(j).getCreated()) < 0) {
+                                                    startMessage = messages.get(j);
+                                                }
                                             }
+                                            break;
                                         }
-                                        break;
                                     }
                                 }
                             }
@@ -190,6 +192,24 @@ public class MainActivity extends AppCompatActivity
             popup.addGreyButton("Ok", null);
             popup.show();
         }
+    }
+
+    Handler indicationHandler = new Handler();
+
+    Runnable indicationTimerRunnable = new Runnable() {
+        @Override
+        public void run() {
+            reloadMenu();
+            indicationHandler.postDelayed(this, 10000);
+        }
+    };
+
+    public void startChecking() {
+        indicationHandler.postDelayed(indicationTimerRunnable, 0);
+    }
+
+    public  void stopChecking() {
+        indicationHandler.removeCallbacks(indicationTimerRunnable);
     }
 
     @Override
@@ -331,7 +351,17 @@ public class MainActivity extends AppCompatActivity
             MenuItemInfo info = menuItemData[id];
             if (info != null) {
                 MenuItem menuItem = menu.add(0, id, Menu.NONE, info.title);
-                menuItem.setIcon(info.iconRes);
+                if (id != AppData.PAGE_MESSAGES) {
+                    menuItem.setIcon(info.iconRes);
+                } else {
+                    int newIconRes = R.drawable.menu_message;
+                    if (newMessageCount > 0 && newMessageCount < 10) {
+                        newIconRes = getResources().getIdentifier("com.myjobpitch:drawable/menu_message" + newMessageCount,null, null);
+                    } else if (newMessageCount >= 10) {
+                        newIconRes = R.drawable.menu_message10;
+                    }
+                    menuItem.setIcon(newIconRes);
+                }
                 if (isJobSeeker) {
                     if ((info.flags.contains("J") && AppData.user.getJob_seeker() == null) || (info.flags.contains("P") && !AppData.existProfile)) {
                         menuItem.setEnabled(false);
@@ -356,6 +386,7 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onClick(View view) {
                 stopNewMessageCount();
+                stopChecking();
                 //MJPApi.shared().logout();
                 MJPApi.shared().clearToken();
                 AppData.clearData();

@@ -98,6 +98,10 @@ public class BusinessUserListFragment extends BaseFragment {
                     fragment.businessId = businessId;
                     fragment.locations = locations;
                     getApp().pushFragment(fragment);
+                } else {
+                    Popup popup = new Popup(getContext(), "Cannot edit currently logged in user.", true);
+                    popup.addYellowButton("Ok", null);
+                    popup.show();
                 }
             }
         });

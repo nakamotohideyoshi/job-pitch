@@ -19,6 +19,9 @@ class BusinessUserCell: MGSwipeTableCell {
         subTitle.text = nil
         if businessUser.locations.count == 0 {
             subTitle.text = "Administrator"
+            if businessUser.email == AppData.user.email {
+                subTitle.text = "Administrator (Current User)"
+            }
         } else {
             for location in locations {
                 if businessUser.locations.contains(location.id) {

@@ -98,13 +98,19 @@ extension BusinessUserListController: UITableViewDataSource {
 extension BusinessUserListController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        refresh = true
-        let controller = AppHelper.mainStoryboard.instantiateViewController(withIdentifier: "BusinessUserEdit") as! BusinessUserEditController
-        controller.locations = locations
-        controller.isEditMode = true
-        controller.businessUser = data[indexPath.row] as! BusinessUser
-        controller.businessId = businessId
-        navigationController?.pushViewController(controller, animated: true)
+        let businessUser = data[indexPath.row] as! BusinessUser
+        if businessUser.email != AppData.user.email {
+            refresh = true
+            let controller = AppHelper.mainStoryboard.instantiateViewController(withIdentifier: "BusinessUserEdit") as! BusinessUserEditController
+            controller.locations = locations
+            controller.isEditMode = true
+            controller.businessUser = data[indexPath.row] as! BusinessUser
+            controller.businessId = businessId
+            navigationController?.pushViewController(controller, animated: true)
+        } else {
+            let message = "Cannot edit currently logged in user"
+            PopupController.showGray(message, ok: "Ok")
+        }
     }
     
 }

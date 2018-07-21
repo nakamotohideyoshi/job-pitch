@@ -88,7 +88,7 @@ function* uploadPitch(action) {
   const jobseeker = yield call(getRequest({ url: `/api/job-seekers/${js_profile.jobseeker.id}/` }));
   yield put({ type: requestSuccess(C.JS_SAVE_PROFILE), payload: jobseeker });
 
-  onSuccess && onSuccess();
+  onSuccess && onSuccess(newPitch.video);
 }
 
 export default function* sagas() {

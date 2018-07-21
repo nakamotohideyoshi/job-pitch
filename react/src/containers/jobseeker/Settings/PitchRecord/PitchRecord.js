@@ -54,8 +54,8 @@ class PitchRecord extends React.Component {
   uploadPitch = () => {
     this.props.uploadPitch({
       data: this.state.pitchData,
-      onSuccess: () => {
-        this.setState({ loading: null });
+      onSuccess: newVideo => {
+        this.setState({ loading: null, newPitchUrl: null, pitchUrl: newVideo });
         message.success('Pitch is uploaded successfully.');
       },
       onFail: error => {

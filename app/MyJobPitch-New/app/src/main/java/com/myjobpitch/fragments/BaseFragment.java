@@ -69,6 +69,22 @@ public class BaseFragment extends Fragment {
         return menuItem;
     }
 
+    protected MenuItem changeMenuItem(int id, @DrawableRes int iconRes) {
+        MenuItem menuItem = getApp().getToolbarMenu().findItem(id);
+        if(iconRes != -1) {
+            menuItem.setIcon(iconRes);
+        }
+        menuItem.setVisible(true);
+        return  menuItem;
+    }
+
+    protected MenuItem setVisibleMenuItem(int id, Boolean isVisible) {
+        MenuItem menuItem = getApp().getToolbarMenu().findItem(id);
+        menuItem.setVisible(isVisible);
+
+        return menuItem;
+    }
+
     public void onMenuSelected(int menuID) {
     }
 

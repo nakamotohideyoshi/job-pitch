@@ -66,6 +66,7 @@ class MJPController: UIViewController {
     
     func runTimer() {
         if AppData.timer == nil {
+            getNewMesssageCount()
             AppData.timer = Timer.scheduledTimer(timeInterval: 30, target: self, selector: #selector(getNewMesssageCount), userInfo: nil, repeats: true)
         }
     }
@@ -89,20 +90,22 @@ class MJPController: UIViewController {
                     let application = item
                     let messages = application.messages as! [Message]
                     
-                    for i in 0...messages.count-1 {
-                        let message = messages[messages.count-1-i]
-                        if message.fromRole == (fromRole as NSNumber) {
-                            if !message.read {
-                                newMessages?.append(message)
-                            } else {
-                                if startMessage == nil {
-                                    startMessage = message
+                    if messages.count > 0 {
+                        for i in 0...messages.count-1 {
+                            let message = messages[messages.count-1-i]
+                            if message.fromRole == (fromRole as NSNumber) {
+                                if !message.read {
+                                    newMessages?.append(message)
                                 } else {
-                                    if message.created > startMessage!.created {
+                                    if startMessage == nil {
                                         startMessage = message
+                                    } else {
+                                        if message.created > startMessage!.created {
+                                            startMessage = message
+                                        }
                                     }
+                                    break
                                 }
-                                break
                             }
                         }
                     }

@@ -54,9 +54,8 @@ class PitchRecord extends React.Component {
   uploadPitch = () => {
     this.props.uploadPitch({
       data: this.state.pitchData,
-      onSuccess: newVideo => {
+      onSuccess: () => {
         const pitch = helper.getPitch(this.props.jobseeker) || {};
-        console.log('newVideo', newVideo, pitch);
         this.setState({
           loading: null,
           newPitchUrl: null,

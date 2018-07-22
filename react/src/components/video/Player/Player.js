@@ -56,6 +56,11 @@ class VideoPlayer extends React.Component {
     }
   }
 
+  componentWillReceiveProps(nextProps) {
+    this.player.src(nextProps.sources);
+    this.player.poster(nextProps.poster);
+  }
+
   render() {
     return (
       <Wrapper className={this.props.className}>

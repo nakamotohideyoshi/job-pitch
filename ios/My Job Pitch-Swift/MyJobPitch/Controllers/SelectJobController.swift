@@ -29,6 +29,8 @@ class SelectJobController: MJPController {
         "interviews":    "Select a job below to view and arrange interviews.",
     ]
     
+    var checkTimer: Timer?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -38,18 +40,8 @@ class SelectJobController: MJPController {
         headerImgView.image = UIImage(named: item["icon"]!)?.withRenderingMode(.alwaysTemplate)
         headerTitle.text = titles[SideMenuController.currentID]
         
-        if (AppData.newMessagesCount > 0) {
-            let item1 = UIBarButtonItem(title: "All Messages", style: .plain, target: self, action: #selector(goAllMessageList))
-            var fileName: String!
-            if (AppData.newMessagesCount<10) {
-                fileName =  "nav-message\(AppData.newMessagesCount)"
-            } else {
-                fileName = "nav-message10"
-            }
-            item1.image = UIImage(named: fileName)
-            navigationItem.rightBarButtonItem = item1
-        }
-        
+        reloadMenuItems()
+        runTimer()
         
         jobActive = AppData.getJobStatusByName(JobStatus.JOB_STATUS_OPEN).id
         
@@ -62,6 +54,11 @@ class SelectJobController: MJPController {
         super.viewWillAppear(animated)
         showLoading()
         refresh()
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        stopTimer()
+        super.viewWillDisappear(animated)
     }
     
     func goAllMessageList() {
@@ -97,6 +94,34 @@ class SelectJobController: MJPController {
             navigationController?.pushViewController(controller, animated: true)
             
         }
+    }
+    
+    override func runTimer() {
+        if checkTimer == nil {
+            checkTimer = Timer.scheduledTimer(timeInterval: 10, target: self, selector: #selector(reloadMenuItems), userInfo: nil, repeats: true)
+        }
+    }
+    
+    override func stopTimer() {
+        if checkTimer != nil {
+            checkTimer?.invalidate()
+            checkTimer = nil
+        }
+    }
+    
+    func reloadMenuItems() {
+        if (AppData.newMessagesCount > 0) {
+            let item1 = UIBarButtonItem(title: "All Messages", style: .plain, target: self, action: #selector(goAllMessageList))
+            var fileName = "nav-message10"
+            if (AppData.newMessagesCount<10) {
+                fileName =  "nav-message\(AppData.newMessagesCount)"
+            }
+            item1.image = UIImage(named: fileName)
+            navigationItem.rightBarButtonItem = item1
+            return
+        }
+        
+        navigationItem.rightBarButtonItem = nil
     }
     
 }

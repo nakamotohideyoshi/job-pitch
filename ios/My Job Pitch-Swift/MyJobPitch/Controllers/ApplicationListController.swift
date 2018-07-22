@@ -31,6 +31,8 @@ class ApplicationListController: SearchController {
     
     static var refreshRequest = false
     
+    var checkTimer: Timer?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -65,17 +67,9 @@ class ApplicationListController: SearchController {
             if (jobSeeker != nil) {
                 showInactiveBanner()
             }
-            if (AppData.newMessagesCount > 0) {
-                let item1 = UIBarButtonItem(title: "All Messages", style: .plain, target: self, action: #selector(goAllMessageList))
-                var fileName: String!
-                if (AppData.newMessagesCount<10) {
-                    fileName =  "nav-message\(AppData.newMessagesCount)"
-                } else {
-                    fileName = "nav-message10"
-                }
-                item1.image = UIImage(named: fileName)
-                navigationItem.rightBarButtonItems?.append(item1)
-            }
+            navigationItem.rightBarButtonItems?.append(UIBarButtonItem())
+            reloadMenuItems()
+            runTimer()
         }
         
         tableView.addPullToRefresh {
@@ -115,6 +109,11 @@ class ApplicationListController: SearchController {
                 loadData()
             }
         }
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        stopTimer()
     }
     
     func goAllMessageList() {
@@ -188,6 +187,35 @@ class ApplicationListController: SearchController {
         controller.job = job
         controller.mode = mode
         AppHelper.getFrontController().navigationController?.pushViewController(controller, animated: true)
+    }
+    
+    override func runTimer() {
+        if checkTimer == nil {
+            checkTimer = Timer.scheduledTimer(timeInterval: 10, target: self, selector: #selector(reloadMenuItems), userInfo: nil, repeats: true)
+        }
+    }
+    
+    override func stopTimer() {
+        if checkTimer != nil {
+            checkTimer?.invalidate()
+            checkTimer = nil
+        }
+    }
+    
+    func reloadMenuItems() {
+        navigationItem.rightBarButtonItems?.removeLast()
+        if (AppData.newMessagesCount > 0) {
+            let item1 = UIBarButtonItem(title: "All Messages", style: .plain, target: self, action: #selector(goAllMessageList))
+            var fileName = "nav-message10"
+            if (AppData.newMessagesCount<10) {
+                fileName =  "nav-message\(AppData.newMessagesCount)"
+            }
+            item1.image = UIImage(named: fileName)
+            navigationItem.rightBarButtonItems?.append(item1)
+            return
+        }
+        
+        navigationItem.rightBarButtonItems?.append(UIBarButtonItem())
     }
     
 }

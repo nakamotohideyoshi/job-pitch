@@ -20,6 +20,8 @@ class MessageListController: SearchController {
     var refresh = true
     var allMessageItems: [UIBarButtonItem]?
     
+    var checkTimer: Timer?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         title = "Messages"
@@ -29,6 +31,10 @@ class MessageListController: SearchController {
             item.image = UIImage(named: "menu-message")
             navigationItem.rightBarButtonItems?.append(item)
             jobTitleView.text = job.title + ", (" + job.getBusinessName() + ")"
+        } else {
+            jobTitleView.text = "All Messages"
+            updateMessage()
+            runTimer()
         }
 
         tableView.addPullToRefresh {
@@ -38,9 +44,6 @@ class MessageListController: SearchController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        AppData.newMessagesCount = 0
-        AppData.isTimerRunning = false
-        updateMessage()
         
         if self.refresh {
             showLoading()
@@ -65,17 +68,17 @@ class MessageListController: SearchController {
     }
     
     override func viewWillDisappear(_ animated: Bool) {
-        AppData.isTimerRunning = true
-        super.viewWillDisappear(animated)
+        stopTimer()
+        super.viewWillDisappear(animated)        
     }
     
     func updateMessage() {
-        if (AppData.lastMessage != nil) {
+        if (AppData.newMessagesCount > 0) {
             let message = MessageForUpdate()
             message.id = AppData.lastMessage.id
             message.fromRole = AppData.lastMessage.fromRole
             API.shared().updateMessageStatus(update: message, success: { (data) in
-                print("success")
+                AppData.newMessagesCount = 0
             }, failure: self.handleErrors)
         }
     }
@@ -115,6 +118,20 @@ class MessageListController: SearchController {
         let controller = AppHelper.mainStoryboard.instantiateViewController(withIdentifier: "MessageList") as! MessageListController
         controller.job = job
         AppHelper.getFrontController().navigationController?.pushViewController(controller, animated: true)
+    }
+    
+    
+    override func runTimer() {
+        if checkTimer == nil {
+            checkTimer = Timer.scheduledTimer(timeInterval: 10, target: self, selector: #selector(updateMessage), userInfo: nil, repeats: true)
+        }
+    }
+    
+    override func stopTimer() {
+        if checkTimer != nil {
+            checkTimer?.invalidate()
+            checkTimer = nil
+        }
     }
 
 }

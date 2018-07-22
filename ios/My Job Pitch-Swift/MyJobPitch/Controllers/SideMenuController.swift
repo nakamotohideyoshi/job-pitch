@@ -58,6 +58,8 @@ class SideMenuController: UIViewController {
     
     var data = [String]()
     
+    var checkTimer: Timer?
+    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         revealViewController().view.endEditing(true)
@@ -73,32 +75,21 @@ class SideMenuController: UIViewController {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        
-        data = [String]()
-        if let user = AppData.user {
-            //if user.isJobSeeker() || (!user.isRecruiter() && LoginController.userType == 1)
-            if user.isJobSeeker() {
-                data = SideMenuController.jobSeekerMenu
-            } else if user.isRecruiter() {
-                data = SideMenuController.recruiterMenu
-            } else if LoginController.userType == 1 {
-                data = SideMenuController.jobSeekerMenu
-            } else if LoginController.userType == 2 {
-                data = SideMenuController.recruiterMenu
-            }
-        }
-        
-        tableView.reloadData()
+        reloadSideMenu()
+        runTimer()        
     }
     
     override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
         
+        super.viewWillDisappear(animated)        
+        stopTimer()
         if maskButton != nil {
             maskButton.removeFromSuperview()
             maskButton = nil
         }
     }
+    
+    
     
     static func pushController(id: String) {
                 
@@ -121,6 +112,37 @@ class SideMenuController: UIViewController {
         revealController.pushFrontViewController(navController, animated: true)
         
     }
+    
+    func reloadSideMenu() {
+        data = [String]()
+        if let user = AppData.user {
+            //if user.isJobSeeker() || (!user.isRecruiter() && LoginController.userType == 1)
+            if user.isJobSeeker() {
+                data = SideMenuController.jobSeekerMenu
+            } else if user.isRecruiter() {
+                data = SideMenuController.recruiterMenu
+            } else if LoginController.userType == 1 {
+                data = SideMenuController.jobSeekerMenu
+            } else if LoginController.userType == 2 {
+                data = SideMenuController.recruiterMenu
+            }
+        }
+        
+        tableView.reloadData()
+    }
+    
+    func runTimer() {
+        if checkTimer == nil {
+            checkTimer = Timer.scheduledTimer(timeInterval: 10, target: self, selector: #selector(reloadSideMenu), userInfo: nil, repeats: true)
+        }
+    }
+    
+    func stopTimer() {
+        if checkTimer != nil {
+            checkTimer?.invalidate()
+            checkTimer = nil
+        }
+    }
 
 }
 
@@ -138,7 +160,16 @@ extension SideMenuController: UITableViewDataSource {
         
         cell.nameLabel.text = item["title"]
         
-        let image = UIImage(named: item["icon"]!)
+        var image = UIImage(named: item["icon"]!)
+        
+        if (item["title"] == "Messages" && AppData.newMessagesCount > 0) {
+            if (AppData.newMessagesCount<10) {
+                image = UIImage(named: "nav-message\(AppData.newMessagesCount)")
+            } else {
+                image = UIImage(named: "nav-message10")
+            }
+            
+        }
         if SideMenuController.currentID == id {
             cell.iconView.image = image?.withRenderingMode(.alwaysTemplate)
             cell.iconView.tintColor = AppData.greenColor

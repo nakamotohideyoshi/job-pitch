@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { Breadcrumb, List, Avatar, Modal, Tooltip } from 'antd';
 
 import { removeBusiness } from 'redux/recruiter/businesses';
+import { getApplications } from 'redux/applications';
 import DATA from 'utils/data';
 import * as helper from 'utils/helper';
 
@@ -47,15 +48,30 @@ class BusinessList extends React.Component {
   };
 
   componentDidMount() {
+    this.props.getApplications();
+    // console.log(this.props.applications);
+    // let countList = {};
+    // _.forEach(this.props.businesses, business => {
+    //   let newApplications = _.filter(DATA.applications, application => {
+    //     return application.job_data.location_data.business === business.id && application.status === 1;
+    //   });
+    //   countList[business.id] = newApplications.length;
+    // });
+    this.setState({
+      dontShowIntro: DATA[`dontShowIntro_${DATA.email}`]
+      // countList: countList
+    });
+  }
+
+  componentWillReceiveProps(nextProps) {
     let countList = {};
     _.forEach(this.props.businesses, business => {
-      let newApplications = _.filter(DATA.applications, application => {
+      let newApplications = _.filter(nextProps.applications, application => {
         return application.job_data.location_data.business === business.id && application.status === 1;
       });
       countList[business.id] = newApplications.length;
     });
     this.setState({
-      dontShowIntro: DATA[`dontShowIntro_${DATA.email}`],
       countList: countList
     });
   }
@@ -200,7 +216,7 @@ class BusinessList extends React.Component {
   };
 
   render() {
-    const { businesses } = this.props;
+    const { businesses, applications } = this.props;
     const { dontShowIntro } = this.state;
 
     return (
@@ -219,13 +235,17 @@ class BusinessList extends React.Component {
         </PageSubHeader>
 
         <div className="content">
-          <ListEx
-            data={this.props.businesses}
-            loadingSize="large"
-            pagination={{ pageSize: 10 }}
-            renderItem={this.renderBusiness}
-            emptyRender={this.renderEmpty}
-          />
+          {applications === null ? (
+            <Loading className="mask" size="large" />
+          ) : (
+            <ListEx
+              data={this.props.businesses}
+              loadingSize="large"
+              pagination={{ pageSize: 10 }}
+              renderItem={this.renderBusiness}
+              emptyRender={this.renderEmpty}
+            />
+          )}
         </div>
 
         {businesses.length === 0 && !dontShowIntro && <Intro data={INTRO_DATA} onClose={this.closeIntro} />}
@@ -237,12 +257,15 @@ class BusinessList extends React.Component {
 export default connect(
   state => {
     const businesses = state.rc_businesses.businesses.slice(0);
+    const { applications } = state.applications;
     return {
       user: state.auth.user,
-      businesses
+      businesses,
+      applications
     };
   },
   {
-    removeBusiness
+    removeBusiness,
+    getApplications
   }
 )(BusinessList);

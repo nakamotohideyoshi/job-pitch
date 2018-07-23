@@ -13,7 +13,7 @@ import Wrapper from '../styled';
 
 class BusinessListForUser extends React.Component {
   selectBusiness = ({ id }) => {
-    this.props.getUsers({ id });
+    // this.props.getUsers({ id });
     this.props.history.push(`/recruiter/users/${id}`);
   };
 

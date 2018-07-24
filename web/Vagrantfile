@@ -67,12 +67,14 @@ Vagrant.configure(2) do |config|
   # documentation for more information about their specific syntax and use.
   config.vm.provision "apt-get", type: "shell", inline: <<-SHELL
     sudo apt-get update
-    sudo apt-get -y install python-pysqlite2 libjpeg-dev python-dev libjpeg8-dev libpng3 python-pip binutils libproj-dev gdal-bin postgresql postgresql-contrib postgis postgresql-9.3-postgis-2.1 libpq-dev
+    sudo apt-get -y install python-virtualenv libjpeg-dev python-dev libjpeg8-dev libpng3 binutils libproj-dev gdal-bin postgresql postgresql-contrib postgis postgresql-9.3-postgis-2.1 libpq-dev
   SHELL
 
-  config.vm.provision "python", type: "shell", inline: <<-SHELL
-    sudo pip install --upgrade pip
-    sudo pip install -r /vagrant/requirements.txt
+  config.vm.provision "python", type: "shell", privileged: false, inline: <<-SHELL
+    virtualenv ~/venv/
+    . ~/venv/bin/activate
+    pip install --upgrade pip
+    pip install -r /vagrant/requirements.txt
   SHELL
 
   config.vm.provision "database", type: "shell", inline: <<-SHELL
@@ -80,6 +82,12 @@ Vagrant.configure(2) do |config|
     sudo -u postgres psql -c "ALTER USER mjp superuser;"
     sudo -u postgres createdb --owner mjp mjp
     sudo -u postgres psql -d mjp -c "CREATE EXTENSION postgis"
+  SHELL
+
+  config.vm.provision "django", type: "shell", privileged: false, inline: <<-SHELL
+    . ~/venv/bin/activate
+    cd /vagrant/src
+    ./manage.py migrate
   SHELL
 
   # MailCatcher

@@ -31,6 +31,8 @@ class MapController: UIViewController {
     var marker: GMSMarker!
     var circ: GMSCircle!
     
+    var locationManager: CLLocationManager!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -40,6 +42,15 @@ class MapController: UIViewController {
         mapView.isMyLocationEnabled = true
         mapView.settings.myLocationButton = true
         mapView.addObserver(self, forKeyPath: "myLocation", options: NSKeyValueObservingOptions.new, context: nil)
+        
+        if (CLLocationManager.locationServicesEnabled())
+        {
+            locationManager = CLLocationManager()
+        }
+        
+        if currentPos == nil {
+            currentPos = locationManager.location?.coordinate
+        }
         
         if (radius == nil) {
             marker = GMSMarker()

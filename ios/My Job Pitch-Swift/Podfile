@@ -5,8 +5,8 @@ target 'MyJobPitch' do
 
     pod 'AWSS3','2.4.11'
     pod 'RestKit'
-    pod 'GoogleMaps', '2.5.0'
-    pod 'GooglePlaces', '2.5.0'
+    pod 'GoogleMaps'
+    pod 'GooglePlaces'
     pod 'GoogleAPIClientForREST/Drive', '1.2.1'
     pod 'Google/SignIn', '3.0.3'
     pod 'UITextView+Placeholder'

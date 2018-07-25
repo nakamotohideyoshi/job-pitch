@@ -100,6 +100,8 @@ import Wrapper from './InterviewEdit.styled';
 import * as helper from 'utils/helper';
 import moment from 'moment';
 
+import { updateMessageByInterview } from 'redux/applications';
+
 const { Item } = Form;
 const { TextArea } = Input;
 
@@ -181,7 +183,7 @@ class InterviewEdit extends React.Component {
           application: application.id
         },
         success: () => {
-          this.saveCompleted();
+          this.saveCompleted(application.id, values.invitation);
         },
         fail: () => {
           this.setState({ loading: null });
@@ -196,12 +198,19 @@ class InterviewEdit extends React.Component {
     });
   };
 
-  saveCompleted = () => {
+  saveCompleted = (appId, message) => {
     this.setState({ loading: null });
     // message.success('Interview is saved successfully.');
     notification.success({
       message: 'Notification',
       description: 'Interview is saved successfully.'
+    });
+    this.props.updateMessageByInterview({
+      id: new Date().getTime(),
+      data: {
+        application: appId,
+        content: message
+      }
     });
     this.props.gotoOrigin();
   };
@@ -328,4 +337,4 @@ class InterviewEdit extends React.Component {
   }
 }
 
-export default connect(state => ({}), { saveInterview })(Form.create()(InterviewEdit));
+export default connect(state => ({}), { saveInterview, updateMessageByInterview })(Form.create()(InterviewEdit));

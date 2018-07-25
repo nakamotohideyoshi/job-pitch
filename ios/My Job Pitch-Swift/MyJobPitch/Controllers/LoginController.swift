@@ -143,7 +143,7 @@ class LoginController: MJPController {
             return //be safe
         }
         self.isDeprecationError = false
-        PopupController.showGreen("Your app is out of date, update now to take advantage of teh latest features", ok: "Update", okCallback: {
+        PopupController.showGreen("Your app is out of date, update now to take advantage of the latest features", ok: "Update", okCallback: {
             if #available(iOS 10.0, *) {
                 UIApplication.shared.open(url, options: [:], completionHandler: nil)
             } else {

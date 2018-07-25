@@ -31,8 +31,6 @@ class MapController: UIViewController {
     var marker: GMSMarker!
     var circ: GMSCircle!
     
-    var locationManager: CLLocationManager!
-    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -43,24 +41,9 @@ class MapController: UIViewController {
         mapView.settings.myLocationButton = true
         mapView.addObserver(self, forKeyPath: "myLocation", options: NSKeyValueObservingOptions.new, context: nil)
         
-        if (CLLocationManager.locationServicesEnabled())
-        {
-            locationManager = CLLocationManager()
-        }
-        
-        if currentPos == nil {
-            currentPos = locationManager.location?.coordinate
-        }
-        
         if (radius == nil) {
             marker = GMSMarker()
             marker.map = mapView
-        } else {
-            circ = GMSCircle(position: currentPos, radius: radius)
-            circ.fillColor = UIColor(red: 1, green: 147/255.0, blue: 0, alpha: 0.2)
-            circ.strokeColor = UIColor(red: 0, green: 182/255.0, blue: 164/255.0, alpha: 1)
-            circ.strokeWidth = 2
-            circ.map = mapView
         }
         
         if currentPos != nil {
@@ -69,8 +52,34 @@ class MapController: UIViewController {
         }
     }
     
+    func showAlert() {
+        let alertController = UIAlertController(title: NSLocalizedString("Alert", comment: ""), message: NSLocalizedString("Access to Your Location required!", comment: ""), preferredStyle: .alert)
+        
+        let cancelAction = UIAlertAction(title: NSLocalizedString("Cancel", comment: ""), style: .cancel) {
+            (UIAlertAction) in
+            self.dismiss(animated: true, completion: nil)
+        }
+        let settingsAction = UIAlertAction(title: NSLocalizedString("Settings", comment: ""), style: .default) { (UIAlertAction) in
+            UIApplication.shared.openURL(NSURL(string: UIApplicationOpenSettingsURLString)! as URL)
+        }
+        
+        alertController.addAction(cancelAction)
+        alertController.addAction(settingsAction)
+        self.present(alertController, animated: true, completion: nil)
+    }
+    
     func updatePosition(_ position: CLLocationCoordinate2D) {
+        
+        
         currentPos = position
+        if circ == nil {
+            circ = GMSCircle(position: currentPos, radius: radius)
+            circ.fillColor = UIColor(red: 1, green: 147/255.0, blue: 0, alpha: 0.2)
+            circ.strokeColor = UIColor(red: 0, green: 182/255.0, blue: 164/255.0, alpha: 1)
+            circ.strokeWidth = 2
+            circ.map = mapView
+        }
+        
         if (marker != nil) {
             marker.position = position
         } else {

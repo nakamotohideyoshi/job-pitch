@@ -233,7 +233,7 @@ public class LoginFragment extends FormFragment {
 
 
     public void showDeprecationWarning() {
-        Popup popup = new Popup(getContext(), "Your app is out of date, update now to take advantage of teh latest features", true);
+        Popup popup = new Popup(getContext(), "Your app is out of date, update now to take advantage of the latest features", true);
         popup.addGreenButton("Update", new View.OnClickListener() {
             @Override
             public void onClick(View view) {

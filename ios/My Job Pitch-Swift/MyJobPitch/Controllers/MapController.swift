@@ -70,10 +70,10 @@ class MapController: UIViewController {
     
     func updatePosition(_ position: CLLocationCoordinate2D) {
         
-        
         currentPos = position
-        if circ == nil {
-            circ = GMSCircle(position: currentPos, radius: radius)
+        
+        if circ == nil && radius != nil {
+            circ = GMSCircle(position: currentPos!, radius: radius)
             circ.fillColor = UIColor(red: 1, green: 147/255.0, blue: 0, alpha: 0.2)
             circ.strokeColor = UIColor(red: 0, green: 182/255.0, blue: 164/255.0, alpha: 1)
             circ.strokeWidth = 2

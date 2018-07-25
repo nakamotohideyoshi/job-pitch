@@ -51,7 +51,7 @@ class PublicLocationListingSerializer(PublicEmbeddedLocationListingSerializer):
 
 
 class PublicBusinessListingSerializer(PublicEmbeddedBusinessListingSerializer):
-    locations = PublicEmbeddedLocationListingSerializer(many=True)
+    locations = PublicLocationListingSerializer(many=True)
 
     class Meta:
         model = Business

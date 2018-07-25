@@ -38,7 +38,7 @@ class ApplicationListController: SearchController {
         
         // Do any additional setup after loading the view.
         
-        navigationItem.title = SideMenuController.getCurrentTitle(mode)
+        title = SideMenuController.menuItems[SideMenuController.currentID]?["title"]
         
         isRecruiter = AppData.user.isRecruiter()
         isApplication = mode == "" || mode == "applications" || mode == "applications1"

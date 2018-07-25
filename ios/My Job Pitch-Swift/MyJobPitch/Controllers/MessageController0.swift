@@ -25,6 +25,8 @@ class MessageController0: MJPController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        title = "Message"
+        
         if AppData.user.isJobSeeker() {
             headerView.addUnderLine(paddingLeft: 0, paddingRight: 0, color: AppData.greyBorderColor)
         } else {

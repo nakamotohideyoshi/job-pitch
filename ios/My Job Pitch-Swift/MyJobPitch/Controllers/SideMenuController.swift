@@ -104,6 +104,7 @@ class SideMenuController: UIViewController {
         
         let revealController = UIApplication.shared.keyWindow?.rootViewController as! SWRevealViewController
         let controller = AppHelper.mainStoryboard.instantiateViewController(withIdentifier: identifier!)
+        controller.title = SideMenuController.menuItems[SideMenuController.currentID]?["title"]
         let navController = UINavigationController(rootViewController: controller)
         controller.navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(named: "nav-menu"),
                                                                        style: .plain,

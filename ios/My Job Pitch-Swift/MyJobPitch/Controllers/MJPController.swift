@@ -114,7 +114,7 @@ class MJPController: UIViewController {
                         
                         var newMessagesCount = startMessage == nil ? (newMessages?.count)! : 0
                         
-                        if (newMessagesCount > 0) {
+                        if ((newMessages?.count)! > 0) {
                             for i in 0...(newMessages?.count)!-1 {
                                 if startMessage != nil {
                                     if newMessages![i].created > startMessage.created {

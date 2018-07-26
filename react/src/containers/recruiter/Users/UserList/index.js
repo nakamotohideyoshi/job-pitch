@@ -3,7 +3,7 @@ import Helmet from 'react-helmet';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import Truncate from 'react-truncate';
-import { Breadcrumb, List, Tooltip } from 'antd';
+import { Breadcrumb, List, Tooltip, Modal } from 'antd';
 
 import * as helper from 'utils/helper';
 
@@ -15,6 +15,8 @@ import { PageHeader, PageSubHeader, AlertMsg, LinkButton, Loading, ListEx, Icons
 import DeleteDialog from './DeleteDialog';
 import Wrapper from '../styled';
 
+const { warning } = Modal;
+
 class UserList extends React.Component {
   state = {
     showDialog: false,
@@ -23,8 +25,19 @@ class UserList extends React.Component {
   };
 
   componentWillMount() {
-    if (this.props.users === null) {
-      this.props.getUsers(this.props.business);
+    // if (this.props.users === null) {
+    this.setState({
+      loading: true
+    });
+    this.props.getUsers(this.props.business);
+    // }
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.users !== this.props.users) {
+      this.setState({
+        loading: false
+      });
     }
   }
 
@@ -83,6 +96,11 @@ class UserList extends React.Component {
         onClick={() => {
           if (userEmail !== email) {
             this.editUser(business.id, user);
+          } else {
+            warning({
+              content: 'Cannot edit currently logged in user',
+              maskClosable: true
+            });
           }
         }}
         className={`${loading ? 'loading' : ''}`}
@@ -130,13 +148,17 @@ class UserList extends React.Component {
         </PageSubHeader>
 
         <div className="content">
-          <ListEx
-            data={users}
-            loadingSize="large"
-            pagination={{ pageSize: 10 }}
-            renderItem={this.renderUser}
-            emptyRender={this.renderEmpty}
-          />
+          {this.state.loading ? (
+            <Loading className="mask" size="large" />
+          ) : (
+            <ListEx
+              data={users}
+              loadingSize="large"
+              pagination={{ pageSize: 10 }}
+              renderItem={this.renderUser}
+              emptyRender={this.renderEmpty}
+            />
+          )}
         </div>
 
         <DeleteDialog user={this.state.selectedUser} onCancel={() => this.showRemoveDialog()} />

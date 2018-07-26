@@ -50,6 +50,14 @@ class PublicLocationListingSerializer(PublicEmbeddedLocationListingSerializer):
         fields = PublicEmbeddedLocationListingSerializer.Meta.fields + ('jobs',)
 
 
+class PublicBusinessListingSerializer(PublicEmbeddedBusinessListingSerializer):
+    locations = PublicLocationListingSerializer(many=True)
+
+    class Meta:
+        model = Business
+        fields = PublicEmbeddedBusinessListingSerializer.Meta.fields + ('locations',)
+
+
 class PublicJobSeekerListingSerializerV1(serializers.ModelSerializer):
     pitches = EmbeddedPitchSerializer(many=True, read_only=True)
 

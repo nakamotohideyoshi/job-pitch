@@ -8,6 +8,7 @@ import { Breadcrumb, List, Avatar, Modal, Tooltip } from 'antd';
 import DATA from 'utils/data';
 
 import { removeWorkplace } from 'redux/recruiter/workplaces';
+import { getApplications } from 'redux/applications';
 import * as helper from 'utils/helper';
 
 import { PageHeader, PageSubHeader, AlertMsg, LinkButton, Loading, ListEx, Icons } from 'components';
@@ -22,13 +23,28 @@ class WorkplaceList extends React.Component {
   };
 
   componentDidMount() {
+    this.props.getApplications();
     const { business, history } = this.props;
     if (!business) {
       history.replace('/recruiter/jobs/business');
     }
+    // let countList = {};
+    // _.forEach(this.props.workplaces, workplace => {
+    //   let newApplications = _.filter(applications, application => {
+    //     return application.job_data.location === workplace.id && application.status === 1;
+    //   });
+    //   countList[workplace.id] = newApplications.length;
+    // });
+    // this.setState({
+    //   countList: countList
+    // });
+  }
+
+  componentWillReceiveProps(nextProps) {
+    const { applications } = nextProps;
     let countList = {};
     _.forEach(this.props.workplaces, workplace => {
-      let newApplications = _.filter(DATA.applications, application => {
+      let newApplications = _.filter(applications, application => {
         return application.job_data.location === workplace.id && application.status === 1;
       });
       countList[workplace.id] = newApplications.length;
@@ -165,6 +181,7 @@ class WorkplaceList extends React.Component {
   };
 
   render() {
+    const { applications } = this.props;
     return (
       <Wrapper className="container">
         <Helmet title="My Workplaces" />
@@ -184,13 +201,17 @@ class WorkplaceList extends React.Component {
         </PageSubHeader>
 
         <div className="content">
-          <ListEx
-            data={this.props.workplaces}
-            loadingSize="large"
-            pagination={{ pageSize: 10 }}
-            renderItem={this.renderWorkplace}
-            emptyRender={this.renderEmpty}
-          />
+          {applications === null ? (
+            <Loading className="mask" size="large" />
+          ) : (
+            <ListEx
+              data={this.props.workplaces}
+              loadingSize="large"
+              pagination={{ pageSize: 10 }}
+              renderItem={this.renderWorkplace}
+              emptyRender={this.renderEmpty}
+            />
+          )}
         </div>
       </Wrapper>
     );
@@ -203,12 +224,15 @@ export default connect(
     const business = helper.getItemByID(state.rc_businesses.businesses, businessId);
     let { workplaces } = state.rc_workplaces;
     workplaces = workplaces.filter(item => item.business === businessId);
+    const { applications } = state.applications;
     return {
       business,
-      workplaces
+      workplaces,
+      applications
     };
   },
   {
-    removeWorkplace
+    removeWorkplace,
+    getApplications
   }
 )(WorkplaceList);

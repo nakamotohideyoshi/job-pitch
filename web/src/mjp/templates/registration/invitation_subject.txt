@@ -1,0 +1,1 @@
+Invitation to {{ site_name }} from {{ business_user.business.name }}

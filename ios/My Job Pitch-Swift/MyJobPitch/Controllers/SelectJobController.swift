@@ -40,9 +40,6 @@ class SelectJobController: MJPController {
         headerImgView.image = UIImage(named: item["icon"]!)?.withRenderingMode(.alwaysTemplate)
         headerTitle.text = titles[SideMenuController.currentID]
         
-        reloadMenuItems()
-        runTimer()
-        
         jobActive = AppData.getJobStatusByName(JobStatus.JOB_STATUS_OPEN).id
         
         tableView.addPullToRefresh {
@@ -52,8 +49,12 @@ class SelectJobController: MJPController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        
         showLoading()
         refresh()
+        
+        reloadMenuItems()
+        runTimer()
     }
     
     override func viewWillDisappear(_ animated: Bool) {

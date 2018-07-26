@@ -6,6 +6,8 @@ import Truncate from 'react-truncate';
 import { Breadcrumb, List, Avatar, Tooltip, Modal, Input } from 'antd';
 import styled from 'styled-components';
 
+import { getApplications } from 'redux/applications';
+
 import DATA from 'utils/data';
 import * as helper from 'utils/helper';
 
@@ -35,19 +37,24 @@ class JobList extends React.Component {
   };
 
   componentDidMount() {
+    this.props.getApplications();
+  }
+
+  componentWillReceiveProps(nextProps) {
     let countList = {};
+    const { applications } = nextProps;
     _.forEach(this.props.jobs, job => {
-      let applications = _.filter(DATA.applications, application => {
+      let _applications = _.filter(applications, application => {
         return application.job === job.id && application.status !== 3;
       });
-      let newApplications = _.filter(DATA.applications, application => {
+      let newApplications = _.filter(applications, application => {
         return application.job === job.id && application.status === 1;
       });
-      let connections = _.filter(DATA.applications, application => {
+      let connections = _.filter(applications, application => {
         return application.job === job.id && application.status === 2;
       });
       countList[job.id] = {
-        totalApplications: applications.length,
+        totalApplications: _applications.length,
         newApplications: newApplications.length,
         connections: connections.length
       };
@@ -198,7 +205,7 @@ class JobList extends React.Component {
   };
 
   render() {
-    const { workplace, jobs } = this.props;
+    const { workplace, jobs, applications } = this.props;
     const { selectedJob, selected } = this.state;
 
     return (
@@ -223,13 +230,17 @@ class JobList extends React.Component {
         </PageSubHeader>
 
         <div className="content">
-          <ListEx
-            data={jobs}
-            loadingSize="large"
-            pagination={{ pageSize: 10 }}
-            renderItem={this.renderJob}
-            emptyRender={this.renderEmpty}
-          />
+          {applications === null ? (
+            <Loading className="mask" size="large" />
+          ) : (
+            <ListEx
+              data={jobs}
+              loadingSize="large"
+              pagination={{ pageSize: 10 }}
+              renderItem={this.renderJob}
+              emptyRender={this.renderEmpty}
+            />
+          )}
         </div>
 
         <DeleteDialog job={selectedJob} onCancel={() => this.showRemoveDialog()} />
@@ -250,13 +261,20 @@ class JobList extends React.Component {
   }
 }
 
-export default connect((state, { match }) => {
-  const workplaceId = helper.str2int(match.params.workplaceId);
-  const workplace = helper.getItemByID(state.rc_workplaces.workplaces, workplaceId);
-  let { jobs } = state.rc_jobs;
-  jobs = jobs.filter(item => item.location === workplaceId);
-  return {
-    workplace,
-    jobs
-  };
-})(JobList);
+export default connect(
+  (state, { match }) => {
+    const workplaceId = helper.str2int(match.params.workplaceId);
+    const workplace = helper.getItemByID(state.rc_workplaces.workplaces, workplaceId);
+    let { jobs } = state.rc_jobs;
+    jobs = jobs.filter(item => item.location === workplaceId);
+    const { applications } = state.applications;
+    return {
+      workplace,
+      jobs,
+      applications
+    };
+  },
+  {
+    getApplications
+  }
+)(JobList);

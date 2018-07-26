@@ -38,7 +38,7 @@ class SwipeController: MJPController {
         
         isFindJob = SideMenuController.currentID == "find_job"
         
-        navigationItem.title = SideMenuController.getCurrentTitle(isFindJob ? "find_job" : "find_talent")
+        title = SideMenuController.menuItems[SideMenuController.currentID]?["title"]
         
         
         refresh()

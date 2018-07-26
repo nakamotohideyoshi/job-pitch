@@ -42,10 +42,14 @@ class JobProfileController: MJPController {
     var jobSeeker: JobSeeker!
     var profile: Profile!
     
+    var locationManager: CLLocationManager!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         addressField.delegate = self
+        locationManager = CLLocationManager()
+        locationManager.delegate = self as? CLLocationManagerDelegate
         
         let iconView = UIImageView(image: UIImage(named: "location-icon"))
         iconView.contentMode = .scaleAspectFit

@@ -1,5 +1,8 @@
+from django.contrib.auth.forms import PasswordResetForm
 from django.db.models import Q
 from rest_framework import viewsets, permissions, serializers
+from rest_framework.decorators import detail_route
+from rest_framework.response import Response
 
 from mjp.models import (
     BusinessUser,
@@ -295,6 +298,34 @@ class BusinessUserViewSet(viewsets.ModelViewSet):
     serializer_class = BusinessUserSerializer
     queryset = BusinessUser.objects.all()
     permission_classes = (BusinessUserPermission,)
+
+    @detail_route(methods=['POST'], url_path='resend-invitation')
+    def resend_invitation(self, request, business_pk, pk):
+        self._send_email(self.get_object(), False)
+        return Response({"result": "success"})
+
+    def perform_create(self, serializer):
+        business_user = serializer.save()
+        created = serializer.new_user
+        self._send_email(business_user, created)
+
+    def _send_email(self, business_user, created):
+        if created:
+            template = 'registration/invitation_email_new_user.txt'
+        else:
+            template = 'registration/invitation_email_existing_user.txt'
+        reset_form = PasswordResetForm(data={'email': business_user.user.email})
+        if not reset_form.is_valid():
+            raise serializers.ValidationError('Error sending invitation')
+        reset_form.save(
+            use_https=self.request.is_secure(),
+            request=self.request,
+            subject_template_name='registration/invitation_subject.txt',
+            email_template_name=template,
+            extra_email_context={
+                'business_user': business_user,
+            }
+        )
 
     def get_serializer_class(self):
         if self.request.method == 'POST':

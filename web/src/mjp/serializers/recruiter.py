@@ -1,3 +1,5 @@
+import uuid
+from django.contrib.auth.forms import PasswordResetForm
 from django.db import transaction
 from rest_framework import serializers
 from rest_framework.exceptions import PermissionDenied
@@ -72,6 +74,7 @@ class BusinessUserSerializer(serializers.ModelSerializer):
 
 class BusinessUserCreateSerializer(serializers.ModelSerializer):
     email = serializers.EmailField(write_only=True)
+    new_user = False
 
     def validate_business(self, value):
         request = self.context['request']
@@ -107,6 +110,10 @@ class BusinessUserCreateSerializer(serializers.ModelSerializer):
                 raise serializers.ValidationError({
                     'email': 'This user already exists',
                 })
+            if created:
+                user.set_password(str(uuid.uuid4()))
+                user.save()
+            self.new_user = created
             data['user'] = user
             data['business'] = business
             return super(BusinessUserCreateSerializer, self).create(data)

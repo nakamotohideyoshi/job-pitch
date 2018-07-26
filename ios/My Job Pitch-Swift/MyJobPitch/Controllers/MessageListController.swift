@@ -23,8 +23,7 @@ class MessageListController: SearchController {
     var checkTimer: Timer?
     
     override func viewDidLoad() {
-        super.viewDidLoad()
-        title = "Messages"
+        super.viewDidLoad()        
         
         if (self.job != nil) {
             let item = UIBarButtonItem(title: "All Messages", style: .plain, target: self, action: #selector(goAllMessageList))

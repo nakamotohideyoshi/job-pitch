@@ -9,18 +9,17 @@ class PublicEmbeddedBusinessListingSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Business
-        fields = ('name', 'images')
+        fields = ('id', 'name', 'images')
 
 
 class PublicEmbeddedLocationListingSerializer(serializers.ModelSerializer):
     images = RelatedImageURLField(many=True, read_only=True)
     longitude = serializers.FloatField(source='latlng.x')
     latitude = serializers.FloatField(source='latlng.y')
-    business = PublicEmbeddedBusinessListingSerializer()
 
     class Meta:
         model = Location
-        fields = ('name', 'images', 'longitude', 'latitude', 'business')
+        fields = ('id', 'name', 'images', 'longitude', 'latitude')
 
 
 class PublicEmbeddedJobListingSerializer(serializers.ModelSerializer):
@@ -31,7 +30,7 @@ class PublicEmbeddedJobListingSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Job
-        fields = ('title', 'description', 'images', 'sector', 'contract', 'hours')
+        fields = ('id', 'title', 'description', 'images', 'sector', 'contract', 'hours')
 
 
 class PublicJobListingSerializer(PublicEmbeddedJobListingSerializer):
@@ -43,11 +42,12 @@ class PublicJobListingSerializer(PublicEmbeddedJobListingSerializer):
 
 
 class PublicLocationListingSerializer(PublicEmbeddedLocationListingSerializer):
+    business_data = PublicEmbeddedBusinessListingSerializer(source='business')
     jobs = PublicEmbeddedJobListingSerializer(many=True)
 
     class Meta:
         model = Location
-        fields = PublicEmbeddedLocationListingSerializer.Meta.fields + ('jobs',)
+        fields = PublicEmbeddedLocationListingSerializer.Meta.fields + ('jobs', 'business_data')
 
 
 class PublicBusinessListingSerializer(PublicEmbeddedBusinessListingSerializer):

@@ -85,72 +85,97 @@
         android:text="date/time date/time date/time date/time date/time date/time date/time"
         android:textSize="13sp" />
 
-    <TextView
-        android:id="@+id/item_location_label"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/item_date_time_label"
-        android:ellipsize="end"
-        android:lines="1"
-        android:text="Location:"
-        android:textSize="13sp"
-        android:textStyle="bold" />
 
-    <TextView
-        android:id="@+id/item_location"
-        android:layout_width="wrap_content"
+    <RelativeLayout
+        android:id="@+id/location_container"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignStart="@+id/item_title"
-        android:layout_alignTop="@+id/item_location_label"
-        android:layout_toRightOf="@+id/item_location_label"
-        android:ellipsize="end"
-        android:lines="1"
-        android:text="location location location location location location"
-        android:textSize="13sp" />
-    <TextView
-        android:id="@+id/item_feedback_label"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/item_location_label"
-        android:ellipsize="end"
-        android:lines="1"
-        android:text="Feedback:"
-        android:textSize="13sp"
-        android:textStyle="bold" />
+        android:layout_below="@+id/item_date_time_label">
+        <TextView
+            android:id="@+id/item_location_label"
+            android:layout_width="65dp"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="10dp"
+            android:ellipsize="end"
+            android:lines="1"
+            android:text="Location:"
+            android:textSize="13sp"
+            android:textStyle="bold" />
 
-    <TextView
-        android:id="@+id/item_feedback"
-        android:layout_width="wrap_content"
-        android:layout_height="50dp"
-        android:layout_alignStart="@+id/item_title"
-        android:layout_alignTop="@+id/item_feedback_label"
-        android:layout_toRightOf="@+id/item_feedback_label"
-        android:ellipsize="end"
-        android:lines="100"
-        android:text="feedback feedback feedback feedback feedback feedback feedback feedback feedback"
-        android:textSize="13sp" />
-    <TextView
-        android:id="@+id/item_notes_label"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/item_feedback"
-        android:ellipsize="end"
-        android:lines="1"
-        android:text="Notes:"
-        android:textSize="13sp"
-        android:textStyle="bold" />
+        <TextView
+            android:id="@+id/item_location"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/item_location_label"
+            android:layout_toRightOf="@+id/item_location_label"
+            android:ellipsize="end"
+            android:lines="1"
+            android:text="location location location location location location"
+            android:textSize="13sp" />
 
-    <TextView
-        android:id="@+id/item_notes"
-        android:layout_width="wrap_content"
-        android:layout_height="50dp"
-        android:layout_alignStart="@+id/item_title"
-        android:layout_alignTop="@+id/item_notes_label"
-        android:layout_toRightOf="@+id/item_notes_label"
-        android:ellipsize="end"
-        android:lines="100"
-        android:text="note note note note note note note note note note note"
-        android:textSize="13sp" />
+    </RelativeLayout>
+
+
+    <RelativeLayout
+        android:id="@+id/feedback_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/location_container">
+
+        <TextView
+            android:id="@+id/item_feedback_label"
+            android:layout_width="65dp"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="10dp"
+            android:ellipsize="end"
+            android:lines="1"
+            android:text="Feedback:"
+            android:textSize="13sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/item_feedback"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:layout_alignTop="@+id/item_feedback_label"
+            android:layout_toRightOf="@+id/item_feedback_label"
+            android:ellipsize="end"
+            android:lines="100"
+            android:hint="None"
+            android:textSize="13sp" />
+
+    </RelativeLayout>
+
+
+    <RelativeLayout
+        android:id="@+id/notes_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/feedback_container">
+
+        <TextView
+            android:id="@+id/item_notes_label"
+            android:layout_width="65dp"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="10dp"
+            android:ellipsize="end"
+            android:lines="2"
+            android:text="Recruiter's notes:"
+            android:textAlignment="center"
+            android:textSize="13sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/item_notes"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:layout_alignTop="@+id/item_notes_label"
+            android:layout_toRightOf="@+id/item_notes_label"
+            android:ellipsize="end"
+            android:lines="100"
+            android:hint="None"
+            android:textSize="13sp" />
+    </RelativeLayout>
 
 
 </RelativeLayout>

@@ -9,7 +9,7 @@ import { getInterviews } from 'redux/interviews';
 import DATA from 'utils/data';
 import * as helper from 'utils/helper';
 
-import { PageHeader, SearchBox, AlertMsg, ListEx, Icons, JobDetails, LargeModal } from 'components';
+import { PageHeader, SearchBox, AlertMsg, ListEx, Icons, JobDetails, LargeModal, Loading } from 'components';
 import NoPitch from '../components/NoPitch';
 import Wrapper from './styled';
 
@@ -42,12 +42,21 @@ class JSInterviews extends React.Component {
   };
 
   filterOption = ({ job_data }) => {
-    const searchText = this.state.searchText.toLowerCase();
-    const name = helper.getFullBWName(job_data);
-    return job_data.title.toLowerCase().indexOf(searchText) >= 0 || name.toLowerCase().indexOf(searchText) >= 0;
+    // const searchText = this.state.searchText.toLowerCase();
+    // const name = helper.getFullBWName(job_data);
+    // return job_data.title.toLowerCase().indexOf(searchText) >= 0 || name.toLowerCase().indexOf(searchText) >= 0;
+    return true;
   };
 
-  renderApp = app => {
+  renderApp = interview => {
+    let app;
+    _.forEach(this.props.applications, application => {
+      if (interview.application === application.id) {
+        let applicationWithInterview = Object.assign({}, application);
+        applicationWithInterview.interview = interview;
+        app = applicationWithInterview;
+      }
+    });
     const { id, job_data } = app;
     const { title, contract, hours, description } = job_data;
     const logo = helper.getJobLogo(job_data);
@@ -94,18 +103,6 @@ class JSInterviews extends React.Component {
   render() {
     const { jobseeker, applications, interviews, error } = this.props;
 
-    let myInterviews = [];
-
-    _.forEach(interviews, interview => {
-      _.forEach(applications, application => {
-        if (interview.application === application.id) {
-          let applicationWithInterview = Object.assign({}, application);
-          applicationWithInterview.interview = interview;
-          myInterviews.push(applicationWithInterview);
-        }
-      });
-    });
-
     if (!helper.getPitch(jobseeker)) {
       return <NoPitch title="My Applications" />;
     }
@@ -122,15 +119,19 @@ class JSInterviews extends React.Component {
         </PageHeader>
 
         <div className="content">
-          <ListEx
-            data={myInterviews}
-            loadingSize="large"
-            pagination={{ pageSize: 10 }}
-            filterOption={this.filterOption}
-            error={error && 'Server Error!'}
-            renderItem={this.renderApp}
-            emptyRender={this.renderEmpty}
-          />
+          {applications !== null && interviews !== null ? (
+            <ListEx
+              data={interviews}
+              loadingSize="large"
+              pagination={{ pageSize: 10 }}
+              filterOption={this.filterOption}
+              error={error && 'Server Error!'}
+              renderItem={this.renderApp}
+              emptyRender={this.renderEmpty}
+            />
+          ) : (
+            <Loading size="large" />
+          )}
         </div>
 
         {selectedApp && (

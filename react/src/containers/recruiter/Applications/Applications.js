@@ -148,7 +148,7 @@ class Applications extends React.Component {
           <TabPane tab="Find Talent" key="find">
             <FindTalent job={job} jobseekers={jobseekers} searchText={searchText} />
           </TabPane>
-          <TabPane tab={`My Applications (${appCount})`} key="apps">
+          <TabPane tab={`New Applications (${appCount})`} key="apps">
             <MyApplications job={job} applications={myApplications} searchText={searchText} />
           </TabPane>
           <TabPane tab={`My Connections (${connCount})`} key="conns">

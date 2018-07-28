@@ -107,14 +107,14 @@ class JSInterviews extends React.Component {
     });
 
     if (!helper.getPitch(jobseeker)) {
-      return <NoPitch title="My Applications" />;
+      return <NoPitch title="New Applications" />;
     }
 
     const selectedApp = applications && helper.getItemByID(applications, this.state.selectedId);
 
     return (
       <Wrapper className="container">
-        <Helmet title="My Applications" />
+        <Helmet title="New Applications" />
 
         <PageHeader>
           <h2>Interviews</h2>

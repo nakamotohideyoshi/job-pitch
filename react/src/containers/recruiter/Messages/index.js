@@ -251,6 +251,7 @@ class Page extends React.Component {
               connected
               application={selectedApp}
               gotoOrigin={this.hideInterviewEdit}
+              create
             />
           </LargeModal>
         )}

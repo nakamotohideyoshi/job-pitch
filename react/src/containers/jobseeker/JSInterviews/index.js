@@ -2,12 +2,14 @@ import React from 'react';
 import Helmet from 'react-helmet';
 import { connect } from 'react-redux';
 import Truncate from 'react-truncate';
-import { List, Avatar, Tooltip, Button } from 'antd';
+import { List, Avatar, Tooltip, Button, notification } from 'antd';
+import moment from 'moment';
 
 import { getApplications } from 'redux/applications';
 import { getInterviews } from 'redux/interviews';
 import DATA from 'utils/data';
 import * as helper from 'utils/helper';
+import { changeInterview } from 'redux/interviews';
 
 import { PageHeader, SearchBox, AlertMsg, ListEx, Icons, JobDetails, LargeModal, Loading } from 'components';
 import NoPitch from '../components/NoPitch';
@@ -18,7 +20,8 @@ import * as _ from 'lodash';
 class JSInterviews extends React.Component {
   state = {
     selectedId: null,
-    searchText: ''
+    searchText: '',
+    selectedApp: null
   };
 
   componentWillMount() {
@@ -34,11 +37,39 @@ class JSInterviews extends React.Component {
 
   onChangeSearchText = searchText => this.setState({ searchText });
 
-  onSelect = selectedId => this.setState({ selectedId });
+  onSelect = app => this.setState({ selectedApp: app });
 
   onMessage = ({ id }, event) => {
     event && event.stopPropagation();
     this.props.history.push(`/jobseeker/messages/${id}/`);
+  };
+
+  acceptInvitation = ({ interview }, event) => {
+    event && event.stopPropagation();
+    this.props.changeInterview({
+      data: {
+        id: interview.id,
+        changeType: 'accept'
+      },
+      success: () => {
+        this.setState({
+          selectedApp: null
+        });
+        notification.success({
+          message: 'Notification',
+          description: 'Interview is saved successfully.'
+        });
+      },
+      fail: () => {
+        this.setState({
+          selectedApp: null
+        });
+        notification.error({
+          message: 'Notification',
+          description: 'Saving is failed'
+        });
+      }
+    });
   };
 
   filterOption = ({ job_data }) => {
@@ -58,11 +89,23 @@ class JSInterviews extends React.Component {
       }
     });
     const { id, job_data } = app;
+    const { at } = interview;
     const { title, contract, hours, description } = job_data;
     const logo = helper.getJobLogo(job_data);
     const name = helper.getFullBWName(job_data);
     const contractName = helper.getItemByID(DATA.contracts, contract).short_name;
     const hoursName = helper.getItemByID(DATA.hours, hours).short_name;
+
+    let status = '';
+    if (interview.status === 'PENDING') {
+      status = 'Interview request received';
+    } else if (interview.status === 'ACCEPTED') {
+      status = 'Interview accepted';
+    } else if (interview.status === 'COMPLETED') {
+      status = 'This interview is done';
+    } else if (interview.status === 'CANCELLED') {
+      status = 'Interview cancelled by ';
+    }
 
     return (
       <List.Item
@@ -74,15 +117,20 @@ class JSInterviews extends React.Component {
             </span>
           </Tooltip>
         ]}
-        onClick={() => this.onSelect(id)}
+        onClick={() => this.onSelect(app)}
       >
         <List.Item.Meta
           avatar={<Avatar src={logo} className="avatar-80" />}
           title={`${title} (${name})`}
           description={
-            <Truncate lines={2} ellipsis={<span>...</span>}>
-              {description}
-            </Truncate>
+            <div>
+              <div>
+                <Truncate>{`Date: ${moment(at).format('dddd, MMMM Do, YYYY h:mm:ss A')}`}</Truncate>
+              </div>
+              <div>
+                <Truncate>{`Status: ${status}`}</Truncate>
+              </div>
+            </div>
           }
         />
         <div className="properties">
@@ -103,11 +151,13 @@ class JSInterviews extends React.Component {
   render() {
     const { jobseeker, applications, interviews, error } = this.props;
 
+    const { selectedApp } = this.state;
+
     if (!helper.getPitch(jobseeker)) {
       return <NoPitch title="My Applications" />;
     }
 
-    const selectedApp = applications && helper.getItemByID(applications, this.state.selectedId);
+    // const selectedApp = applications && helper.getItemByID(applications, this.state.selectedId);
 
     return (
       <Wrapper className="container">
@@ -138,11 +188,14 @@ class JSInterviews extends React.Component {
           <LargeModal visible title="Job Details" onCancel={() => this.onSelect()}>
             <JobDetails
               job={selectedApp.job_data}
-              actions={
-                <Button type="primary" onClick={() => this.onMessage(selectedApp)}>
+              actions={[
+                <Button type="default" onClick={() => this.onMessage(selectedApp)}>
                   Message
+                </Button>,
+                <Button type="primary" onClick={() => this.acceptInvitation(selectedApp)}>
+                  Accept Invitation
                 </Button>
-              }
+              ]}
             />
           </LargeModal>
         )}
@@ -160,6 +213,7 @@ export default connect(
   }),
   {
     getApplications,
-    getInterviews
+    getInterviews,
+    changeInterview
   }
 )(JSInterviews);

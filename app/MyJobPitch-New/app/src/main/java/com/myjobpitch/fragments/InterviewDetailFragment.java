@@ -29,6 +29,7 @@ import com.myjobpitch.api.data.Business;
 import com.myjobpitch.api.data.Contract;
 import com.myjobpitch.api.data.Hours;
 import com.myjobpitch.api.data.Interview;
+import com.myjobpitch.api.data.InterviewStatus;
 import com.myjobpitch.api.data.Job;
 import com.myjobpitch.api.data.JobPitch;
 import com.myjobpitch.api.data.JobSeeker;
@@ -119,11 +120,6 @@ public class InterviewDetailFragment extends BaseFragment {
     public Application application;
     public Integer interviewId;
 
-    public static final String PENDING = "PENDING";
-    public static final String ACCEPTED = "ACCEPTED";
-    public static final String COMPLETE = "COMPLETE";
-    public static final String CANCELLED = "CANCELLED";
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -209,7 +205,7 @@ public class InterviewDetailFragment extends BaseFragment {
         // Note
 
         itemNotes.setText(interview.getNotes());
-        notesContainer.setVisibility(View.GONE);
+        notesContainer.setVisibility(View.VISIBLE);
 
         editButton.setVisibility(AppData.user.isJobSeeker() ? View.GONE : View.VISIBLE);
         completeButton.setVisibility(AppData.user.isJobSeeker() ? View.GONE : View.VISIBLE);
@@ -218,16 +214,16 @@ public class InterviewDetailFragment extends BaseFragment {
 
         switch (status) {
 
-            case PENDING:
+            case InterviewStatus.PENDING:
                 // Status
                 itemStatus.setText("Interview request sent");
-            case ACCEPTED:
+            case InterviewStatus.ACCEPTED:
                 // Status
                 itemStatus.setText("Interview accepted");
 
                 acceptButton.setVisibility(View.GONE);
 
-            case COMPLETE:
+            case InterviewStatus.COMPLETED:
                 // Status
                 itemStatus.setText("This interview is done");
 
@@ -244,10 +240,10 @@ public class InterviewDetailFragment extends BaseFragment {
 
                 feedbackContainer.setVisibility(View.VISIBLE);
 
-            case CANCELLED:
+            case InterviewStatus.CANCELLED:
                 // Status
 
-                itemStatus.setText("Interview cancelled by " + (AppData.user.isJobSeeker() ? "Job seeker"  : "Recruiter"));
+                itemStatus.setText("Interview cancelled by " + (interview.getCancelled_by() == AppData.JOBSEEKER ? "Job seeker"  : "Recruiter"));
 
                 completeButton.setVisibility(View.GONE);
                 cancelButton.setVisibility(View.GONE);

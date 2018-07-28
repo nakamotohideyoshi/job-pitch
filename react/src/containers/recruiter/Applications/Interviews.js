@@ -8,12 +8,14 @@ import { removeInterview } from 'redux/interviews';
 import * as helper from 'utils/helper';
 
 import { AlertMsg, Loading, ListEx, Icons, LargeModal, InterviewEdit } from 'components';
+import moment from 'moment';
 
 const { confirm } = Modal;
 
 class Interviews extends React.Component {
   state = {
     selectedId: null,
+    selectedApp: null,
     openInterviewEdit: false,
     openInterviewView: false
   };
@@ -25,7 +27,7 @@ class Interviews extends React.Component {
     }
   }
 
-  onSelect = selectedId => this.setState({ selectedId, openInterviewView: true });
+  onSelect = app => this.setState({ selectedApp: app, openInterviewView: true });
 
   onMessage = ({ id }, event) => {
     event && event.stopPropagation();
@@ -55,9 +57,9 @@ class Interviews extends React.Component {
     });
   };
 
-  editInterview = ({ id }, event) => {
+  editInterview = (app, event) => {
     event && event.stopPropagation();
-    this.setState({ selectedId: id, openInterviewEdit: true });
+    this.setState({ selectedApp: app, openInterviewEdit: true });
   };
 
   hideInterviewEdit = () => this.setState({ openInterviewEdit: false });
@@ -71,9 +73,19 @@ class Interviews extends React.Component {
       .indexOf(this.props.searchText) >= 0;
 
   renderApplication = app => {
-    const { id, job_seeker, loading } = app;
+    const { id, job_seeker, interview, loading } = app;
     const image = helper.getPitch(job_seeker).thumbnail;
     const name = helper.getFullJSName(job_seeker);
+    let status = '';
+    if (interview.status === 'PENDING') {
+      status = 'Interview request sent';
+    } else if (interview.status === 'ACCEPTED') {
+      status = 'Interview accepted';
+    } else if (interview.status === 'COMPLETED') {
+      status = 'This interview is done';
+    } else if (interview.status === 'CANCELLED') {
+      status = 'Interview cancelled by ';
+    }
 
     return (
       <List.Item
@@ -95,7 +107,7 @@ class Interviews extends React.Component {
             </span>
           </Tooltip>
         ]}
-        onClick={() => this.onSelect(id)}
+        onClick={() => this.onSelect(app)}
         className={loading ? 'loading' : ''}
       >
         <List.Item.Meta
@@ -107,9 +119,14 @@ class Interviews extends React.Component {
           }
           title={name}
           description={
-            <Truncate lines={2} ellipsis={<span>...</span>}>
-              {job_seeker.description}
-            </Truncate>
+            <div>
+              <div>
+                <Truncate>{`Date: ${moment(interview.at).format('dddd, MMMM Do, YYYY h:mm:ss A')}`}</Truncate>
+              </div>
+              <div>
+                <Truncate>{`Status: ${status}`}</Truncate>
+              </div>
+            </div>
           }
         />
         {loading && <Loading className="mask" size="small" />}
@@ -124,11 +141,12 @@ class Interviews extends React.Component {
   );
 
   render() {
-    const { job, applications } = this.props;
-    const selectedApp = helper.getItemByID(applications, this.state.selectedId);
+    const { job, applications, loading } = this.props;
+    // const selectedApp = helper.getItemByID(applications, this.state.selectedId);
+    const { selectedApp } = this.state;
     return (
       <div className="content">
-        {job && (
+        {job && !loading ? (
           <ListEx
             data={applications}
             loadingSize="large"
@@ -137,6 +155,8 @@ class Interviews extends React.Component {
             filterOption={this.filterOption}
             emptyRender={this.renderEmpty}
           />
+        ) : (
+          <Loading size="large" />
         )}
         {selectedApp &&
           this.state.openInterviewView && (

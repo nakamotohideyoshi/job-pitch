@@ -100,7 +100,18 @@ class Applications extends React.Component {
   onChangeSearchText = searchText => this.setState({ searchText });
 
   render() {
-    const { jobs, job, jobseekers, myApplications, myConnections, myShortlist, match, myInterviews } = this.props;
+    const {
+      jobs,
+      job,
+      jobseekers,
+      myApplications,
+      myConnections,
+      myShortlist,
+      match,
+      myInterviews,
+      applications,
+      interviews
+    } = this.props;
     const location = job.location_data;
     const business = location.business_data;
     const searchText = this.state.searchText.toLowerCase();
@@ -158,7 +169,12 @@ class Applications extends React.Component {
             <MyConnections job={job} applications={myShortlist} searchText={searchText} shortlist />
           </TabPane>
           <TabPane tab={`Interviews (${interviewCount})`} key="interviews">
-            <Interviews job={job} applications={myInterviews} searchText={searchText} />
+            <Interviews
+              job={job}
+              applications={myInterviews}
+              loading={applications === null || interviews === null}
+              searchText={searchText}
+            />
           </TabPane>
         </Tabs>
       </Wrapper>
@@ -201,7 +217,9 @@ export default connect(
       myApplications,
       myConnections,
       myShortlist,
-      myInterviews
+      myInterviews,
+      applications,
+      interviews
     };
   },
   {

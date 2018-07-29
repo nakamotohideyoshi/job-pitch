@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { Breadcrumb, Form, Input, Select, Button, notification, Checkbox } from 'antd';
 
-import { saveUser } from 'redux/recruiter/users';
+import { saveUser, resendInvitation } from 'redux/recruiter/users';
 // import DATA from 'utils/data';
 import * as helper from 'utils/helper';
 
@@ -91,6 +91,34 @@ class UserEdit extends React.Component {
     });
   };
 
+  resendInvitation = () => {
+    const { user, resendInvitation, business } = this.props;
+
+    this.setState({
+      loading: {
+        label: 'Sending...'
+      }
+    });
+    resendInvitation({
+      businessId: business.id,
+      userId: user.id,
+      onSuccess: ({ id }) => {
+        notification.success({
+          message: 'Notification',
+          description: 'Invitation is sent successfully.'
+        });
+        this.goUserList();
+      },
+      onFail: error => {
+        this.setState({ loading: null });
+        notification.error({
+          message: 'Notification',
+          description: error
+        });
+      }
+    });
+  };
+
   render() {
     const { loading } = this.state;
     const { business, workplaces, user, form } = this.props;
@@ -157,6 +185,11 @@ class UserEdit extends React.Component {
               <Button type="primary" onClick={this.save}>
                 Save
               </Button>
+              {user && (
+                <Button type="primary" onClick={this.resendInvitation}>
+                  Resend Invitation
+                </Button>
+              )}
               <Button onClick={this.goUserList}>Cancel</Button>
             </NoLabelField>
           </StyledForm>
@@ -185,6 +218,7 @@ export default connect(
     };
   },
   {
-    saveUser
+    saveUser,
+    resendInvitation
   }
 )(Form.create()(UserEdit));

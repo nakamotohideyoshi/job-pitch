@@ -39,9 +39,9 @@ class InterviewEditController: MJPController, WWCalendarTimeSelectorProtocol {
         if let image = application.jobSeeker.getPitch()?.thumbnail {
             AppHelper.loadImageURL(imageUrl: image, imageView: imgView, completion: nil)
         } else {
-            imgView.image = UIImage(named: "no-img")
+            imgView.image = UIImage(named: "default-logo")
         }
-        cvDescription.text = application.jobSeeker.cv == nil ? "Can't find CV" : application.jobSeeker.cv
+        cvDescription.text = application.jobSeeker.desc
         jobSeekerName.text = application.jobSeeker.getFullName()
         
         if isEditMode {

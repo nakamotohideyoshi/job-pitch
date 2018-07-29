@@ -11,6 +11,7 @@ export const updateStatus = createAction(C.RC_USERS_UPDATE);
 export const getUsers = createAction(C.RC_GET_USERS);
 export const removeUser = createAction(C.RC_REMOVE_USER);
 export const saveUser = createAction(C.RC_SAVE_USER);
+export const resendInvitation = createAction(C.RC_RESEND_INVITATION);
 
 // ------------------------------------
 // Reducer

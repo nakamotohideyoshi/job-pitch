@@ -19,7 +19,7 @@ const App = ({ location, status, user, getUserData }) => {
 
   const { pathname, search } = location;
   const urlStatus = pathname.split('/')[1];
-  if (pathname.indexOf('/jobseeker/jobs/') !== 0) {
+  if (pathname.indexOf('/jobseeker/jobs/') !== 0 && pathname.indexOf('/jobseeker/locations/') !== 0) {
     if (urlStatus !== status) {
       let redirect;
       if (urlStatus !== '' && status === 'auth') {

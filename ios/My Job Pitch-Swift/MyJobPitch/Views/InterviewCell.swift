@@ -27,18 +27,18 @@ class InterviewCell: MGSwipeTableCell {
             if let image = application.jobSeeker.getPitch()?.thumbnail {
                 AppHelper.loadImageURL(imageUrl: image, imageView: imgView, completion: nil)
             } else {
-                imgView.image = UIImage(named: "no-img")
+                imgView.image = UIImage(named: "default-logo")
             }
-            cvDescription.text = application.jobSeeker.cv == nil ? "Can't find CV" : application.jobSeeker.cv
+            cvDescription.text = application.jobSeeker.desc
             jobSeekerName.text = application.jobSeeker.getFullName()
             
         } else {
-            if let image = application.job.getPitch()?.thumbnail {
+            if let image = application.job.getImage()?.thumbnail {
                 AppHelper.loadImageURL(imageUrl: image, imageView: imgView, completion: nil)
             } else {
-                imgView.image = UIImage(named: "no-img")
+                imgView.image = UIImage(named: "default-logo")
             }
-            cvDescription.text = application.job.desc == nil ? "Can't find Description" : application.job.desc
+            cvDescription.text = application.job.desc
             jobSeekerName.text = application.job.title
         }
         

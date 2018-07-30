@@ -21,6 +21,7 @@ class PitchRecord extends React.Component {
   };
 
   componentWillMount() {
+    console.log("p[p[p[", this.props.history.location)
     const pitch = helper.getPitch(this.props.jobseeker) || {};
     this.setState({
       pitchUrl: pitch.video,
@@ -64,6 +65,11 @@ class PitchRecord extends React.Component {
           poster: pitch.thumbnail
         });
         message.success('Pitch is uploaded successfully.');
+        let backUrl = localStorage.getItem('back');
+        if (backUrl !== 'false' && backUrl !== null) {
+          localStorage.setItem('back', 'false');
+          this.props.history.push(backUrl);
+        }
       },
       onFail: error => {
         this.setState({ loading: null });

@@ -107,7 +107,7 @@ class JSInterviews extends React.Component {
     });
 
     if (!helper.getPitch(jobseeker)) {
-      return <NoPitch title="My Applications" />;
+      return <NoPitch title="My Applications" backUrl={this.props.history.location.pathname} />;
     }
 
     const selectedApp = applications && helper.getItemByID(applications, this.state.selectedId);

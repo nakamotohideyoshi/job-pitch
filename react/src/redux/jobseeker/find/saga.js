@@ -16,7 +16,7 @@ const findPublicJob = weakRequest(
 
 const findPublicJobList = weakRequest(
   getRequest({
-    url: ({ locationId }) => `/api/public/location/${locationId}/`
+    url: ({ locationId }) => `/api/public/locations/${locationId}/`
   })
 );
 

@@ -68,16 +68,16 @@ class InterviewDetailController: MJPController {
             if let image = application.jobSeeker.getPitch()?.thumbnail {
                 AppHelper.loadImageURL(imageUrl: image, imageView: imgView, completion: nil)
             } else {
-                imgView.image = UIImage(named: "no-img")
+                imgView.image = UIImage(named: "default-logo")
             }
             cvDescription.text = application.jobSeeker.desc
             jobSeekerName.text = application.jobSeeker.getFullName()
             
         } else {
-            if let image = application.job.getPitch()?.thumbnail {
+            if let image = application.job.getImage()?.thumbnail {
                 AppHelper.loadImageURL(imageUrl: image, imageView: imgView, completion: nil)
             } else {
-                imgView.image = UIImage(named: "no-img")
+                imgView.image = UIImage(named: "default-logo")
             }
             cvDescription.text = application.job.desc
             jobSeekerName.text = application.job.title
@@ -92,8 +92,8 @@ class InterviewDetailController: MJPController {
         dataTime.text = String(format: "%@ at %@", dateFormatter.string(from: interview.at), dateFormatter1.string(from: interview.at))
         location.text = application.job.locationData.name
         
-        feedbackContent.text = interview.feedback == nil ? interview.feedback : "None"
-        noteContent.text = interview.notes == nil ? interview.notes : "None"
+        feedbackContent.text = interview.feedback
+        noteContent.text = interview.notes
         
         feedbackLabel.isHidden = true
         feedbackContent.isHidden = true
@@ -111,16 +111,16 @@ class InterviewDetailController: MJPController {
             cancelButton.isHidden = true
         }
         
-        if interview.status == "PENDING" {
+        if interview.status == InterviewStatus.INTERVIEW_PENDING {
             
             status.text = "Interview request sent"
             
-        } else if interview.status == "ACCEPTED" {
+        } else if interview.status == InterviewStatus.INTERVIEW_ACCEPTED {
             
             status.text = "Interview accepted"
             acceptButton.isHidden = true
             
-        } else if interview.status == "COMPLETE" {
+        } else if interview.status == InterviewStatus.INTERVIEW_COMPLETED {
             
             status.text = "This interview is done"
             feedbackLabel.isHidden = false
@@ -130,7 +130,7 @@ class InterviewDetailController: MJPController {
             acceptButton.isHidden = true
             cancelButton1.isHidden = true
             
-        } else if interview.status == "CANCELLED" {
+        } else if interview.status == InterviewStatus.INTERVIEW_CANCELLED {
             
             status.text = "Interview cancelled by " + (AppData.user.isRecruiter() ? "Recruiter" : "Jobseeker")
             completeButton.isHidden = true

@@ -19,6 +19,7 @@
 		2F870FB820DBCC0900F9427C /* BusinessUserCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F870FB720DBCC0900F9427C /* BusinessUserCell.swift */; };
 		2F870FBA20DC9DBD00F9427C /* BusinessUserListController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F870FB920DC9DBD00F9427C /* BusinessUserListController.swift */; };
 		2F870FBC20DCB78D00F9427C /* BusinessUserEditController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F870FBB20DCB78D00F9427C /* BusinessUserEditController.swift */; };
+		2F9F066F210EF2F600E39BEC /* InterviewStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F9F066E210EF2F600E39BEC /* InterviewStatus.swift */; };
 		2FA7FC6220D841240024163A /* Deprecation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FA7FC6120D841240024163A /* Deprecation.swift */; };
 		8DAACC8E94BF22668BF0A289 /* Pods_MyJobPitch.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 27B30165DDDB50C20065D004 /* Pods_MyJobPitch.framework */; };
 		D72AE4111E10470A004C3F02 /* MessageListController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D72AE4101E10470A004C3F02 /* MessageListController.swift */; };
@@ -145,6 +146,7 @@
 		2F870FB720DBCC0900F9427C /* BusinessUserCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = BusinessUserCell.swift; path = Views/BusinessUserCell.swift; sourceTree = "<group>"; };
 		2F870FB920DC9DBD00F9427C /* BusinessUserListController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = BusinessUserListController.swift; path = Controllers/BusinessUserListController.swift; sourceTree = "<group>"; };
 		2F870FBB20DCB78D00F9427C /* BusinessUserEditController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = BusinessUserEditController.swift; path = Controllers/BusinessUserEditController.swift; sourceTree = "<group>"; };
+		2F9F066E210EF2F600E39BEC /* InterviewStatus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = InterviewStatus.swift; path = Models/api/InterviewStatus.swift; sourceTree = "<group>"; };
 		2FA7FC6120D841240024163A /* Deprecation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Deprecation.swift; path = Models/api/Deprecation.swift; sourceTree = "<group>"; };
 		3AFB29B0047E979820654701 /* Pods-MyJobPitch.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MyJobPitch.debug.xcconfig"; path = "Pods/Target Support Files/Pods-MyJobPitch/Pods-MyJobPitch.debug.xcconfig"; sourceTree = "<group>"; };
 		4EBE93C472BCA0F516AF140F /* Pods-MyJobPitch.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MyJobPitch.release.xcconfig"; path = "Pods/Target Support Files/Pods-MyJobPitch/Pods-MyJobPitch.release.xcconfig"; sourceTree = "<group>"; };
@@ -395,6 +397,7 @@
 				2F870FB520DBCA7600F9427C /* BusinessUser.swift */,
 				2F030F1020E81B9E00EDFE60 /* InterviewMessage.swift */,
 				2F030F1220E81C2000EDFE60 /* Interview.swift */,
+				2F9F066E210EF2F600E39BEC /* InterviewStatus.swift */,
 			);
 			name = api;
 			sourceTree = "<group>";
@@ -825,6 +828,7 @@
 				D74226C020ACCDED002D3F4C /* Location.swift in Sources */,
 				D74226B620ACCDED002D3F4C /* AuthToken.swift in Sources */,
 				D7F4DE30202383700018B3A9 /* IntroController.swift in Sources */,
+				2F9F066F210EF2F600E39BEC /* InterviewStatus.swift in Sources */,
 				D787F6331E2879F900C47A88 /* BusinessListController.swift in Sources */,
 				D74226C320ACCDED002D3F4C /* MJPObject.swift in Sources */,
 				D74226BF20ACCDED002D3F4C /* JobStatus.swift in Sources */,

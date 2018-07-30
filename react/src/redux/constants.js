@@ -62,6 +62,7 @@ export const UPDATE_INTERVIEW = 'UPDATE_INTERVIEW';
 
 export const JS_FIND_JOBS = 'JS_FIND_JOBS';
 export const JS_FIND_PUBLIC_JOB = 'JS_FIND_PUBLIC_JOB';
+export const JS_FIND_PUBLIC_JOB_LIST = 'JS_FIND_PUBLIC_JOB_LIST';
 export const JS_APPLY_JOB = 'JS_APPLY_JOB';
 export const JS_REMOVE_JOB = 'JS_REMOVE_JOB';
 

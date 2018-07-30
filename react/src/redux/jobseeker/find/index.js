@@ -11,6 +11,7 @@ export const findJobs = createAction(C.JS_FIND_JOBS);
 export const findPublicJob = createAction(C.JS_FIND_PUBLIC_JOB);
 export const applyJob = createAction(C.JS_APPLY_JOB);
 export const removeJob = createAction(C.JS_REMOVE_JOB);
+export const findPublicJobListing = createAction(C.JS_FIND_PUBLIC_JOB_LIST);
 
 // ------------------------------------
 // Reducer
@@ -18,6 +19,7 @@ export const removeJob = createAction(C.JS_REMOVE_JOB);
 
 const initialState = {
   jobs: null,
+  publicJobList: null,
   error: null
 };
 
@@ -55,6 +57,24 @@ export default handleActions(
     }),
 
     [requestFail(C.JS_FIND_PUBLIC_JOB)]: (state, { payload }) => ({
+      ...state,
+      error: payload
+    }),
+
+    // ---- find public jobs listing----
+
+    [requestPending(C.JS_FIND_PUBLIC_JOB_LIST)]: state => ({
+      ...state,
+      publicJobList: null,
+      error: null
+    }),
+
+    [requestSuccess(C.JS_FIND_PUBLIC_JOB_LIST)]: (state, { payload }) => ({
+      ...state,
+      publicJobList: [payload]
+    }),
+
+    [requestFail(C.JS_FIND_PUBLIC_JOB_LIST)]: (state, { payload }) => ({
       ...state,
       error: payload
     }),

@@ -30,6 +30,7 @@ import JSApplications from 'containers/jobseeker/MyApplications';
 import JSInterviews from 'containers/jobseeker/JSInterviews';
 import JSJob from 'containers/jobseeker/Job';
 import JSPublicJob from 'containers/jobseeker/PublicJob';
+import JSPublicWorkplaceList from 'containers/jobseeker/PublicWorkplaceList';
 import JSMessages from 'containers/jobseeker/Messages';
 import JSSettings from 'containers/jobseeker/Settings';
 
@@ -99,6 +100,11 @@ export default props => {
         <JSRoute exact path="/jobseeker/jobs/:jobId" component={JSJob} />
       )}
       <JSRoute exact path="/jobseeker/jobs/:jobId" component={JSJob} />
+      <Route
+        exact
+        path="/jobseeker/locations/:locationId"
+        render={props => <Layout component={JSPublicWorkplaceList} {...props} />}
+      />
       <JSRoute exact path="/jobseeker/messages" component={JSMessages} />
       <JSRoute exact path="/jobseeker/messages/:appId" component={JSMessages} />
       <Redirect exact from="/jobseeker/settings" to="/jobseeker/settings/profile" />

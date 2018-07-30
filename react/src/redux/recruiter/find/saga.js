@@ -25,7 +25,7 @@ function* connectJobseeker(action) {
       type: C.GET_APPLICATIONS,
       payload: {
         params: {
-          job: action.payload.data.id
+          job: action.payload.data.job
         }
       }
     });

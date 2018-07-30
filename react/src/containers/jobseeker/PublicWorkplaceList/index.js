@@ -1,119 +1,17 @@
-// import React from 'react';
-// import { connect } from 'react-redux';
-
-// import { findPublicJob } from 'redux/jobseeker/find';
-// import * as helper from 'utils/helper';
-
-// import { Button } from 'antd';
-
-// import { Loading, AlertMsg, PublicJobDetails } from 'components';
-
-// class JSPublicWorkplaceList extends React.Component {
-//   state = {
-//     job: null
-//   };
-
-//   componentWillMount() {
-//     this.props.findPublicJob({ jobId: this.props.match.params.locationId });
-//   }
-
-//   componentWillReceiveProps({ jobs }) {
-//     if (jobs) {
-//       this.setState({
-//         job: jobs[0]
-//       });
-//     }
-//   }
-
-//   renderComponent() {
-//     if (this.props.error) {
-//       return (
-//         <AlertMsg>
-//           <span>Server Error!</span>
-//         </AlertMsg>
-//       );
-//     }
-//     if (this.state.job) {
-//       return (
-//         <PublicJobDetails
-//           job={this.state.job}
-//           className="publicJobContainer"
-//           roughLocation
-//           actions={[
-//             <Button
-//               type="primary"
-//               key="1"
-//               onClick={() => {
-//                 this.props.history.push(`/auth?redirect=${this.props.location.pathname}`);
-//               }}
-//             >
-//               Sign in
-//             </Button>,
-//             <Button
-//               type="primary"
-//               key="2"
-//               onClick={() => {
-//                 this.props.history.push(`/auth/register`);
-//               }}
-//             >
-//               Register
-//             </Button>
-//           ]}
-//         />
-//       );
-//     } else {
-//       return <Loading size="large" />;
-//     }
-//   }
-
-//   render() {
-//     return <div className="container">{this.renderComponent()}</div>;
-//   }
-// }
-
-// export default connect(
-//   state => {
-//     const { jobs, error: error1 } = state.js_find;
-//     // const job = jobs[0];
-//     return {
-//       jobs,
-//       error: error1
-//     };
-//   },
-//   {
-//     findPublicJob
-//   }
-// )(JSPublicWorkplaceList);
-
 import React from 'react';
 import Helmet from 'react-helmet';
 import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
 import Truncate from 'react-truncate';
-import { Breadcrumb, List, Avatar, Tooltip, Modal, Input } from 'antd';
-import styled from 'styled-components';
+import { List, Avatar, Breadcrumb } from 'antd';
 
-// import { getApplications } from 'redux/applications';
 import { findPublicJobListing } from 'redux/jobseeker/find';
 
-import DATA from 'utils/data';
 import * as helper from 'utils/helper';
 
-import * as _ from 'lodash';
-
-import { PageHeader, PageSubHeader, AlertMsg, LinkButton, Loading, ListEx, Icons } from 'components';
+import { PageHeader, AlertMsg, Loading, ListEx, PageSubHeader } from 'components';
 import Mark from './Mark';
 import Wrapper from './styled';
-
-const StyledModal = styled(Modal)`
-  .ant-input-group-addon {
-    cursor: pointer;
-  }
-
-  .ant-form-explain {
-    margin-top: 8px;
-  }
-`;
+const defaultLogo = require('assets/default_logo.jpg');
 
 class JSPublicWorkplaceList extends React.Component {
   state = {
@@ -127,9 +25,24 @@ class JSPublicWorkplaceList extends React.Component {
     this.props.findPublicJobListing({ locationId: this.props.match.params.locationId });
   }
 
+  selectJob = ({ id }) => {
+    this.props.history.push(`/jobseeker/jobs/${id}`);
+  };
+
   renderJob = job => {
     const { id, status, title, description, loading } = job;
-    const logo = helper.getJobLogo(job);
+    const { location_data } = this.props;
+    var logo = null;
+    if (!job || !job.images) {
+      logo = defaultLogo;
+    } else {
+      const { images } = job;
+      if (images.length > 0) {
+        logo = images[0].thumbnail;
+      } else {
+        logo = helper.getWorkplaceLogo(location_data);
+      }
+    }
     const closed = status === 2 ? 'disabled' : '';
 
     return (
@@ -154,7 +67,7 @@ class JSPublicWorkplaceList extends React.Component {
   };
 
   render() {
-    const { jobs } = this.props;
+    const { jobs, location_data, error } = this.props;
 
     return (
       <Wrapper className="container">
@@ -164,18 +77,22 @@ class JSPublicWorkplaceList extends React.Component {
           <h2>Jobs</h2>
         </PageHeader>
 
+        <PageSubHeader>
+          <Breadcrumb>
+            <Breadcrumb.Item>{location_data ? location_data.business_data.name : ''}</Breadcrumb.Item>
+            <Breadcrumb.Item>{location_data ? location_data.name : ''}</Breadcrumb.Item>
+          </Breadcrumb>
+        </PageSubHeader>
+
         <div className="content">
-          {jobs === null ? (
-            <Loading className="mask" size="large" />
-          ) : (
-            <ListEx
-              data={jobs}
-              loadingSize="large"
-              pagination={{ pageSize: 10 }}
-              renderItem={this.renderJob}
-              emptyRender={this.renderEmpty}
-            />
-          )}
+          <ListEx
+            data={jobs}
+            loadingSize="large"
+            pagination={{ pageSize: 10 }}
+            renderItem={this.renderJob}
+            emptyRender={this.renderEmpty}
+            error={error && 'Server Error!'}
+          />
         </div>
       </Wrapper>
     );
@@ -184,9 +101,11 @@ class JSPublicWorkplaceList extends React.Component {
 
 export default connect(
   (state, { match }) => {
-    const { publicJobList } = state.js_find;
+    const { publicJobList, error } = state.js_find;
     return {
-      jobs: publicJobList
+      jobs: publicJobList ? publicJobList[0].jobs : null,
+      location_data: publicJobList ? publicJobList[0] : null,
+      error
     };
   },
   {

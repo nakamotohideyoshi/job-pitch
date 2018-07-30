@@ -11,6 +11,7 @@ export const updateStatus = createAction(C.INTERVIEWS_UPDATE);
 export const getInterviews = createAction(C.GET_INTERVIEWS);
 export const removeInterview = createAction(C.REMOVE_INTERVIEW);
 export const saveInterview = createAction(C.SAVE_INTERVIEW);
+export const changeInterview = createAction(C.CHANGE_INTERVIEW);
 
 // ------------------------------------
 // Reducer
@@ -83,6 +84,32 @@ export default handleActions(
     }),
 
     [requestFail(C.SAVE_INTERVIEW)]: (state, { request }) => ({
+      ...state,
+      interviews: helper.updateObj(state.interviews, {
+        id: request.data.id,
+        loading: false
+      })
+    }),
+
+    // ---- change interview ----
+
+    [requestPending(C.CHANGE_INTERVIEW)]: (state, { payload }) => ({
+      ...state,
+      interviews: helper.updateObj(state.interviews, {
+        id: payload.data.id,
+        loading: true
+      })
+    }),
+
+    [requestSuccess(C.CHANGE_INTERVIEW)]: (state, { request }) => ({
+      ...state,
+      interviews: helper.updateObj(state.interviews, {
+        id: request.data.id,
+        loading: false
+      })
+    }),
+
+    [requestFail(C.CHANGE_INTERVIEW)]: (state, { request }) => ({
       ...state,
       interviews: helper.updateObj(state.interviews, {
         id: request.data.id,

@@ -31,6 +31,14 @@
                 layout="@layout/view_interview_item"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
+            <Button
+                android:id="@+id/interview_arrange"
+                android:text="Arrange new interview"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/button_height"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/button_green"
+                android:theme="@style/Button"/>
 
             <Button
                 android:id="@+id/interview_edit"

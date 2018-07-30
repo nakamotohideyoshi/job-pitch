@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.view.GravityCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +15,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -27,6 +29,7 @@ import com.myjobpitch.api.data.Business;
 import com.myjobpitch.api.data.Contract;
 import com.myjobpitch.api.data.Hours;
 import com.myjobpitch.api.data.Interview;
+import com.myjobpitch.api.data.InterviewStatus;
 import com.myjobpitch.api.data.Job;
 import com.myjobpitch.api.data.JobPitch;
 import com.myjobpitch.api.data.JobSeeker;
@@ -83,18 +86,20 @@ public class InterviewDetailFragment extends BaseFragment {
     @BindView(R.id.item_location)
     TextView itemLocation;
 
-    @BindView(R.id.item_feedback_label)
-    TextView itemFeedbackLabel;
+    @BindView(R.id.location_container)
+    RelativeLayout locationContainer;
 
     @BindView(R.id.item_feedback)
     TextView itemFeedback;
 
-    @BindView(R.id.item_notes_label)
-    TextView itemNotesLabel;
-
+    @BindView(R.id.feedback_container)
+    RelativeLayout feedbackContainer;
 
     @BindView(R.id.item_notes)
     TextView itemNotes;
+
+    @BindView(R.id.notes_container)
+    RelativeLayout notesContainer;
 
     @BindView(R.id.interview_edit)
     Button editButton;
@@ -104,6 +109,12 @@ public class InterviewDetailFragment extends BaseFragment {
 
     @BindView(R.id.interview_accept)
     Button acceptButton;
+
+    @BindView(R.id.interview_cancel)
+    Button cancelButton;
+
+    @BindView(R.id.interview_arrange)
+    Button arrangeButton;
 
     Interview interview;
     public Application application;
@@ -150,6 +161,7 @@ public class InterviewDetailFragment extends BaseFragment {
 
         JobSeeker jobSeeker = application.getJobSeeker();
         Job job = application.getJob_data();
+        String status = interview.getStatus();
 
         if (AppData.user.isRecruiter()) {
             AppHelper.loadJobSeekerImage(jobSeeker, imageView);
@@ -159,7 +171,7 @@ public class InterviewDetailFragment extends BaseFragment {
 
             // CV
 
-            itemSubTitle.setText(jobSeeker.getCV() == null ? "Can't find CV" : jobSeeker.getCV());
+            itemSubTitle.setText(jobSeeker.getDescription());
 
 
         } else {
@@ -170,12 +182,10 @@ public class InterviewDetailFragment extends BaseFragment {
 
             // job Description
 
-            itemSubTitle.setText(job.getDescription() == null ? "Can't find Description" : job.getDescription());
+            itemSubTitle.setText(job.getDescription());
         }
 
         // Status
-        //String interviewStatus = interview.getCancelled_by() == null ? "Pending" : "Complete";
-        //String applicationStatus = application.getStatus() == 1 ? "Undecided" : (application.getStatus() == 2 ? "Accepted" : "Rejected");
         itemStatus.setText(String.format("%s", interview.getStatus()));
 
         // Date/Time
@@ -185,23 +195,84 @@ public class InterviewDetailFragment extends BaseFragment {
 
         // Location
 
-        itemLocation.setText(application.getJob_data().getLocation_data().getName());
+        itemLocation.setText(application.getJob_data().getLocation_data().getPlace_name());
 
         // Feedback
 
         itemFeedback.setText(interview.getFeedback());
-        itemFeedback.setVisibility(AppData.user.isJobSeeker() ? View.GONE : View.VISIBLE);
-        itemFeedbackLabel.setVisibility(AppData.user.isJobSeeker() ? View.GONE : View.VISIBLE);
+        feedbackContainer.setVisibility(View.GONE);
 
         // Note
 
         itemNotes.setText(interview.getNotes());
-        itemNotes.setVisibility(AppData.user.isJobSeeker() ? View.GONE : View.VISIBLE);
-        itemNotesLabel.setVisibility(AppData.user.isJobSeeker() ? View.GONE : View.VISIBLE);
+        notesContainer.setVisibility(View.VISIBLE);
 
         editButton.setVisibility(AppData.user.isJobSeeker() ? View.GONE : View.VISIBLE);
         completeButton.setVisibility(AppData.user.isJobSeeker() ? View.GONE : View.VISIBLE);
         acceptButton.setVisibility(AppData.user.isRecruiter() ? View.GONE : View.VISIBLE);
+        arrangeButton.setVisibility(View.GONE);
+
+        switch (status) {
+
+            case InterviewStatus.PENDING:
+                // Status
+                itemStatus.setText("Interview request sent");
+            case InterviewStatus.ACCEPTED:
+                // Status
+                itemStatus.setText("Interview accepted");
+
+                acceptButton.setVisibility(View.GONE);
+
+            case InterviewStatus.COMPLETED:
+                // Status
+                itemStatus.setText("This interview is done");
+
+                completeButton.setVisibility(View.GONE);
+                cancelButton.setVisibility(View.GONE);
+                editButton.setText("Edit notes");
+
+                acceptButton.setVisibility(View.GONE);
+
+
+                if (AppData.user.isRecruiter()) {
+                    arrangeButton.setVisibility(View.VISIBLE);
+                }
+
+                feedbackContainer.setVisibility(View.VISIBLE);
+
+            case InterviewStatus.CANCELLED:
+                // Status
+
+                itemStatus.setText("Interview cancelled by " + (interview.getCancelled_by() == AppData.JOBSEEKER ? "Job seeker"  : "Recruiter"));
+
+                completeButton.setVisibility(View.GONE);
+                cancelButton.setVisibility(View.GONE);
+                editButton.setText("Edit notes");
+
+                acceptButton.setVisibility(View.GONE);
+
+                if (AppData.user.isRecruiter()) {
+                    arrangeButton.setVisibility(View.VISIBLE);
+                }
+
+        }
+    }
+
+    private void showProfile() {
+        if (AppData.user.isJobSeeker()) {
+            ApplicationDetailFragment fragment = new ApplicationDetailFragment();
+            fragment.application = application;
+            getApp().pushFragment(fragment);
+        } else {
+            TalentDetailFragment fragment = new TalentDetailFragment();
+            fragment.application = application;
+            getApp().pushFragment(fragment);
+        }
+    }
+
+    @OnClick(R.id.header_view)
+    void onImage() {
+        showProfile();
     }
 
     @OnClick(R.id.interview_edit)
@@ -223,21 +294,30 @@ public class InterviewDetailFragment extends BaseFragment {
 
     @OnClick(R.id.interview_cancel)
     void onCancel() {
-        new APITask(new APIAction() {
+
+        Popup popup = new Popup(getContext(), "Are you sure you want to cancel this interview?", true);
+        popup.addGreenButton("Yes", new View.OnClickListener() {
             @Override
-            public void run() throws MJPApiException {
-                MJPApi.shared().deleteInterview(interviewId);
+            public void onClick(View view) {
+                new APITask(new APIAction() {
+                    @Override
+                    public void run() throws MJPApiException {
+                        MJPApi.shared().deleteInterview(interviewId);
+                    }
+                }).addListener(new APITaskListener() {
+                    @Override
+                    public void onSuccess() {
+                        getApp().popFragment();
+                    }
+                    @Override
+                    public void onError(JsonNode errors) {
+                        errorHandler(errors);
+                    }
+                }).execute();
             }
-        }).addListener(new APITaskListener() {
-            @Override
-            public void onSuccess() {
-                getApp().popFragment();
-            }
-            @Override
-            public void onError(JsonNode errors) {
-                errorHandler(errors);
-            }
-        }).execute();
+        });
+        popup.addGreyButton("No", null);
+        popup.show();
     }
 
     @OnClick(R.id.interview_accept)
@@ -261,20 +341,28 @@ public class InterviewDetailFragment extends BaseFragment {
 
     @OnClick(R.id.interview_complete)
     void onComplete() {
-        new APITask(new APIAction() {
+        Popup popup = new Popup(getContext(), "Are you sure you want to complete this interview?", true);
+        popup.addGreenButton("Yes", new View.OnClickListener() {
             @Override
-            public void run() throws MJPApiException {
-                MJPApi.shared().completeInterview(interviewId);
+            public void onClick(View view) {
+                new APITask(new APIAction() {
+                    @Override
+                    public void run() throws MJPApiException {
+                        MJPApi.shared().completeInterview(interviewId);
+                    }
+                }).addListener(new APITaskListener() {
+                    @Override
+                    public void onSuccess() {
+                        getApp().popFragment();
+                    }
+                    @Override
+                    public void onError(JsonNode errors) {
+                        errorHandler(errors);
+                    }
+                }).execute();
             }
-        }).addListener(new APITaskListener() {
-            @Override
-            public void onSuccess() {
-                getApp().popFragment();
-            }
-            @Override
-            public void onError(JsonNode errors) {
-                errorHandler(errors);
-            }
-        }).execute();
+        });
+        popup.addGreyButton("No", null);
+        popup.show();
     }
 }

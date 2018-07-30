@@ -70,7 +70,7 @@ class InterviewDetailController: MJPController {
             } else {
                 imgView.image = UIImage(named: "no-img")
             }
-            cvDescription.text = application.jobSeeker.cv == nil ? "Can't find CV" : application.jobSeeker.cv
+            cvDescription.text = application.jobSeeker.desc
             jobSeekerName.text = application.jobSeeker.getFullName()
             
         } else {
@@ -79,13 +79,9 @@ class InterviewDetailController: MJPController {
             } else {
                 imgView.image = UIImage(named: "no-img")
             }
-            cvDescription.text = application.job.desc == nil ? "Can't find Description" : application.job.desc
+            cvDescription.text = application.job.desc
             jobSeekerName.text = application.job.title
         }
-        // Status
-//        let interviewStatus = interview.cancelledBy == nil ? "Pending" : "Complete";
-//        let applicationStatus = application.status == 1 ? "Undecided" : (application.status == 2 ? "Accepted" : "Rejected");
-        status.text = String(format:"%@", interview.status)
         
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "E d MMM, yyyy"
@@ -96,16 +92,17 @@ class InterviewDetailController: MJPController {
         dataTime.text = String(format: "%@ at %@", dateFormatter.string(from: interview.at), dateFormatter1.string(from: interview.at))
         location.text = application.job.locationData.name
         
-        feedbackContent.text = interview.feedback
-        noteContent.text = interview.notes
+        feedbackContent.text = interview.feedback == nil ? interview.feedback : "None"
+        noteContent.text = interview.notes == nil ? interview.notes : "None"
+        
+        feedbackLabel.isHidden = true
+        feedbackContent.isHidden = true
         
         if AppData.user.isRecruiter() {
             acceptButton.isHidden = true
             messageButton1.isHidden = true
             cancelButton1.isHidden = true
         } else {
-            feedbackLabel.isHidden = true
-            feedbackContent.isHidden = true
             noteContent.isHidden = true
             noteLabel.isHidden = true
             editButton.isHidden = true
@@ -113,6 +110,41 @@ class InterviewDetailController: MJPController {
             messageButton.isHidden = true
             cancelButton.isHidden = true
         }
+        
+        if interview.status == "PENDING" {
+            
+            status.text = "Interview request sent"
+            
+        } else if interview.status == "ACCEPTED" {
+            
+            status.text = "Interview accepted"
+            acceptButton.isHidden = true
+            
+        } else if interview.status == "COMPLETE" {
+            
+            status.text = "This interview is done"
+            feedbackLabel.isHidden = false
+            feedbackContent.isHidden = false
+            completeButton.isHidden = true
+            cancelButton.isHidden = true
+            acceptButton.isHidden = true
+            cancelButton1.isHidden = true
+            
+        } else if interview.status == "CANCELLED" {
+            
+            status.text = "Interview cancelled by " + (AppData.user.isRecruiter() ? "Recruiter" : "Jobseeker")
+            completeButton.isHidden = true
+            cancelButton.isHidden = true
+            acceptButton.isHidden = true
+            cancelButton1.isHidden = true
+            
+        }
+        
+        
+        
+        
+        
+        
     }
 
     @IBAction func interviewEdit(_ sender: Any) {

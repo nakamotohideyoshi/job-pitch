@@ -87,7 +87,7 @@
 
 import React from 'react';
 import { connect } from 'react-redux';
-import { saveInterview } from 'redux/interviews';
+import { saveInterview, changeInterview } from 'redux/interviews';
 import { Form, Input, Button, DatePicker, Divider, Row, Col, notification } from 'antd';
 
 import styled from 'styled-components';
@@ -99,6 +99,8 @@ import Wrapper from './InterviewEdit.styled';
 
 import * as helper from 'utils/helper';
 import moment from 'moment';
+
+import { updateMessageByInterview } from 'redux/applications';
 
 const { Item } = Form;
 const { TextArea } = Input;
@@ -146,19 +148,24 @@ const FormWrapper = styled(Form)`
 
 class InterviewEdit extends React.Component {
   state = {
-    loading: null
+    loading: null,
+    view: false
   };
 
   componentDidMount() {
-    const { application, form } = this.props;
+    const { application, form, view, create } = this.props;
     const interview = application.interview;
-    if (interview) {
+
+    if (interview && !create) {
       form.setFieldsValue({
         at: moment(interview.at),
         invitation: interview.invitation,
-        note: interview.note
+        notes: interview.notes
       });
     }
+    this.setState({
+      view: view
+    });
   }
 
   save = () => {
@@ -181,7 +188,7 @@ class InterviewEdit extends React.Component {
           application: application.id
         },
         success: () => {
-          this.saveCompleted();
+          this.saveCompleted(application.id, values.invitation);
         },
         fail: () => {
           this.setState({ loading: null });
@@ -196,21 +203,52 @@ class InterviewEdit extends React.Component {
     });
   };
 
-  saveCompleted = () => {
+  saveCompleted = (appId, message) => {
     this.setState({ loading: null });
     // message.success('Interview is saved successfully.');
     notification.success({
       message: 'Notification',
       description: 'Interview is saved successfully.'
     });
+    this.props.updateMessageByInterview({
+      id: new Date().getTime(),
+      data: {
+        application: appId,
+        content: message
+      }
+    });
     this.props.gotoOrigin();
   };
+
+  completeInvitation({ interview }) {
+    this.props.changeInterview({
+      data: {
+        id: interview.id,
+        changeType: 'complete'
+      },
+      success: () => {
+        this.props.gotoOrigin();
+        notification.success({
+          message: 'Notification',
+          description: 'Interview is completed successfully.'
+        });
+      },
+      fail: () => {
+        this.props.gotoOrigin();
+        notification.error({
+          message: 'Notification',
+          description: 'Saving is failed'
+        });
+      }
+    });
+  }
 
   render() {
     const { loading } = this.state;
     const { getFieldDecorator } = this.props.form;
-    const { jobseeker, className, connected, view } = this.props;
-    // const interview = application ? application.interview : null;
+    const { jobseeker, application, className, connected } = this.props;
+    const interview = application.interview;
+    const { view } = this.state;
 
     const image = helper.getPitch(jobseeker).thumbnail;
     const fullName = helper.getFullJSName(jobseeker);
@@ -221,6 +259,19 @@ class InterviewEdit extends React.Component {
     if (connected) {
       email = jobseeker.email_public && jobseeker.email;
       mobile = jobseeker.mobile_public && jobseeker.mobile;
+    }
+
+    let status = '';
+    if (interview) {
+      if (interview.status === 'PENDING') {
+        status = 'Interview request sent';
+      } else if (interview.status === 'ACCEPTED') {
+        status = 'Interview accepted';
+      } else if (interview.status === 'COMPLETED') {
+        status = 'This interview is done';
+      } else if (interview.status === 'CANCELLED') {
+        status = 'Interview cancelled by ';
+      }
     }
 
     return (
@@ -273,59 +324,96 @@ class InterviewEdit extends React.Component {
         <Divider />
 
         <div className="interview-form-container">
-          <FormWrapper className="interview-form">
-            <Item label={<span>Date&nbsp;</span>}>
-              {getFieldDecorator('at', {
-                type: 'object',
-                rules: [{ required: true, message: 'Please pick date!' }]
-              })(
-                view ? (
-                  <DatePicker disabled style={{ width: '100%' }} showTime format="YYYY-MM-DD HH:mm:ss" />
-                ) : (
-                  <DatePicker style={{ width: '100%' }} showTime format="YYYY-MM-DD HH:mm:ss" />
-                )
-              )}
-            </Item>
-            <Item label={<span>Message&nbsp;</span>}>
-              {getFieldDecorator('invitation', {
-                rules: [
-                  { required: true, message: 'Please enter message!' },
-                  { whitespace: true, message: 'This field may not be blank.' }
-                ]
-              })(
-                view ? (
-                  <TextArea disabled autosize={{ minRows: 3, maxRows: 20 }} />
-                ) : (
-                  <TextArea autosize={{ minRows: 3, maxRows: 20 }} />
-                )
-              )}
-            </Item>
-            <Item label={<span>Note&nbsp;</span>}>
-              {getFieldDecorator('note', {
-                rules: [
-                  { required: true, message: 'Please enter note!' },
-                  { whitespace: true, message: 'This field may not be blank.' }
-                ]
-              })(
-                view ? (
-                  <TextArea disabled autosize={{ minRows: 3, maxRows: 20 }} />
-                ) : (
-                  <TextArea autosize={{ minRows: 3, maxRows: 20 }} />
-                )
-              )}
-            </Item>
-            {!view && (
+          {view ? (
+            <Wrapper className={className}>
+              <Row gutter={32}>
+                <Col sm={24} md={14} lg={19}>
+                  <div>
+                    <div>{`Date: ${moment(interview.at).format('dddd, MMMM Do, YYYY h:mm:ss A')}`}</div>
+                    <div>{`Status: ${status}`}</div>
+                    <div>{`Note: ${interview.notes}`}</div>
+                    <div>{`Feedback: ${interview.feedback}`}</div>
+                  </div>
+                </Col>
+                <Col sm={24} md={10} lg={5}>
+                  <div>
+                    <Button
+                      type="primary"
+                      onClick={() => {
+                        this.completeInvitation(application);
+                      }}
+                    >
+                      Complete Invitation
+                    </Button>
+                    <Button
+                      type="primary"
+                      onClick={() => {
+                        this.setState({ view: false }, () => {
+                          this.props.form.setFieldsValue({
+                            at: moment(interview.at),
+                            invitation: interview.invitation,
+                            notes: interview.notes
+                          });
+                        });
+                      }}
+                    >
+                      Edit Interview
+                    </Button>
+                  </div>
+                </Col>
+              </Row>
+            </Wrapper>
+          ) : (
+            <FormWrapper className="interview-form">
+              <Item label={<span>Date&nbsp;</span>}>
+                {getFieldDecorator('at', {
+                  type: 'object',
+                  rules: [{ required: true, message: 'Please pick date!' }]
+                })(<DatePicker style={{ width: '100%' }} showTime format="YYYY-MM-DD HH:mm:ss" />)}
+              </Item>
+              <Item label={<span>Message&nbsp;</span>}>
+                {getFieldDecorator('invitation', {
+                  rules: [
+                    { required: true, message: 'Please enter message!' },
+                    { whitespace: true, message: 'This field may not be blank.' }
+                  ]
+                })(<TextArea autosize={{ minRows: 3, maxRows: 20 }} />)}
+              </Item>
+              <Item label={<span>Note&nbsp;</span>}>
+                {getFieldDecorator('notes', {
+                  rules: [
+                    { required: true, message: 'Please enter note!' },
+                    { whitespace: true, message: 'This field may not be blank.' }
+                  ]
+                })(<TextArea autosize={{ minRows: 3, maxRows: 20 }} />)}
+              </Item>
               <div className="invite-btn">
                 <Button type="primary" loading={loading} onClick={this.save}>
-                  Send Invitation
+                  {this.props.create ? 'Send Invitation' : 'Edit Invitation'}
                 </Button>
+                {!this.props.create &&
+                  (this.props.view && !view) && (
+                    <Button
+                      type="default"
+                      loading={loading}
+                      onClick={() => {
+                        this.setState({
+                          view: true
+                        });
+                      }}
+                    >
+                      Cancel
+                    </Button>
+                  )}
               </div>
-            )}
-          </FormWrapper>
+            </FormWrapper>
+          )}
         </div>
       </Wrapper>
     );
   }
 }
 
-export default connect(state => ({}), { saveInterview })(Form.create()(InterviewEdit));
+export default connect(state => ({}), { saveInterview, updateMessageByInterview, changeInterview })(
+  Form.create()(InterviewEdit)
+);

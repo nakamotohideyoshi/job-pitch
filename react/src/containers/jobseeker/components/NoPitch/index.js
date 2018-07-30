@@ -3,7 +3,7 @@ import Helmet from 'react-helmet';
 import { Link } from 'react-router-dom';
 import { AlertMsg } from 'components';
 
-export default ({ title }) => (
+export default ({ title, backUrl }) => (
   <AlertMsg>
     <Helmet title={title} />
 
@@ -14,6 +14,8 @@ export default ({ title }) => (
 
         All you're missing is your video pitch!`}
     </span>
-    <Link to="/jobseeker/settings/record">Record now!</Link>
+    <Link to="/jobseeker/settings/record" onClick={() => localStorage.setItem('back', backUrl)}>
+      Record now!
+    </Link>
   </AlertMsg>
 );

@@ -180,7 +180,7 @@ class FindJob extends React.Component {
     const { jobseeker, jobs, error } = this.props;
 
     if (!helper.getPitch(jobseeker)) {
-      return <NoPitch title="Find Me Jobs" />;
+      return <NoPitch title="Find Me Jobs" backUrl={this.props.history.location.pathname} />;
     }
 
     const selectedJob = jobs && helper.getItemByID(jobs, this.state.selectedId);

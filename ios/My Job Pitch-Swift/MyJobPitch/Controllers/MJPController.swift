@@ -73,52 +73,65 @@ class MJPController: UIViewController {
     
     func getNewMesssageCount() {
         if AppData.user != nil {
-            if (!(!AppData.user.isRecruiter() && !AppData.user.isJobSeeker()) && AppData.isTimerRunning) {
+            if ((AppData.user.isRecruiter() || AppData.user.isJobSeeker()) && AppData.isTimerRunning) {
                 API.shared().loadApplicationsForJob(jobId: nil, status: nil, shortlisted: false, success: { (data) in
                     if data.count > 0 {
                         self.allApplications = data.mutableCopy() as! NSMutableArray
                         var newMessages: [Message]! = []
                         
-                        var fromRole = 2
+                        var fromRole = 0
                         if AppData.user.isJobSeeker() {
                             fromRole = 1
+                        } else {
+                            fromRole = 2
                         }
                         
-                        var startMessage: Message! = nil
-                        var lastMessage: Message! = nil
+                        if fromRole != 0 {
                         
-                        for item in self.allApplications as! [Application] {
-                            let application = item
-                            let messages = application.messages as! [Message]
-                            
-                            if messages.count > 0 {
-                                for i in 0...messages.count-1 {
-                                    let message = messages[messages.count-1-i]
-                                    if message.fromRole == (fromRole as NSNumber) {
-                                        if !message.read {
-                                            newMessages?.append(message)
-                                        } else {
-                                            if startMessage == nil {
-                                                startMessage = message
+                            var startMessage: Message! = nil
+                            var lastMessage: Message! = nil
+                        
+                            for item in self.allApplications as! [Application] {
+                                let application = item
+                                let messages = application.messages as! [Message]
+                                
+                                if messages.count > 0 {
+                                    for i in 0...messages.count-1 {
+                                        let message = messages[messages.count-1-i]
+                                        if message.fromRole == (fromRole as NSNumber) {
+                                            if !message.read {
+                                                newMessages?.append(message)
                                             } else {
-                                                if message.created > startMessage!.created {
+                                                if startMessage == nil {
                                                     startMessage = message
+                                                } else {
+                                                    if message.created > startMessage!.created {
+                                                        startMessage = message
+                                                    }
                                                 }
+                                                break
                                             }
-                                            break
                                         }
                                     }
                                 }
                             }
-                        }
                         
-                        var newMessagesCount = startMessage == nil ? (newMessages?.count)! : 0
+                            var newMessagesCount = startMessage == nil ? (newMessages?.count)! : 0
                         
-                        if ((newMessages?.count)! > 0) {
-                            for i in 0...(newMessages?.count)!-1 {
-                                if startMessage != nil {
-                                    if newMessages![i].created > startMessage.created {
-                                        newMessagesCount += 1
+                            if ((newMessages?.count)! > 0) {
+                                for i in 0...(newMessages?.count)!-1 {
+                                    if startMessage != nil {
+                                        if newMessages![i].created > startMessage.created {
+                                            newMessagesCount += 1
+                                            if lastMessage == nil {
+                                                lastMessage = newMessages![i]
+                                            } else {
+                                                if newMessages![i].created > lastMessage.created {
+                                                    lastMessage = newMessages![i]
+                                                }
+                                            }
+                                        }
+                                    } else {
                                         if lastMessage == nil {
                                             lastMessage = newMessages![i]
                                         } else {
@@ -127,21 +140,13 @@ class MJPController: UIViewController {
                                             }
                                         }
                                     }
-                                } else {
-                                    if lastMessage == nil {
-                                        lastMessage = newMessages![i]
-                                    } else {
-                                        if newMessages![i].created > lastMessage.created {
-                                            lastMessage = newMessages![i]
-                                        }
-                                    }
                                 }
                             }
+                        
+                            AppData.lastMessage = lastMessage
+                            AppData.startMessage = startMessage
+                            AppData.newMessagesCount = newMessagesCount
                         }
-                    
-                        AppData.lastMessage = lastMessage
-                        AppData.startMessage = startMessage
-                        AppData.newMessagesCount = newMessagesCount
                     }
                     
                 }, failure: {(message: String?, errors: NSDictionary?) in

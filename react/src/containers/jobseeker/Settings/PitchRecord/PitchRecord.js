@@ -21,7 +21,6 @@ class PitchRecord extends React.Component {
   };
 
   componentWillMount() {
-    console.log("p[p[p[", this.props.history.location)
     const pitch = helper.getPitch(this.props.jobseeker) || {};
     this.setState({
       pitchUrl: pitch.video,

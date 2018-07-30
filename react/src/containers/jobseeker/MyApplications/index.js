@@ -91,17 +91,17 @@ class MyApplications extends React.Component {
     const { jobseeker, applications, error } = this.props;
 
     if (!helper.getPitch(jobseeker)) {
-      return <NoPitch title="My Applications" backUrl={this.props.history.location.pathname} />;
+      return <NoPitch title="New Applications" backUrl={this.props.history.location.pathname} />;
     }
 
     const selectedApp = applications && helper.getItemByID(applications, this.state.selectedId);
 
     return (
       <Wrapper className="container">
-        <Helmet title="My Applications" />
+        <Helmet title="New Applications" />
 
         <PageHeader>
-          <h2>My Applications</h2>
+          <h2>New Applications</h2>
           <SearchBox width="200px" onChange={this.onChangeSearchText} />
         </PageHeader>
 

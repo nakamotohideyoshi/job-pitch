@@ -15,6 +15,7 @@ export const connectApplication = createAction(C.CONNECT_APPLICATION);
 export const updateApplication = createAction(C.UPDATE_APPLICATION);
 export const removeApplication = createAction(C.REMOVE_APPLICATION);
 export const sendMessage = createAction(C.SEND_MESSAGE);
+export const updateMessageByInterview = createAction(C.UPDATE_MESSAGE_BY_INTERVIEW);
 
 // ------------------------------------
 // Reducer
@@ -94,6 +95,53 @@ export default handleActions(
         loading: false
       })
     }),
+
+    // UPDATE_MESSAGE_BY_INTERVIEW
+    [C.UPDATE_MESSAGE_BY_INTERVIEW]: (state, { payload }) => {
+      const appId = payload.data.application;
+      const application = helper.getItemByID(state.applications, appId);
+      const messages = application.messages.slice(0);
+      messages.push({
+        id: payload.id,
+        content: payload.data.content,
+        sending: true
+      });
+
+      return {
+        ...state,
+        applications: helper.updateObj(state.applications, {
+          id: appId,
+          messages
+        })
+      };
+    },
+
+    [requestSuccess(C.UPDATE_MESSAGE_BY_INTERVIEW)]: (state, { payload }) => {
+      const applications = helper.removeObj(state.applications, payload.id);
+      applications.unshift(payload);
+      return {
+        ...state,
+        applications
+      };
+    },
+
+    [requestFail(C.UPDATE_MESSAGE_BY_INTERVIEW)]: (state, { payload }) => {
+      const appId = payload.data.application;
+      const application = helper.getItemByID(state.applications, appId);
+      const messages = helper.updateObj(application.messages, {
+        id: payload.id,
+        sending: false,
+        error: true
+      });
+
+      return {
+        ...state,
+        applications: helper.updateObj(state.applications, {
+          id: appId,
+          messages
+        })
+      };
+    },
 
     // send message
 

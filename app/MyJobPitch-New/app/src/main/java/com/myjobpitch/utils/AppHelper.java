@@ -175,9 +175,6 @@ public class AppHelper {
             getItemSubTitleView(view).setText(job.getDescription() == null ? "Can't find Description" : job.getDescription());
         }
 
-        // Status
-        //String interviewStatus = interview.getCancelled_by() == null ? "Pending" : "Complete";
-        //String applicationStatus = application.getStatus() == 1 ? "Undecided" : (application.getStatus() == 2 ? "Accepted" : "Rejected");
         getItemStatusTitleView(view).setText(String.format("%s", interview.getStatus()));
 
         // Date/Time

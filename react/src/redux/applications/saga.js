@@ -63,6 +63,15 @@ function* sendMessage({ payload }) {
   yield put({ type: requestFail(C.SEND_MESSAGE), payload });
 }
 
+function* updateMessageByInterview({ payload }) {
+  const application = yield call(getRequest({ url: `/api/applications/${payload.data.application}/` }));
+  if (application) {
+    yield put({ type: requestSuccess(C.UPDATE_MESSAGE_BY_INTERVIEW), payload: application });
+    return;
+  }
+  yield put({ type: requestFail(C.UPDATE_MESSAGE_BY_INTERVIEW), payload });
+}
+
 export default function* sagas() {
   yield takeLatest(C.GET_APPLICATIONS, getApplications);
   yield takeLatest(C.GET_ALL_APPLICATIONS, getAllApplications);
@@ -70,4 +79,5 @@ export default function* sagas() {
   yield takeLatest(C.CONNECT_APPLICATION, connectApplication);
   yield takeLatest(C.REMOVE_APPLICATION, removeApplication);
   yield takeLatest(C.SEND_MESSAGE, sendMessage);
+  yield takeLatest(C.UPDATE_MESSAGE_BY_INTERVIEW, updateMessageByInterview);
 }

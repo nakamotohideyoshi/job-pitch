@@ -92,7 +92,11 @@ export default styled.div`
     .invite-btn {
       display: flex;
       justify-content: center;
+      align-items: center;
       margin-left: 210px;
+    }
+    .invite-btn > button {
+      margin-top: 0px;
     }
     .interview-form-container {
       display: flex;

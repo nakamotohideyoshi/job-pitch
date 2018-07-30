@@ -40,8 +40,27 @@ function* saveUser(action) {
   onSuccess && onSuccess(user);
 }
 
+function* resendInvitation(action) {
+  const { businessId, userId, onSuccess, onFail } = action.payload;
+
+  const user = yield call(
+    request({
+      method: 'post',
+      url: `/api/user-businesses/${businessId}/users/${userId}/resend-invitation/`
+    })
+  );
+
+  if (!user) {
+    onFail && onFail('Sending is failed.');
+    return;
+  }
+
+  onSuccess && onSuccess(user);
+}
+
 export default function* sagas() {
   yield takeLatest(C.RC_GET_USERS, getUsers);
   yield takeLatest(C.RC_REMOVE_USER, removeUser);
   yield takeLatest(C.RC_SAVE_USER, saveUser);
+  yield takeLatest(C.RC_RESEND_INVITATION, resendInvitation);
 }

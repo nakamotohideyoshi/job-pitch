@@ -673,6 +673,12 @@ class API: NSObject {
                      success: success, failure: failure)
     }
     
+    func reCreateBusinessUser(businessId: NSNumber!, businessUserId: NSNumber!, businessUser: BusinessUserForCreation,
+                            success: ((NSObject?) -> Void)!,
+                            failure: ((String?, NSDictionary?) -> Void)!) {
+        postObject(String(format: "/api/user-businesses/%@/users/%@/resend-invitation/", businessId, businessUserId), request: businessUser, success: success, failure: failure)
+    }
+    
     // ================== Interviews ============================
     
     func loadInterviews(success: ((NSArray) -> Void)!,

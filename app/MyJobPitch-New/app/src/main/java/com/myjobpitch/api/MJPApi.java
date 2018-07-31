@@ -496,6 +496,17 @@ public class MJPApi {
         }
     }
 
+    public void reCreateBusinessUser(BusinessUserForCreation businessUserForCreation, Integer business_id, Integer user_id) throws MJPApiException {
+        try {
+            rest.exchange(getTypeUrl(String.format("user-businesses/%s/users/%s/resend-invitation", business_id, user_id)), HttpMethod.POST, createAuthenticatedRequest(businessUserForCreation), Void.class);
+        } catch (HttpClientErrorException e) {
+            if (e.getStatusCode().value() == 400) {
+                throw new MJPApiException(e);
+            }
+            throw e;
+        }
+    }
+
     public BusinessUserForUpdate updateBusinessUser(BusinessUserForUpdate businessUserForUpdate, Integer business_id, Integer user_id) throws MJPApiException {
         try {
             return rest.exchange(getTypeUrl(String.format("user-businesses/%s/users/%s", business_id, user_id)), HttpMethod.PUT, createAuthenticatedRequest(businessUserForUpdate), BusinessUserForUpdate.class).getBody();

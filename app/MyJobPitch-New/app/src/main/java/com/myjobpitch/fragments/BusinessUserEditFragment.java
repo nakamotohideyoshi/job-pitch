@@ -77,6 +77,9 @@ public class BusinessUserEditFragment extends FormFragment {
     @BindView(R.id.user_save)
     Button saveButton;
 
+    @BindView(R.id.user_resend)
+    Button resendButton;
+
     public BusinessUser businessUser;
 
     public List<Location> locations;
@@ -122,6 +125,7 @@ public class BusinessUserEditFragment extends FormFragment {
         } else {
             title = "Create User";
             deleteButton.setVisibility(View.GONE);
+            resendButton.setVisibility(View.GONE);
             saveButton.setText("Send Invitation");
             selectedLocations = new ArrayList<Integer>();
         }
@@ -176,6 +180,7 @@ public class BusinessUserEditFragment extends FormFragment {
         popup.addGreenButton("Ok", new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                showLoading();
                 new APITask(new APIAction() {
                     @Override
                     public void run() throws MJPApiException {
@@ -202,8 +207,34 @@ public class BusinessUserEditFragment extends FormFragment {
 
     }
 
+    @OnClick(R.id.user_resend)
+    void resendInvitation() {
+        showLoading();
+
+        final BusinessUserForCreation businessUserForCreation = new BusinessUserForCreation();
+        businessUserForCreation.setLocations(businessUser.getLocations());
+        businessUserForCreation.setEmail(businessUser.getEmail());
+        new APITask(new APIAction() {
+            @Override
+            public void run() throws MJPApiException {
+                MJPApi.shared().reCreateBusinessUser(businessUserForCreation, businessId, businessUser.getId());
+            }
+        }).addListener(new APITaskListener() {
+            @Override
+            public void onSuccess() {
+                getApp().popFragment();
+            }
+            @Override
+            public void onError(JsonNode errors) {
+                errorHandler(errors);
+            }
+        }).execute();
+    }
+
     @OnClick(R.id.user_save)
     void saveUser() {
+        showLoading();
+
         if (!activeView.isChecked() && selectedLocations.size() < 1) {
             Popup popup = new Popup(getContext(), "You must select at least one work place.", true);
             popup.addGreenButton("Ok", new View.OnClickListener() {

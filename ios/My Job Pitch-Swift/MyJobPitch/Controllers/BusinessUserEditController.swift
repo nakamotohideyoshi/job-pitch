@@ -16,6 +16,7 @@ class BusinessUserEditController: MJPController {
     @IBOutlet weak var emailError: UILabel!
     @IBOutlet weak var workplaceError: UILabel!
     @IBOutlet weak var deleteButton: YellowButton!
+    @IBOutlet weak var resendButton: GreenButton!
     
     var isEditMode = false
     var businessUser: BusinessUser!
@@ -34,6 +35,7 @@ class BusinessUserEditController: MJPController {
         self.scrollView.isScrollEnabled = false
         
         deleteButton.isHidden = !isEditMode
+        resendButton.isHidden = !isEditMode
         
         if isEditMode {
             isAdministrator.isOn = businessUser.locations.count == 0
@@ -98,6 +100,21 @@ class BusinessUserEditController: MJPController {
         }, failure: self.handleErrors)
     }
     
+    @IBAction func resendInvitation(_ sender: Any) {
+        
+        showLoading()
+        
+        let businessUserForCreation = BusinessUserForCreation()
+        businessUserForCreation.email = businessUser.email
+        businessUserForCreation.locations = businessUser.locations
+        
+        API.shared().reCreateBusinessUser(businessId: businessId, businessUserId: businessUser.id, businessUser: businessUserForCreation, success: { (data) in
+            self.hideLoading()
+            _ = self.navigationController?.popViewController(animated: true)
+            return
+        }, failure: self.handleErrors)
+    }
+    
     @IBAction func saveAction(_ sender: Any) {
         
         if !isAdministrator.isOn && selectedLocations.count == 0 {
@@ -110,8 +127,8 @@ class BusinessUserEditController: MJPController {
             showLoading()
             
             if isEditMode {
-                let businessUserForUpdate = BusinessUserForUpdate()
                 
+                let businessUserForUpdate = BusinessUserForUpdate()
                 businessUserForUpdate.locations = isAdministrator.isOn ? [] : selectedLocations as NSArray
                 
                 API.shared().updateBusinessUser(businessId: businessId, businessUserId: businessUser.id, businessUser: businessUserForUpdate, success: { (data) in
@@ -119,11 +136,11 @@ class BusinessUserEditController: MJPController {
                     _ = self.navigationController?.popViewController(animated: true)
                     return
                 }, failure: self.handleErrors)
+                
             } else  {
+                
                 let businessUserForCreation = BusinessUserForCreation()
-                
                 businessUserForCreation.email = emailAddress.text
-                
                 businessUserForCreation.locations = isAdministrator.isOn ? [] : selectedLocations as NSArray
                 
                 API.shared().createBusinessUser(businessId: businessId, businessUser: businessUserForCreation, success: { (data) in
@@ -131,6 +148,7 @@ class BusinessUserEditController: MJPController {
                     _ = self.navigationController?.popViewController(animated: true)
                     return
                 }, failure: self.handleErrors)
+                
             }
         }
     }

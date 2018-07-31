@@ -83,6 +83,16 @@
                 android:theme="@style/Button"/>
 
             <Button
+                android:id="@+id/user_resend"
+                android:text="Resend invitation"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/button_height"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="15dp"
+                android:background="@drawable/button_green"
+                android:theme="@style/Button"/>
+
+            <Button
                 android:id="@+id/user_delete"
                 android:text="Delete User"
                 android:layout_width="match_parent"

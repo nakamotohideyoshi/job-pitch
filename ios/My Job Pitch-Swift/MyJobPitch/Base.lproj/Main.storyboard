@@ -6627,14 +6627,28 @@ et dolore magna aliqua.</string>
                                                     <action selector="saveAction:" destination="lFo-m6-2V2" eventType="touchUpInside" id="uag-Qg-SAy"/>
                                                 </connections>
                                             </button>
-                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="YDv-SX-72a" customClass="YellowButton" customModule="MyJobPitch" customModuleProvider="target">
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="2o8-Ya-uYX" customClass="GreenButton" customModule="MyJobPitch" customModuleProvider="target">
                                                 <rect key="frame" x="20" y="359" width="374" height="40"/>
+                                                <color key="backgroundColor" red="0.0" green="0.73333333329999995" blue="0.6588235294" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="height" constant="40" id="cu5-ac-3oq"/>
+                                                </constraints>
+                                                <fontDescription key="fontDescription" type="system" weight="medium" pointSize="20"/>
+                                                <state key="normal" title="Resend invitation">
+                                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                </state>
+                                                <connections>
+                                                    <action selector="resendInvitation:" destination="lFo-m6-2V2" eventType="touchUpInside" id="hB5-yw-qOC"/>
+                                                </connections>
+                                            </button>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="YDv-SX-72a" customClass="YellowButton" customModule="MyJobPitch" customModuleProvider="target">
+                                                <rect key="frame" x="20" y="429" width="374" height="40"/>
                                                 <color key="backgroundColor" red="1" green="0.57254901960000004" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="40" id="Qgx-oh-wff"/>
                                                 </constraints>
                                                 <fontDescription key="fontDescription" type="system" weight="medium" pointSize="18"/>
-                                                <state key="normal" title="Delete User">
+                                                <state key="normal" title="Delete user">
                                                     <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                 </state>
                                                 <connections>
@@ -6646,10 +6660,12 @@ et dolore magna aliqua.</string>
                                         <constraints>
                                             <constraint firstItem="otn-cJ-uch" firstAttribute="leading" secondItem="8Bg-pl-lGC" secondAttribute="leading" constant="20" id="0zF-ei-sM5"/>
                                             <constraint firstItem="Abq-dc-BZf" firstAttribute="centerY" secondItem="pOk-Jw-mKm" secondAttribute="centerY" id="32V-pf-dP5"/>
+                                            <constraint firstAttribute="trailing" secondItem="2o8-Ya-uYX" secondAttribute="trailing" constant="20" id="5oc-sT-eOM"/>
                                             <constraint firstAttribute="trailing" secondItem="otn-cJ-uch" secondAttribute="trailing" constant="20" id="60M-ij-Qoq"/>
                                             <constraint firstItem="XI6-Ln-as8" firstAttribute="top" secondItem="hJb-Uf-ACT" secondAttribute="bottom" constant="10" id="6nq-WM-iZk"/>
                                             <constraint firstAttribute="trailing" secondItem="exF-Lw-5b2" secondAttribute="trailing" constant="20" id="7ln-M8-1zH"/>
                                             <constraint firstItem="kiJ-2n-uge" firstAttribute="top" secondItem="exF-Lw-5b2" secondAttribute="bottom" constant="5" id="EeV-G1-8xy"/>
+                                            <constraint firstItem="2o8-Ya-uYX" firstAttribute="leading" secondItem="8Bg-pl-lGC" secondAttribute="leading" constant="20" id="IsX-AW-wBt"/>
                                             <constraint firstItem="exF-Lw-5b2" firstAttribute="leading" secondItem="8Bg-pl-lGC" secondAttribute="leading" constant="20" id="NTM-6b-VDa"/>
                                             <constraint firstItem="hJb-Uf-ACT" firstAttribute="top" secondItem="pOk-Jw-mKm" secondAttribute="bottom" constant="20" id="NjD-gz-z3V"/>
                                             <constraint firstItem="pCc-Nt-3jz" firstAttribute="leading" secondItem="8Bg-pl-lGC" secondAttribute="leading" constant="20" id="Oxt-K1-RfW"/>
@@ -6658,15 +6674,16 @@ et dolore magna aliqua.</string>
                                             <constraint firstItem="hJb-Uf-ACT" firstAttribute="leading" secondItem="8Bg-pl-lGC" secondAttribute="leading" constant="20" id="VFT-BU-dOf"/>
                                             <constraint firstAttribute="trailing" secondItem="pCc-Nt-3jz" secondAttribute="trailing" constant="20" id="Wt7-XZ-HlY"/>
                                             <constraint firstItem="Abq-dc-BZf" firstAttribute="leading" secondItem="8Bg-pl-lGC" secondAttribute="leading" constant="20" id="X3l-Kk-Dlv"/>
+                                            <constraint firstItem="2o8-Ya-uYX" firstAttribute="top" secondItem="pCc-Nt-3jz" secondAttribute="bottom" constant="30" id="Z1r-qt-zEn"/>
                                             <constraint firstItem="pRa-ab-vl7" firstAttribute="top" secondItem="XI6-Ln-as8" secondAttribute="bottom" constant="5" id="ZtD-i5-PBq"/>
                                             <constraint firstAttribute="trailing" secondItem="pOk-Jw-mKm" secondAttribute="trailing" constant="20" id="ftG-CT-kuN"/>
                                             <constraint firstItem="YDv-SX-72a" firstAttribute="leading" secondItem="8Bg-pl-lGC" secondAttribute="leading" constant="20" id="j1L-Jp-FNv"/>
+                                            <constraint firstItem="YDv-SX-72a" firstAttribute="top" secondItem="2o8-Ya-uYX" secondAttribute="bottom" constant="30" id="ktp-wZ-4ko"/>
                                             <constraint firstItem="pCc-Nt-3jz" firstAttribute="top" secondItem="pRa-ab-vl7" secondAttribute="bottom" constant="50" id="lNe-Xd-tCI"/>
                                             <constraint firstAttribute="trailing" secondItem="pRa-ab-vl7" secondAttribute="trailing" constant="20" id="mE7-S3-MJB"/>
                                             <constraint firstItem="exF-Lw-5b2" firstAttribute="top" secondItem="otn-cJ-uch" secondAttribute="bottom" constant="10" id="pMM-NO-JsX"/>
                                             <constraint firstItem="pOk-Jw-mKm" firstAttribute="leading" secondItem="Abq-dc-BZf" secondAttribute="trailing" constant="20" id="rNU-Zx-DFX"/>
                                             <constraint firstItem="XI6-Ln-as8" firstAttribute="leading" secondItem="8Bg-pl-lGC" secondAttribute="leading" constant="20" id="rtc-sc-69E"/>
-                                            <constraint firstItem="YDv-SX-72a" firstAttribute="top" secondItem="pCc-Nt-3jz" secondAttribute="bottom" constant="30" id="sE0-JE-EPu"/>
                                             <constraint firstAttribute="trailing" secondItem="XI6-Ln-as8" secondAttribute="trailing" constant="20" id="te3-yt-son"/>
                                             <constraint firstItem="pOk-Jw-mKm" firstAttribute="top" secondItem="kiJ-2n-uge" secondAttribute="bottom" constant="20" id="ubW-M3-ZVa"/>
                                             <constraint firstItem="otn-cJ-uch" firstAttribute="top" secondItem="8Bg-pl-lGC" secondAttribute="top" constant="20" id="wVe-J8-WOf"/>
@@ -6702,6 +6719,7 @@ et dolore magna aliqua.</string>
                         <outlet property="emailAddress" destination="exF-Lw-5b2" id="fk6-oL-ZkF"/>
                         <outlet property="emailError" destination="Abq-dc-BZf" id="LJL-Jg-uXt"/>
                         <outlet property="isAdministrator" destination="pOk-Jw-mKm" id="nnX-XL-jEq"/>
+                        <outlet property="resendButton" destination="2o8-Ya-uYX" id="x5P-Ge-Wsm"/>
                         <outlet property="saveButton" destination="pCc-Nt-3jz" id="D4E-5Z-ING"/>
                         <outlet property="scrollView" destination="mHF-Rs-imI" id="KbX-zr-VmE"/>
                         <outlet property="workPlaceSelector" destination="XI6-Ln-as8" id="68K-Sa-uwe"/>

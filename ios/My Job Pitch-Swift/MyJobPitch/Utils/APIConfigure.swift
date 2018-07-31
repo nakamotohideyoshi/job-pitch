@@ -593,6 +593,12 @@ class APIConfigure: NSObject {
                                path: "/api/user-businesses/:pk/users/",
                                method: .POST)
         
+        configureSimpleMapping(BusinessUserForCreation.classForCoder(),
+                               mappingArray: createBusinessUserArray,
+                               mappingDictionary: nil,
+                               mappingRelationships: nil,
+                               path: "/api/user-businesses/:pk/users/:pk/resend-invitation/",
+                               method: .POST)        
         
          let updateBusinessUserArray = [ "locations" ]
         

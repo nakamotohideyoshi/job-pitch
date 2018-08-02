@@ -126,15 +126,13 @@ class PitchController: MJPController {
                 PopupController.showGray("Failed to upload", ok: "OK")
             }
         }) { (progress) in
-            if progress < 1 {
-                
+//            if progress < 1 {
                 let percent = Int(progress*100)
                 self.loadingView.showProgressBar("\(percent)%")
-                
                 self.loadingView.progressView.progress = progress
-            } else {
-                self.loadingView.showLoadingIcon("100%")
-            }
+//            } else {
+//                self.loadingView.showLoadingIcon("")
+//            }
         }
     }
     

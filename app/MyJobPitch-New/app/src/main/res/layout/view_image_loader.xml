@@ -9,9 +9,9 @@
         android:id="@+id/image_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:srcCompat="@drawable/default_logo" />
-        <!--android:background="#ebebeb"-->
+        app:srcCompat="@drawable/default_logo"
         android:scaleType="centerCrop"/>
+        <!--android:background="#ebebeb"-->
 
     <ProgressBar
         android:id="@+id/progress_bar"

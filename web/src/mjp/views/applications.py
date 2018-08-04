@@ -122,6 +122,8 @@ class ApplicationViewSet(viewsets.ModelViewSet):
         return ApplicationSerializer
 
     def get_queryset(self):
+        if self.request.user.role is None:
+            return Application.objects.none()
         query = Application.objects.annotate(Max('messages__created')).order_by('-messages__created__max', '-updated')
         query = query.select_related('job__location__business',
                                      'job_seeker__user',

@@ -325,7 +325,7 @@ class InterviewViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         validated_data = serializer.validated_data
         invitation = validated_data.pop('invitation')
-        interview = super(InterviewViewSet, self).perform_create(serializer)
+        interview = serializer.save()
         Message.objects.create(
             system=True,
             application=validated_data['application'],

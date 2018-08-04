@@ -1,3 +1,4 @@
+from django.core.urlresolvers import reverse
 from django.db.models import Max
 from django.http import Http404
 from django.utils import timezone
@@ -291,7 +292,7 @@ class InterviewViewSet(viewsets.ModelViewSet):
             if request.user and request.user.is_authenticated():
                 if request.user.is_recruiter:
                     return True
-                if request.method in permissions.SAFE_METHODS + ("DELETE",):
+                if request.method in permissions.SAFE_METHODS + ("POST", "DELETE",):
                     return True
             return False
 
@@ -307,6 +308,8 @@ class InterviewViewSet(viewsets.ModelViewSet):
                     if request.method in permissions.SAFE_METHODS:
                         return True
                     if request.method == "DELETE" and obj.status != Interview.COMPLETE:
+                        return True
+                    if request.method == "POST" and reverse('interviews-accept', kwargs=view.kwargs) == request.path:
                         return True
             return False
 

@@ -91,10 +91,13 @@ Vagrant.configure(2) do |config|
   SHELL
 
   # MailCatcher
-  config.vm.provision "mailcatcher", type: "shell", privileged: false, inline: <<-SHELL
+  config.vm.provision "mailcatcher_install", type: "shell", privileged: false, inline: <<-SHELL
     sudo apt-get -y install ruby-all-dev sqlite3 libsqlite3-dev
     sudo gem install eventmachine -v 1.0.3
     sudo gem install mailcatcher
+  SHELL
+
+  config.vm.provision "mailcatcher", type: "shell", privileged: false, inline: <<-SHELL
     mailcatcher --ip 0.0.0.0
   SHELL
 end

@@ -154,14 +154,14 @@ class JSInterviews extends React.Component {
     const { selectedApp } = this.state;
 
     if (!helper.getPitch(jobseeker)) {
-      return <NoPitch title="New Applications" backUrl={this.props.history.location.pathname} />;
+      return <NoPitch title="My Applications" backUrl={this.props.history.location.pathname} />;
     }
 
     // const selectedApp = applications && helper.getItemByID(applications, this.state.selectedId);
 
     return (
       <Wrapper className="container">
-        <Helmet title="New Applications" />
+        <Helmet title="My Applications" />
 
         <PageHeader>
           <h2>Interviews</h2>

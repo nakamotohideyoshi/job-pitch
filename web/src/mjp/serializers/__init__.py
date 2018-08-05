@@ -46,10 +46,23 @@ class BusinessSerializer(serializers.ModelSerializer):
     locations = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
     images = RelatedImageURLField(many=True, read_only=True)
     tokens = serializers.IntegerField(source='token_store.tokens', read_only=True)
-    
+
     class Meta:
         model = Business
         fields = ('id', 'users', 'locations', 'images', 'name', 'created', 'updated', 'tokens',)
+
+
+class UserBusinessSerializer(BusinessSerializer):
+    restricted = serializers.SerializerMethodField()
+
+    def get_restricted(self, business):
+        user = self.context['request'].user
+        business_user = business.business_users.get(user=user)
+        return business_user.locations.exists()
+
+    class Meta:
+        model = Business
+        fields = BusinessSerializer.Meta.fields + ('restricted',)
 
 
 class LocationSerializer(serializers.ModelSerializer):

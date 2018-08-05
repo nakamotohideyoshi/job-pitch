@@ -18,6 +18,7 @@ from mjp.models import (
 )
 from mjp.serializers import (
     BusinessSerializer,
+    UserBusinessSerializer,
     LocationSerializer,
     JobSerializer,
     JobSerializerV1,
@@ -53,7 +54,15 @@ class UserBusinessViewSet(viewsets.ModelViewSet):
             return obj.users.filter(pk=int(request.user.pk)).exists()
 
     permission_classes = (permissions.IsAuthenticated, BusinessPermission)
-    serializer_class = BusinessSerializer
+
+    def get_serializer_class(self):
+        try:
+            version = int(self.request.version)
+        except (TypeError, ValueError):
+            version = 1
+        if version > 4:
+            return UserBusinessSerializer
+        return BusinessSerializer
 
     def perform_create(self, serializer):
         token_store = TokenStore.objects.create(

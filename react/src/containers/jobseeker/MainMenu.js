@@ -82,7 +82,7 @@ class MainMenu extends React.Component {
           <Link to="/jobseeker/find">Find Job</Link>
         </Item>
         <Item key="applications">
-          <Link to="/jobseeker/applications">New Applications</Link>
+          <Link to="/jobseeker/applications">My Applications</Link>
         </Item>
         <Item key="interviews">
           <Link to="/jobseeker/interviews">Interviews</Link>

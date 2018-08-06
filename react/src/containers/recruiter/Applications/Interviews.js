@@ -9,6 +9,8 @@ import * as helper from 'utils/helper';
 
 import { AlertMsg, Loading, ListEx, Icons, LargeModal, InterviewEdit } from 'components';
 import moment from 'moment';
+import Mark from './Mark';
+import Wrapper from './styled';
 
 const { confirm } = Modal;
 
@@ -87,6 +89,8 @@ class Interviews extends React.Component {
       status = 'Interview cancelled by ';
     }
 
+    const cancelled = interview.status === 'CANCELLED' ? 'disabled' : '';
+
     return (
       <List.Item
         key={id}
@@ -108,7 +112,7 @@ class Interviews extends React.Component {
           </Tooltip>
         ]}
         onClick={() => this.onSelect(app)}
-        className={loading ? 'loading' : ''}
+        className={`${loading ? 'loading' : ''} ${cancelled}`}
       >
         <List.Item.Meta
           avatar={
@@ -129,6 +133,8 @@ class Interviews extends React.Component {
             </div>
           }
         />
+        <div className="properties">asdf</div>
+        {cancelled && <Mark>Cancelled</Mark>}
         {loading && <Loading className="mask" size="small" />}
       </List.Item>
     );
@@ -145,69 +151,71 @@ class Interviews extends React.Component {
     // const selectedApp = helper.getItemByID(applications, this.state.selectedId);
     const { selectedApp } = this.state;
     return (
-      <div className="content">
-        {job && !loading ? (
-          <ListEx
-            data={applications}
-            loadingSize="large"
-            pagination={{ pageSize: 10 }}
-            renderItem={this.renderApplication}
-            filterOption={this.filterOption}
-            emptyRender={this.renderEmpty}
-          />
-        ) : (
-          <Loading size="large" />
-        )}
-        {selectedApp &&
-          this.state.openInterviewView && (
-            <LargeModal visible title="Interview Detail" onCancel={this.hideInterviewView}>
-              <InterviewEdit
-                jobseeker={selectedApp.job_seeker}
-                connected
-                application={selectedApp}
-                gotoOrigin={this.hideInterviewView}
-                view
-              />
-            </LargeModal>
-          )}
-        {selectedApp &&
-          this.state.openInterviewEdit && (
-            <LargeModal visible title="Interview Edit" onCancel={this.hideInterviewEdit}>
-              <InterviewEdit
-                jobseeker={selectedApp.job_seeker}
-                connected
-                application={selectedApp}
-                gotoOrigin={this.hideInterviewEdit}
-              />
-            </LargeModal>
-          )}
-        {/* {selectedApp && (
-          <LargeModal visible title="Application Details" onCancel={() => this.onSelect()}>
-            <JobseekerDetails
-              jobseeker={selectedApp.job_seeker}
-              connected
-              actions={
-                <div>
-                  <div style={{ marginBottom: '24px' }}>
-                    <span style={{ marginRight: '5px' }}>Shortlisted</span>
-                    <Switch
-                      checked={selectedApp.shortlisted}
-                      loading={selectedApp.loading}
-                      onChange={() => this.onShortlist(selectedApp)}
-                    />
-                  </div>
-                  <Button type="primary" disabled={selectedApp.loading} onClick={() => this.onMessage(selectedApp)}>
-                    Message
-                  </Button>
-                  <Button type="danger" disabled={selectedApp.loading} onClick={() => this.onRemove(selectedApp)}>
-                    Remove
-                  </Button>
-                </div>
-              }
+      <Wrapper className="container">
+        <div className="content">
+          {job && !loading ? (
+            <ListEx
+              data={applications}
+              loadingSize="large"
+              pagination={{ pageSize: 10 }}
+              renderItem={this.renderApplication}
+              filterOption={this.filterOption}
+              emptyRender={this.renderEmpty}
             />
-          </LargeModal>
-        )} */}
-      </div>
+          ) : (
+            <Loading size="large" />
+          )}
+          {selectedApp &&
+            this.state.openInterviewView && (
+              <LargeModal visible title="Interview Detail" onCancel={this.hideInterviewView}>
+                <InterviewEdit
+                  jobseeker={selectedApp.job_seeker}
+                  connected
+                  application={selectedApp}
+                  gotoOrigin={this.hideInterviewView}
+                  view
+                />
+              </LargeModal>
+            )}
+          {selectedApp &&
+            this.state.openInterviewEdit && (
+              <LargeModal visible title="Interview Edit" onCancel={this.hideInterviewEdit}>
+                <InterviewEdit
+                  jobseeker={selectedApp.job_seeker}
+                  connected
+                  application={selectedApp}
+                  gotoOrigin={this.hideInterviewEdit}
+                />
+              </LargeModal>
+            )}
+          {/* {selectedApp && (
+            <LargeModal visible title="Application Details" onCancel={() => this.onSelect()}>
+              <JobseekerDetails
+                jobseeker={selectedApp.job_seeker}
+                connected
+                actions={
+                  <div>
+                    <div style={{ marginBottom: '24px' }}>
+                      <span style={{ marginRight: '5px' }}>Shortlisted</span>
+                      <Switch
+                        checked={selectedApp.shortlisted}
+                        loading={selectedApp.loading}
+                        onChange={() => this.onShortlist(selectedApp)}
+                      />
+                    </div>
+                    <Button type="primary" disabled={selectedApp.loading} onClick={() => this.onMessage(selectedApp)}>
+                      Message
+                    </Button>
+                    <Button type="danger" disabled={selectedApp.loading} onClick={() => this.onRemove(selectedApp)}>
+                      Remove
+                    </Button>
+                  </div>
+                }
+              />
+            </LargeModal>
+          )} */}
+        </div>
+      </Wrapper>
     );
   }
 }

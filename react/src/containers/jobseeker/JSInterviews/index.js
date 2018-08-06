@@ -17,6 +17,8 @@ import Wrapper from './styled';
 
 import * as _ from 'lodash';
 
+import Mark from './Mark';
+
 const { confirm } = Modal;
 
 class JSInterviews extends React.Component {
@@ -118,6 +120,8 @@ class JSInterviews extends React.Component {
       status = 'Interview cancelled by ';
     }
 
+    const cancelled = interview.status === 'CANCELLED' ? 'disabled' : '';
+
     return (
       <List.Item
         key={id}
@@ -129,6 +133,7 @@ class JSInterviews extends React.Component {
           </Tooltip>
         ]}
         onClick={() => this.onSelect(app)}
+        className={`${cancelled}`}
       >
         <List.Item.Meta
           avatar={<Avatar src={logo} className="avatar-80" />}
@@ -149,6 +154,7 @@ class JSInterviews extends React.Component {
             {contractName} / {hoursName}
           </span>
         </div>
+        {cancelled && <Mark>Cancelled</Mark>}
       </List.Item>
     );
   };

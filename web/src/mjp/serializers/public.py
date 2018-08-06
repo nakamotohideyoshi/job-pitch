@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from mjp.models import Contract, Sector, Hours, Location, Job, Business, JobSeeker
+from mjp.models import Contract, Sector, Hours, Location, Job, Business, JobSeeker, JobStatus
 from mjp.serializers import SimpleSerializer, RelatedImageURLField, EmbeddedPitchSerializer
 
 
@@ -43,7 +43,16 @@ class PublicJobListingSerializer(PublicEmbeddedJobListingSerializer):
 
 class PublicLocationListingSerializer(PublicEmbeddedLocationListingSerializer):
     business_data = PublicEmbeddedBusinessListingSerializer(source='business')
-    jobs = PublicEmbeddedJobListingSerializer(many=True)
+    jobs = serializers.SerializerMethodField()
+
+    def get_jobs(self, location):
+        jobs = location.jobs.filter(status__name=JobStatus.OPEN)
+        serializer = PublicEmbeddedJobListingSerializer(
+            instance=jobs,
+            many=True,
+            context=self.context,
+        )
+        return serializer.data
 
     class Meta:
         model = Location

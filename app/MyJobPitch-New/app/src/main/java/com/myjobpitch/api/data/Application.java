@@ -11,6 +11,7 @@ public class Application extends BaseApplication {
     private Integer created_by;
     private Integer deleted_by;
     private List<Message> messages;
+    private List<Interview> interviews;
 
     public JobSeeker getJob_seeker() {
         return job_seeker;
@@ -38,5 +39,9 @@ public class Application extends BaseApplication {
 
     public void setStatus(Integer status) {
         this.status = status;
+    }
+
+    public List<Interview> getInterview() {
+        return interviews;
     }
 }

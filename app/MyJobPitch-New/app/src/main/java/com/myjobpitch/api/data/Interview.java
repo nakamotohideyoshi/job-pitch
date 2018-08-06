@@ -11,7 +11,7 @@ import java.util.List;
 public class Interview extends MJPAPIObject {
     private Integer application;
     private Date at;
-    private List<InterviewMessage> messages;
+    private List<Message> messages;
     private String notes;
     private String feedback;
     private Date cancelled;
@@ -26,7 +26,7 @@ public class Interview extends MJPAPIObject {
         return at;
     }
 
-    public List<InterviewMessage> getMessages() {
+    public List<Message> getMessages() {
         return messages;
     }
 

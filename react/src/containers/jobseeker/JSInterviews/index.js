@@ -2,7 +2,7 @@ import React from 'react';
 import Helmet from 'react-helmet';
 import { connect } from 'react-redux';
 import Truncate from 'react-truncate';
-import { List, Avatar, Tooltip, Button, notification } from 'antd';
+import { List, Avatar, Tooltip, Button, notification, Modal } from 'antd';
 import moment from 'moment';
 
 import { getApplications } from 'redux/applications';
@@ -16,6 +16,8 @@ import NoPitch from '../components/NoPitch';
 import Wrapper from './styled';
 
 import * as _ from 'lodash';
+
+const { confirm } = Modal;
 
 class JSInterviews extends React.Component {
   state = {
@@ -46,27 +48,36 @@ class JSInterviews extends React.Component {
 
   acceptInvitation = ({ interview }, event) => {
     event && event.stopPropagation();
-    this.props.changeInterview({
-      data: {
-        id: interview.id,
-        changeType: 'accept'
-      },
-      success: () => {
-        this.setState({
-          selectedApp: null
-        });
-        notification.success({
-          message: 'Notification',
-          description: 'Interview is saved successfully.'
-        });
-      },
-      fail: () => {
-        this.setState({
-          selectedApp: null
-        });
-        notification.error({
-          message: 'Notification',
-          description: 'Saving is failed'
+    confirm({
+      content: 'Are you sure you want to accept this interview?',
+      okText: `Accept`,
+      okType: 'primary',
+      cancelText: 'Cancel',
+      maskClosable: true,
+      onOk: () => {
+        this.props.changeInterview({
+          data: {
+            id: interview.id,
+            changeType: 'accept'
+          },
+          success: () => {
+            this.setState({
+              selectedApp: null
+            });
+            notification.success({
+              message: 'Notification',
+              description: 'Interview is accepted successfully.'
+            });
+          },
+          fail: () => {
+            this.setState({
+              selectedApp: null
+            });
+            notification.error({
+              message: 'Notification',
+              description: 'Accepting is failed'
+            });
+          }
         });
       }
     });

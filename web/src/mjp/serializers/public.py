@@ -1,6 +1,16 @@
 from rest_framework import serializers
 
-from mjp.models import Contract, Sector, Hours, Location, Job, Business, JobSeeker, JobStatus
+from mjp.models import (
+    Contract,
+    Sector,
+    Hours,
+    Location,
+    Job,
+    Business,
+    JobSeeker,
+    JobStatus,
+    JobVideo,
+)
 from mjp.serializers import SimpleSerializer, RelatedImageURLField, EmbeddedPitchSerializer
 
 
@@ -24,13 +34,22 @@ class PublicEmbeddedLocationListingSerializer(serializers.ModelSerializer):
 
 class PublicEmbeddedJobListingSerializer(serializers.ModelSerializer):
     images = RelatedImageURLField(many=True, read_only=True)
+    videos = serializers.SerializerMethodField()
     sector = SimpleSerializer(Sector, meta_overrides={'fields': ('name', 'description')})()
     contract = SimpleSerializer(Contract, meta_overrides={'fields': ('name', 'short_name', 'description')})()
     hours = SimpleSerializer(Hours, meta_overrides={'fields': ('name', 'short_name', 'description')})()
 
+    def get_videos(self, job):
+        videos = job.videos.filter(video__isnull=False)
+        serializer = SimpleSerializer(JobVideo, meta_overrides={'fields': ('video', 'thumbnail')})(
+            instance=videos,
+            many=True,
+        )
+        return serializer.data
+
     class Meta:
         model = Job
-        fields = ('id', 'title', 'description', 'images', 'sector', 'contract', 'hours')
+        fields = ('id', 'title', 'description', 'images', 'videos', 'sector', 'contract', 'hours')
 
 
 class PublicJobListingSerializer(PublicEmbeddedJobListingSerializer):

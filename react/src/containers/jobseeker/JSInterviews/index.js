@@ -2,11 +2,11 @@ import React from 'react';
 import Helmet from 'react-helmet';
 import { connect } from 'react-redux';
 import Truncate from 'react-truncate';
-import { List, Avatar, Tooltip, Button, notification } from 'antd';
+import { List, Avatar, Tooltip, Button, notification, Modal } from 'antd';
 import moment from 'moment';
 
 import { getApplications } from 'redux/applications';
-import { getInterviews } from 'redux/interviews';
+import { getInterviews, removeInterview } from 'redux/interviews';
 import DATA from 'utils/data';
 import * as helper from 'utils/helper';
 import { changeInterview } from 'redux/interviews';
@@ -16,6 +16,10 @@ import NoPitch from '../components/NoPitch';
 import Wrapper from './styled';
 
 import * as _ from 'lodash';
+
+import Mark from './Mark';
+
+const { confirm } = Modal;
 
 class JSInterviews extends React.Component {
   state = {
@@ -46,27 +50,36 @@ class JSInterviews extends React.Component {
 
   acceptInvitation = ({ interview }, event) => {
     event && event.stopPropagation();
-    this.props.changeInterview({
-      data: {
-        id: interview.id,
-        changeType: 'accept'
-      },
-      success: () => {
-        this.setState({
-          selectedApp: null
-        });
-        notification.success({
-          message: 'Notification',
-          description: 'Interview is saved successfully.'
-        });
-      },
-      fail: () => {
-        this.setState({
-          selectedApp: null
-        });
-        notification.error({
-          message: 'Notification',
-          description: 'Saving is failed'
+    confirm({
+      content: 'Are you sure you want to accept this interview?',
+      okText: `Accept`,
+      okType: 'primary',
+      cancelText: 'Cancel',
+      maskClosable: true,
+      onOk: () => {
+        this.props.changeInterview({
+          data: {
+            id: interview.id,
+            changeType: 'accept'
+          },
+          success: () => {
+            this.setState({
+              selectedApp: null
+            });
+            notification.success({
+              message: 'Notification',
+              description: 'Interview is accepted successfully.'
+            });
+          },
+          fail: () => {
+            this.setState({
+              selectedApp: null
+            });
+            notification.error({
+              message: 'Notification',
+              description: 'Accepting is failed'
+            });
+          }
         });
       }
     });
@@ -77,6 +90,32 @@ class JSInterviews extends React.Component {
     // const name = helper.getFullBWName(job_data);
     // return job_data.title.toLowerCase().indexOf(searchText) >= 0 || name.toLowerCase().indexOf(searchText) >= 0;
     return true;
+  };
+
+  onRemove = ({ interview }, event) => {
+    event && event.stopPropagation();
+
+    confirm({
+      content: 'Are you sure you want to cancel this interview?',
+      okText: `Yes`,
+      okType: 'danger',
+      cancelText: 'No',
+      maskClosable: true,
+      onOk: () => {
+        this.props.removeInterview({
+          id: interview.id,
+          successMsg: {
+            message: `Interview is cancelled.`
+          },
+          failMsg: {
+            message: `Cancelling is failed.`
+          }
+        });
+        this.setState({
+          selectedApp: null
+        });
+      }
+    });
   };
 
   renderApp = interview => {
@@ -107,6 +146,8 @@ class JSInterviews extends React.Component {
       status = 'Interview cancelled by ';
     }
 
+    const cancelled = interview.status === 'CANCELLED' ? 'disabled' : '';
+
     return (
       <List.Item
         key={id}
@@ -116,8 +157,14 @@ class JSInterviews extends React.Component {
               <Icons.CommentAlt />
             </span>
           </Tooltip>
+          // <Tooltip placement="bottom" title="Cancel">
+          //   <span onClick={e => this.onRemove(app, e)}>
+          //     <Icons.TrashAlt />
+          //   </span>
+          // </Tooltip>
         ]}
         onClick={() => this.onSelect(app)}
+        className={`${cancelled}`}
       >
         <List.Item.Meta
           avatar={<Avatar src={logo} className="avatar-80" />}
@@ -138,6 +185,7 @@ class JSInterviews extends React.Component {
             {contractName} / {hoursName}
           </span>
         </div>
+        {cancelled && <Mark>Cancelled</Mark>}
       </List.Item>
     );
   };
@@ -194,6 +242,9 @@ class JSInterviews extends React.Component {
                 </Button>,
                 <Button type="primary" onClick={() => this.acceptInvitation(selectedApp)}>
                   Accept Invitation
+                </Button>,
+                <Button type="danger" onClick={e => this.onRemove(selectedApp, e)}>
+                  Cancel Invitation
                 </Button>
               ]}
             />
@@ -214,6 +265,7 @@ export default connect(
   {
     getApplications,
     getInterviews,
-    changeInterview
+    changeInterview,
+    removeInterview
   }
 )(JSInterviews);

@@ -54,7 +54,10 @@ export default handleActions(
 
     [requestSuccess(C.REMOVE_INTERVIEW)]: (state, { request }) => ({
       ...state,
-      interviews: helper.removeObj(state.interviews, request.id)
+      interviews: helper.updateObj(state.interviews, {
+        id: request.id,
+        status: 'CANCELLED'
+      })
     }),
 
     [requestFail(C.REMOVE_INTERVIEW)]: (state, { request }) => ({

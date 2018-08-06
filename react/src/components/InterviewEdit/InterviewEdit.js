@@ -1,94 +1,7 @@
-// import React from 'react';
-// import { Divider, Row, Col, Button, Input, Form } from 'antd';
-
-// import * as helper from 'utils/helper';
-
-// import { Icons, VideoPlayer } from 'components';
-// import Wrapper from './InterviewEdit.styled';
-
-// export default ({ jobseeker, connected, className, actions }) => {
-//   const image = helper.getPitch(jobseeker).thumbnail;
-//   const fullName = helper.getFullJSName(jobseeker);
-//   const age = jobseeker.age_public && jobseeker.age;
-//   const sex = jobseeker.sex_public && helper.getNameByID('sexes', jobseeker.sex);
-
-//   let email, mobile;
-//   if (connected) {
-//     email = jobseeker.email_public && jobseeker.email;
-//     mobile = jobseeker.mobile_public && jobseeker.mobile;
-//   }
-
-//   const pitches = jobseeker.pitches.filter(({ video }) => video);
-//   console.log("ooo", jobseeker);
-//   const { getFieldDecorator } = this.props.form;
-//   const { TextArea } = Input;
-//   return (
-//     <Wrapper className={className}>
-//       <Row gutter={32}>
-//         <Col sm={24} md={10} lg={5}>
-//           <div className="avatar">
-//             <span style={{ backgroundImage: `url(${image})` }} />
-//           </div>
-//         </Col>
-//         <Col sm={24} md={14} lg={19}>
-//           <Row gutter={32}>
-//             <Col md={24} lg={14}>
-//               <div className="info">
-//                 <div className="name">{fullName}</div>
-//                 <ul>
-//                   {age && (
-//                     <li>
-//                       <label>Age:</label> {age}
-//                     </li>
-//                   )}
-//                   {sex && (
-//                     <li>
-//                       <label>Sex:</label> {sex}
-//                     </li>
-//                   )}
-//                   {email && (
-//                     <li>
-//                       <label>Email:</label> {email}
-//                     </li>
-//                   )}
-//                   {mobile && (
-//                     <li>
-//                       <label>Mobile:</label> {mobile}
-//                     </li>
-//                   )}
-//                 </ul>
-//               </div>
-//             </Col>
-//             <Col md={24} lg={10}>
-//               <div>
-//                 <h3>Overview</h3>
-//                 <p className="description">{jobseeker.description}</p>
-//               </div>
-//             </Col>
-//           </Row>
-//         </Col>
-//       </Row>
-
-//       <Divider />
-
-//       <div>
-//       <TextArea
-//             placeholder="Type a message here"
-//             autosize={{ minRows: 1, maxRows: 15 }}
-//             value={message}
-//             onChange={this.onMessageInput}
-//           />
-//       </div>
-
-//       <div style={{ clear: 'both' }} />
-//     </Wrapper>
-//   );
-// };
-
 import React from 'react';
 import { connect } from 'react-redux';
-import { saveInterview, changeInterview } from 'redux/interviews';
-import { Form, Input, Button, DatePicker, Divider, Row, Col, notification } from 'antd';
+import { saveInterview, changeInterview, removeInterview } from 'redux/interviews';
+import { Form, Input, Button, DatePicker, Divider, Row, Col, notification, Modal } from 'antd';
 
 import styled from 'styled-components';
 import media from 'utils/mediaquery';
@@ -104,6 +17,7 @@ import { updateMessageByInterview } from 'redux/applications';
 
 const { Item } = Form;
 const { TextArea } = Input;
+const { confirm } = Modal;
 
 const FormWrapper = styled(Form)`
   max-width: 700px;
@@ -221,27 +135,60 @@ class InterviewEdit extends React.Component {
   };
 
   completeInvitation({ interview }) {
-    this.props.changeInterview({
-      data: {
-        id: interview.id,
-        changeType: 'complete'
-      },
-      success: () => {
-        this.props.gotoOrigin();
-        notification.success({
-          message: 'Notification',
-          description: 'Interview is completed successfully.'
-        });
-      },
-      fail: () => {
-        this.props.gotoOrigin();
-        notification.error({
-          message: 'Notification',
-          description: 'Saving is failed'
+    confirm({
+      content: 'Are you sure you want to complete this interview?',
+      okText: `Complete`,
+      okType: 'primary',
+      cancelText: 'Cancel',
+      maskClosable: true,
+      onOk: () => {
+        this.props.changeInterview({
+          data: {
+            id: interview.id,
+            changeType: 'complete'
+          },
+          success: () => {
+            this.props.gotoOrigin();
+            notification.success({
+              message: 'Notification',
+              description: 'Interview is completed successfully.'
+            });
+          },
+          fail: () => {
+            this.props.gotoOrigin();
+            notification.error({
+              message: 'Notification',
+              description: 'Saving is failed'
+            });
+          }
         });
       }
     });
   }
+
+  onRemove = ({ interview }, event) => {
+    event && event.stopPropagation();
+
+    confirm({
+      content: 'Are you sure you want to cancel this interview?',
+      okText: `Yes`,
+      okType: 'danger',
+      cancelText: 'No',
+      maskClosable: true,
+      onOk: () => {
+        this.props.removeInterview({
+          id: interview.id,
+          successMsg: {
+            message: `Interview is cancelled.`
+          },
+          failMsg: {
+            message: `Cancelling is failed.`
+          }
+        });
+        this.props.gotoOrigin();
+      }
+    });
+  };
 
   render() {
     const { loading } = this.state;
@@ -346,6 +293,14 @@ class InterviewEdit extends React.Component {
                       Complete Invitation
                     </Button>
                     <Button
+                      type="danger"
+                      onClick={e => {
+                        this.onRemove(application, e);
+                      }}
+                    >
+                      Cancel Invitation
+                    </Button>
+                    <Button
                       type="primary"
                       onClick={() => {
                         this.setState({ view: false }, () => {
@@ -389,7 +344,7 @@ class InterviewEdit extends React.Component {
               </Item>
               <div className="invite-btn">
                 <Button type="primary" loading={loading} onClick={this.save}>
-                  {this.props.create ? 'Send Invitation' : 'Edit Invitation'}
+                  {this.props.create ? 'Send Invitation' : 'Update'}
                 </Button>
                 {!this.props.create &&
                   (this.props.view && !view) && (
@@ -414,6 +369,6 @@ class InterviewEdit extends React.Component {
   }
 }
 
-export default connect(state => ({}), { saveInterview, updateMessageByInterview, changeInterview })(
+export default connect(state => ({}), { saveInterview, updateMessageByInterview, changeInterview, removeInterview })(
   Form.create()(InterviewEdit)
 );

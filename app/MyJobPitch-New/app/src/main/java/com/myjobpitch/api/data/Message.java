@@ -14,6 +14,7 @@ public class Message extends MJPAPIObject {
     protected String content;
     protected Date created;
     protected Boolean read;
+    protected Integer interview;
 
     public Integer getApplication() {
         return application;
@@ -37,5 +38,9 @@ public class Message extends MJPAPIObject {
 
     public Boolean getRead() {
         return read;
+    }
+
+    public Integer getInterview() {
+        return interview;
     }
 }

@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { saveInterview, changeInterview } from 'redux/interviews';
+import { saveInterview, changeInterview, removeInterview } from 'redux/interviews';
 import { Form, Input, Button, DatePicker, Divider, Row, Col, notification, Modal } from 'antd';
 
 import styled from 'styled-components';
@@ -166,6 +166,30 @@ class InterviewEdit extends React.Component {
     });
   }
 
+  onRemove = ({ interview }, event) => {
+    event && event.stopPropagation();
+
+    confirm({
+      content: 'Are you sure you want to cancel this interview?',
+      okText: `Yes`,
+      okType: 'danger',
+      cancelText: 'No',
+      maskClosable: true,
+      onOk: () => {
+        this.props.removeInterview({
+          id: interview.id,
+          successMsg: {
+            message: `Interview is cancelled.`
+          },
+          failMsg: {
+            message: `Cancelling is failed.`
+          }
+        });
+        this.props.gotoOrigin();
+      }
+    });
+  };
+
   render() {
     const { loading } = this.state;
     const { getFieldDecorator } = this.props.form;
@@ -269,6 +293,14 @@ class InterviewEdit extends React.Component {
                       Complete Invitation
                     </Button>
                     <Button
+                      type="danger"
+                      onClick={e => {
+                        this.onRemove(application, e);
+                      }}
+                    >
+                      Cancel Invitation
+                    </Button>
+                    <Button
                       type="primary"
                       onClick={() => {
                         this.setState({ view: false }, () => {
@@ -312,7 +344,7 @@ class InterviewEdit extends React.Component {
               </Item>
               <div className="invite-btn">
                 <Button type="primary" loading={loading} onClick={this.save}>
-                  {this.props.create ? 'Send Invitation' : 'Edit Invitation'}
+                  {this.props.create ? 'Send Invitation' : 'Update'}
                 </Button>
                 {!this.props.create &&
                   (this.props.view && !view) && (
@@ -337,6 +369,6 @@ class InterviewEdit extends React.Component {
   }
 }
 
-export default connect(state => ({}), { saveInterview, updateMessageByInterview, changeInterview })(
+export default connect(state => ({}), { saveInterview, updateMessageByInterview, changeInterview, removeInterview })(
   Form.create()(InterviewEdit)
 );

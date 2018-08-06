@@ -6,7 +6,7 @@ import { List, Avatar, Tooltip, Button, notification, Modal } from 'antd';
 import moment from 'moment';
 
 import { getApplications } from 'redux/applications';
-import { getInterviews } from 'redux/interviews';
+import { getInterviews, removeInterview } from 'redux/interviews';
 import DATA from 'utils/data';
 import * as helper from 'utils/helper';
 import { changeInterview } from 'redux/interviews';
@@ -92,6 +92,32 @@ class JSInterviews extends React.Component {
     return true;
   };
 
+  onRemove = ({ interview }, event) => {
+    event && event.stopPropagation();
+
+    confirm({
+      content: 'Are you sure you want to cancel this interview?',
+      okText: `Yes`,
+      okType: 'danger',
+      cancelText: 'No',
+      maskClosable: true,
+      onOk: () => {
+        this.props.removeInterview({
+          id: interview.id,
+          successMsg: {
+            message: `Interview is cancelled.`
+          },
+          failMsg: {
+            message: `Cancelling is failed.`
+          }
+        });
+        this.setState({
+          selectedApp: null
+        });
+      }
+    });
+  };
+
   renderApp = interview => {
     let app;
     _.forEach(this.props.applications, application => {
@@ -131,6 +157,11 @@ class JSInterviews extends React.Component {
               <Icons.CommentAlt />
             </span>
           </Tooltip>
+          // <Tooltip placement="bottom" title="Cancel">
+          //   <span onClick={e => this.onRemove(app, e)}>
+          //     <Icons.TrashAlt />
+          //   </span>
+          // </Tooltip>
         ]}
         onClick={() => this.onSelect(app)}
         className={`${cancelled}`}
@@ -211,6 +242,9 @@ class JSInterviews extends React.Component {
                 </Button>,
                 <Button type="primary" onClick={() => this.acceptInvitation(selectedApp)}>
                   Accept Invitation
+                </Button>,
+                <Button type="danger" onClick={e => this.onRemove(selectedApp, e)}>
+                  Cancel Invitation
                 </Button>
               ]}
             />
@@ -231,6 +265,7 @@ export default connect(
   {
     getApplications,
     getInterviews,
-    changeInterview
+    changeInterview,
+    removeInterview
   }
 )(JSInterviews);

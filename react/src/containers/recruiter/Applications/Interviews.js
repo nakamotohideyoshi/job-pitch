@@ -104,12 +104,12 @@ class Interviews extends React.Component {
             <span onClick={e => this.editInterview(app, e)}>
               <Icons.Pen />
             </span>
-          </Tooltip>,
-          <Tooltip placement="bottom" title="Remove">
-            <span onClick={e => this.onRemove(app, e)}>
-              <Icons.TrashAlt />
-            </span>
           </Tooltip>
+          // <Tooltip placement="bottom" title="Remove">
+          //   <span onClick={e => this.onRemove(app, e)}>
+          //     <Icons.TrashAlt />
+          //   </span>
+          // </Tooltip>
         ]}
         onClick={() => this.onSelect(app)}
         className={`${loading ? 'loading' : ''} ${cancelled}`}

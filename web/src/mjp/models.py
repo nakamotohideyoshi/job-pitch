@@ -424,7 +424,7 @@ class JobVideo(models.Model):
 
 
 class JobSeeker(models.Model):
-    user = models.OneToOneField(settings.AUTH_USER_MODEL, related_name='job_seeker')
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, related_name='job_seeker', null=True)
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
     email_public = models.BooleanField(default=False)

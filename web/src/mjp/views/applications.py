@@ -3,7 +3,7 @@ from django.db.models import Max
 from django.http import Http404
 from django.utils import timezone
 from rest_framework import viewsets, permissions, serializers
-from rest_framework.decorators import detail_route
+from rest_framework.decorators import detail_route, list_route
 from rest_framework.exceptions import PermissionDenied
 from rest_framework.response import Response
 
@@ -19,7 +19,7 @@ from mjp.serializers.applications import (
     ApplicationShortlistUpdateSerializer,
     MessageCreateSerializer,
     MessageUpdateSerializer,
-)
+    ExternalApplicationSerializer)
 from mjp.serializers.applications import InterviewSerializer
 from mjp.serializers.job_seeker import ApplicationPitchSerializer
 
@@ -139,6 +139,7 @@ class ApplicationViewSet(viewsets.ModelViewSet):
                                        'job__location__jobs',
                                        'job__location__business__locations',
                                        'job__images',
+                                       'job__videos',
                                        'job__location__images',
                                        'job__location__business_users',
                                        'job__location__business__images',
@@ -166,6 +167,16 @@ class ApplicationViewSet(viewsets.ModelViewSet):
         else:
             query = query.filter(job_seeker__user=self.request.user)
         return query
+
+    @list_route(methods=['GET'])
+    def external(self):
+        # TODO test this code (especially job selection)
+        serializer = ExternalApplicationSerializer(data=self.request.data, context=self.get_serializer_context())
+        serializer.save(
+            created_by=Role.objects.get(name=Role.RECRUITER),
+            status=ApplicationStatus.objects.get(name=ApplicationStatus.ESTABLISHED),
+        )
+        return Response(serializer.data)
 
 
 class MessageViewSet(viewsets.ModelViewSet):

@@ -9,7 +9,7 @@ from mjp.serializers import (
     JobSeekerReadSerializerV1,
     JobSeekerReadSerializer,
     SimpleSerializer,
-)
+    JobSeekerSerializer)
 
 
 class MessageSerializerV1(serializers.ModelSerializer):
@@ -64,6 +64,14 @@ class ApplicationSerializerV4(ApplicationSerializerV3):  # v4
 
 class ApplicationSerializer(ApplicationSerializerV4):  # v5
     job_data = JobSerializer(source='job', read_only=True)
+
+
+class ExternalApplicationSerializer(serializers.Serializer):
+    job_seeker = JobSeekerSerializer()
+
+    class Meta:
+        model = Application
+        fields = ('id', 'job', 'job_seeker')
 
 
 class ApplicationCreateSerializer(serializers.ModelSerializer):

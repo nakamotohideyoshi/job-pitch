@@ -43,6 +43,6 @@ class PublicJobSeekerListing(generics.RetrieveAPIView):
         except (TypeError, ValueError):
             version = 1
 
-        if version > 3:
+        if version >= 4:
             return PublicJobSeekerListingSerializer
         return PublicJobSeekerListingSerializerV1

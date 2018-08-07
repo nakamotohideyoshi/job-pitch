@@ -82,11 +82,11 @@ class JobSeekerViewSet(viewsets.ModelViewSet):
             version = 1
 
         if self.request.query_params.get('job'):
-            if version > 3:
+            if version >= 4:
                 return JobSeekerReadSerializer
             return JobSeekerReadSerializerV1
 
-        if version > 3:
+        if version >= 4:
             return JobSeekerSerializer
         return JobSeekerSerializerV1
 

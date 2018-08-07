@@ -390,6 +390,8 @@ class Job(models.Model):
     contract = models.ForeignKey(Contract, related_name='jobs')
     hours = models.ForeignKey(Hours, related_name='jobs')
     status = models.ForeignKey(JobStatus, related_name='jobs')
+    requires_pitch = models.BooleanField(default=True)
+    requires_cv = models.BooleanField(default=False)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
 

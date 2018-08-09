@@ -236,17 +236,34 @@ class JSInterviews extends React.Component {
           <LargeModal visible title="Job Details" onCancel={() => this.onSelect()}>
             <JobDetails
               job={selectedApp.job_data}
-              actions={[
-                <Button type="default" onClick={() => this.onMessage(selectedApp)}>
-                  Message
-                </Button>,
-                <Button type="primary" onClick={() => this.acceptInvitation(selectedApp)}>
-                  Accept Invitation
-                </Button>,
-                <Button type="danger" onClick={e => this.onRemove(selectedApp, e)}>
-                  Cancel Invitation
-                </Button>
-              ]}
+              actions={
+                selectedApp.interview.status === 'ACCEPTED'
+                  ? [
+                      <Button type="default" onClick={() => this.onMessage(selectedApp)}>
+                        Message
+                      </Button>,
+                      <Button type="danger" onClick={e => this.onRemove(selectedApp, e)}>
+                        Cancel Invitation
+                      </Button>
+                    ]
+                  : selectedApp.interview.status === 'CANCELLED' || selectedApp.interview.status === 'COMPLETED'
+                    ? [
+                        <Button type="default" onClick={() => this.onMessage(selectedApp)}>
+                          Message
+                        </Button>
+                      ]
+                    : [
+                        <Button type="default" onClick={() => this.onMessage(selectedApp)}>
+                          Message
+                        </Button>,
+                        <Button type="primary" onClick={() => this.acceptInvitation(selectedApp)}>
+                          Accept Invitation
+                        </Button>,
+                        <Button type="danger" onClick={e => this.onRemove(selectedApp, e)}>
+                          Cancel Invitation
+                        </Button>
+                      ]
+              }
             />
           </LargeModal>
         )}

@@ -63,7 +63,9 @@ const FormWrapper = styled(Form)`
 class InterviewEdit extends React.Component {
   state = {
     loading: null,
-    view: false
+    view: false,
+    create: false,
+    editNoteOnly: false
   };
 
   componentDidMount() {
@@ -283,50 +285,76 @@ class InterviewEdit extends React.Component {
                   </div>
                 </Col>
                 <Col sm={24} md={10} lg={5}>
-                  <div>
-                    <Button
-                      type="primary"
-                      onClick={() => {
-                        this.completeInvitation(application);
-                      }}
-                    >
-                      Complete Invitation
-                    </Button>
-                    <Button
-                      type="danger"
-                      onClick={e => {
-                        this.onRemove(application, e);
-                      }}
-                    >
-                      Cancel Invitation
-                    </Button>
-                    <Button
-                      type="primary"
-                      onClick={() => {
-                        this.setState({ view: false }, () => {
-                          this.props.form.setFieldsValue({
-                            at: moment(interview.at),
-                            invitation: interview.invitation,
-                            notes: interview.notes
+                  {interview.status !== 'COMPLETED' && interview.status !== 'CANCELLED' ? (
+                    <div>
+                      <Button
+                        type="primary"
+                        onClick={() => {
+                          this.completeInvitation(application);
+                        }}
+                      >
+                        Complete Invitation
+                      </Button>
+                      <Button
+                        type="danger"
+                        onClick={e => {
+                          this.onRemove(application, e);
+                        }}
+                      >
+                        Cancel Invitation
+                      </Button>
+                      <Button
+                        type="primary"
+                        onClick={() => {
+                          this.setState({ view: false }, () => {
+                            this.props.form.setFieldsValue({
+                              at: moment(interview.at),
+                              invitation: interview.invitation,
+                              notes: interview.notes
+                            });
                           });
-                        });
-                      }}
-                    >
-                      Edit Interview
-                    </Button>
-                  </div>
+                        }}
+                      >
+                        Edit Interview
+                      </Button>
+                    </div>
+                  ) : (
+                    <div>
+                      <Button
+                        type="primary"
+                        onClick={() => {
+                          this.setState({ view: false, create: true });
+                        }}
+                      >
+                        Arrange new interview
+                      </Button>
+                      <Button
+                        onClick={e => {
+                          this.setState({ view: false, editNoteOnly: true }, () => {
+                            this.props.form.setFieldsValue({
+                              at: moment(interview.at),
+                              invitation: interview.invitation,
+                              notes: interview.notes
+                            });
+                          });
+                        }}
+                      >
+                        Edit notes
+                      </Button>
+                    </div>
+                  )}
                 </Col>
               </Row>
             </Wrapper>
           ) : (
             <FormWrapper className="interview-form">
-              <Item label={<span>Date&nbsp;</span>}>
+              <Item label={<span>Date&nbsp;</span>} style={{ display: this.state.editNoteOnly ? 'none' : 'block' }}>
                 {getFieldDecorator('at', {
                   type: 'object',
                   rules: [{ required: true, message: 'Please pick date!' }]
                 })(<DatePicker style={{ width: '100%' }} showTime format="YYYY-MM-DD HH:mm:ss" />)}
               </Item>
-              <Item label={<span>Message&nbsp;</span>}>
+              <Item label={<span>Message&nbsp;</span>} style={{ display: this.state.editNoteOnly ? 'none' : 'block' }}>
                 {getFieldDecorator('invitation', {
                   rules: [
                     { required: true, message: 'Please enter message!' },
@@ -344,7 +372,7 @@ class InterviewEdit extends React.Component {
               </Item>
               <div className="invite-btn">
                 <Button type="primary" loading={loading} onClick={this.save}>
-                  {this.props.create ? 'Send Invitation' : 'Update'}
+                  {this.props.create || this.state.create ? 'Send Invitation' : 'Update'}
                 </Button>
                 {!this.props.create &&
                   (this.props.view && !view) && (
@@ -353,7 +381,9 @@ class InterviewEdit extends React.Component {
                       loading={loading}
                       onClick={() => {
                         this.setState({
-                          view: true
+                          view: true,
+                          create: false,
+                          editNoteOnly: false
                         });
                       }}
                     >

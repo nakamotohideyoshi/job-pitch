@@ -278,7 +278,7 @@ class InterviewEdit extends React.Component {
                   <div>
                     <div>{`Date: ${moment(interview.at).format('dddd, MMMM Do, YYYY h:mm:ss A')}`}</div>
                     <div>{`Status: ${status}`}</div>
-                    <div>{`Note: ${interview.notes}`}</div>
+                    <div>{`Recruiter's notes: ${interview.notes}`}</div>
                     <div>{`Feedback: ${interview.feedback}`}</div>
                   </div>
                 </Col>
@@ -334,7 +334,7 @@ class InterviewEdit extends React.Component {
                   ]
                 })(<TextArea autosize={{ minRows: 3, maxRows: 20 }} />)}
               </Item>
-              <Item label={<span>Note&nbsp;</span>}>
+              <Item label={<span>Recruiter's notes&nbsp;</span>}>
                 {getFieldDecorator('notes', {
                   rules: [
                     { required: true, message: 'Please enter note!' },

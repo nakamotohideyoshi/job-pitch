@@ -273,6 +273,8 @@ class JobAdmin(admin.ModelAdmin):
         'contract',
         'hours',
         'description',
+        'requires_pitch',
+        'requires_cv',
     )
     readonly_fields = (
         'get_business',

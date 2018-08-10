@@ -82,21 +82,13 @@ class MainMenu extends React.Component {
 
     return (
       <MenuWrapper theme={theme} mode={mode} selectedKeys={[selectedKey]} onClick={this.handleClick}>
-        {existBusiness && (
-          <Item key="applications">
-            <Link to="/recruiter/applications/find">Applications</Link>
-          </Item>
-        )}
-
         <Item key="jobs">
           <Link to="/recruiter/jobs">Jobs</Link>
         </Item>
 
         {existBusiness && (
-          <Item key="credits">
-            <Link to="/recruiter/settings/credits">
-              Credit<Badge count={(business || {}).tokens} />
-            </Link>
+          <Item key="applications">
+            <Link to="/recruiter/applications/find">Applications</Link>
           </Item>
         )}
 
@@ -104,6 +96,14 @@ class MainMenu extends React.Component {
           <Item key="messages">
             <Link to="/recruiter/messages">
               Messages<Badge count={countStr} />
+            </Link>
+          </Item>
+        )}
+
+        {existBusiness && (
+          <Item key="credits">
+            <Link to="/recruiter/settings/credits">
+              Credit<Badge count={(business || {}).tokens} />
             </Link>
           </Item>
         )}

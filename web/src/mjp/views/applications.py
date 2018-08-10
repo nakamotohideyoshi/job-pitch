@@ -12,6 +12,7 @@ from mjp.serializers.applications import (
     ApplicationSerializerV1,
     ApplicationSerializerV2,
     ApplicationSerializerV3,
+    ApplicationSerializerV4,
     ApplicationSerializer,
     ApplicationCreateSerializer,
     ApplicationConnectSerializer,
@@ -120,6 +121,8 @@ class ApplicationViewSet(viewsets.ModelViewSet):
             return ApplicationSerializerV2
         elif version == 3:
             return ApplicationSerializerV3
+        elif version == 4:
+            return ApplicationSerializerV4
         return ApplicationSerializer
 
     def get_queryset(self):

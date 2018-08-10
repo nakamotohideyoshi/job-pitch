@@ -7,6 +7,7 @@ from mjp.serializers import (
     LocationSerializer,
     JobSerializer,
     JobSerializerV1,
+    JobSerializerV2,
 )
 from mjp.serializers.job_seeker import PitchSerializer, JobProfileSerializer
 
@@ -116,8 +117,10 @@ class JobViewSet(viewsets.ReadOnlyModelViewSet):
             version = int(self.request.version)
         except (TypeError, ValueError):
             version = 1
-        if version > 1:
+        if version >= 5:
             return JobSerializer
+        if version >= 2:
+            return JobSerializerV2
         return JobSerializerV1
 
     def get_queryset(self):

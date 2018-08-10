@@ -4,8 +4,9 @@ import { Divider, Row, Col } from 'antd';
 import * as helper from 'utils/helper';
 import { GoogleMap, Icons, VideoPlayer, SocialShare } from 'components';
 import Wrapper from './JobDetails.styled';
+import moment from 'moment';
 
-export default ({ job, className, roughLocation, actions }) => {
+export default ({ job, className, roughLocation, actions, interview }) => {
   const logo = helper.getJobLogo(job);
   const workplace = job.location_data;
   const subName = helper.getFullBWName(job);
@@ -61,6 +62,23 @@ export default ({ job, className, roughLocation, actions }) => {
                       {job.distance}
                     </li>
                   )}
+                  {interview && <li>{`Date: ${moment(interview.at).format('dddd, MMMM Do, YYYY h:mm:ss A')}`}</li>}
+                  {interview &&
+                    (interview.status === 'COMPLETED' || interview.status === 'CANCELLED') && (
+                      <li>
+                        <div>
+                          {interview.feedback === '' ? (
+                            <div>
+                              Feedback:&nbsp;<span style={{ color: 'grey', fontStyle: 'italic' }}>None</span>
+                            </div>
+                          ) : (
+                            <div>
+                              <span>Feedback: {interview.feedback}</span>
+                            </div>
+                          )}
+                        </div>
+                      </li>
+                    )}
                 </ul>
               </div>
             </Col>

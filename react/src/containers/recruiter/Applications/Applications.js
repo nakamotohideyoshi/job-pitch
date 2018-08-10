@@ -145,7 +145,7 @@ class Applications extends React.Component {
                   <Logo src={logo} className="logo" size="22px" />
                   {job.title}
                   <span className="right-menu-item">
-                    {location.name}, {business.name}
+                    {job.location_data.name}, {job.location_data.business_data.name}
                   </span>
                 </Option>
               );

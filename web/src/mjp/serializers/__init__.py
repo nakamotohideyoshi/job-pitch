@@ -41,7 +41,7 @@ class RelatedImageURLField(serializers.RelatedField):
                 }
 
 
-class BusinessSerializer(serializers.ModelSerializer):
+class BusinessSerializer(serializers.ModelSerializer):  # v1-4 /api/user-businesses/, all versions /api/business/
     users = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
     locations = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
     images = RelatedImageURLField(many=True, read_only=True)
@@ -52,7 +52,7 @@ class BusinessSerializer(serializers.ModelSerializer):
         fields = ('id', 'users', 'locations', 'images', 'name', 'created', 'updated', 'tokens',)
 
 
-class UserBusinessSerializer(BusinessSerializer):
+class UserBusinessSerializer(BusinessSerializer):  # v5 (<5 uses BusinessSerializer)
     restricted = serializers.SerializerMethodField()
 
     def get_restricted(self, business):
@@ -112,6 +112,20 @@ class JobSerializerV1(serializers.ModelSerializer):
 
     class Meta:
         model = Job
+        fields = (
+            'id',
+            'title',
+            'description',
+            'images',
+            'sector',
+            'hours',
+            'contract',
+            'status',
+            'location',
+            'location_data',
+            'created',
+            'updated',
+        )
 
 
 class EmbeddedVideoSerializer(serializers.ModelSerializer):
@@ -120,8 +134,18 @@ class EmbeddedVideoSerializer(serializers.ModelSerializer):
         exclude = ('token', 'job')
 
 
-class JobSerializer(JobSerializerV1):  # v2
+class JobSerializerV2(JobSerializerV1):  # v2
     videos = EmbeddedVideoSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Job
+        fields = JobSerializerV1.Meta.fields + ('videos',)
+
+
+class JobSerializer(JobSerializerV2):  # v5
+    class Meta:
+        model = Job
+        fields = JobSerializerV2.Meta.fields + ('requires_pitch', 'requires_cv')
 
 
 class EmbeddedPitchSerializer(serializers.ModelSerializer):

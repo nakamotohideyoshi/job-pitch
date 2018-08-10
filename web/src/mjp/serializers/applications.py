@@ -4,6 +4,7 @@ from rest_framework import serializers
 from mjp.models import Message, Application, Role, TokenStore, ApplicationStatus, ApplicationPitch, Interview
 from mjp.serializers import (
     JobSerializerV1,
+    JobSerializerV2,
     JobSerializer,
     JobSeekerReadSerializerV1,
     JobSeekerReadSerializer,
@@ -28,7 +29,7 @@ class ApplicationSerializerV1(serializers.ModelSerializer):
 
 
 class ApplicationSerializerV2(ApplicationSerializerV1):
-    job_data = JobSerializer(source='job', read_only=True)
+    job_data = JobSerializerV2(source='job', read_only=True)
 
 
 class EmbeddedApplicationPitchSerializer(serializers.ModelSerializer):
@@ -57,8 +58,12 @@ class ApplicationSerializerV3(ApplicationSerializerV2):
     messages = MessageSerializer(many=True, read_only=True)
 
 
-class ApplicationSerializer(ApplicationSerializerV3):  # v4
+class ApplicationSerializerV4(ApplicationSerializerV3):  # v4
     job_seeker = JobSeekerReadSerializer(read_only=True)
+
+
+class ApplicationSerializer(ApplicationSerializerV4):  # v5
+    job_data = JobSerializer(source='job', read_only=True)
 
 
 class ApplicationCreateSerializer(serializers.ModelSerializer):

@@ -2,6 +2,8 @@ import React, { Fragment } from 'react';
 import Helmet from 'react-helmet';
 import { connect } from 'react-redux';
 import { List, Modal, Avatar, Button, Switch } from 'antd';
+import moment from 'moment';
+import { getInterviews } from 'redux/interviews';
 
 import {
   getApplications,
@@ -28,6 +30,7 @@ import {
 } from 'components';
 import Sidebar from './Sidebar';
 import Wrapper from './styled';
+import { select } from 'redux-saga/effects';
 
 const { confirm } = Modal;
 
@@ -38,11 +41,13 @@ class Page extends React.Component {
     openJobDetails: false,
     openInterviewEdit: false,
     tablet: false,
-    open: false
+    open: false,
+    selectedInterview: null
   };
 
   componentWillMount() {
     this.props.getApplications();
+    this.props.getInterviews();
     window.addEventListener('resize', this.onResize);
     this.onResize();
   }
@@ -146,12 +151,31 @@ class Page extends React.Component {
   showInterviewEdit = () => this.setState({ openInterviewEdit: true });
   hideInterviewEdit = () => this.setState({ openInterviewEdit: false });
 
-  renderHeader = ({ job_data, job_seeker }) => {
+  showInterviewView = interview => this.setState({ openInterviewView: true, selectedInterview: interview });
+  hideInterviewView = () => this.setState({ openInterviewView: false });
+
+  renderHeader = ({ job_data, job_seeker, interviews, id }) => {
     const avatar = helper.getPitch(job_seeker).thumbnail;
     const jobseekerName = helper.getFullJSName(job_seeker);
     const jobName = helper.getFullBWName(job_data);
+    let selectedInterview = null;
+    let interviewLink = 'Arrange Trial/Interview';
+    this.props.interviews.forEach(interview => {
+      if (interview.application === id && (interview.status === 'PENDING' || interview.status === 'ACCEPTED')) {
+        selectedInterview = interview;
+      }
+    });
+    if (selectedInterview) {
+      interviewLink = `Interview: ${moment(selectedInterview.at).format('dddd, MMMM Do, YYYY h:mm:ss A')}`;
+    }
     return (
-      <List.Item actions={[<LinkButton onClick={this.showInterviewEdit}>Arrange Trial/Interview</LinkButton>]}>
+      <List.Item
+        actions={
+          !selectedInterview
+            ? [<LinkButton onClick={this.showInterviewEdit}>{interviewLink}</LinkButton>]
+            : [<LinkButton onClick={() => this.showInterviewView(selectedInterview)}>{interviewLink}</LinkButton>]
+        }
+      >
         <List.Item.Meta
           avatar={<Avatar src={avatar} className="avatar-48" />}
           title={<span onClick={this.showAppDetails}>{jobseekerName}</span>}
@@ -190,7 +214,19 @@ class Page extends React.Component {
 
     const { selectedId } = this.state;
     const selectedApp = helper.getItemByID(applications, selectedId);
-    const { openAppDetails, openJobDetails, openInterviewEdit, tablet, open } = this.state;
+    const {
+      openAppDetails,
+      openJobDetails,
+      openInterviewEdit,
+      openInterviewView,
+      tablet,
+      open,
+      selectedInterview
+    } = this.state;
+
+    if (selectedInterview) {
+      selectedApp.interview = selectedInterview;
+    }
 
     return (
       <Wrapper tablet={tablet} open={open}>
@@ -255,6 +291,17 @@ class Page extends React.Component {
             />
           </LargeModal>
         )}
+        {openInterviewView && (
+          <LargeModal visible title="Interview Detail" onCancel={this.hideInterviewView}>
+            <InterviewEdit
+              jobseeker={selectedApp.job_seeker}
+              connected
+              application={selectedApp}
+              gotoOrigin={this.hideInterviewView}
+              view
+            />
+          </LargeModal>
+        )}
         {openJobDetails && (
           <LargeModal visible title="Job Details" onCancel={this.hideJobDetails}>
             <JobDetails job={selectedApp.job_data} />
@@ -272,7 +319,8 @@ const enhance = connect(
     businesses: state.rc_businesses.businesses,
     error: state.applications.error,
     latest: state.messages.latest,
-    count: state.messages.count
+    count: state.messages.count,
+    interviews: state.interviews.interviews
   }),
   {
     getApplications,
@@ -280,7 +328,8 @@ const enhance = connect(
     connectApplication,
     updateApplication,
     sendMessage,
-    updateLatest
+    updateLatest,
+    getInterviews
   }
 );
 

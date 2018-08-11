@@ -11,7 +11,10 @@ public class Application extends BaseApplication {
     private Integer created_by;
     private Integer deleted_by;
     private List<Message> messages;
-    private List<Interview> interviews;
+
+    //Added in API V3
+    private List<ApplicationInterview> interviews;
+    private List<Pitch> pitches;
 
     public JobSeeker getJob_seeker() {
         return job_seeker;
@@ -41,7 +44,11 @@ public class Application extends BaseApplication {
         this.status = status;
     }
 
-    public List<Interview> getInterview() {
+    public List<ApplicationInterview> getInterviews() {
         return interviews;
+    }
+
+    public List<Pitch> getPitches() {
+        return pitches;
     }
 }

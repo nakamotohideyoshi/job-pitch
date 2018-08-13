@@ -58,8 +58,11 @@ class BusinessUserEditController: MJPController {
                 if businessUser.locations.contains(location.id) {
                     selectedLocationsNames.append(location.name)
                 }
-                
             }
+        }
+        
+        if isEditMode {
+            workPlaceSelector.text = selectedLocationsNames.joined(separator: ", ")
         }
         workPlaceSelector.clickCallback = {
             SelectionController.showPopup(title: "",

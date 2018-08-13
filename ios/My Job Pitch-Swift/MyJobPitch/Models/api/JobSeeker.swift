@@ -34,6 +34,10 @@ class JobSeeker: MJPObjectWithDates {
     var desc: String!
     var cv: String!
     
+    // API V4
+    var profileImage: String!
+    var profileThumb: String!
+    
     func getPitch() -> Pitch? {
         if pitches != nil {
             for pitch in pitches as! [Pitch] {

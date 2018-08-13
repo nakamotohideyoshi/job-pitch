@@ -306,7 +306,7 @@ class APIConfigure: NSObject {
         // ================= Business =====================
 
         let businessArray = [ "id", "created", "updated", "users",
-                              "locations", "name", "tokens" ]
+                              "locations", "name", "tokens", "restricted" ]
 
         let businessRelationships = [ [ "source":       "images",
                                         "destination":  "images",
@@ -415,7 +415,9 @@ class APIConfigure: NSObject {
         let jobArray = [ "id", "created", "updated", "title", "sector",
                          "location", "contract", "hours", "status" ]
 
-        let jobDictionary = [ "desc": "description" ]
+        let jobDictionary = [ "desc":           "description",
+                              "requiresPitch":  "requires_pitch",
+                              "requiresCV":     "requires_cv" ]
 
         let jobRelationships = [ [ "source": "locationData",
                                    "destination": "location_data",

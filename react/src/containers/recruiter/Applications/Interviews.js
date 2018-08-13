@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import Truncate from 'react-truncate';
-import { List, Modal, Avatar, Tooltip } from 'antd';
+import { List, Modal, Avatar, Tooltip, Icon } from 'antd';
 
 import { removeInterview } from 'redux/interviews';
 import * as helper from 'utils/helper';
@@ -11,6 +11,7 @@ import { AlertMsg, Loading, ListEx, Icons, LargeModal, InterviewEdit } from 'com
 import moment from 'moment';
 import Mark from './Mark';
 import Wrapper from './styled';
+import * as _ from 'lodash';
 
 const { confirm } = Modal;
 
@@ -19,7 +20,8 @@ class Interviews extends React.Component {
     selectedId: null,
     selectedApp: null,
     openInterviewEdit: false,
-    openInterviewView: false
+    openInterviewView: false,
+    selectedRest: null
   };
 
   componentWillMount() {
@@ -74,6 +76,31 @@ class Interviews extends React.Component {
       .toLowerCase()
       .indexOf(this.props.searchText) >= 0;
 
+  onSelectRest = ({ id }, event) => {
+    event && event.stopPropagation();
+    let interviews = this.props.interviews;
+    let filteredInterviews = [];
+    interviews.forEach(interview => {
+      if ((interview.status === 'COMPLETED' || interview.status === 'CANCELLED') && interview.application === id) {
+        filteredInterviews.push(interview);
+      }
+    });
+    const { applicationsB } = this.props;
+    let myInterviews = [];
+    _.forEach(filteredInterviews, interview => {
+      _.forEach(applicationsB, application => {
+        if (interview.application === application.id) {
+          let applicationWithInterview = Object.assign({}, application);
+          applicationWithInterview.interview = interview;
+          myInterviews.push(applicationWithInterview);
+        }
+      });
+    });
+    this.setState({
+      selectedRest: myInterviews
+    });
+  };
+
   renderApplication = app => {
     const { id, job_seeker, interview, loading } = app;
     const image = helper.getPitch(job_seeker).thumbnail;
@@ -86,7 +113,8 @@ class Interviews extends React.Component {
     } else if (interview.status === 'COMPLETED') {
       status = 'This interview is done';
     } else if (interview.status === 'CANCELLED') {
-      status = 'Interview cancelled by ';
+      const userRole = helper.getNameByID('roles', interview.cancelled_by);
+      status = `Interview cancelled by ${userRole === 'RECRUITER' ? 'Recruiter' : 'Job Seeker'}`;
     }
 
     const cancelled = interview.status === 'CANCELLED' ? 'disabled' : '';
@@ -94,23 +122,43 @@ class Interviews extends React.Component {
     return (
       <List.Item
         key={id}
-        actions={[
-          <Tooltip placement="bottom" title="Message">
-            <span onClick={e => this.onMessage(app, e)}>
-              <Icons.CommentAlt />
-            </span>
-          </Tooltip>,
-          <Tooltip placement="bottom" title="Edit">
-            <span onClick={e => this.editInterview(app, e)}>
-              <Icons.Pen />
-            </span>
-          </Tooltip>
+        actions={
+          this.state.selectedRest
+            ? [
+                <Tooltip placement="bottom" title="Message">
+                  <span onClick={e => this.onMessage(app, e)}>
+                    <Icons.CommentAlt />
+                  </span>
+                </Tooltip>,
+                <Tooltip placement="bottom" title="Edit">
+                  <span onClick={e => this.editInterview(app, e)}>
+                    <Icons.Pen />
+                  </span>
+                </Tooltip>
+              ]
+            : [
+                <Tooltip placement="bottom" title="Message">
+                  <span onClick={e => this.onMessage(app, e)}>
+                    <Icons.CommentAlt />
+                  </span>
+                </Tooltip>,
+                <Tooltip placement="bottom" title="Edit">
+                  <span onClick={e => this.editInterview(app, e)}>
+                    <Icons.Pen />
+                  </span>
+                </Tooltip>,
+                <Tooltip placement="bottom" title="Show Cancelled and Completed">
+                  <span onClick={e => this.onSelectRest(app, e)}>
+                    <Icon type="ellipsis" style={{ fontSize: '18px' }} />
+                  </span>
+                </Tooltip>
+              ]
           // <Tooltip placement="bottom" title="Remove">
           //   <span onClick={e => this.onRemove(app, e)}>
           //     <Icons.TrashAlt />
           //   </span>
           // </Tooltip>
-        ]}
+        }
         onClick={() => this.onSelect(app)}
         className={`${loading ? 'loading' : ''} ${cancelled}`}
       >
@@ -146,10 +194,16 @@ class Interviews extends React.Component {
     </AlertMsg>
   );
 
+  renderEmptyForCC = () => (
+    <AlertMsg>
+      <span>No Interviews.</span>
+    </AlertMsg>
+  );
+
   render() {
     const { job, applications, loading } = this.props;
     // const selectedApp = helper.getItemByID(applications, this.state.selectedId);
-    const { selectedApp } = this.state;
+    const { selectedApp, selectedRest } = this.state;
     return (
       <Wrapper className="container">
         <div className="content">
@@ -188,6 +242,26 @@ class Interviews extends React.Component {
                 />
               </LargeModal>
             )}
+          {selectedRest && (
+            <LargeModal
+              visible
+              title="Completed and Cancelled Interview List"
+              onCancel={() => this.setState({ selectedRest: null })}
+            >
+              <Wrapper className="container">
+                <div className="content">
+                  <ListEx
+                    data={selectedRest}
+                    loadingSize="large"
+                    pagination={{ pageSize: 10 }}
+                    renderItem={this.renderApplication}
+                    filterOption={this.filterOption}
+                    emptyRender={this.renderEmptyForCC}
+                  />
+                </div>
+              </Wrapper>
+            </LargeModal>
+          )}
           {/* {selectedApp && (
             <LargeModal visible title="Application Details" onCancel={() => this.onSelect()}>
               <JobseekerDetails
@@ -221,7 +295,13 @@ class Interviews extends React.Component {
 }
 
 export default withRouter(
-  connect(null, {
-    removeInterview
-  })(Interviews)
+  connect(
+    state => ({
+      interviews: state.interviews.interviews,
+      applicationsB: state.applications.applications
+    }),
+    {
+      removeInterview
+    }
+  )(Interviews)
 );

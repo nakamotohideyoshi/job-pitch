@@ -201,7 +201,7 @@ export default connect(
       _.forEach(applications, application => {
         if (interview.application === application.id) {
           let applicationWithInterview = Object.assign({}, application);
-          if (interview.status !== 'COMPLETED') {
+          if (interview.status !== 'COMPLETED' && interview.status !== 'CANCELLED') {
             applicationWithInterview.interview = interview;
             myInterviews.push(applicationWithInterview);
           }

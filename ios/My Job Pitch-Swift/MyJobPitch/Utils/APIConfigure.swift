@@ -267,7 +267,9 @@ class APIConfigure: NSObject {
                                     "sexPublic":            "sex_public",
                                     "nationalityPublic":    "nationality_public",
                                     "hasReferences":        "has_references",
-                                    "truthConfirmation":    "truth_confirmation" ]
+                                    "truthConfirmation":    "truth_confirmation",
+                                    "profileImage":         "profile_image",
+                                    "profileThumb":         "profile_thumb" ]
 
         let jobSeekerRelationships = [ [ "source":          "pitches",
                                          "destination":     "pitches",

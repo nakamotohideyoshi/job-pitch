@@ -141,7 +141,11 @@ class Applications extends React.Component {
             {jobs.map(job => {
               const logo = helper.getJobLogo(job);
               return (
-                <Option key={job.id} value={job.id}>
+                <Option
+                  key={job.id}
+                  value={job.id}
+                  title={`${job.title}, ${job.location_data.name}, ${job.location_data.business_data.name}`}
+                >
                   <Logo src={logo} className="logo" size="22px" />
                   {job.title}
                   <span className="right-menu-item">

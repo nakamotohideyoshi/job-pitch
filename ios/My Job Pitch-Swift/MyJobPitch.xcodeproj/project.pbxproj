@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		2F030F1120E81B9E00EDFE60 /* InterviewMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F030F1020E81B9E00EDFE60 /* InterviewMessage.swift */; };
 		2F030F1320E81C2000EDFE60 /* Interview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F030F1220E81C2000EDFE60 /* Interview.swift */; };
 		2F030F1520E8EE2800EDFE60 /* InterviewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F030F1420E8EE2800EDFE60 /* InterviewCell.swift */; };
 		2F030F1720E8EF5300EDFE60 /* InterviewListController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F030F1620E8EF5300EDFE60 /* InterviewListController.swift */; };
@@ -134,7 +133,6 @@
 
 /* Begin PBXFileReference section */
 		27B30165DDDB50C20065D004 /* Pods_MyJobPitch.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MyJobPitch.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		2F030F1020E81B9E00EDFE60 /* InterviewMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = InterviewMessage.swift; path = Models/api/InterviewMessage.swift; sourceTree = "<group>"; };
 		2F030F1220E81C2000EDFE60 /* Interview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Interview.swift; path = Models/api/Interview.swift; sourceTree = "<group>"; };
 		2F030F1420E8EE2800EDFE60 /* InterviewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = InterviewCell.swift; path = Views/InterviewCell.swift; sourceTree = "<group>"; };
 		2F030F1620E8EF5300EDFE60 /* InterviewListController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = InterviewListController.swift; path = Controllers/InterviewListController.swift; sourceTree = "<group>"; };
@@ -395,7 +393,6 @@
 				D74226B320ACCDED002D3F4C /* User.swift */,
 				2FA7FC6120D841240024163A /* Deprecation.swift */,
 				2F870FB520DBCA7600F9427C /* BusinessUser.swift */,
-				2F030F1020E81B9E00EDFE60 /* InterviewMessage.swift */,
 				2F030F1220E81C2000EDFE60 /* Interview.swift */,
 				2F9F066E210EF2F600E39BEC /* InterviewStatus.swift */,
 			);
@@ -859,7 +856,6 @@
 				D787F6351E287A1F00C47A88 /* BusinessDetailController.swift in Sources */,
 				D7F770291E09196300ECB684 /* MJPController.swift in Sources */,
 				D72AE4241E1156C3004C3F02 /* CustomView.swift in Sources */,
-				2F030F1120E81B9E00EDFE60 /* InterviewMessage.swift in Sources */,
 				D78834381ECAAF4B00D99F4B /* UIView+MDCSwipeToChoose.m in Sources */,
 				2F870FBC20DCB78D00F9427C /* BusinessUserEditController.swift in Sources */,
 				2FA7FC6220D841240024163A /* Deprecation.swift in Sources */,

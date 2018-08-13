@@ -17,6 +17,9 @@ class Message: MJPObject {
     var application: NSNumber!
     var fromRole: NSNumber!
     
+    // API V3
+    var interview: NSNumber!
+    
 }
 
 class MessageForCreation: MJPObject {

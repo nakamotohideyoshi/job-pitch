@@ -469,7 +469,7 @@ class APIConfigure: NSObject {
 
         // ================= Message =====================
 
-        let messageArray = [ "id", "system", "content", "read", "created", "application" ]
+        let messageArray = [ "id", "system", "content", "read", "created", "application", "interview" ]
 
         let messageDictionary = [ "fromRole": "from_role" ]
 
@@ -499,6 +499,13 @@ class APIConfigure: NSObject {
 
 
         // ================= Application =====================
+        
+        let applicationInterviewArray = [ "id", "at", "message", "notes", "feedback" ]
+        
+        let applicationInterviewMapping = createResponseMappingForClass(ApplicationInterview.classForCoder(),
+                                                                        array: applicationInterviewArray,
+                                                                        dictionary: nil,
+                                                                        relationships: nil)
 
         let applictionCreateArray = [ "id", "job", "shortlisted" ]
 
@@ -524,7 +531,13 @@ class APIConfigure: NSObject {
                                            "mapping": jobSeekerMapping ],
                                          [ "source": "messages",
                                            "destination": "messages",
-                                           "mapping": messageMapping ] ]
+                                           "mapping": messageMapping ],
+                                         [ "source": "pitches",
+                                           "destination": "pitches",
+                                           "mapping": pitchMapping ],
+                                         [ "source": "interviews",
+                                           "destination": "interviews",
+                                           "mapping": applicationInterviewMapping ] ]
 
         configureResponseMapping(Application.classForCoder(),
                                  responseArray: applicationArray,
@@ -617,7 +630,7 @@ class APIConfigure: NSObject {
         
         // ================= Interviews ================
         
-        let interviewArray = ["id", "application", "at", "message", "notes", "feedback", "cancelled", "status" ]
+        let interviewArray = [ "id", "application", "at", "message", "notes", "feedback", "cancelled", "status" ]
         
         let interviewsDictionary = [ "cancelledBy": "cancelled_by" ]
         

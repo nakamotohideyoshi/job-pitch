@@ -17,6 +17,7 @@ import com.myjobpitch.api.data.Business;
 import com.myjobpitch.api.data.BusinessUser;
 import com.myjobpitch.api.data.Image;
 import com.myjobpitch.api.data.Interview;
+import com.myjobpitch.api.data.InterviewStatus;
 import com.myjobpitch.api.data.Job;
 import com.myjobpitch.api.data.JobSeeker;
 import com.myjobpitch.api.data.Pitch;
@@ -157,6 +158,7 @@ public class AppHelper {
 
         JobSeeker jobSeeker = application.getJobSeeker();
         Job job = application.getJob_data();
+        String status = interview.getStatus();
 
         if (AppData.user.isRecruiter()) {
             loadJobSeekerImage(jobSeeker, getImageView(view));
@@ -185,6 +187,25 @@ public class AppHelper {
         // Location
 
         getItemLocationTitleView(view).setText(application.getJob_data().getLocation_data().getName());
+
+        switch (status) {
+
+            case InterviewStatus.PENDING:
+                // Status
+                getItemStatusTitleView(view).setText("Interview request sent");
+            case InterviewStatus.ACCEPTED:
+                // Status
+                getItemStatusTitleView(view).setText("Interview accepted");
+
+            case InterviewStatus.COMPLETED:
+                // Status
+                getItemStatusTitleView(view).setText("This interview is done");
+
+            case InterviewStatus.CANCELLED:
+                // Status
+                getItemStatusTitleView(view).setText("Interview cancelled by " + (interview.getCancelled_by() == AppData.JOBSEEKER ? "Job seeker"  : "Recruiter"));
+
+        }
 
 
 

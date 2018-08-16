@@ -177,8 +177,6 @@ public class AppHelper {
             getItemSubTitleView(view).setText(job.getDescription() == null ? "Can't find Description" : job.getDescription());
         }
 
-        getItemStatusTitleView(view).setText(String.format("%s", interview.getStatus()));
-
         // Date/Time
         SimpleDateFormat format = new SimpleDateFormat("E d MMM, yyyy");
         SimpleDateFormat format1 = new SimpleDateFormat("HH:mm");
@@ -193,17 +191,24 @@ public class AppHelper {
             case InterviewStatus.PENDING:
                 // Status
                 getItemStatusTitleView(view).setText("Interview request sent");
+                break;
             case InterviewStatus.ACCEPTED:
                 // Status
                 getItemStatusTitleView(view).setText("Interview accepted");
+                break;
 
             case InterviewStatus.COMPLETED:
                 // Status
                 getItemStatusTitleView(view).setText("This interview is done");
+                break;
 
             case InterviewStatus.CANCELLED:
                 // Status
+                //getItemStatusTitleView(view).setText("Interview cancelled");
                 getItemStatusTitleView(view).setText("Interview cancelled by " + (interview.getCancelled_by() == AppData.JOBSEEKER ? "Job seeker"  : "Recruiter"));
+                break;
+            default:
+                break;
 
         }
 

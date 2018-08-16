@@ -48,7 +48,11 @@ class PitchRecord extends React.Component {
     const pitchUrl = this.state.pitchUrl;
     const pitchData = data || this.state.pitchData;
     const newPitchUrl = url === undefined ? null : url;
-    this.setState({ pitchUrl, pitchData, showRecorder: false, newPitchUrl });
+    if (url === undefined && data === undefined) {
+      this.setState({ showRecorder: false });
+    } else {
+      this.setState({ pitchUrl, pitchData, showRecorder: true, newPitchUrl });
+    }
   };
 
   uploadPitch = () => {

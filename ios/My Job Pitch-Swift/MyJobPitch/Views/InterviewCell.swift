@@ -42,10 +42,22 @@ class InterviewCell: MGSwipeTableCell {
             jobSeekerName.text = application.job.title
         }
         
-        // Status
-//        let interviewStatus = interview.cancelledBy == nil ? "Pending" : "Complete";
-//        let applicationStatus = application.status == 1 ? "Undecided" : (application.status == 2 ? "Accepted" : "Rejected");
-        status.text = String(format:"%@", interview.status)
+        if interview.status == InterviewStatus.INTERVIEW_PENDING {
+            
+            status.text = "Interview request sent"
+            
+        } else if interview.status == InterviewStatus.INTERVIEW_ACCEPTED {
+            
+            status.text = "Interview accepted"
+            
+        } else if interview.status == InterviewStatus.INTERVIEW_COMPLETED {
+            
+            status.text = "This interview is done"
+            
+        } else if interview.status == InterviewStatus.INTERVIEW_CANCELLED {
+            
+            status.text = "Interview cancelled by " + (AppData.user.isRecruiter() ? "Recruiter" : "Jobseeker")
+        }
         
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "E d MMM, yyyy"

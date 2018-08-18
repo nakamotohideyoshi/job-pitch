@@ -374,9 +374,8 @@ public class InterviewDetailFragment extends BaseFragment {
 
     @OnClick(R.id.interview_history)
     void onViewHistories() {
-        MessageFragment fragment = new MessageFragment();
+        ApplicationInterviewsFragment fragment = new ApplicationInterviewsFragment();
         fragment.application = application;
-        fragment.interview = interview;
         getApp().pushFragment(fragment);
     }
 }

@@ -13,6 +13,7 @@ import android.widget.TextView;
 import com.myjobpitch.R;
 import com.myjobpitch.MainActivity;
 import com.myjobpitch.api.data.Application;
+import com.myjobpitch.api.data.ApplicationInterview;
 import com.myjobpitch.api.data.Business;
 import com.myjobpitch.api.data.BusinessUser;
 import com.myjobpitch.api.data.Image;
@@ -168,13 +169,13 @@ public class AppHelper {
 
             // CV
 
-            getItemSubTitleView(view).setText(jobSeeker.getCV() == null ? "Can't find CV" : jobSeeker.getCV());
+            getItemSubTitleView(view).setText(jobSeeker.getDescription());
         } else {
             loadJobLogo(job, getImageView(view));
 
             getItemTitleView(view).setText(job.getTitle());
 
-            getItemSubTitleView(view).setText(job.getDescription() == null ? "Can't find Description" : job.getDescription());
+            getItemSubTitleView(view).setText(job.getDescription());
         }
 
         // Date/Time
@@ -212,7 +213,39 @@ public class AppHelper {
 
         }
 
+    }
 
+
+    public static void showApplicationInterviewInfo(ApplicationInterview interview, View view, Application application) {
+
+        JobSeeker jobSeeker = application.getJobSeeker();
+        Job job = application.getJob_data();
+
+        if (AppData.user.isRecruiter()) {
+            loadJobSeekerImage(jobSeeker, getImageView(view));
+
+            // job seeker name
+            getItemTitleView(view).setText(jobSeeker.getFirst_name() + " " + jobSeeker.getLast_name());
+
+            // CV
+
+            getItemSubTitleView(view).setText(jobSeeker.getDescription());
+        } else {
+            loadJobLogo(job, getImageView(view));
+
+            getItemTitleView(view).setText(job.getTitle());
+
+            getItemSubTitleView(view).setText(job.getDescription());
+        }
+
+        // Date/Time
+        SimpleDateFormat format = new SimpleDateFormat("E d MMM, yyyy");
+        SimpleDateFormat format1 = new SimpleDateFormat("HH:mm");
+        getItemDateTimeTitleView(view).setText(format.format(interview.getAt()) + " at " + format1.format(interview.getAt()));
+
+        // Location
+
+        getItemLocationTitleView(view).setText(application.getJob_data().getLocation_data().getName());
 
     }
 

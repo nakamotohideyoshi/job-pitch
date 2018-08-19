@@ -497,13 +497,19 @@ class InterviewEdit extends React.Component {
             </Wrapper>
           ) : (
             <FormWrapper className="interview-form">
-              <Item label={<span>Date&nbsp;</span>} style={{ display: this.state.editNoteOnly ? 'none' : 'block' }}>
+              <Item
+                label={<span>Date&nbsp;</span>}
+                style={{ display: this.state.editNoteOnly || this.props.onlyNote ? 'none' : 'block' }}
+              >
                 {getFieldDecorator('at', {
                   type: 'object',
                   rules: [{ required: true, message: 'Please pick date!' }]
                 })(<DatePicker style={{ width: '100%' }} showTime format="YYYY-MM-DD HH:mm:ss" />)}
               </Item>
-              <Item label={<span>Message&nbsp;</span>} style={{ display: this.state.editNoteOnly ? 'none' : 'block' }}>
+              <Item
+                label={<span>Message&nbsp;</span>}
+                style={{ display: this.state.editNoteOnly || this.props.onlyNote ? 'none' : 'block' }}
+              >
                 {getFieldDecorator('invitation', {
                   rules: [
                     { required: true, message: 'Please enter message!' },

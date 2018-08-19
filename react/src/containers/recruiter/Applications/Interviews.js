@@ -21,7 +21,8 @@ class Interviews extends React.Component {
     selectedApp: null,
     openInterviewEdit: false,
     openInterviewView: false,
-    selectedRest: null
+    selectedRest: null,
+    onlyNote: false
   };
 
   componentWillMount() {
@@ -61,9 +62,13 @@ class Interviews extends React.Component {
     });
   };
 
-  editInterview = (app, event) => {
+  editInterview = (app, rest, event) => {
     event && event.stopPropagation();
-    this.setState({ selectedApp: app, openInterviewEdit: true });
+    if (rest) {
+      this.setState({ selectedApp: app, openInterviewEdit: true, onlyNote: true });
+    } else {
+      this.setState({ selectedApp: app, openInterviewEdit: true, onlyNote: false });
+    }
   };
 
   hideInterviewEdit = () => this.setState({ openInterviewEdit: false });
@@ -131,7 +136,7 @@ class Interviews extends React.Component {
                   </span>
                 </Tooltip>,
                 <Tooltip placement="bottom" title="Edit">
-                  <span onClick={e => this.editInterview(app, e)}>
+                  <span onClick={e => this.editInterview(app, true, e)}>
                     <Icons.Pen />
                   </span>
                 </Tooltip>
@@ -143,7 +148,7 @@ class Interviews extends React.Component {
                   </span>
                 </Tooltip>,
                 <Tooltip placement="bottom" title="Edit">
-                  <span onClick={e => this.editInterview(app, e)}>
+                  <span onClick={e => this.editInterview(app, false, e)}>
                     <Icons.Pen />
                   </span>
                 </Tooltip>,
@@ -190,7 +195,7 @@ class Interviews extends React.Component {
 
   renderEmpty = () => (
     <AlertMsg>
-      <span>You have not requested any interviews yet. Once that happens, their applications will appear here.</span>
+      <span>You have not requested any interviews yet. Once that happens, their interviews will appear here.</span>
     </AlertMsg>
   );
 
@@ -239,6 +244,7 @@ class Interviews extends React.Component {
                   connected
                   application={selectedApp}
                   gotoOrigin={this.hideInterviewEdit}
+                  onlyNote={this.state.onlyNote}
                 />
               </LargeModal>
             )}

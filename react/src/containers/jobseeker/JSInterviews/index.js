@@ -2,7 +2,7 @@ import React from 'react';
 import Helmet from 'react-helmet';
 import { connect } from 'react-redux';
 import Truncate from 'react-truncate';
-import { List, Avatar, Tooltip, Button, notification, Modal } from 'antd';
+import { List, Avatar, Tooltip, Button, notification, Modal, Icon } from 'antd';
 import moment from 'moment';
 
 import { getApplications } from 'redux/applications';
@@ -25,7 +25,8 @@ class JSInterviews extends React.Component {
   state = {
     selectedId: null,
     searchText: '',
-    selectedApp: null
+    selectedApp: null,
+    selectedRest: null
   };
 
   componentWillMount() {
@@ -118,6 +119,20 @@ class JSInterviews extends React.Component {
     });
   };
 
+  onSelectRest = ({ id }, event) => {
+    event && event.stopPropagation();
+    let interviews = this.props.interviews;
+    let filteredInterviews = [];
+    interviews.forEach(interview => {
+      if ((interview.status === 'COMPLETED' || interview.status === 'CANCELLED') && interview.application === id) {
+        filteredInterviews.push(interview);
+      }
+    });
+    this.setState({
+      selectedRest: filteredInterviews
+    });
+  };
+
   renderApp = interview => {
     let app;
     _.forEach(this.props.applications, application => {
@@ -143,7 +158,8 @@ class JSInterviews extends React.Component {
     } else if (interview.status === 'COMPLETED') {
       status = 'This interview is done';
     } else if (interview.status === 'CANCELLED') {
-      status = 'Interview cancelled by ';
+      const userRole = helper.getNameByID('roles', interview.cancelled_by);
+      status = `Interview cancelled by ${userRole === 'RECRUITER' ? 'Recruiter' : 'Job Seeker'}`;
     }
 
     const cancelled = interview.status === 'CANCELLED' ? 'disabled' : '';
@@ -151,18 +167,28 @@ class JSInterviews extends React.Component {
     return (
       <List.Item
         key={id}
-        actions={[
-          <Tooltip placement="bottom" title="Message">
-            <span onClick={e => this.onMessage(app, e)}>
-              <Icons.CommentAlt />
-            </span>
-          </Tooltip>
-          // <Tooltip placement="bottom" title="Cancel">
-          //   <span onClick={e => this.onRemove(app, e)}>
-          //     <Icons.TrashAlt />
-          //   </span>
-          // </Tooltip>
-        ]}
+        actions={
+          this.state.selectedRest
+            ? [
+                <Tooltip placement="bottom" title="Message">
+                  <span onClick={e => this.onMessage(app, e)}>
+                    <Icons.CommentAlt />
+                  </span>
+                </Tooltip>
+              ]
+            : [
+                <Tooltip placement="bottom" title="Message">
+                  <span onClick={e => this.onMessage(app, e)}>
+                    <Icons.CommentAlt />
+                  </span>
+                </Tooltip>,
+                <Tooltip placement="bottom" title="Show Cancelled and Completed">
+                  <span onClick={e => this.onSelectRest(app, e)}>
+                    <Icon type="ellipsis" style={{ fontSize: '18px' }} />
+                  </span>
+                </Tooltip>
+              ]
+        }
         onClick={() => this.onSelect(app)}
         className={`${cancelled}`}
       >
@@ -192,14 +218,22 @@ class JSInterviews extends React.Component {
 
   renderEmpty = () => (
     <AlertMsg>
-      <span>You have no applications.</span>
+      <span>No interviews!</span>
     </AlertMsg>
   );
 
   render() {
     const { jobseeker, applications, interviews, error } = this.props;
+    let filterdInterviews = [];
+    if (interviews !== null) {
+      interviews.forEach(interview => {
+        if (interview.status !== 'COMPLETED' && interview.status !== 'CANCELLED') {
+          filterdInterviews.push(interview);
+        }
+      });
+    }
 
-    const { selectedApp } = this.state;
+    const { selectedApp, selectedRest } = this.state;
 
     if (!helper.getPitch(jobseeker)) {
       return <NoPitch title="My Applications" backUrl={this.props.history.location.pathname} />;
@@ -217,9 +251,9 @@ class JSInterviews extends React.Component {
         </PageHeader>
 
         <div className="content">
-          {applications !== null && interviews !== null ? (
+          {applications !== null && filterdInterviews !== null ? (
             <ListEx
-              data={interviews}
+              data={filterdInterviews}
               loadingSize="large"
               pagination={{ pageSize: 10 }}
               filterOption={this.filterOption}
@@ -233,21 +267,60 @@ class JSInterviews extends React.Component {
         </div>
 
         {selectedApp && (
-          <LargeModal visible title="Job Details" onCancel={() => this.onSelect()}>
+          <LargeModal visible title="Interview Details" onCancel={() => this.onSelect()}>
             <JobDetails
               job={selectedApp.job_data}
-              actions={[
-                <Button type="default" onClick={() => this.onMessage(selectedApp)}>
-                  Message
-                </Button>,
-                <Button type="primary" onClick={() => this.acceptInvitation(selectedApp)}>
-                  Accept Invitation
-                </Button>,
-                <Button type="danger" onClick={e => this.onRemove(selectedApp, e)}>
-                  Cancel Invitation
-                </Button>
-              ]}
+              interview={selectedApp.interview}
+              actions={
+                selectedApp.interview.status === 'ACCEPTED'
+                  ? [
+                      <Button type="default" onClick={() => this.onMessage(selectedApp)}>
+                        Message
+                      </Button>,
+                      <Button type="danger" onClick={e => this.onRemove(selectedApp, e)}>
+                        Cancel Invitation
+                      </Button>
+                    ]
+                  : selectedApp.interview.status === 'CANCELLED' || selectedApp.interview.status === 'COMPLETED'
+                    ? [
+                        <Button type="default" onClick={() => this.onMessage(selectedApp)}>
+                          Message
+                        </Button>
+                      ]
+                    : [
+                        <Button type="default" onClick={() => this.onMessage(selectedApp)}>
+                          Message
+                        </Button>,
+                        <Button type="primary" onClick={() => this.acceptInvitation(selectedApp)}>
+                          Accept Invitation
+                        </Button>,
+                        <Button type="danger" onClick={e => this.onRemove(selectedApp, e)}>
+                          Cancel Invitation
+                        </Button>
+                      ]
+              }
             />
+          </LargeModal>
+        )}
+        {selectedRest && (
+          <LargeModal
+            visible
+            title="Completed and Cancelled Interview List"
+            onCancel={() => this.setState({ selectedRest: null })}
+          >
+            <Wrapper className="container">
+              <div className="content">
+                <ListEx
+                  data={selectedRest}
+                  loadingSize="large"
+                  pagination={{ pageSize: 10 }}
+                  filterOption={this.filterOption}
+                  error={error && 'Server Error!'}
+                  renderItem={this.renderApp}
+                  emptyRender={this.renderEmpty}
+                />
+              </div>
+            </Wrapper>
           </LargeModal>
         )}
       </Wrapper>

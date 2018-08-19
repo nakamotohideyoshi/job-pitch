@@ -1,12 +1,10 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { saveInterview, changeInterview, removeInterview } from 'redux/interviews';
-import { Form, Input, Button, DatePicker, Divider, Row, Col, notification, Modal } from 'antd';
+import { Form, Input, Button, DatePicker, Divider, Row, Col, notification, Modal, Checkbox } from 'antd';
 
 import styled from 'styled-components';
 import media from 'utils/mediaquery';
-
-// import { NoLabelField } from 'components';
 
 import Wrapper from './InterviewEdit.styled';
 
@@ -63,7 +61,17 @@ const FormWrapper = styled(Form)`
 class InterviewEdit extends React.Component {
   state = {
     loading: null,
-    view: false
+    view: false,
+    create: false,
+    editNoteOnly: false,
+    completeModalVisible: false,
+    ignoreFBCO: false,
+    completeApp: null,
+    feedbackComplete: '',
+    cancelModalVisible: false,
+    ignoreFBCA: false,
+    cancelApp: null,
+    feedbackCancel: ''
   };
 
   componentDidMount() {
@@ -73,7 +81,7 @@ class InterviewEdit extends React.Component {
     if (interview && !create) {
       form.setFieldsValue({
         at: moment(interview.at),
-        invitation: interview.invitation,
+        invitation: interview.messages.length > 0 ? interview.messages[0].content : '',
         notes: interview.notes
       });
     }
@@ -166,6 +174,126 @@ class InterviewEdit extends React.Component {
     });
   }
 
+  handleComplete() {
+    this.setState({
+      loading: {
+        label: 'Completing...'
+      }
+    });
+    const { interview } = this.state.completeApp;
+    this.props.changeInterview({
+      data: {
+        id: interview.id,
+        changeType: 'complete'
+      },
+      success: () => {
+        if (this.state.ignoreFBCO) {
+          this.setState({ loading: null });
+          this.props.gotoOrigin();
+          notification.success({
+            message: 'Notification',
+            description: 'Interview is completed successfully.'
+          });
+        } else {
+          this.props.saveInterview({
+            data: {
+              at: moment(interview.at),
+              invitation: interview.messages.length > 0 ? interview.messages[0].content : '',
+              notes: interview.notes,
+              id: interview.id,
+              application: this.state.completeApp.id,
+              feedback: this.state.feedbackComplete
+            },
+            success: () => {
+              this.setState({ loading: null });
+              this.props.gotoOrigin();
+              notification.success({
+                message: 'Notification',
+                description: 'Interview is completed successfully.'
+              });
+            },
+            fail: () => {
+              this.setState({ loading: null });
+              // message.error('Saving is failed');
+              notification.error({
+                message: 'Notification',
+                description: 'Completing is failed'
+              });
+              this.props.gotoOrigin();
+            }
+          });
+        }
+      },
+      fail: () => {
+        this.setState({ loading: null });
+        this.props.gotoOrigin();
+        notification.error({
+          message: 'Notification',
+          description: 'Completing is failed'
+        });
+      }
+    });
+  }
+
+  handleCancel() {
+    this.setState({
+      loading: {
+        label: 'Cancelling...'
+      }
+    });
+    const { interview } = this.state.cancelApp;
+    this.props.removeInterview({
+      id: interview.id,
+      success: () => {
+        if (this.state.ignoreFBCA) {
+          this.setState({ loading: null });
+          this.props.gotoOrigin();
+          notification.success({
+            message: 'Notification',
+            description: 'Interview is cancelled successfully.'
+          });
+        } else {
+          this.props.saveInterview({
+            data: {
+              at: moment(interview.at),
+              invitation: interview.messages.length > 0 ? interview.messages[0].content : '',
+              notes: interview.notes,
+              id: interview.id,
+              application: this.state.cancelApp.id,
+              feedback: this.state.feedbackCancel
+            },
+            success: () => {
+              this.setState({ loading: null });
+              this.props.gotoOrigin();
+              notification.success({
+                message: 'Notification',
+                description: 'Interview is cancelled successfully.'
+              });
+            },
+            fail: () => {
+              this.setState({ loading: null });
+              // message.error('Saving is failed');
+              notification.error({
+                message: 'Notification',
+                description: 'Cancelling is failed'
+              });
+              this.props.gotoOrigin();
+            }
+          });
+        }
+      },
+      fail: () => {
+        this.setState({ loading: null });
+        this.props.gotoOrigin();
+        notification.error({
+          message: 'Notification',
+          description: 'Cancelling is failed'
+        });
+      }
+    });
+    this.props.gotoOrigin();
+  }
+
   onRemove = ({ interview }, event) => {
     event && event.stopPropagation();
 
@@ -217,7 +345,8 @@ class InterviewEdit extends React.Component {
       } else if (interview.status === 'COMPLETED') {
         status = 'This interview is done';
       } else if (interview.status === 'CANCELLED') {
-        status = 'Interview cancelled by ';
+        const userRole = helper.getNameByID('roles', interview.cancelled_by);
+        status = `Interview cancelled by ${userRole === 'RECRUITER' ? 'Recruiter' : 'Job Seeker'}`;
       }
     }
 
@@ -278,55 +407,103 @@ class InterviewEdit extends React.Component {
                   <div>
                     <div>{`Date: ${moment(interview.at).format('dddd, MMMM Do, YYYY h:mm:ss A')}`}</div>
                     <div>{`Status: ${status}`}</div>
-                    <div>{`Note: ${interview.notes}`}</div>
-                    <div>{`Feedback: ${interview.feedback}`}</div>
+                    {interview.notes === '' ? (
+                      <div>
+                        Recruiter's notes:&nbsp;<span style={{ color: 'grey', fontStyle: 'italic' }}>None</span>
+                      </div>
+                    ) : (
+                      <div>
+                        <span>Recruiter's notes: {interview.notes}</span>
+                      </div>
+                    )}
+                    {(interview.status === 'COMPLETED' || interview.status === 'CANCELLED') && (
+                      <div>
+                        {interview.feedback === '' ? (
+                          <div>
+                            Feedback:&nbsp;<span style={{ color: 'grey', fontStyle: 'italic' }}>None</span>
+                          </div>
+                        ) : (
+                          <div>
+                            <span>Feedback: {interview.feedback}</span>
+                          </div>
+                        )}
+                      </div>
+                    )}
                   </div>
                 </Col>
                 <Col sm={24} md={10} lg={5}>
-                  <div>
-                    <Button
-                      type="primary"
-                      onClick={() => {
-                        this.completeInvitation(application);
-                      }}
-                    >
-                      Complete Invitation
-                    </Button>
-                    <Button
-                      type="danger"
-                      onClick={e => {
-                        this.onRemove(application, e);
-                      }}
-                    >
-                      Cancel Invitation
-                    </Button>
-                    <Button
-                      type="primary"
-                      onClick={() => {
-                        this.setState({ view: false }, () => {
-                          this.props.form.setFieldsValue({
-                            at: moment(interview.at),
-                            invitation: interview.invitation,
-                            notes: interview.notes
+                  {interview.status !== 'COMPLETED' && interview.status !== 'CANCELLED' ? (
+                    <div>
+                      <Button
+                        type="primary"
+                        onClick={() => {
+                          this.setState({ completeModalVisible: true, completeApp: application });
+                          // this.completeInvitation(application);
+                        }}
+                      >
+                        Complete Invitation
+                      </Button>
+                      <Button
+                        type="danger"
+                        onClick={e => {
+                          this.setState({ cancelModalVisible: true, cancelApp: application });
+                          // this.onRemove(application, e);
+                        }}
+                      >
+                        Cancel Invitation
+                      </Button>
+                      <Button
+                        type="primary"
+                        onClick={() => {
+                          this.setState({ view: false }, () => {
+                            this.props.form.setFieldsValue({
+                              at: moment(interview.at),
+                              invitation: interview.messages.length > 0 ? interview.messages[0].content : '',
+                              notes: interview.notes
+                            });
                           });
-                        });
-                      }}
-                    >
-                      Edit Interview
-                    </Button>
-                  </div>
+                        }}
+                      >
+                        Edit Interview
+                      </Button>
+                    </div>
+                  ) : (
+                    <div>
+                      <Button
+                        type="primary"
+                        onClick={() => {
+                          this.setState({ view: false, create: true });
+                        }}
+                      >
+                        Arrange new interview
+                      </Button>
+                      <Button
+                        onClick={e => {
+                          this.setState({ view: false, editNoteOnly: true }, () => {
+                            this.props.form.setFieldsValue({
+                              at: moment(interview.at),
+                              invitation: interview.messages.length > 0 ? interview.messages[0].content : '',
+                              notes: interview.notes
+                            });
+                          });
+                        }}
+                      >
+                        Edit notes
+                      </Button>
+                    </div>
+                  )}
                 </Col>
               </Row>
             </Wrapper>
           ) : (
             <FormWrapper className="interview-form">
-              <Item label={<span>Date&nbsp;</span>}>
+              <Item label={<span>Date&nbsp;</span>} style={{ display: this.state.editNoteOnly ? 'none' : 'block' }}>
                 {getFieldDecorator('at', {
                   type: 'object',
                   rules: [{ required: true, message: 'Please pick date!' }]
                 })(<DatePicker style={{ width: '100%' }} showTime format="YYYY-MM-DD HH:mm:ss" />)}
               </Item>
-              <Item label={<span>Message&nbsp;</span>}>
+              <Item label={<span>Message&nbsp;</span>} style={{ display: this.state.editNoteOnly ? 'none' : 'block' }}>
                 {getFieldDecorator('invitation', {
                   rules: [
                     { required: true, message: 'Please enter message!' },
@@ -334,7 +511,7 @@ class InterviewEdit extends React.Component {
                   ]
                 })(<TextArea autosize={{ minRows: 3, maxRows: 20 }} />)}
               </Item>
-              <Item label={<span>Note&nbsp;</span>}>
+              <Item label={<span>Recruiter's notes&nbsp;</span>}>
                 {getFieldDecorator('notes', {
                   rules: [
                     { required: true, message: 'Please enter note!' },
@@ -344,7 +521,7 @@ class InterviewEdit extends React.Component {
               </Item>
               <div className="invite-btn">
                 <Button type="primary" loading={loading} onClick={this.save}>
-                  {this.props.create ? 'Send Invitation' : 'Update'}
+                  {this.props.create || this.state.create ? 'Send Invitation' : 'Update'}
                 </Button>
                 {!this.props.create &&
                   (this.props.view && !view) && (
@@ -353,7 +530,9 @@ class InterviewEdit extends React.Component {
                       loading={loading}
                       onClick={() => {
                         this.setState({
-                          view: true
+                          view: true,
+                          create: false,
+                          editNoteOnly: false
                         });
                       }}
                     >
@@ -363,6 +542,48 @@ class InterviewEdit extends React.Component {
               </div>
             </FormWrapper>
           )}
+          <Modal
+            title="Are you sure you want to complete this interview?"
+            visible={this.state.completeModalVisible}
+            onOk={() => this.handleComplete()}
+            onCancel={() => this.setState({ completeModalVisible: false })}
+          >
+            <Item label={<span>Feedback</span>}>
+              <TextArea
+                autosize={{ minRows: 3, maxRows: 20 }}
+                disabled={this.state.ignoreFBCO}
+                value={this.state.feedbackComplete}
+                onChange={e => this.setState({ feedbackComplete: e.target.value })}
+              />
+            </Item>
+            <Checkbox
+              value={this.state.ignoreFBCO}
+              onChange={() => this.setState({ ignoreFBCO: !this.state.ignoreFBCO })}
+            >
+              Ignore Feedback
+            </Checkbox>
+          </Modal>
+          <Modal
+            title="Are you sure you want to cancel this interview?"
+            visible={this.state.cancelModalVisible}
+            onOk={() => this.handleCancel()}
+            onCancel={() => this.setState({ cancelModalVisible: false })}
+          >
+            <Item label={<span>Feedback</span>}>
+              <TextArea
+                autosize={{ minRows: 3, maxRows: 20 }}
+                disabled={this.state.ignoreFBCA}
+                value={this.state.feedbackCancel}
+                onChange={e => this.setState({ feedbackCancel: e.target.value })}
+              />
+            </Item>
+            <Checkbox
+              value={this.state.ignoreFBCA}
+              onChange={() => this.setState({ ignoreFBCA: !this.state.ignoreFBCA })}
+            >
+              Ignore Feedback
+            </Checkbox>
+          </Modal>
         </div>
       </Wrapper>
     );

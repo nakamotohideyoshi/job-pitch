@@ -276,7 +276,7 @@ public class InterviewDetailFragment extends BaseFragment {
         }
     }
 
-    @OnClick(R.id.header_view)
+    @OnClick(R.id.item_img)
     void onImage() {
         showProfile();
     }

@@ -167,10 +167,16 @@ class Applications extends React.Component {
             <MyApplications job={job} applications={myApplications} searchText={searchText} />
           </TabPane>
           <TabPane tab={`My Connections (${connCount})`} key="conns">
-            <MyConnections job={job} applications={myConnections} searchText={searchText} />
+            <MyConnections job={job} applications={myConnections} searchText={searchText} interviews={myInterviews} />
           </TabPane>
           <TabPane tab={`My Shortlist (${shortCount})`} key="shortlist">
-            <MyConnections job={job} applications={myShortlist} searchText={searchText} shortlist />
+            <MyConnections
+              job={job}
+              applications={myShortlist}
+              searchText={searchText}
+              shortlist
+              interviews={myInterviews}
+            />
           </TabPane>
           <TabPane tab={`Interviews (${interviewCount})`} key="interviews">
             <Interviews

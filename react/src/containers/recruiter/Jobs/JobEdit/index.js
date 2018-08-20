@@ -2,7 +2,7 @@ import React from 'react';
 import Helmet from 'react-helmet';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { Breadcrumb, Form, Input, Select, Switch, Popover, Button, notification } from 'antd';
+import { Breadcrumb, Form, Input, Select, Switch, Popover, Button, notification, Checkbox } from 'antd';
 
 import { saveJob, uploadPitch } from 'redux/recruiter/jobs';
 import DATA from 'utils/data';
@@ -61,7 +61,9 @@ class JobEdit extends React.Component {
         sector: job.sector,
         contract: job.contract,
         hours: job.hours,
-        description: job.description
+        description: job.description,
+        requires_pitch: job.requires_pitch,
+        requires_cv: job.requires_cv
       });
     } else {
       this.setState({
@@ -69,6 +71,10 @@ class JobEdit extends React.Component {
           url: helper.getWorkplaceLogo(workplace),
           exist: false
         }
+      });
+      form.setFieldsValue({
+        requires_pitch: true,
+        requires_cv: false
       });
     }
   }
@@ -352,6 +358,14 @@ class JobEdit extends React.Component {
             <Item label="Logo">
               <ImageSelector url={logo.url} removable={logo.exist} onChange={this.setLogo} />
             </Item>
+
+            <NoLabelField>
+              {getFieldDecorator('requires_pitch', { valuePropName: 'checked' })(<Checkbox>Require Pitch</Checkbox>)}
+            </NoLabelField>
+
+            <NoLabelField>
+              {getFieldDecorator('requires_cv', { valuePropName: 'checked' })(<Checkbox>Require CV</Checkbox>)}
+            </NoLabelField>
 
             {job && (
               <Item label="Share" className="share">

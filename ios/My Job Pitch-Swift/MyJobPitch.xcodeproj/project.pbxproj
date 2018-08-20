@@ -12,6 +12,8 @@
 		2F030F1720E8EF5300EDFE60 /* InterviewListController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F030F1620E8EF5300EDFE60 /* InterviewListController.swift */; };
 		2F030F1920EA1AA900EDFE60 /* InterviewDetailController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F030F1820EA1AA900EDFE60 /* InterviewDetailController.swift */; };
 		2F030F1B20EA1AE200EDFE60 /* InterviewEditController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F030F1A20EA1AE200EDFE60 /* InterviewEditController.swift */; };
+		2F3466E9212AAFCD00E5EF96 /* ApplicationInterviewListController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F3466E8212AAFCD00E5EF96 /* ApplicationInterviewListController.swift */; };
+		2F3466EB212AB95800E5EF96 /* ApplicationInterviewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F3466EA212AB95800E5EF96 /* ApplicationInterviewCell.swift */; };
 		2F62848C20EF932A00BBE78D /* WWCalendarTimeSelector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F62848B20EF932A00BBE78D /* WWCalendarTimeSelector.swift */; };
 		2F62848E20EF9E6700BBE78D /* WWCalendarTimeSelector.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2F62848D20EF9E6700BBE78D /* WWCalendarTimeSelector.storyboard */; };
 		2F870FB620DBCA7600F9427C /* BusinessUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F870FB520DBCA7600F9427C /* BusinessUser.swift */; };
@@ -138,6 +140,8 @@
 		2F030F1620E8EF5300EDFE60 /* InterviewListController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = InterviewListController.swift; path = Controllers/InterviewListController.swift; sourceTree = "<group>"; };
 		2F030F1820EA1AA900EDFE60 /* InterviewDetailController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = InterviewDetailController.swift; path = Controllers/InterviewDetailController.swift; sourceTree = "<group>"; };
 		2F030F1A20EA1AE200EDFE60 /* InterviewEditController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = InterviewEditController.swift; path = Controllers/InterviewEditController.swift; sourceTree = "<group>"; };
+		2F3466E8212AAFCD00E5EF96 /* ApplicationInterviewListController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ApplicationInterviewListController.swift; path = Controllers/ApplicationInterviewListController.swift; sourceTree = "<group>"; };
+		2F3466EA212AB95800E5EF96 /* ApplicationInterviewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ApplicationInterviewCell.swift; path = Views/ApplicationInterviewCell.swift; sourceTree = "<group>"; };
 		2F62848B20EF932A00BBE78D /* WWCalendarTimeSelector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WWCalendarTimeSelector.swift; sourceTree = "<group>"; };
 		2F62848D20EF9E6700BBE78D /* WWCalendarTimeSelector.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = WWCalendarTimeSelector.storyboard; sourceTree = "<group>"; };
 		2F870FB520DBCA7600F9427C /* BusinessUser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = BusinessUser.swift; path = Models/api/BusinessUser.swift; sourceTree = "<group>"; };
@@ -336,6 +340,7 @@
 				D7CFBC6A1EF8E409003FC132 /* FileCell.swift */,
 				2F870FB720DBCC0900F9427C /* BusinessUserCell.swift */,
 				2F030F1420E8EE2800EDFE60 /* InterviewCell.swift */,
+				2F3466EA212AB95800E5EF96 /* ApplicationInterviewCell.swift */,
 			);
 			name = Cells;
 			sourceTree = "<group>";
@@ -544,6 +549,7 @@
 				2F030F1620E8EF5300EDFE60 /* InterviewListController.swift */,
 				2F030F1820EA1AA900EDFE60 /* InterviewDetailController.swift */,
 				2F030F1A20EA1AE200EDFE60 /* InterviewEditController.swift */,
+				2F3466E8212AAFCD00E5EF96 /* ApplicationInterviewListController.swift */,
 			);
 			name = Contollers;
 			sourceTree = "<group>";
@@ -812,6 +818,7 @@
 				D74226C820ACCDED002D3F4C /* MJPObjectWithNameShortNameDesc.swift in Sources */,
 				D74226CE20ACCDED002D3F4C /* RegisterRequest.swift in Sources */,
 				2F870FB620DBCA7600F9427C /* BusinessUser.swift in Sources */,
+				2F3466EB212AB95800E5EF96 /* ApplicationInterviewCell.swift in Sources */,
 				D7ECFBBF1E12FCEF00E2E071 /* JobSeekerProfileController.swift in Sources */,
 				D74226C120ACCDED002D3F4C /* LoginRequest.swift in Sources */,
 				D74226BD20ACCDED002D3F4C /* JobPitch.swift in Sources */,
@@ -874,6 +881,7 @@
 				D7CFBC691EF871A4003FC132 /* GoogleDriveController.swift in Sources */,
 				D788341C1ECAAF0600D99F4B /* MDCGeometry.m in Sources */,
 				2F62848C20EF932A00BBE78D /* WWCalendarTimeSelector.swift in Sources */,
+				2F3466E9212AAFCD00E5EF96 /* ApplicationInterviewListController.swift in Sources */,
 				D72AE4191E1057B0004C3F02 /* MessageCell.swift in Sources */,
 				D76C90531E25405A009C35E4 /* WebViewController.swift in Sources */,
 				D787F6391E287A6700C47A88 /* LocationEditController.swift in Sources */,

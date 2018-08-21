@@ -14,12 +14,12 @@ public class InterviewForCreation extends MJPAPIObject {
     private Integer application;
     private String notes;
     private String feedback;
-    private List<InterviewMessage> messages;
+    private List<Message> messages;
     private Date cancelled;
     private Integer cancelled_by;
     private String status;
 
-    public List<InterviewMessage> getMessages() {
+    public List<Message> getMessages() {
         return messages;
     }
 

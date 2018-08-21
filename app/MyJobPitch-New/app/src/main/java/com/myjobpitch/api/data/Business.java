@@ -11,6 +11,9 @@ public class Business extends MJPObjectWithDates {
     private List<Image> images;
     private Integer  tokens;
 
+    // Added in API v5
+    private Boolean restricted;
+
     public String getName() {
         return name;
     }
@@ -35,4 +38,7 @@ public class Business extends MJPObjectWithDates {
         return tokens;
     }
 
+    public Boolean getRestricted() {
+        return restricted;
+    }
 }

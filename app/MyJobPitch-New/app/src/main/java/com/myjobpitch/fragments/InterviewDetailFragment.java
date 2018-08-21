@@ -217,11 +217,13 @@ public class InterviewDetailFragment extends BaseFragment {
             case InterviewStatus.PENDING:
                 // Status
                 itemStatus.setText("Interview request sent");
+                break;
             case InterviewStatus.ACCEPTED:
                 // Status
                 itemStatus.setText("Interview accepted");
 
                 acceptButton.setVisibility(View.GONE);
+                break;
 
             case InterviewStatus.COMPLETED:
                 // Status
@@ -239,6 +241,7 @@ public class InterviewDetailFragment extends BaseFragment {
                 }
 
                 feedbackContainer.setVisibility(View.VISIBLE);
+                break;
 
             case InterviewStatus.CANCELLED:
                 // Status
@@ -254,6 +257,9 @@ public class InterviewDetailFragment extends BaseFragment {
                 if (AppData.user.isRecruiter()) {
                     arrangeButton.setVisibility(View.VISIBLE);
                 }
+                break;
+            default:
+                break;
 
         }
     }
@@ -270,7 +276,7 @@ public class InterviewDetailFragment extends BaseFragment {
         }
     }
 
-    @OnClick(R.id.header_view)
+    @OnClick(R.id.item_img)
     void onImage() {
         showProfile();
     }
@@ -364,5 +370,12 @@ public class InterviewDetailFragment extends BaseFragment {
         });
         popup.addGreyButton("No", null);
         popup.show();
+    }
+
+    @OnClick(R.id.interview_history)
+    void onViewHistories() {
+        ApplicationInterviewsFragment fragment = new ApplicationInterviewsFragment();
+        fragment.application = application;
+        getApp().pushFragment(fragment);
     }
 }

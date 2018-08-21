@@ -267,7 +267,9 @@ class APIConfigure: NSObject {
                                     "sexPublic":            "sex_public",
                                     "nationalityPublic":    "nationality_public",
                                     "hasReferences":        "has_references",
-                                    "truthConfirmation":    "truth_confirmation" ]
+                                    "truthConfirmation":    "truth_confirmation",
+                                    "profileImage":         "profile_image",
+                                    "profileThumb":         "profile_thumb" ]
 
         let jobSeekerRelationships = [ [ "source":          "pitches",
                                          "destination":     "pitches",
@@ -304,7 +306,7 @@ class APIConfigure: NSObject {
         // ================= Business =====================
 
         let businessArray = [ "id", "created", "updated", "users",
-                              "locations", "name", "tokens" ]
+                              "locations", "name", "tokens", "restricted" ]
 
         let businessRelationships = [ [ "source":       "images",
                                         "destination":  "images",
@@ -413,7 +415,9 @@ class APIConfigure: NSObject {
         let jobArray = [ "id", "created", "updated", "title", "sector",
                          "location", "contract", "hours", "status" ]
 
-        let jobDictionary = [ "desc": "description" ]
+        let jobDictionary = [ "desc":           "description",
+                              "requiresPitch":  "requires_pitch",
+                              "requiresCV":     "requires_cv" ]
 
         let jobRelationships = [ [ "source": "locationData",
                                    "destination": "location_data",
@@ -469,7 +473,7 @@ class APIConfigure: NSObject {
 
         // ================= Message =====================
 
-        let messageArray = [ "id", "system", "content", "read", "created", "application" ]
+        let messageArray = [ "id", "system", "content", "read", "created", "application", "interview" ]
 
         let messageDictionary = [ "fromRole": "from_role" ]
 
@@ -499,6 +503,13 @@ class APIConfigure: NSObject {
 
 
         // ================= Application =====================
+        
+        let applicationInterviewArray = [ "id", "at", "message", "notes", "feedback" ]
+        
+        let applicationInterviewMapping = createResponseMappingForClass(ApplicationInterview.classForCoder(),
+                                                                        array: applicationInterviewArray,
+                                                                        dictionary: nil,
+                                                                        relationships: nil)
 
         let applictionCreateArray = [ "id", "job", "shortlisted" ]
 
@@ -524,7 +535,13 @@ class APIConfigure: NSObject {
                                            "mapping": jobSeekerMapping ],
                                          [ "source": "messages",
                                            "destination": "messages",
-                                           "mapping": messageMapping ] ]
+                                           "mapping": messageMapping ],
+                                         [ "source": "pitches",
+                                           "destination": "pitches",
+                                           "mapping": pitchMapping ],
+                                         [ "source": "interviews",
+                                           "destination": "interviews",
+                                           "mapping": applicationInterviewMapping ] ]
 
         configureResponseMapping(Application.classForCoder(),
                                  responseArray: applicationArray,
@@ -617,7 +634,7 @@ class APIConfigure: NSObject {
         
         // ================= Interviews ================
         
-        let interviewArray = ["id", "application", "at", "message", "notes", "feedback", "cancelled", "status" ]
+        let interviewArray = [ "id", "application", "at", "message", "notes", "feedback", "cancelled", "status" ]
         
         let interviewsDictionary = [ "cancelledBy": "cancelled_by" ]
         

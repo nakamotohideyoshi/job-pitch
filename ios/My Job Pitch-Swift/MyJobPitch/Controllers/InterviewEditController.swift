@@ -17,6 +17,8 @@ class InterviewEditController: MJPController, WWCalendarTimeSelectorProtocol {
     @IBOutlet weak var dateTimeButton: UIButton!
     @IBOutlet weak var message: UITextView!
     @IBOutlet weak var note: UITextView!
+    @IBOutlet weak var invitationButton: GreenButton!
+    @IBOutlet weak var updateButton: GreenButton!
     
     var interview: Interview!
     var application: Application!
@@ -30,6 +32,9 @@ class InterviewEditController: MJPController, WWCalendarTimeSelectorProtocol {
         jobTitleView.text = String(format: "%@, (%@)", application.job.title, application.job.getBusinessName())
         
         self.scrollView.isScrollEnabled = false
+        
+        invitationButton.isHidden = isEditMode
+        updateButton.isHidden = !isEditMode
 
         loadInterviewDetail()
         
@@ -75,36 +80,36 @@ class InterviewEditController: MJPController, WWCalendarTimeSelectorProtocol {
         present(selector, animated: true, completion: nil)
     }
     
+    @IBAction func updateInterview(_ sender: Any) {
+        showLoading()
+        let interviewForUpdate = InterviewForUpdate()
+        
+        interviewForUpdate.at = singleDate
+        interviewForUpdate.application = application.id
+        interviewForUpdate.notes = note.text
+        interviewForUpdate.feedback = ""
+        interviewForUpdate.invitation = message.text
+        
+       API.shared().updateInterview(interviewId: interview.id, interview: interviewForUpdate, success: { (data) in
+            self.doneCreateAction()
+        }, failure: self.handleErrors)
+        
+    }
     @IBAction func sendInvitation(_ sender: Any) {
         showLoading()
         
-        if isEditMode {
-            let interviewForUpdate = InterviewForUpdate()
-            
-            interviewForUpdate.at = singleDate
-            interviewForUpdate.application = application.id
-            interviewForUpdate.notes = note.text
-            interviewForUpdate.feedback = ""
-            interviewForUpdate.invitation = message.text
-            
-            API.shared().updateInterview(interviewId: interview.id, interview: interviewForUpdate, success: { (data) in
-                self.doneCreateAction()
-            }, failure: self.handleErrors)
-        } else {
-            
-            let interviewForCreation = InterviewForCreation()
-            
-            interviewForCreation.at = singleDate
-            interviewForCreation.application = application.id
-            interviewForCreation.notes = note.text
-            interviewForCreation.feedback = ""
-            interviewForCreation.invitation = message.text
-            
-            API.shared().createInterview(interview: interviewForCreation, success: { (data) in
-                self.doneCreateAction()
-            }, failure: self.handleErrors)
-            
-        }
+        let interviewForCreation = InterviewForCreation()
+        
+        interviewForCreation.at = singleDate
+        interviewForCreation.application = application.id
+        interviewForCreation.notes = note.text
+        interviewForCreation.feedback = ""
+        interviewForCreation.invitation = message.text
+        
+        API.shared().createInterview(interview: interviewForCreation, success: { (data) in
+            self.doneCreateAction()
+        }, failure: self.handleErrors)
+        
     }
     
     func doneCreateAction() {

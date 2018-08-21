@@ -27,9 +27,7 @@ class InterviewDetailController: MJPController {
     @IBOutlet weak var acceptButton: GreenButton!
     @IBOutlet weak var messageButton: GreenButton!
     @IBOutlet weak var cancelButton: YellowButton!
-    @IBOutlet weak var messageButton1: GreenButton!
-    
-    @IBOutlet weak var cancelButton1: YellowButton!
+    @IBOutlet weak var newButton: GreenButton!
     
     var interview: Interview!
     var interviewId: NSNumber!
@@ -100,8 +98,12 @@ class InterviewDetailController: MJPController {
         
         if AppData.user.isRecruiter() {
             acceptButton.isHidden = true
-            messageButton1.isHidden = true
-            cancelButton1.isHidden = true
+            if interview.status == InterviewStatus.INTERVIEW_COMPLETED || interview.status == InterviewStatus.INTERVIEW_CANCELLED {
+                editButton.isHidden = true
+                newButton.isHidden = false
+            } else {
+                newButton.isHidden = true
+            }
         } else {
             noteContent.isHidden = true
             noteLabel.isHidden = true
@@ -128,7 +130,6 @@ class InterviewDetailController: MJPController {
             completeButton.isHidden = true
             cancelButton.isHidden = true
             acceptButton.isHidden = true
-            cancelButton1.isHidden = true
             
         } else if interview.status == InterviewStatus.INTERVIEW_CANCELLED {
             
@@ -136,23 +137,25 @@ class InterviewDetailController: MJPController {
             completeButton.isHidden = true
             cancelButton.isHidden = true
             acceptButton.isHidden = true
-            cancelButton1.isHidden = true
             
         }
-        
-        
-        
-        
-        
         
     }
 
     @IBAction func interviewEdit(_ sender: Any) {
         refresh = true
         let controller = AppHelper.mainStoryboard.instantiateViewController(withIdentifier: "InterviewEdit") as! InterviewEditController
-        controller.interview = interview
         controller.application = application
-        controller.isEditMode = true
+            controller.interview = interview
+            controller.isEditMode = true
+        navigationController?.pushViewController(controller, animated: true)
+    }
+    @IBAction func arrangeNewInterview(_ sender: Any) {
+        
+        refresh = true
+        let controller = AppHelper.mainStoryboard.instantiateViewController(withIdentifier: "InterviewEdit") as! InterviewEditController
+        controller.application = application
+            controller.isEditMode = false
         navigationController?.pushViewController(controller, animated: true)
     }
     
@@ -190,6 +193,23 @@ class InterviewDetailController: MJPController {
     func actionDone() {
         _ = navigationController?.popViewController(animated: true)
         return
+    }
+    
+    @IBAction func showProfile(_ sender: Any) {
+        if AppData.user.isRecruiter() {
+            let controller = AppHelper.mainStoryboard.instantiateViewController(withIdentifier: "JobSeekerDetail") as! JobSeekerDetailController
+            controller.application = application
+            navigationController?.pushViewController(controller, animated: true)
+        } else {
+            let controller = AppHelper.mainStoryboard.instantiateViewController(withIdentifier: "ApplicationDetails") as! ApplicationDetailsController
+            controller.application = application
+            navigationController?.pushViewController(controller, animated: true)
+        }
+    }
+    @IBAction func interviewHistories(_ sender: Any) {
+        let controller = AppHelper.mainStoryboard.instantiateViewController(withIdentifier: "ApplicationInterviewList") as! ApplicationInterviewListController
+        controller.application = application
+        navigationController?.pushViewController(controller, animated: true)
     }
     
 }

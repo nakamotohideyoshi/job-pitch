@@ -17,6 +17,11 @@ class Application: MJPObjectWithDates {
     var deletedBy: NSNumber!
     var shortlisted = false
     var status: NSNumber!
+    
+    // API V3
+    var pitches: NSArray!
+    var interviews: NSArray!
+    
 }
 
 class ApplicationForCreation: MJPObject {

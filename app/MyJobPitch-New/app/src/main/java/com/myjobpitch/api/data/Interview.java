@@ -8,34 +8,14 @@ import java.util.List;
 /**
  * Created by Kei on 26/06/2018.
  */
-public class Interview extends MJPAPIObject {
+public class Interview extends ApplicationInterview {
     private Integer application;
-    private Date at;
-    private List<InterviewMessage> messages;
-    private String notes;
-    private String feedback;
     private Date cancelled;
     private Integer cancelled_by;
     private String status;
 
     public Integer getApplication() {
         return application;
-    }
-
-    public Date getAt() {
-        return at;
-    }
-
-    public List<InterviewMessage> getMessages() {
-        return messages;
-    }
-
-    public String getNotes() {
-        return notes;
-    }
-
-    public String getFeedback() {
-        return feedback;
     }
 
     public Date getCancelled() {

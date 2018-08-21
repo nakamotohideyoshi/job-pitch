@@ -39,3 +39,10 @@ class InterviewForUpdate: MJPObject {
     var notes: String!
     var feedback: String!
 }
+
+class ApplicationInterview: MJPObject{
+    var at: Date!
+    var messages: NSArray!
+    var notes: String!
+    var feedback: String!
+}

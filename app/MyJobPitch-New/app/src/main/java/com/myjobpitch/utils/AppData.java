@@ -24,7 +24,7 @@ import java.util.List;
 
 public class AppData {
 
-    public static final int API_VERSION = 4;
+    public static final int API_VERSION = 5;
     public static final boolean PRODUCTION = false;
 
     public static User user;

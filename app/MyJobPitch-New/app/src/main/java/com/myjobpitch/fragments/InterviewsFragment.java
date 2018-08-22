@@ -16,6 +16,7 @@ import com.myjobpitch.api.MJPApi;
 import com.myjobpitch.api.MJPApiException;
 import com.myjobpitch.api.data.Application;
 import com.myjobpitch.api.data.Interview;
+import com.myjobpitch.api.data.InterviewStatus;
 import com.myjobpitch.api.data.Job;
 import com.myjobpitch.api.data.JobSeeker;
 import com.myjobpitch.tasks.APIAction;
@@ -160,7 +161,7 @@ public class InterviewsFragment extends BaseFragment {
                 }
 
                 for (int i=0; i<interviews.size(); i++) {
-                    if (applicationIds.contains(interviews.get(i).getApplication()) && interviews.get(i).getCancelled() == null) {
+                    if (applicationIds.contains(interviews.get(i).getApplication()) && (interviews.get(i).getStatus().equals(InterviewStatus.PENDING) || interviews.get(i).getStatus().equals(InterviewStatus.ACCEPTED))) {
                         adapter.add(interviews.get(i));
                         isEmpty = false;
                     }

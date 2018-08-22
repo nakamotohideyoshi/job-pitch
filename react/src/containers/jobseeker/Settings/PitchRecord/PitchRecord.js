@@ -19,8 +19,13 @@ class PitchRecord extends React.Component {
   };
 
   componentWillMount() {
+    this.updatePitch();
+  }
+
+  updatePitch() {
     const pitch = helper.getPitch(this.props.jobseeker) || {};
     this.setState({
+      loading: null,
       pitchUrl: pitch.video,
       pitchData: null,
       poster: pitch.thumbnail
@@ -52,10 +57,7 @@ class PitchRecord extends React.Component {
     this.props.uploadPitch({
       data: this.state.pitchData,
       onSuccess: () => {
-        this.setState({
-          loading: null,
-          pitchData: null
-        });
+        this.updatePitch();
         message.success('Pitch is uploaded successfully.');
 
         const { from } = this.props.location.state || {};

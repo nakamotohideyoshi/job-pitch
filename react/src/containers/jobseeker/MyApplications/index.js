@@ -91,7 +91,7 @@ class MyApplications extends React.Component {
     const { jobseeker, applications, error } = this.props;
 
     if (!helper.getPitch(jobseeker)) {
-      return <NoPitch title="My Applications" backUrl={this.props.history.location.pathname} />;
+      return <NoPitch title="My Applications" />;
     }
 
     const selectedApp = applications && helper.getItemByID(applications, this.state.selectedId);

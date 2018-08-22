@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { Modal } from 'antd';
-import Player from './Player';
+import VideoPlayer from './Player';
 
 const Wrapper = styled(Modal)`
   .ant-modal-content {
@@ -21,8 +21,8 @@ const Wrapper = styled(Modal)`
   }
 `;
 
-export default ({ videoUrl, onClose, ...rest }) => (
+export default ({ onClose, ...rest }) => (
   <Wrapper visible maskClosable={false} footer={null} width="720px" onCancel={() => onClose()}>
-    <Player {...rest} />
+    <VideoPlayer {...rest} />
   </Wrapper>
 );

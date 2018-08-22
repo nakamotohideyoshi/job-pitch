@@ -2,8 +2,9 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Form, Input, Button, message } from 'antd';
 
-import * as helper from 'utils/helper';
 import { changePassword } from 'redux/auth';
+import DATA from 'utils/data';
+import * as helper from 'utils/helper';
 
 import FormWrapper from './styled';
 
@@ -45,7 +46,7 @@ class PasswordForm extends React.Component {
       <FormWrapper onSubmit={this.changePassword}>
         <label>Email</label>
         <Item>
-          <Input disabled value={this.props.email} />
+          <Input disabled value={DATA.email} />
         </Item>
 
         <label>New password</label>
@@ -78,9 +79,4 @@ class PasswordForm extends React.Component {
   }
 }
 
-export default connect(
-  state => ({
-    email: state.auth.user.email
-  }),
-  { changePassword }
-)(Form.create()(PasswordForm));
+export default connect(null, { changePassword })(Form.create()(PasswordForm));

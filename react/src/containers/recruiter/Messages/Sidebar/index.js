@@ -1,6 +1,6 @@
 import React, { Fragment } from 'react';
 import { withRouter } from 'react-router-dom';
-import { Select, List, Avatar } from 'antd';
+import { Select, List, Avatar, Badge } from 'antd';
 
 import DATA from 'utils/data';
 import * as helper from 'utils/helper';
@@ -38,7 +38,7 @@ class Sidebar extends React.PureComponent {
     );
   };
 
-  renderApp = ({ id, messages, status, job_seeker }) => {
+  renderApp = ({ id, messages, status, job_seeker, newMsgs }) => {
     const name = helper.getFullJSName(job_seeker);
     const image = helper.getPitch(job_seeker).thumbnail;
     const lastMessage = messages.filter(({ created }) => created).pop();
@@ -62,6 +62,7 @@ class Sidebar extends React.PureComponent {
           description={
             <Fragment>
               <div className="single-line">{comment}</div>
+              {!!newMsgs && <Badge count={newMsgs < 100 ? newMsgs : '99+'} />}
             </Fragment>
           }
         />

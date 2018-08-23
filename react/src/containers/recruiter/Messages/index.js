@@ -5,14 +5,7 @@ import { List, Modal, Avatar, Button, Switch } from 'antd';
 import moment from 'moment';
 import { getInterviews } from 'redux/interviews';
 
-import {
-  getApplications,
-  getAllApplications,
-  connectApplication,
-  updateApplication,
-  sendMessage
-} from 'redux/applications';
-import { updateLatest } from 'redux/messages';
+import { getApplications, connectApplication, updateApplication } from 'redux/applications';
 
 import DATA from 'utils/data';
 import * as helper from 'utils/helper';
@@ -30,7 +23,6 @@ import {
 } from 'components';
 import Sidebar from './Sidebar';
 import Wrapper from './styled';
-import { select } from 'redux-saga/effects';
 
 const { confirm } = Modal;
 
@@ -57,11 +49,7 @@ class Page extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const { applications, match: { params }, count } = nextProps;
-    if (count !== 0) {
-      this.props.updateLatest({ id: nextProps.latest, data: { read: true } });
-      this.props.getApplications();
-    }
+    const { applications, match: { params } } = nextProps;
     if (applications) {
       const { applications: applications0, match: { params: params0 } } = this.props;
       if (!applications0 || params0.appId !== params.appId) {
@@ -121,16 +109,6 @@ class Page extends React.Component {
       data: {
         id,
         shortlisted: !shortlisted
-      }
-    });
-  };
-
-  onSend = message => {
-    this.props.sendMessage({
-      id: new Date().getTime(),
-      data: {
-        application: this.state.selectedId,
-        content: message
       }
     });
   };
@@ -240,14 +218,7 @@ class Page extends React.Component {
             </div>
 
             <div className="content">
-              {selectedApp && (
-                <MessageThread
-                  userRole="RECRUITER"
-                  application={selectedApp}
-                  onSend={this.onSend}
-                  inputRenderer={this.renderInput}
-                />
-              )}
+              {selectedApp && <MessageThread application={selectedApp} inputRenderer={this.renderInput} />}
             </div>
           </Fragment>
           {tablet && open && <span className="mask" onClick={this.closeSidebar} />}
@@ -318,17 +289,12 @@ const enhance = connect(
     applications: state.applications.applications,
     businesses: state.rc_businesses.businesses,
     error: state.applications.error,
-    latest: state.messages.latest,
-    count: state.messages.count,
     interviews: state.interviews.interviews
   }),
   {
     getApplications,
-    getAllApplications,
     connectApplication,
     updateApplication,
-    sendMessage,
-    updateLatest,
     getInterviews
   }
 );

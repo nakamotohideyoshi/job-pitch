@@ -3,8 +3,6 @@ import styled from 'styled-components';
 import { connect } from 'react-redux';
 import { withRouter, Link } from 'react-router-dom';
 import { Menu, Badge } from 'antd';
-import { getApplications, getAllApplications } from 'redux/applications';
-import { updateCount, clearUpdated } from 'redux/messages';
 
 const Item = Menu.Item;
 
@@ -15,17 +13,14 @@ const StyledMenu = styled(Menu)`
     border-right: none;
   }
   .ant-menu-item .ant-badge {
-    color: inherit;
-    margin-left: 5px;
+    margin-top: -2px;
+    margin-left: 8px;
     .ant-badge-count {
-      margin: 0 0 3px 3px;
       box-shadow: none;
       background-color: #ff9300;
     }
   }
 `;
-
-var timer = null;
 
 class MainMenu extends React.Component {
   handleClick = () => {
@@ -33,46 +28,9 @@ class MainMenu extends React.Component {
     onClick && onClick();
   };
 
-  componentDidMount() {
-    timer = setInterval(() => {
-      // if (this.props.location.pathname.indexOf('/jobseeker/messages') === 0) {
-      //   // alert('aaa');
-      // } else {
-      //   this.props.getAllApplications();
-      // }
-      const { auth_businesses, job_seeker } = this.props;
-      if (!(auth_businesses.length === 0 && job_seeker === null)) {
-        this.props.getAllApplications();
-        this.props.clearUpdated();
-      }
-    }, 10000);
-  }
-
-  componentWillUnmount() {
-    clearInterval(timer);
-  }
-
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.allApplications !== null && !nextProps.updated) {
-      this.props.updateCount({ applications: nextProps.allApplications, from_role: 1 });
-    }
-  }
-
   render() {
-    const { profile, theme, mode, location, count } = this.props;
+    const { profile, theme, mode, location, newMsgs } = this.props;
     const selectedKey = location.pathname.split('/')[2];
-
-    var countStr = '';
-    if (count > 0 && count < 10) {
-      countStr = count;
-    }
-    if (count >= 9) {
-      countStr = '10+';
-    }
-
-    if (this.props.location.pathname.indexOf('/jobseeker/messages') === 0) {
-      countStr = '';
-    }
 
     if (!profile) return null;
 
@@ -89,7 +47,8 @@ class MainMenu extends React.Component {
         </Item>
         <Item key="messages">
           <Link to="/jobseeker/messages">
-            Messages<Badge count={countStr} />
+            Messages
+            {selectedKey !== 'messages' && <Badge count={newMsgs < 10 ? newMsgs : '9+'} />}
           </Link>
         </Item>
       </StyledMenu>
@@ -98,26 +57,10 @@ class MainMenu extends React.Component {
 }
 
 export default withRouter(
-  connect(
-    state => {
-      const { allApplications } = state.applications;
-      const { count, updated } = state.messages;
-      const { job_seeker } = state.auth.user;
-      const auth_businesses = state.auth.user.businesses;
-      return {
-        profile: state.js_profile.profile,
-        allApplications,
-        count,
-        updated,
-        auth_businesses,
-        job_seeker
-      };
-    },
-    {
-      getApplications,
-      getAllApplications,
-      updateCount,
-      clearUpdated
-    }
-  )(MainMenu)
+  connect(state => {
+    return {
+      profile: state.js_profile.profile,
+      newMsgs: state.applications.allNewMsgs
+    };
+  })(MainMenu)
 );

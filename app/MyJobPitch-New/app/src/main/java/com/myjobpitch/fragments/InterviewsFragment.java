@@ -141,7 +141,7 @@ public class InterviewsFragment extends BaseFragment {
         new APITask(new APIAction() {
             @Override
             public void run() throws MJPApiException {
-                interviews.addAll(MJPApi.shared().getAllInterviews());
+                interviews.addAll(MJPApi.shared().get(Interview.class));
             }
         }).addListener(new APITaskListener() {
             @Override

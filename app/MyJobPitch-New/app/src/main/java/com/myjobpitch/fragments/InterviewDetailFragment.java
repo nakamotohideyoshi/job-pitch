@@ -131,6 +131,8 @@ public class InterviewDetailFragment extends BaseFragment {
 
         AppHelper.setJobTitleViewText(jobTitleView, String.format("%s, (%s)", application.getJob_data().getTitle(), AppHelper.getBusinessName(application.getJob_data())));
 
+        addMenuItem(MENUGROUP2, 120, "View Previous Interviews", R.drawable.ic_loca_storage);
+
         showLoading(view);
         loadInterview();
 
@@ -276,6 +278,15 @@ public class InterviewDetailFragment extends BaseFragment {
         }
     }
 
+    @Override
+    public void onMenuSelected(int menuID) {
+        if (menuID == 120) {
+            onViewHistories();
+        } else {
+            super.onMenuSelected(menuID);
+        }
+    }
+
     @OnClick(R.id.item_img)
     void onImage() {
         showProfile();
@@ -372,10 +383,10 @@ public class InterviewDetailFragment extends BaseFragment {
         popup.show();
     }
 
-    @OnClick(R.id.interview_history)
     void onViewHistories() {
         ApplicationInterviewsFragment fragment = new ApplicationInterviewsFragment();
         fragment.application = application;
+        fragment.interviewId = interviewId;
         getApp().pushFragment(fragment);
     }
 }

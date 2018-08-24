@@ -48,6 +48,7 @@ public class ApplicationInterviewsFragment extends BaseFragment {
     JobSeeker jobSeeker;
 
     public Application application;
+    public Integer interviewId;
 
     private ApplicationInterviewAdapter adapter;
 
@@ -61,16 +62,13 @@ public class ApplicationInterviewsFragment extends BaseFragment {
 
         // empty view
 
-        AppHelper.setEmptyViewText(emptyView, "No Interviews");
+        AppHelper.setEmptyViewText(emptyView, "No Completed and Cancelled Interview List");
         AppHelper.setEmptyButtonText(emptyView, "Refresh");
 
         emptyView.setVisibility(View.GONE);
 
-        if (AppData.user.isRecruiter()) {
-            AppHelper.setJobTitleViewText(jobTitleView, String.format("%s, (%s)", application.getJob_data().getTitle(), AppHelper.getBusinessName(application.getJob_data())));
-        } else {
-            AppHelper.setJobTitleViewText(jobTitleView, "");
-        }
+
+        AppHelper.setJobTitleViewText(jobTitleView, "Completed and Cancelled Interview List");
 
         // pull to refresh
 
@@ -107,7 +105,12 @@ public class ApplicationInterviewsFragment extends BaseFragment {
 
     private void loadInterviews() {
         final List<ApplicationInterview> interviews = new ArrayList();
-        interviews.addAll(application.getInterviews());
+        for (int i = 0; i<application.getInterviews().size(); i++) {
+            if (application.getInterviews().get(i).getId().intValue() != interviewId) {
+                interviews.add(application.getInterviews().get(i));
+            }
+        }
+
 
         adapter.clear();
 

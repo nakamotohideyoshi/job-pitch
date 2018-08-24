@@ -82,16 +82,6 @@
                 android:background="@drawable/button_yellow"
                 android:theme="@style/Button"/>
 
-            <Button
-                android:id="@+id/interview_history"
-                android:text="Interview Histories"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/button_height"
-                android:layout_marginTop="15dp"
-                android:background="@drawable/button_green"
-                android:theme="@style/Button"/>
-
-
         </LinearLayout>
     </ScrollView>
 

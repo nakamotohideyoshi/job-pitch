@@ -3,6 +3,11 @@ import colors from 'utils/colors';
 import media from 'utils/mediaquery';
 
 export default styled.div`
+  h2 {
+    font-size: 1.75em;
+    margin-bottom: 1em;
+  }
+
   .avatar {
     position: relative;
     ${media.tablet` margin-bottom: 24px;`};

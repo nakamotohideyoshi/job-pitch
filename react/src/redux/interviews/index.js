@@ -18,7 +18,8 @@ export const changeInterview = createAction(C.CHANGE_INTERVIEW);
 // ------------------------------------
 
 const initialState = {
-  interviews: null
+  interviews: null,
+  error: null
 };
 
 export default handleActions(
@@ -30,16 +31,20 @@ export default handleActions(
 
     // ---- get interviews ----
 
-    [requestPending(C.GET_INTERVIEWS)]: state => initialState,
+    [requestPending(C.GET_INTERVIEWS)]: state => ({
+      ...state,
+      interviews: null,
+      error: null
+    }),
 
     [requestSuccess(C.GET_INTERVIEWS)]: (state, { payload }) => ({
       ...state,
       interviews: payload
     }),
 
-    [requestFail(C.GET_INTERVIEWS)]: state => ({
+    [requestFail(C.GET_INTERVIEWS)]: (state, { payload }) => ({
       ...state,
-      interviews: []
+      error: payload
     }),
 
     // ---- remove interview ----

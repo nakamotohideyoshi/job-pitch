@@ -3,6 +3,21 @@ import { createAction, handleActions } from 'redux-actions';
 import { requestPending, requestSuccess, requestFail } from 'utils/request';
 import * as C from 'redux/constants';
 import * as helper from 'utils/helper';
+import DATA from 'utils/data';
+
+const getNewMsgCount = messages => {
+  let count = 0;
+  for (let i = messages.length - 1; i >= 0; i--) {
+    const msg = messages[i];
+    if (msg.read) break;
+
+    const userRole = helper.getNameByID('roles', msg.from_role);
+    if (userRole === DATA.userRole) break;
+
+    count++;
+  }
+  return count;
+};
 
 // ------------------------------------
 // Actions
@@ -10,10 +25,10 @@ import * as helper from 'utils/helper';
 
 export const updateStatus = createAction(C.APPLICATIONS_UPDATE);
 export const getApplications = createAction(C.GET_APPLICATIONS);
-export const getAllApplications = createAction(C.GET_ALL_APPLICATIONS);
 export const connectApplication = createAction(C.CONNECT_APPLICATION);
 export const updateApplication = createAction(C.UPDATE_APPLICATION);
 export const removeApplication = createAction(C.REMOVE_APPLICATION);
+export const readMessage = createAction(C.READ_MESSAGE);
 export const sendMessage = createAction(C.SEND_MESSAGE);
 export const updateMessageByInterview = createAction(C.UPDATE_MESSAGE_BY_INTERVIEW);
 
@@ -24,7 +39,7 @@ export const updateMessageByInterview = createAction(C.UPDATE_MESSAGE_BY_INTERVI
 const initialState = {
   applications: null,
   error: null,
-  allApplications: null
+  allNewMsgs: 0
 };
 
 export default handleActions(
@@ -38,34 +53,32 @@ export default handleActions(
 
     [requestPending(C.GET_APPLICATIONS)]: state => ({
       ...state,
-      applications: null,
       error: null
     }),
 
-    [requestSuccess(C.GET_APPLICATIONS)]: (state, { payload }) => ({
-      ...state,
-      applications: payload
-    }),
+    [requestSuccess(C.GET_APPLICATIONS)]: (state, { payload }) => {
+      let allNewMsgs = 0;
+      const applications = payload.map(app => {
+        app.newMsgs = getNewMsgCount(app.messages);
+        allNewMsgs += app.newMsgs;
+
+        const oldApp = helper.getItemByID(state.applications, app.id);
+        if (oldApp) {
+          const sendingMessages = oldApp.messages.filter(({ sending }) => sending);
+          app.messages.concat(sendingMessages);
+        }
+
+        return app;
+      });
+
+      return {
+        ...state,
+        applications,
+        allNewMsgs
+      };
+    },
 
     [requestFail(C.GET_APPLICATIONS)]: (state, { payload }) => ({
-      ...state,
-      error: payload
-    }),
-
-    // ---- get all applications ----
-
-    [requestPending(C.GET_ALL_APPLICATIONS)]: state => ({
-      ...state,
-      allApplications: null,
-      error: null
-    }),
-
-    [requestSuccess(C.GET_ALL_APPLICATIONS)]: (state, { payload }) => ({
-      ...state,
-      allApplications: payload
-    }),
-
-    [requestFail(C.GET_ALL_APPLICATIONS)]: (state, { payload }) => ({
       ...state,
       error: payload
     }),
@@ -97,6 +110,7 @@ export default handleActions(
     }),
 
     // UPDATE_MESSAGE_BY_INTERVIEW
+
     [C.UPDATE_MESSAGE_BY_INTERVIEW]: (state, { payload }) => {
       const appId = payload.data.application;
       const application = helper.getItemByID(state.applications, appId);
@@ -140,6 +154,35 @@ export default handleActions(
           id: appId,
           messages
         })
+      };
+    },
+
+    // read message
+
+    [requestSuccess(C.READ_MESSAGE)]: (state, { request }) => {
+      const { appId, id, data } = request;
+      const application = helper.getItemByID(state.applications, appId);
+      const messages = helper.updateObj(application.messages, {
+        id,
+        ...data
+      });
+
+      const newMsgs = getNewMsgCount(messages);
+      const applications = helper.updateObj(state.applications, {
+        id: appId,
+        messages,
+        newMsgs
+      });
+
+      let allNewMsgs = 0;
+      applications.forEach(({ newMsgs }) => {
+        allNewMsgs += newMsgs;
+      });
+
+      return {
+        ...state,
+        applications,
+        allNewMsgs
       };
     },
 
@@ -194,11 +237,15 @@ export default handleActions(
     // ---- change location ----
 
     [LOCATION_CHANGE]: (state, { payload }) => {
-      const key = payload.pathname.split('/')[2];
-      const clear = key !== 'applications' && key !== 'messages';
+      let { applications, allNewMsgs } = state;
+      if (payload.pathname.split('/')[1] === 'auth') {
+        applications = null;
+        allNewMsgs = 0;
+      }
       return {
         ...state,
-        applications: clear ? null : state.applications
+        applications,
+        allNewMsgs
       };
     }
   },

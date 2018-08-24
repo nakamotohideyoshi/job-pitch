@@ -1,12 +1,13 @@
 import { takeLatest, call, put, select } from 'redux-saga/effects';
 import * as C from 'redux/constants';
 import * as helper from 'utils/helper';
-import request, { getRequest, deleteRequest } from 'utils/request';
+import request, { getRequest, deleteRequest, weakRequest } from 'utils/request';
 
-export const getInterviews = getRequest({
-  type: C.GET_INTERVIEWS,
-  url: '/api/interviews/'
-});
+const getInterviews = weakRequest(
+  getRequest({
+    url: '/api/interviews/'
+  })
+);
 
 const removeInterview = deleteRequest({
   url: ({ id }) => `/api/interviews/${id}/`

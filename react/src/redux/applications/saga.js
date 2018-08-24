@@ -1,4 +1,5 @@
-import { takeLatest, call, put } from 'redux-saga/effects';
+import { takeLatest, call, put, select } from 'redux-saga/effects';
+import { delay } from 'redux-saga';
 import {
   weakRequest,
   getRequest,
@@ -12,12 +13,6 @@ import DATA from 'utils/data';
 import * as C from 'redux/constants';
 
 const getApplications = weakRequest(
-  getRequest({
-    url: '/api/applications/'
-  })
-);
-
-const getAllApplications = weakRequest(
   getRequest({
     url: '/api/applications/'
   })
@@ -51,6 +46,10 @@ const removeApplication = weakRequest(
   })
 );
 
+const readMessage = putRequest({
+  url: ({ id }) => `/api/messages/${id}/`
+});
+
 function* sendMessage({ payload }) {
   const result = yield call(postRequest({ url: '/api/messages/' }), { payload });
   if (result) {
@@ -72,12 +71,39 @@ function* updateMessageByInterview({ payload }) {
   yield put({ type: requestFail(C.UPDATE_MESSAGE_BY_INTERVIEW), payload });
 }
 
+function* autoUpdateAppliciations() {
+  let second = 100;
+  while (true) {
+    yield call(delay, 1000);
+    second++;
+
+    let { auth, router } = yield select();
+
+    if (!auth.user) {
+      second = 100;
+      continue;
+    }
+
+    const interval = router.location.pathname.split('/')[2] === 'messages' ? 5 : 30;
+    if (second < interval) continue;
+
+    second = 0;
+    yield call(
+      getRequest({
+        type: C.GET_APPLICATIONS,
+        url: '/api/applications/'
+      })
+    );
+  }
+}
+
 export default function* sagas() {
   yield takeLatest(C.GET_APPLICATIONS, getApplications);
-  yield takeLatest(C.GET_ALL_APPLICATIONS, getAllApplications);
   yield takeLatest(C.UPDATE_APPLICATION, updateApplication);
   yield takeLatest(C.CONNECT_APPLICATION, connectApplication);
   yield takeLatest(C.REMOVE_APPLICATION, removeApplication);
+  yield takeLatest(C.READ_MESSAGE, readMessage);
   yield takeLatest(C.SEND_MESSAGE, sendMessage);
   yield takeLatest(C.UPDATE_MESSAGE_BY_INTERVIEW, updateMessageByInterview);
+  yield autoUpdateAppliciations();
 }

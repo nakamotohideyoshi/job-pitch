@@ -46,7 +46,20 @@ export default styled.div`
             }
 
             .ant-list-item-meta-description {
+              display: flex;
+              justify-content: space-between;
+              word-break: initial;
               font-size: 13px;
+
+              .ant-badge {
+                font-style: initial;
+                margin-top: 2px;
+                margin-left: 8px;
+                .ant-badge-count {
+                  box-shadow: none;
+                  background-color: #ff9300;
+                }
+              }
             }
           }
         }

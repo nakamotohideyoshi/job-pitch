@@ -3,7 +3,7 @@ import { Row, Col, Tabs } from 'antd';
 
 import * as helper from 'utils/helper';
 import { GoogleMap, Icons, VideoPlayer, SocialShare, Logo } from 'components';
-import Wrapper from './JobDetails.styled';
+import Wrapper from './ApplicationDetails.styled';
 import moment from 'moment';
 
 const TabPane = Tabs.TabPane;

@@ -3,7 +3,6 @@ import { all } from 'redux-saga/effects';
 import auth from './auth/saga';
 import applications from './applications/saga';
 import interviews from './interviews/saga';
-import messages from './messages/saga';
 
 import rc_find from './recruiter/find/saga';
 import rc_businesses from './recruiter/businesses/saga';
@@ -18,7 +17,6 @@ export default function* rootSaga() {
   yield all([
     auth(),
     applications(),
-    messages(),
     interviews(),
     js_find(),
     js_profile(),

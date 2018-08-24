@@ -1,6 +1,8 @@
 import React, { Fragment } from 'react';
 import { Input, Avatar } from 'antd';
+import { connect } from 'react-redux';
 
+import { sendMessage, readMessage } from 'redux/applications';
 import * as helper from 'utils/helper';
 import DATA from 'utils/data';
 
@@ -9,17 +11,43 @@ import Wrapper from './styled';
 
 const { TextArea } = Input;
 
-export default class MessageThread extends React.Component {
+class MessageThread extends React.Component {
   state = {
     message: ''
   };
 
+  componentDidMount() {
+    this.scrollBottom();
+    this.readMessages(this.props.application);
+  }
+
   componentWillReceiveProps(nextProps) {
-    if ((nextProps.application || {}).id !== (this.props.application || {}).id) {
+    const app = this.props.application;
+    const nextApp = nextProps.application;
+    if (app.id !== nextApp.id) {
       this.setState({ message: '' });
       this.scrollBottom();
+      this.readMessages(nextApp);
+    } else if (app.newMsgs !== nextApp.newMsgs) {
+      if (nextApp.newMsgs) {
+        this.scrollBottom();
+      }
+      this.readMessages(nextApp);
     }
   }
+
+  readMessages = application => {
+    if (!application.newMsgs) return;
+
+    const msg = application.messages.slice(-1)[0];
+    this.props.readMessage({
+      appId: application.id,
+      id: msg.id,
+      data: {
+        read: true
+      }
+    });
+  };
 
   onChnageInput = e => this.setState({ message: e.target.value });
 
@@ -27,7 +55,13 @@ export default class MessageThread extends React.Component {
     const message = this.state.message.trim();
     this.setState({ message: '' });
     this.scrollBottom(true);
-    this.props.onSend(message);
+    this.props.sendMessage({
+      id: new Date().getTime(),
+      data: {
+        application: this.props.application.id,
+        content: message
+      }
+    });
   };
 
   onKeyUp = event => {
@@ -51,11 +85,11 @@ export default class MessageThread extends React.Component {
     });
 
   renderMessage = ({ id, content, from_role, created, sending, error }) => {
-    const { application, userRole } = this.props;
-    const me = sending || error || helper.getNameByID('roles', from_role) === userRole;
+    const { application } = this.props;
+    const me = sending || error || helper.getNameByID('roles', from_role) === DATA.userRole;
 
     let avatar;
-    if ((userRole === 'RECRUITER' && me) || (userRole === 'JOB_SEEKER' && !me)) {
+    if ((DATA.userRole === 'RECRUITER' && me) || (DATA.userRole === 'JOB_SEEKER' && !me)) {
       avatar = helper.getJobLogo(application.job_data);
     } else {
       avatar = helper.getPitch(application.job_seeker).thumbnail;
@@ -119,7 +153,6 @@ export default class MessageThread extends React.Component {
           ref={ref => {
             if (!this.containerRef) {
               this.containerRef = ref;
-              this.scrollBottom();
             }
           }}
         >
@@ -131,3 +164,8 @@ export default class MessageThread extends React.Component {
     );
   }
 }
+
+export default connect(null, {
+  sendMessage,
+  readMessage
+})(MessageThread);

@@ -28,6 +28,9 @@ const SVG = styled.svg`
   &.fa-w-9 {
     width: 0.5625em;
   }
+  &.fa-w-10 {
+    width: 0.625em;
+  }
   &.fa-w-14 {
     width: 0.875em;
   }
@@ -195,7 +198,16 @@ const SignOut = props => (
   </SVG>
 );
 
-const TimeCircle = props => (
+const Times = props => (
+  <SVG viewBox="0 0 320 512" className="fa-times fa-w-10" {...props}>
+    <path
+      fill="currentColor"
+      d="M207.6 256l107.72-107.72c6.23-6.23 6.23-16.34 0-22.58l-25.03-25.03c-6.23-6.23-16.34-6.23-22.58 0L160 208.4 52.28 100.68c-6.23-6.23-16.34-6.23-22.58 0L4.68 125.7c-6.23 6.23-6.23 16.34 0 22.58L112.4 256 4.68 363.72c-6.23 6.23-6.23 16.34 0 22.58l25.03 25.03c6.23 6.23 16.34 6.23 22.58 0L160 303.6l107.72 107.72c6.23 6.23 16.34 6.23 22.58 0l25.03-25.03c6.23-6.23 6.23-16.34 0-22.58L207.6 256z"
+    />
+  </SVG>
+);
+
+const TimesCircle = props => (
   <SVG viewBox="0 0 512 512" className="fa-times-circle fa-w-16" {...props}>
     <path
       fill="currentColor"
@@ -294,6 +306,15 @@ const Route = props => (
   </SVG>
 );
 
+const Check = props => (
+  <SVG viewBox="0 0 512 512" className="fa-route fa-w-16" {...props}>
+    <path
+      fill="currentColor"
+      d="M435.848 83.466L172.804 346.51l-96.652-96.652c-4.686-4.686-12.284-4.686-16.971 0l-28.284 28.284c-4.686 4.686-4.686 12.284 0 16.971l133.421 133.421c4.686 4.686 12.284 4.686 16.971 0l299.813-299.813c4.686-4.686 4.686-12.284 0-16.971l-28.284-28.284c-4.686-4.686-12.284-4.686-16.97 0z"
+    />
+  </SVG>
+);
+
 export default {
   Bars,
   UserCircle,
@@ -313,7 +334,8 @@ export default {
   QuestionCircle,
   Settings,
   SignOut,
-  TimeCircle,
+  Times,
+  TimesCircle,
   AngleRight,
   AngleLeft,
   Pen,
@@ -323,5 +345,6 @@ export default {
   ShareAlt,
   HandshakeAlt,
   Clock,
-  Route
+  Route,
+  Check
 };

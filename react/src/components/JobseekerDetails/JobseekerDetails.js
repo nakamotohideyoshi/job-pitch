@@ -22,6 +22,8 @@ export default ({ jobseeker, connected, className, actions }) => {
 
   return (
     <Wrapper className={className}>
+      <h2>Jobseeker Details</h2>
+
       <Row gutter={32}>
         <Col sm={24} md={10} lg={5}>
           <div className="avatar">

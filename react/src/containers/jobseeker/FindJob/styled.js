@@ -17,33 +17,22 @@ export default styled.div`
       padding-left: 12px;
       padding-right: 12px;
 
-      .ant-list-item-content {
-        flex: initial;
+      .ant-list-item-meta {
+        align-items: center;
 
         .ant-list-item-meta-title {
           font-size: 16px;
         }
-
-        .properties {
-          font-size: 12px;
-          span {
-            display: inline-block;
-          }
-        }
       }
 
-      .ant-list-item-action {
-        span {
-          width: 30px;
-          height: 30px;
-          display: inline-flex;
-          justify-content: center;
-          align-items: center;
-          border-radius: 50%;
-          &:hover {
-            box-shadow: 0px 0 4px 0px rgba(0, 0, 0, 0.15);
-          }
-        }
+      .ant-list-item-content {
+        justify-content: space-evenly;
+        font-size: 12px;
+      }
+
+      &:hover {
+        cursor: pointer;
+        background-color: ${colors.lightGreen};
       }
 
       &.loading {
@@ -53,11 +42,6 @@ export default styled.div`
           background-color: rgba(255, 255, 255, 0.5);
           z-index: 1;
         }
-      }
-
-      &:hover {
-        cursor: pointer;
-        background-color: ${colors.lightGreen};
       }
     }
   }

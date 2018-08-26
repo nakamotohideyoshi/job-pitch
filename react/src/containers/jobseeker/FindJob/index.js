@@ -2,24 +2,13 @@ import React from 'react';
 import Helmet from 'react-helmet';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import Truncate from 'react-truncate';
-import { List, Avatar, Modal, Tooltip, Breadcrumb, Button } from 'antd';
+import { List, Modal, Tooltip, Breadcrumb, Button, Drawer } from 'antd';
 
 import { findJobs, applyJob, removeJob } from 'redux/jobseeker/find';
 import DATA from 'utils/data';
 import * as helper from 'utils/helper';
 
-import {
-  PageHeader,
-  PageSubHeader,
-  SearchBox,
-  AlertMsg,
-  ListEx,
-  Icons,
-  Loading,
-  JobDetails,
-  LargeModal
-} from 'components';
+import { PageHeader, PageSubHeader, SearchBox, AlertMsg, ListEx, Icons, Loading, JobDetails, Logo } from 'components';
 import NoPitch from '../components/NoPitch';
 import Wrapper from './styled';
 
@@ -41,7 +30,7 @@ class FindJob extends React.Component {
     }
   }
 
-  componentWillReceiveProps(nextProps) {
+  componentWillReceiveProps() {
     const { selectedId } = this.state;
     if (selectedId) {
       const { jobs } = this.props;
@@ -118,7 +107,7 @@ class FindJob extends React.Component {
   };
 
   renderJob = job => {
-    const { id, title, contract, hours, description, location_data, loading } = job;
+    const { id, title, contract, hours, location_data, loading } = job;
     const logo = helper.getJobLogo(job);
     const name = helper.getFullBWName(job);
     const contractName = helper.getItemByID(DATA.contracts, contract).short_name;
@@ -136,28 +125,18 @@ class FindJob extends React.Component {
           </Tooltip>,
           <Tooltip placement="bottom" title="Not interested">
             <span onClick={e => this.onRemove(job, e)}>
-              <Icons.TrashAlt />
+              <Icons.Times />
             </span>
           </Tooltip>
         ]}
         onClick={() => this.onSelect(id)}
         className={loading ? 'loading' : ''}
       >
-        <List.Item.Meta
-          avatar={<Avatar src={logo} className="avatar-80" />}
-          title={`${title} (${name})`}
-          description={
-            <Truncate lines={2} ellipsis={<span>...</span>}>
-              {description}
-            </Truncate>
-          }
-        />
-        <div className="properties">
-          <span style={{ width: '100px' }}>
-            {contractName} / {hoursName}
-          </span>
-          <span style={{ width: '60px' }}>{job.distance}</span>
-        </div>
+        <List.Item.Meta avatar={<Logo src={logo} size="80px" />} title={title} description={name} />
+        <span style={{ width: '80px' }}>{job.distance}</span>
+        <span style={{ width: '60px' }}>
+          {contractName} / {hoursName}
+        </span>
         {loading && <Loading className="mask" size="small" />}
       </List.Item>
     );
@@ -211,8 +190,8 @@ class FindJob extends React.Component {
           />
         </div>
 
-        {selectedJob && (
-          <LargeModal visible title="Job Details" onCancel={() => this.onSelect()}>
+        <Drawer placement="right" closable={false} onClose={() => this.onSelect()} visible={!!selectedJob}>
+          {selectedJob && (
             <JobDetails
               job={selectedJob}
               roughLocation
@@ -227,8 +206,8 @@ class FindJob extends React.Component {
                 </div>
               }
             />
-          </LargeModal>
-        )}
+          )}
+        </Drawer>
       </Wrapper>
     );
   }

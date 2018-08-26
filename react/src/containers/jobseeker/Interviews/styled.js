@@ -26,13 +26,31 @@ export default styled.div`
       }
 
       .ant-list-item-content {
-        justify-content: space-evenly;
+        justify-content: center;
         font-size: 12px;
+
+        div {
+          margin: 4px 0;
+        }
+      }
+
+      .ant-list-item-action {
+        width: 130px;
+        text-align: right;
       }
 
       &:hover {
         cursor: pointer;
         background-color: ${colors.lightGreen};
+      }
+
+      &.loading {
+        pointer-events: none;
+
+        .mask {
+          background-color: rgba(255, 255, 255, 0.5);
+          z-index: 1;
+        }
       }
     }
   }

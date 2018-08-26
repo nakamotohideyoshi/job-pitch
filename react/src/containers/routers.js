@@ -26,8 +26,8 @@ import UserEdit from 'containers/recruiter/Users/UserEdit';
 
 import JSRoute from 'containers/jobseeker/Route';
 import FindJob from 'containers/jobseeker/FindJob';
-import JSApplications from 'containers/jobseeker/MyApplications';
-import JSInterviews from 'containers/jobseeker/JSInterviews';
+import MyApplications from 'containers/jobseeker/MyApplications';
+import JSInterviews from 'containers/jobseeker/Interviews';
 import JSJob from 'containers/jobseeker/Job';
 import JSPublicJob from 'containers/jobseeker/PublicJob';
 import JSPublicWorkplaceList from 'containers/jobseeker/PublicWorkplaceList';
@@ -90,7 +90,7 @@ export default props => {
 
       <Redirect exact from="/jobseeker" to="/jobseeker/find" />
       <JSRoute exact path="/jobseeker/find" component={FindJob} />
-      <JSRoute exact path="/jobseeker/applications" component={JSApplications} />
+      <JSRoute exact path="/jobseeker/applications" component={MyApplications} />
 
       <JSRoute exact path="/jobseeker/interviews" component={JSInterviews} />
 

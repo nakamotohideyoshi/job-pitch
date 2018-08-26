@@ -80,7 +80,6 @@ export default handleActions(
 
     [requestFail(C.GET_APPLICATIONS)]: (state, { payload }) => ({
       ...state,
-      applications: null,
       error: payload
     }),
 

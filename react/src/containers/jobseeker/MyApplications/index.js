@@ -1,15 +1,15 @@
 import React from 'react';
 import Helmet from 'react-helmet';
 import { connect } from 'react-redux';
-import Truncate from 'react-truncate';
-import { List, Avatar, Tooltip, Button } from 'antd';
+import { List, Tooltip, Button, Drawer } from 'antd';
 
 import { getApplications } from 'redux/applications';
 import DATA from 'utils/data';
 import * as helper from 'utils/helper';
 
-import { PageHeader, SearchBox, AlertMsg, ListEx, Icons, JobDetails, LargeModal } from 'components';
+import { PageHeader, SearchBox, AlertMsg, ListEx, Icons, Logo } from 'components';
 import NoPitch from '../components/NoPitch';
+import ApplicationDetail from './ApplicationDetails';
 import Wrapper from './styled';
 
 class MyApplications extends React.Component {
@@ -45,7 +45,7 @@ class MyApplications extends React.Component {
 
   renderApp = app => {
     const { id, job_data } = app;
-    const { title, contract, hours, description } = job_data;
+    const { title, contract, hours } = job_data;
     const logo = helper.getJobLogo(job_data);
     const name = helper.getFullBWName(job_data);
     const contractName = helper.getItemByID(DATA.contracts, contract).short_name;
@@ -63,20 +63,10 @@ class MyApplications extends React.Component {
         ]}
         onClick={() => this.onSelect(id)}
       >
-        <List.Item.Meta
-          avatar={<Avatar src={logo} className="avatar-80" />}
-          title={`${title} (${name})`}
-          description={
-            <Truncate lines={2} ellipsis={<span>...</span>}>
-              {description}
-            </Truncate>
-          }
-        />
-        <div className="properties">
-          <span>
-            {contractName} / {hoursName}
-          </span>
-        </div>
+        <List.Item.Meta avatar={<Logo src={logo} size="80px" />} title={title} description={name} />
+        <span style={{ width: '80px' }}>
+          {contractName} / {hoursName}
+        </span>
       </List.Item>
     );
   };
@@ -117,18 +107,18 @@ class MyApplications extends React.Component {
           />
         </div>
 
-        {selectedApp && (
-          <LargeModal visible title="Job Details" onCancel={() => this.onSelect()}>
-            <JobDetails
-              job={selectedApp.job_data}
+        <Drawer placement="right" closable={false} onClose={() => this.onSelect()} visible={!!selectedApp}>
+          {selectedApp && (
+            <ApplicationDetail
+              application={selectedApp}
               actions={
                 <Button type="primary" onClick={() => this.onMessage(selectedApp)}>
                   Message
                 </Button>
               }
             />
-          </LargeModal>
-        )}
+          )}
+        </Drawer>
       </Wrapper>
     );
   }

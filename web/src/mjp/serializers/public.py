@@ -29,7 +29,7 @@ class PublicEmbeddedLocationListingSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Location
-        fields = ('id', 'name', 'images', 'longitude', 'latitude')
+        fields = ('id', 'name', 'description', 'images', 'longitude', 'latitude')
 
 
 class PublicEmbeddedJobListingSerializer(serializers.ModelSerializer):

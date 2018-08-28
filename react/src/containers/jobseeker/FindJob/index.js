@@ -132,9 +132,9 @@ class FindJob extends React.Component {
         onClick={() => this.onSelect(id)}
         className={loading ? 'loading' : ''}
       >
-        <List.Item.Meta avatar={<Logo src={logo} size="80px" />} title={title} description={name} />
-        <span style={{ width: '80px' }}>{job.distance}</span>
-        <span style={{ width: '60px' }}>
+        <List.Item.Meta avatar={<Logo src={logo} size="80px" padding="10px" />} title={title} description={name} />
+        <span style={{ width: '60px' }}>{job.distance}</span>
+        <span style={{ width: '80px' }}>
           {contractName} / {hoursName}
         </span>
         {loading && <Loading className="mask" size="small" />}
@@ -193,7 +193,7 @@ class FindJob extends React.Component {
         <Drawer placement="right" closable={false} onClose={() => this.onSelect()} visible={!!selectedJob}>
           {selectedJob && (
             <JobDetails
-              job={selectedJob}
+              jobData={selectedJob}
               roughLocation
               actions={
                 <div>

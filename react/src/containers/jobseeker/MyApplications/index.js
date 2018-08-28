@@ -7,9 +7,8 @@ import { getApplications } from 'redux/applications';
 import DATA from 'utils/data';
 import * as helper from 'utils/helper';
 
-import { PageHeader, SearchBox, AlertMsg, ListEx, Icons, Logo } from 'components';
+import { PageHeader, SearchBox, AlertMsg, ListEx, Icons, JobDetails, Logo } from 'components';
 import NoPitch from '../components/NoPitch';
-import ApplicationDetail from './ApplicationDetails';
 import Wrapper from './styled';
 
 class MyApplications extends React.Component {
@@ -63,7 +62,7 @@ class MyApplications extends React.Component {
         ]}
         onClick={() => this.onSelect(id)}
       >
-        <List.Item.Meta avatar={<Logo src={logo} size="80px" />} title={title} description={name} />
+        <List.Item.Meta avatar={<Logo src={logo} size="80px" padding="10px" />} title={title} description={name} />
         <span style={{ width: '80px' }}>
           {contractName} / {hoursName}
         </span>
@@ -109,7 +108,7 @@ class MyApplications extends React.Component {
 
         <Drawer placement="right" closable={false} onClose={() => this.onSelect()} visible={!!selectedApp}>
           {selectedApp && (
-            <ApplicationDetail
+            <JobDetails
               application={selectedApp}
               actions={
                 <Button type="primary" onClick={() => this.onMessage(selectedApp)}>
@@ -125,11 +124,22 @@ class MyApplications extends React.Component {
 }
 
 export default connect(
-  state => ({
-    jobseeker: state.js_profile.jobseeker,
-    applications: state.applications.applications,
-    error: state.applications.error
-  }),
+  state => {
+    let { applications } = state.applications;
+    applications &&
+      applications.forEach(application => {
+        // application.interview = application.interviews.filter(
+        //   ({ status }) => status === 'PENDING' || status === 'ACCEPTED'
+        // )[0];
+
+        application.interview = { ...application.interviews[0], status: 'PENDING' };
+      });
+    return {
+      jobseeker: state.js_profile.jobseeker,
+      applications,
+      error: state.applications.error
+    };
+  },
   {
     getApplications
   }

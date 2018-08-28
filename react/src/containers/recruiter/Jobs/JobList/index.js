@@ -13,7 +13,7 @@ import * as helper from 'utils/helper';
 
 import * as _ from 'lodash';
 
-import { PageHeader, PageSubHeader, AlertMsg, LinkButton, Loading, ListEx, Icons } from 'components';
+import { PageHeader, PageSubHeader, AlertMsg, LinkButton, Loading, ListEx, Icons, Logo } from 'components';
 import DeleteDialog from './DeleteDialog';
 import Mark from './Mark';
 import Wrapper from '../styled';
@@ -93,7 +93,10 @@ class JobList extends React.Component {
 
   addJob = () => {
     helper.saveData('tutorial');
-    const { workplace: { id }, history } = this.props;
+    const {
+      workplace: { id },
+      history
+    } = this.props;
     history.push(`/recruiter/jobs/job/add/${id}`);
   };
 
@@ -139,7 +142,6 @@ class JobList extends React.Component {
             <span onClick={e => this.openDialog(e, id)}>
               <Icons.ShareAlt />
             </span>
-            {/* <ShareLink url={`${window.location.origin}/jobseeker/jobs/${id}`} /> */}
           </Tooltip>,
           <Tooltip placement="bottom" title="Edit">
             <span onClick={e => this.editJob(job, e)}>
@@ -155,35 +157,23 @@ class JobList extends React.Component {
         onClick={() => this.selectJob(job)}
         className={`${loading ? 'loading' : ''} ${closed}`}
       >
-        <List.Item.Meta
-          avatar={<Avatar src={logo} className="avatar-80" />}
-          title={title}
-          description={
-            <Truncate lines={2} ellipsis={<span>...</span>}>
-              {description}
-            </Truncate>
-          }
-        />
-        {/* <div className="properties">
-          <span style={{ width: '60px' }}>{contractName}</span>
-          <span style={{ width: '60px' }}>{hoursName}</span>
-          <span>{sectorName}</span>
-        </div> */}
-        <div className="properties">
-          <span style={{ color: '#ff9300', marginRight: '5px' }} onClick={e => this.showApps(job, e)}>
-            {strApplications}
-          </span>
-          {count && count.newApplications && count.newApplications > 0 ? (
-            <span style={{ width: '60px', color: '#ff9300' }} onClick={e => this.showApps(job, e)}>
-              {strNewApplications}
+        <List.Item.Meta avatar={<Logo src={logo} size="80px" />} title={title} />
+        <span style={{ width: '140px' }}>
+          <div>
+            <span style={{ color: '#ff9300', marginRight: '5px' }} onClick={e => this.showApps(job, e)}>
+              {strApplications}
             </span>
-          ) : (
-            ''
-          )}
-          <span style={{ color: '#00b6a4' }} onClick={e => this.showCons(job, e)}>
+            {count &&
+              !!count.newApplications && (
+                <span style={{ color: '#ff9300' }} onClick={e => this.showApps(job, e)}>
+                  {strNewApplications}
+                </span>
+              )}
+          </div>
+          <div style={{ color: '#00b6a4' }} onClick={e => this.showCons(job, e)}>
             {strConnections}
-          </span>
-        </div>
+          </div>
+        </span>
         {closed && <Mark>Inactive</Mark>}
         {loading && <Loading className="mask" size="small" />}
       </List.Item>

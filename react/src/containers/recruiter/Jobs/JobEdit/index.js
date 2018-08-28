@@ -389,7 +389,7 @@ class JobEdit extends React.Component {
         {job &&
           showPreview && (
             <LargeModal visible title="Job Details" onCancel={this.closePreview}>
-              <JobDetails job={job} />
+              <JobDetails jobData={job} />
             </LargeModal>
           )}
       </Wrapper>

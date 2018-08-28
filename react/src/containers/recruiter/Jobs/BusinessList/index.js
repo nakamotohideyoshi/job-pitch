@@ -1,14 +1,14 @@
 import React from 'react';
 import Helmet from 'react-helmet';
 import { connect } from 'react-redux';
-import { Breadcrumb, List, Avatar, Modal, Tooltip } from 'antd';
+import { Breadcrumb, List, Modal, Tooltip } from 'antd';
 
 import { removeBusiness } from 'redux/recruiter/businesses';
 import { getApplications } from 'redux/applications';
 import DATA from 'utils/data';
 import * as helper from 'utils/helper';
 
-import { PageHeader, PageSubHeader, AlertMsg, LinkButton, Loading, ListEx, Icons, Intro } from 'components';
+import { PageHeader, PageSubHeader, AlertMsg, LinkButton, Loading, ListEx, Icons, Intro, Logo } from 'components';
 import imgLogo from 'assets/logo1.png';
 import imgIntro1 from 'assets/intro1.png';
 import imgIntro2 from 'assets/intro2.png';
@@ -93,8 +93,11 @@ class BusinessList extends React.Component {
       confirm({
         content: (
           <span>
-            Got more that one business?<br />Get in touch to talk about how we can help you.<br />Remember, you can
-            always create additional workplaces under your existing business.
+            Got more that one business?
+            <br />
+            Get in touch to talk about how we can help you.
+            <br />
+            Remember, you can always create additional workplaces under your existing business.
           </span>
         ),
         okText: `Contact Us`,
@@ -179,22 +182,12 @@ class BusinessList extends React.Component {
         onClick={() => this.selectBusiness(business)}
         className={loading ? 'loading' : ''}
       >
-        <List.Item.Meta
-          style={{ alignItems: 'center' }}
-          avatar={<Avatar src={logo} className="avatar-80" />}
-          title={name}
-        />
-        <div className="properties" style={{ display: 'flex', alignItems: 'flex-end' }}>
-          <span style={{ width: '120px' }}>{strTokens}</span>
-          <div style={{ display: 'flex', flexDirection: 'column' }}>
-            <span style={{ width: '130px' }}>{strWorkplaces}</span>
-            {newApplicationsCount && newApplicationsCount > 0 ? (
-              <span style={{ width: '130px', color: '#ff9300' }}>{strNewApplications}</span>
-            ) : (
-              ''
-            )}
-          </div>
-        </div>
+        <List.Item.Meta avatar={<Logo src={logo} size="80px" />} title={name} />
+        <span style={{ width: '80px' }}>{strTokens}</span>
+        <span style={{ width: '140px' }}>
+          <div>{strWorkplaces}</div>
+          {!!newApplicationsCount && <div style={{ color: '#ff9300' }}>{strNewApplications}</div>}
+        </span>
         {loading && <Loading className="mask" size="small" />}
       </List.Item>
     );

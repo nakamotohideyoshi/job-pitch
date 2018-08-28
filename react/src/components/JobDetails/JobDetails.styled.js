@@ -9,6 +9,7 @@ export default styled.div`
   }
 
   .logo {
+    position: relative;
     ${media.tablet` margin-bottom: 24px;`};
     padding-top: 100%;
     background-color: #fff;
@@ -22,9 +23,9 @@ export default styled.div`
     }
   }
 
-  &.publicJobContainer {
+  /* &.publicJobContainer {
     margin: 20px 0px 20px 0px;
-  }
+  } */
 
   .info {
     ${media.desktop`margin-bottom: 24px;`};
@@ -76,6 +77,14 @@ export default styled.div`
 
   .ant-tabs {
     margin-top: 20px;
+
+    .ant-tabs-nav .ant-tabs-tab {
+      color: inherit !important;
+    }
+
+    .ant-tabs-tabpane {
+      padding: 0 15px;
+    }
   }
 
   .pitch-video {
@@ -87,15 +96,11 @@ export default styled.div`
     `};
   }
 
-  .description,
-  .map {
-    margin-top: 20px;
-  }
-
   .map {
     position: relative;
     width: 100%;
     padding-top: 40%;
+    margin-top: 20px;
 
     > div {
       position: absolute;

@@ -60,7 +60,7 @@ class Sidebar extends React.PureComponent {
           description={
             <Fragment>
               <span className="single-line">{comment}</span>
-              {!!newMsgs && <Badge count={newMsgs < 100 ? newMsgs : '99+'} />}
+              {!!newMsgs && <Badge count={newMsgs < 10 ? newMsgs : '9+'} />}
             </Fragment>
           }
         />

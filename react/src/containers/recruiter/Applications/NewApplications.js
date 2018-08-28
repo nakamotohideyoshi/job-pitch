@@ -2,17 +2,17 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import Truncate from 'react-truncate';
-import { List, Modal, Avatar, Tooltip, Button } from 'antd';
+import { List, Modal, Tooltip, Button, Drawer } from 'antd';
 
 import { connectApplication, removeApplication } from 'redux/applications';
 import DATA from 'utils/data';
 import * as helper from 'utils/helper';
 
-import { AlertMsg, Loading, ListEx, Icons, LargeModal, JobseekerDetails } from 'components';
+import { AlertMsg, Loading, ListEx, Icons, JobseekerDetails, Logo } from 'components';
 
 const { confirm } = Modal;
 
-class MyApplications extends React.Component {
+class NewApplications extends React.Component {
   state = {
     selectedId: null
   };
@@ -29,8 +29,7 @@ class MyApplications extends React.Component {
   onConnect = ({ id }, event) => {
     event && event.stopPropagation();
 
-    const { job } = this.props;
-    const business = job.location_data.business_data;
+    const business = this.props.job.location_data.business_data;
 
     if (business.tokens === 0) {
       confirm({
@@ -121,10 +120,10 @@ class MyApplications extends React.Component {
         className={loading ? 'loading' : ''}
       >
         <List.Item.Meta
-          avatar={<Avatar src={image} className="avatar-80" />}
+          avatar={<Logo src={image} size="80px" />}
           title={name}
           description={
-            <Truncate lines={2} ellipsis={<span>...</span>}>
+            <Truncate lines={1} ellipsis={<span>...</span>}>
               {job_seeker.description}
             </Truncate>
           }
@@ -138,7 +137,7 @@ class MyApplications extends React.Component {
     <AlertMsg>
       <span>
         {`No applications at the moment. Once that happens you can go trough them here,
-                shortlist and easy switch to Find Talent mode and "head hunt" as well.`}
+          shortlist and easy switch to Find Talent mode and "head hunt" as well.`}
       </span>
     </AlertMsg>
   );
@@ -146,9 +145,8 @@ class MyApplications extends React.Component {
   render() {
     const { job, applications } = this.props;
     const selectedApp = applications && helper.getItemByID(applications, this.state.selectedId);
-
     return (
-      <div className="content">
+      <div>
         {job && (
           <ListEx
             data={applications}
@@ -159,11 +157,10 @@ class MyApplications extends React.Component {
             emptyRender={this.renderEmpty}
           />
         )}
-        {selectedApp && (
-          <LargeModal visible title="Application Details" onCancel={() => this.onSelect()}>
+        <Drawer placement="right" closable={false} onClose={() => this.onSelect()} visible={!!selectedApp}>
+          {selectedApp && (
             <JobseekerDetails
-              jobseeker={selectedApp.job_seeker}
-              connected
+              application={selectedApp}
               actions={
                 <div>
                   <Button type="primary" loading={selectedApp.loading} onClick={() => this.onConnect(selectedApp)}>
@@ -175,8 +172,8 @@ class MyApplications extends React.Component {
                 </div>
               }
             />
-          </LargeModal>
-        )}
+          )}
+        </Drawer>
       </div>
     );
   }
@@ -186,5 +183,5 @@ export default withRouter(
   connect(null, {
     connectApplication,
     removeApplication
-  })(MyApplications)
+  })(NewApplications)
 );

@@ -2,12 +2,12 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import Truncate from 'react-truncate';
-import { List, Modal, Avatar, Tooltip, Button } from 'antd';
+import { List, Modal, Tooltip, Button, Drawer } from 'antd';
 
 import { findJobseekers, connectJobseeker, removeJobseeker } from 'redux/recruiter/find';
 import * as helper from 'utils/helper';
 
-import { AlertMsg, Loading, ListEx, Icons, LargeModal, JobseekerDetails } from 'components';
+import { AlertMsg, Loading, ListEx, Icons, JobseekerDetails, Logo } from 'components';
 
 const { confirm } = Modal;
 
@@ -23,8 +23,8 @@ class FindTalent extends React.Component {
     }
   }
 
-  findJobseekers = job => {
-    const jobId = (job || this.props.job || {}).id;
+  findJobseekers = () => {
+    const jobId = (this.props.job || {}).id;
     jobId &&
       this.props.findJobseekers({
         params: {
@@ -115,7 +115,7 @@ class FindTalent extends React.Component {
           </Tooltip>,
           <Tooltip placement="bottom" title="Remove">
             <span onClick={e => this.onRemove(jobseeker, e)}>
-              <Icons.TrashAlt />
+              <Icons.Times />
             </span>
           </Tooltip>
         ]}
@@ -123,10 +123,10 @@ class FindTalent extends React.Component {
         className={loading ? 'loading' : ''}
       >
         <List.Item.Meta
-          avatar={<Avatar src={image} className="avatar-80" />}
+          avatar={<Logo src={image} size="80px" />}
           title={name}
           description={
-            <Truncate lines={2} ellipsis={<span>...</span>}>
+            <Truncate lines={1} ellipsis={<span>...</span>}>
               {description}
             </Truncate>
           }
@@ -140,9 +140,9 @@ class FindTalent extends React.Component {
     <AlertMsg>
       <span>
         {`There are no more new matches for this job.
-                  You can restore your removed matches by clicking refresh above.`}
+          You can restore your removed matches by clicking refresh above.`}
       </span>
-      <a onClick={() => this.findJobseekers()}>
+      <a onClick={this.findJobseekers}>
         <Icons.Refresh />
         Refresh
       </a>
@@ -152,8 +152,9 @@ class FindTalent extends React.Component {
   render() {
     const { job, jobseekers } = this.props;
     const selectedJobseeker = jobseekers && helper.getItemByID(jobseekers, this.state.selectedId);
+
     return (
-      <div className="content">
+      <div>
         {job && (
           <ListEx
             data={jobseekers}
@@ -164,8 +165,8 @@ class FindTalent extends React.Component {
             emptyRender={this.renderEmpty}
           />
         )}
-        {selectedJobseeker && (
-          <LargeModal visible title="Jobseeker Details" onCancel={() => this.onSelect()}>
+        <Drawer placement="right" closable={false} onClose={() => this.onSelect()} visible={!!selectedJobseeker}>
+          {selectedJobseeker && (
             <JobseekerDetails
               jobseeker={selectedJobseeker}
               actions={
@@ -187,8 +188,8 @@ class FindTalent extends React.Component {
                 </div>
               }
             />
-          </LargeModal>
-        )}
+          )}
+        </Drawer>
       </div>
     );
   }

@@ -1,6 +1,5 @@
 import { message } from 'antd';
 import DATA from './data';
-import * as _ from 'lodash';
 
 /**
 |--------------------------------------------------
@@ -271,35 +270,4 @@ export function checkIfEmailInString(str) {
 
 export function checkIfPhoneNumberInString(str) {
   return /\d{7,}/.test(str.replace(/[\s-]/g, ''));
-}
-
-/**
-|--------------------------------------------------
-| count new messages
-|--------------------------------------------------
-*/
-
-export function getNewMessages({ applications, from_role }) {
-  let messageList = [];
-  _.forEach(applications, application => {
-    _.forEach(application.messages, message => {
-      if (message.from_role === from_role) {
-        messageList.push(message);
-      }
-    });
-  });
-  let sortedMessages = _.sortBy(messageList, 'created').reverse();
-  let count = 0;
-  for (let i = 0; i < sortedMessages.length; i++) {
-    if (!sortedMessages[i].read) {
-      count++;
-    } else {
-      break;
-    }
-    if (count > 9) {
-      break;
-    }
-  }
-  let latest = sortedMessages.length > 0 ? sortedMessages[0].id : '';
-  return { count, latest: latest };
 }

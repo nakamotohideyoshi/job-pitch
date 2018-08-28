@@ -2,20 +2,18 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import Truncate from 'react-truncate';
-import { List, Modal, Avatar, Tooltip, Button, Switch, Icon } from 'antd';
+import { List, Modal, Tooltip, Button, Switch, Drawer } from 'antd';
 
 import { updateApplication, removeApplication } from 'redux/applications';
 import * as helper from 'utils/helper';
 
-import { AlertMsg, Loading, ListEx, Icons, LargeModal, JobseekerDetails, InterviewEdit } from 'components';
+import { AlertMsg, Loading, ListEx, Icons, JobseekerDetails, InterviewEdit, Logo } from 'components';
 
 const { confirm } = Modal;
 
 class MyConnections extends React.Component {
   state = {
-    selectedId: null,
-    interviewCreate: false,
-    interviewView: false
+    selectedId: null
   };
 
   componentWillMount() {
@@ -32,22 +30,22 @@ class MyConnections extends React.Component {
     this.props.history.push(`/recruiter/messages/${id}`);
   };
 
-  onInterview = (app, isInterview, event) => {
-    event && event.stopPropagation();
-    if (isInterview) {
-      this.setState({
-        interviewView: true,
-        selectedInterview: app
-      });
-    } else {
-      this.setState({
-        interviewCreate: true,
-        selectedInterview: app
-      });
-    }
+  onInterview = (app, event) => {
+    // event && event.stopPropagation();
+    // if (app.interview) {
+    //   this.setState({
+    //     interviewView: true,
+    //     selectedInterview: app
+    //   });
+    // } else {
+    //   this.setState({
+    //     interviewCreate: true,
+    //     selectedInterview: app
+    //   });
+    // }
   };
 
-  hideInterview = () => this.setState({ interviewCreate: false, interviewView: false });
+  // hideInterview = () => this.setState({ interviewCreate: false, interviewView: false });
 
   onRemove = ({ id }, event) => {
     event && event.stopPropagation();
@@ -89,29 +87,17 @@ class MyConnections extends React.Component {
       .indexOf(this.props.searchText) >= 0;
 
   renderApplication = app => {
-    const { id, job_seeker, loading } = app;
+    const { id, job_seeker, interview, loading } = app;
     const image = helper.getPitch(job_seeker).thumbnail;
     const name = helper.getFullJSName(job_seeker);
-    const interviews = this.props.interviews;
-    let isInterview = false;
-    interviews.forEach(interview => {
-      if (
-        interview.id === app.id &&
-        interview.interview.status !== 'COMPLETED' &&
-        interview.interview.status !== 'CANCELLED'
-      ) {
-        isInterview = true;
-        app.interview = interview.interview;
-      }
-    });
 
     return (
       <List.Item
         key={id}
         actions={[
-          <Tooltip placement="bottom" title={isInterview ? 'View interview' : 'Arrange interview'}>
-            <span onClick={e => this.onInterview(app, isInterview, e)}>
-              <Icon type="team" style={{ fontSize: '18px' }} />
+          <Tooltip placement="bottom" title={interview ? 'View interview' : 'Arrange interview'}>
+            <span onClick={e => this.onInterview(app, e)}>
+              <Icons.UserFriends />
             </span>
           </Tooltip>,
           <Tooltip placement="bottom" title="Message">
@@ -131,13 +117,13 @@ class MyConnections extends React.Component {
         <List.Item.Meta
           avatar={
             <span>
-              <Avatar src={image} className="avatar-80" />
+              {<Logo src={image} size="80px" />}
               {app.shortlisted && <Icons.Star />}
             </span>
           }
           title={name}
           description={
-            <Truncate lines={2} ellipsis={<span>...</span>}>
+            <Truncate lines={1} ellipsis={<span>...</span>}>
               {job_seeker.description}
             </Truncate>
           }
@@ -152,9 +138,9 @@ class MyConnections extends React.Component {
       <span>
         {this.props.shortlist
           ? `You have not shortlisted any applications for this job,
-                       turn off shortlist view to see the non-shortlisted applications.`
+            turn off shortlist view to see the non-shortlisted applications.`
           : `No candidates have applied for this job yet.
-                       Once that happens, their applications will appear here.`}
+            Once that happens, their applications will appear here.`}
       </span>
     </AlertMsg>
   );
@@ -162,22 +148,8 @@ class MyConnections extends React.Component {
   render() {
     const { job, applications } = this.props;
     const selectedApp = helper.getItemByID(applications, this.state.selectedId);
-    const interviews = this.props.interviews;
-    let isInterview = false;
-    if (selectedApp) {
-      interviews.forEach(interview => {
-        if (
-          interview.id === selectedApp.id &&
-          interview.interview.status !== 'COMPLETED' &&
-          interview.interview.status !== 'CANCELLED'
-        ) {
-          isInterview = true;
-          selectedApp.interview = interview.interview;
-        }
-      });
-    }
     return (
-      <div className="content">
+      <div>
         {job && (
           <ListEx
             data={applications}
@@ -188,11 +160,10 @@ class MyConnections extends React.Component {
             emptyRender={this.renderEmpty}
           />
         )}
-        {selectedApp && (
-          <LargeModal visible title="Application Details" onCancel={() => this.onSelect()}>
+        <Drawer placement="right" closable={false} onClose={() => this.onSelect()} visible={!!selectedApp}>
+          {selectedApp && (
             <JobseekerDetails
-              jobseeker={selectedApp.job_seeker}
-              connected
+              application={selectedApp}
               actions={
                 <div>
                   <div style={{ marginBottom: '24px' }}>
@@ -203,12 +174,8 @@ class MyConnections extends React.Component {
                       onChange={() => this.onShortlist(selectedApp)}
                     />
                   </div>
-                  <Button
-                    type="primary"
-                    disabled={selectedApp.loading}
-                    onClick={e => this.onInterview(selectedApp, isInterview, e)}
-                  >
-                    {isInterview ? 'View interview' : 'Arrange interview'}
+                  <Button type="primary" disabled={selectedApp.loading} onClick={e => this.onInterview(selectedApp)}>
+                    {selectedApp.interview ? 'View interview' : 'Arrange interview'}
                   </Button>
                   <Button type="primary" disabled={selectedApp.loading} onClick={() => this.onMessage(selectedApp)}>
                     Message
@@ -219,11 +186,16 @@ class MyConnections extends React.Component {
                 </div>
               }
             />
-          </LargeModal>
-        )}
-        {this.state.selectedInterview &&
-          this.state.interviewView && (
-            <LargeModal visible title="Interview Detail" onCancel={this.hideInterview}>
+          )}
+        </Drawer>
+        {/* <Drawer
+          placement="right"
+          closable={false}
+          onClose={() => this.hideInterview()}
+          visible={this.state.selectedInterview && this.state.interviewView}
+        >
+          {this.state.selectedInterview &&
+            this.state.interviewView && (
               <InterviewEdit
                 jobseeker={this.state.selectedInterview.job_seeker}
                 connected
@@ -231,11 +203,16 @@ class MyConnections extends React.Component {
                 gotoOrigin={this.hideInterview}
                 view
               />
-            </LargeModal>
-          )}
-        {this.state.selectedInterview &&
-          this.state.interviewCreate && (
-            <LargeModal visible title="Request Interview" onCancel={this.hideInterview}>
+            )}
+        </Drawer>
+        <Drawer
+          placement="right"
+          closable={false}
+          onClose={() => this.hideInterview()}
+          visible={this.state.selectedInterview && this.state.interviewCreate}
+        >
+          {this.state.selectedInterview &&
+            this.state.interviewCreate && (
               <InterviewEdit
                 jobseeker={this.state.selectedInterview.job_seeker}
                 connected
@@ -243,8 +220,8 @@ class MyConnections extends React.Component {
                 gotoOrigin={this.hideInterview}
                 create
               />
-            </LargeModal>
-          )}
+            )}
+        </Drawer> */}
       </div>
     );
   }

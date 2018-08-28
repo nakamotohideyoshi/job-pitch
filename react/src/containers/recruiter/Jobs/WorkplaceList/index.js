@@ -11,7 +11,7 @@ import { removeWorkplace } from 'redux/recruiter/workplaces';
 import { getApplications } from 'redux/applications';
 import * as helper from 'utils/helper';
 
-import { PageHeader, PageSubHeader, AlertMsg, LinkButton, Loading, ListEx, Icons } from 'components';
+import { PageHeader, PageSubHeader, AlertMsg, LinkButton, Loading, ListEx, Icons, Logo } from 'components';
 import Wrapper from '../styled';
 import * as _ from 'lodash';
 
@@ -64,7 +64,10 @@ class WorkplaceList extends React.Component {
       helper.saveData('tutorial', 3);
     }
 
-    const { business: { id }, history } = this.props;
+    const {
+      business: { id },
+      history
+    } = this.props;
     history.push(`/recruiter/jobs/workplace/add/${id}`);
   };
 
@@ -136,30 +139,13 @@ class WorkplaceList extends React.Component {
         onClick={() => this.selectWorkplace(workplace)}
         className={loading ? 'loading' : ''}
       >
-        <List.Item.Meta
-          avatar={<Avatar src={logo} className="avatar-80" />}
-          title={name}
-          description={
-            <Truncate lines={2} ellipsis={<span>...</span>}>
-              {description}
-            </Truncate>
-          }
-        />
-        <div className="properties" style={{ display: 'flex', alignItems: 'flex-start' }}>
-          <div style={{ display: 'flex', flexDirection: 'column' }}>
-            <span style={{ width: '130px' }}>{strJobs}</span>
-            {newApplicationsCount && newApplicationsCount > 0 ? (
-              <span style={{ width: '130px', color: '#ff9300' }}>{strNewApplications}</span>
-            ) : (
-              ''
-            )}
+        <List.Item.Meta avatar={<Logo src={logo} size="80px" />} title={name} />
+        <span style={{ width: '160px' }}>
+          <div>
+            {strJobs} ({strInactiveJobs})
           </div>
-          <span style={{ width: '120px' }}>{strInactiveJobs}</span>
-        </div>
-        {/* <div className="properties">
-          <span style={{ width: '120px' }}>{strJobs}</span>
-          <span>{strInactiveJobs}</span>
-        </div> */}
+          {!!newApplicationsCount && <div style={{ color: '#ff9300' }}>{strNewApplications}</div>}
+        </span>
         {loading && <Loading className="mask" size="small" />}
       </List.Item>
     );

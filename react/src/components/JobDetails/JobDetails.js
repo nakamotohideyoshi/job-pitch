@@ -1,20 +1,25 @@
 import React from 'react';
-import { Row, Col, Tabs } from 'antd';
-
-import * as helper from 'utils/helper';
-import { GoogleMap, Icons, VideoPlayer, SocialShare, Logo } from 'components';
-import Wrapper from './JobDetails.styled';
+import { Row, Col, Tabs, Collapse, Tooltip } from 'antd';
 import moment from 'moment';
 
-const TabPane = Tabs.TabPane;
+import * as helper from 'utils/helper';
 
-export default ({ job, className, roughLocation, actions, interview }) => {
+import { GoogleMap, Icons, VideoPlayer, SocialShare, Logo } from 'components';
+import Wrapper from './JobDetails.styled';
+
+const TabPane = Tabs.TabPane;
+const Panel = Collapse.Panel;
+
+export default ({ jobData, application, className, roughLocation, actions }) => {
+  const job = jobData || application.job_data;
   const logo = helper.getJobLogo(job);
   const workplace = job.location_data;
   const subName = helper.getFullBWName(job);
   const contract = helper.getNameByID('contracts', job.contract);
   const hours = helper.getNameByID('hours', job.hours);
   const marker = { lat: workplace.latitude, lng: workplace.longitude };
+  const videos = job.videos.filter(({ video }) => video);
+  const { interview, interviews } = application || {};
 
   let circle;
   if (roughLocation) {
@@ -33,8 +38,6 @@ export default ({ job, className, roughLocation, actions, interview }) => {
     };
   }
 
-  const videos = job.videos.filter(({ video }) => video);
-
   return (
     <Wrapper className={className}>
       <h2>Job Details</h2>
@@ -42,7 +45,7 @@ export default ({ job, className, roughLocation, actions, interview }) => {
       <Row gutter={32}>
         <Col sm={24} md={10} lg={5}>
           <div className="logo">
-            <Logo src={logo} size="100%" />
+            <Logo src={logo} size="100%" padding="10px" />
           </div>
         </Col>
         <Col sm={24} md={14} lg={19}>
@@ -53,37 +56,35 @@ export default ({ job, className, roughLocation, actions, interview }) => {
                 <div className="sub-name">{subName}</div>
                 <ul>
                   <li>
-                    <Icons.HandshakeAlt />
+                    <Tooltip placement="bottom" title="Job Contract">
+                      <Icons.HandshakeAlt />
+                    </Tooltip>
                     {contract}
                   </li>
                   <li>
-                    <Icons.Clock />
+                    <Tooltip placement="bottom" title="Job Hours">
+                      <Icons.Clock />
+                    </Tooltip>
                     {hours}
                   </li>
+
                   {job.distance && (
                     <li>
-                      <Icons.Route />
+                      <Tooltip placement="bottom" title="Distance">
+                        <Icons.Route />
+                      </Tooltip>
                       {job.distance}
                     </li>
                   )}
-                  {interview && <li>{`Date: ${moment(interview.at).format('dddd, MMMM Do, YYYY h:mm:ss A')}`}</li>}
-                  {interview &&
-                    (interview.status === 'COMPLETED' || interview.status === 'CANCELLED') && (
-                      <li>
-                        <div>
-                          {interview.feedback === '' ? (
-                            <div>
-                              Feedback:&nbsp;
-                              <span style={{ color: 'grey', fontStyle: 'italic' }}>None</span>
-                            </div>
-                          ) : (
-                            <div>
-                              <span>Feedback: {interview.feedback}</span>
-                            </div>
-                          )}
-                        </div>
-                      </li>
-                    )}
+
+                  {interview && (
+                    <li>
+                      <Tooltip placement="bottom" title="Interview Date and Time">
+                        <Icons.UserFriends />
+                      </Tooltip>
+                      {moment(interview.at).format('ddd DD MMM, YYYY [at] H:mm')}
+                    </li>
+                  )}
                 </ul>
               </div>
             </Col>
@@ -97,7 +98,7 @@ export default ({ job, className, roughLocation, actions, interview }) => {
         </Col>
       </Row>
 
-      <Tabs size="small" type="card">
+      <Tabs size="small" animated={false}>
         <TabPane tab="Job Description" key="1">
           {videos.map(({ id, thumbnail, video }) => (
             <div key={id} className="pitch-video">
@@ -125,6 +126,18 @@ export default ({ job, className, roughLocation, actions, interview }) => {
             </div>
           </div>
         </TabPane>
+
+        {interviews && (
+          <TabPane tab="Interviews" key="3">
+            <Collapse bordered={false}>
+              {interviews.map(({ id, at, feedback }) => (
+                <Panel key={id} showArrow={false} header={moment(at).format('ddd DD MMM, YYYY [at] H:mm')}>
+                  <div>Feedback: {feedback}</div>
+                </Panel>
+              ))}
+            </Collapse>
+          </TabPane>
+        )}
       </Tabs>
     </Wrapper>
   );

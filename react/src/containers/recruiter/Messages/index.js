@@ -275,7 +275,7 @@ class Page extends React.Component {
         )}
         {openJobDetails && (
           <LargeModal visible title="Job Details" onCancel={this.hideJobDetails}>
-            <JobDetails job={selectedApp.job_data} />
+            <JobDetails jobData={selectedApp.job_data} />
           </LargeModal>
         )}
       </Wrapper>

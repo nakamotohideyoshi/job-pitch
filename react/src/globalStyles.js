@@ -81,23 +81,51 @@ injectGlobal`
     overflow: hidden;
   }
 
+  /* ant design */
+
   .ant-btn {
     i, svg {
       margin-right: 8px;
     }
   }
 
-  /* Select with logo */
+  .ant-menu-item {
+    svg {
+      margin-right: 8px;
+    }
+  }
 
-  .ant-select-selection--single .ant-select-selection-selected-value,
-  .ant-select-dropdown--single .ant-select-dropdown-menu-item {
+  .ant-select-selection-selected-value,
+  .ant-select-dropdown-menu-item {
+    width: 100%;
+
     .logo {
       margin-right: 8px;
       float: left;
     }
-    &.ant-select-selection-selected-value {
-      .logo {
-        margin-top: 8px;
+
+    .right-menu-item {
+      float: right;
+      opacity: 0.5;
+    }
+  }
+  
+  &.ant-select-selection-selected-value {
+    .logo {
+      margin-top: 4px;
+    }
+  }
+
+  .ant-list-item-action {
+    span {
+      width: 30px;
+      height: 30px;
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      border-radius: 50%;
+      &:hover {
+        box-shadow: 0px 0 4px 0px rgba(0, 0, 0, 0.15);
       }
     }
   }

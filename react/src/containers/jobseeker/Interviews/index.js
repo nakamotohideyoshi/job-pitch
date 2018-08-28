@@ -1,13 +1,12 @@
-import React, { Fragment } from 'react';
+import React from 'react';
 import Helmet from 'react-helmet';
 import { connect } from 'react-redux';
-import { List, Avatar, Tooltip, notification, Modal, Button, Drawer } from 'antd';
+import { List, Tooltip, notification, Modal, Button, Drawer } from 'antd';
 import moment from 'moment';
 
 import { getApplications } from 'redux/applications';
-import { getInterviews, removeInterview } from 'redux/interviews';
+import { removeInterview } from 'redux/interviews';
 import { changeInterview } from 'redux/interviews';
-import DATA from 'utils/data';
 import * as helper from 'utils/helper';
 
 import { PageHeader, SearchBox, AlertMsg, ListEx, Icons, JobDetails, Logo, Loading } from 'components';
@@ -25,7 +24,6 @@ class JSInterviews extends React.Component {
   };
 
   componentWillMount() {
-    this.props.getInterviews();
     this.props.getApplications();
   }
 
@@ -38,7 +36,7 @@ class JSInterviews extends React.Component {
     this.props.history.push(`/jobseeker/messages/${id}/`);
   };
 
-  onAccept = ({ id }, event) => {
+  onAccept = (app, event) => {
     event && event.stopPropagation();
 
     confirm({
@@ -50,7 +48,7 @@ class JSInterviews extends React.Component {
       onOk: () => {
         this.props.changeInterview({
           data: {
-            id,
+            id: app.interview.id,
             changeType: 'accept'
           },
           success: () => {
@@ -76,7 +74,7 @@ class JSInterviews extends React.Component {
     });
   };
 
-  onRemove = ({ id }, event) => {
+  onRemove = (app, event) => {
     event && event.stopPropagation();
 
     confirm({
@@ -87,7 +85,7 @@ class JSInterviews extends React.Component {
       maskClosable: true,
       onOk: () => {
         this.props.removeInterview({
-          id,
+          id: app.interview.id,
           successMsg: {
             message: `Interview is cancelled.`
           },
@@ -102,47 +100,40 @@ class JSInterviews extends React.Component {
     });
   };
 
-  filterOption = ({ application_data }) => {
-    const { job_data } = application_data;
+  filterOption = ({ job_data }) => {
     const searchText = this.state.searchText.toLowerCase();
     const name = helper.getFullBWName(job_data);
     return job_data.title.toLowerCase().indexOf(searchText) >= 0 || name.toLowerCase().indexOf(searchText) >= 0;
   };
 
-  renderInterview = interview => {
-    const { at, application_data, status, loading } = interview;
-    const { id, job_data } = application_data;
+  renderApplication = app => {
+    const { id, job_data, interview, loading } = app;
     const { title } = job_data;
     const logo = helper.getJobLogo(job_data);
     const name = helper.getFullBWName(job_data);
 
-    const statusComments = {
-      PENDING: 'Interview request received',
-      ACCEPTED: 'Interview accepted',
-      COMPLETED: 'This interview is done'
+    const INTERVIEW_STATUS = {
+      PENDING: 'Pending',
+      ACCEPTED: 'Accepted'
     };
-    let statusComment = statusComments[status];
-    if (status === 'CANCELLED') {
-      const userRole = helper.getNameByID('roles', interview.cancelled_by);
-      statusComment = `Interview cancelled by ${userRole === 'RECRUITER' ? 'Recruiter' : 'Job Seeker'}`;
-    }
+    let interviewStatus = INTERVIEW_STATUS[interview.status];
 
     let actions = [
       <Tooltip placement="bottom" title="Cancel Invitation">
-        <span onClick={e => this.onRemove(interview, e)}>
+        <span onClick={e => this.onRemove(app, e)}>
           <Icons.Times />
         </span>
       </Tooltip>,
       <Tooltip placement="bottom" title="Message">
-        <span onClick={e => this.onMessage(application_data, e)}>
+        <span onClick={e => this.onMessage(app, e)}>
           <Icons.CommentAlt />
         </span>
       </Tooltip>
     ];
-    if (status === 'PENDING') {
+    if (interview.status === 'PENDING') {
       actions.unshift(
         <Tooltip placement="bottom" title="Accept Invitation">
-          <span onClick={e => this.onRemove(interview, e)}>
+          <span onClick={e => this.onRemove(app, e)}>
             <Icons.Check />
           </span>
         </Tooltip>
@@ -150,16 +141,11 @@ class JSInterviews extends React.Component {
     }
 
     return (
-      <List.Item
-        key={id}
-        actions={actions}
-        onClick={() => this.onSelect(interview.id)}
-        className={loading ? 'loading' : ''}
-      >
-        <List.Item.Meta avatar={<Logo src={logo} size="80px" />} title={title} description={name} />
+      <List.Item key={id} actions={actions} onClick={() => this.onSelect(id)} className={loading ? 'loading' : ''}>
+        <List.Item.Meta avatar={<Logo src={logo} size="80px" padding="10px" />} title={title} description={name} />
         <span style={{ width: '180px' }}>
-          <div>{statusComment}</div>
-          <div>{moment(at).format('ddd DD MMM, YYYY [at] H:mm')}</div>
+          <div>{interviewStatus}</div>
+          <div>{moment(interview.at).format('ddd DD MMM, YYYY [at] H:mm')}</div>
         </span>
         {loading && <Loading className="mask" size="small" />}
       </List.Item>
@@ -179,8 +165,7 @@ class JSInterviews extends React.Component {
       return <NoPitch title="Interviews" />;
     }
 
-    const selectedInterview = interviews && helper.getItemByID(interviews, this.state.selectedId);
-    const selectedApp = (selectedInterview || {}).application_data;
+    const selectedApp = interviews && helper.getItemByID(interviews, this.state.selectedId);
 
     return (
       <Wrapper className="container">
@@ -198,26 +183,26 @@ class JSInterviews extends React.Component {
             pagination={{ pageSize: 10 }}
             filterOption={this.filterOption}
             error={error && 'Server Error!'}
-            renderItem={this.renderInterview}
+            renderItem={this.renderApplication}
             emptyRender={this.renderEmpty}
           />
         </div>
 
-        <Drawer placement="right" closable={false} onClose={() => this.onSelect()} visible={!!selectedInterview}>
-          {selectedInterview && (
+        <Drawer placement="right" closable={false} onClose={() => this.onSelect()} visible={!!selectedApp}>
+          {selectedApp && (
             <JobDetails
-              job={selectedApp.job_data}
+              application={selectedApp}
               actions={
                 <div>
                   <Button type="primary" onClick={() => this.onMessage(selectedApp)}>
                     Message
                   </Button>
-                  {selectedInterview.status === 'PENDING' && (
-                    <Button type="primary" onClick={() => this.onAccept(selectedInterview)}>
+                  {selectedApp.interview.status === 'PENDING' && (
+                    <Button type="primary" onClick={() => this.onAccept(selectedApp)}>
                       Accept Invitation
                     </Button>
                   )}
-                  <Button type="danger" onClick={e => this.onRemove(selectedInterview)}>
+                  <Button type="danger" onClick={e => this.onRemove(selectedApp)}>
                     Cancel Invitation
                   </Button>
                 </div>
@@ -225,29 +210,6 @@ class JSInterviews extends React.Component {
             />
           )}
         </Drawer>
-
-        {/*
-        {selectedRest && (
-          <LargeModal
-            visible
-            title="Completed and Cancelled Interview List"
-            onCancel={() => this.setState({ selectedRest: null })}
-          >
-            <Wrapper className="container">
-              <div className="content">
-                <ListEx
-                  data={selectedRest}
-                  loadingSize="large"
-                  pagination={{ pageSize: 10 }}
-                  filterOption={this.filterOption}
-                  error={error && 'Server Error!'}
-                  renderItem={this.renderApp}
-                  emptyRender={this.renderEmpty}
-                />
-              </div>
-            </Wrapper>
-          </LargeModal>
-        )} */}
       </Wrapper>
     );
   }
@@ -256,26 +218,23 @@ class JSInterviews extends React.Component {
 export default connect(
   state => {
     const { applications } = state.applications;
-    const { interviews } = state.interviews;
-    const interviews1 =
-      applications &&
-      interviews &&
-      interviews.map(interview => ({
-        ...interview,
-        application_data: helper.getItemByID(applications, interview.application)
-      }));
-    const openingInterviews =
-      interviews1 && interviews1.filter(({ status }) => status === 'PENDING' || status === 'ACCEPTED');
+    applications &&
+      applications.forEach(application => {
+        // application.interview = application.interviews.filter(
+        //   ({ status }) => status === 'PENDING' || status === 'ACCEPTED'
+        // )[0];
+        application.interview = { ...application.interviews[0], status: 'PENDING' };
+      });
 
+    const interviews = applications && applications.filter(({ interview }) => interview);
     return {
       jobseeker: state.js_profile.jobseeker,
-      interviews: openingInterviews,
-      error: state.applications.error || state.interviews.error
+      interviews,
+      error: state.applications.error
     };
   },
   {
     getApplications,
-    getInterviews,
     changeInterview,
     removeInterview
   }

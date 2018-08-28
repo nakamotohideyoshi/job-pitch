@@ -8,7 +8,7 @@ export default styled.div`
     margin-bottom: 1em;
   }
 
-  .avatar {
+  .logo {
     position: relative;
     ${media.tablet` margin-bottom: 24px;`};
     padding-top: 100%;
@@ -16,13 +16,8 @@ export default styled.div`
 
     span {
       position: absolute;
-      top: 0;
-      bottom: 0;
-      width: 100%;
-      height: 100%;
-      background-size: cover;
-      background-repeat: no-repeat;
-      background-position: center;
+      top: 0%;
+      left: 0%;
     }
   }
 
@@ -62,8 +57,16 @@ export default styled.div`
     margin-top: 16px;
   }
 
-  .ant-divider {
-    margin: 40px 0;
+  .ant-tabs {
+    margin-top: 20px;
+
+    .ant-tabs-nav .ant-tabs-tab {
+      color: inherit !important;
+    }
+
+    .ant-tabs-tabpane {
+      padding: 0 15px;
+    }
   }
 
   .pitch-video {
@@ -75,15 +78,12 @@ export default styled.div`
     `};
   }
 
-  .description,
-  .btn-cv,
-  .check-label {
-    margin-top: 18px;
-  }
-
   .check-label {
     display: flex;
+    margin-top: 30px;
+
     svg {
+      min-width: 0.875em;
       margin-right: 0.25em;
       color: #ff9300;
     }

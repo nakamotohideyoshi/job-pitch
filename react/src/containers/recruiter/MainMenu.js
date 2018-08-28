@@ -69,9 +69,11 @@ class MainMenu extends React.Component {
           </Item>
         )}
 
-        <Item key="users">
-          <Link to="/recruiter/users">Users</Link>
-        </Item>
+        {existBusiness && (
+          <Item key="users">
+            <Link to="/recruiter/users">Users</Link>
+          </Item>
+        )}
       </MenuWrapper>
     );
   }

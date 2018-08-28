@@ -22,23 +22,27 @@ export default styled.div`
       padding-left: 12px;
       padding-right: 12px;
 
-      .ant-list-item-meta-avatar {
-        position: relative;
-        svg {
-          position: absolute;
-          left: -6px;
-          top: -6px;
-          font-size: 12px;
-          color: #ff9300;
+      .ant-list-item-meta {
+        align-items: center;
+
+        .ant-list-item-meta-avatar {
+          position: relative;
+          svg {
+            position: absolute;
+            left: -6px;
+            top: -6px;
+            font-size: 12px;
+            color: #ff9300;
+          }
+        }
+
+        .ant-list-item-meta-title {
+          font-size: 16px;
         }
       }
 
       .ant-list-item-content {
         flex: initial;
-
-        .ant-list-item-meta-title {
-          font-size: 16px;
-        }
       }
 
       .ant-list-item-action {
@@ -55,6 +59,11 @@ export default styled.div`
         }
       }
 
+      &:hover {
+        cursor: pointer;
+        background-color: ${colors.lightGreen};
+      }
+
       &.loading {
         pointer-events: none;
 
@@ -63,10 +72,16 @@ export default styled.div`
           z-index: 1;
         }
       }
+    }
 
-      &:hover {
-        cursor: pointer;
-        background-color: ${colors.lightGreen};
+    .interview {
+      .ant-list-item-content {
+        justify-content: center;
+        font-size: 12px;
+
+        div {
+          margin: 4px 0;
+        }
       }
     }
   }

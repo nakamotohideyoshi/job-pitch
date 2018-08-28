@@ -4,8 +4,8 @@ export default styled.span`
   ${props =>
     css`
       display: inline-block;
-      padding: 10%;
       ${props.size ? `width: ${props.size}; height: ${props.size}` : ''};
+      ${props.padding && `padding: ${props.padding};`};
       background-size: contain;
       background-position: center;
       background-repeat: no-repeat;

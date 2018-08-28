@@ -1,24 +1,30 @@
 import React from 'react';
-import { Divider, Row, Col, Button } from 'antd';
+import { Row, Col, Button, Tabs, Collapse } from 'antd';
+import moment from 'moment';
 
+import DATA from 'utils/data';
 import * as helper from 'utils/helper';
 
-import { Icons, VideoPlayer } from 'components';
+import { Icons, VideoPlayer, Logo } from 'components';
 import Wrapper from './JobseekerDetails.styled';
 
-export default ({ jobseeker, connected, className, actions }) => {
-  const image = helper.getPitch(jobseeker).thumbnail;
-  const fullName = helper.getFullJSName(jobseeker);
-  const age = jobseeker.age_public && jobseeker.age;
-  const sex = jobseeker.sex_public && helper.getNameByID('sexes', jobseeker.sex);
+const TabPane = Tabs.TabPane;
+const Panel = Collapse.Panel;
+
+export default ({ jobseeker, application, className, actions }) => {
+  const js = jobseeker || application.job_seeker;
+  const image = helper.getPitch(js).thumbnail;
+  const fullName = helper.getFullJSName(js);
+  const age = js.age_public && js.age;
+  const sex = js.sex_public && helper.getNameByID('sexes', js.sex);
 
   let email, mobile;
-  if (connected) {
-    email = jobseeker.email_public && jobseeker.email;
-    mobile = jobseeker.mobile_public && jobseeker.mobile;
+  if (application) {
+    email = js.email_public && js.email;
+    mobile = js.mobile_public && js.mobile;
   }
 
-  const pitches = jobseeker.pitches.filter(({ video }) => video);
+  const pitches = js.pitches.filter(({ video }) => video);
 
   return (
     <Wrapper className={className}>
@@ -26,8 +32,8 @@ export default ({ jobseeker, connected, className, actions }) => {
 
       <Row gutter={32}>
         <Col sm={24} md={10} lg={5}>
-          <div className="avatar">
-            <span style={{ backgroundImage: `url(${image})` }} />
+          <div className="logo">
+            <Logo src={image} size="100%" />
           </div>
         </Col>
         <Col sm={24} md={14} lg={19}>
@@ -66,49 +72,19 @@ export default ({ jobseeker, connected, className, actions }) => {
         </Col>
       </Row>
 
-      <Divider />
-
-      <div>
-        <h3>Overview</h3>
-        {pitches.map(({ id, thumbnail, video }) => (
-          <div key={id} className="pitch-video">
-            <VideoPlayer
-              controls
-              poster={thumbnail}
-              preload="none"
-              sources={[
-                {
-                  src: video,
-                  type: 'video/mp4'
-                }
-              ]}
-            />
-          </div>
-        ))}
-        <p className="description">{jobseeker.description}</p>
-      </div>
-
-      <div style={{ clear: 'both' }} />
-
-      {jobseeker.cv && (
-        <Button className="btn-cv" onClick={() => window.open(this.props.jobseeker.cv)}>
-          CV View
-        </Button>
-      )}
-
-      {jobseeker.has_national_insurance_number && (
+      {js.has_national_insurance_number && (
         <div className="check-label">
           <Icons.CheckSquare size="lg" />
           National Insurance number supplied
         </div>
       )}
-      {jobseeker.has_references && (
+      {js.has_references && (
         <div className="check-label">
           <Icons.CheckSquare size="lg" />
           Reference available on request
         </div>
       )}
-      {jobseeker.truth_confirmation && (
+      {js.truth_confirmation && (
         <div className="check-label">
           <Icons.CheckSquare size="lg" />
           By ticking this box I confirm that all information given is true, I understand that any falsification may lead
@@ -116,6 +92,46 @@ export default ({ jobseeker, connected, className, actions }) => {
           convicted of any criminal offence.
         </div>
       )}
+
+      <Tabs size="small" animated={false}>
+        <TabPane tab="Overview" key="1">
+          {pitches.map(({ id, thumbnail, video }) => (
+            <div key={id} className="pitch-video">
+              <VideoPlayer
+                controls
+                poster={thumbnail}
+                preload="none"
+                sources={[
+                  {
+                    src: video,
+                    type: 'video/mp4'
+                  }
+                ]}
+              />
+            </div>
+          ))}
+          <p className="description">{js.description}</p>
+
+          {js.cv && (
+            <Button className="btn-cv" style={{ marginTop: '20px' }} onClick={() => window.open(js.cv)}>
+              CV View
+            </Button>
+          )}
+        </TabPane>
+
+        {application &&
+          application.status !== DATA.APP.CREATED && (
+            <TabPane tab="Interviews" key="2">
+              <Collapse bordered={false}>
+                {application.interviews.map(({ id, at, feedback }) => (
+                  <Panel key={id} showArrow={false} header={moment(at).format('ddd DD MMM, YYYY [at] H:mm')}>
+                    <div>Feedback: {feedback}</div>
+                  </Panel>
+                ))}
+              </Collapse>
+            </TabPane>
+          )}
+      </Tabs>
     </Wrapper>
   );
 };

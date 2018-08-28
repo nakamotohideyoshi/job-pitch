@@ -441,7 +441,7 @@ class InterviewEdit extends React.Component {
                           // this.completeInvitation(application);
                         }}
                       >
-                        Complete Invitation
+                        Complete Interview
                       </Button>
                       <Button
                         type="danger"

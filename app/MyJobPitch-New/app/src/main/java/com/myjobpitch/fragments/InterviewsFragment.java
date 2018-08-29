@@ -50,6 +50,7 @@ public class InterviewsFragment extends BaseFragment {
 
     public Job job;
     public List<Application> applications;
+    public List<Interview> interviews;
 
     private InterviewAdapter adapter;
 
@@ -99,6 +100,7 @@ public class InterviewsFragment extends BaseFragment {
                 for (int i=0; i<applications.size(); i++) {
                     if (adapter.getItem(position).getApplication().intValue() == applications.get(i).getId().intValue()) {
                         fragment.application = applications.get(i);
+                        fragment.interviews = interviews;
                         getApp().pushFragment(fragment);
                         break;
                     }
@@ -137,7 +139,7 @@ public class InterviewsFragment extends BaseFragment {
     }
 
     private void loadInterviews() {
-        final List<Interview> interviews = new ArrayList();
+        interviews = new ArrayList();
         new APITask(new APIAction() {
             @Override
             public void run() throws MJPApiException {

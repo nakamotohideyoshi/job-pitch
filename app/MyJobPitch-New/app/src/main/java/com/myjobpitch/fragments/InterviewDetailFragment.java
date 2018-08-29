@@ -119,6 +119,7 @@ public class InterviewDetailFragment extends BaseFragment {
     Interview interview;
     public Application application;
     public Integer interviewId;
+    public List<Interview> interviews;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -130,8 +131,9 @@ public class InterviewDetailFragment extends BaseFragment {
         title = "Interview";
 
         AppHelper.setJobTitleViewText(jobTitleView, String.format("%s, (%s)", application.getJob_data().getTitle(), AppHelper.getBusinessName(application.getJob_data())));
-
-        addMenuItem(MENUGROUP2, 120, "View Previous Interviews", R.drawable.ic_loca_storage);
+        if (interviews != null) {
+            addMenuItem(MENUGROUP2, 120, "View Previous Interviews", R.drawable.ic_more);
+        }
 
         showLoading(view);
         loadInterview();
@@ -262,6 +264,15 @@ public class InterviewDetailFragment extends BaseFragment {
                 break;
             default:
                 break;
+
+        }
+
+        if (interviews != null) {
+            editButton.setVisibility(View.GONE);
+            completeButton.setVisibility(View.GONE);
+            acceptButton.setVisibility(View.GONE);
+            cancelButton.setVisibility(View.GONE);
+            arrangeButton.setVisibility(View.GONE);
 
         }
     }

@@ -116,6 +116,9 @@ public class InterviewDetailFragment extends BaseFragment {
     @BindView(R.id.interview_arrange)
     Button arrangeButton;
 
+    @BindView(R.id.interview_message)
+    Button messageButton;
+
     Interview interview;
     public Application application;
     public Integer interviewId;
@@ -267,12 +270,13 @@ public class InterviewDetailFragment extends BaseFragment {
 
         }
 
-        if (interviews != null) {
+        if (interviews == null) {
             editButton.setVisibility(View.GONE);
             completeButton.setVisibility(View.GONE);
             acceptButton.setVisibility(View.GONE);
             cancelButton.setVisibility(View.GONE);
             arrangeButton.setVisibility(View.GONE);
+            messageButton.setVisibility(View.GONE);
 
         }
     }

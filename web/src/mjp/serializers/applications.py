@@ -43,7 +43,7 @@ class EmbeddedInterviewSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Interview
-        fields = ('id', 'at', 'messages', 'notes', 'feedback')
+        fields = ('id', 'at', 'messages', 'notes', 'feedback', 'cancelled', 'cancelled_by', 'status')
 
 
 class MessageSerializer(MessageSerializerV1):  # v2

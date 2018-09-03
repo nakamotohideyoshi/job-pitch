@@ -6,6 +6,11 @@ export default styled.div`
   display: flex;
   flex-direction: column;
 
+  .ant-select {
+    flex: 1;
+    margin-right: 20px;
+  }
+
   .ant-tabs-nav-container {
     font-size: 12px;
     font-weight: 500;

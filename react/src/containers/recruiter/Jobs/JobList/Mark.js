@@ -2,7 +2,7 @@ import styled from 'styled-components';
 
 export default styled.div`
   position: absolute;
-  top: 15px;
+  top: 10px;
   left: -24px;
   width: 100px;
   line-height: 20px;

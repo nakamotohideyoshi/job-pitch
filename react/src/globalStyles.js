@@ -129,5 +129,13 @@ injectGlobal`
       }
     }
   }
+
+  .ant-select-selection__choice__content {
+    display: flex !important;
+
+    span {
+      margin-right: 5px;
+    }
+  }
 }
 `;

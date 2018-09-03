@@ -6,85 +6,93 @@ import DATA from 'utils/data';
 import * as helper from 'utils/helper';
 
 import { Icons, VideoPlayer, Logo } from 'components';
+import Interview from './Interview';
 import Wrapper from './JobseekerDetails.styled';
 
 const TabPane = Tabs.TabPane;
 const Panel = Collapse.Panel;
 
-export default ({ jobseeker, application, className, actions }) => {
-  const js = jobseeker || application.job_seeker;
-  const image = helper.getPitch(js).thumbnail;
-  const fullName = helper.getFullJSName(js);
-  const age = js.age_public && js.age;
-  const sex = js.sex_public && helper.getNameByID('sexes', js.sex);
-
+export default ({ jobseekerData, application, actions, defaultTab }) => {
+  const jobseeker = jobseekerData || application.job_seeker;
+  const image = helper.getPitch(jobseeker).thumbnail;
+  const fullName = helper.getFullJSName(jobseeker);
+  const age = jobseeker.age_public && jobseeker.age;
+  const sex = jobseeker.sex_public && helper.getNameByID('sexes', jobseeker.sex);
+  const pitches = jobseeker.pitches.filter(({ video }) => video);
   let email, mobile;
   if (application) {
-    email = js.email_public && js.email;
-    mobile = js.mobile_public && js.mobile;
+    email = jobseeker.email_public && jobseeker.email;
+    mobile = jobseeker.mobile_public && jobseeker.mobile;
   }
 
-  const pitches = js.pitches.filter(({ video }) => video);
+  const { status, interview, interviews } = application || {};
+  const connected = application && status !== DATA.APP.CREATED;
+  const interviewStatus = (interview || {}).status;
 
   return (
-    <Wrapper className={className}>
+    <Wrapper>
       <h2>Jobseeker Details</h2>
 
       <Row gutter={32}>
-        <Col sm={24} md={10} lg={5}>
+        <Col xs={10} sm={8} md={6} lg={5}>
           <div className="logo">
             <Logo src={image} size="100%" />
           </div>
         </Col>
-        <Col sm={24} md={14} lg={19}>
+        <Col xs={14} sm={16} md={18} lg={19}>
           <Row gutter={32}>
-            <Col md={24} lg={14}>
+            <Col md={14} lg={15}>
               <div className="info">
                 <div className="name">{fullName}</div>
                 <ul>
-                  {age && (
+                  {!!age && (
                     <li>
-                      <label>Age:</label> {age}
+                      <strong>Age:</strong> {age}
                     </li>
                   )}
                   {sex && (
                     <li>
-                      <label>Sex:</label> {sex}
+                      <strong>Sex:</strong> {sex}
                     </li>
                   )}
                   {email && (
                     <li>
-                      <label>Email:</label> {email}
+                      <strong>Email:</strong> {email}
                     </li>
                   )}
                   {mobile && (
                     <li>
-                      <label>Mobile:</label> {mobile}
+                      <strong>Mobile:</strong> {mobile}
+                    </li>
+                  )}
+                  {interview && (
+                    <li className={interviewStatus}>
+                      <strong>Interview:</strong> {moment(interview.at).format('ddd DD MMM, YYYY [at] H:mm')}
                     </li>
                   )}
                 </ul>
               </div>
             </Col>
-            <Col md={24} lg={10}>
+            <Col md={10} lg={9} className="controls">
               {actions}
             </Col>
           </Row>
         </Col>
       </Row>
 
-      {js.has_national_insurance_number && (
+      {jobseeker.has_national_insurance_number && (
         <div className="check-label">
           <Icons.CheckSquare size="lg" />
           National Insurance number supplied
         </div>
       )}
-      {js.has_references && (
+      {jobseeker.has_references && (
         <div className="check-label">
           <Icons.CheckSquare size="lg" />
           Reference available on request
         </div>
       )}
-      {js.truth_confirmation && (
+      {jobseeker.truth_confirmation && (
         <div className="check-label">
           <Icons.CheckSquare size="lg" />
           By ticking this box I confirm that all information given is true, I understand that any falsification may lead
@@ -93,8 +101,8 @@ export default ({ jobseeker, application, className, actions }) => {
         </div>
       )}
 
-      <Tabs size="small" animated={false}>
-        <TabPane tab="Overview" key="1">
+      <Tabs size="small" animated={false} defaultActiveKey={defaultTab || 'overview'}>
+        <TabPane tab="Overview" key="overview">
           {pitches.map(({ id, thumbnail, video }) => (
             <div key={id} className="pitch-video">
               <VideoPlayer
@@ -110,27 +118,34 @@ export default ({ jobseeker, application, className, actions }) => {
               />
             </div>
           ))}
-          <p className="description">{js.description}</p>
+          <p className="description">{jobseeker.description}</p>
 
-          {js.cv && (
-            <Button className="btn-cv" style={{ marginTop: '20px' }} onClick={() => window.open(js.cv)}>
+          {jobseeker.cv && (
+            <Button className="btn-cv" style={{ marginTop: '20px' }} onClick={() => window.open(jobseeker.cv)}>
               CV View
             </Button>
           )}
         </TabPane>
 
-        {application &&
-          application.status !== DATA.APP.CREATED && (
-            <TabPane tab="Interviews" key="2">
-              <Collapse bordered={false}>
-                {application.interviews.map(({ id, at, feedback }) => (
-                  <Panel key={id} showArrow={false} header={moment(at).format('ddd DD MMM, YYYY [at] H:mm')}>
-                    <div>Feedback: {feedback}</div>
-                  </Panel>
-                ))}
-              </Collapse>
-            </TabPane>
-          )}
+        {connected && (
+          <TabPane tab="Interview" key="interview">
+            <Interview application={application} />
+          </TabPane>
+        )}
+
+        {connected && (
+          <TabPane tab="Interview History" key="history">
+            <Collapse bordered={false}>
+              {interviews.map(({ id, at, feedback, status, notes }) => (
+                <Panel key={id} showArrow={false} header={moment(at).format('ddd DD MMM, YYYY [at] H:mm')}>
+                  <div>Status: {status}</div>
+                  {status === 'COMPLETED' && <div>Feedback: {feedback || 'None'}</div>}
+                  <div>Notes: {notes}</div>
+                </Panel>
+              ))}
+            </Collapse>
+          </TabPane>
+        )}
       </Tabs>
     </Wrapper>
   );

@@ -3,8 +3,8 @@ import { Input, Avatar } from 'antd';
 import { connect } from 'react-redux';
 
 import { sendMessage, readMessage } from 'redux/applications';
-import * as helper from 'utils/helper';
 import DATA from 'utils/data';
+import * as helper from 'utils/helper';
 
 import { Icons } from 'components';
 import Wrapper from './styled';
@@ -28,11 +28,13 @@ class MessageThread extends React.Component {
       this.setState({ message: '' });
       this.scrollBottom();
       this.readMessages(nextApp);
-    } else if (app.newMsgs !== nextApp.newMsgs) {
-      if (nextApp.newMsgs) {
+    } else {
+      if (app.messages.length !== nextApp.messages.length) {
         this.scrollBottom();
       }
-      this.readMessages(nextApp);
+      if (app.newMsgs !== nextApp.newMsgs) {
+        this.readMessages(nextApp);
+      }
     }
   }
 
@@ -52,13 +54,14 @@ class MessageThread extends React.Component {
   onChnageInput = e => this.setState({ message: e.target.value });
 
   onSend = () => {
+    const { id } = this.props.application;
     const message = this.state.message.trim();
     this.setState({ message: '' });
     this.scrollBottom(true);
     this.props.sendMessage({
-      id: new Date().getTime(),
+      appId: id,
       data: {
-        application: this.props.application.id,
+        application: id,
         content: message
       }
     });
@@ -84,9 +87,9 @@ class MessageThread extends React.Component {
       }
     });
 
-  renderMessage = ({ id, content, from_role, created, sending, error }) => {
+  renderMessage = ({ id, content, from_role, created }) => {
     const { application } = this.props;
-    const me = sending || error || helper.getNameByID('roles', from_role) === DATA.userRole;
+    const me = helper.getNameByID('roles', from_role) === DATA.userRole;
 
     let avatar;
     if ((DATA.userRole === 'RECRUITER' && me) || (DATA.userRole === 'JOB_SEEKER' && !me)) {
@@ -95,26 +98,19 @@ class MessageThread extends React.Component {
       avatar = helper.getPitch(application.job_seeker).thumbnail;
     }
 
-    let comment;
-    if (sending) {
-      comment = 'sending...';
-    } else if (error) {
-      comment = 'send error!';
-    } else {
-      comment = new Date(created).toLocaleTimeString('en-us', {
-        month: 'short',
-        day: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit'
-      });
-    }
+    const comment = new Date(created).toLocaleTimeString('en-us', {
+      month: 'short',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    });
 
     return (
       <div key={id} className={me ? 'me' : 'you'}>
         {!me && <Avatar src={avatar} />}
         <div className="message">
           <div className="bubble">{content}</div>
-          <div className={`time ${error ? 'error' : ''}`}>{comment}</div>
+          <div className="time">{comment}</div>
         </div>
         {me && <Avatar src={avatar} />}
       </div>

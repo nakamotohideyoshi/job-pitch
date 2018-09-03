@@ -1,3 +1,3 @@
-import ShareLink from './ShareLink';
+import ShareLinkDialog from './ShareLinkDialog';
 import SocialShare from './SocialShare';
-export { ShareLink, SocialShare };
+export { ShareLinkDialog, SocialShare };

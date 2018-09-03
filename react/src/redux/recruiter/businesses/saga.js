@@ -1,30 +1,30 @@
-import { takeLatest, call, put, select } from 'redux-saga/effects';
-import * as C from 'redux/constants';
-import * as helper from 'utils/helper';
+import { takeLatest, call, put } from 'redux-saga/effects';
+
 import request, { getRequest, postRequest, deleteRequest } from 'utils/request';
+import * as C from 'redux/constants';
 
 export const getBusinesses = getRequest({
   type: C.RC_GET_BUSINESSES,
   url: `/api/user-businesses/`
 });
 
-const removeBusiness = deleteRequest({
-  url: ({ id }) => `/api/user-businesses/${id}/`
-});
+export function* updateBusiness(business) {
+  yield put({ type: C.RC_UPDATE_BUSINESS, business });
+}
 
-function* saveBusiness(action) {
-  const { data, logo, onProgress, onSuccess, onFail } = action.payload;
+function* saveBusiness({ payload }) {
+  const { data, logo, onProgress, onSuccess, onFail } = payload;
 
   const business = yield call(
     request({
       method: data.id ? 'put' : 'post',
       url: data.id ? `/api/user-businesses/${data.id}/` : '/api/user-businesses/'
     }),
-    action
+    { payload }
   );
 
-  if (!business) {
-    onFail && onFail('Removing is failed.');
+  if (business === null) {
+    onFail && onFail('There was an error saving the business');
     return;
   }
 
@@ -42,37 +42,32 @@ function* saveBusiness(action) {
         }
       });
 
-      if (!image) {
-        onFail && onFail('Uploading logo is failed.');
-        onSuccess && onSuccess(business);
-        return;
+      if (image === null) {
+        onFail && onFail('There was an error uploading the logo');
+      } else {
+        business.images = [image];
       }
-
-      business.images = [image];
     } else if (business.images.length && !logo.exist) {
       yield call(deleteRequest({ url: `/api/user-business-images/${business.images[0].id}/` }));
       business.images = [];
     }
   }
 
-  let { rc_businesses: { businesses } } = yield select();
-  if (data.id) {
-    businesses = helper.updateObj(businesses, business);
-  } else {
-    businesses = helper.addObj(businesses, business);
-  }
-  yield put({ type: C.RC_BUSINESSES_UPDATE, payload: { businesses } });
+  yield call(updateBusiness, business);
 
   onSuccess && onSuccess(business);
 }
+
+const removeBusiness = deleteRequest({
+  url: ({ id }) => `/api/user-businesses/${id}/`
+});
 
 const purchase = postRequest({
   url: `/api/paypal/purchase/`
 });
 
 export default function* sagas() {
-  yield takeLatest(C.RC_GET_BUSINESSES, getBusinesses);
-  yield takeLatest(C.RC_REMOVE_BUSINESS, removeBusiness);
   yield takeLatest(C.RC_SAVE_BUSINESS, saveBusiness);
+  yield takeLatest(C.RC_REMOVE_BUSINESS, removeBusiness);
   yield takeLatest(C.RC_PURCHASE, purchase);
 }

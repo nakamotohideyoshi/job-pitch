@@ -2,12 +2,12 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import Truncate from 'react-truncate';
-import { List, Modal, Tooltip, Button, Switch, Drawer } from 'antd';
+import { List, Modal, Tooltip, Button, Switch, Drawer, notification } from 'antd';
 
 import { updateApplication, removeApplication } from 'redux/applications';
 import * as helper from 'utils/helper';
 
-import { AlertMsg, Loading, ListEx, Icons, JobseekerDetails, InterviewEdit, Logo } from 'components';
+import { AlertMsg, Loading, ListEx, Icons, JobseekerDetails, Logo } from 'components';
 
 const { confirm } = Modal;
 
@@ -30,22 +30,14 @@ class MyConnections extends React.Component {
     this.props.history.push(`/recruiter/messages/${id}`);
   };
 
-  onInterview = (app, event) => {
-    // event && event.stopPropagation();
-    // if (app.interview) {
-    //   this.setState({
-    //     interviewView: true,
-    //     selectedInterview: app
-    //   });
-    // } else {
-    //   this.setState({
-    //     interviewCreate: true,
-    //     selectedInterview: app
-    //   });
-    // }
+  onShortlist = ({ id, shortlisted }) => {
+    this.props.updateApplication({
+      appId: id,
+      data: {
+        shortlisted: !shortlisted
+      }
+    });
   };
-
-  // hideInterview = () => this.setState({ interviewCreate: false, interviewView: false });
 
   onRemove = ({ id }, event) => {
     event && event.stopPropagation();
@@ -58,36 +50,32 @@ class MyConnections extends React.Component {
       maskClosable: true,
       onOk: () => {
         this.props.removeApplication({
-          id,
-          successMsg: {
-            message: `Application is removed.`
+          appId: id,
+          onSuccess: () => {
+            notification.success({
+              message: 'Success',
+              description: 'The application is removed'
+            });
           },
-          failMsg: {
-            message: `Removing is failed.`
+          onFail: () => {
+            notification.error({
+              message: 'Error',
+              description: 'There was an error removing the application'
+            });
           }
         });
       }
     });
   };
 
-  onShortlist = ({ id, shortlisted }) => {
-    this.props.updateApplication({
-      id,
-      data: {
-        id,
-        shortlisted: !shortlisted
-      }
-    });
-  };
-
-  filterOption = application =>
+  filterOption = ({ job_seeker }) =>
     helper
-      .getFullJSName(application.job_seeker)
+      .getFullJSName(job_seeker)
       .toLowerCase()
       .indexOf(this.props.searchText) >= 0;
 
   renderApplication = app => {
-    const { id, job_seeker, interview, loading } = app;
+    const { id, job_seeker, loading } = app;
     const image = helper.getPitch(job_seeker).thumbnail;
     const name = helper.getFullJSName(job_seeker);
 
@@ -95,11 +83,6 @@ class MyConnections extends React.Component {
       <List.Item
         key={id}
         actions={[
-          <Tooltip placement="bottom" title={interview ? 'View interview' : 'Arrange interview'}>
-            <span onClick={e => this.onInterview(app, e)}>
-              <Icons.UserFriends />
-            </span>
-          </Tooltip>,
           <Tooltip placement="bottom" title="Message">
             <span onClick={e => this.onMessage(app, e)}>
               <Icons.CommentAlt />
@@ -170,13 +153,10 @@ class MyConnections extends React.Component {
                     <span style={{ marginRight: '5px' }}>Shortlisted</span>
                     <Switch
                       checked={selectedApp.shortlisted}
-                      loading={selectedApp.loading}
+                      disabled={selectedApp.loading}
                       onChange={() => this.onShortlist(selectedApp)}
                     />
                   </div>
-                  <Button type="primary" disabled={selectedApp.loading} onClick={e => this.onInterview(selectedApp)}>
-                    {selectedApp.interview ? 'View interview' : 'Arrange interview'}
-                  </Button>
                   <Button type="primary" disabled={selectedApp.loading} onClick={() => this.onMessage(selectedApp)}>
                     Message
                   </Button>
@@ -188,40 +168,6 @@ class MyConnections extends React.Component {
             />
           )}
         </Drawer>
-        {/* <Drawer
-          placement="right"
-          closable={false}
-          onClose={() => this.hideInterview()}
-          visible={this.state.selectedInterview && this.state.interviewView}
-        >
-          {this.state.selectedInterview &&
-            this.state.interviewView && (
-              <InterviewEdit
-                jobseeker={this.state.selectedInterview.job_seeker}
-                connected
-                application={this.state.selectedInterview}
-                gotoOrigin={this.hideInterview}
-                view
-              />
-            )}
-        </Drawer>
-        <Drawer
-          placement="right"
-          closable={false}
-          onClose={() => this.hideInterview()}
-          visible={this.state.selectedInterview && this.state.interviewCreate}
-        >
-          {this.state.selectedInterview &&
-            this.state.interviewCreate && (
-              <InterviewEdit
-                jobseeker={this.state.selectedInterview.job_seeker}
-                connected
-                application={this.state.selectedInterview}
-                gotoOrigin={this.hideInterview}
-                create
-              />
-            )}
-        </Drawer> */}
       </div>
     );
   }

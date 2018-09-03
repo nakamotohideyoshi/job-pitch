@@ -1,18 +1,20 @@
 import { delay } from 'redux-saga';
-import { takeLatest, call, put, select } from 'redux-saga/effects';
-import * as C from 'redux/constants';
-import * as helper from 'utils/helper';
-import request, { getRequest, postRequest, deleteRequest } from 'utils/request';
+import { takeLatest, call, put } from 'redux-saga/effects';
 import AWS from 'aws-sdk';
+
+import { updateWorkplace } from 'redux/recruiter/workplaces/saga';
+import * as C from 'redux/constants';
+import request, { getRequest, postRequest, deleteRequest } from 'utils/request';
 
 export const getJobs = getRequest({
   type: C.RC_GET_JOBS,
   url: '/api/user-jobs/'
 });
 
-const removeJob = deleteRequest({
-  url: ({ id }) => `/api/user-jobs/${id}/`
-});
+export function* updateJob(job) {
+  yield call(updateWorkplace, job.location_data);
+  yield put({ type: C.RC_UPDATE_JOB, job });
+}
 
 function* saveJob(action) {
   const { data, logo, onProgress, onSuccess, onFail } = action.payload;
@@ -25,8 +27,8 @@ function* saveJob(action) {
     action
   );
 
-  if (!job) {
-    onFail && onFail('Removing is failed.');
+  if (job === null) {
+    onFail && onFail('There was an error saving the job');
     return;
   }
 
@@ -44,34 +46,25 @@ function* saveJob(action) {
         }
       });
 
-      if (!image) {
-        onFail && onFail('Uploading logo is failed.');
-        onSuccess && onSuccess(job);
-        return;
+      if (image === null) {
+        onFail && onFail('There was an error uploading the logo');
+      } else {
+        job.images = [image];
       }
-
-      job.images = [image];
     } else if (job.images.length && !logo.exist) {
       yield call(deleteRequest({ url: `/api/user-job-images/${job.images[0].id}/` }));
       job.images = [];
     }
   }
 
-  let { rc_jobs: { jobs } } = yield select();
-  if (data.id) {
-    jobs = helper.updateObj(jobs, job);
-  } else {
-    jobs = helper.addObj(jobs, job);
-  }
-  jobs.sort((a, b) => {
-    const sort1 = a.status - b.status;
-    if (sort1 !== 0) return sort1;
-    return new Date(b.created).getTime() - new Date(a.created).getTime();
-  });
-  yield put({ type: C.RC_JOBS_UPDATE, payload: { jobs } });
+  yield call(updateJob, job);
 
   onSuccess && onSuccess(job);
 }
+
+const removeJob = deleteRequest({
+  url: ({ id }) => `/api/user-jobs/${id}/`
+});
 
 export const _uploadPitch = ({ id, token }, pitchData, onUploadProgress) =>
   new Promise(resolve => {
@@ -140,8 +133,7 @@ function* uploadPitch(action) {
 }
 
 export default function* sagas() {
-  yield takeLatest(C.RC_GET_JOBS, getJobs);
-  yield takeLatest(C.RC_REMOVE_JOB, removeJob);
   yield takeLatest(C.RC_SAVE_JOB, saveJob);
+  yield takeLatest(C.RC_REMOVE_JOB, removeJob);
   yield takeLatest(C.JS_UPLOAD_JOBPITCH, uploadPitch);
 }

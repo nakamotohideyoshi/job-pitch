@@ -3,8 +3,8 @@ import Helmet from 'react-helmet';
 import { connect } from 'react-redux';
 import { Breadcrumb, List, Modal, Tooltip } from 'antd';
 
+import { getApplications, getBusinesses } from 'redux/selectors';
 import { removeBusiness } from 'redux/recruiter/businesses';
-import { getApplications } from 'redux/applications';
 import DATA from 'utils/data';
 import * as helper from 'utils/helper';
 
@@ -14,7 +14,6 @@ import imgIntro1 from 'assets/intro1.png';
 import imgIntro2 from 'assets/intro2.png';
 import imgIntro3 from 'assets/intro3.png';
 import Wrapper from '../styled';
-import * as _ from 'lodash';
 
 const { confirm } = Modal;
 
@@ -43,51 +42,30 @@ const INTRO_DATA = [
 
 class BusinessList extends React.Component {
   state = {
-    dontShowIntro: false,
-    countList: null
+    dontShowIntro: false
   };
 
   componentDidMount() {
-    this.props.getApplications();
-    // console.log(this.props.applications);
-    // let countList = {};
-    // _.forEach(this.props.businesses, business => {
-    //   let newApplications = _.filter(DATA.applications, application => {
-    //     return application.job_data.location_data.business === business.id && application.status === 1;
-    //   });
-    //   countList[business.id] = newApplications.length;
-    // });
-    this.setState({
-      dontShowIntro: DATA[`dontShowIntro_${DATA.email}`]
-      // countList: countList
-    });
+    this.setState({ dontShowIntro: DATA[`dontShowIntro_${DATA.email}`] });
   }
 
-  componentWillReceiveProps(nextProps) {
-    let countList = {};
-    _.forEach(this.props.businesses, business => {
-      let newApplications = _.filter(nextProps.applications, application => {
-        return application.job_data.location_data.business === business.id && application.status === 1;
-      });
-      countList[business.id] = newApplications.length;
-    });
-    this.setState({
-      countList: countList
-    });
-  }
+  onCloseIntro = () => {
+    DATA[`dontShowIntro_${DATA.email}`] = true;
+    this.setState({ dontShowIntro: true });
+  };
 
-  selectBusiness = ({ id }) => {
+  onSselectBusiness = id => {
     this.props.history.push(`/recruiter/jobs/workplace/${id}`);
   };
 
-  addBusiness = () => {
+  onAddBusiness = () => {
     const tutorial = helper.loadData('tutorial');
     if (tutorial === 1) {
       helper.saveData('tutorial', 2);
     }
 
-    const { user, businesses, history } = this.props;
-    if (user.can_create_businesses || businesses.length === 0) {
+    const { can_create_businesses, businesses, history } = this.props;
+    if (can_create_businesses || businesses.length === 0) {
       history.push('/recruiter/jobs/business/add');
     } else {
       confirm({
@@ -110,28 +88,20 @@ class BusinessList extends React.Component {
     }
   };
 
-  editBusiness = ({ id }, event) => {
+  onEditBusiness = (id, event) => {
     event && event.stopPropagation();
     this.props.history.push(`/recruiter/jobs/business/edit/${id}`);
   };
 
-  closeIntro = () => {
-    DATA[`dontShowIntro_${DATA.email}`] = true;
-    this.setState({ dontShowIntro: true });
-  };
-
-  removeBusiness = ({ id, name, locations }, event) => {
+  onRemoveBusiness = ({ id, name, locations }, event) => {
     event && event.stopPropagation();
 
     const count = locations.length;
-    let content;
-    if (count === 0) {
-      content = `Are you sure you want to delete ${name}`;
-    } else {
-      const s = count !== 1 ? 's' : '';
-      content = `Deleting this business will also delete ${count} workplace${s} and all their jobs.
-                If you want to hide the jobs instead you can deactive them.`;
-    }
+    const content =
+      count === 0
+        ? `Deleting this business will also delete ${count} workplace${count !== 1 ? 's' : ''} and all their jobs.
+    If you want to hide the jobs instead you can deactive them.`
+        : `Are you sure you want to delete ${name}`;
 
     confirm({
       content,
@@ -143,10 +113,10 @@ class BusinessList extends React.Component {
         this.props.removeBusiness({
           id,
           successMsg: {
-            message: `Business(${name}) is removed.`
+            message: 'The business is removed'
           },
           failMsg: {
-            message: `Removing business(${name}) is failed.`
+            message: 'There was an error removing the business'
           }
         });
       }
@@ -154,40 +124,45 @@ class BusinessList extends React.Component {
   };
 
   renderBusiness = business => {
-    const { id, name, tokens, locations, loading } = business;
+    const { id, name, tokens, locations, newApps, loading } = business;
     const logo = helper.getBusinessLogo(business);
     const strTokens = `${tokens} credit${tokens !== 1 ? 's' : ''}`;
     const count = locations.length;
     const strWorkplaces = `Includes ${count} workplace${count !== 1 ? 's' : ''}`;
-    if (this.state.countList !== null) {
-      var newApplicationsCount = this.state.countList[business.id];
-      var strNewApplications = `${newApplicationsCount} new application${newApplicationsCount !== 1 ? 's' : ''}`;
+    const strNewApps = `${newApps} new application${newApps !== 1 ? 's' : ''}`;
+
+    const actions = [
+      <Tooltip placement="bottom" title="Edit">
+        <span onClick={e => this.onEditBusiness(id, e)}>
+          <Icons.Pen />
+        </span>
+      </Tooltip>
+    ];
+    if (this.props.businesses.length > 1) {
+      actions.push(
+        <Tooltip placement="bottom" title="Remove">
+          <span onClick={e => this.onRemoveBusiness(business, e)}>
+            <Icons.TrashAlt />
+          </span>
+        </Tooltip>
+      );
     }
 
     return (
       <List.Item
         key={id}
-        actions={[
-          <Tooltip placement="bottom" title="Edit">
-            <span onClick={e => this.editBusiness(business, e)}>
-              <Icons.Pen />
-            </span>
-          </Tooltip>,
-          <Tooltip placement="bottom" title="Remove">
-            <span onClick={e => this.removeBusiness(business, e)}>
-              <Icons.TrashAlt />
-            </span>
-          </Tooltip>
-        ]}
-        onClick={() => this.selectBusiness(business)}
+        actions={actions}
+        onClick={() => this.onSselectBusiness(id)}
         className={loading ? 'loading' : ''}
       >
-        <List.Item.Meta avatar={<Logo src={logo} size="80px" />} title={name} />
+        <List.Item.Meta avatar={<Logo src={logo} size="80px" padding="10px" />} title={name} />
+
         <span style={{ width: '80px' }}>{strTokens}</span>
         <span style={{ width: '140px' }}>
           <div>{strWorkplaces}</div>
-          {!!newApplicationsCount && <div style={{ color: '#ff9300' }}>{strNewApplications}</div>}
+          {!!newApps && <div style={{ color: '#ff9300' }}>{strNewApps}</div>}
         </span>
+
         {loading && <Loading className="mask" size="small" />}
       </List.Item>
     );
@@ -203,13 +178,13 @@ class BusinessList extends React.Component {
                Let's start by easily adding your business!`
             : `You have not added any businesses yet.`}
         </span>
-        <a onClick={this.addBusiness}>{tutorial === 1 ? 'Get started!' : 'Create business'}</a>
+        <a onClick={this.onAddBusiness}>{tutorial === 1 ? 'Get started!' : 'Create business'}</a>
       </AlertMsg>
     );
   };
 
   render() {
-    const { businesses, applications } = this.props;
+    const { businesses } = this.props;
     const { dontShowIntro } = this.state;
 
     return (
@@ -224,24 +199,20 @@ class BusinessList extends React.Component {
           <Breadcrumb>
             <Breadcrumb.Item>Businesses</Breadcrumb.Item>
           </Breadcrumb>
-          <LinkButton onClick={this.addBusiness}>Add new business</LinkButton>
+          <LinkButton onClick={this.onAddBusiness}>Add new business</LinkButton>
         </PageSubHeader>
 
         <div className="content">
-          {applications === null ? (
-            <Loading className="mask" size="large" />
-          ) : (
-            <ListEx
-              data={this.props.businesses}
-              loadingSize="large"
-              pagination={{ pageSize: 10 }}
-              renderItem={this.renderBusiness}
-              emptyRender={this.renderEmpty}
-            />
-          )}
+          <ListEx
+            data={this.props.businesses}
+            loadingSize="large"
+            pagination={{ pageSize: 10 }}
+            renderItem={this.renderBusiness}
+            emptyRender={this.renderEmpty}
+          />
         </div>
 
-        {businesses.length === 0 && !dontShowIntro && <Intro data={INTRO_DATA} onClose={this.closeIntro} />}
+        {businesses.length === 0 && !dontShowIntro && <Intro data={INTRO_DATA} onClose={this.onCloseIntro} />}
       </Wrapper>
     );
   }
@@ -249,16 +220,20 @@ class BusinessList extends React.Component {
 
 export default connect(
   state => {
-    const businesses = state.rc_businesses.businesses.slice(0);
-    const { applications } = state.applications;
+    const applications = getApplications(state);
+    const businesses = getBusinesses(state).map(business => {
+      const newApps = applications.filter(
+        ({ job_data, status }) => job_data.location_data.business === business.id && status === DATA.APP.CREATED
+      ).length;
+      return { ...business, newApps };
+    });
+
     return {
-      user: state.auth.user,
-      businesses,
-      applications
+      can_create_businesses: state.auth.user.can_create_businesses,
+      businesses
     };
   },
   {
-    removeBusiness,
-    getApplications
+    removeBusiness
   }
 )(BusinessList);

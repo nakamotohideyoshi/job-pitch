@@ -2,6 +2,8 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Route, Redirect } from 'react-router-dom';
 
+import { getBusinesses } from 'redux/selectors';
+
 import Layout from 'containers/Layout';
 import MainMenu from './MainMenu';
 
@@ -20,5 +22,5 @@ const RCRoute = ({ businesses, component, ...rest }) => (
 );
 
 export default connect(state => ({
-  businesses: state.rc_businesses.businesses
+  businesses: getBusinesses(state)
 }))(RCRoute);

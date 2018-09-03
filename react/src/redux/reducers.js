@@ -1,6 +1,5 @@
 import auth from './auth';
 import applications from './applications';
-import interviews from './interviews';
 
 import rc_find from './recruiter/find';
 import rc_businesses from './recruiter/businesses';
@@ -14,7 +13,6 @@ import js_profile from './jobseeker/profile';
 export default {
   auth,
   applications,
-  interviews,
 
   rc_find,
   rc_businesses,

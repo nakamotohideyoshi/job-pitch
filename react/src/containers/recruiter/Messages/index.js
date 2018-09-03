@@ -1,26 +1,15 @@
 import React, { Fragment } from 'react';
 import Helmet from 'react-helmet';
 import { connect } from 'react-redux';
-import { List, Modal, Avatar, Button, Switch } from 'antd';
+import { List, Modal, Button, Switch, Drawer, notification } from 'antd';
 import moment from 'moment';
-import { getInterviews } from 'redux/interviews';
 
-import { getApplications, connectApplication, updateApplication } from 'redux/applications';
-
+import { getApplications, getJobs, getBusinesses } from 'redux/selectors';
+import { updateApplication } from 'redux/applications';
 import DATA from 'utils/data';
 import * as helper from 'utils/helper';
 
-import {
-  AlertMsg,
-  Loading,
-  MessageThread,
-  Icons,
-  LargeModal,
-  JobseekerDetails,
-  InterviewEdit,
-  LinkButton,
-  JobDetails
-} from 'components';
+import { Loading, MessageThread, Icons, JobseekerDetails, LinkButton, JobDetails, Logo } from 'components';
 import Sidebar from './Sidebar';
 import Wrapper from './styled';
 
@@ -31,17 +20,18 @@ class Page extends React.Component {
     selectedId: null,
     openAppDetails: false,
     openJobDetails: false,
-    openInterviewEdit: false,
+    viewInterview: false,
     tablet: false,
-    open: false,
-    selectedInterview: null
+    open: false
   };
 
   componentWillMount() {
-    this.props.getApplications();
-    this.props.getInterviews();
     window.addEventListener('resize', this.onResize);
     this.onResize();
+
+    if (this.props.applications) {
+      this.setSelectedID(this.props);
+    }
   }
 
   componentWillUnmount() {
@@ -53,20 +43,23 @@ class Page extends React.Component {
     if (applications) {
       const { applications: applications0, match: { params: params0 } } = this.props;
       if (!applications0 || params0.appId !== params.appId) {
-        const appId = helper.str2int(params.appId) || helper.loadData('messages/appId');
-        const app = helper.getItemByID(applications, appId) || applications[0] || {};
-        helper.saveData('messages/appId', app.id);
-        this.setState({ selectedId: app.id, open: false });
-        this.props.history.replace(`/recruiter/messages/${app.id}`);
+        this.setSelectedID(nextProps);
       }
     }
   }
 
-  onConnect = ({ id, job_data }, event) => {
-    event && event.stopPropagation();
+  setSelectedID = ({ applications, match: { params } }) => {
+    const appId = helper.str2int(params.appId) || helper.loadData('messages/appId');
+    const app = helper.getItemByID(applications, appId) || applications[0] || {};
+    helper.saveData('messages/appId', app.id);
+    this.setState({ selectedId: app.id, open: false });
+    this.props.history.replace(`/recruiter/messages/${app.id}`);
+  };
 
-    const { businesses, connectApplication, history } = this.props;
+  onConnect = ({ id, job_data }) => {
+    const { businesses, history } = this.props;
     const business = helper.getItemByID(businesses, job_data.location_data.business_data.id);
+
     if (business.tokens === 0) {
       confirm({
         content: 'You need 1 credit',
@@ -86,17 +79,22 @@ class Page extends React.Component {
       cancelText: 'Cancel',
       maskClosable: true,
       onOk: () => {
-        connectApplication({
-          id,
+        updateApplication({
+          appId: id,
           data: {
-            id,
             connect: DATA.APP.ESTABLISHED
           },
-          successMsg: {
-            message: `Application is connected.`
+          onSuccess: () => {
+            notification.success({
+              message: 'Success',
+              description: 'The application is connected'
+            });
           },
-          failMsg: {
-            message: `Connection is failed.`
+          onFail: () => {
+            notification.error({
+              message: 'Error',
+              description: 'There was an error connecting the application'
+            });
           }
         });
       }
@@ -105,9 +103,8 @@ class Page extends React.Component {
 
   onShortlist = ({ id, shortlisted }) => {
     this.props.updateApplication({
-      id,
+      appId: id,
       data: {
-        id,
         shortlisted: !shortlisted
       }
     });
@@ -121,42 +118,29 @@ class Page extends React.Component {
 
   openSidebar = () => this.setState({ open: true });
   closeSidebar = () => this.setState({ open: false });
-  showAppDetails = () => this.setState({ openAppDetails: true });
-  hideAppDetails = () => this.setState({ openAppDetails: false });
+  showAppDetails = viewInterview => this.setState({ openAppDetails: true, viewInterview });
+  hideAppDetails = () => this.setState({ openAppDetails: false, viewInterview: false });
   showJobDetails = () => this.setState({ openJobDetails: true });
   hideJobDetails = () => this.setState({ openJobDetails: false });
 
-  showInterviewEdit = () => this.setState({ openInterviewEdit: true });
-  hideInterviewEdit = () => this.setState({ openInterviewEdit: false });
-
-  showInterviewView = interview => this.setState({ openInterviewView: true, selectedInterview: interview });
-  hideInterviewView = () => this.setState({ openInterviewView: false });
-
-  renderHeader = ({ job_data, job_seeker, interviews, id }) => {
+  renderHeader = ({ job_data, job_seeker, interview }) => {
     const avatar = helper.getPitch(job_seeker).thumbnail;
     const jobseekerName = helper.getFullJSName(job_seeker);
     const jobName = helper.getFullBWName(job_data);
-    let selectedInterview = null;
-    let interviewLink = 'Arrange Trial/Interview';
-    this.props.interviews.forEach(interview => {
-      if (interview.application === id && (interview.status === 'PENDING' || interview.status === 'ACCEPTED')) {
-        selectedInterview = interview;
-      }
-    });
-    if (selectedInterview) {
-      interviewLink = `Interview: ${moment(selectedInterview.at).format('dddd, MMMM Do, YYYY h:mm:ss A')}`;
-    }
     return (
-      <List.Item
-        actions={
-          !selectedInterview
-            ? [<LinkButton onClick={this.showInterviewEdit}>{interviewLink}</LinkButton>]
-            : [<LinkButton onClick={() => this.showInterviewView(selectedInterview)}>{interviewLink}</LinkButton>]
-        }
-      >
+      <List.Item>
         <List.Item.Meta
-          avatar={<Avatar src={avatar} className="avatar-48" />}
-          title={<span onClick={this.showAppDetails}>{jobseekerName}</span>}
+          avatar={<Logo src={avatar} size="48px" />}
+          title={
+            <div>
+              <span onClick={() => this.showAppDetails()}>{jobseekerName}</span>
+              <span onClick={() => this.showAppDetails(true)}>
+                {interview
+                  ? `Interview: ${moment(interview.at).format('ddd DD MMM, YYYY [at] H:mm')}`
+                  : 'Arrange Trial/Interview'}
+              </span>
+            </div>
+          }
           description={
             <span onClick={this.showJobDetails}>
               {job_data.title} ({jobName})
@@ -172,7 +156,7 @@ class Page extends React.Component {
       return (
         <div>
           You cannot send messages until you have connected.
-          <LinkButton onClick={this.showAppDetails}>Connect</LinkButton>
+          <LinkButton onClick={() => this.showAppDetails()}>Connect</LinkButton>
         </div>
       );
     }
@@ -181,54 +165,36 @@ class Page extends React.Component {
   };
 
   render() {
-    const { jobs, applications, error } = this.props;
+    const { jobs, applications } = this.props;
 
-    if (error) {
-      return <AlertMsg error>Server Error!</AlertMsg>;
-    }
     if (!applications) {
       return <Loading size="large" />;
     }
 
-    const { selectedId } = this.state;
+    const { selectedId, openAppDetails, openJobDetails, tablet, open, viewInterview } = this.state;
     const selectedApp = helper.getItemByID(applications, selectedId);
-    const {
-      openAppDetails,
-      openJobDetails,
-      openInterviewEdit,
-      openInterviewView,
-      tablet,
-      open,
-      selectedInterview
-    } = this.state;
-
-    if (selectedInterview) {
-      selectedApp.interview = selectedInterview;
-    }
 
     return (
       <Wrapper tablet={tablet} open={open}>
         <Sidebar jobs={jobs} applications={applications} selectedId={selectedId} />
 
         <div className="body">
-          <Fragment>
-            <div className="header">
-              {tablet && <Icons.Bars onClick={this.openSidebar} size="lg" />}
-              {selectedApp && this.renderHeader(selectedApp)}
-            </div>
+          <div className="header">
+            {tablet && <Icons.Bars onClick={this.openSidebar} size="lg" />}
+            {selectedApp && this.renderHeader(selectedApp)}
+          </div>
 
-            <div className="content">
-              {selectedApp && <MessageThread application={selectedApp} inputRenderer={this.renderInput} />}
-            </div>
-          </Fragment>
+          <div className="content">
+            {selectedApp && <MessageThread application={selectedApp} inputRenderer={this.renderInput} />}
+          </div>
           {tablet && open && <span className="mask" onClick={this.closeSidebar} />}
         </div>
 
-        {openAppDetails && (
-          <LargeModal visible title="Application Details" onCancel={this.hideAppDetails}>
+        <Drawer placement="right" closable={false} onClose={this.hideAppDetails} visible={!!openAppDetails}>
+          {openAppDetails && (
             <JobseekerDetails
-              jobseeker={selectedApp.job_seeker}
-              connected
+              application={selectedApp}
+              defaultTab={viewInterview && 'interview'}
               actions={
                 <div>
                   {selectedApp.status === DATA.APP.ESTABLISHED && (
@@ -249,35 +215,11 @@ class Page extends React.Component {
                 </div>
               }
             />
-          </LargeModal>
-        )}
-        {openInterviewEdit && (
-          <LargeModal visible title="Request Interview" onCancel={this.hideInterviewEdit}>
-            <InterviewEdit
-              jobseeker={selectedApp.job_seeker}
-              connected
-              application={selectedApp}
-              gotoOrigin={this.hideInterviewEdit}
-              create
-            />
-          </LargeModal>
-        )}
-        {openInterviewView && (
-          <LargeModal visible title="Interview Detail" onCancel={this.hideInterviewView}>
-            <InterviewEdit
-              jobseeker={selectedApp.job_seeker}
-              connected
-              application={selectedApp}
-              gotoOrigin={this.hideInterviewView}
-              view
-            />
-          </LargeModal>
-        )}
-        {openJobDetails && (
-          <LargeModal visible title="Job Details" onCancel={this.hideJobDetails}>
-            <JobDetails jobData={selectedApp.job_data} />
-          </LargeModal>
-        )}
+          )}
+        </Drawer>
+        <Drawer placement="right" closable={false} onClose={this.hideJobDetails} visible={!!openJobDetails}>
+          {openJobDetails && <JobDetails jobData={selectedApp.job_data} />}
+        </Drawer>
       </Wrapper>
     );
   }
@@ -285,17 +227,12 @@ class Page extends React.Component {
 
 const enhance = connect(
   state => ({
-    jobs: state.rc_jobs.jobs,
-    applications: state.applications.applications,
-    businesses: state.rc_businesses.businesses,
-    error: state.applications.error,
-    interviews: state.interviews.interviews
+    jobs: getJobs(state),
+    applications: getApplications(state),
+    businesses: getBusinesses(state)
   }),
   {
-    getApplications,
-    connectApplication,
-    updateApplication,
-    getInterviews
+    updateApplication
   }
 );
 

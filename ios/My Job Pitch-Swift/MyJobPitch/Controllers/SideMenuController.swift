@@ -13,24 +13,23 @@ class SideMenuController: UIViewController {
     static var currentID = ""
     static let menuItems = [
         "find_job":     ["icon": "menu-search",         "title": "Find Job",                "identifier": "Swipe",              "per": "P"],
-        "applications1":["icon": "menu-application1",   "title": "My Applications",            "identifier": "ApplicationList",    "per": "P"],
+        "applications1":["icon": "menu-applications2",   "title": "My Applications",            "identifier": "ApplicationList",    "per": "P"],
         "messages":     ["icon": "menu-message",        "title": "Messages",                "identifier": "MessageList",        "per": "PB"],
         "job_profile":  ["icon": "menu-job-profile",    "title": "Job Profile",             "identifier": "JobProfile",         "per": "J"],
-        "add_record":   ["icon": "menu-add-record",     "title": "Record Pitch",            "identifier": "Pitch",              "per": "J"],
+        "add_record":   ["icon": "menu-record",     "title": "Record Pitch",            "identifier": "Pitch",              "per": "J"],
         "view_profile": ["icon": "menu-user-profile",   "title": "Profile",                 "identifier": "JobSeekerDetail",   "per": ""],
         "user_profile": ["icon": "menu-user-profile",   "title": "Profile",                 "identifier": "JobSeekerProfile",   "per": ""],
         
         "find_talent":  ["icon": "menu-search",         "title": "Find Talent",             "identifier": "SelectJob",          "per": "B"],
-        "applications": ["icon": "menu-application",    "title": "New Applications",            "identifier": "ApplicationList",    "per": "B"],
-        "connections":  ["icon": "menu-connect",        "title": "My Connections",             "identifier": "SelectJob",          "per": "B"],
+        "applications": ["icon": "menu-new-applications",    "title": "New Applications",            "identifier": "ApplicationList",    "per": "B"],
+        "connections":  ["icon": "menu-applications1",        "title": "My Connections",             "identifier": "SelectJob",          "per": "B"],
         "shortlist":    ["icon": "menu-shortlist",      "title": "My Shortlist",            "identifier": "SelectJob",          "per": "B"],
-        "interviews":  ["icon": "menu-connect",        "title": "Interviews",             "identifier": "SelectJob",          "per": "B"],
+        "interviews":  ["icon": "menu-interview",        "title": "Interviews",             "identifier": "SelectJob",          "per": "B"],
         
-        "j_interviews":  ["icon": "menu-connect",        "title": "Interviews",             "identifier": "InterviewList",          "per": "J"],
+        "j_interviews":  ["icon": "menu-interview",        "title": "Interviews",             "identifier": "InterviewList",          "per": "J"],
         
         "businesses":   ["icon": "menu-business",       "title": "Add or Edit Jobs",        "identifier": "BusinessList",       "per": ""],
-        "payment":      ["icon": "menu-payment",        "title": "Payment",                 "identifier": "",                   "per": ""],
-        "users":        ["icon": "menu-user-profile",   "title": "Users",                   "identifier": "BusinessList",       "per": ""],
+        "users":        ["icon": "menu-users",   "title": "Users",                   "identifier": "BusinessList",       "per": ""],
         
         "change_pass":  ["icon": "menu-key",            "title": "Change Password",         "identifier": "ChangePassword",     "per": ""],
         "help":         ["icon": "menu-help",           "title": "Help",                    "identifier": "Help",               "per": ""],

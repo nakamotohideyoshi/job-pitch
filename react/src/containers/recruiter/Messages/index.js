@@ -39,9 +39,15 @@ class Page extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const { applications, match: { params } } = nextProps;
+    const {
+      applications,
+      match: { params }
+    } = nextProps;
     if (applications) {
-      const { applications: applications0, match: { params: params0 } } = this.props;
+      const {
+        applications: applications0,
+        match: { params: params0 }
+      } = this.props;
       if (!applications0 || params0.appId !== params.appId) {
         this.setSelectedID(nextProps);
       }
@@ -123,7 +129,7 @@ class Page extends React.Component {
   showJobDetails = () => this.setState({ openJobDetails: true });
   hideJobDetails = () => this.setState({ openJobDetails: false });
 
-  renderHeader = ({ job_data, job_seeker, interview }) => {
+  renderHeader = ({ job_data, job_seeker, interview, status }) => {
     const avatar = helper.getPitch(job_seeker).thumbnail;
     const jobseekerName = helper.getFullJSName(job_seeker);
     const jobName = helper.getFullBWName(job_data);
@@ -134,11 +140,13 @@ class Page extends React.Component {
           title={
             <div>
               <span onClick={() => this.showAppDetails()}>{jobseekerName}</span>
-              <span onClick={() => this.showAppDetails(true)}>
-                {interview
-                  ? `Interview: ${moment(interview.at).format('ddd DD MMM, YYYY [at] H:mm')}`
-                  : 'Arrange Trial/Interview'}
-              </span>
+              {status === DATA.APP.ESTABLISHED && (
+                <span onClick={() => this.showAppDetails(true)}>
+                  {interview
+                    ? `Interview: ${moment(interview.at).format('ddd DD MMM, YYYY [at] H:mm')}`
+                    : 'Arrange Trial/Interview'}
+                </span>
+              )}
             </div>
           }
           description={

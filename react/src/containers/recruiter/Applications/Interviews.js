@@ -1,24 +1,16 @@
-import React, { Fragment } from 'react';
-import { connect } from 'react-redux';
+import React from 'react';
 import { withRouter } from 'react-router-dom';
 import Truncate from 'react-truncate';
-import { List, Modal, Tooltip, Drawer } from 'antd';
-
-import { removeInterview } from 'redux/interviews';
-import * as helper from 'utils/helper';
-
-import { AlertMsg, Loading, ListEx, Icons, InterviewEdit, Logo } from 'components';
+import { List, Tooltip, Drawer, Button } from 'antd';
 import moment from 'moment';
 
-const { confirm } = Modal;
+import * as helper from 'utils/helper';
+
+import { AlertMsg, Loading, ListEx, Icons, JobseekerDetails, Logo } from 'components';
 
 class Interviews extends React.Component {
   state = {
     selectedId: null
-    // selectedApp: null,
-    // openInterviewEdit: false,
-    // openInterviewView: false,
-    // onlyNote: false
   };
 
   onSelect = selectedId => this.setState({ selectedId });
@@ -28,45 +20,9 @@ class Interviews extends React.Component {
     this.props.history.push(`/recruiter/messages/${id}`);
   };
 
-  onRemove = ({ interview }, event) => {
-    event && event.stopPropagation();
-
-    confirm({
-      content: 'Are you sure you want to delete this interview?',
-      okText: `Remove`,
-      okType: 'danger',
-      cancelText: 'Cancel',
-      maskClosable: true,
-      onOk: () => {
-        this.props.removeInterview({
-          id: interview.id,
-          successMsg: {
-            message: `Interview is removed.`
-          },
-          failMsg: {
-            message: `Removing is failed.`
-          }
-        });
-      }
-    });
-  };
-
-  editInterview = (app, rest, event) => {
-    event && event.stopPropagation();
-    if (rest) {
-      this.setState({ selectedApp: app, openInterviewEdit: true, onlyNote: true });
-    } else {
-      this.setState({ selectedApp: app, openInterviewEdit: true, onlyNote: false });
-    }
-  };
-
-  hideInterviewEdit = () => this.setState({ openInterviewEdit: false });
-
-  hideInterviewView = () => this.setState({ openInterviewView: false });
-
-  filterOption = application =>
+  filterOption = ({ job_seeker }) =>
     helper
-      .getFullJSName(application.job_seeker)
+      .getFullJSName(job_seeker)
       .toLowerCase()
       .indexOf(this.props.searchText) >= 0;
 
@@ -75,21 +31,15 @@ class Interviews extends React.Component {
     const image = helper.getPitch(job_seeker).thumbnail;
     const name = helper.getFullJSName(job_seeker);
 
-    const INTERVIEW_STATUS = {
+    let interviewStatus = {
       PENDING: 'Pending',
       ACCEPTED: 'Accepted'
-    };
-    let interviewStatus = INTERVIEW_STATUS[interview.status];
+    }[interview.status];
 
     return (
       <List.Item
         key={id}
         actions={[
-          <Tooltip placement="bottom" title="Edit">
-            <span onClick={e => this.editInterview(app, false, e)}>
-              <Icons.Pen />
-            </span>
-          </Tooltip>,
           <Tooltip placement="bottom" title="Message">
             <span onClick={e => this.onMessage(app, e)}>
               <Icons.CommentAlt />
@@ -119,7 +69,10 @@ class Interviews extends React.Component {
 
   renderEmpty = () => (
     <AlertMsg>
-      <span>You have not requested any interviews yet. Once that happens, their interviews will appear here.</span>
+      <span>
+        {`You have not requested any interviews yet. Once that happens,
+        their interviews will appear here.`}
+      </span>
     </AlertMsg>
   );
 
@@ -140,43 +93,22 @@ class Interviews extends React.Component {
         )}
         <Drawer placement="right" closable={false} onClose={() => this.onSelect()} visible={!!selectedApp}>
           {selectedApp && (
-            <InterviewEdit
-              jobseeker={selectedApp.job_seeker}
-              connected
+            <JobseekerDetails
               application={selectedApp}
-              gotoOrigin={this.hideInterviewView}
-              view
+              defaultTab="interview"
+              actions={
+                <div>
+                  <Button type="primary" disabled={selectedApp.loading} onClick={() => this.onMessage(selectedApp)}>
+                    Message
+                  </Button>
+                </div>
+              }
             />
           )}
         </Drawer>
-
-        {/* <Drawer
-          placement="right"
-          closable={false}
-          onClose={() => this.hideInterviewEdit()}
-          visible={selectedApp && this.state.openInterviewEdit}
-        >
-          {selectedApp &&
-            this.state.openInterviewEdit && (
-              <InterviewEdit
-                jobseeker={selectedApp.job_seeker}
-                connected
-                application={selectedApp}
-                gotoOrigin={this.hideInterviewEdit}
-                onlyNote={this.state.onlyNote}
-              />
-            )}
-        </Drawer> */}
       </div>
     );
   }
 }
 
-export default withRouter(
-  connect(
-    null,
-    {
-      removeInterview
-    }
-  )(Interviews)
-);
+export default withRouter(Interviews);

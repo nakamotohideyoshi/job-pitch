@@ -1,78 +1,98 @@
 import { takeLatest, call, put, select } from 'redux-saga/effects';
 import { delay } from 'redux-saga';
+
 import {
-  weakRequest,
   getRequest,
   postRequest,
   putRequest,
   deleteRequest,
+  requestPending,
   requestSuccess,
   requestFail
 } from 'utils/request';
-import DATA from 'utils/data';
 import * as C from 'redux/constants';
 
-const getApplications = weakRequest(
-  getRequest({
-    url: '/api/applications/'
-  })
-);
-
-const updateApplication = weakRequest(
-  putRequest({
-    url: ({ id }) => `/api/applications/${id}/`
-  })
-);
-
-const connectApplication = weakRequest(
-  putRequest({
-    type: C.UPDATE_APPLICATION,
-    url: ({ id }) => `/api/applications/${id}/`,
-    payloadOnSuccess: ({ id }) => ({
-      id,
-      status: DATA.APP.ESTABLISHED
-    })
-  })
-);
-
-const removeApplication = weakRequest(
-  deleteRequest({
-    type: C.UPDATE_APPLICATION,
-    url: ({ id }) => `/api/applications/${id}/`,
-    payloadOnSuccess: ({ id }) => ({
-      id,
-      status: DATA.APP.DELETED
-    })
-  })
-);
-
-const readMessage = putRequest({
-  url: ({ id }) => `/api/messages/${id}/`
+export const getApplications = getRequest({
+  type: C.GET_APPLICATIONS,
+  url: '/api/applications/'
 });
 
-function* sendMessage({ payload }) {
-  const result = yield call(postRequest({ url: '/api/messages/' }), { payload });
-  if (result) {
-    const application = yield call(getRequest({ url: `/api/applications/${payload.data.application}/` }));
-    if (application) {
-      yield put({ type: requestSuccess(C.SEND_MESSAGE), payload: application });
+function* _updateApplication(process, payload) {
+  const { appId, onSuccess, onFail } = payload;
+  yield put({ type: requestPending(C.UPDATE_APPLICATION), appId });
+
+  const result = yield call(process, { payload });
+  if (result !== null) {
+    const application = yield call(getRequest({ url: `/api/applications/${appId}/` }));
+    if (application !== null) {
+      yield put({ type: requestSuccess(C.UPDATE_APPLICATION), application });
+      onSuccess && onSuccess();
       return;
     }
   }
-  yield put({ type: requestFail(C.SEND_MESSAGE), payload });
+
+  yield put({ type: requestFail(C.UPDATE_APPLICATION), appId });
+  onFail && onFail();
 }
 
-function* updateMessageByInterview({ payload }) {
-  const application = yield call(getRequest({ url: `/api/applications/${payload.data.application}/` }));
-  if (application) {
-    yield put({ type: requestSuccess(C.UPDATE_MESSAGE_BY_INTERVIEW), payload: application });
-    return;
-  }
-  yield put({ type: requestFail(C.UPDATE_MESSAGE_BY_INTERVIEW), payload });
+function* updateApplication({ payload }) {
+  yield call(_updateApplication, putRequest({ url: `/api/applications/${payload.appId}/` }), payload);
 }
+
+function* removeApplication({ payload }) {
+  yield call(_updateApplication, deleteRequest({ url: `/api/applications/${payload.appId}/` }), payload);
+}
+
+// message
+
+function* readMessage({ payload }) {
+  yield call(_updateApplication, putRequest({ url: `/api/messages/${payload.id}/` }), payload);
+}
+
+function* sendMessage({ payload }) {
+  yield call(_updateApplication, postRequest({ url: `/api/messages/` }), payload);
+}
+
+// interview
+
+function* saveInterview({ payload }) {
+  yield call(getRequest({ url: `/api/interviews/` }));
+  const { id } = payload.data;
+  if (id) {
+    yield call(_updateApplication, putRequest({ url: `/api/interviews/${id}/` }), payload);
+  } else {
+    yield call(_updateApplication, postRequest({ url: '/api/interviews/' }), payload);
+  }
+}
+
+function* changeInterview({ payload }) {
+  const { id, changeType } = payload;
+  yield call(_updateApplication, postRequest({ url: `/api/interviews/${id}/${changeType}/` }), payload);
+}
+
+function* completeInterview({ payload }) {
+  const { id } = payload.data;
+  yield call(
+    _updateApplication,
+    function*() {
+      const result = yield call(postRequest({ url: `/api/interviews/${id}/complete/` }));
+      if (result === null) return null;
+      if (payload.data.feedback === '') return '';
+      return yield call(putRequest({ url: `/api/interviews/${id}/` }), { payload });
+    },
+    payload
+  );
+}
+
+function* removeInterview({ payload }) {
+  const { id } = payload;
+  yield call(_updateApplication, deleteRequest({ url: `/api/interviews/${id}/` }), payload);
+}
+
+// auto update applications
 
 function* autoUpdateAppliciations() {
-  let second = 100;
+  let second = 0;
   while (true) {
     yield call(delay, 1000);
     second++;
@@ -80,7 +100,7 @@ function* autoUpdateAppliciations() {
     let { auth, router } = yield select();
 
     if (!auth.user) {
-      second = 100;
+      second = 0;
       continue;
     }
 
@@ -88,22 +108,20 @@ function* autoUpdateAppliciations() {
     if (second < interval) continue;
 
     second = 0;
-    yield call(
-      getRequest({
-        type: C.GET_APPLICATIONS,
-        url: '/api/applications/'
-      })
-    );
+    yield call(getApplications);
   }
 }
 
 export default function* sagas() {
-  yield takeLatest(C.GET_APPLICATIONS, getApplications);
   yield takeLatest(C.UPDATE_APPLICATION, updateApplication);
-  yield takeLatest(C.CONNECT_APPLICATION, connectApplication);
   yield takeLatest(C.REMOVE_APPLICATION, removeApplication);
   yield takeLatest(C.READ_MESSAGE, readMessage);
   yield takeLatest(C.SEND_MESSAGE, sendMessage);
-  yield takeLatest(C.UPDATE_MESSAGE_BY_INTERVIEW, updateMessageByInterview);
+
+  yield takeLatest(C.SAVE_INTERVIEW, saveInterview);
+  yield takeLatest(C.CHANGE_INTERVIEW, changeInterview);
+  yield takeLatest(C.COMPLETE_INTERVIEW, completeInterview);
+  yield takeLatest(C.REMOVE_INTERVIEW, removeInterview);
+
   yield autoUpdateAppliciations();
 }

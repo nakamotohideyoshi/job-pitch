@@ -37,28 +37,34 @@ export default styled.div`
       padding: 0;
       color: ${colors.text3};
       li {
-        margin-bottom: 8px;
+        margin-bottom: 10px;
         font-weight: 100;
-        svg {
-          margin-right: 0.5em;
-          width: 20px;
-          font-size: 16px;
+
+        &.PENDING {
+          color: ${colors.yellow};
+        }
+
+        &.ACCEPTED {
+          color: ${colors.green};
         }
       }
     }
   }
 
-  button {
-    display: block;
-    width: 200px;
-  }
+  .controls {
+    button {
+      display: block;
+      max-width: 200px;
+      width: 100%;
+    }
 
-  button + button {
-    margin-top: 16px;
+    button + button {
+      margin-top: 16px;
+    }
   }
 
   .ant-tabs {
-    margin-top: 20px;
+    margin-top: 30px;
 
     .ant-tabs-nav .ant-tabs-tab {
       color: inherit !important;
@@ -91,5 +97,9 @@ export default styled.div`
 
   .check-label + .check-label {
     margin-top: 0.5em;
+  }
+
+  .ant-alert {
+    margin-bottom: 20px;
   }
 `;

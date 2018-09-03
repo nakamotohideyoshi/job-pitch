@@ -8,8 +8,6 @@ import { requestPending, requestSuccess, requestFail } from 'utils/request';
 // Actions
 // ------------------------------------
 
-export const updateStatus = createAction(C.RC_BUSINESSES_UPDATE);
-export const getBusinesses = createAction(C.RC_GET_BUSINESSES);
 export const removeBusiness = createAction(C.RC_REMOVE_BUSINESS);
 export const saveBusiness = createAction(C.RC_SAVE_BUSINESS);
 export const selectBusiness = createAction(C.RC_SELECT_BUSINESS);
@@ -26,35 +24,30 @@ const initialState = {
 
 export default handleActions(
   {
-    [C.RC_BUSINESSES_UPDATE]: (state, { payload }) => ({
-      ...state,
-      ...payload
-    }),
-
     [C.RC_SELECT_BUSINESS]: (state, { payload }) => ({
       ...state,
       selectedId: payload
     }),
 
-    // ---- get business ----
-
-    [requestPending(C.RC_GET_BUSINESSES)]: state => initialState,
+    // ---- get businesses ----
 
     [requestSuccess(C.RC_GET_BUSINESSES)]: (state, { payload }) => ({
       ...state,
       businesses: payload
     }),
 
-    [requestFail(C.RC_GET_BUSINESSES)]: state => ({
+    // ---- update business ----
+
+    [C.RC_UPDATE_BUSINESS]: (state, { business }) => ({
       ...state,
-      businesses: []
+      businesses: helper.updateItem(state.businesses, business, true)
     }),
 
     // ---- remove business ----
 
     [requestPending(C.RC_REMOVE_BUSINESS)]: (state, { payload }) => ({
       ...state,
-      businesses: helper.updateObj(state.businesses, {
+      businesses: helper.updateItem(state.businesses, {
         id: payload.id,
         loading: true
       })
@@ -62,12 +55,12 @@ export default handleActions(
 
     [requestSuccess(C.RC_REMOVE_BUSINESS)]: (state, { request }) => ({
       ...state,
-      businesses: helper.removeObj(state.businesses, request.id)
+      businesses: helper.removeItem(state.businesses, request.id)
     }),
 
     [requestFail(C.RC_REMOVE_BUSINESS)]: (state, { request }) => ({
       ...state,
-      businesses: helper.updateObj(state.businesses, {
+      businesses: helper.updateItem(state.businesses, {
         id: request.id,
         loading: false
       })
@@ -75,15 +68,10 @@ export default handleActions(
 
     // ---- change locaiton ----
 
-    [LOCATION_CHANGE]: (state, { payload }) => {
-      const arr = payload.pathname.split('/');
-      const flag = arr[2] === 'applications' || arr[3] === 'credits';
-
-      return {
-        ...state,
-        selectedId: flag ? state.selectedId : null
-      };
-    }
+    [LOCATION_CHANGE]: (state, { payload }) => ({
+      ...state,
+      selectedId: null
+    })
   },
   initialState
 );

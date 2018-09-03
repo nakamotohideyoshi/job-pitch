@@ -2,15 +2,14 @@ import React from 'react';
 import Helmet from 'react-helmet';
 import { connect } from 'react-redux';
 import { Select, Tabs } from 'antd';
-import styled from 'styled-components';
 
-import { getApplications } from 'redux/applications';
+import { getApplications, getJobs } from 'redux/selectors';
 import { findJobseekers } from 'redux/recruiter/find';
 import { selectBusiness } from 'redux/recruiter/businesses';
 import DATA from 'utils/data';
 import * as helper from 'utils/helper';
 
-import { PageHeader, SearchBox, Logo } from 'components';
+import { PageHeader, PageSubHeader, SearchBox, Logo } from 'components';
 import FindTalent from './FindTalent';
 import NewApplications from './NewApplications';
 import MyConnections from './MyConnections';
@@ -19,16 +18,6 @@ import Wrapper from './Applications.styled';
 
 const Option = Select.Option;
 const TabPane = Tabs.TabPane;
-
-const Filters = styled.div`
-  display: flex;
-  margin: 20px 0;
-
-  .ant-select {
-    flex: 1;
-    margin-right: 20px;
-  }
-`;
 
 class Applications extends React.Component {
   state = {
@@ -39,7 +28,6 @@ class Applications extends React.Component {
     const { jobId, job, location } = this.props;
     const { id } = job || {};
     const { tab } = location.state || {};
-    !tab && this.props.getApplications();
 
     if (jobId !== id) {
       this.replacePath({ id });
@@ -107,7 +95,7 @@ class Applications extends React.Component {
           <h2>Applications</h2>
         </PageHeader>
 
-        <Filters>
+        <PageSubHeader>
           <Select
             showSearch
             value={jobId}
@@ -130,7 +118,7 @@ class Applications extends React.Component {
           </Select>
 
           <SearchBox width="200px" onChange={this.onChangeSearchText} />
-        </Filters>
+        </PageSubHeader>
 
         <Tabs activeKey={activeKey} animated={false} onChange={this.onSelecteTab}>
           <TabPane tab="Find Talent" key="find">
@@ -156,21 +144,17 @@ class Applications extends React.Component {
 
 export default connect(
   (state, { match }) => {
-    const jobs = state.rc_jobs.jobs.filter(({ status }) => status === DATA.JOB.OPEN);
+    const jobs = getJobs(state).filter(({ status }) => status === DATA.JOB.OPEN);
     const jobId = helper.str2int(match.params.jobId);
-    const id = jobId || helper.loadData('applications/jobId');
-    const job = helper.getItemByID(jobs, id) || jobs[0];
-
-    const { applications } = state.applications;
-    applications &&
-      applications.forEach(application => {
-        // application.interview = application.interviews.filter(
-        //   ({ status }) => status === 'PENDING' || status === 'ACCEPTED'
-        // )[0];
-        application.interview = { ...application.interviews[0], status: 'PENDING' };
-      });
-    const newApplications = applications && applications.filter(({ status }) => status === DATA.APP.CREATED);
-    const myConnections = applications && applications.filter(({ status }) => status === DATA.APP.ESTABLISHED);
+    const jobId1 = jobId || helper.loadData('applications/jobId');
+    const job = helper.getItemByID(jobs, jobId1) || jobs[0];
+    const id = (job || {}).id;
+    const applications = getApplications(state);
+    const filteredApplications = applications && applications.filter(({ job_data }) => job_data.id === id);
+    const newApplications =
+      filteredApplications && filteredApplications.filter(({ status }) => status === DATA.APP.CREATED);
+    const myConnections =
+      filteredApplications && filteredApplications.filter(({ status }) => status === DATA.APP.ESTABLISHED);
     const myShortlist = myConnections && myConnections.filter(({ shortlisted }) => shortlisted);
     const interviews = myConnections && myConnections.filter(({ interview }) => interview);
 
@@ -186,7 +170,6 @@ export default connect(
     };
   },
   {
-    getApplications,
     findJobseekers,
     selectBusiness
   }

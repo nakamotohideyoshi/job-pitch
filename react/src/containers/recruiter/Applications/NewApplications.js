@@ -2,9 +2,9 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import Truncate from 'react-truncate';
-import { List, Modal, Tooltip, Button, Drawer } from 'antd';
+import { List, Modal, Tooltip, Button, Drawer, notification } from 'antd';
 
-import { connectApplication, removeApplication } from 'redux/applications';
+import { updateApplication, removeApplication } from 'redux/applications';
 import DATA from 'utils/data';
 import * as helper from 'utils/helper';
 
@@ -50,17 +50,22 @@ class NewApplications extends React.Component {
       cancelText: 'Cancel',
       maskClosable: true,
       onOk: () => {
-        this.props.connectApplication({
-          id,
+        this.props.updateApplication({
+          appId: id,
           data: {
-            id,
             connect: DATA.APP.ESTABLISHED
           },
-          successMsg: {
-            message: `Application is connected.`
+          onSuccess: () => {
+            notification.success({
+              message: 'Success',
+              description: 'The application is connected'
+            });
           },
-          failMsg: {
-            message: `Connection is failed.`
+          onFail: () => {
+            notification.error({
+              message: 'Error',
+              description: 'There was an error connecting the application'
+            });
           }
         });
       }
@@ -78,21 +83,27 @@ class NewApplications extends React.Component {
       maskClosable: true,
       onOk: () => {
         this.props.removeApplication({
-          id,
-          successMsg: {
-            message: `Application is removed.`
+          appId: id,
+          onSuccess: () => {
+            notification.success({
+              message: 'Success',
+              description: 'The application is removed'
+            });
           },
-          failMsg: {
-            message: `Removing is failed.`
+          onFail: () => {
+            notification.error({
+              message: 'Error',
+              description: 'There was an error removing the application'
+            });
           }
         });
       }
     });
   };
 
-  filterOption = application =>
+  filterOption = ({ job_seeker }) =>
     helper
-      .getFullJSName(application.job_seeker)
+      .getFullJSName(job_seeker)
       .toLowerCase()
       .indexOf(this.props.searchText) >= 0;
 
@@ -163,7 +174,7 @@ class NewApplications extends React.Component {
               application={selectedApp}
               actions={
                 <div>
-                  <Button type="primary" loading={selectedApp.loading} onClick={() => this.onConnect(selectedApp)}>
+                  <Button type="primary" disabled={selectedApp.loading} onClick={() => this.onConnect(selectedApp)}>
                     Connect
                   </Button>
                   <Button type="danger" disabled={selectedApp.loading} onClick={() => this.onRemove(selectedApp)}>
@@ -181,7 +192,7 @@ class NewApplications extends React.Component {
 
 export default withRouter(
   connect(null, {
-    connectApplication,
+    updateApplication,
     removeApplication
   })(NewApplications)
 );

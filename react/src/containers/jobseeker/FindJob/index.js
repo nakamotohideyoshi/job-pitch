@@ -2,7 +2,7 @@ import React from 'react';
 import Helmet from 'react-helmet';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { List, Modal, Tooltip, Breadcrumb, Button, Drawer } from 'antd';
+import { List, Modal, Tooltip, Breadcrumb, Button, Drawer, notification } from 'antd';
 
 import { findJobs, applyJob, removeJob } from 'redux/jobseeker/find';
 import DATA from 'utils/data';
@@ -72,11 +72,17 @@ class FindJob extends React.Component {
             job: id,
             job_seeker: jobseeker.id
           },
-          successMsg: {
-            message: `Job is applied.`
+          onSuccess: () => {
+            notification.success({
+              message: 'Success',
+              description: 'The job is applied'
+            });
           },
-          failMsg: {
-            message: `Failed.`
+          onFail: () => {
+            notification.error({
+              message: 'Error',
+              description: 'There was an error'
+            });
           }
         });
       }
@@ -112,6 +118,7 @@ class FindJob extends React.Component {
     const name = helper.getFullBWName(job);
     const contractName = helper.getItemByID(DATA.contracts, contract).short_name;
     const hoursName = helper.getItemByID(DATA.hours, hours).short_name;
+    const sector = helper.getNameByID('sectors', job.sector);
     job.distance = helper.getDistanceFromLatLonEx(location_data, this.props.profile);
 
     return (
@@ -134,8 +141,11 @@ class FindJob extends React.Component {
       >
         <List.Item.Meta avatar={<Logo src={logo} size="80px" padding="10px" />} title={title} description={name} />
         <span style={{ width: '60px' }}>{job.distance}</span>
-        <span style={{ width: '80px' }}>
-          {contractName} / {hoursName}
+        <span style={{ width: '180px' }}>
+          <div>{sector}</div>
+          <div>
+            {contractName} / {hoursName}
+          </div>
         </span>
         {loading && <Loading className="mask" size="small" />}
       </List.Item>
@@ -197,7 +207,7 @@ class FindJob extends React.Component {
               roughLocation
               actions={
                 <div>
-                  <Button type="primary" loading={selectedJob.loading} onClick={() => this.onApply(selectedJob)}>
+                  <Button type="primary" disabled={selectedJob.loading} onClick={() => this.onApply(selectedJob)}>
                     Apply for job
                   </Button>
                   <Button type="danger" disabled={selectedJob.loading} onClick={() => this.onRemove(selectedJob)}>

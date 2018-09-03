@@ -2,9 +2,11 @@ import React from 'react';
 import Helmet from 'react-helmet';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { Breadcrumb, Form, Input, Select, Switch, Popover, Button, notification, Checkbox } from 'antd';
+import { Breadcrumb, Form, Input, Select, Switch, Popover, Button, notification, Checkbox, Drawer } from 'antd';
 
+import { getJobs, getWorkplaces } from 'redux/selectors';
 import { saveJob, uploadPitch } from 'redux/recruiter/jobs';
+import { selectBusiness } from 'redux/recruiter/businesses';
 import DATA from 'utils/data';
 import * as helper from 'utils/helper';
 
@@ -17,8 +19,7 @@ import {
   PitchSelector,
   Icons,
   SocialShare,
-  JobDetails,
-  LargeModal
+  JobDetails
 } from 'components';
 import Wrapper from '../styled';
 import StyledForm from './styled';
@@ -40,12 +41,14 @@ class JobEdit extends React.Component {
   };
 
   componentDidMount() {
-    const { workplace, job, form } = this.props;
+    const { workplace, job, form, selectBusiness } = this.props;
 
     if (!workplace) {
       this.goBuisinessList();
       return;
     }
+
+    selectBusiness(workplace.business);
 
     if (job) {
       this.setState({
@@ -72,10 +75,6 @@ class JobEdit extends React.Component {
           exist: false
         }
       });
-      form.setFieldsValue({
-        requires_pitch: true,
-        requires_cv: false
-      });
     }
   }
 
@@ -93,8 +92,7 @@ class JobEdit extends React.Component {
   };
 
   goJobList = () => {
-    const { workplace: { id }, history } = this.props;
-    history.push(`/recruiter/jobs/job/${id}`);
+    this.props.history.push(`/recruiter/jobs/job/${this.props.workplace.id}`);
   };
 
   openPreview = () => {
@@ -150,7 +148,7 @@ class JobEdit extends React.Component {
             this.uploadPitch(id);
           } else {
             notification.success({
-              message: 'Notification',
+              message: 'Success',
               description: 'Job is saved successfully.'
             });
             if (job) {
@@ -163,7 +161,7 @@ class JobEdit extends React.Component {
         onFail: error => {
           this.setState({ loading: null });
           notification.error({
-            message: 'Notification',
+            message: 'Error',
             description: error
           });
         },
@@ -171,7 +169,7 @@ class JobEdit extends React.Component {
           this.setState({
             loading: {
               label: 'Logo uploading...',
-              progress: Math.floor(progress.loaded / progress.total * 100)
+              progress: Math.floor((progress.loaded / progress.total) * 100)
             }
           });
         }
@@ -186,7 +184,7 @@ class JobEdit extends React.Component {
       data: this.state.pitchData,
       onSuccess: msg => {
         notification.success({
-          message: 'Notification',
+          message: 'Success',
           description: 'Job is saved successfully.'
         });
         if (job) {
@@ -198,7 +196,7 @@ class JobEdit extends React.Component {
       onFail: error => {
         this.setState({ loading: null });
         notification.error({
-          message: 'Notification',
+          message: 'Error',
           description: error
         });
       },
@@ -315,7 +313,8 @@ class JobEdit extends React.Component {
                     placement="right"
                     content={
                       <span>
-                        Don't type in phone numbers or<br />
+                        Don't type in phone numbers or
+                        <br />
                         email address here.
                       </span>
                     }
@@ -341,8 +340,10 @@ class JobEdit extends React.Component {
                     placement="right"
                     content={
                       <span>
-                        Record or upload a short video intro to showcase your company.<br />
-                        Tell potential candidates about the role, and why it is a great<br />
+                        Record or upload a short video intro to showcase your company.
+                        <br />
+                        Tell potential candidates about the role, and why it is a great
+                        <br />
                         place to work!
                       </span>
                     }
@@ -360,11 +361,15 @@ class JobEdit extends React.Component {
             </Item>
 
             <NoLabelField>
-              {getFieldDecorator('requires_pitch', { valuePropName: 'checked' })(<Checkbox>Require Pitch</Checkbox>)}
+              {getFieldDecorator('requires_pitch', { valuePropName: 'checked', initialValue: true })(
+                <Checkbox>Require Pitch</Checkbox>
+              )}
             </NoLabelField>
 
             <NoLabelField>
-              {getFieldDecorator('requires_cv', { valuePropName: 'checked' })(<Checkbox>Require CV</Checkbox>)}
+              {getFieldDecorator('requires_cv', { valuePropName: 'checked', initialValue: false })(
+                <Checkbox>Require CV</Checkbox>
+              )}
             </NoLabelField>
 
             {job && (
@@ -386,12 +391,12 @@ class JobEdit extends React.Component {
         </div>
 
         {loading && <PopupProgress label={loading.label} value={loading.progress} />}
-        {job &&
-          showPreview && (
-            <LargeModal visible title="Job Details" onCancel={this.closePreview}>
-              <JobDetails jobData={job} />
-            </LargeModal>
-          )}
+
+        {job && (
+          <Drawer placement="right" closable={false} onClose={this.closePreview} visible={showPreview}>
+            <JobDetails jobData={job} />
+          </Drawer>
+        )}
       </Wrapper>
     );
   }
@@ -400,17 +405,11 @@ class JobEdit extends React.Component {
 export default connect(
   (state, { match }) => {
     const workplaceId = helper.str2int(match.params.workplaceId);
-    const workplace = helper.getItemByID(state.rc_workplaces.workplaces, workplaceId);
+    const workplace = helper.getItemByID(getWorkplaces(state), workplaceId);
     const jobId = helper.str2int(match.params.jobId);
-    const { jobs } = state.rc_jobs;
+    const jobs = getJobs(state);
     const job = helper.getItemByID(jobs, jobId);
 
-    // const videos = jobs.filter(item => {
-    //   if (item.location === (workplace || {}).id) {
-    //     const pitch = helper.getPitch(item);
-    //     return pitch.video;
-    //   }
-    // });
     return {
       workplace: workplace || (job || {}).location_data,
       job
@@ -418,6 +417,7 @@ export default connect(
   },
   {
     saveJob,
-    uploadPitch
+    uploadPitch,
+    selectBusiness
   }
 )(Form.create()(JobEdit));

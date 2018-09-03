@@ -35,6 +35,10 @@ export default styled.div`
         div {
           margin: 4px 0;
         }
+
+        a:hover {
+          text-decoration: underline;
+        }
       }
 
       &:hover {

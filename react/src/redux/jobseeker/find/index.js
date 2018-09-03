@@ -8,10 +8,10 @@ import * as helper from 'utils/helper';
 // ------------------------------------
 
 export const findJobs = createAction(C.JS_FIND_JOBS);
-export const findPublicJob = createAction(C.JS_FIND_PUBLIC_JOB);
 export const applyJob = createAction(C.JS_APPLY_JOB);
 export const removeJob = createAction(C.JS_REMOVE_JOB);
-export const findPublicJobListing = createAction(C.JS_FIND_PUBLIC_JOB_LIST);
+export const getPublicJob = createAction(C.JS_GET_PUBLIC_JOB);
+export const getPublicWorkplace = createAction(C.JS_GET_PUBLIC_WORKPLACE);
 
 // ------------------------------------
 // Reducer
@@ -19,7 +19,8 @@ export const findPublicJobListing = createAction(C.JS_FIND_PUBLIC_JOB_LIST);
 
 const initialState = {
   jobs: null,
-  publicJobList: null,
+  publicWorkplace: null,
+  publicJob: null,
   error: null
 };
 
@@ -43,61 +44,25 @@ export default handleActions(
       error: payload
     }),
 
-    // ---- find public jobs ----
-
-    [requestPending(C.JS_FIND_PUBLIC_JOB)]: state => ({
-      ...state,
-      jobs: null,
-      error: null
-    }),
-
-    [requestSuccess(C.JS_FIND_PUBLIC_JOB)]: (state, { payload }) => ({
-      ...state,
-      jobs: [payload]
-    }),
-
-    [requestFail(C.JS_FIND_PUBLIC_JOB)]: (state, { payload }) => ({
-      ...state,
-      error: payload
-    }),
-
-    // ---- find public jobs listing----
-
-    [requestPending(C.JS_FIND_PUBLIC_JOB_LIST)]: state => ({
-      ...state,
-      publicJobList: null,
-      error: null
-    }),
-
-    [requestSuccess(C.JS_FIND_PUBLIC_JOB_LIST)]: (state, { payload }) => ({
-      ...state,
-      publicJobList: [payload]
-    }),
-
-    [requestFail(C.JS_FIND_PUBLIC_JOB_LIST)]: (state, { payload }) => ({
-      ...state,
-      error: payload
-    }),
-
     // ---- apply job ----
 
-    [requestPending(C.JS_APPLY_JOB)]: (state, { payload }) => ({
+    [C.JS_APPLY_JOB]: (state, { payload }) => ({
       ...state,
-      jobs: helper.updateObj(state.jobs, {
+      jobs: helper.updateItem(state.jobs, {
         id: payload.data.job,
         loading: true
       })
     }),
 
-    [requestSuccess(C.JS_APPLY_JOB)]: (state, { request }) => ({
+    [requestSuccess(C.JS_APPLY_JOB)]: (state, { job }) => ({
       ...state,
-      jobs: helper.removeObj(state.jobs, request.data.job)
+      jobs: helper.removeItem(state.jobs, job)
     }),
 
-    [requestFail(C.JS_APPLY_JOB)]: (state, { request }) => ({
+    [requestFail(C.JS_APPLY_JOB)]: (state, { job }) => ({
       ...state,
-      jobs: helper.updateObj(state.jobs, {
-        id: request.data.job,
+      jobs: helper.updateItem(state.jobs, {
+        id: job,
         loading: false
       })
     }),
@@ -106,7 +71,43 @@ export default handleActions(
 
     [C.JS_REMOVE_JOB]: (state, { payload }) => ({
       ...state,
-      jobs: helper.removeObj(state.jobs, payload.id)
+      jobs: helper.removeItem(state.jobs, payload.id)
+    }),
+
+    // ---- get public jobs ----
+
+    [requestPending(C.JS_GET_PUBLIC_JOB)]: state => ({
+      ...state,
+      publicJob: null,
+      error: null
+    }),
+
+    [requestSuccess(C.JS_GET_PUBLIC_JOB)]: (state, { payload }) => ({
+      ...state,
+      publicJob: payload
+    }),
+
+    [requestFail(C.JS_GET_PUBLIC_JOB)]: (state, { payload }) => ({
+      ...state,
+      error: payload
+    }),
+
+    // ---- get public workplace ----
+
+    [requestPending(C.JS_GET_PUBLIC_WORKPLACE)]: state => ({
+      ...state,
+      publicWorkplace: null,
+      error: null
+    }),
+
+    [requestSuccess(C.JS_GET_PUBLIC_WORKPLACE)]: (state, { payload }) => ({
+      ...state,
+      publicWorkplace: payload
+    }),
+
+    [requestFail(C.JS_GET_PUBLIC_WORKPLACE)]: (state, { payload }) => ({
+      ...state,
+      error: payload
     })
   },
   initialState

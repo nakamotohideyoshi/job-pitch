@@ -2,92 +2,55 @@ import React from 'react';
 import Helmet from 'react-helmet';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import Truncate from 'react-truncate';
-import { Breadcrumb, List, Avatar, Modal, Tooltip } from 'antd';
+import { Breadcrumb, List, Modal, Tooltip } from 'antd';
 
-import DATA from 'utils/data';
-
+import { getApplications, getWorkplaces, getBusinesses } from 'redux/selectors';
 import { removeWorkplace } from 'redux/recruiter/workplaces';
-import { getApplications } from 'redux/applications';
+import { selectBusiness } from 'redux/recruiter/businesses';
+import DATA from 'utils/data';
 import * as helper from 'utils/helper';
 
 import { PageHeader, PageSubHeader, AlertMsg, LinkButton, Loading, ListEx, Icons, Logo } from 'components';
 import Wrapper from '../styled';
-import * as _ from 'lodash';
 
 const { confirm } = Modal;
 
 class WorkplaceList extends React.Component {
-  state = {
-    countList: null
-  };
-
   componentDidMount() {
-    this.props.getApplications();
-    const { business, history } = this.props;
+    const { business, selectBusiness, history } = this.props;
     if (!business) {
       history.replace('/recruiter/jobs/business');
+      return;
     }
-    // let countList = {};
-    // _.forEach(this.props.workplaces, workplace => {
-    //   let newApplications = _.filter(applications, application => {
-    //     return application.job_data.location === workplace.id && application.status === 1;
-    //   });
-    //   countList[workplace.id] = newApplications.length;
-    // });
-    // this.setState({
-    //   countList: countList
-    // });
+    selectBusiness(business.id);
   }
 
-  componentWillReceiveProps(nextProps) {
-    const { applications } = nextProps;
-    let countList = {};
-    _.forEach(this.props.workplaces, workplace => {
-      let newApplications = _.filter(applications, application => {
-        return application.job_data.location === workplace.id && application.status === 1;
-      });
-      countList[workplace.id] = newApplications.length;
-    });
-    this.setState({
-      countList: countList
-    });
-  }
-
-  selectWorkplace = ({ id }) => {
+  onSelectWorkplace = id => {
     this.props.history.push(`/recruiter/jobs/job/${id}`);
   };
 
-  addWorkplace = () => {
+  onAddWorkplace = () => {
     const tutorial = helper.loadData('tutorial');
     if (tutorial === 2) {
       helper.saveData('tutorial', 3);
     }
 
-    const {
-      business: { id },
-      history
-    } = this.props;
-    history.push(`/recruiter/jobs/workplace/add/${id}`);
+    this.props.history.push(`/recruiter/jobs/workplace/add/${this.props.business.id}`);
   };
 
-  editWorkplace = ({ id }, event) => {
+  onEditWorkplace = (id, event) => {
     event && event.stopPropagation();
     this.props.history.push(`/recruiter/jobs/workplace/edit/${id}`);
   };
 
-  removeWorkplace = ({ id, name, jobs }, event) => {
+  onRemoveWorkplace = ({ id, name, jobs }, event) => {
     event && event.stopPropagation();
 
     const count = jobs.length;
-    let content;
-    if (count === 0) {
-      content = `Are you sure you want to delete ${name}`;
-    } else {
-      const s = count !== 1 ? 's' : '';
-      content = `Deleting this workplace will also delete ${count} job${s}.
-                 If you want to hide the jobs instead you can deactive them.`;
-    }
+    const content = count
+      ? `Deleting this workplace will also delete ${count} job${count !== 1 ? 's' : ''}.
+    If you want to hide the jobs instead you can deactive them.`
+      : `Are you sure you want to delete ${name}`;
 
     confirm({
       content,
@@ -99,10 +62,10 @@ class WorkplaceList extends React.Component {
         this.props.removeWorkplace({
           id,
           successMsg: {
-            message: `Workplace(${name}) is removed.`
+            message: 'The workplace is removed'
           },
           failMsg: {
-            message: `Removing workplace(${name}) is failed.`
+            message: 'There was an error removing the workplace'
           }
         });
       }
@@ -110,42 +73,40 @@ class WorkplaceList extends React.Component {
   };
 
   renderWorkplace = workplace => {
-    const { id, name, description, jobs, active_job_count, loading } = workplace;
+    const { id, name, jobs, active_job_count, newApps, loading } = workplace;
     const logo = helper.getWorkplaceLogo(workplace);
     const count = jobs.length;
     const strJobs = `Includes ${count} job${count !== 1 ? 's' : ''}`;
     const strInactiveJobs = `${count - active_job_count} inactive`;
-
-    if (this.state.countList !== null) {
-      var newApplicationsCount = this.state.countList[workplace.id];
-      var strNewApplications = `${newApplicationsCount} new application${newApplicationsCount !== 1 ? 's' : ''}`;
-    }
+    const strNewApps = `${newApps} new application${newApps !== 1 ? 's' : ''}`;
 
     return (
       <List.Item
         key={id}
         actions={[
           <Tooltip placement="bottom" title="Edit">
-            <span onClick={e => this.editWorkplace(workplace, e)}>
+            <span onClick={e => this.onEditWorkplace(id, e)}>
               <Icons.Pen />
             </span>
           </Tooltip>,
           <Tooltip placement="bottom" title="Remove">
-            <span onClick={e => this.removeWorkplace(workplace, e)}>
+            <span onClick={e => this.onRemoveWorkplace(workplace, e)}>
               <Icons.TrashAlt />
             </span>
           </Tooltip>
         ]}
-        onClick={() => this.selectWorkplace(workplace)}
+        onClick={() => this.onSelectWorkplace(id)}
         className={loading ? 'loading' : ''}
       >
-        <List.Item.Meta avatar={<Logo src={logo} size="80px" />} title={name} />
+        <List.Item.Meta avatar={<Logo src={logo} size="80px" padding="10px" />} title={name} />
+
         <span style={{ width: '160px' }}>
           <div>
             {strJobs} ({strInactiveJobs})
           </div>
-          {!!newApplicationsCount && <div style={{ color: '#ff9300' }}>{strNewApplications}</div>}
+          {!!newApps && <div style={{ color: '#ff9300' }}>{strNewApps}</div>}
         </span>
+
         {loading && <Loading className="mask" size="small" />}
       </List.Item>
     );
@@ -161,13 +122,12 @@ class WorkplaceList extends React.Component {
                Now let's create your work place`
             : `This business doesn't seem to have a workplace for your staff`}
         </span>
-        <a onClick={this.addWorkplace}>Create workplace</a>
+        <a onClick={this.onAddWorkplace}>Create workplace</a>
       </AlertMsg>
     );
   };
 
   render() {
-    const { applications } = this.props;
     return (
       <Wrapper className="container">
         <Helmet title="My Workplaces" />
@@ -183,21 +143,17 @@ class WorkplaceList extends React.Component {
             </Breadcrumb.Item>
             <Breadcrumb.Item>Workplaces</Breadcrumb.Item>
           </Breadcrumb>
-          <LinkButton onClick={this.addWorkplace}>Add new workplace</LinkButton>
+          <LinkButton onClick={this.onAddWorkplace}>Add new workplace</LinkButton>
         </PageSubHeader>
 
         <div className="content">
-          {applications === null ? (
-            <Loading className="mask" size="large" />
-          ) : (
-            <ListEx
-              data={this.props.workplaces}
-              loadingSize="large"
-              pagination={{ pageSize: 10 }}
-              renderItem={this.renderWorkplace}
-              emptyRender={this.renderEmpty}
-            />
-          )}
+          <ListEx
+            data={this.props.workplaces}
+            loadingSize="large"
+            pagination={{ pageSize: 10 }}
+            renderItem={this.renderWorkplace}
+            emptyRender={this.renderEmpty}
+          />
         </div>
       </Wrapper>
     );
@@ -206,19 +162,27 @@ class WorkplaceList extends React.Component {
 
 export default connect(
   (state, { match }) => {
-    const businessId = helper.str2int(match.params.businessId);
-    const business = helper.getItemByID(state.rc_businesses.businesses, businessId);
-    let { workplaces } = state.rc_workplaces;
-    workplaces = workplaces.filter(item => item.business === businessId);
-    const { applications } = state.applications;
+    let businessId = helper.str2int(match.params.businessId);
+    const business = helper.getItemByID(getBusinesses(state), businessId);
+    businessId = (business || {}).id;
+
+    const applications = getApplications(state);
+    const workplaces = getWorkplaces(state)
+      .filter(({ business }) => business === businessId)
+      .map(workplace => {
+        const newApps = applications.filter(
+          ({ job_data, status }) => job_data.location === workplace.id && status === DATA.APP.CREATED
+        ).length;
+        return { ...workplace, newApps };
+      });
+
     return {
       business,
-      workplaces,
-      applications
+      workplaces
     };
   },
   {
     removeWorkplace,
-    getApplications
+    selectBusiness
   }
 )(WorkplaceList);

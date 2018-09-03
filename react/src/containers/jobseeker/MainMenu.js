@@ -4,6 +4,8 @@ import { connect } from 'react-redux';
 import { withRouter, Link } from 'react-router-dom';
 import { Menu, Badge } from 'antd';
 
+import { getAllNewMsgs } from 'redux/selectors';
+
 const Item = Menu.Item;
 
 const StyledMenu = styled(Menu)`
@@ -60,7 +62,7 @@ export default withRouter(
   connect(state => {
     return {
       profile: state.js_profile.profile,
-      newMsgs: state.applications.allNewMsgs
+      newMsgs: getAllNewMsgs(state)
     };
   })(MainMenu)
 );

@@ -54,7 +54,7 @@ const ShareMenuItem = styled(Menu.Item)`
 
 export default ({ menu: MainMenu, url }) => {
   const ShareMenu = (
-    <Menu style={{ display: 'inline-block' }}>
+    <Menu style={{ display: 'inline-block', padding: 0 }}>
       <ShareMenuItem>
         <EmailShareButton url={url}>
           <EmailIcon round={false} size={32} />

@@ -43,9 +43,15 @@ export default styled.div`
       .ant-list-item {
         padding: 15px !important;
 
-        .ant-list-item-meta-title span {
-          color: #ff9300;
-          cursor: pointer;
+        .ant-list-item-meta-title {
+          div {
+            display: flex;
+            justify-content: space-between;
+            span {
+              color: #ff9300;
+              cursor: pointer;
+            }
+          }
         }
 
         .ant-list-item-meta-description span {

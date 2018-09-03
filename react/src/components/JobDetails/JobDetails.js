@@ -15,6 +15,7 @@ export default ({ jobData, application, className, roughLocation, actions }) => 
   const logo = helper.getJobLogo(job);
   const workplace = job.location_data;
   const subName = helper.getFullBWName(job);
+  const sector = helper.getNameByID('sectors', job.sector);
   const contract = helper.getNameByID('contracts', job.contract);
   const hours = helper.getNameByID('hours', job.hours);
   const marker = { lat: workplace.latitude, lng: workplace.longitude };
@@ -43,17 +44,18 @@ export default ({ jobData, application, className, roughLocation, actions }) => 
       <h2>Job Details</h2>
 
       <Row gutter={32}>
-        <Col sm={24} md={10} lg={5}>
+        <Col xs={10} sm={8} md={6} lg={5}>
           <div className="logo">
             <Logo src={logo} size="100%" padding="10px" />
           </div>
         </Col>
-        <Col sm={24} md={14} lg={19}>
+        <Col xs={14} sm={16} md={18} lg={19}>
           <Row gutter={32}>
-            <Col md={24} lg={14}>
+            <Col md={14} lg={15}>
               <div className="info">
                 <div className="name">{job.title}</div>
-                <div className="sub-name">{subName}</div>
+                <div className="sub-name1">( {subName} )</div>
+                <div className="sub-name2">{sector}</div>
                 <ul>
                   <li>
                     <Tooltip placement="bottom" title="Job Contract">
@@ -78,7 +80,7 @@ export default ({ jobData, application, className, roughLocation, actions }) => 
                   )}
 
                   {interview && (
-                    <li>
+                    <li className={interview.status}>
                       <Tooltip placement="bottom" title="Interview Date and Time">
                         <Icons.UserFriends />
                       </Tooltip>
@@ -89,7 +91,7 @@ export default ({ jobData, application, className, roughLocation, actions }) => 
               </div>
             </Col>
 
-            <Col md={24} lg={10}>
+            <Col md={10} lg={9}>
               <h3>Share Job</h3>
               <SocialShare className="social-icons" url={`${window.location.origin}/jobseeker/jobs/${job.id}`} />
               {actions}
@@ -128,10 +130,11 @@ export default ({ jobData, application, className, roughLocation, actions }) => 
         </TabPane>
 
         {interviews && (
-          <TabPane tab="Interviews" key="3">
+          <TabPane tab="Interview History" key="3">
             <Collapse bordered={false}>
-              {interviews.map(({ id, at, feedback }) => (
+              {interviews.map(({ id, at, feedback, status }) => (
                 <Panel key={id} showArrow={false} header={moment(at).format('ddd DD MMM, YYYY [at] H:mm')}>
+                  <div>Status: {status}</div>
                   <div>Feedback: {feedback}</div>
                 </Panel>
               ))}

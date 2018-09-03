@@ -98,6 +98,7 @@ injectGlobal`
   .ant-select-selection-selected-value,
   .ant-select-dropdown-menu-item {
     width: 100%;
+    white-space: initial !important;
 
     .logo {
       margin-right: 8px;

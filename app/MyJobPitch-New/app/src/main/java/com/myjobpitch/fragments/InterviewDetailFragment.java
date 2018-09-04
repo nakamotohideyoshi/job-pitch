@@ -116,6 +116,9 @@ public class InterviewDetailFragment extends BaseFragment {
     @BindView(R.id.interview_arrange)
     Button arrangeButton;
 
+    @BindView(R.id.interview_message)
+    Button messageButton;
+
     Interview interview;
     public Application application;
     public Integer interviewId;
@@ -131,7 +134,7 @@ public class InterviewDetailFragment extends BaseFragment {
 
         AppHelper.setJobTitleViewText(jobTitleView, String.format("%s, (%s)", application.getJob_data().getTitle(), AppHelper.getBusinessName(application.getJob_data())));
 
-        addMenuItem(MENUGROUP2, 120, "View Previous Interviews", R.drawable.ic_loca_storage);
+        addMenuItem(MENUGROUP1, 120, "View Previous Interviews", R.drawable.ic_more);
 
         showLoading(view);
         loadInterview();
@@ -140,7 +143,6 @@ public class InterviewDetailFragment extends BaseFragment {
     }
 
     private void loadInterview() {
-
         new APITask(new APIAction() {
             @Override
             public void run() throws MJPApiException {
@@ -160,30 +162,21 @@ public class InterviewDetailFragment extends BaseFragment {
     }
 
     private void loadDetail() {
-
         JobSeeker jobSeeker = application.getJobSeeker();
         Job job = application.getJob_data();
         String status = interview.getStatus();
 
         if (AppData.user.isRecruiter()) {
             AppHelper.loadJobSeekerImage(jobSeeker, imageView);
-
             // job seeker name
             itemTitle.setText(jobSeeker.getFirst_name() + " " + jobSeeker.getLast_name());
-
             // CV
-
             itemSubTitle.setText(jobSeeker.getDescription());
-
-
         } else {
             AppHelper.loadJobLogo(job, imageView);
-
             // job title
             itemTitle.setText(job.getTitle());
-
             // job Description
-
             itemSubTitle.setText(job.getDescription());
         }
 
@@ -196,16 +189,13 @@ public class InterviewDetailFragment extends BaseFragment {
         itemDateTime.setText(format.format(interview.getAt()) + " at " + format1.format(interview.getAt()));
 
         // Location
-
         itemLocation.setText(application.getJob_data().getLocation_data().getPlace_name());
 
         // Feedback
-
         itemFeedback.setText(interview.getFeedback());
         feedbackContainer.setVisibility(View.GONE);
 
         // Note
-
         itemNotes.setText(interview.getNotes());
         notesContainer.setVisibility(View.VISIBLE);
 
@@ -215,7 +205,6 @@ public class InterviewDetailFragment extends BaseFragment {
         arrangeButton.setVisibility(View.GONE);
 
         switch (status) {
-
             case InterviewStatus.PENDING:
                 // Status
                 itemStatus.setText("Interview request sent");
@@ -223,10 +212,8 @@ public class InterviewDetailFragment extends BaseFragment {
             case InterviewStatus.ACCEPTED:
                 // Status
                 itemStatus.setText("Interview accepted");
-
                 acceptButton.setVisibility(View.GONE);
                 break;
-
             case InterviewStatus.COMPLETED:
                 // Status
                 itemStatus.setText("This interview is done");
@@ -264,6 +251,16 @@ public class InterviewDetailFragment extends BaseFragment {
                 break;
 
         }
+
+//        if (interviews == null) {
+//            editButton.setVisibility(View.GONE);
+//            completeButton.setVisibility(View.GONE);
+//            acceptButton.setVisibility(View.GONE);
+//            cancelButton.setVisibility(View.GONE);
+//            arrangeButton.setVisibility(View.GONE);
+//            messageButton.setVisibility(View.GONE);
+//
+//        }
     }
 
     private void showProfile() {

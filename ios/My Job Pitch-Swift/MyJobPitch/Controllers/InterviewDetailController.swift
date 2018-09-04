@@ -17,17 +17,17 @@ class InterviewDetailController: MJPController {
     @IBOutlet weak var status: UILabel!
     @IBOutlet weak var dataTime: UILabel!
     @IBOutlet weak var location: UILabel!
-    @IBOutlet weak var feedbackLabel: UILabel!
     @IBOutlet weak var feedbackContent: UILabel!
-    @IBOutlet weak var noteLabel: UILabel!
     @IBOutlet weak var noteContent: UILabel!
     
-    @IBOutlet weak var editButton: GreenButton!
-    @IBOutlet weak var completeButton: GreenButton!
-    @IBOutlet weak var acceptButton: GreenButton!
-    @IBOutlet weak var messageButton: GreenButton!
-    @IBOutlet weak var cancelButton: YellowButton!
-    @IBOutlet weak var newButton: GreenButton!
+    @IBOutlet weak var feedbackView: UIView!
+    @IBOutlet weak var notesView: UIView!
+    @IBOutlet weak var editBtnView: UIView!
+    @IBOutlet weak var newBtnView: UIView!
+    @IBOutlet weak var acceptBtnView: UIView!
+    @IBOutlet weak var completeBtnView: UIView!
+    @IBOutlet weak var messageBtnView: UIView!
+    @IBOutlet weak var cancelBtnView: UIView!
     
     var interview: Interview!
     var interviewId: NSNumber!
@@ -40,6 +40,7 @@ class InterviewDetailController: MJPController {
         
         jobTitleView.text = String(format: "%@, (%@)", application.job.title, application.job.getBusinessName())
         self.scrollView.isScrollEnabled = false
+        
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -93,24 +94,22 @@ class InterviewDetailController: MJPController {
         feedbackContent.text = interview.feedback
         noteContent.text = interview.notes
         
-        feedbackLabel.isHidden = true
-        feedbackContent.isHidden = true
+        feedbackView.isHidden = true
         
         if AppData.user.isRecruiter() {
-            acceptButton.isHidden = true
+            acceptBtnView.isHidden = true
             if interview.status == InterviewStatus.INTERVIEW_COMPLETED || interview.status == InterviewStatus.INTERVIEW_CANCELLED {
-                editButton.isHidden = true
-                newButton.isHidden = false
+                editBtnView.isHidden = true
+                newBtnView.isHidden = false
             } else {
-                newButton.isHidden = true
+                newBtnView.isHidden = true
             }
         } else {
-            noteContent.isHidden = true
-            noteLabel.isHidden = true
-            editButton.isHidden = true
-            completeButton.isHidden = true
-            messageButton.isHidden = true
-            cancelButton.isHidden = true
+            notesView.isHidden = true
+            editBtnView.isHidden = true
+            completeBtnView.isHidden = true
+            messageBtnView.isHidden = true
+            cancelBtnView.isHidden = true
         }
         
         if interview.status == InterviewStatus.INTERVIEW_PENDING {
@@ -120,23 +119,22 @@ class InterviewDetailController: MJPController {
         } else if interview.status == InterviewStatus.INTERVIEW_ACCEPTED {
             
             status.text = "Interview accepted"
-            acceptButton.isHidden = true
+            acceptBtnView.isHidden = true
             
         } else if interview.status == InterviewStatus.INTERVIEW_COMPLETED {
             
             status.text = "This interview is done"
-            feedbackLabel.isHidden = false
-            feedbackContent.isHidden = false
-            completeButton.isHidden = true
-            cancelButton.isHidden = true
-            acceptButton.isHidden = true
+            feedbackView.isHidden = false
+            completeBtnView.isHidden = true
+            cancelBtnView.isHidden = true
+            acceptBtnView.isHidden = true
             
         } else if interview.status == InterviewStatus.INTERVIEW_CANCELLED {
             
             status.text = "Interview cancelled by " + (AppData.user.isRecruiter() ? "Recruiter" : "Jobseeker")
-            completeButton.isHidden = true
-            cancelButton.isHidden = true
-            acceptButton.isHidden = true
+            completeBtnView.isHidden = true
+            cancelBtnView.isHidden = true
+            acceptBtnView.isHidden = true
             
         }
         
@@ -206,10 +204,10 @@ class InterviewDetailController: MJPController {
             navigationController?.pushViewController(controller, animated: true)
         }
     }
-    @IBAction func interviewHistories(_ sender: Any) {
+    
+    func showInterviewHistories() {
         let controller = AppHelper.mainStoryboard.instantiateViewController(withIdentifier: "ApplicationInterviewList") as! ApplicationInterviewListController
         controller.application = application
         navigationController?.pushViewController(controller, animated: true)
     }
-    
 }

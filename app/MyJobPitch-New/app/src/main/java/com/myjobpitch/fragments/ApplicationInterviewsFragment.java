@@ -16,6 +16,7 @@ import com.myjobpitch.api.MJPApiException;
 import com.myjobpitch.api.data.Application;
 import com.myjobpitch.api.data.ApplicationInterview;
 import com.myjobpitch.api.data.Interview;
+import com.myjobpitch.api.data.InterviewStatus;
 import com.myjobpitch.api.data.Job;
 import com.myjobpitch.api.data.JobSeeker;
 import com.myjobpitch.tasks.APIAction;
@@ -83,7 +84,7 @@ public class ApplicationInterviewsFragment extends BaseFragment {
         // list view
 
         if (adapter == null) {
-            adapter = new ApplicationInterviewAdapter(getApp(), new ArrayList<ApplicationInterview>());
+            adapter = new ApplicationInterviewAdapter(getApp(), new ArrayList<Interview>());
         } else {
             adapter.clear();
         }
@@ -91,7 +92,10 @@ public class ApplicationInterviewsFragment extends BaseFragment {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
+                InterviewDetailFragment fragment = new InterviewDetailFragment();
+                fragment.interviewId = adapter.getItem(position).getId();
+                fragment.application = application;
+                getApp().pushFragment(fragment);
             }
         });
 
@@ -104,21 +108,37 @@ public class ApplicationInterviewsFragment extends BaseFragment {
     }
 
     private void loadInterviews() {
-        final List<ApplicationInterview> interviews = new ArrayList();
-        for (int i = 0; i<application.getInterviews().size(); i++) {
-            if (application.getInterviews().get(i).getId().intValue() != interviewId) {
-                interviews.add(application.getInterviews().get(i));
+        final List<Interview> interviews = new ArrayList();
+        new APITask(new APIAction() {
+            @Override
+            public void run() throws MJPApiException {
+                interviews.addAll(MJPApi.shared().get(Interview.class));
             }
-        }
+        }).addListener(new APITaskListener() {
+            @Override
+            public void onSuccess() {
+                adapter.clear();
+                Boolean isEmpty = true;
 
+                for (int i=0; i<interviews.size(); i++) {
+                    if (application.getId().intValue() == interviews.get(i).getApplication().intValue()) {
+                        if (interviewId.intValue() != interviews.get(i).getApplication().intValue() && (interviews.get(i).getStatus().equals(InterviewStatus.COMPLETED) || interviews.get(i).getStatus().equals(InterviewStatus.CANCELLED))) {
+                            adapter.add(interviews.get(i));
+                            isEmpty = false;
+                        }
+                    }
+                }
+                adapter.closeAllItems();
 
-        adapter.clear();
+                emptyView.setVisibility(isEmpty ? View.VISIBLE : View.GONE);
+                swipeRefreshLayout.setRefreshing(false);
 
-        for (int i=0; i<interviews.size(); i++) {
-            adapter.add(interviews.get(i));
-        }
-        adapter.closeAllItems();
-        swipeRefreshLayout.setRefreshing(false);
+            }
+            @Override
+            public void onError(JsonNode errors) {
+                errorHandler(errors);
+            }
+        }).execute();
     }
 
     @OnClick(R.id.empty_button)
@@ -129,9 +149,9 @@ public class ApplicationInterviewsFragment extends BaseFragment {
 
     // job adapter ========================================
 
-    private class ApplicationInterviewAdapter extends MJPArraySwipeAdapter<ApplicationInterview> {
+    private class ApplicationInterviewAdapter extends MJPArraySwipeAdapter<Interview> {
 
-        public ApplicationInterviewAdapter(Context context, List<ApplicationInterview> interviews) {
+        public ApplicationInterviewAdapter(Context context, List<Interview> interviews) {
             super(context, interviews);
         }
 
@@ -142,13 +162,13 @@ public class ApplicationInterviewsFragment extends BaseFragment {
 
         @Override
         public View generateView(int position, ViewGroup parent) {
-            return LayoutInflater.from(getContext()).inflate(R.layout.cell_application_interview_list, parent, false);
+            return LayoutInflater.from(getContext()).inflate(R.layout.cell_interview_list, parent, false);
         }
 
         @Override
         public void fillValues(final int position, View convertView) {
 
-            AppHelper.showApplicationInterviewInfo(getItem(position), convertView, application);
+            AppHelper.showInterviewInfo(getItem(position), convertView, application);
 
         }
 

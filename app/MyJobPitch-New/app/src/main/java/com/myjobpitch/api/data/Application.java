@@ -13,7 +13,7 @@ public class Application extends BaseApplication {
     private List<Message> messages;
 
     //Added in API V3
-    private List<ApplicationInterview> interviews;
+    private List<Interview> interviews;
     private List<Pitch> pitches;
 
     public JobSeeker getJob_seeker() {
@@ -44,7 +44,7 @@ public class Application extends BaseApplication {
         this.status = status;
     }
 
-    public List<ApplicationInterview> getInterviews() {
+    public List<Interview> getInterviews() {
         return interviews;
     }
 

@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { withRouter, Link } from 'react-router-dom';
 import { Menu, Badge } from 'antd';
 
+import { getAllNewMsgs, getBusinesses } from 'redux/selectors';
 import * as helper from 'utils/helper';
 
 const Item = Menu.Item;
@@ -64,7 +65,7 @@ class MainMenu extends React.Component {
           <Item key="credits">
             <Link to="/recruiter/settings/credits">
               Credit
-              <Badge count={(business || {}).tokens} />
+              {selectedKey !== 'credits' && <Badge count={(business || {}).tokens} />}
             </Link>
           </Item>
         )}
@@ -81,12 +82,13 @@ class MainMenu extends React.Component {
 
 export default withRouter(
   connect(state => {
-    const { businesses, selectedId } = state.rc_businesses;
+    const businesses = getBusinesses(state);
+    const { selectedId } = state.rc_businesses;
     const business = helper.getItemByID(businesses || [], selectedId);
     return {
       businesses,
       business,
-      newMsgs: state.applications.allNewMsgs
+      newMsgs: getAllNewMsgs(state)
     };
   })(MainMenu)
 );

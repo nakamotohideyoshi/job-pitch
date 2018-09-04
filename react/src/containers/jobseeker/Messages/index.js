@@ -2,13 +2,13 @@ import React, { Fragment } from 'react';
 import Helmet from 'react-helmet';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { List, Avatar } from 'antd';
+import { List, Drawer } from 'antd';
 
-import { getApplications } from 'redux/applications';
+import { getApplications } from 'redux/selectors';
 import DATA from 'utils/data';
 import * as helper from 'utils/helper';
 
-import { AlertMsg, Loading, MessageThread, Icons, JobDetails, LargeModal } from 'components';
+import { AlertMsg, Loading, MessageThread, Icons, JobDetails, Logo } from 'components';
 import Sidebar from './Sidebar';
 import Wrapper from './styled';
 
@@ -21,9 +21,12 @@ class Messages extends React.Component {
   };
 
   componentWillMount() {
-    this.props.getApplications();
     window.addEventListener('resize', this.onResize);
     this.onResize();
+
+    if (this.props.applications) {
+      this.setSelectedID(this.props);
+    }
   }
 
   componentWillUnmount() {
@@ -31,18 +34,28 @@ class Messages extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const { applications, match: { params } } = nextProps;
+    const {
+      applications,
+      match: { params }
+    } = nextProps;
     if (applications) {
-      const { applications: applications0, match: { params: params0 } } = this.props;
+      const {
+        applications: applications0,
+        match: { params: params0 }
+      } = this.props;
       if (!applications0 || params0.appId !== params.appId) {
-        const appId = helper.str2int(params.appId) || helper.loadData('messages/appId');
-        const app = helper.getItemByID(applications, appId) || applications[0] || {};
-        helper.saveData('messages/appId', app.id);
-        this.setState({ selectedId: app.id, open: false });
-        this.props.history.replace(`/jobseeker/messages/${app.id}`);
+        this.setSelectedID(nextProps);
       }
     }
   }
+
+  setSelectedID = ({ applications, match: { params } }) => {
+    const appId = helper.str2int(params.appId) || helper.loadData('messages/appId');
+    const app = helper.getItemByID(applications, appId) || applications[0] || {};
+    helper.saveData('messages/appId', app.id);
+    this.setState({ selectedId: app.id, open: false });
+    this.props.history.replace(`/jobseeker/messages/${app.id}`);
+  };
 
   onResize = () => {
     const tablet = window.innerWidth < 768;
@@ -56,13 +69,13 @@ class Messages extends React.Component {
   hideJobDetails = () => this.setState({ openJobDetails: false });
 
   renderHeader = ({ job_data }) => {
-    const avatar = helper.getJobLogo(job_data);
+    const logo = helper.getJobLogo(job_data);
     const jobTitle = job_data.title;
     const subName = helper.getFullBWName(job_data);
     return (
       <List.Item>
         <List.Item.Meta
-          avatar={<Avatar src={avatar} className="avatar-48" />}
+          avatar={<Logo src={logo} size="48px" padding="4px" />}
           title={<span onClick={this.showJobDetails}>{jobTitle}</span>}
           description={<span onClick={this.showJobDetails}>{subName}</span>}
         />
@@ -74,7 +87,7 @@ class Messages extends React.Component {
     if (!this.props.jobseeker.active) {
       return (
         <div>
-          {'To message please activate your account. '}
+          To message please activate your account.
           <Link to="/jobseeker/settings/profile">Activate</Link>
         </div>
       );
@@ -88,18 +101,14 @@ class Messages extends React.Component {
   };
 
   render() {
-    const { error, applications } = this.props;
+    const { applications } = this.props;
 
-    if (error) {
-      return <AlertMsg error>Server Error!</AlertMsg>;
-    }
     if (!applications) {
       return <Loading size="large" />;
     }
 
-    const { selectedId } = this.state;
+    const { selectedId, openJobDetails, tablet, open } = this.state;
     const selectedApp = helper.getItemByID(applications, selectedId);
-    const { openJobDetails, tablet, open } = this.state;
 
     return (
       <Wrapper tablet={tablet} open={open}>
@@ -119,26 +128,20 @@ class Messages extends React.Component {
           {tablet && open && <span className="mask" onClick={this.closeSidebar} />}
         </div>
 
-        {openJobDetails && (
-          <LargeModal visible title="Job Details" onCancel={this.hideJobDetails}>
-            <JobDetails job={selectedApp.job_data} roughLocation={selectedApp.status === DATA.APP.CREATED} />
-          </LargeModal>
-        )}
+        <Drawer placement="right" closable={false} onClose={this.hideJobDetails} visible={!!openJobDetails}>
+          {openJobDetails && (
+            <JobDetails application={selectedApp} roughLocation={selectedApp.status === DATA.APP.CREATED} />
+          )}
+        </Drawer>
       </Wrapper>
     );
   }
 }
 
-const enhance = connect(
-  state => ({
-    jobseeker: state.js_profile.jobseeker,
-    applications: state.applications.applications,
-    error: state.applications.error
-  }),
-  {
-    getApplications
-  }
-);
+const enhance = connect(state => ({
+  jobseeker: state.js_profile.jobseeker,
+  applications: getApplications(state)
+}));
 
 export default enhance(params => (
   <Fragment>

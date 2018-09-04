@@ -7,6 +7,7 @@ import { getRequest, postRequest, requestSuccess } from 'utils/request';
 import { getBusinesses } from 'redux/recruiter/businesses/saga';
 import { getWorkplaces } from 'redux/recruiter/workplaces/saga';
 import { getJobs } from 'redux/recruiter/jobs/saga';
+import { getApplications } from 'redux/applications/saga';
 import * as C from 'redux/constants';
 
 function* register(action) {
@@ -97,6 +98,8 @@ function* getUserData() {
     DATA.userRole = 'RECRUITER';
     yield all([call(getBusinesses), call(getWorkplaces), call(getJobs)]);
   }
+
+  yield call(getApplications);
 
   yield put({ type: C.UPDATE_AUTH, payload: { user } });
 }

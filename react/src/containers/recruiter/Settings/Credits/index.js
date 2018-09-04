@@ -2,6 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Select, Button, List } from 'antd';
 
+import { getBusinesses } from 'redux/selectors';
 import { selectBusiness, purchase } from 'redux/recruiter/businesses';
 import DATA from 'utils/data';
 import * as helper from 'utils/helper';
@@ -87,7 +88,7 @@ class Credits extends React.Component {
 export default connect(
   (state, { match }) => {
     const businessId = helper.str2int(match.params.businessId) || helper.loadData('credits/businessId');
-    const { businesses } = state.rc_businesses;
+    const businesses = getBusinesses(state);
     const business = helper.getItemByID(businesses, businessId) || businesses[0];
     return {
       businesses,

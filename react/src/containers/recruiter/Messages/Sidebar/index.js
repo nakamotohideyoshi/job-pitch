@@ -1,11 +1,11 @@
 import React, { Fragment } from 'react';
 import { withRouter } from 'react-router-dom';
-import { Select, List, Avatar, Badge } from 'antd';
+import { Select, List, Badge } from 'antd';
 
 import DATA from 'utils/data';
 import * as helper from 'utils/helper';
 
-import { AlertMsg, SelectEx, SearchBox, ListEx } from 'components';
+import { AlertMsg, SelectEx, SearchBox, ListEx, Logo } from 'components';
 import Wrapper from './styled';
 
 const Option = Select.Option;
@@ -52,7 +52,7 @@ class Sidebar extends React.PureComponent {
     return (
       <List.Item key={id} className={`${deleted} ${selected}`} onClick={() => this.selectApp(id)}>
         <List.Item.Meta
-          avatar={<Avatar src={image} className="avatar-48" />}
+          avatar={<Logo src={image} size="48px" />}
           title={
             <Fragment>
               <span className="title single-line">{name}</span>
@@ -62,7 +62,7 @@ class Sidebar extends React.PureComponent {
           description={
             <Fragment>
               <div className="single-line">{comment}</div>
-              {!!newMsgs && <Badge count={newMsgs < 100 ? newMsgs : '99+'} />}
+              {!!newMsgs && <Badge count={newMsgs < 10 ? newMsgs : '9+'} />}
             </Fragment>
           }
         />
@@ -85,7 +85,7 @@ class Sidebar extends React.PureComponent {
             {jobs.map(job => {
               return (
                 <Option key={job.id} value={job.id}>
-                  <Avatar src={helper.getJobLogo(job)} />
+                  <Logo src={helper.getJobLogo(job)} className="logo" size="22px" />
                   {job.title}
                 </Option>
               );

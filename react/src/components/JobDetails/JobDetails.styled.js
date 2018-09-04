@@ -12,9 +12,7 @@ export default styled.div`
     position: relative;
     ${media.tablet` margin-bottom: 24px;`};
     padding-top: 100%;
-    background-color: #fff;
     border: 1px solid #ebebeb;
-    border-radius: 4px;
 
     span {
       position: absolute;
@@ -22,10 +20,6 @@ export default styled.div`
       left: 0%;
     }
   }
-
-  /* &.publicJobContainer {
-    margin: 20px 0px 20px 0px;
-  } */
 
   .info {
     ${media.desktop`margin-bottom: 24px;`};
@@ -38,9 +32,15 @@ export default styled.div`
       color: ${colors.text2};
     }
 
-    .sub-name {
+    .sub-name1 {
+      margin-bottom: 0.5em;
+      font-weight: 300;
+      line-height: 1.2em;
+      color: ${colors.text3};
+    }
+
+    .sub-name2 {
       margin-bottom: 1em;
-      font-size: 18px;
       font-weight: 300;
       line-height: 1.2em;
       color: ${colors.text3};
@@ -51,12 +51,19 @@ export default styled.div`
       padding: 0;
       color: ${colors.text3};
       li {
-        margin-bottom: 16px;
+        margin-bottom: 10px;
         font-weight: 100;
         svg {
           margin-right: 0.5em;
           width: 20px;
           font-size: 16px;
+        }
+        &.PENDING {
+          color: ${colors.yellow};
+        }
+
+        &.ACCEPTED {
+          color: ${colors.green};
         }
       }
     }
@@ -68,7 +75,8 @@ export default styled.div`
 
   button {
     display: block;
-    width: 200px;
+    max-width: 200px;
+    width: 100%;
   }
 
   button + button {

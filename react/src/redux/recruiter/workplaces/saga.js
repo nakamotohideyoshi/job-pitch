@@ -1,16 +1,18 @@
-import { takeLatest, call, put, select } from 'redux-saga/effects';
-import * as C from 'redux/constants';
-import * as helper from 'utils/helper';
+import { takeLatest, call, put } from 'redux-saga/effects';
+
+import { updateBusiness } from 'redux/recruiter/businesses/saga';
 import request, { getRequest, postRequest, deleteRequest } from 'utils/request';
+import * as C from 'redux/constants';
 
 export const getWorkplaces = getRequest({
   type: C.RC_GET_WORKPLACES,
   url: `/api/user-locations/`
 });
 
-const removeWorkplace = deleteRequest({
-  url: ({ id }) => `/api/user-locations/${id}/`
-});
+export function* updateWorkplace(workplace) {
+  yield call(updateBusiness, workplace.business_data);
+  yield put({ type: C.RC_UPDATE_WORKPLACE, workplace });
+}
 
 function* saveWorkplace(action) {
   const { data, logo, onProgress, onSuccess, onFail } = action.payload;
@@ -23,8 +25,8 @@ function* saveWorkplace(action) {
     action
   );
 
-  if (!workplace) {
-    onFail && onFail('Removing is failed.');
+  if (workplace === null) {
+    onFail && onFail('There was an error saving the workplace');
     return;
   }
 
@@ -42,32 +44,27 @@ function* saveWorkplace(action) {
         }
       });
 
-      if (!image) {
-        onFail && onFail('Uploading logo is failed.');
-        onSuccess && onSuccess(workplace);
-        return;
+      if (image === null) {
+        onFail && onFail('There was an error uploading the logo');
+      } else {
+        workplace.images = [image];
       }
-
-      workplace.images = [image];
     } else if (workplace.images.length && !logo.exist) {
       yield call(deleteRequest({ url: `/api/user-location-images/${workplace.images[0].id}/` }));
       workplace.images = [];
     }
   }
 
-  let { rc_workplaces: { workplaces } } = yield select();
-  if (data.id) {
-    workplaces = helper.updateObj(workplaces, workplace);
-  } else {
-    workplaces = helper.addObj(workplaces, workplace);
-  }
-  yield put({ type: C.RC_WORKPLACES_UPDATE, payload: { workplaces } });
+  yield call(updateWorkplace, workplace);
 
   onSuccess && onSuccess(workplace);
 }
 
+const removeWorkplace = deleteRequest({
+  url: ({ id }) => `/api/user-locations/${id}/`
+});
+
 export default function* sagas() {
-  yield takeLatest(C.RC_GET_WORKPLACES, getWorkplaces);
   yield takeLatest(C.RC_REMOVE_WORKPLACE, removeWorkplace);
   yield takeLatest(C.RC_SAVE_WORKPLACE, saveWorkplace);
 }

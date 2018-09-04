@@ -7,8 +7,6 @@ import { requestPending, requestSuccess, requestFail } from 'utils/request';
 // Actions
 // ------------------------------------
 
-export const updateStatus = createAction(C.RC_JOBS_UPDATE);
-export const getJobs = createAction(C.RC_GET_JOBS);
 export const removeJob = createAction(C.RC_REMOVE_JOB);
 export const saveJob = createAction(C.RC_SAVE_JOB);
 export const uploadPitch = createAction(C.JS_UPLOAD_JOBPITCH);
@@ -23,30 +21,33 @@ const initialState = {
 
 export default handleActions(
   {
-    [C.RC_JOBS_UPDATE]: (state, { payload }) => ({
-      ...state,
-      ...payload
-    }),
-
     // ---- get jobs ----
-
-    [requestPending(C.RC_GET_JOBS)]: state => initialState,
 
     [requestSuccess(C.RC_GET_JOBS)]: (state, { payload }) => ({
       ...state,
       jobs: payload
     }),
 
-    [requestFail(C.RC_GET_JOBS)]: state => ({
-      ...state,
-      jobs: []
-    }),
+    // ---- update job ----
+
+    [C.RC_UPDATE_JOB]: (state, { job }) => {
+      let jobs = helper.updateItem(state.jobs, job, true);
+      jobs.sort((a, b) => {
+        const sort1 = a.status - b.status;
+        if (sort1 !== 0) return sort1;
+        return new Date(b.created).getTime() - new Date(a.created).getTime();
+      });
+      return {
+        ...state,
+        jobs: helper.updateItem(state.jobs, job, true)
+      };
+    },
 
     // ---- remove job ----
 
     [requestPending(C.RC_REMOVE_JOB)]: (state, { payload }) => ({
       ...state,
-      jobs: helper.updateObj(state.jobs, {
+      jobs: helper.updateItem(state.jobs, {
         id: payload.id,
         loading: true
       })
@@ -54,48 +55,15 @@ export default handleActions(
 
     [requestSuccess(C.RC_REMOVE_JOB)]: (state, { request }) => ({
       ...state,
-      jobs: helper.removeObj(state.jobs, request.id)
+      jobs: helper.removeItem(state.jobs, request.id)
     }),
 
     [requestFail(C.RC_REMOVE_JOB)]: (state, { request }) => ({
       ...state,
-      jobs: helper.updateObj(state.jobs, {
+      jobs: helper.updateItem(state.jobs, {
         id: request.id,
         loading: false
       })
-    }),
-
-    // ---- save job ----
-
-    [requestPending(C.RC_SAVE_JOB)]: (state, { payload }) => ({
-      ...state,
-      jobs: helper.updateObj(state.jobs, {
-        id: payload.data.id,
-        loading: true
-      })
-    }),
-
-    [requestSuccess(C.RC_SAVE_JOB)]: (state, { request }) => ({
-      ...state,
-      jobs: helper.updateObj(state.jobs, {
-        id: request.data.id,
-        loading: false
-      })
-    }),
-
-    [requestFail(C.RC_SAVE_JOB)]: (state, { request }) => ({
-      ...state,
-      jobs: helper.updateObj(state.jobs, {
-        id: request.data.id,
-        loading: false
-      })
-    }),
-
-    // ---- update job ----
-
-    [C.RC_UPDATE_JOB]: (state, { payload }) => ({
-      ...state,
-      jobs: helper.updateObj(state.jobs, payload)
     })
   },
   initialState

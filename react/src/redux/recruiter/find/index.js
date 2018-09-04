@@ -1,4 +1,3 @@
-import { LOCATION_CHANGE } from 'react-router-redux';
 import { createAction, handleActions } from 'redux-actions';
 import { requestPending, requestSuccess, requestFail } from 'utils/request';
 import * as C from 'redux/constants';
@@ -25,11 +24,7 @@ export default handleActions(
   {
     // ---- find jobseekers ----
 
-    [requestPending(C.RC_FIND_JOBSEEKERS)]: state => ({
-      ...state,
-      jobseekers: null,
-      error: null
-    }),
+    [requestPending(C.RC_FIND_JOBSEEKERS)]: state => initialState,
 
     [requestSuccess(C.RC_FIND_JOBSEEKERS)]: (state, { payload }) => ({
       ...state,
@@ -45,29 +40,21 @@ export default handleActions(
 
     [C.RC_CONNECT_JOBSEEKER]: (state, { payload }) => ({
       ...state,
-      jobseekers: helper.updateObj(state.jobseekers, {
+      jobseekers: helper.updateItem(state.jobseekers, {
         id: payload.data.job_seeker,
         loading: true
       })
     }),
 
-    [requestPending(C.RC_CONNECT_JOBSEEKER)]: (state, { payload }) => ({
+    [requestSuccess(C.RC_CONNECT_JOBSEEKER)]: (state, { job_seeker }) => ({
       ...state,
-      jobseekers: helper.updateObj(state.jobseekers, {
-        id: payload.data.job_seeker,
-        loading: true
-      })
+      jobseekers: helper.removeItem(state.jobseekers, job_seeker)
     }),
 
-    [requestSuccess(C.RC_CONNECT_JOBSEEKER)]: (state, { request }) => ({
+    [requestFail(C.RC_CONNECT_JOBSEEKER)]: (state, { job_seeker }) => ({
       ...state,
-      jobseekers: helper.removeObj(state.jobseekers, request.data.job_seeker)
-    }),
-
-    [requestFail(C.RC_CONNECT_JOBSEEKER)]: (state, { request }) => ({
-      ...state,
-      jobseekers: helper.updateObj(state.jobseekers, {
-        id: request.data.job_seeker,
+      jobseekers: helper.updateItem(state.jobseekers, {
+        id: job_seeker,
         loading: false
       })
     }),
@@ -76,18 +63,8 @@ export default handleActions(
 
     [C.RC_REMOVE_JOBSEEKER]: (state, { payload }) => ({
       ...state,
-      jobseekers: helper.removeObj(state.jobseekers, payload.id)
-    }),
-
-    // ---- change location ----
-
-    [LOCATION_CHANGE]: (state, { payload }) => {
-      const clear = payload.pathname.indexOf('/recruiter/applications') !== 0;
-      return {
-        ...state,
-        jobseekers: clear ? null : state.jobseekers
-      };
-    }
+      jobseekers: helper.removeItem(state.jobseekers, payload.id)
+    })
   },
   initialState
 );

@@ -1,16 +1,15 @@
 import React from 'react';
 import Helmet from 'react-helmet';
 import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
-import { Breadcrumb, Form, Input, Select, Button, notification, Checkbox } from 'antd';
+import { Form, Input, Select, Button, Checkbox, notification } from 'antd';
 
+import { getBusinesses, getWorkplaces, getUsers } from 'redux/selectors';
+import { selectBusiness } from 'redux/recruiter/businesses';
 import { saveUser, resendInvitation } from 'redux/recruiter/users';
-// import DATA from 'utils/data';
 import * as helper from 'utils/helper';
 
-import { PageHeader, PageSubHeader, PopupProgress, NoLabelField } from 'components';
+import { PageHeader, PageSubHeader, PopupProgress, NoLabelField, Logo, LinkButton } from 'components';
 import Wrapper from '../styled';
-import StyledForm from './styled';
 
 const { Item } = Form;
 const { Option } = Select;
@@ -22,37 +21,33 @@ class UserEdit extends React.Component {
   };
 
   componentDidMount() {
-    const { business, user, form } = this.props;
+    const { business, user, form, selectBusiness } = this.props;
 
     if (!business) {
-      this.goBuisinessList();
+      this.goUserList();
       return;
     }
+
+    selectBusiness(business.id);
 
     if (user) {
       form.setFieldsValue({
         email: user.email,
         locations: user.locations
       });
+
       if (user.locations.length === 0) {
-        this.setState({
-          isAdmin: true
-        });
+        this.setState({ isAdmin: true });
       }
     }
   }
 
-  goBuisinessList = () => {
+  goUserList = () => {
     this.props.history.push('/recruiter/users/business');
   };
 
-  goUserList = () => {
-    const { business: { id }, history } = this.props;
-    history.push(`/recruiter/users/${id}`);
-  };
-
   save = () => {
-    const { form, user, saveUser, business } = this.props;
+    const { form, saveUser, user, business } = this.props;
 
     form.validateFieldsAndScroll({ scroll: { offsetTop: 70 } }, (err, values) => {
       if (err) return;
@@ -62,30 +57,27 @@ class UserEdit extends React.Component {
           label: 'Saving...'
         }
       });
+
+      const locations = values.locations || [];
       saveUser({
         data: user
-          ? {
-              locations: values.locations === undefined ? [] : values.locations
-            }
+          ? { locations }
           : {
               email: values.email,
-              locations: values.locations === undefined ? [] : values.locations
+              locations
             },
         businessId: business.id,
-        userId: (user || {}).id,
-        onSuccess: ({ id }) => {
+        id: (user || {}).id,
+        success: () => {
           notification.success({
-            message: 'Notification',
-            description: 'User is saved successfully.'
+            message: 'Success',
+            description: 'The user is saved'
           });
           this.goUserList();
         },
-        onFail: error => {
+        fail: data => {
           this.setState({ loading: null });
-          notification.error({
-            message: 'Notification',
-            description: error
-          });
+          helper.setErrors(form, data, values);
         }
       });
     });
@@ -99,31 +91,32 @@ class UserEdit extends React.Component {
         label: 'Sending...'
       }
     });
+
     resendInvitation({
       businessId: business.id,
-      userId: user.id,
-      onSuccess: ({ id }) => {
+      id: user.id,
+      success: () => {
         notification.success({
-          message: 'Notification',
+          message: 'Success',
           description: 'Invitation is sent successfully.'
         });
         this.goUserList();
       },
-      onFail: error => {
+      fail: error => {
         this.setState({ loading: null });
         notification.error({
-          message: 'Notification',
-          description: error
+          message: 'Error',
+          description: 'There was an error sending invitation'
         });
       }
     });
   };
 
   render() {
-    const { loading } = this.state;
+    const { loading, isAdmin } = this.state;
     const { business, workplaces, user, form } = this.props;
     const { getFieldDecorator } = form;
-    const title = user ? 'Edit' : 'Add';
+    const title = business ? 'Edit' : 'Add';
 
     return (
       <Wrapper className="container">
@@ -134,53 +127,53 @@ class UserEdit extends React.Component {
         </PageHeader>
 
         <PageSubHeader>
-          <Breadcrumb>
-            <Breadcrumb.Item>
-              <Link to="/recruiter/users/business">Businesses</Link>
-            </Breadcrumb.Item>
-            <Breadcrumb.Item>
-              <Link to={`/recruiter/users/${business.id}`}>Users</Link>
-            </Breadcrumb.Item>
-            <Breadcrumb.Item>{title}</Breadcrumb.Item>
-          </Breadcrumb>
+          <LinkButton onClick={this.goUserList}>Users</LinkButton>
         </PageSubHeader>
 
         <div className="content">
-          <StyledForm>
+          <Form>
             <Item label="Email">
               {getFieldDecorator('email', {
-                initialValue: user ? user.email : '',
-                rules: [{ type: 'email', required: true, message: 'The input is not valid email!' }]
-              })(user ? <Input disabled /> : <Input />)}
+                rules: [
+                  { type: 'email', message: 'The input is not valid email!' },
+                  { required: true, message: `Please input user's email!` }
+                ]
+              })(<Input disabled={!!user} />)}
             </Item>
 
             <NoLabelField>
-              {getFieldDecorator('isAdmin', { valuePropName: 'checked', initialValue: this.state.isAdmin })(
-                <Checkbox onClick={() => this.setState({ isAdmin: !this.state.isAdmin })}>Administrator</Checkbox>
-              )}
+              <Checkbox
+                checked={isAdmin}
+                onClick={e => {
+                  this.setState({ isAdmin: e.target.checked });
+                }}
+              >
+                Administrator
+              </Checkbox>
             </NoLabelField>
-            {!this.state.isAdmin && (
+
+            {!isAdmin && (
               <Item label="Workplaces">
                 {getFieldDecorator('locations', {
-                  rules: [{ required: true, message: 'Please select workplace!' }]
+                  rules: [{ required: true, message: 'Please select workplaces!' }]
                 })(
                   <Select
                     mode="multiple"
-                    showSearch
-                    allowClear
                     filterOption={(input, option) =>
                       option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
                     }
                   >
-                    {workplaces.map(({ id, name }) => (
-                      <Option value={id} key={id}>
-                        {name}
+                    {workplaces.map(workplace => (
+                      <Option value={workplace.id} key={workplace.id}>
+                        <Logo src={helper.getWorkplaceLogo(workplace)} className="logo" size="22px" />
+                        {workplace.name}
                       </Option>
                     ))}
                   </Select>
                 )}
               </Item>
             )}
+
             <NoLabelField className="subimt-field">
               <Button type="primary" onClick={this.save}>
                 Save
@@ -192,7 +185,7 @@ class UserEdit extends React.Component {
               )}
               <Button onClick={this.goUserList}>Cancel</Button>
             </NoLabelField>
-          </StyledForm>
+          </Form>
         </div>
 
         {loading && <PopupProgress label={loading.label} value={loading.progress} />}
@@ -203,21 +196,18 @@ class UserEdit extends React.Component {
 
 export default connect(
   (state, { match }) => {
-    const businessId = helper.str2int(match.params.businessId);
-    const business = helper.getItemByID(state.rc_businesses.businesses, businessId);
-    let { workplaces } = state.rc_workplaces;
-    workplaces = workplaces.filter(item => item.business === businessId);
     const userId = helper.str2int(match.params.userId);
-    const { users } = state.rc_users;
-    const user = helper.getItemByID(users, userId);
-
+    const user = helper.getItemByID(getUsers(state), userId);
+    const businessId = helper.str2int(match.params.businessId) || (user || {}).business;
+    const business = helper.getItemByID(getBusinesses(state), businessId);
     return {
       business,
-      workplaces,
+      workplaces: getWorkplaces(state),
       user
     };
   },
   {
+    selectBusiness,
     saveUser,
     resendInvitation
   }

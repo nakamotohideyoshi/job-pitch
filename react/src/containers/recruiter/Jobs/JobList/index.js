@@ -2,178 +2,126 @@ import React from 'react';
 import Helmet from 'react-helmet';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import Truncate from 'react-truncate';
-import { Breadcrumb, List, Avatar, Tooltip, Modal, Input } from 'antd';
-import styled from 'styled-components';
+import { Breadcrumb, List, Tooltip } from 'antd';
 
-import { getApplications } from 'redux/applications';
-
+import { getApplications, getJobs, getWorkplaces } from 'redux/selectors';
+import { selectBusiness } from 'redux/recruiter/businesses';
 import DATA from 'utils/data';
 import * as helper from 'utils/helper';
 
-import * as _ from 'lodash';
-
-import { PageHeader, PageSubHeader, AlertMsg, LinkButton, Loading, ListEx, Icons, Logo } from 'components';
+import {
+  PageHeader,
+  PageSubHeader,
+  AlertMsg,
+  LinkButton,
+  Loading,
+  ListEx,
+  Icons,
+  Logo,
+  ShareLinkDialog
+} from 'components';
 import DeleteDialog from './DeleteDialog';
 import Mark from './Mark';
 import Wrapper from '../styled';
 
-const StyledModal = styled(Modal)`
-  .ant-input-group-addon {
-    cursor: pointer;
-  }
-
-  .ant-form-explain {
-    margin-top: 8px;
-  }
-`;
-
 class JobList extends React.Component {
   state = {
-    selectedJob: null,
-    showDialog: false,
-    selected: '',
-    countList: null
-  };
-
-  componentDidMount() {
-    this.props.getApplications();
-  }
-
-  componentWillReceiveProps(nextProps) {
-    let countList = {};
-    const { applications } = nextProps;
-    _.forEach(this.props.jobs, job => {
-      let _applications = _.filter(applications, application => {
-        return application.job === job.id && application.status !== 3;
-      });
-      let newApplications = _.filter(applications, application => {
-        return application.job === job.id && application.status === 1;
-      });
-      let connections = _.filter(applications, application => {
-        return application.job === job.id && application.status === 2;
-      });
-      countList[job.id] = {
-        totalApplications: _applications.length,
-        newApplications: newApplications.length,
-        connections: connections.length
-      };
-    });
-    this.setState({
-      countList: countList
-    });
-  }
-
-  copyLink = event => {
-    event && event.stopPropagation();
-    this.inputRef.input.select();
-    document.execCommand('Copy');
-  };
-
-  openDialog(event, id) {
-    event && event.stopPropagation();
-    this.setState({ showDialog: true, selected: id });
-  }
-
-  closeDialog = event => {
-    event && event.stopPropagation();
-    this.setState({ showDialog: false });
+    selected1: null,
+    selected2: null
   };
 
   componentWillMount() {
-    const { workplace, history } = this.props;
+    const { workplace, selectBusiness, history } = this.props;
     if (!workplace) {
       history.replace('/recruiter/jobs/business');
+      return;
     }
+    selectBusiness(workplace.business);
   }
 
-  selectJob = ({ id }) => {
+  onSelectJob = id => {
     this.props.history.push(`/recruiter/jobs/job/view/${id}`);
   };
 
-  addJob = () => {
+  onAddJob = () => {
     helper.saveData('tutorial');
-    const {
-      workplace: { id },
-      history
-    } = this.props;
-    history.push(`/recruiter/jobs/job/add/${id}`);
+    this.props.history.push(`/recruiter/jobs/job/add/${this.props.workplace.id}`);
   };
 
-  editJob = ({ id }, event) => {
-    event && event.stopPropagation();
+  onEditJob = (id, event) => {
+    event.stopPropagation();
     this.props.history.push(`/recruiter/jobs/job/edit/${id}`);
   };
 
-  showRemoveDialog = (selectedJob, event) => {
-    event && event.stopPropagation();
-    this.setState({ selectedJob });
-  };
-
-  showApps = ({ id }, event) => {
-    event && event.stopPropagation();
+  onShowApps = (id, event) => {
+    event.stopPropagation();
     this.props.history.push(`/recruiter/applications/apps/${id}`);
   };
 
-  showCons = ({ id }, event) => {
-    event && event.stopPropagation();
+  onShowCons = (id, event) => {
+    event.stopPropagation();
     this.props.history.push(`/recruiter/applications/conns/${id}`);
   };
 
-  renderJob = job => {
-    const { id, status, title, description, loading } = job;
-    const logo = helper.getJobLogo(job);
-    // const sectorName = helper.getItemByID(DATA.sectors, sector).name;
-    // const contractName = helper.getItemByID(DATA.contracts, contract).short_name;
-    // const hoursName = helper.getItemByID(DATA.hours, hours).short_name;
-    const closed = status === DATA.JOB.CLOSED ? 'disabled' : '';
-    if (this.state.countList !== null) {
-      var count = this.state.countList[job.id];
-      var strApplications = `${count.totalApplications} candidate${count.totalApplications > 1 ? 's' : ''}`;
-      var strNewApplications = `(${count.newApplications} new)`;
-      var strConnections = `${count.connections} connection${count.connections > 1 ? 's' : ''}`;
-    }
+  onLinkDialog(selected1, event) {
+    event && event.stopPropagation();
+    this.setState({ selected1 });
+  }
 
+  onDeleteDialog(selected2, event) {
+    event && event.stopPropagation();
+    this.setState({ selected2 });
+  }
+
+  renderJob = job => {
+    const { id, status, title, loading, newApps, conApps } = job;
+    const logo = helper.getJobLogo(job);
+    const sector = helper.getNameByID('sectors', job.sector);
+    const closed = status === DATA.JOB.CLOSED ? 'disabled' : '';
     return (
       <List.Item
         key={id}
         actions={[
           <Tooltip placement="bottom" title="Share Job">
-            <span onClick={e => this.openDialog(e, id)}>
+            <span onClick={e => this.onLinkDialog(job, e)}>
               <Icons.ShareAlt />
             </span>
           </Tooltip>,
           <Tooltip placement="bottom" title="Edit">
-            <span onClick={e => this.editJob(job, e)}>
+            <span onClick={e => this.onEditJob(id, e)}>
               <Icons.Pen />
             </span>
           </Tooltip>,
           <Tooltip placement="bottom" title="Remove">
-            <span onClick={e => this.showRemoveDialog(job, e)}>
+            <span onClick={e => this.onDeleteDialog(job, e)}>
               <Icons.TrashAlt />
             </span>
           </Tooltip>
         ]}
-        onClick={() => this.selectJob(job)}
+        onClick={() => this.onSelectJob(id)}
         className={`${loading ? 'loading' : ''} ${closed}`}
       >
-        <List.Item.Meta avatar={<Logo src={logo} size="80px" />} title={title} />
-        <span style={{ width: '140px' }}>
-          <div>
-            <span style={{ color: '#ff9300', marginRight: '5px' }} onClick={e => this.showApps(job, e)}>
-              {strApplications}
-            </span>
-            {count &&
-              !!count.newApplications && (
-                <span style={{ color: '#ff9300' }} onClick={e => this.showApps(job, e)}>
-                  {strNewApplications}
-                </span>
-              )}
-          </div>
-          <div style={{ color: '#00b6a4' }} onClick={e => this.showCons(job, e)}>
-            {strConnections}
-          </div>
-        </span>
+        <List.Item.Meta avatar={<Logo src={logo} size="80px" padding="10px" />} title={title} description={sector} />
+
+        {!closed && (
+          <span style={{ width: '140px' }}>
+            {!!conApps && (
+              <div>
+                <a style={{ color: '#00b6a4' }} onClick={e => this.onShowCons(id, e)}>
+                  {`${conApps} connection${conApps !== 1 ? 's' : ''}`}
+                </a>
+              </div>
+            )}
+            {!!newApps && (
+              <div>
+                <a style={{ color: '#ff9300' }} onClick={e => this.onShowApps(id, e)}>
+                  {`${newApps} new application${newApps !== 1 ? 's' : ''}`}
+                </a>
+              </div>
+            )}
+          </span>
+        )}
+
         {closed && <Mark>Inactive</Mark>}
         {loading && <Loading className="mask" size="small" />}
       </List.Item>
@@ -189,14 +137,14 @@ class JobList extends React.Component {
             ? `Okay, last step, now create your first job`
             : `This workplace doesn't seem to have any jobs yet!`}
         </span>
-        <a onClick={this.addJob}>Create job</a>
+        <a onClick={this.onAddJob}>Create job</a>
       </AlertMsg>
     );
   };
 
   render() {
-    const { workplace, jobs, applications } = this.props;
-    const { selectedJob, selected } = this.state;
+    const { workplace, jobs } = this.props;
+    const { selected1, selected2 } = this.state;
 
     return (
       <Wrapper className="container">
@@ -212,40 +160,29 @@ class JobList extends React.Component {
               <Link to="/recruiter/jobs/business">Businesses</Link>
             </Breadcrumb.Item>
             <Breadcrumb.Item>
-              {workplace && <Link to={`/recruiter/jobs/workplace/${workplace.business_data.id}`}>Workplaces</Link>}
+              {workplace && <Link to={`/recruiter/jobs/workplace/${workplace.business}`}>Workplaces</Link>}
             </Breadcrumb.Item>
             <Breadcrumb.Item>Jobs</Breadcrumb.Item>
           </Breadcrumb>
-          <LinkButton onClick={this.addJob}>Add new job</LinkButton>
+          <LinkButton onClick={this.onAddJob}>Add new job</LinkButton>
         </PageSubHeader>
 
         <div className="content">
-          {applications === null ? (
-            <Loading className="mask" size="large" />
-          ) : (
-            <ListEx
-              data={jobs}
-              loadingSize="large"
-              pagination={{ pageSize: 10 }}
-              renderItem={this.renderJob}
-              emptyRender={this.renderEmpty}
-            />
-          )}
+          <ListEx
+            data={jobs}
+            loadingSize="large"
+            pagination={{ pageSize: 10 }}
+            renderItem={this.renderJob}
+            emptyRender={this.renderEmpty}
+          />
         </div>
 
-        <DeleteDialog job={selectedJob} onCancel={() => this.showRemoveDialog()} />
-        <StyledModal visible={this.state.showDialog} title={'Share Link'} footer={null} onCancel={this.closeDialog}>
-          <Input
-            readOnly
-            addonAfter={<div onClick={this.copyLink}>Copy link</div>}
-            value={`${window.location.origin}/jobseeker/jobs/${selected}`}
-            ref={ref => {
-              this.inputRef = ref;
-            }}
-            id={selected}
-          />
-          <div className="ant-form-explain">{'Share this link on your website, in an email, or anywhere else.'}</div>
-        </StyledModal>
+        <ShareLinkDialog
+          url={`${window.location.origin}/jobseeker/jobs/${(selected1 || {}).id}`}
+          visible={selected1}
+          onCancel={() => this.onLinkDialog()}
+        />
+        <DeleteDialog job={selected2} visible={selected2} onCancel={() => this.onDeleteDialog()} />
       </Wrapper>
     );
   }
@@ -253,18 +190,31 @@ class JobList extends React.Component {
 
 export default connect(
   (state, { match }) => {
-    const workplaceId = helper.str2int(match.params.workplaceId);
-    const workplace = helper.getItemByID(state.rc_workplaces.workplaces, workplaceId);
-    let { jobs } = state.rc_jobs;
-    jobs = jobs.filter(item => item.location === workplaceId);
-    const { applications } = state.applications;
+    let workplaceId = helper.str2int(match.params.workplaceId);
+    const workplace = helper.getItemByID(getWorkplaces(state), workplaceId);
+    workplaceId = (workplace || {}).id;
+
+    const applications = getApplications(state);
+    const jobs = getJobs(state)
+      .filter(({ location }) => location === workplaceId)
+      .map(job => {
+        let newApps = 0;
+        let conApps = 0;
+        applications.forEach(app => {
+          if (app.job === job.id) {
+            if (app.status === DATA.APP.CREATED) newApps++;
+            else if (app.status === DATA.APP.ESTABLISHED) conApps++;
+          }
+        });
+        return { ...job, newApps, conApps };
+      });
+
     return {
       workplace,
-      jobs,
-      applications
+      jobs
     };
   },
   {
-    getApplications
+    selectBusiness
   }
 )(JobList);

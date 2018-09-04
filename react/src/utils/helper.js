@@ -155,30 +155,19 @@ export function loadData(key) {
 |--------------------------------------------------
 */
 
-export function addObj(objects, obj) {
-  if (Array.isArray(objects)) {
-    const newObject = objects.slice(0);
-    newObject.unshift(obj);
-    return newObject;
+export function updateItem(objects, newItem, addMode) {
+  if (addMode) {
+    if (!getItemByID(objects, newItem.id)) {
+      const newObjects = objects.slice(0);
+      newObjects.unshift(newItem);
+      return newObjects;
+    }
   }
-  return objects;
+  return objects.map(item => (item.id === newItem.id ? { ...item, ...newItem } : item));
 }
 
-export function updateObj(object, updateInfo) {
-  if (Array.isArray(object)) {
-    return object.map(item => (item.id === updateInfo.id ? updateObj(item, updateInfo) : item));
-  }
-  if (typeof object === 'object') {
-    return Object.assign({}, object, updateInfo);
-  }
-  return object;
-}
-
-export function removeObj(object, id) {
-  if (Array.isArray(object)) {
-    return object.filter(item => item.id !== id);
-  }
-  return object;
+export function removeItem(objects, id) {
+  return objects.filter(item => item.id !== id);
 }
 
 export function sort(arr, key) {
@@ -209,15 +198,16 @@ export function sort(arr, key) {
 
 export function setErrors(form, errors, values) {
   Object.keys(errors).forEach(key => {
+    const error = errors[key];
     if (values[key]) {
       form.setFields({
         [key]: {
           value: values[key],
-          errors: [new Error(errors[key][0])]
+          errors: [new Error(typeof error === 'string' ? error : error[0])]
         }
       });
     } else {
-      errors[key].forEach(msg => message.error(msg));
+      error.forEach(msg => message.error(msg));
     }
   });
 }

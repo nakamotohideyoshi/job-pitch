@@ -3,7 +3,7 @@ import Helmet from 'react-helmet';
 import { connect } from 'react-redux';
 import { List, Tooltip, Button, Drawer } from 'antd';
 
-import { getApplications } from 'redux/applications';
+import { getApplications } from 'redux/selectors';
 import DATA from 'utils/data';
 import * as helper from 'utils/helper';
 
@@ -18,12 +18,10 @@ class MyApplications extends React.Component {
   };
 
   componentWillMount() {
-    const { getApplications, location } = this.props;
+    const { location } = this.props;
     const { appId } = location.state || {};
     if (appId) {
       this.setState({ selectedId: appId });
-    } else {
-      getApplications();
     }
   }
 
@@ -42,13 +40,14 @@ class MyApplications extends React.Component {
     return job_data.title.toLowerCase().indexOf(searchText) >= 0 || name.toLowerCase().indexOf(searchText) >= 0;
   };
 
-  renderApp = app => {
+  renderApplication = app => {
     const { id, job_data } = app;
     const { title, contract, hours } = job_data;
     const logo = helper.getJobLogo(job_data);
     const name = helper.getFullBWName(job_data);
     const contractName = helper.getItemByID(DATA.contracts, contract).short_name;
     const hoursName = helper.getItemByID(DATA.hours, hours).short_name;
+    const sector = helper.getNameByID('sectors', job_data.sector);
 
     return (
       <List.Item
@@ -63,8 +62,11 @@ class MyApplications extends React.Component {
         onClick={() => this.onSelect(id)}
       >
         <List.Item.Meta avatar={<Logo src={logo} size="80px" padding="10px" />} title={title} description={name} />
-        <span style={{ width: '80px' }}>
-          {contractName} / {hoursName}
+        <span style={{ width: '180px' }}>
+          <div>{sector}</div>
+          <div>
+            {contractName} / {hoursName}
+          </div>
         </span>
       </List.Item>
     );
@@ -77,7 +79,7 @@ class MyApplications extends React.Component {
   );
 
   render() {
-    const { jobseeker, applications, error } = this.props;
+    const { jobseeker, applications } = this.props;
 
     if (!helper.getPitch(jobseeker)) {
       return <NoPitch title="My Applications" />;
@@ -100,8 +102,7 @@ class MyApplications extends React.Component {
             loadingSize="large"
             pagination={{ pageSize: 10 }}
             filterOption={this.filterOption}
-            error={error && 'Server Error!'}
-            renderItem={this.renderApp}
+            renderItem={this.renderApplication}
             emptyRender={this.renderEmpty}
           />
         </div>
@@ -111,7 +112,7 @@ class MyApplications extends React.Component {
             <JobDetails
               application={selectedApp}
               actions={
-                <Button type="primary" onClick={() => this.onMessage(selectedApp)}>
+                <Button type="primary" disabled={selectedApp.loading} onClick={() => this.onMessage(selectedApp)}>
                   Message
                 </Button>
               }
@@ -123,24 +124,7 @@ class MyApplications extends React.Component {
   }
 }
 
-export default connect(
-  state => {
-    let { applications } = state.applications;
-    applications &&
-      applications.forEach(application => {
-        // application.interview = application.interviews.filter(
-        //   ({ status }) => status === 'PENDING' || status === 'ACCEPTED'
-        // )[0];
-
-        application.interview = { ...application.interviews[0], status: 'PENDING' };
-      });
-    return {
-      jobseeker: state.js_profile.jobseeker,
-      applications,
-      error: state.applications.error
-    };
-  },
-  {
-    getApplications
-  }
-)(MyApplications);
+export default connect(state => ({
+  jobseeker: state.js_profile.jobseeker,
+  applications: getApplications(state)
+}))(MyApplications);

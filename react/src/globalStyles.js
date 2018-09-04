@@ -98,6 +98,7 @@ injectGlobal`
   .ant-select-selection-selected-value,
   .ant-select-dropdown-menu-item {
     width: 100%;
+    white-space: initial !important;
 
     .logo {
       margin-right: 8px;
@@ -127,6 +128,14 @@ injectGlobal`
       &:hover {
         box-shadow: 0px 0 4px 0px rgba(0, 0, 0, 0.15);
       }
+    }
+  }
+
+  .ant-select-selection__choice__content {
+    display: flex !important;
+
+    span {
+      margin-right: 5px;
     }
   }
 }

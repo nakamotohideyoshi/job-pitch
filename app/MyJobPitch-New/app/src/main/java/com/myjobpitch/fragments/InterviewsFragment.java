@@ -95,15 +95,13 @@ public class InterviewsFragment extends BaseFragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 InterviewDetailFragment fragment = new InterviewDetailFragment();
                 fragment.interviewId = adapter.getItem(position).getId();
-
-                for (int i=0; i<applications.size(); i++) {
-                    if (adapter.getItem(position).getApplication().intValue() == applications.get(i).getId().intValue()) {
-                        fragment.application = applications.get(i);
+                for (Application application : applications) {
+                    if (adapter.getItem(position).getApplication().intValue() == application.getId().intValue()) {
+                        fragment.application = application;
                         getApp().pushFragment(fragment);
                         break;
                     }
                 }
-
             }
         });
 
@@ -137,46 +135,26 @@ public class InterviewsFragment extends BaseFragment {
     }
 
     private void loadInterviews() {
-        final List<Interview> interviews = new ArrayList();
-        new APITask(new APIAction() {
-            @Override
-            public void run() throws MJPApiException {
-                interviews.addAll(MJPApi.shared().get(Interview.class));
-            }
-        }).addListener(new APITaskListener() {
-            @Override
-            public void onSuccess() {
-                adapter.clear();
-                Boolean isEmpty = true;
-                List<Integer> applicationIds = new ArrayList<>();
-                for (int i=0; i<applications.size(); i++) {
+        adapter.clear();
+        Boolean isEmpty = true;
 
-                    if (AppData.user.isRecruiter()) {
-                        applicationIds.add(applications.get(i).getId());
-                    } else {
-                        if (applications.get(i).getJobSeeker().getId().intValue() == AppData.user.getJob_seeker().intValue()) {
-                            applicationIds.add(applications.get(i).getId());
-                        }
-                    }
+        for (Application application : applications) {
+            for (Interview interview : application.getInterviews()) {
+                if (interview.getStatus().equals(InterviewStatus.PENDING) || interview.getStatus().equals(InterviewStatus.ACCEPTED)) {
+                    interview.setApplication(application.getId());
+                    adapter.add(interview);
+                    isEmpty = false;
+                    break;
                 }
-
-                for (int i=0; i<interviews.size(); i++) {
-                    if (applicationIds.contains(interviews.get(i).getApplication()) && (interviews.get(i).getStatus().equals(InterviewStatus.PENDING) || interviews.get(i).getStatus().equals(InterviewStatus.ACCEPTED))) {
-                        adapter.add(interviews.get(i));
-                        isEmpty = false;
-                    }
-                }
-                adapter.closeAllItems();
-
-                emptyView.setVisibility(isEmpty ? View.VISIBLE : View.GONE);
-                swipeRefreshLayout.setRefreshing(false);
-
             }
-            @Override
-            public void onError(JsonNode errors) {
-                errorHandler(errors);
-            }
-        }).execute();
+        }
+
+
+
+        adapter.closeAllItems();
+
+        emptyView.setVisibility(isEmpty ? View.VISIBLE : View.GONE);
+        swipeRefreshLayout.setRefreshing(false);
     }
 
     @OnClick(R.id.empty_button)
@@ -205,10 +183,9 @@ public class InterviewsFragment extends BaseFragment {
 
         @Override
         public void fillValues(final int position, View convertView) {
-
-            for (int i=0; i<applications.size(); i++) {
-                if (getItem(position).getApplication().intValue() == applications.get(i).getId().intValue()) {
-                    AppHelper.showInterviewInfo(getItem(position), convertView, applications.get(i));
+            for (Application application : applications) {
+                if (getItem(position).getApplication().intValue() == application.getId().intValue()) {
+                    AppHelper.showInterviewInfo(getItem(position), convertView, application);
                     break;
                 }
             }

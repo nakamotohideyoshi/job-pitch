@@ -18,6 +18,10 @@ public class Interview extends ApplicationInterview {
         return application;
     }
 
+    public void setApplication(Integer application) {
+        this.application = application;
+    }
+
     public Date getCancelled() {
         return cancelled;
     }

@@ -1,6 +1,7 @@
 package com.myjobpitch.utils;
 
 import android.graphics.Bitmap;
+import android.graphics.Paint;
 import android.location.Location;
 import android.os.Environment;
 import android.util.TypedValue;
@@ -21,6 +22,7 @@ import com.myjobpitch.api.data.Interview;
 import com.myjobpitch.api.data.InterviewStatus;
 import com.myjobpitch.api.data.Job;
 import com.myjobpitch.api.data.JobSeeker;
+import com.myjobpitch.api.data.JobStatus;
 import com.myjobpitch.api.data.Pitch;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -206,7 +208,22 @@ public class AppHelper {
             case InterviewStatus.CANCELLED:
                 // Status
                 //getItemStatusTitleView(view).setText("Interview cancelled");
-                getItemStatusTitleView(view).setText("Interview cancelled by " + (interview.getCancelled_by() == AppData.JOBSEEKER ? "Job seeker"  : "Recruiter"));
+                String cancelledBy = "You";
+                if (interview.getCancelled_by() == AppData.JOBSEEKER && AppData.user.isRecruiter()) {
+                    cancelledBy = "Job seeker";
+                } else if (interview.getCancelled_by() == AppData.RECRUITER && AppData.user.isJobSeeker()) {
+                    cancelledBy = "Recruiter";
+                }
+                getItemStatusTitleView(view).setText("Interview cancelled by " + cancelledBy);
+
+                view.setAlpha(0.8f);
+                view.setBackgroundColor(0xFFE1E1E1);
+                getItemTitleView(view).setPaintFlags(getItemTitleView(view).getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+                getItemSubTitleView(view).setPaintFlags(getItemSubTitleView(view).getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+                getItemStatusTitleView(view).setPaintFlags(getItemStatusTitleView(view).getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+                getItemDateTimeTitleView(view).setPaintFlags(getItemDateTimeTitleView(view).getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+                getItemLocationTitleView(view).setPaintFlags(getItemLocationTitleView(view).getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+
                 break;
             default:
                 break;
@@ -216,7 +233,7 @@ public class AppHelper {
     }
 
 
-    public static void showApplicationInterviewInfo(ApplicationInterview interview, View view, Application application) {
+    public static void showApplicationInterviewInfo(Interview interview, View view, Application application) {
 
         JobSeeker jobSeeker = application.getJobSeeker();
         Job job = application.getJob_data();

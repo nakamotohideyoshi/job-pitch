@@ -23,7 +23,7 @@ class Interview extends React.Component {
     if (interview) {
       form.setFieldsValue({
         at: moment(interview.at),
-        invitation: interview.messages[0].content,
+        invitation: (interview.messages[0] || {}).content,
         notes: interview.notes
       });
     }
@@ -71,7 +71,7 @@ class Interview extends React.Component {
         id,
         at,
         notes,
-        invitation: messages[0].content,
+        invitation: (messages[0] || {}).content,
         feedback: this.textbox.textAreaRef.value.trim()
       },
       onSuccess: () => {

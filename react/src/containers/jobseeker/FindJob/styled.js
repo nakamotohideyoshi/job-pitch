@@ -28,6 +28,13 @@ export default styled.div`
       .ant-list-item-content {
         justify-content: space-evenly;
         font-size: 12px;
+
+        span {
+          display: flex;
+          flex-direction: column;
+          align-items: flex-start;
+          justify-content: center;
+        }
       }
 
       &:hover {

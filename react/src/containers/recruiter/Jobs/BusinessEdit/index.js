@@ -4,7 +4,8 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { Breadcrumb, Form, Input, Button, notification } from 'antd';
 
-import { saveBusiness } from 'redux/recruiter/businesses';
+import { getBusinesses } from 'redux/selectors';
+import { saveBusiness, selectBusiness } from 'redux/recruiter/businesses';
 import DATA from 'utils/data';
 import * as helper from 'utils/helper';
 
@@ -24,9 +25,10 @@ class BusinessEdit extends React.Component {
   };
 
   componentDidMount() {
-    const { business, form } = this.props;
+    const { business, form, selectBusiness } = this.props;
 
     if (business) {
+      selectBusiness(business.id);
       this.setState({
         logo: {
           url: helper.getBusinessLogo(business),
@@ -57,8 +59,7 @@ class BusinessEdit extends React.Component {
     });
 
   addCredit = () => {
-    const { business: { id }, history } = this.props;
-    history.push(`/recruiter/settings/credits/${id}`);
+    this.props.history.push(`/recruiter/settings/credits/${this.props.business.id}`);
   };
 
   goBuisinessList = () => {
@@ -85,8 +86,8 @@ class BusinessEdit extends React.Component {
         logo: this.state.logo,
         onSuccess: ({ id }) => {
           notification.success({
-            message: 'Notification',
-            description: 'Business is saved successfully.'
+            message: 'Success',
+            description: 'The business is saved'
           });
           if (business) {
             this.goBuisinessList();
@@ -97,7 +98,7 @@ class BusinessEdit extends React.Component {
         onFail: error => {
           this.setState({ loading: null });
           notification.error({
-            message: 'Notification',
+            message: 'Error',
             description: error
           });
         },
@@ -178,12 +179,13 @@ class BusinessEdit extends React.Component {
 export default connect(
   (state, { match }) => {
     const businessId = helper.str2int(match.params.businessId);
-    const business = helper.getItemByID(state.rc_businesses.businesses, businessId);
+    const business = helper.getItemByID(getBusinesses(state), businessId);
     return {
       business
     };
   },
   {
-    saveBusiness
+    saveBusiness,
+    selectBusiness
   }
 )(Form.create()(BusinessEdit));

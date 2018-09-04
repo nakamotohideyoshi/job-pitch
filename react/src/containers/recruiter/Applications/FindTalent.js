@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import Truncate from 'react-truncate';
-import { List, Modal, Tooltip, Button, Drawer } from 'antd';
+import { List, Modal, Tooltip, Button, Drawer, notification } from 'antd';
 
 import { findJobseekers, connectJobseeker, removeJobseeker } from 'redux/recruiter/find';
 import * as helper from 'utils/helper';
@@ -65,11 +65,17 @@ class FindTalent extends React.Component {
             job: job.id,
             job_seeker: id
           },
-          successMsg: {
-            message: `Jobseeker is connected.`
+          onSuccess: () => {
+            notification.success({
+              message: 'Success',
+              description: 'The jobseeker is connected'
+            });
           },
-          failMsg: {
-            message: `Connection is failed.`
+          onFail: () => {
+            notification.error({
+              message: 'Error',
+              description: 'There was an error connecting the jobseeker'
+            });
           }
         });
       }
@@ -168,12 +174,12 @@ class FindTalent extends React.Component {
         <Drawer placement="right" closable={false} onClose={() => this.onSelect()} visible={!!selectedJobseeker}>
           {selectedJobseeker && (
             <JobseekerDetails
-              jobseeker={selectedJobseeker}
+              jobseekerData={selectedJobseeker}
               actions={
                 <div>
                   <Button
                     type="primary"
-                    loading={selectedJobseeker.loading}
+                    disabled={selectedJobseeker.loading}
                     onClick={() => this.onConnect(selectedJobseeker)}
                   >
                     Connect

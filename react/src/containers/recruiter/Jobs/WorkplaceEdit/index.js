@@ -4,7 +4,9 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { Breadcrumb, Form, Input, Checkbox, Button, Popover, notification } from 'antd';
 
+import { getWorkplaces, getBusinesses } from 'redux/selectors';
 import { saveWorkplace } from 'redux/recruiter/workplaces';
+import { selectBusiness } from 'redux/recruiter/businesses';
 import DATA from 'utils/data';
 import * as helper from 'utils/helper';
 
@@ -27,12 +29,14 @@ class WorkplaceEdit extends React.Component {
   };
 
   componentDidMount() {
-    const { business, workplace, form } = this.props;
+    const { business, workplace, form, selectBusiness } = this.props;
 
     if (!business) {
       this.goBuisinessList();
       return;
     }
+
+    selectBusiness(business.id);
 
     if (workplace) {
       this.setState({
@@ -76,8 +80,7 @@ class WorkplaceEdit extends React.Component {
   };
 
   goWorkplaceList = () => {
-    const { business: { id }, history } = this.props;
-    history.push(`/recruiter/jobs/workplace/${id}`);
+    this.props.history.push(`/recruiter/jobs/workplace/${this.props.business.id}`);
   };
 
   selectLocation = (place_id, place_name, latitude, longitude) => {
@@ -127,8 +130,8 @@ class WorkplaceEdit extends React.Component {
         logo: this.state.logo,
         onSuccess: ({ id }) => {
           notification.success({
-            message: 'Notification',
-            description: 'Workplace is saved successfully.'
+            message: 'Success',
+            description: 'The workplace is saved'
           });
           if (workplace) {
             this.goWorkplaceList();
@@ -139,7 +142,7 @@ class WorkplaceEdit extends React.Component {
         onFail: error => {
           this.setState({ loading: null });
           notification.error({
-            message: 'Notification',
+            message: 'Error',
             description: error
           });
         },
@@ -315,15 +318,16 @@ class WorkplaceEdit extends React.Component {
 export default connect(
   (state, { match }) => {
     const businessId = helper.str2int(match.params.businessId);
-    const business = helper.getItemByID(state.rc_businesses.businesses, businessId);
+    const business = helper.getItemByID(getBusinesses(state), businessId);
     const workplaceId = helper.str2int(match.params.workplaceId);
-    const workplace = helper.getItemByID(state.rc_workplaces.workplaces, workplaceId);
+    const workplace = helper.getItemByID(getWorkplaces(state), workplaceId);
     return {
       business: business || (workplace || {}).business_data,
       workplace
     };
   },
   {
-    saveWorkplace
+    saveWorkplace,
+    selectBusiness
   }
 )(Form.create()(WorkplaceEdit));

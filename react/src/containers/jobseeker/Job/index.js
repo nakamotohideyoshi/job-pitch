@@ -1,11 +1,11 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
+import { getApplications } from 'redux/selectors';
 import { findJobs } from 'redux/jobseeker/find';
-import { getApplications } from 'redux/applications';
 import * as helper from 'utils/helper';
 
-import { Loading, AlertMsg } from 'components';
+import { Loading } from 'components';
 
 class Jobs extends React.Component {
   componentWillMount() {
@@ -16,14 +16,7 @@ class Jobs extends React.Component {
     if (!this.props.jobs && jobs) {
       if (job) {
         history.replace(`/jobseeker/find/`, { jobId: job.id });
-      } else {
-        this.props.getApplications();
-      }
-      return;
-    }
-
-    if (!this.props.applications && applications) {
-      if (application) {
+      } else if (application) {
         history.replace(`/jobseeker/applications/`, { appId: application.id });
       } else {
         history.replace(`/jobseeker/find`);
@@ -34,13 +27,7 @@ class Jobs extends React.Component {
   render() {
     return (
       <div className="container">
-        {this.props.error ? (
-          <AlertMsg>
-            <span>Server Error!</span>
-          </AlertMsg>
-        ) : (
-          <Loading size="large" />
-        )}
+        <Loading size="large" />
       </div>
     );
   }
@@ -48,8 +35,8 @@ class Jobs extends React.Component {
 
 export default connect(
   (state, { match }) => {
-    const { jobs, error: error1 } = state.js_find;
-    const { applications, error: error2 } = state.applications;
+    const { jobs } = state.js_find;
+    const applications = getApplications(state);
     const jobId = helper.str2int(match.params.jobId);
     const job = helper.getItemByID(jobs || [], jobId);
     const application = (applications || []).filter(({ job_data }) => job_data.id === jobId)[0];
@@ -57,12 +44,10 @@ export default connect(
       job,
       jobs,
       application,
-      applications,
-      error: error1 || error2
+      applications
     };
   },
   {
-    findJobs,
-    getApplications
+    findJobs
   }
 )(Jobs);

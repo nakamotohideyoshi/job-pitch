@@ -17,5 +17,11 @@ export const Wrapper = styled.div`
     .credits {
       width: 100px;
     }
+
+    .ant-list-item-action {
+      button {
+        width: 100px;
+      }
+    }
   }
 `;

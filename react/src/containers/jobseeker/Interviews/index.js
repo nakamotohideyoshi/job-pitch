@@ -4,28 +4,21 @@ import { connect } from 'react-redux';
 import { List, Tooltip, notification, Modal, Button, Drawer } from 'antd';
 import moment from 'moment';
 
-import { getApplications } from 'redux/applications';
-import { removeInterview } from 'redux/interviews';
-import { changeInterview } from 'redux/interviews';
+import { getApplications } from 'redux/selectors';
+import { changeInterview, removeInterview } from 'redux/applications';
 import * as helper from 'utils/helper';
 
 import { PageHeader, SearchBox, AlertMsg, ListEx, Icons, JobDetails, Logo, Loading } from 'components';
 import NoPitch from '../components/NoPitch';
 import Wrapper from './styled';
 
-import * as _ from 'lodash';
-
 const { confirm } = Modal;
 
-class JSInterviews extends React.Component {
+class Interviews extends React.Component {
   state = {
     selectedId: null,
     searchText: ''
   };
-
-  componentWillMount() {
-    this.props.getApplications();
-  }
 
   onChangeSearchText = searchText => this.setState({ searchText });
 
@@ -42,31 +35,23 @@ class JSInterviews extends React.Component {
     confirm({
       content: 'Are you sure you want to accept this interview?',
       okText: `Accept`,
-      okType: 'primary',
       cancelText: 'Cancel',
       maskClosable: true,
       onOk: () => {
         this.props.changeInterview({
-          data: {
-            id: app.interview.id,
-            changeType: 'accept'
-          },
-          success: () => {
-            this.setState({
-              selectedApp: null
-            });
+          appId: app.id,
+          id: app.interview.id,
+          changeType: 'accept',
+          onSuccess: () => {
             notification.success({
-              message: 'Notification',
-              description: 'Interview is accepted successfully.'
+              message: 'Success',
+              description: 'The interview is accepted'
             });
           },
-          fail: () => {
-            this.setState({
-              selectedApp: null
-            });
+          onFail: () => {
             notification.error({
-              message: 'Notification',
-              description: 'Accepting is failed'
+              message: 'Error',
+              description: 'There was an error accepting the interview'
             });
           }
         });
@@ -74,27 +59,31 @@ class JSInterviews extends React.Component {
     });
   };
 
-  onRemove = (app, event) => {
+  onCancel = (app, event) => {
     event && event.stopPropagation();
 
     confirm({
       content: 'Are you sure you want to cancel this interview?',
-      okText: `Yes`,
+      okText: `Ok`,
       okType: 'danger',
-      cancelText: 'No',
+      cancelText: 'Cancel',
       maskClosable: true,
       onOk: () => {
         this.props.removeInterview({
+          appId: app.id,
           id: app.interview.id,
-          successMsg: {
-            message: `Interview is cancelled.`
+          onSuccess: () => {
+            notification.success({
+              message: 'Success',
+              description: 'The interview is cancelled'
+            });
           },
-          failMsg: {
-            message: `Cancelling is failed.`
+          onFail: () => {
+            notification.error({
+              message: 'Error',
+              description: 'There was an error cancelling the interview'
+            });
           }
-        });
-        this.setState({
-          selectedApp: null
         });
       }
     });
@@ -112,15 +101,14 @@ class JSInterviews extends React.Component {
     const logo = helper.getJobLogo(job_data);
     const name = helper.getFullBWName(job_data);
 
-    const INTERVIEW_STATUS = {
+    let interviewStatus = {
       PENDING: 'Pending',
       ACCEPTED: 'Accepted'
-    };
-    let interviewStatus = INTERVIEW_STATUS[interview.status];
+    }[interview.status];
 
     let actions = [
-      <Tooltip placement="bottom" title="Cancel Invitation">
-        <span onClick={e => this.onRemove(app, e)}>
+      <Tooltip placement="bottom" title="Cancel Interview">
+        <span onClick={e => this.onCancel(app, e)}>
           <Icons.Times />
         </span>
       </Tooltip>,
@@ -133,7 +121,7 @@ class JSInterviews extends React.Component {
     if (interview.status === 'PENDING') {
       actions.unshift(
         <Tooltip placement="bottom" title="Accept Invitation">
-          <span onClick={e => this.onRemove(app, e)}>
+          <span onClick={e => this.onAccept(app, e)}>
             <Icons.Check />
           </span>
         </Tooltip>
@@ -159,13 +147,14 @@ class JSInterviews extends React.Component {
   );
 
   render() {
-    const { jobseeker, interviews, error } = this.props;
+    const { jobseeker, interviews } = this.props;
 
     if (!helper.getPitch(jobseeker)) {
       return <NoPitch title="Interviews" />;
     }
 
     const selectedApp = interviews && helper.getItemByID(interviews, this.state.selectedId);
+    const { interview } = selectedApp || {};
 
     return (
       <Wrapper className="container">
@@ -182,7 +171,6 @@ class JSInterviews extends React.Component {
             loadingSize="large"
             pagination={{ pageSize: 10 }}
             filterOption={this.filterOption}
-            error={error && 'Server Error!'}
             renderItem={this.renderApplication}
             emptyRender={this.renderEmpty}
           />
@@ -197,13 +185,13 @@ class JSInterviews extends React.Component {
                   <Button type="primary" onClick={() => this.onMessage(selectedApp)}>
                     Message
                   </Button>
-                  {selectedApp.interview.status === 'PENDING' && (
+                  {interview.status === 'PENDING' && (
                     <Button type="primary" onClick={() => this.onAccept(selectedApp)}>
                       Accept Invitation
                     </Button>
                   )}
-                  <Button type="danger" onClick={e => this.onRemove(selectedApp)}>
-                    Cancel Invitation
+                  <Button type="danger" onClick={() => this.onCancel(selectedApp)}>
+                    Cancel Interview
                   </Button>
                 </div>
               }
@@ -217,25 +205,15 @@ class JSInterviews extends React.Component {
 
 export default connect(
   state => {
-    const { applications } = state.applications;
-    applications &&
-      applications.forEach(application => {
-        // application.interview = application.interviews.filter(
-        //   ({ status }) => status === 'PENDING' || status === 'ACCEPTED'
-        // )[0];
-        application.interview = { ...application.interviews[0], status: 'PENDING' };
-      });
-
+    const applications = getApplications(state);
     const interviews = applications && applications.filter(({ interview }) => interview);
     return {
       jobseeker: state.js_profile.jobseeker,
-      interviews,
-      error: state.applications.error
+      interviews
     };
   },
   {
-    getApplications,
     changeInterview,
     removeInterview
   }
-)(JSInterviews);
+)(Interviews);

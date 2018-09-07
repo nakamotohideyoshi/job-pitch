@@ -2,6 +2,7 @@ import React from 'react';
 import { Row, Col, Tabs, Collapse, Tooltip } from 'antd';
 import moment from 'moment';
 
+import DATA from 'utils/data';
 import * as helper from 'utils/helper';
 
 import { GoogleMap, Icons, VideoPlayer, SocialShare, Logo } from 'components';
@@ -10,7 +11,7 @@ import Wrapper from './JobDetails.styled';
 const TabPane = Tabs.TabPane;
 const Panel = Collapse.Panel;
 
-export default ({ jobData, application, className, roughLocation, actions }) => {
+export default ({ jobData, application, className, roughLocation, actions, defaultTab }) => {
   const job = jobData || application.job_data;
   const logo = helper.getJobLogo(job);
   const workplace = job.location_data;
@@ -21,6 +22,8 @@ export default ({ jobData, application, className, roughLocation, actions }) => 
   const marker = { lat: workplace.latitude, lng: workplace.longitude };
   const videos = job.videos.filter(({ video }) => video);
   const { interview, interviews } = application || {};
+  const histories = interviews && interviews.filter(({ id }) => id !== interview.id);
+  histories && histories.sort((a, b) => (a.at > b.at ? 1 : -1));
 
   let circle;
   if (roughLocation) {
@@ -100,8 +103,8 @@ export default ({ jobData, application, className, roughLocation, actions }) => 
         </Col>
       </Row>
 
-      <Tabs size="small" animated={false}>
-        <TabPane tab="Job Description" key="1">
+      <Tabs size="small" animated={false} defaultActiveKey={defaultTab || 'job'}>
+        <TabPane tab="Job Description" key="job">
           {videos.map(({ id, thumbnail, video }) => (
             <div key={id} className="pitch-video">
               <VideoPlayer
@@ -120,7 +123,7 @@ export default ({ jobData, application, className, roughLocation, actions }) => 
           <p className="description">{job.description}</p>
         </TabPane>
 
-        <TabPane tab="Workplace Description" key="2">
+        <TabPane tab="Workplace Description" key="workplace">
           <div className="description">{workplace.description}</div>
           <div className="map">
             <div>
@@ -129,15 +132,39 @@ export default ({ jobData, application, className, roughLocation, actions }) => 
           </div>
         </TabPane>
 
-        {interviews && (
-          <TabPane tab="Interview History" key="3">
+        {histories && (
+          <TabPane tab="Interview History" key="history">
             <Collapse bordered={false}>
-              {interviews.map(({ id, at, feedback, status }) => (
-                <Panel key={id} showArrow={false} header={moment(at).format('ddd DD MMM, YYYY [at] H:mm')}>
-                  <div>Status: {status}</div>
-                  <div>Feedback: {feedback}</div>
-                </Panel>
-              ))}
+              {histories.map(({ id, at, feedback, status, cancelled_by }) => {
+                let statusComment;
+                let statusLabel;
+                if (status === 'COMPLETED') {
+                  statusLabel = 'Completed';
+                  statusComment = 'This interview is done';
+                } else if (status === 'CANCELLED') {
+                  statusLabel = 'Cancelled';
+                  statusComment = `Interview cancelled by ${
+                    cancelled_by === DATA.userRole ? 'Recruiter' : 'Jobseeker'
+                  }`;
+                }
+                return (
+                  <Panel
+                    key={id}
+                    showArrow={false}
+                    header={
+                      <div>
+                        <span>{moment(at).format('ddd DD MMM, YYYY [at] H:mm')}</span>
+                        <span className={status}>{statusLabel}</span>
+                      </div>
+                    }
+                  >
+                    <p>Status: {statusComment}</p>
+                    {status === 'COMPLETED' && (
+                      <p>Feedback: {feedback ? feedback : <span style={{ fontStyle: 'italic' }}>None</span>}</p>
+                    )}
+                  </Panel>
+                );
+              })}
             </Collapse>
           </TabPane>
         )}

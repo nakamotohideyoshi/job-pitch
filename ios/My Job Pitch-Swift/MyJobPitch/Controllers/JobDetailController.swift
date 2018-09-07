@@ -67,12 +67,7 @@ class JobDetailController: MJPController {
     }
     
     func updateJobInfo() {
-        if let image = job.getImage() {
-            AppHelper.loadImageURL(imageUrl: (image.thumbnail)!, imageView: headerImgView, completion: nil)
-        } else {
-            headerImgView.image = UIImage(named: "default-logo")
-        }
-        
+        AppHelper.loadLogo(image: job.getImage(), imageView: headerImgView, completion: nil)
         headerName.text = job.title
         headerSubTitle.text = job.getBusinessName()
     }
@@ -146,12 +141,14 @@ extension JobDetailController: UITableViewDelegate {
                 })
                 return
             } else {
-                MessageListController.pushController(job: job)
+                let controller = MessageListController.instantiate()
+                controller.job = job
+                navigationController?.pushViewController(controller, animated: true)
             }
         } else if id == "interviews" {
-            let controller = AppHelper.mainStoryboard.instantiateViewController(withIdentifier: "InterviewList") as! InterviewListController
+            let controller = InterviewListController.instantiate()
             controller.job = job
-            AppHelper.getFrontController().navigationController?.pushViewController(controller, animated: true)
+            navigationController?.pushViewController(controller, animated: true)
         } else {
             ApplicationListController.pushController(job: job, mode: id)
         }

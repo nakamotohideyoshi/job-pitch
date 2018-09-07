@@ -153,7 +153,10 @@ class ApplicationDetailsController: MJPController {
                 return
             }
         }
-        MessageController0.showModal(application: application)
+        let controller = MessageController0.instantiate()
+        controller.application = application
+        let navController = UINavigationController(rootViewController: controller)
+        present(navController, animated: true, completion: nil)
     }
     
     @IBAction func shareAction(_ sender: Any) {

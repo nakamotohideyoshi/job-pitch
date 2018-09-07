@@ -24,15 +24,7 @@ class InterviewForCancel: MJPObject {
     var cancelledBy: NSNumber!
 }
 
-class InterviewForCreation: MJPObject {
-    var invitation:String!
-    var at: Date!
-    var application: NSNumber!
-    var notes: String!
-    var feedback: String!
-}
-
-class InterviewForUpdate: MJPObject {
+class InterviewForSave: MJPObject {
     var invitation:String!
     var at: Date!
     var application: NSNumber!
@@ -45,4 +37,7 @@ class ApplicationInterview: MJPObject{
     var messages: NSArray!
     var notes: String!
     var feedback: String!
+    var cancelled: Date!
+    var cancelledBy: NSNumber!
+    var status: String!
 }

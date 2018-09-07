@@ -58,12 +58,9 @@ class BusinessEditController: MJPController {
     func load() {        
         nameField.text = business.name
         creditsLabel.text = String(format: "%@", business.tokens)
-        if let image = business.getImage() {
-            AppHelper.loadImageURL(imageUrl: (image.image)!, imageView: imgView, completion: nil)
-            removeImageButton.isHidden = false
-            addLogoButton.setTitle("Change Logo", for: .normal)
-        } else {
-            imgView.image = UIImage(named: "default-logo")
+        AppHelper.loadLogo(image: business.getImage(), imageView: imgView) {
+            self.removeImageButton.isHidden = false
+            self.addLogoButton.setTitle("Change Logo", for: .normal)
         }
     }
     

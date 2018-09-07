@@ -691,17 +691,15 @@ class API: NSObject {
         getObject(String(format: "/api/interviews/%@/", interviewId), success: success, failure: failure)
     }
     
-    func createInterview(interview: InterviewForCreation,
-                         success: ((NSObject?) -> Void)!,
-                         failure: ((String?, NSDictionary?) -> Void)!) {
-        postObject("/api/interviews/", request: interview, success: success, failure: failure)
-    }
-    
-    func updateInterview(interviewId: NSNumber!, interview: InterviewForUpdate,
+    func saveInterview(interviewId: NSNumber!, interview: InterviewForSave,
                             success: ((NSObject?) -> Void)!,
                             failure: ((String?, NSDictionary?) -> Void)!) {
-        putObject(String(format: "/api/interviews/%@/",interviewId),
-                  request: interview, success: success, failure: failure)
+        if (interviewId == nil) {
+            postObject("/api/interviews/", request: interview, success: success, failure: failure)
+        } else {
+            putObject(String(format: "/api/interviews/%@/",interviewId),
+                      request: interview, success: success, failure: failure)
+        }
     }
     
     func deleteInterview(interviewId: NSNumber,
@@ -711,16 +709,11 @@ class API: NSObject {
                      success: success, failure: failure)
     }
     
-    func acceptInterview(interviewId: NSNumber,
+    func changeInterview(interviewId: NSNumber,
+                         type: String,
                          success: ((NSObject?) -> Void)!,
                          failure: ((String?, NSDictionary?) -> Void)!) {
-        postObject(String(format: "/api/interviews/%@/accept/", interviewId), request:nil, success: success, failure: failure)
-    }
-    
-    func completeInterview(interviewId: NSNumber,
-                         success: ((NSObject?) -> Void)!,
-                         failure: ((String?, NSDictionary?) -> Void)!) {
-        postObject(String(format: "/api/interviews/%@/complete/", interviewId), request:nil, success: success, failure: failure)
+        postObject(String(format: "/api/interviews/%@/%@/", interviewId, type), request:nil, success: success, failure: failure)
     }
 
 }

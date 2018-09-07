@@ -45,16 +45,6 @@ class LoginController: MJPController {
         }
     }
     
-    var isDeprecationError = false
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        super.stopTimer()
-        if self.isDeprecationError {
-            self.showDeprecationError()
-        }
-    }
-    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -78,7 +68,7 @@ class LoginController: MJPController {
     
     func isLogin() {
         emailField.text = AppData.email
-        if loginButton != nil && remember && !isDeprecationError {
+        if loginButton != nil && remember {
             rememberSwitch.isOn = true
             
             if !API.shared().isLogin() {
@@ -94,27 +84,21 @@ class LoginController: MJPController {
     }
     
     func checkDeprecation(){
-        
+     
         // Call Deprecation API
         showLoading()
         API.shared().loadDepreactions(success: { (data) in
             self.hideLoading()
-            let deprecations: NSMutableArray!
             
             // App version
             if let version = Bundle.main.infoDictionary?["CFBundleVersion"] as? String {
-                deprecations = data.mutableCopy() as! NSMutableArray
-                
-                for deprecation in deprecations as! [Deprecation]{
-                    if deprecation.platform == "IOS" {
-                        if  version <= deprecation.error {
-                            self.showDeprecationError()
-                        } else if version <= deprecation.warning {
-                            self.showDeprecationWarning()
-                        } else {
-                            self.isLogin()
-                        }
-                    }
+                let deprecation = ((data as! [Deprecation]).filter {$0.platform == "IOS"})[0]
+                if  Int(version)! <= Int(deprecation.error)! {
+                    self.showDeprecationError()
+                } else if Int(version)! <= Int(deprecation.warning)! {
+                    self.showDeprecationWarning()
+                } else {
+                    self.isLogin()
                 }
             }
            
@@ -122,35 +106,30 @@ class LoginController: MJPController {
     }
     
     func showDeprecationError() {
-        guard let url = URL(string: "https://itunes.apple.com/us/app/myjobpitch-job-matching/id1124296674?ls=1&amp;mt=8") else {
-            return //be safe
-        }
-        self.isDeprecationError = true
         PopupController.showGreen("Your app is out of date, you must upgrade to continue", ok: "Update", okCallback: {
+            let url = URL(string: "https://itunes.apple.com/us/app/myjobpitch-job-matching/id1124296674?ls=1&amp;mt=8")
             if #available(iOS 10.0, *) {
-                UIApplication.shared.open(url, options: [:], completionHandler: nil)
+                UIApplication.shared.open(url!, options: [:], completionHandler: { (_) in
+                    exit(0)
+                })
             } else {
-                UIApplication.shared.openURL(url)
+                UIApplication.shared.openURL(url!)
             }
         }, cancel: "Close app", cancelCallback: {
-            UIControl().sendAction(#selector(NSXPCConnection.suspend),
-                                   to: UIApplication.shared, for: nil)
+            exit(0)
         })
     }
     
     func showDeprecationWarning() {
-        guard let url = URL(string: "https://itunes.apple.com/us/app/myjobpitch-job-matching/id1124296674?ls=1&amp;mt=8") else {
-            return //be safe
-        }
-        self.isDeprecationError = false
         PopupController.showGreen("Your app is out of date, update now to take advantage of the latest features", ok: "Update", okCallback: {
+            let url = URL(string: "https://itunes.apple.com/us/app/myjobpitch-job-matching/id1124296674?ls=1&amp;mt=8")
             if #available(iOS 10.0, *) {
-                UIApplication.shared.open(url, options: [:], completionHandler: nil)
+                UIApplication.shared.open(url!, options: [:], completionHandler: nil)
             } else {
-                UIApplication.shared.openURL(url)
+                UIApplication.shared.openURL(url!)
             }
         }, cancel: "Dismiss", cancelCallback: {
-            
+            self.isLogin()
         })
     }
     
@@ -175,7 +154,6 @@ class LoginController: MJPController {
         showLoading()
         
         API.shared().getUser(success: { (data) in
-            super.runTimer()
             AppData.user = data as! User
             
             AppData.loadData(success: {
@@ -232,11 +210,6 @@ class LoginController: MJPController {
     
     @IBAction func loginAction(_ sender: Any) {
         
-        if isDeprecationError {
-            showDeprecationError()
-            return
-        }
-        
         if valid() {
             
             showLoading()
@@ -247,15 +220,9 @@ class LoginController: MJPController {
                                 self.loadData()
             }, failure: self.handleErrors)
         }
-        
     }
 
     @IBAction func registerAction(_ sender: Any) {
-        
-        if isDeprecationError {
-            showDeprecationError()
-            return
-        }
         
         if valid() {
             
@@ -270,15 +237,9 @@ class LoginController: MJPController {
                                     self.loadData()
             }, failure: self.handleErrors)
         }
-        
     }
 
     @IBAction func goSignupAction(_ sender: Any) {
-        
-        if isDeprecationError {
-            showDeprecationError()
-            return
-        }
         
         view.endEditing(true)
         let controller = AppHelper.mainStoryboard.instantiateViewController(withIdentifier: "Signup")
@@ -286,11 +247,6 @@ class LoginController: MJPController {
     }
     
     @IBAction func goSigninAction(_ sender: Any) {
-        
-        if isDeprecationError {
-            showDeprecationError()
-            return
-        }
         
         view.endEditing(true)
         _ = navigationController?.popViewController(animated: true)

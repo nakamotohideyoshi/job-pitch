@@ -8,7 +8,7 @@
 
 import UIKit
 
-class Deprecation: MJPObject {
+class Deprecation: NSObject {
     var platform: String!
     var warning: String!
     var error: String!

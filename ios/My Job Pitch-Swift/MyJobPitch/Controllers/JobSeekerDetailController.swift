@@ -66,12 +66,7 @@ class JobSeekerDetailController: MJPController {
     
     func load() {
     
-        let pitch = jobSeeker.getPitch()
-        if pitch != nil {
-            AppHelper.loadImageURL(imageUrl: (pitch?.thumbnail)!, imageView: imgView, completion: nil)
-        } else {
-            imgView.image = UIImage(named: "no-img")
-        }
+        AppHelper.loadJobseekerImage(jobSeeker, imageView: imgView, completion: nil)
         
         nameLabel.text = jobSeeker.getFullName()
         
@@ -198,7 +193,10 @@ class JobSeekerDetailController: MJPController {
     
     @IBAction func applyAction(_ sender: Any) {
         if isConnected {
-            MessageController0.showModal(application: application)
+            let controller = MessageController0.instantiate()
+            controller.application = application
+            let navController = UINavigationController(rootViewController: controller)
+            present(navController, animated: true, completion: nil)
         } else {
             let message = application == nil ? "Are you sure you want to connect this talent?" : "Are you sure you want to connect this application?"
             PopupController.showGreen(message, ok: "Connect (1 credit)", okCallback: {

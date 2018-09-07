@@ -11,78 +11,56 @@ import MGSwipeTableCell
 
 class InterviewListController: MJPController {
     @IBOutlet weak var emptyView: UILabel!
-    @IBOutlet weak var jobTitleView: UILabel!
     @IBOutlet weak var tableView: UITableView!
     
     var job: Job!
     var jobSeeker: JobSeeker!
-    var applications: NSMutableArray! = NSMutableArray()
     
-    var data: NSMutableArray! = NSMutableArray()
-    var interviews: [Interview]! = [Interview]()
-    
-    var refresh = true
+    var interviews: [(Application, ApplicationInterview)]! = [(Application, ApplicationInterview)]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         emptyView.isHidden = true
+        
         if AppData.user.isRecruiter() {
-            jobTitleView.text = String(format: "%@, (%@)", job.title, job.getBusinessName())
-        } else  {
-            jobTitleView.text = ""
+            let subTitle = String(format: "%@, (%@)", job.title, job.getBusinessName())
+            setTitle(title: "Interviews", subTitle: subTitle)
+        }
+        
+        tableView.addPullToRefresh {
+            self.loadData()
         }
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
-        if refresh {
-            refresh = false
-            showLoading()
-            loadApplications()
-        }
+        loadData()
     }
     
-    func loadApplications() {
-        API.shared().loadApplicationsForJob(jobId: job?.id, status: nil, shortlisted: false, success: { (data) in
-            self.applications = data.mutableCopy() as! NSMutableArray
-            self.loadInterviews()
-        }, failure: self.handleErrors)
-    }
-    
-    func loadInterviews() {
-        API.shared().loadInterviews(success: { (data) in
-            self.hideLoading()
-            
-            var isEmpty = true
-            var applicationIds: [NSNumber]! = [NSNumber]()
-            for application in self.applications as! [Application] {
-                if AppData.user.isRecruiter() {
-                    applicationIds.append(application.id)
-                } else {
-                    if application.jobSeeker.id == AppData.user.jobSeeker {
-                        applicationIds.append(application.id)
-                    }
-                }
-            }
-            
-            self.data = data.mutableCopy() as! NSMutableArray
-            self.interviews = []
-            
-            self.interviews = [Interview]()
-            for interview in data as! [Interview] {
+    func loadData() {
+        interviews.removeAll()
+        for application in AppData.applications {
+            if job == nil || job.id == application.job.id {
+                let appInterviews = application.interviews as! [ApplicationInterview]
+                let filters = appInterviews.filter { $0.status == InterviewStatus.INTERVIEW_PENDING || $0.status == InterviewStatus.INTERVIEW_ACCEPTED }
                 
-                if applicationIds.contains(interview.application) && (interview.status == InterviewStatus.INTERVIEW_PENDING || interview.status == InterviewStatus.INTERVIEW_ACCEPTED) {
-                    self.interviews.append(interview)
-                    isEmpty = false
+                if filters.count > 0 {
+                    interviews.append((application, filters[0]))
                 }
             }
-            
-            self.emptyView.isHidden = !isEmpty
-            self.tableView.reloadData()
-        }, failure: self.handleErrors)
+        }
+        
+        interviews.sort { $0.1.at > $1.1.at }
+        
+        self.emptyView.isHidden = interviews.count > 0
+        self.tableView.reloadData()
+        self.tableView.pullToRefreshView.stopAnimating()
     }
-
+    
+    static func instantiate() -> InterviewListController {
+        return AppHelper.mainStoryboard.instantiateViewController(withIdentifier: "InterviewList") as! InterviewListController
+    }
 }
 
 
@@ -94,38 +72,23 @@ extension InterviewListController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        let interview = interviews[indexPath.row]
         let cell = tableView.dequeueReusableCell(withIdentifier: "InterviewCell", for: indexPath) as! InterviewCell
         
-        for application in self.applications as! [Application] {
-            if application.id == interview.application {
-                cell.setData(interview, application)
-                break
-            }
-        }
-        
+        let (application, interview) = interviews[indexPath.row]
+        cell.setData(application, interview)
         cell.addUnderLine(paddingLeft: 15, paddingRight: 0, color: AppData.greyBorderColor)
         
         return cell
-        
     }
-    
 }
 
 extension InterviewListController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        refresh = true
-        let controller = AppHelper.mainStoryboard.instantiateViewController(withIdentifier: "InterviewDetail") as! InterviewDetailController
-        controller.interviewId = interviews[indexPath.row].id
-        for application in self.applications as! [Application] {
-            if application.id == interviews[indexPath.row].application {
-                controller.application = application
-                navigationController?.pushViewController(controller, animated: true)
-                break
-            }
-        }
-        
+        let (application, interview) = interviews[indexPath.row]
+        let controller = InterviewDetailController.instantiate()
+        controller.application = application
+        controller.interview = interview
+        navigationController?.pushViewController(controller, animated: true)
     }
-    
 }

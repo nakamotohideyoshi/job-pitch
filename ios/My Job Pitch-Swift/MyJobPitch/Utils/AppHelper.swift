@@ -68,6 +68,26 @@ class AppHelper: NSObject {
         }
     }
     
+    static func loadLogo(image: Image?,
+                         imageView: UIImageView,
+                         completion: (() -> Void)!) {
+        if let thumbnail = image?.thumbnail {
+            AppHelper.loadImageURL(imageUrl: thumbnail, imageView: imageView, completion: nil)
+        } else {
+            imageView.image = UIImage(named: "default-logo")
+        }
+    }
+    
+    static func loadJobseekerImage(_ jobseeker: JobSeeker,
+                                   imageView: UIImageView,
+                                   completion: (() -> Void)!) {
+        if let image = jobseeker.getPitch()?.thumbnail {
+            AppHelper.loadImageURL(imageUrl: image, imageView: imageView, completion: nil)
+        } else {
+            imageView.image = UIImage(named: "no-img")
+        }
+    }
+    
     static func removeLoading(imageView: UIImageView) {
         if let indicator = imageView.viewWithTag(1000) {
             indicator.removeFromSuperview()
@@ -86,6 +106,16 @@ class AppHelper: NSObject {
             return String.init(format: "%.1f km", d/1000)
         }
         return String.init(format: "%.0f km", d/1000)
+    }
+    
+    static func convertDateToString(_ date: Date) -> String {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "E d MMM, yyyy"
+        
+        let dateFormatter1 = DateFormatter()
+        dateFormatter1.dateFormat = "HH:mm"
+        
+        return String(format: "%@ at %@", dateFormatter.string(from: date), dateFormatter1.string(from: date))
     }
     
 }

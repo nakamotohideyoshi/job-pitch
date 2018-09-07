@@ -12,34 +12,26 @@ import MGSwipeTableCell
 class InterviewCell: MGSwipeTableCell {
 
     @IBOutlet weak var imgView: UIImageView!
-    @IBOutlet weak var jobSeekerName: UILabel!
+    @IBOutlet weak var name: UILabel!
     
-    @IBOutlet weak var cvDescription: UILabel!
+    @IBOutlet weak var comment: UILabel!
     
     @IBOutlet weak var location: UILabel!
     @IBOutlet weak var dataTime: UILabel!
     @IBOutlet weak var status: UILabel!
     
-    func setData(_ interview: Interview, _ application: Application) {
+    func setData(_ application: Application, _ interview: ApplicationInterview) {
         
         if AppData.user.isRecruiter() {
         
-            if let image = application.jobSeeker.getPitch()?.thumbnail {
-                AppHelper.loadImageURL(imageUrl: image, imageView: imgView, completion: nil)
-            } else {
-                imgView.image = UIImage(named: "default-logo")
-            }
-            cvDescription.text = application.jobSeeker.desc
-            jobSeekerName.text = application.jobSeeker.getFullName()
+            AppHelper.loadJobseekerImage(application.jobSeeker, imageView: imgView, completion: nil)
+            name.text = application.jobSeeker.getFullName()
+            comment.text = application.jobSeeker.desc
             
         } else {
-            if let image = application.job.getImage()?.thumbnail {
-                AppHelper.loadImageURL(imageUrl: image, imageView: imgView, completion: nil)
-            } else {
-                imgView.image = UIImage(named: "default-logo")
-            }
-            cvDescription.text = application.job.desc
-            jobSeekerName.text = application.job.title
+            AppHelper.loadLogo(image: application.job.getImage(), imageView: imgView, completion: nil)
+            name.text = application.job.title
+            comment.text = application.job.getBusinessName()
         }
         
         if interview.status == InterviewStatus.INTERVIEW_PENDING {
@@ -61,13 +53,11 @@ class InterviewCell: MGSwipeTableCell {
         
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "E d MMM, yyyy"
-        
         let dateFormatter1 = DateFormatter()
         dateFormatter1.dateFormat = "HH:mm"
-        
         dataTime.text = String(format: "%@ at %@", dateFormatter.string(from: interview.at), dateFormatter1.string(from: interview.at))
         
-        location.text = application.job.locationData.name
+        location.text = application.job.locationData.placeName
         
     }
 }

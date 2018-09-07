@@ -11,89 +11,58 @@ import SVPullToRefresh
 
 class MessageListController: SearchController {
     
-    @IBOutlet weak var jobTitleView: UILabel!
     @IBOutlet weak var emptyView: UILabel!
     @IBOutlet weak var noPitchView: UIView!
     
     var job: Job!
     var jobSeeker: JobSeeker!
-    var refresh = true
-    var allMessageItems: [UIBarButtonItem]?
-    
-    var checkTimer: Timer?
-    
+        
     override func viewDidLoad() {
         super.viewDidLoad()        
         
         if (self.job != nil) {
-            let item = UIBarButtonItem(title: "All Messages", style: .plain, target: self, action: #selector(goAllMessageList))
-            item.image = UIImage(named: "menu-message")
-            navigationItem.rightBarButtonItems?.append(item)
-            jobTitleView.text = job.title + ", (" + job.getBusinessName() + ")"
-        } else {
-            jobTitleView.text = "All Messages"
-            updateMessage()
-            runTimer()
+            let subTitle = String(format: "%@, (%@)", job.title, job.getBusinessName())
+            setTitle(title: "Messages", subTitle: subTitle)
         }
 
         tableView.addPullToRefresh {
             self.loadData()
+        }
+        
+        if AppData.user.isJobSeeker() {
+            showLoading()
+            API.shared().loadJobSeekerWithId(id: AppData.user.jobSeeker, success: { (data) in
+                self.hideLoading()
+                self.jobSeeker = data as! JobSeeker
+                
+                if self.jobSeeker.getPitch() != nil {
+                    self.loadData()
+                } else {
+                    self.noPitchView.isHidden = false
+                }
+            }, failure: self.handleErrors)
         }
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        if self.refresh {
-            showLoading()
-            
-            if !AppData.user.isRecruiter() {
-                API.shared().loadJobSeekerWithId(id: AppData.user.jobSeeker, success: { (data) in
-                    self.jobSeeker = data as! JobSeeker
-                    
-                    if self.jobSeeker.getPitch() != nil {
-                        self.loadData()
-                    } else {
-                        self.noPitchView.isHidden = false
-                        self.navigationItem.rightBarButtonItem = nil
-                        self.hideLoading()
-                    }
-                }, failure: self.handleErrors)
-            } else {
-                loadData()
-            }
-            self.refresh = false
+        if AppData.user.isRecruiter() || jobSeeker != nil {
+            loadData()
         }
-    }
-    
-    override func viewWillDisappear(_ animated: Bool) {
-        stopTimer()
-        super.viewWillDisappear(animated)        
-    }
-    
-    func updateMessage() {
-        if (AppData.newMessagesCount > 0) {
-            let message = MessageForUpdate()
-            message.id = AppData.lastMessage.id
-            message.fromRole = AppData.lastMessage.fromRole
-            API.shared().updateMessageStatus(update: message, success: { (data) in
-                AppData.newMessagesCount = 0
-            }, failure: self.handleErrors)
-        }
-    }
-    
-    func goAllMessageList() {
-        SideMenuController.pushController(id: "messages")
     }
     
     func loadData() {
-        API.shared().loadApplicationsForJob(jobId: job?.id, status: nil, shortlisted: false, success: { (data) in
-            self.hideLoading()
-            self.allData = data.mutableCopy() as! NSMutableArray
-            self.filter()
-            self.emptyView.isHidden = self.allData.count > 0
-            self.tableView.pullToRefreshView.stopAnimating()
-        }, failure: self.handleErrors)
+        allData = NSMutableArray()
+        for application in AppData.applications {
+            if job == nil || job.id == application.job.id {
+                allData.add(application)
+            }
+        }
+        
+        self.filter()
+        self.emptyView.isHidden = self.allData.count > 0
+        self.tableView.pullToRefreshView.stopAnimating()
     }
     
     override func filterItem(item: Any, text: String) -> Bool {
@@ -105,34 +74,15 @@ class MessageListController: SearchController {
             }
         }
         return application.job.locationData.businessData.name.lowercased().contains(text)
-        
     }
     
     @IBAction func noRecordNow(_ sender: Any) {
         SideMenuController.pushController(id: "add_record")
     }
     
-    
-    static func pushController(job: Job!) {
-        let controller = AppHelper.mainStoryboard.instantiateViewController(withIdentifier: "MessageList") as! MessageListController
-        controller.job = job
-        AppHelper.getFrontController().navigationController?.pushViewController(controller, animated: true)
+    static func instantiate() -> MessageListController {
+        return AppHelper.mainStoryboard.instantiateViewController(withIdentifier: "MessageList") as! MessageListController
     }
-    
-    
-    override func runTimer() {
-        if checkTimer == nil {
-            checkTimer = Timer.scheduledTimer(timeInterval: 10, target: self, selector: #selector(updateMessage), userInfo: nil, repeats: true)
-        }
-    }
-    
-    override func stopTimer() {
-        if checkTimer != nil {
-            checkTimer?.invalidate()
-            checkTimer = nil
-        }
-    }
-
 }
 
 extension MessageListController: UITableViewDataSource {
@@ -150,22 +100,11 @@ extension MessageListController: UITableViewDataSource {
         let job = application.job!
         
         if AppData.user.isJobSeeker() {
-            
-            if let image = job.getImage() {
-                AppHelper.loadImageURL(imageUrl: (image.thumbnail)!, imageView: cell.imgView, completion: nil)
-            } else {
-                cell.imgView.image = UIImage(named: "default-logo")
-            }
+            AppHelper.loadLogo(image: job.getImage(), imageView: cell.imgView, completion: nil)
             cell.titleLabel.text = job.title
             cell.subTitleLabel.text = job.getBusinessName()
-            
         } else {
-            
-            if let pitch = application.jobSeeker.getPitch() {
-                AppHelper.loadImageURL(imageUrl: (pitch.thumbnail)!, imageView: cell.imgView, completion: nil)
-            } else {
-                cell.imgView.image = UIImage(named: "no-img")
-            }
+            AppHelper.loadJobseekerImage(application.jobSeeker, imageView: cell.imgView, completion: nil)
             cell.titleLabel.text = application.jobSeeker.getFullName()
             cell.subTitleLabel.text = String(format: "%@ (%@)", job.title, job.getBusinessName())
         }
@@ -220,37 +159,33 @@ extension MessageListController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
        
-        if AppData.user.isJobSeeker() {
-            if (!jobSeeker.active) {
-                PopupController.showGreen("To message please active your account", ok: "activate", okCallback: {
-                    self.refresh = true
-                    let controller = AppHelper.mainStoryboard.instantiateViewController(withIdentifier: "JobSeekerProfile") as! JobSeekerProfileController
-                    controller.saveComplete = { () in
-                        SideMenuController.pushController(id: "find_job")
-                    }
-                    controller.activation = true
-                    let navController = UINavigationController(rootViewController: controller)
-                    self.present(navController, animated: true, completion: nil)
-                }, cancel: "Cancel", cancelCallback: {
-                    self.refresh = false
-                })
-                return
-            }
-        } else {
-            let application = data[indexPath.row] as! Application
-            if (application.job.status == 2) {
-                PopupController.showGreen("To message please active your account", ok: "activate", okCallback: {
-                    self.refresh = true
-                    JobEditController.pushController(location: nil, job: application.job)
-                }, cancel: "Cancel", cancelCallback: {
-                    self.refresh = false
-                })
-                return
-            }
-        }
+//        if jobSeeker != nil {
+//            if (!jobSeeker.active) {
+//                PopupController.showGreen("To message please active your account", ok: "activate", okCallback: {
+//                    let controller = AppHelper.mainStoryboard.instantiateViewController(withIdentifier: "JobSeekerProfile") as! JobSeekerProfileController
+//                    controller.saveComplete = { () in
+//                        SideMenuController.pushController(id: "find_job")
+//                    }
+//                    controller.activation = true
+//                    let navController = UINavigationController(rootViewController: controller)
+//                    self.present(navController, animated: true, completion: nil)
+//                }, cancel: "Cancel", cancelCallback: nil)
+//                return
+//            }
+//        } else {
+//            let application = data[indexPath.row] as! Application
+//            if (application.job.status == 2) {
+//                PopupController.showGreen("To message please active your account", ok: "activate", okCallback: {
+//                    JobEditController.pushController(location: nil, job: application.job)
+//                }, cancel: "Cancel", cancelCallback: nil)
+//                return
+//            }
+//        }
         
-        let application = data[indexPath.row] as! Application
-        MessageController0.showModal(application: application)
+        let controller = MessageController0.instantiate()
+        controller.application = data[indexPath.row] as! Application
+        let navController = UINavigationController(rootViewController: controller)
+        present(navController, animated: true, completion: nil)
         
     }
     

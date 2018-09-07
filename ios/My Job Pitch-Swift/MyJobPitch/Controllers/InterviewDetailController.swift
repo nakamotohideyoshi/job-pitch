@@ -1,213 +1,241 @@
 //
-//  InterviewDetailController.swift
+//  TestTableView.swift
 //  MyJobPitch
 //
-//  Created by TIGER1 on 6/28/18.
+//  Created by bb on 9/6/18.
 //  Copyright © 2018 myjobpitch. All rights reserved.
 //
 
 import UIKit
 
 class InterviewDetailController: MJPController {
-    @IBOutlet weak var jobTitleView: UILabel!
-    @IBOutlet weak var imgView: UIImageView!
-    @IBOutlet weak var jobSeekerName: UILabel!
-    @IBOutlet weak var cvDescription: UILabel!
     
-    @IBOutlet weak var status: UILabel!
-    @IBOutlet weak var dataTime: UILabel!
-    @IBOutlet weak var location: UILabel!
-    @IBOutlet weak var feedbackContent: UILabel!
-    @IBOutlet weak var noteContent: UILabel!
+    @IBOutlet weak var mainView: UIView!
+    @IBOutlet weak var mainContentView: UIStackView!
+    @IBOutlet weak var tableView: UITableView!
     
-    @IBOutlet weak var feedbackView: UIView!
-    @IBOutlet weak var notesView: UIView!
-    @IBOutlet weak var editBtnView: UIView!
-    @IBOutlet weak var newBtnView: UIView!
+    @IBOutlet weak var imageView: UIImageView!
+    @IBOutlet weak var nameLabel: UILabel!
+    @IBOutlet weak var commentLabel: UILabel!
+    @IBOutlet weak var statusLabel: UILabel!
+    @IBOutlet weak var dateLabel: UILabel!
+    @IBOutlet weak var locationLabel: UILabel!
+    @IBOutlet weak var feedbackLabel: UILabel!
+    @IBOutlet weak var notesLabel: UILabel!
+    
+    @IBOutlet weak var appInfoView: UIView!
     @IBOutlet weak var acceptBtnView: UIView!
     @IBOutlet weak var completeBtnView: UIView!
-    @IBOutlet weak var messageBtnView: UIView!
     @IBOutlet weak var cancelBtnView: UIView!
+    @IBOutlet weak var feedbackView: UIView!
+    @IBOutlet weak var notesView: UIView!
+    @IBOutlet weak var naviationsView: UIView!
+    @IBOutlet weak var historyTitleView: UIView!
     
-    var interview: Interview!
-    var interviewId: NSNumber!
     var application: Application!
-    
-    var refresh = true
+    var interviews: [ApplicationInterview]!
+    var interview: ApplicationInterview!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        jobTitleView.text = String(format: "%@, (%@)", application.job.title, application.job.getBusinessName())
-        self.scrollView.isScrollEnabled = false
-        
+        if AppData.user.isRecruiter() {
+            let subTitle = String(format: "%@, (%@)", application.job.title, application.job.getBusinessName())
+            setTitle(title: "Interview", subTitle: subTitle)
+        }
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        reloadData()
+    }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
         
-        if refresh {
-            refresh = false
-            showLoading()
-            loadInterview()
+        if application != nil {
+            var frame = mainView.frame
+            frame.size.height = mainContentView.frame.height
+            mainView.frame = frame
+            tableView.reloadData()
         }
     }
     
-    func loadInterview() {
-        API.shared().loadInterview(interviewId: interviewId, success: { (data) in
-            self.interview = data as! Interview
-            self.hideLoading()
-            self.loadInterviewDetail()
-        }, failure: self.handleErrors)
-    }
-    
-    func loadInterviewDetail() {
+    func reloadData() {
+        application = (AppData.applications.filter { $0.id == application.id })[0]
+        interviews = application.interviews as! [ApplicationInterview]
+        interview = (interviews.filter { $0.id == interview.id })[0]
+        interviews = interviews.filter { $0.id != interview.id }
+        interviews.sort { $0.at < $1.at }
+        
         if AppData.user.isRecruiter() {
-            
-            if let image = application.jobSeeker.getPitch()?.thumbnail {
-                AppHelper.loadImageURL(imageUrl: image, imageView: imgView, completion: nil)
-            } else {
-                imgView.image = UIImage(named: "default-logo")
-            }
-            cvDescription.text = application.jobSeeker.desc
-            jobSeekerName.text = application.jobSeeker.getFullName()
+            AppHelper.loadJobseekerImage(application.jobSeeker, imageView: imageView, completion: nil)
+            nameLabel.text = application.jobSeeker.getFullName()
+            commentLabel.text = application.jobSeeker.desc
             
         } else {
-            if let image = application.job.getImage()?.thumbnail {
-                AppHelper.loadImageURL(imageUrl: image, imageView: imgView, completion: nil)
-            } else {
-                imgView.image = UIImage(named: "default-logo")
-            }
-            cvDescription.text = application.job.desc
-            jobSeekerName.text = application.job.title
+            AppHelper.loadLogo(image: application.job.getImage(), imageView: imageView, completion: nil)
+            nameLabel.text = application.job.title
+            commentLabel.text = application.job.getBusinessName()
         }
         
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "E d MMM, yyyy"
+        dateLabel.text = AppHelper.convertDateToString(interview.at)
         
-        let dateFormatter1 = DateFormatter()
-        dateFormatter1.dateFormat = "HH:mm"
+        locationLabel.text = application.job.locationData.placeName
         
-        dataTime.text = String(format: "%@ at %@", dateFormatter.string(from: interview.at), dateFormatter1.string(from: interview.at))
-        location.text = application.job.locationData.name
+        if interview.feedback != "" {
+            feedbackLabel.text = interview.feedback
+        } else {
+            let noneParameters = [NSForegroundColorAttributeName : UIColor.lightGray,
+                                   NSFontAttributeName : UIFont.italicSystemFont(ofSize: 15)]
+            feedbackLabel.attributedText = NSMutableAttributedString(string: "None", attributes: noneParameters)
+        }
         
-        feedbackContent.text = interview.feedback
-        noteContent.text = interview.notes
+        notesLabel.text = interview.notes
+        
+        acceptBtnView.isHidden = false
+        completeBtnView.isHidden = false
+        cancelBtnView.isHidden = false
         
         feedbackView.isHidden = true
+        notesView.isHidden = false
         
-        if AppData.user.isRecruiter() {
-            acceptBtnView.isHidden = true
-            if interview.status == InterviewStatus.INTERVIEW_COMPLETED || interview.status == InterviewStatus.INTERVIEW_CANCELLED {
-                editBtnView.isHidden = true
-                newBtnView.isHidden = false
-            } else {
-                newBtnView.isHidden = true
-            }
-        } else {
-            notesView.isHidden = true
-            editBtnView.isHidden = true
-            completeBtnView.isHidden = true
-            messageBtnView.isHidden = true
-            cancelBtnView.isHidden = true
-        }
+        naviationsView.isHidden = false
         
         if interview.status == InterviewStatus.INTERVIEW_PENDING {
-            
-            status.text = "Interview request sent"
-            
+            statusLabel.text = "Interview request sent"
         } else if interview.status == InterviewStatus.INTERVIEW_ACCEPTED {
-            
-            status.text = "Interview accepted"
+            statusLabel.text = "Interview accepted"
             acceptBtnView.isHidden = true
-            
-        } else if interview.status == InterviewStatus.INTERVIEW_COMPLETED {
-            
-            status.text = "This interview is done"
-            feedbackView.isHidden = false
+        } else {
+            if interview.status == InterviewStatus.INTERVIEW_COMPLETED {
+                statusLabel.text = "This interview is done"
+                feedbackView.isHidden = false
+            } else if interview.status == InterviewStatus.INTERVIEW_CANCELLED {
+                statusLabel.text = "Interview cancelled by " + (AppData.user.isRecruiter() ? "Recruiter" : "Jobseeker")
+            }
+            acceptBtnView.isHidden = true
             completeBtnView.isHidden = true
             cancelBtnView.isHidden = true
-            acceptBtnView.isHidden = true
-            
-        } else if interview.status == InterviewStatus.INTERVIEW_CANCELLED {
-            
-            status.text = "Interview cancelled by " + (AppData.user.isRecruiter() ? "Recruiter" : "Jobseeker")
-            completeBtnView.isHidden = true
-            cancelBtnView.isHidden = true
-            acceptBtnView.isHidden = true
-            
+            naviationsView.isHidden = true
+            historyTitleView.isHidden = true
+            interviews = nil
         }
         
-    }
-
-    @IBAction func interviewEdit(_ sender: Any) {
-        refresh = true
-        let controller = AppHelper.mainStoryboard.instantiateViewController(withIdentifier: "InterviewEdit") as! InterviewEditController
-        controller.application = application
-            controller.interview = interview
-            controller.isEditMode = true
-        navigationController?.pushViewController(controller, animated: true)
-    }
-    @IBAction func arrangeNewInterview(_ sender: Any) {
+        navigationItem.rightBarButtonItem = nil
         
-        refresh = true
-        let controller = AppHelper.mainStoryboard.instantiateViewController(withIdentifier: "InterviewEdit") as! InterviewEditController
-        controller.application = application
-            controller.isEditMode = false
-        navigationController?.pushViewController(controller, animated: true)
-    }
-    
-    @IBAction func completeInterview(_ sender: Any) {
-        showLoading()
-        
-        API.shared().completeInterview(interviewId: interview.id, success: { (data) in
-            self.actionDone()
-        }, failure: self.handleErrors)
-    }
-
-    @IBAction func acceptInvitation(_ sender: Any) {
-        showLoading()
-        
-        API.shared().acceptInterview(interviewId: interview.id, success: { (data) in
-            self.actionDone()
-        }, failure: self.handleErrors)
-    }
-    
-    @IBAction func goToMessage(_ sender: Any) {
-        let controller = AppHelper.mainStoryboard.instantiateViewController(withIdentifier: "Message0") as! MessageController0
-        controller.application = application
-        controller.interview = interview
-        AppHelper.getFrontController().navigationController?.pushViewController(controller, animated: true)
-    }
-    
-    @IBAction func cancel(_ sender: Any) {
-        showLoading()
-        
-        API.shared().deleteInterview(interviewId: interview.id, success: { (data) in
-            self.actionDone()
-        }, failure: self.handleErrors)
-    }
-    
-    func actionDone() {
-        _ = navigationController?.popViewController(animated: true)
-        return
-    }
-    
-    @IBAction func showProfile(_ sender: Any) {
         if AppData.user.isRecruiter() {
-            let controller = AppHelper.mainStoryboard.instantiateViewController(withIdentifier: "JobSeekerDetail") as! JobSeekerDetailController
-            controller.application = application
-            navigationController?.pushViewController(controller, animated: true)
+            acceptBtnView.isHidden = true
+            if !cancelBtnView.isHidden {
+                navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(named: "nav-edit"), style: .plain, target: self, action: #selector(editAction))
+            }
         } else {
+            completeBtnView.isHidden = true
+            notesView.isHidden = true
+        }
+        
+        historyTitleView.isHidden = interviews == nil || interviews.count == 0
+    }
+    
+    @IBAction func appDetailAction(_ sender: Any) {
+        if AppData.user.isJobSeeker() {
             let controller = AppHelper.mainStoryboard.instantiateViewController(withIdentifier: "ApplicationDetails") as! ApplicationDetailsController
             controller.application = application
+            controller.onlyView = true
+            navigationController?.pushViewController(controller, animated: true)
+        } else {
+            let controller = AppHelper.mainStoryboard.instantiateViewController(withIdentifier: "JobSeekerDetail") as! JobSeekerDetailController
+            controller.application = application
+            controller.onlyView = true
             navigationController?.pushViewController(controller, animated: true)
         }
     }
     
-    func showInterviewHistories() {
-        let controller = AppHelper.mainStoryboard.instantiateViewController(withIdentifier: "ApplicationInterviewList") as! ApplicationInterviewListController
+    @IBAction func acceptAction(_ sender: Any) {
+        PopupController.showYellow("Are you sure you want to accept this interview?", ok: "Ok", okCallback: {
+            self.showLoading()
+            API.shared().changeInterview(interviewId: self.interview.id, type: "accept", success: { (_) in
+                AppData.updateApplication(self.application.id, success: {
+                    self.hideLoading()
+                    self.reloadData()
+                }, failure: self.handleErrors)
+            }, failure: self.handleErrors)
+        }, cancel: "Cancel", cancelCallback: nil)
+    }
+    
+    @IBAction func completeAction(_ sender: Any) {
+        let controller = InterviewEditController.instantiate()
         controller.application = application
+        controller.interview = interview
+        controller.isComplete = true
+        present(UINavigationController(rootViewController: controller), animated: true, completion: nil)
+    }
+    
+    @IBAction func cancelAction(_ sender: Any) {
+        PopupController.showYellow("Are you sure you want to cancel this interview?", ok: "Ok", okCallback: {
+            self.showLoading()
+            API.shared().deleteInterview(interviewId: self.interview.id, success: { (_) in
+                AppData.updateApplication(self.application.id, success: {
+                    _ = self.navigationController?.popViewController(animated: true)
+                }, failure: self.handleErrors)
+            }, failure: self.handleErrors)
+        }, cancel: "Cancel", cancelCallback: nil)
+    }
+    
+    func editAction() {
+        let controller = InterviewEditController.instantiate()
+        controller.application = application
+        controller.interview = interview
+        present(UINavigationController(rootViewController: controller), animated: true, completion: nil)
+    }
+   
+    @IBAction func messagesAction(_ sender: Any) {
+        let controller = MessageController0.instantiate()
+        controller.application = application
+        present(UINavigationController(rootViewController: controller), animated: true, completion: nil)
+    }
+    
+    static func instantiate() -> InterviewDetailController {
+        return AppHelper.mainStoryboard.instantiateViewController(withIdentifier: "InterviewDetail") as! InterviewDetailController
+    }
+}
+
+extension InterviewDetailController: UITableViewDataSource {
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return interviews != nil ? interviews.count : 0
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        
+        let cell = tableView.dequeueReusableCell(withIdentifier: "InterviewHistoryCell", for: indexPath)
+        
+        let interview = interviews[indexPath.row]
+        var status1 = ""
+        if interview.status == InterviewStatus.INTERVIEW_COMPLETED {
+            status1 = "Completed"
+        } else if interview.status == InterviewStatus.INTERVIEW_CANCELLED {
+            status1 = "Cancelled"
+        }        
+        
+        (cell.viewWithTag(1) as! UILabel).text = AppHelper.convertDateToString(interview.at)
+        (cell.viewWithTag(2) as! UILabel).text = status1
+        
+        if indexPath.row < interviews.count - 1 {
+            cell.addUnderLine(paddingLeft: 12, paddingRight: 0, color: AppData.greyBorderColor)
+        }
+        
+        return cell
+    }
+}
+
+extension InterviewDetailController: UITableViewDelegate {
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let controller = InterviewDetailController.instantiate()
+        controller.application = application
+        controller.interview = interviews[indexPath.row]
         navigationController?.pushViewController(controller, animated: true)
     }
 }
+

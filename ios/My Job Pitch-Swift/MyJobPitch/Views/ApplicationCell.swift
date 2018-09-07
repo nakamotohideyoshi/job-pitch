@@ -18,13 +18,7 @@ class ApplicationCell1: MGSwipeTableCell {
     @IBOutlet weak var desc: UILabel!;
     
     func setData(_ job: Job) {
-        
-        if let image = job.getImage() {
-            AppHelper.loadImageURL(imageUrl: (image.thumbnail)!, imageView: imgView, completion: nil)
-        } else {
-            imgView.image = UIImage(named: "default-logo")
-        }
-        
+        AppHelper.loadLogo(image: job.getImage(), imageView: imgView, completion: nil)
         jobTitle.text = job.title
         businessName.text = job.getBusinessName()
         location.text = job.locationData.placeName
@@ -43,13 +37,7 @@ class ApplicationCell2: MGSwipeTableCell {
     @IBOutlet weak var location: UILabel!;    
     
     func setData(_ application: Application) {
-        
-        if let image = application.jobSeeker.getPitch()?.thumbnail {
-            AppHelper.loadImageURL(imageUrl: image, imageView: imgView, completion: nil)
-        } else {
-            imgView.image = UIImage(named: "no-img")
-        }
-        
+        AppHelper.loadJobseekerImage(application.jobSeeker, imageView: imgView, completion: nil)
         name.text = application.jobSeeker.getFullName()
         jobTitle.text = application.job.title
         businessName.text = application.job.getBusinessName()

@@ -128,6 +128,8 @@ class WorkplaceList extends React.Component {
   };
 
   render() {
+    const { business } = this.props;
+
     return (
       <Wrapper className="container">
         <Helmet title="My Workplaces" />
@@ -143,7 +145,8 @@ class WorkplaceList extends React.Component {
             </Breadcrumb.Item>
             <Breadcrumb.Item>Workplaces</Breadcrumb.Item>
           </Breadcrumb>
-          <LinkButton onClick={this.onAddWorkplace}>Add new workplace</LinkButton>
+
+          {!business.restricted && <LinkButton onClick={this.onAddWorkplace}>Add new workplace</LinkButton>}
         </PageSubHeader>
 
         <div className="content">

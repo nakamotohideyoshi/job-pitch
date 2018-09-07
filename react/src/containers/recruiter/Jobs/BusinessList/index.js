@@ -124,20 +124,23 @@ class BusinessList extends React.Component {
   };
 
   renderBusiness = business => {
-    const { id, name, tokens, locations, newApps, loading } = business;
+    const { id, name, tokens, locations, restricted, newApps, loading } = business;
     const logo = helper.getBusinessLogo(business);
     const strTokens = `${tokens} credit${tokens !== 1 ? 's' : ''}`;
     const count = locations.length;
     const strWorkplaces = `Includes ${count} workplace${count !== 1 ? 's' : ''}`;
     const strNewApps = `${newApps} new application${newApps !== 1 ? 's' : ''}`;
 
-    const actions = [
-      <Tooltip placement="bottom" title="Edit">
-        <span onClick={e => this.onEditBusiness(id, e)}>
-          <Icons.Pen />
-        </span>
-      </Tooltip>
-    ];
+    const actions = [];
+    if (!restricted) {
+      actions.push(
+        <Tooltip placement="bottom" title="Edit">
+          <span onClick={e => this.onEditBusiness(id, e)}>
+            <Icons.Pen />
+          </span>
+        </Tooltip>
+      );
+    }
     if (this.props.businesses.length > 1) {
       actions.push(
         <Tooltip placement="bottom" title="Remove">

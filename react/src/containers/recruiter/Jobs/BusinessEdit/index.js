@@ -25,9 +25,14 @@ class BusinessEdit extends React.Component {
   };
 
   componentDidMount() {
-    const { business, form, selectBusiness } = this.props;
+    const { can_create_businesses, business, form, selectBusiness, history } = this.props;
 
     if (business) {
+      if (business.restricted) {
+        history.replace('/recruiter/jobs/business');
+        return;
+      }
+
       selectBusiness(business.id);
       this.setState({
         logo: {
@@ -40,6 +45,11 @@ class BusinessEdit extends React.Component {
         name: business.name
       });
     } else {
+      if (!can_create_businesses) {
+        history.replace('/recruiter/jobs/business');
+        return;
+      }
+
       this.setState({
         logo: {
           url: helper.getBusinessLogo(),
@@ -181,6 +191,7 @@ export default connect(
     const businessId = helper.str2int(match.params.businessId);
     const business = helper.getItemByID(getBusinesses(state), businessId);
     return {
+      can_create_businesses: state.auth.user.can_create_businesses,
       business
     };
   },

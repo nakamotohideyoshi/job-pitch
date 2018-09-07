@@ -28,6 +28,8 @@ export default ({ jobseekerData, application, actions, defaultTab }) => {
   const { status, interview, interviews } = application || {};
   const connected = application && status !== DATA.APP.CREATED;
   const interviewStatus = (interview || {}).status;
+  const histories = interviews && interviews.filter(({ id }) => id !== interview.id);
+  histories && histories.sort((a, b) => (a.at > b.at ? 1 : -1));
 
   return (
     <Wrapper>
@@ -136,13 +138,37 @@ export default ({ jobseekerData, application, actions, defaultTab }) => {
         {connected && (
           <TabPane tab="Interview History" key="history">
             <Collapse bordered={false}>
-              {interviews.map(({ id, at, feedback, status, notes }) => (
-                <Panel key={id} showArrow={false} header={moment(at).format('ddd DD MMM, YYYY [at] H:mm')}>
-                  <div>Status: {status}</div>
-                  {status === 'COMPLETED' && <div>Feedback: {feedback || 'None'}</div>}
-                  <div>Notes: {notes}</div>
-                </Panel>
-              ))}
+              {histories.map(({ id, at, feedback, status, notes, cancelled_by }) => {
+                let statusComment;
+                let statusLabel;
+                if (status === 'COMPLETED') {
+                  statusLabel = 'Completed';
+                  statusComment = 'This interview is done';
+                } else if (status === 'CANCELLED') {
+                  statusLabel = 'Cancelled';
+                  statusComment = `Interview cancelled by ${
+                    cancelled_by === DATA.userRole ? 'Recruiter' : 'Jobseeker'
+                  }`;
+                }
+                return (
+                  <Panel
+                    key={id}
+                    showArrow={false}
+                    header={
+                      <div>
+                        <span>{moment(at).format('ddd DD MMM, YYYY [at] H:mm')}</span>
+                        <span className={status}>{statusLabel}</span>
+                      </div>
+                    }
+                  >
+                    <p>Status: {statusComment}</p>
+                    <p>Notes: {notes}</p>
+                    {status === 'COMPLETED' && (
+                      <p>Feedback: {feedback ? feedback : <span style={{ fontStyle: 'italic' }}>None</span>}</p>
+                    )}
+                  </Panel>
+                );
+              })}
             </Collapse>
           </TabPane>
         )}

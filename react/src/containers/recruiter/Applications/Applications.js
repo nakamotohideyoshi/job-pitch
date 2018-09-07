@@ -157,6 +157,7 @@ export default connect(
       filteredApplications && filteredApplications.filter(({ status }) => status === DATA.APP.ESTABLISHED);
     const myShortlist = myConnections && myConnections.filter(({ shortlisted }) => shortlisted);
     const interviews = myConnections && myConnections.filter(({ interview }) => interview);
+    interviews.sort((a, b) => (a.interview.at < b.interview.at ? 1 : -1));
 
     return {
       jobs,

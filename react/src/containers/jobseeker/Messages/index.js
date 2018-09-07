@@ -3,12 +3,13 @@ import Helmet from 'react-helmet';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { List, Drawer } from 'antd';
+import moment from 'moment';
 
 import { getApplications } from 'redux/selectors';
 import DATA from 'utils/data';
 import * as helper from 'utils/helper';
 
-import { AlertMsg, Loading, MessageThread, Icons, JobDetails, Logo } from 'components';
+import { Loading, MessageThread, Icons, JobDetails, Logo } from 'components';
 import Sidebar from './Sidebar';
 import Wrapper from './styled';
 
@@ -16,6 +17,7 @@ class Messages extends React.Component {
   state = {
     selectedId: null,
     openJobDetails: false,
+    defaultTab: null,
     tablet: false,
     open: false
   };
@@ -34,16 +36,10 @@ class Messages extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const {
-      applications,
-      match: { params }
-    } = nextProps;
+    const { applications, match } = nextProps;
     if (applications) {
-      const {
-        applications: applications0,
-        match: { params: params0 }
-      } = this.props;
-      if (!applications0 || params0.appId !== params.appId) {
+      const { applications: applications0, match: match0 } = this.props;
+      if (!applications0 || match0.params.appId !== match.params.appId) {
         this.setSelectedID(nextProps);
       }
     }
@@ -65,10 +61,10 @@ class Messages extends React.Component {
 
   openSidebar = () => this.setState({ open: true });
   closeSidebar = () => this.setState({ open: false });
-  showJobDetails = () => this.setState({ openJobDetails: true });
-  hideJobDetails = () => this.setState({ openJobDetails: false });
+  showJobDetails = defaultTab => this.setState({ openJobDetails: true, defaultTab });
+  hideJobDetails = () => this.setState({ openJobDetails: false, defaultTab: null });
 
-  renderHeader = ({ job_data }) => {
+  renderHeader = ({ job_data, interview, status }) => {
     const logo = helper.getJobLogo(job_data);
     const jobTitle = job_data.title;
     const subName = helper.getFullBWName(job_data);
@@ -76,8 +72,18 @@ class Messages extends React.Component {
       <List.Item>
         <List.Item.Meta
           avatar={<Logo src={logo} size="48px" padding="4px" />}
-          title={<span onClick={this.showJobDetails}>{jobTitle}</span>}
-          description={<span onClick={this.showJobDetails}>{subName}</span>}
+          title={
+            <div>
+              <span onClick={() => this.showJobDetails()}>{jobTitle}</span>
+              {status === DATA.APP.ESTABLISHED &&
+                interview && (
+                  <span onClick={() => this.showJobDetails('history')}>
+                    {`Interview: ${moment(interview.at).format('ddd DD MMM, YYYY [at] H:mm')}`}
+                  </span>
+                )}
+            </div>
+          }
+          description={<span onClick={() => this.showJobDetails('workplace')}>{subName}</span>}
         />
       </List.Item>
     );
@@ -107,7 +113,7 @@ class Messages extends React.Component {
       return <Loading size="large" />;
     }
 
-    const { selectedId, openJobDetails, tablet, open } = this.state;
+    const { selectedId, openJobDetails, defaultTab, tablet, open } = this.state;
     const selectedApp = helper.getItemByID(applications, selectedId);
 
     return (
@@ -130,7 +136,11 @@ class Messages extends React.Component {
 
         <Drawer placement="right" closable={false} onClose={this.hideJobDetails} visible={!!openJobDetails}>
           {openJobDetails && (
-            <JobDetails application={selectedApp} roughLocation={selectedApp.status === DATA.APP.CREATED} />
+            <JobDetails
+              application={selectedApp}
+              roughLocation={selectedApp.status === DATA.APP.CREATED}
+              defaultTab={defaultTab}
+            />
           )}
         </Drawer>
       </Wrapper>

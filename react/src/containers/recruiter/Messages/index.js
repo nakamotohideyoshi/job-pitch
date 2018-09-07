@@ -39,16 +39,10 @@ class Page extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const {
-      applications,
-      match: { params }
-    } = nextProps;
+    const { applications, match } = nextProps;
     if (applications) {
-      const {
-        applications: applications0,
-        match: { params: params0 }
-      } = this.props;
-      if (!applications0 || params0.appId !== params.appId) {
+      const { applications: applications0, match: match0 } = this.props;
+      if (!applications0 || match0.params.appId !== match.params.appId) {
         this.setSelectedID(nextProps);
       }
     }

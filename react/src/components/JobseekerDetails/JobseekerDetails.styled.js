@@ -72,6 +72,23 @@ export default styled.div`
 
     .ant-tabs-tabpane {
       padding: 0 15px;
+
+      .ant-collapse-header {
+        div {
+          display: flex;
+          justify-content: space-between;
+
+          .COMPLETED {
+            font-size: 12px;
+            color: ${colors.green};
+          }
+
+          .CANCELLED {
+            font-size: 12px;
+            color: ${colors.yellow};
+          }
+        }
+      }
     }
   }
 

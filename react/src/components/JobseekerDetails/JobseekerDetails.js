@@ -27,8 +27,8 @@ export default ({ jobseekerData, application, actions, defaultTab }) => {
 
   const { status, interview, interviews } = application || {};
   const connected = application && status !== DATA.APP.CREATED;
-  const interviewStatus = (interview || {}).status;
-  const histories = interviews && interviews.filter(({ id }) => id !== interview.id);
+  const { id: interviewId, status: interviewStatus } = interview || {};
+  const histories = interviews && interviews.filter(({ id }) => id !== interviewId);
   histories && histories.sort((a, b) => (a.at > b.at ? 1 : -1));
 
   return (

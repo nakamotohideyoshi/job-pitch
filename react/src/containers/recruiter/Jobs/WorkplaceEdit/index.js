@@ -29,10 +29,10 @@ class WorkplaceEdit extends React.Component {
   };
 
   componentDidMount() {
-    const { business, workplace, form, selectBusiness } = this.props;
+    const { business, workplace, form, selectBusiness, history } = this.props;
 
     if (!business) {
-      this.goBuisinessList();
+      history.replace('/recruiter/jobs/business');
       return;
     }
 
@@ -57,6 +57,11 @@ class WorkplaceEdit extends React.Component {
         place_name: workplace.place_name
       });
     } else {
+      if (business.restricted) {
+        history.replace(`/recruiter/jobs/workplace/${business.id}`);
+        return;
+      }
+
       this.setState({
         logo: {
           url: helper.getBusinessLogo(business),
@@ -74,10 +79,6 @@ class WorkplaceEdit extends React.Component {
         exist: !!file
       }
     });
-
-  goBuisinessList = () => {
-    this.props.history.push('/recruiter/jobs/business');
-  };
 
   goWorkplaceList = () => {
     this.props.history.push(`/recruiter/jobs/workplace/${this.props.business.id}`);

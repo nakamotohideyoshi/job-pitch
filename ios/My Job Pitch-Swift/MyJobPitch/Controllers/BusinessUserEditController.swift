@@ -32,8 +32,6 @@ class BusinessUserEditController: MJPController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.scrollView.isScrollEnabled = false
-        
         deleteButton.isHidden = !isEditMode
         resendButton.isHidden = !isEditMode
         

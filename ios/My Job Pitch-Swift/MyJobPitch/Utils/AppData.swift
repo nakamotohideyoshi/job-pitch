@@ -1,4 +1,4 @@
-//
+
 //  AppData.swift
 //  MyJobPitch
 //
@@ -47,15 +47,9 @@ class AppData: NSObject {
     static var jobStatuses: NSArray!
     static var applicationStatuses: NSArray!
     static var roles: NSArray!
-    static var startMessage: Message!
-    static var lastMessage: Message!
-    static var newMessagesCount: Int = 0
-    static var isTimerRunning  = true
     
     static var initialTokens: InitialTokens!
     
-    static var timer: Timer?
-
     static func clearData() {
         existProfile = false
         
@@ -70,6 +64,9 @@ class AppData: NSObject {
         roles = nil
         
         initialTokens = nil
+        
+        applications = nil
+        stopTimer()
     }
 
     static func loadData(success: (() -> Void)!,
@@ -139,6 +136,8 @@ class AppData: NSObject {
 
         API.shared().loadJobStatuses(success: { (data) in
             jobStatuses = data
+            JobStatus.JOB_STATUS_OPEN_ID = getJobStatusByName(JobStatus.JOB_STATUS_OPEN).id
+            JobStatus.JOB_STATUS_CLOSED_ID = getJobStatusByName(JobStatus.JOB_STATUS_CLOSED).id
             if isDataLoaded() {
                 success()
             }
@@ -151,6 +150,9 @@ class AppData: NSObject {
 
         API.shared().loadApplicationStatuses(success: { (data) in
             applicationStatuses = data
+            ApplicationStatus.APPLICATION_CREATED_ID = getApplicationStatusByName(ApplicationStatus.APPLICATION_CREATED).id
+            ApplicationStatus.APPLICATION_ESTABLISHED_ID = getApplicationStatusByName(ApplicationStatus.APPLICATION_ESTABLISHED).id
+            ApplicationStatus.APPLICATION_DELETED_ID = getApplicationStatusByName(ApplicationStatus.APPLICATION_DELETED).id
             if isDataLoaded() {
                 success()
             }
@@ -185,6 +187,24 @@ class AppData: NSObject {
             }
         }
         
+        API.shared().loadInitialTokens(success: { (data) in
+            initialTokens = data as! InitialTokens
+            if isDataLoaded() {
+                success()
+            }
+        }) { (message, errors) in
+            if !failed {
+                failed = true
+                failure(message, errors)
+            }
+        }
+        
+        getApplications(success: { 
+            if isDataLoaded() {
+                success()
+                startTimer()
+            }
+        }, failure: failure)
     }
 
     private static func isDataLoaded() -> Bool {
@@ -196,7 +216,8 @@ class AppData: NSObject {
                 jobStatuses != nil &&
                 applicationStatuses != nil &&
                 roles != nil &&
-                initialTokens != nil
+                initialTokens != nil &&
+                applications != nil
     }
 
     static func getSex(_ id: NSNumber!) -> Sex! {
@@ -325,6 +346,89 @@ class AppData: NSObject {
             return getRoleByName(Role.ROLE_JOB_SEEKER)
         }
         return getRoleByName(Role.ROLE_RECRUITER)
+    }
+    
+    //================ auto reload applications =============
+    
+    static var timer: Timer?
+    static var time = 0
+    static var timeInterval = 5
+    static var newMessageCount = 0
+    
+    static var applications: [Application]!
+    
+    static func startTimer() {
+        if timer == nil {
+            time = 0
+            timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(refreshApplications), userInfo: nil, repeats: true)
+        }
+    }
+    
+    static func stopTimer() {
+        if timer != nil {
+            timer?.invalidate()
+            timer = nil
+        }
+    }
+    
+    static func refreshApplications() {
+        time += 1
+        if time >= timeInterval {
+            time = 0
+            getApplications(success: nil, failure: nil)
+        }
+    }
+    
+    static func preprocessApplications() {
+        newMessageCount = 0
+        
+        for application in applications {
+            var newMsgs = 0
+            for message in application.messages.reversed() as! [Message] {
+                if message.read {
+                    break
+                }
+                if message.fromRole == AppData.getUserRole().id {
+                    break
+                }
+                newMsgs += 1
+                
+            }
+            newMessageCount += newMsgs
+        }
+    }
+        
+    static func getApplications(success: (() -> Void)?,
+                                failure: ((String?, NSDictionary?) -> Void)?) {
+        API.shared().loadApplicationsForJob(jobId: nil, status: nil, shortlisted: false, success: { (data) in
+            
+            applications = data as! [Application]
+            preprocessApplications()
+            success?()
+
+        }, failure: failure)
+    }
+    
+    static func updateApplication(_ id: NSNumber, success: (() -> Void)?,
+                                failure: ((String?, NSDictionary?) -> Void)?) {
+        API.shared().loadApplicationWithId(id: id, success: { (data) in
+            var newApplication: Application! = data as! Application
+            
+            for (index, application) in applications.enumerated() {
+                if application.id == newApplication.id {
+                    applications[index] = newApplication
+                    newApplication = nil
+                    break
+                }
+            }
+            
+            if newApplication != nil {
+                applications.insert(newApplication, at: 0)
+            }
+            
+            preprocessApplications()
+            success?()
+        }, failure: failure)
     }
 
 }

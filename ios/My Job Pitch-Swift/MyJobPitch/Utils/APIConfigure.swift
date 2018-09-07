@@ -504,12 +504,18 @@ class APIConfigure: NSObject {
 
         // ================= Application =====================
         
-        let applicationInterviewArray = [ "id", "at", "message", "notes", "feedback" ]
+        let applicationInterviewArray = [ "id", "at", "notes", "feedback", "cancelled", "status" ]
+        
+        let applicationInterviewDictionary = [ "cancelledBy": "cancelled_by" ]
+        
+        let applicationInterviewRelationships = [ [ "source": "messages",
+                                                    "destination": "messages",
+                                                    "mapping": messageMapping ] ]
         
         let applicationInterviewMapping = createResponseMappingForClass(ApplicationInterview.classForCoder(),
                                                                         array: applicationInterviewArray,
-                                                                        dictionary: nil,
-                                                                        relationships: nil)
+                                                                        dictionary: inverseDictionary(applicationInterviewDictionary),
+                                                                        relationships: inverseRelationships(applicationInterviewRelationships))
 
         let applictionCreateArray = [ "id", "job", "shortlisted" ]
 
@@ -579,7 +585,7 @@ class APIConfigure: NSObject {
         
         //================== Deprecation ================
         
-        let deprecationArray = [ "id", "platform", "warning", "error" ]
+        let deprecationArray = [ "platform", "warning", "error" ]
         
         configureResponseMapping(Deprecation.classForCoder(),
                                  responseArray: deprecationArray,
@@ -634,7 +640,7 @@ class APIConfigure: NSObject {
         
         // ================= Interviews ================
         
-        let interviewArray = [ "id", "application", "at", "message", "notes", "feedback", "cancelled", "status" ]
+        let interviewArray = [ "id", "application", "at", "messages", "notes", "feedback", "cancelled", "status" ]
         
         let interviewsDictionary = [ "cancelledBy": "cancelled_by" ]
         
@@ -656,14 +662,14 @@ class APIConfigure: NSObject {
                                  path: "/api/interviews/:pk/",
                                  method: .GET)
         
-        configureSimpleMapping(InterviewForCreation.classForCoder(),
+        configureSimpleMapping(InterviewForSave.classForCoder(),
                                mappingArray: createInterviewArray,
                                mappingDictionary: nil,
                                mappingRelationships: nil,
                                path: "/api/interviews/",
                                method: .POST)
         
-        configureSimpleMapping(InterviewForUpdate.classForCoder(),
+        configureSimpleMapping(InterviewForSave.classForCoder(),
                                mappingArray: updateInterviewArray,
                                mappingDictionary: nil,
                                mappingRelationships: nil,

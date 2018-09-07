@@ -19,8 +19,6 @@ class SelectJobController: MJPController {
     
     var data: NSMutableArray! = NSMutableArray()
     
-    var jobActive: NSNumber!
-    
     var titles = [
         "find_talent":  "Select job bellow to start finding talent for your business.",
         "applications": "Select a job below to view jobseekers who have expressed interest in a job.",
@@ -28,8 +26,6 @@ class SelectJobController: MJPController {
         "shortlist":    "Select a job below to view the jobseekers you have shortlisted for that role.",
         "interviews":    "Select a job below to view and arrange interviews.",
     ]
-    
-    var checkTimer: Timer?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -40,30 +36,12 @@ class SelectJobController: MJPController {
         headerImgView.image = UIImage(named: item["icon"]!)?.withRenderingMode(.alwaysTemplate)
         headerTitle.text = titles[SideMenuController.currentID]
         
-        jobActive = AppData.getJobStatusByName(JobStatus.JOB_STATUS_OPEN).id
-        
         tableView.addPullToRefresh {
             self.refresh()
         }
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
         
         showLoading()
         refresh()
-        
-        reloadMenuItems()
-        runTimer()
-    }
-    
-    override func viewWillDisappear(_ animated: Bool) {
-        stopTimer()
-        super.viewWillDisappear(animated)
-    }
-    
-    func goAllMessageList() {
-        SideMenuController.pushController(id: "messages")
     }
     
     func refresh() {
@@ -71,7 +49,7 @@ class SelectJobController: MJPController {
             self.hideLoading()
             self.data.removeAllObjects()
             for job in data as! [Job] {
-                if job.status == self.jobActive {
+                if job.status == JobStatus.JOB_STATUS_OPEN_ID {
                     self.data.add(job)
                 }
             }
@@ -95,34 +73,6 @@ class SelectJobController: MJPController {
             navigationController?.pushViewController(controller, animated: true)
             
         }
-    }
-    
-    override func runTimer() {
-        if checkTimer == nil {
-            checkTimer = Timer.scheduledTimer(timeInterval: 10, target: self, selector: #selector(reloadMenuItems), userInfo: nil, repeats: true)
-        }
-    }
-    
-    override func stopTimer() {
-        if checkTimer != nil {
-            checkTimer?.invalidate()
-            checkTimer = nil
-        }
-    }
-    
-    func reloadMenuItems() {
-        if (AppData.newMessagesCount > 0) {
-            let item1 = UIBarButtonItem(title: "All Messages", style: .plain, target: self, action: #selector(goAllMessageList))
-            var fileName = "nav-message10"
-            if (AppData.newMessagesCount<10) {
-                fileName =  "nav-message\(AppData.newMessagesCount)"
-            }
-            item1.image = UIImage(named: fileName)
-            navigationItem.rightBarButtonItem = item1
-            return
-        }
-        
-        navigationItem.rightBarButtonItem = nil
     }
     
 }
@@ -151,12 +101,13 @@ extension SelectJobController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
         let job = data[indexPath.row] as! Job
+        
         if SideMenuController.currentID == "find_talent" {
             SwipeController.pushController(job: job)
         } else if SideMenuController.currentID == "interviews" {
-            let controller = AppHelper.mainStoryboard.instantiateViewController(withIdentifier: "InterviewList") as! InterviewListController
+            let controller = InterviewListController.instantiate()
             controller.job = job
-            AppHelper.getFrontController().navigationController?.pushViewController(controller, animated: true)
+            navigationController?.pushViewController(controller, animated: true)
         } else {
             ApplicationListController.pushController(job: job, mode: SideMenuController.currentID)
         }

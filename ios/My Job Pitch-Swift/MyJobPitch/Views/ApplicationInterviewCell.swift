@@ -23,20 +23,12 @@ class ApplicationInterviewCell: MGSwipeTableCell {
         
         if AppData.user.isRecruiter() {
             
-            if let image = application.jobSeeker.getPitch()?.thumbnail {
-                AppHelper.loadImageURL(imageUrl: image, imageView: imgView, completion: nil)
-            } else {
-                imgView.image = UIImage(named: "default-logo")
-            }
+            AppHelper.loadJobseekerImage(application.jobSeeker, imageView: imgView, completion: nil)
             cvDescription.text = application.jobSeeker.desc
             jobSeekerName.text = application.jobSeeker.getFullName()
             
         } else {
-            if let image = application.job.getImage()?.thumbnail {
-                AppHelper.loadImageURL(imageUrl: image, imageView: imgView, completion: nil)
-            } else {
-                imgView.image = UIImage(named: "default-logo")
-            }
+            AppHelper.loadLogo(image: application.job.getImage(), imageView: imgView, completion: nil)
             cvDescription.text = application.job.desc
             jobSeekerName.text = application.job.title
         }

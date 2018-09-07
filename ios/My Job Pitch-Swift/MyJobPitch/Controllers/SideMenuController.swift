@@ -15,6 +15,7 @@ class SideMenuController: UIViewController {
         "find_job":     ["icon": "menu-search",         "title": "Find Job",                "identifier": "Swipe",              "per": "P"],
         "applications1":["icon": "menu-applications2",   "title": "My Applications",            "identifier": "ApplicationList",    "per": "P"],
         "messages":     ["icon": "menu-message",        "title": "Messages",                "identifier": "MessageList",        "per": "PB"],
+        "j_interviews":  ["icon": "menu-interview",        "title": "Interviews",             "identifier": "InterviewList",          "per": "P"],
         "job_profile":  ["icon": "menu-job-profile",    "title": "Job Profile",             "identifier": "JobProfile",         "per": "J"],
         "add_record":   ["icon": "menu-record",     "title": "Record Pitch",            "identifier": "Pitch",              "per": "J"],
         "view_profile": ["icon": "menu-user-profile",   "title": "Profile",                 "identifier": "JobSeekerDetail",   "per": ""],
@@ -25,9 +26,6 @@ class SideMenuController: UIViewController {
         "connections":  ["icon": "menu-applications1",        "title": "My Connections",             "identifier": "SelectJob",          "per": "B"],
         "shortlist":    ["icon": "menu-shortlist",      "title": "My Shortlist",            "identifier": "SelectJob",          "per": "B"],
         "interviews":  ["icon": "menu-interview",        "title": "Interviews",             "identifier": "SelectJob",          "per": "B"],
-        
-        "j_interviews":  ["icon": "menu-interview",        "title": "Interviews",             "identifier": "InterviewList",          "per": "J"],
-        
         "businesses":   ["icon": "menu-business",       "title": "Add or Edit Jobs",        "identifier": "BusinessList",       "per": ""],
         "users":        ["icon": "menu-users",   "title": "Users",                   "identifier": "BusinessList",       "per": ""],
         
@@ -50,15 +48,12 @@ class SideMenuController: UIViewController {
         return menuItems[id == nil ? currentID : id]?["title"]
     }
     
-    
     @IBOutlet weak var tableView: UITableView!
     
     var maskButton: UIButton!
     
     var data = [String]()
-    
-    var checkTimer: Timer?
-    
+        
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         revealViewController().view.endEditing(true)
@@ -74,14 +69,27 @@ class SideMenuController: UIViewController {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        reloadSideMenu()
-        runTimer()        
+        
+        data = [String]()
+        if let user = AppData.user {
+            //if user.isJobSeeker() || (!user.isRecruiter() && LoginController.userType == 1)
+            if user.isJobSeeker() {
+                data = SideMenuController.jobSeekerMenu
+            } else if user.isRecruiter() {
+                data = SideMenuController.recruiterMenu
+            } else if LoginController.userType == 1 {
+                data = SideMenuController.jobSeekerMenu
+            } else if LoginController.userType == 2 {
+                data = SideMenuController.recruiterMenu
+            }
+        }
+        
+        tableView.reloadData()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         
         super.viewWillDisappear(animated)        
-        stopTimer()
         if maskButton != nil {
             maskButton.removeFromSuperview()
             maskButton = nil
@@ -112,37 +120,6 @@ class SideMenuController: UIViewController {
         revealController.pushFrontViewController(navController, animated: true)
         
     }
-    
-    func reloadSideMenu() {
-        data = [String]()
-        if let user = AppData.user {
-            //if user.isJobSeeker() || (!user.isRecruiter() && LoginController.userType == 1)
-            if user.isJobSeeker() {
-                data = SideMenuController.jobSeekerMenu
-            } else if user.isRecruiter() {
-                data = SideMenuController.recruiterMenu
-            } else if LoginController.userType == 1 {
-                data = SideMenuController.jobSeekerMenu
-            } else if LoginController.userType == 2 {
-                data = SideMenuController.recruiterMenu
-            }
-        }
-        
-        tableView.reloadData()
-    }
-    
-    func runTimer() {
-        if checkTimer == nil {
-            checkTimer = Timer.scheduledTimer(timeInterval: 10, target: self, selector: #selector(reloadSideMenu), userInfo: nil, repeats: true)
-        }
-    }
-    
-    func stopTimer() {
-        if checkTimer != nil {
-            checkTimer?.invalidate()
-            checkTimer = nil
-        }
-    }
 
 }
 
@@ -160,16 +137,8 @@ extension SideMenuController: UITableViewDataSource {
         
         cell.nameLabel.text = item["title"]
         
-        var image = UIImage(named: item["icon"]!)
+        let image = UIImage(named: item["icon"]!)
         
-        if (item["title"] == "Messages" && AppData.newMessagesCount > 0) {
-            if (AppData.newMessagesCount<10) {
-                image = UIImage(named: "nav-message\(AppData.newMessagesCount)")
-            } else {
-                image = UIImage(named: "nav-message10")
-            }
-            
-        }
         if SideMenuController.currentID == id {
             cell.iconView.image = image?.withRenderingMode(.alwaysTemplate)
             cell.iconView.tintColor = AppData.greenColor
@@ -197,6 +166,14 @@ extension SideMenuController: UITableViewDataSource {
                          color: UIColor(colorLiteralRed: 0, green: 0, blue: 0, alpha: 0.1))
             cell.addLine(frame: CGRect(x: 10, y: 0.5, width:  cell.frame.size.width - 60 - 20, height: 0.5),
                          color: UIColor(colorLiteralRed: 1, green: 1, blue: 1, alpha: 0.06))
+        }
+        
+        let newMessageCount = AppData.newMessageCount
+        if id == "messages" && newMessageCount > 0 {
+            cell.badge.isHidden = false
+            cell.badge.text = newMessageCount < 10 ? "\(newMessageCount)" : "9+"
+        } else {
+            cell.badge.isHidden = true
         }
         
         cell.addLine(frame: CGRect(x: 10, y: cell.frame.size.height - 1, width:  cell.frame.size.width - 60 - 20, height: 0.5),

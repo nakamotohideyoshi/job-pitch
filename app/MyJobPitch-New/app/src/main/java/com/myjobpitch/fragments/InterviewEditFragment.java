@@ -135,13 +135,19 @@ public class InterviewEditFragment extends FormFragment {
 
     private void loadDetail() {
         JobSeeker jobSeeker = application.getJobSeeker();
+        Job job = application.getJob_data();
+
         AppHelper.loadJobSeekerImage(jobSeeker, imageView);
 
         // job seeker name
         itemTitle.setText(jobSeeker.getFirst_name() + " " + jobSeeker.getLast_name());
 
         // CV
-        itemSubTitle.setText(jobSeeker.getCV() == null ? "Can't find CV" : jobSeeker.getCV());
+        if (AppData.user.isRecruiter()) {
+            itemSubTitle.setText(jobSeeker.getDescription());
+        } else {
+            itemSubTitle.setText(job.getDescription());
+        }
 
         date = new Date();
 
@@ -157,6 +163,8 @@ public class InterviewEditFragment extends FormFragment {
 
             //Notes
             interviewNotes.setText(interview.getNotes());
+
+            createButton.setText("Update");
         }
     }
 

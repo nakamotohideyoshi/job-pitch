@@ -28,9 +28,7 @@ class SwipeController: MJPController {
     
     var jobSeeker: JobSeeker!
     var profile: Profile!
-    
-    var checkTimer: Timer?
-    
+        
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -48,22 +46,19 @@ class SwipeController: MJPController {
             creditsButton.setTitle(String(format: "%d %@", credits, credits > 1 ? "Credits" : "Credit"), for: .normal)
             emptyView.text = "There are no more new matches for this job. You can restore your removed matches by clicking refresh above."
             jobTitleView.text = searchJob.title + ", (" + searchJob.getBusinessName() + ")"
-            let item = UIBarButtonItem(barButtonSystemItem: .compose, target: self, action: #selector(goJobDetail))
+            let item = UIBarButtonItem(image: UIImage(named: "nav-edit"), style: .plain, target: self, action: #selector(goJobDetail))
             navigationItem.rightBarButtonItems?.append(item)
         } else {
             creditsButton.removeFromSuperview()
             emptyView.text = "There are no more jobs that match your profile. You can restore your removed matches by clicking refresh above."
             
-            let item = UIBarButtonItem(barButtonSystemItem: .compose, target: self, action: #selector(self.goProfile))
+            let item = UIBarButtonItem(image: UIImage(named: "nav-edit"), style: .plain, target: self, action: #selector(goProfile))
             self.navigationItem.rightBarButtonItems?.append(item)
             
             if (jobSeeker != nil) {
                 showInactiveBanner()
             }
             navigationItem.rightBarButtonItems?.append(UIBarButtonItem())
-            reloadMenuItems()
-            runTimer()
-            
         }
         
     }
@@ -78,15 +73,6 @@ class SwipeController: MJPController {
                 self.showInactiveBanner()
             }, failure: self.handleErrors)
         }
-    }
-    
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-        stopTimer()
-    }
-    
-    func goAllMessageList() {
-        SideMenuController.pushController(id: "messages")
     }
     
     func updateCardPosition(index: Int) {
@@ -289,35 +275,6 @@ class SwipeController: MJPController {
         let controller = AppHelper.mainStoryboard.instantiateViewController(withIdentifier: "Swipe") as! SwipeController
         controller.searchJob = job
         AppHelper.getFrontController().navigationController?.pushViewController(controller, animated: true)
-    }
-    
-    override func runTimer() {
-        if checkTimer == nil {
-            checkTimer = Timer.scheduledTimer(timeInterval: 10, target: self, selector: #selector(reloadMenuItems), userInfo: nil, repeats: true)
-        }
-    }
-    
-    override func stopTimer() {
-        if checkTimer != nil {
-            checkTimer?.invalidate()
-            checkTimer = nil
-        }
-    }
-    
-    func reloadMenuItems() {
-        navigationItem.rightBarButtonItems?.removeLast()
-        if (AppData.newMessagesCount > 0) {
-            let item1 = UIBarButtonItem(title: "All Messages", style: .plain, target: self, action: #selector(goAllMessageList))
-            var fileName = "nav-message10"
-            if (AppData.newMessagesCount<10) {
-                fileName =  "nav-message\(AppData.newMessagesCount)"
-            }
-            item1.image = UIImage(named: fileName)
-            navigationItem.rightBarButtonItems?.append(item1)
-            return
-        }
-        
-        navigationItem.rightBarButtonItems?.append(UIBarButtonItem())
     }
     
 }

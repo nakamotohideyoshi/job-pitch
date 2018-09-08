@@ -17,6 +17,10 @@ public class Job extends MJPObjectWithDates {
     private List<Image> images;
     private List<JobPitch> videos;
 
+    // Added in API V5
+    private Boolean requires_pitch;
+    private Boolean requires_cv;
+
     public String getTitle() {
         return title;
     }
@@ -93,4 +97,11 @@ public class Job extends MJPObjectWithDates {
         return null;
     }
 
+    public Boolean getRequires_cv() {
+        return requires_cv;
+    }
+
+    public Boolean getRequires_pitch() {
+        return requires_pitch;
+    }
 }

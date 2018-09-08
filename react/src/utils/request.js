@@ -36,30 +36,26 @@ const request = ({ type: type1, method, url, payloadOnSuccess, payloadOnFail }) 
           type: requestPending(type),
           payload
         }));
-
       const token = localStorage.getItem('token');
       axios.defaults.headers.common.Authorization = token ? `Token ${token}` : '';
-
       const { data } = yield call(axios.request, {
         url: typeof url === 'string' ? url : url(payload),
-        method: method.toLowerCase(),
+        method: typeof method === 'string' ? method.toLowerCase() : method(payload),
         data: isFormData ? convertFormData(reqData) : reqData,
         params,
         onUploadProgress
       });
-
       type &&
         (yield put({
           type: requestSuccess(type),
           payload: payloadOnSuccess ? payloadOnSuccess(payload, data) : data,
           request: payload
         }));
-
       success && success(data);
 
       successMsg &&
         notification.success({
-          message: successMsg.title || 'Notification',
+          message: successMsg.title || 'Success',
           description: successMsg.message
         });
 
@@ -84,7 +80,7 @@ const request = ({ type: type1, method, url, payloadOnSuccess, payloadOnFail }) 
 
       failMsg &&
         notification.error({
-          message: failMsg.title || 'Notification',
+          message: failMsg.title || 'Error',
           description: data.detail || failMsg.message
         });
 
@@ -104,7 +100,6 @@ export const deleteRequest = params => request({ ...params, method: 'delete' });
 
 export const weakRequest = api =>
   function* fun(action) {
-    // console.log('######', action.payload)
     return yield race({
       result: call(api, action),
       cancel: take(LOCATION_CHANGE)

@@ -4,7 +4,9 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { Breadcrumb, Button, Spin } from 'antd';
 
+import { getJobs } from 'redux/selectors';
 import { saveJob } from 'redux/recruiter/jobs';
+import { selectBusiness } from 'redux/recruiter/businesses';
 import DATA from 'utils/data';
 import * as helper from 'utils/helper';
 
@@ -19,10 +21,11 @@ class JobInterface extends React.Component {
   };
 
   componentDidMount() {
-    const { job } = this.props;
+    const { job, selectBusiness, history } = this.props;
     if (!job) {
-      this.props.history.push('/recruiter/jobs/business');
+      history.push('/recruiter/jobs/business');
     } else {
+      selectBusiness(job.location_data.business);
       this.workplaceId = job.location;
     }
   }
@@ -146,12 +149,13 @@ class JobInterface extends React.Component {
 export default connect(
   (state, { match }) => {
     const jobId = helper.str2int(match.params.jobId);
-    const job = helper.getItemByID(state.rc_jobs.jobs, jobId);
+    const job = helper.getItemByID(getJobs(state), jobId);
     return {
       job
     };
   },
   {
-    saveJob
+    saveJob,
+    selectBusiness
   }
 )(JobInterface);

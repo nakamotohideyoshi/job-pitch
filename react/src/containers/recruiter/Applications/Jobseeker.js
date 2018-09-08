@@ -1,8 +1,8 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
+import { getApplications, getJobs } from 'redux/selectors';
 import { findJobseekers } from 'redux/recruiter/find';
-import { getApplications } from 'redux/applications';
 import DATA from 'utils/data';
 import * as helper from 'utils/helper';
 
@@ -17,11 +17,6 @@ class RCJobseeker extends React.Component {
     }
 
     this.props.findJobseekers({
-      params: {
-        job: job.id
-      }
-    });
-    this.props.getApplications({
       params: {
         job: job.id
       }
@@ -66,14 +61,14 @@ class RCJobseeker extends React.Component {
 export default connect(
   (state, { match }) => {
     const jobId = helper.str2int(match.params.jobId);
-    const job = helper.getItemByID(state.rc_jobs.jobs, jobId);
+    const job = helper.getItemByID(getJobs(state), jobId);
 
     const jobseekerId = helper.str2int(match.params.jobseekerId);
 
-    const { jobseekers, error: error1 } = state.rc_find;
+    const { jobseekers } = state.rc_find;
     const jobseeker = helper.getItemByID(jobseekers || [], jobseekerId);
 
-    const { applications, error: error2 } = state.applications;
+    const applications = getApplications(state);
     const application = (applications || []).filter(
       ({ status, job_seeker }) => status !== DATA.APP.DELETED && job_seeker.id === jobseekerId
     )[0];
@@ -82,12 +77,10 @@ export default connect(
       jobseeker,
       jobseekers,
       application,
-      applications,
-      error: error1 || error2
+      applications
     };
   },
   {
-    findJobseekers,
-    getApplications
+    findJobseekers
   }
 )(RCJobseeker);

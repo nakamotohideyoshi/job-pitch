@@ -4,9 +4,7 @@ import { connect } from 'react-redux';
 import { withRouter, Link } from 'react-router-dom';
 import { Menu, Badge } from 'antd';
 
-import { getApplications, getAllApplications } from 'redux/applications';
-import { updateCount, clearUpdated } from 'redux/messages';
-
+import { getAllNewMsgs, getBusinesses } from 'redux/selectors';
 import * as helper from 'utils/helper';
 
 const Item = Menu.Item;
@@ -19,17 +17,14 @@ const MenuWrapper = styled(Menu)`
   }
 
   .ant-menu-item .ant-badge {
-    color: inherit;
-    margin-left: 5px;
+    margin-top: -2px;
+    margin-left: 8px;
     .ant-badge-count {
-      margin: 0 0 3px 3px;
       box-shadow: none;
       background-color: #ff9300;
     }
   }
 `;
-
-var timer = null;
 
 class MainMenu extends React.Component {
   handleClick = () => {
@@ -37,47 +32,12 @@ class MainMenu extends React.Component {
     onClick && onClick();
   };
 
-  componentDidMount() {
-    timer = setInterval(() => {
-      // if (this.props.location.pathname.indexOf('/recruiter/messages') === 0) {
-      //   // alert('aaa');
-      // } else {
-      //   this.props.getAllApplications();
-      // }
-      const { auth_businesses, job_seeker } = this.props;
-      if (!(auth_businesses.length === 0 && job_seeker === null)) {
-        this.props.getAllApplications();
-        this.props.clearUpdated();
-      }
-    }, 10000);
-  }
-
-  componentWillUnmount() {
-    clearInterval(timer);
-  }
-
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.allApplications !== null && !nextProps.updated) {
-      this.props.updateCount({ applications: nextProps.allApplications, from_role: 2 });
-    }
-  }
-
   render() {
-    const { businesses, business, location, theme, mode, count } = this.props;
+    const { businesses, business, location, theme, mode, newMsgs } = this.props;
     const existBusiness = businesses.length > 0;
     let selectedKey = location.pathname.split('/')[2];
     if (location.pathname.indexOf('/recruiter/settings/credits') === 0) {
       selectedKey = 'credits';
-    }
-    var countStr = '';
-    if (count > 0 && count < 10) {
-      countStr = count;
-    }
-    if (count >= 9) {
-      countStr = '10+';
-    }
-    if (this.props.location.pathname.indexOf('/recruiter/messages') === 0) {
-      countStr = '';
     }
 
     return (
@@ -95,7 +55,8 @@ class MainMenu extends React.Component {
         {existBusiness && (
           <Item key="messages">
             <Link to="/recruiter/messages">
-              Messages<Badge count={countStr} />
+              Messages
+              {selectedKey !== 'messages' && <Badge count={newMsgs < 10 ? newMsgs : '9+'} />}
             </Link>
           </Item>
         )}
@@ -103,43 +64,31 @@ class MainMenu extends React.Component {
         {existBusiness && (
           <Item key="credits">
             <Link to="/recruiter/settings/credits">
-              Credit<Badge count={(business || {}).tokens} />
+              Credit
+              {selectedKey !== 'credits' && <Badge count={(business || {}).tokens} />}
             </Link>
           </Item>
         )}
 
-        <Item key="users">
-          <Link to="/recruiter/users">Users</Link>
-        </Item>
+        {existBusiness && (
+          <Item key="users">
+            <Link to="/recruiter/users">Users</Link>
+          </Item>
+        )}
       </MenuWrapper>
     );
   }
 }
 
 export default withRouter(
-  connect(
-    state => {
-      const { businesses, selectedId } = state.rc_businesses;
-      const { allApplications } = state.applications;
-      const { count, updated } = state.messages;
-      const { job_seeker } = state.auth.user;
-      const auth_businesses = state.auth.user.businesses;
-      const business = helper.getItemByID(businesses || [], selectedId);
-      return {
-        businesses,
-        business,
-        allApplications,
-        count,
-        updated,
-        auth_businesses,
-        job_seeker
-      };
-    },
-    {
-      getApplications,
-      getAllApplications,
-      updateCount,
-      clearUpdated
-    }
-  )(MainMenu)
+  connect(state => {
+    const businesses = getBusinesses(state);
+    const { selectedId } = state.rc_businesses;
+    const business = helper.getItemByID(businesses || [], selectedId);
+    return {
+      businesses,
+      business,
+      newMsgs: getAllNewMsgs(state)
+    };
+  })(MainMenu)
 );

@@ -15,76 +15,58 @@ class MessageController0: MJPController {
     @IBOutlet weak var titleLabel: UILabel!;
     @IBOutlet weak var subTitleLabel: UILabel!;
     @IBOutlet weak var containerView: UIView!
-    @IBOutlet weak var interviewView: UIView!
     
     var application: Application!
-    var refresh = true
     
-    var interview: Interview!
+    var interview: ApplicationInterview!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        title = "Message"
+        navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(named: "nav-close"), style: .plain, target: self, action: #selector(closeAction))
         
-        if AppData.user.isJobSeeker() {
-            headerView.addUnderLine(paddingLeft: 0, paddingRight: 0, color: AppData.greyBorderColor)
-        } else {
-            headerView.addUnderLine(paddingLeft: 0, paddingRight: 0, color: AppData.greyBorderColor)
+        if AppData.user.isRecruiter() {
+            let subTitle = String(format: "%@, (%@)", application.job.title, application.job.getBusinessName())
+            setTitle(title: "Messages", subTitle: subTitle)
         }
         
-        headerView.isHidden = true
-        interviewView.isHidden = true
+        headerView.addUnderLine(paddingLeft: 0, paddingRight: 0, color: AppData.greyBorderColor)
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        
-        if refresh {
-            loadApplication()
-            refresh = false
-        }
+        loadApplication()
     }
     
     func loadApplication() {
-        showLoading()
-        API.shared().loadApplicationWithId(id: application.id, success: { (data) in
-            self.headerView.isHidden = false
-            if AppData.user.isRecruiter()  {
-                self.interviewView.isHidden = false
-            }
-            self.hideLoading()
-            
-            self.application = data as! Application
-            self.load()
-        }, failure: self.handleErrors)
-    }
-    
-    func load() {
+        
+        application = (AppData.applications.filter { $0.id == application.id })[0]
+        let interviews = application.interviews as! [ApplicationInterview]
+        let filters = interviews.filter { $0.status == InterviewStatus.INTERVIEW_PENDING || $0.status == InterviewStatus.INTERVIEW_ACCEPTED }
+        if filters.count > 0 {
+            interview = filters[0]
+            navigationItem.rightBarButtonItem = nil
+        } else {
+            navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(named: "nav-interview"), style: .plain, target: self, action: #selector(createInterview))
+        }
         
         let job = application.job!
         
         if AppData.user.isJobSeeker() {
-            
-            if let image = job.getImage() {
-                AppHelper.loadImageURL(imageUrl: (image.thumbnail)!, imageView: imgView, completion: nil)
-            } else {
-                imgView.image = UIImage(named: "default-logo")
-            }
-            
+            AppHelper.loadLogo(image: job.getImage(), imageView: imgView, completion: nil)
             titleLabel.text = job.title
             subTitleLabel.text = job.getBusinessName()
-            
         } else {
-            
-            let jobSeeker = application.jobSeeker!
-            if let pitch = jobSeeker.getPitch() {
-                AppHelper.loadImageURL(imageUrl: (pitch.thumbnail)!, imageView: imgView, completion: nil)
-            } else {
-                imgView.image = UIImage(named: "no-img")
-            }
-            titleLabel.text = jobSeeker.getFullName()
-            subTitleLabel.text = String(format: "%@ (%@)", job.title, job.getBusinessName())
+            AppHelper.loadJobseekerImage(application.jobSeeker, imageView: imgView, completion: nil)
+            titleLabel.text = application.jobSeeker.getFullName()
+            subTitleLabel.text = application.jobSeeker.desc
+        }
+        
+        if interview != nil {
+            let subTitle = "Interview: " + AppHelper.convertDateToString(interview.at)
+            let subTitleParameters = [NSForegroundColorAttributeName : interview.status == InterviewStatus.INTERVIEW_PENDING ? AppData.yellowColor : AppData.greyColor,
+                                      NSFontAttributeName : UIFont.systemFont(ofSize: 14)]
+            subTitleLabel.attributedText = NSMutableAttributedString(string: subTitle, attributes: subTitleParameters)
         }
         
         let controller = AppHelper.mainStoryboard.instantiateViewController(withIdentifier: "Message") as! MessageController
@@ -92,7 +74,13 @@ class MessageController0: MJPController {
         controller.view.frame = CGRect(origin: CGPoint.zero, size: containerView.frame.size)
         containerView.addSubview(controller.view)
         addChildViewController(controller)
-        
+    }
+    
+    func createInterview() {
+        let controller = InterviewEditController.instantiate()
+        controller.application = application
+        controller.interview = interview
+        present(UINavigationController(rootViewController: controller), animated: true, completion: nil)
     }
     
     @IBAction func headerClickAction(_ sender: Any) {
@@ -109,26 +97,12 @@ class MessageController0: MJPController {
         }
     }
     
-    @IBAction func closeAction(_ sender: Any) {
+    func closeAction() {
         navigationController?.dismiss(animated: true, completion: nil)
-        navigationController?.popViewController(animated: true)
     }
 
-    @IBAction func createInterview(_ sender: Any) {
-        refresh = true
-        
-        let controller = AppHelper.mainStoryboard.instantiateViewController(withIdentifier: "InterviewEdit") as! InterviewEditController
-        controller.application = application
-        controller.interview = interview
-        controller.isEditMode = interview == nil ? false : true
-        AppHelper.getFrontController().navigationController?.pushViewController(controller, animated: true)
-    }
-    static func showModal(application: Application) {
-        
-        let controller = AppHelper.mainStoryboard.instantiateViewController(withIdentifier: "Message0") as! MessageController0
-        controller.application = application
-        AppHelper.getFrontController().navigationController?.pushViewController(controller, animated: true)
-        
+    static func instantiate() -> MessageController0 {
+        return AppHelper.mainStoryboard.instantiateViewController(withIdentifier: "Message0") as! MessageController0
     }
     
 }

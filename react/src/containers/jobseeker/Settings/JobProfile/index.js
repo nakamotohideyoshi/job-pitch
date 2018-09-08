@@ -52,7 +52,7 @@ class JobProfile extends React.Component {
           job_seeker: jobseeker.id,
           id: (profile || {}).id
         },
-        success: ({ success }) => {
+        success: () => {
           this.setState({ loading: false });
           message.success('Job Profile saved successfully!!');
 

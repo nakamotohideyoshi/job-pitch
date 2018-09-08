@@ -33,6 +33,10 @@ public class JobSeeker extends MJPObjectWithDates {
 
     private boolean truth_confirmation;
 
+    // Added in  API V4
+    private String profile_image;
+    private String profile_thumb;
+
     public boolean getEmail_public() {
         return email_public;
     }
@@ -215,6 +219,14 @@ public class JobSeeker extends MJPObjectWithDates {
 
     public boolean getHas_national_insurance_number() {
         return has_national_insurance_number;
+    }
+
+    public String getProfile_image() {
+        return profile_image;
+    }
+
+    public String getProfile_thumb() {
+        return profile_thumb;
     }
 
 }

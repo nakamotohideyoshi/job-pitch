@@ -21,6 +21,10 @@ class Job: MJPObjectWithDates {
     var images: NSArray!
     var videos: NSArray!
     
+    // API V5
+    var requiresPitch = false
+    var requiresCV = false
+    
     func getPitch() -> JobPitch? {
         if videos != nil {
             for pitch in videos as! [JobPitch] {

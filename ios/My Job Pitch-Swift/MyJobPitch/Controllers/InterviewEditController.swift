@@ -9,118 +9,153 @@
 import UIKit
 
 class InterviewEditController: MJPController, WWCalendarTimeSelectorProtocol {
-    @IBOutlet weak var jobTitleView: UILabel!
     @IBOutlet weak var imgView: UIImageView!
-    @IBOutlet weak var jobSeekerName: UILabel!
-    @IBOutlet weak var cvDescription: UILabel!
-    @IBOutlet weak var dateTimeLabel: UILabel!
-    @IBOutlet weak var dateTimeButton: UIButton!
-    @IBOutlet weak var message: UITextView!
-    @IBOutlet weak var note: UITextView!
+    @IBOutlet weak var nameLabel: UILabel!
+    @IBOutlet weak var commentLabel: UILabel!
+    @IBOutlet weak var dateTimeField: UITextField!
+    @IBOutlet weak var dateTimeError: UILabel!
+    @IBOutlet weak var messageTextView: BorderTextView!
+    @IBOutlet weak var messageError: UILabel!
+    @IBOutlet weak var notesTextView: BorderTextView!
+    @IBOutlet weak var feedbackTextView: BorderTextView!
+    @IBOutlet weak var feedbackView: UIView!
+    @IBOutlet weak var saveButton: GreenButton!
+    @IBOutlet weak var appInfoView: UIView!
     
-    var interview: Interview!
     var application: Application!
-    var isEditMode = false
+    var interview: ApplicationInterview?
+    var isComplete = false
     
-    fileprivate var singleDate: Date = Date()
-    
+    var dateTime: Date! = Date()
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        jobTitleView.text = String(format: "%@, (%@)", application.job.title, application.job.getBusinessName())
         
-        self.scrollView.isScrollEnabled = false
-
-        loadInterviewDetail()
+        var title = "Arrange Interview"
+        if isComplete {
+            title = "Complete Interview"
+        } else if interview != nil {
+            title = "Edit Interview"
+        }
+        let subTitle = String(format: "%@, (%@)", application.job.title, application.job.getBusinessName())
+        setTitle(title: title, subTitle: subTitle)
         
+        navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(named: "nav-close"), style: .plain, target: self, action: #selector(closeAction))
+        
+        appInfoView.addUnderLine(paddingLeft: 0, paddingRight: 0, color: AppData.greyBorderColor)
+        
+        dateTimeField.delegate = self
+        
+        loadData()
     }
     
-    func loadInterviewDetail() {
-        if let image = application.jobSeeker.getPitch()?.thumbnail {
-            AppHelper.loadImageURL(imageUrl: image, imageView: imgView, completion: nil)
-        } else {
-            imgView.image = UIImage(named: "default-logo")
-        }
-        cvDescription.text = application.jobSeeker.desc
-        jobSeekerName.text = application.jobSeeker.getFullName()
+    override func getRequiredFields() -> [String: NSArray] {
+        return [
+            "at":           [dateTimeField,    dateTimeError],
+            "invitation":    [messageTextView, messageError],
+        ]
+    }
+    
+    func loadData() {
+        AppHelper.loadJobseekerImage(application.jobSeeker, imageView: imgView, completion: nil)
+        nameLabel.text = application.jobSeeker.getFullName()
+        commentLabel.text = application.jobSeeker.desc
         
-        if isEditMode {
+        feedbackView.isHidden = true
         
-            let dateFormatter = DateFormatter()
-            dateFormatter.dateFormat = "E d MMM, yyyy"
+        if interview != nil {
+            dateTime = interview?.at
+            dateTimeField.text = AppHelper.convertDateToString(dateTime)
             
-            let dateFormatter1 = DateFormatter()
-            dateFormatter1.dateFormat = "HH:mm"
+            if (interview?.messages.count)! > 0 {
+                messageTextView.text = (interview?.messages[0] as! Message).content
+            }
             
-            singleDate = interview.at
-            dateTimeLabel.text = String(format: "%@ at %@", dateFormatter.string(from: singleDate), dateFormatter1.string(from: singleDate))
+            notesTextView.text = interview?.notes
             
-            note.text = interview.notes
-            
+            if isComplete {
+                dateTimeField.isEnabled = false
+                messageTextView.isEditable = false
+                notesTextView.isEditable = false
+                feedbackView.isHidden = false
+                
+                saveButton.setTitle("Complete", for: .normal)
+            } else {
+                saveButton.setTitle("Update", for: .normal)
+            }
         }
     }
-
-    @IBAction func getDateTime(_ sender: Any) {
+    
+    @IBAction func appDetailAction(_ sender: Any) {
+        let controller = AppHelper.mainStoryboard.instantiateViewController(withIdentifier: "JobSeekerDetail") as! JobSeekerDetailController
+        controller.application = application
+        controller.onlyView = true
+        navigationController?.pushViewController(controller, animated: true)
+    }
+    
+    func saveInterview() {
+        let interviewForSave = InterviewForSave()
+        interviewForSave.at = dateTime
+        interviewForSave.application = application.id
+        interviewForSave.invitation = messageTextView.text
+        interviewForSave.notes = notesTextView.text
+        interviewForSave.feedback = feedbackTextView.text
+        
+        API.shared().saveInterview(interviewId: interview?.id, interview: interviewForSave, success: { (_) in
+            AppData.updateApplication(self.application.id, success: self.closeAction, failure: self.handleErrors)
+        }, failure: self.handleErrors)
+    }
+    
+    @IBAction func sendAction(_ sender: Any) {
+        
+        if !valid() {
+            return
+        }
+        
+        showLoading()
+        
+        if isComplete {
+            API.shared().changeInterview(interviewId: (self.interview?.id)!, type: "complete", success: { (_) in
+                self.saveInterview()
+            }, failure: self.handleErrors)
+        } else {
+            saveInterview()
+        }
+    }
+    
+    func showDateTimePicker() {
         
         let selector = WWCalendarTimeSelector.instantiate()
         selector.delegate = self
-        selector.optionTopPanelTitle = "Choose Calendar!"
-        
-        selector.optionCurrentDate = singleDate
-        
-        selector.optionStyles.showDateMonth(true)
+        selector.optionTopPanelTitle = "Choose Date/Time"
+        selector.optionCurrentDate = dateTime
         selector.optionStyles.showYear(true)
+        selector.optionStyles.showDateMonth(true)
         selector.optionStyles.showTime(true)
         
         present(selector, animated: true, completion: nil)
     }
     
-    @IBAction func sendInvitation(_ sender: Any) {
-        showLoading()
-        
-        if isEditMode {
-            let interviewForUpdate = InterviewForUpdate()
-            
-            interviewForUpdate.at = singleDate
-            interviewForUpdate.application = application.id
-            interviewForUpdate.notes = note.text
-            interviewForUpdate.feedback = ""
-            interviewForUpdate.invitation = message.text
-            
-            API.shared().updateInterview(interviewId: interview.id, interview: interviewForUpdate, success: { (data) in
-                self.doneCreateAction()
-            }, failure: self.handleErrors)
-        } else {
-            
-            let interviewForCreation = InterviewForCreation()
-            
-            interviewForCreation.at = singleDate
-            interviewForCreation.application = application.id
-            interviewForCreation.notes = note.text
-            interviewForCreation.feedback = ""
-            interviewForCreation.invitation = message.text
-            
-            API.shared().createInterview(interview: interviewForCreation, success: { (data) in
-                self.doneCreateAction()
-            }, failure: self.handleErrors)
-            
-        }
-    }
-    
-    func doneCreateAction() {
-        _ = navigationController?.popViewController(animated: true)
-        return
-    }
-    
     func WWCalendarTimeSelectorDone(_ selector: WWCalendarTimeSelector, date: Date) {
-        singleDate = date
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "E d MMM, yyyy"
-        
-        let dateFormatter1 = DateFormatter()
-        dateFormatter1.dateFormat = "HH:mm"
-        
-        dateTimeLabel.text = String(format: "%@ at %@", dateFormatter.string(from: singleDate), dateFormatter1.string(from: singleDate))
+        dateTime = date
+        dateTimeField.text = AppHelper.convertDateToString(dateTime)
     }
     
+    func closeAction() {
+        navigationController?.dismiss(animated: true, completion: nil)
+    }
+    
+    static func instantiate() -> InterviewEditController {
+        return AppHelper.mainStoryboard.instantiateViewController(withIdentifier: "InterviewEdit") as! InterviewEditController
+    }
+    
+}
+
+extension InterviewEditController: UITextFieldDelegate {
+    func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
+        if dateTimeField == textField {
+            showDateTimePicker()
+        }
+        return false
+    }
 }

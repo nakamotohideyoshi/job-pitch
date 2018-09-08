@@ -2,41 +2,22 @@ import React from 'react';
 import Helmet from 'react-helmet';
 import { connect } from 'react-redux';
 import { Select, Tabs } from 'antd';
-import styled from 'styled-components';
 
-import { selectBusiness } from 'redux/recruiter/businesses';
+import { getApplications, getJobs } from 'redux/selectors';
 import { findJobseekers } from 'redux/recruiter/find';
-import { getApplications } from 'redux/applications';
-import { getInterviews } from 'redux/interviews';
+import { selectBusiness } from 'redux/recruiter/businesses';
 import DATA from 'utils/data';
 import * as helper from 'utils/helper';
 
-import { PageHeader, SearchBox, Logo } from 'components';
+import { PageHeader, PageSubHeader, SearchBox, Logo } from 'components';
 import FindTalent from './FindTalent';
-import MyApplications from './MyApplications';
+import NewApplications from './NewApplications';
 import MyConnections from './MyConnections';
 import Interviews from './Interviews';
 import Wrapper from './Applications.styled';
 
-import * as _ from 'lodash';
-
 const Option = Select.Option;
 const TabPane = Tabs.TabPane;
-
-const Filters = styled.div`
-  display: flex;
-  margin: 20px 0;
-
-  .ant-select {
-    flex: 1;
-    margin-right: 20px;
-
-    .ant-select-selection-selected-value .logo {
-      float: left;
-      margin: 4px 8px 0 0 !important;
-    }
-  }
-`;
 
 class Applications extends React.Component {
   state = {
@@ -46,49 +27,46 @@ class Applications extends React.Component {
   componentWillMount() {
     const { jobId, job, location } = this.props;
     const { id } = job || {};
+    const { tab } = location.state || {};
+
     if (jobId !== id) {
       this.replacePath({ id });
     } else if (job) {
-      const { tab } = location.state || {};
-      if (!tab) {
-        this.getData(job);
-      }
+      !tab && this.findJobseekers(this.props);
+
+      this.props.selectBusiness(job.location_data.business_data.id);
+      helper.saveData('applications/jobId', id);
     }
   }
 
   componentWillReceiveProps(nextProps) {
-    const { jobId, job } = nextProps;
+    this.findJobseekers(nextProps);
 
+    const { jobId, job } = nextProps;
     if (jobId !== this.props.jobId && job) {
-      this.getData(job);
+      this.props.selectBusiness(job.location_data.business_data.id);
+      helper.saveData('applications/jobId', jobId);
     }
   }
 
   replacePath = ({ tab, id }) => {
-    const { match, history } = this.props;
-    const arr = match.url.split('/');
+    const { location, history } = this.props;
+    const arr = location.pathname.split('/');
     if (tab) arr[3] = tab;
     if (id) arr[4] = id;
     history.replace(arr.join('/'));
   };
 
-  getData = job => {
-    const { id, location_data } = job;
-
-    this.props.selectBusiness(location_data.business_data.id);
-    helper.saveData('applications/jobId', id);
-
-    this.props.findJobseekers({
-      params: {
-        job: id
-      }
-    });
-    this.props.getApplications({
-      params: {
-        job: id
-      }
-    });
-    this.props.getInterviews();
+  findJobseekers = ({ jobId, location }) => {
+    const arr = location.pathname.split('/');
+    if (arr[3] === 'find' && this.filerJobId !== jobId) {
+      this.filerJobId = jobId;
+      this.props.findJobseekers({
+        params: {
+          job: jobId
+        }
+      });
+    }
   };
 
   jobsFilterOption = (input, option) => option.props.children[1].toLowerCase().indexOf(input.toLowerCase()) >= 0;
@@ -100,27 +78,14 @@ class Applications extends React.Component {
   onChangeSearchText = searchText => this.setState({ searchText });
 
   render() {
-    const {
-      jobs,
-      job,
-      jobseekers,
-      myApplications,
-      myConnections,
-      myShortlist,
-      match,
-      myInterviews,
-      applications,
-      interviews
-    } = this.props;
-    const location = job.location_data;
-    const business = location.business_data;
+    const { jobs, job, jobseekers, newApplications, myConnections, myShortlist, location, interviews } = this.props;
     const searchText = this.state.searchText.toLowerCase();
-    const activeKey = match.url.split('/')[3];
+    const activeKey = location.pathname.split('/')[3];
     const jobId = (job || {}).id;
-    const appCount = (myApplications || []).length;
+    const appCount = (newApplications || []).length;
     const connCount = (myConnections || []).length;
     const shortCount = (myShortlist || []).length;
-    const interviewCount = (myInterviews || []).length;
+    const interviewCount = (interviews || []).length;
 
     return (
       <Wrapper className="container">
@@ -130,7 +95,7 @@ class Applications extends React.Component {
           <h2>Applications</h2>
         </PageHeader>
 
-        <Filters>
+        <PageSubHeader>
           <Select
             showSearch
             value={jobId}
@@ -145,7 +110,7 @@ class Applications extends React.Component {
                   <Logo src={logo} className="logo" size="22px" />
                   {job.title}
                   <span className="right-menu-item">
-                    {location.name}, {business.name}
+                    {job.location_data.name}, {job.location_data.business_data.name}
                   </span>
                 </Option>
               );
@@ -153,14 +118,14 @@ class Applications extends React.Component {
           </Select>
 
           <SearchBox width="200px" onChange={this.onChangeSearchText} />
-        </Filters>
+        </PageSubHeader>
 
         <Tabs activeKey={activeKey} animated={false} onChange={this.onSelecteTab}>
           <TabPane tab="Find Talent" key="find">
             <FindTalent job={job} jobseekers={jobseekers} searchText={searchText} />
           </TabPane>
           <TabPane tab={`New Applications (${appCount})`} key="apps">
-            <MyApplications job={job} applications={myApplications} searchText={searchText} />
+            <NewApplications job={job} applications={newApplications} searchText={searchText} />
           </TabPane>
           <TabPane tab={`My Connections (${connCount})`} key="conns">
             <MyConnections job={job} applications={myConnections} searchText={searchText} />
@@ -169,12 +134,7 @@ class Applications extends React.Component {
             <MyConnections job={job} applications={myShortlist} searchText={searchText} shortlist />
           </TabPane>
           <TabPane tab={`Interviews (${interviewCount})`} key="interviews">
-            <Interviews
-              job={job}
-              applications={myInterviews}
-              loading={applications === null || interviews === null}
-              searchText={searchText}
-            />
+            <Interviews job={job} applications={interviews} searchText={searchText} />
           </TabPane>
         </Tabs>
       </Wrapper>
@@ -184,48 +144,34 @@ class Applications extends React.Component {
 
 export default connect(
   (state, { match }) => {
-    const jobs = state.rc_jobs.jobs.filter(({ status }) => status === DATA.JOB.OPEN);
+    const jobs = getJobs(state).filter(({ status }) => status === DATA.JOB.OPEN);
     const jobId = helper.str2int(match.params.jobId);
-    const id = jobId || helper.loadData('applications/jobId');
-    const job = helper.getItemByID(jobs, id) || jobs[0];
-
-    const { applications } = state.applications;
-    const { interviews } = state.interviews;
-    const myApplications = applications && applications.filter(({ status }) => status === DATA.APP.CREATED);
-    const myConnections = applications && applications.filter(({ status }) => status === DATA.APP.ESTABLISHED);
+    const jobId1 = jobId || helper.loadData('applications/jobId');
+    const job = helper.getItemByID(jobs, jobId1) || jobs[0];
+    const id = (job || {}).id;
+    const applications = getApplications(state);
+    const filteredApplications = applications && applications.filter(({ job_data }) => job_data.id === id);
+    const newApplications =
+      filteredApplications && filteredApplications.filter(({ status }) => status === DATA.APP.CREATED);
+    const myConnections =
+      filteredApplications && filteredApplications.filter(({ status }) => status === DATA.APP.ESTABLISHED);
     const myShortlist = myConnections && myConnections.filter(({ shortlisted }) => shortlisted);
-
-    let myInterviews = [];
-
-    _.forEach(interviews, interview => {
-      _.forEach(applications, application => {
-        if (interview.application === application.id) {
-          let applicationWithInterview = Object.assign({}, application);
-          if (interview.status !== 'COMPLETED') {
-            applicationWithInterview.interview = interview;
-            myInterviews.push(applicationWithInterview);
-          }
-        }
-      });
-    });
+    const interviews = myConnections && myConnections.filter(({ interview }) => interview);
+    interviews.sort((a, b) => (a.interview.at < b.interview.at ? 1 : -1));
 
     return {
       jobs,
       jobId,
       job,
       jobseekers: state.rc_find.jobseekers,
-      myApplications,
+      newApplications,
       myConnections,
       myShortlist,
-      myInterviews,
-      applications,
       interviews
     };
   },
   {
-    selectBusiness,
     findJobseekers,
-    getApplications,
-    getInterviews
+    selectBusiness
   }
 )(Applications);

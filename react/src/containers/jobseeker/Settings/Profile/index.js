@@ -168,9 +168,9 @@ class Profile extends React.Component {
             this.saveCompleted();
           }
         },
-        fail: () => {
+        fail: data => {
           this.setState({ loading: null });
-          message.error('Saving is failed');
+          helper.setErrors(form, data, values);
         }
       });
     });
@@ -440,7 +440,7 @@ class Profile extends React.Component {
         {loading && <PopupProgress label={loading.label} value={loading.progress} />}
         {showPreview && (
           <LargeModal visible title="Jobseeker Details" onCancel={this.closePreview}>
-            <JobseekerDetails jobseeker={jobseeker} />
+            <JobseekerDetails jobseekerData={jobseeker} />
           </LargeModal>
         )}
       </FormWrapper>

@@ -1,35 +1,30 @@
 import { takeLatest, call, put } from 'redux-saga/effects';
+
+import { updateBusiness } from 'redux/recruiter/businesses/saga';
+import { weakRequest, getRequest, postRequest, requestSuccess, requestFail } from 'utils/request';
 import * as C from 'redux/constants';
-import { getRequest, postRequest } from 'utils/request';
 
-// function* useToken() {
-//   const { rc_apps: { jobs, selectedJobId } } = yield select();
-//   const job = helper.getItemByID(jobs, selectedJobId);
-//   const business = job.location_data.business_data;
-//   const updatedBusiness = {
-//     ...business,
-//     tokens: business.tokens - 1
-//   };
-//   job.location_data.business_data = updatedBusiness;
-//   yield put({ type: requestSuccess(C.RC_SELECT_BUSINESS), payload: updatedBusiness });
-// }
+const findJobseekers = weakRequest(getRequest({ url: '/api/job-seekers/' }));
 
-const findJobseekers = getRequest({
-  url: '/api/job-seekers/'
-});
+function* connectJobseeker({ payload }) {
+  const { onSuccess, onFail, data: { job_seeker } } = payload;
 
-function* connectJobseeker(action) {
-  const result = yield call(postRequest({ url: `/api/applications/` }), action);
-  if (result) {
-    yield put({
-      type: C.GET_APPLICATIONS,
-      payload: {
-        params: {
-          job: action.payload.data.job
-        }
-      }
-    });
+  const result = yield call(postRequest({ url: `/api/applications/` }), { payload });
+  if (result !== null) {
+    const application = yield call(getRequest({ url: `/api/applications/${result.id}/` }));
+    yield put({ type: requestSuccess(C.RC_CONNECT_JOBSEEKER), job_seeker });
+    if (application !== null) {
+      yield call(updateBusiness, application.job_data.location_data.business_data);
+      yield put({ type: requestSuccess(C.UPDATE_APPLICATION), application });
+      onSuccess && onSuccess();
+    } else {
+      onFail && onFail();
+    }
+    return;
   }
+
+  yield put({ type: requestFail(C.RC_CONNECT_JOBSEEKER), job_seeker });
+  onFail && onFail();
 }
 
 export default function* sagas() {

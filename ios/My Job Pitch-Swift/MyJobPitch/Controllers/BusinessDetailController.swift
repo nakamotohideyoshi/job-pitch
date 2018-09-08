@@ -76,12 +76,7 @@ class BusinessDetailController: MJPController {
     }
     
     func updateBusinessInfo() {
-        if let image = business.getImage() {
-            AppHelper.loadImageURL(imageUrl: (image.thumbnail)!, imageView: headerImgView, completion: nil)
-        } else {
-            headerImgView.image = UIImage(named: "default-logo")
-        }
-        
+        AppHelper.loadLogo(image: business.getImage(), imageView: headerImgView, completion: nil)
         headerName.text = business.name
         headerCreditCount.setTitle(String(format: "%@ %@", business.tokens, business.tokens.intValue > 1 ? "Credits" : "Credit"), for: .normal);
     }

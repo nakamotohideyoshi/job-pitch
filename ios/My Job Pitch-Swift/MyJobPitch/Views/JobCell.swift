@@ -17,11 +17,7 @@ class JobCell: MGSwipeTableCell {
     
     func setData(_ job: Job) {
         
-        if let image = job.getImage() {
-            AppHelper.loadImageURL(imageUrl: (image.thumbnail)!, imageView: imgView, completion: nil)
-        } else {
-            imgView.image = UIImage(named: "default-logo")
-        }
+        AppHelper.loadLogo(image: job.getImage(), imageView: imgView, completion: nil)
         
         nameLabel.text = job.title
         subTitle.text = job.getBusinessName()

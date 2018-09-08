@@ -5,7 +5,7 @@ import { Button, message, Modal } from 'antd';
 import { uploadPitch } from 'redux/jobseeker/profile';
 import * as helper from 'utils/helper';
 
-import { PopupProgress, Icons, VideoRecorder, VideoPlayer, VideoPlayerModal } from 'components';
+import { PopupProgress, Icons, VideoRecorder, VideoPlayer } from 'components';
 import Wrapper from './PitchRecord.styled';
 
 const { confirm } = Modal;
@@ -15,14 +15,17 @@ class PitchRecord extends React.Component {
     showRecorder: false,
     pitchUrl: null,
     pitchData: null,
-    loading: null,
-    newPitchUrl: null,
-    showNewPitch: false
+    loading: null
   };
 
   componentWillMount() {
+    this.updatePitch();
+  }
+
+  updatePitch() {
     const pitch = helper.getPitch(this.props.jobseeker) || {};
     this.setState({
+      loading: null,
       pitchUrl: pitch.video,
       pitchData: null,
       poster: pitch.thumbnail
@@ -45,29 +48,21 @@ class PitchRecord extends React.Component {
   };
 
   closeRecorder = (url, data) => {
-    const pitchUrl = this.state.pitchUrl;
+    const pitchUrl = url || this.state.pitchUrl;
     const pitchData = data || this.state.pitchData;
-    const newPitchUrl = url === undefined ? null : url;
-    this.setState({ pitchUrl, pitchData, showRecorder: false, newPitchUrl });
+    this.setState({ pitchUrl, pitchData, showRecorder: false });
   };
 
   uploadPitch = () => {
     this.props.uploadPitch({
       data: this.state.pitchData,
       onSuccess: () => {
-        const pitch = helper.getPitch(this.props.jobseeker) || {};
-        this.setState({
-          loading: null,
-          newPitchUrl: null,
-          pitchUrl: pitch.video,
-          pitchData: null,
-          poster: pitch.thumbnail
-        });
+        this.updatePitch();
         message.success('Pitch is uploaded successfully.');
-        let backUrl = localStorage.getItem('back');
-        if (backUrl !== 'false' && backUrl !== null) {
-          localStorage.setItem('back', 'false');
-          this.props.history.push(backUrl);
+
+        const { from } = this.props.location.state || {};
+        if (from) {
+          this.props.history.push(from);
         }
       },
       onFail: error => {
@@ -82,23 +77,16 @@ class PitchRecord extends React.Component {
     });
   };
 
-  showModal = () => {
-    this.setState({ showNewPitch: true });
-  };
-
-  hideModal = () => {
-    this.setState({ showNewPitch: false });
-  };
-
   render() {
-    const { pitchUrl, pitchData, loading, showRecorder, poster, newPitchUrl, showNewPitch } = this.state;
+    const { pitchUrl, pitchData, loading, showRecorder, poster } = this.state;
 
     return (
       <Wrapper>
         <div className="help-container">
           Record your up to 30 sec selfie video. The key is to just be yourself! You can record on your phone pretty
           much anywhere, at home on the bus or in a coffee shop it doesn’t matter, and you can re-record as many times
-          as you want.<br />
+          as you want.
+          <br />
           Check out our{' '}
           <a href="https://vimeo.com/255467562" target="_blank" rel="noopener noreferrer">
             example video
@@ -109,7 +97,7 @@ class PitchRecord extends React.Component {
         <div className="video-container">
           <VideoPlayer
             controls
-            poster={poster}
+            poster={!pitchData && poster}
             preload="none"
             sources={[
               {
@@ -122,29 +110,10 @@ class PitchRecord extends React.Component {
           {!pitchUrl && <span> Great show who you are here for your next Job </span>}
         </div>
 
-        {showNewPitch && (
-          <VideoPlayerModal
-            autoplay
-            controls
-            sources={[
-              {
-                src: newPitchUrl,
-                type: 'video/mp4'
-              }
-            ]}
-            onClose={() => this.hideModal()}
-          />
-        )}
-
         <div className="button-container">
           <Button type="primary" onClick={this.openRecorder}>
             Record New Pitch
           </Button>
-          {newPitchUrl && (
-            <Button type="secondary" onClick={this.showModal}>
-              <Icons.PlayCircle /> New Pitch
-            </Button>
-          )}
           {pitchData && (
             <Button type="secondary" onClick={this.uploadPitch}>
               <Icons.Upload /> Upload

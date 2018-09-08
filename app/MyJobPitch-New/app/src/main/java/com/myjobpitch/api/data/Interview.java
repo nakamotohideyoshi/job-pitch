@@ -8,12 +8,8 @@ import java.util.List;
 /**
  * Created by Kei on 26/06/2018.
  */
-public class Interview extends MJPAPIObject {
+public class Interview extends ApplicationInterview {
     private Integer application;
-    private Date at;
-    private List<InterviewMessage> messages;
-    private String notes;
-    private String feedback;
     private Date cancelled;
     private Integer cancelled_by;
     private String status;
@@ -22,20 +18,8 @@ public class Interview extends MJPAPIObject {
         return application;
     }
 
-    public Date getAt() {
-        return at;
-    }
-
-    public List<InterviewMessage> getMessages() {
-        return messages;
-    }
-
-    public String getNotes() {
-        return notes;
-    }
-
-    public String getFeedback() {
-        return feedback;
+    public void setApplication(Integer application) {
+        this.application = application;
     }
 
     public Date getCancelled() {

@@ -7,9 +7,7 @@ import PopupProgress from './PopupProgress';
 import SearchBox from './SearchBox';
 
 import JobseekerDetails from './JobseekerDetails';
-import InterviewEdit from './InterviewEdit';
 import JobDetails from './JobDetails';
-import PublicJobDetails from './JobDetails/PublicJobDetails';
 
 import GoogleMap from './GoogleMap';
 
@@ -33,7 +31,7 @@ import { VideoPlayer, VideoPlayerModal } from './video/Player';
 
 import Email from './Email';
 
-import { ShareLink, SocialShare } from './SocialShare';
+import { ShareLinkDialog, SocialShare } from './SocialShare';
 
 import LargeModal from './LargeModal';
 
@@ -42,9 +40,7 @@ export {
   PopupProgress,
   Logo,
   JobseekerDetails,
-  InterviewEdit,
   JobDetails,
-  PublicJobDetails,
   MessageThread,
   PageHeader,
   PageSubHeader,
@@ -63,7 +59,7 @@ export {
   VideoPlayer,
   VideoPlayerModal,
   Email,
-  ShareLink,
+  ShareLinkDialog,
   SocialShare,
   LargeModal
 };

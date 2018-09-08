@@ -132,6 +132,10 @@ public class MessageFragment extends BaseFragment {
             otherName = AppHelper.getJobSeekerName(jobSeeker);
             otherAvatar = jobSeekerImage;
 
+            if (interview != null) {
+                createButton.setText("Edit Interview");
+            }
+
         }
 
         // show chat list

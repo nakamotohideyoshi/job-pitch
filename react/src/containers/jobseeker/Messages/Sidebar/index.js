@@ -1,11 +1,11 @@
 import React, { Fragment } from 'react';
 import { withRouter } from 'react-router-dom';
-import { List, Avatar } from 'antd';
+import { List, Badge } from 'antd';
 
 import DATA from 'utils/data';
 import * as helper from 'utils/helper';
 
-import { AlertMsg, SearchBox, ListEx } from 'components';
+import { AlertMsg, SearchBox, ListEx, Logo } from 'components';
 import Wrapper from './styled';
 
 class Sidebar extends React.PureComponent {
@@ -33,7 +33,7 @@ class Sidebar extends React.PureComponent {
     );
   };
 
-  renderApp = ({ id, messages, status, job_data }) => {
+  renderApp = ({ id, messages, status, job_data, newMsgs }) => {
     const name = job_data.title;
     const image = helper.getJobLogo(job_data);
     const subName = helper.getFullBWName(job_data);
@@ -48,7 +48,7 @@ class Sidebar extends React.PureComponent {
     return (
       <List.Item key={id} className={`${deleted} ${selected}`} onClick={() => this.selectApp(id)}>
         <List.Item.Meta
-          avatar={<Avatar src={image} className="avatar-48" />}
+          avatar={<Logo src={image} size="48px" padding="4px" />}
           title={
             <Fragment>
               <span className="title single-line">
@@ -59,7 +59,8 @@ class Sidebar extends React.PureComponent {
           }
           description={
             <Fragment>
-              <div className="single-line">{comment}</div>
+              <span className="single-line">{comment}</span>
+              {!!newMsgs && <Badge count={newMsgs < 10 ? newMsgs : '9+'} />}
             </Fragment>
           }
         />

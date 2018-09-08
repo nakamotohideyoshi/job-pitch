@@ -20,25 +20,34 @@ import JobInterface from 'containers/recruiter/Jobs/JobInterface';
 import RCMessages from 'containers/recruiter/Messages';
 import RCSettings from 'containers/recruiter/Settings';
 
-import BusinessListForUser from 'containers/recruiter/Users/BusinessListForUser';
 import UserList from 'containers/recruiter/Users/UserList';
 import UserEdit from 'containers/recruiter/Users/UserEdit';
 
 import JSRoute from 'containers/jobseeker/Route';
 import FindJob from 'containers/jobseeker/FindJob';
-import JSApplications from 'containers/jobseeker/MyApplications';
-import JSInterviews from 'containers/jobseeker/JSInterviews';
+import MyApplications from 'containers/jobseeker/MyApplications';
+import JSInterviews from 'containers/jobseeker/Interviews';
 import JSJob from 'containers/jobseeker/Job';
-import JSPublicJob from 'containers/jobseeker/PublicJob';
-import JSPublicWorkplaceList from 'containers/jobseeker/PublicWorkplaceList';
 import JSMessages from 'containers/jobseeker/Messages';
 import JSSettings from 'containers/jobseeker/Settings';
 
 import NotFound from 'containers/NotFound';
 
-import Layout from 'containers/Layout';
+export default ({ status, location }) => {
+  const { pathname, search } = location;
+  const urlStatus = pathname.split('/')[1];
+  if (urlStatus !== status) {
+    let redirect;
+    if (urlStatus !== '' && status === 'auth') {
+      redirect = `/auth?redirect=${pathname}${search}`;
+    } else if (urlStatus === 'auth' && status !== 'auth') {
+      redirect = `/select${search}`;
+    } else if (urlStatus === 'select' && status !== 'select') {
+      redirect = search.split('redirect=')[1];
+    }
+    return <Redirect to={redirect || `/${status}`} />;
+  }
 
-export default props => {
   return (
     <Switch>
       <Redirect exact from="/" to="/auth" />
@@ -82,29 +91,18 @@ export default props => {
       <RCRoute exact path="/recruiter/settings/credits/:businessId" component={RCSettings} />
       <RCRoute exact path="/recruiter/settings/password" component={RCSettings} />
 
-      <Redirect exact from="/recruiter/users" to="/recruiter/users/business" />
-      <RCRoute exact path="/recruiter/users/business" component={BusinessListForUser} />
+      <RCRoute exact path="/recruiter/users" component={UserList} />
       <RCRoute exact path="/recruiter/users/:businessId" component={UserList} />
-      <RCRoute exact path="/recruiter/users/:businessId/add" component={UserEdit} />
-      <RCRoute exact path="/recruiter/users/:businessId/edit/:userId" component={UserEdit} />
+      <RCRoute exact path="/recruiter/users/add/:businessId" component={UserEdit} />
+      <RCRoute exact path="/recruiter/users/edit/:userId" component={UserEdit} />
 
       <Redirect exact from="/jobseeker" to="/jobseeker/find" />
       <JSRoute exact path="/jobseeker/find" component={FindJob} />
-      <JSRoute exact path="/jobseeker/applications" component={JSApplications} />
+      <JSRoute exact path="/jobseeker/applications" component={MyApplications} />
 
       <JSRoute exact path="/jobseeker/interviews" component={JSInterviews} />
 
-      {props.auth === 'auth' ? (
-        <Route exact path="/jobseeker/jobs/:jobId" render={props => <Layout component={JSPublicJob} {...props} />} />
-      ) : (
-        <JSRoute exact path="/jobseeker/jobs/:jobId" component={JSJob} />
-      )}
-      <JSRoute exact path="/jobseeker/jobs/:jobId" component={JSJob} />
-      <Route
-        exact
-        path="/jobseeker/locations/:locationId"
-        render={props => <Layout component={JSPublicWorkplaceList} {...props} />}
-      />
+      {status === 'jobseeker' && <JSRoute exact path="/jobseeker/jobs/:jobId" component={JSJob} />}
       <JSRoute exact path="/jobseeker/messages" component={JSMessages} />
       <JSRoute exact path="/jobseeker/messages/:appId" component={JSMessages} />
       <Redirect exact from="/jobseeker/settings" to="/jobseeker/settings/profile" />

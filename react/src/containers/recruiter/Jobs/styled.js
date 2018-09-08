@@ -19,37 +19,31 @@ export default styled.div`
       padding-right: 12px;
       overflow: hidden;
 
-      .ant-list-item-content {
-        flex: initial;
+      .ant-list-item-meta {
+        align-items: center;
 
         .ant-list-item-meta-title {
           font-size: 16px;
         }
+      }
 
-        .ant-list-item-meta-description {
-          margin-right: 10px;
+      .ant-list-item-content {
+        justify-content: space-evenly;
+        align-items: center;
+        font-size: 12px;
+
+        div {
+          margin: 4px 0;
         }
 
-        .properties {
-          font-size: 12px;
-          span {
-            display: inline-block;
-          }
+        a:hover {
+          text-decoration: underline;
         }
       }
 
-      .ant-list-item-action {
-        span {
-          width: 30px;
-          height: 30px;
-          display: inline-flex;
-          justify-content: center;
-          align-items: center;
-          border-radius: 50%;
-          &:hover {
-            box-shadow: 0px 0 4px 0px rgba(0, 0, 0, 0.15);
-          }
-        }
+      &:hover {
+        cursor: pointer;
+        background-color: ${colors.lightGreen};
       }
 
       &.loading {
@@ -59,11 +53,6 @@ export default styled.div`
           background-color: rgba(255, 255, 255, 0.5);
           z-index: 1;
         }
-      }
-
-      &:hover {
-        cursor: pointer;
-        background-color: ${colors.lightGreen};
       }
 
       &.disabled * {

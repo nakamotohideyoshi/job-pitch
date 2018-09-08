@@ -107,17 +107,13 @@ class LocationEditController: MJPController {
             latitude = location.latitude
             longitude = location.longitude
             
-            if let image = location.getImage() {
-                AppHelper.loadImageURL(imageUrl: (image.image)!, imageView: imgView, completion: nil)
-                if location.images != nil && location.images.count > 0 {
-                    origImage = image
-                    removeImageButton.isHidden = false
-                    addLogoButton.setTitle("Change Logo", for: .normal)
+            AppHelper.loadLogo(image: location.getImage(), imageView: imgView, completion: { 
+                if self.location.images != nil && self.location.images.count > 0 {
+                    self.origImage = self.location.getImage()
+                    self.removeImageButton.isHidden = false
+                    self.addLogoButton.setTitle("Change Logo", for: .normal)
                 }
-            } else {
-                imgView.image = UIImage(named: "default-logo")
-            }
-            
+            })            
         } else {
             emailField.text = AppData.email
             imgView.image = UIImage(named: "default-logo")
@@ -211,15 +207,9 @@ class LocationEditController: MJPController {
     @IBAction func removeImageAction(_ sender: Any) {
         
         logoImage = nil
-        if let image = business?.getImage() {
-            AppHelper.loadImageURL(imageUrl: (image.thumbnail)!, imageView: imgView, completion: nil)
-        } else {
-            AppHelper.removeLoading(imageView: imgView)
-            imgView.image = UIImage(named: "default-logo")
-        }
+        AppHelper.loadLogo(image: business?.getImage(), imageView: imgView, completion: nil)
         addLogoButton.setTitle("Add Logo", for: .normal)
-        removeImageButton.isHidden = true
-        
+        removeImageButton.isHidden = true        
     }
     
     @IBAction func myLocationAction(_ sender: Any) {
@@ -359,3 +349,4 @@ extension LocationEditController: UITextFieldDelegate {
         return false
     }
 }
+

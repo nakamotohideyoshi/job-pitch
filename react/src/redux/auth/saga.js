@@ -7,6 +7,7 @@ import { getRequest, postRequest, requestSuccess } from 'utils/request';
 import { getBusinesses } from 'redux/recruiter/businesses/saga';
 import { getWorkplaces } from 'redux/recruiter/workplaces/saga';
 import { getJobs } from 'redux/recruiter/jobs/saga';
+import { getApplications } from 'redux/applications/saga';
 import * as C from 'redux/constants';
 
 function* register(action) {
@@ -32,6 +33,8 @@ function* logout(action) {
     yield call(postRequest({ url: '/api-rest-auth/logout/' }), action);
     localStorage.removeItem('token');
   }
+  DATA.email = undefined;
+  DATA.userRole = undefined;
 }
 
 const resetPassword = postRequest({
@@ -54,8 +57,7 @@ function* getUserData() {
       call(getRequest({ url: '/api/job-statuses/' })),
       call(getRequest({ url: '/api/sexes/' })),
       call(getRequest({ url: '/api/roles/' })),
-      call(getRequest({ url: '/api/paypal-products/' })),
-      call(getRequest({ url: '/api/applications/' }))
+      call(getRequest({ url: '/api/paypal-products/' }))
     ]);
 
     DATA.initTokens = result[0];
@@ -68,7 +70,6 @@ function* getUserData() {
     DATA.sexes = result[7];
     DATA.roles = result[8];
     DATA.paypalProducts = result[9];
-    DATA.applications = result[10];
 
     DATA.JOB = {
       OPEN: DATA.jobStatuses.filter(({ name }) => name === 'OPEN')[0].id,
@@ -87,14 +88,18 @@ function* getUserData() {
 
   const jobseekerId = user.job_seeker;
   if (jobseekerId) {
+    DATA.userRole = 'JOB_SEEKER';
     const jobseeker = jobseekerId ? yield call(getRequest({ url: `/api/job-seekers/${jobseekerId}/` })) : null;
     const profileId = (jobseeker || {}).profile;
     const profile = profileId ? yield call(getRequest({ url: `/api/job-profiles/${profileId}/` })) : null;
     yield put({ type: requestSuccess(C.JS_SAVE_PROFILE), payload: jobseeker });
     yield put({ type: requestSuccess(C.JS_SAVE_JOBPROFILE), payload: profile });
   } else {
+    DATA.userRole = 'RECRUITER';
     yield all([call(getBusinesses), call(getWorkplaces), call(getJobs)]);
   }
+
+  yield call(getApplications);
 
   yield put({ type: C.UPDATE_AUTH, payload: { user } });
 }

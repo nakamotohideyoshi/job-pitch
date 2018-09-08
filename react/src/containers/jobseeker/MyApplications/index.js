@@ -1,14 +1,13 @@
 import React from 'react';
 import Helmet from 'react-helmet';
 import { connect } from 'react-redux';
-import Truncate from 'react-truncate';
-import { List, Avatar, Tooltip, Button } from 'antd';
+import { List, Tooltip, Button, Drawer } from 'antd';
 
-import { getApplications } from 'redux/applications';
+import { getApplications } from 'redux/selectors';
 import DATA from 'utils/data';
 import * as helper from 'utils/helper';
 
-import { PageHeader, SearchBox, AlertMsg, ListEx, Icons, JobDetails, LargeModal } from 'components';
+import { PageHeader, SearchBox, AlertMsg, ListEx, Icons, JobDetails, Logo } from 'components';
 import NoPitch from '../components/NoPitch';
 import Wrapper from './styled';
 
@@ -19,12 +18,10 @@ class MyApplications extends React.Component {
   };
 
   componentWillMount() {
-    const { getApplications, location } = this.props;
+    const { location } = this.props;
     const { appId } = location.state || {};
     if (appId) {
       this.setState({ selectedId: appId });
-    } else {
-      getApplications();
     }
   }
 
@@ -43,13 +40,14 @@ class MyApplications extends React.Component {
     return job_data.title.toLowerCase().indexOf(searchText) >= 0 || name.toLowerCase().indexOf(searchText) >= 0;
   };
 
-  renderApp = app => {
+  renderApplication = app => {
     const { id, job_data } = app;
-    const { title, contract, hours, description } = job_data;
+    const { title, contract, hours } = job_data;
     const logo = helper.getJobLogo(job_data);
     const name = helper.getFullBWName(job_data);
     const contractName = helper.getItemByID(DATA.contracts, contract).short_name;
     const hoursName = helper.getItemByID(DATA.hours, hours).short_name;
+    const sector = helper.getNameByID('sectors', job_data.sector);
 
     return (
       <List.Item
@@ -63,20 +61,13 @@ class MyApplications extends React.Component {
         ]}
         onClick={() => this.onSelect(id)}
       >
-        <List.Item.Meta
-          avatar={<Avatar src={logo} className="avatar-80" />}
-          title={`${title} (${name})`}
-          description={
-            <Truncate lines={2} ellipsis={<span>...</span>}>
-              {description}
-            </Truncate>
-          }
-        />
-        <div className="properties">
-          <span>
+        <List.Item.Meta avatar={<Logo src={logo} size="80px" padding="10px" />} title={title} description={name} />
+        <span style={{ width: '180px' }}>
+          <div>{sector}</div>
+          <div>
             {contractName} / {hoursName}
-          </span>
-        </div>
+          </div>
+        </span>
       </List.Item>
     );
   };
@@ -88,10 +79,10 @@ class MyApplications extends React.Component {
   );
 
   render() {
-    const { jobseeker, applications, error } = this.props;
+    const { jobseeker, applications } = this.props;
 
     if (!helper.getPitch(jobseeker)) {
-      return <NoPitch title="My Applications" backUrl={this.props.history.location.pathname} />;
+      return <NoPitch title="My Applications" />;
     }
 
     const selectedApp = applications && helper.getItemByID(applications, this.state.selectedId);
@@ -111,36 +102,29 @@ class MyApplications extends React.Component {
             loadingSize="large"
             pagination={{ pageSize: 10 }}
             filterOption={this.filterOption}
-            error={error && 'Server Error!'}
-            renderItem={this.renderApp}
+            renderItem={this.renderApplication}
             emptyRender={this.renderEmpty}
           />
         </div>
 
-        {selectedApp && (
-          <LargeModal visible title="Job Details" onCancel={() => this.onSelect()}>
+        <Drawer placement="right" closable={false} onClose={() => this.onSelect()} visible={!!selectedApp}>
+          {selectedApp && (
             <JobDetails
-              job={selectedApp.job_data}
+              application={selectedApp}
               actions={
-                <Button type="primary" onClick={() => this.onMessage(selectedApp)}>
+                <Button type="primary" disabled={selectedApp.loading} onClick={() => this.onMessage(selectedApp)}>
                   Message
                 </Button>
               }
             />
-          </LargeModal>
-        )}
+          )}
+        </Drawer>
       </Wrapper>
     );
   }
 }
 
-export default connect(
-  state => ({
-    jobseeker: state.js_profile.jobseeker,
-    applications: state.applications.applications,
-    error: state.applications.error
-  }),
-  {
-    getApplications
-  }
-)(MyApplications);
+export default connect(state => ({
+  jobseeker: state.js_profile.jobseeker,
+  applications: getApplications(state)
+}))(MyApplications);

@@ -1,115 +1,128 @@
 import React from 'react';
 import Helmet from 'react-helmet';
 import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
 import Truncate from 'react-truncate';
-import { Breadcrumb, List, Tooltip, Modal } from 'antd';
+import { Select, List, Tooltip, Modal, notification } from 'antd';
 
+import { getBusinesses, getUsers as getUsersFromStore } from 'redux/selectors';
+import { selectBusiness } from 'redux/recruiter/businesses';
+import { getUsers, removeUser } from 'redux/recruiter/users';
+import DATA from 'utils/data';
 import * as helper from 'utils/helper';
 
-import { getUsers } from 'redux/recruiter/users';
+import { PageHeader, PageSubHeader, SearchBox, ListEx, Logo, Loading, Icons, LinkButton, AlertMsg } from 'components';
+import Wrapper from './styled';
 
-import * as _ from 'lodash';
-
-import { PageHeader, PageSubHeader, AlertMsg, LinkButton, Loading, ListEx, Icons } from 'components';
-import DeleteDialog from './DeleteDialog';
-import Wrapper from '../styled';
-
-const { warning } = Modal;
+const Option = Select.Option;
+const { confirm, warning } = Modal;
 
 class UserList extends React.Component {
   state = {
-    showDialog: false,
-    selected: '',
-    selectedUser: null
+    searchText: ''
   };
 
   componentWillMount() {
-    // if (this.props.users === null) {
-    this.setState({
-      loading: true
-    });
-    this.props.getUsers(this.props.business);
-    // }
-  }
-
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.users !== this.props.users) {
-      this.setState({
-        loading: false
-      });
+    const { businessId, business, history } = this.props;
+    if (businessId !== business.id) {
+      history.replace(`/recruiter/users/${business.id}`);
+    } else {
+      this.selectBusiness(businessId);
     }
   }
 
-  openDialog(event, id) {
-    event && event.stopPropagation();
-    this.setState({ showDialog: true, selected: id });
+  componentWillReceiveProps({ businessId }) {
+    if (businessId !== this.props.businessId) {
+      this.selectBusiness(businessId);
+    }
   }
 
-  closeDialog = event => {
-    event && event.stopPropagation();
-    this.setState({ showDialog: false });
+  selectBusiness = id => {
+    this.props.getUsers(id);
+    this.props.selectBusiness(id);
+    helper.saveData('users/businessId', id);
   };
 
-  addUser = () => {
-    const { business: { id }, history } = this.props;
-    history.push(`/recruiter/users/${id}/add`);
+  onSelectBusiness = ({ id }) => {
+    this.props.history.replace(`/recruiter/users/${id}`);
   };
 
-  editUser = (businessId, { id }, event) => {
-    event && event.stopPropagation();
-    this.props.history.push(`/recruiter/users/${businessId}/edit/${id}`);
+  onAddUser = () => {
+    this.props.history.push(`/recruiter/users/add/${this.props.businessId}`);
   };
 
-  showRemoveDialog = (selectedUser, event) => {
+  onSelect = ({ id, email }) => {
+    if (DATA.email === email) {
+      warning({
+        content: 'Cannot edit currently logged in user',
+        maskClosable: true
+      });
+      return;
+    }
+
+    this.props.history.push(`/recruiter/users/edit/${id}`);
+  };
+
+  onRemove = (id, event) => {
     event && event.stopPropagation();
-    this.setState({ selectedUser });
+
+    confirm({
+      content: 'Are you sure you want to delete this user?',
+      okText: `Remove`,
+      okType: 'danger',
+      cancelText: 'Cancel',
+      maskClosable: true,
+      onOk: () => {
+        this.props.removeUser({
+          id,
+          business: this.props.businessId,
+          onSuccess: () => {
+            notification.success({
+              message: 'Success',
+              description: 'The user is removed'
+            });
+          },
+          onFail: () => {
+            notification.error({
+              message: 'Error',
+              description: 'There was an error removing the user'
+            });
+          }
+        });
+      }
+    });
+  };
+
+  onChangeSearchText = searchText => this.setState({ searchText });
+
+  filterOption = ({ email, comment }) => {
+    const searchText = this.state.searchText.toLowerCase();
+    return email.toLowerCase().indexOf(searchText) >= 0 || comment.toLowerCase().indexOf(searchText) >= 0;
   };
 
   renderUser = user => {
-    const { id, email, locations, loading } = user;
-    const { workplaces, business, userEmail } = this.props;
-    let locationStr = '';
-    if (locations.length === 0) {
-      locationStr = 'Administrator';
-    } else {
-      _.forEach(locations, location => {
-        let filteredWorkplaces = workplaces.filter(item => item.id === location);
-        locationStr += filteredWorkplaces[0].name + ', ';
-      });
-      locationStr = locationStr.substring(0, locationStr.length - 2);
-    }
+    const { id, email, comment, loading } = user;
     return (
       <List.Item
         key={id}
         actions={
-          userEmail !== email
+          DATA.email !== email
             ? [
                 <Tooltip placement="bottom" title="Remove">
-                  <span onClick={e => this.showRemoveDialog(user, e)}>
+                  <span onClick={e => this.onRemove(id, e)}>
                     <Icons.TrashAlt />
                   </span>
                 </Tooltip>
               ]
             : []
         }
-        onClick={() => {
-          if (userEmail !== email) {
-            this.editUser(business.id, user);
-          } else {
-            warning({
-              content: 'Cannot edit currently logged in user',
-              maskClosable: true
-            });
-          }
-        }}
+        onClick={() => this.onSelect(user)}
         className={`${loading ? 'loading' : ''}`}
       >
         <List.Item.Meta
           title={email}
           description={
-            <Truncate lines={2} ellipsis={<span>...</span>}>
-              {locationStr}
+            <Truncate lines={1} ellipsis={<span>...</span>}>
+              {comment}
             </Truncate>
           }
         />
@@ -122,13 +135,14 @@ class UserList extends React.Component {
     return (
       <AlertMsg>
         <span>This busniness doesn't seem to have any user yet!</span>
-        <a onClick={this.addUser}>Create user</a>
+        <a onClick={this.onAddUser}>Create user</a>
       </AlertMsg>
     );
   };
 
   render() {
-    const { users } = this.props;
+    const { businesses, business, users } = this.props;
+
     return (
       <Wrapper className="container">
         <Helmet title="My Users" />
@@ -138,30 +152,35 @@ class UserList extends React.Component {
         </PageHeader>
 
         <PageSubHeader>
-          <Breadcrumb>
-            <Breadcrumb.Item>
-              <Link to="/recruiter/users/business">Businesses</Link>
-            </Breadcrumb.Item>
-            <Breadcrumb.Item>Users</Breadcrumb.Item>
-          </Breadcrumb>
-          <LinkButton onClick={this.addUser}>Add new user</LinkButton>
+          <Select value={business.id} onChange={this.onSelectBusiness}>
+            {businesses.map(b => {
+              const logo = helper.getBusinessLogo(b);
+              return (
+                <Option key={b.id} value={b.id}>
+                  <Logo src={logo} className="logo" size="22px" />
+                  {b.name}
+                </Option>
+              );
+            })}
+          </Select>
+          <SearchBox width="200px" onChange={this.onChangeSearchText} />
+        </PageSubHeader>
+
+        <PageSubHeader>
+          <div />
+          <LinkButton onClick={this.onAddUser}>Add new user</LinkButton>
         </PageSubHeader>
 
         <div className="content">
-          {this.state.loading ? (
-            <Loading className="mask" size="large" />
-          ) : (
-            <ListEx
-              data={users}
-              loadingSize="large"
-              pagination={{ pageSize: 10 }}
-              renderItem={this.renderUser}
-              emptyRender={this.renderEmpty}
-            />
-          )}
+          <ListEx
+            data={users}
+            loadingSize="large"
+            pagination={{ pageSize: 10 }}
+            renderItem={this.renderUser}
+            filterOption={this.filterOption}
+            emptyRender={this.renderEmpty}
+          />
         </div>
-
-        <DeleteDialog user={this.state.selectedUser} onCancel={() => this.showRemoveDialog()} />
       </Wrapper>
     );
   }
@@ -169,18 +188,21 @@ class UserList extends React.Component {
 
 export default connect(
   (state, { match }) => {
+    const businesses = getBusinesses(state);
     const businessId = helper.str2int(match.params.businessId);
-    const business = helper.getItemByID(state.rc_businesses.businesses, businessId);
-    let { workplaces } = state.rc_workplaces;
-    workplaces = workplaces.filter(item => item.business === businessId);
-    const { users } = state.rc_users;
-    const userEmail = state.auth.user.email;
+    const businessId1 = businessId || helper.loadData('users/businessId');
+    const business = helper.getItemByID(businesses, businessId1) || businesses[0];
+
     return {
+      businesses,
+      businessId,
       business,
-      workplaces,
-      users,
-      userEmail
+      users: getUsersFromStore(state)
     };
   },
-  { getUsers }
+  {
+    selectBusiness,
+    getUsers,
+    removeUser
+  }
 )(UserList);

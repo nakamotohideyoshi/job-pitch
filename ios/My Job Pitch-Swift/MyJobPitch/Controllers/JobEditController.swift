@@ -180,16 +180,13 @@ class JobEditController: MJPController {
             
             playButtonView.isHidden = job.getPitch()?.video == nil
             
-            if let image = job.getImage() {
-                AppHelper.loadImageURL(imageUrl: (image.image)!, imageView: imgView, completion: nil)
-                if job.images != nil && job.images.count > 0 {
-                    origImage = image
-                    removeImageButton.isHidden = false
-                    addLogoButton.setTitle("Change Logo", for: .normal)
+            AppHelper.loadLogo(image: job.getImage(), imageView: imgView, completion: { 
+                if self.job.images != nil && self.job.images.count > 0 {
+                    self.origImage = self.job.getImage()
+                    self.removeImageButton.isHidden = false
+                    self.addLogoButton.setTitle("Change Logo", for: .normal)
                 }
-            } else {
-                imgView.image = UIImage(named: "default-logo")
-            }
+            })
         } else {
             imgView.image = UIImage(named: "default-logo")
         }
@@ -324,12 +321,7 @@ class JobEditController: MJPController {
     @IBAction func removeImageAction(_ sender: Any) {
         
         logoImage = nil
-        if let image = location?.getImage() {
-            AppHelper.loadImageURL(imageUrl: (image.thumbnail)!, imageView: imgView, completion: nil)
-        } else {
-            AppHelper.removeLoading(imageView: imgView)
-            imgView.image = UIImage(named: "default-logo")
-        }
+        AppHelper.loadLogo(image: location?.getImage(), imageView: imgView, completion: nil)
         removeImageButton.isHidden = true
         addLogoButton.setTitle("Add Logo", for: .normal)
         

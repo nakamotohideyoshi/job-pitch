@@ -59,9 +59,9 @@ class ImageSelector extends React.Component {
       return;
     }
 
-    helper.getBase64(file.originFileObj, url => {
+    helper.getBase64(file, url => {
       const { onChange } = this.props;
-      onChange && onChange(file.originFileObj, url);
+      onChange && onChange(file, url);
     });
   };
 

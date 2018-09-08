@@ -16,6 +16,9 @@ class Business: MJPObjectWithDates {
     var images: NSArray!
     var tokens: NSNumber!
     
+    // API V5
+    var restricted = false
+    
     func getImage() -> Image? {
         if images != nil && images.count > 0 {
             return images.firstObject as? Image

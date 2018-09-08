@@ -3,7 +3,12 @@ import colors from 'utils/colors';
 import media from 'utils/mediaquery';
 
 export default styled.div`
-  .avatar {
+  h2 {
+    font-size: 1.75em;
+    margin-bottom: 1em;
+  }
+
+  .logo {
     position: relative;
     ${media.tablet` margin-bottom: 24px;`};
     padding-top: 100%;
@@ -11,13 +16,8 @@ export default styled.div`
 
     span {
       position: absolute;
-      top: 0;
-      bottom: 0;
-      width: 100%;
-      height: 100%;
-      background-size: cover;
-      background-repeat: no-repeat;
-      background-position: center;
+      top: 0%;
+      left: 0%;
     }
   }
 
@@ -37,28 +37,59 @@ export default styled.div`
       padding: 0;
       color: ${colors.text3};
       li {
-        margin-bottom: 8px;
+        margin-bottom: 10px;
         font-weight: 100;
-        svg {
-          margin-right: 0.5em;
-          width: 20px;
-          font-size: 16px;
+
+        &.PENDING {
+          color: ${colors.yellow};
+        }
+
+        &.ACCEPTED {
+          color: ${colors.green};
         }
       }
     }
   }
 
-  button {
-    display: block;
-    width: 200px;
+  .controls {
+    button {
+      display: block;
+      max-width: 200px;
+      width: 100%;
+    }
+
+    button + button {
+      margin-top: 16px;
+    }
   }
 
-  button + button {
-    margin-top: 16px;
-  }
+  .ant-tabs {
+    margin-top: 30px;
 
-  .ant-divider {
-    margin: 40px 0;
+    .ant-tabs-nav .ant-tabs-tab {
+      color: inherit !important;
+    }
+
+    .ant-tabs-tabpane {
+      padding: 0 15px;
+
+      .ant-collapse-header {
+        div {
+          display: flex;
+          justify-content: space-between;
+
+          .COMPLETED {
+            font-size: 12px;
+            color: ${colors.green};
+          }
+
+          .CANCELLED {
+            font-size: 12px;
+            color: ${colors.yellow};
+          }
+        }
+      }
+    }
   }
 
   .pitch-video {
@@ -70,15 +101,12 @@ export default styled.div`
     `};
   }
 
-  .description,
-  .btn-cv,
-  .check-label {
-    margin-top: 18px;
-  }
-
   .check-label {
     display: flex;
+    margin-top: 30px;
+
     svg {
+      min-width: 0.875em;
       margin-right: 0.25em;
       color: #ff9300;
     }
@@ -86,5 +114,9 @@ export default styled.div`
 
   .check-label + .check-label {
     margin-top: 0.5em;
+  }
+
+  .ant-alert {
+    margin-bottom: 20px;
   }
 `;

@@ -1,38 +1,40 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Redirect, withRouter } from 'react-router-dom';
-import { message, notification } from 'antd';
-
-import { Loading } from 'components';
+import { Switch, Route, withRouter } from 'react-router-dom';
+import { message } from 'antd';
 
 import { getUserData } from 'redux/auth';
-import Routers from './routers';
+
+import { Loading } from 'components';
+import Layout from 'containers/Layout';
+import PublicWorkplace from 'containers/jobseeker/PublicWorkplace';
+import PublicJob from 'containers/jobseeker/PublicJob';
+
+import Routers from './Routers';
 
 message.config({ top: 60 });
-notification.config({ top: 60 });
+// notification.config({ top: 60 });
 
-const App = ({ location, status, user, getUserData }) => {
+const App = ({ user, status, getUserData, location }) => {
   if (status !== 'auth' && !user) {
     getUserData();
     return <Loading size="large" />;
   }
 
-  const { pathname, search } = location;
-  const urlStatus = pathname.split('/')[1];
-  if (pathname.indexOf('/jobseeker/jobs/') !== 0 && pathname.indexOf('/jobseeker/locations/') !== 0) {
-    if (urlStatus !== status) {
-      let redirect;
-      if (urlStatus !== '' && status === 'auth') {
-        redirect = `/auth?redirect=${pathname}${search}`;
-      } else if (urlStatus === 'auth' && status !== 'auth') {
-        redirect = `/select${search}`;
-      } else if (urlStatus === 'select' && status !== 'select') {
-        redirect = search.split('redirect=')[1];
-      }
-      return <Redirect to={redirect || `/${status}`} />;
-    }
-  }
-  return <Routers auth={status} />;
+  return (
+    <Switch>
+      <Route
+        exact
+        path="/jobseeker/locations/:workplaceId"
+        render={props => <Layout component={PublicWorkplace} {...props} />}
+      />
+      {status !== 'jobseeker' && (
+        <Route exact path="/jobseeker/jobs/:jobId" render={props => <Layout component={PublicJob} {...props} />} />
+      )}
+
+      <Routers status={status} location={location} />
+    </Switch>
+  );
 };
 
 export default withRouter(

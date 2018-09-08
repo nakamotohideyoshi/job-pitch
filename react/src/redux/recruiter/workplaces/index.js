@@ -7,8 +7,6 @@ import { requestPending, requestSuccess, requestFail } from 'utils/request';
 // Actions
 // ------------------------------------
 
-export const updateStatus = createAction(C.RC_WORKPLACES_UPDATE);
-export const getWorkplaces = createAction(C.RC_GET_WORKPLACES);
 export const removeWorkplace = createAction(C.RC_REMOVE_WORKPLACE);
 export const saveWorkplace = createAction(C.RC_SAVE_WORKPLACE);
 
@@ -22,30 +20,25 @@ const initialState = {
 
 export default handleActions(
   {
-    [C.RC_WORKPLACES_UPDATE]: (state, { payload }) => ({
-      ...state,
-      ...payload
-    }),
-
-    // ---- get workplace ----
-
-    [requestPending(C.RC_GET_WORKPLACES)]: state => initialState,
+    // ---- get workplaces ----
 
     [requestSuccess(C.RC_GET_WORKPLACES)]: (state, { payload }) => ({
       ...state,
       workplaces: payload
     }),
 
-    [requestFail(C.RC_GET_WORKPLACES)]: state => ({
+    // ---- update workplace ----
+
+    [C.RC_UPDATE_WORKPLACE]: (state, { workplace }) => ({
       ...state,
-      workplaces: []
+      workplaces: helper.updateItem(state.workplaces, workplace, true)
     }),
 
     // ---- remove workplace ----
 
     [requestPending(C.RC_REMOVE_WORKPLACE)]: (state, { payload }) => ({
       ...state,
-      workplaces: helper.updateObj(state.workplaces, {
+      workplaces: helper.updateItem(state.workplaces, {
         id: payload.id,
         loading: true
       })
@@ -53,12 +46,12 @@ export default handleActions(
 
     [requestSuccess(C.RC_REMOVE_WORKPLACE)]: (state, { request }) => ({
       ...state,
-      workplaces: helper.removeObj(state.workplaces, request.id)
+      workplaces: helper.removeItem(state.workplaces, request.id)
     }),
 
     [requestFail(C.RC_REMOVE_WORKPLACE)]: (state, { request }) => ({
       ...state,
-      workplaces: helper.updateObj(state.workplaces, {
+      workplaces: helper.updateItem(state.workplaces, {
         id: request.id,
         loading: false
       })

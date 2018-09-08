@@ -12,6 +12,10 @@ public class Application extends BaseApplication {
     private Integer deleted_by;
     private List<Message> messages;
 
+    //Added in API V3
+    private List<Interview> interviews;
+    private List<Pitch> pitches;
+
     public JobSeeker getJob_seeker() {
         return job_seeker;
     }
@@ -38,5 +42,13 @@ public class Application extends BaseApplication {
 
     public void setStatus(Integer status) {
         this.status = status;
+    }
+
+    public List<Interview> getInterviews() {
+        return interviews;
+    }
+
+    public List<Pitch> getPitches() {
+        return pitches;
     }
 }

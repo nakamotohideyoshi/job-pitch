@@ -5,10 +5,6 @@ import styled from 'styled-components';
 const Wrapper = styled(Select)`
   flex: 1;
   margin-right: 20px;
-
-  .ant-select-selection-selected-value .logo {
-    margin-top: 4px !important;
-  }
 `;
 
 export default ({ loading, placeholder, children, ...props }) => {

@@ -7,14 +7,20 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		2F030F1120E81B9E00EDFE60 /* InterviewMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F030F1020E81B9E00EDFE60 /* InterviewMessage.swift */; };
+		21CF19302141883D003185F0 /* Duration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21CF19282141883D003185F0 /* Duration.swift */; };
+		21CF19312141883D003185F0 /* Int+Timepiece.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21CF19292141883D003185F0 /* Int+Timepiece.swift */; };
+		21CF19322141883D003185F0 /* NSCalendar+Timepiece.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21CF192A2141883D003185F0 /* NSCalendar+Timepiece.swift */; };
+		21CF19332141883D003185F0 /* NSDate+Timepiece.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21CF192B2141883D003185F0 /* NSDate+Timepiece.swift */; };
+		21CF19342141883D003185F0 /* NSDateComponents+Timepiece.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21CF192C2141883D003185F0 /* NSDateComponents+Timepiece.swift */; };
+		21CF19352141883D003185F0 /* String+Timepiece.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21CF192D2141883D003185F0 /* String+Timepiece.swift */; };
+		21CF19362141883D003185F0 /* WWCalendarTimeSelector.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 21CF192E2141883D003185F0 /* WWCalendarTimeSelector.storyboard */; };
+		21CF19372141883D003185F0 /* WWCalendarTimeSelector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21CF192F2141883D003185F0 /* WWCalendarTimeSelector.swift */; };
 		2F030F1320E81C2000EDFE60 /* Interview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F030F1220E81C2000EDFE60 /* Interview.swift */; };
 		2F030F1520E8EE2800EDFE60 /* InterviewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F030F1420E8EE2800EDFE60 /* InterviewCell.swift */; };
 		2F030F1720E8EF5300EDFE60 /* InterviewListController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F030F1620E8EF5300EDFE60 /* InterviewListController.swift */; };
 		2F030F1920EA1AA900EDFE60 /* InterviewDetailController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F030F1820EA1AA900EDFE60 /* InterviewDetailController.swift */; };
 		2F030F1B20EA1AE200EDFE60 /* InterviewEditController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F030F1A20EA1AE200EDFE60 /* InterviewEditController.swift */; };
-		2F62848C20EF932A00BBE78D /* WWCalendarTimeSelector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F62848B20EF932A00BBE78D /* WWCalendarTimeSelector.swift */; };
-		2F62848E20EF9E6700BBE78D /* WWCalendarTimeSelector.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2F62848D20EF9E6700BBE78D /* WWCalendarTimeSelector.storyboard */; };
+		2F3466EB212AB95800E5EF96 /* ApplicationInterviewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F3466EA212AB95800E5EF96 /* ApplicationInterviewCell.swift */; };
 		2F870FB620DBCA7600F9427C /* BusinessUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F870FB520DBCA7600F9427C /* BusinessUser.swift */; };
 		2F870FB820DBCC0900F9427C /* BusinessUserCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F870FB720DBCC0900F9427C /* BusinessUserCell.swift */; };
 		2F870FBA20DC9DBD00F9427C /* BusinessUserListController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F870FB920DC9DBD00F9427C /* BusinessUserListController.swift */; };
@@ -133,15 +139,21 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		21CF19282141883D003185F0 /* Duration.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Duration.swift; path = Utils/WWCalendarTimeSelector/Duration.swift; sourceTree = "<group>"; };
+		21CF19292141883D003185F0 /* Int+Timepiece.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "Int+Timepiece.swift"; path = "Utils/WWCalendarTimeSelector/Int+Timepiece.swift"; sourceTree = "<group>"; };
+		21CF192A2141883D003185F0 /* NSCalendar+Timepiece.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "NSCalendar+Timepiece.swift"; path = "Utils/WWCalendarTimeSelector/NSCalendar+Timepiece.swift"; sourceTree = "<group>"; };
+		21CF192B2141883D003185F0 /* NSDate+Timepiece.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "NSDate+Timepiece.swift"; path = "Utils/WWCalendarTimeSelector/NSDate+Timepiece.swift"; sourceTree = "<group>"; };
+		21CF192C2141883D003185F0 /* NSDateComponents+Timepiece.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "NSDateComponents+Timepiece.swift"; path = "Utils/WWCalendarTimeSelector/NSDateComponents+Timepiece.swift"; sourceTree = "<group>"; };
+		21CF192D2141883D003185F0 /* String+Timepiece.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "String+Timepiece.swift"; path = "Utils/WWCalendarTimeSelector/String+Timepiece.swift"; sourceTree = "<group>"; };
+		21CF192E2141883D003185F0 /* WWCalendarTimeSelector.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = WWCalendarTimeSelector.storyboard; path = Utils/WWCalendarTimeSelector/WWCalendarTimeSelector.storyboard; sourceTree = "<group>"; };
+		21CF192F2141883D003185F0 /* WWCalendarTimeSelector.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = WWCalendarTimeSelector.swift; path = Utils/WWCalendarTimeSelector/WWCalendarTimeSelector.swift; sourceTree = "<group>"; };
 		27B30165DDDB50C20065D004 /* Pods_MyJobPitch.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MyJobPitch.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		2F030F1020E81B9E00EDFE60 /* InterviewMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = InterviewMessage.swift; path = Models/api/InterviewMessage.swift; sourceTree = "<group>"; };
 		2F030F1220E81C2000EDFE60 /* Interview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Interview.swift; path = Models/api/Interview.swift; sourceTree = "<group>"; };
 		2F030F1420E8EE2800EDFE60 /* InterviewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = InterviewCell.swift; path = Views/InterviewCell.swift; sourceTree = "<group>"; };
 		2F030F1620E8EF5300EDFE60 /* InterviewListController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = InterviewListController.swift; path = Controllers/InterviewListController.swift; sourceTree = "<group>"; };
 		2F030F1820EA1AA900EDFE60 /* InterviewDetailController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = InterviewDetailController.swift; path = Controllers/InterviewDetailController.swift; sourceTree = "<group>"; };
 		2F030F1A20EA1AE200EDFE60 /* InterviewEditController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = InterviewEditController.swift; path = Controllers/InterviewEditController.swift; sourceTree = "<group>"; };
-		2F62848B20EF932A00BBE78D /* WWCalendarTimeSelector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WWCalendarTimeSelector.swift; sourceTree = "<group>"; };
-		2F62848D20EF9E6700BBE78D /* WWCalendarTimeSelector.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = WWCalendarTimeSelector.storyboard; sourceTree = "<group>"; };
+		2F3466EA212AB95800E5EF96 /* ApplicationInterviewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ApplicationInterviewCell.swift; path = Views/ApplicationInterviewCell.swift; sourceTree = "<group>"; };
 		2F870FB520DBCA7600F9427C /* BusinessUser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = BusinessUser.swift; path = Models/api/BusinessUser.swift; sourceTree = "<group>"; };
 		2F870FB720DBCC0900F9427C /* BusinessUserCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = BusinessUserCell.swift; path = Views/BusinessUserCell.swift; sourceTree = "<group>"; };
 		2F870FB920DC9DBD00F9427C /* BusinessUserListController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = BusinessUserListController.swift; path = Controllers/BusinessUserListController.swift; sourceTree = "<group>"; };
@@ -302,6 +314,21 @@
 			name = Pods;
 			sourceTree = "<group>";
 		};
+		21CF192721418825003185F0 /* WWCalendarTimeSelector */ = {
+			isa = PBXGroup;
+			children = (
+				21CF19282141883D003185F0 /* Duration.swift */,
+				21CF19292141883D003185F0 /* Int+Timepiece.swift */,
+				21CF192A2141883D003185F0 /* NSCalendar+Timepiece.swift */,
+				21CF192B2141883D003185F0 /* NSDate+Timepiece.swift */,
+				21CF192C2141883D003185F0 /* NSDateComponents+Timepiece.swift */,
+				21CF192D2141883D003185F0 /* String+Timepiece.swift */,
+				21CF192E2141883D003185F0 /* WWCalendarTimeSelector.storyboard */,
+				21CF192F2141883D003185F0 /* WWCalendarTimeSelector.swift */,
+			);
+			name = WWCalendarTimeSelector;
+			sourceTree = "<group>";
+		};
 		448358EEC898485C13FEE69B /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -316,7 +343,6 @@
 		D72AE4141E104E99004C3F02 /* Base */ = {
 			isa = PBXGroup;
 			children = (
-				2F62848B20EF932A00BBE78D /* WWCalendarTimeSelector.swift */,
 				D76C90451E238C90009C35E4 /* SideMenuController.swift */,
 				D7F770281E09196300ECB684 /* MJPController.swift */,
 				D72AE4121E1049BE004C3F02 /* SearchController.swift */,
@@ -338,6 +364,7 @@
 				D7CFBC6A1EF8E409003FC132 /* FileCell.swift */,
 				2F870FB720DBCC0900F9427C /* BusinessUserCell.swift */,
 				2F030F1420E8EE2800EDFE60 /* InterviewCell.swift */,
+				2F3466EA212AB95800E5EF96 /* ApplicationInterviewCell.swift */,
 			);
 			name = Cells;
 			sourceTree = "<group>";
@@ -395,7 +422,6 @@
 				D74226B320ACCDED002D3F4C /* User.swift */,
 				2FA7FC6120D841240024163A /* Deprecation.swift */,
 				2F870FB520DBCA7600F9427C /* BusinessUser.swift */,
-				2F030F1020E81B9E00EDFE60 /* InterviewMessage.swift */,
 				2F030F1220E81C2000EDFE60 /* Interview.swift */,
 				2F9F066E210EF2F600E39BEC /* InterviewStatus.swift */,
 			);
@@ -514,7 +540,6 @@
 				D7B07B891E08DDE1005B9EBE /* Assets.xcassets */,
 				D742268E20ACC5E2002D3F4C /* JobResource.xib */,
 				D7B07B861E08DDE1005B9EBE /* Main.storyboard */,
-				2F62848D20EF9E6700BBE78D /* WWCalendarTimeSelector.storyboard */,
 				D7B07B8B1E08DDE1005B9EBE /* LaunchScreen.storyboard */,
 				D7B07B8E1E08DDE1005B9EBE /* Info.plist */,
 				D7CFBBAB1EF7D294003FC132 /* GoogleService-Info.plist */,
@@ -575,6 +600,7 @@
 		D7F76FE91E08E02F00ECB684 /* Utils */ = {
 			isa = PBXGroup;
 			children = (
+				21CF192721418825003185F0 /* WWCalendarTimeSelector */,
 				D742268A20ACC567002D3F4C /* iCarousel */,
 				D78834161ECAAEE900D99F4B /* MDCSwipeToChoose */,
 				D76C903B1E238580009C35E4 /* SWRevealViewController */,
@@ -656,7 +682,7 @@
 				D76C90591E255540009C35E4 /* about.html in Resources */,
 				D7CFBBAC1EF7D294003FC132 /* GoogleService-Info.plist in Resources */,
 				D7B07B8D1E08DDE1005B9EBE /* LaunchScreen.storyboard in Resources */,
-				2F62848E20EF9E6700BBE78D /* WWCalendarTimeSelector.storyboard in Resources */,
+				21CF19362141883D003185F0 /* WWCalendarTimeSelector.storyboard in Resources */,
 				D76C90511E25173D009C35E4 /* help-recruiter.html in Resources */,
 				D742269020ACC5E2002D3F4C /* JobResource.xib in Resources */,
 				D7B07B8A1E08DDE1005B9EBE /* Assets.xcassets in Resources */,
@@ -809,18 +835,22 @@
 				D74226BB20ACCDED002D3F4C /* InitialTokens.swift in Sources */,
 				D74226C920ACCDED002D3F4C /* Nationality.swift in Sources */,
 				D74226BA20ACCDED002D3F4C /* Image.swift in Sources */,
+				21CF19322141883D003185F0 /* NSCalendar+Timepiece.swift in Sources */,
 				D76C90461E238C90009C35E4 /* SideMenuController.swift in Sources */,
 				D74226B820ACCDED002D3F4C /* Contract.swift in Sources */,
 				D74226CF20ACCDED002D3F4C /* Role.swift in Sources */,
 				D74226C820ACCDED002D3F4C /* MJPObjectWithNameShortNameDesc.swift in Sources */,
 				D74226CE20ACCDED002D3F4C /* RegisterRequest.swift in Sources */,
 				2F870FB620DBCA7600F9427C /* BusinessUser.swift in Sources */,
+				2F3466EB212AB95800E5EF96 /* ApplicationInterviewCell.swift in Sources */,
 				D7ECFBBF1E12FCEF00E2E071 /* JobSeekerProfileController.swift in Sources */,
 				D74226C120ACCDED002D3F4C /* LoginRequest.swift in Sources */,
 				D74226BD20ACCDED002D3F4C /* JobPitch.swift in Sources */,
 				D7CFBC6B1EF8E409003FC132 /* FileCell.swift in Sources */,
 				D73CC7D1209FF14100DE6546 /* JobPitchUploader.swift in Sources */,
+				21CF19312141883D003185F0 /* Int+Timepiece.swift in Sources */,
 				D7ECFBBD1E12D9A100E2E071 /* MapController.swift in Sources */,
+				21CF19302141883D003185F0 /* Duration.swift in Sources */,
 				D788341D1ECAAF0600D99F4B /* UIColor+MDCRGB8Bit.m in Sources */,
 				D7896AEF1E0CC51300533884 /* JobSeekerDetailController.swift in Sources */,
 				D7B7D8C71EFCFFE300649A5F /* DropboxController.swift in Sources */,
@@ -833,14 +863,17 @@
 				D74226C320ACCDED002D3F4C /* MJPObject.swift in Sources */,
 				D74226BF20ACCDED002D3F4C /* JobStatus.swift in Sources */,
 				D74226D120ACCDED002D3F4C /* Sex.swift in Sources */,
+				21CF19332141883D003185F0 /* NSDate+Timepiece.swift in Sources */,
 				2F030F1720E8EF5300EDFE60 /* InterviewListController.swift in Sources */,
 				D74226D020ACCDED002D3F4C /* Sector.swift in Sources */,
 				2F030F1320E81C2000EDFE60 /* Interview.swift in Sources */,
+				21CF19342141883D003185F0 /* NSDateComponents+Timepiece.swift in Sources */,
 				2F030F1920EA1AA900EDFE60 /* InterviewDetailController.swift in Sources */,
 				D7F770271E0918FF00ECB684 /* LoginController.swift in Sources */,
 				D7896AED1E0C85BF00533884 /* JobCell.swift in Sources */,
 				D7896AEB1E0C854600533884 /* LocationDetailController.swift in Sources */,
 				D78834201ECAAF0F00D99F4B /* MDCViewState.m in Sources */,
+				21CF19352141883D003185F0 /* String+Timepiece.swift in Sources */,
 				D76C903E1E23858C009C35E4 /* SWRevealViewController.m in Sources */,
 				D74226C720ACCDED002D3F4C /* MJPObjectWithNameShortName.swift in Sources */,
 				D749E3591E0B21C0000FD0B1 /* SwipeCard.swift in Sources */,
@@ -859,7 +892,6 @@
 				D787F6351E287A1F00C47A88 /* BusinessDetailController.swift in Sources */,
 				D7F770291E09196300ECB684 /* MJPController.swift in Sources */,
 				D72AE4241E1156C3004C3F02 /* CustomView.swift in Sources */,
-				2F030F1120E81B9E00EDFE60 /* InterviewMessage.swift in Sources */,
 				D78834381ECAAF4B00D99F4B /* UIView+MDCSwipeToChoose.m in Sources */,
 				2F870FBC20DCB78D00F9427C /* BusinessUserEditController.swift in Sources */,
 				2FA7FC6220D841240024163A /* Deprecation.swift in Sources */,
@@ -877,7 +909,6 @@
 				D788342A1ECAAF3400D99F4B /* MDCSwipeToChooseViewOptions.m in Sources */,
 				D7CFBC691EF871A4003FC132 /* GoogleDriveController.swift in Sources */,
 				D788341C1ECAAF0600D99F4B /* MDCGeometry.m in Sources */,
-				2F62848C20EF932A00BBE78D /* WWCalendarTimeSelector.swift in Sources */,
 				D72AE4191E1057B0004C3F02 /* MessageCell.swift in Sources */,
 				D76C90531E25405A009C35E4 /* WebViewController.swift in Sources */,
 				D787F6391E287A6700C47A88 /* LocationEditController.swift in Sources */,
@@ -886,6 +917,7 @@
 				D74226CA20ACCDED002D3F4C /* PasswordChangeRequest.swift in Sources */,
 				D749E3551E0A8724000FD0B1 /* AppData.swift in Sources */,
 				D78834311ECAAF3E00D99F4B /* MDCSwipeResult.m in Sources */,
+				21CF19372141883D003185F0 /* WWCalendarTimeSelector.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

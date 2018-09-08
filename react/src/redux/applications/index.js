@@ -8,197 +8,68 @@ import * as helper from 'utils/helper';
 // Actions
 // ------------------------------------
 
-export const updateStatus = createAction(C.APPLICATIONS_UPDATE);
 export const getApplications = createAction(C.GET_APPLICATIONS);
-export const getAllApplications = createAction(C.GET_ALL_APPLICATIONS);
-export const connectApplication = createAction(C.CONNECT_APPLICATION);
 export const updateApplication = createAction(C.UPDATE_APPLICATION);
 export const removeApplication = createAction(C.REMOVE_APPLICATION);
+
+export const readMessage = createAction(C.READ_MESSAGE);
 export const sendMessage = createAction(C.SEND_MESSAGE);
-export const updateMessageByInterview = createAction(C.UPDATE_MESSAGE_BY_INTERVIEW);
+
+export const saveInterview = createAction(C.SAVE_INTERVIEW);
+export const changeInterview = createAction(C.CHANGE_INTERVIEW);
+export const completeInterview = createAction(C.COMPLETE_INTERVIEW);
+export const removeInterview = createAction(C.REMOVE_INTERVIEW);
 
 // ------------------------------------
 // Reducer
 // ------------------------------------
 
 const initialState = {
-  applications: null,
-  error: null,
-  allApplications: null
+  applications: null
 };
 
 export default handleActions(
   {
-    [C.APPLICATIONS_UPDATE]: (state, { payload }) => ({
-      ...state,
-      ...payload
-    }),
-
     // ---- get applications ----
-
-    [requestPending(C.GET_APPLICATIONS)]: state => ({
-      ...state,
-      applications: null,
-      error: null
-    }),
 
     [requestSuccess(C.GET_APPLICATIONS)]: (state, { payload }) => ({
       ...state,
-      applications: payload
-    }),
-
-    [requestFail(C.GET_APPLICATIONS)]: (state, { payload }) => ({
-      ...state,
-      error: payload
-    }),
-
-    // ---- get all applications ----
-
-    [requestPending(C.GET_ALL_APPLICATIONS)]: state => ({
-      ...state,
-      allApplications: null,
-      error: null
-    }),
-
-    [requestSuccess(C.GET_ALL_APPLICATIONS)]: (state, { payload }) => ({
-      ...state,
-      allApplications: payload
-    }),
-
-    [requestFail(C.GET_ALL_APPLICATIONS)]: (state, { payload }) => ({
-      ...state,
-      error: payload
+      applications: payload.map(app => ({ ...app, loading: false }))
     }),
 
     // ---- update application ----
 
-    [requestPending(C.UPDATE_APPLICATION)]: (state, { payload }) => ({
+    [requestPending(C.UPDATE_APPLICATION)]: (state, { appId }) => ({
       ...state,
-      applications: helper.updateObj(state.applications, {
-        id: payload.id,
+      applications: helper.updateItem(state.applications, {
+        id: appId,
         loading: true
       })
     }),
 
-    [requestSuccess(C.UPDATE_APPLICATION)]: (state, { payload }) => ({
+    [requestSuccess(C.UPDATE_APPLICATION)]: (state, { application }) => ({
       ...state,
-      applications: helper.updateObj(state.applications, {
-        ...payload,
+      applications: helper.updateItem(state.applications, { ...application, loading: false }, true)
+    }),
+
+    [requestFail(C.UPDATE_APPLICATION)]: (state, { appId }) => ({
+      ...state,
+      applications: helper.updateItem(state.applications, {
+        id: appId,
         loading: false
       })
     }),
-
-    [requestFail(C.UPDATE_APPLICATION)]: (state, { request }) => ({
-      ...state,
-      applications: helper.updateObj(state.applications, {
-        id: request.id,
-        loading: false
-      })
-    }),
-
-    // UPDATE_MESSAGE_BY_INTERVIEW
-    [C.UPDATE_MESSAGE_BY_INTERVIEW]: (state, { payload }) => {
-      const appId = payload.data.application;
-      const application = helper.getItemByID(state.applications, appId);
-      const messages = application.messages.slice(0);
-      messages.push({
-        id: payload.id,
-        content: payload.data.content,
-        sending: true
-      });
-
-      return {
-        ...state,
-        applications: helper.updateObj(state.applications, {
-          id: appId,
-          messages
-        })
-      };
-    },
-
-    [requestSuccess(C.UPDATE_MESSAGE_BY_INTERVIEW)]: (state, { payload }) => {
-      const applications = helper.removeObj(state.applications, payload.id);
-      applications.unshift(payload);
-      return {
-        ...state,
-        applications
-      };
-    },
-
-    [requestFail(C.UPDATE_MESSAGE_BY_INTERVIEW)]: (state, { payload }) => {
-      const appId = payload.data.application;
-      const application = helper.getItemByID(state.applications, appId);
-      const messages = helper.updateObj(application.messages, {
-        id: payload.id,
-        sending: false,
-        error: true
-      });
-
-      return {
-        ...state,
-        applications: helper.updateObj(state.applications, {
-          id: appId,
-          messages
-        })
-      };
-    },
-
-    // send message
-
-    [C.SEND_MESSAGE]: (state, { payload }) => {
-      const appId = payload.data.application;
-      const application = helper.getItemByID(state.applications, appId);
-      const messages = application.messages.slice(0);
-      messages.push({
-        id: payload.id,
-        content: payload.data.content,
-        sending: true
-      });
-
-      return {
-        ...state,
-        applications: helper.updateObj(state.applications, {
-          id: appId,
-          messages
-        })
-      };
-    },
-
-    [requestSuccess(C.SEND_MESSAGE)]: (state, { payload }) => {
-      const applications = helper.removeObj(state.applications, payload.id);
-      applications.unshift(payload);
-      return {
-        ...state,
-        applications
-      };
-    },
-
-    [requestFail(C.SEND_MESSAGE)]: (state, { payload }) => {
-      const appId = payload.data.application;
-      const application = helper.getItemByID(state.applications, appId);
-      const messages = helper.updateObj(application.messages, {
-        id: payload.id,
-        sending: false,
-        error: true
-      });
-
-      return {
-        ...state,
-        applications: helper.updateObj(state.applications, {
-          id: appId,
-          messages
-        })
-      };
-    },
 
     // ---- change location ----
 
     [LOCATION_CHANGE]: (state, { payload }) => {
-      const key = payload.pathname.split('/')[2];
-      const clear = key !== 'applications' && key !== 'messages';
+      let { applications } = state;
+      if (payload.pathname.split('/')[1] === 'auth') {
+        applications = null;
+      }
       return {
         ...state,
-        applications: clear ? null : state.applications
+        applications
       };
     }
   },

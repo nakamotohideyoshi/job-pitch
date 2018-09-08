@@ -1,17 +1,29 @@
 import React from 'react';
-import { Divider, Row, Col } from 'antd';
+import { Row, Col, Tabs, Collapse, Tooltip } from 'antd';
+import moment from 'moment';
 
+import DATA from 'utils/data';
 import * as helper from 'utils/helper';
-import { GoogleMap, Icons, VideoPlayer, SocialShare } from 'components';
+
+import { GoogleMap, Icons, VideoPlayer, SocialShare, Logo } from 'components';
 import Wrapper from './JobDetails.styled';
 
-export default ({ job, className, roughLocation, actions }) => {
+const TabPane = Tabs.TabPane;
+const Panel = Collapse.Panel;
+
+export default ({ jobData, application, className, roughLocation, actions, defaultTab }) => {
+  const job = jobData || application.job_data;
   const logo = helper.getJobLogo(job);
   const workplace = job.location_data;
   const subName = helper.getFullBWName(job);
+  const sector = helper.getNameByID('sectors', job.sector);
   const contract = helper.getNameByID('contracts', job.contract);
   const hours = helper.getNameByID('hours', job.hours);
   const marker = { lat: workplace.latitude, lng: workplace.longitude };
+  const videos = job.videos.filter(({ video }) => video);
+  const { interview, interviews } = application || {};
+  const histories = interviews && interviews.filter(({ id }) => id !== interview.id);
+  histories && histories.sort((a, b) => (a.at > b.at ? 1 : -1));
 
   let circle;
   if (roughLocation) {
@@ -30,41 +42,59 @@ export default ({ job, className, roughLocation, actions }) => {
     };
   }
 
-  const videos = job.videos.filter(({ video }) => video);
-
   return (
     <Wrapper className={className}>
+      <h2>Job Details</h2>
+
       <Row gutter={32}>
-        <Col sm={24} md={10} lg={5}>
+        <Col xs={10} sm={8} md={6} lg={5}>
           <div className="logo">
-            <span style={{ backgroundImage: `url(${logo})` }} />
+            <Logo src={logo} size="100%" padding="10px" />
           </div>
         </Col>
-        <Col sm={24} md={14} lg={19}>
+        <Col xs={14} sm={16} md={18} lg={19}>
           <Row gutter={32}>
-            <Col md={24} lg={14}>
+            <Col md={14} lg={15}>
               <div className="info">
                 <div className="name">{job.title}</div>
-                <div className="sub-name">{subName}</div>
+                <div className="sub-name1">( {subName} )</div>
+                <div className="sub-name2">{sector}</div>
                 <ul>
                   <li>
-                    <Icons.HandshakeAlt />
+                    <Tooltip placement="bottom" title="Job Contract">
+                      <Icons.HandshakeAlt />
+                    </Tooltip>
                     {contract}
                   </li>
                   <li>
-                    <Icons.Clock />
+                    <Tooltip placement="bottom" title="Job Hours">
+                      <Icons.Clock />
+                    </Tooltip>
                     {hours}
                   </li>
+
                   {job.distance && (
                     <li>
-                      <Icons.Route />
+                      <Tooltip placement="bottom" title="Distance">
+                        <Icons.Route />
+                      </Tooltip>
                       {job.distance}
+                    </li>
+                  )}
+
+                  {interview && (
+                    <li className={interview.status}>
+                      <Tooltip placement="bottom" title="Interview Date and Time">
+                        <Icons.UserFriends />
+                      </Tooltip>
+                      {moment(interview.at).format('ddd DD MMM, YYYY [at] H:mm')}
                     </li>
                   )}
                 </ul>
               </div>
             </Col>
-            <Col md={24} lg={10}>
+
+            <Col md={10} lg={9}>
               <h3>Share Job</h3>
               <SocialShare className="social-icons" url={`${window.location.origin}/jobseeker/jobs/${job.id}`} />
               {actions}
@@ -72,34 +102,73 @@ export default ({ job, className, roughLocation, actions }) => {
           </Row>
         </Col>
       </Row>
-      <Divider />
-      <div>
-        <h3>Job Description</h3>
-        {videos.map(({ id, thumbnail, video }) => (
-          <div key={id} className="pitch-video">
-            <VideoPlayer
-              controls
-              poster={thumbnail}
-              preload="none"
-              sources={[
-                {
-                  src: video,
-                  type: 'video/mp4'
-                }
-              ]}
-            />
+
+      <Tabs size="small" animated={false} defaultActiveKey={defaultTab || 'job'}>
+        <TabPane tab="Job Description" key="job">
+          {videos.map(({ id, thumbnail, video }) => (
+            <div key={id} className="pitch-video">
+              <VideoPlayer
+                controls
+                poster={thumbnail}
+                preload="none"
+                sources={[
+                  {
+                    src: video,
+                    type: 'video/mp4'
+                  }
+                ]}
+              />
+            </div>
+          ))}
+          <p className="description">{job.description}</p>
+        </TabPane>
+
+        <TabPane tab="Workplace Description" key="workplace">
+          <div className="description">{workplace.description}</div>
+          <div className="map">
+            <div>
+              <GoogleMap marker={marker} circle={circle} />
+            </div>
           </div>
-        ))}
-        <p className="description">{job.description}</p>
-      </div>
-      <Divider />
-      <h3>Workplace Description</h3>
-      <div className="description">{workplace.description}</div>
-      <div className="map">
-        <div>
-          <GoogleMap marker={marker} circle={circle} />
-        </div>
-      </div>
+        </TabPane>
+
+        {histories && (
+          <TabPane tab="Interview History" key="history">
+            <Collapse bordered={false}>
+              {histories.map(({ id, at, feedback, status, cancelled_by }) => {
+                let statusComment;
+                let statusLabel;
+                if (status === 'COMPLETED') {
+                  statusLabel = 'Completed';
+                  statusComment = 'This interview is done';
+                } else if (status === 'CANCELLED') {
+                  statusLabel = 'Cancelled';
+                  statusComment = `Interview cancelled by ${
+                    cancelled_by === DATA.userRole ? 'Recruiter' : 'Jobseeker'
+                  }`;
+                }
+                return (
+                  <Panel
+                    key={id}
+                    showArrow={false}
+                    header={
+                      <div>
+                        <span>{moment(at).format('ddd DD MMM, YYYY [at] H:mm')}</span>
+                        <span className={status}>{statusLabel}</span>
+                      </div>
+                    }
+                  >
+                    <p>Status: {statusComment}</p>
+                    {status === 'COMPLETED' && (
+                      <p>Feedback: {feedback ? feedback : <span style={{ fontStyle: 'italic' }}>None</span>}</p>
+                    )}
+                  </Panel>
+                );
+              })}
+            </Collapse>
+          </TabPane>
+        )}
+      </Tabs>
     </Wrapper>
   );
 };

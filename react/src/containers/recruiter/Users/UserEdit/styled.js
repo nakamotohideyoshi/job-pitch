@@ -3,41 +3,19 @@ import { Form } from 'antd';
 import media from 'utils/mediaquery';
 
 export default styled(Form)`
-  .with-public {
-    display: inline-block;
-    width: calc(100% - 90px);
-  }
-
-  .public-check {
-    display: inline-block;
-    padding-top: 8px;
-    ${media.mobile`padding-top: 38px;`};
-    float: right;
-  }
-
-  .btn-play {
-    position: absolute;
-    top: 4px;
-    left: 125px;
-  }
+  max-width: 700px;
+  width: 100%;
 
   ${media.notmobile`
-    .share {
-      display: flex;
-      align-items: center;
-    }
-  `};
-
-  ${media.mobile`
-    .status-field {
+    .ant-form-item {
       .ant-form-item-label {
-        display: inline-block;
-        width: 50px;
-        padding-bottom: 5px;
+        width: 210px;
+        vertical-align: top;
       }
+
       .ant-form-item-control-wrapper {
         display: inline-block;
-        width: calc(100% - 50px);
+        width: calc(100% - 210px);
       }
     }
   `};

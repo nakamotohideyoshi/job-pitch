@@ -1,33 +1,70 @@
 import React, { Fragment } from 'react';
 import { Input, Avatar } from 'antd';
+import { connect } from 'react-redux';
 
-import * as helper from 'utils/helper';
+import { sendMessage, readMessage } from 'redux/applications';
 import DATA from 'utils/data';
+import * as helper from 'utils/helper';
 
 import { Icons } from 'components';
 import Wrapper from './styled';
 
 const { TextArea } = Input;
 
-export default class MessageThread extends React.Component {
+class MessageThread extends React.Component {
   state = {
     message: ''
   };
 
+  componentDidMount() {
+    this.scrollBottom();
+    this.readMessages(this.props.application);
+  }
+
   componentWillReceiveProps(nextProps) {
-    if ((nextProps.application || {}).id !== (this.props.application || {}).id) {
+    const app = this.props.application;
+    const nextApp = nextProps.application;
+    if (app.id !== nextApp.id) {
       this.setState({ message: '' });
       this.scrollBottom();
+      this.readMessages(nextApp);
+    } else {
+      if (app.messages.length !== nextApp.messages.length) {
+        this.scrollBottom();
+      }
+      if (app.newMsgs !== nextApp.newMsgs) {
+        this.readMessages(nextApp);
+      }
     }
   }
+
+  readMessages = application => {
+    if (!application.newMsgs) return;
+
+    const msg = application.messages.slice(-1)[0];
+    this.props.readMessage({
+      appId: application.id,
+      id: msg.id,
+      data: {
+        read: true
+      }
+    });
+  };
 
   onChnageInput = e => this.setState({ message: e.target.value });
 
   onSend = () => {
+    const { id } = this.props.application;
     const message = this.state.message.trim();
     this.setState({ message: '' });
     this.scrollBottom(true);
-    this.props.onSend(message);
+    this.props.sendMessage({
+      appId: id,
+      data: {
+        application: id,
+        content: message
+      }
+    });
   };
 
   onKeyUp = event => {
@@ -50,37 +87,30 @@ export default class MessageThread extends React.Component {
       }
     });
 
-  renderMessage = ({ id, content, from_role, created, sending, error }) => {
-    const { application, userRole } = this.props;
-    const me = sending || error || helper.getNameByID('roles', from_role) === userRole;
+  renderMessage = ({ id, content, from_role, created }) => {
+    const { application } = this.props;
+    const me = helper.getNameByID('roles', from_role) === DATA.userRole;
 
     let avatar;
-    if ((userRole === 'RECRUITER' && me) || (userRole === 'JOB_SEEKER' && !me)) {
+    if ((DATA.userRole === 'RECRUITER' && me) || (DATA.userRole === 'JOB_SEEKER' && !me)) {
       avatar = helper.getJobLogo(application.job_data);
     } else {
       avatar = helper.getPitch(application.job_seeker).thumbnail;
     }
 
-    let comment;
-    if (sending) {
-      comment = 'sending...';
-    } else if (error) {
-      comment = 'send error!';
-    } else {
-      comment = new Date(created).toLocaleTimeString('en-us', {
-        month: 'short',
-        day: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit'
-      });
-    }
+    const comment = new Date(created).toLocaleTimeString('en-us', {
+      month: 'short',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    });
 
     return (
       <div key={id} className={me ? 'me' : 'you'}>
         {!me && <Avatar src={avatar} />}
         <div className="message">
           <div className="bubble">{content}</div>
-          <div className={`time ${error ? 'error' : ''}`}>{comment}</div>
+          <div className="time">{comment}</div>
         </div>
         {me && <Avatar src={avatar} />}
       </div>
@@ -119,7 +149,6 @@ export default class MessageThread extends React.Component {
           ref={ref => {
             if (!this.containerRef) {
               this.containerRef = ref;
-              this.scrollBottom();
             }
           }}
         >
@@ -131,3 +160,8 @@ export default class MessageThread extends React.Component {
     );
   }
 }
+
+export default connect(null, {
+  sendMessage,
+  readMessage
+})(MessageThread);

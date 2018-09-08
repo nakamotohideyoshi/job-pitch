@@ -57,12 +57,7 @@ class LocationDetailController: MJPController {
     }
     
     func updateLocationInfo() {
-        if let image = location.getImage() {
-            AppHelper.loadImageURL(imageUrl: (image.thumbnail)!, imageView: imgView, completion: nil)
-        } else {
-            imgView.image = UIImage(named: "default-logo")
-        }
-        
+        AppHelper.loadLogo(image: location.getImage(), imageView: imgView, completion: nil)
         nameLabel.text = location.name
     }
     

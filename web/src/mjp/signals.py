@@ -15,6 +15,8 @@ def send_message_notification_email(sender, instance, created, *args, **kwargs):
     if created:
         try:
             job_seeker = instance.application.job_seeker
+            if job_seeker.user is None:
+                return
             location = instance.application.job.location
             if instance.from_role.name == Role.RECRUITER:
                 to_address = job_seeker.user.email

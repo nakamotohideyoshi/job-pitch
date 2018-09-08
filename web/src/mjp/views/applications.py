@@ -1,4 +1,5 @@
 from django.core.urlresolvers import reverse
+from django.db import transaction
 from django.db.models import Max
 from django.http import Http404
 from django.utils import timezone
@@ -8,6 +9,7 @@ from rest_framework.exceptions import PermissionDenied
 from rest_framework.response import Response
 
 from mjp.models import Job, Role, ApplicationStatus, Message, Application, Location, ApplicationPitch, Interview
+from mjp.serializers import JobSeekerSerializer
 from mjp.serializers.applications import (
     ApplicationSerializerV1,
     ApplicationSerializerV2,
@@ -19,7 +21,8 @@ from mjp.serializers.applications import (
     ApplicationShortlistUpdateSerializer,
     MessageCreateSerializer,
     MessageUpdateSerializer,
-    ExternalApplicationSerializer)
+    ExternalApplicationSerializer,
+)
 from mjp.serializers.applications import InterviewSerializer
 from mjp.serializers.job_seeker import ApplicationPitchSerializer
 
@@ -31,8 +34,7 @@ class ApplicationViewSet(viewsets.ModelViewSet):
                 return True
             pk = request.data.get('job')
             if pk:
-                job = Job.objects.get(pk=pk)
-                is_recruiter = request.user.businesses.filter(locations__jobs=job).exists()
+                is_recruiter = request.user.businesses.filter(locations__jobs__pk=pk).exists()
                 if not is_recruiter and not request.user.is_job_seeker:
                     return False
             return True
@@ -61,12 +63,9 @@ class ApplicationViewSet(viewsets.ModelViewSet):
         else:
             status = ApplicationStatus.objects.get(name='CREATED')
         application = serializer.save(created_by=role, status=status)
-        message = Message()
-        message.system = True
-        message.application = application
-        message.from_role = role
+
         if role.name == Role.RECRUITER:
-            message.content = \
+            content = \
                 '%(business)s has expressed an interest in your profile for the following job:\n' \
                 'Job title: %(title)s\n' \
                 'Sector: %(sector)s\n' \
@@ -79,28 +78,38 @@ class ApplicationViewSet(viewsets.ModelViewSet):
                    'hours': job.hours.name,
                    }
         else:
-            message.content = '%(name)s has expressed an interest in your job %(title)s, %(location)s, %(business)s' \
-                              % {'name': application.job_seeker.get_full_name(),
-                                 'title': job.title,
-                                 'location': job.location.name,
-                                 'business': job.location.business.name,
-                                 }
-        message.save()
+            content = \
+                '%(name)s has expressed an interest in your job %(title)s, %(location)s, %(business)s' \
+                % {'name': application.job_seeker.get_full_name(),
+                   'title': job.title,
+                   'location': job.location.name,
+                   'business': job.location.business.name,
+                   }
+
+        Message.objects.create(
+            system=True,
+            application=application,
+            from_role=role,
+            content=content,
+        )
 
     def perform_destroy(self, application):
         application.status = ApplicationStatus.objects.get(name='DELETED')
         role = self.request.user.role
         application.deleted_by = role
         application.save()
-        message = Message()
-        message.system = True
-        message.application = application
-        message.from_role = role
+
         if role.name == Role.RECRUITER:
-            message.content = 'The recruiter has withdrawn their interest'
+            content = 'The recruiter has withdrawn their interest'
         else:
-            message.content = 'The job seeker has withdrawn their interest in this job'
-        message.save()
+            content = 'The job seeker has withdrawn their interest in this job'
+
+        Message.objects.create(
+            system=True,
+            application=application,
+            from_role=role,
+            content=content,
+        )
 
     def get_serializer_class(self):
         if self.request.method == 'POST':
@@ -168,14 +177,24 @@ class ApplicationViewSet(viewsets.ModelViewSet):
             query = query.filter(job_seeker__user=self.request.user)
         return query
 
-    @list_route(methods=['GET'])
-    def external(self):
-        # TODO test this code (especially job selection)
-        serializer = ExternalApplicationSerializer(data=self.request.data, context=self.get_serializer_context())
-        serializer.save(
-            created_by=Role.objects.get(name=Role.RECRUITER),
-            status=ApplicationStatus.objects.get(name=ApplicationStatus.ESTABLISHED),
-        )
+    @list_route(methods=['POST'])
+    def external(self, request, *args, **kwargs):
+        with transaction.atomic():
+            if 'job_seeker' in request.data:
+                job_seeker_serializer = JobSeekerSerializer(
+                    data=request.data['job_seeker'],
+                    context=self.get_serializer_context(),
+                )
+                if not job_seeker_serializer.is_valid():
+                    raise serializers.ValidationError({'job_seeker': job_seeker_serializer.errors})
+                request.data['job_seeker'] = job_seeker_serializer.save().pk
+
+            serializer = ExternalApplicationSerializer(data=request.data, context=self.get_serializer_context())
+            serializer.is_valid(raise_exception=True)
+            serializer.save(
+                created_by=Role.objects.get(name=Role.RECRUITER),
+                status=ApplicationStatus.objects.get(name=ApplicationStatus.ESTABLISHED),
+            )
         return Response(serializer.data)
 
 
@@ -372,16 +391,18 @@ class InterviewViewSet(viewsets.ModelViewSet):
         interview.cancelled_by = role
         interview.save()
 
-        message = Message()
-        message.system = True
-        message.application = interview.application
-        message.interview = interview
-        message.from_role = role
         if role.name == Role.RECRUITER:
-            message.content = 'The recruiter has cancelled this interview'
+            content = 'The recruiter has cancelled this interview'
         else:
-            message.content = 'The job seeker has cancelled this interview'
-        message.save()
+            content = 'The job seeker has cancelled this interview'
+
+        Message.objects.create(
+            system=True,
+            application=interview.application,
+            interview=interview,
+            from_role=role,
+            content=content,
+        )
 
     @detail_route(methods=['POST'])
     def accept(self, request, pk):
@@ -395,13 +416,13 @@ class InterviewViewSet(viewsets.ModelViewSet):
         interview.status = Interview.ACCEPTED
         interview.save()
 
-        message = Message()
-        message.system = True
-        message.application = interview.application
-        message.interview = interview
-        message.from_role = request.user.role
-        message.content = '{} has accepted your interview request'.format(request.user.job_seeker.get_full_name())
-        message.save()
+        Message.objects.create(
+            system=True,
+            application=interview.application,
+            interview = interview,
+            from_role=request.user.role,
+            content='{} has accepted your interview request'.format(request.user.job_seeker.get_full_name()),
+        )
 
         serializer = InterviewSerializer(instance=interview)
         return Response(serializer.data)
@@ -418,13 +439,13 @@ class InterviewViewSet(viewsets.ModelViewSet):
         interview.status = Interview.COMPLETE
         interview.save()
 
-        message = Message()
-        message.system = True
-        message.application = interview.application
-        message.interview = interview
-        message.from_role = request.user.role
-        message.content = 'Interview completed'
-        message.save()
+        Message.objects.create(
+            system=True,
+            application=interview.application,
+            interview=interview,
+            from_role=request.user.role,
+            content='Interview completed',
+        )
 
         serializer = InterviewSerializer(instance=interview)
         return Response(serializer.data)

@@ -454,6 +454,8 @@ class JobSeeker(models.Model):
         return " ".join((self.first_name, self.last_name))
 
     def send_welcome_email(self):
+        if self.user is None:
+            return
         try:
             site = Site.objects.get_current()
             scheme = "http" if site.domain.startswith('localhost') and settings.DEBUG else "https"
@@ -561,6 +563,13 @@ class Interview(models.Model):
         ordering = ('at',)
 
 
+class MessageManager(models.Manager):
+    def create(self, application=None, **kwargs):
+        if application and application.job_seeker and application.job_seeker.user is None:
+            return
+        return super(MessageManager, self).create(**kwargs)
+
+
 class Message(models.Model):
     application = models.ForeignKey(Application, related_name='messages')
     system = models.BooleanField(default=False)
@@ -569,6 +578,13 @@ class Message(models.Model):
     read = models.BooleanField(default=False)
     created = models.DateTimeField(auto_now_add=True)
     interview = models.ForeignKey(Interview, related_name='messages', null=True, blank=True)
+
+    objects = MessageManager
+
+    def save(self, **kwargs):
+        if self.application and self.application.job_seeker and self.application.job_seeker.user is None:
+            return
+        return super(Message, self).save(**kwargs)
 
     class Meta:
         ordering = ('created',)

@@ -22,7 +22,8 @@ export default ({ jobData, application, className, roughLocation, actions, defau
   const marker = { lat: workplace.latitude, lng: workplace.longitude };
   const videos = job.videos.filter(({ video }) => video);
   const { interview, interviews } = application || {};
-  const histories = interviews && interviews.filter(({ id }) => id !== interview.id);
+  const { id: interviewId } = interview || {};
+  const histories = interviews && interviews.filter(({ id }) => id !== interviewId);
   histories && histories.sort((a, b) => (a.at > b.at ? 1 : -1));
 
   let circle;

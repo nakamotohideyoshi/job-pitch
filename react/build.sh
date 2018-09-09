@@ -3,7 +3,7 @@
 path_src=./build
 path_dst=../web/src/web
 
-# yarn build
+yarn build
 
 echo ""
 echo "removing old data..."

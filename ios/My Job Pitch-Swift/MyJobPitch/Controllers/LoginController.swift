@@ -90,6 +90,11 @@ class LoginController: MJPController {
         API.shared().loadDepreactions(success: { (data) in
             self.hideLoading()
             
+            if data.count == 0 {
+                self.isLogin()
+                return
+            }
+            
             // App version
             if let version = Bundle.main.infoDictionary?["CFBundleVersion"] as? String {
                 let deprecation = ((data as! [Deprecation]).filter {$0.platform == "IOS"})[0]

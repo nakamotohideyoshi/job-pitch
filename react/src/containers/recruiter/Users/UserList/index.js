@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import Helmet from 'react-helmet';
 import { connect } from 'react-redux';
 import Truncate from 'react-truncate';
@@ -26,18 +26,20 @@ class UserList extends React.Component {
     if (businessId !== business.id) {
       history.replace(`/recruiter/users/${business.id}`);
     } else {
-      this.selectBusiness(businessId);
+      this.selectBusiness(business);
     }
   }
 
-  componentWillReceiveProps({ businessId }) {
+  componentWillReceiveProps({ businessId, business }) {
     if (businessId !== this.props.businessId) {
-      this.selectBusiness(businessId);
+      this.selectBusiness(business);
     }
   }
 
-  selectBusiness = id => {
-    this.props.getUsers(id);
+  selectBusiness = ({ id, restricted }) => {
+    if (!restricted) {
+      this.props.getUsers(id);
+    }
     this.props.selectBusiness(id);
     helper.saveData('users/businessId', id);
   };
@@ -134,8 +136,14 @@ class UserList extends React.Component {
   renderEmpty = () => {
     return (
       <AlertMsg>
-        <span>This busniness doesn't seem to have any user yet!</span>
-        <a onClick={this.onAddUser}>Create user</a>
+        {this.props.business.restricted ? (
+          <span>You must an administrator to view this information.</span>
+        ) : (
+          <Fragment>
+            <span>This busniness doesn't seem to have any user yet!</span>
+            <a onClick={this.onAddUser}>Create user</a>
+          </Fragment>
+        )}
       </AlertMsg>
     );
   };
@@ -168,12 +176,12 @@ class UserList extends React.Component {
 
         <PageSubHeader>
           <div />
-          <LinkButton onClick={this.onAddUser}>Add new user</LinkButton>
+          {!business.restricted && <LinkButton onClick={this.onAddUser}>Add new user</LinkButton>}
         </PageSubHeader>
 
         <div className="content">
           <ListEx
-            data={users}
+            data={business.restricted ? [] : users}
             loadingSize="large"
             pagination={{ pageSize: 10 }}
             renderItem={this.renderUser}

@@ -23,8 +23,8 @@ class UserEdit extends React.Component {
   componentDidMount() {
     const { business, user, form, selectBusiness } = this.props;
 
-    if (!business) {
-      this.goUserList();
+    if (!business || business.restricted) {
+      this.props.history.replace('/recruiter/users/business');
       return;
     }
 

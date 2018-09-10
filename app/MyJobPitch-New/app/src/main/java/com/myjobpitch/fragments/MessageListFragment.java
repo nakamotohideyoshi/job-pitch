@@ -40,24 +40,6 @@ public class MessageListFragment extends ApplicationsFragment {
     @BindView(R.id.job_title_view)
     View jobTitleView;
 
-    Handler indicationHandler = new Handler();
-
-    Runnable indicationTimerRunnable = new Runnable() {
-        @Override
-        public void run() {
-            updateMessage();
-            indicationHandler.postDelayed(this, 10000);
-        }
-    };
-
-    public void startChecking() {
-        indicationHandler.postDelayed(indicationTimerRunnable, 0);
-    }
-
-    public  void stopChecking() {
-        indicationHandler.removeCallbacks(indicationTimerRunnable);
-    }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -80,7 +62,7 @@ public class MessageListFragment extends ApplicationsFragment {
             addMenuItem(MENUGROUP1, 105, "All Messages", R.drawable.menu_message);
         } else {
             AppHelper.setJobTitleViewText(jobTitleView, "All Messages");
-            startChecking();
+            updateMessage();
         }
 
         return view;
@@ -91,12 +73,6 @@ public class MessageListFragment extends ApplicationsFragment {
         if (newMessageCount > 0) {
             updateMessage(getApp().lastMessage);
         }
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        stopChecking();
     }
 
 
@@ -249,7 +225,9 @@ public class MessageListFragment extends ApplicationsFragment {
             }).addListener(new APITaskListener() {
                 @Override
                 public void onSuccess() {
+
                     getApp().newMessageCount = 0;
+                    getApp().reloadMenu();
                 }
 
                 @Override

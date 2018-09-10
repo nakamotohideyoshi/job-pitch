@@ -17,11 +17,13 @@ class BusinessDetailController: MJPController {
     @IBOutlet weak var headerSubTitle: UILabel!
     @IBOutlet weak var headerCreditCount: UIButton!
     @IBOutlet weak var headerNavTitle: UILabel!
+    @IBOutlet weak var editButtonDisable: UIView!
     @IBOutlet weak var removeButtonDisable: UIView!
     @IBOutlet weak var controlHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var emptyView: UIView!
     @IBOutlet weak var firstCreateMessage: UIButton!
+    @IBOutlet weak var toolbar: UIToolbar!
     
     var business: Business!
     var data: NSMutableArray! = NSMutableArray()
@@ -67,6 +69,12 @@ class BusinessDetailController: MJPController {
             showLoading()
             API.shared().loadBusiness(id: businessId, success: { (data) in
                 self.business = data as! Business
+                
+                if self.business.restricted {
+                    self.editButtonDisable.isHidden = false
+                    self.toolbar.items?.remove(at: 1)
+                }
+
                 if !self.isAddMode {
                     self.updateBusinessInfo()
                 }

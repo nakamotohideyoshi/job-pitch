@@ -249,16 +249,15 @@ class SwipeController: MJPController {
     func clickCard() {
         
         if isFindJob {
-            let job = data[currentIndex - cards.count] as! Job
-            ApplicationDetailsController.pushController(job: job,
-                                                       application: nil,
-                                               chooseDelegate: self)
+            let controller = ApplicationDetailsController.instantiate()
+            controller.job = data[currentIndex - cards.count] as! Job
+            controller.chooseDelegate = self
+            navigationController?.pushViewController(controller, animated: true)
         } else {
-            let jobSeeker = data[currentIndex - cards.count] as! JobSeeker
-            JobSeekerDetailController.pushController(jobSeeker: jobSeeker,
-                                                     job: searchJob,
-                                                     application: nil,
-                                                     chooseDelegate: self)
+            let controller = JobSeekerDetailController.instantiate()
+            controller.jobSeeker = data[currentIndex - cards.count] as! JobSeeker
+            controller.chooseDelegate = self
+            navigationController?.pushViewController(controller, animated: true)
         }
         
     }

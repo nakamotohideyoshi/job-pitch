@@ -23,12 +23,9 @@ class InterviewDetailController: MJPController {
     @IBOutlet weak var feedbackLabel: UILabel!
     @IBOutlet weak var notesLabel: UILabel!
     
-    @IBOutlet weak var appInfoView: UIView!
     @IBOutlet weak var acceptBtnView: UIView!
     @IBOutlet weak var completeBtnView: UIView!
     @IBOutlet weak var cancelBtnView: UIView!
-    @IBOutlet weak var feedbackView: UIView!
-    @IBOutlet weak var notesView: UIView!
     @IBOutlet weak var naviationsView: UIView!
     @IBOutlet weak var historyTitleView: UIView!
     
@@ -97,8 +94,8 @@ class InterviewDetailController: MJPController {
         completeBtnView.isHidden = false
         cancelBtnView.isHidden = false
         
-        feedbackView.isHidden = true
-        notesView.isHidden = false
+        feedbackLabel.superview?.isHidden = true
+        notesLabel.superview?.isHidden = false
         
         naviationsView.isHidden = false
         
@@ -110,7 +107,7 @@ class InterviewDetailController: MJPController {
         } else {
             if interview.status == InterviewStatus.INTERVIEW_COMPLETED {
                 statusLabel.text = "This interview is done"
-                feedbackView.isHidden = false
+                feedbackLabel.superview?.isHidden = false
             } else if interview.status == InterviewStatus.INTERVIEW_CANCELLED {
                 statusLabel.text = "Interview cancelled by " + (AppData.user.isRecruiter() ? "Recruiter" : "Jobseeker")
             }
@@ -131,7 +128,7 @@ class InterviewDetailController: MJPController {
             }
         } else {
             completeBtnView.isHidden = true
-            notesView.isHidden = true
+            notesLabel.superview?.isHidden = true
         }
         
         historyTitleView.isHidden = interviews == nil || interviews.count == 0
@@ -139,12 +136,12 @@ class InterviewDetailController: MJPController {
     
     @IBAction func appDetailAction(_ sender: Any) {
         if AppData.user.isJobSeeker() {
-            let controller = AppHelper.mainStoryboard.instantiateViewController(withIdentifier: "ApplicationDetails") as! ApplicationDetailsController
+            let controller = ApplicationDetailsController.instantiate()
             controller.application = application
             controller.onlyView = true
             navigationController?.pushViewController(controller, animated: true)
         } else {
-            let controller = AppHelper.mainStoryboard.instantiateViewController(withIdentifier: "JobSeekerDetail") as! JobSeekerDetailController
+            let controller = JobSeekerDetailController.instantiate()
             controller.application = application
             controller.onlyView = true
             navigationController?.pushViewController(controller, animated: true)

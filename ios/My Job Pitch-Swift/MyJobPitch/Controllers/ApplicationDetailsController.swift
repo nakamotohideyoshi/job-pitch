@@ -16,10 +16,9 @@ class ApplicationDetailsController: MJPController {
     @IBOutlet weak var contractLabel: UILabel!
     @IBOutlet weak var hoursLabel: UILabel!
     @IBOutlet weak var distanceLabel: UILabel!
-    @IBOutlet weak var distanceView: UIView!
     @IBOutlet weak var removeView: UIView!
     @IBOutlet weak var applyView: UIView!
-    @IBOutlet weak var messageView: UIView!
+    @IBOutlet weak var messagesBtnView: UIView!
     @IBOutlet weak var jobDescription: UILabel!
     @IBOutlet weak var locationDescription: UILabel!
     @IBOutlet weak var mapView: GMSMapView!
@@ -70,7 +69,7 @@ class ApplicationDetailsController: MJPController {
         }
         
         let logoModel = JobResourceModel()
-        logoModel.isLogo = true
+        logoModel.defaultImage = UIImage(named: "default-logo")
         let image = job.getImage()
         if image != nil {
             logoModel.thumbnail = image?.thumbnail
@@ -98,7 +97,7 @@ class ApplicationDetailsController: MJPController {
             applyView.removeFromSuperview()
         }
         if application == nil || onlyView {
-            messageView.removeFromSuperview()
+            messagesBtnView.isHidden = true
         }
         
         var position = CLLocationCoordinate2DMake(location.latitude.doubleValue, location.longitude.doubleValue)
@@ -122,6 +121,9 @@ class ApplicationDetailsController: MJPController {
         mapView.camera = GMSCameraPosition.camera(withTarget: position, zoom: 14)
         
         pageControl.numberOfPages = resources.count
+        if resources.count < 2 {
+            pageControl.isHidden = true
+        }
         carousel.bounces = false
         carousel.reloadData()
     }
@@ -166,16 +168,10 @@ class ApplicationDetailsController: MJPController {
         present(controller, animated: true, completion: nil)
     }
     
-    static func pushController(job: Job!,
-                               application: Application!,
-                               chooseDelegate: ChooseDelegate!) {
-        let controller = AppHelper.mainStoryboard.instantiateViewController(withIdentifier: "ApplicationDetails") as! ApplicationDetailsController
-        controller.job = job
-        controller.application = application
-        controller.chooseDelegate = chooseDelegate
-        AppHelper.getFrontController().navigationController?.pushViewController(controller, animated: true)
+    static func instantiate() -> ApplicationDetailsController {
+        return AppHelper.mainStoryboard.instantiateViewController(withIdentifier: "ApplicationDetails") as! ApplicationDetailsController
     }
-
+    
 }
 
 extension ApplicationDetailsController: iCarouselDataSource {
@@ -201,15 +197,6 @@ extension ApplicationDetailsController: iCarouselDataSource {
 }
 
 extension ApplicationDetailsController: iCarouselDelegate {
-//    func carousel(_ carousel: iCarousel, valueFor option: iCarouselOption, withDefault value: CGFloat) -> CGFloat {
-//        switch option {
-//        case .wrap:
-//            return 1
-//        default:
-//            return value
-//        }
-//    }
-    
     func carouselCurrentItemIndexDidChange(_ carousel: iCarousel) {
         pageControl.currentPage = carousel.currentItemIndex
     }

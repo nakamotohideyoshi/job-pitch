@@ -85,12 +85,12 @@ class MessageController0: MJPController {
     
     @IBAction func headerClickAction(_ sender: Any) {
         if AppData.user.isJobSeeker() {
-            let controller = AppHelper.mainStoryboard.instantiateViewController(withIdentifier: "ApplicationDetails") as! ApplicationDetailsController
+            let controller = ApplicationDetailsController.instantiate()
             controller.application = application
             controller.onlyView = true
             navigationController?.pushViewController(controller, animated: true)
         } else {
-            let controller = AppHelper.mainStoryboard.instantiateViewController(withIdentifier: "JobSeekerDetail") as! JobSeekerDetailController
+            let controller = JobSeekerDetailController.instantiate()
             controller.application = application
             controller.onlyView = true
             navigationController?.pushViewController(controller, animated: true)

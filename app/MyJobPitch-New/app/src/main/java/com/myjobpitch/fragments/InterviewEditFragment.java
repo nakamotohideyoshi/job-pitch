@@ -22,6 +22,7 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.google.common.collect.Iterables;
 import com.myjobpitch.CameraActivity;
 import com.myjobpitch.MediaPlayerActivity;
 import com.myjobpitch.R;
@@ -39,6 +40,7 @@ import com.myjobpitch.api.data.JobPitch;
 import com.myjobpitch.api.data.JobSeeker;
 import com.myjobpitch.api.data.JobStatus;
 import com.myjobpitch.api.data.Location;
+import com.myjobpitch.api.data.Message;
 import com.myjobpitch.api.data.Sector;
 import com.myjobpitch.tasks.APIAction;
 import com.myjobpitch.tasks.APITask;
@@ -89,11 +91,17 @@ public class InterviewEditFragment extends FormFragment {
     @BindView(R.id.interview_date_time)
     MaterialEditText interviewDateTime;
 
+    @BindView(R.id.interview_date_time_button)
+    Button interviewDateTimeButton;
+
     @BindView(R.id.interview_message)
     MaterialEditText interviewMessage;
 
     @BindView(R.id.interview_notes)
     MaterialEditText interviewNotes;
+
+    @BindView(R.id.interview_feedback)
+    MaterialEditText interviewFeedback;
 
     @BindView(R.id.interview_create)
     Button createButton;
@@ -103,6 +111,7 @@ public class InterviewEditFragment extends FormFragment {
     public Interview interview;
     public Boolean isEditMode = true;
     public Application application;
+    public String mode = "NEW";
 
     Calendar dateAndTime;
 
@@ -123,8 +132,6 @@ public class InterviewEditFragment extends FormFragment {
                              Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_interview_edit, container, false);
         ButterKnife.bind(this, view);
-
-        title = "Arrange Interview";
 
         AppHelper.setJobTitleViewText(jobTitleView, String.format("%s, (%s)", application.getJob_data().getTitle(), AppHelper.getBusinessName(application.getJob_data())));
 
@@ -151,7 +158,7 @@ public class InterviewEditFragment extends FormFragment {
 
         date = new Date();
 
-        if (isEditMode) {
+        if (interview != null) {
             // Date/Time
             SimpleDateFormat format = new SimpleDateFormat("E d MMM, yyyy");
             SimpleDateFormat format1 = new SimpleDateFormat("HH:mm");
@@ -159,12 +166,50 @@ public class InterviewEditFragment extends FormFragment {
 
             date = interview.getAt();
 
+            List<Message> messageList = interview.getMessages();
+
             //Message
+            interviewMessage.setText(messageList.size() == 0 ? "" : messageList.get(messageList.size()-1).getContent());
+
 
             //Notes
             interviewNotes.setText(interview.getNotes());
 
-            createButton.setText("Update");
+            interviewFeedback.setText(interview.getFeedback());
+
+        }
+
+        interviewFeedback.setVisibility(View.GONE);
+
+        switch (mode) {
+            case "NEW":
+                title = "Arrange Interview";
+                createButton.setText("Send Invitation");
+                break;
+            case "EDIT":
+                title = "Edit Interview";
+                createButton.setText("Update");
+                break;
+            case "NOTE":
+                title = "Edit Notes";
+                interviewDateTimeButton.setEnabled(false);
+                interviewMessage.setEnabled(false);
+                createButton.setText("Update Notes");
+                break;
+            case "COMPLETE":
+                title = "Complete Interview";
+                interviewDateTimeButton.setEnabled(false);
+                interviewFeedback.setVisibility(View.VISIBLE);
+                createButton.setText("Complete");
+                break;
+            case "CANCEL":
+                title = "Cancel Interview";
+                createButton.setText("Cancel");
+                interviewDateTimeButton.setEnabled(false);
+                interviewFeedback.setVisibility(View.VISIBLE);
+                break;
+            default:
+                break;
         }
     }
 
@@ -223,60 +268,131 @@ public class InterviewEditFragment extends FormFragment {
         timePickerDialog.show();
     }
 
+    void createInterview() {
+        final InterviewForCreation interviewForCreation = new InterviewForCreation();
+        android.text.format.DateFormat df = new android.text.format.DateFormat();
+        String dateStr = String.format("%s", df.format("yyyy-MM-dd hh:mm:ss", date));
+        interviewForCreation.setAt(dateStr);
+        interviewForCreation.setApplication(application.getId());
+        interviewForCreation.setInvitation(interviewMessage.getText().toString() == null ? "" : interviewMessage.getText().toString());
+        interviewForCreation.setNotes(interviewNotes.getText().toString() == null ? "" : interviewNotes.getText().toString());
+        interviewForCreation.setFeedback("");
+
+        new APITask(new APIAction() {
+            @Override
+            public void run() throws MJPApiException {
+                MJPApi.shared().createInterview(interviewForCreation);
+            }
+        }).addListener(new APITaskListener() {
+            @Override
+            public void onSuccess() {
+                getApp().popFragment();
+            }
+            @Override
+            public void onError(JsonNode errors) {
+                errorHandler(errors);
+            }
+        }).execute();
+    }
+
+    void updateInterview() {
+        final InterviewForUpdate interviewForUpdate = new InterviewForUpdate();
+        android.text.format.DateFormat df = new android.text.format.DateFormat();
+        String dateStr = String.format("%s", df.format("yyyy-MM-dd hh:mm:ss", date));
+        interviewForUpdate.setAt(dateStr);
+        interviewForUpdate.setApplication(application.getId());
+        interviewForUpdate.setInvitation(interviewMessage.getText().toString() == null ? "" : interviewMessage.getText().toString());
+        interviewForUpdate.setNotes(interviewNotes.getText().toString() == null ? "" : interviewNotes.getText().toString());
+        interviewForUpdate.setFeedback(interviewFeedback.getText().toString() == null ? "" : interviewFeedback.getText().toString());
+
+        new APITask(new APIAction() {
+            @Override
+            public void run() throws MJPApiException {
+                MJPApi.shared().updateInterview(interviewForUpdate, interview.getId());
+            }
+        }).addListener(new APITaskListener() {
+            @Override
+            public void onSuccess() {
+                getApp().popFragment();
+            }
+            @Override
+            public void onError(JsonNode errors) {
+                errorHandler(errors);
+            }
+        }).execute();
+    }
+
+    void completeInterview() {
+        Popup popup = new Popup(getContext(), "Are you sure you want to complete this interview?", true);
+        popup.addGreenButton("Yes", new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                new APITask(new APIAction() {
+                    @Override
+                    public void run() throws MJPApiException {
+                        MJPApi.shared().completeInterview(interview.getId());
+                    }
+                }).addListener(new APITaskListener() {
+                    @Override
+                    public void onSuccess() {
+                        updateInterview();
+                    }
+                    @Override
+                    public void onError(JsonNode errors) {
+                        errorHandler(errors);
+                    }
+                }).execute();
+            }
+        });
+        popup.addGreyButton("No", null);
+        popup.show();
+    }
+
+    void cancelInterview() {
+        Popup popup = new Popup(getContext(), "Are you sure you want to cancel this interview?", true);
+        popup.addGreenButton("Yes", new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                new APITask(new APIAction() {
+                    @Override
+                    public void run() throws MJPApiException {
+                        MJPApi.shared().deleteInterview(interview.getId());
+                    }
+                }).addListener(new APITaskListener() {
+                    @Override
+                    public void onSuccess() {
+                        updateInterview();
+                    }
+                    @Override
+                    public void onError(JsonNode errors) {
+                        errorHandler(errors);
+                    }
+                }).execute();
+            }
+        });
+        popup.addGreyButton("No", null);
+        popup.show();
+    }
+
     @OnClick(R.id.interview_create)
     void onCreateInterview() {
 
-        if (isEditMode) {
-            final InterviewForUpdate interviewForUpdate = new InterviewForUpdate();
-            android.text.format.DateFormat df = new android.text.format.DateFormat();
-            String dateStr = String.format("%s", df.format("yyyy-MM-dd hh:mm:ss", date));
-            interviewForUpdate.setAt(dateStr);
-            interviewForUpdate.setApplication(application.getId());
-            interviewForUpdate.setInvitation(interviewMessage.getText().toString() == null ? "" : interviewMessage.getText().toString());
-            interviewForUpdate.setNotes(interviewNotes.getText().toString() == null ? "" : interviewNotes.getText().toString());
-            interviewForUpdate.setFeedback("");
-
-            new APITask(new APIAction() {
-                @Override
-                public void run() throws MJPApiException {
-                    MJPApi.shared().updateInterview(interviewForUpdate, interview.getId());
-                }
-            }).addListener(new APITaskListener() {
-                @Override
-                public void onSuccess() {
-                    getApp().popFragment();
-                }
-                @Override
-                public void onError(JsonNode errors) {
-                    errorHandler(errors);
-                }
-            }).execute();
-
-        } else {
-            final InterviewForCreation interviewForCreation = new InterviewForCreation();
-            android.text.format.DateFormat df = new android.text.format.DateFormat();
-            String dateStr = String.format("%s", df.format("yyyy-MM-dd hh:mm:ss", date));
-            interviewForCreation.setAt(dateStr);
-            interviewForCreation.setApplication(application.getId());
-            interviewForCreation.setInvitation(interviewMessage.getText().toString() == null ? "" : interviewMessage.getText().toString());
-            interviewForCreation.setNotes(interviewNotes.getText().toString() == null ? "" : interviewNotes.getText().toString());
-            interviewForCreation.setFeedback("");
-
-            new APITask(new APIAction() {
-                @Override
-                public void run() throws MJPApiException {
-                    MJPApi.shared().createInterview(interviewForCreation);
-                }
-            }).addListener(new APITaskListener() {
-                @Override
-                public void onSuccess() {
-                    getApp().popFragment();
-                }
-                @Override
-                public void onError(JsonNode errors) {
-                    errorHandler(errors);
-                }
-            }).execute();
+        switch (mode) {
+            case "NEW":
+                createInterview();
+                break;
+            case "EDIT":
+            case "NOTE":
+                updateInterview();
+                break;
+            case "COMPLETE":
+                completeInterview();
+                break;
+            case "CANCEL":
+                cancelInterview();
+                break;
+            default:
+                break;
         }
 
     }

@@ -233,36 +233,47 @@ public class AppHelper {
     }
 
 
-    public static void showApplicationInterviewInfo(Interview interview, View view, Application application) {
-
-        JobSeeker jobSeeker = application.getJobSeeker();
-        Job job = application.getJob_data();
-
-        if (AppData.user.isRecruiter()) {
-            loadJobSeekerImage(jobSeeker, getImageView(view));
-
-            // job seeker name
-            getItemTitleView(view).setText(jobSeeker.getFirst_name() + " " + jobSeeker.getLast_name());
-
-            // CV
-
-            getItemSubTitleView(view).setText(jobSeeker.getDescription());
-        } else {
-            loadJobLogo(job, getImageView(view));
-
-            getItemTitleView(view).setText(job.getTitle());
-
-            getItemSubTitleView(view).setText(job.getDescription());
-        }
-
+    public static void showApplicationInterviewInfo(Interview interview, View view) {
         // Date/Time
         SimpleDateFormat format = new SimpleDateFormat("E d MMM, yyyy");
         SimpleDateFormat format1 = new SimpleDateFormat("HH:mm");
         getItemDateTimeTitleView(view).setText(format.format(interview.getAt()) + " at " + format1.format(interview.getAt()));
 
-        // Location
+        // Status
+        String status = interview.getStatus();
 
-        getItemLocationTitleView(view).setText(application.getJob_data().getLocation_data().getName());
+        switch (status) {
+
+            case InterviewStatus.PENDING:
+                // Status
+                getItemStatusTitleView(view).setText("Interview request sent");
+                break;
+            case InterviewStatus.ACCEPTED:
+                // Status
+                getItemStatusTitleView(view).setText("Interview accepted");
+                break;
+
+            case InterviewStatus.COMPLETED:
+                // Status
+                getItemStatusTitleView(view).setText("This interview is done");
+                break;
+
+            case InterviewStatus.CANCELLED:
+                // Status
+                //getItemStatusTitleView(view).setText("Interview cancelled");
+                String cancelledBy = "You";
+                if (interview.getCancelled_by() == AppData.JOBSEEKER && AppData.user.isRecruiter()) {
+                    cancelledBy = "Job seeker";
+                } else if (interview.getCancelled_by() == AppData.RECRUITER && AppData.user.isJobSeeker()) {
+                    cancelledBy = "Recruiter";
+                }
+                getItemStatusTitleView(view).setText("Interview cancelled by " + cancelledBy);
+
+                break;
+            default:
+                break;
+
+        }
 
     }
 

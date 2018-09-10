@@ -22,6 +22,8 @@ import com.myjobpitch.api.data.ApplicationForCreation;
 import com.myjobpitch.api.data.ApplicationShortlistUpdate;
 import com.myjobpitch.api.data.ApplicationStatus;
 import com.myjobpitch.api.data.ApplicationStatusUpdate;
+import com.myjobpitch.api.data.Interview;
+import com.myjobpitch.api.data.InterviewStatus;
 import com.myjobpitch.api.data.Job;
 import com.myjobpitch.api.data.JobSeeker;
 import com.myjobpitch.api.data.Sex;
@@ -33,6 +35,8 @@ import com.myjobpitch.utils.AppHelper;
 import com.myjobpitch.views.Popup;
 
 import org.apache.commons.lang3.SerializationUtils;
+
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -87,6 +91,8 @@ public class TalentDetailFragment extends BaseFragment {
     public JobSeeker jobSeeker;
     public Job job;
     public Action action;
+    private Interview interview;
+    private Boolean isOpenInterview = false;
 
     public interface Action {
         void apply(Job job);
@@ -110,6 +116,20 @@ public class TalentDetailFragment extends BaseFragment {
             addMenuItem(MENUGROUP2, 100, "Edit", R.drawable.ic_edit);
         } else {
             title = "Talent Detail";
+
+            for (Interview applicationInterview : application.getInterviews()) {
+                if (applicationInterview.getStatus().equals(InterviewStatus.PENDING) || applicationInterview.getStatus().equals(InterviewStatus.ACCEPTED)) {
+                    interview = applicationInterview;
+                    interview.setApplication(application.getId());
+                    isOpenInterview = true;
+                    break;
+                }
+            }
+            if (isOpenInterview) {
+                applyButton.setText("Pending Interview");
+            } else {
+                applyButton.setText("Arrange Interview");
+            }
         }
 
         if (jobSeeker == null) {
@@ -253,9 +273,24 @@ public class TalentDetailFragment extends BaseFragment {
     @OnClick(R.id.apply_button)
     void onApply() {
         if (connected) {
-            MessageFragment fragment = new MessageFragment();
-            fragment.application = application;
-            getApp().pushFragment(fragment);
+
+            if (AppData.user.isJobSeeker()) {
+                MessageFragment fragment = new MessageFragment();
+                fragment.application = application;
+                getApp().pushFragment(fragment);
+            } else {
+                if (isOpenInterview) {
+                    InterviewDetailFragment fragment = new InterviewDetailFragment();
+                    fragment.interviewId = interview.getId();
+                    fragment.application = application;
+                    getApp().pushFragment(fragment);
+                } else {
+                    InterviewEditFragment fragment = new InterviewEditFragment();
+                    fragment.application = application;
+                    fragment.mode = "NEW";
+                    getApp().pushFragment(fragment);
+                }
+            }
         } else {
             String message = application == null ? "Are you sure you want to connect this talent?" : "Are you sure you want to connect this application?";
             Popup popup = new Popup(getContext(), message, true);

@@ -12,6 +12,8 @@ import com.myjobpitch.api.MJPApiException;
 import com.myjobpitch.api.data.Application;
 import com.myjobpitch.api.data.ApplicationStatus;
 import com.myjobpitch.api.data.ApplicationStatusUpdate;
+import com.myjobpitch.api.data.Interview;
+import com.myjobpitch.api.data.InterviewStatus;
 import com.myjobpitch.api.data.Job;
 import com.myjobpitch.api.data.JobSeeker;
 import com.myjobpitch.tasks.APIAction;
@@ -79,6 +81,19 @@ public class RecruiterApplicationsFragment extends ApplicationsFragment {
         setItemAttributes(view, AppHelper.getBusinessName(job));
         setItemDesc(view, job.getLocation_data().getPlace_name());
         view.findViewById(R.id.item_star).setVisibility(listKind == CONNECTIONS && application.getShortlisted() ? View.VISIBLE : View.GONE);
+
+        if (listKind == CONNECTIONS || listKind == MY_SHORTLIST) {
+            Boolean isOpenInterview = false;
+            for (Interview applicationInterview : application.getInterviews()) {
+                if (applicationInterview.getStatus().equals(InterviewStatus.PENDING) || applicationInterview.getStatus().equals(InterviewStatus.ACCEPTED)) {
+                    isOpenInterview = true;
+                    break;
+                }
+            }
+            if (isOpenInterview) {
+                setItemSubTitle(view, (job.getTitle() + " (Pending Interview)"));
+            }
+        }
     }
 
     @Override

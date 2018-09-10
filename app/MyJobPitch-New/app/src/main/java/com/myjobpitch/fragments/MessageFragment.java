@@ -14,6 +14,7 @@ import com.myjobpitch.api.MJPApiException;
 import com.myjobpitch.api.data.Application;
 import com.myjobpitch.api.data.Business;
 import com.myjobpitch.api.data.Interview;
+import com.myjobpitch.api.data.InterviewStatus;
 import com.myjobpitch.api.data.Job;
 import com.myjobpitch.api.data.JobSeeker;
 import com.myjobpitch.api.data.Location;
@@ -43,9 +44,6 @@ public class MessageFragment extends BaseFragment {
 
     @BindView(R.id.header_view)
     View headerView;
-
-    @BindView(R.id.interview_create)
-    Button createButton;
 
     @BindView(R.id.messagesList)
     MessagesList messagesList;
@@ -119,8 +117,6 @@ public class MessageFragment extends BaseFragment {
             otherName = job.getLocation_data().getBusiness_data().getName();
             otherAvatar = jobImage;
 
-            createButton.setVisibility(View.GONE);
-
         } else {
 
             AppHelper.loadJobSeekerImage(jobSeeker, AppHelper.getImageView(headerView));
@@ -132,8 +128,19 @@ public class MessageFragment extends BaseFragment {
             otherName = AppHelper.getJobSeekerName(jobSeeker);
             otherAvatar = jobSeekerImage;
 
+            if (interview == null) {
+                for (Interview applicationInterview : application.getInterviews()) {
+                    if (applicationInterview.getStatus().equals(InterviewStatus.PENDING) || applicationInterview.getStatus().equals(InterviewStatus.ACCEPTED)) {
+                        interview = applicationInterview;
+                        break;
+                    }
+                }
+            }
+
             if (interview != null) {
-                createButton.setText("Edit Interview");
+                addMenuItem(MENUGROUP1, 122, "Edit Interview", R.drawable.ic_edit);
+            } else {
+                addMenuItem(MENUGROUP1, 123, "Arrange Interview", R.drawable.menu_interview);
             }
 
         }
@@ -220,13 +227,20 @@ public class MessageFragment extends BaseFragment {
         }
     }
 
-    @OnClick(R.id.interview_create)
-    void onCreate() {
-        InterviewEditFragment fragment = new InterviewEditFragment();
-        fragment.application = application;
-        fragment.interview = interview;
-        fragment.isEditMode = interview != null;
-        getApp().pushFragment(fragment);
+    @Override
+    public void onMenuSelected(int menuID) {
+        if (menuID == 122) {
+            InterviewEditFragment fragment = new InterviewEditFragment();
+            fragment.application = application;
+            fragment.mode = "EDIT";
+            fragment.interview = interview;
+            getApp().pushFragment(fragment);
+        } else if (menuID == 123) {
+            InterviewEditFragment fragment = new InterviewEditFragment();
+            fragment.application = application;
+            fragment.mode = "NEW";
+            getApp().pushFragment(fragment);
+        }
     }
 
     class MessageItem implements IMessage {

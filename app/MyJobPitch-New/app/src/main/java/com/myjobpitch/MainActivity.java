@@ -168,6 +168,8 @@ public class MainActivity extends AppCompatActivity
                                 }
                             }
                         }
+
+                        reloadMenu();
                     }
 
                     @Override
@@ -192,24 +194,6 @@ public class MainActivity extends AppCompatActivity
             popup.addGreyButton("Ok", null);
             popup.show();
         }
-    }
-
-    Handler indicationHandler = new Handler();
-
-    Runnable indicationTimerRunnable = new Runnable() {
-        @Override
-        public void run() {
-            reloadMenu();
-            indicationHandler.postDelayed(this, 10000);
-        }
-    };
-
-    public void startChecking() {
-        indicationHandler.postDelayed(indicationTimerRunnable, 0);
-    }
-
-    public  void stopChecking() {
-        indicationHandler.removeCallbacks(indicationTimerRunnable);
     }
 
     @Override
@@ -386,7 +370,6 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onClick(View view) {
                 stopNewMessageCount();
-                stopChecking();
                 //MJPApi.shared().logout();
                 MJPApi.shared().clearToken();
                 AppData.clearData();
@@ -603,16 +586,16 @@ public class MainActivity extends AppCompatActivity
 
     MenuItemInfo[] menuItemData = {
         new MenuItemInfo(AppData.PAGE_FIND_JOB, "Find Job", R.drawable.menu_search, FindJobFragment.class, "P"),
-        new MenuItemInfo(AppData.PAGE_JS_APPLICATIONS, "My Applications", R.drawable.menu_application, TalentApplicationsFragment.class, "P"),
+        new MenuItemInfo(AppData.PAGE_JS_APPLICATIONS, "My Applications", R.drawable.menu_applications2, TalentApplicationsFragment.class, "P"),
         new MenuItemInfo(AppData.PAGE_MESSAGES, "Messages", R.drawable.menu_message, MessageListFragment.class, "PB"),
         new MenuItemInfo(AppData.PAGE_JOB_PROFILE, "Job Profile", R.drawable.menu_job_profile, JobProfileFragment.class, "J"),
-        new MenuItemInfo(AppData.PAGE_ADD_RECORD, "Record Pitch", R.drawable.menu_add_record, PitchFragment.class, "J"),
+        new MenuItemInfo(AppData.PAGE_ADD_RECORD, "Record Pitch", R.drawable.menu_record, PitchFragment.class, "J"),
         new MenuItemInfo(AppData.PAGE_VIEW_PROFILE, "Profile", R.drawable.menu_user_profile, TalentDetailFragment.class, ""),
         new MenuItemInfo(AppData.PAGE_USER_PROFILE, "Profile", R.drawable.menu_user_profile, TalentProfileFragment.class, ""),
         new MenuItemInfo(AppData.PAGE_FIND_TALENT, "Find Talent", R.drawable.menu_search, SelectJobFragment.class, "B"),
-        new MenuItemInfo(AppData.PAGE_R_APPLICATIONS, "New Applications", R.drawable.menu_application, SelectJobFragment.class, "B"),
-        new MenuItemInfo(AppData.PAGE_CONNECTIONS, "My Connections", R.drawable.menu_connect, SelectJobFragment.class, "B"),
-        new MenuItemInfo(AppData.PAGE_MY_SHORTLIST, "My Shortlist", R.drawable.menu_shortlisted, SelectJobFragment.class, "B"),
+        new MenuItemInfo(AppData.PAGE_R_APPLICATIONS, "New Applications", R.drawable.menu_new_applications, SelectJobFragment.class, "B"),
+        new MenuItemInfo(AppData.PAGE_CONNECTIONS, "My Connections", R.drawable.menu_applications1, SelectJobFragment.class, "B"),
+        new MenuItemInfo(AppData.PAGE_MY_SHORTLIST, "My Shortlist", R.drawable.menu_shortlist, SelectJobFragment.class, "B"),
         new MenuItemInfo(AppData.PAGE_ADD_JOB, "Add or Edit Jobs", R.drawable.menu_business, BusinessListFragment.class, ""),
         new MenuItemInfo(AppData.PAGE_PAYMENT, "Payment", R.drawable.menu_payment, PaymentFragment.class, ""),
         new MenuItemInfo(AppData.PAGE_CHANGE_PASS, "Change Password", R.drawable.menu_key, ChangePasswordFragment.class, ""),
@@ -620,9 +603,9 @@ public class MainActivity extends AppCompatActivity
         new MenuItemInfo(AppData.PAGE_LOGOUT, "Log Out", R.drawable.menu_logout, null, ""),
         new MenuItemInfo(AppData.PAGE_CONTACT_UP, "Contact Us", R.drawable.menu_contact_us, null, ""),
         new MenuItemInfo(AppData.PAGE_SHARE, "Tell a friend", R.drawable.menu_share, null, ""),
-        new MenuItemInfo(AppData.PAGE_USERS, "Users", R.drawable.menu_user_profile, BusinessListFragment.class, ""),
-        new MenuItemInfo(AppData.PAGE_R_INTERVIEWS, "Interviews", R.drawable.menu_connect, SelectJobFragment.class, "B"),
-        new MenuItemInfo(AppData.PAGE_JS_INTERVIEWS, "Interviews", R.drawable.menu_connect, InterviewsFragment.class, "P"),
+        new MenuItemInfo(AppData.PAGE_USERS, "Users", R.drawable.menu_users, BusinessListFragment.class, ""),
+        new MenuItemInfo(AppData.PAGE_R_INTERVIEWS, "Interviews", R.drawable.menu_interview, SelectJobFragment.class, "B"),
+        new MenuItemInfo(AppData.PAGE_JS_INTERVIEWS, "Interviews", R.drawable.menu_interview, InterviewsFragment.class, "P"),
     };
 
     int[] jobSeekerMenu = {

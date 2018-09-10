@@ -1,6 +1,7 @@
 package com.myjobpitch.fragments;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -10,11 +11,13 @@ import android.support.v4.view.GravityCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -47,6 +50,7 @@ import com.myjobpitch.utils.AppData;
 import com.myjobpitch.utils.AppHelper;
 import com.myjobpitch.utils.ImageSelector;
 import com.myjobpitch.utils.Loading;
+import com.myjobpitch.utils.MJPArraySwipeAdapter;
 import com.myjobpitch.views.Popup;
 import com.myjobpitch.views.SelectDialog;
 import com.myjobpitch.views.SelectDialog.SelectItem;
@@ -86,9 +90,6 @@ public class InterviewDetailFragment extends BaseFragment {
     @BindView(R.id.item_location)
     TextView itemLocation;
 
-    @BindView(R.id.location_container)
-    RelativeLayout locationContainer;
-
     @BindView(R.id.item_feedback)
     TextView itemFeedback;
 
@@ -101,8 +102,14 @@ public class InterviewDetailFragment extends BaseFragment {
     @BindView(R.id.notes_container)
     RelativeLayout notesContainer;
 
-    @BindView(R.id.interview_edit)
-    Button editButton;
+    @BindView(R.id.buttons_container)
+    LinearLayout buttonsContainer;
+
+    @BindView(R.id.notes_edit)
+    RelativeLayout editNotes;
+
+    @BindView(R.id.interview_message)
+    RelativeLayout messageButton;
 
     @BindView(R.id.interview_complete)
     Button completeButton;
@@ -113,15 +120,17 @@ public class InterviewDetailFragment extends BaseFragment {
     @BindView(R.id.interview_cancel)
     Button cancelButton;
 
-    @BindView(R.id.interview_arrange)
-    Button arrangeButton;
+    @BindView(R.id.header_button_container)
+    LinearLayout headerButtonContainer;
 
-    @BindView(R.id.interview_message)
-    Button messageButton;
+    @BindView(R.id.interview_history_list)
+    LinearLayout interviewHistoryList;
 
     Interview interview;
     public Application application;
     public Integer interviewId;
+    public Boolean historyMode = false;
+    private LinearLayout historyList;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -134,10 +143,14 @@ public class InterviewDetailFragment extends BaseFragment {
 
         AppHelper.setJobTitleViewText(jobTitleView, String.format("%s, (%s)", application.getJob_data().getTitle(), AppHelper.getBusinessName(application.getJob_data())));
 
-        addMenuItem(MENUGROUP1, 120, "View Previous Interviews", R.drawable.ic_more);
+        if (historyMode) {
+            loadDetail();
+        } else {
+            showLoading(view);
+            loadInterview();
+        }
 
-        showLoading(view);
-        loadInterview();
+        historyList = view.findViewById(R.id.interview_history_list);
 
         return  view;
     }
@@ -199,37 +212,40 @@ public class InterviewDetailFragment extends BaseFragment {
         itemNotes.setText(interview.getNotes());
         notesContainer.setVisibility(View.VISIBLE);
 
-        editButton.setVisibility(AppData.user.isJobSeeker() ? View.GONE : View.VISIBLE);
         completeButton.setVisibility(AppData.user.isJobSeeker() ? View.GONE : View.VISIBLE);
         acceptButton.setVisibility(AppData.user.isRecruiter() ? View.GONE : View.VISIBLE);
-        arrangeButton.setVisibility(View.GONE);
+        editNotes.setVisibility(View.GONE);
 
         switch (status) {
             case InterviewStatus.PENDING:
                 // Status
                 itemStatus.setText("Interview request sent");
+                if (AppData.user.isRecruiter()) {
+                    addMenuItem(MENUGROUP1, 120, "Edit Interview", R.drawable.ic_edit);
+                }
                 break;
             case InterviewStatus.ACCEPTED:
                 // Status
                 itemStatus.setText("Interview accepted");
                 acceptButton.setVisibility(View.GONE);
+                if (AppData.user.isRecruiter()) {
+                    addMenuItem(MENUGROUP1, 120, "Edit Interview", R.drawable.ic_edit);
+                }
                 break;
             case InterviewStatus.COMPLETED:
                 // Status
                 itemStatus.setText("This interview is done");
 
-                completeButton.setVisibility(View.GONE);
-                cancelButton.setVisibility(View.GONE);
-                editButton.setText("Edit notes");
-
-                acceptButton.setVisibility(View.GONE);
+                headerButtonContainer.setVisibility(View.GONE);
+                editNotes.setVisibility(View.VISIBLE);
 
 
                 if (AppData.user.isRecruiter()) {
-                    arrangeButton.setVisibility(View.VISIBLE);
+                    addMenuItem(MENUGROUP1, 121, "Arrange Interview", R.drawable.menu_interview);
                 }
 
                 feedbackContainer.setVisibility(View.VISIBLE);
+
                 break;
 
             case InterviewStatus.CANCELLED:
@@ -237,33 +253,43 @@ public class InterviewDetailFragment extends BaseFragment {
 
                 itemStatus.setText("Interview cancelled by " + (interview.getCancelled_by() == AppData.JOBSEEKER ? "Job seeker"  : "Recruiter"));
 
-                completeButton.setVisibility(View.GONE);
-                cancelButton.setVisibility(View.GONE);
-                editButton.setText("Edit notes");
-
-                acceptButton.setVisibility(View.GONE);
+                headerButtonContainer.setVisibility(View.GONE);
+                editNotes.setVisibility(View.VISIBLE);
 
                 if (AppData.user.isRecruiter()) {
-                    arrangeButton.setVisibility(View.VISIBLE);
+                    addMenuItem(MENUGROUP1, 121, "Arrange Interview", R.drawable.menu_interview);
                 }
+
                 break;
             default:
                 break;
 
         }
 
-//        if (interviews == null) {
-//            editButton.setVisibility(View.GONE);
-//            completeButton.setVisibility(View.GONE);
-//            acceptButton.setVisibility(View.GONE);
-//            cancelButton.setVisibility(View.GONE);
-//            arrangeButton.setVisibility(View.GONE);
-//            messageButton.setVisibility(View.GONE);
-//
-//        }
+        if (historyMode) {
+            buttonsContainer.setVisibility(View.GONE);
+            headerButtonContainer.setVisibility(View.GONE);
+            interviewHistoryList.setVisibility(View.GONE);
+        } else {
+            for (final Interview applicationInterview : application.getInterviews()) {
+                View view = getLayoutInflater().inflate(R.layout.cell_interview_history, null);
+                view.setOnClickListener(new View.OnClickListener() {
+                    public void onClick(View v) {
+                        InterviewDetailFragment fragment = new InterviewDetailFragment();
+                        fragment.interview = applicationInterview;
+                        fragment.application = application;
+                        fragment.historyMode = true;
+                        getApp().pushFragment(fragment);
+                    }
+                });
+                historyList.addView(view);
+                AppHelper.showApplicationInterviewInfo(applicationInterview, view);
+            }
+        }
     }
 
-    private void showProfile() {
+    @OnClick(R.id.header_container)
+    void showProfile() {
         if (AppData.user.isJobSeeker()) {
             ApplicationDetailFragment fragment = new ApplicationDetailFragment();
             fragment.application = application;
@@ -275,25 +301,11 @@ public class InterviewDetailFragment extends BaseFragment {
         }
     }
 
-    @Override
-    public void onMenuSelected(int menuID) {
-        if (menuID == 120) {
-            onViewHistories();
-        } else {
-            super.onMenuSelected(menuID);
-        }
-    }
-
-    @OnClick(R.id.item_img)
-    void onImage() {
-        showProfile();
-    }
-
-    @OnClick(R.id.interview_edit)
-    void onEdit() {
+    @OnClick(R.id.notes_edit)
+    void editNotes() {
         InterviewEditFragment fragment = new InterviewEditFragment();
         fragment.application = application;
-        fragment.isEditMode = true;
+        fragment.mode = "NOTE";
         fragment.interview = interview;
         getApp().pushFragment(fragment);
     }
@@ -308,30 +320,11 @@ public class InterviewDetailFragment extends BaseFragment {
 
     @OnClick(R.id.interview_cancel)
     void onCancel() {
-
-        Popup popup = new Popup(getContext(), "Are you sure you want to cancel this interview?", true);
-        popup.addGreenButton("Yes", new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                new APITask(new APIAction() {
-                    @Override
-                    public void run() throws MJPApiException {
-                        MJPApi.shared().deleteInterview(interviewId);
-                    }
-                }).addListener(new APITaskListener() {
-                    @Override
-                    public void onSuccess() {
-                        getApp().popFragment();
-                    }
-                    @Override
-                    public void onError(JsonNode errors) {
-                        errorHandler(errors);
-                    }
-                }).execute();
-            }
-        });
-        popup.addGreyButton("No", null);
-        popup.show();
+        InterviewEditFragment fragment = new InterviewEditFragment();
+        fragment.application = application;
+        fragment.mode = "CANCEL";
+        fragment.interview = interview;
+        getApp().pushFragment(fragment);
     }
 
     @OnClick(R.id.interview_accept)
@@ -355,35 +348,26 @@ public class InterviewDetailFragment extends BaseFragment {
 
     @OnClick(R.id.interview_complete)
     void onComplete() {
-        Popup popup = new Popup(getContext(), "Are you sure you want to complete this interview?", true);
-        popup.addGreenButton("Yes", new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                new APITask(new APIAction() {
-                    @Override
-                    public void run() throws MJPApiException {
-                        MJPApi.shared().completeInterview(interviewId);
-                    }
-                }).addListener(new APITaskListener() {
-                    @Override
-                    public void onSuccess() {
-                        getApp().popFragment();
-                    }
-                    @Override
-                    public void onError(JsonNode errors) {
-                        errorHandler(errors);
-                    }
-                }).execute();
-            }
-        });
-        popup.addGreyButton("No", null);
-        popup.show();
+        InterviewEditFragment fragment = new InterviewEditFragment();
+        fragment.application = application;
+        fragment.mode = "COMPLETE";
+        fragment.interview = interview;
+        getApp().pushFragment(fragment);
     }
 
-    void onViewHistories() {
-        ApplicationInterviewsFragment fragment = new ApplicationInterviewsFragment();
-        fragment.application = application;
-        fragment.interviewId = interviewId;
-        getApp().pushFragment(fragment);
+    @Override
+    public void onMenuSelected(int menuID) {
+        if (menuID == 120) {
+            InterviewEditFragment fragment = new InterviewEditFragment();
+            fragment.application = application;
+            fragment.mode = "EDIT";
+            fragment.interview = interview;
+            getApp().pushFragment(fragment);
+        } else if (menuID == 121) {
+            InterviewEditFragment fragment = new InterviewEditFragment();
+            fragment.application = application;
+            fragment.mode = "NEW";
+            getApp().pushFragment(fragment);
+        }
     }
 }

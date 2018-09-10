@@ -351,7 +351,6 @@ public class LoginFragment extends FormFragment {
 
     void goMain() {
         User user = AppData.user;
-        getApp().startChecking();
 
         if (user.isRecruiter()) {
             showMainPage(AppData.PAGE_FIND_TALENT);

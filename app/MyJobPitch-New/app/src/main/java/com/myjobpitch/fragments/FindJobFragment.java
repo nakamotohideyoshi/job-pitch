@@ -32,24 +32,6 @@ public class FindJobFragment extends SwipeFragment<Job> {
     JobProfile profile;
     View noPitchView;
 
-    Handler indicationHandler = new Handler();
-
-    Runnable indicationTimerRunnable = new Runnable() {
-        @Override
-        public void run() {
-            showNewMessagesCounts();
-            indicationHandler.postDelayed(this, 10000);
-        }
-    };
-
-    public void startChecking() {
-        indicationHandler.postDelayed(indicationTimerRunnable, 0);
-    }
-
-    public  void stopChecking() {
-        indicationHandler.removeCallbacks(indicationTimerRunnable);
-    }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -68,19 +50,12 @@ public class FindJobFragment extends SwipeFragment<Job> {
         // new message indication
         addMenuItem(MENUGROUP1, 108, "All Messages", R.drawable.menu_message10);
         setVisibleMenuItem(108, false);
-        startChecking();
 
         if (jobSeeker != null) {
             showInactiveBanner();
         }
 
         return  view;
-    }
-
-    @Override
-    public void onDestroyView(){
-        super.onDestroyView();
-        stopChecking();
     }
 
     @Override
@@ -230,16 +205,6 @@ public class FindJobFragment extends SwipeFragment<Job> {
         fragment.jobSeeker = jobSeeker;
         fragment.isActivation = true;
         getApp().pushFragment(fragment);
-    }
-
-    void showNewMessagesCounts() {
-        long newMessageCount = getApp().newMessageCount;
-        if (newMessageCount > 0 && newMessageCount < 10) {
-            int id = getResources().getIdentifier("com.myjobpitch:drawable/menu_message" + getApp().newMessageCount,null, null);
-            changeMenuItem(108, id);
-        } else if (newMessageCount >= 10) {
-            changeMenuItem(108, R.drawable.menu_message10);
-        }
     }
 
 }

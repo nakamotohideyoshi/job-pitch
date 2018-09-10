@@ -1,5 +1,6 @@
 import uuid
 
+from django import forms
 from django.conf.urls import url
 from django.contrib import admin
 from django.contrib import messages
@@ -15,7 +16,6 @@ from django.db.models import Value
 from django.db.models import When
 from django.db.models.aggregates import Aggregate
 from django.db.models.functions import Concat, Coalesce
-from django.forms import forms
 from django.http import HttpResponseRedirect
 from django.shortcuts import render_to_response
 from django.template import RequestContext
@@ -594,11 +594,23 @@ class UserAdmin(AuthUserAdmin):
                                        'groups', 'user_permissions')}),
         ('Important dates', {'fields': ('last_login', 'date_joined')}),
     )
+    add_fieldsets = (
+        (None, {
+            'classes': ('wide',),
+            'fields': ('email', 'password1', 'password2'),
+        }),
+    )
     ordering = ('email',)
-    readonly_fields = ('email', 'last_login', 'date_joined')
+    readonly_fields = ('last_login', 'date_joined')
     list_display = ('email', 'last_login', 'date_joined', 'is_active', 'is_staff', 'can_create_businesses')
     list_filter = ('is_staff', 'is_superuser', 'is_active', 'groups', 'can_create_businesses')
     search_fields = ('first_name', 'last_name', 'email')
+
+    def get_readonly_fields(self, request, obj=None):
+        readonly_fields = super(UserAdmin, self).get_readonly_fields(request, obj)
+        if obj:
+            return readonly_fields + ('email',)
+        return readonly_fields
 
     def save_model(self, request, obj, form, change):
         if not change:

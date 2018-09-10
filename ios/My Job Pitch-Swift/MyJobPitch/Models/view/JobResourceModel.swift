@@ -12,5 +12,5 @@ class JobResourceModel {
     var video: String!
     var image: String!
     var thumbnail: String!
-    var isLogo: Bool = false
+    var defaultImage: UIImage!
 }

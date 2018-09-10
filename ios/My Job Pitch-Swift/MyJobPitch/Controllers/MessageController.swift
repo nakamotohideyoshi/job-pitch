@@ -40,8 +40,6 @@ class MessageController: JSQMessagesViewController {
         let jobSeeker = application.jobSeeker!
         let jobImage = job.getImage()?.thumbnail
         let jobSeekerImage = jobSeeker.getPitch()?.thumbnail
-        let statusCreated = AppData.getApplicationStatusByName(ApplicationStatus.APPLICATION_CREATED).id
-        let statusDeleted = AppData.getApplicationStatusByName(ApplicationStatus.APPLICATION_DELETED).id
         
         if AppData.user.isJobSeeker() {
             
@@ -51,7 +49,7 @@ class MessageController: JSQMessagesViewController {
             setAavatar(sender: true, path: jobSeekerImage, local: "no-img")
             setAavatar(sender: false, path: jobImage, local: "default-logo")
             
-            if application.status == statusCreated {
+            if application.status == ApplicationStatus.APPLICATION_CREATED_ID {
                 
                 inputToolbar.isUserInteractionEnabled = false
                 PopupController.showGray("You cannot send messages until your application is accepted", ok: "OK")
@@ -66,18 +64,18 @@ class MessageController: JSQMessagesViewController {
             setAavatar(sender: true, path: jobImage, local: "default-logo")
             setAavatar(sender: false, path: jobSeekerImage, local: "no-img")
             
-            if application.status == statusCreated {
+            if application.status == ApplicationStatus.APPLICATION_CREATED_ID {
                 inputToolbar.isUserInteractionEnabled = false
                 PopupController.showGreen("You cannot send messages until you have connected", ok: "Connect", okCallback: {
                     self.apply(callback: nil)
                 }, cancel: "View profile", cancelCallback: { 
-                    let controller = AppHelper.mainStoryboard.instantiateViewController(withIdentifier: "JobSeekerDetail") as! JobSeekerDetailController
+                    let controller = JobSeekerDetailController.instantiate()
                     controller.application = self.application
                     controller.chooseDelegate = self
                     controller.onlyView = true
-                    self.parent?.navigationController?.pushViewController(controller, animated: true)
+                    self.navigationController?.pushViewController(controller, animated: true)
                 })
-            } else if application.status == statusDeleted {
+            } else if application.status == ApplicationStatus.APPLICATION_DELETED_ID {
                 inputToolbar.isUserInteractionEnabled = false
                 PopupController.showGray("This application has been deleted.", ok: "OK")
             }
@@ -228,7 +226,7 @@ extension MessageController: ChooseDelegate {
         
         let update = ApplicationStatusUpdate()
         update.id = application.id
-        update.status = AppData.getApplicationStatusByName(ApplicationStatus.APPLICATION_ESTABLISHED).id
+        update.status = ApplicationStatus.APPLICATION_ESTABLISHED_ID
         
         let loadingView = showLoading()
         

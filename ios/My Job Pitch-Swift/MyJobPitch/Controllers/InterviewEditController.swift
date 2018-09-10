@@ -18,7 +18,6 @@ class InterviewEditController: MJPController, WWCalendarTimeSelectorProtocol {
     @IBOutlet weak var messageError: UILabel!
     @IBOutlet weak var notesTextView: BorderTextView!
     @IBOutlet weak var feedbackTextView: BorderTextView!
-    @IBOutlet weak var feedbackView: UIView!
     @IBOutlet weak var saveButton: GreenButton!
     @IBOutlet weak var appInfoView: UIView!
     
@@ -61,7 +60,7 @@ class InterviewEditController: MJPController, WWCalendarTimeSelectorProtocol {
         nameLabel.text = application.jobSeeker.getFullName()
         commentLabel.text = application.jobSeeker.desc
         
-        feedbackView.isHidden = true
+        feedbackTextView.superview?.isHidden = true
         
         if interview != nil {
             dateTime = interview?.at
@@ -77,7 +76,7 @@ class InterviewEditController: MJPController, WWCalendarTimeSelectorProtocol {
                 dateTimeField.isEnabled = false
                 messageTextView.isEditable = false
                 notesTextView.isEditable = false
-                feedbackView.isHidden = false
+                feedbackTextView.superview?.isHidden = false
                 
                 saveButton.setTitle("Complete", for: .normal)
             } else {
@@ -87,7 +86,7 @@ class InterviewEditController: MJPController, WWCalendarTimeSelectorProtocol {
     }
     
     @IBAction func appDetailAction(_ sender: Any) {
-        let controller = AppHelper.mainStoryboard.instantiateViewController(withIdentifier: "JobSeekerDetail") as! JobSeekerDetailController
+        let controller = JobSeekerDetailController.instantiate()
         controller.application = application
         controller.onlyView = true
         navigationController?.pushViewController(controller, animated: true)

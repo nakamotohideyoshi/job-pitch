@@ -73,8 +73,7 @@ class ApplicationListController: SearchController {
         }
         
         if isRecruiter {
-            let statusName = isApplication ? ApplicationStatus.APPLICATION_CREATED: ApplicationStatus.APPLICATION_ESTABLISHED
-            status = AppData.getApplicationStatusByName(statusName).id
+            status = isApplication ? ApplicationStatus.APPLICATION_CREATED_ID: ApplicationStatus.APPLICATION_ESTABLISHED_ID
         }
         
         ApplicationListController.refreshRequest = true
@@ -270,16 +269,15 @@ extension ApplicationListController: UITableViewDelegate {
         self.selectedItem = application
         
         if isRecruiter {
-            
-            JobSeekerDetailController.pushController(jobSeeker: nil,
-                                                     job: nil,
-                                                     application: application,
-                                                     chooseDelegate: self)
+            let controller = JobSeekerDetailController.instantiate()
+            controller.application = application
+            controller.chooseDelegate = self
+            navigationController?.pushViewController(controller, animated: true)
         } else {
-            
-            ApplicationDetailsController.pushController(job: nil,
-                                               application: application,
-                                               chooseDelegate: self)
+            let controller = ApplicationDetailsController.instantiate()
+            controller.application = application
+            controller.chooseDelegate = self
+            navigationController?.pushViewController(controller, animated: true)
         }
         
     }
@@ -292,7 +290,7 @@ extension ApplicationListController: ChooseDelegate {
         
         let update = ApplicationStatusUpdate()
         update.id = (self.selectedItem as! Application).id
-        update.status = AppData.getApplicationStatusByName(ApplicationStatus.APPLICATION_ESTABLISHED).id
+        update.status = ApplicationStatus.APPLICATION_ESTABLISHED_ID
         
         showLoading()
         API.shared().updateApplicationStatus(update: update, success: { (data) in

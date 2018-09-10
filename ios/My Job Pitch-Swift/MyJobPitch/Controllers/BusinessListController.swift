@@ -149,7 +149,7 @@ extension BusinessListController: UITableViewDataSource {
         
         let business = data[indexPath.row] as! Business
         let cell = tableView.dequeueReusableCell(withIdentifier: "BusinessCell", for: indexPath) as! BusinessCell
-        
+                
         if isUserMode {
             cell.setUsersData(business)
         } else {
@@ -157,17 +157,19 @@ extension BusinessListController: UITableViewDataSource {
         
             if !isAddMode {
                 
-                var buttons = [
-                    MGSwipeButton(title: "",
-                                  icon: UIImage(named: "edit-big-icon"),
-                                  backgroundColor: AppData.greenColor,
-                                  padding: 20,
-                                  callback: { (cell) -> Bool in
-                                    self.refresh = true
-                                    BusinessEditController.pushController(business: business)
-                                    return true
-                    })
-                ]
+                var buttons = [MGSwipeButton]()
+                
+                if !business.restricted {
+                    buttons.insert(MGSwipeButton(title: "",
+                                                 icon: UIImage(named: "edit-big-icon"),
+                                                 backgroundColor: AppData.greenColor,
+                                                 padding: 20,
+                                                 callback: { (cell) -> Bool in
+                                                    self.refresh = true
+                                                    BusinessEditController.pushController(business: business)
+                                                    return true
+                    }), at: 0)
+                }
                 
                 if AppData.user.canCreateBusinesses && AppData.user.businesses.count > 1 {
                     

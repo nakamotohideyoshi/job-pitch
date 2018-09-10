@@ -121,7 +121,7 @@ extension MessageListController: UITableViewDataSource {
         
         cell.addUnderLine(paddingLeft: 15, paddingRight: 0, color: AppData.greyBorderColor)
         
-        if application.status == AppData.getApplicationStatusByName(ApplicationStatus.APPLICATION_DELETED).id {
+        if application.status == ApplicationStatus.APPLICATION_DELETED_ID {
             var str: NSMutableAttributedString =  NSMutableAttributedString(string: cell.titleLabel.text!)
             str.addAttribute(NSStrikethroughStyleAttributeName, value: 1, range: NSMakeRange(0, str.length))
             str.addAttribute(NSFontAttributeName, value: UIFont.italicSystemFont(ofSize: 20), range: NSMakeRange(0, str.length))

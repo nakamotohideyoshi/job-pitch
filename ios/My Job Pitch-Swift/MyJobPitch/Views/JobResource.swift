@@ -23,19 +23,15 @@ class JobResource: UIView {
             
             if let thumbnail = model.thumbnail {
                 AppHelper.loadImageURL(imageUrl: thumbnail, imageView: imageView, completion: nil)
-            } else {
-                if model.isLogo {
-                     imageView.image = UIImage(named: "default-logo")
-                }
+                imageView.frame = self.frame
+            } else if model.defaultImage != nil {
+                imageView.image = model.defaultImage
+                
+                let size = self.frame.size
+                let d = size.width * 0.25
+                imageView.frame = CGRect(x: size.width / 2 - d / 2, y: size.height / 2 - d / 2, width: d, height: d)
             }
   
-            let size = self.frame.size
-            let d = size.width * 0.25
-            if model.isLogo {
-                imageView.frame = CGRect(x: size.width / 2 - d / 2, y: size.height / 2 - d / 2, width: d, height: d)
-            } else {
-                imageView.frame = self.frame
-            }
             playButton.frame = imageView.frame
             
             playIcon.isHidden = model.video == nil
@@ -56,7 +52,7 @@ class JobResource: UIView {
              if let image = model.image {
                 imageInfo.imageURL = URL(string: image)
             } else {
-                imageInfo.image = UIImage(named: "default-logo")
+                imageInfo.image = model.defaultImage
             }
             
             let imageViewer = JTSImageViewController.init(imageInfo: imageInfo, mode: .image, backgroundStyle: .init(rawValue: 0))

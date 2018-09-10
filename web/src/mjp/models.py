@@ -218,6 +218,9 @@ class Sector(models.Model):
 
 
 class Contract(models.Model):
+    TEMPORARY = 'Temporary'
+    PERMANENT = 'Permanent'
+
     name = models.CharField(max_length=255)
     short_name = models.CharField(max_length=255)
     description = models.TextField()
@@ -394,6 +397,9 @@ class Job(models.Model):
     requires_cv = models.BooleanField(default=False)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
+
+    def get_absolute_url(self):
+        return "/jobseeker/jobs/{}/".format(self.id)
 
     def __str__(self):
         return "%s (%s)" % (self.title, self.location.name)

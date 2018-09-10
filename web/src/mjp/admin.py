@@ -4,6 +4,7 @@ from django.conf.urls import url
 from django.contrib import admin
 from django.contrib import messages
 from django.contrib.auth import get_user_model
+from django.contrib.auth.admin import UserAdmin as AuthUserAdmin
 from django.contrib.auth.forms import PasswordResetForm
 from django.core.urlresolvers import reverse
 from django.core.validators import EMPTY_VALUES, EmailValidator
@@ -585,23 +586,19 @@ class PreRegistrationPasswordResetForm(PasswordResetForm):
 
 
 @admin.register(User)
-class UserAdmin(admin.ModelAdmin):
-    fields = (
-        'email',
-        'first_name',
-        'last_name',
-        'date_joined',
-        'last_login',
-        'is_active',
-        'is_staff',
-        'is_superuser',
-        'groups',
-        'user_permissions',
-        'can_create_businesses',
+class UserAdmin(AuthUserAdmin):
+    fieldsets = (
+        (None, {'fields': ('email', 'password')}),
+        ('Personal info', {'fields': ('first_name', 'last_name')}),
+        ('Permissions', {'fields': ('is_active', 'is_staff', 'is_superuser', 'can_create_businesses',
+                                       'groups', 'user_permissions')}),
+        ('Important dates', {'fields': ('last_login', 'date_joined')}),
     )
-    readonly_fields = ('last_login', 'date_joined')
+    ordering = ('email',)
+    readonly_fields = ('email', 'last_login', 'date_joined')
     list_display = ('email', 'last_login', 'date_joined', 'is_active', 'is_staff', 'can_create_businesses')
-    search_fields = ('email',)
+    list_filter = ('is_staff', 'is_superuser', 'is_active', 'groups', 'can_create_businesses')
+    search_fields = ('first_name', 'last_name', 'email')
 
     def save_model(self, request, obj, form, change):
         if not change:

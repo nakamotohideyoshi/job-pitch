@@ -208,14 +208,15 @@ class MessageViewSet(viewsets.ModelViewSet):
                 if pk:
                     application = Application.objects.get(pk=int(pk))
                     is_recruiter = request.user.businesses.filter(locations__jobs__applications=application).exists()
-                    return is_recruiter or application.job_seeker.user == request.user
+                    is_job_seeker = application.job_seeker.user == request.user
+                    return is_recruiter or (is_job_seeker and application.status.name != ApplicationStatus.CREATED)
                 return True
-            elif request.method == 'PUT':
+            elif request.method == 'PUT':  # set read
                 return True
             return False
 
         def has_object_permission(self, request, view, message):
-            if request.method == 'PUT':
+            if request.method == 'PUT':  # set read
                 is_recruiter = request.user.businesses.filter(locations__jobs__applications__messages=message).exists()
                 if is_recruiter and message.from_role.name == Role.JOB_SEEKER:
                     return True

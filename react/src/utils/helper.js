@@ -146,7 +146,7 @@ export function saveData(key, value) {
 
 export function loadData(key) {
   const value = localStorage.getItem(`${DATA.email}_${key}`);
-  return value && JSON.parse(value);
+  return value && value !== 'undefined' && JSON.parse(value);
 }
 
 /**

@@ -69,7 +69,7 @@ class ApplicationSerializer(ApplicationSerializerV4):  # v5
 class ExternalApplicationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Application
-        fields = ('id', 'job', 'job_seeker')
+        fields = ('id', 'job', 'job_seeker', 'shortlisted')
 
 
 class ApplicationCreateSerializer(serializers.ModelSerializer):

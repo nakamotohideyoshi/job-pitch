@@ -482,7 +482,7 @@ class JobSeeker(models.Model):
         except Exception:
             import traceback
             send_mail(
-                subject='Error sending job seeker welcome email to: {}'.format(self.user.email),
+                subject=u'Error sending job seeker welcome email to: {}'.format(self.user.email),
                 message=traceback.format_exc(),
                 from_email=settings.DEFAULT_FROM_EMAIL,
                 recipient_list=["jamie_cockburn@hotmail.co.uk"],
@@ -617,7 +617,7 @@ class TokenStore(models.Model):
         return ", ".join(b.name for b in self.businesses.all())
 
     def __str__(self):
-        return "{} token(s) for {}: {}".format(self.tokens, self.user.email, self.business_list())
+        return u"{} token(s) for {}: {}".format(self.tokens, self.user.email, self.business_list())
 
 
 class InitialTokens(models.Model):

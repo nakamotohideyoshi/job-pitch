@@ -188,9 +188,15 @@ class MJPController: UIViewController {
                 if let fields = requiredFields[key as! String] {
                     (fields.lastObject as! UILabel).text = errorMessage
                 } else {
-                    PopupController.showGreen(errorMessage,
-                                              ok: nil, okCallback: nil,
-                                              cancel: "OK", cancelCallback: nil)
+                    if errorMessage == "Invalid token." {
+                        UserDefaults.standard.removeObject(forKey: "token")
+                        API.shared().clearToken()
+                        SideMenuController.pushController(id: "log_out")
+                    } else {
+                        PopupController.showGreen(errorMessage,
+                                                  ok: nil, okCallback: nil,
+                                                  cancel: "OK", cancelCallback: nil)
+                    }
                     return
                 }
             }

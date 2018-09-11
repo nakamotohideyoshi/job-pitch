@@ -73,9 +73,11 @@ class LoginController: MJPController {
             
             if !API.shared().isLogin() {
                 let token = UserDefaults.standard.string(forKey: "token")
-                API.shared().setToken(token!)
-                loadData()
-                return
+                if token != nil {
+                    API.shared().setToken(token!)
+                    loadData()
+                    return
+                }
             }
         }
         

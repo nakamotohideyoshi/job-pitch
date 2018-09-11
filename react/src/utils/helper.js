@@ -146,7 +146,7 @@ export function saveData(key, value) {
 
 export function loadData(key) {
   const value = localStorage.getItem(`${DATA.email}_${key}`);
-  return JSON.parse(value);
+  return value && JSON.parse(value);
 }
 
 /**
@@ -229,23 +229,21 @@ export function str2int(str) {
   return isNaN(val) ? undefined : val;
 }
 
-// export function parseUrlParams(str) {
-//   if (str[0] === '?') {
-//     str = str.slice(1);
-//   }
+export function parseUrlParams(str) {
+  if (str[0] === '?') {
+    str = str.slice(1);
+  }
 
-//   const params = {};
-//   if (str !== '') {
-//     str.split('&').forEach(str => {
-//       const arr = str.split('=');
-//       params[arr[0]] = arr[1];
-//     });
-//   }
+  const params = {};
+  if (str !== '') {
+    str.split('&').forEach(str => {
+      const arr = str.split('=');
+      params[arr[0]] = arr[1];
+    });
+  }
 
-//   return params;
-// }
-
-/* form helper */
+  return params;
+}
 
 /**
 |--------------------------------------------------

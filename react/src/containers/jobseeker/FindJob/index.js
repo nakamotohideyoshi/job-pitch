@@ -28,6 +28,13 @@ class FindJob extends React.Component {
     } else {
       findJobs();
     }
+
+    if (helper.loadData('apply')) {
+      helper.saveData('apply');
+      notification.success({
+        message: 'Application submitted successfully.'
+      });
+    }
   }
 
   componentWillReceiveProps() {

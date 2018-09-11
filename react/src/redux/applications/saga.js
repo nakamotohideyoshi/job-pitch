@@ -99,7 +99,7 @@ function* autoUpdateAppliciations() {
 
     let { auth, router } = yield select();
 
-    if (!auth.user) {
+    if (!auth.user || auth.status === 'auth' || auth.status === 'select') {
       second = 0;
       continue;
     }

@@ -1,7 +1,7 @@
 import React from 'react';
 import Helmet from 'react-helmet';
 import { connect } from 'react-redux';
-import { Row, Col, Button, Tooltip, Tabs } from 'antd';
+import { Row, Col, Button, Tooltip, Tabs, Alert } from 'antd';
 
 import { getPublicJob } from 'redux/jobseeker/find';
 import * as helper from 'utils/helper';
@@ -18,15 +18,15 @@ class PublicJob extends React.Component {
   }
 
   onLogin = () => {
-    this.props.history.push(`/auth?redirect=${this.props.location.pathname}`);
+    this.props.history.push(`/auth?apply=${this.props.job.id}`);
   };
 
   onRegister = () => {
-    this.props.history.push(`/auth/register`);
+    this.props.history.push(`/auth/register?apply=${this.props.job.id}`);
   };
 
   render() {
-    const { job, error } = this.props;
+    const { job, error, status } = this.props;
 
     if (error) {
       return (
@@ -66,6 +66,8 @@ class PublicJob extends React.Component {
       <Wrapper className="container">
         <Helmet title="Job Details" />
 
+        {status === 'recruiter' && <Alert message="Job ad preview" type="success" />}
+
         <div className="content">
           <Row gutter={32}>
             <Col xs={10} sm={8} md={6} lg={5}>
@@ -96,15 +98,17 @@ class PublicJob extends React.Component {
                   </div>
                 </Col>
 
-                <Col md={10} lg={9}>
-                  <h3>Login or Register to Apply</h3>
-                  <Button type="primary" onClick={this.onLogin}>
-                    Sign in
-                  </Button>
-                  <Button type="primary" onClick={this.onRegister}>
-                    Register
-                  </Button>
-                </Col>
+                {status === 'auth' && (
+                  <Col md={10} lg={9}>
+                    <h3>Login or Register to Apply</h3>
+                    <Button type="primary" onClick={this.onLogin}>
+                      Sign in
+                    </Button>
+                    <Button type="primary" onClick={this.onRegister}>
+                      Register
+                    </Button>
+                  </Col>
+                )}
               </Row>
             </Col>
           </Row>
@@ -147,7 +151,8 @@ class PublicJob extends React.Component {
 export default connect(
   state => ({
     job: state.js_find.publicJob,
-    error: state.js_find.error
+    error: state.js_find.error,
+    status: state.auth.status
   }),
   {
     getPublicJob

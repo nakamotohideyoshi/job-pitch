@@ -1,8 +1,9 @@
 import { replace } from 'react-router-redux';
-import { takeLatest, all, call, put } from 'redux-saga/effects';
+import { takeLatest, all, call, put, select } from 'redux-saga/effects';
 
-import DATA from 'utils/data';
 import { getRequest, postRequest, requestSuccess } from 'utils/request';
+import DATA from 'utils/data';
+import * as helper from 'utils/helper';
 
 import { getBusinesses } from 'redux/recruiter/businesses/saga';
 import { getWorkplaces } from 'redux/recruiter/workplaces/saga';
@@ -22,6 +23,11 @@ function* _auth(action, url) {
   const data = yield call(postRequest({ url }), action);
   if (data) {
     localStorage.setItem('token', data.key);
+
+    const { router } = yield select();
+    const { apply } = helper.parseUrlParams(router.location.search);
+    localStorage.setItem(`${action.payload.data.email}_apply`, apply);
+
     yield put({ type: C.UPDATE_AUTH, payload: { status: 'select' } });
   }
 }

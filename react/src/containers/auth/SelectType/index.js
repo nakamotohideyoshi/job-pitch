@@ -22,6 +22,8 @@ const SelectType = ({ user, updateAuth }) => {
     setRecruiter();
   } else if (user.job_seeker) {
     setJobseeker();
+  } else if (helper.loadData('apply')) {
+    setJobseeker();
   }
 
   return (

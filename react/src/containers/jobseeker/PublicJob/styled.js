@@ -3,6 +3,10 @@ import colors from 'utils/colors';
 import media from 'utils/mediaquery';
 
 export default styled.div`
+  .ant-alert {
+    margin-top: 20px;
+  }
+
   .content {
     margin: 40px 0;
 

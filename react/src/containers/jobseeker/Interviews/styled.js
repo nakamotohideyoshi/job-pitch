@@ -29,8 +29,12 @@ export default styled.div`
         justify-content: center;
         font-size: 12px;
 
-        div {
-          margin: 4px 0;
+        .PENDING {
+          color: ${colors.yellow};
+        }
+
+        .ACCEPTED {
+          color: ${colors.green};
         }
       }
 

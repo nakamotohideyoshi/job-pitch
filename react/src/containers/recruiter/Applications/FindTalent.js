@@ -1,7 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
-import Truncate from 'react-truncate';
 import { List, Modal, Tooltip, Button, Drawer, notification } from 'antd';
 
 import { findJobseekers, connectJobseeker, removeJobseeker } from 'redux/recruiter/find';
@@ -131,11 +130,7 @@ class FindTalent extends React.Component {
         <List.Item.Meta
           avatar={<Logo src={image} size="80px" />}
           title={name}
-          description={
-            <Truncate lines={1} ellipsis={<span>...</span>}>
-              {description}
-            </Truncate>
-          }
+          description={<div className="single-line">{description}</div>}
         />
         {loading && <Loading className="mask" size="small" />}
       </List.Item>
@@ -202,9 +197,12 @@ class FindTalent extends React.Component {
 }
 
 export default withRouter(
-  connect(null, {
-    findJobseekers,
-    connectJobseeker,
-    removeJobseeker
-  })(FindTalent)
+  connect(
+    null,
+    {
+      findJobseekers,
+      connectJobseeker,
+      removeJobseeker
+    }
+  )(FindTalent)
 );

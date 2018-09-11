@@ -1,7 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
-import Truncate from 'react-truncate';
 import { List, Modal, Tooltip, Button, Drawer, notification } from 'antd';
 
 import { updateApplication, removeApplication } from 'redux/applications';
@@ -123,7 +122,7 @@ class NewApplications extends React.Component {
           </Tooltip>,
           <Tooltip placement="bottom" title="Remove">
             <span onClick={e => this.onRemove(app, e)}>
-              <Icons.TrashAlt />
+              <Icons.Times />
             </span>
           </Tooltip>
         ]}
@@ -133,11 +132,7 @@ class NewApplications extends React.Component {
         <List.Item.Meta
           avatar={<Logo src={image} size="80px" />}
           title={name}
-          description={
-            <Truncate lines={1} ellipsis={<span>...</span>}>
-              {job_seeker.description}
-            </Truncate>
-          }
+          description={<div className="single-line">{job_seeker.description}</div>}
         />
         {loading && <Loading className="mask" size="small" />}
       </List.Item>

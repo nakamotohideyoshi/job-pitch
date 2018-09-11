@@ -1,8 +1,8 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
-import Truncate from 'react-truncate';
 import { List, Modal, Tooltip, Button, Switch, Drawer, notification } from 'antd';
+import moment from 'moment';
 
 import { updateApplication, removeApplication } from 'redux/applications';
 import * as helper from 'utils/helper';
@@ -75,7 +75,7 @@ class MyConnections extends React.Component {
       .indexOf(this.props.searchText) >= 0;
 
   renderApplication = app => {
-    const { id, job_seeker, loading } = app;
+    const { id, job_seeker, interview, loading } = app;
     const image = helper.getPitch(job_seeker).thumbnail;
     const name = helper.getFullJSName(job_seeker);
 
@@ -90,7 +90,7 @@ class MyConnections extends React.Component {
           </Tooltip>,
           <Tooltip placement="bottom" title="Remove">
             <span onClick={e => this.onRemove(app, e)}>
-              <Icons.TrashAlt />
+              <Icons.Times />
             </span>
           </Tooltip>
         ]}
@@ -106,9 +106,11 @@ class MyConnections extends React.Component {
           }
           title={name}
           description={
-            <Truncate lines={1} ellipsis={<span>...</span>}>
-              {job_seeker.description}
-            </Truncate>
+            interview && (
+              <div className={`single-line ${interview.status}`}>
+                Interview: {moment(interview.at).format('ddd DD MMM, YYYY [at] H:mm')}
+              </div>
+            )
           }
         />
         {loading && <Loading className="mask" size="small" />}
@@ -147,6 +149,7 @@ class MyConnections extends React.Component {
           {selectedApp && (
             <JobseekerDetails
               application={selectedApp}
+              defaultTab="interview"
               actions={
                 <div>
                   <div style={{ marginBottom: '24px' }}>
@@ -174,8 +177,11 @@ class MyConnections extends React.Component {
 }
 
 export default withRouter(
-  connect(null, {
-    updateApplication,
-    removeApplication
-  })(MyConnections)
+  connect(
+    null,
+    {
+      updateApplication,
+      removeApplication
+    }
+  )(MyConnections)
 );

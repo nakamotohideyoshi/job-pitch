@@ -29,6 +29,7 @@ export default styled.div`
 
       .ant-list-item-meta {
         align-items: center;
+        width: calc(100% - 108px);
 
         .ant-list-item-meta-avatar {
           position: relative;
@@ -41,8 +42,24 @@ export default styled.div`
           }
         }
 
-        .ant-list-item-meta-title {
-          font-size: 16px;
+        .ant-list-item-meta-content {
+          width: calc(100% - 96px);
+
+          .ant-list-item-meta-title {
+            font-size: 16px;
+          }
+
+          .ant-list-item-meta-description {
+            .PENDING {
+              color: ${colors.yellow};
+              font-size: 12px;
+            }
+
+            .ACCEPTED {
+              color: ${colors.green};
+              font-size: 12px;
+            }
+          }
         }
       }
 

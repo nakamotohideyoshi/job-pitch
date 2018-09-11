@@ -28,6 +28,14 @@ export default styled.div`
       .ant-list-item-content {
         justify-content: space-evenly;
         font-size: 12px;
+
+        .PENDING {
+          color: ${colors.yellow};
+        }
+
+        .ACCEPTED {
+          color: ${colors.green};
+        }
       }
 
       &:hover {

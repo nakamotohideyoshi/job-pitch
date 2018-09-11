@@ -76,10 +76,14 @@ export const getUsers = createSelector(
   (users, workplaces) =>
     users &&
     users.map(user => {
-      let comment =
-        user.locations.length === 0
-          ? 'Administrator'
-          : user.locations.map(id => helper.getItemByID(workplaces, id).name).join(', ');
+      var comment;
+      if (user.locations.length) {
+        comment = user.locations.map(id => helper.getItemByID(workplaces, id).name).join(', ');
+      } else if (user.email === DATA.email) {
+        comment = 'Administrator (Current User)';
+      } else {
+        comment = 'Administrator';
+      }
       return { ...user, comment };
     })
 );

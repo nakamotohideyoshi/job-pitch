@@ -6,16 +6,12 @@ import * as C from 'redux/constants';
 const findJobs = weakRequest(getRequest({ url: '/api/jobs/' }));
 
 function* applyJob({ payload }) {
-  const {
-    onSuccess,
-    onFail,
-    data: { job }
-  } = payload;
+  const { onSuccess, onFail, data } = payload;
 
   const result = yield call(postRequest({ url: `/api/applications/` }), { payload });
   if (result !== null) {
     const application = yield call(getRequest({ url: `/api/applications/${result.id}/` }));
-    yield put({ type: requestSuccess(C.JS_APPLY_JOB), job });
+    yield put({ type: requestSuccess(C.JS_APPLY_JOB), job: data.job });
     if (application !== null) {
       yield put({ type: requestSuccess(C.UPDATE_APPLICATION), application });
       onSuccess && onSuccess();
@@ -25,7 +21,7 @@ function* applyJob({ payload }) {
     return;
   }
 
-  yield put({ type: requestFail(C.JS_APPLY_JOB), job });
+  yield put({ type: requestFail(C.JS_APPLY_JOB), job: data.job });
   onFail && onFail();
 }
 

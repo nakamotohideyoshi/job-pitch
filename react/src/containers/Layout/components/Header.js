@@ -1,4 +1,5 @@
 import React, { Fragment } from 'react';
+import { Link } from 'react-router-dom';
 import { Layout, Dropdown, Menu } from 'antd';
 import Responsive from 'react-responsive';
 import styled from 'styled-components';
@@ -90,9 +91,11 @@ export default ({ menu: MainMenu, url }) => {
           <Responsive maxWidth={767}>{<Popover float="left" icon={Icons.Bars} menu={MainMenu} />}</Responsive>
         )}
 
-        <div className="title-logo">
-          <img src={titleImage} alt="" />
-        </div>
+        <Link to="/">
+          <div className="title-logo">
+            <img src={titleImage} alt="" />
+          </div>
+        </Link>
 
         {MainMenu && (
           <Fragment>

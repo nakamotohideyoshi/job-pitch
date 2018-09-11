@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Form, Input, Button, Select, Popover, message } from 'antd';
+import { Form, Input, Button, Select, Popover, message, notification } from 'antd';
 
 import { saveJobProfile } from 'redux/jobseeker/profile';
 import DATA from 'utils/data';
@@ -33,6 +33,13 @@ class JobProfile extends React.Component {
       });
 
       this.selectLocation(profile.place_id, profile.place_name, profile.latitude, profile.longitude);
+    }
+
+    if (helper.loadData('apply')) {
+      helper.saveData('apply');
+      notification.success({
+        message: 'Application submitted successfully.'
+      });
     }
   }
 

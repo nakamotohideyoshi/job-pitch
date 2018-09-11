@@ -197,7 +197,18 @@ class Profile extends React.Component {
   saveCompleted = () => {
     const { active, profile } = this.props.jobseeker;
     this.setState({ loading: null });
-    message.success('Profile is saved successfully.');
+    if (helper.loadData('apply')) {
+      helper.saveData('apply');
+      notification.success({
+        message: 'Application submitted successfully.'
+      });
+    } else {
+      notification.success({
+        message: 'Success',
+        description: 'Profile is saved successfully.'
+      });
+    }
+
     if (!active) {
       notification.info({
         message: 'Profile is deactivated',
@@ -324,8 +335,10 @@ class Profile extends React.Component {
                 placement="right"
                 content={
                   <span>
-                    Supplying your national insurance number makes<br />
-                    it easier for employers to recruit you. Your National<br />
+                    Supplying your national insurance number makes
+                    <br />
+                    it easier for employers to recruit you. Your National
+                    <br />
                     Insurance number will not be shared with employers.
                   </span>
                 }
@@ -346,7 +359,8 @@ class Profile extends React.Component {
                 placement="right"
                 content={
                   <span>
-                    CV summary is what the recruiter first see, write if you<br />
+                    CV summary is what the recruiter first see, write if you
+                    <br />
                     have previous relevant experience where and for how long.
                   </span>
                 }
@@ -394,10 +408,14 @@ class Profile extends React.Component {
                 placement="right"
                 content={
                   <span>
-                    Record your up to 30 sec selfie video. The key is to<br />
-                    just be yourself! You can record on your phone pretty<br />
-                    much anywhere, at home on the bus or in a coffee shop<br />
-                    it doesn’t matter, and you can re-record as many times<br />
+                    Record your up to 30 sec selfie video. The key is to
+                    <br />
+                    just be yourself! You can record on your phone pretty
+                    <br />
+                    much anywhere, at home on the bus or in a coffee shop
+                    <br />
+                    it doesn’t matter, and you can re-record as many times
+                    <br />
                     times as you want. Check out our{' '}
                     <a href="https://vimeo.com/255467562" target="_blank" rel="noopener noreferrer">
                       example video

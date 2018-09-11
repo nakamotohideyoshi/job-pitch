@@ -49,7 +49,18 @@ class PublicEmbeddedJobListingSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Job
-        fields = ('id', 'title', 'description', 'images', 'videos', 'sector', 'contract', 'hours')
+        fields = (
+            'id',
+            'title',
+            'description',
+            'images',
+            'videos',
+            'sector',
+            'contract',
+            'hours',
+            'requires_pitch',
+            'requires_cv',
+        )
 
 
 class PublicJobListingSerializer(PublicEmbeddedJobListingSerializer):

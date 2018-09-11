@@ -62,13 +62,20 @@ class LoginController: MJPController {
                 apiButton.setTitle(url, for: .normal)
             }
         }
-        // Check API deprecation
-        checkDeprecation()
+        
+        if loginButton != nil {
+            if !API.shared().isLogin() {
+                // Check API deprecation
+                checkDeprecation()
+            } else {
+                isLogin()
+            }
+        }
     }
     
     func isLogin() {
         emailField.text = AppData.email
-        if loginButton != nil && remember {
+        if remember {
             rememberSwitch.isOn = true
             
             if !API.shared().isLogin() {
@@ -183,24 +190,15 @@ class LoginController: MJPController {
 
                 } else {
                     
-                    switch LoginController.userType {
-                    case 1:
+                    let popupController = PopupController.show(AppHelper.getFrontController(), message: "Choose User Type", ok: "Get a Job", okCallback: {
+                        LoginController.userType = 1
                         self.showIntro()
-                        
-                    case 2:
+                    }, cancel: "I Need Staff", cancelCallback: {
+                        LoginController.userType = 2
                         SideMenuController.pushController(id: "businesses")
-                        
-                    default:
-                        let popupController = PopupController.show(AppHelper.getFrontController(), message: "Choose User Type", ok: "Get a Job", okCallback: {
-                            LoginController.userType = 1
-                            self.showIntro()
-                        }, cancel: "I Need Staff", cancelCallback: {
-                            LoginController.userType = 2
-                            SideMenuController.pushController(id: "businesses")
-                        })
-                        popupController.okButton.backgroundColor = AppData.yellowColor
-                        popupController.cancelButton.backgroundColor = AppData.greenColor
-                    }
+                    })
+                    popupController.okButton.backgroundColor = AppData.yellowColor
+                    popupController.cancelButton.backgroundColor = AppData.greenColor
                     
                 }
                 
@@ -236,7 +234,6 @@ class LoginController: MJPController {
             showLoading()
             
             AppData.email = emailField.text
-            LoginController.userType = (sender as! UIButton).tag
             
             API.shared().register(email: emailField.text!, password: passwordField.text!,
                                   success: { (authToken) in
@@ -299,3 +296,22 @@ class LoginController: MJPController {
     }
     
 }
+
+extension LoginController: UITextFieldDelegate {
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        if textField == emailField {
+            passwordField.becomeFirstResponder()
+            return false
+        }
+        if textField == passwordField {
+            if loginButton != nil {
+                loginAction(UIButton())
+            } else {
+                registerAction(UIButton())
+            }
+            return false
+        }
+        return true
+    }
+}
+

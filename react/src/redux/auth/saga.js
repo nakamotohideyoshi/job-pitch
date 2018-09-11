@@ -26,7 +26,11 @@ function* _auth(action, url) {
 
     const { router } = yield select();
     const { apply } = helper.parseUrlParams(router.location.search);
-    localStorage.setItem(`${action.payload.data.email}_apply`, apply);
+    if (apply) {
+      localStorage.setItem(`${action.payload.data.email}_apply`, apply);
+    } else {
+      localStorage.removeItem(`${action.payload.data.email}_apply`);
+    }
 
     yield put({ type: C.UPDATE_AUTH, payload: { status: 'select' } });
   }

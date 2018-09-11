@@ -9,149 +9,133 @@
 import UIKit
 
 class BusinessUserEditController: MJPController {
-    @IBOutlet weak var saveButton: GreenButton!
-    @IBOutlet weak var isAdministrator: UISwitch!
     @IBOutlet weak var emailAddress: UITextField!
-    @IBOutlet weak var workPlaceSelector: ButtonTextField!
     @IBOutlet weak var emailError: UILabel!
+    @IBOutlet weak var isAdministrator: UISwitch!
+    @IBOutlet weak var workPlaceSelector: ButtonTextField!
     @IBOutlet weak var workplaceError: UILabel!
-    @IBOutlet weak var deleteButton: YellowButton!
+    @IBOutlet weak var saveButton: GreenButton!
     @IBOutlet weak var resendButton: GreenButton!
+    @IBOutlet weak var deleteButton: YellowButton!
     
-    var isEditMode = false
+    var business: Business!
     var businessUser: BusinessUser!
-    var businessId: NSNumber!
-    
-    var locations: [Location]!
-    var isSelectedLocation: [Bool]!
     
     var locationNames = [String]()
     var selectedLocationsNames = [String]()
-    var selectedLocations = [NSNumber]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        deleteButton.isHidden = !isEditMode
-        resendButton.isHidden = !isEditMode
+        setTitle(title: businessUser == nil ? "Create User" : "Edit User", subTitle: business.name)
         
-        if isEditMode {
-            isAdministrator.isOn = businessUser.locations.count == 0
-            emailAddress.text = businessUser.email
+        locationNames = AppData.locations.map { $0.name }
+        
+        if businessUser != nil {
             emailAddress.isEnabled = false
-            emailAddress.textColor = UIColor.darkGray
-        } else {
-            isAdministrator.isOn = false
-            emailAddress.text = ""
-            emailAddress.isEnabled = true
-            emailAddress.textColor = UIColor.black
-            saveButton.setTitle("Send Invitation", for: .normal)
-        }
-        
-        workPlaceSelector.isEnabled = !isAdministrator.isOn
-        
-        for location in locations {
-            locationNames.append(location.name)
-            if isEditMode {
-                if businessUser.locations.contains(location.id) {
-                    selectedLocationsNames.append(location.name)
-                }
-            }
-        }
-        
-        if isEditMode {
+            emailAddress.text = businessUser.email
+            isAdministrator.isOn = businessUser.locations.count == 0
+            workPlaceSelector.superview?.isHidden = isAdministrator.isOn
+            
+            selectedLocationsNames = (AppData.locations.filter { businessUser.locations.contains($0.id) }).map { $0.name }
             workPlaceSelector.text = selectedLocationsNames.joined(separator: ", ")
+            
+            saveButton.setTitle("Save", for: .normal)
+            resendButton.superview?.isHidden = false
+            deleteButton.superview?.isHidden = false
         }
+        
         workPlaceSelector.clickCallback = {
             SelectionController.showPopup(title: "",
                                           items: self.locationNames,
                                           selectedItems: self.selectedLocationsNames,
                                           multiSelection: true,
-                                          search: true,
+                                          search: false,
                                           doneCallback: { (items) in
                                             self.selectedLocationsNames = items
-                                            self.selectedLocations.removeAll()
-                                            for item in items {
-                                                if let index = self.locationNames.index(of: item) {
-                                                    if index > -1 {
-                                                        self.selectedLocations.append(self.locations[index].id)
-                                                    }
-                                                }
-                                            }
                                             self.workPlaceSelector.text = items.joined(separator: ", ")
             })
         }
-
         
+        navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(named: "nav-close"), style: .plain, target: self, action: #selector(closeAction))
     }
     
-    @IBAction func setAdministrator(_ sender: Any) {
+    override func getRequiredFields() -> [String: NSArray] {
+        return [
+            "email": [emailAddress, emailError]
+        ]
+    }
+    
+    func closeAction() {
+        navigationController?.dismiss(animated: true, completion: nil)
+    }
+    
+    @IBAction func administratorAction(_ sender: Any) {
         isAdministrator.isOn = !isAdministrator.isOn
-        workPlaceSelector.isEnabled = !isAdministrator.isOn
+        workPlaceSelector.superview?.isHidden = isAdministrator.isOn
+        selectedLocationsNames = []
     }
     
-    @IBAction func deleteAction(_ sender: Any) {
+    @IBAction func saveAction(_ sender: Any) {
+        workplaceError.text = !isAdministrator.isOn && selectedLocationsNames.count == 0 ? "This field is required." : ""
+        
+        if !valid() || workplaceError.text != "" {
+            return
+        }
         
         showLoading()
         
-        API.shared().deleteBusinessUser(businessId: businessId, businessUserId: businessUser.id, success: { (data) in
-            self.hideLoading()
-            _ = self.navigationController?.popViewController(animated: true)
-            return
-        }, failure: self.handleErrors)
+        let locations = (AppData.locations.filter { selectedLocationsNames.contains($0.name) }).map { $0.id }
+        
+        if businessUser == nil {
+            let businessUserForCreation = BusinessUserForCreation()
+            businessUserForCreation.email = emailAddress.text
+            businessUserForCreation.locations = locations as NSArray!
+            
+            API.shared().createBusinessUser(businessId: business.id, businessUser: businessUserForCreation, success: { (data) in
+                AppData.getBusinessUsers(businessId: self.business.id, success: {
+                    self.closeAction()
+                }, failure: self.handleErrors)
+            }, failure: self.handleErrors)
+        } else {
+            let businessUserForUpdate = BusinessUserForUpdate()
+            businessUserForUpdate.locations = locations as NSArray!
+            
+            API.shared().updateBusinessUser(businessId: business.id, businessUserId: businessUser.id, businessUser: businessUserForUpdate, success: { (data) in
+                AppData.updateBusinessUser(businessId: self.business.id, userId: self.businessUser.id, success: {
+                    self.closeAction()
+                }, failure: self.handleErrors)
+            }, failure: self.handleErrors)
+            
+        }
     }
     
     @IBAction func resendInvitation(_ sender: Any) {
-        
         showLoading()
         
         let businessUserForCreation = BusinessUserForCreation()
         businessUserForCreation.email = businessUser.email
         businessUserForCreation.locations = businessUser.locations
         
-        API.shared().reCreateBusinessUser(businessId: businessId, businessUserId: businessUser.id, businessUser: businessUserForCreation, success: { (data) in
-            self.hideLoading()
-            _ = self.navigationController?.popViewController(animated: true)
-            return
+        API.shared().reCreateBusinessUser(businessId: business.id, businessUserId: businessUser.id, businessUser: nil, success: { (data) in
+            self.closeAction()
         }, failure: self.handleErrors)
     }
     
-    @IBAction func saveAction(_ sender: Any) {
-        
-        if !isAdministrator.isOn && selectedLocations.count == 0 {
-            PopupController.showGreen("You must select at least one work place.", ok: "Ok", okCallback: {
-            }, cancel: "Cancel", cancelCallback: {
-                
-            })
-        } else {
-        
-            showLoading()
+    @IBAction func deleteAction(_ sender: Any) {
+        let message = String(format: "Are you sure you want to delete %@", businessUser.email)
+        PopupController.showYellow(message, ok: "Delete", okCallback: {
+            self.showLoading()
             
-            if isEditMode {
-                
-                let businessUserForUpdate = BusinessUserForUpdate()
-                businessUserForUpdate.locations = isAdministrator.isOn ? [] : selectedLocations as NSArray
-                
-                API.shared().updateBusinessUser(businessId: businessId, businessUserId: businessUser.id, businessUser: businessUserForUpdate, success: { (data) in
-                    self.hideLoading()
-                    _ = self.navigationController?.popViewController(animated: true)
-                    return
-                }, failure: self.handleErrors)
-                
-            } else  {
-                
-                let businessUserForCreation = BusinessUserForCreation()
-                businessUserForCreation.email = emailAddress.text
-                businessUserForCreation.locations = isAdministrator.isOn ? [] : selectedLocations as NSArray
-                
-                API.shared().createBusinessUser(businessId: businessId, businessUser: businessUserForCreation, success: { (data) in
-                    self.hideLoading()
-                    _ = self.navigationController?.popViewController(animated: true)
-                    return
-                }, failure: self.handleErrors)
-                
-            }
-        }
+            API.shared().deleteBusinessUser(businessId: self.business.id, businessUserId: self.businessUser.id, success: { (data) in
+                AppData.removeBusinessUser(self.businessUser.id)
+                self.closeAction()
+            }, failure: self.handleErrors)
+        }, cancel: "Cancel", cancelCallback: nil)
+    }
+    
+    static func instantiate() -> BusinessUserEditController {
+        return AppHelper.instantiate("BusinessUserEdit") as! BusinessUserEditController
     }
 }
 

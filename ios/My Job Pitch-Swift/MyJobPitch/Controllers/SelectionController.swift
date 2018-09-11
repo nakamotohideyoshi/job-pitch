@@ -70,7 +70,7 @@ class SelectionController: UIViewController {
         let frontController = AppHelper.getFrontController()
         frontController?.view.endEditing(true)
         
-        let selectionController = AppHelper.mainStoryboard.instantiateViewController(withIdentifier: "Selection") as! SelectionController
+        let selectionController = AppHelper.instantiate("Selection") as! SelectionController
         selectionController.items0 = items
         selectionController.selectedItems.append(contentsOf: selectedItems)
         selectionController.multiSelection = multiSelection

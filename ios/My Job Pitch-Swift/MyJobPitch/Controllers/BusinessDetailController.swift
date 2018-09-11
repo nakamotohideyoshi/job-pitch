@@ -231,11 +231,11 @@ extension BusinessDetailController: UITableViewDelegate {
         let location = data[indexPath.row] as! Location
         
         if isAddMode {
-            let controller = AppHelper.mainStoryboard.instantiateViewController(withIdentifier: "JobEdit") as! JobEditController
+            let controller = AppHelper.instantiate("JobEdit") as! JobEditController
             controller.location = location
             navigationController?.pushViewController(controller, animated: true)
         } else {
-            let controller = AppHelper.mainStoryboard.instantiateViewController(withIdentifier: "JobList") as! LocationDetailController
+            let controller = AppHelper.instantiate("JobList") as! LocationDetailController
             controller.location = location
             navigationController?.pushViewController(controller, animated: true)
         }

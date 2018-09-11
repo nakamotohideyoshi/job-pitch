@@ -63,12 +63,12 @@ class SelectJobController: MJPController {
         
         if AppData.user.canCreateBusinesses || AppData.user.businesses.count==0 {
             
-            let controller = AppHelper.mainStoryboard.instantiateViewController(withIdentifier: "BusinessList") as! BusinessListController
+            let controller = AppHelper.instantiate("BusinessList") as! BusinessListController
             AppHelper.getFrontController().navigationController?.pushViewController(controller, animated: true)
             
         } else {
             
-            let controller = AppHelper.mainStoryboard.instantiateViewController(withIdentifier: "LocationList") as! BusinessDetailController
+            let controller = AppHelper.instantiate("LocationList") as! BusinessDetailController
             controller.businessId = AppData.user.businesses[0] as! NSNumber
             navigationController?.pushViewController(controller, animated: true)
             

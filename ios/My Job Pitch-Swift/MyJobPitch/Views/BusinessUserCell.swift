@@ -12,27 +12,13 @@ import MGSwipeTableCell
 class BusinessUserCell: MGSwipeTableCell {
     @IBOutlet weak var email: UILabel!
     @IBOutlet weak var subTitle: UILabel!
-    
 
-    func setData(_ businessUser: BusinessUser, _ locations: [Location]) {
-        email.text = businessUser.email
-        subTitle.text = nil
-        if businessUser.locations.count == 0 {
-            subTitle.text = "Administrator"
-            if businessUser.email == AppData.user.email {
-                subTitle.text = "Administrator (Current User)"
-            }
-        } else {
-            for location in locations {
-                if businessUser.locations.contains(location.id) {
-                    if subTitle.text == nil {
-                        subTitle.text = location.name
-                    } else {
-                        subTitle.text = "\(subTitle.text!), \(location.name!)"
-                    }
-                }
-            }
-        }
+    func setData(_ user: BusinessUser, _ locations: String) {
+        email.text = user.email
+        subTitle.text = locations
+        
+        accessoryType = user.email == AppData.user.email ? .none : .disclosureIndicator
+        addUnderLine(paddingLeft: 12, paddingRight: 0, color: AppData.greyBorderColor)
     }
 
 }

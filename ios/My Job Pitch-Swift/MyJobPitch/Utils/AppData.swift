@@ -9,7 +9,7 @@
 import UIKit
 
 class AppData: NSObject {
-
+    
     // const
     
     static let apiVersion = 5
@@ -21,11 +21,11 @@ class AppData: NSObject {
     static let greyBorderColor = UIColor(red: 204/256.0, green: 204/256.0, blue: 204/256.0, alpha: 1)
     static let imageBGColor = UIColor(red: 235/256.0, green: 235/256.0, blue: 235/256.0, alpha: 1)
     static let navColor = UIColor(red: 35/256.0, green: 35/256.0, blue: 35/256.0, alpha: 1)
-
+    
     static let cornerRadius: CGFloat = 6
-
+    
     // app data
-
+    
     static var email: String! {
         get {
             return UserDefaults.standard.string(forKey: "email")
@@ -68,12 +68,12 @@ class AppData: NSObject {
         applications = nil
         stopTimer()
     }
-
+    
     static func loadData(success: (() -> Void)!,
                          failure: ((String?, NSDictionary?) -> Void)!) {
-
+        
         var failed = false
-
+        
         API.shared().loadHours(success: { (data) in
             hours = data
             if isDataLoaded() {
@@ -85,7 +85,7 @@ class AppData: NSObject {
                 failure(message, errors)
             }
         }
-
+        
         API.shared().loadContracts(success: { (data) in
             contracts = data
             if isDataLoaded() {
@@ -97,7 +97,7 @@ class AppData: NSObject {
                 failure(message, errors)
             }
         }
-
+        
         API.shared().loadSexes(success: { (data) in
             sexes = data
             if isDataLoaded() {
@@ -109,7 +109,7 @@ class AppData: NSObject {
                 failure(message, errors)
             }
         }
-
+        
         API.shared().loadNationalities(success: { (data) in
             nationalities = data
             if isDataLoaded() {
@@ -121,7 +121,7 @@ class AppData: NSObject {
                 failure(message, errors)
             }
         }
-
+        
         API.shared().loadSectors(success: { (data) in
             sectors = data
             if isDataLoaded() {
@@ -133,7 +133,7 @@ class AppData: NSObject {
                 failure(message, errors)
             }
         }
-
+        
         API.shared().loadJobStatuses(success: { (data) in
             jobStatuses = data
             JobStatus.JOB_STATUS_OPEN_ID = getJobStatusByName(JobStatus.JOB_STATUS_OPEN).id
@@ -147,7 +147,7 @@ class AppData: NSObject {
                 failure(message, errors)
             }
         }
-
+        
         API.shared().loadApplicationStatuses(success: { (data) in
             applicationStatuses = data
             ApplicationStatus.APPLICATION_CREATED_ID = getApplicationStatusByName(ApplicationStatus.APPLICATION_CREATED).id
@@ -162,7 +162,7 @@ class AppData: NSObject {
                 failure(message, errors)
             }
         }
-
+        
         API.shared().loadRoles(success: { (data) in
             roles = data
             if isDataLoaded() {
@@ -199,27 +199,27 @@ class AppData: NSObject {
             }
         }
         
-        getApplications(success: { 
+        getApplications(success: {
             if isDataLoaded() {
                 success()
                 startTimer()
             }
         }, failure: failure)
     }
-
+    
     private static func isDataLoaded() -> Bool {
         return  hours != nil &&
-                contracts != nil &&
-                sexes != nil &&
-                nationalities != nil &&
-                sectors != nil &&
-                jobStatuses != nil &&
-                applicationStatuses != nil &&
-                roles != nil &&
-                initialTokens != nil &&
-                applications != nil
+            contracts != nil &&
+            sexes != nil &&
+            nationalities != nil &&
+            sectors != nil &&
+            jobStatuses != nil &&
+            applicationStatuses != nil &&
+            roles != nil &&
+            initialTokens != nil &&
+            applications != nil
     }
-
+    
     static func getSex(_ id: NSNumber!) -> Sex! {
         if id != nil {
             for sex in sexes as! [Sex] {
@@ -230,7 +230,7 @@ class AppData: NSObject {
         }
         return nil
     }
-
+    
     static func getSexByName(_ name: String!) -> Sex! {
         if name != nil {
             for sex in sexes as! [Sex] {
@@ -241,7 +241,7 @@ class AppData: NSObject {
         }
         return nil
     }
-
+    
     static func getHours(_ id: NSNumber!) -> Hours! {
         if id != nil {
             for hours in AppData.hours as! [Hours] {
@@ -252,7 +252,7 @@ class AppData: NSObject {
         }
         return nil
     }
-
+    
     static func getHoursByName(_ name: String!) -> Hours! {
         if name != nil {
             for hours in AppData.hours as! [Hours] {
@@ -263,7 +263,7 @@ class AppData: NSObject {
         }
         return nil
     }
-
+    
     static func getContract(_ id: NSNumber!) -> Contract! {
         if id != nil {
             for contract in contracts as! [Contract] {
@@ -274,7 +274,7 @@ class AppData: NSObject {
         }
         return nil
     }
-
+    
     static func getContractByName(_ name: String!) -> Contract! {
         if name != nil {
             for contract in contracts as! [Contract] {
@@ -296,7 +296,7 @@ class AppData: NSObject {
         }
         return nil
     }
-
+    
     static func getApplicationStatus(_ id: NSNumber!) -> ApplicationStatus! {
         if id != nil {
             for status in applicationStatuses as! [ApplicationStatus] {
@@ -307,7 +307,7 @@ class AppData: NSObject {
         }
         return nil
     }
-
+    
     static func getApplicationStatusByName(_ name: String!) -> ApplicationStatus! {
         if name != nil {
             for status in applicationStatuses as! [ApplicationStatus] {
@@ -318,7 +318,7 @@ class AppData: NSObject {
         }
         return nil
     }
-
+    
     static func getRole(_ id: NSNumber!) -> Role! {
         if id != nil {
             for role in roles as! [Role] {
@@ -329,7 +329,7 @@ class AppData: NSObject {
         }
         return nil
     }
-
+    
     static func getRoleByName(_ name: String!) -> Role! {
         if name != nil {
             for role in roles as! [Role] {
@@ -340,7 +340,7 @@ class AppData: NSObject {
         }
         return nil
     }
-
+    
     static func getUserRole() -> Role! {
         if user.isJobSeeker() {
             return getRoleByName(Role.ROLE_JOB_SEEKER)
@@ -348,7 +348,7 @@ class AppData: NSObject {
         return getRoleByName(Role.ROLE_RECRUITER)
     }
     
-    //================ auto reload applications =============
+    //================ applications =============
     
     static var timer: Timer?
     static var time = 0
@@ -397,7 +397,7 @@ class AppData: NSObject {
             newMessageCount += newMsgs
         }
     }
-        
+    
     static func getApplications(success: (() -> Void)?,
                                 failure: ((String?, NSDictionary?) -> Void)?) {
         API.shared().loadApplicationsForJob(jobId: nil, status: nil, shortlisted: false, success: { (data) in
@@ -405,12 +405,12 @@ class AppData: NSObject {
             applications = data as! [Application]
             preprocessApplications()
             success?()
-
+            
         }, failure: failure)
     }
     
     static func updateApplication(_ id: NSNumber, success: (() -> Void)?,
-                                failure: ((String?, NSDictionary?) -> Void)?) {
+                                  failure: ((String?, NSDictionary?) -> Void)?) {
         API.shared().loadApplicationWithId(id: id, success: { (data) in
             var newApplication: Application! = data as! Application
             
@@ -430,5 +430,182 @@ class AppData: NSObject {
             success?()
         }, failure: failure)
     }
-
+    
+    //================ businesses =============
+    
+    static var businesses: [Business]!
+    
+    static func getBusinesses(success: (() -> Void)?,
+                              failure: ((String?, NSDictionary?) -> Void)?) {
+        API.shared().loadBusinesses(success: { (data) in
+            businesses = data as! [Business]
+            success?()
+        }, failure: failure)
+    }
+    
+    static func updateBusiness(_ id: NSNumber, success: (() -> Void)?,
+                               failure: ((String?, NSDictionary?) -> Void)?) {
+        API.shared().loadBusiness(id: id, success: { (data) in
+            var newBusiness: Business! = data as! Business
+            
+            for (index, business) in businesses.enumerated() {
+                if business.id == newBusiness.id {
+                    businesses[index] = newBusiness
+                    newBusiness = nil
+                    break
+                }
+            }
+            
+            if newBusiness != nil {
+                businesses.insert(newBusiness, at: 0)
+            }
+            
+            success?()
+        }, failure: failure)
+    }
+    
+    static func removeBusiness(businessId: NSNumber,
+                               success: (() -> Void)?,
+                               failure: ((String?, NSDictionary?) -> Void)?) {
+        for (index, business) in businesses.enumerated() {
+            if business.id == businessId {
+                businesses.remove(at: index)
+                break
+            }
+        }
+    }
+    
+    //================ locations =============
+    
+    static var locations: [Location]!
+    
+    static func getLocations(businessId: NSNumber,
+                             success: (() -> Void)?,
+                             failure: ((String?, NSDictionary?) -> Void)?) {
+        API.shared().loadLocationsForBusiness(businessId: businessId, success: { (data) in
+            locations = data as! [Location]
+            success?()
+        }, failure: failure)
+    }
+    
+    static func updateLocation(_ id: NSNumber, success: (() -> Void)?,
+                               failure: ((String?, NSDictionary?) -> Void)?) {
+        API.shared().loadLocation(id: id, success: { (data) in
+            var newLocation: Location! = data as! Location
+            
+            for (index, location) in locations.enumerated() {
+                if location.id == newLocation.id {
+                    locations[index] = newLocation
+                    newLocation = nil
+                    break
+                }
+            }
+            
+            if newLocation != nil {
+                locations.insert(newLocation, at: 0)
+            }
+            
+            success?()
+        }, failure: failure)
+    }
+    
+    static func removeLocation(locationId: NSNumber,
+                               success: (() -> Void)?,
+                               failure: ((String?, NSDictionary?) -> Void)?) {
+        for (index, location) in locations.enumerated() {
+            if location.id == locationId {
+                locations.remove(at: index)
+                break
+            }
+        }
+    }
+    
+    //================ jobs =============
+    
+    static var jobs: [Job]!
+    
+    static func getJobs(locationId: NSNumber,
+                        success: (() -> Void)?,
+                        failure: ((String?, NSDictionary?) -> Void)?) {
+        API.shared().loadJobsForLocation(locationId: locationId, success: { (data) in
+            jobs = data as! [Job]
+            success?()
+        }, failure: failure)
+    }
+    
+    static func updateJob(_ id: NSNumber, success: (() -> Void)?,
+                          failure: ((String?, NSDictionary?) -> Void)?) {
+        API.shared().loadJob(id: id, success: { (data) in
+            var newJob: Job! = data as! Job
+            
+            for (index, job) in jobs.enumerated() {
+                if job.id == newJob.id {
+                    jobs[index] = newJob
+                    newJob = nil
+                    break
+                }
+            }
+            
+            if newJob != nil {
+                jobs.insert(newJob, at: 0)
+            }
+            
+            success?()
+        }, failure: failure)
+    }
+    
+    static func removeJob(_ jobId: NSNumber) {
+        for (index, job) in jobs.enumerated() {
+            if job.id == jobId {
+                jobs.remove(at: index)
+                break
+            }
+        }
+    }
+    
+    //================ business users =============
+    
+    static var businessUsers: [BusinessUser]!
+    
+    static func getBusinessUsers(businessId: NSNumber,
+                         success: (() -> Void)?,
+                         failure: ((String?, NSDictionary?) -> Void)?) {
+        API.shared().loadBusinessUsers(businessId: businessId, success: { (data) in
+            businessUsers = data as! [BusinessUser]
+            success?()
+        }, failure: failure)
+    }
+    
+    static func updateBusinessUser(businessId: NSNumber,
+                           userId: NSNumber,
+                           success: (() -> Void)?,
+                           failure: ((String?, NSDictionary?) -> Void)?) {
+        API.shared().getBusinessUser(businessId: businessId, businessUserId: userId, success: { (data) in
+            var newUser: BusinessUser! = data as! BusinessUser
+            
+            for (index, user) in businessUsers.enumerated() {
+                if user.id == newUser.id {
+                    businessUsers[index] = newUser
+                    newUser = nil
+                    break
+                }
+            }
+            
+            if newUser != nil {
+                businessUsers.append(newUser)
+            }
+            
+            success?()
+        }, failure: failure)
+    }
+    
+    static func removeBusinessUser(_ userId: NSNumber) {
+        for (index, user) in businessUsers.enumerated() {
+            if user.id == userId {
+                businessUsers.remove(at: index)
+                break
+            }
+        }
+    }
+    
 }

@@ -193,7 +193,7 @@ class InterviewDetailController: MJPController {
     }
     
     static func instantiate() -> InterviewDetailController {
-        return AppHelper.mainStoryboard.instantiateViewController(withIdentifier: "InterviewDetail") as! InterviewDetailController
+        return AppHelper.instantiate("InterviewDetail") as! InterviewDetailController
     }
 }
 

@@ -41,17 +41,15 @@ class BusinessListController: MJPController {
             title = "Choose Business"
             headerView.removeFromSuperview()
             emptyView.isHidden = true
+        } else if isAddMode {
+            title = "Add job"
+            headerImgView.image = UIImage(named: "menu-business")?.withRenderingMode(.alwaysTemplate)
+            emptyView.isHidden = true
         } else {
-            if isAddMode {
-                title = "Add job"
-                headerImgView.image = UIImage(named: "menu-business")?.withRenderingMode(.alwaysTemplate)
-                emptyView.isHidden = true
-            } else {
-                title = "Businesses"
-                headerView.removeFromSuperview()
-            }
+            title = "Businesses"
+            headerView.removeFromSuperview()
         }
-        
+    
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -224,13 +222,18 @@ extension BusinessListController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         refresh = true
         
+        let business = data[indexPath.row] as! Business
         if isUserMode {
-            let controller = AppHelper.mainStoryboard.instantiateViewController(withIdentifier: "BusinessUserList") as! BusinessUserListController
-            controller.businessId = (data[indexPath.row] as! Business).id
-            navigationController?.pushViewController(controller, animated: true)
+            if business.restricted {
+                PopupController.showGray("You must an administrator to view this information.", ok: "Ok")
+            } else {
+                let controller = BusinessUserListController.instantiate()
+                controller.business = business
+                navigationController?.pushViewController(controller, animated: true)
+            }
         } else {
-            let controller = AppHelper.mainStoryboard.instantiateViewController(withIdentifier: "LocationList") as! BusinessDetailController
-            controller.businessId = (data[indexPath.row] as! Business).id
+            let controller = AppHelper.instantiate("LocationList") as! BusinessDetailController
+            controller.businessId = business.id
             navigationController?.pushViewController(controller, animated: true)
         }
     }

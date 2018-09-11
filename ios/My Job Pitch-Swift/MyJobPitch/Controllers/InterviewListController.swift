@@ -59,7 +59,7 @@ class InterviewListController: MJPController {
     }
     
     static func instantiate() -> InterviewListController {
-        return AppHelper.mainStoryboard.instantiateViewController(withIdentifier: "InterviewList") as! InterviewListController
+        return AppHelper.instantiate("InterviewList") as! InterviewListController
     }
 }
 

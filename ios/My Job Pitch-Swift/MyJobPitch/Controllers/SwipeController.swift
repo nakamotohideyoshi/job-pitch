@@ -93,14 +93,14 @@ class SwipeController: MJPController {
     }
     
     func goJobDetail(_ sender: Any) {
-        let controller = AppHelper.mainStoryboard.instantiateViewController(withIdentifier: "JobDetail") as! JobDetailController
+        let controller = AppHelper.instantiate("JobDetail") as! JobDetailController
         controller.job = searchJob
         navigationController?.pushViewController(controller, animated: true)
     }
     
     func goProfile(_ sender: Any) {
         isRefresh = true
-        let controller = AppHelper.mainStoryboard.instantiateViewController(withIdentifier: "JobSeekerProfile") as! JobSeekerProfileController
+        let controller = AppHelper.instantiate("JobSeekerProfile") as! JobSeekerProfileController
         controller.saveComplete = { () in
             SideMenuController.pushController(id: "find_job")
         }
@@ -271,7 +271,7 @@ class SwipeController: MJPController {
     }
     
     static func pushController(job: Job!) {
-        let controller = AppHelper.mainStoryboard.instantiateViewController(withIdentifier: "Swipe") as! SwipeController
+        let controller = AppHelper.instantiate("Swipe") as! SwipeController
         controller.searchJob = job
         AppHelper.getFrontController().navigationController?.pushViewController(controller, animated: true)
     }
@@ -301,7 +301,7 @@ extension SwipeController: ChooseDelegate {
         if AppData.user.isJobSeeker(){
             if (!jobSeeker.active) {
                 PopupController.showGreen("To apply please activate your account", ok: "activate", okCallback: {
-                    let controller = AppHelper.mainStoryboard.instantiateViewController(withIdentifier: "JobSeekerProfile") as! JobSeekerProfileController
+                    let controller = AppHelper.instantiate("JobSeekerProfile") as! JobSeekerProfileController
                     controller.activation = true
                     AppHelper.getFrontController().navigationController?.present(controller, animated: true)
                 }, cancel: "Cancel", cancelCallback: nil)

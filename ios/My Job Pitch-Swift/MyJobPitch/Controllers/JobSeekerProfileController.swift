@@ -218,7 +218,7 @@ class JobSeekerProfileController: MJPController {
         actionSheet.addAction(photoAction)
         
         let googledriveAction = UIAlertAction(title: "Google Drive", style: .default) { (_) in
-            let browser = AppHelper.mainStoryboard.instantiateViewController(withIdentifier: "GoogleDrive") as! GoogleDriveController
+            let browser = AppHelper.instantiate("GoogleDrive") as! GoogleDriveController
             browser.downloadCallback = { (path) in
                 self.setCV(path: path)
             }
@@ -228,7 +228,7 @@ class JobSeekerProfileController: MJPController {
         actionSheet.addAction(googledriveAction)
         
         let dropboxAction = UIAlertAction(title: "Dropbox", style: .default) { (_) in
-            let browser = AppHelper.mainStoryboard.instantiateViewController(withIdentifier: "Dropbox") as! DropboxController
+            let browser = AppHelper.instantiate("Dropbox") as! DropboxController
             browser.downloadCallback = { (path) in
                 self.setCV(path: path)
             }
@@ -285,7 +285,7 @@ class JobSeekerProfileController: MJPController {
     
     @IBAction func pitchRecordAction(_ sender: Any) {
         
-        let controller = AppHelper.mainStoryboard.instantiateViewController(withIdentifier: "Camera") as! CameraController
+        let controller = AppHelper.instantiate("Camera") as! CameraController
         controller.complete = { (videoUrl) in
             self.videoUrl = videoUrl
             self.playButtonView.isHidden = false

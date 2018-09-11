@@ -34,7 +34,6 @@ class BusinessCell: MGSwipeTableCell {
         let userCount = business.users.count
         subTitle.text = String(format: "%lu %@", userCount, userCount > 1 ? "users" : "user")
         creditCount.isHidden = true
-        
     }
     
 }

@@ -40,10 +40,8 @@ class AppHelper: NSObject {
         return controller!
     }
     
-    static var mainStoryboard: UIStoryboard {
-        get {
-            return UIStoryboard(name: "Main", bundle: nil)
-        }
+    static func instantiate(_ identifier: String) -> UIViewController {
+        return UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: identifier)
     }
     
     static func loadImageURL(imageUrl: String,

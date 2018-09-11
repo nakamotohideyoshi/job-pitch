@@ -209,7 +209,7 @@ class LoginController: MJPController {
     }
     
     func showIntro() {
-        let controller = AppHelper.mainStoryboard.instantiateViewController(withIdentifier: "Intro")
+        let controller = AppHelper.instantiate("Intro")
         navigationController?.pushViewController(controller, animated: true)
     }
     
@@ -247,7 +247,7 @@ class LoginController: MJPController {
     @IBAction func goSignupAction(_ sender: Any) {
         
         view.endEditing(true)
-        let controller = AppHelper.mainStoryboard.instantiateViewController(withIdentifier: "Signup")
+        let controller = AppHelper.instantiate("Signup")
         navigationController?.pushViewController(controller, animated: true)
     }
     

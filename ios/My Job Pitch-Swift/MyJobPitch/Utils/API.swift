@@ -666,6 +666,13 @@ class API: NSObject {
                       request: businessUser, success: success, failure: failure)
     }
     
+    func getBusinessUser(businessId: NSNumber!, businessUserId: NSNumber!,
+                         success: ((NSObject?) -> Void)!,
+                         failure: ((String?, NSDictionary?) -> Void)!) {
+        getObject(String(format: "/api/user-businesses/%@/users/%@/", businessId, businessUserId),
+                  success: success, failure: failure)
+    }
+    
     func deleteBusinessUser(businessId: NSNumber!, businessUserId: NSNumber!,
                            success: (() -> Void)!,
                            failure: ((String?, NSDictionary?) -> Void)!) {
@@ -673,7 +680,7 @@ class API: NSObject {
                      success: success, failure: failure)
     }
     
-    func reCreateBusinessUser(businessId: NSNumber!, businessUserId: NSNumber!, businessUser: BusinessUserForCreation,
+    func reCreateBusinessUser(businessId: NSNumber!, businessUserId: NSNumber!, businessUser: BusinessUserForCreation!,
                             success: ((NSObject?) -> Void)!,
                             failure: ((String?, NSDictionary?) -> Void)!) {
         postObject(String(format: "/api/user-businesses/%@/users/%@/resend-invitation/", businessId, businessUserId), request: businessUser, success: success, failure: failure)

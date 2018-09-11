@@ -11,86 +11,93 @@ import MGSwipeTableCell
 
 class BusinessUserListController: MJPController {
     @IBOutlet weak var tableView: UITableView!
-    @IBOutlet weak var businessName: UILabel!
-    
-    var addButton: UIBarButtonItem!
-    var data: NSMutableArray! = NSMutableArray()
+    @IBOutlet weak var emptyView: UIView!
     
     var business: Business!
-    var businessId: NSNumber!
-    var locations: [Location]!
-    
-    var refresh = true
+    var data: [(BusinessUser, String)]!
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        title = "Users"
+        
+        setTitle(title: "Users", subTitle: business.name)
+        
+        tableView.addPullToRefresh {
+            self.loadData()
+        }
+        
+        showLoading()
+        loadData()
+       
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
-        if refresh {
-            refresh = false
-            showLoading()
-            self.loadData()
+        if data != nil {
+            updatedData()
         }
     }
     
     func loadData() {
-        if locations == nil {
-            loadLocations()
-        } else  {
-            loadUsers()
+        if business.restricted {
+            AppData.businessUsers = []
+            updatedData()
+            return
         }
+        
+        AppData.getLocations(businessId: business.id, success: {
+            AppData.getBusinessUsers(businessId: self.business.id, success: {
+                self.updatedData()
+            }, failure: self.handleErrors)
+        }, failure: handleErrors)
     }
     
-    func loadLocations() {
-        API.shared().loadLocationsForBusiness(businessId: businessId, success: { (data) in
-            self.locations = data as! [Location]
-            self.loadUsers()
-        }, failure: self.handleErrors)
-    }
-    
-    func loadUsers() {
-        API.shared().loadBusinessUsers(businessId: businessId, success: { (data) in
-            self.hideLoading()
-            self.data = data.mutableCopy() as! NSMutableArray
-            self.updateUserList()
-        }, failure: self.handleErrors)
-    }
-    
-    func updateUserList() {
+    func updatedData() {
+        self.hideLoading()
+        self.tableView.pullToRefreshView.stopAnimating()
+        emptyView.isHidden = AppData.businessUsers.count > 0
+        
+        data = AppData.businessUsers.map({ (user) -> (BusinessUser, String) in
+            var label = ""
+            if user.locations.count > 0 {
+                let locations = AppData.locations.filter { user.locations.contains($0.id) }
+                let names: [String] = locations.map { $0.name }
+                label = names.joined(separator: ", ")
+            } else if user.email == AppData.user.email {
+                label = "Administrator (Current User)"
+            } else {
+                label = "Administrator"
+            }
+            return (user, label)
+        })
+        
         self.tableView.reloadData()
     }
     
     @IBAction func addAction(_ sender: Any) {
-        refresh = true
-        let controller = AppHelper.mainStoryboard.instantiateViewController(withIdentifier: "BusinessUserEdit") as! BusinessUserEditController
-        controller.businessId = businessId
-        controller.locations = locations
-        controller.isEditMode = false
-        navigationController?.pushViewController(controller, animated: true)
+        let controller = BusinessUserEditController.instantiate()
+        controller.business = business
+        present(UINavigationController(rootViewController: controller), animated: true, completion: nil)
+    }
+    
+    static func instantiate() -> BusinessUserListController {
+        return AppHelper.instantiate("BusinessUserList") as! BusinessUserListController
     }
 }
 
 extension BusinessUserListController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return data.count
+        return data != nil ? data.count : 0
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        let businessUser = data[indexPath.row] as! BusinessUser
         let cell = tableView.dequeueReusableCell(withIdentifier: "BusinessUserCell", for: indexPath) as! BusinessUserCell
         
-        cell.setData(businessUser, locations)
-        
-        cell.addUnderLine(paddingLeft: 15, paddingRight: 0, color: AppData.greyBorderColor)
+        let (user, label) = data[indexPath.row]
+        cell.setData(user, label)
         
         return cell
-        
     }
     
 }
@@ -98,19 +105,17 @@ extension BusinessUserListController: UITableViewDataSource {
 extension BusinessUserListController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let businessUser = data[indexPath.row] as! BusinessUser
-        if businessUser.email != AppData.user.email {
-            refresh = true
-            let controller = AppHelper.mainStoryboard.instantiateViewController(withIdentifier: "BusinessUserEdit") as! BusinessUserEditController
-            controller.locations = locations
-            controller.isEditMode = true
-            controller.businessUser = data[indexPath.row] as! BusinessUser
-            controller.businessId = businessId
-            navigationController?.pushViewController(controller, animated: true)
-        } else {
-            let message = "Cannot edit currently logged in user"
-            PopupController.showGray(message, ok: "Ok")
+        let (user, _) = data[indexPath.row]
+
+        if user.email == AppData.user.email {
+            PopupController.showGray("Cannot edit currently logged in user", ok: "Ok")
+            return
         }
+        
+        let controller = BusinessUserEditController.instantiate()
+        controller.business = business
+        controller.businessUser = user
+        present(UINavigationController(rootViewController: controller), animated: true, completion: nil)
     }
     
 }

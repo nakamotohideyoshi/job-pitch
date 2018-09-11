@@ -326,7 +326,9 @@ class InterviewViewSet(viewsets.ModelViewSet):
             if request.user and request.user.is_authenticated():
                 if request.user.is_recruiter:
                     return True
-                if request.method in permissions.SAFE_METHODS + ("POST", "DELETE",):
+                if request.method in permissions.SAFE_METHODS + ("DELETE",):
+                    return True
+                if request.method == 'POST' and 'accept' in request.path:
                     return True
             return False
 

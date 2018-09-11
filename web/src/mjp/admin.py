@@ -341,7 +341,7 @@ class ProfileFilter(admin.SimpleListFilter):
 
 class ProfileShortNameFilter(ProfileFilter):
     def lookups(self, request, model_admin):
-        return [(obj.id, "{} ({})".format(obj.name, obj.short_name)) for obj in self.model.objects.all()]
+        return [(obj.id, u"{} ({})".format(obj.name, obj.short_name)) for obj in self.model.objects.all()]
 
 
 class SectorFilter(ProfileFilter):
@@ -643,12 +643,12 @@ class UserAdmin(AuthUserAdmin):
                 if sent:
                     messages.success(
                         request,
-                        'Registration emails sent to the following addresses: {}'.format("; ".join(sent)),
+                        u'Registration emails sent to the following addresses: {}'.format("; ".join(sent)),
                     )
                 if skipped:
                     messages.warning(
                         request,
-                        'Skipped the following addresses (already registered): {}'.format("; ".join(skipped)),
+                        u'Skipped the following addresses (already registered): {}'.format("; ".join(skipped)),
                     )
                 return HttpResponseRedirect('.')
         else:

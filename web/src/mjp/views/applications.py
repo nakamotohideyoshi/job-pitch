@@ -424,7 +424,7 @@ class InterviewViewSet(viewsets.ModelViewSet):
             application=interview.application,
             interview = interview,
             from_role=request.user.role,
-            content='{} has accepted your interview request'.format(request.user.job_seeker.get_full_name()),
+            content=u'{} has accepted your interview request'.format(request.user.job_seeker.get_full_name()),
         )
 
         serializer = InterviewSerializer(instance=interview)

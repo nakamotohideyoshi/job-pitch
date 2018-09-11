@@ -53,7 +53,7 @@ class Command(BaseCommand):
         except Exception:
             import traceback
             send_mail(
-                subject='Error sending pitch reminder email for: {}'.format(job_seeker.user.email),
+                subject=u'Error sending pitch reminder email for: {}'.format(job_seeker.user.email),
                 message=traceback.format_exc(),
                 from_email=settings.DEFAULT_FROM_EMAIL,
                 recipient_list=["jamie_cockburn@hotmail.co.uk"],

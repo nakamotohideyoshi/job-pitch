@@ -23,10 +23,10 @@ def send_message_notification_email(sender, instance, created, *args, **kwargs):
                 from_name = location.name
             elif instance.from_role.name == Role.JOB_SEEKER:
                 to_address = location.email
-                from_name = "{} {}".format(job_seeker.first_name, job_seeker.last_name)
+                from_name = u"{} {}".format(job_seeker.first_name, job_seeker.last_name)
             else:
                 to_address = "jamie_cockburn@hotmail.co.uk"
-                from_name = 'unknown'
+                from_name = u'unknown'
             site = Site.objects.get_current()
             scheme = "http" if site.domain.startswith('localhost') and settings.DEBUG else "https"
             base_url = "{}://{}".format(scheme, site.domain)
@@ -40,7 +40,7 @@ def send_message_notification_email(sender, instance, created, *args, **kwargs):
             text_template = get_template("emails/message.txt")
             html_template = get_template('emails/message.html')
             send_mail(
-                subject="My Job Pitch message from {}".format(from_name),
+                subject=u"My Job Pitch message from {}".format(from_name),
                 message=text_template.render(context),
                 html_message=html_template.render(context),
                 from_email=settings.DEFAULT_FROM_EMAIL,
@@ -49,7 +49,7 @@ def send_message_notification_email(sender, instance, created, *args, **kwargs):
         except Exception as e:
             import traceback
             send_mail(
-                subject='Error sending for Message pk: {}'.format(instance.pk),
+                subject=u'Error sending for Message pk: {}'.format(instance.pk),
                 message=traceback.format_exc(),
                 from_email=settings.DEFAULT_FROM_EMAIL,
                 recipient_list=["jamie_cockburn@hotmail.co.uk"],

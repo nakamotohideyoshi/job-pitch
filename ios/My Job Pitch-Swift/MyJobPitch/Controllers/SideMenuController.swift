@@ -103,11 +103,14 @@ class SideMenuController: UIViewController {
         SideMenuController.currentID = id
         
         var identifier = SideMenuController.menuItems[SideMenuController.currentID]?["identifier"]
-        if AppData.user.isRecruiter() && id == "applications" {
-            identifier = "SelectJob"
-        } else if AppData.user.jobSeeker == nil && id == "view_profile" {
-            identifier = "JobSeekerProfile"
+        if AppData.user != nil {
+            if AppData.user.isRecruiter() && id == "applications" {
+                identifier = "SelectJob"
+            } else if AppData.user.jobSeeker == nil && id == "view_profile" {
+                identifier = "JobSeekerProfile"
+            }
         }
+        
         
         let revealController = UIApplication.shared.keyWindow?.rootViewController as! SWRevealViewController
         let controller = AppHelper.instantiate(identifier!)

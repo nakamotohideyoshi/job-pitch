@@ -28,6 +28,8 @@ class JobEditController: MJPController {
     @IBOutlet weak var addLogoButton: UIButton!
     @IBOutlet weak var removeImageButton: UIButton!
     @IBOutlet weak var playButtonView: UIView!
+    @IBOutlet weak var requirePitch: UISwitch!
+    @IBOutlet weak var requireCV: UISwitch!
     
     var isAddMode = false
     var isNew = false
@@ -187,6 +189,9 @@ class JobEditController: MJPController {
                     self.addLogoButton.setTitle("Change Logo", for: .normal)
                 }
             })
+            
+            requirePitch.isOn = job.requiresPitch
+            requireCV.isOn = job.requiresCV
         } else {
             imgView.image = UIImage(named: "default-logo")
         }
@@ -382,6 +387,9 @@ class JobEditController: MJPController {
                 break
             }
         }
+        
+        job.requiresPitch = requirePitch.isOn
+        job.requiresCV = requirePitch.isOn
         
         showLoading()
         

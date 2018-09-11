@@ -18,7 +18,7 @@ class SideMenuController: UIViewController {
         "j_interviews":  ["icon": "menu-interview",        "title": "Interviews",             "identifier": "InterviewList",          "per": "P"],
         "job_profile":  ["icon": "menu-job-profile",    "title": "Job Profile",             "identifier": "JobProfile",         "per": "J"],
         "add_record":   ["icon": "menu-record",     "title": "Record Pitch",            "identifier": "Pitch",              "per": "J"],
-        "view_profile": ["icon": "menu-user-profile",   "title": "Profile",                 "identifier": "JobSeekerDetail",   "per": ""],
+        "view_profile": ["icon": "menu-user-profile",   "title": "Profile",                 "identifier": "JobSeekerDetails",   "per": ""],
         "user_profile": ["icon": "menu-user-profile",   "title": "Profile",                 "identifier": "JobSeekerProfile",   "per": ""],
         
         "find_talent":  ["icon": "menu-search",         "title": "Find Talent",             "identifier": "SelectJob",          "per": "B"],

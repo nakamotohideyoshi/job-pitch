@@ -331,7 +331,11 @@ public class BusinessListFragment extends BaseFragment {
                     } else {
                         removeButton.setVisibility(View.GONE);
                     }
-                }
+
+                    if (getItem(position).getRestricted()) {
+                        editButton.setVisibility(View.GONE);
+                    }
+                 }
             }
         }
 

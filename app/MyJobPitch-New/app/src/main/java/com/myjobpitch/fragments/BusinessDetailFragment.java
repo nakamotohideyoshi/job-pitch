@@ -43,8 +43,15 @@ public class BusinessDetailFragment extends BaseFragment {
 
     @BindView(R.id.edit_buttons)
     View editButtonsView;
+
+    @BindView(R.id.edit_button)
+    ImageButton editButton;
+
     @BindView(R.id.remove_button)
     ImageButton removeButton;
+
+    @BindView(R.id.nav_right_button)
+    ImageButton navRightButton;
 
     @BindView(R.id.nav_title)
     TextView navTitleView;
@@ -150,6 +157,12 @@ public class BusinessDetailFragment extends BaseFragment {
                 hideLoading();
                 if (!isAddMode) {
                     AppHelper.showBusinessInfo(business, infoView);
+                    if (business.getRestricted()) {
+                        editButton.setBackgroundColor(Color.parseColor("#008074"));
+                        editButton.setColorFilter(Color.parseColor("#808080"));
+                        editButton.setEnabled(false);
+                        navRightButton.setVisibility(View.GONE);
+                    }
                 }
                 swipeRefreshLayout.setRefreshing(true);
                 loadWorkplaces();

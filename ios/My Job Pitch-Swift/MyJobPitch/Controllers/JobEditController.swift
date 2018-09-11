@@ -233,7 +233,7 @@ class JobEditController: MJPController {
         actionSheetContoller.addAction(photoGalleryAction)
         
         let googledriveAction = UIAlertAction(title: "Google Drive", style: .default) { (_) in
-            let browser = AppHelper.mainStoryboard.instantiateViewController(withIdentifier: "GoogleDrive") as! GoogleDriveController
+            let browser = AppHelper.instantiate("GoogleDrive") as! GoogleDriveController
             browser.mimeQuery = "mimeType = 'image/png' or mimeType = 'image/jpg'"
             browser.downloadCallback = { (path) in
                 self.downloadedLogo(path: path)
@@ -244,7 +244,7 @@ class JobEditController: MJPController {
         actionSheetContoller.addAction(googledriveAction)
         
         let dropboxAction = UIAlertAction(title: "Dropbox", style: .default) { (_) in
-            let browser = AppHelper.mainStoryboard.instantiateViewController(withIdentifier: "Dropbox") as! DropboxController
+            let browser = AppHelper.instantiate("Dropbox") as! DropboxController
             browser.downloadCallback = { (path) in
                 self.downloadedLogo(path: path)
             }
@@ -272,7 +272,7 @@ class JobEditController: MJPController {
     }
     
     @IBAction func pitchRecordAction(_ sender: Any) {
-        let controller = AppHelper.mainStoryboard.instantiateViewController(withIdentifier: "Camera") as! CameraController
+        let controller = AppHelper.instantiate("Camera") as! CameraController
         controller.complete = { (videoUrl) in
             self.videoUrl = videoUrl
             self.playButtonView.isHidden = false
@@ -460,7 +460,7 @@ class JobEditController: MJPController {
             }
             navigationController?.viewControllers = controllers!
         } else {
-            let controller = AppHelper.mainStoryboard.instantiateViewController(withIdentifier: "JobDetail") as! JobDetailController
+            let controller = AppHelper.instantiate("JobDetail") as! JobDetailController
             controller.job = job
             controllers?.insert(controller, at: (controllers?.count)!-1)
             navigationController?.viewControllers = controllers!
@@ -471,7 +471,7 @@ class JobEditController: MJPController {
     }
     
     static func pushController(location: Location!, job: Job!) {
-        let controller = AppHelper.mainStoryboard.instantiateViewController(withIdentifier: "JobEdit") as! JobEditController
+        let controller = AppHelper.instantiate("JobEdit") as! JobEditController
         controller.location = location
         controller.job = job
         AppHelper.getFrontController().navigationController?.pushViewController(controller, animated: true)

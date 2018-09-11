@@ -145,7 +145,7 @@ class InterviewEditController: MJPController, WWCalendarTimeSelectorProtocol {
     }
     
     static func instantiate() -> InterviewEditController {
-        return AppHelper.mainStoryboard.instantiateViewController(withIdentifier: "InterviewEdit") as! InterviewEditController
+        return AppHelper.instantiate("InterviewEdit") as! InterviewEditController
     }
     
 }

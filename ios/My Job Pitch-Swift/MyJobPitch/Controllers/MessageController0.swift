@@ -69,7 +69,7 @@ class MessageController0: MJPController {
             subTitleLabel.attributedText = NSMutableAttributedString(string: subTitle, attributes: subTitleParameters)
         }
         
-        let controller = AppHelper.mainStoryboard.instantiateViewController(withIdentifier: "Message") as! MessageController
+        let controller = AppHelper.instantiate("Message") as! MessageController
         controller.application = application
         controller.view.frame = CGRect(origin: CGPoint.zero, size: containerView.frame.size)
         containerView.addSubview(controller.view)
@@ -102,7 +102,7 @@ class MessageController0: MJPController {
     }
 
     static func instantiate() -> MessageController0 {
-        return AppHelper.mainStoryboard.instantiateViewController(withIdentifier: "Message0") as! MessageController0
+        return AppHelper.instantiate("Message0") as! MessageController0
     }
     
 }

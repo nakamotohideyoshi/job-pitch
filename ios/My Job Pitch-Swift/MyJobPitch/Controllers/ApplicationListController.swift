@@ -132,13 +132,13 @@ class ApplicationListController: SearchController {
     }
     
     func goJobDetail(_ sender: Any) {
-        let controller = AppHelper.mainStoryboard.instantiateViewController(withIdentifier: "JobDetail") as! JobDetailController
+        let controller = AppHelper.instantiate("JobDetail") as! JobDetailController
         controller.job = job
         navigationController?.pushViewController(controller, animated: true)
     }
     
     func goProfile(_ sender: Any) {
-        let controller = AppHelper.mainStoryboard.instantiateViewController(withIdentifier: "JobSeekerProfile") as! JobSeekerProfileController
+        let controller = AppHelper.instantiate("JobSeekerProfile") as! JobSeekerProfileController
         controller.activation = true
         AppHelper.getFrontController().navigationController?.present(controller, animated: true)
         ApplicationListController.refreshRequest = true
@@ -169,7 +169,7 @@ class ApplicationListController: SearchController {
     
     
     static func pushController(job: Job!, mode: String!) {
-        let controller = AppHelper.mainStoryboard.instantiateViewController(withIdentifier: "ApplicationList") as! ApplicationListController
+        let controller = AppHelper.instantiate("ApplicationList") as! ApplicationListController
         controller.job = job
         controller.mode = mode
         AppHelper.getFrontController().navigationController?.pushViewController(controller, animated: true)

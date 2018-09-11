@@ -81,7 +81,7 @@ class MessageListController: SearchController {
     }
     
     static func instantiate() -> MessageListController {
-        return AppHelper.mainStoryboard.instantiateViewController(withIdentifier: "MessageList") as! MessageListController
+        return AppHelper.instantiate("MessageList") as! MessageListController
     }
 }
 
@@ -162,7 +162,7 @@ extension MessageListController: UITableViewDelegate {
 //        if jobSeeker != nil {
 //            if (!jobSeeker.active) {
 //                PopupController.showGreen("To message please active your account", ok: "activate", okCallback: {
-//                    let controller = AppHelper.mainStoryboard.instantiateViewController(withIdentifier: "JobSeekerProfile") as! JobSeekerProfileController
+//                    let controller = AppHelper.instantiate("JobSeekerProfile") as! JobSeekerProfileController
 //                    controller.saveComplete = { () in
 //                        SideMenuController.pushController(id: "find_job")
 //                    }

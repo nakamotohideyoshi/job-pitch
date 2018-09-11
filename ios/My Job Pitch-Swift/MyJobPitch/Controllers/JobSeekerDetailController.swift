@@ -207,7 +207,7 @@ class JobSeekerDetailController: MJPController {
     }
     
     static func instantiate() -> JobSeekerDetailController {
-        return AppHelper.mainStoryboard.instantiateViewController(withIdentifier: "JobSeekerDetail") as! JobSeekerDetailController
+        return AppHelper.instantiate("JobSeekerDetail") as! JobSeekerDetailController
     }
     
 }

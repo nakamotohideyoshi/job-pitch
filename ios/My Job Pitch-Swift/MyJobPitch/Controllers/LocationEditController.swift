@@ -151,7 +151,7 @@ class LocationEditController: MJPController {
         actionSheetContoller.addAction(photoGalleryAction)
         
         let googledriveAction = UIAlertAction(title: "Google Drive", style: .default) { (_) in
-            let browser = AppHelper.mainStoryboard.instantiateViewController(withIdentifier: "GoogleDrive") as! GoogleDriveController
+            let browser = AppHelper.instantiate("GoogleDrive") as! GoogleDriveController
             browser.mimeQuery = "mimeType = 'image/png' or mimeType = 'image/jpg'"
             browser.downloadCallback = { (path) in
                 self.downloadedLogo(path: path)
@@ -162,7 +162,7 @@ class LocationEditController: MJPController {
         actionSheetContoller.addAction(googledriveAction)
         
         let dropboxAction = UIAlertAction(title: "Dropbox", style: .default) { (_) in
-            let browser = AppHelper.mainStoryboard.instantiateViewController(withIdentifier: "Dropbox") as! DropboxController
+            let browser = AppHelper.instantiate("Dropbox") as! DropboxController
             browser.downloadCallback = { (path) in
                 self.downloadedLogo(path: path)
             }
@@ -299,11 +299,11 @@ class LocationEditController: MJPController {
         
         var controllers = navigationController?.viewControllers
         if isAddMode {
-            let controller = AppHelper.mainStoryboard.instantiateViewController(withIdentifier: "JobEdit") as! JobEditController
+            let controller = AppHelper.instantiate("JobEdit") as! JobEditController
             controller.location = location
             controllers?.insert(controller, at: (controllers?.count)!-1)
         } else {
-            let controller = AppHelper.mainStoryboard.instantiateViewController(withIdentifier: "JobList") as! LocationDetailController
+            let controller = AppHelper.instantiate("JobList") as! LocationDetailController
             controller.isFirstCreate = isFirstCreate
             controller.location = location
             controllers?.insert(controller, at: (controllers?.count)!-1)
@@ -313,7 +313,7 @@ class LocationEditController: MJPController {
     }
     
     static func pushController(business: Business!, location: Location!) {
-        let controller = AppHelper.mainStoryboard.instantiateViewController(withIdentifier: "LocationEdit") as! LocationEditController
+        let controller = AppHelper.instantiate("LocationEdit") as! LocationEditController
         controller.business = business
         controller.location = location
         AppHelper.getFrontController().navigationController?.pushViewController(controller, animated: true)

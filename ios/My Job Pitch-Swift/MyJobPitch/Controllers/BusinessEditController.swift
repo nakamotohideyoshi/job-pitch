@@ -87,7 +87,7 @@ class BusinessEditController: MJPController {
         actionSheetContoller.addAction(photoGalleryAction)
         
         let googledriveAction = UIAlertAction(title: "Google Drive", style: .default) { (_) in
-            let browser = AppHelper.mainStoryboard.instantiateViewController(withIdentifier: "GoogleDrive") as! GoogleDriveController
+            let browser = AppHelper.instantiate("GoogleDrive") as! GoogleDriveController
             browser.mimeQuery = "mimeType = 'image/png' or mimeType = 'image/jpg'"
             browser.downloadCallback = { (path) in
                 self.downloadedLogo(path: path)
@@ -98,7 +98,7 @@ class BusinessEditController: MJPController {
         actionSheetContoller.addAction(googledriveAction)
         
         let dropboxAction = UIAlertAction(title: "Dropbox", style: .default) { (_) in
-            let browser = AppHelper.mainStoryboard.instantiateViewController(withIdentifier: "Dropbox") as! DropboxController
+            let browser = AppHelper.instantiate("Dropbox") as! DropboxController
             browser.downloadCallback = { (path) in
                 self.downloadedLogo(path: path)
             }
@@ -209,7 +209,7 @@ class BusinessEditController: MJPController {
         }
         
         var controllers = navigationController?.viewControllers
-        let controller = AppHelper.mainStoryboard.instantiateViewController(withIdentifier: "LocationList") as! BusinessDetailController
+        let controller = AppHelper.instantiate("LocationList") as! BusinessDetailController
         controller.isFirstCreate = isFirstCreate
         controller.businessId = business.id
         controllers?.insert(controller, at: (controllers?.count)!-1)
@@ -218,7 +218,7 @@ class BusinessEditController: MJPController {
     }
     
     static func pushController(business: Business!) {
-        let controller = AppHelper.mainStoryboard.instantiateViewController(withIdentifier: "BusinessEdit") as! BusinessEditController
+        let controller = AppHelper.instantiate("BusinessEdit") as! BusinessEditController
         controller.business = business
         AppHelper.getFrontController().navigationController?.pushViewController(controller, animated: true)
     }

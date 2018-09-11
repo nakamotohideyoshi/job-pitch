@@ -148,7 +148,7 @@ class ApplicationDetailsController: MJPController {
         if AppData.user.isJobSeeker() {
             if (!jobSeeker.active) {
                 PopupController.showGreen("To message please active your account", ok: "activate", okCallback: {
-                    let controller = AppHelper.mainStoryboard.instantiateViewController(withIdentifier: "JobSeekerProfile") as! JobSeekerProfileController
+                    let controller = AppHelper.instantiate("JobSeekerProfile") as! JobSeekerProfileController
                     controller.activation = true
                     AppHelper.getFrontController().navigationController?.present(controller, animated: true)
                 }, cancel: "Cancel", cancelCallback: nil)
@@ -169,7 +169,7 @@ class ApplicationDetailsController: MJPController {
     }
     
     static func instantiate() -> ApplicationDetailsController {
-        return AppHelper.mainStoryboard.instantiateViewController(withIdentifier: "ApplicationDetails") as! ApplicationDetailsController
+        return AppHelper.instantiate("ApplicationDetails") as! ApplicationDetailsController
     }
     
 }

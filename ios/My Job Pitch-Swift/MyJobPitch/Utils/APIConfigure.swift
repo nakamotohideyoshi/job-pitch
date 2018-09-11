@@ -632,11 +632,11 @@ class APIConfigure: NSObject {
                                path: "/api/user-businesses/:pk/users/:pk/",
                                method: .PUT)
         configureSimpleMapping(BusinessUser.classForCoder(),
-                               mappingArray: nil,
+                               mappingArray: businessUserArray,
                                mappingDictionary: nil,
                                mappingRelationships: nil,
                                path: "/api/user-businesses/:pk/users/:pk/",
-                               method: .DELETE)
+                               method: [.GET, .DELETE])
         
         // ================= Interviews ================
         

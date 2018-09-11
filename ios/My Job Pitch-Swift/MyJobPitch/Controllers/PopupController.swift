@@ -72,7 +72,7 @@ class PopupController: UIViewController {
                      ok: String!, okCallback: (() -> Void)!,
                      cancel: String!, cancelCallback: (() -> Void)!) -> PopupController {
                 
-        let controller = AppHelper.mainStoryboard.instantiateViewController(withIdentifier: "Popup") as! PopupController
+        let controller = AppHelper.instantiate("Popup") as! PopupController
         let popupController = STPopupController(rootViewController: controller)
         popupController.backgroundView?.backgroundColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.65)
         popupController.containerView.backgroundColor = UIColor.clear

@@ -170,7 +170,7 @@ extension LocationDetailController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         refresh = true
         
-        let controller = AppHelper.mainStoryboard.instantiateViewController(withIdentifier: "JobDetail") as! JobDetailController
+        let controller = AppHelper.instantiate("JobDetail") as! JobDetailController
         controller.job = data[indexPath.row] as! Job
         navigationController?.pushViewController(controller, animated: true)
     }

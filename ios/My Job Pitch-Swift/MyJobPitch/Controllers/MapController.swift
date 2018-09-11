@@ -166,7 +166,7 @@ class MapController: UIViewController {
     static func showModal(latitude: NSNumber!, longitude: NSNumber!, radius: CLLocationDistance!,
                           complete: ((CLLocationCoordinate2D, String, String) -> Void)!) {
         
-        let controller = AppHelper.mainStoryboard.instantiateViewController(withIdentifier: "MapController") as! MapController
+        let controller = AppHelper.instantiate("MapController") as! MapController
         if latitude != nil {
             controller.currentPos = CLLocationCoordinate2DMake(latitude as CLLocationDegrees, longitude as CLLocationDegrees)
         }

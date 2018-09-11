@@ -55,7 +55,6 @@ public class AppData {
         data.put(JobStatus.class, MJPApi.shared().get(JobStatus.class));
         data.put(Sex.class, MJPApi.shared().get(Sex.class));
         data.put(Role.class, MJPApi.shared().get(Role.class));
-        data.put(Interview.class, MJPApi.shared().get(Interview.class));
     }
 
     public static void clearData() {

@@ -103,7 +103,6 @@ public class MJPApi {
         classEndPoints.put(MessageForCreation.class, "messages");
         classEndPoints.put(MessageForUpdate.class, "messages");
         classEndPoints.put(ProductToken.class, "google-play-products");
-        classEndPoints.put(Interview.class, "interviews");
     }
 
     private String apiRoot;

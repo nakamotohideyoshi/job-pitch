@@ -150,7 +150,7 @@ class JobSeekerDetailController: MJPController {
     }
     
     func editProfile() {
-        let controller = storyboard?.instantiateViewController(withIdentifier: "JobSeekerDetails") as! JobSeekerProfileController
+        let controller = storyboard?.instantiateViewController(withIdentifier: "JobSeekerProfile") as! JobSeekerProfileController
         controller.saveComplete = { () in
             SideMenuController.pushController(id: "view_profile")
         }
@@ -207,7 +207,7 @@ class JobSeekerDetailController: MJPController {
     }
     
     static func instantiate() -> JobSeekerDetailController {
-        return AppHelper.instantiate("JobSeekerDetail") as! JobSeekerDetailController
+        return AppHelper.instantiate("JobSeekerDetails") as! JobSeekerDetailController
     }
     
 }

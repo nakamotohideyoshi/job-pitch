@@ -15,7 +15,6 @@ class SwipeController: MJPController {
     
     @IBOutlet weak var emptyView: UILabel!
     @IBOutlet weak var noRecordView: UIView!
-    @IBOutlet weak var jobTitleView: UILabel!
     
     var isFindJob = false
     var isRefresh = true
@@ -45,7 +44,7 @@ class SwipeController: MJPController {
             let credits = searchJob.locationData.businessData.tokens as Int
             creditsButton.setTitle(String(format: "%d %@", credits, credits > 1 ? "Credits" : "Credit"), for: .normal)
             emptyView.text = "There are no more new matches for this job. You can restore your removed matches by clicking refresh above."
-            jobTitleView.text = searchJob.title + ", (" + searchJob.getBusinessName() + ")"
+            setTitle(title: title!, subTitle: searchJob.title + ", (" + searchJob.getBusinessName() + ")")
             let item = UIBarButtonItem(image: UIImage(named: "nav-edit"), style: .plain, target: self, action: #selector(goJobDetail))
             navigationItem.rightBarButtonItems?.append(item)
         } else {
@@ -85,11 +84,11 @@ class SwipeController: MJPController {
     }
     
     func showInactiveBanner () {
-        if !self.jobSeeker.active {
-            self.jobTitleView.text = "Your profile is not active!"
-        } else {
-            self.jobTitleView.text = ""
-        }
+//        if !self.jobSeeker.active {
+//            self.jobTitleView.text = "Your profile is not active!"
+//        } else {
+//            self.jobTitleView.text = ""
+//        }
     }
     
     func goJobDetail(_ sender: Any) {

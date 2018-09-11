@@ -209,21 +209,8 @@ All you're missing is your video pitch!</string>
                         <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="x3V-yx-sVi">
-                                <rect key="frame" x="0.0" y="64" width="414" height="40"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="40" id="JFy-3g-3Ux"/>
-                                </constraints>
-                            </view>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="9M8-8a-AcT">
-                                <rect key="frame" x="42" y="64" width="331" height="40"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
-                                <nil key="highlightedColor"/>
-                            </label>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="E23-SR-OY4">
-                                <rect key="frame" x="0.0" y="104" width="414" height="605"/>
+                                <rect key="frame" x="0.0" y="64" width="414" height="645"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             </view>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="right" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="XQS-aA-5j0">
@@ -237,16 +224,16 @@ All you're missing is your video pitch!</string>
                                 </connections>
                             </button>
                             <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="There are no more new matches for this job. You can restore your removed matches by clicking refresh above." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="oN5-3h-dvf">
-                                <rect key="frame" x="35" y="332" width="344" height="72"/>
+                                <rect key="frame" x="35" y="332.33333333333326" width="344" height="71.666666666666686"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="20"/>
                                 <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="BXg-zT-5TX">
-                                <rect key="frame" x="0.0" y="104" width="414" height="632"/>
+                                <rect key="frame" x="0.0" y="64" width="414" height="672"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="zLc-SZ-yfL">
-                                        <rect key="frame" x="0.0" y="181" width="414" height="270"/>
+                                        <rect key="frame" x="0.0" y="201.33333333333329" width="414" height="269.66666666666674"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Your pitch video is missing!" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="XdY-mK-18B">
                                                 <rect key="frame" x="41" y="10" width="332" height="24"/>
@@ -255,7 +242,7 @@ All you're missing is your video pitch!</string>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="wHd-Wg-kjw" customClass="YellowButton" customModule="MyJobPitch" customModuleProvider="target">
-                                                <rect key="frame" x="104" y="220" width="207" height="40"/>
+                                                <rect key="frame" x="104" y="219.66666666666669" width="207" height="40"/>
                                                 <color key="backgroundColor" red="1" green="0.57254901960000004" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="40" id="aI8-uC-JSg"/>
@@ -269,7 +256,7 @@ All you're missing is your video pitch!</string>
                                                 </connections>
                                             </button>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aer-1Y-vki">
-                                                <rect key="frame" x="41" y="49" width="332" height="151"/>
+                                                <rect key="frame" x="41" y="49" width="332" height="150.66666666666669"/>
                                                 <string key="text">Recruiters are looking for someone with your exact profile.
 You are the perfect candidate, let your personality shine and land you the job thet you really want!
 
@@ -303,9 +290,6 @@ All you're missing is your video pitch!</string>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="9M8-8a-AcT" firstAttribute="width" secondItem="x3V-yx-sVi" secondAttribute="width" multiplier="0.8" id="3q9-yq-gNW"/>
-                            <constraint firstItem="x3V-yx-sVi" firstAttribute="width" secondItem="k7z-YD-hbw" secondAttribute="width" id="4o0-eX-KTG"/>
-                            <constraint firstItem="9M8-8a-AcT" firstAttribute="centerY" secondItem="x3V-yx-sVi" secondAttribute="centerY" id="5Hq-9b-67a"/>
                             <constraint firstAttribute="trailingMargin" secondItem="oN5-3h-dvf" secondAttribute="trailing" constant="15" id="8zI-bb-cKu"/>
                             <constraint firstItem="BXg-zT-5TX" firstAttribute="leading" secondItem="k7z-YD-hbw" secondAttribute="leading" id="905-ix-nEQ"/>
                             <constraint firstItem="oN5-3h-dvf" firstAttribute="leading" secondItem="k7z-YD-hbw" secondAttribute="leadingMargin" constant="15" id="F7E-Cc-T4Y"/>
@@ -315,16 +299,12 @@ All you're missing is your video pitch!</string>
                             <constraint firstItem="XQS-aA-5j0" firstAttribute="top" secondItem="E23-SR-OY4" secondAttribute="bottom" id="NHb-8H-U5i"/>
                             <constraint firstAttribute="trailing" secondItem="E23-SR-OY4" secondAttribute="trailing" id="Qrv-Rw-dFU"/>
                             <constraint firstAttribute="trailing" secondItem="XQS-aA-5j0" secondAttribute="trailing" constant="8" id="VUh-Rq-dEb"/>
-                            <constraint firstItem="9M8-8a-AcT" firstAttribute="centerX" secondItem="x3V-yx-sVi" secondAttribute="centerX" id="YSl-He-wCY"/>
-                            <constraint firstItem="9M8-8a-AcT" firstAttribute="height" secondItem="x3V-yx-sVi" secondAttribute="height" id="bSh-Wg-Xbt"/>
                             <constraint firstItem="oN5-3h-dvf" firstAttribute="centerY" secondItem="k7z-YD-hbw" secondAttribute="centerY" id="hV8-VA-hz8"/>
                             <constraint firstItem="oN5-3h-dvf" firstAttribute="centerX" secondItem="k7z-YD-hbw" secondAttribute="centerX" id="jEO-PF-1W0"/>
-                            <constraint firstItem="E23-SR-OY4" firstAttribute="top" secondItem="1n2-yg-3ID" secondAttribute="bottom" constant="40" id="jap-GE-qQM"/>
-                            <constraint firstItem="BXg-zT-5TX" firstAttribute="top" secondItem="1n2-yg-3ID" secondAttribute="bottom" constant="40" id="nQC-s9-weX"/>
-                            <constraint firstItem="x3V-yx-sVi" firstAttribute="top" secondItem="1n2-yg-3ID" secondAttribute="bottom" id="na5-BO-ELe"/>
+                            <constraint firstItem="E23-SR-OY4" firstAttribute="top" secondItem="1n2-yg-3ID" secondAttribute="bottom" id="jap-GE-qQM"/>
+                            <constraint firstItem="BXg-zT-5TX" firstAttribute="top" secondItem="1n2-yg-3ID" secondAttribute="bottom" id="nQC-s9-weX"/>
                             <constraint firstItem="E23-SR-OY4" firstAttribute="leading" secondItem="k7z-YD-hbw" secondAttribute="leading" id="qOo-2o-7vc"/>
                             <constraint firstItem="tuj-oZ-NWZ" firstAttribute="top" secondItem="E23-SR-OY4" secondAttribute="bottom" priority="250" constant="10" id="tA3-BR-9T9"/>
-                            <constraint firstItem="x3V-yx-sVi" firstAttribute="centerX" secondItem="k7z-YD-hbw" secondAttribute="centerX" id="vYr-n3-7Cz"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="yIw-dg-dpG">
@@ -339,7 +319,6 @@ All you're missing is your video pitch!</string>
                         <outlet property="cardsView" destination="E23-SR-OY4" id="MPd-9m-IKU"/>
                         <outlet property="creditsButton" destination="XQS-aA-5j0" id="hwn-2U-29M"/>
                         <outlet property="emptyView" destination="oN5-3h-dvf" id="uJ5-6b-rKz"/>
-                        <outlet property="jobTitleView" destination="9M8-8a-AcT" id="HkN-Jt-YZa"/>
                         <outlet property="noRecordView" destination="BXg-zT-5TX" id="wiQ-CL-sGY"/>
                     </connections>
                 </viewController>
@@ -1021,27 +1000,66 @@ All you're missing is your video pitch!</string>
                         <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="pKt-rs-7TI">
-                                <rect key="frame" x="0.0" y="64" width="414" height="40"/>
+                            <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="e6X-vo-5lH">
+                                <rect key="frame" x="0.0" y="64" width="414" height="672"/>
                                 <subviews>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="CiD-mJ-FIf">
-                                        <rect key="frame" x="41" y="0.0" width="332" height="40"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                        <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="NLY-zH-Y8U">
+                                        <rect key="frame" x="0.0" y="201.33333333333329" width="414" height="269.66666666666674"/>
+                                        <subviews>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Your pitch video is missing!" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xMK-4P-2Gq">
+                                                <rect key="frame" x="41" y="10" width="332" height="24"/>
+                                                <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="20"/>
+                                                <nil key="textColor"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mf6-EU-Sxt" customClass="YellowButton" customModule="MyJobPitch" customModuleProvider="target">
+                                                <rect key="frame" x="104" y="219.66666666666669" width="207" height="40"/>
+                                                <color key="backgroundColor" red="1" green="0.57254901960000004" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="height" constant="40" id="4tb-uX-cga"/>
+                                                </constraints>
+                                                <inset key="imageEdgeInsets" minX="-150" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                                <state key="normal" title="Record now!">
+                                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                </state>
+                                                <connections>
+                                                    <action selector="goRecordNow:" destination="BIn-WW-p4s" eventType="touchUpInside" id="fNG-h0-7Gg"/>
+                                                </connections>
+                                            </button>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Gct-Rb-ZfZ">
+                                                <rect key="frame" x="41" y="49" width="332" height="150.66666666666669"/>
+                                                <string key="text">Recruiters are looking for someone with your exact profile.
+You are the perfect candidate, let your personality shine and land you the job thet you really want!
+
+All you're missing is your video pitch!</string>
+                                                <fontDescription key="fontDescription" type="system" pointSize="18"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                        </subviews>
+                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        <constraints>
+                                            <constraint firstItem="mf6-EU-Sxt" firstAttribute="centerX" secondItem="NLY-zH-Y8U" secondAttribute="centerX" id="2SM-Zw-QlF"/>
+                                            <constraint firstItem="mf6-EU-Sxt" firstAttribute="width" secondItem="NLY-zH-Y8U" secondAttribute="width" multiplier="0.5" id="3ns-m3-Lmb"/>
+                                            <constraint firstAttribute="bottom" secondItem="mf6-EU-Sxt" secondAttribute="bottom" constant="10" id="A4K-GC-BNs"/>
+                                            <constraint firstItem="mf6-EU-Sxt" firstAttribute="top" secondItem="Gct-Rb-ZfZ" secondAttribute="bottom" constant="20" id="I4z-yU-ofo"/>
+                                            <constraint firstItem="xMK-4P-2Gq" firstAttribute="width" secondItem="NLY-zH-Y8U" secondAttribute="width" multiplier="0.8" id="Nk9-9S-ebp"/>
+                                            <constraint firstItem="xMK-4P-2Gq" firstAttribute="top" secondItem="NLY-zH-Y8U" secondAttribute="top" constant="10" id="dh5-CE-BcP"/>
+                                            <constraint firstItem="Gct-Rb-ZfZ" firstAttribute="centerX" secondItem="NLY-zH-Y8U" secondAttribute="centerX" id="hMe-Up-f9Z"/>
+                                            <constraint firstItem="xMK-4P-2Gq" firstAttribute="centerX" secondItem="NLY-zH-Y8U" secondAttribute="centerX" id="qJc-3P-wk7"/>
+                                            <constraint firstItem="Gct-Rb-ZfZ" firstAttribute="top" secondItem="xMK-4P-2Gq" secondAttribute="bottom" constant="15" id="sJR-jJ-cuE"/>
+                                            <constraint firstItem="Gct-Rb-ZfZ" firstAttribute="width" secondItem="NLY-zH-Y8U" secondAttribute="width" multiplier="0.8" id="vMm-xa-bB0"/>
+                                        </constraints>
+                                    </view>
                                 </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
-                                    <constraint firstItem="CiD-mJ-FIf" firstAttribute="centerY" secondItem="pKt-rs-7TI" secondAttribute="centerY" id="1wY-4O-tjt"/>
-                                    <constraint firstAttribute="height" constant="40" id="AoO-Ep-O5C"/>
-                                    <constraint firstItem="CiD-mJ-FIf" firstAttribute="height" secondItem="pKt-rs-7TI" secondAttribute="height" id="BAS-lg-ofW"/>
-                                    <constraint firstItem="CiD-mJ-FIf" firstAttribute="width" secondItem="pKt-rs-7TI" secondAttribute="width" multiplier="0.8" id="Fql-M2-QEn"/>
-                                    <constraint firstItem="CiD-mJ-FIf" firstAttribute="centerX" secondItem="pKt-rs-7TI" secondAttribute="centerX" id="cFV-Cp-as7"/>
+                                    <constraint firstItem="NLY-zH-Y8U" firstAttribute="leading" secondItem="e6X-vo-5lH" secondAttribute="leading" id="IgQ-sc-MRh"/>
+                                    <constraint firstAttribute="trailing" secondItem="NLY-zH-Y8U" secondAttribute="trailing" id="bpE-MI-xN0"/>
+                                    <constraint firstItem="NLY-zH-Y8U" firstAttribute="centerY" secondItem="e6X-vo-5lH" secondAttribute="centerY" id="quv-IB-n2P"/>
                                 </constraints>
                             </view>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="110" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="ycZ-AQ-6at">
-                                <rect key="frame" x="0.0" y="104" width="414" height="632"/>
+                                <rect key="frame" x="0.0" y="64" width="414" height="672"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="ApplicationCell1" rowHeight="110" id="Xkx-ny-XCA" userLabel="ApplicationCell" customClass="ApplicationCell1" customModule="MyJobPitch" customModuleProvider="target">
@@ -1191,69 +1209,11 @@ All you're missing is your video pitch!</string>
                                 </connections>
                             </tableView>
                             <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="No candidates have applied for this job yet. Once that happens, their applications will appear here." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="faJ-FA-sbE">
-                                <rect key="frame" x="35" y="384" width="344" height="72"/>
+                                <rect key="frame" x="35" y="364.33333333333326" width="344" height="71.666666666666686"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="20"/>
                                 <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="e6X-vo-5lH">
-                                <rect key="frame" x="0.0" y="104" width="414" height="632"/>
-                                <subviews>
-                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="NLY-zH-Y8U">
-                                        <rect key="frame" x="0.0" y="181" width="414" height="270"/>
-                                        <subviews>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Your pitch video is missing!" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xMK-4P-2Gq">
-                                                <rect key="frame" x="41" y="10" width="332" height="24"/>
-                                                <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="20"/>
-                                                <nil key="textColor"/>
-                                                <nil key="highlightedColor"/>
-                                            </label>
-                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mf6-EU-Sxt" customClass="YellowButton" customModule="MyJobPitch" customModuleProvider="target">
-                                                <rect key="frame" x="104" y="220" width="207" height="40"/>
-                                                <color key="backgroundColor" red="1" green="0.57254901960000004" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                                <constraints>
-                                                    <constraint firstAttribute="height" constant="40" id="4tb-uX-cga"/>
-                                                </constraints>
-                                                <inset key="imageEdgeInsets" minX="-150" minY="0.0" maxX="0.0" maxY="0.0"/>
-                                                <state key="normal" title="Record now!">
-                                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                                </state>
-                                                <connections>
-                                                    <action selector="goRecordNow:" destination="BIn-WW-p4s" eventType="touchUpInside" id="fNG-h0-7Gg"/>
-                                                </connections>
-                                            </button>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Gct-Rb-ZfZ">
-                                                <rect key="frame" x="41" y="49" width="332" height="151"/>
-                                                <string key="text">Recruiters are looking for someone with your exact profile.
-You are the perfect candidate, let your personality shine and land you the job thet you really want!
-
-All you're missing is your video pitch!</string>
-                                                <fontDescription key="fontDescription" type="system" pointSize="18"/>
-                                                <nil key="highlightedColor"/>
-                                            </label>
-                                        </subviews>
-                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                        <constraints>
-                                            <constraint firstItem="mf6-EU-Sxt" firstAttribute="centerX" secondItem="NLY-zH-Y8U" secondAttribute="centerX" id="2SM-Zw-QlF"/>
-                                            <constraint firstItem="mf6-EU-Sxt" firstAttribute="width" secondItem="NLY-zH-Y8U" secondAttribute="width" multiplier="0.5" id="3ns-m3-Lmb"/>
-                                            <constraint firstAttribute="bottom" secondItem="mf6-EU-Sxt" secondAttribute="bottom" constant="10" id="A4K-GC-BNs"/>
-                                            <constraint firstItem="mf6-EU-Sxt" firstAttribute="top" secondItem="Gct-Rb-ZfZ" secondAttribute="bottom" constant="20" id="I4z-yU-ofo"/>
-                                            <constraint firstItem="xMK-4P-2Gq" firstAttribute="width" secondItem="NLY-zH-Y8U" secondAttribute="width" multiplier="0.8" id="Nk9-9S-ebp"/>
-                                            <constraint firstItem="xMK-4P-2Gq" firstAttribute="top" secondItem="NLY-zH-Y8U" secondAttribute="top" constant="10" id="dh5-CE-BcP"/>
-                                            <constraint firstItem="Gct-Rb-ZfZ" firstAttribute="centerX" secondItem="NLY-zH-Y8U" secondAttribute="centerX" id="hMe-Up-f9Z"/>
-                                            <constraint firstItem="xMK-4P-2Gq" firstAttribute="centerX" secondItem="NLY-zH-Y8U" secondAttribute="centerX" id="qJc-3P-wk7"/>
-                                            <constraint firstItem="Gct-Rb-ZfZ" firstAttribute="top" secondItem="xMK-4P-2Gq" secondAttribute="bottom" constant="15" id="sJR-jJ-cuE"/>
-                                            <constraint firstItem="Gct-Rb-ZfZ" firstAttribute="width" secondItem="NLY-zH-Y8U" secondAttribute="width" multiplier="0.8" id="vMm-xa-bB0"/>
-                                        </constraints>
-                                    </view>
-                                </subviews>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                <constraints>
-                                    <constraint firstItem="NLY-zH-Y8U" firstAttribute="leading" secondItem="e6X-vo-5lH" secondAttribute="leading" id="IgQ-sc-MRh"/>
-                                    <constraint firstAttribute="trailing" secondItem="NLY-zH-Y8U" secondAttribute="trailing" id="bpE-MI-xN0"/>
-                                    <constraint firstItem="NLY-zH-Y8U" firstAttribute="centerY" secondItem="e6X-vo-5lH" secondAttribute="centerY" id="quv-IB-n2P"/>
-                                </constraints>
-                            </view>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
@@ -1265,20 +1225,16 @@ All you're missing is your video pitch!</string>
                             <constraint firstItem="ycZ-AQ-6at" firstAttribute="leading" secondItem="8qO-fU-yaH" secondAttribute="leading" id="9hi-VS-oce"/>
                             <constraint firstItem="faJ-FA-sbE" firstAttribute="centerX" secondItem="ycZ-AQ-6at" secondAttribute="centerX" id="IhF-nb-Mz0"/>
                             <constraint firstAttribute="trailingMargin" secondItem="faJ-FA-sbE" secondAttribute="trailing" constant="15" id="Nfk-oC-XQ0"/>
-                            <constraint firstItem="e6X-vo-5lH" firstAttribute="top" secondItem="XNb-i1-pym" secondAttribute="bottom" constant="40" id="YlC-2o-Nks"/>
+                            <constraint firstItem="e6X-vo-5lH" firstAttribute="top" secondItem="XNb-i1-pym" secondAttribute="bottom" id="YlC-2o-Nks"/>
                             <constraint firstAttribute="trailing" secondItem="ycZ-AQ-6at" secondAttribute="trailing" id="cV0-rc-3tQ"/>
-                            <constraint firstItem="pKt-rs-7TI" firstAttribute="width" secondItem="8qO-fU-yaH" secondAttribute="width" id="daC-4p-aaQ"/>
-                            <constraint firstItem="pKt-rs-7TI" firstAttribute="top" secondItem="XNb-i1-pym" secondAttribute="bottom" id="e0H-dd-0w7"/>
-                            <constraint firstItem="pKt-rs-7TI" firstAttribute="centerX" secondItem="8qO-fU-yaH" secondAttribute="centerX" id="iZ4-ex-gFA"/>
                             <constraint firstItem="faJ-FA-sbE" firstAttribute="centerY" secondItem="ycZ-AQ-6at" secondAttribute="centerY" id="nJq-ik-W9u"/>
-                            <constraint firstItem="ycZ-AQ-6at" firstAttribute="top" secondItem="XNb-i1-pym" secondAttribute="bottom" constant="40" id="udr-ND-Gzr"/>
+                            <constraint firstItem="ycZ-AQ-6at" firstAttribute="top" secondItem="XNb-i1-pym" secondAttribute="bottom" id="udr-ND-Gzr"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Applications" id="0kP-P6-Lbu"/>
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
                     <connections>
                         <outlet property="emptyView" destination="faJ-FA-sbE" id="XKi-mK-uC7"/>
-                        <outlet property="jobTitleView" destination="CiD-mJ-FIf" id="QxY-sy-N3W"/>
                         <outlet property="noPitchView" destination="e6X-vo-5lH" id="fdd-py-TW0"/>
                         <outlet property="scrollView" destination="ycZ-AQ-6at" id="GTJ-Mt-Hu3"/>
                         <outlet property="tableView" destination="ycZ-AQ-6at" id="LcJ-JM-76u"/>
@@ -6063,7 +6019,7 @@ et dolore magna aliqua.</string>
                                 </connections>
                             </tableView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="37m-8F-bfc">
-                                <rect key="frame" x="20" y="321" width="374" height="96"/>
+                                <rect key="frame" x="20" y="320" width="374" height="96"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="wrq-QB-EEh">
                                         <rect key="frame" x="134" y="60" width="107" height="36"/>

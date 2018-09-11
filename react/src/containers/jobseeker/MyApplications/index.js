@@ -1,15 +1,19 @@
 import React from 'react';
 import Helmet from 'react-helmet';
 import { connect } from 'react-redux';
-import { List, Tooltip, Button, Drawer } from 'antd';
+import { Modal, List, Tooltip, Button, Drawer, notification } from 'antd';
+import moment from 'moment';
 
 import { getApplications } from 'redux/selectors';
+import { changeInterview, removeInterview } from 'redux/applications';
 import DATA from 'utils/data';
 import * as helper from 'utils/helper';
 
 import { PageHeader, SearchBox, AlertMsg, ListEx, Icons, JobDetails, Logo } from 'components';
 import NoPitch from '../components/NoPitch';
 import Wrapper from './styled';
+
+const { confirm } = Modal;
 
 class MyApplications extends React.Component {
   state = {
@@ -34,6 +38,66 @@ class MyApplications extends React.Component {
     this.props.history.push(`/jobseeker/messages/${id}/`);
   };
 
+  onAccept = (app, event) => {
+    event && event.stopPropagation();
+
+    confirm({
+      content: 'Are you sure you want to accept this interview?',
+      okText: `Accept`,
+      cancelText: 'Cancel',
+      maskClosable: true,
+      onOk: () => {
+        this.props.changeInterview({
+          appId: app.id,
+          id: app.interview.id,
+          changeType: 'accept',
+          onSuccess: () => {
+            notification.success({
+              message: 'Success',
+              description: 'The interview is accepted'
+            });
+          },
+          onFail: () => {
+            notification.error({
+              message: 'Error',
+              description: 'There was an error accepting the interview'
+            });
+          }
+        });
+      }
+    });
+  };
+
+  onCancel = (app, event) => {
+    event && event.stopPropagation();
+
+    confirm({
+      content: 'Are you sure you want to cancel this interview?',
+      okText: `Ok`,
+      okType: 'danger',
+      cancelText: 'Cancel',
+      maskClosable: true,
+      onOk: () => {
+        this.props.removeInterview({
+          appId: app.id,
+          id: app.interview.id,
+          onSuccess: () => {
+            notification.success({
+              message: 'Success',
+              description: 'The interview is cancelled'
+            });
+          },
+          onFail: () => {
+            notification.error({
+              message: 'Error',
+              description: 'There was an error cancelling the interview'
+            });
+          }
+        });
+      }
+    });
+  };
+
   filterOption = ({ job_data }) => {
     const searchText = this.state.searchText.toLowerCase();
     const name = helper.getFullBWName(job_data);
@@ -41,7 +105,7 @@ class MyApplications extends React.Component {
   };
 
   renderApplication = app => {
-    const { id, job_data } = app;
+    const { id, job_data, interview } = app;
     const { title, contract, hours } = job_data;
     const logo = helper.getJobLogo(job_data);
     const name = helper.getFullBWName(job_data);
@@ -61,13 +125,17 @@ class MyApplications extends React.Component {
         ]}
         onClick={() => this.onSelect(id)}
       >
-        <List.Item.Meta avatar={<Logo src={logo} size="80px" padding="10px" />} title={title} description={name} />
-        <span style={{ width: '180px' }}>
-          <div>{sector}</div>
-          <div>
-            {contractName} / {hoursName}
+        <List.Item.Meta
+          avatar={<Logo src={logo} size="80px" padding="10px" />}
+          title={`${title} (${name})`}
+          description={`${sector} (${contractName} / ${hoursName})`}
+        />
+        {interview && (
+          <div style={{ width: '160px', whiteSpace: 'pre-line' }} className={interview.status}>
+            {interview.status === 'PENDING' ? 'Interview request received\n' : 'Interview accepted\n'}
+            {moment(interview.at).format('ddd DD MMM, YYYY [at] H:mm')}
           </div>
-        </span>
+        )}
       </List.Item>
     );
   };
@@ -86,6 +154,7 @@ class MyApplications extends React.Component {
     }
 
     const selectedApp = applications && helper.getItemByID(applications, this.state.selectedId);
+    const { interview } = selectedApp || {};
 
     return (
       <Wrapper className="container">
@@ -112,9 +181,21 @@ class MyApplications extends React.Component {
             <JobDetails
               application={selectedApp}
               actions={
-                <Button type="primary" disabled={selectedApp.loading} onClick={() => this.onMessage(selectedApp)}>
-                  Message
-                </Button>
+                <div>
+                  <Button type="primary" onClick={() => this.onMessage(selectedApp)}>
+                    Message
+                  </Button>
+                  {(interview || {}).status === 'PENDING' && (
+                    <Button type="primary" onClick={() => this.onAccept(selectedApp)}>
+                      Accept Invitation
+                    </Button>
+                  )}
+                  {interview && (
+                    <Button type="danger" onClick={() => this.onCancel(selectedApp)}>
+                      Cancel Interview
+                    </Button>
+                  )}
+                </div>
               }
             />
           )}
@@ -124,7 +205,13 @@ class MyApplications extends React.Component {
   }
 }
 
-export default connect(state => ({
-  jobseeker: state.js_profile.jobseeker,
-  applications: getApplications(state)
-}))(MyApplications);
+export default connect(
+  state => ({
+    jobseeker: state.js_profile.jobseeker,
+    applications: getApplications(state)
+  }),
+  {
+    changeInterview,
+    removeInterview
+  }
+)(MyApplications);

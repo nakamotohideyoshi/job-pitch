@@ -29,7 +29,7 @@ class SearchController: MJPController {
         
         navTitleView = navigationItem.titleView
         
-        searchItems = [UIBarButtonItem(barButtonSystemItem: .search, target: self, action: #selector(searchAction))]
+        searchItems = [UIBarButtonItem(image: UIImage(named: "nav-search"), style: .plain, target: self, action: #selector(searchAction))]
         navigationItem.rightBarButtonItems = searchItems
         searchBar = UISearchBar()
         searchBar.delegate = self

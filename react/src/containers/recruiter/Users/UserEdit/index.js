@@ -102,7 +102,7 @@ class UserEdit extends React.Component {
         });
         this.goUserList();
       },
-      fail: error => {
+      fail: () => {
         this.setState({ loading: null });
         notification.error({
           message: 'Error',

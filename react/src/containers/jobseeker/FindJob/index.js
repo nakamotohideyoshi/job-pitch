@@ -139,14 +139,12 @@ class FindJob extends React.Component {
         onClick={() => this.onSelect(id)}
         className={loading ? 'loading' : ''}
       >
-        <List.Item.Meta avatar={<Logo src={logo} size="80px" padding="10px" />} title={title} description={name} />
+        <List.Item.Meta
+          avatar={<Logo src={logo} size="80px" padding="10px" />}
+          title={`${title} (${name})`}
+          description={`${sector} (${contractName} / ${hoursName})`}
+        />
         <span style={{ width: '60px' }}>{job.distance}</span>
-        <span style={{ width: '180px' }}>
-          <div>{sector}</div>
-          <div>
-            {contractName} / {hoursName}
-          </div>
-        </span>
         {loading && <Loading className="mask" size="small" />}
       </List.Item>
     );

@@ -1,6 +1,5 @@
 import React from 'react';
 import { withRouter } from 'react-router-dom';
-import Truncate from 'react-truncate';
 import { List, Tooltip, Drawer, Button } from 'antd';
 import moment from 'moment';
 
@@ -31,11 +30,6 @@ class Interviews extends React.Component {
     const image = helper.getPitch(job_seeker).thumbnail;
     const name = helper.getFullJSName(job_seeker);
 
-    let interviewStatus = {
-      PENDING: 'Pending',
-      ACCEPTED: 'Accepted'
-    }[interview.status];
-
     return (
       <List.Item
         key={id}
@@ -53,15 +47,13 @@ class Interviews extends React.Component {
           avatar={<Logo src={image} size="80px" />}
           title={name}
           description={
-            <Truncate lines={1} ellipsis={<span>...</span>}>
-              {job_seeker.description}
-            </Truncate>
+            interview && (
+              <div className={`single-line ${interview.status}`}>
+                Interview: {moment(interview.at).format('ddd DD MMM, YYYY [at] H:mm')}
+              </div>
+            )
           }
         />
-        <span style={{ width: '180px' }}>
-          <div>{interviewStatus}</div>
-          <div>{moment(interview.at).format('ddd DD MMM, YYYY [at] H:mm')}</div>
-        </span>
         {loading && <Loading className="mask" size="small" />}
       </List.Item>
     );

@@ -6,7 +6,7 @@ import { Row, Col, Button, Tooltip, Tabs } from 'antd';
 import { getPublicJob } from 'redux/jobseeker/find';
 import * as helper from 'utils/helper';
 
-import { PageHeader, Loading, Logo, AlertMsg, Icons, VideoPlayer, GoogleMap } from 'components';
+import { Loading, Logo, AlertMsg, Icons, VideoPlayer, GoogleMap } from 'components';
 import Wrapper from './styled';
 
 const TabPane = Tabs.TabPane;

@@ -100,7 +100,11 @@ class InterviewDetailController: MJPController {
         naviationsView.isHidden = false
         
         if interview.status == InterviewStatus.INTERVIEW_PENDING {
-            statusLabel.text = "Interview request sent"
+            if AppData.user.isRecruiter() {
+                statusLabel.text = "Interview request sent"
+            } else {
+                statusLabel.text = "Interview request received"
+            }
         } else if interview.status == InterviewStatus.INTERVIEW_ACCEPTED {
             statusLabel.text = "Interview accepted"
             acceptBtnView.isHidden = true

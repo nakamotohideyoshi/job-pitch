@@ -14,7 +14,6 @@ class ApplicationListController: SearchController {
     
     @IBOutlet weak var emptyView: UILabel!
     @IBOutlet weak var noPitchView: UIView!
-    @IBOutlet weak var jobTitleView: UILabel!
     
     var isRecruiter = false
     var isApplication = false
@@ -54,12 +53,12 @@ class ApplicationListController: SearchController {
         }
         
         if isRecruiter {
-            let item = UIBarButtonItem(barButtonSystemItem: .compose, target: self, action: #selector(goJobDetail))
+            let item = UIBarButtonItem(image: UIImage(named: "nav-edit"), style: .plain, target: self, action: #selector(goJobDetail))
             searchItems?.append(item)
             navigationItem.rightBarButtonItems = searchItems
-            jobTitleView.text = job.title + ", (" + job.getBusinessName() + ")"
+            setTitle(title: title!, subTitle: job.title + ", (" + job.getBusinessName() + ")")
         } else {
-            let item = UIBarButtonItem(barButtonSystemItem: .compose, target: self, action: #selector(self.goProfile))
+            let item = UIBarButtonItem(image: UIImage(named: "nav-edit"), style: .plain, target: self, action: #selector(goProfile))
             self.searchItems?.append(item)
             self.navigationItem.rightBarButtonItems = self.searchItems
             if (jobSeeker != nil) {
@@ -107,11 +106,11 @@ class ApplicationListController: SearchController {
     }
     
     func showInactiveBanner () {
-        if !jobSeeker.active {
-            self.jobTitleView.text = "Your profile is not active!"
-        } else {
-            self.jobTitleView.text = ""
-        }
+//        if !jobSeeker.active {
+//            self.jobTitleView.text = "Your profile is not active!"
+//        } else {
+//            self.jobTitleView.text = ""
+//        }
     }
     
     func loadData() {
@@ -187,14 +186,32 @@ extension ApplicationListController: UITableViewDataSource {
         
         let application = data[indexPath.row] as! Application
         
+        let appInterviews = application.interviews as! [ApplicationInterview]
+        let filters = appInterviews.filter { $0.status == InterviewStatus.INTERVIEW_PENDING || $0.status == InterviewStatus.INTERVIEW_ACCEPTED }
+        let interview = filters.count > 0 ? filters[0] : nil
+        
         var cell: MGSwipeTableCell!
         if isRecruiter {
             let cell2 = tableView.dequeueReusableCell(withIdentifier: "ApplicationCell2", for: indexPath) as! ApplicationCell2
             cell2.setData(application)
+            if interview != nil {
+                let dateFormatter = DateFormatter()
+                dateFormatter.dateFormat = "E d MMM, yyyy"
+                let dateFormatter1 = DateFormatter()
+                dateFormatter1.dateFormat = "HH:mm"
+                cell2.location.text = String(format: "Interview: %@ at %@", dateFormatter.string(from: (interview?.at)!), dateFormatter1.string(from: (interview?.at)!))
+            }
             cell = cell2
         } else {
             let cell1 = tableView.dequeueReusableCell(withIdentifier: "ApplicationCell1", for: indexPath) as! ApplicationCell1
             cell1.setData(application.job)
+            if interview != nil {
+                let dateFormatter = DateFormatter()
+                dateFormatter.dateFormat = "E d MMM, yyyy"
+                let dateFormatter1 = DateFormatter()
+                dateFormatter1.dateFormat = "HH:mm"
+                cell1.desc.text = String(format: "Interview: %@ at %@", dateFormatter.string(from: (interview?.at)!), dateFormatter1.string(from: (interview?.at)!))
+            }
             cell = cell1
         }
         

@@ -6,6 +6,7 @@ import moment from 'moment';
 
 import { getApplications } from 'redux/selectors';
 import { changeInterview, removeInterview } from 'redux/applications';
+import DATA from 'utils/data';
 import * as helper from 'utils/helper';
 
 import { PageHeader, SearchBox, AlertMsg, ListEx, Icons, JobDetails, Logo, Loading } from 'components';
@@ -97,14 +98,12 @@ class Interviews extends React.Component {
 
   renderApplication = app => {
     const { id, job_data, interview, loading } = app;
-    const { title } = job_data;
+    const { title, contract, hours } = job_data;
     const logo = helper.getJobLogo(job_data);
     const name = helper.getFullBWName(job_data);
-
-    let interviewStatus = {
-      PENDING: 'Pending',
-      ACCEPTED: 'Accepted'
-    }[interview.status];
+    const contractName = helper.getItemByID(DATA.contracts, contract).short_name;
+    const hoursName = helper.getItemByID(DATA.hours, hours).short_name;
+    const sector = helper.getNameByID('sectors', job_data.sector);
 
     let actions = [
       <Tooltip placement="bottom" title="Cancel Interview">
@@ -130,11 +129,15 @@ class Interviews extends React.Component {
 
     return (
       <List.Item key={id} actions={actions} onClick={() => this.onSelect(id)} className={loading ? 'loading' : ''}>
-        <List.Item.Meta avatar={<Logo src={logo} size="80px" padding="10px" />} title={title} description={name} />
-        <span style={{ width: '180px' }}>
-          <div>{interviewStatus}</div>
-          <div>{moment(interview.at).format('ddd DD MMM, YYYY [at] H:mm')}</div>
-        </span>
+        <List.Item.Meta
+          avatar={<Logo src={logo} size="80px" padding="10px" />}
+          title={`${title} (${name})`}
+          description={`${sector} (${contractName} / ${hoursName})`}
+        />
+        <div style={{ width: '160px', whiteSpace: 'pre-line' }} className={interview.status}>
+          {interview.status === 'PENDING' ? 'Interview request received\n' : 'Interview accepted\n'}
+          {moment(interview.at).format('ddd DD MMM, YYYY [at] H:mm')}
+        </div>
         {loading && <Loading className="mask" size="small" />}
       </List.Item>
     );

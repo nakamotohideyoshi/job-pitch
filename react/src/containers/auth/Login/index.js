@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 import { Form, Input, Button } from 'antd';
 
 import * as helper from 'utils/helper';
-import { login } from 'redux/auth';
+import { login, logout } from 'redux/auth';
 
 import Wrapper from './styled';
 
@@ -17,6 +17,7 @@ class LoginForm extends React.Component {
   };
 
   componentDidMount() {
+    this.props.logout();
     this.refEmail.focus();
   }
 
@@ -93,4 +94,4 @@ class LoginForm extends React.Component {
   }
 }
 
-export default connect(null, { login })(Form.create()(LoginForm));
+export default connect(null, { login, logout })(Form.create()(LoginForm));

@@ -1,4 +1,3 @@
-import { replace } from 'react-router-redux';
 import { takeLatest, all, call, put, select } from 'redux-saga/effects';
 
 import { getRequest, postRequest, requestSuccess } from 'utils/request';
@@ -37,8 +36,12 @@ function* _auth(action, url) {
 }
 
 function* logout(action) {
-  yield put({ type: C.UPDATE_AUTH, payload: { status: 'auth', user: null, jobseeker: null, profile: null } });
-  yield put(replace('/auth'));
+  yield put({ type: C.UPDATE_AUTH, payload: { status: 'auth', user: null } });
+  yield put({ type: requestSuccess(C.RC_GET_BUSINESSES), payload: null });
+  yield put({ type: requestSuccess(C.RC_GET_WORKPLACES), payload: null });
+  yield put({ type: requestSuccess(C.RC_GET_JOBS), payload: null });
+  yield put({ type: requestSuccess(C.GET_APPLICATIONS), payload: null });
+
   if (localStorage.getItem('token')) {
     yield call(postRequest({ url: '/api-rest-auth/logout/' }), action);
     localStorage.removeItem('token');

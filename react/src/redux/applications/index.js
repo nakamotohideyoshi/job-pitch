@@ -34,7 +34,7 @@ export default handleActions(
 
     [requestSuccess(C.GET_APPLICATIONS)]: (state, { payload }) => ({
       ...state,
-      applications: payload.map(app => ({ ...app, loading: false }))
+      applications: payload && payload.map(app => ({ ...app, loading: false }))
     }),
 
     // ---- update application ----
@@ -58,20 +58,7 @@ export default handleActions(
         id: appId,
         loading: false
       })
-    }),
-
-    // ---- change location ----
-
-    [LOCATION_CHANGE]: (state, { payload }) => {
-      let { applications } = state;
-      if (payload.pathname.split('/')[1] === 'auth') {
-        applications = null;
-      }
-      return {
-        ...state,
-        applications
-      };
-    }
+    })
   },
   initialState
 );

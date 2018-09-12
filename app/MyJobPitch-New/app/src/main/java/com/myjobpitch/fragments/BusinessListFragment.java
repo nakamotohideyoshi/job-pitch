@@ -124,10 +124,16 @@ public class BusinessListFragment extends BaseFragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 if (isUserMode) {
-                    BusinessUserListFragment fragment = new BusinessUserListFragment();
-                    fragment.businessId = adapter.getItem(position).getId();
-                    fragment.businessName = adapter.getItem(position).getName();
-                    getApp().pushFragment(fragment);
+                    if (adapter.getItem(position).getRestricted()) {
+                        Popup popup = new Popup(getContext(), "You must an administrator to view this information.", true);
+                        popup.addGreyButton("Ok", null);
+                        popup.show();
+                    } else {
+                        BusinessUserListFragment fragment = new BusinessUserListFragment();
+                        fragment.business = adapter.getItem(position);
+                        fragment.businessName = adapter.getItem(position).getName();
+                        getApp().pushFragment(fragment);
+                    }
                 } else {
                     BusinessDetailFragment fragment = new BusinessDetailFragment();
                     fragment.businessId = adapter.getItem(position).getId();

@@ -48,12 +48,18 @@ public class BusinessUserListFragment extends BaseFragment {
     ListView listView;
     @BindView(R.id.job_title_view)
     View jobTitleView;
+    @BindView(R.id.empty_view)
+    View emptyView;
+    @BindView(R.id.empty_text)
+    TextView emptyText;
+    @BindView(R.id.empty_button)
+    TextView emptyButton;
 
     private MenuItem addMenuItem;
     private BusinessesUserAdapter adapter;
 
     public String businessName;
-    public Integer businessId;
+    public Business business;
     public List<Location> locations;
 
     @Override
@@ -95,36 +101,47 @@ public class BusinessUserListFragment extends BaseFragment {
                     BusinessUserEditFragment fragment = new BusinessUserEditFragment();
                     fragment.isEditMode = true;
                     fragment.businessUser = adapter.getItem(position);
-                    fragment.businessId = businessId;
+                    fragment.businessId = business.getId();
                     fragment.locations = locations;
                     getApp().pushFragment(fragment);
                 } else {
                     Popup popup = new Popup(getContext(), "Cannot edit currently logged in user.", true);
-                    popup.addYellowButton("Ok", null);
+                    popup.addGreyButton("Ok", null);
                     popup.show();
                 }
             }
         });
 
-        addMenuItem(MENUGROUP1, 115, "Create User", R.drawable.ic_add);
+        if (business.getRestricted()) {
+            swipeRefreshLayout.setRefreshing(false);
+            emptyView.setVisibility(View.VISIBLE);
+            emptyText.setText("You must an administrator to view this information.");
+            emptyButton.setVisibility(View.GONE);
+        } else {
+            swipeRefreshLayout.setRefreshing(true);
+            addMenuItem(MENUGROUP1, 115, "Create User", R.drawable.ic_add);
+            // loading data
+            loadWorkplaces();
+        }
 
-        // loading data
 
-        swipeRefreshLayout.setRefreshing(true);
-
-        loadWorkplaces();
 
         return view;
+    }
+
+    @OnClick(R.id.empty_button)
+    void createUser(){
+        BusinessUserEditFragment fragment = new BusinessUserEditFragment();
+        fragment.isEditMode = false;
+        fragment.businessId = business.getId();
+        fragment.locations = locations;
+        getApp().pushFragment(fragment);
     }
 
     @Override
     public void onMenuSelected(int menuID) {
         if (menuID == 115) {
-            BusinessUserEditFragment fragment = new BusinessUserEditFragment();
-            fragment.isEditMode = false;
-            fragment.businessId = businessId;
-            fragment.locations = locations;
-            getApp().pushFragment(fragment);
+            createUser();
         } else {
             super.onMenuSelected(menuID);
         }
@@ -135,7 +152,7 @@ public class BusinessUserListFragment extends BaseFragment {
         new APITask(new APIAction() {
             @Override
             public void run() throws MJPApiException {
-                locations.addAll(MJPApi.shared().getUserLocations(businessId));
+                locations.addAll(MJPApi.shared().getUserLocations(business.getId()));
             }
         }).addListener(new APITaskListener() {
             @Override
@@ -155,13 +172,18 @@ public class BusinessUserListFragment extends BaseFragment {
         new APITask(new APIAction() {
             @Override
             public void run() throws MJPApiException {
-                businessUsers.addAll(MJPApi.shared().getBusinessUsers(businessId));
+                businessUsers.addAll(MJPApi.shared().getBusinessUsers(business.getId()));
             }
         }).addListener(new APITaskListener() {
             @Override
             public void onSuccess() {
                 adapter.clear();
                 adapter.addAll(businessUsers);
+                if (businessUsers.size() == 0) {
+                    emptyView.setVisibility(View.VISIBLE);
+                    emptyText.setText("This Business doesn't seem to have any user yet!");
+                    emptyButton.setText("Create User");
+                }
                 updatedBusinessUserList();
                 swipeRefreshLayout.setRefreshing(false);
             }

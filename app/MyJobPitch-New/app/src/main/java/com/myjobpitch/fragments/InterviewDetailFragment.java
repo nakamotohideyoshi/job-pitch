@@ -296,10 +296,12 @@ public class InterviewDetailFragment extends BaseFragment {
         if (AppData.user.isJobSeeker()) {
             ApplicationDetailFragment fragment = new ApplicationDetailFragment();
             fragment.application = application;
+            fragment.viewMode = true;
             getApp().pushFragment(fragment);
         } else {
             TalentDetailFragment fragment = new TalentDetailFragment();
             fragment.application = application;
+            fragment.viewMode = true;
             getApp().pushFragment(fragment);
         }
     }

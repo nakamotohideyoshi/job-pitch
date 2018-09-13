@@ -9,7 +9,7 @@ import { newApplication } from 'redux/applications';
 import DATA from 'utils/data';
 import * as helper from 'utils/helper';
 
-import { PageHeader, PageSubHeader, NoLabelField, Logo, Icons } from 'components';
+import { PageHeader, PageSubHeader, NoLabelField, Logo, Icons, PopupProgress } from 'components';
 import Wrapper from './AddApplication.styled';
 
 const { Item } = Form;
@@ -17,6 +17,10 @@ const { TextArea } = Input;
 const { Option } = Select;
 
 class AddApplication extends React.Component {
+  state = {
+    loading: false
+  };
+
   componentDidMount() {
     const { jobId } = this.props.location.state || {};
     this.props.form.setFieldsValue({
@@ -48,7 +52,7 @@ class AddApplication extends React.Component {
           job_seeker,
           shortlisted: values.shortlisted
         },
-        onSuccess: ({ id }) => {
+        onSuccess: () => {
           notification.success({
             message: 'Success',
             description: 'The application is saved'
@@ -68,6 +72,7 @@ class AddApplication extends React.Component {
 
   render() {
     const { jobs, form } = this.props;
+    const { loading } = this.state;
     const { getFieldDecorator } = form;
 
     return (
@@ -239,6 +244,8 @@ class AddApplication extends React.Component {
             </NoLabelField>
           </Form>
         </div>
+
+        {loading && <PopupProgress label={loading.label} value={loading.progress} />}
       </Wrapper>
     );
   }

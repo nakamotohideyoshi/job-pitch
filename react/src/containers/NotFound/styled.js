@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import colors from 'utils/colors';
 
 export default styled.div`
   display: flex;
@@ -20,7 +21,7 @@ export default styled.div`
   }
 
   a {
-    color: #00b6a4 !important;
+    color: ${colors.green} !important;
   }
 
   p {

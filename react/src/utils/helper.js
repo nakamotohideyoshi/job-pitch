@@ -53,19 +53,33 @@ export function getJobLogo(job, original) {
 */
 
 export function getPitch(object) {
-  if (!object) return null;
-
-  const pitches = object.pitches || object.videos;
-  if (!pitches || !pitches.length) return null;
-
-  for (let i = 0; i < pitches.length; i++) {
-    const pitch = pitches[i];
-    if (pitch.video) {
-      return pitch;
+  if (object) {
+    const pitches = object.pitches || object.videos;
+    if (pitches) {
+      const pitch = pitches.filter(({ video }) => video)[0];
+      if (pitch) return pitch;
     }
   }
 
   return null;
+}
+
+export function getAvatar(jobseeker) {
+  const pitch = getPitch(jobseeker);
+  if (pitch) {
+    return pitch.thumbnail;
+  }
+
+  if (jobseeker.profile_thumb) {
+    return jobseeker.profile_thumb;
+  }
+
+  if (jobseeker.sex_public && jobseeker.sex) {
+    const genderName = getItemByID(DATA.sexes, jobseeker.sex).name;
+    return require(`assets/avatar_${genderName}.png`);
+  }
+
+  return require('assets/avatar.png');
 }
 
 /**
@@ -156,18 +170,19 @@ export function loadData(key) {
 */
 
 export function updateItem(objects, newItem, addMode) {
+  let items = objects || [];
   if (addMode) {
-    if (!getItemByID(objects, newItem.id)) {
-      const newObjects = objects.slice(0);
-      newObjects.unshift(newItem);
-      return newObjects;
+    if (!getItemByID(items, newItem.id)) {
+      items = items.slice(0);
+      items.unshift(newItem);
+      return items;
     }
   }
-  return objects.map(item => (item.id === newItem.id ? { ...item, ...newItem } : item));
+  return items.map(item => (item.id === newItem.id ? { ...item, ...newItem } : item));
 }
 
 export function removeItem(objects, id) {
-  return objects.filter(item => item.id !== id);
+  return objects && objects.filter(item => item.id !== id);
 }
 
 export function sort(arr, key) {

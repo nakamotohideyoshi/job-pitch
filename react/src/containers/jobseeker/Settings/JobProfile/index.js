@@ -4,6 +4,7 @@ import { Form, Input, Button, Select, Popover, message, notification } from 'ant
 
 import { saveJobProfile } from 'redux/jobseeker/profile';
 import DATA from 'utils/data';
+import colors from 'utils/colors';
 import * as helper from 'utils/helper';
 
 import { NoLabelField, GoogleMap, Icons } from 'components';
@@ -94,7 +95,7 @@ class JobProfile extends React.Component {
       radius: 1609.344 * search_radius,
       options: {
         fillColor: '#ff930080',
-        strokeColor: '#00b6a4',
+        strokeColor: colors.green,
         strokeWeight: 2
       }
     };

@@ -228,7 +228,7 @@ class Profile extends React.Component {
 
     return (
       <FormWrapper>
-        <Item label="Active" className="with-public">
+        <Item label="Active">
           {getFieldDecorator('active', { valuePropName: 'checked', initialValue: true })(<Switch />)}
         </Item>
 
@@ -391,7 +391,7 @@ class Profile extends React.Component {
           })(
             <Upload.Dragger beforeUpload={() => false}>
               <p className="ant-upload-text">
-                <Icons.Upload /> Click or drag file to this area to upload CV
+                <Icons.CloudUpload /> Click or drag file to this area to upload CV
               </p>
               <p className="ant-upload-hint">
                 Upload your CV using your favourite cloud service, or take a photo if you have it printed out.

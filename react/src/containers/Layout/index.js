@@ -1,67 +1,33 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
 import { Layout, Alert } from 'antd';
-import styled from 'styled-components';
 
 import Header from './components/Header';
 import Footer from './components/Footer';
 
-const Wrapper = styled(Layout)`
-  min-height: 100vh;
-`;
-
-const Main = styled(Layout)`
-  position: relative;
-  margin-top: 50px;
-
-  .banner {
-    padding-top: 20px;
-  }
-`;
-
-const MainLayout = ({ menu, jobseeker, auth, component: Component, ...rest }) => {
-  const arr = rest.location.pathname.split('/');
-
-  let helpUrl = 'https://www.myjobpitch.com/what-is-my-job-pitch/';
-  let url;
-  if (arr[1] === 'recruiter') {
-    helpUrl = 'https://www.myjobpitch.com/recruiters/';
-    url = 'https://www.myjobpitch.com/recruiters/';
-  } else if (arr[1] === 'jobseeker') {
-    helpUrl = 'https://www.myjobpitch.com/jobseeker/';
-    url = 'https://www.myjobpitch.com/candidates/';
-  }
-  const showBanner = auth === 'jobseeker' && jobseeker && !jobseeker.active;
-  const showLink = rest.location.pathname.indexOf('/jobseeker/settings/profile') !== 0;
+const MainLayout = ({ menu, banners, content: Content, visibleFooter, shareUrl, helpUrl, ...rest }) => {
+  const headerKey = rest.location.pathname.split('/')[2];
 
   return (
-    <Wrapper>
-      <Header selectedKey={arr[2]} menu={menu} url={url} />
-      <Main>
-        {showBanner && (
-          <div className="container banner">
-            <Alert
-              message={
-                <span>
-                  Your profile is not active!
-                  {` `}
-                  {showLink && <Link to="/jobseeker/settings/profile">Activate</Link>}
-                </span>
-              }
-              type="error"
-            />
+    <Layout style={{ minHeight: '100vh' }}>
+      <Header selectedKey={headerKey} menu={menu} shareUrl={shareUrl} />
+
+      <Layout style={{ position: 'relative', marginTop: '50px' }}>
+        {!!banners.length && (
+          <div className="container" style={{ marginTop: '10px' }}>
+            {banners.map(({ id, ...props }) => <Alert key={id} style={{ marginBottom: '10px' }} {...props} />)}
           </div>
         )}
-        <Component {...rest} />
-      </Main>
 
-      {arr[2] !== 'messages' && <Footer helpUrl={helpUrl} />}
-    </Wrapper>
+        <Content {...rest} />
+      </Layout>
+
+      {visibleFooter && <Footer helpUrl={helpUrl || 'https://www.myjobpitch.com/what-is-my-job-pitch/'} />}
+    </Layout>
   );
 };
 
 export default connect(state => ({
-  jobseeker: state.js_profile.jobseeker,
-  auth: state.auth.status
+  banners: state.common.banners || [],
+  visibleFooter: state.common.visibleFooter
 }))(MainLayout);

@@ -65,13 +65,13 @@ export default styled.div`
   }
 
   form {
-    margin: 40px auto;
+    margin: 30px auto;
     max-width: 700px;
     width: 100%;
     padding: 0 15px;
 
     .ant-form-item-label svg {
-      color: #ff9300;
+      color: ${colors.yellow};
       cursor: pointer;
     }
 

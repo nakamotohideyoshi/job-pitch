@@ -42,7 +42,7 @@ class FindTalent extends React.Component {
 
     if (business.tokens === 0) {
       confirm({
-        content: 'You need 1 credit',
+        title: 'You need 1 credit',
         okText: `Credits`,
         cancelText: 'Cancel',
         maskClosable: true,
@@ -54,7 +54,7 @@ class FindTalent extends React.Component {
     }
 
     confirm({
-      content: 'Are you sure you want to connect this talent? (1 credit)',
+      title: 'Are you sure you want to connect this talent? (1 credit)',
       okText: `Connect`,
       cancelText: 'Cancel',
       maskClosable: true,
@@ -85,7 +85,7 @@ class FindTalent extends React.Component {
     event && event.stopPropagation();
 
     confirm({
-      content: 'Are you sure you want to delete this talent?',
+      title: 'Are you sure you want to delete this talent?',
       okText: `Remove`,
       okType: 'danger',
       cancelText: 'Cancel',
@@ -106,7 +106,7 @@ class FindTalent extends React.Component {
 
   renderJobseeker = jobseeker => {
     const { id, description, loading } = jobseeker;
-    const image = helper.getPitch(jobseeker).thumbnail;
+    const avatar = helper.getAvatar(jobseeker);
     const name = helper.getFullJSName(jobseeker);
 
     return (
@@ -128,7 +128,7 @@ class FindTalent extends React.Component {
         className={loading ? 'loading' : ''}
       >
         <List.Item.Meta
-          avatar={<Logo src={image} size="80px" />}
+          avatar={<Logo src={avatar} size="80px" />}
           title={name}
           description={<div className="single-line">{description}</div>}
         />
@@ -144,7 +144,7 @@ class FindTalent extends React.Component {
           You can restore your removed matches by clicking refresh above.`}
       </span>
       <a onClick={this.findJobseekers}>
-        <Icons.Refresh />
+        <Icons.SyncAlt />
         Refresh
       </a>
     </AlertMsg>

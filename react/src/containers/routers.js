@@ -9,6 +9,7 @@ import SelectType from 'containers/auth/SelectType';
 
 import RCRoute from 'containers/recruiter/Route';
 import RCApplications from 'containers/recruiter/Applications';
+import AddApplication from 'containers/recruiter/Applications/AddApplication';
 import RCJobseeker from 'containers/recruiter/Applications/Jobseeker';
 import BusinessList from 'containers/recruiter/Jobs/BusinessList';
 import BusinessEdit from 'containers/recruiter/Jobs/BusinessEdit';
@@ -68,6 +69,7 @@ export default ({ status, location }) => {
       <RCRoute exact path="/recruiter/applications/conns/:jobId" component={RCApplications} />
       <RCRoute exact path="/recruiter/applications/shortlist" component={RCApplications} />
       <RCRoute exact path="/recruiter/applications/shortlist/:jobId" component={RCApplications} />
+      <RCRoute exact path="/recruiter/applications/add" component={AddApplication} />
       <RCRoute exact path="/recruiter/apps/:jobId/:jobseekerId" component={RCJobseeker} />
 
       <RCRoute exact path="/recruiter/applications/interviews" component={RCApplications} />

@@ -35,7 +35,7 @@ class PitchRecord extends React.Component {
   openRecorder = () => {
     if (navigator.userAgent.indexOf('iPhone') !== -1) {
       confirm({
-        content: 'To record your video, you need to download the app',
+        title: 'To record your video, you need to download the app',
         okText: 'Sign out',
         maskClosable: true,
         onOk: () => {
@@ -116,7 +116,7 @@ class PitchRecord extends React.Component {
           </Button>
           {pitchData && (
             <Button type="secondary" onClick={this.uploadPitch}>
-              <Icons.Upload /> Upload
+              <Icons.CloudUpload /> Upload
             </Button>
           )}
         </div>

@@ -14,7 +14,7 @@ const Panel = Collapse.Panel;
 
 export default ({ jobseekerData, application, actions, defaultTab }) => {
   const jobseeker = jobseekerData || application.job_seeker;
-  const image = helper.getPitch(jobseeker).thumbnail;
+  const avatar = helper.getAvatar(jobseeker);
   const fullName = helper.getFullJSName(jobseeker);
   const age = jobseeker.age_public && jobseeker.age;
   const sex = jobseeker.sex_public && helper.getNameByID('sexes', jobseeker.sex);
@@ -38,7 +38,7 @@ export default ({ jobseekerData, application, actions, defaultTab }) => {
       <Row gutter={32}>
         <Col xs={10} sm={8} md={6} lg={5}>
           <div className="logo">
-            <Logo src={image} size="100%" />
+            <Logo src={avatar} size="100%" />
           </div>
         </Col>
         <Col xs={14} sm={16} md={18} lg={19}>

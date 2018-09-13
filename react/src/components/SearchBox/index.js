@@ -7,7 +7,7 @@ const Wrapper = styled(Input)`
   svg {
     color: #ccc;
   }
-  .fa-times-circle:hover {
+  .i-times-circle:hover {
     color: #999;
     cursor: pointer;
   }

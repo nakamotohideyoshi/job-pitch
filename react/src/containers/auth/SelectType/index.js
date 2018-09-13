@@ -30,7 +30,7 @@ const SelectType = ({ user, updateAuth }) => {
     <Wrapper className="container">
       <Helmet title="Select Type" />
 
-      <Form className="shadow1">
+      <Form className="shadow">
         <h1>Select Type</h1>
 
         <Item>

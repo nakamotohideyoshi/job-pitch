@@ -26,8 +26,7 @@ class UserMenu extends React.PureComponent {
 
     if (key === 'signout') {
       confirm({
-        title: null,
-        content: 'Are you sure you want to sign out?',
+        title: 'Are you sure you want to sign out?',
         okText: 'Sign out',
         maskClosable: true,
         onOk: () => {
@@ -44,12 +43,12 @@ class UserMenu extends React.PureComponent {
       <Wrapper mode="inline" selectedKeys={[selectedKey]} onClick={this.handleClick}>
         <Item key="settings">
           <Link to={`/${status}/settings`}>
-            <Icons.Settings />
+            <Icons.Cog />
             Settings
           </Link>
         </Item>
         <Item key="signout">
-          <Icons.SignOut />
+          <Icons.SignOutAlt />
           Sign out
         </Item>
       </Wrapper>

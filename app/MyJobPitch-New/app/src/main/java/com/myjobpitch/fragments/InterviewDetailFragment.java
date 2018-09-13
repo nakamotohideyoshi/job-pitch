@@ -272,18 +272,21 @@ public class InterviewDetailFragment extends BaseFragment {
             interviewHistoryList.setVisibility(View.GONE);
         } else {
             for (final Interview applicationInterview : application.getInterviews()) {
-                View view = getLayoutInflater().inflate(R.layout.cell_interview_history, null);
-                view.setOnClickListener(new View.OnClickListener() {
-                    public void onClick(View v) {
-                        InterviewDetailFragment fragment = new InterviewDetailFragment();
-                        fragment.interview = applicationInterview;
-                        fragment.application = application;
-                        fragment.historyMode = true;
-                        getApp().pushFragment(fragment);
-                    }
-                });
-                historyList.addView(view);
-                AppHelper.showApplicationInterviewInfo(applicationInterview, view);
+
+                if (applicationInterview.getId().intValue() != interviewId.intValue()) {
+                    View view = getLayoutInflater().inflate(R.layout.cell_interview_history, null);
+                    view.setOnClickListener(new View.OnClickListener() {
+                        public void onClick(View v) {
+                            InterviewDetailFragment fragment = new InterviewDetailFragment();
+                            fragment.interview = applicationInterview;
+                            fragment.application = application;
+                            fragment.historyMode = true;
+                            getApp().pushFragment(fragment);
+                        }
+                    });
+                    historyList.addView(view);
+                    AppHelper.showApplicationInterviewInfo(applicationInterview, view);
+                }
             }
         }
     }

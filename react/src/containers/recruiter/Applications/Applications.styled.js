@@ -38,7 +38,7 @@ export default styled.div`
             left: -6px;
             top: -6px;
             font-size: 12px;
-            color: #ff9300;
+            color: ${colors.yellow};
           }
         }
 
@@ -68,17 +68,7 @@ export default styled.div`
       }
 
       .ant-list-item-action {
-        span {
-          width: 30px;
-          height: 30px;
-          display: inline-flex;
-          justify-content: center;
-          align-items: center;
-          border-radius: 50%;
-          &:hover {
-            box-shadow: 0px 0 4px 0px rgba(0, 0, 0, 0.15);
-          }
-        }
+        margin-left: 24px;
       }
 
       &:hover {

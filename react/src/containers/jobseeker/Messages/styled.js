@@ -1,11 +1,10 @@
 import styled, { css } from 'styled-components';
+import colors from 'utils/colors';
 
 export default styled.div`
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
+  position: relative;
+  border-top: 1px solid #e0e0e0;
+  flex: 1;
 
   .sidebar {
     position: absolute;
@@ -48,7 +47,7 @@ export default styled.div`
             display: flex;
             justify-content: space-between;
             span {
-              color: #ff9300;
+              color: ${colors.yellow};
               cursor: pointer;
             }
           }

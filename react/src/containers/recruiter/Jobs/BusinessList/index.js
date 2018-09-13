@@ -6,6 +6,7 @@ import { Breadcrumb, List, Modal, Tooltip } from 'antd';
 import { getApplications, getBusinesses } from 'redux/selectors';
 import { removeBusiness } from 'redux/recruiter/businesses';
 import DATA from 'utils/data';
+import colors from 'utils/colors';
 import * as helper from 'utils/helper';
 
 import { PageHeader, PageSubHeader, AlertMsg, LinkButton, Loading, ListEx, Icons, Intro, Logo } from 'components';
@@ -69,10 +70,9 @@ class BusinessList extends React.Component {
       history.push('/recruiter/jobs/business/add');
     } else {
       confirm({
+        title: 'Got more that one business?',
         content: (
           <span>
-            Got more that one business?
-            <br />
             Get in touch to talk about how we can help you.
             <br />
             Remember, you can always create additional workplaces under your existing business.
@@ -97,14 +97,11 @@ class BusinessList extends React.Component {
     event && event.stopPropagation();
 
     const count = locations.length;
-    const content =
-      count === 0
-        ? `Deleting this business will also delete ${count} workplace${count !== 1 ? 's' : ''} and all their jobs.
-    If you want to hide the jobs instead you can deactive them.`
-        : `Are you sure you want to delete ${name}`;
-
     confirm({
-      content,
+      title: count
+        ? `Deleting this business will also delete ${count} workplace${count !== 1 ? 's' : ''} and all their jobs.`
+        : `Are you sure you want to delete ${name}`,
+      content: count ? `If you want to hide the jobs instead you can deactive them.` : null,
       okText: `Remove`,
       okType: 'danger',
       cancelText: 'Cancel',
@@ -163,7 +160,7 @@ class BusinessList extends React.Component {
         <span style={{ width: '80px' }}>{strTokens}</span>
         <span style={{ width: '140px' }}>
           <div>{strWorkplaces}</div>
-          {!!newApps && <div style={{ color: '#ff9300' }}>{strNewApps}</div>}
+          {!!newApps && <div style={{ color: colors.yellow }}>{strNewApps}</div>}
         </span>
 
         {loading && <Loading className="mask" size="small" />}

@@ -9,7 +9,7 @@ import { saveUser, resendInvitation } from 'redux/recruiter/users';
 import * as helper from 'utils/helper';
 
 import { PageHeader, PageSubHeader, PopupProgress, NoLabelField, Logo, LinkButton } from 'components';
-import Wrapper from '../styled';
+import Wrapper from './styled';
 
 const { Item } = Form;
 const { Option } = Select;

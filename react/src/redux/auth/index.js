@@ -39,7 +39,12 @@ export default handleActions(
     [LOCATION_CHANGE]: state => ({
       ...state,
       status: localStorage.getItem('status') || 'auth'
-    })
+    }),
+
+    [C.LOGOUT]: () => {
+      localStorage.removeItem('status');
+      return initialState;
+    }
   },
   initialState
 );

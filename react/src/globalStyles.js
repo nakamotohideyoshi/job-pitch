@@ -6,13 +6,9 @@ injectGlobal`
     font-size: 14px;
   }
 
-  textarea.ant-input {
-    resize: none;
-  }
-
   .container {
     @media (min-width: 768px) {
-      max-width: 720px;
+      max-width: 740px;
     }
     @media (min-width: 992px) {
       max-width: 960px;
@@ -29,49 +25,17 @@ injectGlobal`
     margin-left: auto;
   }
 
-  .description {
-    white-space: pre-line;
-    word-break: break-all;
-    hyphens: auto;
-  }
-
-  .avatar-80 {
-    width: 80px !important;
-    height: 80px !important;
-    border-radius: 50% !important;
-  }
-
-  .avatar-48 {
-    width: 48px !important;
-    height: 48px !important;
-    border-radius: 50% !important;
-  }
- 
-  .shadow1 {
+  .shadow {
     box-shadow: 0 3px 12px rgba(0, 0, 0, 0.25);
     ${media.tablet`
       box-shadow: none;
     `};
   }
 
-  .alert-msg {
-    color: #8c8c8c;
-    font-size: 14px;
-    text-align: center;
+  .description {
     white-space: pre-line;
-
-    & + .btn-link {
-      margin-top: 10px;
-    }
-  }
-
-  .btn-link {
-    color: #00b6a4 !important;
-    font-size: 14px;
-
-    i, svg {
-      margin-right: 8px;
-    }
+    word-break: break-all;
+    hyphens: auto;
   }
 
   .single-line {
@@ -83,16 +47,9 @@ injectGlobal`
 
   /* ant design */
 
-  .ant-btn {
-    i, svg {
-      margin-right: 8px;
-    }
-  }
-
-  .ant-menu-item {
-    svg {
-      margin-right: 8px;
-    }
+  .ant-btn svg,
+  .ant-menu-item svg {
+    margin-right: 8px;
   }
 
   .ant-select-selection-selected-value,
@@ -117,6 +74,14 @@ injectGlobal`
     }
   }
 
+  .ant-select-selection__choice__content {
+    display: flex !important;
+
+    span {
+      margin-right: 5px;
+    }
+  }
+
   .ant-list-item-action {
     span {
       width: 30px;
@@ -131,12 +96,5 @@ injectGlobal`
     }
   }
 
-  .ant-select-selection__choice__content {
-    display: flex !important;
-
-    span {
-      margin-right: 5px;
-    }
-  }
 }
 `;

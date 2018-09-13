@@ -62,7 +62,7 @@ export default styled.div`
                 margin-left: 8px;
                 .ant-badge-count {
                   box-shadow: none;
-                  background-color: #ff9300;
+                  background-color: ${colors.yellow};
                 }
               }
             }

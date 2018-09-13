@@ -95,7 +95,7 @@ class MessageThread extends React.Component {
     if ((DATA.userRole === 'RECRUITER' && me) || (DATA.userRole === 'JOB_SEEKER' && !me)) {
       avatar = helper.getJobLogo(application.job_data);
     } else {
-      avatar = helper.getPitch(application.job_seeker).thumbnail;
+      avatar = helper.getAvatar(application.job_seeker);
     }
 
     const comment = new Date(created).toLocaleTimeString('en-us', {
@@ -135,7 +135,7 @@ class MessageThread extends React.Component {
             onChange={this.onChnageInput}
             onKeyUp={this.onKeyUp}
           />
-          <Icons.Send size="lg" className={message.trim() === '' ? 'disabled' : ''} onClick={this.onSend} />
+          <Icons.PaperPlane size="lg" className={message.trim() === '' ? 'disabled' : ''} onClick={this.onSend} />
         </Fragment>
       )
     );

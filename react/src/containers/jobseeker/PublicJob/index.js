@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { Row, Col, Button, Tooltip, Tabs, Alert } from 'antd';
 
 import { getPublicJob } from 'redux/jobseeker/find';
+import colors from 'utils/colors';
 import * as helper from 'utils/helper';
 
 import { Loading, Logo, AlertMsg, Icons, VideoPlayer, GoogleMap } from 'components';
@@ -57,7 +58,7 @@ class PublicJob extends React.Component {
       radius: 482.8,
       options: {
         fillColor: '#ff930080',
-        strokeColor: '#00b6a4',
+        strokeColor: colors.green,
         strokeWeight: 2
       }
     };

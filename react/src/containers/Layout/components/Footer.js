@@ -2,8 +2,8 @@ import React from 'react';
 import { Layout } from 'antd';
 import styled from 'styled-components';
 
-import { VERSION } from 'const';
 import media from 'utils/mediaquery';
+import { VERSION } from 'const';
 
 import { Icons } from 'components';
 import logoImage from 'assets/logo.png';
@@ -51,14 +51,9 @@ const Footer = styled(Layout.Footer)`
   }
 `;
 
-const SocialLink = ({ url, icon: Icon }) => (
+const Link = ({ url, icon: Icon, label }) => (
   <a href={url} target="_blank" rel="noopener noreferrer">
     {Icon && <Icon size="lg" />}
-  </a>
-);
-
-const Link = ({ url, label }) => (
-  <a href={url} rel="noopener noreferrer">
     {label}
   </a>
 );
@@ -75,9 +70,9 @@ export default ({ helpUrl }) => (
       </div>
 
       <div className="follow">
-        <SocialLink url="https://www.facebook.com/myjobpitchapp/" icon={Icons.Facebook} />
-        <SocialLink url="https://twitter.com/myjobpitch/" icon={Icons.Twitter} />
-        <SocialLink url="https://www.linkedin.com/company/my-job-pitch/" icon={Icons.Linkedin} />
+        <Link url="https://www.facebook.com/myjobpitchapp/" icon={Icons.FacebookF} />
+        <Link url="https://twitter.com/myjobpitch/" icon={Icons.Twitter} />
+        <Link url="https://www.linkedin.com/company/my-job-pitch/" icon={Icons.LinkedinIn} />
       </div>
 
       <div className="company">

@@ -5,6 +5,7 @@ import { withRouter, Link } from 'react-router-dom';
 import { Menu, Badge } from 'antd';
 
 import { getAllNewMsgs, getBusinesses } from 'redux/selectors';
+import colors from 'utils/colors';
 import * as helper from 'utils/helper';
 
 const Item = Menu.Item;
@@ -21,7 +22,7 @@ const MenuWrapper = styled(Menu)`
     margin-left: 8px;
     .ant-badge-count {
       box-shadow: none;
-      background-color: #ff9300;
+      background-color: ${colors.yellow};
     }
   }
 `;

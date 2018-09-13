@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 import { Modal } from 'antd';
+import colors from 'utils/colors';
 
 export default styled(Modal)`
   .ant-modal-body {
@@ -48,7 +49,7 @@ export default styled(Modal)`
         }
 
         &.slick-active button {
-          background-color: #ff9300;
+          background-color: ${colors.yellow};
         }
       }
     }

@@ -29,13 +29,6 @@
 @shadow-color : rgba(0, 0, 0, .25);
 @shadow-2 : 0 2px 12px @shadow-color;
 
-.ant-menu-submenu.ant-menu-dark {
-  top: 50px !important;
-  > .ant-menu {
-    border-radius: 0;
-  }
-}
-
 .ant-btn-secondary {
   color: #fff;
   background-color: #ff9300;
@@ -56,44 +49,19 @@
   }
 }
 
-.ant-center-modal {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  .ant-modal {
-    position: initial;
-    padding: 0;
-  }
+textarea.ant-input {
+  resize: none;
 }
 
-.ant-spin-nested-loading > div > .ant-spin {
-  max-height: initial;
-}
-
-.ant-confirm-body .ant-confirm-title {
-  display: none;
-}
-
-.ant-list-item-meta-description {
-  word-break: break-all;
-  hyphens: auto;
-}
+// .ant-spin-nested-loading > div > .ant-spin {
+//   max-height: initial;
+// }
 
 .ant-upload.ant-upload-drag {
   padding: 0;
   .ant-upload-btn {
     padding: 16px 8px;
   }
-}
-
-.ant-progress-show-info .ant-progress-outer {
-  padding-right: calc(3em + 8px);
-  margin-right: calc(-3em - 8px);
-}
-
-.ant-progress-text {
-  width: 3em;
 }
 
 .ant-drawer-right .ant-drawer-content-wrapper {

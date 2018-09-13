@@ -7,6 +7,7 @@ import { Breadcrumb, List, Tooltip } from 'antd';
 import { getApplications, getJobs, getWorkplaces } from 'redux/selectors';
 import { selectBusiness } from 'redux/recruiter/businesses';
 import DATA from 'utils/data';
+import colors from 'utils/colors';
 import * as helper from 'utils/helper';
 
 import {
@@ -107,14 +108,14 @@ class JobList extends React.Component {
           <span style={{ width: '140px' }}>
             {!!conApps && (
               <div>
-                <a style={{ color: '#00b6a4' }} onClick={e => this.onShowCons(id, e)}>
+                <a style={{ color: colors.green }} onClick={e => this.onShowCons(id, e)}>
                   {`${conApps} connection${conApps !== 1 ? 's' : ''}`}
                 </a>
               </div>
             )}
             {!!newApps && (
               <div>
-                <a style={{ color: '#ff9300' }} onClick={e => this.onShowApps(id, e)}>
+                <a style={{ color: colors.yellow }} onClick={e => this.onShowApps(id, e)}>
                   {`${newApps} new application${newApps !== 1 ? 's' : ''}`}
                 </a>
               </div>

@@ -93,7 +93,7 @@ class Interview extends React.Component {
     const { application } = this.props;
 
     confirm({
-      content: 'Are you sure you want to cancel this interview?',
+      title: 'Are you sure you want to cancel this interview?',
       okText: `Ok`,
       okType: 'danger',
       cancelText: 'Cancel',

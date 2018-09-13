@@ -169,7 +169,7 @@ class JobEdit extends React.Component {
           this.setState({
             loading: {
               label: 'Logo uploading...',
-              progress: Math.floor((progress.loaded / progress.total) * 100)
+              progress: Math.floor(progress.loaded / progress.total * 100)
             }
           });
         }

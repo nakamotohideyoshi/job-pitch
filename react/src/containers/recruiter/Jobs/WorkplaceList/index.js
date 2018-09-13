@@ -8,6 +8,7 @@ import { getApplications, getWorkplaces, getBusinesses } from 'redux/selectors';
 import { removeWorkplace } from 'redux/recruiter/workplaces';
 import { selectBusiness } from 'redux/recruiter/businesses';
 import DATA from 'utils/data';
+import colors from 'utils/colors';
 import * as helper from 'utils/helper';
 
 import { PageHeader, PageSubHeader, AlertMsg, LinkButton, Loading, ListEx, Icons, Logo } from 'components';
@@ -47,13 +48,11 @@ class WorkplaceList extends React.Component {
     event && event.stopPropagation();
 
     const count = jobs.length;
-    const content = count
-      ? `Deleting this workplace will also delete ${count} job${count !== 1 ? 's' : ''}.
-    If you want to hide the jobs instead you can deactive them.`
-      : `Are you sure you want to delete ${name}`;
-
     confirm({
-      content,
+      title: count
+        ? `Deleting this workplace will also delete ${count} job${count !== 1 ? 's' : ''}.`
+        : `Are you sure you want to delete ${name}`,
+      content: count ? 'If you want to hide the jobs instead you can deactive them.' : null,
       okText: `Remove`,
       okType: 'danger',
       cancelText: 'Cancel',
@@ -104,7 +103,7 @@ class WorkplaceList extends React.Component {
           <div>
             {strJobs} ({strInactiveJobs})
           </div>
-          {!!newApps && <div style={{ color: '#ff9300' }}>{strNewApps}</div>}
+          {!!newApps && <div style={{ color: colors.yellow }}>{strNewApps}</div>}
         </span>
 
         {loading && <Loading className="mask" size="small" />}

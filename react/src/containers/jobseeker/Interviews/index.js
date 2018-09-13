@@ -34,7 +34,7 @@ class Interviews extends React.Component {
     event && event.stopPropagation();
 
     confirm({
-      content: 'Are you sure you want to accept this interview?',
+      title: 'Are you sure you want to accept this interview?',
       okText: `Accept`,
       cancelText: 'Cancel',
       maskClosable: true,
@@ -64,7 +64,7 @@ class Interviews extends React.Component {
     event && event.stopPropagation();
 
     confirm({
-      content: 'Are you sure you want to cancel this interview?',
+      title: 'Are you sure you want to cancel this interview?',
       okText: `Ok`,
       okType: 'danger',
       cancelText: 'Cancel',

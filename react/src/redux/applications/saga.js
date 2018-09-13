@@ -43,6 +43,11 @@ function* removeApplication({ payload }) {
   yield call(_updateApplication, deleteRequest({ url: `/api/applications/${payload.appId}/` }), payload);
 }
 
+function* newApplication({ payload }) {
+  // yield call(_updateApplication, postRequest({ url: '/api/applications/external/' }), payload);
+  yield call(postRequest({ url: '/api/applications/external/' }), { payload });
+}
+
 // message
 
 function* readMessage({ payload }) {
@@ -115,6 +120,7 @@ function* autoUpdateAppliciations() {
 export default function* sagas() {
   yield takeLatest(C.UPDATE_APPLICATION, updateApplication);
   yield takeLatest(C.REMOVE_APPLICATION, removeApplication);
+  yield takeLatest(C.NEW_APPLICATION, newApplication);
   yield takeLatest(C.READ_MESSAGE, readMessage);
   yield takeLatest(C.SEND_MESSAGE, sendMessage);
 

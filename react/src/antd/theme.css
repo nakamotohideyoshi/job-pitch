@@ -18839,12 +18839,6 @@ li.ant-select-tree-treenode-disabled > .ant-select-tree-node-content-wrapper:hov
     opacity: 0;
   }
 }
-.ant-menu-submenu.ant-menu-dark {
-  top: 50px !important;
-}
-.ant-menu-submenu.ant-menu-dark > .ant-menu {
-  border-radius: 0;
-}
 .ant-btn-secondary {
   color: #fff;
   background-color: #ff9300;
@@ -18862,37 +18856,14 @@ li.ant-select-tree-treenode-disabled > .ant-select-tree-node-content-wrapper:hov
   background-color: #d97700;
   border-color: #d97700;
 }
-.ant-center-modal {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-.ant-center-modal .ant-modal {
-  position: initial;
-  padding: 0;
-}
-.ant-spin-nested-loading > div > .ant-spin {
-  max-height: initial;
-}
-.ant-confirm-body .ant-confirm-title {
-  display: none;
-}
-.ant-list-item-meta-description {
-  word-break: break-all;
-  hyphens: auto;
+textarea.ant-input {
+  resize: none;
 }
 .ant-upload.ant-upload-drag {
   padding: 0;
 }
 .ant-upload.ant-upload-drag .ant-upload-btn {
   padding: 16px 8px;
-}
-.ant-progress-show-info .ant-progress-outer {
-  padding-right: calc(11em);
-  margin-right: calc(-11em);
-}
-.ant-progress-text {
-  width: 3em;
 }
 .ant-drawer-right .ant-drawer-content-wrapper {
   width: 90% !important;

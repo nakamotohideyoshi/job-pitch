@@ -227,11 +227,6 @@ public class TalentDetailFragment extends BaseFragment {
 
             connectHelpButton.setVisibility(View.GONE);
 
-            if (viewMode) {
-                applyButton.setVisibility(View.GONE);
-                removeButton.setVisibility(View.GONE);
-            }
-
         } else {
 
             contactView.setVisibility(View.GONE);
@@ -245,6 +240,11 @@ public class TalentDetailFragment extends BaseFragment {
                 applyButton.setText("Connect");
             }
 
+        }
+
+        if (viewMode) {
+            applyButton.setVisibility(View.GONE);
+            removeButton.setVisibility(View.GONE);
         }
 
     }

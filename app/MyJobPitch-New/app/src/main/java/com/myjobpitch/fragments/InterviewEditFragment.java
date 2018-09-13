@@ -194,7 +194,7 @@ public class InterviewEditFragment extends FormFragment {
                 title = "Edit Notes";
                 interviewDateTimeButton.setEnabled(false);
                 interviewMessage.setEnabled(false);
-                createButton.setText("Update Notes");
+                createButton.setText("Update Recruiter's Notes");
                 break;
             case "COMPLETE":
                 title = "Complete Interview";

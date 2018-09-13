@@ -276,7 +276,7 @@
                         android:layout_alignParentLeft="true"
                         android:layout_centerVertical="true"
                         android:ellipsize="end"
-                        android:text="Edit Notes"
+                        android:text="Edit recruiter's notes:"
                         android:textAlignment="center"
                         android:textSize="13sp"
                         android:textStyle="bold" />

@@ -26,10 +26,10 @@ const App = ({ user, status, getUserData, location }) => {
       <Route
         exact
         path="/jobseeker/locations/:workplaceId"
-        render={props => <Layout component={PublicWorkplace} {...props} />}
+        render={props => <Layout content={PublicWorkplace} {...props} />}
       />
       {status !== 'jobseeker' && (
-        <Route exact path="/jobseeker/jobs/:jobId" render={props => <Layout component={PublicJob} {...props} />} />
+        <Route exact path="/jobseeker/jobs/:jobId" render={props => <Layout content={PublicJob} {...props} />} />
       )}
 
       <Routers status={status} location={location} />

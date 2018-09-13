@@ -1,3 +1,5 @@
+import common from './common';
+
 import auth from './auth';
 import applications from './applications';
 
@@ -11,6 +13,7 @@ import js_find from './jobseeker/find';
 import js_profile from './jobseeker/profile';
 
 export default {
+  common,
   auth,
   applications,
 

@@ -3,6 +3,7 @@ import { Row, Col, Tabs, Collapse, Tooltip } from 'antd';
 import moment from 'moment';
 
 import DATA from 'utils/data';
+import colors from 'utils/colors';
 import * as helper from 'utils/helper';
 
 import { GoogleMap, Icons, VideoPlayer, SocialShare, Logo } from 'components';
@@ -37,7 +38,7 @@ export default ({ jobData, application, className, roughLocation, actions, defau
       radius: 482.8,
       options: {
         fillColor: '#ff930080',
-        strokeColor: '#00b6a4',
+        strokeColor: colors.green,
         strokeWeight: 2
       }
     };

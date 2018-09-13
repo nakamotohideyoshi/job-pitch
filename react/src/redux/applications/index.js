@@ -11,6 +11,7 @@ import * as helper from 'utils/helper';
 export const getApplications = createAction(C.GET_APPLICATIONS);
 export const updateApplication = createAction(C.UPDATE_APPLICATION);
 export const removeApplication = createAction(C.REMOVE_APPLICATION);
+export const newApplication = createAction(C.NEW_APPLICATION);
 
 export const readMessage = createAction(C.READ_MESSAGE);
 export const sendMessage = createAction(C.SEND_MESSAGE);
@@ -58,7 +59,9 @@ export default handleActions(
         id: appId,
         loading: false
       })
-    })
+    }),
+
+    [C.LOGOUT]: () => initialState
   },
   initialState
 );

@@ -47,7 +47,7 @@ class RegisterForm extends React.Component {
       <Wrapper className="container">
         <Helmet title="Create account" />
 
-        <Form onSubmit={this.register} className="shadow1">
+        <Form onSubmit={this.register} className="shadow">
           <h1>Create account</h1>
 
           <label>Email Address</label>

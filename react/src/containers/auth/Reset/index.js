@@ -54,7 +54,7 @@ class ResetForm extends React.Component {
       <Wrapper className="container">
         <Helmet title="Reset Password" />
 
-        <Form onSubmit={this.resetPassword} className="shadow1">
+        <Form onSubmit={this.resetPassword} className="shadow">
           <h1>Reset Password</h1>
 
           {!sent && <label>Email Address</label>}

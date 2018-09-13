@@ -36,12 +36,6 @@ function* _auth(action, url) {
 }
 
 function* logout(action) {
-  yield put({ type: C.UPDATE_AUTH, payload: { status: 'auth', user: null } });
-  yield put({ type: requestSuccess(C.RC_GET_BUSINESSES), payload: null });
-  yield put({ type: requestSuccess(C.RC_GET_WORKPLACES), payload: null });
-  yield put({ type: requestSuccess(C.RC_GET_JOBS), payload: null });
-  yield put({ type: requestSuccess(C.GET_APPLICATIONS), payload: null });
-
   if (localStorage.getItem('token')) {
     yield call(postRequest({ url: '/api-rest-auth/logout/' }), action);
     localStorage.removeItem('token');

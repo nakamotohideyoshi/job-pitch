@@ -1,8 +1,9 @@
 import styled, { css } from 'styled-components';
+import colors from 'utils/colors';
 
 export default styled.a`
   cursor: pointer;
-  color: #00b6a4 !important;
+  color: ${colors.green} !important;
 
   ${props => props.underline && css``};
 

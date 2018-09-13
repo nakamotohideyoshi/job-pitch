@@ -68,7 +68,7 @@ class UserList extends React.Component {
     event && event.stopPropagation();
 
     confirm({
-      content: 'Are you sure you want to delete this user?',
+      title: 'Are you sure you want to delete this user?',
       okText: `Remove`,
       okType: 'danger',
       cancelText: 'Cancel',
@@ -175,7 +175,7 @@ class UserList extends React.Component {
         </PageSubHeader>
 
         <PageSubHeader>
-          <div />
+          <div style={{ display: 'inline' }} />
           {!business.restricted && <LinkButton onClick={this.onAddUser}>Add new user</LinkButton>}
         </PageSubHeader>
 

@@ -43,7 +43,7 @@ class MyConnections extends React.Component {
     event && event.stopPropagation();
 
     confirm({
-      content: 'Are you sure you want to delete this applicaton?',
+      title: 'Are you sure you want to delete this applicaton?',
       okText: `Remove`,
       okType: 'danger',
       cancelText: 'Cancel',
@@ -76,7 +76,7 @@ class MyConnections extends React.Component {
 
   renderApplication = app => {
     const { id, job_seeker, interview, loading } = app;
-    const image = helper.getPitch(job_seeker).thumbnail;
+    const image = helper.getAvatar(job_seeker);
     const name = helper.getFullJSName(job_seeker);
 
     return (

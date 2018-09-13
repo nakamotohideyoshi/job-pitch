@@ -55,7 +55,9 @@ export default handleActions(
         id: request.id,
         loading: false
       })
-    })
+    }),
+
+    [C.LOGOUT]: () => initialState
   },
   initialState
 );

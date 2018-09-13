@@ -57,7 +57,7 @@ class FindJob extends React.Component {
 
     if (!jobseeker.active) {
       confirm({
-        content: 'To apply please activate your account',
+        title: 'To apply please activate your account',
         okText: 'Activate',
         cancelText: 'Cancel',
         maskClosable: true,
@@ -69,7 +69,7 @@ class FindJob extends React.Component {
     }
 
     confirm({
-      content: 'Yes, I want to apply to this job',
+      title: 'Yes, I want to apply to this job',
       okText: 'Apply',
       cancelText: 'Cancel',
       maskClosable: true,
@@ -100,7 +100,7 @@ class FindJob extends React.Component {
     event && event.stopPropagation();
 
     confirm({
-      content: 'Are you sure you are not interested in this job?',
+      title: 'Are you sure you are not interested in this job?',
       okText: `I'm Sure`,
       okType: 'danger',
       cancelText: 'Cancel',
@@ -164,7 +164,7 @@ class FindJob extends React.Component {
           You can restore your removed matches by clicking refresh.`}
       </span>
       <a onClick={() => this.props.findJobs()}>
-        <Icons.Refresh />
+        <Icons.SyncAlt />
         Refresh
       </a>
     </AlertMsg>

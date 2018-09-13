@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 import { Form } from 'antd';
 import media from 'utils/mediaquery';
+import colors from 'utils/colors';
 
 export default styled(Form)`
   max-width: 700px;
@@ -26,8 +27,8 @@ export default styled(Form)`
     width: 100%;
   }
 
-  .fa-question-circle {
-    color: #ff9300;
+  .i-question-circle {
+    color: ${colors.yellow};
   }
 
   .btn-cv-view {

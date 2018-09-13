@@ -140,10 +140,10 @@ public class BusinessUserEditFragment extends FormFragment {
         if(!activeView.isChecked()) {
             final ArrayList<SelectItem> items = new ArrayList<>();
             for (Location location : locations) {
-                items.add(new SelectItem(location.getName(), selectedLocations.indexOf(location.getId()) > -1 ? true : false));
+                items.add(new SelectItem(location.getName(), selectedLocations.contains(location.getId())));
             }
 
-            new SelectDialog(getApp(), "Select Work Place", items, true, new SelectDialog.Action() {
+            new SelectDialog(getApp(), "", items, true, new SelectDialog.Action() {
                 @Override
                 public void apply(int selectedIndex) {
                     String locationTitle = "";

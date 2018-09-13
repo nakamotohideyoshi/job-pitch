@@ -1,6 +1,5 @@
 import React, { Fragment } from 'react';
 import { Link } from 'react-router-dom';
-import { Layout, Dropdown, Menu } from 'antd';
 import Responsive from 'react-responsive';
 import styled from 'styled-components';
 import {
@@ -15,6 +14,7 @@ import {
   LinkedinIcon,
   EmailIcon
 } from 'react-share';
+import { Layout, Dropdown, Menu } from 'antd';
 
 import { Icons } from 'components';
 import titleImage from 'assets/title.png';
@@ -28,7 +28,7 @@ const Wrapper = styled(Layout.Header)`
 
   .title-logo {
     float: left;
-    margin: 0 24px 0 10px;
+    margin: 0 20px 0 10px;
   }
 
   .ant-menu {
@@ -36,7 +36,7 @@ const Wrapper = styled(Layout.Header)`
     line-height: 50px;
 
     .ant-menu-item {
-      padding: 0 16px;
+      padding: 0 12px;
     }
   }
 `;
@@ -53,31 +53,31 @@ const ShareMenuItem = styled(Menu.Item)`
   }
 `;
 
-export default ({ menu: MainMenu, url }) => {
+export default ({ menu: MainMenu, shareUrl }) => {
   const ShareMenu = (
     <Menu style={{ display: 'inline-block', padding: 0 }}>
       <ShareMenuItem>
-        <EmailShareButton url={url}>
+        <EmailShareButton url={shareUrl}>
           <EmailIcon round={false} size={32} />
         </EmailShareButton>
       </ShareMenuItem>
       <ShareMenuItem>
-        <LinkedinShareButton url={url}>
+        <LinkedinShareButton url={shareUrl}>
           <LinkedinIcon round={false} size={32} />
         </LinkedinShareButton>
       </ShareMenuItem>
       <ShareMenuItem>
-        <GooglePlusShareButton url={url}>
+        <GooglePlusShareButton url={shareUrl}>
           <GooglePlusIcon round={false} size={32} />
         </GooglePlusShareButton>
       </ShareMenuItem>
       <ShareMenuItem>
-        <FacebookShareButton url={url}>
+        <FacebookShareButton url={shareUrl}>
           <FacebookIcon round={false} size={32} />
         </FacebookShareButton>
       </ShareMenuItem>
       <ShareMenuItem>
-        <TwitterShareButton url={url}>
+        <TwitterShareButton url={shareUrl}>
           <TwitterIcon round={false} size={32} />
         </TwitterShareButton>
       </ShareMenuItem>
@@ -85,7 +85,7 @@ export default ({ menu: MainMenu, url }) => {
   );
 
   return (
-    <Wrapper className="shadow1">
+    <Wrapper className="shadow">
       <div className="container">
         {MainMenu && (
           <Responsive maxWidth={767}>{<Popover float="left" icon={Icons.Bars} menu={MainMenu} />}</Responsive>
@@ -105,7 +105,7 @@ export default ({ menu: MainMenu, url }) => {
 
             <Popover float="right" menu={UserMenu} icon={Icons.UserCircle} />
 
-            {url && (
+            {shareUrl && (
               <Dropdown
                 overlay={ShareMenu}
                 trigger={['click']}

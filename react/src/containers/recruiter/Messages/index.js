@@ -5,6 +5,7 @@ import { List, Modal, Button, Switch, Drawer, notification } from 'antd';
 import moment from 'moment';
 
 import { getApplications, getJobs, getBusinesses } from 'redux/selectors';
+import { showFooter } from 'redux/common';
 import { updateApplication } from 'redux/applications';
 import DATA from 'utils/data';
 import * as helper from 'utils/helper';
@@ -26,6 +27,7 @@ class Page extends React.Component {
   };
 
   componentWillMount() {
+    this.props.showFooter(false);
     window.addEventListener('resize', this.onResize);
     this.onResize();
 
@@ -35,6 +37,7 @@ class Page extends React.Component {
   }
 
   componentWillUnmount() {
+    this.props.showFooter(true);
     window.removeEventListener('resize', this.onResize);
   }
 
@@ -62,7 +65,7 @@ class Page extends React.Component {
 
     if (business.tokens === 0) {
       confirm({
-        content: 'You need 1 credit',
+        title: 'You need 1 credit',
         okText: `Credits`,
         cancelText: 'Cancel',
         maskClosable: true,
@@ -74,7 +77,7 @@ class Page extends React.Component {
     }
 
     confirm({
-      content: 'Yes, I want to make this connection (1 credit)',
+      title: 'Yes, I want to make this connection (1 credit)',
       okText: `Connect`,
       cancelText: 'Cancel',
       maskClosable: true,
@@ -124,7 +127,7 @@ class Page extends React.Component {
   hideJobDetails = () => this.setState({ openJobDetails: false });
 
   renderHeader = ({ job_data, job_seeker, interview, status }) => {
-    const avatar = helper.getPitch(job_seeker).thumbnail;
+    const avatar = helper.getAvatar(job_seeker);
     const jobseekerName = helper.getFullJSName(job_seeker);
     const jobName = helper.getFullBWName(job_data);
     return (
@@ -234,6 +237,7 @@ const enhance = connect(
     businesses: getBusinesses(state)
   }),
   {
+    showFooter,
     updateApplication
   }
 );

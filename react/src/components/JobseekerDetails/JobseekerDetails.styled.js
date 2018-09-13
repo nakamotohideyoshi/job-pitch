@@ -108,7 +108,7 @@ export default styled.div`
     svg {
       min-width: 0.875em;
       margin-right: 0.25em;
-      color: #ff9300;
+      color: ${colors.yellow};
     }
   }
 

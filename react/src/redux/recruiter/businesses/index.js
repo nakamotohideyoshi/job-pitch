@@ -66,12 +66,12 @@ export default handleActions(
       })
     }),
 
-    // ---- change locaiton ----
-
     [LOCATION_CHANGE]: (state, { payload }) => ({
       ...state,
       selectedId: null
-    })
+    }),
+
+    [C.LOGOUT]: () => initialState
   },
   initialState
 );

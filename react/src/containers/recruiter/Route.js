@@ -23,7 +23,15 @@ const RCRoute = ({ businesses, component, ...rest }) => (
       if (businesses.length === 0 && (key === 'applications' || key === 'messages' || key === 'users')) {
         return <Redirect to="/recruiter/jobs" />;
       }
-      return <Layout menu={MainMenu} component={component} {...props} />;
+      return (
+        <Layout
+          menu={MainMenu}
+          content={component}
+          shareUrl="https://www.myjobpitch.com/recruiters/"
+          helpUrl="https://www.myjobpitch.com/recruiters/"
+          {...props}
+        />
+      );
     }}
   />
 );

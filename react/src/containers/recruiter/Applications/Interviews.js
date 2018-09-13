@@ -27,7 +27,7 @@ class Interviews extends React.Component {
 
   renderApplication = app => {
     const { id, job_seeker, interview, loading } = app;
-    const image = helper.getPitch(job_seeker).thumbnail;
+    const avatar = helper.getAvatar(job_seeker);
     const name = helper.getFullJSName(job_seeker);
 
     return (
@@ -44,7 +44,7 @@ class Interviews extends React.Component {
         className={loading ? 'loading' : ''}
       >
         <List.Item.Meta
-          avatar={<Logo src={image} size="80px" />}
+          avatar={<Logo src={avatar} size="80px" />}
           title={name}
           description={
             interview && (

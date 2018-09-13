@@ -48,7 +48,7 @@ class LoginForm extends React.Component {
       <Wrapper className="container">
         <Helmet title="Sign in" />
 
-        <Form onSubmit={this.login} className="shadow1">
+        <Form onSubmit={this.login} className="shadow">
           <h1>Sign in</h1>
 
           <label>Email Address</label>

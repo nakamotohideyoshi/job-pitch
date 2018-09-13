@@ -9,7 +9,7 @@ import { selectBusiness } from 'redux/recruiter/businesses';
 import DATA from 'utils/data';
 import * as helper from 'utils/helper';
 
-import { PageHeader, PageSubHeader, SearchBox, Logo } from 'components';
+import { PageHeader, PageSubHeader, SearchBox, Logo, LinkButton } from 'components';
 import FindTalent from './FindTalent';
 import NewApplications from './NewApplications';
 import MyConnections from './MyConnections';
@@ -77,6 +77,10 @@ class Applications extends React.Component {
 
   onChangeSearchText = searchText => this.setState({ searchText });
 
+  onAddApplication = () => {
+    this.props.history.push({ pathname: `/recruiter/applications/add`, state: { jobId: this.props.job.id } });
+  };
+
   render() {
     const { jobs, job, jobseekers, newApplications, myConnections, myShortlist, location, interviews } = this.props;
     const searchText = this.state.searchText.toLowerCase();
@@ -118,6 +122,11 @@ class Applications extends React.Component {
           </Select>
 
           <SearchBox width="200px" onChange={this.onChangeSearchText} />
+        </PageSubHeader>
+
+        <PageSubHeader>
+          <div style={{ display: 'inline' }} />
+          <LinkButton onClick={this.onAddApplication}>Add application</LinkButton>
         </PageSubHeader>
 
         <Tabs activeKey={activeKey} animated={false} onChange={this.onSelecteTab}>

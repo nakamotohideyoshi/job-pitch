@@ -32,7 +32,7 @@ class NewApplications extends React.Component {
 
     if (business.tokens === 0) {
       confirm({
-        content: 'You need 1 credit',
+        title: 'You need 1 credit',
         okText: `Credits`,
         cancelText: 'Cancel',
         maskClosable: true,
@@ -44,7 +44,7 @@ class NewApplications extends React.Component {
     }
 
     confirm({
-      content: 'Yes, I want to make this connection (1 credit)',
+      title: 'Yes, I want to make this connection (1 credit)',
       okText: `Connect`,
       cancelText: 'Cancel',
       maskClosable: true,
@@ -75,7 +75,7 @@ class NewApplications extends React.Component {
     event && event.stopPropagation();
 
     confirm({
-      content: 'Are you sure you want to delete this applicaton?',
+      title: 'Are you sure you want to delete this applicaton?',
       okText: `Remove`,
       okType: 'danger',
       cancelText: 'Cancel',
@@ -108,7 +108,7 @@ class NewApplications extends React.Component {
 
   renderApplication = app => {
     const { id, job_seeker, loading } = app;
-    const image = helper.getPitch(job_seeker).thumbnail;
+    const avatar = helper.getAvatar(job_seeker);
     const name = helper.getFullJSName(job_seeker);
 
     return (
@@ -130,7 +130,7 @@ class NewApplications extends React.Component {
         className={loading ? 'loading' : ''}
       >
         <List.Item.Meta
-          avatar={<Logo src={image} size="80px" />}
+          avatar={<Logo src={avatar} size="80px" />}
           title={name}
           description={<div className="single-line">{job_seeker.description}</div>}
         />

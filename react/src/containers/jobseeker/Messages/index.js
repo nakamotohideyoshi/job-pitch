@@ -6,6 +6,7 @@ import { List, Drawer } from 'antd';
 import moment from 'moment';
 
 import { getApplications } from 'redux/selectors';
+import { showFooter } from 'redux/common';
 import DATA from 'utils/data';
 import * as helper from 'utils/helper';
 
@@ -23,6 +24,7 @@ class Messages extends React.Component {
   };
 
   componentWillMount() {
+    this.props.showFooter(false);
     window.addEventListener('resize', this.onResize);
     this.onResize();
 
@@ -32,6 +34,7 @@ class Messages extends React.Component {
   }
 
   componentWillUnmount() {
+    this.props.showFooter(true);
     window.removeEventListener('resize', this.onResize);
   }
 
@@ -148,10 +151,13 @@ class Messages extends React.Component {
   }
 }
 
-const enhance = connect(state => ({
-  jobseeker: state.js_profile.jobseeker,
-  applications: getApplications(state)
-}));
+const enhance = connect(
+  state => ({
+    jobseeker: state.js_profile.jobseeker,
+    applications: getApplications(state)
+  }),
+  { showFooter }
+);
 
 export default enhance(params => (
   <Fragment>

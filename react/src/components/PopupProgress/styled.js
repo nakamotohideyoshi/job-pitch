@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 import { Modal } from 'antd';
+import colors from 'utils/colors';
 
 export const Wrapper = styled(Modal)`
   &.ant-modal {
@@ -14,13 +15,19 @@ export const Wrapper = styled(Modal)`
 
     label {
       color: #fff;
+
+      span {
+        display: inline-block;
+        width: 40px;
+        font-size: 12px;
+      }
     }
 
     .ant-progress-inner {
       background-color: rgba(0, 0, 0, 0.5);
 
       .ant-progress-bg {
-        background-color: #ff9300;
+        background-color: ${colors.yellow};
       }
 
       .ant-progress-text {

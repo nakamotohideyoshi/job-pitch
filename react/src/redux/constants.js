@@ -1,5 +1,9 @@
 // general
 
+export const ADD_BANNER = 'ADD_BANNER';
+export const REMOVE_BANNER = 'REMOVE_BANNER';
+export const SHOW_FOOTER = 'SHOW_FOOTER';
+
 export const REGISTER = 'REGISTER';
 export const LOGIN = 'LOGIN';
 export const LOGOUT = 'LOGOUT';
@@ -11,6 +15,7 @@ export const UPDATE_AUTH = 'UPDATE_AUTH';
 export const GET_APPLICATIONS = 'GET_APPLICATIONS';
 export const UPDATE_APPLICATION = 'UPDATE_APPLICATION';
 export const REMOVE_APPLICATION = 'REMOVE_APPLICATION';
+export const NEW_APPLICATION = 'NEW_APPLICATION';
 export const READ_MESSAGE = 'READ_MESSAGE';
 export const SEND_MESSAGE = 'SEND_MESSAGE';
 

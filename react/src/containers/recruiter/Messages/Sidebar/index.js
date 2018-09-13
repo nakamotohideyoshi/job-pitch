@@ -40,28 +40,31 @@ class Sidebar extends React.PureComponent {
 
   renderApp = ({ id, messages, status, job_seeker, newMsgs }) => {
     const name = helper.getFullJSName(job_seeker);
-    const image = helper.getPitch(job_seeker).thumbnail;
+    const avatar = helper.getAvatar(job_seeker);
     const lastMessage = messages.filter(({ created }) => created).pop();
-    const date = new Date(lastMessage.created);
-    const strDate = `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear() - 2000}`;
-    const userRole = helper.getNameByID('roles', lastMessage.from_role);
-    const comment = `${userRole === 'RECRUITER' ? 'You: ' : ''}${lastMessage.content}`;
+    let date, comment;
+    if (lastMessage) {
+      date = new Date(lastMessage.created);
+      date = `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear() - 2000}`;
+      const userRole = helper.getNameByID('roles', lastMessage.from_role);
+      comment = `${userRole === 'RECRUITER' ? 'You: ' : ''}${lastMessage.content}`;
+    }
     const deleted = status === DATA.APP.DELETED ? 'deleted' : '';
     const selected = id === this.props.selectedId ? 'selected' : '';
 
     return (
       <List.Item key={id} className={`${deleted} ${selected}`} onClick={() => this.selectApp(id)}>
         <List.Item.Meta
-          avatar={<Logo src={image} size="48px" />}
+          avatar={<Logo src={avatar} size="48px" />}
           title={
             <Fragment>
               <span className="title single-line">{name}</span>
-              <span className="date">{strDate}</span>
+              {date && <span className="date">{date}</span>}
             </Fragment>
           }
           description={
             <Fragment>
-              <div className="single-line">{comment}</div>
+              {comment && <div className="single-line">{comment}</div>}
               {!!newMsgs && <Badge count={newMsgs < 10 ? newMsgs : '9+'} />}
             </Fragment>
           }

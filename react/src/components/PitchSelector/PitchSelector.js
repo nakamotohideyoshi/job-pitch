@@ -22,8 +22,8 @@ class PitchSelector extends React.Component {
 
     if (navigator.userAgent.indexOf('iPhone') !== -1) {
       confirm({
-        content: 'To record your video, you need to download the app',
-        okText: 'Sign out',
+        title: 'To record your video, you need to download the app',
+        okText: 'Download',
         maskClosable: true,
         onOk: () => {
           window.open('https://itunes.apple.com/us/app/myjobpitch-job-matching/id1124296674?ls=1&mt=8', '_blank');
@@ -88,7 +88,7 @@ class PitchSelector extends React.Component {
             onChange={this.setPitchFile}
           >
             <p className="ant-upload-text">
-              <Icons.Upload /> Click or drag to upload video file
+              <Icons.CloudUpload /> Click or drag to upload video file
             </p>
             <p className="ant-upload-hint">
               or you can record <a onClick={this.openRecorder}>New Video</a>

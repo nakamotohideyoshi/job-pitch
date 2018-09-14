@@ -193,7 +193,7 @@ public class AppHelper {
 
             case InterviewStatus.PENDING:
                 // Status
-                getItemStatusTitleView(view).setText("Interview request sent");
+                getItemStatusTitleView(view).setText(AppData.user.isRecruiter() ? "Interview request sent" : "Interview request received");
                 break;
             case InterviewStatus.ACCEPTED:
                 // Status
@@ -246,7 +246,7 @@ public class AppHelper {
 
             case InterviewStatus.PENDING:
                 // Status
-                getItemStatusTitleView(view).setText("Interview request sent");
+                getItemStatusTitleView(view).setText(AppData.user.isRecruiter() ? "Interview request sent" : "Interview request received");
                 break;
             case InterviewStatus.ACCEPTED:
                 // Status

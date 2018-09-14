@@ -216,14 +216,15 @@ public class InterviewDetailFragment extends BaseFragment {
 
         completeButton.setVisibility(AppData.user.isJobSeeker() ? View.GONE : View.VISIBLE);
         acceptButton.setVisibility(AppData.user.isRecruiter() ? View.GONE : View.VISIBLE);
-        editNotes.setVisibility(View.GONE);
+        editNotes.setVisibility(AppData.user.isRecruiter() ? View.VISIBLE : View.GONE);
 
         switch (status) {
             case InterviewStatus.PENDING:
                 // Status
-                itemStatus.setText("Interview request sent");
+                itemStatus.setText(AppData.user.isRecruiter() ? "Interview request sent" : "Interview request received");
                 if (AppData.user.isRecruiter()) {
                     addMenuItem(MENUGROUP1, 120, "Edit Interview", R.drawable.ic_edit);
+                    editNotes.setVisibility(View.GONE);
                 }
                 break;
             case InterviewStatus.ACCEPTED:
@@ -237,10 +238,7 @@ public class InterviewDetailFragment extends BaseFragment {
             case InterviewStatus.COMPLETED:
                 // Status
                 itemStatus.setText("This interview is done");
-
                 headerButtonContainer.setVisibility(View.GONE);
-                editNotes.setVisibility(View.VISIBLE);
-
 
                 if (AppData.user.isRecruiter()) {
                     addMenuItem(MENUGROUP1, 121, "Arrange Interview", R.drawable.menu_interview);
@@ -256,7 +254,6 @@ public class InterviewDetailFragment extends BaseFragment {
                 itemStatus.setText("Interview cancelled by " + (interview.getCancelled_by() == AppData.JOBSEEKER ? "Job seeker"  : "Recruiter"));
 
                 headerButtonContainer.setVisibility(View.GONE);
-                editNotes.setVisibility(View.VISIBLE);
 
                 if (AppData.user.isRecruiter()) {
                     addMenuItem(MENUGROUP1, 121, "Arrange Interview", R.drawable.menu_interview);

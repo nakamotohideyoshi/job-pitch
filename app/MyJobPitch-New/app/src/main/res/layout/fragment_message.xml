@@ -12,11 +12,81 @@
         android:orientation="vertical"
         android:background="#fff">
 
-        <include
+        <RelativeLayout
             android:id="@+id/header_view"
-            layout="@layout/view_job_item"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:paddingRight="10dp">
+
+            <include
+                layout="@layout/view_job_item"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <ImageView
+                android:layout_width="8dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:scaleType="centerInside"
+                android:src="@drawable/icon_right_arrow" />
+        </RelativeLayout>
+
+
+        <LinearLayout
+            android:id="@+id/message_interview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:background="@color/colorLightGrey" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp">
+
+                <TextView
+                    android:id="@+id/message_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"
+                    android:ellipsize="end"
+                    android:paddingRight="20dp"
+                    android:text="Interview"
+                    android:textAlignment="center"
+                    android:textSize="13sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/interview_date"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_toRightOf="@+id/message_label"
+                    android:ellipsize="end"
+                    android:paddingRight="10dp"
+                    android:text="Date + Time"
+                    android:textAlignment="center"
+                    android:textSize="13sp" />
+
+                <ImageView
+                    android:layout_width="8dp"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/icon_right_arrow" />
+
+            </RelativeLayout>
+
+        </LinearLayout>
 
         <View
             android:layout_width="match_parent"

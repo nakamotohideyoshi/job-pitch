@@ -342,7 +342,7 @@
                         android:layout_centerVertical="true"
                         android:layout_marginRight="10dp"
                         android:ellipsize="end"
-                        android:text="History"
+                        android:text="Previous interviews"
                         android:textAlignment="center"
                         android:textSize="13sp"
                         android:textStyle="bold" />

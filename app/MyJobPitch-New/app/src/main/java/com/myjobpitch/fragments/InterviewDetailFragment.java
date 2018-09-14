@@ -60,6 +60,8 @@ import com.weiwangcn.betterspinner.library.material.MaterialBetterSpinner;
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 
@@ -271,7 +273,15 @@ public class InterviewDetailFragment extends BaseFragment {
             headerButtonContainer.setVisibility(View.GONE);
             interviewHistoryList.setVisibility(View.GONE);
         } else {
-            for (final Interview applicationInterview : application.getInterviews()) {
+
+            List<Interview> interviews = application.getInterviews();
+
+            Collections.sort(interviews, new Comparator<Interview>() {
+                public int compare(Interview o1, Interview o2) {
+                    return o2.getAt().compareTo(o1.getAt());
+                }
+            });
+            for (final Interview applicationInterview : interviews) {
 
                 if (applicationInterview.getId().intValue() != interviewId.intValue()) {
                     View view = getLayoutInflater().inflate(R.layout.cell_interview_history, null);

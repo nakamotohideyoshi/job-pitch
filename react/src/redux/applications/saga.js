@@ -23,7 +23,7 @@ function* _updateApplication(process, payload) {
 
   const result = yield call(process, { payload });
   if (result !== null) {
-    const application = yield call(getRequest({ url: `/api/applications/${appId}/` }));
+    const application = yield call(getRequest({ url: `/api/applications/${appId || result.id}/` }));
     if (application !== null) {
       yield put({ type: requestSuccess(C.UPDATE_APPLICATION), application });
       onSuccess && onSuccess();
@@ -44,8 +44,7 @@ function* removeApplication({ payload }) {
 }
 
 function* newApplication({ payload }) {
-  // yield call(_updateApplication, postRequest({ url: '/api/applications/external/' }), payload);
-  yield call(postRequest({ url: '/api/applications/external/' }), { payload });
+  yield call(_updateApplication, postRequest({ url: '/api/applications/external/' }), payload);
 }
 
 // message

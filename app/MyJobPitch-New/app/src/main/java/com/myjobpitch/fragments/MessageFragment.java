@@ -6,6 +6,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.myjobpitch.R;
@@ -32,6 +34,7 @@ import com.stfalcon.chatkit.messages.MessageInput;
 import com.stfalcon.chatkit.messages.MessagesList;
 import com.stfalcon.chatkit.messages.MessagesListAdapter;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -50,6 +53,12 @@ public class MessageFragment extends BaseFragment {
 
     @BindView(R.id.input)
     MessageInput input;
+
+    @BindView(R.id.message_interview)
+    LinearLayout messageInterview;
+
+    @BindView(R.id.interview_date)
+    TextView interviewDate;
 
     Application application;
 
@@ -106,6 +115,22 @@ public class MessageFragment extends BaseFragment {
 
         AppHelper.getItemAttributesView(headerView).setVisibility(View.GONE);
 
+        if (interview == null) {
+            for (Interview applicationInterview : application.getInterviews()) {
+                if (applicationInterview.getStatus().equals(InterviewStatus.PENDING) || applicationInterview.getStatus().equals(InterviewStatus.ACCEPTED)) {
+                    interview = applicationInterview;
+                    break;
+                }
+            }
+        }
+
+        if (interview != null) {
+            SimpleDateFormat format = new SimpleDateFormat("E d MMM, yyyy");
+            SimpleDateFormat format1 = new SimpleDateFormat("HH:mm");
+            interviewDate.setText(format.format(interview.getAt()) + " at " + format1.format(interview.getAt()));
+            messageInterview.setVisibility(View.VISIBLE);
+        }
+
         if (AppData.user.isJobSeeker()) {
 
             AppHelper.loadJobLogo(job, AppHelper.getImageView(headerView));
@@ -129,17 +154,6 @@ public class MessageFragment extends BaseFragment {
             otherAvatar = jobSeekerImage;
 
             if (interview == null) {
-                for (Interview applicationInterview : application.getInterviews()) {
-                    if (applicationInterview.getStatus().equals(InterviewStatus.PENDING) || applicationInterview.getStatus().equals(InterviewStatus.ACCEPTED)) {
-                        interview = applicationInterview;
-                        break;
-                    }
-                }
-            }
-
-            if (interview != null) {
-                addMenuItem(MENUGROUP1, 122, "Edit Interview", R.drawable.ic_edit);
-            } else {
                 addMenuItem(MENUGROUP1, 123, "Arrange Interview", R.drawable.menu_interview);
             }
 
@@ -225,6 +239,14 @@ public class MessageFragment extends BaseFragment {
             fragment.viewMode = true;
             getApp().pushFragment(fragment);
         }
+    }
+
+    @OnClick(R.id.message_interview)
+    void onClickInterview() {
+        InterviewDetailFragment fragment = new InterviewDetailFragment();
+        fragment.interviewId = interview.getId();
+        fragment.application = application;
+        getApp().pushFragment(fragment);
     }
 
     @Override

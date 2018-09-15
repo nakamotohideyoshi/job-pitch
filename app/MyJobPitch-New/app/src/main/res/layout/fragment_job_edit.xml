@@ -179,6 +179,50 @@
                 </LinearLayout>
             </LinearLayout>
 
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_gravity="right">
+                <TextView
+                    android:text="Require Pitch"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:theme="@style/GreyLabel" />
+
+                <CheckBox
+                    android:id="@+id/job_require_pitch"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="10dp"
+                    android:checked="true"
+                    android:theme="@style/CheckBox" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_gravity="right">
+                <TextView
+                    android:text="Require CV"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:theme="@style/GreyLabel" />
+
+                <CheckBox
+                    android:id="@+id/job_require_cv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="10dp"
+                    android:checked="true"
+                    android:theme="@style/CheckBox" />
+            </LinearLayout>
+
             <include
                 android:id="@+id/job_logo"
                 layout="@layout/view_image_selector"

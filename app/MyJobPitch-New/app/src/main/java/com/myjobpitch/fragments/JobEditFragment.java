@@ -66,6 +66,12 @@ public class JobEditFragment extends FormFragment {
     @BindView(R.id.job_active)
     CheckBox activeView;
 
+    @BindView(R.id.job_require_pitch)
+    CheckBox requirePitch;
+
+    @BindView(R.id.job_require_cv)
+    CheckBox requireCV;
+
     @BindView(R.id.job_title)
     MaterialEditText titleView;
 
@@ -185,6 +191,9 @@ public class JobEditFragment extends FormFragment {
         if (job != null) {
 
             activeView.setChecked(AppData.get(JobStatus.class, job.getStatus()).getName().equals("OPEN"));
+
+            requirePitch.setChecked(job.getRequires_pitch());
+            requireCV.setChecked(job.getRequires_cv());
 
             titleView.setText(job.getTitle());
             descView.setText(job.getDescription());
@@ -343,6 +352,8 @@ public class JobEditFragment extends FormFragment {
         }
 
         String statusName = activeView.isChecked() ? "OPEN" : "CLOSED";
+        job.setRequires_pitch(requirePitch.isChecked());
+        job.setRequires_cv(requireCV.isChecked());
         job.setStatus(AppData.get(JobStatus.class, statusName).getId());
 
         job.setTitle(titleView.getText().toString().trim());

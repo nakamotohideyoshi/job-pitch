@@ -104,4 +104,12 @@ public class Job extends MJPObjectWithDates {
     public Boolean getRequires_pitch() {
         return requires_pitch;
     }
+
+    public void setRequires_pitch(Boolean requires_pitch) {
+        this.requires_pitch = requires_pitch;
+    }
+
+    public void setRequires_cv(Boolean requires_cv) {
+        this.requires_cv = requires_cv;
+    }
 }

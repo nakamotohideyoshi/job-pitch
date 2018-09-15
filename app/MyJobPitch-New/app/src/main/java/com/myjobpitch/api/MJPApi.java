@@ -559,9 +559,9 @@ public class MJPApi {
     }
 
 
-    public void completeInterview(Integer interviewId) throws MJPApiException {
+    public void completeInterview(InterviewForUpdate interviewForUpdate, Integer interviewId) throws MJPApiException {
         try {
-            rest.exchange(getTypeUrl(String.format("interviews/%s/complete", interviewId)), HttpMethod.POST, createAuthenticatedRequest(), Void.class);
+            rest.exchange(getTypeUrl(String.format("interviews/%s/complete", interviewId)), HttpMethod.POST, createAuthenticatedRequest(interviewForUpdate), InterviewForUpdate.class).getBody();
         } catch (HttpClientErrorException e) {
             if (e.getStatusCode().value() == 400) {
                 throw new MJPApiException(e);
@@ -580,10 +580,6 @@ public class MJPApi {
             throw e;
         }
     }
-
-
-
-
 
     public Business sendPurchaseInfo(Integer businessId, String productId, String purchaseToken) throws MJPApiException {
         PurchaseInfo purchaseInfo = new PurchaseInfo(businessId, productId, purchaseToken);

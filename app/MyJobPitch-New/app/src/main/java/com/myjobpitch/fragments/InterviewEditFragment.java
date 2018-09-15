@@ -198,7 +198,8 @@ public class InterviewEditFragment extends FormFragment {
                 break;
             case "COMPLETE":
                 title = "Complete Interview";
-                interviewDateTimeButton.setEnabled(false);
+                interviewDateTimeButton.setVisibility(View.GONE);
+                interviewDateTime.setVisibility(View.GONE);
                 interviewFeedback.setVisibility(View.VISIBLE);
                 createButton.setText("Complete");
                 break;
@@ -323,6 +324,14 @@ public class InterviewEditFragment extends FormFragment {
     }
 
     void completeInterview() {
+        final InterviewForUpdate interviewForUpdate = new InterviewForUpdate();
+        android.text.format.DateFormat df = new android.text.format.DateFormat();
+        String dateStr = String.format("%s", df.format("yyyy-MM-dd hh:mm:ss", date));
+        interviewForUpdate.setAt(dateStr);
+        interviewForUpdate.setApplication(application.getId());
+        interviewForUpdate.setInvitation(interviewMessage.getText().toString() == null ? "" : interviewMessage.getText().toString());
+        interviewForUpdate.setNotes(interviewNotes.getText().toString() == null ? "" : interviewNotes.getText().toString());
+        interviewForUpdate.setFeedback(interviewFeedback.getText().toString() == null ? "" : interviewFeedback.getText().toString());
         Popup popup = new Popup(getContext(), "Are you sure you want to complete this interview?", true);
         popup.addGreenButton("Yes", new View.OnClickListener() {
             @Override
@@ -330,38 +339,12 @@ public class InterviewEditFragment extends FormFragment {
                 new APITask(new APIAction() {
                     @Override
                     public void run() throws MJPApiException {
-                        MJPApi.shared().completeInterview(interview.getId());
+                        MJPApi.shared().completeInterview(interviewForUpdate, interview.getId());
                     }
                 }).addListener(new APITaskListener() {
                     @Override
                     public void onSuccess() {
-                        updateInterview();
-                    }
-                    @Override
-                    public void onError(JsonNode errors) {
-                        errorHandler(errors);
-                    }
-                }).execute();
-            }
-        });
-        popup.addGreyButton("No", null);
-        popup.show();
-    }
-
-    void cancelInterview() {
-        Popup popup = new Popup(getContext(), "Are you sure you want to cancel this interview?", true);
-        popup.addGreenButton("Yes", new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                new APITask(new APIAction() {
-                    @Override
-                    public void run() throws MJPApiException {
-                        MJPApi.shared().deleteInterview(interview.getId());
-                    }
-                }).addListener(new APITaskListener() {
-                    @Override
-                    public void onSuccess() {
-                        updateInterview();
+                        getApp().popFragment();
                     }
                     @Override
                     public void onError(JsonNode errors) {
@@ -387,9 +370,6 @@ public class InterviewEditFragment extends FormFragment {
                 break;
             case "COMPLETE":
                 completeInterview();
-                break;
-            case "CANCEL":
-                cancelInterview();
                 break;
             default:
                 break;

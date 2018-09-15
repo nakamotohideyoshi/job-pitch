@@ -332,11 +332,29 @@ public class InterviewDetailFragment extends BaseFragment {
 
     @OnClick(R.id.interview_cancel)
     void onCancel() {
-        InterviewEditFragment fragment = new InterviewEditFragment();
-        fragment.application = application;
-        fragment.mode = "CANCEL";
-        fragment.interview = interview;
-        getApp().pushFragment(fragment);
+        Popup popup = new Popup(getContext(), "Are you sure you want to cancel this interview?", true);
+        popup.addGreenButton("Yes", new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                new APITask(new APIAction() {
+                    @Override
+                    public void run() throws MJPApiException {
+                        MJPApi.shared().deleteInterview(interview.getId());
+                    }
+                }).addListener(new APITaskListener() {
+                    @Override
+                    public void onSuccess() {
+                        getApp().popFragment();
+                    }
+                    @Override
+                    public void onError(JsonNode errors) {
+                        errorHandler(errors);
+                    }
+                }).execute();
+            }
+        });
+        popup.addGreyButton("No", null);
+        popup.show();
     }
 
     @OnClick(R.id.interview_accept)

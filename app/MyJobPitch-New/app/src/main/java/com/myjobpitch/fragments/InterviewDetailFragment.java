@@ -217,6 +217,7 @@ public class InterviewDetailFragment extends BaseFragment {
         completeButton.setVisibility(AppData.user.isJobSeeker() ? View.GONE : View.VISIBLE);
         acceptButton.setVisibility(AppData.user.isRecruiter() ? View.GONE : View.VISIBLE);
         editNotes.setVisibility(AppData.user.isRecruiter() ? View.VISIBLE : View.GONE);
+        notesContainer.setVisibility(AppData.user.isRecruiter() ? View.VISIBLE :View.GONE);
 
         switch (status) {
             case InterviewStatus.PENDING:

@@ -340,6 +340,7 @@ public class BusinessListFragment extends BaseFragment {
 
                     if (getItem(position).getRestricted()) {
                         editButton.setVisibility(View.GONE);
+                        removeButton.setVisibility(View.GONE);
                     }
                  }
             }

@@ -96,11 +96,6 @@ public class BusinessDetailFragment extends BaseFragment {
             title = "Business Detail";
             headerCommentView.setVisibility(View.GONE);
             navTitleView.setText("Work Places");
-            if (AppData.user.getBusinesses().size() == 1) {
-                removeButton.setBackgroundColor(Color.parseColor("#7f4900"));
-                removeButton.setColorFilter(Color.parseColor("#7d7d7d"));
-                removeButton.setEnabled(false);
-            }
         }
 
         // empty view
@@ -158,10 +153,12 @@ public class BusinessDetailFragment extends BaseFragment {
                 if (!isAddMode) {
                     AppHelper.showBusinessInfo(business, infoView);
                     if (business.getRestricted()) {
-                        editButton.setBackgroundColor(Color.parseColor("#008074"));
-                        editButton.setColorFilter(Color.parseColor("#808080"));
-                        editButton.setEnabled(false);
+                        disableEditButton();
+                        disableRemoveButton();
                         navRightButton.setVisibility(View.GONE);
+                    }
+                    if (business.getLocations().size() == 1) {
+                        disableRemoveButton();
                     }
                 }
                 swipeRefreshLayout.setRefreshing(true);
@@ -174,6 +171,18 @@ public class BusinessDetailFragment extends BaseFragment {
         }).execute();
 
         return  view;
+    }
+
+    void disableRemoveButton() {
+        removeButton.setBackgroundColor(Color.parseColor("#7f4900"));
+        removeButton.setColorFilter(Color.parseColor("#7d7d7d"));
+        removeButton.setEnabled(false);
+    }
+
+    void disableEditButton() {
+        editButton.setBackgroundColor(Color.parseColor("#008074"));
+        editButton.setColorFilter(Color.parseColor("#808080"));
+        editButton.setEnabled(false);
     }
 
     void loadWorkplaces() {
@@ -369,6 +378,13 @@ public class BusinessDetailFragment extends BaseFragment {
                         deleteLocation(getItem(position));
                     }
                 });
+                if (business.getRestricted()) {
+                    AppHelper.getEditButton(convertView).setVisibility(View.GONE);
+                    AppHelper.getRemoveButton(convertView).setVisibility(View.GONE);
+                }
+                if (business.getLocations().size() == 1) {
+                    AppHelper.getRemoveButton(convertView).setVisibility(View.GONE);
+                }
             }
         }
 

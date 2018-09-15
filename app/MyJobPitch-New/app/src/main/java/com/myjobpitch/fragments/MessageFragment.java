@@ -14,6 +14,7 @@ import com.myjobpitch.R;
 import com.myjobpitch.api.MJPApi;
 import com.myjobpitch.api.MJPApiException;
 import com.myjobpitch.api.data.Application;
+import com.myjobpitch.api.data.ApplicationStatus;
 import com.myjobpitch.api.data.Business;
 import com.myjobpitch.api.data.Interview;
 import com.myjobpitch.api.data.InterviewStatus;
@@ -27,6 +28,7 @@ import com.myjobpitch.tasks.APITask;
 import com.myjobpitch.tasks.APITaskListener;
 import com.myjobpitch.utils.AppData;
 import com.myjobpitch.utils.AppHelper;
+import com.myjobpitch.views.Popup;
 import com.stfalcon.chatkit.commons.ImageLoader;
 import com.stfalcon.chatkit.commons.models.IMessage;
 import com.stfalcon.chatkit.commons.models.IUser;
@@ -141,6 +143,32 @@ public class MessageFragment extends BaseFragment {
             myAvatar = jobSeekerImage;
             otherName = job.getLocation_data().getBusiness_data().getName();
             otherAvatar = jobImage;
+
+            String statusName = ApplicationStatus.ESTABLISHED;
+            Integer status = AppData.get(ApplicationStatus.class, statusName).getId();
+
+            if (application.getStatus().intValue() != status.intValue()) {
+                input.getInputEditText().setEnabled(false);
+                input.getButton().setEnabled(false);
+
+                statusName = ApplicationStatus.CREATED;
+                status = AppData.get(ApplicationStatus.class, statusName).getId();
+
+                if (application.getStatus().intValue() == status.intValue()) {
+                    Popup popup = new Popup(getContext(), "You cannot send message until your application is accepted.", true);
+                    popup.addGreyButton("Ok", null);
+                    popup.show();
+                }
+
+                statusName = ApplicationStatus.DELETED;
+                status = AppData.get(ApplicationStatus.class, statusName).getId();
+
+                if (application.getStatus().intValue() == status.intValue()) {
+                    Popup popup = new Popup(getContext(), "This application has been deleted.", true);
+                    popup.addGreyButton("Ok", null);
+                    popup.show();
+                }
+            }
 
         } else {
 

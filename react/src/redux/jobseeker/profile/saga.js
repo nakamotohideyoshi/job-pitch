@@ -5,50 +5,15 @@ import request, { getRequest, postRequest, putRequest, requestSuccess } from 'ut
 import { uploadVideo } from 'utils/aws';
 import * as C from 'redux/constants';
 
-function* saveJobseeker({ payload }) {
-  const { data, avatar, onProgress, onSuccess, onFail } = payload;
-
-  const jobseeker = yield call(
+function* saveJobseeker(action) {
+  const { id } = action.payload.data;
+  yield call(
     request({
-      method: data.id ? 'put' : 'post',
-      url: data.id ? `/api/job-seekers/${data.id}/` : '/api/job-seekers/'
+      method: id ? 'patch' : 'post',
+      url: id ? `/api/job-seekers/${id}/` : '/api/job-seekers/'
     }),
-    { payload }
+    action
   );
-
-  if (jobseeker === null) {
-    onFail && onFail('There was an error saving the profile');
-    return;
-  }
-
-  // if (avatar) {
-  //   if (avatar.file) {
-  //     const image = yield call(postRequest({ url: '/api/user-business-images/' }), {
-  //       payload: {
-  //         isFormData: true,
-  //         data: {
-  //           order: 0,
-  //           job_seeker: jobseeker.id,
-  //           image: avatar.file
-  //         },
-  //         onUploadProgress: onProgress
-  //       }
-  //     });
-
-  //     if (image === null) {
-  //       onFail && onFail('There was an error uploading the logo');
-  //     } else {
-  //       // business.images = [image];
-  //     }
-  //   } else if (business.images.length && !logo.exist) {
-  //     yield call(deleteRequest({ url: `/api/user-business-images/${business.images[0].id}/` }));
-  //     business.images = [];
-  //   }
-  // }
-
-  yield put({ type: requestSuccess(C.JS_SAVE_PROFILE), payload: jobseeker });
-
-  onSuccess && onSuccess();
 }
 
 function* saveJobProfile(action) {

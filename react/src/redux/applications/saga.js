@@ -75,13 +75,13 @@ function* changeInterview({ payload }) {
 }
 
 function* completeInterview({ payload }) {
-  const { id } = payload.data;
+  const { id, feedback } = payload.data;
   yield call(
     _updateApplication,
     function*() {
       const result = yield call(postRequest({ url: `/api/interviews/${id}/complete/` }));
       if (result === null) return null;
-      if (payload.data.feedback === '') return '';
+      if (feedback === '') return '';
       return yield call(putRequest({ url: `/api/interviews/${id}/` }), { payload });
     },
     payload

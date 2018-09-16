@@ -25,7 +25,6 @@ export default ({ jobData, application, className, roughLocation, actions, defau
   const { interview, interviews } = application || {};
   const { id: interviewId } = interview || {};
   const histories = interviews && interviews.filter(({ id }) => id !== interviewId);
-  histories && histories.sort((a, b) => (a.at > b.at ? 1 : -1));
 
   let circle;
   if (roughLocation) {
@@ -135,7 +134,7 @@ export default ({ jobData, application, className, roughLocation, actions, defau
         </TabPane>
 
         {histories && (
-          <TabPane tab="Interview History" key="history">
+          <TabPane tab="Previous interviews" key="history">
             <Collapse bordered={false}>
               {histories.map(({ id, at, feedback, status, cancelled_by }) => {
                 let statusComment;

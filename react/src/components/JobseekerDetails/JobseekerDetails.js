@@ -29,7 +29,6 @@ export default ({ jobseekerData, application, actions, defaultTab }) => {
   const connected = application && status !== DATA.APP.CREATED;
   const { id: interviewId, status: interviewStatus } = interview || {};
   const histories = interviews && interviews.filter(({ id }) => id !== interviewId);
-  histories && histories.sort((a, b) => (a.at > b.at ? 1 : -1));
 
   return (
     <Wrapper>
@@ -136,7 +135,7 @@ export default ({ jobseekerData, application, actions, defaultTab }) => {
         )}
 
         {connected && (
-          <TabPane tab="Interview History" key="history">
+          <TabPane tab="Previous interviews" key="history">
             <Collapse bordered={false}>
               {histories.map(({ id, at, feedback, status, notes, cancelled_by }) => {
                 let statusComment;
@@ -162,7 +161,7 @@ export default ({ jobseekerData, application, actions, defaultTab }) => {
                     }
                   >
                     <p>Status: {statusComment}</p>
-                    <p>Notes: {notes}</p>
+                    <p>Recruiter's notes: {notes}</p>
                     {status === 'COMPLETED' && (
                       <p>Feedback: {feedback ? feedback : <span style={{ fontStyle: 'italic' }}>None</span>}</p>
                     )}

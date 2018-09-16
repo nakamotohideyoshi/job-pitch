@@ -41,7 +41,7 @@ class PitchSelector extends React.Component {
     this.props.onChange(data);
   };
 
-  setPitchFile = ({ file }) => {
+  setPitchFile = ({ file, fileList }) => {
     if (file.type !== 'video/mp4' && file.type !== 'video/avi' && file.type !== 'video/quicktime') {
       message.error('You can only upload mp4, avi, mov file!');
       return;

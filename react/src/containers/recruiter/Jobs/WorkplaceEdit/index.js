@@ -36,6 +36,11 @@ class WorkplaceEdit extends React.Component {
       return;
     }
 
+    if (business.restricted) {
+      history.replace(`/recruiter/jobs/workplace/${business.id}`);
+      return;
+    }
+
     selectBusiness(business.id);
 
     if (workplace) {
@@ -57,11 +62,6 @@ class WorkplaceEdit extends React.Component {
         place_name: workplace.place_name
       });
     } else {
-      if (business.restricted) {
-        history.replace(`/recruiter/jobs/workplace/${business.id}`);
-        return;
-      }
-
       this.setState({
         logo: {
           url: helper.getBusinessLogo(business),

@@ -100,6 +100,8 @@ public class PitchFragment extends BaseFragment {
         } else {
             if (mPitch != null) {
                 AppHelper.loadImage(mPitch.getThumbnail(), mImagePreview);
+                getApp().reloadMenu();
+                getApp().setRootFragement(AppData.PAGE_FIND_JOB);
             } else {
                 mPlayIcon.setVisibility(View.INVISIBLE);
             }

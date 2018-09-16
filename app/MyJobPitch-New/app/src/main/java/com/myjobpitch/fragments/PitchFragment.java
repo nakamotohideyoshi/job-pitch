@@ -100,12 +100,15 @@ public class PitchFragment extends BaseFragment {
         } else {
             if (mPitch != null) {
                 AppHelper.loadImage(mPitch.getThumbnail(), mImagePreview);
-                getApp().reloadMenu();
-                getApp().setRootFragement(AppData.PAGE_FIND_JOB);
             } else {
                 mPlayIcon.setVisibility(View.INVISIBLE);
             }
         }
+    }
+
+    void completePitchUpload() {
+        getApp().reloadMenu();
+        getApp().setRootFragement(AppData.PAGE_FIND_JOB);
     }
 
     @OnClick(R.id.image_preview)
@@ -170,6 +173,7 @@ public class PitchFragment extends BaseFragment {
                             public void onSuccess() {
                                 hideLoading();
                                 updateInterface();
+                                completePitchUpload();
                             }
                             @Override
                             public void onError(JsonNode errors) {

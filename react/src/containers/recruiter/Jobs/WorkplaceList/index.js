@@ -79,10 +79,9 @@ class WorkplaceList extends React.Component {
     const strInactiveJobs = `${count - active_job_count} inactive`;
     const strNewApps = `${newApps} new application${newApps !== 1 ? 's' : ''}`;
 
-    return (
-      <List.Item
-        key={id}
-        actions={[
+    const actions = this.props.business.restricted
+      ? []
+      : [
           <Tooltip placement="bottom" title="Edit">
             <span onClick={e => this.onEditWorkplace(id, e)}>
               <Icons.Pen />
@@ -93,7 +92,12 @@ class WorkplaceList extends React.Component {
               <Icons.TrashAlt />
             </span>
           </Tooltip>
-        ]}
+        ];
+
+    return (
+      <List.Item
+        key={id}
+        actions={actions}
         onClick={() => this.onSelectWorkplace(id)}
         className={loading ? 'loading' : ''}
       >

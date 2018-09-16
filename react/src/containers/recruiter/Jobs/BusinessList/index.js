@@ -137,15 +137,16 @@ class BusinessList extends React.Component {
           </span>
         </Tooltip>
       );
-    }
-    if (this.props.businesses.length > 1) {
-      actions.push(
-        <Tooltip placement="bottom" title="Remove">
-          <span onClick={e => this.onRemoveBusiness(business, e)}>
-            <Icons.TrashAlt />
-          </span>
-        </Tooltip>
-      );
+
+      if (this.props.businesses.length > 1) {
+        actions.push(
+          <Tooltip placement="bottom" title="Remove">
+            <span onClick={e => this.onRemoveBusiness(business, e)}>
+              <Icons.TrashAlt />
+            </span>
+          </Tooltip>
+        );
+      }
     }
 
     return (

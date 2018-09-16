@@ -14,10 +14,11 @@ import {
   LinkedinIcon,
   EmailIcon
 } from 'react-share';
-import { Layout, Dropdown, Menu } from 'antd';
+import { Layout, Dropdown, Menu, Avatar } from 'antd';
 
 import { Icons } from 'components';
 import titleImage from 'assets/title.png';
+import defaultAvatar from 'assets/avatar.png';
 import Popover, { MenuButton } from './Popover';
 import UserMenu from './UserMenu';
 
@@ -53,7 +54,7 @@ const ShareMenuItem = styled(Menu.Item)`
   }
 `;
 
-export default ({ menu: MainMenu, shareUrl }) => {
+export default ({ menu: MainMenu, shareUrl, avatar }) => {
   const ShareMenu = (
     <Menu style={{ display: 'inline-block', padding: 0 }}>
       <ShareMenuItem>
@@ -103,7 +104,7 @@ export default ({ menu: MainMenu, shareUrl }) => {
               <MainMenu theme="dark" mode="horizontal" />
             </Responsive>
 
-            <Popover float="right" menu={UserMenu} icon={Icons.UserCircle} />
+            <Popover float="right" menu={UserMenu} icon={<Avatar src={avatar || defaultAvatar} size="small" />} />
 
             {shareUrl && (
               <Dropdown

@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Button, message, Modal } from 'antd';
+import { Button, message, Modal, Upload } from 'antd';
 
 import { uploadPitch } from 'redux/jobseeker/profile';
 import * as helper from 'utils/helper';
@@ -53,6 +53,22 @@ class PitchRecord extends React.Component {
     this.setState({ pitchUrl, pitchData, showRecorder: false });
   };
 
+  setPitchFile = ({ file }) => {
+    if (file.type !== 'video/mp4' && file.type !== 'video/avi' && file.type !== 'video/quicktime') {
+      message.error('You can only upload mp4, avi, mov file!');
+      return;
+    }
+
+    if (file.size > 10000000) {
+      message.error('You can only upload file less than 10MB!');
+      return;
+    }
+
+    helper.getBase64(file, url => {
+      this.closeRecorder(url, file);
+    });
+  };
+
   uploadPitch = () => {
     this.props.uploadPitch({
       data: this.state.pitchData,
@@ -98,7 +114,6 @@ class PitchRecord extends React.Component {
           <VideoPlayer
             controls
             poster={!pitchData && poster}
-            preload="none"
             sources={[
               {
                 src: pitchUrl,
@@ -114,6 +129,13 @@ class PitchRecord extends React.Component {
           <Button type="primary" onClick={this.openRecorder}>
             Record New Pitch
           </Button>
+
+          <Upload showUploadList={false} beforeUpload={() => false} onChange={this.setPitchFile}>
+            <Button>
+              <Icons.Hdd /> Select File
+            </Button>
+          </Upload>
+
           {pitchData && (
             <Button type="secondary" onClick={this.uploadPitch}>
               <Icons.CloudUpload /> Upload

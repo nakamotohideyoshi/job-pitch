@@ -12,6 +12,7 @@ export const applyJob = createAction(C.JS_APPLY_JOB);
 export const removeJob = createAction(C.JS_REMOVE_JOB);
 export const getPublicJob = createAction(C.JS_GET_PUBLIC_JOB);
 export const getPublicWorkplace = createAction(C.JS_GET_PUBLIC_WORKPLACE);
+export const uploadSpecPitch = createAction(C.JS_UPLOAD_SPEC_PITCH);
 
 // ------------------------------------
 // Reducer

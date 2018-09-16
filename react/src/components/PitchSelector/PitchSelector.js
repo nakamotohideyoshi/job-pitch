@@ -52,10 +52,9 @@ class PitchSelector extends React.Component {
       return;
     }
 
-    const data = file.originFileObj;
-    helper.getBase64(data, url => {
+    helper.getBase64(file, url => {
       this.setState({ url });
-      this.props.onChange(data);
+      this.props.onChange(file);
     });
   };
 

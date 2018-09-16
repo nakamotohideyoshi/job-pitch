@@ -5,12 +5,12 @@ import { Layout, Alert } from 'antd';
 import Header from './components/Header';
 import Footer from './components/Footer';
 
-const MainLayout = ({ menu, banners, content: Content, visibleFooter, shareUrl, helpUrl, ...rest }) => {
+const MainLayout = ({ menu, banners, content: Content, visibleFooter, shareUrl, helpUrl, avatar, ...rest }) => {
   const headerKey = rest.location.pathname.split('/')[2];
 
   return (
     <Layout style={{ minHeight: '100vh' }}>
-      <Header selectedKey={headerKey} menu={menu} shareUrl={shareUrl} />
+      <Header selectedKey={headerKey} menu={menu} shareUrl={shareUrl} avatar={avatar} />
 
       <Layout style={{ position: 'relative', marginTop: '50px' }}>
         {!!banners.length && (

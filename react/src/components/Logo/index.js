@@ -6,6 +6,7 @@ export default styled.span`
       display: inline-block;
       ${props.size ? `width: ${props.size}; height: ${props.size}` : ''};
       ${props.padding && `padding: ${props.padding};`};
+      ${props.circle && `border-radius: 50%;`};
       background-size: contain;
       background-position: center;
       background-repeat: no-repeat;

@@ -33,7 +33,9 @@ export default handleActions(
     [requestSuccess(C.JS_SAVE_JOBPROFILE)]: (state, { payload }) => ({
       ...state,
       profile: payload
-    })
+    }),
+
+    [C.LOGOUT]: () => initialState
   },
   initialState
 );

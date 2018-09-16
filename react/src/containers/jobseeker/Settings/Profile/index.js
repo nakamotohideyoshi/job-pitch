@@ -18,12 +18,22 @@ import { saveJobseeker, uploadPitch } from 'redux/jobseeker/profile';
 import DATA from 'utils/data';
 import * as helper from 'utils/helper';
 
-import { NoLabelField, PitchSelector, PopupProgress, Intro, Icons, LargeModal, JobseekerDetails } from 'components';
+import {
+  NoLabelField,
+  PitchSelector,
+  PopupProgress,
+  Intro,
+  Icons,
+  LargeModal,
+  JobseekerDetails,
+  ImageSelector
+} from 'components';
 import imgLogo from 'assets/logo1.png';
 import imgIntro1 from 'assets/intro1.png';
 import imgIntro2 from 'assets/intro2.png';
 import imgIntro3 from 'assets/intro3.png';
 import FormWrapper from './styled';
+import Avatar from 'assets/avatar.png';
 
 const { Item } = Form;
 const { TextArea } = Input;
@@ -57,12 +67,25 @@ class Profile extends React.Component {
     dontShowIntro: false,
     showPreview: false,
     pitchData: null,
+    avatar: {
+      url: null,
+      file: null,
+      exist: false
+    },
     loading: null
   };
 
   componentDidMount() {
     const { jobseeker, form } = this.props;
+
     if (jobseeker) {
+      this.setState({
+        avatar: {
+          url: jobseeker.profile_thumb || Avatar,
+          exist: jobseeker.profile_thumb
+        }
+      });
+
       form.setFieldsValue({
         active: jobseeker.active,
         first_name: jobseeker.first_name,
@@ -84,6 +107,13 @@ class Profile extends React.Component {
         has_references: jobseeker.has_references,
         truth_confirmation: jobseeker.truth_confirmation
       });
+    } else {
+      this.setState({
+        avatar: {
+          url: Avatar,
+          exist: false
+        }
+      });
     }
 
     this.setState({
@@ -103,6 +133,15 @@ class Profile extends React.Component {
     DATA[`dontShowIntro_${DATA.email}`] = true;
     this.setState({ dontShowIntro: true });
   };
+
+  setAvatar = (file, url) =>
+    this.setState({
+      avatar: {
+        url: url || Avatar,
+        file,
+        exist: !!file
+      }
+    });
 
   viewCV = () => {
     window.open(this.props.jobseeker.cv);
@@ -158,7 +197,8 @@ class Profile extends React.Component {
           cv: (cv || {}).originFileObj,
           id: (jobseeker || {}).id
         },
-        success: () => {
+        avatar: this.state.avatar,
+        onSuccess: () => {
           form.setFieldsValue({
             cv: null
           });
@@ -168,7 +208,7 @@ class Profile extends React.Component {
             this.saveCompleted();
           }
         },
-        fail: data => {
+        onFail: data => {
           this.setState({ loading: null });
           helper.setErrors(form, data, values);
         }
@@ -221,7 +261,7 @@ class Profile extends React.Component {
   };
 
   render() {
-    const { dontShowIntro, loading, showPreview } = this.state;
+    const { dontShowIntro, loading, showPreview, avatar } = this.state;
     const { getFieldDecorator } = this.props.form;
     const jobseeker = this.props.jobseeker || {};
     const pitch = helper.getPitch(jobseeker);
@@ -230,6 +270,10 @@ class Profile extends React.Component {
       <FormWrapper>
         <Item label="Active">
           {getFieldDecorator('active', { valuePropName: 'checked', initialValue: true })(<Switch />)}
+        </Item>
+
+        <Item label="Photo">
+          <ImageSelector url={avatar.url} removable={avatar.exist} onChange={this.setAvatar} circle />
         </Item>
 
         <Item label="First name">

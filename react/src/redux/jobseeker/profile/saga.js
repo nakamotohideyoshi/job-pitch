@@ -1,18 +1,54 @@
 import { delay } from 'redux-saga';
 import { takeLatest, call, put, select } from 'redux-saga/effects';
 
-import { getRequest, postRequest, putRequest, requestSuccess } from 'utils/request';
+import request, { getRequest, postRequest, putRequest, requestSuccess } from 'utils/request';
+import { uploadVideo } from 'utils/aws';
 import * as C from 'redux/constants';
 
-import AWS from 'aws-sdk';
+function* saveJobseeker({ payload }) {
+  const { data, avatar, onProgress, onSuccess, onFail } = payload;
 
-function* saveJobseeker(action) {
-  const { id } = action.payload.data;
-  if (!id) {
-    yield call(postRequest({ url: '/api/job-seekers/' }), action);
-  } else {
-    yield call(putRequest({ url: `/api/job-seekers/${id}/` }), action);
+  const jobseeker = yield call(
+    request({
+      method: data.id ? 'put' : 'post',
+      url: data.id ? `/api/job-seekers/${data.id}/` : '/api/job-seekers/'
+    }),
+    { payload }
+  );
+
+  if (jobseeker === null) {
+    onFail && onFail('There was an error saving the profile');
+    return;
   }
+
+  // if (avatar) {
+  //   if (avatar.file) {
+  //     const image = yield call(postRequest({ url: '/api/user-business-images/' }), {
+  //       payload: {
+  //         isFormData: true,
+  //         data: {
+  //           order: 0,
+  //           job_seeker: jobseeker.id,
+  //           image: avatar.file
+  //         },
+  //         onUploadProgress: onProgress
+  //       }
+  //     });
+
+  //     if (image === null) {
+  //       onFail && onFail('There was an error uploading the logo');
+  //     } else {
+  //       // business.images = [image];
+  //     }
+  //   } else if (business.images.length && !logo.exist) {
+  //     yield call(deleteRequest({ url: `/api/user-business-images/${business.images[0].id}/` }));
+  //     business.images = [];
+  //   }
+  // }
+
+  yield put({ type: requestSuccess(C.JS_SAVE_PROFILE), payload: jobseeker });
+
+  onSuccess && onSuccess();
 }
 
 function* saveJobProfile(action) {
@@ -23,40 +59,6 @@ function* saveJobProfile(action) {
     yield call(putRequest({ url: `/api/job-profiles/${id}/` }), action);
   }
 }
-
-export const _uploadPitch = ({ id, token }, pitchData, onUploadProgress) =>
-  new Promise(resolve => {
-    const folder = window.location.origin.replace('//', '');
-    const s3 = new AWS.S3({
-      apiVersion: '2006-03-01',
-      credentials: new AWS.CognitoIdentityCredentials(
-        {
-          IdentityPoolId: 'eu-west-1:93ae6986-5938-4130-a3c0-f96c39d75be2'
-        },
-        {
-          region: 'eu-west-1'
-        }
-      )
-    });
-    s3
-      .upload(
-        {
-          Bucket: 'mjp-android-uploads',
-          Key: `${folder}/${token}.${id}.pitches.${new Date().getTime()}`,
-          Body: pitchData,
-          ContentType: 'video/webm'
-        },
-        (error, data) => {
-          if (error) {
-            throw error;
-          }
-          resolve();
-        }
-      )
-      .on('httpUploadProgress', progress => {
-        onUploadProgress('Uploading...', Math.floor(progress.loaded / progress.total * 100));
-      });
-  });
 
 function* uploadPitch(action) {
   const { data, onProgress, onSuccess, onFail } = action.payload;
@@ -70,7 +72,7 @@ function* uploadPitch(action) {
   }
 
   try {
-    yield call(_uploadPitch, newPitch, data, onProgress);
+    yield call(uploadVideo, 'pitches', newPitch, data, onProgress);
   } catch (error) {
     onFail && onFail();
     return;

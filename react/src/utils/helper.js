@@ -65,14 +65,14 @@ export function getPitch(object) {
 }
 
 export function getAvatar(jobseeker) {
-  const pitch = getPitch(jobseeker);
-  if (pitch) {
-    return pitch.thumbnail;
-  }
-
   if (jobseeker.profile_thumb) {
     return jobseeker.profile_thumb;
   }
+
+  // const pitch = getPitch(jobseeker);
+  // if (pitch) {
+  //   return pitch.thumbnail;
+  // }
 
   if (jobseeker.sex_public && jobseeker.sex) {
     const genderName = getItemByID(DATA.sexes, jobseeker.sex).name;

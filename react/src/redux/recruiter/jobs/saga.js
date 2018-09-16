@@ -1,10 +1,10 @@
 import { delay } from 'redux-saga';
 import { takeLatest, call, put } from 'redux-saga/effects';
-import AWS from 'aws-sdk';
 
 import { updateWorkplace } from 'redux/recruiter/workplaces/saga';
 import * as C from 'redux/constants';
 import request, { getRequest, postRequest, deleteRequest } from 'utils/request';
+import { uploadVideo } from 'utils/aws';
 
 export const getJobs = getRequest({
   type: C.RC_GET_JOBS,
@@ -66,40 +66,6 @@ const removeJob = deleteRequest({
   url: ({ id }) => `/api/user-jobs/${id}/`
 });
 
-export const _uploadPitch = ({ id, token }, pitchData, onUploadProgress) =>
-  new Promise(resolve => {
-    const folder = window.location.origin.replace('//', '');
-    const s3 = new AWS.S3({
-      apiVersion: '2006-03-01',
-      credentials: new AWS.CognitoIdentityCredentials(
-        {
-          IdentityPoolId: 'eu-west-1:93ae6986-5938-4130-a3c0-f96c39d75be2'
-        },
-        {
-          region: 'eu-west-1'
-        }
-      )
-    });
-    s3
-      .upload(
-        {
-          Bucket: 'mjp-android-uploads',
-          Key: `${folder}/${token}.${id}.job-videos.${new Date().getTime()}`,
-          Body: pitchData,
-          ContentType: 'video/webm'
-        },
-        (error, data) => {
-          if (error) {
-            throw error;
-          }
-          resolve();
-        }
-      )
-      .on('httpUploadProgress', progress => {
-        onUploadProgress('Uploading Pitch...', Math.floor(progress.loaded / progress.total * 100));
-      });
-  });
-
 function* uploadPitch(action) {
   const { job, data, onProgress, onSuccess, onFail } = action.payload;
 
@@ -114,9 +80,9 @@ function* uploadPitch(action) {
   }
 
   try {
-    yield call(_uploadPitch, newPitch, data, onProgress);
+    yield call(uploadVideo, 'job-videos', newPitch, data, onProgress);
   } catch (error) {
-    onFail && onFail(`Uploading is failed.`);
+    onFail && onFail('Uploading is failed.');
     return;
   }
 
@@ -135,5 +101,5 @@ function* uploadPitch(action) {
 export default function* sagas() {
   yield takeLatest(C.RC_SAVE_JOB, saveJob);
   yield takeLatest(C.RC_REMOVE_JOB, removeJob);
-  yield takeLatest(C.JS_UPLOAD_JOBPITCH, uploadPitch);
+  yield takeLatest(C.RC_UPLOAD_JOBPITCH, uploadPitch);
 }

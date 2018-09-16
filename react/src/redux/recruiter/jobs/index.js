@@ -9,7 +9,7 @@ import { requestPending, requestSuccess, requestFail } from 'utils/request';
 
 export const removeJob = createAction(C.RC_REMOVE_JOB);
 export const saveJob = createAction(C.RC_SAVE_JOB);
-export const uploadPitch = createAction(C.JS_UPLOAD_JOBPITCH);
+export const uploadPitch = createAction(C.RC_UPLOAD_JOBPITCH);
 
 // ------------------------------------
 // Reducer

@@ -4,12 +4,23 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { List, Modal, Tooltip, Breadcrumb, Button, Drawer, notification } from 'antd';
 
-import { findJobs, applyJob, removeJob } from 'redux/jobseeker/find';
+import { findJobs, applyJob, removeJob, uploadSpecPitch } from 'redux/jobseeker/find';
 import DATA from 'utils/data';
 import * as helper from 'utils/helper';
 
-import { PageHeader, PageSubHeader, SearchBox, AlertMsg, ListEx, Icons, Loading, JobDetails, Logo } from 'components';
-import NoPitch from '../components/NoPitch';
+import {
+  PageHeader,
+  PageSubHeader,
+  SearchBox,
+  AlertMsg,
+  ListEx,
+  Icons,
+  Loading,
+  JobDetails,
+  Logo,
+  PitchSelector,
+  PopupProgress
+} from 'components';
 import Wrapper from './styled';
 
 const { confirm } = Modal;
@@ -17,7 +28,11 @@ const { confirm } = Modal;
 class FindJob extends React.Component {
   state = {
     selectedId: null,
-    searchText: ''
+    searchText: '',
+    visibleDetail: false,
+    pitchData: null,
+    visibleApply: false,
+    loading: null
   };
 
   componentWillMount() {
@@ -48,12 +63,10 @@ class FindJob extends React.Component {
 
   onChangeSearchText = searchText => this.setState({ searchText });
 
-  onSelect = selectedId => this.setState({ selectedId });
-
   onApply = ({ id }, event) => {
     event && event.stopPropagation();
 
-    const { jobseeker, history, applyJob } = this.props;
+    const { jobseeker, jobs, history } = this.props;
 
     if (!jobseeker.active) {
       confirm({
@@ -68,33 +81,53 @@ class FindJob extends React.Component {
       return;
     }
 
-    confirm({
-      title: 'Yes, I want to apply to this job',
-      okText: 'Apply',
-      cancelText: 'Cancel',
-      maskClosable: true,
-      onOk: () => {
-        applyJob({
-          data: {
-            job: id,
-            job_seeker: jobseeker.id
-          },
-          onSuccess: () => {
-            notification.success({
-              message: 'Success',
-              description: 'The job is applied'
-            });
-          },
-          onFail: () => {
-            notification.error({
-              message: 'Error',
-              description: 'There was an error'
-            });
-          }
-        });
-      }
-    });
+    // if (!jobseeker.profile_thumb) {
+    //   confirm({
+    //     title: 'To apply please set your photo',
+    //     okText: 'Edit profile',
+    //     cancelText: 'Cancel',
+    //     maskClosable: true,
+    //     onOk: () => {
+    //       history.push('/jobseeker/settings/profile');
+    //     }
+    //   });
+    //   return;
+    // }
+
+    const selectedJob = jobs && helper.getItemByID(jobs, this.state.selectedId);
+
+    if (selectedJob.requires_cv && !jobseeker.cv) {
+      confirm({
+        title: 'To apply please add your cv',
+        okText: 'Edit Profile',
+        cancelText: 'Cancel',
+        maskClosable: true,
+        onOk: () => {
+          history.push('/jobseeker/settings/profile');
+        }
+      });
+      return;
+    }
+
+    if (!selectedJob.requires_pitch) {
+      confirm({
+        title: 'Yes, I want to apply to this job',
+        okText: 'Apply',
+        cancelText: 'Cancel',
+        maskClosable: true,
+        onOk: () => {
+          this.apply();
+        }
+      });
+      return;
+    }
+
+    this.setState({ visibleApply: true, selectedId: id });
   };
+
+  onSelect = selectedId => this.setState({ visibleDetail: !!selectedId, selectedId });
+
+  hideApplyDialog = () => this.setState({ visibleApply: false });
 
   onRemove = ({ id }, event) => {
     event && event.stopPropagation();
@@ -111,6 +144,70 @@ class FindJob extends React.Component {
         });
       }
     });
+  };
+
+  apply = () => {
+    this.setState({
+      loading: {
+        label: 'Saving...'
+      }
+    });
+
+    this.props.applyJob({
+      data: {
+        job: this.state.selectedId,
+        job_seeker: this.props.jobseeker.id
+      },
+      onSuccess: application => {
+        if (this.state.pitchData) {
+          this.uploadPitch(application);
+        } else {
+          this.setState({ loading: null });
+          notification.success({
+            message: 'Success',
+            description: 'The job is applied'
+          });
+        }
+      },
+      onFail: () => {
+        this.setState({ loading: null });
+        notification.error({
+          message: 'Error',
+          description: 'There was an error'
+        });
+      }
+    });
+  };
+
+  uploadPitch = ({ id }) => {
+    this.props.uploadSpecPitch({
+      job_seeker: this.props.jobseeker.id,
+      application: id,
+      data: this.state.pitchData,
+      onSuccess: msg => {
+        this.setState({ loading: null });
+        notification.success({
+          message: 'Success',
+          description: 'The job is applied'
+        });
+      },
+      onFail: error => {
+        this.setState({ loading: null });
+        notification.error({
+          message: 'Error',
+          description: 'There was an error'
+        });
+      },
+      onProgress: (label, progress) => {
+        this.setState({
+          loading: { label, progress }
+        });
+      }
+    });
+  };
+
+  changePitch = pitchData => {
+    this.setState({ pitchData });
   };
 
   filterOption = job => {
@@ -171,13 +268,11 @@ class FindJob extends React.Component {
   );
 
   render() {
-    const { jobseeker, jobs, error } = this.props;
+    const { jobs, jobseeker, error } = this.props;
+    const { visibleDetail, visibleApply, selectedId, pitchData, loading } = this.state;
 
-    if (!helper.getPitch(jobseeker)) {
-      return <NoPitch title="Find Me Jobs" />;
-    }
-
-    const selectedJob = jobs && helper.getItemByID(jobs, this.state.selectedId);
+    const selectedJob = jobs && helper.getItemByID(jobs, selectedId);
+    const pitch = helper.getPitch(jobseeker);
 
     return (
       <Wrapper className="container">
@@ -205,8 +300,8 @@ class FindJob extends React.Component {
           />
         </div>
 
-        <Drawer placement="right" closable={false} onClose={() => this.onSelect()} visible={!!selectedJob}>
-          {selectedJob && (
+        <Drawer placement="right" closable={false} onClose={() => this.onSelect()} visible={visibleDetail}>
+          {visibleDetail && (
             <JobDetails
               jobData={selectedJob}
               roughLocation
@@ -223,6 +318,34 @@ class FindJob extends React.Component {
             />
           )}
         </Drawer>
+
+        {visibleApply && (
+          <Modal
+            title="Specific Pitch"
+            visible
+            onOk={this.apply}
+            onCancel={this.hideApplyDialog}
+            okText="Apply"
+            footer={[
+              <Button key="cancel" onClick={this.hideApplyDialog}>
+                Cancel
+              </Button>,
+              <Button key="submit" type="primary" disabled={!pitch && !pitchData} onClick={this.hideApplyDialog}>
+                Apply
+              </Button>
+            ]}
+          >
+            <PitchSelector onChange={this.changePitch} />
+
+            {!pitch && (
+              <div style={{ marginTop: '20px' }}>
+                or <Link to="/jobseeker/settings/record">Record Pitch</Link> on profile
+              </div>
+            )}
+          </Modal>
+        )}
+
+        {loading && <PopupProgress label={loading.label} value={loading.progress} />}
       </Wrapper>
     );
   }
@@ -238,6 +361,7 @@ export default connect(
   {
     findJobs,
     applyJob,
-    removeJob
+    removeJob,
+    uploadSpecPitch
   }
 )(FindJob);

@@ -24,7 +24,7 @@ class HeaderPopover extends React.Component {
   hide = () => this.setState({ visible: false });
 
   render() {
-    const { float, icon: Icon, menu: Menu } = this.props;
+    const { float, icon, menu: Menu } = this.props;
     const placement = float === 'left' ? 'bottomLeft' : 'bottomRight';
 
     return (
@@ -36,9 +36,7 @@ class HeaderPopover extends React.Component {
         trigger="click"
         overlayStyle={{ position: 'fixed' }}
       >
-        <MenuButton style={{ float }}>
-          <Icon />
-        </MenuButton>
+        <MenuButton style={{ float }}>{icon}</MenuButton>
       </Popover>
     );
   }

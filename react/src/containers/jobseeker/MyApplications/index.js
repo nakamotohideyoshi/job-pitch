@@ -10,7 +10,6 @@ import DATA from 'utils/data';
 import * as helper from 'utils/helper';
 
 import { PageHeader, SearchBox, AlertMsg, ListEx, Icons, JobDetails, Logo } from 'components';
-import NoPitch from '../components/NoPitch';
 import Wrapper from './styled';
 
 const { confirm } = Modal;
@@ -147,11 +146,7 @@ class MyApplications extends React.Component {
   );
 
   render() {
-    const { jobseeker, applications } = this.props;
-
-    if (!helper.getPitch(jobseeker)) {
-      return <NoPitch title="My Applications" />;
-    }
+    const { applications } = this.props;
 
     const selectedApp = applications && helper.getItemByID(applications, this.state.selectedId);
     const { interview } = selectedApp || {};
@@ -207,7 +202,6 @@ class MyApplications extends React.Component {
 
 export default connect(
   state => ({
-    jobseeker: state.js_profile.jobseeker,
     applications: getApplications(state)
   }),
   {

@@ -59,10 +59,11 @@ class Interview extends React.Component {
   };
 
   onComplete = () => {
-    this.showCompleteDialog(false);
-
-    const { completeInterview, application } = this.props;
+    const { completeInterview, application, form } = this.props;
     const { id, at, messages, notes } = application.interview;
+    const feedback = this.textbox.textAreaRef.value.trim();
+
+    this.showCompleteDialog(false);
 
     completeInterview({
       appId: application.id,
@@ -72,12 +73,17 @@ class Interview extends React.Component {
         at,
         notes,
         invitation: (messages[0] || {}).content,
-        feedback: this.textbox.textAreaRef.value.trim()
+        feedback
       },
       onSuccess: () => {
         notification.success({
           message: 'Success',
           description: 'The interview is completed'
+        });
+        form.setFieldsValue({
+          at: null,
+          invitation: '',
+          notes: ''
         });
       },
       onFail: () => {
@@ -90,7 +96,7 @@ class Interview extends React.Component {
   };
 
   onCancel = () => {
-    const { application } = this.props;
+    const { application, form } = this.props;
 
     confirm({
       title: 'Are you sure you want to cancel this interview?',
@@ -106,6 +112,11 @@ class Interview extends React.Component {
             notification.success({
               message: 'Success',
               description: 'The interview is cancelled'
+            });
+            form.setFieldsValue({
+              at: null,
+              invitation: '',
+              notes: ''
             });
           },
           onFail: () => {
@@ -159,7 +170,7 @@ class Interview extends React.Component {
                   ]
                 })(<TextArea autosize={{ minRows: 3, maxRows: 20 }} />)}
               </Item>
-              <Item label="Notes">
+              <Item label="Recruiter's notes">
                 {getFieldDecorator('notes')(<TextArea autosize={{ minRows: 3, maxRows: 20 }} />)}
               </Item>
             </Col>

@@ -66,6 +66,7 @@ class Profile extends React.Component {
   state = {
     dontShowIntro: false,
     showPreview: false,
+    cvData: null,
     pitchData: null,
     avatar: {
       url: null,
@@ -134,7 +135,7 @@ class Profile extends React.Component {
     this.setState({ dontShowIntro: true });
   };
 
-  setAvatar = (file, url) =>
+  setAvatar = (file, url) => {
     this.setState({
       avatar: {
         url: url || Avatar,
@@ -142,6 +143,11 @@ class Profile extends React.Component {
         exist: !!file
       }
     });
+  };
+
+  changedCV = info => {
+    this.setState({ cvData: info.fileList.length ? info.file : null });
+  };
 
   viewCV = () => {
     window.open(this.props.jobseeker.cv);
@@ -188,27 +194,29 @@ class Profile extends React.Component {
         }
       });
 
-      const cv = (values.cv || [])[0];
+      const { avatar, cvData } = this.state;
+      const data = {
+        ...values,
+        id: (jobseeker || {}).id
+      };
+      if (avatar.file || (jobseeker.profile_image && !avatar.exist)) {
+        data.profile_image = avatar.file;
+      }
+      if (cvData) {
+        data.cv = cvData;
+      }
 
       saveJobseeker({
         isFormData: true,
-        data: {
-          ...values,
-          cv: (cv || {}).originFileObj,
-          id: (jobseeker || {}).id
-        },
-        avatar: this.state.avatar,
-        onSuccess: () => {
-          form.setFieldsValue({
-            cv: null
-          });
+        data,
+        success: () => {
           if (this.state.pitchData) {
             this.uploadPitch();
           } else {
             this.saveCompleted();
           }
         },
-        onFail: data => {
+        fail: data => {
           this.setState({ loading: null });
           helper.setErrors(form, data, values);
         }
@@ -236,7 +244,16 @@ class Profile extends React.Component {
 
   saveCompleted = () => {
     const { active, profile } = this.props.jobseeker;
-    this.setState({ loading: null });
+
+    this.setState({
+      loading: null,
+      avatar: {
+        ...this.state.avatar,
+        file: null
+      },
+      cvData: null
+    });
+
     if (helper.loadData('apply')) {
       helper.saveData('apply');
       notification.success({
@@ -261,7 +278,7 @@ class Profile extends React.Component {
   };
 
   render() {
-    const { dontShowIntro, loading, showPreview, avatar } = this.state;
+    const { dontShowIntro, loading, showPreview, avatar, cvData } = this.state;
     const { getFieldDecorator } = this.props.form;
     const jobseeker = this.props.jobseeker || {};
     const pitch = helper.getPitch(jobseeker);
@@ -429,19 +446,14 @@ class Profile extends React.Component {
             </Button>
           )}
 
-          {getFieldDecorator('cv', {
-            valuePropName: 'fileList',
-            getValueFromEvent: e => e && e.fileList
-          })(
-            <Upload.Dragger beforeUpload={() => false}>
-              <p className="ant-upload-text">
-                <Icons.CloudUpload /> Click or drag file to this area to upload CV
-              </p>
-              <p className="ant-upload-hint">
-                Upload your CV using your favourite cloud service, or take a photo if you have it printed out.
-              </p>
-            </Upload.Dragger>
-          )}
+          <Upload.Dragger beforeUpload={() => false} fileList={cvData ? [cvData] : []} onChange={this.changedCV}>
+            <p className="ant-upload-text">
+              <Icons.CloudUpload /> Click or drag file to this area to upload CV
+            </p>
+            <p className="ant-upload-hint">
+              Upload your CV using your favourite cloud service, or take a photo if you have it printed out.
+            </p>
+          </Upload.Dragger>
         </NoLabelField>
 
         <Item

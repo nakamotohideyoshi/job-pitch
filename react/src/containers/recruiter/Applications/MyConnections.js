@@ -177,11 +177,8 @@ class MyConnections extends React.Component {
 }
 
 export default withRouter(
-  connect(
-    null,
-    {
-      updateApplication,
-      removeApplication
-    }
-  )(MyConnections)
+  connect(null, {
+    updateApplication,
+    removeApplication
+  })(MyConnections)
 );

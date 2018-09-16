@@ -177,16 +177,16 @@ class MyApplications extends React.Component {
               application={selectedApp}
               actions={
                 <div>
-                  <Button type="primary" onClick={() => this.onMessage(selectedApp)}>
+                  <Button type="primary" disabled={selectedApp.loading} onClick={() => this.onMessage(selectedApp)}>
                     Message
                   </Button>
                   {(interview || {}).status === 'PENDING' && (
-                    <Button type="primary" onClick={() => this.onAccept(selectedApp)}>
+                    <Button type="primary" disabled={selectedApp.loading} onClick={() => this.onAccept(selectedApp)}>
                       Accept Invitation
                     </Button>
                   )}
                   {interview && (
-                    <Button type="danger" onClick={() => this.onCancel(selectedApp)}>
+                    <Button type="danger" disabled={selectedApp.loading} onClick={() => this.onCancel(selectedApp)}>
                       Cancel Interview
                     </Button>
                   )}

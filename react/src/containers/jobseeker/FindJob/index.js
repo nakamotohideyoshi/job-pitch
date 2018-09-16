@@ -330,7 +330,7 @@ class FindJob extends React.Component {
               <Button key="cancel" onClick={this.hideApplyDialog}>
                 Cancel
               </Button>,
-              <Button key="submit" type="primary" disabled={!pitch && !pitchData} onClick={this.hideApplyDialog}>
+              <Button key="submit" type="primary" disabled={!pitch && !pitchData} onClick={this.apply}>
                 Apply
               </Button>
             ]}

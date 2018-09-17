@@ -135,6 +135,10 @@ class BusinessListController: MJPController {
         }, failure: self.handleErrors)
     }
     
+    static func instantiate() -> BusinessListController {
+        return AppHelper.instantiate("BusinessList") as! BusinessListController
+    }
+    
 }
 
 extension BusinessListController: UITableViewDataSource {
@@ -153,21 +157,19 @@ extension BusinessListController: UITableViewDataSource {
         } else {
             cell.setData(business)
         
-            if !isAddMode {
+            if !isAddMode && !business.restricted {
                 
                 var buttons = [MGSwipeButton]()
                 
-                if !business.restricted {
-                    buttons.insert(MGSwipeButton(title: "",
-                                                 icon: UIImage(named: "edit-big-icon"),
-                                                 backgroundColor: AppData.greenColor,
-                                                 padding: 20,
-                                                 callback: { (cell) -> Bool in
-                                                    self.refresh = true
-                                                    BusinessEditController.pushController(business: business)
-                                                    return true
-                    }), at: 0)
-                }
+                buttons.insert(MGSwipeButton(title: "",
+                                             icon: UIImage(named: "edit-big-icon"),
+                                             backgroundColor: AppData.greenColor,
+                                             padding: 20,
+                                             callback: { (cell) -> Bool in
+                                                self.refresh = true
+                                                BusinessEditController.pushController(business: business)
+                                                return true
+                }), at: 0)
                 
                 if AppData.user.canCreateBusinesses && AppData.user.businesses.count > 1 {
                     
@@ -205,11 +207,10 @@ extension BusinessListController: UITableViewDataSource {
                 }
                 
                 cell.rightButtons = buttons
-                
             }
         }
         
-        cell.addUnderLine(paddingLeft: 15, paddingRight: 0, color: AppData.greyBorderColor)
+        cell.addUnderLine(paddingLeft: 15, paddingRight: 0, color: AppData.greyColor)
         
         return cell
         

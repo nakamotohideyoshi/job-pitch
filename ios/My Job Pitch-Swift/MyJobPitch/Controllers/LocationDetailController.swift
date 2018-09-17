@@ -16,6 +16,9 @@ class LocationDetailController: MJPController {
     @IBOutlet weak var imgView: UIImageView!
     @IBOutlet weak var nameLabel: UILabel!
     @IBOutlet weak var subTitle: UILabel!
+    @IBOutlet weak var editButton: UIButton!
+    @IBOutlet weak var removeButton: UIButton!
+    @IBOutlet weak var toolbar: UIToolbar!    
     @IBOutlet weak var firstCreateMessage: UIButton!
     
     var data: NSMutableArray! = NSMutableArray()
@@ -41,6 +44,15 @@ class LocationDetailController: MJPController {
             showLoading()
             API.shared().loadLocation(id: location.id, success: { (data) in
                 self.location = data as! Location
+                if self.location.businessData.restricted {
+                    self.editButton.backgroundColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.5)
+                    self.editButton.isEnabled = false
+                    self.removeButton.backgroundColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.5)
+                    self.removeButton.isEnabled = false
+                    if (self.toolbar.items?.count)! > 1 {
+                        self.toolbar.items?.remove(at: 1)
+                    }
+                }
                 self.updateLocationInfo()
                 self.loadJobs()
             }, failure: self.handleErrors)
@@ -157,8 +169,6 @@ extension LocationDetailController: UITableViewDataSource {
                             return true
             })
         ]
-        
-        cell.addUnderLine(paddingLeft: 15, paddingRight: 0, color: AppData.greyBorderColor)
         
         return cell
     }

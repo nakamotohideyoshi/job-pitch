@@ -41,8 +41,6 @@ class InterviewEditController: MJPController, WWCalendarTimeSelectorProtocol {
         
         navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(named: "nav-close"), style: .plain, target: self, action: #selector(closeAction))
         
-        appInfoView.addUnderLine(paddingLeft: 0, paddingRight: 0, color: AppData.greyBorderColor)
-        
         dateTimeField.delegate = self
         
         loadData()
@@ -56,9 +54,10 @@ class InterviewEditController: MJPController, WWCalendarTimeSelectorProtocol {
     }
     
     func loadData() {
-        AppHelper.loadJobseekerImage(application.jobSeeker, imageView: imgView, completion: nil)
+        AppHelper.loadJobseekerAvatar(application.jobSeeker, imageView: imgView, completion: nil)
         nameLabel.text = application.jobSeeker.getFullName()
         commentLabel.text = application.jobSeeker.desc
+        imgView.superview?.addUnderLine(paddingLeft: 0, paddingRight: 0, color: AppData.greyColor)
         
         feedbackTextView.superview?.isHidden = true
         
@@ -88,7 +87,7 @@ class InterviewEditController: MJPController, WWCalendarTimeSelectorProtocol {
     @IBAction func appDetailAction(_ sender: Any) {
         let controller = JobSeekerDetailController.instantiate()
         controller.application = application
-        controller.onlyView = true
+        controller.readOnly = true
         navigationController?.pushViewController(controller, animated: true)
     }
     
@@ -101,7 +100,9 @@ class InterviewEditController: MJPController, WWCalendarTimeSelectorProtocol {
         interviewForSave.feedback = feedbackTextView.text
         
         API.shared().saveInterview(interviewId: interview?.id, interview: interviewForSave, success: { (_) in
-            AppData.updateApplication(self.application.id, success: self.closeAction, failure: self.handleErrors)
+            AppData.updateApplication(self.application.id, success: { (_) in
+                self.closeAction()
+            }, failure: self.handleErrors)
         }, failure: self.handleErrors)
     }
     

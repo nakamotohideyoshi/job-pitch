@@ -15,6 +15,7 @@ class MessageController0: MJPController {
     @IBOutlet weak var titleLabel: UILabel!;
     @IBOutlet weak var subTitleLabel: UILabel!;
     @IBOutlet weak var containerView: UIView!
+    @IBOutlet weak var bannerLabel: UILabel!
     
     var application: Application!
     
@@ -30,7 +31,7 @@ class MessageController0: MJPController {
             setTitle(title: "Messages", subTitle: subTitle)
         }
         
-        headerView.addUnderLine(paddingLeft: 0, paddingRight: 0, color: AppData.greyBorderColor)
+        headerView.addUnderLine(paddingLeft: 0, paddingRight: 0, color: AppData.greyColor)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -41,15 +42,6 @@ class MessageController0: MJPController {
     func loadApplication() {
         
         application = (AppData.applications.filter { $0.id == application.id })[0]
-        let interviews = application.interviews as! [ApplicationInterview]
-        let filters = interviews.filter { $0.status == InterviewStatus.INTERVIEW_PENDING || $0.status == InterviewStatus.INTERVIEW_ACCEPTED }
-        if filters.count > 0 {
-            interview = filters[0]
-            navigationItem.rightBarButtonItem = nil
-        } else {
-            navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(named: "nav-interview"), style: .plain, target: self, action: #selector(createInterview))
-        }
-        
         let job = application.job!
         
         if AppData.user.isJobSeeker() {
@@ -57,7 +49,16 @@ class MessageController0: MJPController {
             titleLabel.text = job.title
             subTitleLabel.text = job.getBusinessName()
         } else {
-            AppHelper.loadJobseekerImage(application.jobSeeker, imageView: imgView, completion: nil)
+            let interviews = application.interviews as! [ApplicationInterview]
+            let filters = interviews.filter { $0.status == InterviewStatus.INTERVIEW_PENDING || $0.status == InterviewStatus.INTERVIEW_ACCEPTED }
+            if filters.count > 0 {
+                interview = filters[0]
+                navigationItem.rightBarButtonItem = nil
+            } else {
+                navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(named: "nav-interview"), style: .plain, target: self, action: #selector(createInterview))
+            }
+
+            AppHelper.loadJobseekerAvatar(application.jobSeeker, imageView: imgView, completion: nil)
             titleLabel.text = application.jobSeeker.getFullName()
             subTitleLabel.text = application.jobSeeker.desc
         }
@@ -66,7 +67,9 @@ class MessageController0: MJPController {
             let subTitle = "Interview: " + AppHelper.convertDateToString(interview.at)
             let subTitleParameters = [NSForegroundColorAttributeName : interview.status == InterviewStatus.INTERVIEW_PENDING ? AppData.yellowColor : AppData.greyColor,
                                       NSFontAttributeName : UIFont.systemFont(ofSize: 14)]
-            subTitleLabel.attributedText = NSMutableAttributedString(string: subTitle, attributes: subTitleParameters)
+            bannerLabel.attributedText = NSMutableAttributedString(string: subTitle, attributes: subTitleParameters)
+        } else {
+            bannerLabel.superview?.isHidden = true
         }
         
         let controller = AppHelper.instantiate("Message") as! MessageController
@@ -92,7 +95,7 @@ class MessageController0: MJPController {
         } else {
             let controller = JobSeekerDetailController.instantiate()
             controller.application = application
-            controller.onlyView = true
+            controller.readOnly = true
             navigationController?.pushViewController(controller, animated: true)
         }
     }

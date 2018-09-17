@@ -71,8 +71,7 @@ class MessageController: JSQMessagesViewController {
                 }, cancel: "View profile", cancelCallback: { 
                     let controller = JobSeekerDetailController.instantiate()
                     controller.application = self.application
-                    controller.chooseDelegate = self
-                    controller.onlyView = true
+                    controller.isHideMessages = true
                     self.navigationController?.pushViewController(controller, animated: true)
                 })
             } else if application.status == ApplicationStatus.APPLICATION_DELETED_ID {
@@ -213,7 +212,7 @@ class MessageController: JSQMessagesViewController {
     }
     
     func showLoading() -> LoadingView {
-        let loadingView = LoadingView.create(controller: self)
+        let loadingView = LoadingView.create(parentView: self.view)
         loadingView.backgroundColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.5)
         return loadingView
     }

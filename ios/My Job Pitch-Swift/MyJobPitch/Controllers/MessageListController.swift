@@ -9,10 +9,13 @@
 import UIKit
 import SVPullToRefresh
 
-class MessageListController: SearchController {
+class MessageListController: MJPController {
     
     @IBOutlet weak var emptyView: UILabel!
     @IBOutlet weak var noPitchView: UIView!
+    @IBOutlet weak var tableView: UITableView!
+    
+    var data: NSMutableArray!
     
     var job: Job!
     var jobSeeker: JobSeeker!
@@ -53,27 +56,15 @@ class MessageListController: SearchController {
     }
     
     func loadData() {
-        allData = NSMutableArray()
+        data = NSMutableArray()
         for application in AppData.applications {
             if job == nil || job.id == application.job.id {
-                allData.add(application)
+                data.add(application)
             }
         }
         
-        self.filter()
-        self.emptyView.isHidden = self.allData.count > 0
+        self.emptyView.isHidden = self.data.count > 0
         self.tableView.pullToRefreshView.stopAnimating()
-    }
-    
-    override func filterItem(item: Any, text: String) -> Bool {
-        
-        let application = item as! Application
-        for message in application.messages as! [Message] {
-            if message.content.lowercased().contains(text) {
-                return true
-            }
-        }
-        return application.job.locationData.businessData.name.lowercased().contains(text)
     }
     
     @IBAction func noRecordNow(_ sender: Any) {
@@ -104,7 +95,7 @@ extension MessageListController: UITableViewDataSource {
             cell.titleLabel.text = job.title
             cell.subTitleLabel.text = job.getBusinessName()
         } else {
-            AppHelper.loadJobseekerImage(application.jobSeeker, imageView: cell.imgView, completion: nil)
+            AppHelper.loadJobseekerAvatar(application.jobSeeker, imageView: cell.imgView, completion: nil)
             cell.titleLabel.text = application.jobSeeker.getFullName()
             cell.subTitleLabel.text = String(format: "%@ (%@)", job.title, job.getBusinessName())
         }
@@ -119,7 +110,7 @@ extension MessageListController: UITableViewDataSource {
             cell.messageLabel.text = lastMessage.content
         }
         
-        cell.addUnderLine(paddingLeft: 15, paddingRight: 0, color: AppData.greyBorderColor)
+        cell.addUnderLine(paddingLeft: 15, paddingRight: 0, color: AppData.greyColor)
         
         if application.status == ApplicationStatus.APPLICATION_DELETED_ID {
             var str: NSMutableAttributedString =  NSMutableAttributedString(string: cell.titleLabel.text!)
@@ -143,7 +134,7 @@ extension MessageListController: UITableViewDataSource {
             cell.attributesLabel.attributedText = str
             
             cell.setOpacity(0.5)
-            cell.backgroundColor = UIColor(red: 240/256.0, green: 240/256.0, blue: 240/256.0, alpha: 0.5)
+            cell.backgroundColor = UIColor(red: 240/255.0, green: 240/255.0, blue: 240/255.0, alpha: 0.5)
         } else {
             cell.setOpacity(1)
             cell.backgroundColor = UIColor.white

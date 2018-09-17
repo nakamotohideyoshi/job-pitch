@@ -15,12 +15,11 @@ class AppData: NSObject {
     static let apiVersion = 5
     static let production = false
     
-    static let greenColor = UIColor(red: 0/256.0, green: 187/256.0, blue: 168/256.0, alpha: 1)
-    static let yellowColor = UIColor(red: 256/256.0, green: 147/256.0, blue: 0/256.0, alpha: 1)
-    static let greyColor = UIColor(red: 214/256.0, green: 214/256.0, blue: 214/256.0, alpha: 1)
-    static let greyBorderColor = UIColor(red: 204/256.0, green: 204/256.0, blue: 204/256.0, alpha: 1)
-    static let imageBGColor = UIColor(red: 235/256.0, green: 235/256.0, blue: 235/256.0, alpha: 1)
-    static let navColor = UIColor(red: 35/256.0, green: 35/256.0, blue: 35/256.0, alpha: 1)
+    static let greenColor = UIColor(red: 0/255.0, green: 182/255.0, blue: 164/255.0, alpha: 1)
+    static let yellowColor = UIColor(red: 1, green: 147/255.0, blue: 0, alpha: 1)
+    static let greyColor = UIColor(red: 214/255.0, green: 214/255.0, blue: 214/255.0, alpha: 1)
+    static let imageBGColor = UIColor(red: 235/255.0, green: 235/255.0, blue: 235/255.0, alpha: 1)
+    static let darkColor = UIColor(red: 51/255.0, green: 51/255.0, blue: 51/255.0, alpha: 1)
     
     static let cornerRadius: CGFloat = 6
     
@@ -39,14 +38,14 @@ class AppData: NSObject {
     static var existProfile = false
     
     static var user: User!
-    static var hours: NSArray!
-    static var contracts: NSArray!
-    static var sexes: NSArray!
-    static var nationalities: NSArray!
-    static var sectors: NSArray!
-    static var jobStatuses: NSArray!
-    static var applicationStatuses: NSArray!
-    static var roles: NSArray!
+    static var hours: [Hours]!
+    static var contracts: [Contract]!
+    static var sexes: [Sex]!
+    static var nationalities: [Nationality]!
+    static var sectors: [Sector]!
+    static var jobStatuses: [JobStatus]!
+    static var applicationStatuses: [ApplicationStatus]!
+    static var roles: [Role]!
     
     static var initialTokens: InitialTokens!
     
@@ -75,7 +74,7 @@ class AppData: NSObject {
         var failed = false
         
         API.shared().loadHours(success: { (data) in
-            hours = data
+            hours = data as! [Hours]
             if isDataLoaded() {
                 success()
             }
@@ -87,7 +86,7 @@ class AppData: NSObject {
         }
         
         API.shared().loadContracts(success: { (data) in
-            contracts = data
+            contracts = data as! [Contract]
             if isDataLoaded() {
                 success()
             }
@@ -99,7 +98,7 @@ class AppData: NSObject {
         }
         
         API.shared().loadSexes(success: { (data) in
-            sexes = data
+            sexes = data as! [Sex]
             if isDataLoaded() {
                 success()
             }
@@ -111,7 +110,7 @@ class AppData: NSObject {
         }
         
         API.shared().loadNationalities(success: { (data) in
-            nationalities = data
+            nationalities = data as! [Nationality]
             if isDataLoaded() {
                 success()
             }
@@ -123,7 +122,7 @@ class AppData: NSObject {
         }
         
         API.shared().loadSectors(success: { (data) in
-            sectors = data
+            sectors = data as! [Sector]
             if isDataLoaded() {
                 success()
             }
@@ -135,7 +134,7 @@ class AppData: NSObject {
         }
         
         API.shared().loadJobStatuses(success: { (data) in
-            jobStatuses = data
+            jobStatuses = data as! [JobStatus]
             JobStatus.JOB_STATUS_OPEN_ID = getJobStatusByName(JobStatus.JOB_STATUS_OPEN).id
             JobStatus.JOB_STATUS_CLOSED_ID = getJobStatusByName(JobStatus.JOB_STATUS_CLOSED).id
             if isDataLoaded() {
@@ -149,7 +148,7 @@ class AppData: NSObject {
         }
         
         API.shared().loadApplicationStatuses(success: { (data) in
-            applicationStatuses = data
+            applicationStatuses = data as! [ApplicationStatus]
             ApplicationStatus.APPLICATION_CREATED_ID = getApplicationStatusByName(ApplicationStatus.APPLICATION_CREATED).id
             ApplicationStatus.APPLICATION_ESTABLISHED_ID = getApplicationStatusByName(ApplicationStatus.APPLICATION_ESTABLISHED).id
             ApplicationStatus.APPLICATION_DELETED_ID = getApplicationStatusByName(ApplicationStatus.APPLICATION_DELETED).id
@@ -164,7 +163,7 @@ class AppData: NSObject {
         }
         
         API.shared().loadRoles(success: { (data) in
-            roles = data
+            roles = data as! [Role]
             if isDataLoaded() {
                 success()
             }
@@ -222,7 +221,7 @@ class AppData: NSObject {
     
     static func getSex(_ id: NSNumber!) -> Sex! {
         if id != nil {
-            for sex in sexes as! [Sex] {
+            for sex in sexes as [Sex] {
                 if sex.id == id {
                     return sex
                 }
@@ -233,7 +232,7 @@ class AppData: NSObject {
     
     static func getSexByName(_ name: String!) -> Sex! {
         if name != nil {
-            for sex in sexes as! [Sex] {
+            for sex in sexes as [Sex] {
                 if sex.name == name {
                     return sex
                 }
@@ -244,7 +243,7 @@ class AppData: NSObject {
     
     static func getHours(_ id: NSNumber!) -> Hours! {
         if id != nil {
-            for hours in AppData.hours as! [Hours] {
+            for hours in AppData.hours {
                 if hours.id == id {
                     return hours
                 }
@@ -255,7 +254,7 @@ class AppData: NSObject {
     
     static func getHoursByName(_ name: String!) -> Hours! {
         if name != nil {
-            for hours in AppData.hours as! [Hours] {
+            for hours in AppData.hours {
                 if hours.name == name {
                     return hours
                 }
@@ -266,7 +265,7 @@ class AppData: NSObject {
     
     static func getContract(_ id: NSNumber!) -> Contract! {
         if id != nil {
-            for contract in contracts as! [Contract] {
+            for contract in contracts {
                 if contract.id == id {
                     return contract
                 }
@@ -277,7 +276,7 @@ class AppData: NSObject {
     
     static func getContractByName(_ name: String!) -> Contract! {
         if name != nil {
-            for contract in contracts as! [Contract] {
+            for contract in contracts as [Contract] {
                 if contract.name == name {
                     return contract
                 }
@@ -288,19 +287,8 @@ class AppData: NSObject {
     
     static func getJobStatusByName(_ name: String!) -> JobStatus! {
         if name != nil {
-            for status in jobStatuses as! [JobStatus] {
+            for status in jobStatuses as [JobStatus] {
                 if status.name == name {
-                    return status
-                }
-            }
-        }
-        return nil
-    }
-    
-    static func getApplicationStatus(_ id: NSNumber!) -> ApplicationStatus! {
-        if id != nil {
-            for status in applicationStatuses as! [ApplicationStatus] {
-                if status.id == id {
                     return status
                 }
             }
@@ -310,7 +298,7 @@ class AppData: NSObject {
     
     static func getApplicationStatusByName(_ name: String!) -> ApplicationStatus! {
         if name != nil {
-            for status in applicationStatuses as! [ApplicationStatus] {
+            for status in applicationStatuses as [ApplicationStatus] {
                 if status.name == name {
                     return status
                 }
@@ -321,7 +309,7 @@ class AppData: NSObject {
     
     static func getRole(_ id: NSNumber!) -> Role! {
         if id != nil {
-            for role in roles as! [Role] {
+            for role in roles as [Role] {
                 if role.id == id {
                     return role
                 }
@@ -332,7 +320,7 @@ class AppData: NSObject {
     
     static func getRoleByName(_ name: String!) -> Role! {
         if name != nil {
-            for role in roles as! [Role] {
+            for role in roles as [Role] {
                 if role.name == name {
                     return role
                 }
@@ -352,7 +340,7 @@ class AppData: NSObject {
     
     static var timer: Timer?
     static var time = 0
-    static var timeInterval = 5
+    static var timeInterval = 30
     static var newMessageCount = 0
     
     static var applications: [Application]!
@@ -409,25 +397,25 @@ class AppData: NSObject {
         }, failure: failure)
     }
     
-    static func updateApplication(_ id: NSNumber, success: (() -> Void)?,
+    static func updateApplication(_ id: NSNumber, success: ((Application) -> Void)?,
                                   failure: ((String?, NSDictionary?) -> Void)?) {
         API.shared().loadApplicationWithId(id: id, success: { (data) in
-            var newApplication: Application! = data as! Application
-            
+            let newApplication = data as! Application
+            var isNew = true
             for (index, application) in applications.enumerated() {
                 if application.id == newApplication.id {
                     applications[index] = newApplication
-                    newApplication = nil
+                    isNew = false
                     break
                 }
             }
             
-            if newApplication != nil {
+            if isNew {
                 applications.insert(newApplication, at: 0)
             }
             
             preprocessApplications()
-            success?()
+            success?(newApplication)
         }, failure: failure)
     }
     

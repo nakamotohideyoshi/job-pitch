@@ -58,7 +58,7 @@ class BorderTextView: UITextView {
         
         self.layer.cornerRadius = 6;
         self.layer.borderWidth = 0.5;
-        self.layer.borderColor = AppData.greyBorderColor.cgColor;
+        self.layer.borderColor = AppData.greyColor.cgColor;
         
         self.textContainerInset = UIEdgeInsetsMake(11, 3, 11, 3)
     }
@@ -66,11 +66,10 @@ class BorderTextView: UITextView {
 
 class ButtonTextField: UITextField {
     
-    var clickCallback: (() -> Void)!;
+    var clickCallback: (() -> Void)!
     
     public required init?(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder);
-        
+        super.init(coder: aDecoder)
         delegate = self;
     }
 }
@@ -82,6 +81,13 @@ extension ButtonTextField: UITextFieldDelegate {
         return false;
     }
 
+}
+
+class CircleImageView: UIImageView {
+    public required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+        layer.cornerRadius = frame.width / 2
+    }
 }
 
 class BadgeIcon: UILabel {

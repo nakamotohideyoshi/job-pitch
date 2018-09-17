@@ -275,11 +275,6 @@ class APIConfigure: NSObject {
                                          "destination":     "pitches",
                                          "mapping":         pitchMapping ] ]
 
-        let jobSeekerMapping = createResponseMappingForClass(JobSeeker.classForCoder(),
-                                                             array: jobSeekerArray,
-                                                             dictionary: inverseDictionary(jobSeekerDictionary),
-                                                             relationships: inverseRelationships(jobSeekerRelationships))
-
         configureMapping(JobSeeker.classForCoder(),
                          requestArray: jobSeekerArray,
                          requestDictionary: jobSeekerDictionary,
@@ -517,7 +512,7 @@ class APIConfigure: NSObject {
                                                                         dictionary: inverseDictionary(applicationInterviewDictionary),
                                                                         relationships: inverseRelationships(applicationInterviewRelationships))
 
-        let applictionCreateArray = [ "id", "job", "shortlisted" ]
+        let applictionCreateArray = [ "job", "shortlisted" ]
 
         let applictionCreateDictionary = [ "jobSeeker": "job_seeker" ]
 
@@ -527,12 +522,53 @@ class APIConfigure: NSObject {
                                mappingRelationships: nil,
                                path: "/api/applications/",
                                method: .POST)
+        
+        let externalApplictionCreateArray = [ "job", "shortlisted" ]
+
+        
+        
+        
+        
+        
+        
+        let jobSeekerArray1 = [ "email", "telephone", "mobile", "age", "sex", "nationality", "national_insurance_number", "has_national_insurance_number" ]
+        let jobSeekerDictionary1 = [ "firstName":            "first_name",
+                                    "lastName":             "last_name",
+                                    "desc":                 "description",
+                                    "emailPublic":          "email_public",
+                                    "telephonePublic":      "telephone_public",
+                                    "mobilePublic":         "mobile_public",
+                                    "agePublic":            "age_public",
+                                    "sexPublic":            "sex_public",
+                                    "nationalityPublic":    "nationality_public",
+                                    "hasReferences":        "has_references",
+                                    "truthConfirmation":    "truth_confirmation" ]
+        let jobSeekerReqMapping = RKObjectMapping.request()!
+        setupMapping(jobSeekerReqMapping,
+                     array: jobSeekerArray1,
+                     dictionary: jobSeekerDictionary1,
+                     relationships: nil)
+        let externalApplicationInterviewRelationships = [ [ "source": "jobSeeker",
+                                                            "destination": "job_seeker",
+                                                            "mapping": jobSeekerReqMapping ] ]
+        
+        configureSimpleMapping(ExternalApplicationForCreation.classForCoder(),
+                               mappingArray: externalApplictionCreateArray,
+                               mappingDictionary: nil,
+                               mappingRelationships: externalApplicationInterviewRelationships,
+                               path: "/api/applications/external/",
+                               method: .POST)
 
         let applicationArray = [ "id", "created", "updated", "shortlisted", "status" ]
 
         let applicationDictionary = [ "createdBy": "created_by",
                                       "deletedBy": "deleted_by" ]
 
+        let jobSeekerMapping = createResponseMappingForClass(JobSeeker.classForCoder(),
+                                                             array: jobSeekerArray,
+                                                             dictionary: inverseDictionary(jobSeekerDictionary),
+                                                             relationships: inverseRelationships(jobSeekerRelationships))
+        
         let applicationRelationships = [ [ "source": "job",
                                            "destination": "job_data",
                                            "mapping": jobMapping ],
@@ -791,7 +827,7 @@ class APIConfigure: NSObject {
                      array: requestArray,
                      dictionary: requestDictionary,
                      relationships: requestRelationships)
-
+        
         let requestDescriptor = RKRequestDescriptor(mapping: requestMapping,
                                                     objectClass: requestClass,
                                                     rootKeyPath: nil,

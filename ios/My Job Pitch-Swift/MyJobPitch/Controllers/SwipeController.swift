@@ -255,7 +255,6 @@ class SwipeController: MJPController {
         } else {
             let controller = JobSeekerDetailController.instantiate()
             controller.jobSeeker = data[currentIndex - cards.count] as! JobSeeker
-            controller.chooseDelegate = self
             navigationController?.pushViewController(controller, animated: true)
         }
         
@@ -269,12 +268,9 @@ class SwipeController: MJPController {
         SideMenuController.pushController(id: "add_record")
     }
     
-    static func pushController(job: Job!) {
-        let controller = AppHelper.instantiate("Swipe") as! SwipeController
-        controller.searchJob = job
-        AppHelper.getFrontController().navigationController?.pushViewController(controller, animated: true)
-    }
-    
+    static func instantiate() -> SwipeController {
+        return AppHelper.instantiate("Swipe") as! SwipeController
+    }    
 }
 
 extension SwipeController: MDCSwipeToChooseDelegate {

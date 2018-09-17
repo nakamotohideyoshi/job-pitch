@@ -28,7 +28,7 @@ class SelectionController: UIViewController {
         
         let tap = UITapGestureRecognizer(target: self, action: #selector(close))
         popupController?.backgroundView?.addGestureRecognizer(tap)
-        popupController?.navigationBar.barTintColor = AppData.navColor
+        popupController?.navigationBar.barTintColor = AppData.darkColor
         popupController?.navigationBar.tintColor = UIColor.white
         popupController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName: UIColor.white]
         

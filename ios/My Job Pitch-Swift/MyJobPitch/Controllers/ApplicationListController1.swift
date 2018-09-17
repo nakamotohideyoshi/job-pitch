@@ -1,5 +1,5 @@
 //
-//  ApplicationListController.swift
+//  ApplicationListController1.swift
 //  MyJobPitch
 //
 //  Created by dev on 12/26/16.
@@ -10,10 +10,14 @@ import UIKit
 import SVPullToRefresh
 import MGSwipeTableCell
 
-class ApplicationListController: SearchController {
+class ApplicationListController1: MJPController {
     
     @IBOutlet weak var emptyView: UILabel!
     @IBOutlet weak var noPitchView: UIView!
+    @IBOutlet weak var tableView: UITableView!
+    
+    var data: NSMutableArray!
+    var selectedItem: Any!
     
     var isRecruiter = false
     var isApplication = false
@@ -38,7 +42,7 @@ class ApplicationListController: SearchController {
         title = SideMenuController.menuItems[SideMenuController.currentID]?["title"]
         
         isRecruiter = AppData.user.isRecruiter()
-        isApplication = mode == "" || mode == "applications" || mode == "applications1"
+        isApplication = mode == "" || mode == "applications" || mode == "j_applications"
         isConnectBtn = isRecruiter && isApplication
         isShortlisted = mode == "shortlist"
         
@@ -53,14 +57,10 @@ class ApplicationListController: SearchController {
         }
         
         if isRecruiter {
-            let item = UIBarButtonItem(image: UIImage(named: "nav-edit"), style: .plain, target: self, action: #selector(goJobDetail))
-            searchItems?.append(item)
-            navigationItem.rightBarButtonItems = searchItems
+            navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(named: "nav-edit"), style: .plain, target: self, action: #selector(goJobDetail))
             setTitle(title: title!, subTitle: job.title + ", (" + job.getBusinessName() + ")")
         } else {
-            let item = UIBarButtonItem(image: UIImage(named: "nav-edit"), style: .plain, target: self, action: #selector(goProfile))
-            self.searchItems?.append(item)
-            self.navigationItem.rightBarButtonItems = self.searchItems
+            self.navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(named: "nav-edit"), style: .plain, target: self, action: #selector(goProfile))
             if (jobSeeker != nil) {
                 showInactiveBanner()
             }
@@ -75,14 +75,14 @@ class ApplicationListController: SearchController {
             status = isApplication ? ApplicationStatus.APPLICATION_CREATED_ID: ApplicationStatus.APPLICATION_ESTABLISHED_ID
         }
         
-        ApplicationListController.refreshRequest = true
+        ApplicationListController1.refreshRequest = true
         
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        if ApplicationListController.refreshRequest {
-            ApplicationListController.refreshRequest = false
+        if ApplicationListController1.refreshRequest {
+            ApplicationListController1.refreshRequest = false
             showLoading()
             
             if !isRecruiter {
@@ -106,25 +106,24 @@ class ApplicationListController: SearchController {
     }
     
     func showInactiveBanner () {
-//        if !jobSeeker.active {
-//            self.jobTitleView.text = "Your profile is not active!"
-//        } else {
-//            self.jobTitleView.text = ""
-//        }
+        //        if !jobSeeker.active {
+        //            self.jobTitleView.text = "Your profile is not active!"
+        //        } else {
+        //            self.jobTitleView.text = ""
+        //        }
     }
     
     func loadData() {
         
         API.shared().loadApplicationsForJob(jobId: job?.id, status: status, shortlisted: isShortlisted, success: { (data) in
             self.hideLoading()
-            self.allData = NSMutableArray()
+            self.data = NSMutableArray()
             for application in data as! [Application] {
                 if (self.status == nil || self.status == application.status) && (!self.isShortlisted || application.shortlisted == self.isShortlisted) {
-                    self.allData.add(application)
+                    self.data.add(application)
                 }
             }
-            self.filter()
-            self.emptyView.isHidden = self.allData.count > 0
+            self.emptyView.isHidden = self.data.count > 0
             self.tableView.pullToRefreshView.stopAnimating()
         }, failure: self.handleErrors)
         
@@ -140,26 +139,7 @@ class ApplicationListController: SearchController {
         let controller = AppHelper.instantiate("JobSeekerProfile") as! JobSeekerProfileController
         controller.activation = true
         AppHelper.getFrontController().navigationController?.present(controller, animated: true)
-        ApplicationListController.refreshRequest = true
-    }
-    
-    override func filterItem(item: Any, text: String) -> Bool {
-        
-        let application = item as! Application
-        let businessName = application.job.getBusinessName()
-        
-        if isRecruiter {
-            let name = application.jobSeeker.getFullName()
-            return  name.lowercased().contains(text) ||
-                    application.job.title.lowercased().contains(text) ||
-                    businessName.lowercased().contains(text) ||
-                    application.job.locationData.placeName.lowercased().contains(text)
-        }
-        
-        return  application.job.title.lowercased().contains(text) ||
-                businessName.lowercased().contains(text) ||
-                application.job.locationData.placeName.lowercased().contains(text)
-        
+        ApplicationListController1.refreshRequest = true
     }
     
     @IBAction func goRecordNow(_ sender: Any) {
@@ -168,7 +148,7 @@ class ApplicationListController: SearchController {
     
     
     static func pushController(job: Job!, mode: String!) {
-        let controller = AppHelper.instantiate("ApplicationList") as! ApplicationListController
+        let controller = AppHelper.instantiate("ApplicationList") as! ApplicationListController1
         controller.job = job
         controller.mode = mode
         AppHelper.getFrontController().navigationController?.pushViewController(controller, animated: true)
@@ -176,7 +156,7 @@ class ApplicationListController: SearchController {
     
 }
 
-extension ApplicationListController: UITableViewDataSource {
+extension ApplicationListController1: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return data.count
@@ -235,7 +215,7 @@ extension ApplicationListController: UITableViewDataSource {
                                     })
                                 }, cancel: "Cancel", cancelCallback: nil)
                             } else {
-                                ApplicationListController.refreshRequest = true
+                                ApplicationListController1.refreshRequest = true
                                 let controller = MessageController0.instantiate()
                                 controller.application = self.selectedItem as! Application
                                 let navController = UINavigationController(rootViewController: controller)
@@ -268,7 +248,7 @@ extension ApplicationListController: UITableViewDataSource {
         
         cell.rightButtons = buttons
         
-        cell.addUnderLine(paddingLeft: 15, paddingRight: 0, color: AppData.greyBorderColor)
+        cell.addUnderLine(paddingLeft: 15, paddingRight: 0, color: AppData.greyColor)
         
         return cell
         
@@ -276,11 +256,11 @@ extension ApplicationListController: UITableViewDataSource {
     
 }
 
-extension ApplicationListController: UITableViewDelegate {
+extension ApplicationListController1: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
-        ApplicationListController.refreshRequest = true
+        ApplicationListController1.refreshRequest = true
         
         let application = data[indexPath.row] as! Application
         self.selectedItem = application
@@ -288,7 +268,6 @@ extension ApplicationListController: UITableViewDelegate {
         if isRecruiter {
             let controller = JobSeekerDetailController.instantiate()
             controller.application = application
-            controller.chooseDelegate = self
             navigationController?.pushViewController(controller, animated: true)
         } else {
             let controller = ApplicationDetailsController.instantiate()
@@ -301,7 +280,7 @@ extension ApplicationListController: UITableViewDelegate {
     
 }
 
-extension ApplicationListController: ChooseDelegate {
+extension ApplicationListController1: ChooseDelegate {
     
     func apply(callback: (()->Void)!) {
         
@@ -334,6 +313,15 @@ extension ApplicationListController: ChooseDelegate {
             self.hideLoading()
             self.removeItem(self.selectedItem)
         }, failure: self.handleErrors)
+        
+    }
+    
+    func removeItem(_ item: Any!) {
+        
+        if item != nil {
+            data.remove(item)
+            tableView.reloadData()
+        }
         
     }
     

@@ -76,14 +76,14 @@ class LoadingView: UIView {
         progressView.center = CGPoint(x: frame.size.width*0.5, y: frame.size.height*0.5 + (labelView != nil ? 15 : 0))
     }
     
-    static func create(controller: UIViewController) -> LoadingView {
+    static func create(parentView: UIView) -> LoadingView {
         
         let loadingView = LoadingView()
-        loadingView.frame = controller.view.frame
-        loadingView.frame.origin.y = 20
-        loadingView.frame.size.height = loadingView.frame.size.height - 20
+        loadingView.frame = parentView.frame
+//        loadingView.frame.origin.y = 20
+//        loadingView.frame.size.height = loadingView.frame.size.height - 20
         loadingView.backgroundColor = UIColor.white
-        controller.view.addSubview(loadingView)
+        parentView.addSubview(loadingView)
         
         loadingView.showLoadingIcon("")
         

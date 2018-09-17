@@ -67,7 +67,7 @@ class JobEditController: MJPController {
         
         // sector data
         
-        for sector in AppData.sectors as! [Sector] {
+        for sector in AppData.sectors {
             sectorNames.append(sector.name)
         }
         sectorField.clickCallback = {
@@ -84,7 +84,7 @@ class JobEditController: MJPController {
         
         // contract data
         
-        for contract in AppData.contracts as! [Contract] {
+        for contract in AppData.contracts {
             contractNames.append(contract.name)
         }
         contractField.clickCallback = {
@@ -100,10 +100,7 @@ class JobEditController: MJPController {
         }
         
         // hours data
-        
-        for hours in AppData.hours as! [Hours] {
-            hoursNames.append(hours.name)
-        }
+        hoursNames = AppData.hours.map { $0.name }
         hoursField.clickCallback = {
             SelectionController.showPopup(title: "",
                                           items: self.hoursNames,
@@ -142,7 +139,7 @@ class JobEditController: MJPController {
             
             location = job.locationData
             
-            for status in AppData.jobStatuses as! [JobStatus] {
+            for status in AppData.jobStatuses {
                 if status.id == job.status {
                     active.isOn = status.name == JobStatus.JOB_STATUS_OPEN
                     break
@@ -152,7 +149,7 @@ class JobEditController: MJPController {
             titleField.text = job.title
             descTextView.text = job.desc
             
-            for sector in AppData.sectors as! [Sector] {
+            for sector in AppData.sectors {
                 if job.sector == sector.id {
                     selectedSectorNames.append(sector.name)
                     break
@@ -162,7 +159,7 @@ class JobEditController: MJPController {
             
             // contract data
             
-            for contract in AppData.contracts as! [Contract] {
+            for contract in AppData.contracts {
                 if job.contract == contract.id {
                     selectedContractNames.append(contract.name)
                     break
@@ -172,12 +169,7 @@ class JobEditController: MJPController {
             
             // hours data
             
-            for hours in AppData.hours as! [Hours] {
-                if job.hours == hours.id {
-                    selectedHoursNames.append(hours.name)
-                    break
-                }
-            }
+            selectedHoursNames = (AppData.hours.filter { $0.id ==  job.hours }).map { $0.name }
             hoursField.text = selectedHoursNames.joined(separator: ", ")
             
             playButtonView.isHidden = job.getPitch()?.video == nil
@@ -351,7 +343,7 @@ class JobEditController: MJPController {
         }
         
         let statusName = active.isOn ? JobStatus.JOB_STATUS_OPEN : JobStatus.JOB_STATUS_CLOSED
-        for status in AppData.jobStatuses as! [JobStatus] {
+        for status in AppData.jobStatuses {
             if status.name == statusName {
                 job.status = status.id
                 break
@@ -363,7 +355,7 @@ class JobEditController: MJPController {
         
         // sector data
         
-        for sector in AppData.sectors as! [Sector] {
+        for sector in AppData.sectors {
             if selectedSectorNames.contains(sector.name) {
                 job.sector = sector.id
                 break
@@ -372,7 +364,7 @@ class JobEditController: MJPController {
         
         // contract data
         
-        for contract in AppData.contracts as! [Contract] {
+        for contract in AppData.contracts {
             if selectedContractNames.contains(contract.name) {
                 job.contract = contract.id
                 break
@@ -381,7 +373,7 @@ class JobEditController: MJPController {
         
         // hours data
         
-        for hours in AppData.hours as! [Hours] {
+        for hours in AppData.hours {
             if selectedHoursNames.contains(hours.name) {
                 job.hours = hours.id
                 break

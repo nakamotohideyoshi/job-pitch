@@ -11,51 +11,45 @@ import MGSwipeTableCell
 
 class SelectJobController: MJPController {
     
-    @IBOutlet weak var headerView: UIView!
     @IBOutlet weak var headerImgView: UIImageView!
     @IBOutlet weak var headerTitle: UILabel!
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var emptyView: UIView!
     
-    var data: NSMutableArray! = NSMutableArray()
+    var jobs: [Job]! = [Job]()
     
     var titles = [
         "find_talent":  "Select job bellow to start finding talent for your business.",
-        "applications": "Select a job below to view jobseekers who have expressed interest in a job.",
-        "connections":  "Select a job below to view jobseekers you have connected with.",
-        "shortlist":    "Select a job below to view the jobseekers you have shortlisted for that role.",
+        "applications": "Select a job below to view applications",
         "interviews":    "Select a job below to view and arrange interviews.",
     ]
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        // Do any additional setup after loading the view.
-        
         var item = SideMenuController.menuItems[SideMenuController.currentID]!
         headerImgView.image = UIImage(named: item["icon"]!)?.withRenderingMode(.alwaysTemplate)
         headerTitle.text = titles[SideMenuController.currentID]
         
         tableView.addPullToRefresh {
-            self.refresh()
+            self.loadData()
         }
         
-        showLoading()
-        refresh()
+        AppHelper.showLoading("")
+        loadData()
     }
     
-    func refresh() {
+    func loadData() {
+        
+        self.emptyView.isHidden = true
         API.shared().loadJobsForLocation(locationId: nil, success: { (data) in
-            self.hideLoading()
-            self.data.removeAllObjects()
-            for job in data as! [Job] {
-                if job.status == JobStatus.JOB_STATUS_OPEN_ID {
-                    self.data.add(job)
-                }
-            }
-            self.emptyView.isHidden = self.data.count > 0
+            
+            AppHelper.hideLoading()
+            self.jobs = (data as! [Job]).filter { $0.status == JobStatus.JOB_STATUS_OPEN_ID }
             self.tableView.reloadData()
             self.tableView.pullToRefreshView.stopAnimating()
+            self.emptyView.isHidden = self.jobs.count > 0
+            
         }, failure: self.handleErrors)        
     }
     
@@ -63,54 +57,58 @@ class SelectJobController: MJPController {
         
         if AppData.user.canCreateBusinesses || AppData.user.businesses.count==0 {
             
-            let controller = AppHelper.instantiate("BusinessList") as! BusinessListController
-            AppHelper.getFrontController().navigationController?.pushViewController(controller, animated: true)
+            let controller = BusinessListController.instantiate()
+            navigationController?.pushViewController(controller, animated: true)
             
         } else {
             
-            let controller = AppHelper.instantiate("LocationList") as! BusinessDetailController
+            let controller = BusinessDetailController.instantiate()
             controller.businessId = AppData.user.businesses[0] as! NSNumber
             navigationController?.pushViewController(controller, animated: true)
             
         }
-    }
-    
+    }    
 }
 
 extension SelectJobController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return data.count
+        return jobs.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        let job = data[indexPath.row] as! Job
-        
         let cell = tableView.dequeueReusableCell(withIdentifier: "JobCell", for: indexPath) as! JobCell
         
-        cell.setData(job)
-        cell.addUnderLine(paddingLeft: 15, paddingRight: 0, color: AppData.greyBorderColor)
+        cell.setData(jobs[indexPath.row])
         return cell
     }
-    
 }
 
 extension SelectJobController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
-        let job = data[indexPath.row] as! Job
+        let job = jobs[indexPath.row]
         
         if SideMenuController.currentID == "find_talent" {
-            SwipeController.pushController(job: job)
-        } else if SideMenuController.currentID == "interviews" {
+            
+            let controller = SwipeController.instantiate()
+            controller.searchJob = job
+            navigationController?.pushViewController(controller, animated: true)
+            
+        } else if SideMenuController.currentID == "applications" {
+            
+            let controller = RCApplicationListController.instantiate()
+            controller.job = job
+            navigationController?.pushViewController(controller, animated: true)
+            
+        } else {
+            
             let controller = InterviewListController.instantiate()
             controller.job = job
             navigationController?.pushViewController(controller, animated: true)
-        } else {
-            ApplicationListController.pushController(job: job, mode: SideMenuController.currentID)
+            
         }
     }
-    
 }

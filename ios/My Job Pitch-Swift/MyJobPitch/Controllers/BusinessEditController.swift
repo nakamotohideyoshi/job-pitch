@@ -125,16 +125,13 @@ class BusinessEditController: MJPController {
         let url = URL(fileURLWithPath: path)
         do {
             let data = try Data(contentsOf: url)
-            logoImage = UIImage(data: data)
-            
-            if logoImage == nil {
-                //PopupController.showGray(fileName + "is not a image file", ok: "OK")
-            } else {
+            if let logoImage = UIImage(data: data) {
                 imgView.image = logoImage
                 removeImageButton.isHidden = false
                 addLogoButton.setTitle("Change Logo", for: .normal)
+            } else {
+                //PopupController.showGray(fileName + "is not a image file", ok: "OK")
             }
-            
         } catch {
             print("error")
         }

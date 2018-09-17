@@ -43,3 +43,11 @@ class ApplicationShortlistUpdate: MJPObject {
     var shortlisted = false
     
 }
+
+class ExternalApplicationForCreation: MJPObject {
+    
+    var jobSeeker: JobSeeker!
+    var job: NSNumber!
+    var shortlisted = false
+
+}

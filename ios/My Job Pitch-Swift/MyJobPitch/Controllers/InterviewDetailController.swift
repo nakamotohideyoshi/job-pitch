@@ -66,7 +66,7 @@ class InterviewDetailController: MJPController {
         interviews.sort { $0.at < $1.at }
         
         if AppData.user.isRecruiter() {
-            AppHelper.loadJobseekerImage(application.jobSeeker, imageView: imageView, completion: nil)
+            AppHelper.loadJobseekerAvatar(application.jobSeeker, imageView: imageView, completion: nil)
             nameLabel.text = application.jobSeeker.getFullName()
             commentLabel.text = application.jobSeeker.desc
             
@@ -147,7 +147,7 @@ class InterviewDetailController: MJPController {
         } else {
             let controller = JobSeekerDetailController.instantiate()
             controller.application = application
-            controller.onlyView = true
+            controller.readOnly = true
             navigationController?.pushViewController(controller, animated: true)
         }
     }
@@ -156,7 +156,7 @@ class InterviewDetailController: MJPController {
         PopupController.showYellow("Are you sure you want to accept this interview?", ok: "Ok", okCallback: {
             self.showLoading()
             API.shared().changeInterview(interviewId: self.interview.id, type: "accept", success: { (_) in
-                AppData.updateApplication(self.application.id, success: {
+                AppData.updateApplication(self.application.id, success: { (_) in
                     self.hideLoading()
                     self.reloadData()
                 }, failure: self.handleErrors)
@@ -176,7 +176,7 @@ class InterviewDetailController: MJPController {
         PopupController.showYellow("Are you sure you want to cancel this interview?", ok: "Ok", okCallback: {
             self.showLoading()
             API.shared().deleteInterview(interviewId: self.interview.id, success: { (_) in
-                AppData.updateApplication(self.application.id, success: {
+                AppData.updateApplication(self.application.id, success: { (_) in
                     _ = self.navigationController?.popViewController(animated: true)
                 }, failure: self.handleErrors)
             }, failure: self.handleErrors)
@@ -223,7 +223,7 @@ extension InterviewDetailController: UITableViewDataSource {
         (cell.viewWithTag(2) as! UILabel).text = status1
         
         if indexPath.row < interviews.count - 1 {
-            cell.addUnderLine(paddingLeft: 12, paddingRight: 0, color: AppData.greyBorderColor)
+            cell.addUnderLine(paddingLeft: 12, paddingRight: 0, color: AppData.greyColor)
         }
         
         return cell

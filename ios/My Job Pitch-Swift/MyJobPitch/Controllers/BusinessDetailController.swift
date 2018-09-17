@@ -17,8 +17,8 @@ class BusinessDetailController: MJPController {
     @IBOutlet weak var headerSubTitle: UILabel!
     @IBOutlet weak var headerCreditCount: UIButton!
     @IBOutlet weak var headerNavTitle: UILabel!
-    @IBOutlet weak var editButtonDisable: UIView!
-    @IBOutlet weak var removeButtonDisable: UIView!
+    @IBOutlet weak var editButton: UIButton!
+    @IBOutlet weak var removeButton: UIButton!
     @IBOutlet weak var controlHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var emptyView: UIView!
@@ -53,7 +53,10 @@ class BusinessDetailController: MJPController {
         } else {
             headerComment.isHidden = true
             headerNavTitle.text = "Workplaces"
-            removeButtonDisable.isHidden = AppData.user.canCreateBusinesses && AppData.user.businesses.count > 1
+            if AppData.user.canCreateBusinesses && AppData.user.businesses.count > 1 {
+                removeButton.backgroundColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.5)
+                removeButton.isEnabled = false
+            }
         }
         
         tableView.addPullToRefresh {
@@ -71,8 +74,13 @@ class BusinessDetailController: MJPController {
                 self.business = data as! Business
                 
                 if self.business.restricted {
-                    self.editButtonDisable.isHidden = false
-                    self.toolbar.items?.remove(at: 1)
+                    self.editButton.backgroundColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.5)
+                    self.editButton.isEnabled = false
+                    self.removeButton.backgroundColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.5)
+                    self.removeButton.isEnabled = false
+                    if (self.toolbar.items?.count)! > 1 {
+                        self.toolbar.items?.remove(at: 1)
+                    }
                 }
 
                 if !self.isAddMode {
@@ -154,6 +162,10 @@ class BusinessDetailController: MJPController {
         }, failure: self.handleErrors)
     }
     
+    static func instantiate() -> BusinessDetailController {
+        return AppHelper.instantiate("LocationList") as! BusinessDetailController
+    }
+    
 }
 
 extension BusinessDetailController: UITableViewDataSource {
@@ -170,7 +182,7 @@ extension BusinessDetailController: UITableViewDataSource {
         
         cell.setData(location)
         
-        if !isAddMode {
+        if !isAddMode && !business.restricted {
             
             cell.rightButtons = [
                 MGSwipeButton(title: "",
@@ -214,7 +226,7 @@ extension BusinessDetailController: UITableViewDataSource {
             
         }
         
-        cell.addUnderLine(paddingLeft: 15, paddingRight: 0, color: AppData.greyBorderColor)
+        cell.addUnderLine(paddingLeft: 15, paddingRight: 0, color: AppData.greyColor)
         
         return cell
         

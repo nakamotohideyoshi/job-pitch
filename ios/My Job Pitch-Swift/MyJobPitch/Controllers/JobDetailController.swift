@@ -21,11 +21,15 @@ class JobDetailController: MJPController {
     var refresh = true
     
     let menuItems = [
-        "find_talent", "applications", "connections", "shortlist", "messages", "interviews"
+        "find_talent", "applications", "applications", "applications", "interviews"
+    ]
+    
+    let titles = [
+        "Find Talent", "New Applications", "My Connections", "My Shortlist", "Interviews"
     ]
     
     var countItems = [
-        "", "", "", "", "", ""
+        "", "", "", "", ""
     ]
     
     override func viewWillAppear(_ animated: Bool) {
@@ -109,7 +113,7 @@ extension JobDetailController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         let cell = tableView.dequeueReusableCell(withIdentifier: "JobMenuCell", for: indexPath)
-        cell.addUnderLine(paddingLeft: 10, paddingRight: 0, color: AppData.greyBorderColor)
+        cell.addUnderLine(paddingLeft: 10, paddingRight: 0, color: AppData.greyColor)
         
         let iconView = cell.viewWithTag(1) as! UIImageView
         let titleView = cell.viewWithTag(2) as! UILabel
@@ -117,7 +121,7 @@ extension JobDetailController: UITableViewDataSource {
         let item = SideMenuController.menuItems[menuItems[indexPath.row]]!
         let count = countItems[indexPath.row]
         iconView.image = UIImage(named: item["icon"]!)?.withRenderingMode(.alwaysTemplate)
-        titleView.text = item["title"]! + count
+        titleView.text = titles[indexPath.row] + count
         
         return cell
     }
@@ -130,27 +134,18 @@ extension JobDetailController: UITableViewDelegate {
         
         let id = menuItems[indexPath.row]
         if id == "find_talent" {
-            SwipeController.pushController(job: job)
-        } else if id == "messages" {
-            if job.status == 2 {
-                PopupController.showGreen("To message please active your job", ok: "activate", okCallback: {
-                    self.refresh = true
-                    JobEditController.pushController(location: nil, job: self.job)
-                }, cancel: "Cancel", cancelCallback: {
-                    self.refresh = false
-                })
-                return
-            } else {
-                let controller = MessageListController.instantiate()
-                controller.job = job
-                navigationController?.pushViewController(controller, animated: true)
-            }
+            let controller = SwipeController.instantiate()
+            controller.searchJob = job
+            navigationController?.pushViewController(controller, animated: true)
         } else if id == "interviews" {
             let controller = InterviewListController.instantiate()
             controller.job = job
             navigationController?.pushViewController(controller, animated: true)
-        } else {
-            ApplicationListController.pushController(job: job, mode: id)
+        } else if id == "applications" {
+            let controller = RCApplicationListController.instantiate()
+            controller.job = job
+            controller.defaultTab = indexPath.row - 1
+            navigationController?.pushViewController(controller, animated: true)
         }
         
     }

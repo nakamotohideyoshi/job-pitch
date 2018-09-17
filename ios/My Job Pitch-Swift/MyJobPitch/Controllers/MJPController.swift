@@ -49,7 +49,8 @@ class MJPController: UIViewController {
     
     func showLoading() {
         if loadingView == nil {
-            loadingView = LoadingView.create(controller: self)
+            loadingView = LoadingView.create(parentView: self.view)
+//            navigationItem.hidesBackButton = true
             navigationItem.leftBarButtonItem?.isEnabled = false
             navigationItem.rightBarButtonItem?.isEnabled = false
         }
@@ -59,6 +60,7 @@ class MJPController: UIViewController {
         if loadingView != nil {
             loadingView.removeFromSuperview()
             loadingView = nil
+//            navigationItem.hidesBackButton = false
             navigationItem.leftBarButtonItem?.isEnabled = true
             navigationItem.rightBarButtonItem?.isEnabled = true
         }
@@ -163,6 +165,7 @@ class MJPController: UIViewController {
     func handleErrors(message: String?, errors: NSDictionary?) {
         
         hideLoading()
+        AppHelper.hideLoading()
         
         let requiredFields = getRequiredFields()
         

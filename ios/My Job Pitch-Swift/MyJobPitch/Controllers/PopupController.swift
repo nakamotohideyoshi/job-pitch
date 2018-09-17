@@ -71,6 +71,8 @@ class PopupController: UIViewController {
                      message: String!,
                      ok: String!, okCallback: (() -> Void)!,
                      cancel: String!, cancelCallback: (() -> Void)!) -> PopupController {
+        
+        AppHelper.hideLoading()
                 
         let controller = AppHelper.instantiate("Popup") as! PopupController
         let popupController = STPopupController(rootViewController: controller)
@@ -83,7 +85,7 @@ class PopupController: UIViewController {
         controller.boardView.layer.cornerRadius = AppData.cornerRadius
         controller.messageLabel.text = message
         
-        controller.boardView.backgroundColor = UIColor(red: 35/256.0, green: 35/256.0, blue: 35/256.0, alpha: 0.95)
+        controller.boardView.backgroundColor = UIColor(red: 51/255.0, green: 51/255.0, blue: 51/255.0, alpha: 0.95)
         controller.boardView.layer.borderColor = UIColor(red: 1, green: 1, blue: 1, alpha: 0.3).cgColor
         controller.boardView.layer.borderWidth = 0.5
         

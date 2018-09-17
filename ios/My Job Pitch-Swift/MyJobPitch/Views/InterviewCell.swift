@@ -24,7 +24,7 @@ class InterviewCell: MGSwipeTableCell {
         
         if AppData.user.isRecruiter() {
         
-            AppHelper.loadJobseekerImage(application.jobSeeker, imageView: imgView, completion: nil)
+            AppHelper.loadJobseekerAvatar(application.jobSeeker, imageView: imgView, completion: nil)
             name.text = application.jobSeeker.getFullName()
             comment.text = application.jobSeeker.desc
             

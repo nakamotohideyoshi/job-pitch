@@ -36,7 +36,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 
         let navigationBarAppearace = UINavigationBar.appearance()
         navigationBarAppearace.tintColor = UIColor.white
-        navigationBarAppearace.barTintColor = AppData.navColor
+        navigationBarAppearace.barTintColor = AppData.darkColor
+        navigationBarAppearace.isTranslucent = false
         navigationBarAppearace.titleTextAttributes = [NSForegroundColorAttributeName:UIColor.white]
         navigationBarAppearace.backIndicatorImage = UIImage(named: "nav-back")
         navigationBarAppearace.backIndicatorTransitionMaskImage = UIImage(named: "nav-back")

@@ -83,7 +83,7 @@ class DropboxController: UIViewController {
     
     func downloadFile(file: Files.FileMetadata) {
         
-        let loadingView = LoadingView.create(controller: self)
+        let loadingView = LoadingView.create(parentView: self.view)
         loadingView.backgroundColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.5)
         loadingView.showLoadingIcon("Downloading...")
         

@@ -9,6 +9,7 @@
 import UIKit
 import CoreLocation
 import Nuke
+import MBProgressHUD
 
 class AppHelper: NSObject {
 
@@ -39,6 +40,31 @@ class AppHelper: NSObject {
         
         return controller!
     }
+    
+    static func showLoading(_ message:String) {
+        let hud = createLoading()
+        hud.label.text = message
+    }
+    
+    static func createLoading() -> MBProgressHUD {
+        
+        hideLoading()
+        
+        let frontController = getFrontController1()
+        let hud = MBProgressHUD.showAdded(to: (frontController?.view)!, animated: true)
+        hud.backgroundView.color = UIColor(red: 0, green: 0, blue: 0, alpha: 0.65)
+        hud.bezelView.style = MBProgressHUDBackgroundStyle.solidColor
+        hud.bezelView.backgroundColor = UIColor(red: 35/255.0, green: 35/255.0, blue: 35/255.0, alpha: 0.95)
+        hud.contentColor = UIColor.white
+        
+        return hud
+    }
+    
+    static func hideLoading() {
+        let frontController = getFrontController1()
+        MBProgressHUD.hide(for: (frontController?.view)!, animated: true)
+    }
+
     
     static func instantiate(_ identifier: String) -> UIViewController {
         return UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: identifier)
@@ -76,14 +102,27 @@ class AppHelper: NSObject {
         }
     }
     
-    static func loadJobseekerImage(_ jobseeker: JobSeeker,
+    static func loadJobseekerAvatar(_ jobseeker: JobSeeker,
                                    imageView: UIImageView,
                                    completion: (() -> Void)!) {
-        if let image = jobseeker.getPitch()?.thumbnail {
-            AppHelper.loadImageURL(imageUrl: image, imageView: imageView, completion: nil)
-        } else {
-            imageView.image = UIImage(named: "no-img")
+        if let avatar = jobseeker.profileThumb {
+            AppHelper.loadImageURL(imageUrl: avatar, imageView: imageView, completion: completion)
+            return
         }
+
+//        if let avatar = jobseeker.getPitch()?.thumbnail {
+//            AppHelper.loadImageURL(imageUrl: avatar, imageView: imageView, completion: completion)
+//            return
+//        }
+        
+        var avatar = "avatar"
+        if jobseeker.sexPublic {
+            if let sex = AppData.getSex(jobseeker.sex) {
+                avatar = String(format: "avatar_%@", sex.name)
+            }
+        }
+        imageView.image = UIImage(named: avatar)
+        completion?()
     }
     
     static func removeLoading(imageView: UIImageView) {

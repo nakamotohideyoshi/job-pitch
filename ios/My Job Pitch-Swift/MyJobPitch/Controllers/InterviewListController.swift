@@ -76,7 +76,7 @@ extension InterviewListController: UITableViewDataSource {
         
         let (application, interview) = interviews[indexPath.row]
         cell.setData(application, interview)
-        cell.addUnderLine(paddingLeft: 12, paddingRight: 0, color: AppData.greyBorderColor)
+        cell.addUnderLine(paddingLeft: 12, paddingRight: 0, color: AppData.greyColor)
         
         return cell
     }

@@ -18,7 +18,7 @@ class BusinessUserCell: MGSwipeTableCell {
         subTitle.text = locations
         
         accessoryType = user.email == AppData.user.email ? .none : .disclosureIndicator
-        addUnderLine(paddingLeft: 12, paddingRight: 0, color: AppData.greyBorderColor)
+        addUnderLine(paddingLeft: 12, paddingRight: 0, color: AppData.greyColor)
     }
 
 }

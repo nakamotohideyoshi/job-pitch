@@ -60,7 +60,7 @@ class API: NSObject {
             message = "Connection Error"
         }
 
-        failure(message, userInfo)
+        failure?(message, userInfo)
     }
 
 
@@ -583,6 +583,13 @@ class API: NSObject {
                            success: ((NSObject?) -> Void)!,
                            failure: ((String?, NSDictionary?) -> Void)!) {
         postObject("/api/applications/", request: application,
+                   success: success, failure: failure)
+    }
+    
+    func createExternalApplication(application: ExternalApplicationForCreation,
+                           success: ((NSObject?) -> Void)!,
+                           failure: ((String?, NSDictionary?) -> Void)!) {
+        postObject("/api/applications/external/", request: application,
                    success: success, failure: failure)
     }
 

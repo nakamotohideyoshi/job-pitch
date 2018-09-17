@@ -9,6 +9,15 @@
 import UIKit
 import MGSwipeTableCell
 
+class RCApplicationCell: MGSwipeTableCell {
+    
+    @IBOutlet weak var imgView: UIImageView!;
+    @IBOutlet weak var titleLabel: UILabel!;
+    @IBOutlet weak var subTitleLabel: UILabel!;
+    @IBOutlet weak var iconView: UIImageView!
+    
+}
+
 class ApplicationCell1: MGSwipeTableCell {
 
     @IBOutlet weak var imgView: UIImageView!;
@@ -37,7 +46,7 @@ class ApplicationCell2: MGSwipeTableCell {
     @IBOutlet weak var location: UILabel!;    
     
     func setData(_ application: Application) {
-        AppHelper.loadJobseekerImage(application.jobSeeker, imageView: imgView, completion: nil)
+        AppHelper.loadJobseekerAvatar(application.jobSeeker, imageView: imgView, completion: nil)
         name.text = application.jobSeeker.getFullName()
         jobTitle.text = application.job.title
         businessName.text = application.job.getBusinessName()

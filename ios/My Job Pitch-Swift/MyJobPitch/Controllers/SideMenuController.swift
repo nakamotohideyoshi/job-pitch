@@ -13,7 +13,7 @@ class SideMenuController: UIViewController {
     static var currentID = ""
     static let menuItems = [
         "find_job":     ["icon": "menu-search",         "title": "Find Job",                "identifier": "Swipe",              "per": "P"],
-        "applications1":["icon": "menu-applications2",   "title": "My Applications",            "identifier": "ApplicationList",    "per": "P"],
+        "j_applications":["icon": "menu-applications2",   "title": "My Applications",            "identifier": "ApplicationList1",    "per": "P"],
         "messages":     ["icon": "menu-message",        "title": "Messages",                "identifier": "MessageList",        "per": "PB"],
         "j_interviews":  ["icon": "menu-interview",        "title": "Interviews",             "identifier": "InterviewList",          "per": "P"],
         "job_profile":  ["icon": "menu-job-profile",    "title": "Job Profile",             "identifier": "JobProfile",         "per": "J"],
@@ -22,9 +22,7 @@ class SideMenuController: UIViewController {
         "user_profile": ["icon": "menu-user-profile",   "title": "Profile",                 "identifier": "JobSeekerProfile",   "per": ""],
         
         "find_talent":  ["icon": "menu-search",         "title": "Find Talent",             "identifier": "SelectJob",          "per": "B"],
-        "applications": ["icon": "menu-new-applications",    "title": "New Applications",            "identifier": "ApplicationList",    "per": "B"],
-        "connections":  ["icon": "menu-applications1",        "title": "My Connections",             "identifier": "SelectJob",          "per": "B"],
-        "shortlist":    ["icon": "menu-shortlist",      "title": "My Shortlist",            "identifier": "SelectJob",          "per": "B"],
+        "applications": ["icon": "menu-applications1",    "title": "Applications",            "identifier": "SelectJob",    "per": "B"],
         "interviews":  ["icon": "menu-interview",        "title": "Interviews",             "identifier": "SelectJob",          "per": "B"],
         "businesses":   ["icon": "menu-business",       "title": "Add or Edit Jobs",        "identifier": "BusinessList",       "per": ""],
         "users":        ["icon": "menu-users",   "title": "Users",                   "identifier": "BusinessList",       "per": ""],
@@ -37,11 +35,11 @@ class SideMenuController: UIViewController {
     ]
     
     static let jobSeekerMenu = [
-        "find_job", "applications1", "messages", "j_interviews", "job_profile", "add_record", "view_profile", "change_pass", "help", "share", "contact_us", "log_out"
+        "find_job", "j_applications", "messages", "j_interviews", "job_profile", "add_record", "view_profile", "change_pass", "help", "share", "contact_us", "log_out"
     ]
     
     static let recruiterMenu = [
-        "find_talent", "applications", "connections", "shortlist", "messages", "interviews", "businesses", "change_pass", "users", "help", "share", "contact_us", "log_out"
+        "find_talent", "applications", "messages", "interviews", "businesses", "users", "change_pass", "help", "share", "contact_us", "log_out"
     ]
     
     static func getCurrentTitle(_ id: String!) -> String! {
@@ -104,9 +102,7 @@ class SideMenuController: UIViewController {
         
         var identifier = SideMenuController.menuItems[SideMenuController.currentID]?["identifier"]
         if AppData.user != nil {
-            if AppData.user.isRecruiter() && id == "applications" {
-                identifier = "SelectJob"
-            } else if AppData.user.jobSeeker == nil && id == "view_profile" {
+            if AppData.user.jobSeeker == nil && id == "view_profile" {
                 identifier = "JobSeekerProfile"
             }
         }

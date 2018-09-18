@@ -81,25 +81,10 @@ class FindJob extends React.Component {
       return;
     }
 
-    // if (!jobseeker.profile_thumb) {
-    //   confirm({
-    //     title: 'To apply please set your photo',
-    //     okText: 'Edit profile',
-    //     cancelText: 'Cancel',
-    //     maskClosable: true,
-    //     onOk: () => {
-    //       history.push('/jobseeker/settings/profile');
-    //     }
-    //   });
-    //   return;
-    // }
-
-    const selectedJob = jobs && helper.getItemByID(jobs, this.state.selectedId);
-
-    if (selectedJob.requires_cv && !jobseeker.cv) {
+    if (!jobseeker.profile_image) {
       confirm({
-        title: 'To apply please add your cv',
-        okText: 'Edit Profile',
+        title: 'To apply please set your photo',
+        okText: 'Edit profile',
         cancelText: 'Cancel',
         maskClosable: true,
         onOk: () => {
@@ -109,14 +94,16 @@ class FindJob extends React.Component {
       return;
     }
 
-    if (!selectedJob.requires_pitch) {
+    const selectedJob = jobs && helper.getItemByID(jobs, this.state.selectedId);
+
+    if (selectedJob.requires_cv && !jobseeker.cv) {
       confirm({
-        title: 'Yes, I want to apply to this job',
-        okText: 'Apply',
+        title: 'This job requires your cv',
+        okText: 'Edit Profile',
         cancelText: 'Cancel',
         maskClosable: true,
         onOk: () => {
-          this.apply();
+          history.push('/jobseeker/settings/profile');
         }
       });
       return;
@@ -330,7 +317,12 @@ class FindJob extends React.Component {
               <Button key="cancel" onClick={this.hideApplyDialog}>
                 Cancel
               </Button>,
-              <Button key="submit" type="primary" disabled={!pitch && !pitchData} onClick={this.apply}>
+              <Button
+                key="submit"
+                type="primary"
+                disabled={selectedJob.requires_pitch && !pitch && !pitchData}
+                onClick={this.apply}
+              >
                 Apply
               </Button>
             ]}

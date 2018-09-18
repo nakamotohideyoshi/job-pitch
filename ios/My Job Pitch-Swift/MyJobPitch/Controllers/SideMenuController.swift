@@ -13,7 +13,7 @@ class SideMenuController: UIViewController {
     static var currentID = ""
     static let menuItems = [
         "find_job":     ["icon": "menu-search",         "title": "Find Job",                "identifier": "Swipe",              "per": "P"],
-        "j_applications":["icon": "menu-applications2",   "title": "My Applications",            "identifier": "ApplicationList1",    "per": "P"],
+        "j_applications":["icon": "menu-applications2",   "title": "My Applications",            "identifier": "ApplicationList",    "per": "P"],
         "messages":     ["icon": "menu-message",        "title": "Messages",                "identifier": "MessageList",        "per": "PB"],
         "j_interviews":  ["icon": "menu-interview",        "title": "Interviews",             "identifier": "InterviewList",          "per": "P"],
         "job_profile":  ["icon": "menu-job-profile",    "title": "Job Profile",             "identifier": "JobProfile",         "per": "J"],

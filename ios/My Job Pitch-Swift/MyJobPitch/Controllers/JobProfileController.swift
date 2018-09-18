@@ -246,7 +246,7 @@ class JobProfileController: MJPController {
     
     @IBAction func saveAction(_ sender: Any) {
         
-        if loadingView != nil || !valid() {
+        if !valid() {
             return
         }
         

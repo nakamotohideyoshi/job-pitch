@@ -76,7 +76,7 @@ class InterviewDetailController: MJPController {
             commentLabel.text = application.job.getBusinessName()
         }
         
-        dateLabel.text = AppHelper.convertDateToString(interview.at)
+        dateLabel.text = AppHelper.convertDateToString(interview.at, short: false)
         
         locationLabel.text = application.job.locationData.placeName
         
@@ -142,12 +142,12 @@ class InterviewDetailController: MJPController {
         if AppData.user.isJobSeeker() {
             let controller = ApplicationDetailsController.instantiate()
             controller.application = application
-            controller.onlyView = true
+            controller.viewMode = true
             navigationController?.pushViewController(controller, animated: true)
         } else {
             let controller = JobSeekerDetailController.instantiate()
             controller.application = application
-            controller.readOnly = true
+            controller.viewMode = true
             navigationController?.pushViewController(controller, animated: true)
         }
     }
@@ -219,7 +219,7 @@ extension InterviewDetailController: UITableViewDataSource {
             status1 = "Cancelled"
         }        
         
-        (cell.viewWithTag(1) as! UILabel).text = AppHelper.convertDateToString(interview.at)
+        (cell.viewWithTag(1) as! UILabel).text = AppHelper.convertDateToString(interview.at, short: true)
         (cell.viewWithTag(2) as! UILabel).text = status1
         
         if indexPath.row < interviews.count - 1 {

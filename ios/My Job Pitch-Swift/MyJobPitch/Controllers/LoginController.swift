@@ -149,8 +149,8 @@ class LoginController: MJPController {
     
     override func showLoading() {
         super.showLoading()
-        loadingView.backgroundColor = AppData.darkColor
-        loadingView.indicatorView.color = UIColor.white
+        loading.view.backgroundColor = AppData.darkColor
+        loading.indicatorView.color = UIColor.white
     }
     
     override func getRequiredFields() -> [String: NSArray] {

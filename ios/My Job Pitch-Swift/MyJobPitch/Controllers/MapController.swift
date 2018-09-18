@@ -133,12 +133,14 @@ class MapController: UIViewController {
     
     @IBAction func selectAction(_ sender: Any) {
     
-        let loadingView = LoadingView.create(parentView: self.view)
-        loadingView.backgroundColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.5)
+        let loading = LoadingController()
+        loading.addToView(parentView: view)
+        loading.indicatorView.isHidden = false
+        loading.view.backgroundColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.5)
         
         GMSGeocoder().reverseGeocodeCoordinate(currentPos) { (response, error) in
             
-            loadingView.removeFromSuperview()
+            loading.view.removeFromSuperview()
             
             var address = "address unknown"
             if let firstAddress = response?.firstResult() {

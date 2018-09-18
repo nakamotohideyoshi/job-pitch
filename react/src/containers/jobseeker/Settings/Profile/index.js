@@ -196,8 +196,8 @@ class Profile extends React.Component {
 
       const { avatar, cvData } = this.state;
       const data = {
-        ...values,
-        id: (jobseeker || {}).id
+        ...values
+        // id: (jobseeker || {}).id
       };
       if (avatar.file || (jobseeker.profile_image && !avatar.exist)) {
         data.profile_image = avatar.file;
@@ -208,6 +208,7 @@ class Profile extends React.Component {
 
       saveJobseeker({
         isFormData: true,
+        id: (jobseeker || {}).id,
         data,
         success: () => {
           if (this.state.pitchData) {

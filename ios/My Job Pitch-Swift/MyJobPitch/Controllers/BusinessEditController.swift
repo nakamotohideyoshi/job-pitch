@@ -148,7 +148,7 @@ class BusinessEditController: MJPController {
     
     @IBAction func saveAction(_ sender: Any) {
         
-        if loadingView != nil || !valid() {
+        if !valid() {
             return
         }
     
@@ -166,7 +166,7 @@ class BusinessEditController: MJPController {
             
             if self.logoImage != nil {
                 
-                self.loadingView.showProgressBar("Uploading...")
+                self.showLoading(label: "Uploading...")
                 
                 API.shared().uploadImage(image: self.logoImage,
                                          endpoint: "user-business-images",
@@ -174,7 +174,7 @@ class BusinessEditController: MJPController {
                                          objectId: self.business.id,
                                          order: 0,
                                          progress: { (bytesWriteen, totalBytesWritten, totalBytesExpectedToWrite) in
-                                            self.loadingView.progressView.progress = Float(totalBytesWritten) / Float(totalBytesExpectedToWrite)
+                                            self.showLoading(label: "Uploading...", withProgress: Float(totalBytesWritten) / Float(totalBytesExpectedToWrite))
                 }, success: { (data) in
                     self.saveFinished()
                 }, failure: self.handleErrors)
@@ -214,10 +214,8 @@ class BusinessEditController: MJPController {
         _ = navigationController?.popViewController(animated: true)
     }
     
-    static func pushController(business: Business!) {
-        let controller = AppHelper.instantiate("BusinessEdit") as! BusinessEditController
-        controller.business = business
-        AppHelper.getFrontController().navigationController?.pushViewController(controller, animated: true)
+    static func instantiate() -> BusinessEditController {
+        return AppHelper.instantiate("BusinessEdit") as! BusinessEditController
     }
 
 }

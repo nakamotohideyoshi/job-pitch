@@ -111,7 +111,8 @@ class BusinessListController: MJPController {
         
         if AppData.user.canCreateBusinesses || data.count == 0 {
             refresh = true
-            BusinessEditController.pushController(business: nil)
+            let controller = BusinessEditController.instantiate()
+            navigationController?.pushViewController(controller, animated: true)
         } else {
             let url = URL(string: "mailto:support@myjobpitch.com")!
             if #available(iOS 10.0, *) {
@@ -167,7 +168,9 @@ extension BusinessListController: UITableViewDataSource {
                                              padding: 20,
                                              callback: { (cell) -> Bool in
                                                 self.refresh = true
-                                                BusinessEditController.pushController(business: business)
+                                                let controller = BusinessEditController.instantiate()
+                                                controller.business = business
+                                                self.navigationController?.pushViewController(controller, animated: true)
                                                 return true
                 }), at: 0)
                 

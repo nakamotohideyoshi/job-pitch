@@ -23,6 +23,7 @@ class JobSeekerDetailController: MJPController {
     @IBOutlet weak var shortlistIndicator: UIActivityIndicatorView!
     @IBOutlet weak var connectBtnView: UIView!
     @IBOutlet weak var removeBtnView: UIView!
+    @IBOutlet weak var arrangeBtnView: UIView!
     @IBOutlet weak var messageBtnView: UIView!
     @IBOutlet weak var availableView: UIView!
     @IBOutlet weak var nationalNumberView: UIView!
@@ -32,157 +33,131 @@ class JobSeekerDetailController: MJPController {
     
     var jobSeeker: JobSeeker!
     var application: Application!
-    var readOnly = false
+    var interview: ApplicationInterview!
+    var preInterviews: [ApplicationInterview]!
     var isHideMessages = false
+    var viewMode = false
+    var isProfile = false
     
-    var resources = Array<JobResourceModel>()
+    var controlDelegate: ControlDelegate!
+    
+    var resources = [MediaModel]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        if application != nil {
-            jobSeeker = application?.jobSeeker
-        }
-        
-        if jobSeeker == nil {
+        if application == nil && jobSeeker == nil {
             
             title = "Profile"
             navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(named: "nav-edit"), style: .plain, target: self, action: #selector(editProfile))
             
-            readOnly = true
+            isProfile = true
 
             self.showLoading()
             API.shared().loadJobSeekerWithId(id: AppData.user.jobSeeker, success: { (data) in
-                
                 self.hideLoading()
                 self.jobSeeker = data as! JobSeeker
-                self.load()
-                
+                self.loadData()
             }, failure: self.handleErrors)
             
         } else {
-            load()
+            loadData()
         }
     }
     
-    func load() {
+    func loadData() {
         
-        if let pitch = jobSeeker.getPitch() {
-            
-            let resource = JobResourceModel()
+        if application != nil {
+            jobSeeker = application?.jobSeeker
+        }
+        interview = AppHelper.getInterview(application)
+        
+        resources.removeAll()
+        if let pitch = jobSeeker.getPitch() {            
+            let resource = MediaModel()
             resource.thumbnail = pitch.thumbnail
             resource.video = pitch.video
             resources.append(resource)
         }
         
-        let resource = JobResourceModel()
-        resource.thumbnail = jobSeeker.profileThumb
+        let resource = MediaModel()
+        resource.thumbnail = jobSeeker?.profileThumb
         resource.image = jobSeeker?.profileImage
-        var avatar = "avatar"
-        if jobSeeker.sexPublic {
-            if let sex = AppData.getSex(jobSeeker.sex) {
-                avatar = String(format: "avatar_%@", sex.name)
-            }
-        }
-        resource.defaultImage = UIImage(named: avatar)
+        resource.defaultImage = UIImage(named: "avatar")
+        resource.isCircleView = true
         resources.append(resource)
         
         nameLabel.text = jobSeeker.getFullName()
         
         let sex = AppData.getSex(jobSeeker.sex)
-        if sex != nil && jobSeeker.sexPublic {
-            genderLabel.text = sex?.name
+        if sex != nil && (jobSeeker.sexPublic || isProfile) {
+            genderLabel.text = (sex?.name)! + (!jobSeeker.sexPublic ? " (private)" : "")
+            genderLabel.superview?.isHidden = false
         } else {
             genderLabel.superview?.isHidden = true
         }
         
-        if jobSeeker.age != nil && jobSeeker.agePublic {
-            ageLabel.text = jobSeeker.age.stringValue
+        if jobSeeker.age != nil && (jobSeeker.agePublic || isProfile) {
+            ageLabel.text = jobSeeker.age.stringValue + (!jobSeeker.agePublic ? " (private)" : "")
+            ageLabel.superview?.isHidden = false
         } else {
             ageLabel.superview?.isHidden = true
         }
         
-        if !jobSeeker.hasReferences {
-            availableView.isHidden = true
+        if jobSeeker.email != nil && (jobSeeker.emailPublic || isProfile) {
+            emailLabel.text = jobSeeker.email + (!jobSeeker.emailPublic ? " (private)" : "")
+            emailLabel.superview?.isHidden = false
+        } else {
+            emailLabel.superview?.isHidden = true
         }
-        if !jobSeeker.has_national_insurance_number || jobSeeker.national_insurance_number == nil {
-            nationalNumberView.isHidden = true
+        
+        if jobSeeker.mobile != nil && (jobSeeker.mobilePublic || isProfile) {
+            mobileLabel.text = jobSeeker.mobile + (!jobSeeker.mobilePublic ? " (private)" : "")
+            mobileLabel.superview?.isHidden = false
+        } else {
+            mobileLabel.superview?.isHidden = true
         }
-        if !jobSeeker.truthConfirmation {
-            truthfulView.isHidden = true
-        }
+        
+        availableView.isHidden = !jobSeeker.hasReferences
+        nationalNumberView.isHidden = !jobSeeker.has_national_insurance_number
+        truthfulView.isHidden = !jobSeeker.truthConfirmation
         
         // contact info
         
-        if application?.status == ApplicationStatus.APPLICATION_ESTABLISHED_ID {
-            
-            if jobSeeker.email != nil && jobSeeker.emailPublic {
-                emailLabel.text = jobSeeker.email
-            } else {
-                emailLabel.superview?.isHidden = true
-            }
-            
-            if jobSeeker.mobile != nil && jobSeeker.mobilePublic {
-                mobileLabel.text = jobSeeker.mobile
-            } else {
-                mobileLabel.superview?.isHidden = true
-            }
-            
-            shortlisted.isOn = (application?.shortlisted)!
-            
-            connectBtnView.isHidden = true
-            
-        } else {
-            
-            emailLabel.superview?.isHidden = true
-            mobileLabel.superview?.isHidden = true
-            shortlisted.superview?.isHidden = true
-           
-            messageBtnView.isHidden = true
-        }
+        let connected = application?.status == ApplicationStatus.APPLICATION_ESTABLISHED_ID
         
-        if readOnly {
-            connectBtnView.isHidden = true
-            removeBtnView.isHidden = true
-            messageBtnView.isHidden = true
-        } else if isHideMessages {
-            messageBtnView.isHidden = true
-        }
-        
-        if jobSeeker.cv == nil {
-            cvButton.removeFromSuperview()
-        }
+        shortlisted.isOn = connected && application.shortlisted
+        shortlisted.superview?.isHidden = !connected
+        emailLabel.superview?.isHidden = !connected && !isProfile
+        mobileLabel.superview?.isHidden = !connected && !isProfile
+        connectBtnView.isHidden = viewMode || isProfile || connected
+        removeBtnView.isHidden = viewMode || isProfile
+        arrangeBtnView.isHidden = viewMode || isProfile || !connected || interview != nil
+        messageBtnView.isHidden = viewMode || isProfile || isHideMessages || !connected
         
         overviewLabel.text = jobSeeker.desc
         
+        cvButton.isHidden = jobSeeker.cv == nil
+        
         pageControl.numberOfPages = resources.count
-        if resources.count <= 1 {
-            pageControl.isHidden = true
-        }
-
+        pageControl.isHidden = resources.count <= 1
+        
         carousel.bounces = false
         carousel.reloadData()
     }
     
     func editProfile() {
-        
         let controller = JobSeekerProfileController.instantiate()
-        controller.saveComplete = { () in
-            SideMenuController.pushController(id: "view_profile")
-        }
         present(UINavigationController(rootViewController: controller), animated: true, completion: nil)
     }
     
-    func updateApplication(_ applicationId: NSNumber) {
-        
+    func updateApplication() {
         AppData.updateApplication(application.id, success: { (_) in
-            AppHelper.hideLoading()
-            self.closeAction()
+            self.popController()
         }, failure: self.handleErrors)
     }
     
     @IBAction func viewCVAction(_ sender: Any) {
-        
         let url = URL(string: jobSeeker.cv)!
         if #available(iOS 10.0, *) {
             UIApplication.shared.open(url, options: [:], completionHandler: nil)
@@ -212,17 +187,24 @@ class JobSeekerDetailController: MJPController {
         let message = application == nil ? "Are you sure you want to connect this talent?" : "Are you sure you want to connect this application?"
         PopupController.showGreen(message, ok: "Connect (1 credit)", okCallback: {
             
-            if self.application != nil {
+            self.showLoading()
+            
+            if self.application == nil {
                 
-                AppHelper.showLoading("")
+                self.controlDelegate.apply(success: { (_) in
+                    self.popController()
+                }, failure: nil)
+                
+            } else {
                 
                 let update = ApplicationStatusUpdate()
                 update.id = self.application.id
                 update.status = ApplicationStatus.APPLICATION_ESTABLISHED_ID
                 
                 API.shared().updateApplicationStatus(update: update, success: { (data) in
-                    self.updateApplication(self.application.id)
+                    self.updateApplication()
                 }) { (message, errors) in
+                    self.hideLoading()
                     if errors?["NO_TOKENS"] != nil {
                         PopupController.showGray("You have no credits left so cannot compete this connection. Credits cannot be added through the app, please go to our web page.", ok: "Ok")
                     } else {
@@ -239,26 +221,40 @@ class JobSeekerDetailController: MJPController {
         let message = application == nil ? "Are you sure you want to delete this talent?" : "Are you sure you want to delete this application?"
         PopupController.showYellow(message, ok: "Delete", okCallback: {
             
-            AppHelper.showLoading("")
-            
-            API.shared().deleteApplication(id: self.application.id, success: {
-                self.updateApplication(self.application.id)
-            }, failure: self.handleErrors)
+            self.showLoading()
 
+            if self.application == nil {
+                self.controlDelegate.remove(success: { (_) in
+                    self.popController()
+                }, failure: nil)
+            } else {
+                API.shared().deleteApplication(id: self.application.id, success: {
+                    self.updateApplication()
+                }, failure: self.handleErrors)
+            }
+            
         }, cancel: "Cancel", cancelCallback: nil)
     }
     
+    @IBAction func arrangeAction(_ sender: Any) {
+        let controller = InterviewEditController.instantiate()
+        controller.application = application
+        controller.saveComplete = { (application) in
+            self.application = application
+            self.loadData()
+        }
+        present(UINavigationController(rootViewController: controller), animated: true, completion: nil)
+    }
+    
     @IBAction func messagesAction(_ sender: Any) {
-        
         let controller = MessageController0.instantiate()
         controller.application = application
         present(UINavigationController(rootViewController: controller), animated: true, completion: nil)
     }
     
-    func closeAction() {
+    func popController() {
         _ = self.navigationController?.popViewController(animated: true)
     }
-    
     static func instantiate() -> JobSeekerDetailController {
         return AppHelper.instantiate("JobSeekerDetails") as! JobSeekerDetailController
     }
@@ -272,21 +268,20 @@ extension JobSeekerDetailController: iCarouselDataSource {
     
     func carousel(_ carousel: iCarousel, viewForItemAt index: Int, reusing view: UIView?) -> UIView {
         
-        var jobResource: JobResource!
+        var mediaView: MediaView!
         if view == nil {
-            jobResource = JobResource.instanceFromNib(carousel.bounds)
-            jobResource.controller = self
+            mediaView = MediaView.instantiate(carousel.bounds)
+            mediaView.controller = self
         } else {
-            jobResource = view as! JobResource
+            mediaView = view as! MediaView
         }
         
-        jobResource.model = resources[index]
-        return jobResource
+        mediaView.model = resources[index]
+        return mediaView
     }
 }
 
 extension JobSeekerDetailController: iCarouselDelegate {
-
     func carouselCurrentItemIndexDidChange(_ carousel: iCarousel) {
         pageControl.currentPage = carousel.currentItemIndex
     }

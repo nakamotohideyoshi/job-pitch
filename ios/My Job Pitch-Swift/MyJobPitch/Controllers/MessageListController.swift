@@ -100,9 +100,7 @@ extension MessageListController: UITableViewDataSource {
             cell.subTitleLabel.text = String(format: "%@ (%@)", job.title, job.getBusinessName())
         }
         
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "MMM dd, HH:mm a"
-        cell.attributesLabel.text = dateFormatter.string(from: lastMessage.created)
+        cell.attributesLabel.text = AppHelper.convertDateToString(lastMessage.created, short: true)
         
         if lastMessage.fromRole == AppData.getUserRole().id {
             cell.messageLabel.text = String(format: "You: %@", lastMessage.content)

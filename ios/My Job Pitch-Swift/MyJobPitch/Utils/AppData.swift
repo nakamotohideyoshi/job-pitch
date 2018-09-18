@@ -36,7 +36,7 @@ class AppData: NSObject {
     }
     
     static var existProfile = false
-    
+        
     static var user: User!
     static var hours: [Hours]!
     static var contracts: [Contract]!
@@ -512,7 +512,7 @@ class AppData: NSObject {
     
     static var jobs: [Job]!
     
-    static func getJobs(locationId: NSNumber,
+    static func getJobs(locationId: NSNumber!,
                         success: (() -> Void)?,
                         failure: ((String?, NSDictionary?) -> Void)?) {
         API.shared().loadJobsForLocation(locationId: locationId, success: { (data) in
@@ -591,6 +591,49 @@ class AppData: NSObject {
         for (index, user) in businessUsers.enumerated() {
             if user.id == userId {
                 businessUsers.remove(at: index)
+                break
+            }
+        }
+    }
+    
+    //================ serach jobs =============
+    
+    static var jsJobs: [Job]!
+    
+    static func searchJobs(success: (() -> Void)?,
+                           failure: ((String?, NSDictionary?) -> Void)?) {
+        API.shared().searchJobsWithExclusions(exclusions: [], success: { (data) in
+            jsJobs = data as! [Job]
+            success?()
+        }, failure: failure)
+    }
+    
+    static func removeJobForJS(_ jobId: NSNumber) {
+        for (index, job) in jsJobs.enumerated() {
+            if job.id == jobId {
+                jsJobs.remove(at: index)
+                break
+            }
+        }
+    }
+    
+    //================ jobseekers =============
+    
+    static var rcJobseekers: [JobSeeker]!
+    
+    static func searchJobseekers(jobId: NSNumber,
+                                 success: (() -> Void)?,
+                                 failure: ((String?, NSDictionary?) -> Void)?) {
+        API.shared().searchJobSeekersForJob(jobId: jobId, exclusions: [], success: { (data) in
+            rcJobseekers = data as! [JobSeeker]
+            success?()
+        }, failure: failure)
+    }
+    
+    static func removeJobseekerForRC(_ jobseekerId: NSNumber) {
+        for (index, jobseeker) in rcJobseekers.enumerated() {
+            if jobseeker.id == jobseekerId {
+                rcJobseekers.remove(at: index)
                 break
             }
         }

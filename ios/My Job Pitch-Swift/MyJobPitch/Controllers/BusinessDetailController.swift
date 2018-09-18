@@ -118,7 +118,9 @@ class BusinessDetailController: MJPController {
     
     @IBAction func editBusinessAction(_ sender: Any) {
         refresh = true
-        BusinessEditController.pushController(business: business)
+        let controller = BusinessEditController.instantiate()
+        controller.business = business
+        navigationController?.pushViewController(controller, animated: true)
     }
     
     @IBAction func deleteBusinessAction(_ sender: Any) {

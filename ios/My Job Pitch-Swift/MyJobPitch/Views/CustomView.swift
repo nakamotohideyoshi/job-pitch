@@ -86,6 +86,7 @@ extension ButtonTextField: UITextFieldDelegate {
 class CircleImageView: UIImageView {
     public required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
+        clipsToBounds = true
         layer.cornerRadius = frame.width / 2
     }
 }

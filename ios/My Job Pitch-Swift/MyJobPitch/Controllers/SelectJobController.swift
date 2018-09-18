@@ -35,27 +35,26 @@ class SelectJobController: MJPController {
             self.loadData()
         }
         
-        AppHelper.showLoading("")
+        showLoading()
         loadData()
     }
     
     func loadData() {
         
         self.emptyView.isHidden = true
-        API.shared().loadJobsForLocation(locationId: nil, success: { (data) in
-            
-            AppHelper.hideLoading()
-            self.jobs = (data as! [Job]).filter { $0.status == JobStatus.JOB_STATUS_OPEN_ID }
+        
+        AppData.getJobs(locationId: nil, success: { 
+            self.hideLoading()
+            self.jobs = AppData.jobs.filter { $0.status == JobStatus.JOB_STATUS_OPEN_ID }
             self.tableView.reloadData()
             self.tableView.pullToRefreshView.stopAnimating()
             self.emptyView.isHidden = self.jobs.count > 0
-            
-        }, failure: self.handleErrors)        
+        }, failure: self.handleErrors)
     }
     
     @IBAction func jobAddAction(_ sender: Any) {
         
-        if AppData.user.canCreateBusinesses || AppData.user.businesses.count==0 {
+        if AppData.user.businesses.count > 1 {
             
             let controller = BusinessListController.instantiate()
             navigationController?.pushViewController(controller, animated: true)
@@ -65,7 +64,6 @@ class SelectJobController: MJPController {
             let controller = BusinessDetailController.instantiate()
             controller.businessId = AppData.user.businesses[0] as! NSNumber
             navigationController?.pushViewController(controller, animated: true)
-            
         }
     }    
 }
@@ -77,9 +75,7 @@ extension SelectJobController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        
         let cell = tableView.dequeueReusableCell(withIdentifier: "JobCell", for: indexPath) as! JobCell
-        
         cell.setData(jobs[indexPath.row])
         return cell
     }
@@ -103,12 +99,11 @@ extension SelectJobController: UITableViewDelegate {
             controller.job = job
             navigationController?.pushViewController(controller, animated: true)
             
-        } else {
+        } else if SideMenuController.currentID == "interviews" {
             
             let controller = InterviewListController.instantiate()
             controller.job = job
             navigationController?.pushViewController(controller, animated: true)
-            
         }
     }
 }

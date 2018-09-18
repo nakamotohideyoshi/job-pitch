@@ -13,4 +13,5 @@ class MediaModel {
     var image: String!
     var thumbnail: String!
     var defaultImage: UIImage!
+    var isCircleView = false
 }

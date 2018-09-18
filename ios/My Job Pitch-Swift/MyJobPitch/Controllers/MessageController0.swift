@@ -24,7 +24,7 @@ class MessageController0: MJPController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(named: "nav-close"), style: .plain, target: self, action: #selector(closeAction))
+        isModal = true
         
         if AppData.user.isRecruiter() {
             let subTitle = String(format: "%@, (%@)", application.job.title, application.job.getBusinessName())
@@ -64,7 +64,7 @@ class MessageController0: MJPController {
         }
         
         if interview != nil {
-            let subTitle = "Interview: " + AppHelper.convertDateToString(interview.at)
+            let subTitle = "Interview: " + AppHelper.convertDateToString(interview.at, short: false)
             let subTitleParameters = [NSForegroundColorAttributeName : interview.status == InterviewStatus.INTERVIEW_PENDING ? AppData.yellowColor : AppData.greyColor,
                                       NSFontAttributeName : UIFont.systemFont(ofSize: 14)]
             bannerLabel.attributedText = NSMutableAttributedString(string: subTitle, attributes: subTitleParameters)
@@ -90,20 +90,16 @@ class MessageController0: MJPController {
         if AppData.user.isJobSeeker() {
             let controller = ApplicationDetailsController.instantiate()
             controller.application = application
-            controller.onlyView = true
+            controller.viewMode = true
             navigationController?.pushViewController(controller, animated: true)
         } else {
             let controller = JobSeekerDetailController.instantiate()
             controller.application = application
-            controller.readOnly = true
+            controller.viewMode = true
             navigationController?.pushViewController(controller, animated: true)
         }
     }
     
-    func closeAction() {
-        navigationController?.dismiss(animated: true, completion: nil)
-    }
-
     static func instantiate() -> MessageController0 {
         return AppHelper.instantiate("Message0") as! MessageController0
     }

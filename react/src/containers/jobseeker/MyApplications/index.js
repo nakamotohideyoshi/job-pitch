@@ -182,7 +182,7 @@ class MyApplications extends React.Component {
                   </Button>
                   {(interview || {}).status === 'PENDING' && (
                     <Button type="primary" disabled={selectedApp.loading} onClick={() => this.onAccept(selectedApp)}>
-                      Accept Invitation
+                      Accept Interview
                     </Button>
                   )}
                   {interview && (

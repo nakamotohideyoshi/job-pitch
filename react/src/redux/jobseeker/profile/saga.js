@@ -6,7 +6,7 @@ import { uploadVideo } from 'utils/aws';
 import * as C from 'redux/constants';
 
 function* saveJobseeker(action) {
-  const { id } = action.payload.data;
+  const { id } = action.payload;
   yield call(
     request({
       method: id ? 'patch' : 'post',

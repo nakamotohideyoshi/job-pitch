@@ -45,8 +45,6 @@ class SwipeCard: MDCSwipeToChooseView {
         
         if imageUrl != nil {
             AppHelper.loadImageURL(imageUrl: imageUrl, imageView: imageView, completion: nil)
-        } else {
-            imageView.image = UIImage(named: "default-logo")
         }
         
         let size = frame.size

@@ -27,6 +27,8 @@ class InterviewEditController: MJPController, WWCalendarTimeSelectorProtocol {
     
     var dateTime: Date! = Date()
     
+    var saveComplete: ((Application) -> Void)!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -39,7 +41,7 @@ class InterviewEditController: MJPController, WWCalendarTimeSelectorProtocol {
         let subTitle = String(format: "%@, (%@)", application.job.title, application.job.getBusinessName())
         setTitle(title: title, subTitle: subTitle)
         
-        navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(named: "nav-close"), style: .plain, target: self, action: #selector(closeAction))
+        isModal = true
         
         dateTimeField.delegate = self
         
@@ -63,7 +65,7 @@ class InterviewEditController: MJPController, WWCalendarTimeSelectorProtocol {
         
         if interview != nil {
             dateTime = interview?.at
-            dateTimeField.text = AppHelper.convertDateToString(dateTime)
+            dateTimeField.text = AppHelper.convertDateToString(dateTime, short: false)
             
             if (interview?.messages.count)! > 0 {
                 messageTextView.text = (interview?.messages[0] as! Message).content
@@ -87,7 +89,7 @@ class InterviewEditController: MJPController, WWCalendarTimeSelectorProtocol {
     @IBAction func appDetailAction(_ sender: Any) {
         let controller = JobSeekerDetailController.instantiate()
         controller.application = application
-        controller.readOnly = true
+        controller.viewMode = true
         navigationController?.pushViewController(controller, animated: true)
     }
     
@@ -100,8 +102,9 @@ class InterviewEditController: MJPController, WWCalendarTimeSelectorProtocol {
         interviewForSave.feedback = feedbackTextView.text
         
         API.shared().saveInterview(interviewId: interview?.id, interview: interviewForSave, success: { (_) in
-            AppData.updateApplication(self.application.id, success: { (_) in
-                self.closeAction()
+            AppData.updateApplication(self.application.id, success: { (application) in
+                self.closeModal()
+                self.saveComplete?(application)
             }, failure: self.handleErrors)
         }, failure: self.handleErrors)
     }
@@ -138,11 +141,7 @@ class InterviewEditController: MJPController, WWCalendarTimeSelectorProtocol {
     
     func WWCalendarTimeSelectorDone(_ selector: WWCalendarTimeSelector, date: Date) {
         dateTime = date
-        dateTimeField.text = AppHelper.convertDateToString(dateTime)
-    }
-    
-    func closeAction() {
-        navigationController?.dismiss(animated: true, completion: nil)
+        dateTimeField.text = AppHelper.convertDateToString(dateTime, short: false)
     }
     
     static func instantiate() -> InterviewEditController {

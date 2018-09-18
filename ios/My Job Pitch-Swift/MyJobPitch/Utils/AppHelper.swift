@@ -131,6 +131,16 @@ class AppHelper: NSObject {
         }
     }
     
+    static func getInterview(_ application: Application!) -> ApplicationInterview! {
+        if application == nil {
+            return nil
+        }
+
+        let interviews = application.interviews as! [ApplicationInterview]
+        let filters = interviews.filter { $0.status == InterviewStatus.INTERVIEW_PENDING || $0.status == InterviewStatus.INTERVIEW_ACCEPTED }
+        return filters.count == 0 ? nil : filters[0]
+    }
+    
     static func distance(latitude1: NSNumber, longitude1: NSNumber, latitude2: NSNumber, longitude2: NSNumber) -> String {
         
         let location1 = CLLocation(latitude: CLLocationDegrees(latitude1), longitude: CLLocationDegrees(longitude1))
@@ -145,7 +155,13 @@ class AppHelper: NSObject {
         return String.init(format: "%.0f km", d/1000)
     }
     
-    static func convertDateToString(_ date: Date) -> String {
+    static func convertDateToString(_ date: Date, short: Bool) -> String {
+        if short {
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateFormat = "MMM dd, HH:mm a"
+            return dateFormatter.string(from: date)
+        }
+        
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "E d MMM, yyyy"
         

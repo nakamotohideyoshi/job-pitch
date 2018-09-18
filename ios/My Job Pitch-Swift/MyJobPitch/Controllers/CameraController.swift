@@ -134,4 +134,8 @@ class CameraController: UIViewController {
         }
     }
     
+    static func instantiate() -> CameraController {
+        return AppHelper.instantiate("Camera") as! CameraController
+    }
+    
 }

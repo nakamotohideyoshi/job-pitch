@@ -39,7 +39,7 @@ class ApplicationAddController: MJPController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(named: "nav-close"), style: .plain, target: self, action: #selector(closeAction))
+        isModal = true
         
         AppHelper.loadLogo(image: job.getImage(), imageView: jobImgView, completion: nil)
         jobTitleLabel.text = job.title

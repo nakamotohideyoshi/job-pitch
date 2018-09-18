@@ -28,6 +28,7 @@ class BusinessUserEditController: MJPController {
         super.viewDidLoad()
         
         setTitle(title: businessUser == nil ? "Create User" : "Edit User", subTitle: business.name)
+        isModal = true
         
         locationNames = AppData.locations.map { $0.name }
         
@@ -56,8 +57,6 @@ class BusinessUserEditController: MJPController {
                                             self.workPlaceSelector.text = items.joined(separator: ", ")
             })
         }
-        
-        navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(named: "nav-close"), style: .plain, target: self, action: #selector(closeAction))
     }
     
     override func getRequiredFields() -> [String: NSArray] {
@@ -65,11 +64,7 @@ class BusinessUserEditController: MJPController {
             "email": [emailAddress, emailError]
         ]
     }
-    
-    func closeAction() {
-        navigationController?.dismiss(animated: true, completion: nil)
-    }
-    
+        
     @IBAction func administratorAction(_ sender: Any) {
         isAdministrator.isOn = !isAdministrator.isOn
         workPlaceSelector.superview?.isHidden = isAdministrator.isOn
@@ -94,7 +89,7 @@ class BusinessUserEditController: MJPController {
             
             API.shared().createBusinessUser(businessId: business.id, businessUser: businessUserForCreation, success: { (data) in
                 AppData.getBusinessUsers(businessId: self.business.id, success: {
-                    self.closeAction()
+                    self.closeModal()
                 }, failure: self.handleErrors)
             }, failure: self.handleErrors)
         } else {
@@ -103,7 +98,7 @@ class BusinessUserEditController: MJPController {
             
             API.shared().updateBusinessUser(businessId: business.id, businessUserId: businessUser.id, businessUser: businessUserForUpdate, success: { (data) in
                 AppData.updateBusinessUser(businessId: self.business.id, userId: self.businessUser.id, success: {
-                    self.closeAction()
+                    self.closeModal()
                 }, failure: self.handleErrors)
             }, failure: self.handleErrors)
             
@@ -118,7 +113,7 @@ class BusinessUserEditController: MJPController {
         businessUserForCreation.locations = businessUser.locations
         
         API.shared().reCreateBusinessUser(businessId: business.id, businessUserId: businessUser.id, businessUser: nil, success: { (data) in
-            self.closeAction()
+            self.closeModal()
         }, failure: self.handleErrors)
     }
     
@@ -129,7 +124,7 @@ class BusinessUserEditController: MJPController {
             
             API.shared().deleteBusinessUser(businessId: self.business.id, businessUserId: self.businessUser.id, success: { (data) in
                 AppData.removeBusinessUser(self.businessUser.id)
-                self.closeAction()
+                self.closeModal()
             }, failure: self.handleErrors)
         }, cancel: "Cancel", cancelCallback: nil)
     }

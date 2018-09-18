@@ -67,7 +67,7 @@ class MessageController: JSQMessagesViewController {
             if application.status == ApplicationStatus.APPLICATION_CREATED_ID {
                 inputToolbar.isUserInteractionEnabled = false
                 PopupController.showGreen("You cannot send messages until you have connected", ok: "Connect", okCallback: {
-                    self.apply(callback: nil)
+                    self.apply(success: nil, failure: nil)
                 }, cancel: "View profile", cancelCallback: { 
                     let controller = JobSeekerDetailController.instantiate()
                     controller.application = self.application
@@ -169,10 +169,7 @@ class MessageController: JSQMessagesViewController {
     
     override func collectionView(_ collectionView: JSQMessagesCollectionView!, attributedTextForCellBottomLabelAt indexPath: IndexPath!) -> NSAttributedString! {
         let message = messages[indexPath.row]
-        
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "MMM dd, HH:mm a"
-        let dateStr = dateFormatter.string(from: message.date)
+        let dateStr = AppHelper.convertDateToString(message.date, short: true)
         return NSAttributedString(string: dateStr)
     }
     override func collectionView(_ collectionView: JSQMessagesCollectionView!, layout collectionViewLayout: JSQMessagesCollectionViewFlowLayout!, heightForMessageBubbleTopLabelAt indexPath: IndexPath!) -> CGFloat {
@@ -211,29 +208,30 @@ class MessageController: JSQMessagesViewController {
         }
     }
     
-    func showLoading() -> LoadingView {
-        let loadingView = LoadingView.create(parentView: self.view)
-        loadingView.backgroundColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.5)
-        return loadingView
+    func showLoading() -> LoadingController {
+        let loading = LoadingController()
+        loading.addToView(parentView: self.view)
+        loading.view.backgroundColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.5)
+        return loading
     }
     
 }
 
-extension MessageController: ChooseDelegate {
+extension MessageController: ControlDelegate {
     
-    func apply(callback: (()->Void)!) {
-        
+    func apply(success: ((NSObject?) -> Void)?,
+               failure: ((String?, NSDictionary?) -> Void)?) {
         let update = ApplicationStatusUpdate()
         update.id = application.id
         update.status = ApplicationStatus.APPLICATION_ESTABLISHED_ID
         
-        let loadingView = showLoading()
+        let loading = showLoading()
         
         API.shared().updateApplicationStatus(update: update, success: { (data) in
-            loadingView.removeFromSuperview()
+            loading.view.removeFromSuperview()
             self.inputToolbar.isUserInteractionEnabled = true
         }) { (message, errors) in
-            loadingView.removeFromSuperview()
+            loading.view.removeFromSuperview()
             if errors?["NO_TOKENS"] != nil {
                 PopupController.showGray("You have no credits left so cannot compete this connection. Credits cannot be added through the app, please go to our web page.", ok: "Ok")
             } else {
@@ -242,17 +240,15 @@ extension MessageController: ChooseDelegate {
         }
     }
     
-    func remove() {
-        
-        let loadingView = showLoading()
+    func remove(success: ((NSObject?) -> Void)?,
+                failure: ((String?, NSDictionary?) -> Void)?) {
+        let loading = showLoading()
         
         API.shared().deleteApplication(id: application.id, success: {
-            loadingView.removeFromSuperview()
+            loading.view.removeFromSuperview()
         }) { (message, errors) in
-            loadingView.removeFromSuperview()
+            loading.view.removeFromSuperview()
             PopupController.showGray("error", ok: "Ok")
         }
-        
     }
-    
 }

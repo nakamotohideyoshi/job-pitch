@@ -356,27 +356,28 @@ class API: NSObject {
 
     // ================= Jobseeker =====================
 
-    func saveJobSeeker(jobSeeker: JobSeeker, cvdata: Data!,
+    func saveJobSeeker(id: NSNumber!, data: JobSeekerForSave, photo: UIImage!, cvdata: Data!,
                        progress:((UInt, Int64, Int64) -> Void)!,
                        success: ((NSObject?) -> Void)!,
                        failure: ((String?, NSDictionary?) -> Void)!) {
         clearCookies()
-
-        if cvdata == nil {
-            jobSeeker.cv = nil
-        }
-        
-        let method = jobSeeker.id == nil ? RKRequestMethod.POST : RKRequestMethod.PUT
-        let path = jobSeeker.id == nil ? "/api/job-seekers/" : String(format: "/api/job-seekers/%@/", jobSeeker.id)
-        let request = manager.multipartFormRequest(with: jobSeeker,
+        let method = id == nil ? RKRequestMethod.POST : RKRequestMethod.PATCH
+        let path = id == nil ? "/api/job-seekers/" : String(format: "/api/job-seekers/%@/", id)
+        let request = manager.multipartFormRequest(with: data,
                                                    method: method,
                                                    path: path,
                                                    parameters: nil,
                                                    constructingBodyWith: { (formData) in
+                                                    if photo != nil {
+                                                        formData?.appendPart(withFileData: UIImagePNGRepresentation(photo),
+                                                                             name: "profile_image",
+                                                                             fileName: "photo",
+                                                                             mimeType: "image/png")
+                                                    }
                                                     if cvdata != nil {
                                                         formData?.appendPart(withFileData: cvdata,
                                                                              name: "cv",
-                                                                             fileName: jobSeeker.cv,
+                                                                             fileName: "cv_file",
                                                                              mimeType: "application/octet-stream")
                                                     }
         })
@@ -389,8 +390,7 @@ class API: NSObject {
         })
         
         operation?.httpRequestOperation.setUploadProgressBlock(progress)
-        manager.enqueue(operation)
-        
+        manager.enqueue(operation)        
     }
 
     func loadJobSeekerWithId(id: NSNumber,

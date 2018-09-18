@@ -8,21 +8,24 @@
 
 import UIKit
 
-protocol ChooseDelegate {
-        
-    func apply(callback: (()->Void)!)
-    func remove()
-    
-}
-
 class MJPController: UIViewController {
     
     @IBOutlet weak var scrollView: UIScrollView!
     
     var showKeyboard = false
     
-    var loadingView: LoadingView!
+    var loading: LoadingController!
     var allApplications: NSMutableArray!
+    
+    var isModal = false {
+        didSet {
+            if isModal {
+                navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(named: "nav-close"), style: .plain, target: self, action: #selector(closeModal))
+            } else {
+                navigationItem.leftBarButtonItem = nil
+            }
+        }
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -48,18 +51,38 @@ class MJPController: UIViewController {
     }
     
     func showLoading() {
-        if loadingView == nil {
-            loadingView = LoadingView.create(parentView: self.view)
+        if loading == nil {
+            loading = LoadingController()
+            loading.addToView(parentView: view)
 //            navigationItem.hidesBackButton = true
             navigationItem.leftBarButtonItem?.isEnabled = false
             navigationItem.rightBarButtonItem?.isEnabled = false
         }
+        loading.labelView.isHidden = true
+        loading.progressView.isHidden = true
+        loading.indicatorView.isHidden = false
+    }
+    
+    func showLoading(label: String!) {
+        showLoading()
+        loading.indicatorView.isHidden = true
+        loading.labelView.isHidden = false
+        loading.labelView.text = label
+    }
+    
+    func showLoading(label: String!, withProgress: Float!) {
+        showLoading()
+        loading.indicatorView.isHidden = true
+        loading.labelView.isHidden = false
+        loading.labelView.text = label
+        loading.progressView.isHidden = false
+        loading.progressView.progress = withProgress
     }
     
     func hideLoading() {
-        if loadingView != nil {
-            loadingView.removeFromSuperview()
-            loadingView = nil
+        if loading != nil {
+            loading.view.removeFromSuperview()
+            loading = nil
 //            navigationItem.hidesBackButton = false
             navigationItem.leftBarButtonItem?.isEnabled = true
             navigationItem.rightBarButtonItem?.isEnabled = true
@@ -211,6 +234,10 @@ class MJPController: UIViewController {
             }
         }
         
+    }
+    
+    func closeModal() {
+        dismiss(animated: true, completion: nil)
     }
         
 }

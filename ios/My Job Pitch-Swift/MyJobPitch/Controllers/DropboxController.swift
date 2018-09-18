@@ -83,9 +83,11 @@ class DropboxController: UIViewController {
     
     func downloadFile(file: Files.FileMetadata) {
         
-        let loadingView = LoadingView.create(parentView: self.view)
-        loadingView.backgroundColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.5)
-        loadingView.showLoadingIcon("Downloading...")
+        let loading = LoadingController()
+        loading.addToView(parentView: view)
+        loading.view.backgroundColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.5)
+        loading.labelView.isHidden = false
+        loading.labelView.text = "Downloading..."
         
         let path = "/" + arrPath.joined(separator: "/") + file.name
         let destPath = NSHomeDirectory().appendingFormat("/Documents/%@", file.name.replacingOccurrences(of: " ", with: ""))
@@ -99,7 +101,7 @@ class DropboxController: UIViewController {
                                                                destination: destination)
             .response { response, error in
                 
-                loadingView.removeFromSuperview()
+                loading.view.removeFromSuperview()
                 
                 if let _ = response {
                     self.dismiss(animated: true, completion: {

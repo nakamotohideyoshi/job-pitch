@@ -20,7 +20,7 @@ class RCApplicationListController: ButtonBarPagerTabStripViewController {
     var defaultTab: Int = 0
     
     var controllers: [RCApplicationSubListController]!
-    var loadingView: LoadingView!
+    var loading: LoadingController!
     
     override func viewDidLoad() {
         
@@ -40,6 +40,8 @@ class RCApplicationListController: ButtonBarPagerTabStripViewController {
         AppHelper.loadLogo(image: job.getImage(), imageView: imgView, completion: nil)
         nameLabel.text = job.title
         commentLabel.text = job.getBusinessName()
+        
+        
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -146,7 +148,7 @@ class RCApplicationSubListController: MJPController, IndicatorInfoProvider {
     func updateApplication(_ applicationId: NSNumber) {
         
         AppData.updateApplication(applicationId, success: { (_) in
-            AppHelper.hideLoading()
+            self.hideLoading()
             (self.parent as? RCApplicationListController)?.reloadData()
         }, failure: self.handleErrors)        
     }
@@ -175,6 +177,14 @@ extension RCApplicationSubListController: UITableViewDataSource {
         AppHelper.loadJobseekerAvatar(application.jobSeeker, imageView: cell.imgView, completion: nil)
         cell.titleLabel.text = application.jobSeeker.getFullName()
         cell.subTitleLabel.text = application.jobSeeker.desc
+        if let interview = AppHelper.getInterview(application) {
+            let subTitle = "Interview: " + AppHelper.convertDateToString(interview.at, short: false)
+            let subTitleParameters = [NSForegroundColorAttributeName : interview.status == InterviewStatus.INTERVIEW_PENDING ? AppData.yellowColor : AppData.greenColor, NSFontAttributeName : UIFont.systemFont(ofSize: 12)]
+            cell.attributesLabel.attributedText = NSMutableAttributedString(string: subTitle, attributes: subTitleParameters)
+            cell.attributesLabel.isHidden = false
+        } else {
+            cell.attributesLabel.isHidden = true
+        }
         cell.iconView.isHidden = !application.shortlisted
         cell.addUnderLine(paddingLeft: 12, paddingRight: 0, color: AppData.greyColor)
         
@@ -187,7 +197,7 @@ extension RCApplicationSubListController: UITableViewDataSource {
 
                             PopupController.showYellow("Are you sure you want to delete this application?", ok: "Delete", okCallback: {
                                 
-                                AppHelper.showLoading("")
+                                self.showLoading()
                                 
                                 API.shared().deleteApplication(id: application.id, success: {
                                     self.updateApplication(application.id)
@@ -206,7 +216,7 @@ extension RCApplicationSubListController: UITableViewDataSource {
                             if self.status == ApplicationStatus.APPLICATION_CREATED_ID {
                                 PopupController.showYellow("Are you sure you want to connect this application?", ok: "Connect (1 credit)", okCallback: {
 
-                                    AppHelper.showLoading("")
+                                    self.showLoading()
                                     
                                     let update = ApplicationStatusUpdate()
                                     update.id = application.id

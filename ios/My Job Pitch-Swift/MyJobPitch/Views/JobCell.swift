@@ -18,7 +18,6 @@ class JobCell: MGSwipeTableCell {
     func setData(_ job: Job) {
         
         AppHelper.loadLogo(image: job.getImage(), imageView: imgView, completion: nil)
-        
         titleLabel.text = job.title
         subTitle.text = job.getBusinessName()
         
@@ -40,7 +39,7 @@ class JobCell: MGSwipeTableCell {
             backgroundColor = UIColor(red: 240/255.0, green: 240/255.0, blue: 240/255.0, alpha: 0.5)
         }
         
-        addUnderLine(paddingLeft: 12, paddingRight: 0, color: AppData.greyColor)        
+        addUnderLine(paddingLeft: 12, paddingRight: 0, color: AppData.greyColor)     
     }
     
     func setOpacity(_ alpha: CGFloat) {

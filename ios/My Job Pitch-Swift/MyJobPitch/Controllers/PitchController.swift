@@ -107,8 +107,7 @@ class PitchController: MJPController {
 
     @IBAction func uploadAction(_ sender: Any) {
         
-        showLoading()
-        loadingView.showProgressBar("0%")
+        showLoading(label: "0%", withProgress: 0)
         
         PitchUploader().uploadVideo(videoUrl: videoUrl, complete: { (pitch) in
             self.hideLoading()
@@ -128,8 +127,7 @@ class PitchController: MJPController {
         }) { (progress) in
 //            if progress < 1 {
                 let percent = Int(progress*100)
-                self.loadingView.showProgressBar("\(percent)%")
-                self.loadingView.progressView.progress = progress
+                self.showLoading(label: "\(percent)%", withProgress: progress)
 //            } else {
 //                self.loadingView.showLoadingIcon("")
 //            }

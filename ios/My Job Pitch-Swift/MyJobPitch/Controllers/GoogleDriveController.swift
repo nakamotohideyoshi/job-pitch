@@ -32,7 +32,7 @@ class GoogleDriveController: UIViewController, GIDSignInDelegate, GIDSignInUIDel
         "application/pdf": "g_pdf",
     ]
     
-    var loadingView: LoadingView!
+    var loading: LoadingController!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -63,15 +63,17 @@ class GoogleDriveController: UIViewController, GIDSignInDelegate, GIDSignInUIDel
     }
     
     func showLoading(_ label: String!) {
-        loadingView = LoadingView.create(parentView: self.view)
-        loadingView.backgroundColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.5)
-        loadingView.showLoadingIcon(label)
+        loading = LoadingController()
+        loading.addToView(parentView: view)
+        loading.view.backgroundColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.5)
+        loading.labelView.isHidden = false
+        loading.labelView.text = label
     }
     
     func sign(_ signIn: GIDSignIn!, didSignInFor user: GIDGoogleUser!,
               withError error: Error!) {
         
-        loadingView?.removeFromSuperview()
+        loading.view.removeFromSuperview()
         
         if error != nil {
             PopupController.showGreen("Authentication Error",
@@ -135,7 +137,7 @@ class GoogleDriveController: UIViewController, GIDSignInDelegate, GIDSignInUIDel
         showLoading("Downloading...")
         let query = GTLRDriveQuery_FilesGet.queryForMedia(withFileId: file.identifier!)
         service.executeQuery(query) { (ticket, result, error) in
-            self.loadingView?.removeFromSuperview()
+            self.loading.view.removeFromSuperview()
             if error == nil {
                 let object = result as! GTLRDataObject
                 let path = NSHomeDirectory().appendingFormat("/Documents/%@", file.name!.replacingOccurrences(of: " ", with: ""))

@@ -29,8 +29,8 @@ class ResetPasswordController: MJPController {
     
     override func showLoading() {
         super.showLoading()
-        loadingView.backgroundColor = UIColor(red: 65.8/255.0, green:65.8/255.0, blue: 65.8/255.0, alpha: 1)
-        loadingView.indicatorView.color = UIColor.white
+        loading.view.backgroundColor = UIColor(red: 65.8/255.0, green:65.8/255.0, blue: 65.8/255.0, alpha: 1)
+        loading.indicatorView.color = UIColor.white
     }
 
     @IBAction func resetAction(_ sender: Any) {

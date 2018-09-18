@@ -333,7 +333,7 @@ class JobEditController: MJPController {
     
     @IBAction func saveAction(_ sender: Any) {
         
-        if loadingView != nil || !valid() {
+        if !valid() {
             return
         }
         
@@ -389,7 +389,7 @@ class JobEditController: MJPController {
             
             if self.logoImage != nil {
                 
-                self.loadingView.showProgressBar("Uploading...")
+                self.showLoading(label: "Uploading...")
                 
                 API.shared().uploadImage(image: self.logoImage,
                                          endpoint: "user-job-images",
@@ -397,7 +397,7 @@ class JobEditController: MJPController {
                                          objectId: self.job.id,
                                          order: 0,
                                          progress: { (bytesWriteen, totalBytesWritten, totalBytesExpectedToWrite) in
-                                            self.loadingView.progressView.progress = Float(totalBytesWritten) / Float(totalBytesExpectedToWrite)
+                                            self.showLoading(label: "Uploading...", withProgress: Float(totalBytesWritten) / Float(totalBytesExpectedToWrite))
                 }, success: { (data) in
                     self.uploadPitch()
                 }, failure: self.handleErrors)
@@ -422,19 +422,16 @@ class JobEditController: MJPController {
             return;
         }
         
-        self.loadingView.showLoadingIcon("")
+        self.showLoading()
         
         JobPitchUploader().uploadVideo(videoUrl: self.videoUrl, job: job.id, complete: { (pitch) in
             self.saveFinished()
         }) { (progress) in
             print(progress)
             if progress < 1 {
-                if self.loadingView.progressView == nil {
-                    self.loadingView.showProgressBar("Uploading Pitch...")
-                }
-                self.loadingView.progressView.progress = progress
+                self.showLoading(label: "Uploading Pitch...", withProgress: progress)
             } else {
-                self.loadingView.showLoadingIcon("")
+                self.showLoading()
             }
         }
     }

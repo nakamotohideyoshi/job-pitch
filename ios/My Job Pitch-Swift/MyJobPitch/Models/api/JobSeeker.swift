@@ -54,3 +54,25 @@ class JobSeeker: MJPObjectWithDates {
     }
 
 }
+
+class JobSeekerForSave: NSObject {
+    var active = true
+    var firstName: String!
+    var lastName: String!
+    var email: String!
+    var telephone: String!
+    var mobile: String!
+    var age: NSNumber!
+    var sex: NSNumber!
+    var nationality: NSNumber!
+    var emailPublic = true
+    var telephonePublic = true
+    var mobilePublic = true
+    var agePublic = true
+    var sexPublic = true
+    var nationalityPublic = true
+    var national_insurance_number: String!
+    var desc: String!
+    var hasReferences = false
+    var truthConfirmation = false
+}

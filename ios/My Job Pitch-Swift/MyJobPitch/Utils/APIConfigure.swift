@@ -253,7 +253,21 @@ class APIConfigure: NSObject {
 
 
         // ================= Jobseeker =====================
-
+        
+        let jobSeekerForSaveArray = [ "active", "email", "telephone", "mobile", "age", "sex", "nationality", "national_insurance_number" ]
+        
+        let jobSeekerForSaveDictionary = [ "firstName":            "first_name",
+                                    "lastName":             "last_name",
+                                    "desc":                 "description",
+                                    "emailPublic":          "email_public",
+                                    "telephonePublic":      "telephone_public",
+                                    "mobilePublic":         "mobile_public",
+                                    "agePublic":            "age_public",
+                                    "sexPublic":            "sex_public",
+                                    "nationalityPublic":    "nationality_public",
+                                    "hasReferences":        "has_references",
+                                    "truthConfirmation":    "truth_confirmation" ]
+        
         let jobSeekerArray = [ "id", "email", "created", "updated", "telephone", "mobile",
                                "age", "sex", "nationality", "national_insurance_number", "has_national_insurance_number", "profile", "cv", "active" ]
 
@@ -275,9 +289,9 @@ class APIConfigure: NSObject {
                                          "destination":     "pitches",
                                          "mapping":         pitchMapping ] ]
 
-        configureMapping(JobSeeker.classForCoder(),
-                         requestArray: jobSeekerArray,
-                         requestDictionary: jobSeekerDictionary,
+        configureMapping(JobSeekerForSave.classForCoder(),
+                         requestArray: jobSeekerForSaveArray,
+                         requestDictionary: jobSeekerForSaveDictionary,
                          requestRelationships: nil,
                          responseClass: JobSeeker.classForCoder(),
                          responseArray: jobSeekerArray,
@@ -286,9 +300,9 @@ class APIConfigure: NSObject {
                          path: "/api/job-seekers/",
                          method: .any)
 
-        configureMapping(JobSeeker.classForCoder(),
-                         requestArray: jobSeekerArray,
-                         requestDictionary: jobSeekerDictionary,
+        configureMapping(JobSeekerForSave.classForCoder(),
+                         requestArray: jobSeekerForSaveArray,
+                         requestDictionary: jobSeekerForSaveDictionary,
                          requestRelationships: nil,
                          responseClass: JobSeeker.classForCoder(),
                          responseArray: jobSeekerArray,

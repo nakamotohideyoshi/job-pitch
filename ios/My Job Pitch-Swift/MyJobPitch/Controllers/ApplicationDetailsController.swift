@@ -11,6 +11,8 @@ import GoogleMaps
 
 class ApplicationDetailsController: MJPController {
 
+    @IBOutlet weak var carousel: iCarousel!
+    @IBOutlet weak var pageControl: UIPageControl!
     @IBOutlet weak var jobTitle: UILabel!
     @IBOutlet weak var jobBusinessLocation: UILabel!
     @IBOutlet weak var contractLabel: UILabel!
@@ -18,95 +20,81 @@ class ApplicationDetailsController: MJPController {
     @IBOutlet weak var distanceLabel: UILabel!
     @IBOutlet weak var removeView: UIView!
     @IBOutlet weak var applyView: UIView!
+    @IBOutlet weak var acceptView: UIView!
     @IBOutlet weak var messagesBtnView: UIView!
     @IBOutlet weak var jobDescription: UILabel!
     @IBOutlet weak var locationDescription: UILabel!
     @IBOutlet weak var mapView: GMSMapView!
-    @IBOutlet weak var carousel: iCarousel!
-    @IBOutlet weak var pageControl: UIPageControl!
     
     var job: Job!
     var application: Application!
-    var chooseDelegate: ChooseDelegate!
-    var onlyView = false
-    
+    var interview: ApplicationInterview!
+    var controlDelegate: ControlDelegate!
     var jobSeeker: JobSeeker!
     var profile: Profile!
+    var viewMode = false
     
-    var resources = Array<JobResourceModel>()
+    var resources = [MediaModel]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        scrollView.isHidden = true
+        if AppData.user.jobSeeker != nil {
+
+            showLoading()
+
+            API.shared().loadJobSeekerWithId(id: AppData.user.jobSeeker, success: { (data) in
+                self.jobSeeker = data as! JobSeeker
+                API.shared().loadJobProfileWithId(id: self.jobSeeker.profile, success: { (data) in
+                    self.hideLoading()
+                    self.profile = data as! Profile
+                    self.loadData()
+                }, failure: self.handleErrors)
+            }, failure: self.handleErrors)
+        }
+    }
+    
+    func loadData() {
         
         if application != nil {
             job = application.job
         }
+        interview = AppHelper.getInterview(application)
         
-        showLoading()
-        API.shared().loadJobSeekerWithId(id: AppData.user.jobSeeker, success: { (data) in
-            self.jobSeeker = data as! JobSeeker
-            API.shared().loadJobProfileWithId(id: self.jobSeeker.profile, success: { (data) in
-                self.hideLoading()
-                self.scrollView.isHidden = false
-                
-                self.profile = data as! Profile
-                self.load()
-            }, failure: self.handleErrors)
-        }, failure: self.handleErrors)
-        
-    }
-    
-    func load() {
-        
-        let pitch = job.getPitch()
-        if pitch != nil {
-            let resource = JobResourceModel()
-            resource.thumbnail = pitch?.thumbnail
-            resource.video = pitch?.video
+        resources.removeAll()
+        if let pitch = job.getPitch() {
+            let resource = MediaModel()
+            resource.thumbnail = pitch.thumbnail
+            resource.video = pitch.video
             resources.append(resource)
         }
         
-        let logoModel = JobResourceModel()
-        logoModel.defaultImage = UIImage(named: "default-logo")
         let image = job.getImage()
-        if image != nil {
-            logoModel.thumbnail = image?.thumbnail
-            logoModel.image = image?.image
-        }
+        let logoModel = MediaModel()
+        logoModel.thumbnail = image?.thumbnail
+        logoModel.image = image?.image
+        logoModel.defaultImage = UIImage(named: "default-logo")
         resources.append(logoModel)
-        
-        let location = job.locationData!
-        let contract = AppData.getContract(job.contract)!
-        let hours = AppData.getHours(job.hours)!
         
         jobTitle.text = job.title
         jobBusinessLocation.text = job.getBusinessName()
+        let workplace = job.locationData!
         
-        distanceLabel.text = AppHelper.distance(latitude1: profile.latitude, longitude1: profile.longitude, latitude2: location.latitude, longitude2: location.longitude)
-        
-        contractLabel.text = contract.name
-        hoursLabel.text = hours.name
-        
+        contractLabel.text = AppData.getContract(job.contract).name
+        hoursLabel.text = AppData.getHours(job.hours).name
+        distanceLabel.text = AppHelper.distance(latitude1: profile.latitude, longitude1: profile.longitude, latitude2: workplace.latitude, longitude2: workplace.longitude)
+        distanceLabel.isHidden = application == nil
+
         jobDescription.text = job.desc
-        locationDescription.text = location.desc
+        locationDescription.text = workplace.desc
         
-        if application != nil || onlyView {
-            removeView.removeFromSuperview()
-            applyView.removeFromSuperview()
-        }
-        if application == nil || onlyView {
-            messagesBtnView.isHidden = true
-        }
+        applyView.isHidden = viewMode || application != nil
+        removeView.isHidden = viewMode || application != nil
+        acceptView.isHidden = viewMode || interview == nil || interview.status != InterviewStatus.INTERVIEW_PENDING
+        messagesBtnView.isHidden = viewMode || application == nil
         
-        var position = CLLocationCoordinate2DMake(location.latitude.doubleValue, location.longitude.doubleValue)
-        if (application != nil) {
-            let marker = GMSMarker()
-            marker.map = mapView
-            marker.position = position
-            mapView.camera = GMSCameraPosition.camera(withTarget: marker.position, zoom: 15)
-        } else {
+        var position = CLLocationCoordinate2DMake(workplace.latitude.doubleValue, workplace.longitude.doubleValue)
+        if (application == nil) {
             let alpha = 2 * Double.pi * drand48();
             let rand = drand48();
             position.latitude += 0.00434195349206 * cos(alpha) * rand;
@@ -117,48 +105,78 @@ class ApplicationDetailsController: MJPController {
             circ.strokeColor = UIColor(red: 0, green: 182/255.0, blue: 164/255.0, alpha: 1)
             circ.strokeWidth = 2
             circ.map = mapView
+        } else {
+            let marker = GMSMarker()
+            marker.map = mapView
+            marker.position = position
+            mapView.camera = GMSCameraPosition.camera(withTarget: marker.position, zoom: 15)
         }
         mapView.camera = GMSCameraPosition.camera(withTarget: position, zoom: 14)
         
         pageControl.numberOfPages = resources.count
-        if resources.count < 2 {
-            pageControl.isHidden = true
-        }
+        pageControl.isHidden = resources.count <= 1
+        
         carousel.bounces = false
         carousel.reloadData()
     }
     
-    @IBAction func removeAction(_ sender: Any) {
-        PopupController.showYellow("Are you sure you are not interested in this job?", ok: "I'm Sure", okCallback: {
-            _ = self.navigationController?.popViewController(animated: true)
-            self.chooseDelegate?.remove()
-        }, cancel: "Cancel", cancelCallback: nil)
+    func updateApplication(_ close: Bool) {
+        AppData.updateApplication(application.id, success: { (application) in
+            if close {
+                self.popController()
+            } else {
+                self.application = application
+                self.loadData()
+                self.hideLoading()
+            }
+        }, failure: self.handleErrors)
     }
     
     @IBAction func applyAction(_ sender: Any) {
         PopupController.showGreen("Are you sure you want to apply to this job?", ok: "Apply", okCallback: {
             self.showLoading()
-            self.chooseDelegate?.apply(callback: {
-                _ = self.navigationController?.popViewController(animated: true)
-            })
+            self.controlDelegate.apply(success: { (_) in
+                self.popController()
+            }, failure: nil)
+        }, cancel: "Cancel", cancelCallback: nil)
+    }
+    
+    @IBAction func removeAction(_ sender: Any) {
+        PopupController.showYellow("Are you sure you are not interested in this job?", ok: "I'm Sure", okCallback: {
+            self.showLoading()
+            self.controlDelegate.remove(success: { (_) in
+                self.popController()
+            }, failure: nil)
+        }, cancel: "Cancel", cancelCallback: nil)
+    }
+    
+    @IBAction func acceptAction(_ sender: Any) {
+        PopupController.showYellow("Are you sure you want to accept this interview?", ok: "Ok", okCallback: {
+            self.showLoading()
+            API.shared().changeInterview(interviewId: self.interview.id, type: "accept", success: { (_) in
+                AppData.updateApplication(self.application.id, success: { (application) in
+                    self.application = application
+                    self.loadData()
+                    self.hideLoading()
+                }, failure: self.handleErrors)
+            }, failure: self.handleErrors)
         }, cancel: "Cancel", cancelCallback: nil)
     }
     
     @IBAction func messageAction(_ sender: Any) {
-        if AppData.user.isJobSeeker() {
-            if (!jobSeeker.active) {
-                PopupController.showGreen("To message please active your account", ok: "activate", okCallback: {
-                    let controller = AppHelper.instantiate("JobSeekerProfile") as! JobSeekerProfileController
-                    controller.activation = true
-                    AppHelper.getFrontController().navigationController?.present(controller, animated: true)
-                }, cancel: "Cancel", cancelCallback: nil)
-                return
-            }
+        if jobSeeker != nil && !jobSeeker.active {
+            
+            PopupController.showGreen("To message please active your account", ok: "activate", okCallback: {
+                let controller = JobSeekerProfileController.instantiate()
+                self.present(UINavigationController(rootViewController: controller), animated: true, completion: nil)
+            }, cancel: "Cancel", cancelCallback: nil)
+            
+        } else {
+        
+            let controller = MessageController0.instantiate()
+            controller.application = application
+            present(UINavigationController(rootViewController: controller), animated: true, completion: nil)
         }
-        let controller = MessageController0.instantiate()
-        controller.application = application
-        let navController = UINavigationController(rootViewController: controller)
-        present(navController, animated: true, completion: nil)
     }
     
     @IBAction func shareAction(_ sender: Any) {
@@ -166,6 +184,10 @@ class ApplicationDetailsController: MJPController {
         let itemProvider = ShareProvider(placeholderItem: url)
         let controller = UIActivityViewController(activityItems: [itemProvider], applicationActivities: nil)
         present(controller, animated: true, completion: nil)
+    }
+    
+    func popController() {
+        _ = self.navigationController?.popViewController(animated: true)
     }
     
     static func instantiate() -> ApplicationDetailsController {
@@ -181,19 +203,18 @@ extension ApplicationDetailsController: iCarouselDataSource {
     }
     
     func carousel(_ carousel: iCarousel, viewForItemAt index: Int, reusing view: UIView?) -> UIView {
-        //create new view if no view is available for recycling
-        var jobResource: JobResource!
+
+        var mediaView: MediaView!
         if view == nil {
-            jobResource = JobResource.instanceFromNib(carousel.bounds)
-            jobResource.controller = self
+            mediaView = MediaView.instantiate(carousel.bounds)
+            mediaView.controller = self
         } else {
-            jobResource = view as! JobResource
+            mediaView = view as! MediaView
         }
         
-        jobResource.model = resources[index]
-        return jobResource
+        mediaView.model = resources[index]
+        return mediaView
     }
-    
 }
 
 extension ApplicationDetailsController: iCarouselDelegate {

@@ -51,11 +51,7 @@ class InterviewCell: MGSwipeTableCell {
             status.text = "Interview cancelled by " + (AppData.user.isRecruiter() ? "Recruiter" : "Jobseeker")
         }
         
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "E d MMM, yyyy"
-        let dateFormatter1 = DateFormatter()
-        dateFormatter1.dateFormat = "HH:mm"
-        dataTime.text = String(format: "%@ at %@", dateFormatter.string(from: interview.at), dateFormatter1.string(from: interview.at))
+        dataTime.text = AppHelper.convertDateToString(interview.at, short: false)
         
         location.text = application.job.locationData.placeName
         

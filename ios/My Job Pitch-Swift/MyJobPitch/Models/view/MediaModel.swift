@@ -1,14 +1,14 @@
 //
-//  JobResourceModel.swift
+//  MediaModal.swift
 //  MyJobPitch
 //
-//  Created by dev on 5/17/18.
+//  Created by bb on 9/18/18.
 //  Copyright © 2018 myjobpitch. All rights reserved.
 //
 
 import Foundation
 
-class JobResourceModel {
+class MediaModel {
     var video: String!
     var image: String!
     var thumbnail: String!

@@ -70,7 +70,7 @@ class LocationSerializer(serializers.ModelSerializer):
     longitude = serializers.FloatField(source='latlng.x')
     latitude = serializers.FloatField(source='latlng.y')
     images = RelatedImageURLField(many=True, read_only=True)
-    business_data = UserBusinessSerializer(source='business', read_only=True)
+    business_data = BusinessSerializer(source='business', read_only=True)
     active_job_count = serializers.SerializerMethodField()
 
     def get_active_job_count(self, obj):

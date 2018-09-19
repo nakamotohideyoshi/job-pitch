@@ -65,7 +65,7 @@ class UserBusinessSerializer(BusinessSerializer):  # v5 (<5 uses BusinessSeriali
         fields = BusinessSerializer.Meta.fields + ('restricted',)
 
 
-class LocationSerializer(serializers.ModelSerializer):
+class LocationSerializer(serializers.ModelSerializer):  # v1-4 /api/user-locations/, all versions /api/locations/
     jobs = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
     longitude = serializers.FloatField(source='latlng.x')
     latitude = serializers.FloatField(source='latlng.y')
@@ -94,6 +94,10 @@ class LocationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Location
         exclude = ('latlng',)
+
+
+class UserLocationSerializer(LocationSerializer):  # v5 (<5 uses LocationSerializer)
+    business_data = UserBusinessSerializer(source='business', read_only=True)
 
 
 class JobSerializerV1(serializers.ModelSerializer):

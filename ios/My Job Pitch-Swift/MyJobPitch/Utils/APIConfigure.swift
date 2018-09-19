@@ -537,38 +537,29 @@ class APIConfigure: NSObject {
                                method: .POST)
         
         let externalApplictionCreateArray = [ "job", "shortlisted" ]
-
-        
-        
-        
-        
-        
-        
-        let jobSeekerArray1 = [ "email", "telephone", "mobile", "age", "sex", "nationality", "national_insurance_number", "has_national_insurance_number" ]
-        let jobSeekerDictionary1 = [ "firstName":            "first_name",
-                                    "lastName":             "last_name",
-                                    "desc":                 "description",
-                                    "emailPublic":          "email_public",
-                                    "telephonePublic":      "telephone_public",
-                                    "mobilePublic":         "mobile_public",
-                                    "agePublic":            "age_public",
-                                    "sexPublic":            "sex_public",
-                                    "nationalityPublic":    "nationality_public",
-                                    "hasReferences":        "has_references",
-                                    "truthConfirmation":    "truth_confirmation" ]
-        let jobSeekerReqMapping = RKObjectMapping.request()!
-        setupMapping(jobSeekerReqMapping,
-                     array: jobSeekerArray1,
-                     dictionary: jobSeekerDictionary1,
-                     relationships: nil)
-        let externalApplicationInterviewRelationships = [ [ "source": "jobSeeker",
-                                                            "destination": "job_seeker",
-                                                            "mapping": jobSeekerReqMapping ] ]
+        let externalApplictionDictionary = [ "firstName":           "job_seeker.first_name",
+                                             "lastName":            "job_seeker.last_name",
+                                             "email":               "job_seeker.email",
+                                             "telephone":           "job_seeker.telephone",
+                                             "mobile":              "job_seeker.mobile",
+                                             "age":                 "job_seeker.age",
+                                             "sex":                 "job_seeker.sex",
+                                             "nationality":         "job_seeker.nationality",
+                                             "emailPublic":          "job_seeker.email_public",
+                                             "telephonePublic":      "job_seeker.telephone_public",
+                                             "mobilePublic":         "job_seeker.mobile_public",
+                                             "agePublic":            "job_seeker.age_public",
+                                             "sexPublic":            "job_seeker.sex_public",
+                                             "nationalityPublic":    "job_seeker.nationality_public",
+                                             "nationalInsuranceNumber":                 "job_seeker.national_insurance_number",
+                                             "desc":                 "job_seeker.description",
+                                             "hasReferences":        "job_seeker.has_references",
+                                             "truthConfirmation":    "job_seeker.truth_confirmation" ]
         
         configureSimpleMapping(ExternalApplicationForCreation.classForCoder(),
                                mappingArray: externalApplictionCreateArray,
-                               mappingDictionary: nil,
-                               mappingRelationships: externalApplicationInterviewRelationships,
+                               mappingDictionary: externalApplictionDictionary,
+                               mappingRelationships: nil,
                                path: "/api/applications/external/",
                                method: .POST)
 

@@ -371,18 +371,7 @@ class AppData: NSObject {
         newMessageCount = 0
         
         for application in applications {
-            var newMsgs = 0
-            for message in application.messages.reversed() as! [Message] {
-                if message.read {
-                    break
-                }
-                if message.fromRole == AppData.getUserRole().id {
-                    break
-                }
-                newMsgs += 1
-                
-            }
-            newMessageCount += newMsgs
+            newMessageCount += AppHelper.getNewMessageCount(application)
         }
     }
     

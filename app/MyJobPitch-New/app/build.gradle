@@ -6,8 +6,8 @@ android {
         applicationId "com.myjobpitch"
         minSdkVersion 19
         targetSdkVersion 27
-        versionCode 140
-        versionName "1.1-beta.140"
+        versionCode 142
+        versionName "1.1-beta.142"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
     }
@@ -49,7 +49,7 @@ dependencies {
     implementation 'com.google.api-client:google-api-client:1.23.0'
     implementation 'com.google.api-client:google-api-client-android:1.23.0'
     implementation 'com.google.apis:google-api-services-drive:v3-rev114-1.23.0'
-    implementation 'org.springframework.android:spring-android-rest-template:1.0.1.RELEASE'
+    implementation 'org.springframework.android:spring-android-rest-template:2.0.0.M2'
     implementation 'com.amazonaws:aws-android-sdk-core:2.6.18'
     implementation 'com.amazonaws:aws-android-sdk-s3:2.6.18'
     implementation 'com.dropbox.core:dropbox-core-sdk:3.0.7'

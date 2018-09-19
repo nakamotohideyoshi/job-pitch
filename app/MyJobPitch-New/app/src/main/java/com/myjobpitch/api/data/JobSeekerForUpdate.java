@@ -1,41 +1,26 @@
 package com.myjobpitch.api.data;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.myjobpitch.api.MJPObjectWithDates;
+import java.io.Serializable;
 
-import java.util.List;
-
-@JsonIgnoreProperties({"user"})
-public class JobSeeker extends MJPObjectWithDates {
+public class JobSeekerForUpdate implements Serializable {
     private boolean active;
     private String first_name;
     private String last_name;
-    private String telephone;
-    private String mobile;
-    private String email;
     private boolean email_public;
-    private boolean mobile_public;
+    private String telephone;
     private boolean telephone_public;
+    private String mobile;
+    private boolean mobile_public;
     private Integer age;
-    private Integer sex;
-    private Integer nationality;
-    private boolean sex_public;
-    private boolean nationality_public;
     private boolean age_public;
-    private Integer profile;
-    private List<Pitch> pitches;
+    private Integer sex;
+    private boolean sex_public;
+    private Integer nationality;
+    private boolean nationality_public;
     private String description;
-    private String cv;
     private String national_insurance_number;
-    private boolean has_national_insurance_number;
-
     private boolean has_references;
-
     private boolean truth_confirmation;
-
-    // Added in  API V4
-    private String profile_image;
-    private String profile_thumb;
 
     public boolean getEmail_public() {
         return email_public;
@@ -43,10 +28,6 @@ public class JobSeeker extends MJPObjectWithDates {
 
     public String getMobile() {
         return mobile;
-    }
-
-    public String getEmail() {
-        return email;
     }
 
     public boolean getMobile_public() {
@@ -71,10 +52,6 @@ public class JobSeeker extends MJPObjectWithDates {
 
     public void setMobile(String mobile) {
         this.mobile = mobile;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
     }
 
     public void setEmail_public(boolean emailPublic) {
@@ -149,26 +126,6 @@ public class JobSeeker extends MJPObjectWithDates {
         return first_name;
     }
 
-    public Integer getProfile() {
-        return profile;
-    }
-
-    public List<Pitch> getPitches() {
-        return pitches;
-    }
-
-    public Pitch getPitch() {
-        if (pitches != null)
-            for (Pitch pitch : pitches)
-                if (pitch.getVideo() != null)
-                    return pitch;
-        return null;
-    }
-
-    public boolean hasPitch() {
-        return getPitch() != null;
-    }
-
     public String getDescription() {
         return description;
     }
@@ -183,14 +140,6 @@ public class JobSeeker extends MJPObjectWithDates {
 
     public void setActive(boolean active) {
         this.active = active;
-    }
-
-    public String getCV() {
-        return cv;
-    }
-
-    public void setCV(String cv) {
-        this.cv = cv;
     }
 
     public boolean getHas_references() {
@@ -216,21 +165,4 @@ public class JobSeeker extends MJPObjectWithDates {
     public void setNational_insurance_number(String number) {
         this.national_insurance_number = number;
     }
-
-    public boolean getHas_national_insurance_number() {
-        return has_national_insurance_number;
-    }
-
-    public String getProfile_image() {
-        return profile_image;
-    }
-
-    public void setProfile_image(String profile_image) {
-        this.profile_image = profile_image;
-    }
-
-    public String getProfile_thumb() {
-        return profile_thumb;
-    }
-
 }

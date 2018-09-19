@@ -110,74 +110,12 @@ sdafsdf</string>
                                 <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="1Ud-oh-iSo">
-                                <rect key="frame" x="0.0" y="64" width="414" height="672"/>
-                                <subviews>
-                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="jm8-4i-na1">
-                                        <rect key="frame" x="0.0" y="201.33333333333329" width="414" height="269.66666666666674"/>
-                                        <subviews>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Your pitch video is missing!" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FGg-hV-6GX">
-                                                <rect key="frame" x="41" y="10" width="332" height="24"/>
-                                                <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="20"/>
-                                                <nil key="textColor"/>
-                                                <nil key="highlightedColor"/>
-                                            </label>
-                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="L7E-Hg-VpA" customClass="YellowButton" customModule="MyJobPitch" customModuleProvider="target">
-                                                <rect key="frame" x="104" y="219.66666666666669" width="207" height="40"/>
-                                                <color key="backgroundColor" red="1" green="0.57254901960000004" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                                <constraints>
-                                                    <constraint firstAttribute="height" constant="40" id="NyV-nU-sDZ"/>
-                                                </constraints>
-                                                <inset key="imageEdgeInsets" minX="-150" minY="0.0" maxX="0.0" maxY="0.0"/>
-                                                <state key="normal" title="Record now!">
-                                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                                </state>
-                                                <connections>
-                                                    <action selector="noRecordNow:" destination="fXk-1p-fNQ" eventType="touchUpInside" id="vKW-5z-ffp"/>
-                                                </connections>
-                                            </button>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xpv-wE-14w">
-                                                <rect key="frame" x="41" y="49" width="332" height="150.66666666666669"/>
-                                                <string key="text">Recruiters are looking for someone with your exact profile.
-You are the perfect candidate, let your personality shine and land you the job thet you really want!
-
-All you're missing is your video pitch!</string>
-                                                <fontDescription key="fontDescription" type="system" pointSize="18"/>
-                                                <nil key="highlightedColor"/>
-                                            </label>
-                                        </subviews>
-                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                        <constraints>
-                                            <constraint firstItem="xpv-wE-14w" firstAttribute="centerX" secondItem="jm8-4i-na1" secondAttribute="centerX" id="9pa-3c-Pge"/>
-                                            <constraint firstItem="xpv-wE-14w" firstAttribute="top" secondItem="FGg-hV-6GX" secondAttribute="bottom" constant="15" id="EC1-7K-xGa"/>
-                                            <constraint firstItem="FGg-hV-6GX" firstAttribute="width" secondItem="jm8-4i-na1" secondAttribute="width" multiplier="0.8" id="JGQ-9i-l2D"/>
-                                            <constraint firstItem="L7E-Hg-VpA" firstAttribute="centerX" secondItem="jm8-4i-na1" secondAttribute="centerX" id="KTw-NJ-r1Q"/>
-                                            <constraint firstItem="xpv-wE-14w" firstAttribute="width" secondItem="jm8-4i-na1" secondAttribute="width" multiplier="0.8" id="N72-MX-xPw"/>
-                                            <constraint firstItem="FGg-hV-6GX" firstAttribute="centerX" secondItem="jm8-4i-na1" secondAttribute="centerX" id="OVE-DN-Dgy"/>
-                                            <constraint firstItem="L7E-Hg-VpA" firstAttribute="top" secondItem="xpv-wE-14w" secondAttribute="bottom" constant="20" id="Vxp-eN-2X3"/>
-                                            <constraint firstAttribute="bottom" secondItem="L7E-Hg-VpA" secondAttribute="bottom" constant="10" id="dfG-li-z60"/>
-                                            <constraint firstItem="L7E-Hg-VpA" firstAttribute="width" secondItem="jm8-4i-na1" secondAttribute="width" multiplier="0.5" id="pKw-3w-UqN"/>
-                                            <constraint firstItem="FGg-hV-6GX" firstAttribute="top" secondItem="jm8-4i-na1" secondAttribute="top" constant="10" id="yE0-L7-kg0"/>
-                                        </constraints>
-                                    </view>
-                                </subviews>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                <constraints>
-                                    <constraint firstItem="jm8-4i-na1" firstAttribute="leading" secondItem="1Ud-oh-iSo" secondAttribute="leading" id="IuX-fD-rG1"/>
-                                    <constraint firstItem="jm8-4i-na1" firstAttribute="centerY" secondItem="1Ud-oh-iSo" secondAttribute="centerY" id="xPC-LT-3s9"/>
-                                    <constraint firstAttribute="trailing" secondItem="jm8-4i-na1" secondAttribute="trailing" id="ydO-Ng-bpr"/>
-                                </constraints>
-                            </view>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="dwK-gi-WTZ" firstAttribute="top" secondItem="1Ud-oh-iSo" secondAttribute="bottom" id="4Zc-BB-PxH"/>
                             <constraint firstItem="OW2-wO-B54" firstAttribute="leading" secondItem="wBZ-83-Uco" secondAttribute="leadingMargin" constant="15" id="DVs-Z1-kpd"/>
-                            <constraint firstItem="1Ud-oh-iSo" firstAttribute="leading" secondItem="wBZ-83-Uco" secondAttribute="leading" id="Ihh-a5-Y7Z"/>
-                            <constraint firstItem="1Ud-oh-iSo" firstAttribute="top" secondItem="0rA-0R-uH5" secondAttribute="bottom" id="Rsd-Ix-b9T"/>
                             <constraint firstItem="WYp-fM-9Ji" firstAttribute="top" secondItem="0rA-0R-uH5" secondAttribute="bottom" id="aW8-iQ-lRK"/>
                             <constraint firstAttribute="trailing" secondItem="WYp-fM-9Ji" secondAttribute="trailing" id="fH4-Cd-Lqk"/>
-                            <constraint firstAttribute="trailing" secondItem="1Ud-oh-iSo" secondAttribute="trailing" id="ilg-qU-d2e"/>
                             <constraint firstItem="WYp-fM-9Ji" firstAttribute="leading" secondItem="wBZ-83-Uco" secondAttribute="leading" id="l4Z-dC-aes"/>
                             <constraint firstItem="OW2-wO-B54" firstAttribute="centerX" secondItem="WYp-fM-9Ji" secondAttribute="centerX" id="nC1-mS-iTK"/>
                             <constraint firstItem="dwK-gi-WTZ" firstAttribute="top" secondItem="WYp-fM-9Ji" secondAttribute="bottom" id="vgC-To-tht"/>
@@ -189,13 +127,12 @@ All you're missing is your video pitch!</string>
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
                     <connections>
                         <outlet property="emptyView" destination="OW2-wO-B54" id="dx1-oK-gJC"/>
-                        <outlet property="noPitchView" destination="1Ud-oh-iSo" id="XCe-Gb-5Kt"/>
                         <outlet property="tableView" destination="WYp-fM-9Ji" id="8TC-Aj-xJx"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dUn-bh-Bxh" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-6583" y="-1321"/>
+            <point key="canvasLocation" x="-8972" y="-1131"/>
         </scene>
         <!--Swipe Controller-->
         <scene sceneID="Sfe-Ad-csf">
@@ -342,7 +279,7 @@ All you're missing is your video pitch!</string>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="m8i-6Y-1s0" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-10068.115942028986" y="-469.56521739130437"/>
+            <point key="canvasLocation" x="-11788" y="-2835"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="joV-0S-ahh">
@@ -359,7 +296,7 @@ All you're missing is your video pitch!</string>
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="z5P-cX-qlh" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-10068" y="-3242"/>
+            <point key="canvasLocation" x="-11784" y="-3697"/>
         </scene>
         <!--Popup Controller-->
         <scene sceneID="CDa-CC-dr8">
@@ -446,7 +383,7 @@ All you're missing is your video pitch!</string>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="hbZ-SB-Xtp" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-10050" y="251"/>
+            <point key="canvasLocation" x="-10404" y="-4438"/>
         </scene>
         <!--Selection Controller-->
         <scene sceneID="kdM-Hq-BhS">
@@ -526,7 +463,7 @@ All you're missing is your video pitch!</string>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="pj2-Qa-pbU" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-9391.3043478260879" y="250.67934782608697"/>
+            <point key="canvasLocation" x="-7016" y="-4438"/>
         </scene>
         <!--Add Business-->
         <scene sceneID="Exg-a1-bHr">
@@ -703,7 +640,7 @@ All you're missing is your video pitch!</string>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="nHe-da-qPi" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-6616" y="-2475"/>
+            <point key="canvasLocation" x="-7068" y="-2832"/>
         </scene>
         <!--Record Pitch-->
         <scene sceneID="fTE-4Q-K89">
@@ -855,7 +792,7 @@ All you're missing is your video pitch!</string>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="hWx-WN-h4H" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-7991.3043478260879" y="-2481.521739130435"/>
+            <point key="canvasLocation" x="-8052" y="-2832"/>
         </scene>
         <!--Camera Controller-->
         <scene sceneID="iGV-2Z-F82">
@@ -933,7 +870,7 @@ All you're missing is your video pitch!</string>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="WQq-di-4Mg" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-5936" y="-2482"/>
+            <point key="canvasLocation" x="-8620" y="-4411"/>
         </scene>
         <!--Location-->
         <scene sceneID="FLK-7G-A4Q">
@@ -1004,7 +941,7 @@ All you're missing is your video pitch!</string>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Cng-m4-IlT" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-7020" y="-469"/>
+            <point key="canvasLocation" x="-7838" y="-4411"/>
         </scene>
         <!--Workplace Detail-->
         <scene sceneID="LWo-PO-Ggf">
@@ -1293,7 +1230,7 @@ jobs yet.</string>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="v5I-8U-awG" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-8740" y="-1322"/>
+            <point key="canvasLocation" x="-10603" y="-19"/>
         </scene>
         <!--Change Password-->
         <scene sceneID="7du-b8-eOv">
@@ -1439,7 +1376,7 @@ jobs yet.</string>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ghU-Bi-mpo" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-9302" y="-469"/>
+            <point key="canvasLocation" x="-8649" y="-3725"/>
         </scene>
         <!--Job Profile-->
         <scene sceneID="cPR-ge-vO9">
@@ -1654,7 +1591,7 @@ jobs yet.</string>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="IHc-4v-LkS" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-8686" y="-2495"/>
+            <point key="canvasLocation" x="-8786" y="-2842"/>
         </scene>
         <!--Login Controller-->
         <scene sceneID="ifO-fY-8zv">
@@ -1841,7 +1778,7 @@ jobs yet.</string>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Npf-2c-iCp" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-9362.31884057971" y="-3242.1195652173915"/>
+            <point key="canvasLocation" x="-11078" y="-3697"/>
         </scene>
         <!--Login Controller-->
         <scene sceneID="hJd-an-xlr">
@@ -2013,7 +1950,7 @@ jobs yet.</string>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Ydu-8I-Uvb" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-8686" y="-3242"/>
+            <point key="canvasLocation" x="-10403" y="-3697"/>
         </scene>
         <!--Reset Password Controller-->
         <scene sceneID="4XO-RY-eL9">
@@ -2139,7 +2076,7 @@ jobs yet.</string>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="LbR-JI-0z7" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-8006" y="-3242"/>
+            <point key="canvasLocation" x="-9723" y="-3697"/>
         </scene>
         <!--Side Menu Controller-->
         <scene sceneID="qAT-zT-Iyu">
@@ -2277,7 +2214,7 @@ jobs yet.</string>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="vlD-q1-lWC" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-10068" y="-3955"/>
+            <point key="canvasLocation" x="-11784" y="-4410"/>
         </scene>
         <!--Reveal View Controller-->
         <scene sceneID="9GE-Di-5Kb">
@@ -2299,7 +2236,7 @@ jobs yet.</string>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="7z1-5A-5Ha" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-10865" y="-3591"/>
+            <point key="canvasLocation" x="-12581" y="-4046"/>
         </scene>
         <!--Web View Controller-->
         <scene sceneID="z5i-dV-T6A">
@@ -2343,7 +2280,7 @@ jobs yet.</string>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="iEQ-c3-4hf" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-7804" y="-469"/>
+            <point key="canvasLocation" x="-7148" y="-3697"/>
         </scene>
         <!--Help Controller-->
         <scene sceneID="CnW-ce-qcG">
@@ -2540,7 +2477,7 @@ jobs yet.</string>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="wRA-eb-te8" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-8593" y="-469"/>
+            <point key="canvasLocation" x="-7901" y="-3697"/>
         </scene>
         <!--Businesses-->
         <scene sceneID="SJW-OY-QYF">
@@ -2755,7 +2692,7 @@ Lets start with easy adding your Business</string>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Vsj-Rh-aH6" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-10068" y="-1320.0899550224888"/>
+            <point key="canvasLocation" x="-11929" y="-17"/>
         </scene>
         <!--Business Detail-->
         <scene sceneID="yXH-Eg-R9h">
@@ -3051,7 +2988,7 @@ Now tap to create your workplaces.</string>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="mCw-RZ-Gjy" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-9407.2000000000007" y="-1321.8890554722639"/>
+            <point key="canvasLocation" x="-11268" y="-19"/>
         </scene>
         <!--Edit Profile-->
         <scene sceneID="qeD-WZ-pt5">
@@ -3834,7 +3771,7 @@ Now tap to create your workplaces.</string>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="cWI-sO-gvM" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-2757" y="-889"/>
+            <point key="canvasLocation" x="-9515" y="-2401"/>
         </scene>
         <!--Add Workplace-->
         <scene sceneID="dbN-B6-d59">
@@ -4116,7 +4053,7 @@ Now tap to create your workplaces.</string>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="qk1-xM-oab" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-7279" y="-2417"/>
+            <point key="canvasLocation" x="-6325" y="-2765"/>
         </scene>
         <!--Add Job-->
         <scene sceneID="dMV-Gq-Etz">
@@ -4519,7 +4456,7 @@ Now tap to create your workplaces.</string>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="cFb-6s-EFL" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-5070" y="-2286"/>
+            <point key="canvasLocation" x="-5653" y="-2644"/>
         </scene>
         <!--Messages-->
         <scene sceneID="z1o-6H-gOA">
@@ -4632,10 +4569,10 @@ Now tap to create your workplaces.</string>
                         <constraints>
                             <constraint firstItem="M11-5x-EBS" firstAttribute="leading" secondItem="5Xx-UK-Sek" secondAttribute="leading" id="7GF-GA-ZcR"/>
                             <constraint firstItem="M11-5x-EBS" firstAttribute="top" secondItem="UXi-ui-vea" secondAttribute="bottom" id="7MU-8X-KjL"/>
-                            <constraint firstItem="BdU-h9-5hB" firstAttribute="top" secondItem="Ejc-rD-IPC" secondAttribute="bottom" id="Eya-l5-16C"/>
-                            <constraint firstItem="Ejc-rD-IPC" firstAttribute="top" secondItem="M11-5x-EBS" secondAttribute="bottom" id="NBc-ha-hyu"/>
-                            <constraint firstAttribute="trailing" secondItem="Ejc-rD-IPC" secondAttribute="trailing" id="Soz-31-kLG"/>
-                            <constraint firstItem="Ejc-rD-IPC" firstAttribute="leading" secondItem="5Xx-UK-Sek" secondAttribute="leading" id="W8l-Rc-W1X"/>
+                            <constraint firstAttribute="trailing" secondItem="Ejc-rD-IPC" secondAttribute="trailing" id="PZl-DT-9jB"/>
+                            <constraint firstItem="BdU-h9-5hB" firstAttribute="top" secondItem="Ejc-rD-IPC" secondAttribute="bottom" id="hxM-3f-PnZ"/>
+                            <constraint firstItem="Ejc-rD-IPC" firstAttribute="leading" secondItem="5Xx-UK-Sek" secondAttribute="leading" id="jsK-AD-j0e"/>
+                            <constraint firstItem="Ejc-rD-IPC" firstAttribute="top" secondItem="M11-5x-EBS" secondAttribute="bottom" id="kVI-8G-Lka"/>
                             <constraint firstAttribute="trailing" secondItem="M11-5x-EBS" secondAttribute="trailing" id="wXG-48-njW"/>
                         </constraints>
                     </view>
@@ -4652,7 +4589,7 @@ Now tap to create your workplaces.</string>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="iXK-87-UXV" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-6136.2318840579719" y="-469.56521739130437"/>
+            <point key="canvasLocation" x="-8206" y="-1131"/>
         </scene>
         <!--Google Drive-->
         <scene sceneID="SU2-Yw-CZ6">
@@ -4750,7 +4687,7 @@ Now tap to create your workplaces.</string>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="LoD-OC-A2l" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-8594" y="279"/>
+            <point key="canvasLocation" x="-6217" y="-4410"/>
         </scene>
         <!--Select Job-->
         <scene sceneID="hWX-IL-r5U">
@@ -4939,7 +4876,7 @@ Now tap to create your workplaces.</string>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="4Fi-eV-XOr" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-7307.2463768115949" y="-1321.467391304348"/>
+            <point key="canvasLocation" x="-8945" y="-20"/>
         </scene>
         <!--Message Controller-->
         <scene sceneID="jJf-HM-hQj">
@@ -4957,7 +4894,7 @@ Now tap to create your workplaces.</string>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="rjl-Ze-Gdn" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-5450" y="-469"/>
+            <point key="canvasLocation" x="-7519" y="-1131"/>
         </scene>
         <!--Job Detail-->
         <scene sceneID="u5v-Im-b7f">
@@ -5170,7 +5107,7 @@ Now tap to create your workplaces.</string>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="exE-BG-7Ob" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-8007.1999999999998" y="-1322.7886056971515"/>
+            <point key="canvasLocation" x="-9868" y="-22"/>
         </scene>
         <!--Dropbox-->
         <scene sceneID="4OL-7n-eOC">
@@ -5268,7 +5205,7 @@ Now tap to create your workplaces.</string>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="aXg-XA-hEQ" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-7804" y="279"/>
+            <point key="canvasLocation" x="-5475" y="-4411"/>
         </scene>
         <!--Intro Controller-->
         <scene sceneID="PSf-1s-SbL">
@@ -5544,7 +5481,7 @@ Now tap to create your workplaces.</string>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="kJO-Nm-p0B" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-7275.36231884058" y="-3242.1195652173915"/>
+            <point key="canvasLocation" x="-11078" y="-4410"/>
         </scene>
         <!--Data Source-->
         <scene sceneID="eNi-D7-gsk">
@@ -5960,7 +5897,7 @@ et dolore magna aliqua.</string>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="sVc-Ij-vGC" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-1360" y="-1238"/>
+            <point key="canvasLocation" x="-10405" y="-2746"/>
         </scene>
         <!--Users-->
         <scene sceneID="noA-jy-UP0">
@@ -6076,7 +6013,7 @@ et dolore magna aliqua.</string>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="gBA-H6-fz1" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-10068" y="1110"/>
+            <point key="canvasLocation" x="-3972" y="-1130"/>
         </scene>
         <!--Edit User-->
         <scene sceneID="I4s-UU-eN6">
@@ -6324,7 +6261,7 @@ et dolore magna aliqua.</string>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="cUv-xV-NGz" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-9391" y="1030"/>
+            <point key="canvasLocation" x="-3296" y="-1209"/>
         </scene>
         <!--Interviews-->
         <scene sceneID="M6r-C5-sFw">
@@ -6488,7 +6425,7 @@ et dolore magna aliqua.</string>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="IUV-Yt-NQG" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-10039.13043478261" y="1823.6413043478262"/>
+            <point key="canvasLocation" x="-6532" y="-1129"/>
         </scene>
         <!--Arrange Interview-->
         <scene sceneID="r8l-1C-qyC">
@@ -6749,7 +6686,7 @@ et dolore magna aliqua.</string>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="P1x-pD-goN" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-8623.188405797102" y="1823.6413043478262"/>
+            <point key="canvasLocation" x="-5116" y="-1130"/>
         </scene>
         <!--Interview-->
         <scene sceneID="9lK-tc-whP">
@@ -6770,79 +6707,20 @@ et dolore magna aliqua.</string>
                                     <rect key="frame" x="0.0" y="0.0" width="414" height="701"/>
                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                     <subviews>
-                                        <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="12" translatesAutoresizingMaskIntoConstraints="NO" id="Jv3-uD-g2Q">
+                                        <stackView opaque="NO" contentMode="scaleToFill" misplaced="YES" axis="vertical" spacing="12" translatesAutoresizingMaskIntoConstraints="NO" id="Jv3-uD-g2Q">
                                             <rect key="frame" x="0.0" y="0.0" width="414" height="591"/>
                                             <subviews>
-                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="f35-wu-eJ8">
+                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="V7h-BY-TRZ" customClass="AppInfoSmallView" customModule="MyJobPitch" customModuleProvider="target">
                                                     <rect key="frame" x="0.0" y="0.0" width="414" height="74"/>
-                                                    <subviews>
-                                                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="GJI-r2-aLm">
-                                                            <rect key="frame" x="16" y="12" width="50" height="50"/>
-                                                            <constraints>
-                                                                <constraint firstAttribute="width" secondItem="GJI-r2-aLm" secondAttribute="height" multiplier="1:1" id="vI2-Sa-1mn"/>
-                                                                <constraint firstAttribute="width" constant="50" id="xjO-LB-mxg"/>
-                                                            </constraints>
-                                                        </imageView>
-                                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="bUq-dw-Gup">
-                                                            <rect key="frame" x="78" y="14.333333333333332" width="302" height="46.666666666666671"/>
-                                                            <subviews>
-                                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Name" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mDT-eN-pQW">
-                                                                    <rect key="frame" x="0.0" y="0.0" width="302" height="21.666666666666664"/>
-                                                                    <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="18"/>
-                                                                    <nil key="highlightedColor"/>
-                                                                </label>
-                                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="comment" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="70s-f8-gtC">
-                                                                    <rect key="frame" x="0.0" y="29.666666666666664" width="302" height="17"/>
-                                                                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                                                    <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
-                                                                    <nil key="highlightedColor"/>
-                                                                </label>
-                                                            </subviews>
-                                                            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                                            <constraints>
-                                                                <constraint firstAttribute="bottom" secondItem="70s-f8-gtC" secondAttribute="bottom" id="Mwe-Gg-8XT"/>
-                                                                <constraint firstAttribute="trailing" secondItem="70s-f8-gtC" secondAttribute="trailing" id="bFh-aF-UfU"/>
-                                                                <constraint firstItem="70s-f8-gtC" firstAttribute="top" secondItem="mDT-eN-pQW" secondAttribute="bottom" constant="8" id="eas-R2-idV"/>
-                                                                <constraint firstItem="mDT-eN-pQW" firstAttribute="leading" secondItem="bUq-dw-Gup" secondAttribute="leading" id="oNL-fO-H51"/>
-                                                                <constraint firstAttribute="trailing" secondItem="mDT-eN-pQW" secondAttribute="trailing" id="piH-vq-qHG"/>
-                                                                <constraint firstItem="mDT-eN-pQW" firstAttribute="top" secondItem="bUq-dw-Gup" secondAttribute="top" id="tYS-KC-zhL"/>
-                                                                <constraint firstItem="70s-f8-gtC" firstAttribute="leading" secondItem="bUq-dw-Gup" secondAttribute="leading" id="tum-vd-Hfp"/>
-                                                            </constraints>
-                                                        </view>
-                                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="right-arrow" translatesAutoresizingMaskIntoConstraints="NO" id="taJ-2x-xIT">
-                                                            <rect key="frame" x="386" y="29" width="16" height="16"/>
-                                                            <constraints>
-                                                                <constraint firstAttribute="height" constant="16" id="6id-Oc-7fj"/>
-                                                                <constraint firstAttribute="width" constant="16" id="KcB-Or-t9h"/>
-                                                            </constraints>
-                                                        </imageView>
-                                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="tZv-Lm-ala">
-                                                            <rect key="frame" x="0.0" y="0.0" width="414" height="74"/>
-                                                            <connections>
-                                                                <action selector="appDetailAction:" destination="qLd-uB-4CZ" eventType="touchUpInside" id="tkD-k0-EJm"/>
-                                                            </connections>
-                                                        </button>
-                                                    </subviews>
                                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                     <constraints>
-                                                        <constraint firstAttribute="trailing" secondItem="tZv-Lm-ala" secondAttribute="trailing" id="48b-ih-Por"/>
-                                                        <constraint firstItem="GJI-r2-aLm" firstAttribute="top" secondItem="f35-wu-eJ8" secondAttribute="top" constant="12" id="5Rs-lx-u0N"/>
-                                                        <constraint firstItem="tZv-Lm-ala" firstAttribute="top" secondItem="f35-wu-eJ8" secondAttribute="top" id="6xj-Sk-hfc"/>
-                                                        <constraint firstItem="GJI-r2-aLm" firstAttribute="leading" secondItem="f35-wu-eJ8" secondAttribute="leading" constant="16" id="DSc-t0-jnA"/>
-                                                        <constraint firstItem="taJ-2x-xIT" firstAttribute="leading" secondItem="bUq-dw-Gup" secondAttribute="trailing" constant="6" id="Jbi-GX-YNA"/>
-                                                        <constraint firstItem="tZv-Lm-ala" firstAttribute="leading" secondItem="f35-wu-eJ8" secondAttribute="leading" id="SuA-oN-3eq"/>
-                                                        <constraint firstItem="bUq-dw-Gup" firstAttribute="centerY" secondItem="GJI-r2-aLm" secondAttribute="centerY" id="agX-t3-ZYH"/>
-                                                        <constraint firstItem="bUq-dw-Gup" firstAttribute="leading" secondItem="GJI-r2-aLm" secondAttribute="trailing" constant="12" id="aqN-U1-50j"/>
-                                                        <constraint firstAttribute="bottom" secondItem="GJI-r2-aLm" secondAttribute="bottom" constant="12" id="fLz-ix-mVg"/>
-                                                        <constraint firstAttribute="trailing" secondItem="taJ-2x-xIT" secondAttribute="trailing" constant="12" id="i1z-gG-piB"/>
-                                                        <constraint firstItem="taJ-2x-xIT" firstAttribute="centerY" secondItem="GJI-r2-aLm" secondAttribute="centerY" id="xJh-tK-Iuv"/>
-                                                        <constraint firstAttribute="bottom" secondItem="tZv-Lm-ala" secondAttribute="bottom" id="zpW-j9-2OR"/>
+                                                        <constraint firstAttribute="height" constant="74" id="ol8-ux-Guh"/>
                                                     </constraints>
                                                 </view>
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="GtN-KJ-POQ">
                                                     <rect key="frame" x="0.0" y="86" width="414" height="158"/>
                                                     <subviews>
-                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Status:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="UID-lv-VJY">
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Status:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="UID-lv-VJY">
                                                             <rect key="frame" x="16" y="16" width="92" height="22"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="width" constant="92" id="hjf-v7-qQk"/>
@@ -6851,37 +6729,37 @@ et dolore magna aliqua.</string>
                                                             <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
-                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Status" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="unN-le-Lpa">
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Status" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="unN-le-Lpa">
                                                             <rect key="frame" x="108" y="18" width="294" height="18"/>
                                                             <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                                             <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
-                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Date/Time:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="X95-eW-yX5">
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Date/Time:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="X95-eW-yX5">
                                                             <rect key="frame" x="16" y="46" width="92" height="18"/>
                                                             <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="15"/>
                                                             <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
-                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Date/Time" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gQM-k3-a59">
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Date/Time" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gQM-k3-a59">
                                                             <rect key="frame" x="108" y="46" width="294" height="18"/>
                                                             <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                                             <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
-                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Location:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fo2-UK-KXF">
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Location:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fo2-UK-KXF">
                                                             <rect key="frame" x="16" y="72" width="92" height="18"/>
                                                             <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="15"/>
                                                             <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
-                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Location" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="GC4-Rf-nSD">
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Location" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="GC4-Rf-nSD">
                                                             <rect key="frame" x="108" y="72" width="294" height="18"/>
                                                             <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                                             <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
-                                                        <stackView opaque="NO" contentMode="scaleToFill" spacing="24" translatesAutoresizingMaskIntoConstraints="NO" id="cTt-be-qCA">
+                                                        <stackView opaque="NO" contentMode="scaleToFill" misplaced="YES" spacing="24" translatesAutoresizingMaskIntoConstraints="NO" id="cTt-be-qCA">
                                                             <rect key="frame" x="-66" y="102" width="546" height="56"/>
                                                             <subviews>
                                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="XPz-uL-16I">
@@ -6997,13 +6875,13 @@ et dolore magna aliqua.</string>
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="bXm-xc-p0e">
                                                     <rect key="frame" x="0.0" y="256" width="414" height="99"/>
                                                     <subviews>
-                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Feedback" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lcW-7g-Txm">
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Feedback" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lcW-7g-Txm">
                                                             <rect key="frame" x="16" y="16" width="75.666666666666671" height="20.666666666666686"/>
                                                             <fontDescription key="fontDescription" type="boldSystem" pointSize="16"/>
                                                             <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
-                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" usesAttributedText="YES" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="r3h-Qd-RFw">
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" usesAttributedText="YES" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="r3h-Qd-RFw">
                                                             <rect key="frame" x="16" y="44.666666666666686" width="382" height="38.333333333333314"/>
                                                             <attributedString key="attributedText">
                                                                 <fragment>
@@ -7032,13 +6910,13 @@ dsfasd</string>
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Dfa-PI-4k7">
                                                     <rect key="frame" x="0.0" y="367" width="414" height="100"/>
                                                     <subviews>
-                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Note" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="NBd-44-gG9">
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Note" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="NBd-44-gG9">
                                                             <rect key="frame" x="16.000000000000004" y="16" width="37.333333333333343" height="21.666666666666686"/>
                                                             <fontDescription key="fontDescription" type="boldSystem" pointSize="16"/>
                                                             <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
-                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Azu-1H-5xh">
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Azu-1H-5xh">
                                                             <rect key="frame" x="16" y="45.666666666666686" width="382" height="38.333333333333314"/>
                                                             <string key="text">Lorem ipsum dolor sit amet,
 dsfsafsdf</string>
@@ -7095,7 +6973,7 @@ dsfsafsdf</string>
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="rGp-AO-fEW">
                                                     <rect key="frame" x="0.0" y="541" width="414" height="50"/>
                                                     <subviews>
-                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Previous interviews" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="CTu-bA-g9e">
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Previous interviews" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="CTu-bA-g9e">
                                                             <rect key="frame" x="16" y="16" width="152" height="30"/>
                                                             <fontDescription key="fontDescription" type="boldSystem" pointSize="16"/>
                                                             <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
@@ -7172,16 +7050,14 @@ dsfsafsdf</string>
                     <connections>
                         <outlet property="acceptBtnView" destination="XPz-uL-16I" id="Z9n-rM-nEN"/>
                         <outlet property="cancelBtnView" destination="wfO-Fh-W7n" id="dF0-Rj-5RH"/>
-                        <outlet property="commentLabel" destination="70s-f8-gtC" id="yOe-wa-Z6m"/>
                         <outlet property="completeBtnView" destination="412-Dq-Q8D" id="Y3G-iS-Thg"/>
                         <outlet property="dateLabel" destination="gQM-k3-a59" id="sv4-d8-xbg"/>
                         <outlet property="feedbackLabel" destination="r3h-Qd-RFw" id="TcD-kv-Tpj"/>
                         <outlet property="historyTitleView" destination="rGp-AO-fEW" id="f2u-Ee-ZGA"/>
-                        <outlet property="imageView" destination="GJI-r2-aLm" id="Hnt-Sl-cJw"/>
+                        <outlet property="infoView" destination="V7h-BY-TRZ" id="3rP-yE-IVW"/>
                         <outlet property="locationLabel" destination="GC4-Rf-nSD" id="5AY-Nm-P1q"/>
                         <outlet property="mainContentView" destination="Jv3-uD-g2Q" id="qHb-rw-7q7"/>
                         <outlet property="mainView" destination="VkW-mF-0WL" id="VwM-nk-s47"/>
-                        <outlet property="nameLabel" destination="mDT-eN-pQW" id="2Px-If-ry2"/>
                         <outlet property="naviationsView" destination="k4Y-dn-op7" id="W43-PI-ox2"/>
                         <outlet property="notesLabel" destination="Azu-1H-5xh" id="Ihc-cP-LrI"/>
                         <outlet property="statusLabel" destination="unN-le-Lpa" id="ro6-gL-LNK"/>
@@ -7190,7 +7066,7 @@ dsfsafsdf</string>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="s4q-mZ-G0d" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-9304.3478260869579" y="1889.6739130434785"/>
+            <point key="canvasLocation" x="-5800" y="-1064"/>
         </scene>
         <!--Data Source-->
         <scene sceneID="nXS-Gy-iJp">
@@ -7749,7 +7625,7 @@ et dolore magna aliqua.</string>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="MWd-zl-SBz" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-2027" y="-1096"/>
+            <point key="canvasLocation" x="-11104" y="-2606"/>
         </scene>
         <!--Add Application-->
         <scene sceneID="wR2-5G-CjE">
@@ -8117,7 +7993,7 @@ et dolore magna aliqua.</string>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dE7-WR-2C7" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-3822" y="-1218"/>
+            <point key="canvasLocation" x="-9870" y="-1028"/>
         </scene>
         <!--Applications-->
         <scene sceneID="6wD-Fu-lFP">
@@ -8237,7 +8113,7 @@ et dolore magna aliqua.</string>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="DPr-5I-Nuv" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-5159" y="-1325"/>
+            <point key="canvasLocation" x="-11209" y="-1135"/>
         </scene>
         <!--Application Sub List Controller-->
         <scene sceneID="0hv-9H-thr">
@@ -8360,7 +8236,7 @@ et dolore magna aliqua.</string>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="3Cj-r7-7tV" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-4481.159420289855" y="-1324.7282608695652"/>
+            <point key="canvasLocation" x="-10530" y="-1134"/>
         </scene>
         <!--Applications-->
         <scene sceneID="Pf8-rO-Nv5">
@@ -8473,7 +8349,7 @@ et dolore magna aliqua.</string>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="qNW-fm-9Cg" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-5878" y="-1321"/>
+            <point key="canvasLocation" x="-11928" y="-1131"/>
         </scene>
     </scenes>
     <resources>
@@ -8508,6 +8384,6 @@ et dolore magna aliqua.</string>
         <image name="terms" width="100" height="100"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="TmY-8d-Yr4"/>
+        <segue reference="Wqs-lE-sEq"/>
     </inferredMetricsTieBreakers>
 </document>

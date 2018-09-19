@@ -14,9 +14,8 @@ class InterviewDetailController: MJPController {
     @IBOutlet weak var mainContentView: UIStackView!
     @IBOutlet weak var tableView: UITableView!
     
-    @IBOutlet weak var imageView: UIImageView!
-    @IBOutlet weak var nameLabel: UILabel!
-    @IBOutlet weak var commentLabel: UILabel!
+    @IBOutlet weak var infoView: AppInfoSmallView!
+    
     @IBOutlet weak var statusLabel: UILabel!
     @IBOutlet weak var dateLabel: UILabel!
     @IBOutlet weak var locationLabel: UILabel!
@@ -66,14 +65,9 @@ class InterviewDetailController: MJPController {
         interviews.sort { $0.at < $1.at }
         
         if AppData.user.isRecruiter() {
-            AppHelper.loadJobseekerAvatar(application.jobSeeker, imageView: imageView, completion: nil)
-            nameLabel.text = application.jobSeeker.getFullName()
-            commentLabel.text = application.jobSeeker.desc
-            
+            infoView.setData(application.jobSeeker, touch: appDetailAction)
         } else {
-            AppHelper.loadLogo(image: application.job.getImage(), imageView: imageView, completion: nil)
-            nameLabel.text = application.job.title
-            commentLabel.text = application.job.getBusinessName()
+            infoView.setData(application.job, touch: appDetailAction)
         }
         
         dateLabel.text = AppHelper.convertDateToString(interview.at, short: false)
@@ -138,7 +132,7 @@ class InterviewDetailController: MJPController {
         historyTitleView.isHidden = interviews == nil || interviews.count == 0
     }
     
-    @IBAction func appDetailAction(_ sender: Any) {
+    func appDetailAction() {
         if AppData.user.isJobSeeker() {
             let controller = ApplicationDetailsController.instantiate()
             controller.application = application

@@ -12,10 +12,9 @@ import SVPullToRefresh
 class MessageListController: MJPController {
     
     @IBOutlet weak var emptyView: UILabel!
-    @IBOutlet weak var noPitchView: UIView!
     @IBOutlet weak var tableView: UITableView!
     
-    var data: NSMutableArray!
+    var applications = [Application]()
     
     var job: Job!
     var jobSeeker: JobSeeker!
@@ -34,15 +33,11 @@ class MessageListController: MJPController {
         
         if AppData.user.isJobSeeker() {
             showLoading()
+            
             API.shared().loadJobSeekerWithId(id: AppData.user.jobSeeker, success: { (data) in
                 self.hideLoading()
-                self.jobSeeker = data as! JobSeeker
-                
-                if self.jobSeeker.getPitch() != nil {
-                    self.loadData()
-                } else {
-                    self.noPitchView.isHidden = false
-                }
+                self.jobSeeker = data as! JobSeeker                
+                self.loadData()
             }, failure: self.handleErrors)
         }
     }
@@ -56,19 +51,10 @@ class MessageListController: MJPController {
     }
     
     func loadData() {
-        data = NSMutableArray()
-        for application in AppData.applications {
-            if job == nil || job.id == application.job.id {
-                data.add(application)
-            }
-        }
-        
-        self.emptyView.isHidden = self.data.count > 0
-        self.tableView.pullToRefreshView.stopAnimating()
-    }
-    
-    @IBAction func noRecordNow(_ sender: Any) {
-        SideMenuController.pushController(id: "add_record")
+        applications = AppData.applications.filter { job == nil || job.id == $0.job.id }
+        tableView.pullToRefreshView.stopAnimating()
+        tableView.reloadData()
+        emptyView.isHidden = applications.count > 0
     }
     
     static func instantiate() -> MessageListController {
@@ -79,15 +65,14 @@ class MessageListController: MJPController {
 extension MessageListController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return data.count
+        return applications.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         let cell = tableView.dequeueReusableCell(withIdentifier: "MessageCell", for: indexPath) as! MessageCell
         
-        let application = data[indexPath.row] as! Application
-        let lastMessage = application.messages.lastObject as! Message
+        let application = applications[indexPath.row]
         let job = application.job!
         
         if AppData.user.isJobSeeker() {
@@ -100,12 +85,17 @@ extension MessageListController: UITableViewDataSource {
             cell.subTitleLabel.text = String(format: "%@ (%@)", job.title, job.getBusinessName())
         }
         
-        cell.attributesLabel.text = AppHelper.convertDateToString(lastMessage.created, short: true)
-        
-        if lastMessage.fromRole == AppData.getUserRole().id {
-            cell.messageLabel.text = String(format: "You: %@", lastMessage.content)
+        if let lastMessage = application.messages?.lastObject as? Message {
+            cell.attributesLabel.text = AppHelper.convertDateToString((lastMessage.created)!, short: true)
+            
+            if lastMessage.fromRole == AppData.getUserRole().id {
+                cell.messageLabel.text = String(format: "You: %@", (lastMessage.content)!)
+            } else {
+                cell.messageLabel.text = lastMessage.content
+            }
         } else {
-            cell.messageLabel.text = lastMessage.content
+            cell.attributesLabel.text = ""
+            cell.messageLabel.text = ""
         }
         
         cell.addUnderLine(paddingLeft: 15, paddingRight: 0, color: AppData.greyColor)
@@ -172,9 +162,8 @@ extension MessageListController: UITableViewDelegate {
 //        }
         
         let controller = MessageController0.instantiate()
-        controller.application = data[indexPath.row] as! Application
-        let navController = UINavigationController(rootViewController: controller)
-        present(navController, animated: true, completion: nil)
+        controller.application = applications[indexPath.row]
+        present(UINavigationController(rootViewController: controller), animated: true, completion: nil)
         
     }
     

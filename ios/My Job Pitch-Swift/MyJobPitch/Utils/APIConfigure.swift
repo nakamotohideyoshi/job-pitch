@@ -298,7 +298,7 @@ class APIConfigure: NSObject {
                          responseDictionary: inverseDictionary(jobSeekerDictionary),
                          responseRelationships: inverseRelationships(jobSeekerRelationships),
                          path: "/api/job-seekers/",
-                         method: .any)
+                         method: .POST)
 
         configureMapping(JobSeekerForSave.classForCoder(),
                          requestArray: jobSeekerForSaveArray,
@@ -309,8 +309,7 @@ class APIConfigure: NSObject {
                          responseDictionary: inverseDictionary(jobSeekerDictionary),
                          responseRelationships: inverseRelationships(jobSeekerRelationships),
                          path: "/api/job-seekers/:pk/",
-                         method: .any)
-
+                         method: [.GET, .PATCH])
 
         // ================= Business =====================
 

@@ -46,8 +46,27 @@ class ApplicationShortlistUpdate: MJPObject {
 
 class ExternalApplicationForCreation: MJPObject {
     
-    var jobSeeker: JobSeeker!
+//    var jobSeeker: JobSeeker!
     var job: NSNumber!
     var shortlisted = false
+    
+    var firstName: String!
+    var lastName: String!
+    var email: String!
+    var telephone: String!
+    var mobile: String!
+    var age: NSNumber!
+    var sex: NSNumber!
+    var nationality: NSNumber!
+    var emailPublic = true
+    var telephonePublic = true
+    var mobilePublic = true
+    var agePublic = true
+    var sexPublic = true
+    var nationalityPublic = true
+    var nationalInsuranceNumber: String!
+    var desc: String!
+    var hasReferences = false
+    var truthConfirmation = false
 
 }

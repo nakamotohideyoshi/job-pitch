@@ -141,6 +141,20 @@ class AppHelper: NSObject {
         return filters.count == 0 ? nil : filters[0]
     }
     
+    static func getNewMessageCount(_ application: Application) -> Int {
+        var count = 0
+        for message in application.messages.reversed() as! [Message] {
+            if message.read {
+                break
+            }
+            if message.fromRole == AppData.getUserRole().id {
+                break
+            }
+            count += 1
+        }
+        return count
+    }
+    
     static func distance(latitude1: NSNumber, longitude1: NSNumber, latitude2: NSNumber, longitude2: NSNumber) -> String {
         
         let location1 = CLLocation(latitude: CLLocationDegrees(latitude1), longitude: CLLocationDegrees(longitude1))

@@ -11,22 +11,15 @@ import SVPullToRefresh
 
 class MessageListController: MJPController {
     
-    @IBOutlet weak var emptyView: UILabel!
     @IBOutlet weak var tableView: UITableView!
+    @IBOutlet weak var emptyView: UILabel!
     
-    var applications = [Application]()
-    
-    var job: Job!
+    var applications = [(Application, Int)]()
     var jobSeeker: JobSeeker!
         
     override func viewDidLoad() {
         super.viewDidLoad()        
         
-        if (self.job != nil) {
-            let subTitle = String(format: "%@, (%@)", job.title, job.getBusinessName())
-            setTitle(title: "Messages", subTitle: subTitle)
-        }
-
         tableView.addPullToRefresh {
             self.loadData()
         }
@@ -51,7 +44,12 @@ class MessageListController: MJPController {
     }
     
     func loadData() {
-        applications = AppData.applications.filter { job == nil || job.id == $0.job.id }
+        applications.removeAll()
+        for application in AppData.applications {
+            let newMsgs = AppHelper.getNewMessageCount(application)
+            applications.append((application, newMsgs))
+        }
+        
         tableView.pullToRefreshView.stopAnimating()
         tableView.reloadData()
         emptyView.isHidden = applications.count > 0
@@ -72,20 +70,28 @@ extension MessageListController: UITableViewDataSource {
         
         let cell = tableView.dequeueReusableCell(withIdentifier: "MessageCell", for: indexPath) as! MessageCell
         
-        let application = applications[indexPath.row]
+        let (application, newMsgs) = applications[indexPath.row]
         let job = application.job!
         
         if AppData.user.isJobSeeker() {
             AppHelper.loadLogo(image: job.getImage(), imageView: cell.imgView, completion: nil)
+            cell.imgView.layer.cornerRadius = 0
             cell.titleLabel.text = job.title
             cell.subTitleLabel.text = job.getBusinessName()
         } else {
             AppHelper.loadJobseekerAvatar(application.jobSeeker, imageView: cell.imgView, completion: nil)
+            cell.imgView.layer.cornerRadius = cell.imgView.frame.width / 2
             cell.titleLabel.text = application.jobSeeker.getFullName()
             cell.subTitleLabel.text = String(format: "%@ (%@)", job.title, job.getBusinessName())
         }
         
+        cell.badge.text = newMsgs < 10 ? "\(newMsgs)" : "9+"
+        cell.badge.isHidden = newMsgs == 0
+        
         if let lastMessage = application.messages?.lastObject as? Message {
+            cell.attributesLabel.isHidden = false
+            cell.messageLabel.isHidden = false
+            
             cell.attributesLabel.text = AppHelper.convertDateToString((lastMessage.created)!, short: true)
             
             if lastMessage.fromRole == AppData.getUserRole().id {
@@ -94,8 +100,8 @@ extension MessageListController: UITableViewDataSource {
                 cell.messageLabel.text = lastMessage.content
             }
         } else {
-            cell.attributesLabel.text = ""
-            cell.messageLabel.text = ""
+            cell.attributesLabel.isHidden = true
+            cell.messageLabel.isHidden = true
         }
         
         cell.addUnderLine(paddingLeft: 15, paddingRight: 0, color: AppData.greyColor)
@@ -108,12 +114,12 @@ extension MessageListController: UITableViewDataSource {
             
             str =  NSMutableAttributedString(string: cell.subTitleLabel.text!)
             str.addAttribute(NSStrikethroughStyleAttributeName, value: 1, range: NSMakeRange(0, str.length))
-            str.addAttribute(NSFontAttributeName, value: UIFont.italicSystemFont(ofSize: 14), range: NSMakeRange(0, str.length))
+            str.addAttribute(NSFontAttributeName, value: UIFont.italicSystemFont(ofSize: 15), range: NSMakeRange(0, str.length))
             cell.subTitleLabel.attributedText = str
             
             str =  NSMutableAttributedString(string: cell.messageLabel.text!)
             str.addAttribute(NSStrikethroughStyleAttributeName, value: 1, range: NSMakeRange(0, str.length))
-            str.addAttribute(NSFontAttributeName, value: UIFont.italicSystemFont(ofSize: 14), range: NSMakeRange(0, str.length))
+            str.addAttribute(NSFontAttributeName, value: UIFont.italicSystemFont(ofSize: 15), range: NSMakeRange(0, str.length))
             cell.messageLabel.attributedText = str
             
             str =  NSMutableAttributedString(string: cell.attributesLabel.text!)
@@ -122,14 +128,33 @@ extension MessageListController: UITableViewDataSource {
             cell.attributesLabel.attributedText = str
             
             cell.setOpacity(0.5)
-            cell.backgroundColor = UIColor(red: 240/255.0, green: 240/255.0, blue: 240/255.0, alpha: 0.5)
+            cell.backgroundColor = UIColor(red: 240/255.0, green: 240/255.0, blue: 240/255.0, alpha: 1)
         } else {
+            var str: NSMutableAttributedString =  NSMutableAttributedString(string: cell.titleLabel.text!)
+            str.addAttribute(NSStrikethroughStyleAttributeName, value: 0, range: NSMakeRange(0, str.length))
+            str.addAttribute(NSFontAttributeName, value: UIFont.systemFont(ofSize: 20, weight: UIFontWeightSemibold), range: NSMakeRange(0, str.length))
+            cell.titleLabel.attributedText = str
+            
+            str =  NSMutableAttributedString(string: cell.subTitleLabel.text!)
+            str.addAttribute(NSStrikethroughStyleAttributeName, value: 0, range: NSMakeRange(0, str.length))
+            str.addAttribute(NSFontAttributeName, value: UIFont.systemFont(ofSize: 15), range: NSMakeRange(0, str.length))
+            cell.subTitleLabel.attributedText = str
+            
+            str =  NSMutableAttributedString(string: cell.messageLabel.text!)
+            str.addAttribute(NSStrikethroughStyleAttributeName, value: 0, range: NSMakeRange(0, str.length))
+            str.addAttribute(NSFontAttributeName, value: UIFont.systemFont(ofSize: 15), range: NSMakeRange(0, str.length))
+            cell.messageLabel.attributedText = str
+            
+            str =  NSMutableAttributedString(string: cell.attributesLabel.text!)
+            str.addAttribute(NSStrikethroughStyleAttributeName, value: 0, range: NSMakeRange(0, str.length))
+            str.addAttribute(NSFontAttributeName, value: UIFont.systemFont(ofSize: 12), range: NSMakeRange(0, str.length))
+            cell.attributesLabel.attributedText = str
+            
             cell.setOpacity(1)
             cell.backgroundColor = UIColor.white
         }
         
         return cell
-        
     }
     
 }
@@ -162,7 +187,7 @@ extension MessageListController: UITableViewDelegate {
 //        }
         
         let controller = MessageController0.instantiate()
-        controller.application = applications[indexPath.row]
+        controller.application = applications[indexPath.row].0
         present(UINavigationController(rootViewController: controller), animated: true, completion: nil)
         
     }

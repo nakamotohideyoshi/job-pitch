@@ -15,6 +15,7 @@ class MessageCell: UITableViewCell {
     @IBOutlet weak var subTitleLabel: UILabel!
     @IBOutlet weak var attributesLabel: UILabel!
     @IBOutlet weak var messageLabel: UILabel!
+    @IBOutlet weak var badge: BadgeIcon!
 
     func setOpacity(_ alpha: CGFloat) {
         imgView.alpha = alpha

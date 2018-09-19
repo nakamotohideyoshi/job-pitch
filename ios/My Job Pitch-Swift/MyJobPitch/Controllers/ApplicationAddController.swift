@@ -100,46 +100,43 @@ class ApplicationAddController: MJPController {
             return
         }
         
-        let jobSeeker = JobSeeker()
+        let application = ExternalApplicationForCreation()
+        application.job = job.id
+        application.shortlisted = shortlisted.isOn
         
-        jobSeeker.firstName = firstName.text?.capitalized
-        jobSeeker.lastName = lastName.text?.capitalized
-        jobSeeker.email = AppData.email
-        jobSeeker.telephone = telephone.text
-        jobSeeker.mobile = mobile.text
+        application.firstName = firstName.text?.capitalized
+        application.lastName = lastName.text?.capitalized
+        application.email = AppData.email
+        application.telephone = telephone.text
+        application.mobile = mobile.text
         
         if let intAge = Int(age.text!) {
-            jobSeeker.age = NSNumber(value: intAge)
+            application.age = NSNumber(value: intAge)
         }
         
         if selectedSexNames.count > 0 {
-            jobSeeker.sex = (AppData.sexes.filter { selectedSexNames.contains($0.name) })[0].id
+            application.sex = (AppData.sexes.filter { selectedSexNames.contains($0.name) })[0].id
         }
         
         if selectedNationalityNames.count > 0 {
-            jobSeeker.nationality = (AppData.nationalities.filter { selectedNationalityNames.contains($0.name) })[0].id
+            application.nationality = (AppData.nationalities.filter { selectedNationalityNames.contains($0.name) })[0].id
         }
         
         if (nationalNumber.text?.isEmpty == false) {
-            jobSeeker.national_insurance_number = nationalNumber.text
+            application.nationalInsuranceNumber = nationalNumber.text
         } else {
-            jobSeeker.national_insurance_number = nil
+            application.nationalInsuranceNumber = nil
         }
         
-        jobSeeker.emailPublic = true
-        jobSeeker.telephonePublic = true
-        jobSeeker.mobilePublic = true
-        jobSeeker.agePublic = true
-        jobSeeker.sexPublic = true
-        jobSeeker.nationalityPublic = true
-        jobSeeker.desc = descView.text
-        jobSeeker.hasReferences = false
-        jobSeeker.truthConfirmation = false
-        
-        let application = ExternalApplicationForCreation()
-        application.job = job.id
-        application.jobSeeker = jobSeeker;
-        application.shortlisted = shortlisted.isOn
+        application.emailPublic = true
+        application.telephonePublic = true
+        application.mobilePublic = true
+        application.agePublic = true
+        application.sexPublic = true
+        application.nationalityPublic = true
+        application.desc = descView.text
+        application.hasReferences = false
+        application.truthConfirmation = false
         
         AppHelper.showLoading("")
         

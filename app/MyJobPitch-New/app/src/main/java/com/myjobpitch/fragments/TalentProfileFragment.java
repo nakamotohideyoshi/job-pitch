@@ -4,10 +4,15 @@ import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
+import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.util.DisplayMetrics;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,15 +20,19 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.myjobpitch.CameraActivity;
+import com.myjobpitch.MainActivity;
 import com.myjobpitch.MediaPlayerActivity;
 import com.myjobpitch.R;
 import com.myjobpitch.api.MJPApi;
 import com.myjobpitch.api.MJPApiException;
 import com.myjobpitch.api.data.JobSeeker;
+import com.myjobpitch.api.data.JobSeekerForUpdate;
 import com.myjobpitch.api.data.Nationality;
 import com.myjobpitch.api.data.Pitch;
 import com.myjobpitch.api.data.Sex;
@@ -35,10 +44,15 @@ import com.myjobpitch.uploader.PitchUpload;
 import com.myjobpitch.uploader.PitchUploadListener;
 import com.myjobpitch.utils.AppData;
 import com.myjobpitch.utils.AppHelper;
+import com.myjobpitch.utils.ImageSelector;
 import com.myjobpitch.utils.Loading;
 import com.myjobpitch.views.Popup;
 import com.myjobpitch.views.SelectDialog;
 import com.myjobpitch.views.SelectDialog.SelectItem;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.assist.FailReason;
+import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 import com.rengwuxian.materialedittext.MaterialEditText;
 import com.weiwangcn.betterspinner.library.material.MaterialBetterSpinner;
 
@@ -55,6 +69,10 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+
+import static android.media.ExifInterface.ORIENTATION_ROTATE_180;
+import static android.media.ExifInterface.ORIENTATION_ROTATE_270;
+import static android.media.ExifInterface.ORIENTATION_ROTATE_90;
 
 public class TalentProfileFragment extends FormFragment {
 
@@ -120,13 +138,20 @@ public class TalentProfileFragment extends FormFragment {
     @BindView(R.id.job_seeker_tick_box)
     CheckBox mTickBox;
 
+    @BindView(R.id.job_seeker_profile_image)
+    View mProfileImage;
+
+    private ProfileImageSelector imageSelector;
+
     List<String> mSexNames = new ArrayList<>();
     JobSeeker jobSeeker;
+    JobSeekerForUpdate jobSeekerForUpdate;
 
     Pitch mPitch;
     String mVideoPath;
     int requestCode;
     boolean isActivation = false;
+    boolean isProfileImage = false;
 
     Uri cvUri;
 
@@ -139,6 +164,8 @@ public class TalentProfileFragment extends FormFragment {
         ButterKnife.bind(this, view);
 
         title = "Edit Profile";
+
+        imageSelector = new ProfileImageSelector(mProfileImage, null);
 
         // data
         for (Sex sex : AppData.get(Sex.class)) {
@@ -231,6 +258,12 @@ public class TalentProfileFragment extends FormFragment {
 
         mCVViewButton.setVisibility(jobSeeker.getCV() == null ? View.GONE : View.VISIBLE);
 
+        if (jobSeeker.getProfile_image() != null) {
+            imageSelector.loadImage(jobSeeker.getProfile_image());
+        } else {
+            imageSelector.loadImage(null);
+        }
+
     }
 
     @OnClick(R.id.job_seeker_nationality_button)
@@ -286,6 +319,7 @@ public class TalentProfileFragment extends FormFragment {
 
     @OnClick(R.id.job_seeker_cv_upload)
     void onCVUpload() {
+        isProfileImage = false;
         getApp().showFilePicker(false);
     }
 
@@ -348,39 +382,37 @@ public class TalentProfileFragment extends FormFragment {
     }
 
     void saveData() {
-        if (jobSeeker == null) {
-            jobSeeker = new JobSeeker();
+        if (jobSeekerForUpdate == null) {
+            jobSeekerForUpdate = new JobSeekerForUpdate();
         }
-        jobSeeker.setActive(mActiveView.isChecked());
-        jobSeeker.setFirst_name(mFirstNameView.getText().toString().trim());
-        jobSeeker.setLast_name(mLastNameView.getText().toString().trim());
-        jobSeeker.setEmail(mEmailView.getText().toString().trim());
-        jobSeeker.setEmail_public(mEmailPublicView.isChecked());
-        jobSeeker.setTelephone(mTelephoneView.getText().toString().trim());
-        jobSeeker.setTelephone_public(mTelephonePublicView.isChecked());
-        jobSeeker.setMobile(mMobileView.getText().toString().trim());
-        jobSeeker.setMobile_public(mMobilePublicView.isChecked());
+        jobSeekerForUpdate.setActive(mActiveView.isChecked());
+        jobSeekerForUpdate.setFirst_name(mFirstNameView.getText().toString().trim());
+        jobSeekerForUpdate.setLast_name(mLastNameView.getText().toString().trim());
+        jobSeekerForUpdate.setEmail_public(mEmailPublicView.isChecked());
+        jobSeekerForUpdate.setTelephone(mTelephoneView.getText().toString().trim());
+        jobSeekerForUpdate.setTelephone_public(mTelephonePublicView.isChecked());
+        jobSeekerForUpdate.setMobile(mMobileView.getText().toString().trim());
+        jobSeekerForUpdate.setMobile_public(mMobilePublicView.isChecked());
         if (!mAgeView.getText().toString().isEmpty()) {
-            jobSeeker.setAge(Integer.parseInt(mAgeView.getText().toString()));
+            jobSeekerForUpdate.setAge(Integer.parseInt(mAgeView.getText().toString()));
         }
-        jobSeeker.setAge_public(mAgePublicView.isChecked());
+        jobSeekerForUpdate.setAge_public(mAgePublicView.isChecked());
         int sexIndex = mSexNames.indexOf(mSexView.getText().toString());
         if (sexIndex != -1) {
-            jobSeeker.setSex(AppData.get(Sex.class).get(sexIndex).getId());
+            jobSeekerForUpdate.setSex(AppData.get(Sex.class).get(sexIndex).getId());
         }
-        jobSeeker.setSex_public(mSexPublicView.isChecked());
+        jobSeekerForUpdate.setSex_public(mSexPublicView.isChecked());
         for (Nationality nationality : AppData.get(Nationality.class)) {
             if (nationality.getName().equals(mNationalityView.getText().toString())) {
-                jobSeeker.setNationality(nationality.getId());
+                jobSeekerForUpdate.setNationality(nationality.getId());
                 break;
             }
         }
-        jobSeeker.setNationality_public(mNationalityPublicView.isChecked());
-        jobSeeker.setDescription(mDescriptionView.getText().toString().trim());
-        jobSeeker.setHas_references(mHasReferencesView.isChecked());
-        jobSeeker.setTruth_confirmation(mTickBox.isChecked());
-        jobSeeker.setCV(null);
-        jobSeeker.setNational_insurance_number(mNationalNumberView.getText().toString());
+        jobSeekerForUpdate.setNationality_public(mNationalityPublicView.isChecked());
+        jobSeekerForUpdate.setDescription(mDescriptionView.getText().toString().trim());
+        jobSeekerForUpdate.setHas_references(mHasReferencesView.isChecked());
+        jobSeekerForUpdate.setTruth_confirmation(mTickBox.isChecked());
+        jobSeekerForUpdate.setNational_insurance_number(mNationalNumberView.getText().toString());
     }
 
     @OnClick(R.id.job_seeker_save)
@@ -404,8 +436,50 @@ public class TalentProfileFragment extends FormFragment {
                 if (jobSeeker.getId() == null) {
                     jobSeeker = MJPApi.shared().create(JobSeeker.class, jobSeeker);
                     AppData.user.setJob_seeker(jobSeeker.getId());
-                } else if (cvUri == null) {
-                    jobSeeker = MJPApi.shared().updateJobSeeker(jobSeeker, null);
+                } else if (cvUri == null && imageSelector.getImageUri() == null) {
+                    jobSeeker = MJPApi.shared().updateJobSeeker(jobSeeker.getId(), jobSeekerForUpdate, null, null);
+                }
+
+                if ( imageSelector.getImageUri() != null) {
+                    try {
+                        File dir = new File(Environment.getExternalStorageDirectory(), "MyJobPitch");
+                        if (!dir.exists()) {
+                            dir.mkdirs();
+                        }
+                        String filename = "profile_" + imageSelector.getImageUri().getLastPathSegment();
+                        File outputFile = new File(dir, filename);
+
+                        try {
+                            // Copy imageUri content to temp file
+                            InputStream in = getApp().getContentResolver().openInputStream(imageSelector.getImageUri());
+                            try {
+                                FileOutputStream out = new FileOutputStream(outputFile);
+                                try {
+                                    byte[] buf = new byte[1024];
+                                    int len;
+                                    while ((len = in.read(buf)) > 0)
+                                        out.write(buf, 0, len);
+                                } finally {
+                                    out.close();
+                                }
+                            } finally {
+                                in.close();
+                            }
+
+                            // Upload image
+                            try {
+                                jobSeeker = MJPApi.shared().updateJobSeeker(jobSeeker.getId(), jobSeekerForUpdate, new FileSystemResource(outputFile), null);
+                            } catch (MJPApiException e) {
+                                e.printStackTrace();
+                                return;
+                            }
+                        } finally {
+                            outputFile.delete();
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                        return;
+                    }
                 }
 
                 if (cvUri != null) {
@@ -436,7 +510,7 @@ public class TalentProfileFragment extends FormFragment {
 
                             // Upload image
                             try {
-                                jobSeeker = MJPApi.shared().updateJobSeeker(jobSeeker, new FileSystemResource(outputFile));
+                                jobSeeker = MJPApi.shared().updateJobSeeker(jobSeeker.getId(), jobSeekerForUpdate, null, new FileSystemResource(outputFile));
                             } catch (MJPApiException e) {
                                 e.printStackTrace();
                                 return;
@@ -479,19 +553,33 @@ public class TalentProfileFragment extends FormFragment {
                 if (requestCode == AppData.REQUEST_IMAGE_CAPTURE) {
                     Bitmap photo = (Bitmap) data.getExtras().get("data");
                     File file = AppHelper.saveBitmap(photo);
-                    cvUri = Uri.fromFile(file);
-                } else if (requestCode == AppData.REQUEST_IMAGE_PICK) {
-                    String[] projection = { MediaStore.Images.Media.DATA };
-                    Cursor cursor = getApp().getContentResolver().query(data.getData(), projection, null, null, null);
-                    if(cursor != null) {
-                        int column_index = cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DATA);
-                        cursor.moveToFirst();
-                        String path = cursor.getString(column_index);
-                        cvUri = Uri.fromFile(new File(path));
+                    if (isProfileImage) {
+                        imageSelector.setImageUri(Uri.fromFile(file));
+                    } else {
+                        cvUri = Uri.fromFile(file);
                     }
+                } else if (requestCode == AppData.REQUEST_IMAGE_PICK) {
+                    if (isProfileImage) {
+                        imageSelector.setImageUri(data.getData());
+                    } else {
+                        String[] projection = { MediaStore.Images.Media.DATA };
+                        Cursor cursor = getApp().getContentResolver().query(data.getData(), projection, null, null, null);
+                        if(cursor != null) {
+                            int column_index = cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DATA);
+                            cursor.moveToFirst();
+                            String path = cursor.getString(column_index);
+                            cvUri = Uri.fromFile(new File(path));
+                        }
+                    }
+
                 } else if (requestCode == AppData.REQUEST_GOOGLE_DRIVE || requestCode == AppData.REQUEST_DROPBOX) {
                     String path = (String) data.getExtras().get("path");
-                    cvUri = Uri.fromFile(new File(path));
+                    if (isProfileImage) {
+                        imageSelector.setImageUri(Uri.fromFile(new File(path)));
+                    } else {
+                        cvUri = Uri.fromFile(new File(path));
+                    }
+
                 }
                 if (cvUri != null) {
                     mCVCommentView.setText("CV added: save to upload.");
@@ -579,6 +667,179 @@ public class TalentProfileFragment extends FormFragment {
             getApp().reloadMenu();
             getApp().setRootFragement(AppData.PAGE_JOB_PROFILE);
         }
+    }
+
+    public class ProfileImageSelector {
+
+        @BindView(R.id.image_add_button)
+        Button addButton;
+
+        @BindView(R.id.image_remove_button)
+        Button removeButton;
+
+        ImageView imageView;
+
+        String defaultImagePath;
+        Bitmap defaultBitmap;
+        Bitmap bitmap;
+
+        Uri imageUri;
+
+        ProfileImageSelector(View view, int defaultImageRes) {
+            init(view);
+            defaultBitmap = BitmapFactory.decodeResource(MainActivity.shared().getResources(), defaultImageRes);
+        }
+
+        ProfileImageSelector(View view, String defaultImagePath) {
+            init(view);
+            this.defaultImagePath = defaultImagePath;
+        }
+
+        void init(View view) {
+            ButterKnife.bind(this, view);
+
+            Display display = MainActivity.shared().getWindowManager().getDefaultDisplay();
+            DisplayMetrics displayMetrics = new DisplayMetrics();
+            display.getMetrics(displayMetrics);
+            ViewGroup.LayoutParams params = view.getLayoutParams();
+            params.height = (displayMetrics.widthPixels - AppHelper.dp2px(30)) * 3 / 4;
+            view.setLayoutParams(params);
+
+            imageView = AppHelper.getImageView(view);
+        }
+
+        public void loadImage(final String path) {
+
+            String imagePath;
+            if (path == null) {
+                if (defaultBitmap != null) {
+                    bitmap = null;
+                    imageView.setImageBitmap(defaultBitmap);
+                    removeButton.setVisibility(View.GONE);
+                    addButton.setText("Add Profile Image");
+                    imageUri = null;
+                    return;
+                }
+                imagePath = defaultImagePath;
+                if (imagePath == null) {
+                    bitmap = null;
+                    imageView.setImageBitmap(defaultBitmap);
+                    removeButton.setVisibility(View.GONE);
+                    addButton.setText("Add Profile Image");
+                    imageUri = null;
+                    return;
+                }
+            } else {
+                imagePath = path;
+            }
+
+            final ProgressBar progressBar = AppHelper.getProgressBar(imageView);
+
+            DisplayImageOptions displayImageOptions = new DisplayImageOptions.Builder()
+                    .considerExifParams(true)
+                    .cacheOnDisk(true)
+                    .build();
+
+            ImageLoader.getInstance().displayImage(imagePath, imageView, displayImageOptions, new ImageLoadingListener() {
+                @Override
+                public void onLoadingStarted(String path1, View view) {
+                    if (progressBar != null) {
+                        progressBar.setVisibility(View.VISIBLE);
+                    }
+                }
+                @Override
+                public void onLoadingFailed(String path1, View view, FailReason failReason) {
+                    if (progressBar != null) {
+                        progressBar.setVisibility(View.GONE);
+                    }
+                }
+                @Override
+                public void onLoadingComplete(String path1, View view, Bitmap loadedImage) {
+                    if (progressBar != null) {
+                        progressBar.setVisibility(View.GONE);
+                    }
+
+                    if (path == null) {
+                        bitmap = null;
+                        removeButton.setVisibility(View.GONE);
+                        addButton.setText("Add Profile Image");
+                        imageUri = null;
+                    } else {
+                        bitmap = loadedImage;
+                        removeButton.setVisibility(View.VISIBLE);
+                        addButton.setText("Change Profile Image");
+                    }
+                }
+                @Override
+                public void onLoadingCancelled(String uri, View view) {
+                }
+            });
+
+        }
+
+        public Bitmap getImage() {
+            return bitmap;
+        }
+
+        private boolean setImage(String path) {
+            try {
+                ExifInterface exif = new ExifInterface(path);
+                int orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, 1);
+                Matrix matrix = new Matrix();
+                switch (orientation) {
+                    case ORIENTATION_ROTATE_90:
+                        matrix.postRotate(90);
+                        break;
+                    case ORIENTATION_ROTATE_180:
+                        matrix.postRotate(180);
+                        break;
+                    case ORIENTATION_ROTATE_270:
+                        matrix.postRotate(270);
+                        break;
+                }
+                bitmap = BitmapFactory.decodeFile(path);
+                bitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
+                imageView.setImageBitmap(bitmap);
+                removeButton.setVisibility(View.VISIBLE);
+                addButton.setText("Change Profile Image");
+                return true;
+            } catch (IOException e) {
+                e.printStackTrace();
+                return false;
+            }
+        }
+
+        public void setImageUri(Uri uri) {
+            String path;
+            String[] projection = { MediaStore.Images.Media.DATA };
+            Cursor cursor = MainActivity.shared().getContentResolver().query(uri, projection, null, null, null);
+            if(cursor != null) {
+                int column_index = cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DATA);
+                cursor.moveToFirst();
+                path = cursor.getString(column_index);
+            } else {
+                path = uri.getPath();
+            }
+            if (setImage(path)) {
+                imageUri = uri;
+            }
+        }
+
+        public Uri getImageUri() {
+            return imageUri;
+        }
+
+        @OnClick(R.id.image_add_button)
+        public void onClickAdd() {
+            isProfileImage = true;
+            getApp().shared().showFilePicker(true);
+        }
+
+        @OnClick(R.id.image_remove_button)
+        void onClickRemove() {
+            loadImage(null);
+        }
+
     }
 
 }

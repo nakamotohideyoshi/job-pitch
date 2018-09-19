@@ -19,6 +19,7 @@ import com.myjobpitch.api.data.BusinessUserForUpdate;
 import com.myjobpitch.api.data.ChangePassword;
 import com.myjobpitch.api.data.Contract;
 import com.myjobpitch.api.data.Deprecation;
+import com.myjobpitch.api.data.ExternalApplication;
 import com.myjobpitch.api.data.Hours;
 import com.myjobpitch.api.data.ImageUpload;
 import com.myjobpitch.api.data.InitialTokens;
@@ -29,6 +30,7 @@ import com.myjobpitch.api.data.Job;
 import com.myjobpitch.api.data.JobPitch;
 import com.myjobpitch.api.data.JobProfile;
 import com.myjobpitch.api.data.JobSeeker;
+import com.myjobpitch.api.data.JobSeekerForUpdate;
 import com.myjobpitch.api.data.JobStatus;
 import com.myjobpitch.api.data.Location;
 import com.myjobpitch.api.data.MessageForCreation;
@@ -440,7 +442,7 @@ public class MJPApi {
         rest.exchange(getObjectUrl("user-job-images", id), HttpMethod.DELETE, createAuthenticatedRequest(), Void.class);
     }
 
-    public JobSeeker updateJobSeeker(JobSeeker jobSeeker, Resource cvdata) throws MJPApiException {
+    public JobSeeker updateJobSeeker(Integer jobSeekerId, JobSeekerForUpdate jobSeeker, Resource profileImage, Resource cvdata) throws MJPApiException {
 
         MultiValueMap<String, Object> parts = new LinkedMultiValueMap<>();
         for (Field field : jobSeeker.getClass().getDeclaredFields()) {
@@ -454,20 +456,18 @@ public class MJPApi {
             } catch (Exception e) {
             }
         }
-        parts.put("id", Arrays.asList(new Object[] {jobSeeker.getId().toString()}));
-        parts.put("created", Arrays.asList(new Object[] {jobSeeker.getCreated().toString()}));
-        parts.put("updated", Arrays.asList(new Object[] {jobSeeker.getUpdated().toString()}));
-
+        if (profileImage != null) {
+            parts.put("profile_image", Arrays.asList(new Object[] {profileImage}));
+        }
         if (cvdata != null) {
             parts.put("cv", Arrays.asList(new Object[] {cvdata}));
         }
-
         try {
-            HttpMethod method = jobSeeker.getId() == null ? HttpMethod.POST : HttpMethod.PUT;
+            HttpMethod method = jobSeekerId == null ? HttpMethod.POST : HttpMethod.PUT;
             HttpHeaders headers = getDefaultHttpHeaders();
             headers.setContentType(MediaType.MULTIPART_FORM_DATA);
             HttpEntity<MultiValueMap<String, Object>> request = createAuthenticatedRequest(parts, headers);
-            return rest.exchange(getObjectUrl("job-seekers", jobSeeker.getId()), method, request, JobSeeker.class).getBody();
+            return rest.exchange(getObjectUrl("job-seekers", jobSeekerId), method, request, JobSeeker.class).getBody();
         } catch (HttpClientErrorException e) {
             if (e.getStatusCode().value() == 400) {
                 throw new MJPApiException(e);
@@ -475,6 +475,7 @@ public class MJPApi {
             throw e;
         }
     }
+
 
     public List<Deprecation> loadDeprecations() throws MJPApiException {
         return Arrays.asList(rest.exchange(getTypeUrl("deprecation"), HttpMethod.GET, null, Deprecation[].class).getBody());
@@ -573,6 +574,17 @@ public class MJPApi {
     public void acceptInterview(Integer interviewId) throws MJPApiException {
         try {
             rest.exchange(getTypeUrl(String.format("interviews/%s/accept", interviewId)), HttpMethod.POST, createAuthenticatedRequest(), Void.class);
+        } catch (HttpClientErrorException e) {
+            if (e.getStatusCode().value() == 400) {
+                throw new MJPApiException(e);
+            }
+            throw e;
+        }
+    }
+
+    public void addExternalApplication(ExternalApplication externalApplication) throws MJPApiException {
+        try {
+            rest.exchange(getTypeUrl("applications/external"), HttpMethod.POST, createAuthenticatedRequest(externalApplication), ExternalApplication.class).getBody();
         } catch (HttpClientErrorException e) {
             if (e.getStatusCode().value() == 400) {
                 throw new MJPApiException(e);

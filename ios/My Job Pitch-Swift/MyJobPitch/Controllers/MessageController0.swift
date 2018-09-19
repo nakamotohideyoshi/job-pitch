@@ -21,6 +21,8 @@ class MessageController0: MJPController {
     
     var interview: ApplicationInterview!
     
+    var viewHeight: CGFloat!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -37,6 +39,24 @@ class MessageController0: MJPController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         loadApplication()
+    }
+    
+    override func keyboardWasShown(_ notification: NSNotification) {
+        
+        showKeyboard = true
+        
+        if viewHeight == nil {
+            viewHeight = view.frame.size.height
+        }
+        
+        let rect = (notification.userInfo?[UIKeyboardFrameEndUserInfoKey] as! NSValue).cgRectValue
+        view.frame.size.height = viewHeight - rect.height
+    }
+
+    override func keyboardWillBeHidden(_ notification: NSNotification) {
+        
+        showKeyboard = false
+        view.frame.size.height = viewHeight
     }
     
     func loadApplication() {
@@ -74,8 +94,9 @@ class MessageController0: MJPController {
         
         let controller = AppHelper.instantiate("Message") as! MessageController
         controller.application = application
-        controller.view.frame = CGRect(origin: CGPoint.zero, size: containerView.frame.size)
         containerView.addSubview(controller.view)
+        controller.view.frame = containerView.bounds
+        controller.view.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         addChildViewController(controller)
     }
     

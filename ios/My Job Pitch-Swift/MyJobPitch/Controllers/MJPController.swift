@@ -29,8 +29,16 @@ class MJPController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        // Do any additional setup after loading the view.
+        
+        let tap = UITapGestureRecognizer.init(target: self, action: #selector(dismissKeyboard))
+        tap.delegate = self
+        view.addGestureRecognizer(tap)
+        
+        self.navigationController?.navigationBar.topItem?.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
         
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(keyboardWasShown),
@@ -41,13 +49,12 @@ class MJPController: UIViewController {
                                                selector: #selector(keyboardWillBeHidden),
                                                name: Notification.Name.UIKeyboardWillHide,
                                                object: nil)
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
         
-        let tap = UITapGestureRecognizer.init(target: self, action: #selector(dismissKeyboard))
-        tap.delegate = self
-        view.addGestureRecognizer(tap)
-        
-        self.navigationController?.navigationBar.topItem?.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
-
+        NotificationCenter.default.removeObserver(self)
     }
     
     func showLoading() {
@@ -115,20 +122,21 @@ class MJPController: UIViewController {
     // keyboard
     
     func keyboardWasShown(_ notification: NSNotification) {
-        
+
         showKeyboard = true
         
         if scrollView != nil {
             let bottom_h = AppHelper.getFrontController().view.frame.size.height - view.frame.origin.y - view.frame.size.height
             let info = notification.userInfo
-            let size = (info?[UIKeyboardFrameBeginUserInfoKey] as! NSValue).cgRectValue.size
-            let contentInsets = UIEdgeInsets(top: 0, left: 0, bottom: size.height - bottom_h, right: 0)
+            let keyboardRect = (info?[UIKeyboardFrameEndUserInfoKey] as! NSValue).cgRectValue
+            let contentInsets = UIEdgeInsets(top: 0, left: 0, bottom: keyboardRect.height - bottom_h, right: 0)
             scrollView.contentInset = contentInsets
             scrollView.scrollIndicatorInsets = contentInsets
         }
     }
     
     func keyboardWillBeHidden(_ notification: NSNotification) {
+        
         showKeyboard = false
         
         if scrollView != nil {

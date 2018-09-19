@@ -199,7 +199,7 @@ class Profile extends React.Component {
         ...values
         // id: (jobseeker || {}).id
       };
-      if (avatar.file || (jobseeker.profile_image && !avatar.exist)) {
+      if (avatar.file || ((jobseeker || {}).profile_image && !avatar.exist)) {
         data.profile_image = avatar.file;
       }
       if (cvData) {

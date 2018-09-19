@@ -8,7 +8,7 @@ from django.contrib.auth.base_user import AbstractBaseUser, BaseUserManager
 from django.contrib.auth.models import PermissionsMixin
 from django.contrib.gis.db import models
 from django.contrib.sites.models import Site
-from django.core.files.uploadedfile import SimpleUploadedFile
+from django.core.files.uploadedfile import SimpleUploadedFile, UploadedFile
 from django.core.mail import send_mail
 from django.db import transaction
 from django.template.loader import get_template
@@ -489,7 +489,10 @@ class JobSeeker(models.Model):
             )
 
     def save(self, *args, **kwargs):
-        create_thumbnail(self.profile_image, self.profile_thumb)
+        if not self.profile_image:
+            self.profile_thumb = None
+        elif isinstance(self.profile_image.file, UploadedFile):
+            create_thumbnail(self.profile_image, self.profile_thumb)
         super(JobSeeker, self).save(*args, **kwargs)
 
     def __str__(self):

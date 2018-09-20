@@ -1,12 +1,13 @@
 import React from 'react';
 import Helmet from 'react-helmet';
 import { connect } from 'react-redux';
-import { Modal, List, Tooltip, Button, Drawer, notification } from 'antd';
+import { Modal, List, Tooltip, Button, Drawer, notification, Badge } from 'antd';
 import moment from 'moment';
 
 import { getApplications } from 'redux/selectors';
 import { changeInterview, removeInterview } from 'redux/applications';
 import DATA from 'utils/data';
+import colors from 'utils/colors';
 import * as helper from 'utils/helper';
 
 import { PageHeader, SearchBox, AlertMsg, ListEx, Icons, JobDetails, Logo } from 'components';
@@ -179,6 +180,12 @@ class MyApplications extends React.Component {
                 <div>
                   <Button type="primary" disabled={selectedApp.loading} onClick={() => this.onMessage(selectedApp)}>
                     Message
+                    {selectedApp.newMsgs > 0 && (
+                      <Badge
+                        count={selectedApp.newMsgs > 9 ? '9+' : selectedApp.newMsgs}
+                        style={{ backgroundColor: colors.yellow, marginLeft: '8px' }}
+                      />
+                    )}
                   </Button>
                   {(interview || {}).status === 'PENDING' && (
                     <Button type="primary" disabled={selectedApp.loading} onClick={() => this.onAccept(selectedApp)}>

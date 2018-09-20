@@ -393,7 +393,7 @@ class JobEdit extends React.Component {
         {loading && <PopupProgress label={loading.label} value={loading.progress} />}
 
         {job && (
-          <Drawer placement="right" closable={false} onClose={this.closePreview} visible={showPreview}>
+          <Drawer placement="right" onClose={this.closePreview} visible={showPreview}>
             <JobDetails jobData={job} />
           </Drawer>
         )}

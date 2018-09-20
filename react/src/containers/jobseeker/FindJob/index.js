@@ -287,7 +287,7 @@ class FindJob extends React.Component {
           />
         </div>
 
-        <Drawer placement="right" closable={false} onClose={() => this.onSelect()} visible={visibleDetail}>
+        <Drawer placement="right" onClose={() => this.onSelect()} visible={visibleDetail}>
           {visibleDetail && (
             <JobDetails
               jobData={selectedJob}

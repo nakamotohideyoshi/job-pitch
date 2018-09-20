@@ -172,7 +172,7 @@ class MyApplications extends React.Component {
           />
         </div>
 
-        <Drawer placement="right" closable={false} onClose={() => this.onSelect()} visible={!!selectedApp}>
+        <Drawer placement="right" onClose={() => this.onSelect()} visible={!!selectedApp}>
           {selectedApp && (
             <JobDetails
               application={selectedApp}

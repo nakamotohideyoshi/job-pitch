@@ -195,7 +195,7 @@ class Page extends React.Component {
           {tablet && open && <span className="mask" onClick={this.closeSidebar} />}
         </div>
 
-        <Drawer placement="right" closable={false} onClose={this.hideAppDetails} visible={!!openAppDetails}>
+        <Drawer placement="right" onClose={this.hideAppDetails} visible={!!openAppDetails}>
           {openAppDetails && (
             <JobseekerDetails
               application={selectedApp}
@@ -222,7 +222,7 @@ class Page extends React.Component {
             />
           )}
         </Drawer>
-        <Drawer placement="right" closable={false} onClose={this.hideJobDetails} visible={!!openJobDetails}>
+        <Drawer placement="right" onClose={this.hideJobDetails} visible={!!openJobDetails}>
           {openJobDetails && <JobDetails jobData={selectedApp.job_data} />}
         </Drawer>
       </Wrapper>

@@ -166,7 +166,7 @@ class FindTalent extends React.Component {
             emptyRender={this.renderEmpty}
           />
         )}
-        <Drawer placement="right" closable={false} onClose={() => this.onSelect()} visible={!!selectedJobseeker}>
+        <Drawer placement="right" onClose={() => this.onSelect()} visible={!!selectedJobseeker}>
           {selectedJobseeker && (
             <JobseekerDetails
               jobseekerData={selectedJobseeker}

@@ -137,7 +137,7 @@ class Messages extends React.Component {
           {tablet && open && <span className="mask" onClick={this.closeSidebar} />}
         </div>
 
-        <Drawer placement="right" closable={false} onClose={this.hideJobDetails} visible={!!openJobDetails}>
+        <Drawer placement="right" onClose={this.hideJobDetails} visible={!!openJobDetails}>
           {openJobDetails && (
             <JobDetails
               application={selectedApp}

@@ -58,6 +58,7 @@ public class RecruiterApplicationsFragment extends ApplicationsFragment {
         }
 
         addMenuItem(MENUGROUP1, 101, "Job Details", R.drawable.ic_edit);
+        addMenuItem(MENUGROUP1, 121, "Add Application", R.drawable.ic_add);
         return  view;
     }
 
@@ -186,6 +187,10 @@ public class RecruiterApplicationsFragment extends ApplicationsFragment {
     public void onMenuSelected(int menuID) {
         if (menuID == 101) {
             JobDetailFragment fragment = new JobDetailFragment();
+            fragment.job = job;
+            getApp().pushFragment(fragment);
+        } else if (menuID == 121) {
+            ExternalApplicantFragment fragment = new ExternalApplicantFragment();
             fragment.job = job;
             getApp().pushFragment(fragment);
         }

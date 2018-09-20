@@ -231,11 +231,15 @@ class Page extends React.Component {
 }
 
 const enhance = connect(
-  state => ({
-    jobs: getJobs(state),
-    applications: getApplications(state),
-    businesses: getBusinesses(state)
-  }),
+  state => {
+    let applications = getApplications(state);
+    applications = applications.filter(({ messages }) => messages.length);
+    return {
+      jobs: getJobs(state),
+      applications,
+      businesses: getBusinesses(state)
+    };
+  },
   {
     showFooter,
     updateApplication

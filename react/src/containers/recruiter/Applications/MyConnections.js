@@ -1,10 +1,11 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
-import { List, Modal, Tooltip, Button, Switch, Drawer, notification } from 'antd';
+import { List, Modal, Tooltip, Button, Switch, Drawer, notification, Badge } from 'antd';
 import moment from 'moment';
 
 import { updateApplication, removeApplication } from 'redux/applications';
+import colors from 'utils/colors';
 import * as helper from 'utils/helper';
 
 import { AlertMsg, Loading, ListEx, Icons, JobseekerDetails, Logo } from 'components';
@@ -75,28 +76,29 @@ class MyConnections extends React.Component {
       .indexOf(this.props.searchText) >= 0;
 
   renderApplication = app => {
-    const { id, job_seeker, interview, loading } = app;
+    const { id, job_seeker, interview, messages, loading } = app;
     const image = helper.getAvatar(job_seeker);
     const name = helper.getFullJSName(job_seeker);
 
+    const actions = [
+      <Tooltip placement="bottom" title="Remove">
+        <span onClick={e => this.onRemove(app, e)}>
+          <Icons.Times />
+        </span>
+      </Tooltip>
+    ];
+    if (messages.length) {
+      actions.unshift(
+        <Tooltip placement="bottom" title="Message">
+          <span onClick={e => this.onMessage(app, e)}>
+            <Icons.CommentAlt />
+          </span>
+        </Tooltip>
+      );
+    }
+
     return (
-      <List.Item
-        key={id}
-        actions={[
-          <Tooltip placement="bottom" title="Message">
-            <span onClick={e => this.onMessage(app, e)}>
-              <Icons.CommentAlt />
-            </span>
-          </Tooltip>,
-          <Tooltip placement="bottom" title="Remove">
-            <span onClick={e => this.onRemove(app, e)}>
-              <Icons.Times />
-            </span>
-          </Tooltip>
-        ]}
-        onClick={() => this.onSelect(id)}
-        className={loading ? 'loading' : ''}
-      >
+      <List.Item key={id} actions={actions} onClick={() => this.onSelect(id)} className={loading ? 'loading' : ''}>
         <List.Item.Meta
           avatar={
             <span>
@@ -160,9 +162,19 @@ class MyConnections extends React.Component {
                       onChange={() => this.onShortlist(selectedApp)}
                     />
                   </div>
-                  <Button type="primary" disabled={selectedApp.loading} onClick={() => this.onMessage(selectedApp)}>
-                    Message
-                  </Button>
+
+                  {selectedApp.messages.length > 0 && (
+                    <Button type="primary" disabled={selectedApp.loading} onClick={() => this.onMessage(selectedApp)}>
+                      Message
+                      {selectedApp.newMsgs > 0 && (
+                        <Badge
+                          count={selectedApp.newMsgs > 9 ? '9+' : selectedApp.newMsgs}
+                          style={{ backgroundColor: colors.yellow, marginLeft: '8px' }}
+                        />
+                      )}
+                    </Button>
+                  )}
+
                   <Button type="danger" disabled={selectedApp.loading} onClick={() => this.onRemove(selectedApp)}>
                     Remove
                   </Button>
@@ -177,8 +189,11 @@ class MyConnections extends React.Component {
 }
 
 export default withRouter(
-  connect(null, {
-    updateApplication,
-    removeApplication
-  })(MyConnections)
+  connect(
+    null,
+    {
+      updateApplication,
+      removeApplication
+    }
+  )(MyConnections)
 );

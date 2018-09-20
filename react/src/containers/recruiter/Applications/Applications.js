@@ -165,8 +165,13 @@ export default connect(
     const myConnections =
       filteredApplications && filteredApplications.filter(({ status }) => status === DATA.APP.ESTABLISHED);
     const myShortlist = myConnections && myConnections.filter(({ shortlisted }) => shortlisted);
-    const interviews = myConnections && myConnections.filter(({ interview }) => interview);
-    interviews.sort((a, b) => (a.interview.at < b.interview.at ? 1 : -1));
+    const interviews =
+      myConnections && myConnections.filter(({ interview, interviews }) => interview || interviews.length);
+    interviews.sort((a, b) => {
+      let interview1 = a.interview || a.interviews.slice(-1)[0];
+      let interview2 = b.interview || b.interviews.slice(-1)[0];
+      return interview1.at < interview2.at ? 1 : -1;
+    });
 
     return {
       jobs,

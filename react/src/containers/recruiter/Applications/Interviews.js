@@ -1,8 +1,9 @@
 import React from 'react';
 import { withRouter } from 'react-router-dom';
-import { List, Tooltip, Drawer, Button } from 'antd';
+import { List, Tooltip, Drawer, Button, Badge } from 'antd';
 import moment from 'moment';
 
+import colors from 'utils/colors';
 import * as helper from 'utils/helper';
 
 import { AlertMsg, Loading, ListEx, Icons, JobseekerDetails, Logo } from 'components';
@@ -26,9 +27,20 @@ class Interviews extends React.Component {
       .indexOf(this.props.searchText) >= 0;
 
   renderApplication = app => {
-    const { id, job_seeker, interview, loading } = app;
+    const { id, job_seeker, loading } = app;
     const avatar = helper.getAvatar(job_seeker);
     const name = helper.getFullJSName(job_seeker);
+
+    const interview = app.interview || app.interviews.slice(-1)[0];
+
+    let INTERVIEW_STATUS = {
+      PENDING: 'Interview request sent',
+      ACCEPTED: 'Interview accepted',
+      COMPLETED: 'This interview is done',
+      CANCELLED: `Interview cancelled by ${
+        helper.getNameByID('roles', interview.cancelled_by) === 'RECRUITER' ? 'Recruiter' : 'Jobseeker'
+      }`
+    };
 
     return (
       <List.Item
@@ -47,11 +59,9 @@ class Interviews extends React.Component {
           avatar={<Logo src={avatar} size="80px" />}
           title={name}
           description={
-            interview && (
-              <div className={`single-line ${interview.status}`}>
-                Interview: {moment(interview.at).format('ddd DD MMM, YYYY [at] H:mm')}
-              </div>
-            )
+            <div className={`single-line ${interview.status}`} style={{ fontSize: '12px' }}>
+              {`${INTERVIEW_STATUS[interview.status]} (${moment(interview.at).format('ddd DD MMM, YYYY [at] H:mm')})`}
+            </div>
           }
         />
         {loading && <Loading className="mask" size="small" />}
@@ -92,6 +102,12 @@ class Interviews extends React.Component {
                 <div>
                   <Button type="primary" disabled={selectedApp.loading} onClick={() => this.onMessage(selectedApp)}>
                     Message
+                    {selectedApp.newMsgs > 0 && (
+                      <Badge
+                        count={selectedApp.newMsgs > 9 ? '9+' : selectedApp.newMsgs}
+                        style={{ backgroundColor: colors.yellow, marginLeft: '8px' }}
+                      />
+                    )}
                   </Button>
                 </div>
               }

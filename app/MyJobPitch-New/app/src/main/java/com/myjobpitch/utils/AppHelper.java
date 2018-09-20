@@ -416,7 +416,7 @@ public class AppHelper {
         if (pitch != null) {
             loadImage(pitch.getThumbnail(), imageView);
         } else {
-            imageView.setImageResource(R.drawable.icon_no_img);
+            imageView.setImageResource(R.drawable.avatar);
         }
     }
 

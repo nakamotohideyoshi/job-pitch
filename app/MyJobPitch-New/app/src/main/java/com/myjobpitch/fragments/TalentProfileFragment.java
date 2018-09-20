@@ -433,12 +433,9 @@ public class TalentProfileFragment extends FormFragment {
         new APITask(new APIAction() {
             @Override
             public void run() throws MJPApiException {
-                if (jobSeeker.getId() == null) {
-                    jobSeeker = MJPApi.shared().create(JobSeeker.class, jobSeeker);
-                    AppData.user.setJob_seeker(jobSeeker.getId());
-                } else if (cvUri == null && imageSelector.getImageUri() == null) {
-                    jobSeeker = MJPApi.shared().updateJobSeeker(jobSeeker.getId(), jobSeekerForUpdate, null, null);
-                }
+
+                jobSeeker = MJPApi.shared().updateJobSeeker(jobSeeker == null ? null : jobSeeker.getId(), jobSeekerForUpdate, null, null);
+
 
                 if ( imageSelector.getImageUri() != null) {
                     try {
@@ -665,6 +662,7 @@ public class TalentProfileFragment extends FormFragment {
             getApp().popFragment();
         } else {
             getApp().reloadMenu();
+            AppData.user.setJob_seeker(jobSeeker.getId());
             getApp().setRootFragement(AppData.PAGE_JOB_PROFILE);
         }
     }

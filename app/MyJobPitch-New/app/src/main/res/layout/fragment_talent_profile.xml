@@ -434,6 +434,13 @@
                 </LinearLayout>
             </LinearLayout>
 
+            <include
+                android:id="@+id/job_seeker_profile_image"
+                layout="@layout/view_profile_image_selector"
+                android:layout_width="match_parent"
+                android:layout_height="240dp"
+                android:layout_marginTop="15dp"/>
+
             <CheckBox
                 android:id="@+id/job_seeker_has_references"
                 android:text="References Available"

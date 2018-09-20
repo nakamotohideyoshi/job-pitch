@@ -20,6 +20,7 @@ import com.myjobpitch.api.data.ChangePassword;
 import com.myjobpitch.api.data.Contract;
 import com.myjobpitch.api.data.Deprecation;
 import com.myjobpitch.api.data.ExternalApplication;
+import com.myjobpitch.api.data.ExternalApplicationForResponse;
 import com.myjobpitch.api.data.Hours;
 import com.myjobpitch.api.data.ImageUpload;
 import com.myjobpitch.api.data.InitialTokens;
@@ -442,7 +443,7 @@ public class MJPApi {
         rest.exchange(getObjectUrl("user-job-images", id), HttpMethod.DELETE, createAuthenticatedRequest(), Void.class);
     }
 
-    public JobSeeker updateJobSeeker(Integer jobSeekerId, JobSeekerForUpdate jobSeeker, Resource profileImage, Resource cvdata) throws MJPApiException {
+    public JobSeeker updateJobSeeker(Integer jobSeekerId, JobSeekerForUpdate jobSeeker, Resource profileImage, Resource cv) throws MJPApiException {
 
         MultiValueMap<String, Object> parts = new LinkedMultiValueMap<>();
         for (Field field : jobSeeker.getClass().getDeclaredFields()) {
@@ -459,11 +460,11 @@ public class MJPApi {
         if (profileImage != null) {
             parts.put("profile_image", Arrays.asList(new Object[] {profileImage}));
         }
-        if (cvdata != null) {
-            parts.put("cv", Arrays.asList(new Object[] {cvdata}));
+        if (cv != null) {
+            parts.put("cv", Arrays.asList(new Object[] {cv}));
         }
         try {
-            HttpMethod method = jobSeekerId == null ? HttpMethod.POST : HttpMethod.PUT;
+            HttpMethod method = jobSeekerId == null ? HttpMethod.POST : HttpMethod.PATCH;
             HttpHeaders headers = getDefaultHttpHeaders();
             headers.setContentType(MediaType.MULTIPART_FORM_DATA);
             HttpEntity<MultiValueMap<String, Object>> request = createAuthenticatedRequest(parts, headers);
@@ -584,7 +585,7 @@ public class MJPApi {
 
     public void addExternalApplication(ExternalApplication externalApplication) throws MJPApiException {
         try {
-            rest.exchange(getTypeUrl("applications/external"), HttpMethod.POST, createAuthenticatedRequest(externalApplication), ExternalApplication.class).getBody();
+            rest.exchange(getTypeUrl("applications/external"), HttpMethod.POST, createAuthenticatedRequest(externalApplication), ExternalApplicationForResponse.class).getBody();
         } catch (HttpClientErrorException e) {
             if (e.getStatusCode().value() == 400) {
                 throw new MJPApiException(e);
